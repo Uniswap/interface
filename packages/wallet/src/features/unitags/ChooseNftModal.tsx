@@ -11,17 +11,6 @@ import { NftView } from 'wallet/src/components/nfts/NftView'
 import { NftViewWithContextMenu } from 'wallet/src/components/nfts/NftViewWithContextMenu'
 import { NftsList } from 'wallet/src/components/nfts/NftsList'
 import { NFTItem } from 'wallet/src/features/nfts/types'
-import { ChoosePhotoOptionsProps } from 'wallet/src/features/unitags/ChoosePhotoOptionsModal'
-
-export const NFT_MODAL_MAX_WIDTH = 610
-
-export const extensionNftModalProps: ChoosePhotoOptionsProps['nftModalProps'] = {
-  includeContextMenu: false,
-  itemMargin: '$spacing6',
-  containerProps: { m: -spacing.spacing6 }, // Cancels out the margin on each NFT item
-  modalMaxWidth: NFT_MODAL_MAX_WIDTH,
-  numColumns: 4,
-}
 
 export type ChooseNftModalProps = {
   address: string
@@ -75,18 +64,17 @@ export const ChooseNftModal = ({
       isDismissible={renderedInBottomSheet}
       name={ModalName.NftCollection}
       maxWidth={modalMaxWidth}
-      padding={isWeb ? spacing.spacing24 : undefined}
       onClose={onClose}
     >
       <Flex fill gap="$spacing24">
         {isWeb ? (
           <Flex row centered>
+            <X size="$icon.24" />
             <Flex grow centered>
               <Text color="$neutral1" variant="subheading1">
                 {t('unitags.choosePhoto.option.nft')}
               </Text>
             </Flex>
-            <X position="absolute" left={0} size="$icon.24" cursor="pointer" color="$neutral2" onClick={onClose} />
           </Flex>
         ) : undefined}
         <Flex fill {...containerProps}>

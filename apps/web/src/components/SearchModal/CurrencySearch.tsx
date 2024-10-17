@@ -53,7 +53,7 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss }: C
       return
     }
 
-    showSwapNetworkNotification({ chainId, prevChainId })
+    showSwapNetworkNotification(chainId, prevChainId)
   }, [currentTab, chainId, prevChainId, multichainUXEnabled, showSwapNetworkNotification])
 
   return (

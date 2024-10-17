@@ -7,7 +7,6 @@ import { Language } from 'uniswap/src/features/language/constants'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
-import { RankingType } from 'wallet/src/features/wallet/types'
 
 export function testActivatePendingAccounts(migration: (state: any) => any, prevSchema: any): void {
   // all accounts active
@@ -576,9 +575,4 @@ export function testMovedCurrencySetting(migration: (state: any) => any, prevSch
   const result = migration(prevSchema)
   expect(result.fiatCurrencySettings).toEqual(undefined)
   expect(result.userSettings.currentCurrency).toEqual(FiatCurrency.UnitedStatesDollar)
-}
-
-export function testUpdateExploreOrderByType(migration: (state: any) => any, prevSchema: any): void {
-  const result = migration(prevSchema)
-  expect(result.wallet.settings.tokensOrderBy).toEqual(RankingType.Volume)
 }

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import 'react-native-reanimated'
+import { useSelector } from 'react-redux'
 import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
 import { getSupportedURI, URIType } from 'src/components/Requests/ScanSheet/util'
 import { Flex, Text, TouchableArea, useHapticFeedback, useIsDarkMode, useSporeColors } from 'ui/src'
@@ -13,7 +14,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { WalletQRCode } from 'wallet/src/components/QRCodeScanner/WalletQRCode'
-import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
+import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 type Props = {
   onClose: () => void
@@ -23,7 +24,7 @@ type Props = {
 export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const activeAddress = useActiveAccountAddress()
+  const activeAddress = useSelector(selectActiveAccountAddress)
   const [currentScreenState, setCurrentScreenState] = useState<ScannerModalState>(ScannerModalState.ScanQr)
   const [shouldFreezeCamera, setShouldFreezeCamera] = useState(false)
   const { hapticFeedback } = useHapticFeedback()

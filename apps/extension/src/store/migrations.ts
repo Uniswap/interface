@@ -17,7 +17,6 @@ import {
   moveUserSettings,
   removeUniconV2BehaviorState,
   removeWalletIsUnlockedState,
-  updateExploreOrderByType,
 } from 'wallet/src/state/walletMigrations'
 
 export const migrations = {
@@ -39,7 +38,6 @@ export const migrations = {
   13: moveDismissedTokenWarnings,
   14: moveLanguageSetting,
   15: moveCurrencySetting,
-  16: updateExploreOrderByType,
 }
 
-export const EXTENSION_STATE_VERSION = 16
+export const EXTENSION_STATE_VERSION = 15

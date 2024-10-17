@@ -76,8 +76,6 @@ import {
   ExtensionToDappRequestType,
   FocusOnboardingMessage,
   FocusOnboardingMessageSchema,
-  RefreshUnitagsRequest,
-  RefreshUnitagsRequestSchema,
   TabActivatedRequest,
   TabActivatedRequestSchema,
   UpdateConnectionRequest,
@@ -123,7 +121,6 @@ export function createOnboardingMessagePort(
 type BackgroundToSidePanelMessageSchemas = {
   [BackgroundToSidePanelRequestType.DappRequestReceived]: DappRequestMessage
   [BackgroundToSidePanelRequestType.TabActivated]: TabActivatedRequest
-  [BackgroundToSidePanelRequestType.RefreshUnitags]: RefreshUnitagsRequest
 }
 const backgroundToSidePanelMessageParsers: MessageParsers<
   BackgroundToSidePanelRequestType,
@@ -133,8 +130,6 @@ const backgroundToSidePanelMessageParsers: MessageParsers<
     DappRequestMessageSchema.parse(message),
   [BackgroundToSidePanelRequestType.TabActivated]: (message): TabActivatedRequest =>
     TabActivatedRequestSchema.parse(message),
-  [BackgroundToSidePanelRequestType.RefreshUnitags]: (message): RefreshUnitagsRequest =>
-    RefreshUnitagsRequestSchema.parse(message),
 }
 
 function createBackgroundToSidePanelMessageChannel(): TypedRuntimeMessageChannel<
@@ -144,7 +139,6 @@ function createBackgroundToSidePanelMessageChannel(): TypedRuntimeMessageChannel
   return new TypedRuntimeMessageChannel<BackgroundToSidePanelRequestType, BackgroundToSidePanelMessageSchemas>({
     channelName: MessageChannelName.DappBackground,
     messageParsers: backgroundToSidePanelMessageParsers,
-    canReceiveFromWebPage: true,
   })
 }
 
@@ -200,7 +194,7 @@ function createContentScriptToBackgroundMessageChannel(): TypedRuntimeMessageCha
   return new TypedRuntimeMessageChannel<DappRequestType, ContentScriptToBackgroundMessageSchemas>({
     channelName: MessageChannelName.DappContentScript,
     messageParsers: contentScriptToBackgroundMessageParsers,
-    canReceiveFromWebPage: true,
+    canReceiveFromContentScript: true,
   })
 }
 
@@ -321,7 +315,7 @@ export function createContentScriptUtilityMessageChannel(): TypedRuntimeMessageC
   return new TypedRuntimeMessageChannel<ContentScriptUtilityMessageType, ContentScriptUtilityMessageSchemas>({
     channelName: MessageChannelName.ContentScriptUtility,
     messageParsers: contentScriptUtilityMessageParsers,
-    canReceiveFromWebPage: true,
+    canReceiveFromContentScript: true,
   })
 }
 

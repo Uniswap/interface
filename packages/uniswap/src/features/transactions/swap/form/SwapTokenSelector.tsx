@@ -59,7 +59,7 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
       const otherFieldTradeableAsset = field === CurrencyField.INPUT ? swapCtx.output : swapCtx.input
 
       // swap order if tokens are the same
-      if (otherFieldTradeableAsset && areCurrencyIdsEqual(currencyId(currency), currencyId(otherFieldTradeableAsset))) {
+      if (otherFieldTradeableAsset && currencyId(currency) === currencyId(otherFieldTradeableAsset)) {
         const previouslySelectedTradableAsset = field === CurrencyField.INPUT ? swapCtx.input : swapCtx.output
         // Given that we're swapping the order of tokens, we should also swap the `exactCurrencyField` and update the `focusOnCurrencyField` to make sure the correct input field is focused.
         newState.exactCurrencyField =

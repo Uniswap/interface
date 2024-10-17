@@ -17,10 +17,6 @@ import { parseRemote as parseRemoteSignature } from 'state/signatures/parseRemot
 import { OrderActivity, SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { TransactionType as LocalTransactionType } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { Flex, Text } from 'ui/src'
-import { Arrow } from 'ui/src/components/arrow/Arrow'
-import { iconSizes } from 'ui/src/theme'
-import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   AssetActivityPartsFragment,
@@ -172,44 +168,6 @@ function getSwapDescriptor({
   })
 }
 
-function getChainIdFromGqlTokenOrCurrency(token?: TokenAssetPartsFragment | Currency): number | null {
-  if (!token) {
-    return null
-  }
-  if ('chainId' in token) {
-    return token.chainId
-  }
-  return supportedChainIdFromGQLChain(token.chain) ?? null
-}
-
-export function getBridgeDescriptor({
-  tokenIn,
-  inputAmount,
-  tokenOut,
-  outputAmount,
-}: {
-  tokenIn?: TokenAssetPartsFragment | Currency
-  outputAmount: string
-  tokenOut?: TokenAssetPartsFragment | Currency
-  inputAmount: string
-}) {
-  const inputChain = getChainIdFromGqlTokenOrCurrency(tokenIn)
-  const outputChain = getChainIdFromGqlTokenOrCurrency(tokenOut)
-  return (
-    <Flex row alignItems="center" gap="4px">
-      <NetworkLogo chainId={inputChain} size={16} borderRadius={6} />
-      <Text variant="body2">
-        {inputAmount}&nbsp;{tokenIn?.symbol ?? t('common.unknown')}
-      </Text>
-      <Arrow direction="e" color="$neutral3" size={iconSizes.icon16} />
-      <NetworkLogo chainId={outputChain} size={16} borderRadius={6} />
-      <Text variant="body2">
-        {outputAmount}&nbsp;{tokenOut?.symbol ?? t('common.unknown')}
-      </Text>
-    </Flex>
-  )
-}
-
 /**
  *
  * @param transactedValue Transacted value amount from TokenTransfer API response
@@ -304,20 +262,6 @@ function parseSwap(changes: TransactionChanges, formatNumberOrString: FormatNumb
     }
   }
   return { title: t('common.unknownSwap') }
-}
-
-function parseBridge(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
-  const swapAmounts = parseSwapAmounts(changes, formatNumberOrString)
-
-  if (swapAmounts) {
-    const { sent, received, inputAmount, outputAmount } = swapAmounts
-    return {
-      title: getSwapTitle(sent, received),
-      descriptor: getBridgeDescriptor({ tokenIn: sent.asset, inputAmount, tokenOut: received.asset, outputAmount }),
-      currencies: [gqlToCurrency(sent.asset), gqlToCurrency(received.asset)],
-    }
-  }
-  return { title: t('common.unknownBridge') }
 }
 
 /**
@@ -530,7 +474,6 @@ const ActivityParserByType: { [key: string]: TransactionTypeParser | undefined }
   [TransactionType.Send]: parseSendReceive,
   [TransactionType.Receive]: parseSendReceive,
   [TransactionType.Mint]: parseMint,
-  [TransactionType.Bridging]: parseBridge,
   [TransactionType.Unknown]: parseUnknown,
 }
 
@@ -722,7 +665,6 @@ function parseRemoteActivity(
       from: assetActivity.details.from,
       nonce: assetActivity.details.nonce,
       isSpam: isSpam(changes, assetActivity.details, account),
-      type: assetActivity.details.type,
     }
 
     const parsedFields = ActivityParserByType[assetActivity.details.type]?.(

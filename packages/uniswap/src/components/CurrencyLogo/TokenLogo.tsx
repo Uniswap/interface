@@ -1,11 +1,10 @@
 import { memo, useState } from 'react'
-import { Flex, Text, UniversalImage, useColorSchemeFromSeed, useSporeColors } from 'ui/src'
+import { Flex, FlexProps, Text, UniversalImage, useColorSchemeFromSeed, useSporeColors } from 'ui/src'
 import { iconSizes, validColor } from 'ui/src/theme'
 import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { isMobileApp } from 'utilities/src/platform'
 
 interface TokenLogoProps {
   url?: string | null
@@ -15,6 +14,7 @@ interface TokenLogoProps {
   size?: number
   hideNetworkLogo?: boolean
   networkLogoBorderWidth?: number
+  backgroundColor?: FlexProps['borderColor']
 }
 
 const TESTNET_BORDER_DIVISOR = 15
@@ -27,7 +27,9 @@ export const TokenLogo = memo(function _TokenLogo({
   chainId,
   size = iconSizes.icon40,
   hideNetworkLogo,
-  networkLogoBorderWidth = isMobileApp ? 2 : 1.5,
+  networkLogoBorderWidth = 1.5,
+  // used to shave token image for testnet border
+  backgroundColor = '$background',
 }: TokenLogoProps): JSX.Element {
   const [showBackground, setShowBackground] = useState(false)
 
@@ -102,19 +104,23 @@ export const TokenLogo = memo(function _TokenLogo({
       width={size}
       position="relative"
     >
-      {isTestnetToken ? null : (
-        <Flex
-          opacity={showBackground ? 1 : 0}
-          height="96%"
-          width="96%"
-          zIndex={-1}
-          backgroundColor={colors.white.val}
-          position="absolute"
-          top="2%"
-          left="2%"
-          borderRadius={size / 2}
-        />
-      )}
+      <Flex
+        opacity={showBackground ? 1 : 0}
+        height="96%"
+        width="96%"
+        zIndex={-1}
+        backgroundColor={colors.white.val}
+        position="absolute"
+        top="2%"
+        left="2%"
+        borderRadius={size / 2}
+        // shave off for border
+        {...(isTestnetToken && {
+          style: { boxSizing: 'border-box' },
+          borderWidth,
+          borderColor: backgroundColor,
+        })}
+      />
       {tokenImage}
       {isTestnetToken && (
         <Flex

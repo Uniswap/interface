@@ -1,10 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import {
-  PendingTransactionDetails,
-  TransactionDetails,
-  TransactionInfo,
-  TransactionType,
-} from 'state/transactions/types'
+import { PendingTransactionDetails, TransactionDetails, TransactionInfo } from 'state/transactions/types'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
@@ -94,24 +89,6 @@ const localTransactionSlice = createSlice({
         info: info ?? tx.info,
       }
     },
-    /* Marks a bridge tx as deposited, without setting it as confirmed in the UI. */
-    confirmBridgeDeposit(
-      transactions,
-      {
-        payload: { chainId, hash },
-      }: {
-        payload: {
-          chainId: UniverseChainId
-          hash: string
-        }
-      },
-    ) {
-      const tx = transactions[chainId]?.[hash]
-      if (tx?.info.type !== TransactionType.BRIDGE) {
-        return
-      }
-      tx.info.depositConfirmed = true
-    },
     cancelTransaction(
       transactions,
       {
@@ -139,6 +116,5 @@ export const {
   finalizeTransaction,
   removeTransaction,
   cancelTransaction,
-  confirmBridgeDeposit,
 } = localTransactionSlice.actions
 export default localTransactionSlice.reducer

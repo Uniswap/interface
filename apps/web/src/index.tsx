@@ -5,7 +5,6 @@ import { getDeviceId } from '@amplitude/analytics-browser'
 import { ApolloProvider } from '@apollo/client'
 import { PortalProvider } from '@tamagui/portal'
 import { QueryClientProvider } from '@tanstack/react-query'
-import { MiniKit } from '@worldcoin/minikit-js'
 import Web3Provider from 'components/Web3Provider'
 import { WebUniswapProvider } from 'components/Web3Provider/WebUniswapContext'
 import { AssetActivityProvider } from 'graphql/data/apollo/AssetActivityProvider'
@@ -16,7 +15,7 @@ import { LanguageProvider } from 'i18n/LanguageProvider'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
 import App from 'pages/App'
-import { PropsWithChildren, StrictMode, useEffect, useMemo } from 'react'
+import { PropsWithChildren, StrictMode, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Helmet, HelmetProvider } from 'react-helmet-async/lib/index'
 import { Provider } from 'react-redux'
@@ -101,14 +100,6 @@ function StatsigProvider({ children }: PropsWithChildren) {
   )
 }
 
-function MiniKitProvider({ children }: PropsWithChildren) {
-  useEffect(() => {
-    MiniKit.install()
-  }, [])
-
-  return <>{children}</>
-}
-
 const container = document.getElementById('root') as HTMLElement
 
 const Router = isBrowserRouterEnabled() ? BrowserRouter : HashRouter
@@ -132,9 +123,7 @@ createRoot(container).render(
                               <TamaguiProvider>
                                 <PortalProvider>
                                   <ThemedGlobalStyle />
-                                  <MiniKitProvider>
-                                    <App />
-                                  </MiniKitProvider>
+                                  <App />
                                 </PortalProvider>
                               </TamaguiProvider>
                             </ThemeProvider>

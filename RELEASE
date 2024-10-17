@@ -1,24 +1,15 @@
-IPFS hash of the deployment:
-- CIDv0: `QmfZnGkqmvUSeByDRpHFCSFU4ANdwD4XXE8WXxhTjnu35z`
-- CIDv1: `bafybeih76pdzu4rnkttpfyyla3tkd65x6ma6xhtzdqb6xn4l6vgutggjde`
+### We’re back with an exciting release! Here’s the latest
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+### Unichain Testnet Support
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+Unichain is a new DeFi-native Ethereum L2, built to be the home for liquidity across chains. We now support its testnet, **Unichain Sepolia**!
 
-IPFS gateways:
-- https://bafybeih76pdzu4rnkttpfyyla3tkd65x6ma6xhtzdqb6xn4l6vgutggjde.ipfs.dweb.link/
-- https://bafybeih76pdzu4rnkttpfyyla3tkd65x6ma6xhtzdqb6xn4l6vgutggjde.ipfs.cf-ipfs.com/
-- [ipfs://QmfZnGkqmvUSeByDRpHFCSFU4ANdwD4XXE8WXxhTjnu35z/](ipfs://QmfZnGkqmvUSeByDRpHFCSFU4ANdwD4XXE8WXxhTjnu35z/)
+### Testnet Mode
 
-### 5.53.6 (2024-10-17)
+Now, developers can use the Uniswap Wallet to transact on testnets and store testnet assets. Currently, we support **ETH Sepolia** and **Unichain Sepolia**.
 
+### Other Changes
 
-### Bug Fixes
-
-* **web:** fallback to local activity if remote is empty (#13136) 33f4425
-
-
+- Improved visuals around the networks we support
+- Better linkouts on transaction details sheet
+- Various bug fixes and performance improvements

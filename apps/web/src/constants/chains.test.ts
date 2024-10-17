@@ -164,7 +164,6 @@ const backendSupportedChains = [
   Chain.Avalanche,
   Chain.Worldchain,
   Chain.Zksync,
-  Chain.Zora,
 ] as const
 
 test.each(backendSupportedChains)(
@@ -175,11 +174,15 @@ test.each(backendSupportedChains)(
   },
 )
 
-const backendNotyetSupportedChainIds = [] as const
+const backendNotyetSupportedChainIds = [UniverseChainId.Zora] as const
 
-test('BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS array is empty', () => {
-  expect(backendNotyetSupportedChainIds).toEqual(BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS)
-})
+test.each(backendNotyetSupportedChainIds)(
+  'BACKEND_SUPPORTED_CHAINS generates the correct chains',
+  (chainId: UniverseChainId) => {
+    expect(BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(chainId)).toBe(true)
+    expect(BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.length).toEqual(backendNotyetSupportedChainIds.length)
+  },
+)
 
 const infuraPrefixToChainId: { [prefix: string]: UniverseChainId } = {
   mainnet: UniverseChainId.Mainnet,

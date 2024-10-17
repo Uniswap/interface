@@ -9,8 +9,8 @@ import { ArrowDownCircle, Buy, CoinConvert, SendAction } from 'ui/src/components
 import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
+import { TestnetModeModal } from 'wallet/src/components/modals/TestnetModeModal'
 
 const ICON_COLOR = '$accent1'
 

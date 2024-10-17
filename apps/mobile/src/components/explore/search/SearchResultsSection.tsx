@@ -14,7 +14,6 @@ import { SearchUnitagItem } from 'src/components/explore/search/items/SearchUnit
 import { SearchWalletByAddressItem } from 'src/components/explore/search/items/SearchWalletByAddressItem'
 import { SearchResultOrHeader } from 'src/components/explore/search/types'
 import {
-  filterSearchResultsByChainId,
   formatNFTCollectionSearchResults,
   formatTokenSearchResults,
   getSearchResultId,
@@ -64,13 +63,7 @@ const EtherscanHeaderItem: (chainId: UniverseChainId) => SearchResultOrHeader = 
 
 const IGNORED_ERRORS = ['Subgraph provider undefined not supported']
 
-export function SearchResultsSection({
-  searchQuery,
-  selectedChain,
-}: {
-  searchQuery: string
-  selectedChain: UniverseChainId | null
-}): JSX.Element {
+export function SearchResultsSection({ searchQuery }: { searchQuery: string }): JSX.Element {
   const { t } = useTranslation()
   const { defaultChainId } = useEnabledChains()
 
@@ -93,14 +86,8 @@ export function SearchResultsSection({
       return undefined
     }
 
-    const formattedTokenSearchResults = formatTokenSearchResults(searchResultsData.searchTokens, searchQuery)
-
-    if (!selectedChain) {
-      return formattedTokenSearchResults
-    }
-
-    return filterSearchResultsByChainId(formattedTokenSearchResults, selectedChain)
-  }, [selectedChain, searchQuery, searchResultsData])
+    return formatTokenSearchResults(searchResultsData.searchTokens, searchQuery)
+  }, [searchQuery, searchResultsData])
 
   // Search for matching NFT collections
 
@@ -109,22 +96,12 @@ export function SearchResultsSection({
       return undefined
     }
 
-    const formattedNftCollectionSearchResults = formatNFTCollectionSearchResults(searchResultsData.nftCollections)
-
-    if (!selectedChain) {
-      return formattedNftCollectionSearchResults
-    }
-
-    return filterSearchResultsByChainId(formattedNftCollectionSearchResults, selectedChain)
-  }, [searchResultsData, selectedChain])
+    return formatNFTCollectionSearchResults(searchResultsData.nftCollections)
+  }, [searchResultsData])
 
   // Search for matching wallets
 
-  const {
-    wallets: walletSearchResults,
-    exactENSMatch,
-    exactUnitagMatch,
-  } = useWalletSearchResults(searchQuery, selectedChain)
+  const { wallets: walletSearchResults, exactENSMatch, exactUnitagMatch } = useWalletSearchResults(searchQuery)
 
   const validAddress: Address | undefined = useMemo(
     () => getValidAddress(searchQuery, true, false) ?? undefined,
@@ -162,8 +139,8 @@ export function SearchResultsSection({
       // NFTs, then wallets, then tokens
       searchResultItems = [...nftsWithHeader, ...walletsWithHeader, ...tokensWithHeader]
     } else {
-      // Tokens, then wallets, then NFTs,
-      searchResultItems = [...tokensWithHeader, ...walletsWithHeader, ...nftsWithHeader]
+      // Tokens, then NFTs, then wallets
+      searchResultItems = [...tokensWithHeader, ...nftsWithHeader, ...walletsWithHeader]
     }
 
     // Add etherscan items at end

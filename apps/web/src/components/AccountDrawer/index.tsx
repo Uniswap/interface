@@ -8,7 +8,7 @@ import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import usePrevious from 'hooks/usePrevious'
 import { useIsUniExtensionAvailable } from 'hooks/useUniswapWalletOptions'
-import { atom, useAtom } from 'jotai'
+import { useAtom } from 'jotai'
 import styled, { css } from 'lib/styled-components'
 import { useEffect, useRef, useState } from 'react'
 import { ChevronsRight } from 'react-feather'
@@ -26,17 +26,6 @@ const DRAWER_MARGIN = '8px'
 const DRAWER_OFFSET = '10px'
 
 export const MODAL_WIDTH = '368px'
-
-export enum MenuState {
-  DEFAULT = 'default',
-  SETTINGS = 'settings',
-  LANGUAGE_SETTINGS = 'language_settings',
-  LOCAL_CURRENCY_SETTINGS = 'local_currency_settings',
-  LIMITS = 'limits',
-  POOLS = 'pools',
-}
-
-export const miniPortfolioMenuStateAtom = atom(MenuState.DEFAULT)
 
 const ScrimBackground = styled.div<{ $open: boolean; $maxWidth?: number; $zIndex?: number }>`
   z-index: ${({ $zIndex }) => $zIndex ?? Z_INDEX.modalBackdrop};

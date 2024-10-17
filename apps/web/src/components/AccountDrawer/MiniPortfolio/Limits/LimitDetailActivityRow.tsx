@@ -128,8 +128,8 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
         right={undefined}
         onClick={() => {
           openOffchainActivityModal(offchainOrderDetails, {
-            inputLogo: inputLogo ?? undefined,
-            outputLogo: outputLogo ?? undefined,
+            inputLogo: order?.logos?.[0],
+            outputLogo: order?.logos?.[1],
           })
         }}
       />

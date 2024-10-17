@@ -1,5 +1,5 @@
 import { formatEther as ethersFormatEther } from '@ethersproject/units'
-import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { getCurrencySymbolDisplayType } from 'constants/localCurrencies'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -513,7 +513,6 @@ interface FormatNumberOptions {
   locale?: Locale
   localCurrency?: FiatCurrency
   conversionRate?: number
-  forceShowCurrencySymbol?: boolean
 }
 
 function formatNumber({
@@ -523,17 +522,8 @@ function formatNumber({
   locale = DEFAULT_LOCALE,
   localCurrency = DEFAULT_LOCAL_CURRENCY,
   conversionRate,
-  forceShowCurrencySymbol = false,
 }: FormatNumberOptions): string {
   if (input === null || input === undefined) {
-    if (forceShowCurrencySymbol) {
-      const parts = new Intl.NumberFormat(locale, { style: 'currency', currency: localCurrency }).formatToParts(0)
-      const currencySymbol = parts.find((part) => part.type === 'currency')?.value
-      const isSymbolBeforeNumber = parts[0].type === 'currency'
-
-      return isSymbolBeforeNumber ? `${currencySymbol}${placeholder}` : `${placeholder}${currencySymbol}`
-    }
-
     return placeholder
   }
 
@@ -640,7 +630,7 @@ function formatPrice({
 }
 
 interface FormatTickPriceOptions {
-  price?: Price<Currency, Currency>
+  price?: Price<Token, Token>
   atLimit: { [bound in Bound]?: boolean | undefined }
   direction: Bound
   placeholder?: string

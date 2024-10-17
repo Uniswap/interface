@@ -300,14 +300,7 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
     <View
       style={
         {
-          "borderColor": "#131313",
-          "borderRadius": 4.8,
-          "borderStyle": "solid",
-          "borderWidth": 0,
           "flexDirection": "column",
-          "height": 16,
-          "overflow": "hidden",
-          "width": 16,
         }
       }
       testID="network-logo"
@@ -317,6 +310,18 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
         dir={null}
         style={
           {
+            "borderBottomColor": "rgba(19,19,19,1.00)",
+            "borderBottomLeftRadius": "4.8px",
+            "borderBottomRightRadius": "4.8px",
+            "borderBottomWidth": "0px",
+            "borderLeftColor": "rgba(19,19,19,1.00)",
+            "borderLeftWidth": "0px",
+            "borderRightColor": "rgba(19,19,19,1.00)",
+            "borderRightWidth": "0px",
+            "borderTopColor": "rgba(19,19,19,1.00)",
+            "borderTopLeftRadius": "4.8px",
+            "borderTopRightRadius": "4.8px",
+            "borderTopWidth": "0px",
             "height": "16px",
             "width": "16px",
           }
@@ -485,14 +490,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
     <View
       style={
         {
-          "borderColor": "#131313",
-          "borderRadius": 4.8,
-          "borderStyle": "solid",
-          "borderWidth": 0,
           "flexDirection": "column",
-          "height": 16,
-          "overflow": "hidden",
-          "width": 16,
         }
       }
       testID="network-logo"
@@ -502,6 +500,18 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
         dir={null}
         style={
           {
+            "borderBottomColor": "rgba(19,19,19,1.00)",
+            "borderBottomLeftRadius": "4.8px",
+            "borderBottomRightRadius": "4.8px",
+            "borderBottomWidth": "0px",
+            "borderLeftColor": "rgba(19,19,19,1.00)",
+            "borderLeftWidth": "0px",
+            "borderRightColor": "rgba(19,19,19,1.00)",
+            "borderRightWidth": "0px",
+            "borderTopColor": "rgba(19,19,19,1.00)",
+            "borderTopLeftRadius": "4.8px",
+            "borderTopRightRadius": "4.8px",
+            "borderTopWidth": "0px",
             "height": "16px",
             "width": "16px",
           }

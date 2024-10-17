@@ -5,8 +5,6 @@ import { useDispatch } from 'react-redux'
 import { Flex, IconProps, Text, TouchableArea, useSporeColors } from 'ui/src'
 import CopyIcon from 'ui/src/assets/icons/copy-sheets.svg'
 import { iconSizes } from 'ui/src/theme'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -14,6 +12,8 @@ import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { openUri } from 'uniswap/src/utils/linking'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 
 export enum LinkButtonType {
   Copy = 'copy',

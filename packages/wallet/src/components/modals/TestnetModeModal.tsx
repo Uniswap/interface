@@ -1,23 +1,21 @@
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
-import { Wrench } from 'ui/src/components/icons/Wrench'
-import { InfoLinkModal } from 'uniswap/src/components/modals/InfoLinkModal'
+import { Wrench } from 'ui/src/components/icons'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { InfoLinkModal } from 'wallet/src/components/modals/InfoLinkModal'
 
 type TestnetModeModalProps = {
   isOpen: boolean
+  onClose: () => void
   unsupported?: boolean
   descriptionCopy?: string
-  showCloseButton?: boolean
-  onClose: () => void
 }
 
 export function TestnetModeModal({
   isOpen,
+  onClose,
   descriptionCopy,
   unsupported = false,
-  showCloseButton = false,
-  onClose,
 }: TestnetModeModalProps): JSX.Element {
   const { t } = useTranslation()
   return (
@@ -35,7 +33,6 @@ export function TestnetModeModal({
           <Wrench color="$neutral1" size="$icon.24" />
         </Flex>
       }
-      showCloseButton={showCloseButton}
       onDismiss={onClose}
       onButtonPress={onClose}
     />

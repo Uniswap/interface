@@ -3,8 +3,8 @@ import { Shuffle } from 'ui/src/components/icons/Shuffle'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { NetworkChangedBridgeNotification as NetworkChangedBridgeNotificationType } from 'uniswap/src/features/notifications/types'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
+import { NetworkChangedBridgeNotification as NetworkChangedBridgeNotificationType } from 'wallet/src/features/notifications/types'
 
 export function NetworkChangedBridgeNotification({
   notification,

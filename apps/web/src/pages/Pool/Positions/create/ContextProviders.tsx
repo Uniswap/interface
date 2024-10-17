@@ -1,14 +1,10 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { useQuery } from '@tanstack/react-query'
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { CurrencyAmount } from '@uniswap/sdk-core'
 import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
 import { DepositState } from 'components/Liquidity/types'
 import { getProtocolItems } from 'components/Liquidity/utils'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
-import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import {
   CreatePositionContext,
   CreateTxContext,
@@ -32,15 +28,11 @@ import {
   PriceRangeState,
 } from 'pages/Pool/Positions/create/types'
 import { useMemo, useState } from 'react'
-import { useProvider } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
 import { CheckApprovalLPRequest, CreateLPPositionRequest } from 'uniswap/src/data/tradingApi/__generated__'
 import { CreatePositionTxAndGasInfo } from 'uniswap/src/features/transactions/liquidity/types'
-import { getWrapTransactionRequest } from 'uniswap/src/features/transactions/swap/hooks/useWrapTransactionRequest'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
-import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function CreatePositionContextProvider({
@@ -97,7 +89,6 @@ export function DepositContextProvider({ children }: { children: React.ReactNode
 
 export function CreateTxContextProvider({ children }: { children: React.ReactNode }) {
   const account = useAccount()
-  const provider = useProvider(account.chainId ?? UniverseChainId.Mainnet)
   const {
     priceRangeState: { fullRange },
     derivedPriceRangeInfo: { tickSpaceLimits, ticks },
@@ -109,60 +100,6 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
 
   const { derivedPositionInfo, positionState } = useCreatePositionContext()
 
-  const selectedNativeCurrencyAmount = useMemo(() => {
-    const selectedNativeCurrency = positionState.currencyInputs.TOKEN0?.isNative
-      ? positionState.currencyInputs.TOKEN0
-      : positionState.currencyInputs.TOKEN1?.isNative
-        ? positionState.currencyInputs.TOKEN1
-        : undefined
-    if (!selectedNativeCurrency) {
-      return undefined
-    }
-    if (currencyAmounts?.TOKEN0?.currency.equals(selectedNativeCurrency.wrapped)) {
-      return CurrencyAmount.fromFractionalAmount(
-        selectedNativeCurrency,
-        currencyAmounts.TOKEN0.numerator,
-        currencyAmounts.TOKEN0.denominator,
-      )
-    } else if (currencyAmounts?.TOKEN1?.currency.equals(selectedNativeCurrency.wrapped)) {
-      return CurrencyAmount.fromFractionalAmount(
-        selectedNativeCurrency,
-        currencyAmounts.TOKEN1.numerator,
-        currencyAmounts.TOKEN1.denominator,
-      )
-    }
-    return undefined
-  }, [currencyAmounts, positionState.currencyInputs])
-
-  const [wrappedNativeBalance] = useCurrencyBalances(
-    account.address,
-    [selectedNativeCurrencyAmount?.currency?.wrapped].filter(Boolean),
-  )
-
-  const { data: wrapTxRequest } = useQuery({
-    queryKey: ['CreateTxContextProvider-wrapTxRequest', derivedPositionInfo, account.address],
-    queryFn: async () => {
-      const txRequest = await getWrapTransactionRequest(
-        provider,
-        false,
-        account.chainId ?? UniverseChainId.Mainnet,
-        account.address,
-        WrapType.Wrap,
-        selectedNativeCurrencyAmount,
-      )
-      return {
-        ...txRequest,
-        value: BigNumber.from(txRequest?.value)?.toString(),
-      }
-    },
-    enabled: Boolean(
-      positionState.protocolVersion !== ProtocolVersion.V4 &&
-        account.address &&
-        selectedNativeCurrencyAmount &&
-        wrappedNativeBalance?.greaterThan(selectedNativeCurrencyAmount),
-    ),
-  })
-
   const addLiquidityApprovalParams: CheckApprovalLPRequest | undefined = useMemo(() => {
     const apiProtocolItems = getProtocolItems(positionState.protocolVersion)
     if (!account.address || !apiProtocolItems || !currencyAmounts?.TOKEN0 || !currencyAmounts?.TOKEN1) {
@@ -172,14 +109,12 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
       walletAddress: account.address,
       chainId: derivedPositionInfo.currencies.TOKEN0?.chainId,
       protocol: apiProtocolItems,
-      token0:
-        derivedPositionInfo.currencies.TOKEN0?.isNative && positionState.protocolVersion === ProtocolVersion.V4
-          ? ZERO_ADDRESS
-          : derivedPositionInfo.currencies.TOKEN0?.wrapped.address,
-      token1:
-        derivedPositionInfo.currencies.TOKEN1?.isNative && positionState.protocolVersion === ProtocolVersion.V4
-          ? ZERO_ADDRESS
-          : derivedPositionInfo.currencies.TOKEN1?.wrapped.address,
+      token0: derivedPositionInfo.currencies.TOKEN0?.isNative
+        ? ZERO_ADDRESS
+        : derivedPositionInfo.currencies.TOKEN0?.address,
+      token1: derivedPositionInfo.currencies.TOKEN1?.isNative
+        ? ZERO_ADDRESS
+        : derivedPositionInfo.currencies.TOKEN1?.address,
       amount0: currencyAmounts?.TOKEN0?.quotient.toString(),
       amount1: currencyAmounts?.TOKEN1?.quotient.toString(),
     }
@@ -226,11 +161,8 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
       return undefined
     }
     const { token0Approval, token1Approval, positionTokenApproval, permitData } = approvalCalldata ?? {}
-    const needsWrap = Boolean(
-      derivedPositionInfo.protocolVersion !== ProtocolVersion.V4 && selectedNativeCurrencyAmount,
-    )
     return {
-      simulateTransaction: !(permitData || token0Approval || token1Approval || positionTokenApproval || needsWrap),
+      simulateTransaction: !(permitData || token0Approval || token1Approval || positionTokenApproval),
       protocol: apiProtocolItems,
       walletAddress: account.address,
       chainId: derivedPositionInfo.currencies.TOKEN0?.chainId,
@@ -246,14 +178,12 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
         tickUpper,
         pool: {
           tickSpacing,
-          token0:
-            derivedPositionInfo.currencies.TOKEN0?.isNative && positionState.protocolVersion === ProtocolVersion.V4
-              ? ZERO_ADDRESS
-              : derivedPositionInfo.currencies.TOKEN0?.wrapped.address,
-          token1:
-            derivedPositionInfo.currencies.TOKEN1?.isNative && positionState.protocolVersion === ProtocolVersion.V4
-              ? ZERO_ADDRESS
-              : derivedPositionInfo.currencies.TOKEN1?.wrapped.address,
+          token0: derivedPositionInfo.currencies.TOKEN0.isNative
+            ? ZERO_ADDRESS
+            : derivedPositionInfo.currencies.TOKEN0.address,
+          token1: derivedPositionInfo.currencies.TOKEN1.isNative
+            ? ZERO_ADDRESS
+            : derivedPositionInfo.currencies.TOKEN1.address,
           fee: positionState.fee,
           hooks: positionState.hook,
         },
@@ -268,7 +198,6 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     ticks,
     tickSpaceLimits,
     approvalCalldata,
-    selectedNativeCurrencyAmount,
   ])
 
   const { data: createCalldata } = useCreateLpPositionCalldataQuery({
@@ -295,11 +224,6 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
       return undefined
     }
 
-    const validatedWrapRequest = validateTransactionRequest(wrapTxRequest)
-    if (wrapTxRequest && !validatedWrapRequest) {
-      return undefined
-    }
-
     const txRequest = validateTransactionRequest(createCalldata.create)
     if (!txRequest) {
       return undefined
@@ -311,7 +235,6 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
       protocolVersion: derivedPositionInfo.protocolVersion,
       createPositionRequestArgs: createCalldataQueryParams,
       action: {
-        nativeCurrencyAmount: selectedNativeCurrencyAmount,
         currency0Amount: currencyAmounts.TOKEN0,
         currency1Amount: currencyAmounts.TOKEN1,
         liquidityToken:
@@ -319,7 +242,6 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
             ? derivedPositionInfo.pair?.liquidityToken
             : undefined,
       },
-      wrapTxRequest: validatedWrapRequest,
       approveToken0Request: validatedApprove0Request,
       approveToken1Request: validatedApprove1Request,
       txRequest,
@@ -327,15 +249,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
       revocationTxRequest: undefined,
       permit: validatedPermitRequest,
     } satisfies CreatePositionTxAndGasInfo
-  }, [
-    approvalCalldata,
-    createCalldata,
-    createCalldataQueryParams,
-    derivedPositionInfo,
-    currencyAmounts,
-    wrapTxRequest,
-    selectedNativeCurrencyAmount,
-  ])
+  }, [approvalCalldata, createCalldata, createCalldataQueryParams, derivedPositionInfo, currencyAmounts])
 
   return <CreateTxContext.Provider value={validatedValue}>{children}</CreateTxContext.Provider>
 }

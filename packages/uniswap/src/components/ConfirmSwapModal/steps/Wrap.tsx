@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { StepRowProps, StepRowSkeleton } from 'uniswap/src/components/ConfirmSwapModal/steps/StepRowSkeleton'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { WrapTransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
+import { WrapTransactionStep } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
 
 export function WrapTransactionStepRow({ step, status }: StepRowProps<WrapTransactionStep>): JSX.Element {
   const { t } = useTranslation()

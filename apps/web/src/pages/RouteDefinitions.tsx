@@ -222,19 +222,19 @@ export const routes: RouteDefinition[] = [
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
-    path: '/positions/v2/:chainName/:pairAddress',
+    path: '/positions/v2/:pairAddress',
     getElement: () => <V2PositionPage />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
-    path: '/positions/v3/:chainName/:tokenId',
+    path: '/positions/v3/:tokenId',
     getElement: () => <PositionPage />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
-    path: '/positions/v4/:chainName/:tokenId',
+    path: '/positions/v4/:tokenId',
     getElement: () => <PositionPage />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,

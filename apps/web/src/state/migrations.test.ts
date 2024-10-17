@@ -18,6 +18,10 @@ const defaultState = {
   },
   application: {
     chainId: null,
+    fiatOnramp: {
+      availabilityChecked: false,
+      available: false,
+    },
     openModal: null,
     popupList: [],
   },

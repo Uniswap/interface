@@ -8,7 +8,7 @@ import {
   DecreasePositionTransactionStep,
   IncreasePositionTransactionStep,
   IncreasePositionTransactionStepAsync,
-} from 'uniswap/src/features/transactions/swap/types/steps'
+} from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
 
 const LPIcon = (): JSX.Element => (
   <Flex centered width="$spacing24" height="$spacing24" borderRadius="$roundedFull" backgroundColor="$DEP_blue400">

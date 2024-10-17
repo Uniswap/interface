@@ -61,7 +61,7 @@ export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
             <SpinningLoader color="$white" />
           </Flex>
         </WidthAnimator>
-        <Text variant="buttonLabel1" color="$white" animation="fastHeavy">
+        <Text variant="buttonLabel1" color="$white" animation="fastHeavy" x={fetchingQuotes ? 0 : -20}>
           {t('common.button.continue')}
         </Text>
       </Flex>

@@ -13,9 +13,6 @@ type InlineWarningCardProps = {
   heroIcon?: boolean
   checkboxLabel?: string
   onPressCtaButton?: () => void
-  checked?: boolean
-  setChecked?: (checked: boolean) => void
-  hideCtaIcon?: boolean
 }
 
 export function InlineWarningCard({
@@ -25,27 +22,20 @@ export function InlineWarningCard({
   checkboxLabel,
   heroIcon,
   onPressCtaButton,
-  checked,
-  setChecked,
-  hideCtaIcon,
 }: InlineWarningCardProps): JSX.Element {
   const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
-  const [checkedFallback, setCheckedFallback] = useState(false)
+  const [checked, setChecked] = useState(false)
   const { color, textColor, backgroundColor } = getWarningIconColors(severity)
   const WarningIcon = getWarningIcon(severity, tokenProtectionEnabled)
-  const shouldShowCtaIcon = !hideCtaIcon && severity !== WarningSeverity.Low && severity !== WarningSeverity.None
+  const shouldShowCtaIcon = severity !== WarningSeverity.Low && severity !== WarningSeverity.None
 
   const onCheckPressed = (isChecked: boolean): void => {
-    if (setChecked) {
-      setChecked(!isChecked)
-    } else {
-      setCheckedFallback(!isChecked)
-    }
+    setChecked(!isChecked)
   }
 
   const checkboxElement = checkboxLabel ? (
     <LabeledCheckbox
-      checked={checked ?? checkedFallback}
+      checked={checked}
       gap="$spacing8"
       px="$none"
       size="$icon.16"

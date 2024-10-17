@@ -1,3 +1,4 @@
+import { FeatureFlags } from "uniswap/src/features/gating/flags"
 import { getTestSelector } from "../utils"
 
 describe('Buy Crypto Form', () => {
@@ -7,7 +8,7 @@ describe('Buy Crypto Form', () => {
     cy.intercept('*/fiat-on-ramp/supported-countries*', { fixture: 'fiatOnRamp/supported-countries.json' })
     cy.intercept('*/fiat-on-ramp/supported-tokens*', { fixture: 'fiatOnRamp/supported-tokens.json' })
     cy.intercept('*/fiat-on-ramp/quote*', { fixture: 'fiatOnRamp/quotes.json' })
-    cy.visit('/buy')
+    cy.visit('/buy', {featureFlags: [{flag: FeatureFlags.ForAggregator, value: true}]})
   })
   
   it('quick amount select', () => {

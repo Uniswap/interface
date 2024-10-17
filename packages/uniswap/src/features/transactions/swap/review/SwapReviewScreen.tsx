@@ -10,8 +10,6 @@ import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/Progr
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
 import {
@@ -25,16 +23,15 @@ import {
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
 import { useAcceptedTrade } from 'uniswap/src/features/transactions/swap/hooks/useAcceptedTrade'
-import { useFeeOnTransferAmounts } from 'uniswap/src/features/transactions/swap/hooks/useFeeOnTransferAmount'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
 import { SubmitSwapButton } from 'uniswap/src/features/transactions/swap/review/SubmitSwapButton'
 import { SwapDetails } from 'uniswap/src/features/transactions/swap/review/SwapDetails'
 import { SwapErrorScreen } from 'uniswap/src/features/transactions/swap/review/SwapErrorScreen'
 import { TransactionAmountsReview } from 'uniswap/src/features/transactions/swap/review/TransactionAmountsReview'
-import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { SwapCallback } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { isValidSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { WrapCallback } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
+import { TransactionStep } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { isWrapAction } from 'uniswap/src/features/transactions/swap/utils/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -59,7 +56,6 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
   const [showWarningModal, setShowWarningModal] = useState(false)
   const [warningAcknowledged, setWarningAcknowledged] = useState(false)
   const [shouldSubmitTx, setShouldSubmitTx] = useState(false)
-  const [feeOnTransferWarningChecked, setFeeOnTransferWarningChecked] = useState(false)
 
   // Submission error UI is currently interface-only
   const [submissionError, setSubmissionError] = useState<Error>()
@@ -121,8 +117,6 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
 
   const acceptedDerivedSwapInfo = isWrap ? derivedSwapInfo : swapAcceptedDerivedSwapInfo
   const acceptedTrade = acceptedDerivedSwapInfo?.trade.trade
-
-  const feeOnTransferProps = useFeeOnTransferAmounts(acceptedDerivedSwapInfo)
 
   const onPrev = useCallback(() => {
     if (!focusOnCurrencyField) {
@@ -237,14 +231,8 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
     }
   }, [authTrigger, hapticFeedback, onFailure, submitTransaction, updateSwapForm])
 
-  const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
-  const isFeeOnTransferWarningBlocking = tokenProtectionEnabled && !feeOnTransferWarningChecked && !!feeOnTransferProps
   const submitButtonDisabled =
-    (!validSwap && !isWrap) ||
-    !!blockingWarning ||
-    newTradeRequiresAcceptance ||
-    isSubmitting ||
-    isFeeOnTransferWarningBlocking
+    (!validSwap && !isWrap) || !!blockingWarning || newTradeRequiresAcceptance || isSubmitting
 
   const showUniswapXSubmittingUI = isUniswapX(swapTxContext) && isSubmitting && !isInterface
 
@@ -354,9 +342,6 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
                 autoSlippageTolerance={autoSlippageTolerance}
                 customSlippageTolerance={customSlippageTolerance}
                 derivedSwapInfo={derivedSwapInfo}
-                feeOnTransferProps={feeOnTransferProps}
-                feeOnTransferWarningChecked={feeOnTransferWarningChecked}
-                setFeeOnTransferWarningChecked={setFeeOnTransferWarningChecked}
                 gasFee={gasFee}
                 newTradeRequiresAcceptance={newTradeRequiresAcceptance}
                 uniswapXGasBreakdown={uniswapXGasBreakdown}

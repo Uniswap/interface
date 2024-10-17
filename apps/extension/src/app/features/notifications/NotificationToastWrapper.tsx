@@ -1,15 +1,14 @@
-import { useSelectAddressNotifications } from 'uniswap/src/features/notifications/hooks'
-import { AppNotification, AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { useSelector } from 'react-redux'
 import { DappConnectedNotification } from 'wallet/src/features/notifications/components/DappConnectedNotification'
 import { DappDisconnectedNotification } from 'wallet/src/features/notifications/components/DappDisconnectedNotification'
 import { NotSupportedNetworkNotification } from 'wallet/src/features/notifications/components/NotSupportedNetworkNotification'
 import { PasswordChangedNotification } from 'wallet/src/features/notifications/components/PasswordChangedNotification'
 import { SharedNotificationToastRouter } from 'wallet/src/features/notifications/components/SharedNotificationToastRouter'
-import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
+import { selectActiveAccountNotifications } from 'wallet/src/features/notifications/selectors'
+import { AppNotification, AppNotificationType } from 'wallet/src/features/notifications/types'
 
 export function NotificationToastWrapper(): JSX.Element | null {
-  const activeAccountAddress = useActiveAccountAddress()
-  const notifications = useSelectAddressNotifications(activeAccountAddress)
+  const notifications = useSelector(selectActiveAccountNotifications)
   const notification = notifications?.[0]
 
   if (!notification) {

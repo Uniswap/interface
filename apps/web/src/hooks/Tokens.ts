@@ -53,12 +53,6 @@ export function useCurrencyInfo(
     const commonBase = getCommonBase(chainIdWithFallback, isNative, address)
 
     if (commonBase) {
-      // Related to TODO(WEB-5111)
-      // Some common base images are broken so this'll ensure we read from uniswap images
-      if (currencyInfo?.logoUrl) {
-        commonBase.logoUrl = currencyInfo.logoUrl
-      }
-
       return commonBase
     }
 

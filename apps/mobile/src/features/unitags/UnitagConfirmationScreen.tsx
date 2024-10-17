@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { UnitagStackScreenProp } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
+import { UnitagWithProfilePicture } from 'src/components/unitags/UnitagWithProfilePicture'
 import { AnimatePresence, Button, Flex, Text } from 'ui/src'
 import { AnimateInOrder } from 'ui/src/animations'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
@@ -20,7 +21,6 @@ import {
   SwapElement,
   TextElement,
 } from 'wallet/src/components/landing/elements'
-import { UnitagWithProfilePicture } from 'wallet/src/features/unitags/UnitagWithProfilePicture'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 
 export function UnitagConfirmationScreen({

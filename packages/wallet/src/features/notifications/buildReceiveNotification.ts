@@ -1,14 +1,14 @@
 import { AssetType } from 'uniswap/src/entities/assets'
 import {
-  AppNotificationType,
-  ReceiveCurrencyTxNotification,
-  ReceiveNFTNotification,
-} from 'uniswap/src/features/notifications/types'
-import {
   TransactionDetails,
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  AppNotificationType,
+  ReceiveCurrencyTxNotification,
+  ReceiveNFTNotification,
+} from 'wallet/src/features/notifications/types'
 
 /**
  * Based on notification type info, returns an AppNotification object for either NFT or Currency receive.

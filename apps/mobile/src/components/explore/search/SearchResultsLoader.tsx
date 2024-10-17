@@ -21,20 +21,20 @@ export const SearchResultsLoader = (): JSX.Element => {
       </Flex>
       <Flex gap="$spacing12">
         <SectionHeaderText
-          icon={<Person color="$neutral2" size="$icon.24" />}
-          title={t('explore.search.section.wallets')}
-        />
-        <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="$spacing24">
-          <Loader.Token />
-        </AnimatedFlex>
-      </Flex>
-      <Flex gap="$spacing12">
-        <SectionHeaderText
           icon={<Gallery color="$neutral2" size="$icon.24" />}
           title={t('explore.search.section.nft')}
         />
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="$spacing24">
           <Loader.Token repeat={2} />
+        </AnimatedFlex>
+      </Flex>
+      <Flex gap="$spacing12">
+        <SectionHeaderText
+          icon={<Person color="$neutral2" size="$icon.24" />}
+          title={t('explore.search.section.wallets')}
+        />
+        <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="$spacing24">
+          <Loader.Token />
         </AnimatedFlex>
       </Flex>
     </Flex>

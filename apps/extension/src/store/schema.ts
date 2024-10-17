@@ -1,5 +1,3 @@
-import { RankingType } from 'wallet/src/features/wallet/types'
-
 // only add fields that are persisted
 export const initialSchema = {
   dapp: {},
@@ -189,9 +187,4 @@ const v15SchemaIntermediate = {
 delete v15SchemaIntermediate.fiatCurrencySettings
 export const v15Schema = v15SchemaIntermediate
 
-export const v16Schema = {
-  ...v15Schema,
-  wallet: { ...v15Schema.wallet, settings: { ...v15Schema.wallet.settings, tokensOrderBy: RankingType.Volume } },
-}
-
-export const getSchema = (): typeof v16Schema => v16Schema
+export const getSchema = (): typeof v15Schema => v15Schema

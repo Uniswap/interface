@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 
 export function useCopyToClipboard(): ({
   textToCopy,

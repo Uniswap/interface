@@ -10,8 +10,6 @@ export enum MobileEventName {
   ExploreFilterSelected = 'Explore Filter Selected',
   ExploreSearchResultClicked = 'Explore Search Result Clicked',
   ExploreTokenItemSelected = 'Explore Token Item Selected',
-  ExploreNetworkSelected = 'Explore Network Selected',
-  ExploreSearchNetworkSelected = 'Explore Search Network Selected',
   FavoriteItem = 'Favorite Item',
   FiatOnRampQuickActionButtonPressed = 'Fiat OnRamp QuickAction Button Pressed',
   HomeExploreTokenItemSelected = 'Home Explore Token Item Selected',

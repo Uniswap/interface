@@ -5,16 +5,15 @@
 import { useCallback, useEffect } from 'react'
 import { Directions, FlingGestureHandler, FlingGestureHandlerGestureEvent, State } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { ElementAfterText, Flex, Text, TouchableArea, isWeb, styled, useShadowPropsShort } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, spacing } from 'ui/src/theme'
-import { useSelectAddressNotifications } from 'uniswap/src/features/notifications/hooks'
-import { popNotification, setNotificationViewed } from 'uniswap/src/features/notifications/slice'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useTimeout } from 'utilities/src/time/timing'
-import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
+import { selectActiveAccountNotifications } from 'wallet/src/features/notifications/selectors'
+import { popNotification, setNotificationViewed } from 'wallet/src/features/notifications/slice'
 
 const NOTIFICATION_HEIGHT = 64
 
@@ -81,8 +80,7 @@ export function NotificationToast({
 }: NotificationToastProps): JSX.Element {
   const shadowProps = useShadowPropsShort()
   const dispatch = useDispatch()
-  const activeAccountAddress = useActiveAccountAddress()
-  const notifications = useSelectAddressNotifications(activeAccountAddress)
+  const notifications = useSelector(selectActiveAccountNotifications)
   const currentNotification = notifications?.[0]
   const hasQueuedNotification = !!notifications?.[1]
 

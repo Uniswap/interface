@@ -14,7 +14,6 @@ export enum DynamicConfigs {
 
   // Web
   QuickRouteChains = 'quick_route_chains',
-  AstroChain = 'astro_chain',
 }
 
 // Config values go here for easy access
@@ -75,10 +74,6 @@ export enum QuickRouteChainsConfigKey {
   Chains = 'quick_route_chains',
 }
 
-export enum AstroChainConfigKey {
-  Url = 'url',
-}
-
 export type DynamicConfigKeys = {
   // Shared
   [DynamicConfigs.Swap]: SwapConfigKey
@@ -90,5 +85,4 @@ export type DynamicConfigKeys = {
 
   // Web
   [DynamicConfigs.QuickRouteChains]: QuickRouteChainsConfigKey
-  [DynamicConfigs.AstroChain]: AstroChainConfigKey
 }

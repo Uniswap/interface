@@ -1,5 +1,5 @@
-import { WalletKitTypes } from '@reown/walletkit'
 import { PairingTypes, ProposalTypes, SessionTypes, SignClientTypes } from '@walletconnect/types'
+import { Web3WalletTypes } from '@walletconnect/web3wallet'
 import { utils } from 'ethers'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { SignRequest, TransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
@@ -78,7 +78,7 @@ export const getAccountAddressFromEIP155String = (account: string): Address | nu
  * @param {number} internalId id for the WalletConnect signature request
  * @param {ChainId} chainId chain the signature is being requested on
  * @param {SignClientTypes.Metadata} dapp metadata for the dapp requesting the signature
- * @param {WalletKitTypes.SessionRequest['params']['request']['params']} requestParams parameters of the request
+ * @param {Web3WalletTypes.SessionRequest['params']['request']['params']} requestParams parameters of the request
  * @returns {{Address, SignRequest}} address of the account receiving the request and formatted SignRequest object
  */
 export const parseSignRequest = (
@@ -87,7 +87,7 @@ export const parseSignRequest = (
   internalId: number,
   chainId: UniverseChainId,
   dapp: SignClientTypes.Metadata,
-  requestParams: WalletKitTypes.SessionRequest['params']['request']['params'],
+  requestParams: Web3WalletTypes.SessionRequest['params']['request']['params'],
 ): { account: Address; request: SignRequest } => {
   const { address, rawMessage, message } = getAddressAndMessageToSign(method, requestParams)
   return {
@@ -120,7 +120,7 @@ export const parseSignRequest = (
  * @param {number} internalId id for the WalletConnect transaction request
  * @param {UniverseChainId} chainId chain the signature is being requested on
  * @param {SignClientTypes.Metadata} dapp metadata for the dapp requesting the transaction
- * @param {WalletKitTypes.SessionRequest['params']['request']['params']} requestParams parameters of the request
+ * @param {Web3WalletTypes.SessionRequest['params']['request']['params']} requestParams parameters of the request
  * @returns {{Address, TransactionRequest}} address of the account receiving the request and formatted TransactionRequest object
  */
 export const parseTransactionRequest = (
@@ -129,7 +129,7 @@ export const parseTransactionRequest = (
   internalId: number,
   chainId: UniverseChainId,
   dapp: SignClientTypes.Metadata,
-  requestParams: WalletKitTypes.SessionRequest['params']['request']['params'],
+  requestParams: Web3WalletTypes.SessionRequest['params']['request']['params'],
 ): { account: Address; request: TransactionRequest } => {
   // Omit gasPrice and nonce in tx sent from dapp since it is calculated later
   const { from, to, data, gasLimit, value } = requestParams[0]
@@ -159,27 +159,6 @@ export const parseTransactionRequest = (
   }
 }
 
-export function isHexString(value: string): boolean {
-  // Check if it starts with '0x' and has an even length after the prefix
-  return /^0x[0-9a-fA-F]+$/.test(value)
-}
-
-export function decodeMessage(value: string): string {
-  if (isHexString(value)) {
-    try {
-      return utils.toUtf8String(value)
-    } catch (error) {
-      logger.error(error, {
-        tags: { file: 'walletConnect/util.ts', function: 'decodeMessage' },
-      })
-
-      return value
-    }
-  } else {
-    return value
-  }
-}
-
 /**
  * Gets the address receiving the request, raw message, decoded message to sign based on the EthSignMethod.
  * `personal_sign` params are ordered as [message, account]
@@ -190,11 +169,11 @@ export function decodeMessage(value: string): string {
 // eslint-disable-next-line consistent-return
 export function getAddressAndMessageToSign(
   ethMethod: EthSignMethod,
-  params: WalletKitTypes.SessionRequest['params']['request']['params'],
+  params: Web3WalletTypes.SessionRequest['params']['request']['params'],
 ): { address: string; rawMessage: string; message: string | null } {
   switch (ethMethod) {
     case EthMethod.PersonalSign:
-      return { address: params[1], rawMessage: params[0], message: decodeMessage(params[0]) }
+      return { address: params[1], rawMessage: params[0], message: utils.toUtf8String(params[0]) }
     case EthMethod.EthSign:
       return { address: params[0], rawMessage: params[1], message: utils.toUtf8String(params[1]) }
     case EthMethod.SignTypedData:
@@ -205,7 +184,7 @@ export function getAddressAndMessageToSign(
 
 export async function pairWithWalletConnectURI(uri: string): Promise<void | PairingTypes.Struct> {
   try {
-    return await wcWeb3Wallet.pair({ uri })
+    return await wcWeb3Wallet.core.pairing.pair({ uri })
   } catch (error) {
     logger.error(error, {
       tags: { file: 'walletConnectV2/utils', function: 'pairWithWalletConnectURI' },

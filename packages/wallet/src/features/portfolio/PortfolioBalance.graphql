@@ -1,0 +1,23 @@
+query PortfolioBalance(
+  $owner: String!
+  $valueModifiers: [PortfolioValueModifier!]
+) {
+  portfolios(
+    ownerAddresses: [$owner]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
+    valueModifiers: $valueModifiers
+  ) {
+    id
+    tokensTotalDenominatedValue {
+      value
+    }
+    tokensTotalDenominatedValueChange(duration: DAY) {
+      absolute {
+        value
+      }
+      percentage {
+        value
+      }
+    }
+  }
+}

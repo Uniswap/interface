@@ -142,14 +142,7 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
           <View
             style={
               {
-                "borderColor": "#FFFFFF",
-                "borderRadius": 6.8999999999999995,
-                "borderStyle": "solid",
-                "borderWidth": 1.5,
                 "flexDirection": "column",
-                "height": 23,
-                "overflow": "hidden",
-                "width": 23,
               }
             }
             testID="network-logo"
@@ -159,8 +152,20 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
               dir={null}
               style={
                 {
-                  "height": "20px",
-                  "width": "20px",
+                  "borderBottomColor": "rgba(255,255,255,1.00)",
+                  "borderBottomLeftRadius": "6.8999999999999995px",
+                  "borderBottomRightRadius": "6.8999999999999995px",
+                  "borderBottomWidth": "1.5px",
+                  "borderLeftColor": "rgba(255,255,255,1.00)",
+                  "borderLeftWidth": "1.5px",
+                  "borderRightColor": "rgba(255,255,255,1.00)",
+                  "borderRightWidth": "1.5px",
+                  "borderTopColor": "rgba(255,255,255,1.00)",
+                  "borderTopLeftRadius": "6.8999999999999995px",
+                  "borderTopRightRadius": "6.8999999999999995px",
+                  "borderTopWidth": "1.5px",
+                  "height": "23px",
+                  "width": "23px",
                 }
               }
             >
@@ -435,14 +440,7 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       <View
         style={
           {
-            "borderColor": "#FFFFFF",
-            "borderRadius": 4.8,
-            "borderStyle": "solid",
-            "borderWidth": 0,
             "flexDirection": "column",
-            "height": 16,
-            "overflow": "hidden",
-            "width": 16,
           }
         }
         testID="network-logo"
@@ -452,6 +450,18 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
           dir={null}
           style={
             {
+              "borderBottomColor": "rgba(255,255,255,1.00)",
+              "borderBottomLeftRadius": "4.8px",
+              "borderBottomRightRadius": "4.8px",
+              "borderBottomWidth": "0px",
+              "borderLeftColor": "rgba(255,255,255,1.00)",
+              "borderLeftWidth": "0px",
+              "borderRightColor": "rgba(255,255,255,1.00)",
+              "borderRightWidth": "0px",
+              "borderTopColor": "rgba(255,255,255,1.00)",
+              "borderTopLeftRadius": "4.8px",
+              "borderTopRightRadius": "4.8px",
+              "borderTopWidth": "0px",
               "height": "16px",
               "width": "16px",
             }
@@ -670,14 +680,7 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       <View
         style={
           {
-            "borderColor": "#FFFFFF",
-            "borderRadius": 4.8,
-            "borderStyle": "solid",
-            "borderWidth": 0,
             "flexDirection": "column",
-            "height": 16,
-            "overflow": "hidden",
-            "width": 16,
           }
         }
         testID="network-logo"
@@ -687,6 +690,18 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
           dir={null}
           style={
             {
+              "borderBottomColor": "rgba(255,255,255,1.00)",
+              "borderBottomLeftRadius": "4.8px",
+              "borderBottomRightRadius": "4.8px",
+              "borderBottomWidth": "0px",
+              "borderLeftColor": "rgba(255,255,255,1.00)",
+              "borderLeftWidth": "0px",
+              "borderRightColor": "rgba(255,255,255,1.00)",
+              "borderRightWidth": "0px",
+              "borderTopColor": "rgba(255,255,255,1.00)",
+              "borderTopLeftRadius": "4.8px",
+              "borderTopRightRadius": "4.8px",
+              "borderTopWidth": "0px",
               "height": "16px",
               "width": "16px",
             }

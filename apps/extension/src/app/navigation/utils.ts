@@ -68,13 +68,13 @@ export async function focusOrCreateOnboardingTab(page?: string): Promise<void> {
   })
 }
 
-export async function focusOrCreateUnitagTab(page?: string): Promise<void> {
+export async function focusOrCreateUnitagClaimTab(): Promise<void> {
   const extension = await chrome.management.getSelf()
 
   const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/unitagClaim.html*` })
   const tab = tabs[0]
 
-  const url = `unitagClaim.html#/${page ?? ''}`
+  const url = 'unitagClaim.html#/'
 
   if (!tab?.id) {
     await chrome.tabs.create({ url })
@@ -204,23 +204,4 @@ export async function getCurrentTabAndWindowId(): Promise<{ tabId: number; windo
     throw new Error('No active tab found or missing tab/window ID')
   }
   return { tabId: tabs[0].id, windowId: tabs[0].windowId }
-}
-
-export async function closeCurrentTab(): Promise<void> {
-  try {
-    const tab = await chrome.tabs.getCurrent()
-
-    if (tab?.id) {
-      await chrome.tabs.remove(tab.id)
-    } else {
-      throw new Error('chrome.tabs.getCurrent did not return a tab with an id')
-    }
-  } catch (e) {
-    logger.error(e, {
-      tags: {
-        file: 'utils.ts',
-        function: 'closeCurrentTab',
-      },
-    })
-  }
 }

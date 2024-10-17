@@ -13,6 +13,8 @@ import {
 } from 'uniswap/src/components/TokenSelector/types'
 import { useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
 import { GqlResult } from 'uniswap/src/data/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 function useTokenSectionsForSend({
   activeAccountAddress,
@@ -28,10 +30,7 @@ function useTokenSectionsForSend({
   const loading = portfolioTokenOptionsLoading
   const error = !portfolioTokenOptions && portfolioTokenOptionsError
 
-  const sections = useTokenOptionsSection({
-    sectionKey: TokenOptionSection.YourTokens,
-    tokenOptions: portfolioTokenOptions,
-  })
+  const sections = useTokenOptionsSection(TokenOptionSection.YourTokens, portfolioTokenOptions)
 
   return useMemo(
     () => ({
@@ -46,6 +45,8 @@ function useTokenSectionsForSend({
 
 function EmptyList({ onEmptyActionPress }: { onEmptyActionPress?: () => void }): JSX.Element {
   const { t } = useTranslation()
+  // This flag is enabled only for supported countries.
+  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
 
   return (
     <Flex>
@@ -53,9 +54,13 @@ function EmptyList({ onEmptyActionPress }: { onEmptyActionPress?: () => void }):
       <Flex pt="$spacing16" px="$spacing16">
         <BaseCard.EmptyState
           buttonLabel={
-            onEmptyActionPress ? t('tokens.selector.empty.buy.title') : t('tokens.selector.empty.receive.title')
+            forAggregatorEnabled && onEmptyActionPress
+              ? t('tokens.selector.empty.buy.title')
+              : t('tokens.selector.empty.receive.title')
           }
-          description={t('tokens.selector.empty.buy.message')}
+          description={
+            forAggregatorEnabled ? t('tokens.selector.empty.buy.message') : t('tokens.selector.empty.receive.message')
+          }
           title={t('tokens.selector.empty.title')}
           onPress={onEmptyActionPress}
         />

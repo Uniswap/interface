@@ -1,8 +1,5 @@
-import { StreamResponse, UnaryResponse } from '@connectrpc/connect'
 import { createConnectTransport } from '@connectrpc/connect-web'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { BASE_UNISWAP_HEADERS } from 'uniswap/src/data/apiClients/createApiClient'
-import { isMobileApp } from 'utilities/src/platform'
 
 /**
  * Connectrpc transport for Uniswap REST BE service
@@ -11,18 +8,6 @@ import { isMobileApp } from 'utilities/src/platform'
 export const uniswapGetTransport = createConnectTransport({
   baseUrl: uniswapUrls.apiBaseUrlV2,
   useHttpGet: true,
-  // Mobile app needs to manually set headers
-  interceptors: isMobileApp
-    ? [
-        (next) =>
-          (request): Promise<UnaryResponse | StreamResponse> => {
-            Object.entries(BASE_UNISWAP_HEADERS).forEach(([key, value]) => {
-              request.header.set(key, value)
-            })
-            return next(request)
-          },
-      ]
-    : [],
 })
 
 // The string arg to pass to the BE for chainId to get data for all networks

@@ -5,7 +5,6 @@ import {
   handleOnChainStep,
   handleSignatureStep,
 } from 'state/sagas/transactions/utils'
-import { handleWrapStep } from 'state/sagas/transactions/wrapSaga'
 import {
   DecreaseLiquidityTransactionInfo,
   IncreaseLiquidityTransactionInfo,
@@ -15,16 +14,15 @@ import invariant from 'tiny-invariant'
 import { call, put } from 'typed-redux-saga'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { LiquidityAction, ValidatedLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
+import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import {
   DecreasePositionTransactionStep,
   IncreasePositionTransactionStep,
   IncreasePositionTransactionStepAsync,
   TransactionStep,
   TransactionStepType,
-  WrapTransactionStep,
-} from 'uniswap/src/features/transactions/swap/types/steps'
-import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
-import { generateTransactionSteps } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
+  generateTransactionSteps,
+} from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { currencyId } from 'utils/currencyId'
@@ -41,17 +39,12 @@ type LiquidityParams = {
 }
 
 function* getLiquidityTxRequest(
-  step:
-    | IncreasePositionTransactionStep
-    | IncreasePositionTransactionStepAsync
-    | DecreasePositionTransactionStep
-    | WrapTransactionStep,
+  step: IncreasePositionTransactionStep | IncreasePositionTransactionStepAsync | DecreasePositionTransactionStep,
   signature: string | undefined,
 ) {
   if (
     step.type === TransactionStepType.IncreasePositionTransaction ||
-    step.type === TransactionStepType.DecreasePositionTransaction ||
-    step.type === TransactionStepType.WrapTransaction
+    step.type === TransactionStepType.DecreasePositionTransaction
   ) {
     return step.txRequest
   }
@@ -71,11 +64,7 @@ function* getLiquidityTxRequest(
 }
 
 interface HandlePositionStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
-  step:
-    | IncreasePositionTransactionStep
-    | IncreasePositionTransactionStepAsync
-    | DecreasePositionTransactionStep
-    | WrapTransactionStep
+  step: IncreasePositionTransactionStep | IncreasePositionTransactionStepAsync | DecreasePositionTransactionStep
   signature?: string
   action: LiquidityAction
 }
@@ -114,9 +103,6 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
           signature = yield* call(handleSignatureStep, { account, step, setCurrentStep })
           break
         }
-        case TransactionStepType.WrapTransaction:
-          yield* call(handleWrapStep, { account, step, setCurrentStep, action })
-          break
         case TransactionStepType.IncreasePositionTransaction:
         case TransactionStepType.IncreasePositionTransactionAsync:
         case TransactionStepType.DecreasePositionTransaction:

@@ -1,7 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Currency, Percent, Price } from '@uniswap/sdk-core'
-import { Position as V3Position } from '@uniswap/v3-sdk'
-import { Position as V4Position } from '@uniswap/v4-sdk'
+import { Percent, Price, Token } from '@uniswap/sdk-core'
+import { Position } from '@uniswap/v3-sdk'
 import RangeBadge from 'components/Badge/RangeBadge'
 import HoverInlineText from 'components/HoverInlineText'
 import Loader from 'components/Icons/LoadingSpinner'
@@ -111,14 +110,12 @@ interface PositionListItemProps {
   tickUpper: number
 }
 
-export interface PriceOrdering {
-  priceLower?: Price<Currency, Currency>
-  priceUpper?: Price<Currency, Currency>
-  quote?: Currency
-  base?: Currency
-}
-
-export function getPriceOrderingFromPositionForUI(position?: V3Position | V4Position): PriceOrdering {
+export function getPriceOrderingFromPositionForUI(position?: Position): {
+  priceLower?: Price<Token, Token>
+  priceUpper?: Price<Token, Token>
+  quote?: Token
+  base?: Token
+} {
   if (!position) {
     return {}
   }
@@ -189,7 +186,7 @@ export default function PositionListItem({
 
   const position = useMemo(() => {
     if (pool) {
-      return new V3Position({ pool, liquidity: liquidity.toString(), tickLower, tickUpper })
+      return new Position({ pool, liquidity: liquidity.toString(), tickLower, tickUpper })
     }
     return undefined
   }, [liquidity, pool, tickLower, tickUpper])

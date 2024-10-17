@@ -10,7 +10,6 @@ import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, ViewProps } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { spacing } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
@@ -116,15 +115,15 @@ export const TokenItem = memo(function _TokenItem({
       >
         {overlay}
         <AnimatedFlex grow row alignItems="center" gap="$spacing12" px="$spacing24" py="$spacing8" {...containerProps}>
-          <Flex centered row gap="$spacing4">
+          <Flex centered row gap="$spacing4" overflow="hidden">
             {!hideNumberedList && (
-              <Flex minWidth={spacing.spacing16} mr="$spacing8">
+              <Flex minWidth={16}>
                 <Text color="$neutral2" variant="buttonLabel2">
                   {index + 1}
                 </Text>
               </Flex>
             )}
-            <TokenLogo chainId={chainId} name={name} symbol={symbol} url={logoUrl} />
+            <TokenLogo name={name} symbol={symbol} url={logoUrl} />
           </Flex>
           <Flex fill shrink gap="$spacing2">
             <Text numberOfLines={1} variant="body1">

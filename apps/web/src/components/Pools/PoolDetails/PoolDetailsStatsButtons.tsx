@@ -155,7 +155,10 @@ function findMatchingPosition(positions: PositionInfo[], token0?: Token, token1?
 
 export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, loading }: PoolDetailsStatsButtonsProps) {
   const account = useAccount()
-  const { positions: userOwnedPositions } = useMultiChainPositions(account.address ?? '')
+  const { positions: userOwnedPositions } = useMultiChainPositions(
+    account.address ?? '',
+    chainId ? [chainId] : undefined,
+  )
   const position = userOwnedPositions && findMatchingPosition(userOwnedPositions, token0, token1, feeTier)
   const tokenId = position?.details.tokenId
   const switchChain = useSwitchChain()

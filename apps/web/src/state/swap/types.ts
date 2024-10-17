@@ -104,7 +104,6 @@ export interface SerializedCurrencyState {
   value?: string
   field?: string
   chainId?: number
-  outputChainId?: number
 }
 
 // shared state between Swap and Limit

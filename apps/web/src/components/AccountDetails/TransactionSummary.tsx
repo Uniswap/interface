@@ -482,8 +482,5 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.DECREASE_LIQUIDITY:
       return <DecreaseLiquiditySummary info={info} />
-
-    case TransactionType.BRIDGE:
-      return <></> // Bridging was launched after this code became deprecated
   }
 }

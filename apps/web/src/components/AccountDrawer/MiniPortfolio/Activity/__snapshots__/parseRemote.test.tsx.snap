@@ -14,7 +14,6 @@ Object {
   "status": "CONFIRMED",
   "timestamp": 10000,
   "title": "Minted",
-  "type": "MINT",
 }
 `;
 
@@ -30,7 +29,6 @@ Object {
   "status": "CONFIRMED",
   "timestamp": 10000,
   "title": "Unknown Approval",
-  "type": "APPROVE",
 }
 `;
 
@@ -46,7 +44,6 @@ Object {
   "status": "CONFIRMED",
   "timestamp": 10000,
   "title": "Unknown Approval",
-  "type": "APPROVE",
 }
 `;
 
@@ -66,7 +63,6 @@ Object {
   "status": "CONFIRMED",
   "timestamp": 10000,
   "title": "Received",
-  "type": "RECEIVE",
 }
 `;
 
@@ -106,7 +102,6 @@ Object {
   "status": "CONFIRMED",
   "timestamp": 10000,
   "title": "Wrapped",
-  "type": "LEND",
 }
 `;
 
@@ -265,7 +260,6 @@ Object {
   "status": "CONFIRMED",
   "timestamp": 10000,
   "title": "Purchased",
-  "type": "RECEIVE",
 }
 `;
 
@@ -283,7 +277,6 @@ Object {
   "status": "CONFIRMED",
   "timestamp": 10000,
   "title": "Bought",
-  "type": "SWAP",
 }
 `;
 
@@ -315,7 +308,6 @@ Object {
   "status": "CONFIRMED",
   "timestamp": 10000,
   "title": "Received",
-  "type": "RECEIVE",
 }
 `;
 
@@ -357,8 +349,7 @@ Object {
   "nonce": 12345,
   "status": "CONFIRMED",
   "timestamp": 10000,
-  "title": "Removed liquidity",
-  "type": "RECEIVE",
+  "title": "Removed Liquidity",
 }
 `;
 
@@ -390,7 +381,6 @@ Object {
   "status": "CONFIRMED",
   "timestamp": 10000,
   "title": "Sent",
-  "type": "SEND",
 }
 `;
 
@@ -432,7 +422,6 @@ Object {
   "status": "CONFIRMED",
   "timestamp": 10000,
   "title": "Swapped",
-  "type": "SWAP",
 }
 `;
 
@@ -495,7 +484,6 @@ Object {
   "status": "CONFIRMED",
   "timestamp": 10000,
   "title": "Swapped",
-  "type": "SWAP_ORDER",
 }
 `;
 
@@ -526,6 +514,5 @@ Object {
   "status": "CONFIRMED",
   "timestamp": 10000,
   "title": "Approved",
-  "type": "APPROVE",
 }
 `;

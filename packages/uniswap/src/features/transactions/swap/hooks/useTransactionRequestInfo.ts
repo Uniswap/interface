@@ -25,7 +25,6 @@ import { SwapGasFeeEstimation } from 'uniswap/src/features/transactions/swap/typ
 import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
-  SWAP_GAS_URGENCY_OVERRIDE,
   getBridgeQuoteFromResponse,
   getClassicQuoteFromResponse,
   isClassicQuote,
@@ -120,7 +119,6 @@ export function useTransactionRequestInfo({
       deadline,
       refreshGasPrice: true,
       gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])],
-      urgency: SWAP_GAS_URGENCY_OVERRIDE,
       v4Enabled,
     }
 

@@ -4,6 +4,8 @@ import { PoolDetailsPositionsTable } from 'components/Pools/PoolDetails/PoolDeta
 import { PoolDetailsTransactionsTable } from 'components/Pools/PoolDetails/PoolDetailsTransactionsTable'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
+import { useChainFromUrlParam } from 'constants/chains'
+import { getSupportedGraphQlChain } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
 import styled from 'lib/styled-components'
 import { useMemo, useState } from 'react'
@@ -34,8 +36,9 @@ export function PoolDetailsTableTab({
   protocolVersion?: ProtocolVersion
 }) {
   const [activeTable, setActiveTable] = useState<PoolDetailsTableTabs>(PoolDetailsTableTabs.TRANSACTIONS)
+  const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
   const account = useAccount()
-  const { positions } = useMultiChainPositions(account.address ?? '')
+  const { positions } = useMultiChainPositions(account.address ?? '', [chain.id])
   const positionsInThisPool = useMemo(
     () =>
       positions?.filter(

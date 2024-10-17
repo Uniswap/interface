@@ -105,8 +105,7 @@ function TokenWarningModalContent({
               : // otherwise, Acknowledge button should say "Continue"
                 t('common.button.continue')
         }
-        icon={<WarningIcon heroIcon severity={severity} size="$icon.24" />}
-        backgroundIconColor={false}
+        icon={<WarningIcon severity={severity} size="$icon.24" />}
         severity={severity}
         titleComponent={
           <Text color={titleTextColor} variant="subheading1">
@@ -291,13 +290,7 @@ function FeeRow({ feeType, feeBps }: { feeType: 'buy' | 'sell'; feeBps?: BigNumb
   )
 }
 
-export function FeeDisplayTable({
-  buyFeeBps,
-  sellFeeBps,
-}: {
-  buyFeeBps?: BigNumber
-  sellFeeBps?: BigNumber
-}): JSX.Element {
+function FeeDisplayTable({ buyFeeBps, sellFeeBps }: { buyFeeBps?: BigNumber; sellFeeBps?: BigNumber }): JSX.Element {
   return (
     <WarningModalInfoContainer>
       <FeeRow feeBps={buyFeeBps} feeType="buy" />

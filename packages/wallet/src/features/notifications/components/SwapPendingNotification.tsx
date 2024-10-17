@@ -1,10 +1,10 @@
 import { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { SpinningLoader } from 'ui/src'
-import { SwapPendingNotification as SwapPendingNotificationType } from 'uniswap/src/features/notifications/types'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
+import { SwapPendingNotification as SwapPendingNotificationType } from 'wallet/src/features/notifications/types'
 
 // We roughly track the L1 block time, accuracy isnt crucial because we have other pending states,
 // and when a txn confirms it ll replace this toast.

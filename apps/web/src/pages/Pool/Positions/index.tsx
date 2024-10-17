@@ -1,13 +1,8 @@
 /* eslint-disable-next-line no-restricted-imports */
-import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { Position, PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
-import { PositionInfo } from 'components/Liquidity/types'
-import { parseRestPosition } from 'components/Liquidity/utils'
-import { LoadingRows } from 'components/Loader/styled'
-import { getChain } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { PositionsHeader } from 'pages/Pool/Positions/PositionsHeader'
-import { LoadingRow } from 'pages/Pool/Positions/shared'
 import { useCallback, useMemo, useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
@@ -37,22 +32,18 @@ export default function Positions() {
   const { address } = account
   const [currentPage, setCurrentPage] = useState(0)
 
-  const { data, isLoading: positionsLoading } = useGetPositionsQuery({
+  const { data } = useGetPositionsQuery({
     address,
-    chainIds: chainFilter ? [chainFilter] : undefined,
-    positionStatuses: statusFilter,
-    protocolVersions: versionFilter,
   })
 
   const onNavigateToPosition = useCallback(
-    (position: PositionInfo) => {
-      const chainInfo = getChain({ chainId: position.currency0Amount.currency.chainId })
-      if (position.version === ProtocolVersion.V2) {
-        navigate(`/positions/v2/${chainInfo.urlParam}/${position.liquidityToken.address}`)
-      } else if (position.version === ProtocolVersion.V3) {
-        navigate(`/positions/v3/${chainInfo.urlParam}/${position.tokenId}`)
-      } else if (position.version === ProtocolVersion.V4) {
-        navigate(`/positions/v4/${chainInfo.urlParam}/${position.tokenId}`)
+    (position: Position) => {
+      if (position.position.case === 'v2Pair' && position.position.value.liquidityToken) {
+        navigate(`/positions/v2/${position.position.value.liquidityToken.address}`)
+      } else if (position.position.case === 'v3Position') {
+        navigate(`/positions/v3/${position.position.value.tokenId}`)
+      } else if (position.position.case === 'v4Position') {
+        navigate(`/positions/v4/${position.position.value.poolPosition?.tokenId}`)
       } else {
         logger.error('Invalid position', {
           tags: { file: 'Positions/index.tsx', function: 'onPress' },
@@ -64,7 +55,7 @@ export default function Positions() {
 
   const currentPageItems = useMemo(() => {
     const start = currentPage * PAGE_SIZE
-    return (data?.positions.slice(start, start + PAGE_SIZE) ?? []).map((position) => parseRestPosition(position))
+    return data?.positions.slice(start, start + PAGE_SIZE) ?? []
   }, [currentPage, data?.positions])
   const pageCount = data?.positions ? Math.ceil(data?.positions.length / PAGE_SIZE) : undefined
 
@@ -95,33 +86,16 @@ export default function Positions() {
       <Flex gap="$gap16" mb="$spacing16">
         {currentPageItems.map((position, index) => {
           return (
-            position && (
-              <LiquidityPositionCard
-                key={`LiquidityPositionCard-${index}`}
-                liquidityPosition={position}
-                {...ClickableTamaguiStyle}
-                onPress={() => onNavigateToPosition(position)}
-              />
-            )
+            <LiquidityPositionCard
+              key={`LiquidityPositionCard-${index}`}
+              liquidityPosition={position}
+              {...ClickableTamaguiStyle}
+              onPress={() => onNavigateToPosition(position)}
+            />
           )
         })}
       </Flex>
-      {!data && positionsLoading && (
-        <LoadingRows>
-          <LoadingRow />
-          <LoadingRow />
-          <LoadingRow />
-          <LoadingRow />
-          <LoadingRow />
-          <LoadingRow />
-          <LoadingRow />
-          <LoadingRow />
-          <LoadingRow />
-          <LoadingRow />
-          <LoadingRow />
-        </LoadingRows>
-      )}
-      {!!pageCount && pageCount > 1 && data?.positions && (
+      {pageCount && pageCount > 1 && data?.positions && (
         <Flex row gap="$gap12" alignItems="center" mb="$spacing24">
           <ChevronLeft
             size={20}

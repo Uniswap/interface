@@ -13,7 +13,6 @@ export enum OnboardingRoutes {
   Reset = 'reset',
   ResetScan = 'reset-scan',
   UnsupportedBrowser = 'unsupported-browser',
-  EditProfile = 'edit-profile',
 }
 
 export enum AppRoutes {

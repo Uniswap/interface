@@ -1,11 +1,12 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
+import { TokenSortableField } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { Account, ReadOnlyAccount, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { ExploreOrderBy, RankingType } from 'wallet/src/features/wallet/types'
+import { TokensOrderBy } from 'wallet/src/features/wallet/types'
 import { WalletState } from 'wallet/src/state/walletReducer'
 
-const DEFAULT_TOKENS_ORDER_BY = RankingType.Volume
+const DEFAULT_TOKENS_ORDER_BY = TokenSortableField.Volume
 
 export const selectAccounts = (state: WalletState): Record<string, Account> => state.wallet.accounts
 
@@ -48,7 +49,7 @@ export const selectActiveAccount = createSelector(
 
 export const selectFinishedOnboarding = (state: WalletState): boolean | undefined => state.wallet.finishedOnboarding
 
-export const selectTokensOrderBy = (state: WalletState): ExploreOrderBy =>
+export const selectTokensOrderBy = (state: WalletState): TokensOrderBy =>
   state.wallet.settings.tokensOrderBy ?? DEFAULT_TOKENS_ORDER_BY
 
 export const selectInactiveAccounts = createSelector(

@@ -6,12 +6,12 @@ import { LiquidityPositionAmountsTile } from 'components/Liquidity/LiquidityPosi
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { LiquidityPositionPriceRangeTile } from 'components/Liquidity/LiquidityPositionPriceRangeTile'
 import { PositionNFT } from 'components/Liquidity/PositionNFT'
-import { parseRestPosition, useV3OrV4PositionDerivedInfo } from 'components/Liquidity/utils'
+import { parseRestPosition, parseV3FeeTier, useV3PositionDerivedInfo } from 'components/Liquidity/utils'
 import { LoadingFullscreen, LoadingRows } from 'components/Loader/styled'
-import { useChainFromUrlParam } from 'constants/chains'
+import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
 import { ClaimFeeModal } from 'pages/Pool/Positions/ClaimFeeModal'
-import { LoadingRow, useRefetchOnLpModalClose } from 'pages/Pool/Positions/shared'
+import { LoadingRow } from 'pages/Pool/Positions/shared'
 import { useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -63,14 +63,9 @@ export const HeaderButton = styled(Flex, {
 
 export default function PositionPage() {
   const { tokenId } = useParams<{ tokenId: string }>()
-  const chainInfo = useChainFromUrlParam()
   const account = useAccount()
   const { pathname } = useLocation()
-  const {
-    data,
-    isLoading: positionLoading,
-    refetch,
-  } = useGetPositionQuery(
+  const { data, isLoading: positionLoading } = useGetPositionQuery(
     account.address
       ? {
           owner: account.address,
@@ -80,15 +75,13 @@ export default function PositionPage() {
               ? ProtocolVersion.V4
               : ProtocolVersion.UNSPECIFIED,
           tokenId,
-          chainId: chainInfo?.id ?? account.chainId,
+          chainId: account.chainId,
         }
       : undefined,
   )
   const position = data?.position
   const positionInfo = useMemo(() => parseRestPosition(position), [position])
   const metadata = usePositionTokenURI(tokenId ? BigNumber.from(tokenId) : undefined)
-
-  useRefetchOnLpModalClose(refetch)
 
   const dispatch = useAppDispatch()
   const [collectAsWeth, setCollectAsWeth] = useState(false)
@@ -109,7 +102,12 @@ export default function PositionPage() {
     fiatValue0,
     fiatValue1,
     priceOrdering,
-  } = useV3OrV4PositionDerivedInfo(positionInfo)
+  } = useV3PositionDerivedInfo(positionInfo)
+  const isTickAtLimit = useIsTickAtLimit(
+    parseV3FeeTier(positionInfo?.feeTier),
+    Number(positionInfo?.tickLower),
+    Number(positionInfo?.tickUpper),
+  )
 
   if (!isLoading && !v4Enabled) {
     return <Navigate to="/pools" replace />
@@ -146,7 +144,7 @@ export default function PositionPage() {
           </BreadcrumbNavContainer>
         </Flex>
         <Flex row justifyContent="space-between" alignItems="center">
-          <LiquidityPositionInfo positionInfo={positionInfo} />
+          <LiquidityPositionInfo position={position} />
           {status !== PositionStatus.CLOSED && (
             <Flex row gap="$gap12" alignItems="center">
               <HeaderButton
@@ -162,7 +160,7 @@ export default function PositionPage() {
               <HeaderButton
                 emphasis="secondary"
                 onPress={() => {
-                  dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: positionInfo }))
+                  dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: position }))
                 }}
               >
                 <Text variant="buttonLabel2" color="$neutral1">
@@ -172,7 +170,7 @@ export default function PositionPage() {
               <HeaderButton
                 emphasis="primary"
                 onPress={() => {
-                  dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: positionInfo }))
+                  dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: position }))
                 }}
               >
                 <Text variant="buttonLabel2" color="$surface1">
@@ -264,9 +262,7 @@ export default function PositionPage() {
         <LiquidityPositionPriceRangeTile
           status={status}
           priceOrdering={priceOrdering}
-          feeTier={positionInfo.feeTier?.toString()}
-          tickLower={positionInfo.tickLower}
-          tickUpper={positionInfo.tickUpper}
+          isTickAtLimit={isTickAtLimit}
           token0CurrentPrice={token0CurrentPrice}
           token1CurrentPrice={token1CurrentPrice}
         />

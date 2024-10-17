@@ -12,27 +12,19 @@ import { SearchResultsSection } from 'src/components/explore/search/SearchResult
 import { Screen } from 'src/components/layout/Screen'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { Flex, flexStyles } from 'ui/src'
+import { ColorTokens, Flex, flexStyles, useIsDarkMode } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
-import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
-import { CancelBehaviorType, SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
-import { MobileEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
+import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { useDebounce } from 'utilities/src/time/timing'
-
-// From design to avoid layout thrash as icons show and hide
-const MIN_SEARCH_INPUT_HEIGHT = 52
 
 export function ExploreScreen(): JSX.Element {
   const modalInitialState = useSelector(selectModalState(ModalName.Explore)).initialState
   const navigation = useExploreStackNavigation()
-  const { chains } = useEnabledChains()
 
   const { isSheetReady } = useBottomSheetContext()
 
@@ -46,6 +38,7 @@ export function ExploreScreen(): JSX.Element {
   }, [modalInitialState, navigation])
 
   const { t } = useTranslation()
+  const isDarkMode = useIsDarkMode()
 
   const listRef = useRef(null)
   useScrollToTop(listRef)
@@ -54,7 +47,6 @@ export function ExploreScreen(): JSX.Element {
   const debouncedSearchQuery = useDebounce(searchQuery).trim()
   const [isSearchMode, setIsSearchMode] = useState<boolean>(false)
   const textInputRef = useRef<TextInput>(null)
-  const [selectedChain, setSelectedChain] = useState<UniverseChainId | null>(null)
 
   const onSearchChangeText = (newSearchFilter: string): void => {
     setSearchQuery(newSearchFilter)
@@ -72,40 +64,23 @@ export function ExploreScreen(): JSX.Element {
     setIsSearchMode(false)
   }
 
+  // Handle special case with design system light colors because surface2 is the same as surface1
+  const contrastBackgroundColor: ColorTokens = isDarkMode ? '$DEP_backgroundOverlay' : '$surface1'
+  const searchBarBackgroundColor: ColorTokens = isDarkMode ? '$DEP_backgroundOverlay' : '$surface1'
+
   const onScroll = useCallback(() => {
     textInputRef.current?.blur()
   }, [])
 
   return (
-    <Screen backgroundColor="$surface1" edges={['top']}>
+    <Screen backgroundColor="$transparent" edges={['top']}>
       <HandleBar backgroundColor="none" />
-      <Flex p="$spacing16">
+      <Flex backgroundColor="$transparent" p="$spacing16">
         <SearchTextInput
           ref={textInputRef}
-          cancelBehaviorType={CancelBehaviorType.BackChevron}
-          endAdornment={
-            isSearchMode ? (
-              <Flex row alignItems="center">
-                <NetworkFilter
-                  includeAllNetworks
-                  chainIds={chains}
-                  selectedChain={selectedChain}
-                  styles={{ buttonPaddingY: '$none' }}
-                  onDismiss={dismissNativeKeyboard}
-                  onPressChain={(newChainId) => {
-                    sendAnalyticsEvent(MobileEventName.ExploreSearchNetworkSelected, {
-                      networkChainId: newChainId ?? 'all',
-                    })
-
-                    setSelectedChain(newChainId)
-                  }}
-                />
-              </Flex>
-            ) : null
-          }
-          hideIcon={isSearchMode}
-          minHeight={MIN_SEARCH_INPUT_HEIGHT}
+          backgroundColor={isSearchMode ? contrastBackgroundColor : searchBarBackgroundColor}
           placeholder={t('explore.search.placeholder')}
+          showShadow={!isSearchMode}
           onCancel={onSearchCancel}
           onChangeText={onSearchChangeText}
           onFocus={onSearchFocus}
@@ -117,10 +92,10 @@ export function ExploreScreen(): JSX.Element {
             <VirtualizedList onScroll={onScroll}>
               <Flex p="$spacing4" />
               {debouncedSearchQuery.length === 0 ? (
-                <SearchEmptySection selectedChain={selectedChain} />
+                <SearchEmptySection />
               ) : (
                 <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
-                  <SearchResultsSection searchQuery={debouncedSearchQuery} selectedChain={selectedChain} />
+                  <SearchResultsSection searchQuery={debouncedSearchQuery} />
                 </AnimatedFlex>
               )}
             </VirtualizedList>

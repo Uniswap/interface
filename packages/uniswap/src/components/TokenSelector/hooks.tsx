@@ -298,16 +298,16 @@ export function useTokenSectionsForEmptySearch(chainFilter: UniverseChainId | nu
     dispatch(clearSearchHistory())
   }, [dispatch])
 
-  const recentSection = useTokenOptionsSection({
-    sectionKey: TokenOptionSection.RecentTokens,
-    tokenOptions: recentlySearchedTokenOptions,
-    endElement: <ClearAll onPress={onPressClearSearchHistory} />,
-  })
-
-  const popularSection = useTokenOptionsSection({
-    sectionKey: TokenOptionSection.PopularTokens,
-    tokenOptions: currencyInfosToTokenOptions(popularTokens?.map(gqlTokenToCurrencyInfo)),
-  })
+  const recentSection = useTokenOptionsSection(
+    TokenOptionSection.RecentTokens,
+    recentlySearchedTokenOptions,
+    undefined,
+    <ClearAll onPress={onPressClearSearchHistory} />,
+  )
+  const popularSection = useTokenOptionsSection(
+    TokenOptionSection.PopularTokens,
+    currencyInfosToTokenOptions(popularTokens?.map(gqlTokenToCurrencyInfo)),
+  )
   const sections = useMemo(() => [...(recentSection ?? []), ...(popularSection ?? [])], [popularSection, recentSection])
 
   return useMemo(
@@ -455,16 +455,12 @@ export function usePortfolioTokenOptions(
   searchFilter?: string,
 ): GqlResult<TokenOption[] | undefined> {
   const { data: portfolioBalancesById, error, refetch, loading } = usePortfolioBalancesForAddressById(address)
-  const { isTestnetModeEnabled } = useEnabledChains()
 
   const { shownTokens } = useTokenBalancesGroupedByVisibility({
     balancesById: portfolioBalancesById,
   })
 
-  const portfolioBalances = useMemo(
-    () => (shownTokens ? sortPortfolioBalances({ balances: shownTokens, isTestnetModeEnabled }) : undefined),
-    [shownTokens, isTestnetModeEnabled],
-  )
+  const portfolioBalances = useMemo(() => (shownTokens ? sortPortfolioBalances(shownTokens) : undefined), [shownTokens])
 
   const filteredPortfolioBalances = useMemo(
     () => portfolioBalances && filter(portfolioBalances, chainFilter, searchFilter),
@@ -620,11 +616,11 @@ export function useTokenSectionsForSearchResults(
     (!isBalancesOnlySearch && searchTokensLoading) ||
     bridgingTokenOptionsLoading
 
-  const searchResultsSections = useTokenOptionsSection({
-    sectionKey: TokenOptionSection.SearchResults,
+  const searchResultsSections = useTokenOptionsSection(
+    TokenOptionSection.SearchResults,
     // Use local search when only searching balances
-    tokenOptions: isBalancesOnlySearch ? portfolioTokenOptions : searchResults,
-  })
+    isBalancesOnlySearch ? portfolioTokenOptions : searchResults,
+  )
 
   // If there are bridging options, we need to extract them from the search results and then prepend them as a new section above.
   // The remaining non-bridging search results will be shown in a section with a different name

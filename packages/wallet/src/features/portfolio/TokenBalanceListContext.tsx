@@ -11,13 +11,8 @@ import {
   useState,
 } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import {
-  sortPortfolioBalances,
-  usePortfolioBalances,
-  useTokenBalancesGroupedByVisibility,
-} from 'uniswap/src/features/dataApi/balances'
+import { usePortfolioBalances, useTokenBalancesGroupedByVisibility } from 'uniswap/src/features/dataApi/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
 
 type CurrencyId = string
@@ -58,7 +53,6 @@ export function TokenBalanceListContextProvider({
     fetchPolicy: 'cache-and-network',
   })
 
-  const { isTestnetModeEnabled } = useEnabledChains()
   // re-order token balances to visible and hidden
   const { shownTokens, hiddenTokens } = useTokenBalancesGroupedByVisibility({
     balancesById,
@@ -71,13 +65,8 @@ export function TokenBalanceListContextProvider({
   const rowsRef = useRef<TokenBalanceListRow[]>()
 
   const rows = useMemo<TokenBalanceListRow[]>(() => {
-    const shownTokensArray = shownTokens ?? []
     const newRowIds = [
-      // already sorted when testnet mode is disabled;
-      // api uses usd value, which is available for prod tokens
-      ...(isTestnetModeEnabled
-        ? sortPortfolioBalances({ balances: shownTokensArray, isTestnetModeEnabled })
-        : shownTokensArray),
+      ...(shownTokens ?? []),
       ...(hiddenTokens?.length ? [HIDDEN_TOKEN_BALANCES_ROW] : []),
       ...(hiddenTokensExpanded && hiddenTokens ? hiddenTokens : []),
     ].map((token) => {
@@ -94,7 +83,7 @@ export function TokenBalanceListContextProvider({
     }
 
     return rowsRef.current
-  }, [hiddenTokens, hiddenTokensExpanded, shownTokens, isTestnetModeEnabled])
+  }, [hiddenTokens, hiddenTokensExpanded, shownTokens])
 
   const isWarmLoading = !!balancesById && isWarmLoadingStatus(networkStatus) && !isExternalProfile
 

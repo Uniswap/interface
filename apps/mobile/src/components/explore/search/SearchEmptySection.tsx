@@ -14,15 +14,28 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { SearchResultType, WalletSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { clearSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 
 const TrendUpIcon = <TrendUp color="$neutral2" size="$icon.24" />
 
-export function SearchEmptySection({ selectedChain }: { selectedChain: UniverseChainId | null }): JSX.Element {
+export const SUGGESTED_WALLETS: WalletSearchResult[] = [
+  {
+    type: SearchResultType.ENSAddress,
+    address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
+    ensName: 'vitalik.eth',
+  },
+  {
+    type: SearchResultType.ENSAddress,
+    address: '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3',
+    ensName: 'hayden.eth',
+  },
+]
+
+export function SearchEmptySection(): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const dispatch = useDispatch()
@@ -77,12 +90,20 @@ export function SearchEmptySection({ selectedChain }: { selectedChain: UniverseC
             title={t('explore.search.section.popularTokens')}
             onPress={onPopularTokenInfoPress}
           />
-          <SearchPopularTokens selectedChain={selectedChain} />
+          <SearchPopularTokens />
         </Flex>
         <Flex gap="$spacing4">
           <SectionHeaderText icon={TrendUpIcon} title={t('explore.search.section.popularNFT')} />
           <SearchPopularNFTCollections />
         </Flex>
+        <FlatList
+          ListHeaderComponent={
+            <SectionHeaderText icon={TrendUpIcon} title={t('explore.search.section.suggestedWallets')} />
+          }
+          data={SUGGESTED_WALLETS}
+          keyExtractor={walletKey}
+          renderItem={renderSearchItem}
+        />
       </AnimatedFlex>
       <WarningModal
         backgroundIconColor={colors.surface2.get()}
@@ -97,6 +118,10 @@ export function SearchEmptySection({ selectedChain }: { selectedChain: UniverseC
       />
     </>
   )
+}
+
+const walletKey = (wallet: WalletSearchResult): string => {
+  return wallet.address
 }
 
 export const RecentIcon = (): JSX.Element => {

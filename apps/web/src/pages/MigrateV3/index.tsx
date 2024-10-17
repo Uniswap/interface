@@ -2,8 +2,7 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
-import { PositionInfo } from 'components/Liquidity/types'
-import { parseRestPosition } from 'components/Liquidity/utils'
+import { PositionInfo, parseRestPosition } from 'components/Liquidity/utils'
 import { LoadingRows } from 'components/Loader/styled'
 import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
 import { CreatePositionContextProvider, PriceRangeContextProvider } from 'pages/Pool/Positions/create/ContextProviders'
@@ -105,7 +104,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
             </Text>
           </Flex>
         </Flex>
-        <LiquidityPositionCard liquidityPosition={positionInfo} mt="$spacing24" />
+        <LiquidityPositionCard liquidityPosition={positionInfo.restPosition} mt="$spacing24" />
         <Flex justifyContent="center" alignItems="center">
           <Flex shrink backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12">
             <ArrowDown size={20} color="$neutral1" />

@@ -44,7 +44,6 @@ import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/
 import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
@@ -59,6 +58,7 @@ import {
   currencyIdToChain,
   isNativeCurrencyAddress,
 } from 'uniswap/src/utils/currencyId'
+import { TestnetModeModal } from 'wallet/src/components/modals/TestnetModeModal'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'

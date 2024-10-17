@@ -1,14 +1,12 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import { IWalletKit, WalletKit, WalletKitTypes } from '@reown/walletkit'
 import { Core } from '@walletconnect/core'
 import '@walletconnect/react-native-compat'
 import { PendingRequestTypes, ProposalTypes } from '@walletconnect/types'
 import { buildApprovedNamespaces, getSdkError } from '@walletconnect/utils'
+import { IWeb3Wallet, Web3Wallet, Web3WalletTypes } from '@walletconnect/web3wallet'
 import { Alert } from 'react-native'
 import { EventChannel, eventChannel } from 'redux-saga'
-import { MobileState } from 'src/app/mobileReducer'
 import { registerWCClientForPushNotifications } from 'src/features/walletConnect/api'
-import { fetchDappDetails } from 'src/features/walletConnect/fetchDappDetails'
 import {
   getAccountAddressFromEIP155String,
   getChainIdFromEIP155String,
@@ -26,16 +24,13 @@ import {
 import { call, fork, put, select, take } from 'typed-redux-saga'
 import { config } from 'uniswap/src/config'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import i18n from 'uniswap/src/i18n/i18n'
 import { COMBINED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/types/chains'
-import { EthEvent, EthMethod, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
+import { EthEvent, EthMethod } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { selectAccounts, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
-export let wcWeb3Wallet: IWalletKit
+export let wcWeb3Wallet: IWeb3Wallet
 
 let wcWeb3WalletReadyResolve: () => void
 let wcWeb3WalletReadyReject: (e: unknown) => void
@@ -43,6 +38,7 @@ const wcWeb3WalletReady = new Promise<void>((resolve, reject) => {
   wcWeb3WalletReadyResolve = resolve
   wcWeb3WalletReadyReject = reject
 })
+
 export const waitForWcWeb3WalletIsReady = () => wcWeb3WalletReady
 
 export async function initializeWeb3Wallet(): Promise<void> {
@@ -51,7 +47,7 @@ export async function initializeWeb3Wallet(): Promise<void> {
       projectId: config.walletConnectProjectId,
     })
 
-    wcWeb3Wallet = await WalletKit.init({
+    wcWeb3Wallet = await Web3Wallet.init({
       core: wcCore,
       metadata: {
         name: 'Uniswap Wallet',
@@ -62,7 +58,7 @@ export async function initializeWeb3Wallet(): Promise<void> {
       },
     })
 
-    const clientId = await wcWeb3Wallet.engine.signClient.core.crypto.getClientId()
+    const clientId = await wcCore.crypto.getClientId()
     await registerWCClientForPushNotifications(clientId)
     wcWeb3WalletReadyResolve?.()
   } catch (e) {
@@ -77,17 +73,17 @@ function createWalletConnectChannel(): EventChannel<AnyAction> {
      * and the proposal namespaces (chains, methods, events)
      */
     const sessionProposalHandler = async (
-      proposalEvent: Omit<WalletKitTypes.BaseEventArgs<ProposalTypes.Struct>, 'topic'>,
+      proposalEvent: Omit<Web3WalletTypes.BaseEventArgs<ProposalTypes.Struct>, 'topic'>,
     ): Promise<void> => {
       const { params: proposal } = proposalEvent
       emit({ type: 'session_proposal', proposal })
     }
 
-    const sessionRequestHandler = async (request: WalletKitTypes.SessionRequest): Promise<void> => {
+    const sessionRequestHandler = async (request: Web3WalletTypes.SessionRequest): Promise<void> => {
       emit({ type: 'session_request', request })
     }
 
-    const sessionDeleteHandler = async (session: WalletKitTypes.SessionDelete): Promise<void> => {
+    const sessionDeleteHandler = async (session: Web3WalletTypes.SessionDelete): Promise<void> => {
       emit({ type: 'session_delete', session })
     }
 
@@ -137,28 +133,6 @@ function showAlert(title: string, message: string): Promise<boolean> {
   })
 }
 
-function* cancelErrorSession(dappName: string, chainLabels: string, proposalId: number) {
-  yield* call([wcWeb3Wallet, wcWeb3Wallet.rejectSession], {
-    id: proposalId,
-    reason: getSdkError('UNSUPPORTED_CHAINS'),
-  })
-
-  yield* call(
-    showAlert,
-    i18n.t('walletConnect.error.connection.title'),
-    i18n.t('walletConnect.error.connection.message', {
-      chainNames: chainLabels,
-      dappName,
-    }),
-  )
-
-  // Set error state to cancel loading state in WalletConnectModal UI
-  yield* put(setHasPendingSessionError(true))
-
-  // Allow users to rescan again
-  yield* put(setHasPendingSessionError(false))
-}
-
 function* handleSessionProposal(proposal: ProposalTypes.Struct) {
   const activeAccountAddress = yield* select(selectActiveAccountAddress)
 
@@ -166,15 +140,6 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
     id,
     proposer: { metadata: dapp },
   } = proposal
-
-  const namespaceCheck = proposal.requiredNamespaces
-  const firstNamespace = Object.keys(namespaceCheck)[0]
-
-  if (firstNamespace && firstNamespace !== 'eip155') {
-    const chainLabels = COMBINED_CHAIN_IDS.map((chainId) => UNIVERSE_CHAIN_INFO[chainId].label).join(', ')
-    yield* cancelErrorSession(dapp.name, chainLabels, proposal.id)
-    return
-  }
 
   try {
     const supportedEip155Chains = COMBINED_CHAIN_IDS.map((chainId) => `eip155:${chainId}`)
@@ -223,9 +188,28 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
       }),
     )
   } catch (e) {
+    // Reject pending session if required namespaces includes non-EVM chains or unsupported EVM chains
+    yield* call([wcWeb3Wallet, wcWeb3Wallet.rejectSession], {
+      id: proposal.id,
+      reason: getSdkError('UNSUPPORTED_CHAINS'),
+    })
+
     const chainLabels = COMBINED_CHAIN_IDS.map((chainId) => UNIVERSE_CHAIN_INFO[chainId].label).join(', ')
 
-    yield* cancelErrorSession(dapp.name, chainLabels, proposal.id)
+    const confirmed = yield* call(
+      showAlert,
+      i18n.t('walletConnect.error.connection.title'),
+      i18n.t('walletConnect.error.connection.message', {
+        chainNames: chainLabels,
+        dappName: dapp.name,
+      }),
+    )
+    if (confirmed) {
+      yield* put(setHasPendingSessionError(false))
+    }
+
+    // Set error state to cancel loading state in WalletConnectModal UI
+    yield* put(setHasPendingSessionError(true))
 
     logger.debug(
       'WalletConnectSaga',
@@ -289,22 +273,8 @@ function* handleSessionRequest(sessionRequest: PendingRequestTypes.Struct) {
   }
 }
 
-function* handleSessionDelete(event: WalletKitTypes.SessionDelete) {
+function* handleSessionDelete(event: Web3WalletTypes.SessionDelete) {
   const { topic } = event
-
-  const currentState = yield* select((state: MobileState) => state.walletConnect)
-
-  const { dappName, dappIcon } = fetchDappDetails(topic, currentState)
-
-  yield* put(
-    pushNotification({
-      type: AppNotificationType.WalletConnect,
-      event: WalletConnectEvent.Disconnected,
-      dappName,
-      imageUrl: dappIcon,
-      hideDelay: 3 * ONE_SECOND_MS,
-    }),
-  )
 
   yield* put(removeSession({ sessionId: topic }))
 }

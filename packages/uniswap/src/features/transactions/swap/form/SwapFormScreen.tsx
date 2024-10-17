@@ -429,20 +429,13 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
     [exactCurrencyField, isFiatMode, moveCursorToEnd, updateSwapForm],
   )
 
-  // If exact output will fail due to FoT tokens, the field should be disabled and un-focusable.
-  // Also, for bridging, the output field should be disabled since Across does not have exact in vs. exact out.
-  const isBridge = input && output && input?.chainId !== output?.chainId
-  const exactOutputDisabled = isBridge || exactOutputWillFail
-
   const onSwitchCurrencies = useCallback(() => {
     // If exact output would fail if currencies switch, we never want to have OUTPUT as exact field / focused field
-    const newExactCurrencyField = isBridge
+    const newExactCurrencyField = exactOutputWouldFailIfCurrenciesSwitched
       ? CurrencyField.INPUT
-      : exactOutputWouldFailIfCurrenciesSwitched
-        ? CurrencyField.INPUT
-        : exactFieldIsInput
-          ? CurrencyField.OUTPUT
-          : CurrencyField.INPUT
+      : exactFieldIsInput
+        ? CurrencyField.OUTPUT
+        : CurrencyField.INPUT
 
     updateSwapForm({
       exactCurrencyField: newExactCurrencyField,
@@ -468,7 +461,6 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
     isFiatMode,
     trace,
     moveCursorToEnd,
-    isBridge,
   ])
 
   // Swap input requires numeric values, not localized ones
@@ -497,6 +489,11 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
   const exactValueRef = isFiatMode ? exactAmountFiatRef : exactAmountTokenRef
 
   const decimalPadValueRef = decimalPadControlledField === exactCurrencyField ? exactValueRef : formattedDerivedValueRef
+
+  // If exact output will fail due to FoT tokens, the field should be disabled and un-focusable.
+  // Also, for bridging, the output field should be disabled since Across does not have exact in vs. exact out.
+  const isBridge = input && output && input?.chainId !== output?.chainId
+  const exactOutputDisabled = isBridge || exactOutputWillFail
 
   const [showWarning, setShowWarning] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)

@@ -10,8 +10,6 @@ import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, Text, TouchableArea, useHapticFeedback } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -19,6 +17,8 @@ import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useAccountList } from 'wallet/src/features/accounts/hooks'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 
 type AccountCardItemProps = {
   address: Address

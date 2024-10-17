@@ -26,8 +26,6 @@ interface SwapDetailsProps {
   autoSlippageTolerance?: number
   customSlippageTolerance?: number
   derivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>
-  feeOnTransferProps?: FeeOnTransferFeeGroupProps
-  feeOnTransferWarningChecked?: boolean
   gasFallbackUsed?: boolean
   gasFee: GasFeeResult
   uniswapXGasBreakdown?: UniswapXGasBreakdown
@@ -35,7 +33,6 @@ interface SwapDetailsProps {
   warning?: Warning
   onAcceptTrade: () => void
   onShowWarning?: () => void
-  setFeeOnTransferWarningChecked?: (checked: boolean) => void
 }
 
 export function SwapDetails({
@@ -43,15 +40,12 @@ export function SwapDetails({
   autoSlippageTolerance,
   customSlippageTolerance,
   derivedSwapInfo,
-  feeOnTransferProps,
-  feeOnTransferWarningChecked,
   gasFee,
   uniswapXGasBreakdown,
   newTradeRequiresAcceptance,
   warning,
   onAcceptTrade,
   onShowWarning,
-  setFeeOnTransferWarningChecked,
 }: SwapDetailsProps): JSX.Element {
   const { t } = useTranslation()
 
@@ -69,6 +63,23 @@ export function SwapDetails({
   if (!acceptedTrade) {
     throw new Error('Invalid render of `SwapDetails` with no `acceptedTrade`')
   }
+
+  const feeOnTransferProps: FeeOnTransferFeeGroupProps | undefined = useMemo(() => {
+    if (acceptedTrade.indicative || isBridge(acceptedTrade)) {
+      return undefined
+    }
+
+    return {
+      inputTokenInfo: {
+        fee: acceptedTrade.inputTax,
+        tokenSymbol: acceptedTrade.inputAmount.currency.symbol ?? 'Token sell',
+      },
+      outputTokenInfo: {
+        fee: acceptedTrade.outputTax,
+        tokenSymbol: acceptedTrade.outputAmount.currency.symbol ?? 'Token buy',
+      },
+    }
+  }, [acceptedTrade])
 
   const estimatedBridgingTime = useMemo(() => {
     const tradeQuote = derivedSwapInfo.trade.trade?.quote
@@ -95,8 +106,6 @@ export function SwapDetails({
         }
         chainId={acceptedTrade.inputAmount.currency.chainId}
         feeOnTransferProps={feeOnTransferProps}
-        feeOnTransferWarningChecked={feeOnTransferWarningChecked}
-        setFeeOnTransferWarningChecked={setFeeOnTransferWarningChecked}
         gasFee={gasFee}
         swapFee={acceptedTrade.swapFee}
         swapFeeUsd={swapFeeUsd}

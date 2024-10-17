@@ -1,16 +1,16 @@
 import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
-import { PositionInfo } from 'components/Liquidity/types'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
+/* eslint-disable-next-line no-restricted-imports */
+import { Position } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 
 export enum PopupType {
   Transaction = 'transaction',
   Order = 'order',
   FailedSwitchNetwork = 'failedSwitchNetwork',
   SwitchNetwork = 'switchNetwork',
-  Bridge = 'bridge',
 }
 
 export type PopupContent =
@@ -30,11 +30,6 @@ export type PopupContent =
       type: PopupType.SwitchNetwork
       chainId: UniverseChainId
       action: SwapTab
-    }
-  | {
-      type: PopupType.Bridge
-      inputChainId: UniverseChainId
-      outputChainId: UniverseChainId
     }
 
 // TODO(WEB-4888): remove this type
@@ -60,16 +55,16 @@ export enum ApplicationModal {
 
 type AddLiquidityModalParams = {
   name: typeof ModalName.AddLiquidity
-  initialState: PositionInfo
+  initialState: Position
 }
 
 type RemoveLiquidityModalParams = {
   name: typeof ModalName.RemoveLiquidity
-  initialState: PositionInfo
+  initialState: Position
 }
 
 export type OpenModalParams =
-  | { name: ModalNameType | ApplicationModal; initialState?: undefined }
+  | { name: ApplicationModal; initialState?: undefined }
   | AddLiquidityModalParams
   | RemoveLiquidityModalParams
 
@@ -79,12 +74,14 @@ export type PopupList = Array<{ key: string; show: boolean; content: PopupConten
 
 export interface ApplicationState {
   readonly chainId: number | null
+  readonly fiatOnramp: { available: boolean; availabilityChecked: boolean }
   readonly openModal: OpenModalParams | null
   readonly popupList: PopupList
   readonly suppressedPopups: PopupType[]
 }
 
 const initialState: ApplicationState = {
+  fiatOnramp: { available: false, availabilityChecked: false },
   chainId: null,
   openModal: null,
   popupList: [],
@@ -95,6 +92,9 @@ const applicationSlice = createSlice({
   name: 'application',
   initialState,
   reducers: {
+    setFiatOnrampAvailability(state, { payload: available }) {
+      state.fiatOnramp = { available, availabilityChecked: true }
+    },
     updateChainId(state, action) {
       const { chainId } = action.payload
       state.chainId = chainId
@@ -144,6 +144,7 @@ const applicationSlice = createSlice({
 
 export const {
   updateChainId,
+  setFiatOnrampAvailability,
   setOpenModal,
   setCloseModal,
   addPopup,

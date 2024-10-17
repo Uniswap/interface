@@ -3,7 +3,6 @@ import blankTokenUrl from 'assets/svg/blank_token.svg'
 import { ReactComponent as UnknownStatus } from 'assets/svg/contract-interaction.svg'
 import Identicon from 'components/Identicon'
 import { ChainLogo } from 'components/Logo/ChainLogo'
-import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import {
   CircleLogoImage,
   DoubleCurrencyLogo,
@@ -11,7 +10,6 @@ import {
   L2LogoContainer,
   SingleLogoContainer,
 } from 'components/Logo/DoubleLogo'
-import { TESTNET_CHAIN_IDS } from 'constants/chains'
 import styled from 'lib/styled-components'
 import React, { memo } from 'react'
 import { Flex, SpinningLoader, styled as TamaguiStyled } from 'ui/src'
@@ -37,7 +35,6 @@ interface PortfolioLogoProps {
   size?: number
   style?: React.CSSProperties
   loading?: boolean
-  customIcon?: React.ReactNode
 }
 
 function SquareL2Logo({ chainId, size }: { chainId: UniverseChainId; size: number }) {
@@ -62,15 +59,11 @@ const AbsoluteCenteredElement = TamaguiStyled(Flex, {
   top: -4.5,
 })
 
-// TODO(WEB-5111): Replace currency logos on web with uniswap currency logos
+// TODO(WEB-2983)
 /**
  * Renders an image by prioritizing a list of sources, and then eventually a fallback contract icon
  */
 export const PortfolioLogo = memo(function PortfolioLogo(props: PortfolioLogoProps) {
-  if (TESTNET_CHAIN_IDS.includes(props.chainId)) {
-    return <CurrencyLogo currency={props.currencies?.[0]} size={props.size} />
-  }
-
   return (
     <LogoContainer style={props.style}>
       <Flex position="relative">
@@ -81,13 +74,7 @@ export const PortfolioLogo = memo(function PortfolioLogo(props: PortfolioLogoPro
         )}
         {getLogo(props)}
       </Flex>
-      {props.customIcon ? (
-        <Flex bottom={-4} position="absolute" right={-4}>
-          {props.customIcon}
-        </Flex>
-      ) : (
-        <SquareL2Logo chainId={props.chainId} size={props.size ?? LOGO_DEFAULT_SIZE} />
-      )}
+      <SquareL2Logo chainId={props.chainId} size={props.size ?? LOGO_DEFAULT_SIZE} />
     </LogoContainer>
   )
 })

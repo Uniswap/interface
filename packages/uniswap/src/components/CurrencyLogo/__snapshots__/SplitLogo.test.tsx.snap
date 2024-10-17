@@ -163,14 +163,7 @@ exports[`SplitLogo renders without error 1`] = `
     <View
       style={
         {
-          "borderColor": "#131313",
-          "borderRadius": 2.4,
-          "borderStyle": "solid",
-          "borderWidth": 1.5,
           "flexDirection": "column",
-          "height": 8,
-          "overflow": "hidden",
-          "width": 8,
         }
       }
       testID="network-logo"
@@ -180,8 +173,20 @@ exports[`SplitLogo renders without error 1`] = `
         dir={null}
         style={
           {
-            "height": "5px",
-            "width": "5px",
+            "borderBottomColor": "rgba(19,19,19,1.00)",
+            "borderBottomLeftRadius": "2.4px",
+            "borderBottomRightRadius": "2.4px",
+            "borderBottomWidth": "1.5px",
+            "borderLeftColor": "rgba(19,19,19,1.00)",
+            "borderLeftWidth": "1.5px",
+            "borderRightColor": "rgba(19,19,19,1.00)",
+            "borderRightWidth": "1.5px",
+            "borderTopColor": "rgba(19,19,19,1.00)",
+            "borderTopLeftRadius": "2.4px",
+            "borderTopRightRadius": "2.4px",
+            "borderTopWidth": "1.5px",
+            "height": "8px",
+            "width": "8px",
           }
         }
       >

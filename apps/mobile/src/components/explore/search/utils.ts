@@ -9,18 +9,10 @@ import {
   TokenSearchResult,
 } from 'uniswap/src/features/search/SearchResult'
 import { searchResultId } from 'uniswap/src/features/search/searchHistorySlice'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const MAX_TOKEN_RESULTS_COUNT = 4
 
 type ExploreSearchResult = NonNullable<ExploreSearchQuery>
-
-export function filterSearchResultsByChainId<T extends { chainId: null | UniverseChainId }>(
-  tokenSearchResults: Array<T> | undefined,
-  chainId: UniverseChainId | null,
-): Array<T> | undefined {
-  return tokenSearchResults?.filter((searchResult): boolean => chainId === null || searchResult.chainId === chainId)
-}
 
 // Formats the tokens portion of explore search results into sorted array of TokenSearchResult
 export function formatTokenSearchResults(

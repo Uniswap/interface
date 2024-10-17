@@ -1,16 +1,17 @@
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
-import { isWeb } from 'ui/src'
+import { isWeb, useSporeColors } from 'ui/src'
+import { MoneyBillSend } from 'ui/src/components/icons/MoneyBillSend'
+import { iconSizes } from 'ui/src/theme'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
-import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TokenFeeInfo, getFeeSeverity } from 'uniswap/src/features/transactions/TransactionDetails/FeeOnTransferFee'
 
-export function FeeOnTransferWarning({ children, feeInfo }: PropsWithChildren<{ feeInfo: TokenFeeInfo }>): JSX.Element {
+export function FeeOnTransferWarning({ children }: PropsWithChildren): JSX.Element {
   const { t } = useTranslation()
-  const { severity } = getFeeSeverity(feeInfo.fee)
+  const colors = useSporeColors()
+
   const caption = t('swap.warning.feeOnTransfer.message')
   const title = t('swap.warning.feeOnTransfer.title')
 
@@ -23,13 +24,20 @@ export function FeeOnTransferWarning({ children, feeInfo }: PropsWithChildren<{ 
         />
       }
       modalProps={{
+        backgroundIconColor: colors.DEP_magentaDark.val,
         caption,
         rejectText: t('common.button.close'),
-        icon: <WarningIcon heroIcon severity={severity} size="$icon.24" />,
+        icon: (
+          <MoneyBillSend
+            color="$magentaVibrant"
+            // @ts-expect-error TODO(MOB-1571): this token is the only one that doesn't use same width/height, overriding type here as it will pass through and work
+            height={iconSizes.icon20}
+            width={iconSizes.icon24}
+          />
+        ),
+
         modalName: ModalName.FOTInfo,
         title,
-        rejectButtonTheme: 'tertiary',
-        backgroundIconColor: false,
       }}
       tooltipProps={{
         text: caption,

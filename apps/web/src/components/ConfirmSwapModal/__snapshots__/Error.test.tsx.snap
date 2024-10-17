@@ -2,7 +2,62 @@
 
 exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0 1`] = `
 <DocumentFragment>
-  .c10 {
+  .c4 {
+  height: 24px;
+  width: 24px;
+}
+
+.c4 path {
+  background: #7D7D7D;
+  fill: #7D7D7D;
+}
+
+.c14 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c14 img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c15 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c12 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c10 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -26,7 +81,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   gap: 8px;
 }
 
-.c13 {
+.c17 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -60,7 +115,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   letter-spacing: -0.01em;
 }
 
-.c12 {
+.c16 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -71,15 +126,15 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   font-weight: 500;
 }
 
-.c12:hover {
+.c16:hover {
   opacity: 0.6;
 }
 
-.c12:active {
+.c16:active {
   opacity: 0.4;
 }
 
-.c17 {
+.c21 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -93,7 +148,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   width: 100%;
 }
 
-.c14 {
+.c18 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -128,26 +183,26 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   user-select: none;
 }
 
-.c14:active .c16 {
+.c18:active .c20 {
   background-color: #B8C0DC3d;
 }
 
-.c14:focus .c16 {
+.c18:focus .c20 {
   background-color: #B8C0DC3d;
 }
 
-.c14:hover .c16 {
+.c18:hover .c20 {
   background-color: #98A1C014;
 }
 
-.c14:disabled {
+.c18:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c14:disabled:active .c16,
-.c14:disabled:focus .c16,
-.c14:disabled:hover .c16 {
+.c18:disabled:active .c20,
+.c18:disabled:focus .c20,
+.c18:disabled:hover .c20 {
   background-color: transparent;
 }
 
@@ -241,7 +296,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   text-align: center;
 }
 
-.c15 {
+.c19 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -252,16 +307,6 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   flex-grow: 1;
   height: 40px;
   border-radius: 12px;
-}
-
-.c4 {
-  height: 24px;
-  width: 24px;
-}
-
-.c4 path {
-  background: #7D7D7D;
-  fill: #7D7D7D;
 }
 
 <span
@@ -316,6 +361,30 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
                   class="c10 c11"
                 >
                   <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
                     class="c6 css-142zc9n"
                   >
                     &lt;0.00001 ABC
@@ -342,13 +411,37 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
                     />
                   </svg>
                   <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
                     class="c6 css-142zc9n"
                   >
                     &lt;0.00001 DEF
                   </div>
                 </div>
                 <a
-                  class="c12"
+                  class="c16"
                   href="https://support.uniswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction"
                   rel="noopener noreferrer"
                   target="_blank"
@@ -359,13 +452,13 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
             </div>
           </div>
           <div
-            class="c10 c13"
+            class="c10 c17"
           >
             <button
-              class="c14 c15"
+              class="c18 c19"
             >
               <div
-                class="c16 c17"
+                class="c20 c21"
               />
               Try again
             </button>
@@ -379,7 +472,62 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
 
 exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1 1`] = `
 <DocumentFragment>
-  .c10 {
+  .c4 {
+  height: 24px;
+  width: 24px;
+}
+
+.c4 path {
+  background: #7D7D7D;
+  fill: #7D7D7D;
+}
+
+.c14 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c14 img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c15 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c12 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c10 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -403,7 +551,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   gap: 8px;
 }
 
-.c13 {
+.c17 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -437,7 +585,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   letter-spacing: -0.01em;
 }
 
-.c12 {
+.c16 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -448,15 +596,15 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   font-weight: 500;
 }
 
-.c12:hover {
+.c16:hover {
   opacity: 0.6;
 }
 
-.c12:active {
+.c16:active {
   opacity: 0.4;
 }
 
-.c17 {
+.c21 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -470,7 +618,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   width: 100%;
 }
 
-.c14 {
+.c18 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -505,26 +653,26 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   user-select: none;
 }
 
-.c14:active .c16 {
+.c18:active .c20 {
   background-color: #B8C0DC3d;
 }
 
-.c14:focus .c16 {
+.c18:focus .c20 {
   background-color: #B8C0DC3d;
 }
 
-.c14:hover .c16 {
+.c18:hover .c20 {
   background-color: #98A1C014;
 }
 
-.c14:disabled {
+.c18:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c14:disabled:active .c16,
-.c14:disabled:focus .c16,
-.c14:disabled:hover .c16 {
+.c18:disabled:active .c20,
+.c18:disabled:focus .c20,
+.c18:disabled:hover .c20 {
   background-color: transparent;
 }
 
@@ -618,7 +766,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   text-align: center;
 }
 
-.c15 {
+.c19 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -629,16 +777,6 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   flex-grow: 1;
   height: 40px;
   border-radius: 12px;
-}
-
-.c4 {
-  height: 24px;
-  width: 24px;
-}
-
-.c4 path {
-  background: #7D7D7D;
-  fill: #7D7D7D;
 }
 
 <span
@@ -693,6 +831,30 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
                   class="c10 c11"
                 >
                   <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
                     class="c6 css-142zc9n"
                   >
                     &lt;0.00001 ABC
@@ -719,13 +881,37 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
                     />
                   </svg>
                   <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
                     class="c6 css-142zc9n"
                   >
                     &lt;0.00001 DEF
                   </div>
                 </div>
                 <a
-                  class="c12"
+                  class="c16"
                   href="https://support.uniswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction"
                   rel="noopener noreferrer"
                   target="_blank"
@@ -736,13 +922,13 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
             </div>
           </div>
           <div
-            class="c10 c13"
+            class="c10 c17"
           >
             <button
-              class="c14 c15"
+              class="c18 c19"
             >
               <div
-                class="c16 c17"
+                class="c20 c21"
               />
               Try again
             </button>
@@ -756,7 +942,62 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
 
 exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3 1`] = `
 <DocumentFragment>
-  .c10 {
+  .c4 {
+  height: 24px;
+  width: 24px;
+}
+
+.c4 path {
+  background: #7D7D7D;
+  fill: #7D7D7D;
+}
+
+.c14 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c14 img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c15 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c12 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c10 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -780,7 +1021,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   gap: 8px;
 }
 
-.c13 {
+.c17 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -814,7 +1055,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   letter-spacing: -0.01em;
 }
 
-.c12 {
+.c16 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -825,15 +1066,15 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   font-weight: 500;
 }
 
-.c12:hover {
+.c16:hover {
   opacity: 0.6;
 }
 
-.c12:active {
+.c16:active {
   opacity: 0.4;
 }
 
-.c17 {
+.c21 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -847,7 +1088,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   width: 100%;
 }
 
-.c14 {
+.c18 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -882,26 +1123,26 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   user-select: none;
 }
 
-.c14:active .c16 {
+.c18:active .c20 {
   background-color: #B8C0DC3d;
 }
 
-.c14:focus .c16 {
+.c18:focus .c20 {
   background-color: #B8C0DC3d;
 }
 
-.c14:hover .c16 {
+.c18:hover .c20 {
   background-color: #98A1C014;
 }
 
-.c14:disabled {
+.c18:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c14:disabled:active .c16,
-.c14:disabled:focus .c16,
-.c14:disabled:hover .c16 {
+.c18:disabled:active .c20,
+.c18:disabled:focus .c20,
+.c18:disabled:hover .c20 {
   background-color: transparent;
 }
 
@@ -995,7 +1236,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   text-align: center;
 }
 
-.c15 {
+.c19 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1006,16 +1247,6 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   flex-grow: 1;
   height: 40px;
   border-radius: 12px;
-}
-
-.c4 {
-  height: 24px;
-  width: 24px;
-}
-
-.c4 path {
-  background: #7D7D7D;
-  fill: #7D7D7D;
 }
 
 <span
@@ -1070,6 +1301,30 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
                   class="c10 c11"
                 >
                   <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
                     class="c6 css-142zc9n"
                   >
                     &lt;0.00001 ABC
@@ -1096,13 +1351,37 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
                     />
                   </svg>
                   <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
                     class="c6 css-142zc9n"
                   >
                     &lt;0.00001 DEF
                   </div>
                 </div>
                 <a
-                  class="c12"
+                  class="c16"
                   href="https://support.uniswap.org/hc/en-us/articles/8643975058829-Why-did-my-transaction-fail-"
                   rel="noopener noreferrer"
                   target="_blank"
@@ -1113,13 +1392,13 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
             </div>
           </div>
           <div
-            class="c10 c13"
+            class="c10 c17"
           >
             <button
-              class="c14 c15"
+              class="c18 c19"
             >
               <div
-                class="c16 c17"
+                class="c20 c21"
               />
               Try again
             </button>
@@ -1133,7 +1412,62 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
 
 exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4 1`] = `
 <DocumentFragment>
-  .c10 {
+  .c4 {
+  height: 24px;
+  width: 24px;
+}
+
+.c4 path {
+  background: #7D7D7D;
+  fill: #7D7D7D;
+}
+
+.c14 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c14 img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c15 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c12 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c10 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -1157,7 +1491,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
   gap: 8px;
 }
 
-.c13 {
+.c17 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -1191,7 +1525,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
   letter-spacing: -0.01em;
 }
 
-.c12 {
+.c16 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -1202,15 +1536,15 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
   font-weight: 500;
 }
 
-.c12:hover {
+.c16:hover {
   opacity: 0.6;
 }
 
-.c12:active {
+.c16:active {
   opacity: 0.4;
 }
 
-.c17 {
+.c21 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -1224,7 +1558,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
   width: 100%;
 }
 
-.c14 {
+.c18 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -1259,26 +1593,26 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
   user-select: none;
 }
 
-.c14:active .c16 {
+.c18:active .c20 {
   background-color: #B8C0DC3d;
 }
 
-.c14:focus .c16 {
+.c18:focus .c20 {
   background-color: #B8C0DC3d;
 }
 
-.c14:hover .c16 {
+.c18:hover .c20 {
   background-color: #98A1C014;
 }
 
-.c14:disabled {
+.c18:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c14:disabled:active .c16,
-.c14:disabled:focus .c16,
-.c14:disabled:hover .c16 {
+.c18:disabled:active .c20,
+.c18:disabled:focus .c20,
+.c18:disabled:hover .c20 {
   background-color: transparent;
 }
 
@@ -1372,7 +1706,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
   text-align: center;
 }
 
-.c15 {
+.c19 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1383,16 +1717,6 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
   flex-grow: 1;
   height: 40px;
   border-radius: 12px;
-}
-
-.c4 {
-  height: 24px;
-  width: 24px;
-}
-
-.c4 path {
-  background: #7D7D7D;
-  fill: #7D7D7D;
 }
 
 <span
@@ -1447,6 +1771,30 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
                   class="c10 c11"
                 >
                   <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
                     class="c6 css-142zc9n"
                   >
                     &lt;0.00001 ABC
@@ -1473,13 +1821,37 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
                     />
                   </svg>
                   <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
                     class="c6 css-142zc9n"
                   >
                     &lt;0.00001 DEF
                   </div>
                 </div>
                 <a
-                  class="c12"
+                  class="c16"
                   href="https://support.uniswap.org/hc/en-us/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH"
                   rel="noopener noreferrer"
                   target="_blank"
@@ -1490,13 +1862,13 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
             </div>
           </div>
           <div
-            class="c10 c13"
+            class="c10 c17"
           >
             <button
-              class="c14 c15"
+              class="c18 c19"
             >
               <div
-                class="c16 c17"
+                class="c20 c21"
               />
               Try again
             </button>
@@ -1510,7 +1882,62 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
 
 exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1`] = `
 <DocumentFragment>
-  .c10 {
+  .c4 {
+  height: 24px;
+  width: 24px;
+}
+
+.c4 path {
+  background: #7D7D7D;
+  fill: #7D7D7D;
+}
+
+.c14 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c14 img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c15 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c12 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c10 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -1534,7 +1961,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   gap: 8px;
 }
 
-.c13 {
+.c17 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -1568,7 +1995,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   letter-spacing: -0.01em;
 }
 
-.c12 {
+.c16 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -1579,15 +2006,15 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   font-weight: 500;
 }
 
-.c12:hover {
+.c16:hover {
   opacity: 0.6;
 }
 
-.c12:active {
+.c16:active {
   opacity: 0.4;
 }
 
-.c17 {
+.c21 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -1601,7 +2028,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   width: 100%;
 }
 
-.c14 {
+.c18 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -1636,26 +2063,26 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   user-select: none;
 }
 
-.c14:active .c16 {
+.c18:active .c20 {
   background-color: #B8C0DC3d;
 }
 
-.c14:focus .c16 {
+.c18:focus .c20 {
   background-color: #B8C0DC3d;
 }
 
-.c14:hover .c16 {
+.c18:hover .c20 {
   background-color: #98A1C014;
 }
 
-.c14:disabled {
+.c18:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c14:disabled:active .c16,
-.c14:disabled:focus .c16,
-.c14:disabled:hover .c16 {
+.c18:disabled:active .c20,
+.c18:disabled:focus .c20,
+.c18:disabled:hover .c20 {
   background-color: transparent;
 }
 
@@ -1749,7 +2176,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   text-align: center;
 }
 
-.c15 {
+.c19 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1760,16 +2187,6 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   flex-grow: 1;
   height: 40px;
   border-radius: 12px;
-}
-
-.c4 {
-  height: 24px;
-  width: 24px;
-}
-
-.c4 path {
-  background: #7D7D7D;
-  fill: #7D7D7D;
 }
 
 <span
@@ -1822,6 +2239,30 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
                   class="c10 c11"
                 >
                   <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
                     class="c6 css-142zc9n"
                   >
                     &lt;0.00001 DAI
@@ -1848,13 +2289,37 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
                     />
                   </svg>
                   <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
                     class="c6 css-142zc9n"
                   >
                     0.0001 USDC
                   </div>
                 </div>
                 <a
-                  class="c12"
+                  class="c16"
                   href="https://support.uniswap.org/hc/en-us/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute"
                   rel="noopener noreferrer"
                   target="_blank"
@@ -1865,13 +2330,13 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
             </div>
           </div>
           <div
-            class="c10 c13"
+            class="c10 c17"
           >
             <button
-              class="c14 c15"
+              class="c18 c19"
             >
               <div
-                class="c16 c17"
+                class="c20 c21"
               />
               Try again
             </button>
@@ -1885,7 +2350,62 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
 
 exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1`] = `
 <DocumentFragment>
-  .c10 {
+  .c4 {
+  height: 24px;
+  width: 24px;
+}
+
+.c4 path {
+  background: #7D7D7D;
+  fill: #7D7D7D;
+}
+
+.c14 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c14 img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c15 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c12 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c10 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -1909,7 +2429,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
   gap: 8px;
 }
 
-.c13 {
+.c17 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -1943,7 +2463,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
   letter-spacing: -0.01em;
 }
 
-.c12 {
+.c16 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -1954,15 +2474,15 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
   font-weight: 500;
 }
 
-.c12:hover {
+.c16:hover {
   opacity: 0.6;
 }
 
-.c12:active {
+.c16:active {
   opacity: 0.4;
 }
 
-.c17 {
+.c21 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -1976,7 +2496,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
   width: 100%;
 }
 
-.c14 {
+.c18 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -2011,26 +2531,26 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
   user-select: none;
 }
 
-.c14:active .c16 {
+.c18:active .c20 {
   background-color: #B8C0DC3d;
 }
 
-.c14:focus .c16 {
+.c18:focus .c20 {
   background-color: #B8C0DC3d;
 }
 
-.c14:hover .c16 {
+.c18:hover .c20 {
   background-color: #98A1C014;
 }
 
-.c14:disabled {
+.c18:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c14:disabled:active .c16,
-.c14:disabled:focus .c16,
-.c14:disabled:hover .c16 {
+.c18:disabled:active .c20,
+.c18:disabled:focus .c20,
+.c18:disabled:hover .c20 {
   background-color: transparent;
 }
 
@@ -2124,7 +2644,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
   text-align: center;
 }
 
-.c15 {
+.c19 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -2135,16 +2655,6 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
   flex-grow: 1;
   height: 40px;
   border-radius: 12px;
-}
-
-.c4 {
-  height: 24px;
-  width: 24px;
-}
-
-.c4 path {
-  background: #7D7D7D;
-  fill: #7D7D7D;
 }
 
 <span
@@ -2199,6 +2709,30 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
                   class="c10 c11"
                 >
                   <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
                     class="c6 css-142zc9n"
                   >
                     &lt;0.00001 DAI
@@ -2225,13 +2759,37 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
                     />
                   </svg>
                   <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
                     class="c6 css-142zc9n"
                   >
                     0.0001 USDC
                   </div>
                 </div>
                 <a
-                  class="c12"
+                  class="c16"
                   href="https://support.uniswap.org/hc/en-us/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH"
                   rel="noopener noreferrer"
                   target="_blank"
@@ -2242,13 +2800,13 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
             </div>
           </div>
           <div
-            class="c10 c13"
+            class="c10 c17"
           >
             <button
-              class="c14 c15"
+              class="c18 c19"
             >
               <div
-                class="c16 c17"
+                class="c20 c21"
               />
               Try again
             </button>

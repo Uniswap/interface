@@ -13,10 +13,8 @@ import { useNavigate } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
 import { capitalize } from 'tsafe'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { t } from 'uniswap/src/i18n'
-import { InterfaceGqlChain } from 'uniswap/src/types/chains'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -53,18 +51,12 @@ export function NFT({
   mediaShouldBePlaying: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }) {
-  const { isTestnetModeEnabled, gqlChains } = useEnabledChains()
   const accountDrawer = useAccountDrawer()
   const navigate = useNavigate()
   const trace = useTrace()
 
-  const enabled =
-    asset.chain && isTestnetModeEnabled
-      ? gqlChains.includes(asset.chain as InterfaceGqlChain)
-      : asset.chain === Chain.Ethereum
-
   const navigateToNFTDetails = () => {
-    if (enabled) {
+    if (asset.chain === Chain.Ethereum) {
       accountDrawer.close()
       navigate(detailsHref(asset))
     }
@@ -75,7 +67,7 @@ export function NFT({
       <MouseFollowTooltip
         placement="bottom"
         size={TooltipSize.Max}
-        disabled={enabled}
+        disabled={asset.chain === Chain.Ethereum}
         text={t('nft.chainSupportComingSoon', {
           chainName: capitalize(asset.chain?.toLowerCase() ?? 'L2'),
         })}
@@ -86,7 +78,7 @@ export function NFT({
           hideDetails
           display={{ disabledInfo: true }}
           isSelected={false}
-          isDisabled={!enabled}
+          isDisabled={asset.chain !== Chain.Ethereum}
           onCardClick={navigateToNFTDetails}
           sendAnalyticsEvent={() =>
             sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {

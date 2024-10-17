@@ -4,6 +4,7 @@ import { id } from '@ethersproject/hash'
 import { resolveProperties } from '@ethersproject/properties'
 import { BlockTag, JsonRpcProvider } from '@ethersproject/providers'
 import { ConnectionInfo, fetchJson } from '@ethersproject/web'
+import { ensureLeading0x } from 'uniswap/src/utils/addresses'
 
 /**
  * A provider that uses a signer to authenticate requests.
@@ -71,7 +72,7 @@ export class FlashbotsRpcProvider extends AuthenticatedJsonRpcProvider {
       provider: this,
     })
 
-    const signature = await this.signer.signMessage(id(request))
+    const signature = ensureLeading0x(await this.signer.signMessage(id(request)))
 
     const connection: ConnectionInfo = {
       ...this.connection,

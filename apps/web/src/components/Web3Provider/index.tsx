@@ -1,4 +1,3 @@
-import { Web3Provider as EthersWeb3Provider, ExternalProvider } from '@ethersproject/providers'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { recentConnectorIdAtom } from 'components/Web3Provider/constants'
@@ -21,7 +20,7 @@ import { setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
-import { WalletType, getWalletMeta } from 'utils/walletMeta'
+import { getWalletMeta } from 'utils/walletMeta'
 import { WagmiProvider } from 'wagmi'
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
@@ -114,48 +113,22 @@ function Updater() {
       setUserProperty(CustomUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account.address, true)
 
       setUserProperty(CustomUserProperties.WALLET_TYPE, amplitudeWalletType)
-
+      setUserProperty(CustomUserProperties.WALLET_NAME, walletName)
+      setUserProperty(CustomUserProperties.PEER_WALLET_AGENT, peerWalletAgent ?? '')
       if (account.chainId) {
         setUserProperty(CustomUserProperties.CHAIN_ID, account.chainId)
         setUserProperty(CustomUserProperties.ALL_WALLET_CHAIN_IDS, account.chainId, true)
       }
 
-      const walletConnectedProperties = {
+      sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: account.address,
         wallet_name: walletName,
-        wallet_type: amplitudeWalletType,
+        wallet_type: walletTypeToAmplitudeWalletType(connector?.type),
         is_reconnect: isReconnect,
         peer_wallet_agent: peerWalletAgent,
         page: currentPage,
-      }
-
-      if (connector?.name === WalletType.WALLET_CONNECT) {
-        connector
-          ?.getProvider()
-          .then((externalProvider) => {
-            const provider = externalProvider as ExternalProvider
-            // Lookup metadata from the wallet connect external provider
-            const meta = getWalletMeta(new EthersWeb3Provider(provider))
-            const name = meta?.name ?? walletName
-            const agent = meta?.agent ?? peerWalletAgent
-
-            setUserProperty(CustomUserProperties.WALLET_NAME, name)
-            setUserProperty(CustomUserProperties.PEER_WALLET_AGENT, agent ?? '')
-            sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, {
-              ...walletConnectedProperties,
-              wallet_name: name,
-              peer_wallet_agent: agent,
-            })
-          })
-          .catch((error) => {
-            logger.warn('Web3Provider', 'Updater', 'Failed to get wallet connect metadata', error)
-          })
-      } else {
-        setUserProperty(CustomUserProperties.WALLET_NAME, walletName)
-        setUserProperty(CustomUserProperties.PEER_WALLET_AGENT, peerWalletAgent ?? '')
-        sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, walletConnectedProperties)
-      }
+      })
 
       addConnectedWallet({ account: account.address, walletName })
     }

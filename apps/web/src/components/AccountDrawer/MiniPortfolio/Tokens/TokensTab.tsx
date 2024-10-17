@@ -16,14 +16,8 @@ import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletConten
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { EllipsisStyle, ThemedText } from 'theme/components'
-import { Text, Tooltip } from 'ui/src'
-import {
-  useEnabledChains,
-  useHideSmallBalancesSetting,
-  useHideSpamTokensSetting,
-} from 'uniswap/src/features/settings/hooks'
+import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useTranslation } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { splitHiddenTokens } from 'utils/splitHiddenTokens'
@@ -83,22 +77,16 @@ function TokenRow({
   denominatedValue,
   tokenProjectMarket,
 }: PortfolioBalance & { token: PortfolioToken }) {
-  const { t } = useTranslation()
   const { formatDelta } = useFormatter()
-  const { isTestnetModeEnabled } = useEnabledChains()
   const percentChange = tokenProjectMarket?.relativeChange24?.value ?? 0
 
   const navigate = useNavigate()
   const accountDrawer = useAccountDrawer()
 
   const navigateToTokenDetails = useCallback(async () => {
-    if (isTestnetModeEnabled) {
-      return
-    }
-
     navigate(getTokenDetailsURL({ ...token }))
     accountDrawer.close()
-  }, [navigate, token, accountDrawer, isTestnetModeEnabled])
+  }, [navigate, token, accountDrawer])
   const { formatNumber } = useFormatter()
 
   const currency = gqlToCurrency(token)
@@ -112,40 +100,6 @@ function TokenRow({
     })
     return null
   }
-
-  const portfolioRow = (
-    <PortfolioRow
-      left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size={40} />}
-      title={<TokenNameText>{token?.name ?? token?.project?.name}</TokenNameText>}
-      descriptor={
-        <TokenBalanceText>
-          {formatNumber({
-            input: quantity,
-            type: NumberType.TokenNonTx,
-          })}{' '}
-          {token?.symbol}
-        </TokenBalanceText>
-      }
-      onClick={navigateToTokenDetails}
-      right={
-        denominatedValue && (
-          <>
-            <ThemedText.SubHeader>
-              {formatNumber({
-                input: denominatedValue?.value,
-                type: NumberType.PortfolioBalance,
-              })}
-            </ThemedText.SubHeader>
-            <Row justify="flex-end">
-              <DeltaArrow delta={percentChange} />
-              <ThemedText.BodySecondary>{formatDelta(percentChange)}</ThemedText.BodySecondary>
-            </Row>
-          </>
-        )
-      }
-    />
-  )
-
   return (
     <Trace
       logPress
@@ -156,17 +110,36 @@ function TokenRow({
         address: token?.address,
       }}
     >
-      {isTestnetModeEnabled ? (
-        <Tooltip placement="right" delay={{ open: 2000 }}>
-          <Tooltip.Content>
-            <Text variant="body4">{t('token.details.testnet.unsupported')}</Text>
-            <Tooltip.Arrow />
-          </Tooltip.Content>
-          <Tooltip.Trigger>{portfolioRow}</Tooltip.Trigger>
-        </Tooltip>
-      ) : (
-        portfolioRow
-      )}
+      <PortfolioRow
+        left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size={40} />}
+        title={<TokenNameText>{token?.name ?? token?.project?.name}</TokenNameText>}
+        descriptor={
+          <TokenBalanceText>
+            {formatNumber({
+              input: quantity,
+              type: NumberType.TokenNonTx,
+            })}{' '}
+            {token?.symbol}
+          </TokenBalanceText>
+        }
+        onClick={navigateToTokenDetails}
+        right={
+          denominatedValue && (
+            <>
+              <ThemedText.SubHeader>
+                {formatNumber({
+                  input: denominatedValue?.value,
+                  type: NumberType.PortfolioBalance,
+                })}
+              </ThemedText.SubHeader>
+              <Row justify="flex-end">
+                <DeltaArrow delta={percentChange} />
+                <ThemedText.BodySecondary>{formatDelta(percentChange)}</ThemedText.BodySecondary>
+              </Row>
+            </>
+          )
+        }
+      />
     </Trace>
   )
 }

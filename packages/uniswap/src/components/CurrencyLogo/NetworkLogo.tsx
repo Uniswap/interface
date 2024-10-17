@@ -33,28 +33,37 @@ function _NetworkLogo({
   const shapeBorderRadius = shape === 'circle' ? size / 2 : size * SQUIRCLE_BORDER_RADIUS_RATIO
   const colors = useSporeColors()
 
-  const imageStyle = {
-    width: size,
-    height: size,
-    borderRadius: borderRadius ?? shapeBorderRadius,
-    borderWidth,
-    borderColor: colors.surface1.val,
-  }
-
   if (chainId === null) {
     return (
       <Flex testID="all-networks-logo">
-        <Image resizeMode="contain" source={ALL_NETWORKS_LOGO} style={imageStyle} />
+        <Image
+          resizeMode="contain"
+          source={ALL_NETWORKS_LOGO}
+          style={{
+            width: size,
+            height: size,
+            borderRadius: borderRadius ?? shapeBorderRadius,
+            borderWidth,
+            borderColor: colors.surface1.val,
+          }}
+        />
       </Flex>
     )
   }
-
   const logo = UNIVERSE_CHAIN_INFO[chainId].logo
-  const imageSize = size - borderWidth * 2 // this prevents the border from cutting off the logo
-
   return logo ? (
-    <Flex testID="network-logo" overflow="hidden" style={imageStyle}>
-      <Image resizeMode="contain" source={logo} width={imageSize} height={imageSize} />
+    <Flex testID="network-logo">
+      <Image
+        resizeMode="contain"
+        source={logo}
+        style={{
+          width: size,
+          height: size,
+          borderRadius: borderRadius ?? shapeBorderRadius,
+          borderWidth,
+          borderColor: colors.surface1.val,
+        }}
+      />
     </Flex>
   ) : null
 }

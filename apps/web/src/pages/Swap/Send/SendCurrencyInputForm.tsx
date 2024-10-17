@@ -28,7 +28,6 @@ import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -196,7 +195,6 @@ export default function SendCurrencyInputForm({
 }) {
   const { chainId } = useSwapAndLimitContext()
   const supportedChain = useSupportedChainId(chainId)
-  const { isTestnetModeEnabled } = useEnabledChains()
   const { formatCurrencyAmount } = useFormatter()
   const { symbol: fiatSymbol } = useActiveLocalCurrencyComponents()
   const { formatNumber } = useFormatter()
@@ -316,14 +314,12 @@ export default function SendCurrencyInputForm({
           />
           <NumericalInputMimic ref={hiddenObserver.ref}>{displayValue}</NumericalInputMimic>
         </NumericalInputWrapper>
-        {isTestnetModeEnabled ? null : (
-          <Trace logPress element={InterfaceElementName.SEND_FIAT_TOGGLE}>
-            <AlternateCurrencyDisplay
-              disabled={fiatCurrencyEqualsTransferCurrency}
-              onToggle={toggleFiatInputAmountEnabled}
-            />
-          </Trace>
-        )}
+        <Trace logPress element={InterfaceElementName.SEND_FIAT_TOGGLE}>
+          <AlternateCurrencyDisplay
+            disabled={fiatCurrencyEqualsTransferCurrency}
+            onToggle={toggleFiatInputAmountEnabled}
+          />
+        </Trace>
         <InputError />
       </InputWrapper>
       <CurrencyInputWrapper>

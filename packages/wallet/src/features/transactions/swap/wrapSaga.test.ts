@@ -1,7 +1,5 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { testSaga } from 'redux-saga-test-plan'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import {
   TransactionOriginType,
@@ -11,6 +9,8 @@ import {
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { ethersTransactionRequest } from 'uniswap/src/test/fixtures'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { WrapParams, wrap } from 'wallet/src/features/transactions/swap/wrapSaga'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'

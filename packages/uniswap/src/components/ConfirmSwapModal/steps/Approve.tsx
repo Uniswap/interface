@@ -5,7 +5,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import {
   TokenApprovalTransactionStep,
   TokenRevocationTransactionStep,
-} from 'uniswap/src/features/transactions/swap/types/steps'
+} from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
 
 export function TokenApprovalTransactionStepRow({
   step,

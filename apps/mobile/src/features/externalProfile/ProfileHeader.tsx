@@ -2,6 +2,7 @@ import React, { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StatusBar, StyleSheet } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
+import Svg, { ClipPath, Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
 import { useDispatch, useSelector } from 'react-redux'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Favorite } from 'src/components/icons/Favorite'
@@ -34,7 +35,6 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { openUri } from 'uniswap/src/utils/linking'
 import { RecipientSelectSpeedBumps } from 'wallet/src/components/RecipientSearch/RecipientSelectSpeedBumps'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { HeaderRadial, solidHeaderProps } from 'wallet/src/features/unitags/HeaderRadial'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
@@ -43,6 +43,13 @@ const HEADER_ICON_SIZE = 72
 
 interface ProfileHeaderProps {
   address: Address
+}
+
+const HEADER_SOLID_COLOR_OPACITY = 0.1
+
+export const solidHeaderProps = {
+  minOpacity: HEADER_SOLID_COLOR_OPACITY,
+  maxOpacity: HEADER_SOLID_COLOR_OPACITY,
 }
 
 export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHeaderProps): JSX.Element {
@@ -255,6 +262,40 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
         onConfirm={openSendModal}
       />
     </Flex>
+  )
+})
+
+export const HeaderRadial = memo(function HeaderRadial({
+  color,
+  borderRadius,
+  minOpacity,
+  maxOpacity,
+}: {
+  color: string
+  borderRadius?: number
+  minOpacity?: number
+  maxOpacity?: number
+}): JSX.Element {
+  return (
+    <Svg height="100%" width="100%">
+      <Defs>
+        <ClipPath id="clip">
+          <Rect height="100%" rx={borderRadius} width="100%" />
+        </ClipPath>
+        <RadialGradient cy="-0.1" id="background" rx="0.8" ry="1.1">
+          <Stop offset="0" stopColor={color} stopOpacity={maxOpacity ?? '0.6'} />
+          <Stop offset="1" stopColor={color} stopOpacity={minOpacity ?? '0'} />
+        </RadialGradient>
+      </Defs>
+      <Rect
+        clipPath={borderRadius ? 'url(#clip)' : undefined}
+        fill="url(#background)"
+        height="100%"
+        width="100%"
+        x="0"
+        y="0"
+      />
+    </Svg>
   )
 })
 

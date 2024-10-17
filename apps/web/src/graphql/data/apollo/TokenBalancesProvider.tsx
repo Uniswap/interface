@@ -3,6 +3,7 @@ import { AdaptiveTokenBalancesProvider } from 'graphql/data/apollo/AdaptiveToken
 import { useAssetActivitySubscription } from 'graphql/data/apollo/AssetActivityProvider'
 import { useAccount } from 'hooks/useAccount'
 import { PropsWithChildren, useCallback, useMemo } from 'react'
+import { GQL_MAINNET_CHAINS_MUTABLE } from 'uniswap/src/constants/chains'
 import {
   OnAssetActivitySubscription,
   SwapOrderStatus,
@@ -10,11 +11,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import {
-  useEnabledChains,
-  useHideSmallBalancesSetting,
-  useHideSpamTokensSetting,
-} from 'uniswap/src/features/settings/hooks'
+import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { SUBSCRIPTION_CHAINIDS } from 'utilities/src/apollo/constants'
 import { usePrevious } from 'utilities/src/react/hooks'
@@ -53,26 +50,13 @@ function useHasAccountUpdate() {
   const account = useAccount()
   const prevAccount = usePrevious(account.address)
 
-  const { isTestnetModeEnabled } = useEnabledChains()
-  const prevIsTestnetModeEnabled = usePrevious(isTestnetModeEnabled)
-
   return useMemo(() => {
     const hasPolledTxUpdate = !isRealtime && hasLocalStateUpdate
     const hasSubscriptionTxUpdate = data !== prevData && mayAffectTokenBalances(data)
     const accountChanged = Boolean(prevAccount !== account.address && account.address)
-    const hasTestnetModeChanged = prevIsTestnetModeEnabled !== isTestnetModeEnabled
 
-    return hasPolledTxUpdate || hasSubscriptionTxUpdate || accountChanged || hasTestnetModeChanged
-  }, [
-    account.address,
-    data,
-    hasLocalStateUpdate,
-    isRealtime,
-    prevAccount,
-    prevData,
-    prevIsTestnetModeEnabled,
-    isTestnetModeEnabled,
-  ])
+    return hasPolledTxUpdate || hasSubscriptionTxUpdate || accountChanged
+  }, [account.address, data, hasLocalStateUpdate, isRealtime, prevAccount, prevData])
 }
 
 function usePortfolioValueModifiers(): {
@@ -96,7 +80,6 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
   const hasAccountUpdate = useHasAccountUpdate()
   const valueModifiers = usePortfolioValueModifiers()
   const prevValueModifiers = usePrevious(valueModifiers)
-  const { gqlChains } = useEnabledChains()
 
   const fetch = useCallback(() => {
     if (!account.address) {
@@ -105,7 +88,7 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
     lazyFetch({
       variables: {
         ownerAddress: account.address,
-        chains: gqlChains,
+        chains: GQL_MAINNET_CHAINS_MUTABLE,
         valueModifiers: [
           {
             ownerAddress: account.address,
@@ -117,7 +100,7 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
         ],
       },
     })
-  }, [account.address, lazyFetch, valueModifiers, gqlChains])
+  }, [account.address, lazyFetch, valueModifiers])
 
   return (
     <AdaptiveTokenBalancesProvider

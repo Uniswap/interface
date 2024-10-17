@@ -36,7 +36,6 @@ export type FocusOnboardingMessage = z.infer<typeof FocusOnboardingMessageSchema
 export enum BackgroundToSidePanelRequestType {
   TabActivated = 'TabActivated',
   DappRequestReceived = 'DappRequestReceived',
-  RefreshUnitags = 'RefreshUnitags',
 }
 
 export const DappRequestMessageSchema = z.object({
@@ -55,11 +54,6 @@ export const TabActivatedRequestSchema = MessageSchema.extend({
   type: z.literal(BackgroundToSidePanelRequestType.TabActivated),
 })
 export type TabActivatedRequest = z.infer<typeof TabActivatedRequestSchema>
-
-export const RefreshUnitagsRequestSchema = MessageSchema.extend({
-  type: z.literal(BackgroundToSidePanelRequestType.RefreshUnitags),
-})
-export type RefreshUnitagsRequest = z.infer<typeof RefreshUnitagsRequestSchema>
 
 // Requests outgoing from the extension to the injected script
 export enum ExtensionToDappRequestType {

@@ -118,7 +118,7 @@ export const ProtocolPreference: SwapSettingConfig = {
   },
 }
 
-export function getProtocolTitle(preference: FrontendSupportedProtocol, t: TFunction): JSX.Element | string {
+export function getProtocolTitle(preference: FrontendSupportedProtocol, t: TFunction): JSX.Element {
   switch (preference) {
     case ProtocolItems.UNISWAPX_V2:
       return (
@@ -162,7 +162,7 @@ function OptionRow({
   cantDisable,
   onSelect,
 }: {
-  title: JSX.Element | string
+  title: JSX.Element
   active: boolean
   elementName: ElementNameType
   cantDisable: boolean

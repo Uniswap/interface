@@ -1,5 +1,4 @@
-import { PositionInfo } from 'components/Liquidity/types'
-import { useModalLiquidityPositionInfo } from 'components/Liquidity/utils'
+import { PositionInfo, useModalLiquidityPositionInfo } from 'components/Liquidity/utils'
 import { PropsWithChildren, createContext, useContext, useState } from 'react'
 
 type RemoveLiquidityModalState = {

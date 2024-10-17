@@ -1,13 +1,15 @@
 import 'i18next'
+// This is only required because importing json as const is not yet supported
+// The json file can be directly imported instead of generating an interface when that is available
+import Resources from 'uniswap/src/i18n/locales/@types/resources'
 
-const en = require('uniswap/src/i18n/locales/source/en-US.json') as Record<string, string>;
-
-const resources = {
-  translation: en,
-} as const;
+interface CustomResources {
+  translation: Resources['en-US']
+}
 
 declare module 'i18next' {
   interface CustomTypeOptions {
-    resources: typeof resources;
+    defaultNS: 'translation'
+    resources: CustomResources
   }
 }

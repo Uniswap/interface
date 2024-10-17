@@ -1,10 +1,9 @@
 // eslint-disable-next-line no-restricted-imports
 import { PositionStatus } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, Price } from '@uniswap/sdk-core'
+import { Price, Token } from '@uniswap/sdk-core'
 import { LiquidityPositionStatusIndicator } from 'components/Liquidity/LiquidityPositionStatusIndicator'
-import { useGetRangeDisplay } from 'components/Liquidity/utils'
-import { PriceOrdering } from 'components/PositionListItem'
 import { useMemo, useState } from 'react'
+import { Bound } from 'state/mint/v3/actions'
 import { Flex, SegmentedControl, SegmentedControlOption, Text, styled } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -20,24 +19,60 @@ const InnerTile = styled(Flex, {
 
 interface LiquidityPositionPriceRangeTileProps {
   status?: PositionStatus
-  priceOrdering: PriceOrdering
-  token0CurrentPrice: Price<Currency, Currency>
-  token1CurrentPrice: Price<Currency, Currency>
-  feeTier?: string
-  tickLower?: string
-  tickUpper?: string
+  priceOrdering: {
+    priceLower?: Price<Token, Token>
+    priceUpper?: Price<Token, Token>
+    quote?: Token
+    base?: Token
+  }
+  isTickAtLimit: {
+    [Bound.LOWER]?: boolean
+    [Bound.UPPER]?: boolean
+  }
+  token0CurrentPrice: Price<Token, Token>
+  token1CurrentPrice: Price<Token, Token>
+}
+
+const getValues = ({
+  token0CurrentPrice,
+  token1CurrentPrice,
+  priceLower,
+  priceUpper,
+  quote,
+  base,
+  invert,
+}: {
+  token0CurrentPrice?: Price<Token, Token>
+  token1CurrentPrice?: Price<Token, Token>
+  priceLower?: Price<Token, Token>
+  priceUpper?: Price<Token, Token>
+  quote?: Token
+  base?: Token
+  invert?: boolean
+}): {
+  currentPrice?: Price<Token, Token>
+  priceLower?: Price<Token, Token>
+  priceUpper?: Price<Token, Token>
+  quote?: Token
+  base?: Token
+} => {
+  return {
+    currentPrice: invert ? token1CurrentPrice : token0CurrentPrice,
+    priceUpper: invert ? priceLower?.invert() : priceUpper,
+    priceLower: invert ? priceUpper?.invert() : priceLower,
+    quote: invert ? base : quote,
+    base: invert ? quote : base,
+  }
 }
 
 export function LiquidityPositionPriceRangeTile({
   status,
   priceOrdering,
+  isTickAtLimit,
   token0CurrentPrice,
   token1CurrentPrice,
-  feeTier,
-  tickLower,
-  tickUpper,
 }: LiquidityPositionPriceRangeTileProps) {
-  const { formatPrice } = useFormatter()
+  const { formatTickPrice, formatPrice } = useFormatter()
   const [pricesInverted, setPricesInverted] = useState(false)
 
   const currencyASymbol = token0CurrentPrice.baseCurrency.symbol
@@ -60,15 +95,33 @@ export function LiquidityPositionPriceRangeTile({
     throw new Error('LiquidityPositionPriceRangeTile: Currency symbols are required')
   }
 
-  const { minPrice, maxPrice, currentPrice, tokenASymbol, tokenBSymbol } = useGetRangeDisplay({
+  const {
+    currentPrice: displayCurrentPrice,
+    priceLower,
+    priceUpper,
+    base,
+    quote,
+  } = getValues({
     token0CurrentPrice,
     token1CurrentPrice,
-    priceOrdering,
-    feeTier,
-    tickLower,
-    tickUpper,
-    pricesInverted,
+    ...priceOrdering,
+    invert: pricesInverted,
   })
+
+  const displayMinPrice = formatTickPrice({
+    price: priceLower,
+    atLimit: isTickAtLimit,
+    direction: Bound.LOWER,
+    numberType: NumberType.TokenTx,
+  })
+  const displayMaxPrice = formatTickPrice({
+    price: priceUpper,
+    atLimit: isTickAtLimit,
+    direction: Bound.UPPER,
+    numberType: NumberType.TokenTx,
+  })
+  const displayASymbol = quote?.symbol
+  const displayBSymbol = base?.symbol
 
   return (
     <Flex backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12" width="100%" gap="$gap12">
@@ -93,14 +146,14 @@ export function LiquidityPositionPriceRangeTile({
             <Trans i18nKey="pool.minPrice" />
           </Text>
           <Text variant="heading2" color="$neutral1">
-            {minPrice}
+            {displayMinPrice}
           </Text>
           <Text variant="subheading2" color="$neutral2">
             <Trans
               i18nKey="common.feesEarnedPerBase"
               values={{
-                symbolA: tokenASymbol,
-                symbolB: tokenBSymbol,
+                symbolA: displayASymbol,
+                symbolB: displayBSymbol,
               }}
             />
           </Text>
@@ -110,14 +163,14 @@ export function LiquidityPositionPriceRangeTile({
             <Trans i18nKey="pool.maxPrice" />
           </Text>
           <Text variant="heading2" color="$neutral1">
-            {maxPrice}
+            {displayMaxPrice}
           </Text>
           <Text variant="subheading2" color="$neutral2">
             <Trans
               i18nKey="common.feesEarnedPerBase"
               values={{
-                symbolA: tokenASymbol,
-                symbolB: tokenBSymbol,
+                symbolA: displayASymbol,
+                symbolB: displayBSymbol,
               }}
             />
           </Text>
@@ -128,14 +181,14 @@ export function LiquidityPositionPriceRangeTile({
           <Trans i18nKey="common.currentPrice" />
         </Text>
         <Text variant="heading2" color="$neutral1">
-          {formatPrice({ price: currentPrice, type: NumberType.TokenTx })}
+          {formatPrice({ price: displayCurrentPrice, type: NumberType.TokenTx })}
         </Text>
         <Text variant="subheading2" color="$neutral2">
           <Trans
             i18nKey="common.feesEarnedPerBase"
             values={{
-              symbolA: tokenASymbol,
-              symbolB: tokenBSymbol,
+              symbolA: displayASymbol,
+              symbolB: displayBSymbol,
             }}
           />
         </Text>

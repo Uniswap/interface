@@ -1,17 +1,12 @@
 /* eslint-disable-next-line no-restricted-imports */
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { PositionInfo } from 'components/Liquidity/types'
-import { getProtocolItems } from 'components/Liquidity/utils'
+import { PositionInfo, getProtocolItems } from 'components/Liquidity/utils'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useMemo } from 'react'
-import { PopupType, addPopup } from 'state/application/reducer'
-import { useAppDispatch } from 'state/hooks'
-import { useTransactionAdder } from 'state/transactions/hooks'
-import { TransactionType } from 'state/transactions/types'
 import { Button, Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
@@ -22,7 +17,6 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useTranslation } from 'uniswap/src/i18n'
 import { NumberType } from 'utilities/src/format/types'
-import { currencyId } from 'utils/currencyId'
 
 type ClaimFeeModalProps = {
   positionInfo: PositionInfo
@@ -48,8 +42,6 @@ export function ClaimFeeModal({
   const currencyInfo0 = useCurrencyInfo(token0Fees?.currency)
   const currencyInfo1 = useCurrencyInfo(token1Fees?.currency)
   const account = useAccount()
-  const dispatch = useAppDispatch()
-  const addTransaction = useTransactionAdder()
 
   const claimLpFeesParams = useMemo(() => {
     return {
@@ -133,28 +125,9 @@ export function ClaimFeeModal({
           </Flex>
         )}
         <Button
-          onPress={async () => {
+          onPress={() => {
             if (signer && data?.claim) {
-              const response = await signer.sendTransaction(data?.claim)
-
-              addTransaction(response, {
-                type: TransactionType.COLLECT_FEES,
-                currencyId0: currencyId(token0Fees?.currency),
-                currencyId1: currencyId(token1Fees?.currency),
-                expectedCurrencyOwed0: token0Fees?.quotient.toString() || '',
-                expectedCurrencyOwed1: token1Fees?.quotient.toString() || '',
-              })
-
-              onClose()
-              dispatch(
-                addPopup({
-                  content: {
-                    type: PopupType.Transaction,
-                    hash: response.hash,
-                  },
-                  key: response.hash,
-                }),
-              )
+              signer.sendTransaction(data?.claim)
             }
           }}
         >

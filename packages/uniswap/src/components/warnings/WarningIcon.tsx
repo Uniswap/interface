@@ -1,4 +1,4 @@
-import { ColorTokens, Flex, IconProps } from 'ui/src'
+import { ColorTokens, IconProps } from 'ui/src'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import {
   getWarningIcon,
@@ -15,27 +15,18 @@ interface Props {
   severity?: WarningSeverity
   // To override the normally associated safetyLevel<->color mapping
   strokeColorOverride?: ColorTokens
-  heroIcon?: boolean
 }
 
 export default function WarningIcon({
   safetyLevel,
   severity,
   strokeColorOverride,
-  heroIcon,
   ...rest
 }: Props & IconProps): JSX.Element | null {
   const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
   const severityToUse = severity ?? safetyLevelToWarningSeverity(safetyLevel)
-  const { color: defaultIconColor, backgroundColor } = getWarningIconColors(severityToUse)
+  const { color: defaultIconColor } = getWarningIconColors(severityToUse)
   const color = strokeColorOverride ?? defaultIconColor
   const Icon = getWarningIcon(severityToUse, tokenProtectionEnabled)
-  const icon = <Icon color={color} {...rest} />
-  return heroIcon ? (
-    <Flex borderRadius="$rounded12" p="$spacing12" backgroundColor={backgroundColor}>
-      {icon}
-    </Flex>
-  ) : (
-    icon
-  )
+  return <Icon color={color} {...rest} />
 }

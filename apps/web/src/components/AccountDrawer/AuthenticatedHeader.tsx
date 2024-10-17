@@ -1,4 +1,4 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
+import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { ActionTile } from 'components/AccountDrawer/ActionTile'
 import IconButton, { IconHoverText, IconWithConfirmTextButton } from 'components/AccountDrawer/IconButton'
@@ -10,6 +10,7 @@ import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Status } from 'components/AccountDrawer/Status'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
 import { CreditCardIcon } from 'components/Icons/CreditCard'
+import { ImagesIcon } from 'components/Icons/Images'
 import { Power } from 'components/Icons/Power'
 import { Settings } from 'components/Icons/Settings'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
@@ -17,22 +18,24 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import Column from 'components/deprecated/Column'
 import Row, { AutoRow } from 'components/deprecated/Row'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
+import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useDisconnect } from 'hooks/useDisconnect'
 import useENSName from 'hooks/useENSName'
 import { useIsUniExtensionAvailable } from 'hooks/useUniswapWalletOptions'
 import styled from 'lib/styled-components'
+import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
+import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useState } from 'react'
-import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { useOpenModal, useToggleModal } from 'state/application/hooks'
+import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
 import { ThemedText } from 'theme/components'
 import { ArrowDownCircleFilled } from 'ui/src/components/icons/ArrowDownCircleFilled'
-import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
-import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { Trans, t } from 'uniswap/src/i18n'
 import { isPathBlocked } from 'utils/blockedPaths'
@@ -100,34 +103,76 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const { disconnect } = useDisconnect()
   const { ENSName } = useENSName(account)
   const navigate = useNavigate()
+  const closeModal = useCloseModal()
   const openReceiveModal = useOpenModal({ name: ApplicationModal.RECEIVE_CRYPTO })
+  const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
+  const resetSellAssets = useSellAsset((state) => state.reset)
+  const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
   const shouldShowBuyFiatButton = !isPathBlocked('/buy')
   const { formatNumber, formatDelta } = useFormatter()
   const isUniExtensionAvailable = useIsUniExtensionAvailable()
-  const { isTestnetModeEnabled } = useEnabledChains()
+
+  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
+  const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
   const isUnclaimed = useUserHasAvailableClaim(account)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
 
   const accountDrawer = useAccountDrawer()
-  const dispatch = useDispatch()
 
-  const handleDisconnect = useCallback(() => {
-    dispatch(setIsTestnetModeEnabled(false))
-    disconnect()
-  }, [disconnect, dispatch])
+  const navigateToProfile = useCallback(() => {
+    accountDrawer.close()
+    resetSellAssets()
+    setSellPageState(ProfilePageStateType.VIEWING)
+    clearCollectionFilters()
+    navigate('/nfts/profile')
+    closeModal()
+  }, [clearCollectionFilters, closeModal, navigate, resetSellAssets, setSellPageState, accountDrawer])
+
+  const openFiatOnrampModal = useOpenModal({ name: ApplicationModal.FIAT_ONRAMP })
+  const openFoRModalWithAnalytics = useCallback(() => {
+    accountDrawer.close()
+    sendAnalyticsEvent(InterfaceEventName.FIAT_ONRAMP_WIDGET_OPENED)
+    openFiatOnrampModal()
+  }, [openFiatOnrampModal, accountDrawer])
+
+  const [shouldCheck, setShouldCheck] = useState(false)
+  const {
+    available: fiatOnrampAvailable,
+    availabilityChecked: fiatOnrampAvailabilityChecked,
+    error,
+    loading: fiatOnrampAvailabilityLoading,
+  } = useFiatOnrampAvailability(shouldCheck, openFoRModalWithAnalytics)
 
   const handleBuyCryptoClick = useCallback(() => {
-    accountDrawer.close()
-    navigate(`/buy`, { replace: true })
-  }, [accountDrawer, navigate])
+    if (forAggregatorEnabled) {
+      accountDrawer.close()
+      navigate(`/buy`, { replace: true })
+      return
+    }
+
+    if (!fiatOnrampAvailabilityChecked) {
+      setShouldCheck(true)
+    } else if (fiatOnrampAvailable) {
+      openFoRModalWithAnalytics()
+    }
+  }, [
+    accountDrawer,
+    fiatOnrampAvailabilityChecked,
+    fiatOnrampAvailable,
+    forAggregatorEnabled,
+    navigate,
+    openFoRModalWithAnalytics,
+  ])
+  const disableBuyCryptoButton = Boolean(
+    error || (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) || fiatOnrampAvailabilityLoading,
+  )
 
   const { data: portfolioBalances } = useTokenBalancesQuery({ cacheOnly: !accountDrawer.isOpen })
   const portfolio = portfolioBalances?.portfolios?.[0]
   const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
-  // denominated portfolio balance on testnet is always 0
-  const isPortfolioZero = !isTestnetModeEnabled && totalBalance === 0
+  const isEmptyWallet = totalBalance === 0 && forAggregatorEnabled
   const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
   const percentChange = portfolio?.tokensTotalDenominatedValueChange?.percentage?.value
   const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false)
@@ -137,7 +182,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
 
   return (
     <AuthenticatedHeaderWrapper isUniExtensionAvailable={isUniExtensionAvailable}>
-      <TestnetModeBanner mt={isUniExtensionAvailable ? -16 : -20} mx={-24} mb="$spacing16" />
       <HeaderWrapper>
         <Status account={account} ensUsername={ENSName} uniswapUsername={unitag?.username} />
         <IconContainer>
@@ -150,7 +194,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           <Trace logPress element={InterfaceElementName.DISCONNECT_WALLET_BUTTON}>
             <IconWithConfirmTextButton
               data-testid="wallet-disconnect"
-              onConfirm={handleDisconnect}
+              onConfirm={disconnect}
               onShowConfirm={setShowDisconnectConfirm}
               Icon={Power}
               text="Disconnect"
@@ -162,20 +206,14 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
       <PortfolioDrawerContainer>
         {totalBalance !== undefined ? (
           <FadeInColumn gap="xs">
-            <ThemedText.HeadlineLarge
-              fontWeight={535}
-              color={isTestnetModeEnabled ? 'neutral3' : 'neutral1'}
-              data-testid="portfolio-total-balance"
-            >
+            <ThemedText.HeadlineLarge fontWeight={535} data-testid="portfolio-total-balance">
               {formatNumber({
-                input: isTestnetModeEnabled ? null : totalBalance,
-                placeholder: '--',
-                forceShowCurrencySymbol: true,
+                input: totalBalance,
                 type: NumberType.PortfolioBalance,
               })}
             </ThemedText.HeadlineLarge>
             <AutoRow marginBottom="20px">
-              {absoluteChange !== 0 && percentChange && !isTestnetModeEnabled && (
+              {absoluteChange !== 0 && percentChange && (
                 <>
                   <DeltaArrow delta={absoluteChange} />
                   <ThemedText.BodySecondary>
@@ -198,25 +236,38 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           <ExtensionDeeplinks account={account} />
         ) : (
           <>
-            <Row gap="8px">
+            <Row gap="8px" marginBottom={!fiatOnrampAvailable && fiatOnrampAvailabilityChecked ? '20px' : '0px'}>
               {shouldShowBuyFiatButton && (
                 <ActionTile
                   dataTestId="wallet-buy-crypto"
                   Icon={<CreditCardIcon />}
                   name={t('common.buy.label')}
                   onClick={handleBuyCryptoClick}
+                  disabled={disableBuyCryptoButton}
+                  loading={fiatOnrampAvailabilityLoading}
+                  error={Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked)}
                   errorMessage={t('common.restricted.region')}
                   errorTooltip={t('moonpay.restricted.region')}
                 />
               )}
-              <ActionTile
-                dataTestId="wallet-recieve-crypto"
-                Icon={<ArrowDownCircleFilled size={24} />}
-                name={t('common.receive')}
-                onClick={openReceiveModal}
-              />
+              {!shouldDisableNFTRoutes && !forAggregatorEnabled && (
+                <ActionTile
+                  dataTestId="nft-view-self-nfts"
+                  Icon={<ImagesIcon />}
+                  name={t('nft.view')}
+                  onClick={navigateToProfile}
+                />
+              )}
+              {forAggregatorEnabled && (
+                <ActionTile
+                  dataTestId="wallet-recieve-crypto"
+                  Icon={<ArrowDownCircleFilled size={24} />}
+                  name={t('common.receive')}
+                  onClick={openReceiveModal}
+                />
+              )}
             </Row>
-            {isPortfolioZero ? (
+            {isEmptyWallet ? (
               <EmptyWallet handleBuyCryptoClick={handleBuyCryptoClick} handleReceiveCryptoClick={openReceiveModal} />
             ) : (
               <MiniPortfolio account={account} />

@@ -1,8 +1,9 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { getProtocolItems, useV3OrV4PositionDerivedInfo } from 'components/Liquidity/utils'
+import { getProtocolItems, useV3PositionDerivedInfo } from 'components/Liquidity/utils'
 import { ZERO_ADDRESS } from 'constants/misc'
 import JSBI from 'jsbi'
+import { usePool } from 'pages/Pool/Positions/create/hooks'
 import { useLiquidityModalContext } from 'pages/RemoveLiquidity/RemoveLiquidityModalContext'
 import { RemoveLiquidityTxInfo } from 'pages/RemoveLiquidity/RemoveLiquidityTxContext'
 import { useMemo } from 'react'
@@ -14,15 +15,27 @@ import {
   ProtocolItems,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }): RemoveLiquidityTxInfo {
   const { positionInfo, percent, percentInvalid } = useLiquidityModalContext()
 
-  const pool = positionInfo?.version === ProtocolVersion.V3 ? positionInfo.pool : undefined
+  const pool = usePool(
+    positionInfo?.currency0Amount.currency,
+    positionInfo?.currency1Amount.currency,
+    positionInfo?.feeTier ? Number(positionInfo.feeTier) : undefined,
+    positionInfo?.currency0Amount.currency.chainId ?? UniverseChainId.Mainnet,
+    positionInfo?.version,
+  )
 
   const v2LpTokenApprovalQueryParams: CheckApprovalLPRequest | undefined = useMemo(() => {
-    if (!positionInfo || !positionInfo.liquidityToken || percentInvalid || !positionInfo.liquidityAmount) {
+    if (
+      !positionInfo?.restPosition ||
+      !positionInfo.liquidityToken ||
+      percentInvalid ||
+      !positionInfo.liquidityAmount
+    ) {
       return undefined
     }
     return {
@@ -48,11 +61,11 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
 
   const approvalsNeeded = Boolean(v2LpTokenApproval)
 
-  const { feeValue0, feeValue1 } = useV3OrV4PositionDerivedInfo(positionInfo)
+  const { feeValue0, feeValue1 } = useV3PositionDerivedInfo(positionInfo)
 
   const decreaseCalldataQueryParams: DecreaseLPPositionRequest | undefined = useMemo(() => {
     const apiProtocolItems = getProtocolItems(positionInfo?.version)
-    if (!positionInfo || !apiProtocolItems || !account || percentInvalid) {
+    if (!positionInfo?.restPosition || !apiProtocolItems || !account || percentInvalid) {
       return undefined
     }
     return {
@@ -63,9 +76,9 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
       walletAddress: account,
       collectAsWeth: false,
       liquidityPercentageToDecrease: Number(percent),
-      poolLiquidity: pool?.liquidity.toString(),
-      currentTick: pool?.tickCurrent,
-      sqrtRatioX96: pool?.sqrtRatioX96.toString(),
+      poolLiquidity: pool?.liquidity,
+      currentTick: pool?.tick,
+      sqrtRatioX96: pool?.sqrtPriceX96,
       positionLiquidity:
         positionInfo.version === ProtocolVersion.V2
           ? positionInfo.liquidityAmount?.quotient.toString()

@@ -1,8 +1,9 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { useMemo, useRef } from 'react'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
+import { WithV4Flag } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { useTradingApiQuoteQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiQuoteQuery'
-import { TradeType as TradingApiTradeType } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { QuoteRequest, TradeType as TradingApiTradeType } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { useActiveGasStrategy, useShadowGasStrategies } from 'uniswap/src/features/gas/hooks'
 import { areEqualGasStrategies } from 'uniswap/src/features/gas/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -11,7 +12,6 @@ import { useIndicativeTrade } from 'uniswap/src/features/transactions/swap/hooks
 import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
 import { TradeWithStatus, UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
-  SWAP_GAS_URGENCY_OVERRIDE,
   getTokenAddressForApi,
   toTradingApiSupportedChainId,
   transformTradingApiResponseToTrade,
@@ -88,7 +88,7 @@ export function useTrade({
 
   const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
 
-  const quoteRequestArgs = useMemo((): Parameters<typeof useTradingApiQuoteQuery>[0]['params'] | undefined => {
+  const quoteRequestArgs = useMemo((): WithV4Flag<QuoteRequest> | undefined => {
     if (skipQuery) {
       return undefined
     }
@@ -101,11 +101,9 @@ export function useTrade({
       tokenIn: tokenInAddress,
       tokenOut: tokenOutAddress,
       slippageTolerance: customSlippageTolerance,
+      ...routingParams,
       gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])],
       v4Enabled,
-      isUSDQuote,
-      urgency: SWAP_GAS_URGENCY_OVERRIDE,
-      ...routingParams,
     }
   }, [
     activeAccountAddress,
@@ -121,7 +119,6 @@ export function useTrade({
     tokenOutAddress,
     tokenOutChainId,
     v4Enabled,
-    isUSDQuote,
   ])
 
   /***** Fetch quote from trading API  ******/

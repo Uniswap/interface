@@ -1,7 +1,6 @@
 /* eslint-disable rulesdir/no-undefined-or */
 import { TransactionResponse } from '@ethersproject/providers'
 import { SwapEventName } from '@uniswap/analytics-events'
-import { ZERO_PERCENT } from 'constants/misc'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/useTotalBalancesUsdForAnalytics'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
@@ -12,7 +11,6 @@ import { PopupType, addPopup } from 'state/application/reducer'
 import { handleUniswapXSignatureStep } from 'state/sagas/transactions/uniswapx'
 import {
   HandleOnChainStepParams,
-  addTransactionBreadcrumb,
   getSwapTransactionInfo,
   handleApprovalTransactionStep,
   handleOnChainStep,
@@ -38,24 +36,23 @@ import {
 } from 'uniswap/src/features/transactions/errors'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import {
-  SwapTransactionStep,
-  SwapTransactionStepAsync,
-  TransactionStep,
-  TransactionStepType,
-} from 'uniswap/src/features/transactions/swap/types/steps'
-import {
   SetCurrentStepFn,
   SwapCallback,
   SwapCallbackParams,
 } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import {
-  ValidatedBridgeSwapTxAndGasInfo,
   ValidatedClassicSwapTxAndGasInfo,
   ValidatedSwapTxContext,
   ValidatedUniswapXSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { BridgeTrade, ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { generateTransactionSteps } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
+import { ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import {
+  SwapTransactionStep,
+  SwapTransactionStepAsync,
+  TransactionStep,
+  TransactionStepType,
+  generateTransactionSteps,
+} from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { createSaga } from 'uniswap/src/utils/saga'
@@ -66,12 +63,11 @@ import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 interface HandleSwapStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
   step: SwapTransactionStep | SwapTransactionStepAsync
   signature: string | undefined
-  trade: ClassicTrade | BridgeTrade
+  trade: ClassicTrade
   analytics: ReturnType<typeof getBaseTradeAnalyticsProperties>
 }
 function* handleSwapTransactionStep(params: HandleSwapStepParams) {
   const { trade, step, signature, analytics } = params
-
   const info = getSwapTransactionInfo(trade)
   const txRequest = yield* call(getSwapTxRequest, step, signature)
 
@@ -94,12 +90,11 @@ function* handleSwapTransactionStep(params: HandleSwapStepParams) {
     onModification,
   })
 
-  const allowedSlippage = trade.slippageTolerance ? percentFromFloat(trade.slippageTolerance) : ZERO_PERCENT
   sendAnalyticsEvent(
     SwapEventName.SWAP_SIGNED,
     formatSwapSignedAnalyticsEventProperties({
       trade,
-      allowedSlippage,
+      allowedSlippage: percentFromFloat(trade.slippageTolerance),
       fiatValues: {
         amountIn: analytics.token_in_amount_usd,
         amountOut: analytics.token_out_amount_usd,
@@ -163,11 +158,12 @@ function* swap(params: SwapParams) {
 
     switch (swapTxContext.routing) {
       case Routing.CLASSIC:
-      case Routing.BRIDGE:
         return yield* classicSwap({ ...params, swapTxContext, steps })
       case Routing.DUTCH_V2:
       case Routing.PRIORITY:
         return yield* uniswapXSwap({ ...params, swapTxContext, steps })
+      // case Routing.BRIDGE:
+      //   return yield* bridgingSaga({ ...params, swapTxContext })
     }
   } catch (error) {
     logger.error(error, { tags: { file: 'swapSaga', function: 'swap' } })
@@ -176,10 +172,7 @@ function* swap(params: SwapParams) {
 }
 
 function* classicSwap(
-  params: SwapParams & {
-    swapTxContext: ValidatedClassicSwapTxAndGasInfo | ValidatedBridgeSwapTxAndGasInfo
-    steps: TransactionStep[]
-  },
+  params: SwapParams & { swapTxContext: ValidatedClassicSwapTxAndGasInfo; steps: TransactionStep[] },
 ) {
   const {
     account,
@@ -278,18 +271,15 @@ function* uniswapXSwap(
 }
 
 function getDisplayableError(error: Error, step: TransactionStep): TransactionError | undefined {
-  const userRejected = didUserReject(error)
   // If the user rejects a request, or it's a known interruption e.g. trade update, we handle gracefully / do not show error UI
-  if (userRejected || error instanceof HandledTransactionInterrupt) {
-    const loggableMessage = userRejected ? 'user rejected request' : error.message // for user rejections, avoid logging redundant/long message
-    addTransactionBreadcrumb({ step, status: 'interrupted', data: { message: loggableMessage } })
+  if (didUserReject(error) || error instanceof HandledTransactionInterrupt) {
     return undefined
   } else if (error instanceof TransactionError) {
     return error // If the error was already formatted as a TransactionError, we just propagate
   } else {
     const isBackendRejection = error instanceof FetchError
     return new TransactionStepFailedError({
-      message: `${step.type} failed during swap`,
+      message: `Swap ${step.type} failed during swap`,
       step,
       isBackendRejection,
       originalError: error,

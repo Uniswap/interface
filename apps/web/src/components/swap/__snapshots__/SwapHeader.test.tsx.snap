@@ -60,16 +60,21 @@ exports[`SwapHeader.tsx matches base snapshot 1`] = `
   text-decoration: underline;
 }
 
-.c12 {
+.c9 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c13 {
   height: 24px;
   width: 24px;
 }
 
-.c12 > * {
+.c13 > * {
   fill: #7D7D7D;
 }
 
-.c10 {
+.c11 {
   border: none;
   background-color: transparent;
   margin: 0;
@@ -78,16 +83,16 @@ exports[`SwapHeader.tsx matches base snapshot 1`] = `
   outline: none;
 }
 
-.c10:not([disabled]):hover {
+.c11:not([disabled]):hover {
   opacity: 0.7;
 }
 
-.c11 {
+.c12 {
   padding: 6px 12px;
   border-radius: 16px;
 }
 
-.c9 {
+.c10 {
   position: relative;
 }
 
@@ -177,29 +182,36 @@ exports[`SwapHeader.tsx matches base snapshot 1`] = `
             >
               Send
             </button>
-            <button
-              class="c6 c8"
+            <div
+              class="c9"
             >
-              Buy
-            </button>
+              <div>
+                <button
+                  class="c6 c8"
+                  data-testid="buy-fiat-button"
+                >
+                  Buy
+                </button>
+              </div>
+            </div>
           </div>
           <div
             class="c0 c1 c4"
           >
             <div
-              class="c9"
+              class="c10"
             >
               <button
                 aria-label="Transaction Settings"
-                class="c10"
+                class="c11"
                 data-testid="open-settings-dialog-button"
                 id="open-settings-dialog-button"
               >
                 <div
-                  class="c0 c1 c11"
+                  class="c0 c1 c12"
                 >
                   <svg
-                    class="c12"
+                    class="c13"
                     fill="none"
                     height="24"
                     viewBox="0 0 24 24"

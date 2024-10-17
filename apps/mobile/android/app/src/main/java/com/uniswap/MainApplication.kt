@@ -17,7 +17,6 @@ import com.shopify.reactnativeperformance.ReactNativePerformance
 import com.uniswap.onboarding.scantastic.ScantasticEncryptionModule
 import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper
-import com.uniswap.RedirectToSourceAppPackage 
 
 class MainApplication : MultiDexApplication(), ReactApplication {
   override val reactNativeHost: ReactNativeHost =
@@ -29,7 +28,6 @@ class MainApplication : MultiDexApplication(), ReactApplication {
           add(UniswapPackage())
           add(RNCloudStorageBackupsManagerModule())
           add(ScantasticEncryptionModule())
-          add(RedirectToSourceAppPackage())
         }
       override fun getJSMainModuleName(): String {
         return "index"

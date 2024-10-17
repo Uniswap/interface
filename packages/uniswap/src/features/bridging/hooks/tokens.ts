@@ -209,14 +209,16 @@ function useBridgingTokensToTokenOptions(
     return sortedBridgingTokens
       .map((token) => {
         const chainId = toSupportedChainId(token.chainId)
-        const validInput = token.address && token.chainId
+        const validInput = token.address && token.chainId && portfolioBalancesById
         if (!chainId || !validInput) {
           return undefined
         }
 
         const isNative = token.address === NATIVE_ADDRESS_FOR_TRADING_API
-        const currencyId = isNative ? buildNativeCurrencyId(chainId) : buildCurrencyId(chainId, token.address)
-        return portfolioBalancesById?.[currencyId] ?? createEmptyTokenOptionFromBridgingToken(token)
+        return (
+          portfolioBalancesById[isNative ? buildNativeCurrencyId(chainId) : buildCurrencyId(chainId, token.address)] ??
+          createEmptyTokenOptionFromBridgingToken(token)
+        )
       })
       .filter((tokenOption): tokenOption is TokenOption => tokenOption !== undefined)
   }, [bridgingTokens, portfolioBalancesById])

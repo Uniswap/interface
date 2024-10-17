@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { focusOrCreateUnitagTab } from 'src/app/navigation/utils'
+import { focusOrCreateUnitagClaimTab } from 'src/app/navigation/utils'
 import { Flex } from 'ui/src'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { AccountType } from 'uniswap/src/features/accounts/types'
@@ -18,7 +18,7 @@ export function HomeIntroCardStack(): JSX.Element | null {
   })
 
   const navigateToUnitagClaim = useCallback(async () => {
-    await focusOrCreateUnitagTab()
+    await focusOrCreateUnitagClaimTab()
   }, [])
 
   const { cards } = useSharedIntroCards({

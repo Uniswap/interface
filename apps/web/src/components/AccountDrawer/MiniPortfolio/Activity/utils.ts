@@ -5,10 +5,8 @@ import { CosignedPriorityOrder, CosignedV2DutchOrder, DutchOrder, getCancelMulti
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { ContractTransaction } from 'ethers/lib/ethers'
-import { useAccount } from 'hooks/useAccount'
 import { useContract } from 'hooks/useContract'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
-import useSelectChain from 'hooks/useSelectChain'
 import { useCallback } from 'react'
 import store from 'state'
 import { updateSignature } from 'state/signatures/reducer'
@@ -21,10 +19,8 @@ import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constant
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { getContract } from 'utilities/src/contracts/getContract'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
-import { WrongChainError } from 'utils/errors'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 interface ActivityGroup {
@@ -115,9 +111,8 @@ function getCancelMultipleUniswapXOrdersParams(
 export function useCancelMultipleOrdersCallback(
   orders?: Array<UniswapXOrderDetails>,
 ): () => Promise<ContractTransaction[] | undefined> {
-  const provider = useEthersWeb3Provider({ chainId: orders?.[0]?.chainId })
-  const account = useAccount()
-  const selectChain = useSelectChain()
+  const provider = useEthersWeb3Provider()
+  const permit2 = useContract<Permit2>(permit2Address(orders?.[0]?.chainId), PERMIT2_ABI, true)
 
   return useCallback(async () => {
     if (!orders || orders.length === 0) {
@@ -132,10 +127,9 @@ export function useCancelMultipleOrdersCallback(
       orders: orders.map((order) => {
         return { encodedOrder: order.encodedOrder as string, type: order.type as SignatureType }
       }),
-      signer: account.address,
+      permit2,
       provider,
       chainId: orders?.[0].chainId,
-      selectChain,
     }).then((result) => {
       orders.forEach((order) => {
         if (order.status === UniswapXOrderStatus.FILLED) {
@@ -145,32 +139,25 @@ export function useCancelMultipleOrdersCallback(
       })
       return result
     })
-  }, [orders, account.address, provider, selectChain])
+  }, [orders, permit2, provider])
 }
 
 async function cancelMultipleUniswapXOrders({
   orders,
   chainId,
-  signer,
+  permit2,
   provider,
-  selectChain,
 }: {
   orders: Array<{ encodedOrder: string; type: SignatureType }>
   chainId: UniverseChainId
-  signer?: string
+  permit2: Permit2 | null
   provider?: Web3Provider
-  selectChain: (targetChain: UniverseChainId) => Promise<boolean>
 }) {
   const cancelParams = getCancelMultipleUniswapXOrdersParams(orders, chainId)
-  const permit2 = provider && getContract(permit2Address(chainId), PERMIT2_ABI, provider, signer)
   if (!permit2 || !provider) {
     return undefined
   }
   try {
-    const switchChainResult = await selectChain(chainId)
-    if (!switchChainResult) {
-      throw new WrongChainError()
-    }
     const transactions: ContractTransaction[] = []
     for (const params of cancelParams) {
       const tx = await permit2.invalidateUnorderedNonces(params.word, params.mask)
@@ -232,8 +219,4 @@ export function useCreateCancelTransactionRequest(
   }, [params, permit2])
 
   return useAsyncData(transactionFetcher).data
-}
-
-export function isLimitCancellable(order: UniswapXOrderDetails) {
-  return [UniswapXOrderStatus.OPEN, UniswapXOrderStatus.INSUFFICIENT_FUNDS].includes(order.status)
 }

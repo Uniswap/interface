@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
-import { ExploreOrderBy, RankingType } from 'wallet/src/features/wallet/types'
+import { TokensOrderBy } from 'wallet/src/features/wallet/types'
 
 export enum SwapProtectionSetting {
   On = 'on',
@@ -15,7 +15,7 @@ export interface WalletSliceState {
   // Persisted UI configs set by the user through interaction with filters and settings
   settings: {
     swapProtection: SwapProtectionSetting
-    tokensOrderBy?: ExploreOrderBy
+    tokensOrderBy?: TokensOrderBy
   }
 
   // Tracks app rating
@@ -29,7 +29,6 @@ export const initialWalletState: WalletSliceState = {
   activeAccountAddress: null,
   settings: {
     swapProtection: SwapProtectionSetting.On,
-    tokensOrderBy: RankingType.Volume,
   },
 }
 
@@ -107,7 +106,7 @@ const slice = createSlice({
     },
     setTokensOrderBy: (
       state,
-      { payload: { newTokensOrderBy } }: PayloadAction<{ newTokensOrderBy: ExploreOrderBy }>,
+      { payload: { newTokensOrderBy } }: PayloadAction<{ newTokensOrderBy: TokensOrderBy }>,
     ) => {
       state.settings.tokensOrderBy = newTokensOrderBy
     },

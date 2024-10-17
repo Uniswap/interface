@@ -13,10 +13,10 @@ class ChromeMessageChannel {
   constructor({
     channelName,
     port,
-    canReceiveFromWebPage = false,
+    canReceiveFromContentScript = false,
   }: {
     channelName: string
-    canReceiveFromWebPage?: boolean
+    canReceiveFromContentScript?: boolean
     port?: chrome.runtime.Port
   }) {
     this.channelName = channelName
@@ -26,7 +26,7 @@ class ChromeMessageChannel {
       const targetMessage = message[this.channelName]
 
       if (targetMessage !== undefined) {
-        if (sender?.tab !== undefined && !canReceiveFromWebPage) {
+        if (sender?.tab !== undefined && !canReceiveFromContentScript) {
           return
         }
 
@@ -113,18 +113,18 @@ abstract class TypedMessageChannel<
     channelName,
     port,
     messageParsers,
-    canReceiveFromWebPage,
+    canReceiveFromContentScript,
   }: {
     channelName: string
     port?: chrome.runtime.Port
     messageParsers: MessageParsers<T, R>
-    canReceiveFromWebPage?: boolean
+    canReceiveFromContentScript?: boolean
   }) {
     this.messageParsers = messageParsers
     this.chromeMessageChannel = new ChromeMessageChannel({
       channelName,
       port,
-      canReceiveFromWebPage,
+      canReceiveFromContentScript,
     })
 
     this.chromeMessageChannel.addMessageListener((message, sender) => {
@@ -263,13 +263,13 @@ export class TypedRuntimeMessageChannel<
   constructor({
     channelName,
     messageParsers,
-    canReceiveFromWebPage,
+    canReceiveFromContentScript,
   }: {
     channelName: string
     messageParsers: MessageParsers<T, R>
-    canReceiveFromWebPage?: boolean
+    canReceiveFromContentScript?: boolean
   }) {
-    super({ channelName, messageParsers, canReceiveFromWebPage })
+    super({ channelName, messageParsers, canReceiveFromContentScript })
   }
 }
 
@@ -294,7 +294,7 @@ export class TypedPortMessageChannel<
     port: chrome.runtime.Port
     canReceiveFromContentScript?: boolean
   }) {
-    super({ channelName, messageParsers, port, canReceiveFromWebPage: canReceiveFromContentScript })
+    super({ channelName, messageParsers, port, canReceiveFromContentScript })
     this.port = port
   }
 }

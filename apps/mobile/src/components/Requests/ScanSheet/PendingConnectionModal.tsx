@@ -16,19 +16,18 @@ import {
   WalletConnectPendingSession,
   addSession,
   removePendingSession,
-  setDidOpenFromDeepLink,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Check, RotatableChevron, X } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { WCEventType, WCRequestOutcome, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { formatDappURL } from 'utilities/src/format/urls'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
 import {
   useActiveAccountAddressWithThrow,
@@ -199,8 +198,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
 
       onClose()
       if (didOpenFromDeepLink) {
-        await returnToPreviousApp()
-        setDidOpenFromDeepLink(false)
+        returnToPreviousApp()
       }
     },
     [activeAddress, dispatch, onClose, pendingSession, didOpenFromDeepLink],

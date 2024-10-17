@@ -33,7 +33,7 @@ export function useWrapTransactionRequest(
   return useAsyncData(transactionFetcher).data
 }
 
-export const getWrapTransactionRequest = async (
+const getWrapTransactionRequest = async (
   provider: providers.Provider | undefined,
   isUniswapXWrap: boolean,
   chainId: UniverseChainId,

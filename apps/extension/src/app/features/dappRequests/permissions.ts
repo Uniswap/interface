@@ -21,8 +21,8 @@ import { Permission } from 'src/contentScript/WindowEthereumRequestTypes'
 import { ExtensionEthMethods } from 'src/contentScript/methodHandlers/requestMethods'
 import { call, put } from 'typed-redux-saga'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 
 export function getPermissions(dappUrl: string | undefined, connectedAddresses: Address[] | undefined): Permission[] {
   const permissions: Permission[] = []

@@ -242,7 +242,7 @@ export function CreatePosition() {
       <PriceRangeContextProvider>
         <DepositContextProvider>
           <CreateTxContextProvider>
-            <Flex row gap={60} width={1000} mt="$spacing48">
+            <Flex row gap={60} justifyContent="space-around" mt="$spacing48">
               <Sidebar />
               <Flex gap={32} width="100%" maxWidth={580}>
                 <Toolbar />

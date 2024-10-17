@@ -1,12 +1,10 @@
 /* eslint-disable max-lines */
 import { ApolloError, NetworkStatus } from '@apollo/client'
-import { Token } from '@uniswap/sdk-core'
 import { setupWalletCache } from 'uniswap/src/data/cache'
 import {
   Chain,
-  PortfolioBalancesDocument,
+  PortfolioBalanceDocument,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { filterChainIdsByFeatureFlag, getEnabledChains } from 'uniswap/src/features/chains/utils'
 import {
   sortPortfolioBalances,
   useHighestBalanceNativeCurrencyId,
@@ -40,7 +38,6 @@ import {
 } from 'uniswap/src/test/fixtures'
 import { createArray } from 'uniswap/src/test/utils'
 import { queryResolvers } from 'uniswap/src/test/utils/resolvers'
-import { COMBINED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/types/chains'
 import { initialWalletState } from 'wallet/src/features/wallet/slice'
 import { ACCOUNT, ACCOUNT2 } from 'wallet/src/test/fixtures'
 import { act, renderHook, waitFor } from 'wallet/src/test/test-utils'
@@ -525,68 +522,9 @@ describe(sortPortfolioBalances, () => {
       currencyInfo: currencyInfo({ currency: OPTIMISM_CURRENCY }),
     }),
   ]
-  const nativeBalances: ArrayOfLength<2, PortfolioBalance> = [
-    portfolioBalance({
-      balanceUSD: null,
-      currencyInfo: currencyInfo({ currency: POLYGON_CURRENCY }),
-      quantity: 200,
-    }),
-    portfolioBalance({
-      balanceUSD: null,
-      currencyInfo: currencyInfo({ currency: MAINNET_CURRENCY }),
-      quantity: 100,
-    }),
-  ]
-  const tokenBalances: ArrayOfLength<2, PortfolioBalance> = [
-    {
-      cacheId: '1-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-      quantity: 100,
-      balanceUSD: null,
-      relativeChange24: undefined,
-      isHidden: undefined,
-      currencyInfo: {
-        logoUrl: '',
-        currencyId: '1-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-        safetyLevel: undefined,
-        currency: {
-          isNative: false,
-          isToken: true,
-          name: 'USDT',
-          address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-          symbol: 'USDT',
-          decimals: 6,
-          chainId: 1,
-        } as Token,
-      },
-    },
-    {
-      cacheId: '1-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-      quantity: 100,
-      balanceUSD: null,
-      relativeChange24: undefined,
-      isHidden: undefined,
-      currencyInfo: {
-        logoUrl: '',
-        currencyId: '1-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-        safetyLevel: undefined,
-        currency: {
-          isNative: false,
-          isToken: true,
-          name: 'USDC',
-          address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-          symbol: 'USDC',
-          decimals: 6,
-          chainId: 1,
-        } as Token,
-      },
-    },
-  ]
 
-  it('[prod mode] returns balances with USD value before balances without USD value', () => {
-    const result = sortPortfolioBalances({
-      balances: [...balancesWithoutUSD, ...balancesWithUSD],
-      isTestnetModeEnabled: false,
-    })
+  it('returns balances with USD value before balances without USD value', () => {
+    const result = sortPortfolioBalances([...balancesWithoutUSD, ...balancesWithUSD])
 
     expect(result).toEqual([
       ...createArray(balancesWithUSD.length, () => expect.objectContaining({ balanceUSD: expect.any(Number) })),
@@ -594,14 +532,14 @@ describe(sortPortfolioBalances, () => {
     ])
   })
 
-  it('[prod mode] sorts balances with USD value by USD value in descending order', () => {
-    const result = sortPortfolioBalances({ balances: balancesWithUSD, isTestnetModeEnabled: false })
+  it('sorts balances with USD value by USD value in descending order', () => {
+    const result = sortPortfolioBalances(balancesWithUSD)
 
     expect(result).toEqual(balancesWithUSD.sort((a, b) => b.balanceUSD! - a.balanceUSD!))
   })
 
-  it('[prod mode] sorts balances without USD value by name', () => {
-    const result = sortPortfolioBalances({ balances: balancesWithoutUSD, isTestnetModeEnabled: false })
+  it('sorts balances without USD value by name', () => {
+    const result = sortPortfolioBalances(balancesWithoutUSD)
 
     expect(result).toEqual([
       balancesWithoutUSD[2],
@@ -610,46 +548,6 @@ describe(sortPortfolioBalances, () => {
       balancesWithoutUSD[4],
       balancesWithoutUSD[0],
     ])
-  })
-
-  it('[testnet mode] returns native balances before everything else', () => {
-    const result = sortPortfolioBalances({
-      balances: [...tokenBalances, ...nativeBalances],
-      isTestnetModeEnabled: true,
-    })
-    expect(result.map((t) => t.currencyInfo.currency.isNative)).toEqual([true, true, false, false])
-
-    expect(result.map((t) => t.currencyInfo.currencyId)).toEqual(
-      [nativeBalances[0], nativeBalances[1], tokenBalances[1], tokenBalances[0]].map((t) => t?.currencyInfo.currencyId),
-    )
-  })
-
-  it('[testnet mode] sorts native balances by balance in descending order', () => {
-    const result = sortPortfolioBalances({ balances: nativeBalances, isTestnetModeEnabled: true })
-
-    expect(result).toEqual(nativeBalances.sort((a, b) => b.quantity! - a.quantity!))
-  })
-
-  it('[testnet mode] sorts token balances by name', () => {
-    const result = sortPortfolioBalances({ balances: tokenBalances, isTestnetModeEnabled: true })
-
-    expect(result).toEqual([tokenBalances[1], tokenBalances[0]])
-  })
-
-  it('[testnet mode] sorts token balances by name (no name last)', () => {
-    const namelessTokenBalance = {
-      ...tokenBalances[1],
-      currencyInfo: {
-        ...tokenBalances[1]?.currencyInfo,
-        currency: { ...tokenBalances[1]?.currencyInfo?.currency, name: undefined },
-      },
-    }
-    const result = sortPortfolioBalances({
-      balances: [tokenBalances[0], namelessTokenBalance] as PortfolioBalance[],
-      isTestnetModeEnabled: true,
-    })
-
-    expect(result).toEqual([tokenBalances[0], namelessTokenBalance])
   })
 })
 
@@ -662,21 +560,10 @@ describe(usePortfolioCacheUpdater, () => {
     await cache.reset()
     modifyMock.mockClear()
 
-    const enabledChains = getEnabledChains({
-      isTestnetModeEnabled: false,
-      connectedWalletChainIds: COMBINED_CHAIN_IDS,
-      featureFlaggedChainIds: filterChainIdsByFeatureFlag({
-        [UniverseChainId.WorldChain]: false,
-      }),
-    })
-
     cache.writeQuery({
-      query: PortfolioBalancesDocument,
+      query: PortfolioBalanceDocument,
       data: { portfolios: [Portfolio] },
-      variables: {
-        ownerAddress: SAMPLE_SEED_ADDRESS_1,
-        chains: enabledChains.gqlChains,
-      },
+      variables: { owner: SAMPLE_SEED_ADDRESS_1 },
     })
   })
 

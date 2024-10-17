@@ -18,10 +18,10 @@ import {
   UniswapXv2Config,
 } from 'state/routing/types'
 import { isExactInput, transformQuoteToTrade } from 'state/routing/utils'
+import { logSwapQuoteRequest } from 'tracing/swapFlowLoggers'
 import { trace } from 'tracing/trace'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/analytics'
 import { logger } from 'utilities/src/logger/logger'
 
 const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
@@ -107,10 +107,7 @@ export const routingApi = createApi({
     getQuote: build.query<TradeResult, GetQuoteArgs>({
       queryFn(args, _api, _extraOptions, fetch) {
         return trace({ name: 'Quote', op: 'quote', data: { ...args } }, async (trace) => {
-          logSwapQuoteFetch({
-            chainId: args.tokenInChainId,
-            isUSDQuote: args.routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE,
-          })
+          logSwapQuoteRequest(args.tokenInChainId, args.routerPreference, false)
           const {
             tokenInAddress: tokenIn,
             tokenInChainId,

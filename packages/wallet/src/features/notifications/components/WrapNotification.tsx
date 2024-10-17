@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { WrapTxNotification } from 'uniswap/src/features/notifications/types'
 import { useNativeCurrencyInfo, useWrappedNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
 import { NOTIFICATION_ICON_SIZE } from 'wallet/src/features/notifications/constants'
+import { WrapTxNotification } from 'wallet/src/features/notifications/types'
 import { formWrapNotificationTitle } from 'wallet/src/features/notifications/utils'
 import { useCreateWrapFormState } from 'wallet/src/features/transactions/hooks'
 

@@ -1,16 +1,15 @@
-/* eslint-disable complexity */
+import { useNavigation } from '@react-navigation/native'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
 import { getUniqueId } from 'react-native-device-info'
 import { useDispatch } from 'react-redux'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
-import { AlertTriangleFilled, Person } from 'ui/src/components/icons'
+import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { useBottomSheetSafeKeyboard } from 'uniswap/src/components/modals/useBottomSheetSafeKeyboard'
 import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
@@ -18,9 +17,9 @@ import { UnitagErrorCodes } from 'uniswap/src/features/unitags/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { logger } from 'utilities/src/logger/logger'
-import { isExtension } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
-import { UnitagName } from 'wallet/src/features/unitags/UnitagName'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { changeUnitag } from 'wallet/src/features/unitags/api'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 import { useCanAddressClaimUnitag, useCanClaimUnitagName } from 'wallet/src/features/unitags/hooks'
@@ -31,18 +30,15 @@ import { useAccount } from 'wallet/src/features/wallet/hooks'
 export function ChangeUnitagModal({
   unitag,
   address,
-  keyboardHeight = 0,
   onClose,
-  goBack,
 }: {
   unitag: string
   address: Address
-  keyboardHeight?: number
   onClose: () => void
-  goBack?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const navigation = useNavigation()
   const dispatch = useDispatch()
   const { data: deviceId } = useAsyncData(getUniqueId)
   const account = useAccount(address)
@@ -57,6 +53,7 @@ export function ChangeUnitagModal({
   const { error: canClaimUnitagNameError, loading: loadingUnitagErrorCheck } = useCanClaimUnitagName(unitagToCheck)
   const { errorCode } = useCanAddressClaimUnitag(address, true)
   const { triggerRefetchUnitags } = useUnitagUpdater()
+  const { keyboardHeight } = useBottomSheetSafeKeyboard()
 
   const isUnitagEdited = unitag !== newUnitag
   const isUnitagInvalid = newUnitag === unitagToCheck && !!canClaimUnitagNameError && !loadingUnitagErrorCheck
@@ -133,7 +130,7 @@ export function ChangeUnitagModal({
             title: t('unitags.notification.username.title'),
           }),
         )
-        goBack?.()
+        navigation.goBack()
         onClose()
       }
     } catch (e) {
@@ -166,9 +163,7 @@ export function ChangeUnitagModal({
 
   return (
     <>
-      {showConfirmModal && (
-        <ChangeUnitagConfirmModal unitag={newUnitag} onChangeSubmit={onChangeSubmit} onClose={onCloseConfirmModal} />
-      )}
+      {showConfirmModal && <ChangeUnitagConfirmModal onChangeSubmit={onChangeSubmit} onClose={onCloseConfirmModal} />}
       <Modal isDismissible name={ModalName.UnitagsChange} onClose={onClose}>
         <Flex
           centered
@@ -176,17 +171,8 @@ export function ChangeUnitagModal({
           // Since BottomSheetTextInput doesnt work, dynamically set bottom padding based on keyboard height to get a keyboard avoiding view
           pb={keyboardHeight > 0 ? keyboardHeight - spacing.spacing20 : '$spacing12'}
           pt="$spacing12"
-          px={isExtension ? undefined : '$spacing24'}
+          px="$spacing24"
         >
-          <Flex
-            centered
-            backgroundColor="$surface2"
-            borderRadius="$rounded12"
-            height="$spacing48"
-            minWidth="$spacing48"
-          >
-            <Person color="$neutral1" size="$icon.24" />
-          </Flex>
           <Text textAlign="center" variant="subheading1">
             {t('unitags.editUsername.title')}
           </Text>
@@ -197,8 +183,6 @@ export function ChangeUnitagModal({
             borderRadius="$rounded16"
             borderWidth="$spacing1"
             px="$spacing24"
-            mt="$spacing12"
-            width="100%"
           >
             <TextInput
               autoFocus
@@ -243,14 +227,14 @@ export function ChangeUnitagModal({
               </Text>
             </Flex>
           )}
-          <Flex centered row gap="$spacing8" minHeight={fonts.body3.lineHeight}>
-            {isUnitagEdited && unitagToCheck === newUnitag && canClaimUnitagNameError && (
+          {isUnitagEdited && unitagToCheck === newUnitag && canClaimUnitagNameError && (
+            <Flex centered row gap="$spacing8">
               <Text color="$statusCritical" textAlign="center" variant="body3">
                 {canClaimUnitagNameError}
               </Text>
-            )}
-          </Flex>
-          <Flex centered row pt="$spacing4" width="100%">
+            </Flex>
+          )}
+          <Flex centered row pt="$spacing4">
             <Button
               fill
               disabled={isSubmitButtonDisabled}
@@ -263,7 +247,7 @@ export function ChangeUnitagModal({
                   <ActivityIndicator color={colors.white.val} />
                 </Flex>
               ) : (
-                t('common.button.save')
+                t('unitags.editUsername.button.confirm')
               )}
             </Button>
           </Flex>
@@ -274,11 +258,9 @@ export function ChangeUnitagModal({
 }
 
 function ChangeUnitagConfirmModal({
-  unitag,
   onClose,
   onChangeSubmit,
 }: {
-  unitag: string
   onClose: () => void
   onChangeSubmit: () => Promise<void>
 }): JSX.Element {
@@ -299,13 +281,10 @@ function ChangeUnitagConfirmModal({
         <Text textAlign="center" variant="subheading1">
           {t('unitags.editUsername.confirm.title')}
         </Text>
-        <Text color="$neutral2" textAlign="center" variant={isExtension ? 'body3' : 'body2'}>
+        <Text color="$neutral2" textAlign="center" variant="body2">
           {t('unitags.editUsername.confirm.subtitle')}
         </Text>
-        <Flex py="$spacing32">
-          <UnitagName name={unitag} fontSize={fonts.heading3.fontSize} />
-        </Flex>
-        <Flex centered row gap="$spacing12" width="100%">
+        <Flex centered row gap="$spacing12" pt="$spacing24">
           <Button fill testID={TestID.Remove} theme="secondary" onPress={onClose}>
             {t('common.button.back')}
           </Button>

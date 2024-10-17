@@ -10,7 +10,7 @@ export function ToastRegularSimple({
   onDismiss,
 }: {
   icon: JSX.Element
-  text?: string
+  text: string
   onDismiss?: () => void
 }): JSX.Element {
   const media = useMedia()
@@ -51,7 +51,7 @@ export function ToastRegularSimple({
     >
       <Flex row alignItems="center" gap={12}>
         {icon}
-        {text ? <Text variant="body2">{text}</Text> : null}
+        <Text variant="body2">{text}</Text>
       </Flex>
       {onDismiss ? (
         <TouchableArea onPress={onDismiss}>

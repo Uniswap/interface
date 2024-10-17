@@ -24,7 +24,7 @@ const TransactionTitleTable: { [key in TransactionType]: { [state in Transaction
   },
   [TransactionType.REMOVE_LIQUIDITY_V3]: {
     [TransactionStatus.Pending]: t('common.removing.liquidity'),
-    [TransactionStatus.Confirmed]: t('common.removedLiquidity'),
+    [TransactionStatus.Confirmed]: t('common.removed.liquidity'),
     [TransactionStatus.Failed]: t('common.remove.liquidity.failed'),
   },
   [TransactionType.CREATE_V3_POOL]: {
@@ -149,13 +149,8 @@ const TransactionTitleTable: { [key in TransactionType]: { [state in Transaction
   },
   [TransactionType.DECREASE_LIQUIDITY]: {
     [TransactionStatus.Pending]: t('common.removing.liquidity'),
-    [TransactionStatus.Confirmed]: t('common.liquidity.removed'),
+    [TransactionStatus.Confirmed]: t('common.removed.liquidity'),
     [TransactionStatus.Failed]: t('common.remove.liquidity.failed'),
-  },
-  [TransactionType.BRIDGE]: {
-    [TransactionStatus.Pending]: t('common.swapping'),
-    [TransactionStatus.Confirmed]: t('common.swapped'),
-    [TransactionStatus.Failed]: t('common.swap.failed'),
   },
 }
 
@@ -189,7 +184,6 @@ export const CancelledTransactionTitleTable: { [key in TransactionType]: string 
   [TransactionType.LIMIT]: t('common.limit.cancelled'),
   [TransactionType.INCREASE_LIQUIDITY]: t('common.add.liquidity.cancelled'),
   [TransactionType.DECREASE_LIQUIDITY]: t('common.remove.liquidity.cancelled'),
-  [TransactionType.BRIDGE]: t('common.swap.cancelled'),
 }
 
 const AlternateTransactionTitleTable: { [key in TransactionType]?: { [state in TransactionStatus]: string } } = {

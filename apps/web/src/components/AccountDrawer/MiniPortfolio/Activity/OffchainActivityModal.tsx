@@ -8,10 +8,7 @@ import {
   OffchainOrderLineItemProps,
   OffchainOrderLineItemType,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainOrderLineItem'
-import {
-  isLimitCancellable,
-  useCancelMultipleOrdersCallback,
-} from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
+import { useCancelMultipleOrdersCallback } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
@@ -223,7 +220,6 @@ export function OrderContent({
   if (!amounts?.inputAmount || !amounts?.outputAmount) {
     return null
   }
-
   return (
     <Column>
       <Row gap="md">
@@ -267,7 +263,7 @@ export function OrderContent({
           <OffchainOrderLineItem key={detail.type} {...detail} />
         ))}
       </Column>
-      {Boolean(isLimitCancellable(order) && order.encodedOrder) && (
+      {Boolean(order.status === UniswapXOrderStatus.OPEN && order.encodedOrder) && (
         <OffchainModalBottomButton emphasis={ButtonEmphasis.medium} onClick={onCancel} size={ButtonSize.medium}>
           {order.type === SignatureType.SIGN_LIMIT ? (
             <Trans i18nKey="common.limit.cancel" count={1} />

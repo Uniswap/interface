@@ -80,7 +80,6 @@ import {
   v76Schema,
   v77Schema,
   v78Schema,
-  v79Schema,
   v7Schema,
   v8Schema,
   v9Schema,
@@ -96,7 +95,6 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { initialUniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
 import { initialFavoritesState } from 'uniswap/src/features/favorites/slice'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
-import { initialNotificationsState } from 'uniswap/src/features/notifications/slice'
 import { initialSearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
 import { initialUserSettingsState } from 'uniswap/src/features/settings/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -109,6 +107,7 @@ import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
 import { initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
+import { initialNotificationsState } from 'wallet/src/features/notifications/slice'
 import { initialTelemetryState } from 'wallet/src/features/telemetry/slice'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { initialWalletState, SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -123,7 +122,6 @@ import {
   testMovedTokenWarnings,
   testMovedUserSettings,
   testRemoveHoldToSwap,
-  testUpdateExploreOrderByType,
 } from 'wallet/src/state/walletMigrationsTests'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
@@ -1581,9 +1579,5 @@ describe('Redux state migrations', () => {
 
   it('migrates from v78 to v79', async () => {
     testMovedCurrencySetting(migrations[79], v78Schema)
-  })
-
-  it('migrates from v79 to v80', async () => {
-    testUpdateExploreOrderByType(migrations[80], v79Schema)
   })
 })

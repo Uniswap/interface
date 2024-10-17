@@ -59,6 +59,7 @@ exports[`TokenItem renders without error 1`] = `
             "flexDirection": "row",
             "gap": 4,
             "justifyContent": "center",
+            "overflow": "hidden",
           }
         }
       >
@@ -66,7 +67,6 @@ exports[`TokenItem renders without error 1`] = `
           style={
             {
               "flexDirection": "column",
-              "marginRight": 8,
               "minWidth": 16,
             }
           }

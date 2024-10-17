@@ -1,4 +1,4 @@
-import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer'
+import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/DefaultMenu'
 import { ActivityRow } from 'components/AccountDrawer/MiniPortfolio/Activity/ActivityRow'
 import { useAllActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { createGroups } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'

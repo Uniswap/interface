@@ -11,8 +11,6 @@ import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/const
 import { useFiatOnRampTransactionCreator } from 'uniswap/src/features/fiatOnRamp/hooks'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { getServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { InstitutionTransferEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -20,6 +18,8 @@ import { openUri } from 'uniswap/src/utils/linking'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 // Design decision

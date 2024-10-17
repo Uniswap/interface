@@ -11,14 +11,14 @@ import { NoDappConnections } from 'src/app/features/settings/SettingsManageConne
 import { Flex, Text, TouchableArea, UniversalImage, useSporeColors } from 'ui/src'
 import { MinusCircle } from 'ui/src/components/icons'
 import { borderRadii, breakpoints, iconSizes } from 'ui/src/theme'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const MIN_SCREEN_WIDTH = breakpoints.xxs

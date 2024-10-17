@@ -4,6 +4,7 @@ import { timingReducer } from 'uniswap/src/features/timing/slice'
 import { uniswapPersistedStateList, uniswapReducers } from 'uniswap/src/state/uniswapReducer'
 import { appearanceSettingsReducer } from 'wallet/src/features/appearance/slice'
 import { behaviorHistoryReducer } from 'wallet/src/features/behaviorHistory/slice'
+import { notificationReducer } from 'wallet/src/features/notifications/slice'
 import { telemetryReducer } from 'wallet/src/features/telemetry/slice'
 import { walletReducer } from 'wallet/src/features/wallet/slice'
 import { SagaState } from 'wallet/src/utils/saga'
@@ -12,6 +13,7 @@ export const walletReducers = {
   ...uniswapReducers,
   appearanceSettings: appearanceSettingsReducer,
   behaviorHistory: behaviorHistoryReducer,
+  notifications: notificationReducer,
   telemetry: telemetryReducer,
   timing: timingReducer,
   wallet: walletReducer,

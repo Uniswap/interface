@@ -26,7 +26,7 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { isAddress } from 'utilities/src/addresses'
-import { ParsedChainIdKey, getParsedChainId } from 'utils/chains'
+import { getParsedChainId } from 'utils/chains'
 
 export function useSwapActionHandlers(): {
   onCurrencySelection: (field: CurrencyField, currency?: Currency) => void
@@ -339,10 +339,6 @@ export function serializeSwapStateToURLParameters(
 
   params.set('chain', CHAIN_IDS_TO_NAMES[chainId])
 
-  if (outputCurrency && inputCurrency && outputCurrency.chainId !== inputCurrency.chainId) {
-    params.set('outputChain', CHAIN_IDS_TO_NAMES[outputCurrency.chainId as UniverseChainId])
-  }
-
   if (inputCurrency) {
     params.set('inputCurrency', inputCurrency.isNative ? NATIVE_CHAIN_ID : inputCurrency.address)
   }
@@ -364,15 +360,13 @@ export function serializeSwapStateToURLParameters(
 }
 
 export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCurrencyState {
-  const chainId = getParsedChainId(parsedQs)
-  const outputChainId = getParsedChainId(parsedQs, ParsedChainIdKey.OUTPUT)
   const inputCurrencyId = parseCurrencyFromURLParameter(parsedQs.inputCurrency ?? parsedQs.inputcurrency)
   const parsedOutputCurrencyId = parseCurrencyFromURLParameter(parsedQs.outputCurrency ?? parsedQs.outputcurrency)
-  const outputCurrencyId =
-    parsedOutputCurrencyId === inputCurrencyId && outputChainId === chainId ? undefined : parsedOutputCurrencyId
+  const outputCurrencyId = parsedOutputCurrencyId === inputCurrencyId ? undefined : parsedOutputCurrencyId
   const hasCurrencyInput = inputCurrencyId || outputCurrencyId
   const value = hasCurrencyInput ? parseFromURLParameter(parsedQs.value) : undefined
   const field = value ? parseFromURLParameter(parsedQs.field) : undefined
+  const chainId = getParsedChainId(parsedQs)
 
   return {
     inputCurrencyId,
@@ -380,7 +374,6 @@ export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCu
     value,
     field,
     chainId,
-    outputChainId,
   }
 }
 
@@ -446,18 +439,13 @@ export function useInitialCurrencyState(): {
 
   const initialOutputCurrencyAddress = useMemo(
     () =>
-      // clear output if identical unless there's an outputChainId which means we're bridging
-      initialInputCurrencyAddress === parsedCurrencyState.outputCurrencyId && !parsedCurrencyState.outputChainId
+      initialInputCurrencyAddress === parsedCurrencyState.outputCurrencyId // clear output if identical
         ? undefined
         : parsedCurrencyState.outputCurrencyId,
-    [initialInputCurrencyAddress, parsedCurrencyState.outputCurrencyId, parsedCurrencyState.outputChainId],
+    [initialInputCurrencyAddress, parsedCurrencyState.outputCurrencyId],
   )
-
   const initialInputCurrency = useCurrency(initialInputCurrencyAddress, initialChainId)
-  const initialOutputCurrency = useCurrency(
-    initialOutputCurrencyAddress,
-    parsedCurrencyState.outputChainId ?? initialChainId,
-  )
+  const initialOutputCurrency = useCurrency(initialOutputCurrencyAddress, initialChainId)
   const initialTypedValue = initialInputCurrency || initialOutputCurrency ? parsedCurrencyState.value : undefined
   const initialField =
     initialTypedValue && parsedCurrencyState.field && parsedCurrencyState.field in CurrencyField

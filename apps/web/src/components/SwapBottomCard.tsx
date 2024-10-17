@@ -7,7 +7,7 @@ import { ArrowUpRight } from 'react-feather'
 import { useSelector } from 'react-redux'
 import { useAppDispatch } from 'state/hooks'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
-import { ClickableTamaguiStyle, ExternalLink, HideSmall } from 'theme/components'
+import { ExternalLink, HideSmall } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { ElementAfterText, Flex, Text, TouchableArea, TouchableAreaEvent, useSporeColors } from 'ui/src'
 import { BRIDGING_BANNER } from 'ui/src/assets'
@@ -67,7 +67,7 @@ export function SwapBottomCard() {
 
   if (shouldShowBridgingBanner) {
     return (
-      <TouchableArea {...ClickableTamaguiStyle} onPress={() => handleBridgingDismiss(true)}>
+      <TouchableArea onPress={() => handleBridgingDismiss(true)}>
         <CardInner
           isAbsoluteImage
           image={

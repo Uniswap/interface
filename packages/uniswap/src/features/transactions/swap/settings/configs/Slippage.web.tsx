@@ -52,7 +52,6 @@ export const Slippage: SwapSettingConfig = {
           borderWidth={1}
           gap="$spacing8"
           p="$spacing4"
-          pr="$spacing8"
           style={inputAnimatedStyle}
         >
           <Flex

@@ -44,7 +44,6 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   const shortenedSymbol = getSymbolDisplayText(currency.symbol)
   const balance = convertFiatAmountFormatted(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)
 
-  const isTestnetModeWithNoBalance = isTestnetModeEnabled && !portfolioBalance.balanceUSD
   return (
     <TouchableArea
       hapticFeedback
@@ -79,7 +78,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
           </Flex>
         </Flex>
       </Flex>
-      {!isTestnetModeWithNoBalance && (
+      {!isTestnetModeEnabled && (
         <Flex justifyContent="space-between" position="relative">
           <Shine disabled={!isLoading}>
             {!portfolioBalance.balanceUSD ? (

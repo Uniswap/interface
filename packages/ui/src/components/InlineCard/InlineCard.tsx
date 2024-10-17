@@ -50,7 +50,7 @@ export function InlineCard({
   ) : null
 
   return (
-    <Flex row backgroundColor="$surface3" borderRadius="$rounded16" gap="$spacing12" p="$spacing12">
+    <Flex fill grow row backgroundColor="$surface3" borderRadius="$rounded16" gap="$spacing12" p="$spacing12">
       <Flex>{iconElement}</Flex>
       <Flex fill grow row gap="$spacing4" justifyContent="space-between">
         <Flex fill grow gap="$spacing2">

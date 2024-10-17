@@ -7,13 +7,13 @@ import { ActionSheetModalContent, MenuItemProp } from 'uniswap/src/components/mo
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FORMAT_DATE_LONG, useFormattedDate } from 'uniswap/src/features/language/localizedDayjs'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { openOnRampSupportLink } from 'wallet/src/utils/linking'
 
 function renderOptionItem(label: string, textColorOverride?: ColorTokens): () => JSX.Element {

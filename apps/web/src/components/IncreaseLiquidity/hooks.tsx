@@ -1,7 +1,8 @@
 // eslint-disable-next-line no-restricted-imports
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { PoolPosition, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { IncreaseLiquidityState } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
 import { DepositInfo } from 'components/Liquidity/types'
+import { getPairFromRest, getPoolFromRest } from 'components/Liquidity/utils'
 import { useAccount } from 'hooks/useAccount'
 import { UseDepositInfoProps, useDepositInfo } from 'pages/Pool/Positions/create/hooks'
 import { useMemo } from 'react'
@@ -20,10 +21,23 @@ export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): 
   const token1 = currency1.isNative ? currency1.wrapped : currency1
 
   const depositInfoProps: UseDepositInfoProps = useMemo(() => {
-    if (positionInfo.version === ProtocolVersion.V2) {
+    if (positionInfo.restPosition.position.case === undefined) {
+      return {
+        protocolVersion: ProtocolVersion.UNSPECIFIED,
+        exactField,
+      }
+    }
+
+    if (positionInfo.restPosition.position.case === 'v2Pair') {
+      const pair = getPairFromRest({
+        pair: positionInfo.restPosition.position.value,
+        token0,
+        token1,
+      })
+
       return {
         protocolVersion: ProtocolVersion.V2,
-        pair: positionInfo.pair,
+        pair,
         address: account.address,
         token0: currency0,
         token1: currency1,
@@ -32,14 +46,17 @@ export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): 
       }
     }
 
-    if (positionInfo.version === ProtocolVersion.V3) {
-      const { tickLower: tickLowerStr, tickUpper: tickUpperStr } = positionInfo
-      const tickLower = tickLowerStr ? parseInt(tickLowerStr) : undefined
-      const tickUpper = tickUpperStr ? parseInt(tickUpperStr) : undefined
+    if (positionInfo.restPosition.position.case === 'v3Position') {
+      const position: PoolPosition = positionInfo.restPosition.position.value
+      const { tickLower: tickLowerStr, tickUpper: tickUpperStr } = position
+      const tickLower = parseInt(tickLowerStr)
+      const tickUpper = parseInt(tickUpperStr)
+
+      const pool = getPoolFromRest({ pool: position, token0, token1 })
 
       return {
         protocolVersion: ProtocolVersion.V3,
-        pool: positionInfo.pool,
+        pool: pool ?? undefined,
         address: account.address,
         tickLower,
         tickUpper,
@@ -55,7 +72,17 @@ export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): 
       protocolVersion: ProtocolVersion.UNSPECIFIED,
       exactField,
     }
-  }, [account.address, exactAmount, exactField, positionInfo, currency0, currency1, token0, token1])
+  }, [
+    account.address,
+    exactAmount,
+    exactField,
+    positionInfo.restPosition.position.case,
+    positionInfo.restPosition.position.value,
+    currency0,
+    currency1,
+    token0,
+    token1,
+  ])
 
   return useDepositInfo(depositInfoProps)
 }

@@ -4,18 +4,16 @@ import {
 } from 'components/AccountDrawer/MiniPortfolio/Activity/CancelOrdersDialog'
 import { useOpenLimitOrders } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
-import {
-  isLimitCancellable,
-  useCancelMultipleOrdersCallback,
-} from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
+import { useCancelMultipleOrdersCallback } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import { LimitDetailActivityRow } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitDetailActivityRow'
 import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
 import Column from 'components/deprecated/Column'
 import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
 import styled from 'lib/styled-components'
-import { useCallback, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { UniswapXOrderDetails } from 'state/signatures/types'
+import { UniswapXOrderStatus } from 'types/uniswapx'
 import { Trans, t } from 'uniswap/src/i18n'
 
 const Container = styled(Column)`
@@ -55,19 +53,6 @@ export function LimitsMenu({ onClose, account }: { account: string; onClose: () 
     setSelectedOrdersByHash(newSelectedOrders)
   }
 
-  const handleConfirm = useCallback(async () => {
-    setCancelState(CancellationState.PENDING_SIGNATURE)
-    const transactions = await cancelOrders()
-    if (transactions && transactions.length > 0) {
-      setCancelState(CancellationState.PENDING_CONFIRMATION)
-      setCancelTxHash(transactions[0].hash)
-      await transactions[0].wait(1)
-      setCancelState(CancellationState.CANCELLED)
-    } else {
-      setCancelState(CancellationState.REVIEWING_CANCELLATION)
-    }
-  }, [cancelOrders])
-
   return (
     <SlideOutMenu title={<Trans i18nKey="common.limits.open" />} onClose={onClose}>
       <StyledLimitsDisclaimer />
@@ -80,7 +65,7 @@ export function LimitsMenu({ onClose, account }: { account: string; onClose: () 
             onToggleSelect={toggleOrderSelection}
           />
         ))}
-        {Boolean(selectedOrders.filter((order) => isLimitCancellable(order)).length) && (
+        {Boolean(selectedOrders.filter((order) => order.status === UniswapXOrderStatus.OPEN).length) && (
           <StyledCancelButton
             emphasis={ButtonEmphasis.medium}
             onClick={() => setCancelState(CancellationState.REVIEWING_CANCELLATION)}
@@ -95,7 +80,18 @@ export function LimitsMenu({ onClose, account }: { account: string; onClose: () 
         isVisible={cancelState !== CancellationState.NOT_STARTED}
         orders={selectedOrders}
         onCancel={() => setCancelState(CancellationState.NOT_STARTED)}
-        onConfirm={handleConfirm}
+        onConfirm={async () => {
+          setCancelState(CancellationState.PENDING_SIGNATURE)
+          const transactions = await cancelOrders()
+          if (transactions && transactions.length > 0) {
+            setCancelState(CancellationState.PENDING_CONFIRMATION)
+            setCancelTxHash(transactions[0].hash)
+            await transactions[0].wait(1)
+            setCancelState(CancellationState.CANCELLED)
+          } else {
+            setCancelState(CancellationState.REVIEWING_CANCELLATION)
+          }
+        }}
         cancelState={cancelState}
         cancelTxHash={cancelTxHash}
       />

@@ -7,7 +7,6 @@ import SwapHeader, { PathnameToTab } from 'components/swap/SwapHeader'
 import { PageWrapper, SwapWrapper } from 'components/swap/styled'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
-import { useIsExplorePage } from 'hooks/useIsExplorePage'
 import { BuyForm } from 'pages/Swap/Buy/BuyForm'
 import { LimitFormWrapper } from 'pages/Swap/Limit/LimitForm'
 import { SendForm } from 'pages/Swap/Send/SendForm'
@@ -22,9 +21,8 @@ import { SwapAndLimitContextProvider, SwapContextProvider } from 'state/swap/Swa
 import { useInitialCurrencyState } from 'state/swap/hooks'
 import { CurrencyState, SwapAndLimitContext } from 'state/swap/types'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { Flex, SegmentedControl, Text, Tooltip, styled } from 'ui/src'
+import { Flex, SegmentedControl, Text } from 'ui/src'
 import { AppTFunction } from 'ui/src/i18n/types'
-import { zIndices } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -144,11 +142,10 @@ export function Swap({
 }) {
   const isDark = useIsDarkMode()
   const screenSize = useScreenSize()
-  const isExplore = useIsExplorePage()
+  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
 
   const universalSwapFlow = useFeatureFlag(FeatureFlags.UniversalSwap)
   const { isTestnetModeEnabled } = useEnabledChains()
-  const isSharedSwapDisabled = isTestnetModeEnabled && isExplore
 
   const input = currencyToAsset(initialInputCurrency)
   const output = currencyToAsset(initialOutputCurrency)
@@ -173,8 +170,7 @@ export function Swap({
       >
         <PrefetchBalancesWrapper>
           <SwapFormContextProvider prefilledState={prefilledState} hideSettings={hideHeader} hideFooter={hideFooter}>
-            <Flex position="relative" gap="$spacing16" opacity={isSharedSwapDisabled ? 0.6 : 1}>
-              {isSharedSwapDisabled && <DisabledSwapOverlay />}
+            <Flex gap="$spacing16">
               <UniversalSwapFlow
                 hideHeader={hideHeader}
                 hideFooter={hideFooter}
@@ -221,7 +217,7 @@ export function Swap({
                 {currentTab === SwapTab.Send && (
                   <SendForm disableTokenInputs={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
                 )}
-                {currentTab === SwapTab.Buy && <BuyForm disabled={disableTokenInputs} />}
+                {currentTab === SwapTab.Buy && forAggregatorEnabled && <BuyForm disabled={disableTokenInputs} />}
               </SwapWrapper>
               <SwapBottomCard />
             </Flex>
@@ -266,6 +262,7 @@ function UniversalSwapFlow({
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
   const swapCallback = useSwapCallback()
   const wrapCallback = useWrapCallback()
 
@@ -389,33 +386,8 @@ function UniversalSwapFlow({
         {currentTab === SwapTab.Send && (
           <SendForm disableTokenInputs={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
         )}
-        {currentTab === SwapTab.Buy && <BuyForm disabled={disableTokenInputs} />}
+        {currentTab === SwapTab.Buy && forAggregatorEnabled && <BuyForm disabled={disableTokenInputs} />}
       </Flex>
     </>
-  )
-}
-
-const DisabledOverlay = styled(Flex, {
-  position: 'absolute',
-  width: '100%',
-  height: '100%',
-  zIndex: zIndices.overlay,
-})
-
-const DisabledSwapOverlay = () => {
-  const { t } = useTranslation()
-
-  return (
-    <DisabledOverlay cursor="not-allowed">
-      <Tooltip placement="left-start">
-        <Tooltip.Content>
-          <Tooltip.Arrow />
-          <Text variant="body4">{t('testnet.unsupported')}</Text>
-        </Tooltip.Content>
-        <Tooltip.Trigger position="relative" width="100%" height="100%">
-          <DisabledOverlay />
-        </Tooltip.Trigger>
-      </Tooltip>
-    </DisabledOverlay>
   )
 }

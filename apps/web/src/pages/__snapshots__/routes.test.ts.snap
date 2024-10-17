@@ -156,7 +156,7 @@ Array [
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
-    "path": "/positions/v2/:chainName/:pairAddress",
+    "path": "/positions/v2/:pairAddress",
   },
   Object {
     "enabled": [Function],
@@ -164,7 +164,7 @@ Array [
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
-    "path": "/positions/v3/:chainName/:tokenId",
+    "path": "/positions/v3/:tokenId",
   },
   Object {
     "enabled": [Function],
@@ -172,7 +172,7 @@ Array [
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
-    "path": "/positions/v4/:chainName/:tokenId",
+    "path": "/positions/v4/:tokenId",
   },
   Object {
     "enabled": [Function],

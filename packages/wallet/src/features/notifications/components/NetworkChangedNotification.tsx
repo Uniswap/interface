@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { NetworkChangedNotification as NetworkChangedNotificationType } from 'uniswap/src/features/notifications/types'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
+import { NetworkChangedNotification as NetworkChangedNotificationType } from 'wallet/src/features/notifications/types'
 
 export function NetworkChangedNotification({
   notification: { chainId, flow, hideDelay = 2 * ONE_SECOND_MS },

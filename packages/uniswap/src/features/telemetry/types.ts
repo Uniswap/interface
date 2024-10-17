@@ -120,9 +120,6 @@ export type SwapTradeBaseProperties = {
   price_impact_basis_points?: string | number
   estimated_network_fee_usd?: string
   chain_id?: number
-  // `chain_id_in` and `chain_id_out` was added when bridging was introduced.
-  chain_id_in?: number
-  chain_id_out?: number
   token_in_amount?: string | number
   token_out_amount?: string | number
   token_in_amount_usd?: number
@@ -155,8 +152,6 @@ type BaseSwapTransactionResultProperties = {
   time_to_swap_since_first_input?: number
   address?: string
   chain_id: number
-  chain_id_in?: number
-  chain_id_out?: number
   hash: string
   added_time?: number
   confirmed_time?: number
@@ -512,12 +507,6 @@ export type UniverseEventProperties = {
   }
   [MobileEventName.ExploreFilterSelected]: {
     filter_type: string
-  }
-  [MobileEventName.ExploreNetworkSelected]: {
-    networkChainId: number | 'all'
-  }
-  [MobileEventName.ExploreSearchNetworkSelected]: {
-    networkChainId: number | 'all'
   }
   [MobileEventName.ExploreSearchResultClicked]: SearchResultContextProperties &
     AssetDetailsBaseProperties & {

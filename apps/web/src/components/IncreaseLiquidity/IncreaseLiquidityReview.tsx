@@ -1,9 +1,7 @@
-// eslint-disable-next-line no-restricted-imports
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { useIncreaseLiquidityContext } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
 import { useIncreaseLiquidityTxContext } from 'components/IncreaseLiquidity/IncreaseLiquidityTxContext'
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
-import { useGetPoolTokenPercentage } from 'components/Liquidity/utils'
+import { useV2PositionDerivedInfo, useV3PositionDerivedInfo } from 'components/Liquidity/utils'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
@@ -17,7 +15,7 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
+import { TransactionStep } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
@@ -44,20 +42,8 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   }
 
   const { currency0Amount, currency1Amount } = increaseLiquidityState.position
-
-  const currentPrice = useMemo(() => {
-    if (increaseLiquidityState.position?.version === ProtocolVersion.V2) {
-      return increaseLiquidityState.position.pair?.token1Price
-    }
-
-    if (increaseLiquidityState.position?.version === ProtocolVersion.V3) {
-      return increaseLiquidityState.position.pool?.token1Price
-    }
-
-    return undefined
-  }, [increaseLiquidityState.position])
-
-  const poolTokenPercentage = useGetPoolTokenPercentage(increaseLiquidityState.position)
+  const { poolTokenPercentage, currentPrice: v2Price } = useV2PositionDerivedInfo(increaseLiquidityState.position)
+  const { token1CurrentPrice: v3Price } = useV3PositionDerivedInfo(increaseLiquidityState.position)
 
   const newToken0Amount = useMemo(() => {
     return currencyAmounts?.TOKEN0?.add(currency0Amount)
@@ -116,7 +102,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
                   </Text>
                 ),
                 Value: () => (
-                  <Text variant="body3">{`1 ${currentPrice?.baseCurrency.symbol} = ${currentPrice?.toFixed()} ${currentPrice?.quoteCurrency.symbol}`}</Text>
+                  <Text variant="body3">{`1 ${(v3Price || v2Price)?.baseCurrency.symbol} = ${(v3Price || v2Price)?.toFixed()} ${(v3Price || v2Price)?.quoteCurrency.symbol}`}</Text>
                 ),
               }}
             />

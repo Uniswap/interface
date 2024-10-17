@@ -10,7 +10,6 @@ import {
   v12Schema,
   v13Schema,
   v14Schema,
-  v15Schema,
   v1Schema,
   v2Schema,
   v3Schema,
@@ -24,7 +23,6 @@ import {
 import { initialUniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
 import { initialFavoritesState } from 'uniswap/src/features/favorites/slice'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
-import { initialNotificationsState } from 'uniswap/src/features/notifications/slice'
 import { initialSearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
 import { initialUserSettingsState } from 'uniswap/src/features/settings/slice'
 import { initialTokensState } from 'uniswap/src/features/tokens/slice/slice'
@@ -34,6 +32,7 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
 import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
 import { initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
+import { initialNotificationsState } from 'wallet/src/features/notifications/slice'
 import { initialWalletState } from 'wallet/src/features/wallet/slice'
 import { createMigrate } from 'wallet/src/state/createMigrate'
 import { HAYDEN_ETH_ADDRESS } from 'wallet/src/state/walletMigrations'
@@ -46,7 +45,6 @@ import {
   testMovedTokenWarnings,
   testMovedUserSettings,
   testRemoveHoldToSwap,
-  testUpdateExploreOrderByType,
 } from 'wallet/src/state/walletMigrationsTests'
 
 expect.extend({ toIncludeSameMembers })
@@ -263,9 +261,5 @@ describe('Redux state migrations', () => {
 
   it('migrates from v14 to v15', async () => {
     testMovedCurrencySetting(migrations[15], v14Schema)
-  })
-
-  it('migrates from v15 to v16', async () => {
-    testUpdateExploreOrderByType(migrations[16], v15Schema)
   })
 })

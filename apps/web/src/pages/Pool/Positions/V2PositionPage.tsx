@@ -2,12 +2,11 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
-import { parseRestPosition, useGetPoolTokenPercentage } from 'components/Liquidity/utils'
+import { parseRestPosition, useV2PositionDerivedInfo } from 'components/Liquidity/utils'
 import { LoadingRows } from 'components/Loader/styled'
 import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
-import { useChainFromUrlParam } from 'constants/chains'
 import { HeaderButton } from 'pages/Pool/Positions/PositionPage'
-import { LoadingRow, useRefetchOnLpModalClose } from 'pages/Pool/Positions/shared'
+import { LoadingRow } from 'pages/Pool/Positions/shared'
 import { useMemo } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
@@ -19,7 +18,6 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Trans } from 'uniswap/src/i18n'
 import { NumberType } from 'utilities/src/format/types'
 import { useAccount } from 'wagmi'
@@ -37,20 +35,15 @@ const BodyWrapper = styled(Main, {
 
 export default function V2PositionPage() {
   const { pairAddress } = useParams<{ pairAddress: string }>()
-  const chainInfo = useChainFromUrlParam()
   const account = useAccount()
 
-  const {
-    data,
-    isLoading: positionLoading,
-    refetch,
-  } = useGetPositionQuery(
+  const { data, isLoading: positionLoading } = useGetPositionQuery(
     account.address
       ? {
           owner: account.address,
           protocolVersion: ProtocolVersion.V2,
           pairAddress,
-          chainId: chainInfo?.id ?? account.chainId,
+          chainId: account.chainId,
         }
       : undefined,
   )
@@ -60,21 +53,16 @@ export default function V2PositionPage() {
   const navigate = useNavigate()
   const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
 
-  useRefetchOnLpModalClose(refetch)
-
   const { value: v4Enabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Everywhere)
 
   const { currency0Amount, currency1Amount, status, liquidityAmount } = positionInfo ?? {}
-
-  const token0USDValue = useUSDCValue(currency0Amount)
-  const token1USDValue = useUSDCValue(currency1Amount)
-  const poolTokenPercentage = useGetPoolTokenPercentage(positionInfo)
+  const { poolTokenPercentage, token0USDValue, token1USDValue } = useV2PositionDerivedInfo(positionInfo)
 
   if (!isLoading && !v4Enabled) {
     return <Navigate to="/pools" replace />
   }
 
-  if (positionLoading || !positionInfo || !liquidityAmount || !currency0Amount || !currency1Amount) {
+  if (positionLoading || !position || !positionInfo || !liquidityAmount || !currency0Amount || !currency1Amount) {
     return (
       <BodyWrapper>
         <LoadingRows>
@@ -106,7 +94,7 @@ export default function V2PositionPage() {
           </BreadcrumbNavContainer>
         </Flex>
 
-        <LiquidityPositionInfo positionInfo={positionInfo} />
+        <LiquidityPositionInfo position={position} />
         {status === PositionStatus.IN_RANGE && (
           <Flex row gap="$gap12" alignItems="center">
             <HeaderButton
@@ -122,7 +110,7 @@ export default function V2PositionPage() {
             <HeaderButton
               emphasis="secondary"
               onPress={() => {
-                dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: positionInfo }))
+                dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: position }))
               }}
             >
               <Text variant="buttonLabel2" color="$neutral1">
@@ -132,7 +120,7 @@ export default function V2PositionPage() {
             <HeaderButton
               emphasis="primary"
               onPress={() => {
-                dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: positionInfo }))
+                dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: position }))
               }}
             >
               <Text variant="buttonLabel2" color="$surface1">

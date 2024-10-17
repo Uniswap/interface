@@ -2,11 +2,12 @@
 import { NativeModules } from 'react-native'
 import { isAndroid } from 'utilities/src/platform'
 
-const { RNWalletConnect, RedirectToSourceApp } = NativeModules
+const { RNWalletConnect } = NativeModules
 
-export const returnToPreviousApp = async (): Promise<boolean> => {
+export const returnToPreviousApp = (): boolean => {
+  // TOOD(MOB-1680): Implement return to previous app for Android
   if (isAndroid) {
-    return RedirectToSourceApp.moveAppToBackground()
+    return false
   }
   return RNWalletConnect.returnToPreviousApp()
 }

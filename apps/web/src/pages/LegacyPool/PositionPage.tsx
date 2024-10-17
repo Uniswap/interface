@@ -380,10 +380,10 @@ function PositionPageContent() {
 
   // handle manual inversion
   const { priceLower, priceUpper, base } = useInverter({
-    priceLower: pricesFromPosition.priceLower as Price<Token, Token>,
-    priceUpper: pricesFromPosition.priceUpper as Price<Token, Token>,
-    quote: pricesFromPosition.quote as Token,
-    base: pricesFromPosition.base as Token,
+    priceLower: pricesFromPosition.priceLower,
+    priceUpper: pricesFromPosition.priceUpper,
+    quote: pricesFromPosition.quote,
+    base: pricesFromPosition.base,
     invert: manuallyInverted,
   })
 

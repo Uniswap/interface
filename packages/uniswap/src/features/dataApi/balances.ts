@@ -4,7 +4,7 @@ import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
   ContractInput,
   IAmount,
-  PortfolioBalancesDocument,
+  PortfolioBalanceDocument,
   PortfolioBalancesQuery,
   PortfolioValueModifier,
   usePortfolioBalancesQuery,
@@ -12,12 +12,7 @@ import {
 import { GqlResult } from 'uniswap/src/data/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import {
-  buildCurrency,
-  currencyIdToContractInput,
-  sortByName,
-  usePersistedError,
-} from 'uniswap/src/features/dataApi/utils'
+import { buildCurrency, currencyIdToContractInput, usePersistedError } from 'uniswap/src/features/dataApi/utils'
 import {
   useEnabledChains,
   useHideSmallBalancesSetting,
@@ -48,10 +43,12 @@ export type PortfolioCacheUpdater = (hidden: boolean, portfolioBalance?: Portfol
  * @param pollInterval optional `PollingInterval` representing polling frequency.
  *  If undefined, will query once and not poll.
  * NOTE:
- *  on TokenDetails, useBalances relies rely on usePortfolioBalances but don't need polling versions of it.
- *  Including polling was causing multiple polling intervals to be kicked off with usePortfolioBalances.
- *  Same with on Token Selector's TokenSearchResultList, since the home screen has a usePortfolioBalances polling hook,
- *  we don't need to duplicate the polling interval when token selector is open
+ *  on TokenDetails, useBalances relies rely on usePortfolioBalances but don't need
+ *  polling versions of it. Including polling was causing multiple polling intervals
+ *  to be kicked off with usePortfolioBalances.
+ *  Same with on Token Selector's TokenSearchResultList, since the home screen
+ *  has a usePortfolioBalances polling hook, we don't need to duplicate the
+ *  polling interval when token selector is open
  * @param onCompleted
  * @param fetchPolicy
  * @returns
@@ -73,6 +70,7 @@ export function usePortfolioBalances({
   })
 
   const valueModifiers = usePortfolioValueModifiers(address)
+
   const { gqlChains } = useEnabledChains()
 
   const {
@@ -353,8 +351,6 @@ export function useSortedPortfolioBalances({
   pollInterval?: PollingInterval
   onCompleted?: () => void
 }): GqlResult<SortedPortfolioBalances> & { networkStatus: NetworkStatus } {
-  const { isTestnetModeEnabled } = useEnabledChains()
-
   // Fetch all balances including small balances and spam tokens because we want to return those in separate arrays
   const {
     data: balancesById,
@@ -372,8 +368,8 @@ export function useSortedPortfolioBalances({
 
   return {
     data: {
-      balances: sortPortfolioBalances({ balances: shownTokens || [], isTestnetModeEnabled }),
-      hiddenBalances: sortPortfolioBalances({ balances: hiddenTokens || [], isTestnetModeEnabled }),
+      balances: sortPortfolioBalances(shownTokens || []),
+      hiddenBalances: sortPortfolioBalances(hiddenTokens || []),
     },
     loading,
     networkStatus,
@@ -382,26 +378,10 @@ export function useSortedPortfolioBalances({
 }
 
 /**
- * Helper function to stable sort balances by descending balanceUSD – or native balance tokens in testnet mode –
- * followed by all other tokens sorted alphabetically
+ * Helper function to stable sort balances by descending balanceUSD,
+ * followed by balances with null balanceUSD values sorted alphabetically
  * */
-export function sortPortfolioBalances({
-  balances,
-  isTestnetModeEnabled,
-}: {
-  balances: PortfolioBalance[]
-  isTestnetModeEnabled: boolean
-}): PortfolioBalance[] {
-  if (isTestnetModeEnabled) {
-    const sortedNativeBalances = balances
-      .filter((b) => b.currencyInfo.currency.isNative)
-      .sort((a, b) => b.quantity - a.quantity)
-
-    const sortedNonNativeBalances = sortByName(balances.filter((b) => !b.currencyInfo.currency.isNative))
-
-    return [...sortedNativeBalances, ...sortedNonNativeBalances]
-  }
-
+export function sortPortfolioBalances(balances: PortfolioBalance[]): PortfolioBalance[] {
   const balancesWithUSDValue = balances.filter((b) => b.balanceUSD)
   const balancesWithoutUSDValue = balances.filter((b) => !b.balanceUSD)
 
@@ -415,7 +395,15 @@ export function sortPortfolioBalances({
       }
       return b.balanceUSD - a.balanceUSD
     }),
-    ...sortByName(balancesWithoutUSDValue),
+    ...balancesWithoutUSDValue.sort((a, b) => {
+      if (!a.currencyInfo.currency.name) {
+        return 1
+      }
+      if (!b.currencyInfo.currency.name) {
+        return -1
+      }
+      return a.currencyInfo.currency.name?.localeCompare(b.currencyInfo.currency.name)
+    }),
   ]
 }
 
@@ -438,9 +426,9 @@ export function usePortfolioCacheUpdater(address: string): PortfolioCacheUpdater
       }
 
       const cachedPortfolio = apolloClient.readQuery<PortfolioBalancesQuery>({
-        query: PortfolioBalancesDocument,
+        query: PortfolioBalanceDocument,
         variables: {
-          ownerAddress: address,
+          owner: address,
           chains: gqlChains,
         },
       })?.portfolios?.[0]

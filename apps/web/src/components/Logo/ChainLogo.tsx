@@ -115,17 +115,11 @@ export function getChainUI(chainId: UniverseChainId, darkMode: boolean): ChainUI
             textColor: '#3667F6',
           }
     case UniverseChainId.WorldChain:
-      return darkMode
-        ? {
-            symbol: WORLD_CHAIN_LOGO,
-            bgColor: 'rgba(255, 255, 255, 0.12)',
-            textColor: '#FFFFFF',
-          }
-        : {
-            symbol: WORLD_CHAIN_LOGO,
-            bgColor: 'rgba(0, 0, 0, 0.12)',
-            textColor: '#000000',
-          }
+      return {
+        symbol: WORLD_CHAIN_LOGO,
+        bgColor: darkMode ? '#FFFFFF' : '#222222',
+        textColor: darkMode ? '#FFFFFF' : '#222222',
+      }
     case UniverseChainId.AstrochainSepolia:
       return {
         symbol: ASTROCHAIN_SEPOLIA_LOGO,

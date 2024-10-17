@@ -10,8 +10,8 @@ export const Container = styled(Flex, {
   borderRadius: '$rounded20',
   borderWidth: '$spacing1',
   borderColor: '$surface3',
+  maxWidth: 580,
   overflow: 'hidden',
-  width: '100%',
 })
 
 export function AdvancedButton({

@@ -9,9 +9,9 @@ import { useCopyToClipboard } from 'src/app/hooks/useOnCopyToClipboard'
 import { Anchor, Flex, Text, TouchableArea } from 'ui/src'
 import { AnimatedCopySheets, ExternalLink } from 'ui/src/components/icons'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { ellipseMiddle, shortenAddress } from 'utilities/src/addresses'
+import { CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 import {
   SpendingDetails,

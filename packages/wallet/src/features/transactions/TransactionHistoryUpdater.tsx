@@ -11,21 +11,22 @@ import {
   useTransactionListLazyQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
-import { selectLastTxNotificationUpdate } from 'uniswap/src/features/notifications/selectors'
-import {
-  pushNotification,
-  setLastTxNotificationUpdate,
-  setNotificationStatus,
-} from 'uniswap/src/features/notifications/slice'
-import { ReceiveCurrencyTxNotification, ReceiveNFTNotification } from 'uniswap/src/features/notifications/types'
 import { useEnabledChains, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
 import { shouldSuppressNotification } from 'wallet/src/features/notifications/notificationWatcherSaga'
+import { selectLastTxNotificationUpdate } from 'wallet/src/features/notifications/selectors'
+import {
+  pushNotification,
+  setLastTxNotificationUpdate,
+  setNotificationStatus,
+} from 'wallet/src/features/notifications/slice'
+import { ReceiveCurrencyTxNotification, ReceiveNFTNotification } from 'wallet/src/features/notifications/types'
 import { parseDataResponseToTransactionDetails } from 'wallet/src/features/transactions/history/utils'
 import { useAccounts, useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
+import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 export const GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE = [
   GQLQueries.PortfolioBalances,
@@ -100,7 +101,7 @@ function AddressTransactionHistoryUpdater({
   const dispatch = useDispatch()
   const apolloClient = useApolloClient()
 
-  const activeAccountAddress = useActiveAccountAddress()
+  const activeAccountAddress = useSelector(selectActiveAccountAddress)
 
   // Current txn count for all addresses
   const lastTxNotificationUpdateTimestamp = useSelector(selectLastTxNotificationUpdate)[address]

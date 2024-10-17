@@ -15,7 +15,6 @@ import { Gallery } from 'ui/src/components/icons/Gallery'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { t } from 'uniswap/src/i18n'
 
 const StyledTabButton = styled(TabButton)`
@@ -24,19 +23,19 @@ const StyledTabButton = styled(TabButton)`
 `
 
 export default function NFTs({ account }: { account: string }) {
+  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
   const accountDrawer = useAccountDrawer()
   const navigate = useNavigate()
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
-  const { gqlChains, isTestnetModeEnabled } = useEnabledChains()
 
   const isL2NFTsEnabled = useFeatureFlag(FeatureFlags.L2NFTs)
   const { walletAssets, loading, hasNext, loadMore } = useNftBalance({
     ownerAddress: account,
     first: DEFAULT_NFT_QUERY_AMOUNT,
     skip: !accountDrawer.isOpen,
-    chains: isTestnetModeEnabled ? gqlChains : isL2NFTsEnabled ? [Chain.Ethereum, Chain.Zora] : undefined,
+    chains: isL2NFTsEnabled ? [Chain.Ethereum, Chain.Zora] : undefined,
   })
 
   const [currentTokenPlayingMedia, setCurrentTokenPlayingMedia] = useState<string | undefined>()
@@ -63,11 +62,13 @@ export default function NFTs({ account }: { account: string }) {
 
   return (
     <>
-      <StyledTabButton
-        text={t('nfts.viewAndSell')}
-        icon={<Gallery color="$neutral2" size="$icon.20" />}
-        onClick={navigateToProfile}
-      />
+      {forAggregatorEnabled && (
+        <StyledTabButton
+          text={t('nfts.viewAndSell')}
+          icon={<Gallery color="$neutral2" size="$icon.20" />}
+          onClick={navigateToProfile}
+        />
+      )}
       <InfiniteScroll
         next={loadMore}
         hasMore={hasNext ?? false}

@@ -3,7 +3,6 @@ import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { RankingType } from 'wallet/src/features/wallet/types'
 
 // only add fields that are persisted
 export const initialSchema = {
@@ -616,17 +615,6 @@ const v79SchemaIntermediate = {
 delete v79SchemaIntermediate.fiatCurrencySettings
 export const v79Schema = v79SchemaIntermediate
 
-export const v80Schema = {
-  ...v79Schema,
-  wallet: {
-    ...v79Schema.wallet,
-    settings: {
-      ...v79Schema.wallet.settings,
-      tokensOrderBy: RankingType.Volume,
-    },
-  },
-}
-
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v80Schema => v80Schema
+export const getSchema = (): typeof v79Schema => v79Schema

@@ -4,6 +4,7 @@ import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/t
 import {
   chainIdToHexadecimalString,
   fromGraphQLChain,
+  fromMoonpayNetwork,
   fromUniswapWebAppLink,
   getEnabledChains,
   getPollingIntervalByBlocktime,
@@ -38,6 +39,20 @@ describe(fromGraphQLChain, () => {
 
   it('handles unsupported chain', () => {
     expect(fromGraphQLChain(Chain.UnknownChain)).toEqual(null)
+  })
+})
+
+describe(fromMoonpayNetwork, () => {
+  it('handles supported chain', () => {
+    expect(fromMoonpayNetwork(undefined)).toEqual(UniverseChainId.Mainnet)
+    expect(fromMoonpayNetwork(Chain.Arbitrum.toLowerCase())).toEqual(UniverseChainId.ArbitrumOne)
+    expect(fromMoonpayNetwork(Chain.Optimism.toLowerCase())).toEqual(UniverseChainId.Optimism)
+    expect(fromMoonpayNetwork(Chain.Polygon.toLowerCase())).toEqual(UniverseChainId.Polygon)
+    expect(fromMoonpayNetwork(Chain.Base.toLowerCase())).toEqual(UniverseChainId.Base)
+  })
+
+  it('handle unsupported chain', () => {
+    expect(fromMoonpayNetwork('unknown')).toBeUndefined()
   })
 })
 

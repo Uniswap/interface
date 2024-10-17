@@ -164,19 +164,13 @@ function isExactTokenOptionMatch(searchResult: TokenOption, query: string): bool
   )
 }
 
-export function useTokenOptionsSection({
-  sectionKey,
-  tokenOptions,
-  rightElement,
-  endElement,
-  name,
-}: {
-  sectionKey: TokenOptionSection
-  tokenOptions?: TokenOption[] | TokenOption[][]
-  rightElement?: JSX.Element
-  endElement?: JSX.Element
-  name?: string
-}): TokenSection[] | undefined {
+export function useTokenOptionsSection(
+  sectionKey: TokenOptionSection,
+  tokenOptions?: TokenOption[] | TokenOption[][],
+  rightElement?: JSX.Element,
+  endElement?: JSX.Element,
+  name?: string,
+): TokenSection[] | undefined {
   return useMemo(() => {
     if (!tokenOptions) {
       return undefined

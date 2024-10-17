@@ -37,8 +37,6 @@ export enum ClaimUnitagSteps {
   Intro = 'intro',
   CreateUsername = 'createUsername',
   ChooseProfilePic = 'chooseProfilePic',
-  EditProfile = 'editProfile',
-  Confirmation = 'confirmation',
 }
 
 export type Step = CreateOnboardingSteps | ImportOnboardingSteps | ResetSteps | ScanOnboardingSteps | ClaimUnitagSteps
