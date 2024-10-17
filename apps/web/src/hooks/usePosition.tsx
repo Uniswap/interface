@@ -47,7 +47,14 @@ const usePosition = (tokenId: number, incentiveId: string) => {
   const nftManagerPositionsContract = useV3NFTPositionManagerContract();
 
   const [incentive, setIncentive] = useState<Incentive | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isApproving, setIsApproving] = useState<boolean>(false);
+  const [isTransferring, setIsTransferring] = useState<boolean>(false);
+  const [isStaking, setIsStaking] = useState<boolean>(false);
+  const [isUnstaking, setIsUnstaking] = useState<boolean>(false);
+  const [isClaiming, setIsClaiming] = useState<boolean>(false);
+  const [isWithdrawing, setIsWithdrawing] = useState<boolean>(false);
+  const [isFetchingRewardInfo, setIsFetchingRewardInfo] =
+    useState<boolean>(false);
 
   const fetchIncentive = useCallback(
     async (incentiveId: string): Promise<Incentive | null> => {
@@ -82,6 +89,10 @@ const usePosition = (tokenId: number, incentiveId: string) => {
     });
   }, [incentiveId, fetchIncentive]);
 
+  useEffect(() => {
+    getRewardInfo();
+  }, [isTransferring, isStaking, isUnstaking, isClaiming, isWithdrawing]);
+
   const isApprovedForTransfer = useCallback(async (): Promise<boolean> => {
     if (!nftManagerPositionsContract) return false;
 
@@ -105,16 +116,17 @@ const usePosition = (tokenId: number, incentiveId: string) => {
         return;
 
       try {
-        setIsLoading(true);
-        await nftManagerPositionsContract.approve(
+        setIsApproving(true);
+        const approveTx = await nftManagerPositionsContract.approve(
           v3StakerContract.address,
           tokenId
         );
+        await approveTx.wait();
         next();
       } catch (e) {
         console.warn(e);
       } finally {
-        setIsLoading(false);
+        setIsApproving(false);
       }
     },
     [tokenId, incentiveId, v3StakerContract, nftManagerPositionsContract]
@@ -133,15 +145,16 @@ const usePosition = (tokenId: number, incentiveId: string) => {
         return;
 
       try {
-        setIsLoading(true);
-        await nftManagerPositionsContract[
+        setIsTransferring(true);
+        const transferTx = await nftManagerPositionsContract[
           "safeTransferFrom(address,address,uint256)"
         ](address, v3StakerContract.address, tokenId);
+        await transferTx.wait();
         next();
       } catch (e) {
         console.warn(e);
       } finally {
-        setIsLoading(false);
+        setIsTransferring(false);
       }
     },
     [
@@ -158,14 +171,18 @@ const usePosition = (tokenId: number, incentiveId: string) => {
       if (!(v3StakerContract && incentive)) return;
 
       try {
-        setIsLoading(true);
+        setIsStaking(true);
         const incentiveKey = buildIncentiveIdFromIncentive(incentive);
-        await v3StakerContract.stakeToken(incentiveKey, tokenId);
+        const stakeTx = await v3StakerContract.stakeToken(
+          incentiveKey,
+          tokenId
+        );
+        await stakeTx.wait();
         next();
       } catch (e) {
         console.warn(e);
       } finally {
-        setIsLoading(false);
+        setIsStaking(false);
       }
     },
     [tokenId, incentive, v3StakerContract]
@@ -176,14 +193,18 @@ const usePosition = (tokenId: number, incentiveId: string) => {
       if (!(v3StakerContract && incentive)) return;
 
       try {
-        setIsLoading(true);
+        setIsUnstaking(true);
         const incentiveKey = buildIncentiveIdFromIncentive(incentive);
-        await v3StakerContract.unstakeToken(incentiveKey, tokenId);
+        const unstakeTx = await v3StakerContract.unstakeToken(
+          incentiveKey,
+          tokenId
+        );
+        await unstakeTx.wait();
         next();
       } catch (e) {
         console.warn(e);
       } finally {
-        setIsLoading(false);
+        setIsUnstaking(false);
       }
     },
     [tokenId, incentive, v3StakerContract]
@@ -194,21 +215,22 @@ const usePosition = (tokenId: number, incentiveId: string) => {
       if (!(v3StakerContract && incentive && address)) return;
 
       try {
-        setIsLoading(true);
+        setIsClaiming(true);
         const reward = await v3StakerContract.rewards(
           incentive.rewardToken.id,
           address
         );
-        await v3StakerContract.claimReward(
+        const claimTx = await v3StakerContract.claimReward(
           incentive.rewardToken.id,
           address,
           reward
         );
+        await claimTx.wait();
         next();
       } catch (e) {
         console.warn(e);
       } finally {
-        setIsLoading(false);
+        setIsClaiming(false);
       }
     },
     [incentive, address, v3StakerContract]
@@ -219,41 +241,28 @@ const usePosition = (tokenId: number, incentiveId: string) => {
       if (!(v3StakerContract && address)) return;
 
       try {
-        setIsLoading(true);
-        await v3StakerContract.withdrawToken(tokenId, address, []);
+        setIsWithdrawing(true);
+        const withdrawTx = await v3StakerContract.withdrawToken(
+          tokenId,
+          address,
+          []
+        );
+        await withdrawTx.wait();
         next();
       } catch (e) {
         console.warn(e);
       } finally {
-        setIsLoading(false);
+        setIsWithdrawing(false);
       }
     },
     [tokenId, address, v3StakerContract]
   );
 
-  const getDepositData =
-    useCallback(async (): Promise<PositionDetails | null> => {
-      if (!(v3StakerContract && address)) return null;
-
-      try {
-        setIsLoading(true);
-        const depositData: PositionDetails = await v3StakerContract.deposits(
-          tokenId
-        );
-        return depositData;
-      } catch (e) {
-        console.warn(e);
-        return null;
-      } finally {
-        setIsLoading(false);
-      }
-    }, [tokenId, address, v3StakerContract]);
-
   const getRewardInfo = useCallback(async (): Promise<RewardInfo | null> => {
     if (!(v3StakerContract && address && incentive)) return null;
 
     try {
-      setIsLoading(true);
+      setIsFetchingRewardInfo(true);
       const incentiveKey = buildIncentiveIdFromIncentive(incentive);
       const rewardInfo: RewardInfo = await v3StakerContract.getRewardInfo(
         incentiveKey,
@@ -264,7 +273,7 @@ const usePosition = (tokenId: number, incentiveId: string) => {
       console.warn(e);
       return null;
     } finally {
-      setIsLoading(false);
+      setIsFetchingRewardInfo(false);
     }
   }, [tokenId, incentive, v3StakerContract, address]);
 
@@ -281,10 +290,15 @@ const usePosition = (tokenId: number, incentiveId: string) => {
   }, [tokenId, address, nftManagerPositionsContract, v3StakerContract]);
 
   return {
-    isLoading,
+    isFetchingRewardInfo,
+    isApproving,
+    isTransferring,
+    isStaking,
+    isUnstaking,
+    isClaiming,
+    isWithdrawing,
     isDeposited,
     isApprovedForTransfer,
-    getDepositData,
     getRewardInfo,
     approve,
     transfer,

@@ -26,12 +26,13 @@ import { useV3Positions } from "../../hooks/useV3Positions";
 import { useAccount } from "../../hooks/useAccount";
 import { FeeAmount, Pool, Position } from "@taraswap/v3-sdk";
 import { Token } from "@taraswap/sdk-core";
-import { useChainId } from "wagmi";
+import { useCall, useChainId } from "wagmi";
 import { formatUnits } from "viem/utils";
 import { MouseoverTooltip } from "components/Tooltip";
 import styled from "styled-components";
 import { Info } from "react-feather";
 import { useV3StakerContract } from "../../hooks/useV3StakerContract";
+import useTotalPositions, { PositionsResponse } from "hooks/useTotalPositions";
 
 const LOGO_DEFAULT_SIZE = 30;
 
@@ -79,9 +80,14 @@ export default function Incentives() {
   const [poolTransactionTableValues, setPoolTransactionTableValues] = useState<
     PoolIncentivesTableValues[]
   >([]);
+  const [userPositionsGql, setUserPositionsGql] = useState<PositionsResponse[]>(
+    []
+  );
   const { positions, loading: positionsLoading } = useV3Positions(
     account.address
   );
+  const { getPositionsWithDepositsOfUser, isLoading: isLoadingDepositData } =
+    useTotalPositions();
   const positionsKey = positions
     ?.map((pos) => pos.tokenId)
     .sort()
@@ -155,6 +161,18 @@ export default function Incentives() {
     }
   }, [indexerTaraswap]);
 
+  const getUserPositionsGql = useCallback(async () => {
+    if (!account || !account.address) return;
+
+    const positions = await getPositionsWithDepositsOfUser(account.address);
+    console.log("~ postionsgql", positions);
+    setUserPositionsGql(positions);
+  }, [getPositionsWithDepositsOfUser, account]);
+
+  useEffect(() => {
+    getUserPositionsGql();
+  }, []);
+
   useEffect(() => {
     fetchIncentivesData();
   }, []);
@@ -207,6 +225,29 @@ export default function Incentives() {
               );
             });
 
+            const userTokenIds = userPositions.map((pos) =>
+              Number(pos.tokenId)
+            );
+
+            const stakedTokenId = userPositionsGql.find((pos) =>
+              userTokenIds.includes(pos.id)
+            );
+            const hasDepositedToStaker = userPositionsGql.some((pos) =>
+              userTokenIds.includes(pos.id)
+            );
+
+            // Additional logging for debugging
+            console.log("User Token IDs:", userTokenIds);
+            console.log("User Positions GQL:", userPositionsGql);
+            console.log("Staked Token ID:", stakedTokenId);
+            console.log("Has Deposited To Staker:", hasDepositedToStaker);
+
+            const unifiedTokenId = poolPosition[0]
+              ? poolPosition[0].tokenId
+              : stakedTokenId
+              ? stakedTokenId.id
+              : undefined;
+
             return {
               ...poolDetails,
               address: poolDetails.id,
@@ -222,8 +263,9 @@ export default function Incentives() {
               tickUpper: poolPosition[0] ? poolPosition[0].tickUpper : "0",
               apy: annualRewardPerStandardLiquidity,
               link:
-                poolPosition[0] && poolPosition[0].tokenId
-                  ? `/pool/${poolPosition[0].tokenId}?incentive=${incentive.id}`
+                (poolPosition[0] && poolPosition[0].tokenId) ||
+                hasDepositedToStaker
+                  ? `/pool/${unifiedTokenId}?incentive=${incentive.id}`
                   : `/add/${poolDetails.token0.id}/${poolDetails.token1.id}`,
               pendingRewards,
             } as unknown as PoolInfo;
@@ -235,7 +277,7 @@ export default function Incentives() {
       let filteredData = poolInfo.filter((pool) => pool !== null) as PoolInfo[];
       return filteredData;
     },
-    [rawIncentivesData]
+    [rawIncentivesData, userPositionsGql, userPositions]
   );
 
   useEffect(() => {
@@ -304,7 +346,7 @@ export default function Incentives() {
         }
       });
     }
-  }, [rawIncentivesData, tokenList, userPositions]);
+  }, [rawIncentivesData, tokenList, userPositions, userPositionsGql]);
 
   useEffect(() => {
     fetchCoinDetails();
@@ -333,6 +375,28 @@ export default function Incentives() {
           >
             <ThemedText.BodySecondary>
               <PoolTokenImage pool={pool.getValue?.()} />
+            </ThemedText.BodySecondary>
+          </Cell>
+        ),
+      }),
+      columnHelper.accessor("feeTier", {
+        id: "feeTier",
+        header: () => (
+          <Cell minWidth={200} justifyContent="flex-start" grow>
+            <Row gap="4px">
+              <ThemedText.BodySecondary>
+                <Trans i18nKey="common.incentives.pool.feeTier" />
+              </ThemedText.BodySecondary>
+            </Row>
+          </Cell>
+        ),
+        cell: (feeTier) => (
+          <Cell loading={isLoading} minWidth={200}>
+            <ThemedText.BodySecondary>
+              {parseFloat(
+                (Number(feeTier.getValue?.() || "0") / 100000).toString()
+              ).toFixed(3)}
+              %
             </ThemedText.BodySecondary>
           </Cell>
         ),

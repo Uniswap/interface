@@ -1,8 +1,8 @@
 import Navbar from "components/NavBar/index";
-import {
-  MobileAppPromoBanner,
-  useMobileAppPromoBannerEligible,
-} from "components/TopLevelBanners/MobileAppPromoBanner";
+// import {
+//   MobileAppPromoBanner,
+//   useMobileAppPromoBannerEligible,
+// } from "components/TopLevelBanners/MobileAppPromoBanner";
 import {
   UkBanner,
   useRenderUkBanner,

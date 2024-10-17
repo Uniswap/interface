@@ -96,6 +96,7 @@ import { ExplorerDataType, getExplorerLink } from "../../utils/getExplorerLink";
 import { LoadingRows } from "./styled";
 import { STAKER_ADDRESS, useV3StakerContract } from "hooks/useV3StakerContract";
 import usePosition from "hooks/usePosition";
+import useTokenPosition from "hooks/useTokenPosition";
 
 const PositionPageButtonPrimary = styled(ButtonPrimary)`
   width: 228px;
@@ -254,7 +255,6 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
   );
 
   const {
-    getDepositData,
     getRewardInfo,
     approve,
     transfer,
@@ -264,8 +264,18 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
     claim,
     isDeposited,
     isApprovedForTransfer,
-    isLoading,
+    isFetchingRewardInfo,
+    isApproving,
+    isTransferring,
+    isStaking,
+    isUnstaking,
+    isClaiming,
+    isWithdrawing,
   } = usePosition(props.tokenId, props.incentiveId);
+
+  const { getDepositData, isLoading: isLoadingDepositData } = useTokenPosition(
+    props.tokenId
+  );
 
   const fetchDepositAndRewards = async () => {
     const depositData = await getDepositData();
@@ -293,13 +303,13 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
   const approveAndTransfer = useCallback(async () => {
     if (isApproved) {
       transfer(() => {
-        setRefetch(refetch + 1);
+        setRefetch((prev) => prev + 1);
       });
     } else {
       await approve(() => {
         setIsApproved(true);
         transfer(() => {
-          setRefetch(refetch + 1);
+          setRefetch((prev) => prev + 1);
         });
       });
     }
@@ -307,25 +317,25 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
 
   const withdraw = useCallback(async () => {
     await withdrawPosition(() => {
-      setRefetch(refetch + 1);
+      setRefetch((prev) => prev + 1);
     });
   }, [withdrawPosition, refetch]);
 
   const unstake = useCallback(async () => {
     await unstakePosition(() => {
-      setRefetch(refetch + 1);
+      setRefetch((prev) => prev + 1);
     });
   }, [unstakePosition, refetch]);
 
   const claimReward = useCallback(async () => {
     await claim(() => {
-      setRefetch(refetch + 1);
+      setRefetch((prev) => prev + 1);
     });
   }, [claim, refetch]);
 
   const stake = useCallback(async () => {
     await stakePosition(() => {
-      setRefetch(refetch + 1);
+      setRefetch((prev) => prev + 1);
     });
   }, [stakePosition, refetch]);
 
@@ -348,7 +358,7 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
               <Trans i18nKey="common.incentives.pending.reward" />
             </ExtentsText>
             <ThemedText.DeprecatedMediumHeader textAlign="center">
-              {formattedPendingRewards}
+              formattedPendingRewards
             </ThemedText.DeprecatedMediumHeader>
           </AutoColumn>
         </LightCard>
@@ -362,13 +372,59 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
             onClick={approveAndTransfer}
             disabled={userDetails.hasDeposited}
           >
-            Deposit LP Token
+            {isApproving || isTransferring ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                viewBox="0 0 24 24"
+                style={{ marginRight: "8px" }}
+              >
+                <path
+                  fill="currentColor"
+                  d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+                >
+                  <animateTransform
+                    attributeName="transform"
+                    dur="0.75s"
+                    repeatCount="indefinite"
+                    type="rotate"
+                    values="0 12 12;360 12 12"
+                  />
+                </path>
+              </svg>
+            ) : (
+              "Approve and Deposit LP Token"
+            )}
           </ButtonPrimary>
           <ButtonPrimary
             onClick={withdraw}
             disabled={!userDetails.hasDeposited}
           >
-            Withdraw LP Token
+            {isWithdrawing ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                viewBox="0 0 24 24"
+                style={{ marginRight: "8px" }}
+              >
+                <path
+                  fill="currentColor"
+                  d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+                >
+                  <animateTransform
+                    attributeName="transform"
+                    dur="0.75s"
+                    repeatCount="indefinite"
+                    type="rotate"
+                    values="0 12 12;360 12 12"
+                  />
+                </path>
+              </svg>
+            ) : (
+              "Withdraw LP Token"
+            )}
           </ButtonPrimary>
         </AutoColumn>
       </LightCard>
@@ -380,19 +436,88 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
                 <Trans i18nKey="common.incentives.lp.stake" />
               </ExtentsText>
               <ButtonPrimary onClick={stake} disabled={userDetails.hasStaked}>
-                Stake
+                {isStaking ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 24 24"
+                    style={{ marginRight: "8px" }}
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+                    >
+                      <animateTransform
+                        attributeName="transform"
+                        dur="0.75s"
+                        repeatCount="indefinite"
+                        type="rotate"
+                        values="0 12 12;360 12 12"
+                      />
+                    </path>
+                  </svg>
+                ) : (
+                  "Stake"
+                )}
               </ButtonPrimary>
               <ButtonPrimary
                 onClick={claimReward}
                 disabled={!userDetails.hasStaked}
               >
-                Claim Reward
+                {isClaiming ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 24 24"
+                    style={{ marginRight: "8px" }}
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+                    >
+                      <animateTransform
+                        attributeName="transform"
+                        dur="0.75s"
+                        repeatCount="indefinite"
+                        type="rotate"
+                        values="0 12 12;360 12 12"
+                      />
+                    </path>
+                  </svg>
+                ) : (
+                  "Claim Reward"
+                )}
               </ButtonPrimary>
               <ButtonPrimary
                 onClick={unstake}
                 disabled={!userDetails.hasStaked}
               >
-                Unstake
+                {isUnstaking ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 24 24"
+                    style={{ marginRight: "8px" }}
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+                    >
+                      <animateTransform
+                        attributeName="transform"
+                        dur="0.75s"
+                        repeatCount="indefinite"
+                        type="rotate"
+                        values="0 12 12;360 12 12"
+                      />
+                    </path>
+                  </svg>
+                ) : (
+                  "Unstake"
+                )}
               </ButtonPrimary>
             </>
           ) : (

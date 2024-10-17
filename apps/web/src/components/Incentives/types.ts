@@ -98,6 +98,17 @@ export function findTokenByAddress(
 export const indexerTaraswap = process.env.REACT_APP_INDEXER_SUBGRAPH_TARASWAP;
 export const indexerLara = process.env.REACT_APP_INDEXER_SUBGRAPH_LARA;
 
+export const POSITIONS_QUERY = `
+query positions{
+	positions(subgraphError: deny){
+    id
+    owner{
+      id
+    }
+  }
+}
+`;
+
 export const EXACT_INCENTIVE_QUERY = `
 query incentive($id: String!) {
   incentive(subgraphError: deny, id : $id){
