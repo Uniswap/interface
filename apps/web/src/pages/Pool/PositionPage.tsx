@@ -339,7 +339,7 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
     });
   }, [stakePosition, refetch]);
 
-  return (
+  return props.incentiveId ? (
     <AutoColumn gap="md" justify="center">
       <RowBetween gap="md">
         <LightCard padding="12px" width="100%">
@@ -358,7 +358,7 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
               <Trans i18nKey="common.incentives.pending.reward" />
             </ExtentsText>
             <ThemedText.DeprecatedMediumHeader textAlign="center">
-              formattedPendingRewards
+              {formattedPendingRewards}
             </ThemedText.DeprecatedMediumHeader>
           </AutoColumn>
         </LightCard>
@@ -528,6 +528,8 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
         </AutoColumn>
       </LightCard>
     </AutoColumn>
+  ) : (
+    <></>
   );
 }
 
@@ -1668,21 +1670,25 @@ function PositionPageContent() {
                 />
               </AutoColumn>
             </DarkCard>
-            <DarkCard>
-              <AutoColumn gap="md">
-                <RowBetween>
-                  <RowFixed>
-                    <Label display="flex" style={{ marginRight: "12px" }}>
-                      <Trans i18nKey="common.incentives" />
-                    </Label>
-                  </RowFixed>
-                </RowBetween>
-                <UserDetailsCard
-                  tokenId={Number(tokenId?.toString() ?? 0)}
-                  incentiveId={incentiveId ?? ""}
-                />
-              </AutoColumn>
-            </DarkCard>
+            {incentiveId ? (
+              <DarkCard>
+                <AutoColumn gap="md">
+                  <RowBetween>
+                    <RowFixed>
+                      <Label display="flex" style={{ marginRight: "12px" }}>
+                        <Trans i18nKey="common.incentives" />
+                      </Label>
+                    </RowFixed>
+                  </RowBetween>
+                  <UserDetailsCard
+                    tokenId={Number(tokenId?.toString() ?? 0)}
+                    incentiveId={incentiveId ?? ""}
+                  />
+                </AutoColumn>
+              </DarkCard>
+            ) : (
+              <></>
+            )}
           </AutoColumn>
         </PageWrapper>
         <SwitchLocaleLink />

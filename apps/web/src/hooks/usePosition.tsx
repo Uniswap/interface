@@ -34,7 +34,9 @@ export interface Incentive {
   rewardToken: {
     id: string;
   };
-  pool: string;
+  pool: {
+    id: string;
+  };
   startTime: number;
   endTime: number;
   vestingPeriod: number;
@@ -312,7 +314,7 @@ const usePosition = (tokenId: number, incentiveId: string) => {
 const buildIncentiveIdFromIncentive = (incentive: Incentive): IncentiveKey => {
   return {
     rewardToken: incentive.rewardToken.id,
-    pool: incentive.pool,
+    pool: incentive.pool.id,
     startTime: incentive.startTime,
     endTime: incentive.endTime,
     vestingPeriod: incentive.vestingPeriod,
