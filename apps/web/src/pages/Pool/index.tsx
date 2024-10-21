@@ -215,10 +215,6 @@ export default function Pool() {
   const filteredPositions = useFilterPossiblyMaliciousPositions(userSelectedPositionSet)
 
   const { loading: ichiVaultsLoading, amounts: ichiVaults } = useIchiVaults(account)
-  console.log({ ichiVaultsLoading })
-  if (ichiVaults) {
-    console.log(ichiVaults)
-  }
 
   if (!isSupportedChain(chainId)) {
     return <WrongNetworkCard />

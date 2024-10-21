@@ -69,6 +69,7 @@ export default function PositionList({ positions }: PositionListProps) {
           token1={p.vaultInfo.tokenB}
           vaultAddress={p.vaultAddress}
           amounts={p.userAmounts}
+          isReversed={p.vaultInfo.allowTokenA == false}
         />
       ))}
     </>

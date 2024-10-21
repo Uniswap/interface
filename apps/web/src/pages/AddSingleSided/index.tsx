@@ -1,4 +1,4 @@
-import { SupportedDex, deposit } from '@ichidao/ichi-vaults-sdk'
+import { SupportedDex, deposit, getIchiVaultInfo } from '@ichidao/ichi-vaults-sdk'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@ubeswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -38,6 +38,57 @@ import { DynamicSection, MediumOnly, ResponsiveTwoColumns, ScrollablePage, Wrapp
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 const DEPOSIT_GUARD_ADDRESS = '0x238394541dE407Fd494e455eF17C9D991F4FBEd8'
+
+const VAULTS = [
+  // cUSD-CELO-0.01% 0xA4574B53c18192B5DC37e7428e7BD66C04cA9410
+  {
+    depositTokenSymbol: 'cUSD',
+    otherTokenSymbol: 'CELO',
+    vaultAddress: '0xA4574B53c18192B5DC37e7428e7BD66C04cA9410',
+  },
+
+  // CELO-cUSD-0.01% 0xd85a949433c1F373eF3C3fA6f7c26edb10F136Eb
+  {
+    depositTokenSymbol: 'CELO',
+    otherTokenSymbol: 'cUSD',
+    vaultAddress: '0xd85a949433c1F373eF3C3fA6f7c26edb10F136Eb',
+  },
+
+  // CELO-USDT-0.01% 0x91a954a8dC372b49E2A4227556Dcc23f7fb16353
+  {
+    depositTokenSymbol: 'CELO',
+    otherTokenSymbol: 'USDT',
+    vaultAddress: '0x91a954a8dC372b49E2A4227556Dcc23f7fb16353',
+  },
+
+  // USDT-CELO-0.01% 0xa6e80fAb39506317F5246f200B0AF3aa828Da40c
+  {
+    depositTokenSymbol: 'USDT',
+    otherTokenSymbol: 'CELO',
+    vaultAddress: '0xa6e80fAb39506317F5246f200B0AF3aa828Da40c',
+  },
+
+  // CELO-UBE-0.01% 0x982dbFb3141852A828837c33CA899D4C748B2827
+  {
+    depositTokenSymbol: 'CELO',
+    otherTokenSymbol: 'UBE',
+    vaultAddress: '0x982dbFb3141852A828837c33CA899D4C748B2827',
+  },
+
+  // CELO-USDC-0.01% 0x9a16797F2192EC3475B6C81B62C2B68E654Bcb98
+  {
+    depositTokenSymbol: 'CELO',
+    otherTokenSymbol: 'USDC',
+    vaultAddress: '0x9a16797F2192EC3475B6C81B62C2B68E654Bcb98',
+  },
+
+  // USDC-CELO-0.01% 0xa3Cecd4A024D18Df495b350316b6A491C71a5d53
+  {
+    depositTokenSymbol: 'USDC',
+    otherTokenSymbol: 'CELO',
+    vaultAddress: '0xa3Cecd4A024D18Df495b350316b6A491C71a5d53',
+  },
+]
 
 const StyledBodyWrapper = styled(BodyWrapper)`
   padding: 0;
@@ -85,65 +136,42 @@ function AddSingleSided() {
   const currencyB = useCurrency(currencyIdB)
   const baseBalance = useCurrencyBalance(account, baseCurrency)
 
-  const currencyCELO = useCurrency('0x471EcE3750Da237f93B8E339c536989b8978a438')
-  const currencyUBE = useCurrency('0x71e26d0E519D14591b9dE9a0fE9513A398101490')
-  const currencyCUSD = useCurrency('0x765DE816845861e75A25fCA122bb6898B8B1282a')
-  const currencyUSDT = useCurrency('0x48065fbBE25f71C9282ddf5e1cD6D6A887483D5e')
-  const currencyUSDC = useCurrency('0xcebA9300f2b948710d2653dD7B07f33A8B32118C')
+  const currencies = [
+    useCurrency('0x471EcE3750Da237f93B8E339c536989b8978a438'),
+    useCurrency('0x71e26d0E519D14591b9dE9a0fE9513A398101490'),
+    useCurrency('0x765DE816845861e75A25fCA122bb6898B8B1282a'),
+    useCurrency('0x48065fbBE25f71C9282ddf5e1cD6D6A887483D5e'),
+    useCurrency('0xcebA9300f2b948710d2653dD7B07f33A8B32118C'),
+  ]
 
-  const firstCurrencies = [currencyCELO, currencyCUSD, currencyUSDT, currencyUSDC]
-  const secondCurrencies = useMemo(() => {
-    if (baseCurrency) {
-      if (baseCurrency.symbol === currencyCELO?.symbol) {
-        return [currencyUBE, currencyCUSD, currencyUSDT, currencyUSDC]
-      }
-      if (baseCurrency.symbol === currencyUSDT?.symbol) {
-        return [currencyCELO]
-      }
-      if (baseCurrency.symbol === currencyCUSD?.symbol) {
-        return [currencyCELO]
-      }
-      if (baseCurrency.symbol === currencyUSDC?.symbol) {
-        return [currencyCELO]
-      }
+  const firstCurrencies = useMemo(() => {
+    if (currencies.filter((c) => !c).length == 0) {
+      return currencies.filter((c) => !!VAULTS.find((v) => c?.symbol == v.depositTokenSymbol))
     }
     return []
-  }, [baseCurrency, currencyCELO, currencyCUSD, currencyUSDT, currencyUBE, currencyUSDC])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, currencies)
 
-  // prevent an error if they input ETH/WETH
+  const secondCurrencies = useMemo(() => {
+    if (baseCurrency && currencies.filter((c) => !c).length == 0) {
+      const otherSymbols = VAULTS.filter((v) => v.depositTokenSymbol == baseCurrency.symbol).map(
+        (v) => v.otherTokenSymbol
+      )
+      return currencies.filter((c) => otherSymbols.includes(c?.symbol ?? ''))
+    }
+    return []
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [baseCurrency].concat(currencies))
+
   const quoteCurrency =
     baseCurrency && currencyB && baseCurrency.wrapped.equals(currencyB.wrapped) ? undefined : currencyB
 
   const vaultAddress = useMemo(() => {
-    // cUSD-CELO-0.01% 0xA4574B53c18192B5DC37e7428e7BD66C04cA9410
-    // CELO-cUSD-0.01% 0xd85a949433c1F373eF3C3fA6f7c26edb10F136Eb
-    // CELO-USDT-0.01% 0x91a954a8dC372b49E2A4227556Dcc23f7fb16353
-    // USDT-CELO-0.01% 0xa6e80fAb39506317F5246f200B0AF3aa828Da40c
-    // CELO-UBE-0.01% 0x982dbFb3141852A828837c33CA899D4C748B2827
-    // CELO-USDC-0.01% 0x9a16797F2192EC3475B6C81B62C2B68E654Bcb98
-    // USDC-CELO-0.01% 0xa3Cecd4A024D18Df495b350316b6A491C71a5d53
-    if (baseCurrency?.symbol == 'CELO') {
-      if (quoteCurrency?.symbol == 'cUSD') {
-        return '0xd85a949433c1F373eF3C3fA6f7c26edb10F136Eb'
-      }
-      if (quoteCurrency?.symbol == 'USDT') {
-        return '0x91a954a8dC372b49E2A4227556Dcc23f7fb16353'
-      }
-      if (quoteCurrency?.symbol == 'USDC') {
-        return '0x9a16797F2192EC3475B6C81B62C2B68E654Bcb98'
-      }
-      if (quoteCurrency?.symbol == 'UBE') {
-        return '0x982dbFb3141852A828837c33CA899D4C748B2827'
-      }
-    }
-    if (baseCurrency?.symbol == 'cUSD' && quoteCurrency?.symbol == 'CELO') {
-      return '0xA4574B53c18192B5DC37e7428e7BD66C04cA9410'
-    }
-    if (baseCurrency?.symbol == 'USDT' && quoteCurrency?.symbol == 'CELO') {
-      return '0xa6e80fAb39506317F5246f200B0AF3aa828Da40c'
-    }
-    if (baseCurrency?.symbol == 'USDC' && quoteCurrency?.symbol == 'CELO') {
-      return '0xa3Cecd4A024D18Df495b350316b6A491C71a5d53'
+    if (baseCurrency && quoteCurrency) {
+      const vault = VAULTS.find(
+        (v) => v.depositTokenSymbol == baseCurrency.symbol && v.otherTokenSymbol == quoteCurrency.symbol
+      )
+      return vault ? vault.vaultAddress : undefined
     }
     return undefined
   }, [baseCurrency, quoteCurrency])
@@ -197,26 +225,26 @@ function AddSingleSided() {
     try {
       setAttemptingTxn(true)
       const dex = SupportedDex.Ubeswap
-      const txnDetails =
-        baseCurrency?.symbol == 'CELO'
-          ? await deposit(
-              account,
-              parseUnits(depositAmount, baseCurrency.decimals), // can be 0 when only depositing amount1
-              0, // can be 0 when only depositing amount0
-              vaultAddress,
-              provider,
-              dex,
-              1 // acceptable slippage (percents)
-            )
-          : await deposit(
-              account,
-              0, // can be 0 when only depositing amount1
-              parseUnits(depositAmount, baseCurrency.decimals), // can be 0 when only depositing amount0
-              vaultAddress,
-              provider,
-              dex,
-              1 // acceptable slippage (percents)
-            )
+      const info = await getIchiVaultInfo(42220, dex, vaultAddress)
+      const txnDetails = info.allowTokenA
+        ? await deposit(
+            account,
+            parseUnits(depositAmount, baseCurrency.decimals), // can be 0 when only depositing amount1
+            0, // can be 0 when only depositing amount0
+            vaultAddress,
+            provider,
+            dex,
+            1 // acceptable slippage (percents)
+          )
+        : await deposit(
+            account,
+            0, // can be 0 when only depositing amount1
+            parseUnits(depositAmount, baseCurrency.decimals), // can be 0 when only depositing amount0
+            vaultAddress,
+            provider,
+            dex,
+            1 // acceptable slippage (percents)
+          )
       setTxHash(txnDetails.hash)
       addTransaction(txnDetails, {
         type: TransactionType.CUSTOM,
@@ -233,20 +261,13 @@ function AddSingleSided() {
 
   const handleCurrencySelect = useCallback((firstCurrency?: Currency, secondCurrency?: Currency): Currency[] => {
     if (firstCurrency) {
-      if (['CELO', 'cUSD', 'USDT', 'USDC'].includes(firstCurrency.symbol || '')) {
+      const firstTokenSymbols = VAULTS.map((v) => v.depositTokenSymbol)
+      if (firstTokenSymbols.includes(firstCurrency.symbol || '')) {
         if (secondCurrency) {
-          if (firstCurrency.symbol == 'CELO') {
-            if (['UBE', 'cUSD', 'USDT', 'USDC'].includes(secondCurrency.symbol || '')) {
-              return [firstCurrency, secondCurrency]
-            }
-          }
-          if (firstCurrency.symbol == 'cUSD' && secondCurrency.symbol == 'CELO') {
-            return [firstCurrency, secondCurrency]
-          }
-          if (firstCurrency.symbol == 'USDT' && secondCurrency.symbol == 'CELO') {
-            return [firstCurrency, secondCurrency]
-          }
-          if (firstCurrency.symbol == 'USDC' && secondCurrency.symbol == 'CELO') {
+          const secondSymbols = VAULTS.filter((v) => v.depositTokenSymbol == firstCurrency.symbol).map(
+            (v) => v.otherTokenSymbol
+          )
+          if (secondSymbols.includes(secondCurrency.symbol || '')) {
             return [firstCurrency, secondCurrency]
           }
         }
@@ -426,20 +447,18 @@ function AddSingleSided() {
               {!hasExistingPosition && (
                 <>
                   <DynamicSection gap="md">
-                    {baseCurrency && quoteCurrency && (
-                      <YellowCard padding="8px 12px" $borderRadius="12px">
-                        <RowBetween>
-                          <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
-                          <ThemedText.DeprecatedYellow ml="12px" fontSize="12px">
-                            Single token deposits only. The final position may consist with both tokens. Learn more
-                            about the strategy&nbsp;
-                            <ExternalLink href="https://docs.ichi.org/home/yield-iq-strategy">here.</ExternalLink>.
-                            <br />
-                            This liquidity will be managed by ICHI finance.
-                          </ThemedText.DeprecatedYellow>
-                        </RowBetween>
-                      </YellowCard>
-                    )}
+                    <YellowCard padding="8px 12px" $borderRadius="12px">
+                      <RowBetween>
+                        <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
+                        <ThemedText.DeprecatedYellow ml="12px" fontSize="12px">
+                          Single token deposits only. The final position may consist with both tokens. Learn more about
+                          the strategy&nbsp;
+                          <ExternalLink href="https://docs.ichi.org/home/yield-iq-strategy">here.</ExternalLink>.
+                          <br />
+                          This liquidity will be managed by ICHI finance.
+                        </ThemedText.DeprecatedYellow>
+                      </RowBetween>
+                    </YellowCard>
                   </DynamicSection>
                 </>
               )}

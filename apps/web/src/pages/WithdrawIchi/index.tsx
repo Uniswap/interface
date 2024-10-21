@@ -194,11 +194,13 @@ function WithdrawIchi() {
         summary: 'Withdraw single token liquidty',
       })
       await txnDetails.wait(2)
+      setTimeout(() => window.location.reload(), 800)
     } catch (err) {
       console.log(err)
     } finally {
       setTxHash('')
       setAttemptingTxn(false)
+      setShowConfirm(false)
     }
   }
 

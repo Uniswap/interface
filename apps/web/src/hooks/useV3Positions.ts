@@ -193,11 +193,12 @@ export function useIchiVaults(account: string | null | undefined): UseIchiVaults
       ;(async () => {
         try {
           const dex = SupportedDex.Ubeswap
-          const amounts: (UserAmountsInVault & { vaultInfo?: IchiVault })[] = await getAllUserAmounts(
+          let amounts: (UserAmountsInVault & { vaultInfo?: IchiVault })[] = await getAllUserAmounts(
             account,
             provider,
             dex
           )
+          amounts = amounts.filter((a) => a.userAmounts.amount0 != '0' && a.userAmounts.amount1 != '0')
           for (const amountInfo of amounts) {
             amountInfo.vaultInfo = await getIchiVaultInfo(42220, dex, amountInfo.vaultAddress)
           }
