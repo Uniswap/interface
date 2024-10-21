@@ -15,13 +15,13 @@ import { TransactionType } from 'state/transactions/types'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
-import { /*ButtonConfirmed,*/ ButtonError } from 'components/Button'
-import { AutoColumn } from 'components/Column'
+import { /*ButtonConfirmed,*/ ButtonError } from 'components/Button/buttons'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
+import { AutoColumn } from 'components/deprecated/Column'
+import { RowBetween } from 'components/deprecated/Row'
 import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import ProgressCircles from 'components/ProgressSteps'
-import { RowBetween } from 'components/Row'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;

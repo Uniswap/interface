@@ -1,5 +1,5 @@
-import { ButtonPrimary } from 'components/Button'
-import { AutoColumn } from 'components/Column'
+import { ButtonPrimary } from 'components/Button/buttons'
+import { AutoColumn } from 'components/deprecated/Column'
 import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import { useAccount } from 'hooks/useAccount'
@@ -10,7 +10,7 @@ import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/ho
 import { ExternalLink, ThemedText } from 'theme/components'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 export const ProposalSubmissionModal = ({
   isOpen,

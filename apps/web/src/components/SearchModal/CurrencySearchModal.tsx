@@ -1,5 +1,5 @@
 import { Currency, Token } from '@uniswap/sdk-core'
-import { CurrencySearch } from 'components/SearchModal/CurrencySearch'
+import { CurrencySearch, CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import TokenSafety from 'components/TokenSafety'
 import useLast from 'hooks/useLast'
 import { memo, useCallback, useEffect, useState } from 'react'
@@ -17,6 +17,7 @@ interface CurrencySearchModalProps {
   otherSelectedCurrency?: Currency | null
   showCurrencyAmount?: boolean
   currencyField?: CurrencyField
+  currencySearchFilters?: CurrencySearchFilters
   operatedPools?: Token[]
 }
 
@@ -31,6 +32,7 @@ export default memo(function CurrencySearchModal({
   onDismiss,
   onCurrencySelect,
   currencyField = CurrencyField.INPUT,
+  currencySearchFilters,
   operatedPools,
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.search)
@@ -71,7 +73,6 @@ export default memo(function CurrencySearchModal({
   switch (modalView) {
     // we use DeprecatedCurrencySearch without multichain flag and for pool select
     case CurrencyModalView.search:
-      content = currencySearchFilters?.onlyDisplaySmartPools ? (
       content = (
         <CurrencySearch
           currencyField={currencyField}

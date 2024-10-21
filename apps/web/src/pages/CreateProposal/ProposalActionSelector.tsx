@@ -1,7 +1,7 @@
-import { ButtonDropdown } from 'components/Button'
-import Column from 'components/Column'
+import { ButtonDropdownLight } from 'components/Button/buttons'
+import Column from 'components/deprecated/Column'
 import Modal from 'components/Modal'
-import { RowBetween } from 'components/Row'
+import { RowBetween } from 'components/deprecated/Row'
 import { MenuItem, PaddedColumn, Separator } from 'components/SearchModal/styled'
 import styled from 'lib/styled-components'
 import { useCallback } from 'react'
@@ -37,7 +37,7 @@ const ActionSelectorHeader = styled.div`
   margin-bottom: 10px;
 `
 
-const ActionDropdown = styled(ButtonDropdown)`
+const ActionDropdown = styled(ButtonDropdownLight)`
   padding: 0px;
   background-color: transparent;
   color: ${({ theme }) => theme.neutral1};

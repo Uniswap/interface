@@ -22,15 +22,18 @@ export interface CurrencySearchFilters {
   onlyDisplaySmartPools?: boolean
 }
 
+// TODO: remove boolean if we pass operated pools only when we need to display them
 interface CurrencySearchProps {
   currencyField: CurrencyField
-  hideChainSwitch: boolean
+  onlyDisplaySmartPools?: boolean
+  currencySearchFilters?: CurrencySearchFilters
+  operatedPools?: Currency[]
   onCurrencySelect: (currency: Currency) => void
   onDismiss: () => void
 }
 
 // TODO: we moved filtering by operate pool to currency search modal, check if needed
-export function CurrencySearch({ currencyField, hideChainSwitch, onCurrencySelect, onDismiss }: CurrencySearchProps) {
+export function CurrencySearch({ currencyField, currencySearchFilters, operatedPools, onCurrencySelect, onDismiss }: CurrencySearchProps) {
   const account = useAccount()
   const { chainId, setSelectedChainId, isUserSelectedToken, setIsUserSelectedToken, currentTab, multichainUXEnabled } =
     useSwapAndLimitContext()

@@ -3,8 +3,8 @@
  *
  * TODO(WEB-4896): remove this file
  */
-import { GRG } from 'constants/tokens'
 import { useCurrencyInfo } from 'hooks/Tokens'
+import { GRG } from 'uniswap/src/constants/tokens'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans, t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'

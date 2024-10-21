@@ -2,9 +2,9 @@ import { Interface } from '@ethersproject/abi'
 import { getAddress, isAddress } from '@ethersproject/address'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { ButtonError } from 'components/Button'
-import { BlueCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
+import { ButtonError } from 'components/Button/buttons'
+import { BlueCard } from 'components/Card/cards'
+import { AutoColumn } from 'components/deprecated/Column'
 import {
   AUTHORITY_ADDRESSES,
   GOVERNANCE_PROXY_ADDRESSES,
@@ -40,9 +40,9 @@ import TOKEN_ABI from 'uniswap/src/abis/erc20.json'
 import GOVERNANCE_RB_ABI from 'uniswap/src/abis/governance.json'
 import RB_POOL_FACTORY_ABI from 'uniswap/src/abis/rb-pool-factory.json'
 import STAKING_PROXY_ABI from 'uniswap/src/abis/staking-proxy.json'
+import { GRG } from 'uniswap/src/constants/tokens'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans } from 'uniswap/src/i18n'
-import { GRG } from 'constants/tokens'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;

@@ -1,5 +1,5 @@
 import { MendableSearchBar } from '@mendable/search'
-import { RowFixed } from 'components/Row'
+import { RowFixed } from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 

@@ -1,6 +1,6 @@
 import { Interface } from '@ethersproject/abi'
+import { RowFixed } from 'components/deprecated/Row'
 import PoolPositionListItem from 'components/PoolPositionListItem'
-import { RowFixed } from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'uniswap/src/i18n'
