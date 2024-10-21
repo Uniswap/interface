@@ -89,12 +89,13 @@ function AddSingleSided() {
   const currencyUBE = useCurrency('0x71e26d0E519D14591b9dE9a0fE9513A398101490')
   const currencyCUSD = useCurrency('0x765DE816845861e75A25fCA122bb6898B8B1282a')
   const currencyUSDT = useCurrency('0x48065fbBE25f71C9282ddf5e1cD6D6A887483D5e')
+  const currencyUSDC = useCurrency('0xcebA9300f2b948710d2653dD7B07f33A8B32118C')
 
-  const firstCurrencies = [currencyCELO, currencyCUSD, currencyUSDT]
+  const firstCurrencies = [currencyCELO, currencyCUSD, currencyUSDT, currencyUSDC]
   const secondCurrencies = useMemo(() => {
     if (baseCurrency) {
       if (baseCurrency.symbol === currencyCELO?.symbol) {
-        return [currencyUBE, currencyCUSD, currencyUSDT]
+        return [currencyUBE, currencyCUSD, currencyUSDT, currencyUSDC]
       }
       if (baseCurrency.symbol === currencyUSDT?.symbol) {
         return [currencyCELO]
@@ -102,9 +103,12 @@ function AddSingleSided() {
       if (baseCurrency.symbol === currencyCUSD?.symbol) {
         return [currencyCELO]
       }
+      if (baseCurrency.symbol === currencyUSDC?.symbol) {
+        return [currencyCELO]
+      }
     }
     return []
-  }, [baseCurrency, currencyCELO, currencyCUSD, currencyUSDT, currencyUBE])
+  }, [baseCurrency, currencyCELO, currencyCUSD, currencyUSDT, currencyUBE, currencyUSDC])
 
   // prevent an error if they input ETH/WETH
   const quoteCurrency =
@@ -116,12 +120,17 @@ function AddSingleSided() {
     // CELO-USDT-0.01% 0x91a954a8dC372b49E2A4227556Dcc23f7fb16353
     // USDT-CELO-0.01% 0xa6e80fAb39506317F5246f200B0AF3aa828Da40c
     // CELO-UBE-0.01% 0x982dbFb3141852A828837c33CA899D4C748B2827
+    // CELO-USDC-0.01% 0x9a16797F2192EC3475B6C81B62C2B68E654Bcb98
+    // USDC-CELO-0.01% 0xa3Cecd4A024D18Df495b350316b6A491C71a5d53
     if (baseCurrency?.symbol == 'CELO') {
       if (quoteCurrency?.symbol == 'cUSD') {
         return '0xd85a949433c1F373eF3C3fA6f7c26edb10F136Eb'
       }
       if (quoteCurrency?.symbol == 'USDT') {
         return '0x91a954a8dC372b49E2A4227556Dcc23f7fb16353'
+      }
+      if (quoteCurrency?.symbol == 'USDC') {
+        return '0x9a16797F2192EC3475B6C81B62C2B68E654Bcb98'
       }
       if (quoteCurrency?.symbol == 'UBE') {
         return '0x982dbFb3141852A828837c33CA899D4C748B2827'
@@ -132,6 +141,9 @@ function AddSingleSided() {
     }
     if (baseCurrency?.symbol == 'USDT' && quoteCurrency?.symbol == 'CELO') {
       return '0xa6e80fAb39506317F5246f200B0AF3aa828Da40c'
+    }
+    if (baseCurrency?.symbol == 'USDC' && quoteCurrency?.symbol == 'CELO') {
+      return '0xa3Cecd4A024D18Df495b350316b6A491C71a5d53'
     }
     return undefined
   }, [baseCurrency, quoteCurrency])
@@ -185,15 +197,26 @@ function AddSingleSided() {
     try {
       setAttemptingTxn(true)
       const dex = SupportedDex.Ubeswap
-      const txnDetails = await deposit(
-        account,
-        parseUnits(depositAmount, baseCurrency.decimals), // can be 0 when only depositing amount1
-        0, // can be 0 when only depositing amount0
-        vaultAddress,
-        provider,
-        dex,
-        1 // acceptable slippage (percents)
-      )
+      const txnDetails =
+        baseCurrency?.symbol == 'CELO'
+          ? await deposit(
+              account,
+              parseUnits(depositAmount, baseCurrency.decimals), // can be 0 when only depositing amount1
+              0, // can be 0 when only depositing amount0
+              vaultAddress,
+              provider,
+              dex,
+              1 // acceptable slippage (percents)
+            )
+          : await deposit(
+              account,
+              0, // can be 0 when only depositing amount1
+              parseUnits(depositAmount, baseCurrency.decimals), // can be 0 when only depositing amount0
+              vaultAddress,
+              provider,
+              dex,
+              1 // acceptable slippage (percents)
+            )
       setTxHash(txnDetails.hash)
       addTransaction(txnDetails, {
         type: TransactionType.CUSTOM,
@@ -210,10 +233,10 @@ function AddSingleSided() {
 
   const handleCurrencySelect = useCallback((firstCurrency?: Currency, secondCurrency?: Currency): Currency[] => {
     if (firstCurrency) {
-      if (['CELO', 'cUSD', 'USDT'].includes(firstCurrency.symbol || '')) {
+      if (['CELO', 'cUSD', 'USDT', 'USDC'].includes(firstCurrency.symbol || '')) {
         if (secondCurrency) {
           if (firstCurrency.symbol == 'CELO') {
-            if (['UBE', 'cUSD', 'USDT'].includes(secondCurrency.symbol || '')) {
+            if (['UBE', 'cUSD', 'USDT', 'USDC'].includes(secondCurrency.symbol || '')) {
               return [firstCurrency, secondCurrency]
             }
           }
@@ -221,6 +244,9 @@ function AddSingleSided() {
             return [firstCurrency, secondCurrency]
           }
           if (firstCurrency.symbol == 'USDT' && secondCurrency.symbol == 'CELO') {
+            return [firstCurrency, secondCurrency]
+          }
+          if (firstCurrency.symbol == 'USDC' && secondCurrency.symbol == 'CELO') {
             return [firstCurrency, secondCurrency]
           }
         }

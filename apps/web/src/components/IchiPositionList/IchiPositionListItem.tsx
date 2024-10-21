@@ -66,13 +66,25 @@ interface PositionListItemProps {
 }
 
 export default function PositionListItem({
-  token0: token0Address,
-  token1: token1Address,
+  token0: _token0Address,
+  token1: _token1Address,
   vaultAddress,
   amounts,
 }: PositionListItemProps) {
   const { formatNumber } = useFormatter()
   const navigate = useNavigate()
+
+  let token0Address = _token0Address
+  let token1Address = _token1Address
+  console.log({ vaultAddress })
+  const reverse =
+    vaultAddress.toLowerCase() == '0xA4574B53c18192B5DC37e7428e7BD66C04cA9410'.toLowerCase() ||
+    vaultAddress.toLowerCase() == '0xa6e80fAb39506317F5246f200B0AF3aa828Da40c'.toLowerCase() ||
+    vaultAddress.toLowerCase() == '0xa3Cecd4A024D18Df495b350316b6A491C71a5d53'.toLowerCase()
+  if (reverse) {
+    token0Address = _token1Address
+    token1Address = _token0Address
+  }
 
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
@@ -93,7 +105,7 @@ export default function PositionListItem({
           <ThemedText.SubHeader style={{ fontWeight: 'bold' }}>
             &nbsp;
             {formatNumber({
-              input: parseFloat(amounts.amount0),
+              input: parseFloat(reverse ? amounts.amount1 : amounts.amount0),
               type: NumberType.TokenNonTx,
             })}
             &nbsp;{currency0?.symbol}

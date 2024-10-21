@@ -25,6 +25,8 @@ const MigrateV2Pair = lazy(() => import('pages/MigrateV2/MigrateV2Pair'))
 const NotFound = lazy(() => import('pages/NotFound'))
 const Pool = lazy(() => import('pages/Pool'))
 const PositionPage = lazy(() => import('pages/Pool/PositionPage'))
+const IchiVaultDetails = lazy(() => import('pages/IchiVaultDetails'))
+const WithdrawIchi = lazy(() => import('pages/WithdrawIchi'))
 const PoolV2 = lazy(() => import('pages/Pool/v2'))
 const PoolDetails = lazy(() => import('pages/PoolDetails'))
 const PoolFinder = lazy(() => import('pages/PoolFinder'))
@@ -228,6 +230,16 @@ export const routes: RouteDefinition[] = [
     nestedPaths: [':currencyIdA', ':currencyIdA/:currencyIdB'],
     getElement: () => <AddSingleSidedWithTokenRedirects />,
     getTitle: () => t`Provide liquidity to Single Sided Vaults on Ubeswap`,
+  }),
+  createRouteDefinition({
+    path: '/ichivault/:vaultAddress',
+    getElement: () => <IchiVaultDetails />,
+    getTitle: () => t`Manage single sided vault on Ubeswap`,
+  }),
+  createRouteDefinition({
+    path: '/remove/single/:vaultAddress',
+    getElement: () => <WithdrawIchi />,
+    getTitle: () => t`Manage single sided vault on Ubeswap`,
   }),
   createRouteDefinition({
     path: '/add',

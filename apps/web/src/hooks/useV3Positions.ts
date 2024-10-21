@@ -226,3 +226,44 @@ export function useIchiVaults(account: string | null | undefined): UseIchiVaults
     amounts: data,
   }
 }
+
+export function useIchiVaultDetails(vaultAddress: string | undefined) {
+  const [data, setData] = useState<IchiVault>()
+  const [isLoading, setIsLoading] = useState(true)
+  const { provider } = useWeb3React()
+
+  const pendingTxs = JSON.stringify(usePendingTransactions())
+
+  useEffect(() => {
+    let active = true
+    if (vaultAddress && provider) {
+      setIsLoading(true)
+      ;(async () => {
+        try {
+          const dex = SupportedDex.Ubeswap
+          const info = await getIchiVaultInfo(42220, dex, vaultAddress)
+
+          if (active) {
+            setData(info)
+          }
+        } catch (e) {
+          console.error(e)
+        } finally {
+          if (active) {
+            setIsLoading(false)
+          }
+        }
+      })()
+    } else {
+      setIsLoading(false)
+    }
+    return () => {
+      active = false
+    }
+  }, [vaultAddress, pendingTxs, provider])
+
+  return {
+    loading: isLoading,
+    info: data,
+  }
+}
