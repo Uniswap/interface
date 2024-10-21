@@ -28,6 +28,7 @@ Array [
           "symbol": "DEF",
         },
         10000,
+        "V3",
       ],
     ],
     "percent": Percent {

@@ -2,7 +2,7 @@ import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { render } from 'uniswap/src/test/test-utils'
 
 import ReactDOM from 'react-dom'
-import { WALLET_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
+import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 
 ReactDOM.createPortal = jest.fn((element) => {
   return element as React.ReactPortal
@@ -10,9 +10,7 @@ ReactDOM.createPortal = jest.fn((element) => {
 
 describe(NetworkFilter, () => {
   it('renders a NetworkFilter', () => {
-    const tree = render(
-      <NetworkFilter chainIds={WALLET_SUPPORTED_CHAIN_IDS} selectedChain={null} onPressChain={() => null} />,
-    )
+    const tree = render(<NetworkFilter chainIds={SUPPORTED_CHAIN_IDS} selectedChain={null} onPressChain={() => null} />)
     expect(tree).toMatchSnapshot()
   })
 })

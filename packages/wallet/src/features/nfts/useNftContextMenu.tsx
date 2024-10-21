@@ -15,7 +15,7 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
@@ -31,7 +31,7 @@ interface NFTMenuParams {
   owner?: Address
   showNotification?: boolean
   isSpam?: boolean
-  chainId?: WalletChainId
+  chainId?: UniverseChainId
 }
 
 type MenuAction = ContextMenuAction & { onPress: () => void; Icon?: GeneratedIcon }

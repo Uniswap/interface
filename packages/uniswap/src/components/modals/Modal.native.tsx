@@ -11,13 +11,14 @@ import { BlurView } from 'expo-blur'
 import React, { ComponentProps, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BackHandler, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { Flex, useDeviceInsets, useIsDarkMode, useMedia, useSporeColors } from 'ui/src'
+import { Flex, useIsDarkMode, useMedia, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { borderRadii, spacing } from 'ui/src/theme'
 import { BottomSheetContextProvider } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { useKeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { isIOS } from 'utilities/src/platform'
@@ -94,7 +95,7 @@ function BottomSheetModalContents({
   hideScrim = false,
 }: ModalProps): JSX.Element {
   const dimensions = useDeviceDimensions()
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const media = useMedia()
   const keyboard = useKeyboardLayout()
   const colors = useSporeColors()
@@ -289,7 +290,7 @@ export function BottomSheetDetachedModal({
   hideHandlebar,
   backgroundColor,
 }: ModalProps): JSX.Element {
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const dimensions = useDeviceDimensions()
   const modalRef = useRef<BaseModal>(null)
   const colors = useSporeColors()

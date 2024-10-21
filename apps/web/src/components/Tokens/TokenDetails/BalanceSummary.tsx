@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const BalancesCard = styled.div`
@@ -60,7 +60,7 @@ const BalanceAmountsContainer = styled.div<{ $alignLeft: boolean }>`
 
 interface BalanceProps {
   currency?: Currency
-  chainId?: InterfaceChainId
+  chainId?: UniverseChainId
   gqlBalance?: PortfolioBalance
   alignLeft?: boolean
   onClick?: () => void

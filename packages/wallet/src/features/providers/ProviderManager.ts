@@ -1,7 +1,7 @@
 import { Signer, providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
-import { RPCType, WalletChainId } from 'uniswap/src/types/chains'
+import { RPCType, UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 
 enum ProviderStatus {
@@ -26,7 +26,7 @@ type ProviderInfo = Partial<{
   private: PrivateProviderDetails
 }>
 
-type ChainIdToProvider = Partial<Record<WalletChainId, ProviderInfo>>
+type ChainIdToProvider = Partial<Record<UniverseChainId, ProviderInfo>>
 
 export class ProviderManager {
   private readonly _providers: ChainIdToProvider = {}
@@ -37,7 +37,7 @@ export class ProviderManager {
     this.onUpdate = onUpdate
   }
 
-  tryGetProvider(chainId: WalletChainId): ethersProviders.JsonRpcProvider | null {
+  tryGetProvider(chainId: UniverseChainId): ethersProviders.JsonRpcProvider | null {
     try {
       return this.getProvider(chainId)
     } catch (error) {
@@ -45,7 +45,7 @@ export class ProviderManager {
     }
   }
 
-  getProvider(chainId: WalletChainId): ethersProviders.JsonRpcProvider {
+  getProvider(chainId: UniverseChainId): ethersProviders.JsonRpcProvider {
     const cachedProviderDetails = this._providers[chainId]?.public
     if (!cachedProviderDetails || cachedProviderDetails.status !== ProviderStatus.Connected) {
       this.createProvider(chainId)
@@ -60,7 +60,7 @@ export class ProviderManager {
     return providerDetails.provider
   }
 
-  async getPrivateProvider(chainId: WalletChainId, signer?: Signer): Promise<ethersProviders.JsonRpcProvider> {
+  async getPrivateProvider(chainId: UniverseChainId, signer?: Signer): Promise<ethersProviders.JsonRpcProvider> {
     const signerAddress = await signer?.getAddress()
     const cachedProviderDetails = this._providers[chainId]?.private
     if (
@@ -79,7 +79,7 @@ export class ProviderManager {
     return providerDetails.provider
   }
 
-  createProvider(chainId: WalletChainId): undefined {
+  createProvider(chainId: UniverseChainId): undefined {
     const provider = createEthersProvider(chainId)
     if (!provider) {
       return
@@ -92,7 +92,7 @@ export class ProviderManager {
     this.onUpdate?.()
   }
 
-  createPrivateProvider(chainId: WalletChainId, signer?: Signer, address?: Address): undefined {
+  createPrivateProvider(chainId: UniverseChainId, signer?: Signer, address?: Address): undefined {
     const provider = createEthersProvider(chainId, RPCType.Private, signer)
     if (!provider) {
       return
@@ -105,7 +105,7 @@ export class ProviderManager {
     this.onUpdate?.()
   }
 
-  removeProviders(chainId: WalletChainId): void {
+  removeProviders(chainId: UniverseChainId): void {
     const providersInfo = this._providers[chainId]
     if (!providersInfo) {
       logger.warn('ProviderManager', 'removeProviders', `Attempting to remove non-existent provider: ${chainId}`)

@@ -38,6 +38,11 @@ exports.shared = {
       importNames: ['useLocalizedFormatter'],
       message: 'Use via `useLocalizationContext` instead.',
     },
+    {
+      name: 'ui/src/hooks/useDeviceInsets',
+      importNames: ['useDeviceInsets'],
+      message: 'Use `useAppInsets` instead.'
+    },
   ],
   patterns: [
     {

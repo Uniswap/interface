@@ -1,3 +1,4 @@
+import { MouseoverTooltip } from 'components/Tooltip'
 import { Flex, GeneratedIcon, Text, styled } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { iconSizes } from 'ui/src/theme'
@@ -15,12 +16,12 @@ export const Container = styled(Flex, {
 
 export function AdvancedButton({
   title,
-  tooltip = true,
+  tooltipText,
   Icon,
   onPress,
 }: {
   title: string
-  tooltip?: boolean
+  tooltipText?: string
   Icon: GeneratedIcon
   onPress: () => void
 }) {
@@ -43,8 +44,11 @@ export function AdvancedButton({
       <Text variant="body3" color="$neutral3">
         ({t('common.advanced')})
       </Text>
-      {/* TODO(WEB-4920): implement tooltip text here */}
-      {tooltip && <InfoCircleFilled size={iconSizes.icon16} color="$neutral3" />}
+      {tooltipText && (
+        <MouseoverTooltip text={tooltipText} placement="auto">
+          <InfoCircleFilled size={iconSizes.icon16} color="$neutral3" />
+        </MouseoverTooltip>
+      )}
     </Flex>
   )
 }

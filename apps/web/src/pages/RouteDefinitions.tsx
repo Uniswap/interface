@@ -222,7 +222,7 @@ export const routes: RouteDefinition[] = [
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
-    path: '/positions/v2/:currencyIdA/:currencyIdB',
+    path: '/positions/v2/:pairAddress',
     getElement: () => <V2PositionPage />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,

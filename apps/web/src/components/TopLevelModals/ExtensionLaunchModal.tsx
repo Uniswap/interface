@@ -2,7 +2,6 @@ import { InterfaceElementName, InterfaceModalName } from '@uniswap/analytics-eve
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
 import Modal from 'components/Modal'
 import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
-import { CONNECTION } from 'components/Web3Provider/constants'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
@@ -17,6 +16,7 @@ import { Image } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans } from 'uniswap/src/i18n'
 
@@ -105,7 +105,7 @@ const showExtensionLaunchAtom = atomWithStorage('showUniswapExtensionLaunchAtom'
 export function ExtensionLaunchModal() {
   const [showExtensionLaunch, setShowExtensionLaunch] = useAtom(showExtensionLaunchAtom)
   const isOnLandingPage = useIsLandingPage()
-  const uniswapExtensionConnector = useConnectorWithId(CONNECTION.UNISWAP_EXTENSION_RDNS)
+  const uniswapExtensionConnector = useConnectorWithId(CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS)
   const isMobile = useIsMobile()
 
   return (

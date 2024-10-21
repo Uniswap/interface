@@ -2,12 +2,12 @@ import { Result } from 'ethers/lib/utils'
 import { TransactionDescription } from 'no-yolo-signatures'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { isAddress } from 'utilities/src/addresses'
 
 export function useTransactionCurrencies(args: {
-  chainId?: WalletChainId
+  chainId?: UniverseChainId
   to?: string
   parsedTransactionData?: TransactionDescription
 }): CurrencyInfo[] {

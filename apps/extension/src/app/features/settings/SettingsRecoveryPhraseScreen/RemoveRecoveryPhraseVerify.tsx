@@ -8,6 +8,7 @@ import { SettingsRecoveryPhrase } from 'src/app/features/settings/SettingsRecove
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import { Flex, LabeledCheckbox, Text, inputStyles } from 'ui/src'
 import { TrashFilled } from 'ui/src/components/icons'
+import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
@@ -58,6 +59,7 @@ export function RemoveRecoveryPhraseVerify(): JSX.Element {
     await Keyring.removePassword()
 
     await removeAllDappConnectionsFromExtension()
+    await dispatch(setIsTestnetModeEnabled(false))
 
     await dispatch(
       editAccountActions.trigger({

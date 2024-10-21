@@ -1,9 +1,9 @@
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export type TokenItemData = {
   name: string
   logoUrl: string
-  chainId: WalletChainId
+  chainId: UniverseChainId
   address: Address | null
   symbol: string
   price?: number

@@ -21,7 +21,6 @@ import {
   LinearGradient,
   Text,
   TouchableArea,
-  useDeviceInsets,
   useHapticFeedback,
   useIsDarkMode,
   useSporeColors,
@@ -30,12 +29,15 @@ import { Search } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, fonts, opacify } from 'ui/src/theme'
 import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/balances'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/transactionState'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid, isIOS } from 'utilities/src/platform'
+import { TestnetModeModal } from 'wallet/src/components/modals/TestnetModeModal'
 import { setHasUsedExplore } from 'wallet/src/features/behaviorHistory/slice'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -56,7 +58,7 @@ function sendSwapPressAnalyticsEvent(): void {
 }
 
 export function NavBar(): JSX.Element {
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const { width: screenWidth } = useSafeAreaFrame()
   const [isNarrow, setIsNarrow] = useState(false)
   const [exploreButtonLayout, setExploreButtonLayout] = useState<LayoutRectangle | null>(null)
@@ -133,6 +135,7 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96, onSwapLayout }: Swa
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const { hapticFeedback } = useHapticFeedback()
+  const { defaultChainId } = useEnabledChains()
 
   const isDarkMode = useIsDarkMode()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
@@ -142,12 +145,12 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96, onSwapLayout }: Swa
     dispatch(
       openModal({
         name: ModalName.Swap,
-        initialState: prepareSwapFormState({ inputCurrencyId }),
+        initialState: prepareSwapFormState({ inputCurrencyId, defaultChainId }),
       }),
     )
 
     await hapticFeedback.impact()
-  }, [dispatch, inputCurrencyId, hapticFeedback])
+  }, [dispatch, inputCurrencyId, hapticFeedback, defaultChainId])
 
   const scale = useSharedValue(1)
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }), [scale])
@@ -213,8 +216,18 @@ function ExploreTabBarButton({ activeScale = 0.98, onLayout, isNarrow }: Explore
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
   const { t } = useTranslation()
+  const { isTestnetModeEnabled } = useEnabledChains()
+  const [isTestnetWarningModalOpen, setIsTestnetWarningModalOpen] = useState(false)
+
+  const handleTestnetWarningModalClose = useCallback(() => {
+    setIsTestnetWarningModalOpen(false)
+  }, [])
 
   const onPress = (): void => {
+    if (isTestnetModeEnabled) {
+      setIsTestnetWarningModalOpen(true)
+      return
+    }
     dispatch(openModal({ name: ModalName.Explore }))
     dispatch(setHasUsedExplore(true))
   }
@@ -256,8 +269,8 @@ function ExploreTabBarButton({ activeScale = 0.98, onLayout, isNarrow }: Explore
       hapticFeedback
       activeOpacity={1}
       style={[styles.searchBar, { borderRadius: borderRadii.roundedFull }]}
-      onPress={onPress}
     >
+      <TestnetModeModal unsupported isOpen={isTestnetWarningModalOpen} onClose={handleTestnetWarningModalClose} />
       <TapGestureHandler testID={TestID.SearchTokensAndWallets} onGestureEvent={onGestureEvent}>
         <AnimatedFlex
           borderRadius="$roundedFull"

@@ -107,6 +107,7 @@ export default function extractTransactionDetails(
   return {
     routing: transaction.details.type === RemoteTransactionType.SwapOrder ? Routing.DUTCH_V2 : Routing.CLASSIC,
     id: transaction.details.hash,
+    // TODO: WALL-4919: Remove hardcoded Mainnet
     // fallback to mainnet, although this should never happen
     chainId: chainId ?? UniverseChainId.Mainnet,
     hash: transaction.details.hash,

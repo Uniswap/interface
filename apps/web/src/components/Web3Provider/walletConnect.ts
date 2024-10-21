@@ -1,8 +1,6 @@
-import { CONNECTION } from 'components/Web3Provider/constants'
 import { Z_INDEX } from 'theme/zIndex'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
-import { Connector, createConnector } from 'wagmi'
+import { createConnector } from 'wagmi'
 import { walletConnect } from 'wagmi/connectors'
 
 if (process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID === undefined) {
@@ -28,12 +26,6 @@ export const walletTypeToAmplitudeWalletType = (connectionType?: string) => {
       return connectionType ?? 'Network'
     }
   }
-}
-
-export interface WalletConnectConnector extends Connector {
-  type: typeof CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID
-  getNamespaceChainsIds: () => InterfaceChainId[]
-  getProvider(): Promise<{ modal: { setTheme: ({ themeMode }: { themeMode: 'dark' | 'light' }) => void } }>
 }
 
 export const WC_PARAMS = {

@@ -38,6 +38,7 @@ export const uniswapUrls = {
     limitsFailure: `${helpUrl}/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute`,
     limitsInfo: `${helpUrl}/sections/24372644881293`,
     limitsNetworkSupport: `${helpUrl}/articles/24470251716237-What-networks-do-limits-support`,
+    lpCollectFees: `${helpUrl}/articles/20901267003789-How-to-collect-fees-from-a-liquidity-pool-on-Uniswap-v3`,
     fiatOnRampHelp: `${helpUrl}/articles/11306574799117`,
     transferCryptoHelp: `${helpUrl}/articles/27103878635661-How-to-transfer-crypto-from-a-Robinhood-or-Coinbase-account-to-the-Uniswap-Wallet`,
     moonpayRegionalAvailability: `${helpUrl}/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-`,

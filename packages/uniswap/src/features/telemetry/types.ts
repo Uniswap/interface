@@ -40,7 +40,7 @@ import {
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { UnitagClaimContext } from 'uniswap/src/features/unitags/types'
 import { RenderPassReport } from 'uniswap/src/types/RenderPassReport'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { ImportType } from 'uniswap/src/types/onboarding'
@@ -102,6 +102,7 @@ export type SwapRouting =
   | 'priority_order'
   | 'bridge'
   | 'limit_order'
+  | 'priority'
   | 'none'
 
 export type SwapTradeBaseProperties = {
@@ -179,7 +180,7 @@ type BridgeSwapTransactionResultProperties = BaseSwapTransactionResultProperties
 type FailedUniswapXOrderResultProperties = Omit<UniswapXTransactionResultProperties, 'hash'>
 
 type TransferProperties = {
-  chainId: WalletChainId
+  chainId: UniverseChainId
   tokenAddress: Address
   toAddress: Address
   amountUSD?: number
@@ -193,7 +194,7 @@ export type WindowEthereumRequestProperties = {
 
 export type DappContextProperties = {
   dappUrl?: string
-  chainId?: WalletChainId
+  chainId?: UniverseChainId
   activeConnectedAddress?: Address
   connectedAddresses: Address[]
 }
@@ -747,7 +748,7 @@ export type UniverseEventProperties = {
   }
   [WalletEventName.NFTVisibilityChanged]: {
     tokenId?: string
-    chainId?: WalletChainId
+    chainId?: UniverseChainId
     contractAddress?: Address
     isSpam?: boolean
     visible: boolean
@@ -785,6 +786,9 @@ export type UniverseEventProperties = {
       }
   ) &
     SwapTradeBaseProperties
+  [WalletEventName.TestnetModeToggled]: {
+    enabled: boolean
+  }
   [WalletEventName.ViewRecoveryPhrase]: undefined
   // Please sort new values by EventName type!
 }

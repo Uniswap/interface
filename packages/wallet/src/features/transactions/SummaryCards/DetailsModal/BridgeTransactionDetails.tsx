@@ -7,9 +7,9 @@ import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { BridgeTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useNetworkColors } from 'uniswap/src/utils/colors'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { ValueText } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/SwapTransactionDetails'
@@ -84,7 +84,8 @@ export function CurrencyValueWithIcon({
   formattedFiatAmount: string
   formattedTokenAmount: string
 }): JSX.Element {
-  const chainId = toSupportedChainId(currencyInfo.currency.chainId) ?? UniverseChainId.Mainnet
+  const { defaultChainId } = useEnabledChains()
+  const chainId = toSupportedChainId(currencyInfo.currency.chainId) ?? defaultChainId
   const networkColors = useNetworkColors(chainId)
   const networkLabel = UNIVERSE_CHAIN_INFO[chainId].label
   const networkColor = validColor(networkColors.foreground)

@@ -21,7 +21,7 @@ import {
   TransactionModalInnerContainer,
 } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -70,7 +70,7 @@ function SendFormScreenContent({ hideContent }: { hideContent: boolean }): JSX.E
           >
             <Flex fill px="$spacing16">
               <RecipientSelect
-                chainId={derivedSendInfo.chainId as WalletChainId}
+                chainId={derivedSendInfo.chainId as UniverseChainId}
                 focusInput={showRecipientSelector}
                 hideBackButton={true}
                 recipient={recipient}

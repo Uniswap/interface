@@ -174,19 +174,19 @@ exports[`SplitLogo renders without error 1`] = `
         style={
           {
             "borderBottomColor": "rgba(19,19,19,1.00)",
-            "borderBottomLeftRadius": "2.1px",
-            "borderBottomRightRadius": "2.1px",
-            "borderBottomWidth": "1px",
+            "borderBottomLeftRadius": "2.4px",
+            "borderBottomRightRadius": "2.4px",
+            "borderBottomWidth": "1.5px",
             "borderLeftColor": "rgba(19,19,19,1.00)",
-            "borderLeftWidth": "1px",
+            "borderLeftWidth": "1.5px",
             "borderRightColor": "rgba(19,19,19,1.00)",
-            "borderRightWidth": "1px",
+            "borderRightWidth": "1.5px",
             "borderTopColor": "rgba(19,19,19,1.00)",
-            "borderTopLeftRadius": "2.1px",
-            "borderTopRightRadius": "2.1px",
-            "borderTopWidth": "1px",
-            "height": "7px",
-            "width": "7px",
+            "borderTopLeftRadius": "2.4px",
+            "borderTopRightRadius": "2.4px",
+            "borderTopWidth": "1.5px",
+            "height": "8px",
+            "width": "8px",
           }
         }
       >

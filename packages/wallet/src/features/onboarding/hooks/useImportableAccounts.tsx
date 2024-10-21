@@ -5,6 +5,7 @@ import {
   SelectWalletScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useENSName } from 'uniswap/src/features/ens/api'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { NUMBER_OF_WALLETS_TO_GENERATE } from 'wallet/src/features/onboarding/OnboardingContext'
 import { fetchUnitagByAddresses } from 'wallet/src/features/unitags/api'
@@ -77,6 +78,8 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
 
   const { ensMap, loading: ensLoading } = useAddressesEnsNames(addressesArray)
 
+  const { gqlChains } = useEnabledChains()
+
   const fetchBalanceAndUnitags = useCallback(async (): Promise<AddressTo<AddressWithBalanceAndName> | undefined> => {
     if (addressesArray.length === 0) {
       return undefined
@@ -90,7 +93,7 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
 
     const fetchBalances = apolloClient.query<SelectWalletScreenQuery>({
       query: SelectWalletScreenDocument,
-      variables: { ownerAddresses: addressesArray, valueModifiers },
+      variables: { ownerAddresses: addressesArray, chains: gqlChains, valueModifiers },
     })
 
     const fetchUnitags = fetchUnitagByAddresses(addressesArray)
@@ -123,7 +126,7 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
 
     // We use `refetchCount` as a dependency to manually trigger a refetch when calling the `refetch` function.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addressesArray, apolloClient, refetchCount])
+  }, [addressesArray, apolloClient, refetchCount, gqlChains])
 
   const {
     data: balanceAndUnitags,

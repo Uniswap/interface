@@ -13,6 +13,7 @@ export enum FeatureFlags {
   SelfReportSpamNFTs,
   UniswapXPriorityOrders,
   SharedSwapArbitrumUniswapXExperiment,
+  V4Swap,
 
   // Wallet
   FlashbotsPrivateRpc,
@@ -22,6 +23,7 @@ export enum FeatureFlags {
   OpenAIAssistant,
   UnitagsDeviceAttestation,
   UniswapX,
+  TestnetMode,
 
   // Mobile
   Datadog,
@@ -55,6 +57,7 @@ export enum FeatureFlags {
   V2Everywhere,
   V4Everywhere,
   Zora,
+  WorldChain,
   // TODO(WEB-3625): Remove these once we have a generalized system for outage banners.
   OutageBannerArbitrum,
   OutageBannerOptimism,
@@ -73,6 +76,9 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.Datadog, 'datadog'],
   [FeatureFlags.UniswapXPriorityOrders, 'uniswapx_priority_orders'],
   [FeatureFlags.SharedSwapArbitrumUniswapXExperiment, 'shared_swap_arbitrum_uniswapx_experiment'],
+  [FeatureFlags.TestnetMode, 'testnet-mode'],
+  [FeatureFlags.V4Swap, 'v4_swap'],
+  [FeatureFlags.WorldChain, 'world_chain'],
 
   // Web Specific
   [FeatureFlags.UniversalSwap, 'universal_swap'],
@@ -110,6 +116,9 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.SelfReportSpamNFTs, 'self-report-spam-nfts'],
   [FeatureFlags.UniswapXPriorityOrders, 'uniswapx_priority_orders'],
   [FeatureFlags.SharedSwapArbitrumUniswapXExperiment, 'shared_swap_arbitrum_uniswapx_experiment'],
+  [FeatureFlags.TestnetMode, 'testnet-mode'],
+  [FeatureFlags.V4Swap, 'v4_swap'],
+  [FeatureFlags.WorldChain, 'world_chain'],
 
   // Wallet Specific
   [FeatureFlags.Datadog, 'datadog'],

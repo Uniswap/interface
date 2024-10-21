@@ -25,7 +25,7 @@ export function useUSDTokenUpdater({
   onFiatAmountUpdated,
   onTokenAmountUpdated,
 }: USDTokenUpdaterProps): void {
-  const price = useUSDCPrice(currency)
+  const { price } = useUSDCPrice(currency)
   const shouldUseUSDRef = useRef(isFiatInput)
   const { convertFiatAmount, formatCurrencyAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount(1).amount

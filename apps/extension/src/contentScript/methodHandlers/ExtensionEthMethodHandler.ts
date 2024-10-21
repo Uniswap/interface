@@ -310,6 +310,7 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
   }
 
   async handleEthChainIdRequest(request: EthChainIdRequest, source: MessageEventSource | null): Promise<void> {
+    // TODO: WALL-4919: Remove hardcoded Mainnet
     // Defaults to mainnet for unconnected dapps
     const chainId = this.getChainId() ?? chainIdToHexadecimalString(UniverseChainId.Mainnet)
 

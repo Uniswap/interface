@@ -8,14 +8,14 @@ import { extractBaseUrl } from 'src/app/features/dappRequests/utils'
 import { closePopup, PopupName } from 'src/app/features/popups/slice'
 import { backgroundToSidePanelMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { BackgroundToSidePanelRequestType } from 'src/background/messagePassing/types/requests'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 type DappContextState = {
   dappUrl: string
   dappIconUrl?: string
   isConnected: boolean
-  lastChainId?: WalletChainId
+  lastChainId?: UniverseChainId
 }
 
 const DappContext = createContext<DappContextState | undefined>(undefined)

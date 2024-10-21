@@ -1,6 +1,6 @@
 import providers from '@ethersproject/providers'
-import { Protocol } from '@uniswap/router-sdk'
-import { Percent, TradeType } from '@uniswap/sdk-core'
+import { ONE, Protocol } from '@uniswap/router-sdk'
+import { Fraction, Percent, TradeType } from '@uniswap/sdk-core'
 import { NullablePermit, Permit } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -84,11 +84,18 @@ export function requireAcceptNewTrade(oldTrade: Maybe<Trade>, newTrade: Maybe<Tr
     return false
   }
 
+  const isExecutionPriceWithinThreshold = isBridge(newTrade)
+    ? !newTrade.executionPrice.lessThan(
+        // Bridge trades have no slippage and hence a static execution price, so we calculate the threshold here.
+        new Fraction(ONE).subtract(ACCEPT_NEW_TRADE_THRESHOLD).multiply(oldTrade.executionPrice),
+      )
+    : !newTrade.executionPrice.lessThan(oldTrade.worstExecutionPrice(ACCEPT_NEW_TRADE_THRESHOLD))
+
   return (
     oldTrade.tradeType !== newTrade.tradeType ||
     !oldTrade.inputAmount.currency.equals(newTrade.inputAmount.currency) ||
     !oldTrade.outputAmount.currency.equals(newTrade.outputAmount.currency) ||
-    newTrade.executionPrice.lessThan(oldTrade.worstExecutionPrice(ACCEPT_NEW_TRADE_THRESHOLD))
+    !isExecutionPriceWithinThreshold
   )
 }
 

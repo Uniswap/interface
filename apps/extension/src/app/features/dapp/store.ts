@@ -1,13 +1,13 @@
 import { cloneDeep } from '@apollo/client/utilities'
 import EventEmitter from 'eventemitter3'
 import { getOrderedConnectedAddresses, isConnectedAccount } from 'src/app/features/dapp/utils'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 const STATE_STORAGE_KEY = 'dappState'
 
 export interface DappInfo {
-  lastChainId: WalletChainId
+  lastChainId: UniverseChainId
   connectedAccounts: Account[]
   activeConnectedAddress: Address
   iconUrl?: string
@@ -153,7 +153,7 @@ function updateDappIconUrl(dappUrl: string, newIconUrl?: string): void {
 }
 
 // TODO(WALL-4643): if we migrate to immer, let's avoid iterating over the the object here
-function updateDappLatestChainId(dappUrl: string, chainId: WalletChainId): void {
+function updateDappLatestChainId(dappUrl: string, chainId: UniverseChainId): void {
   // Never directly mutate state, as some of its fields could have `writable: false`
   state = Object.fromEntries(
     Object.entries(state).map(([key, dappUrlState]) => {
@@ -172,6 +172,7 @@ function saveDappActiveAccount(dappUrl: string, account: Account, initialPropert
     ...state,
     [dappUrl]: {
       ...state[dappUrl],
+      // TODO: WALL-4919: Remove hardcoded Mainnet
       lastChainId: state[dappUrl]?.lastChainId ?? UniverseChainId.Mainnet,
       activeConnectedAddress: account.address,
       connectedAccounts: ((): Account[] => {

@@ -9,7 +9,7 @@ import { getCumulativeSum, getCumulativeVolume, getVolumeProtocolInfo } from 'co
 import { ChartType } from 'components/Charts/utils'
 import { DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { SupportedInterfaceChainId, chainIdToBackendChain, useChainFromUrlParam } from 'constants/chains'
+import { chainIdToBackendChain, useChainFromUrlParam } from 'constants/chains'
 import { useDailyProtocolTVL, useHistoricalProtocolVolume } from 'graphql/data/protocolStats'
 import { TimePeriod, getProtocolColor, getProtocolGradient, getSupportedGraphQlChain } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
@@ -26,6 +26,7 @@ import { HistoryDuration, PriceSource } from 'uniswap/src/data/graphql/uniswap-d
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { Trans } from 'uniswap/src/i18n'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const EXPLORE_CHART_HEIGHT_PX = 368
@@ -69,7 +70,7 @@ const SectionTitle = styled(Text, {
   lineHeight: 24,
 })
 
-function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId }) {
+function VolumeChartSection({ chainId }: { chainId: UniverseChainId }) {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
   const theme = useTheme()
   const isSmallScreen = !useScreenSize()['sm']
@@ -193,7 +194,7 @@ function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId })
   )
 }
 
-function TVLChartSection({ chainId }: { chainId: SupportedInterfaceChainId }) {
+function TVLChartSection({ chainId }: { chainId: UniverseChainId }) {
   const theme = useTheme()
   const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
   const {

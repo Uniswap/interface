@@ -1,12 +1,16 @@
 import { NetworkFee } from 'uniswap/src/components/gas/NetworkFee'
 import { render } from 'uniswap/src/test/test-utils'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 jest.mock('uniswap/src/features/gas/hooks', () => {
   return {
     useFormattedUniswapXGasFeeInfo: jest.fn(() => undefined),
-    useUSDValue: (_chainId: WalletChainId, gasFee: string): string => gasFee,
+    useUSDValue: (_chainId: UniverseChainId, gasFee: string): string => gasFee,
     useGasFeeHighRelativeToValue: jest.fn(() => false),
+    useGasFeeFormattedAmounts: jest.fn(() => ({
+      gasFeeFormatted: '$1',
+      gasFeeUSD: '$500.00',
+    })),
   }
 })
 

@@ -30,7 +30,7 @@ import { textFadeIn } from 'theme/styles'
 import { SegmentedControl } from 'ui/src'
 import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans, t } from 'uniswap/src/i18n'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const PDP_CHART_HEIGHT_PX = 356
@@ -379,7 +379,7 @@ function LiquidityChart({
   tokenB: Token
   feeTier: FeeAmount
   isReversed: boolean
-  chainId: InterfaceChainId
+  chainId: UniverseChainId
 }) {
   const tokenADescriptor = tokenA.symbol ?? tokenA.name ?? t('common.tokenA')
   const tokenBDescriptor = tokenB.symbol ?? tokenB.name ?? t('common.tokenB')

@@ -18,7 +18,7 @@ import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
-import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
+import { TransactionSummaryLayout } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
 
@@ -91,34 +91,32 @@ export function TransferTokenSummaryItem({
     ? (currencyAmount ?? '') + (getSymbolDisplayText(currencyInfo?.currency?.symbol) ?? '')
     : transaction.typeInfo.nftSummaryInfo?.name
 
-  let caption = ''
+  let captionText = ''
   if (transactionType === TransactionType.Send) {
-    caption = t('transaction.summary.received', {
+    captionText = t('transaction.summary.received', {
       recipientAddress: personDisplayName,
       tokenAmountWithSymbol,
     })
   } else {
-    caption = t('transaction.summary.sent', {
+    captionText = t('transaction.summary.sent', {
       senderAddress: personDisplayName,
       tokenAmountWithSymbol,
     })
   }
 
-  return (
-    <TransactionSummaryLayout
-      caption={
-        <ElementAfterText
-          wrapperProps={{
-            grow: true,
-            shrink: true,
-          }}
-          element={unitag?.username ? <Unitag size="$icon.24" /> : undefined}
-          text={caption}
-        />
-      }
-      icon={icon}
-      index={index}
-      transaction={transaction}
-    />
+  const caption = useMemo(
+    () => (
+      <ElementAfterText
+        wrapperProps={{
+          grow: true,
+          shrink: true,
+        }}
+        element={unitag?.username ? <Unitag size="$icon.24" /> : undefined}
+        text={captionText}
+      />
+    ),
+    [captionText, unitag?.username],
   )
+
+  return <TransactionSummaryLayout caption={caption} icon={icon} index={index} transaction={transaction} />
 }

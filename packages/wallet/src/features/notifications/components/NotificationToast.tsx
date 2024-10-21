@@ -6,18 +6,10 @@ import { useCallback, useEffect } from 'react'
 import { Directions, FlingGestureHandler, FlingGestureHandlerGestureEvent, State } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  ElementAfterText,
-  Flex,
-  Text,
-  TouchableArea,
-  isWeb,
-  styled,
-  useDeviceInsets,
-  useShadowPropsShort,
-} from 'ui/src'
+import { ElementAfterText, Flex, Text, TouchableArea, isWeb, styled, useShadowPropsShort } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, spacing } from 'ui/src/theme'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useTimeout } from 'utilities/src/time/timing'
 import { selectActiveAccountNotifications } from 'wallet/src/features/notifications/selectors'
@@ -92,7 +84,7 @@ export function NotificationToast({
   const currentNotification = notifications?.[0]
   const hasQueuedNotification = !!notifications?.[1]
 
-  const showOffset = useDeviceInsets().top + spacing.spacing4 + (isWeb ? spacing.spacing12 : 0)
+  const showOffset = useAppInsets().top + spacing.spacing4 + (isWeb ? spacing.spacing12 : 0)
   const bannerOffset = useSharedValue(HIDE_OFFSET_Y)
 
   // Run this only once to ensure that if a new notification is created it doesn't show on the next screen

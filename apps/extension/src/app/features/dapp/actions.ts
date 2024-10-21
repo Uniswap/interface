@@ -7,11 +7,11 @@ import {
   UpdateConnectionRequest,
 } from 'src/background/messagePassing/types/requests'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { getProviderSync } from 'wallet/src/features/wallet/context'
 
-export async function saveDappChain(dappUrl: string, chainId: WalletChainId): Promise<void> {
+export async function saveDappChain(dappUrl: string, chainId: UniverseChainId): Promise<void> {
   dappStore.updateDappLatestChainId(dappUrl, chainId)
   const provider = getProviderSync(chainId)
 

@@ -51,6 +51,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
+import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
 getLocalUserId()
@@ -202,6 +203,7 @@ function useDappRequestPortListener(): void {
 function SidebarWrapper(): JSX.Element {
   const dispatch = useDispatch()
   useDappRequestPortListener()
+  useTestnetModeForLoggingAndAnalytics()
 
   useEffect(() => {
     dispatch(syncAppWithDeviceLanguage())

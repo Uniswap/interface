@@ -56,5 +56,12 @@ export function AddHook() {
     )
   }
 
-  return <AdvancedButton title={t('position.addHook')} Icon={DocumentList} onPress={handleToggleHookInput} />
+  return (
+    <AdvancedButton
+      title={t('position.addHook')}
+      Icon={DocumentList}
+      onPress={handleToggleHookInput}
+      tooltipText={t('position.addHook.tooltip')}
+    />
+  )
 }

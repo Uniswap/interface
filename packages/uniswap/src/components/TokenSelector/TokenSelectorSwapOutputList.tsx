@@ -1,4 +1,5 @@
-import { memo, useCallback, useMemo } from 'react'
+import { memo, useCallback, useMemo, useRef } from 'react'
+import { Flex } from 'ui/src'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import {
   useCommonTokensOptionsWithFallback,
@@ -23,15 +24,18 @@ import { GqlResult } from 'uniswap/src/data/types'
 import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isMobileApp } from 'utilities/src/platform'
 
+// eslint-disable-next-line complexity
 function useTokenSectionsForSwapOutput({
   activeAccountAddress,
   chainFilter,
   input,
 }: TokenSectionsHookProps): GqlResult<TokenSection[]> {
   const isBridgingEnabled = useFeatureFlag(FeatureFlags.Bridging)
+  const { defaultChainId, isTestnetModeEnabled } = useEnabledChains()
 
   const {
     data: portfolioTokenOptions,
@@ -46,7 +50,7 @@ function useTokenSectionsForSwapOutput({
     refetch: refetchPopularTokenOptions,
     loading: popularTokenOptionsLoading,
     // if there is no chain filter then we show mainnet tokens
-  } = usePopularTokensOptions(activeAccountAddress, chainFilter ?? UniverseChainId.Mainnet)
+  } = usePopularTokensOptions(activeAccountAddress, chainFilter ?? defaultChainId)
 
   const {
     data: favoriteTokenOptions,
@@ -60,8 +64,8 @@ function useTokenSectionsForSwapOutput({
     error: commonTokenOptionsError,
     refetch: refetchCommonTokenOptions,
     loading: commonTokenOptionsLoading,
-    // if there is no chain filter then we show mainnet tokens
-  } = useCommonTokensOptionsWithFallback(activeAccountAddress, chainFilter ?? UniverseChainId.Mainnet)
+    // if there is no chain filter then we show default chain tokens
+  } = useCommonTokensOptionsWithFallback(activeAccountAddress, chainFilter ?? defaultChainId)
 
   const {
     data: bridgingTokenOptions,
@@ -81,43 +85,67 @@ function useTokenSectionsForSwapOutput({
     (!bridgingTokenOptions && bridgingTokenOptionsError)
 
   const loading =
-    portfolioTokenOptionsLoading ||
-    popularTokenOptionsLoading ||
-    favoriteTokenOptionsLoading ||
-    commonTokenOptionsLoading ||
-    bridgingTokenOptionsLoading
+    (!portfolioTokenOptions && portfolioTokenOptionsLoading) ||
+    (!popularTokenOptions && popularTokenOptionsLoading) ||
+    (!favoriteTokenOptions && favoriteTokenOptionsLoading) ||
+    (!commonTokenOptions && commonTokenOptionsLoading) ||
+    (!bridgingTokenOptions && bridgingTokenOptionsLoading)
 
-  const refetchAll = useCallback(() => {
+  const refetchAllRef = useRef<() => void>(() => {})
+
+  refetchAllRef.current = (): void => {
     refetchPortfolioTokenOptions?.()
     refetchPopularTokenOptions?.()
     refetchFavoriteTokenOptions?.()
     refetchCommonTokenOptions?.()
     refetchBridgingTokenOptions?.()
-  }, [
-    refetchBridgingTokenOptions,
-    refetchCommonTokenOptions,
-    refetchFavoriteTokenOptions,
-    refetchPopularTokenOptions,
-    refetchPortfolioTokenOptions,
-  ])
+  }
+
+  const refetch = useCallback(() => {
+    refetchAllRef.current()
+  }, [])
+
+  const newTag = useMemo(
+    () =>
+      isMobileApp ? (
+        // Hack for vertically centering the new tag with text
+        <Flex row pt={1}>
+          <NewTag />
+        </Flex>
+      ) : (
+        <NewTag />
+      ),
+    [],
+  )
 
   // we draw the Suggested pills as a single item of a section list, so `data` is TokenOption[][]
-  const suggestedSection = useTokenOptionsSection(TokenOptionSection.SuggestedTokens, [commonTokenOptions ?? []])
+
+  const suggestedSectionOptions = useMemo(() => [commonTokenOptions ?? []], [commonTokenOptions])
+  const suggestedSection = useTokenOptionsSection(TokenOptionSection.SuggestedTokens, suggestedSectionOptions)
+
   const portfolioSection = useTokenOptionsSection(TokenOptionSection.YourTokens, portfolioTokenOptions)
   const recentSection = useTokenOptionsSection(TokenOptionSection.RecentTokens, recentlySearchedTokenOptions)
   const favoriteSection = useTokenOptionsSection(TokenOptionSection.FavoriteTokens, favoriteTokenOptions)
 
-  const popularMinusPortfolioTokens = tokenOptionDifference(popularTokenOptions, portfolioTokenOptions)
-  const popularSection = useTokenOptionsSection(TokenOptionSection.PopularTokens, popularMinusPortfolioTokens)
-  const bridgingSection = useTokenOptionsSection(
-    TokenOptionSection.BridgingTokens,
-    shouldNestBridgingTokens ? [bridgingTokenOptions ?? []] : bridgingTokenOptions ?? [],
-    <NewTag />,
+  const popularMinusPortfolioTokens = useMemo(
+    () => tokenOptionDifference(popularTokenOptions, portfolioTokenOptions),
+    [popularTokenOptions, portfolioTokenOptions],
   )
+  const popularSection = useTokenOptionsSection(TokenOptionSection.PopularTokens, popularMinusPortfolioTokens)
+
+  const bridgingSectionTokenOptions = useMemo(
+    () => (shouldNestBridgingTokens ? [bridgingTokenOptions ?? []] : bridgingTokenOptions ?? []),
+    [bridgingTokenOptions, shouldNestBridgingTokens],
+  )
+  const bridgingSection = useTokenOptionsSection(TokenOptionSection.BridgingTokens, bridgingSectionTokenOptions, newTag)
 
   const sections = useMemo(() => {
     if (isSwapListLoading(loading, portfolioSection, popularSection)) {
       return undefined
+    }
+
+    if (isTestnetModeEnabled) {
+      return [...(suggestedSection ?? []), ...(portfolioSection ?? [])]
     }
 
     return [
@@ -139,6 +167,7 @@ function useTokenSectionsForSwapOutput({
     bridgingSection,
     recentSection,
     favoriteSection,
+    isTestnetModeEnabled,
   ])
 
   return useMemo(
@@ -146,9 +175,9 @@ function useTokenSectionsForSwapOutput({
       data: sections,
       loading,
       error: error || undefined,
-      refetch: refetchAll,
+      refetch,
     }),
-    [error, loading, refetchAll, sections],
+    [error, loading, refetch, sections],
   )
 }
 
@@ -179,7 +208,7 @@ function _TokenSelectorSwapOutputList({
       isKeyboardOpen={isKeyboardOpen}
       loading={loading}
       refetch={refetch}
-      sections={sections}
+      sections={loading ? undefined : sections}
       showTokenWarnings={true}
       onSelectCurrency={onSelectCurrency}
     />

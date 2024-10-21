@@ -18,12 +18,7 @@ import TransactionConfirmationModal, { ConfirmationModalContent } from 'componen
 import { AutoColumn } from 'components/deprecated/Column'
 import { RowBetween, RowFixed } from 'components/deprecated/Row'
 import { Dots } from 'components/swap/styled'
-import {
-  SupportedInterfaceChainId,
-  chainIdToBackendChain,
-  useIsSupportedChainId,
-  useSupportedChainId,
-} from 'constants/chains'
+import { chainIdToBackendChain, useIsSupportedChainId, useSupportedChainId } from 'constants/chains'
 import { getPoolDetailsURL, getTokenDetailsURL, isGqlSupportedChain } from 'graphql/data/util'
 import { useToken } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
@@ -208,7 +203,7 @@ const TokenLink = ({
   children,
   chainId,
   address,
-}: PropsWithChildren<{ chainId: SupportedInterfaceChainId; address: string }>) => {
+}: PropsWithChildren<{ chainId: UniverseChainId; address: string }>) => {
   const tokenLink = getTokenDetailsURL({ address, chain: chainIdToBackendChain({ chainId }) })
   return <StyledRouterLink to={tokenLink}>{children}</StyledRouterLink>
 }

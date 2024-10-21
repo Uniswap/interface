@@ -3,18 +3,15 @@ import { Flex } from 'ui/src'
 import { Shuffle } from 'ui/src/components/icons/Shuffle'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo, STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import {
-  SQUIRCLE_BORDER_RADIUS_RATIO,
-  TransactionSummaryNetworkLogo,
-} from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 interface Props {
   inputCurrencyInfo: Maybe<CurrencyInfo>
   outputCurrencyInfo: Maybe<CurrencyInfo>
   size: number
-  chainId: WalletChainId | null
+  chainId: UniverseChainId | null
   customIcon?: ReactNode
 }
 
@@ -65,10 +62,12 @@ export const BridgeIcon = (
   <Flex
     testID="bridge-icon"
     borderColor="$surface1"
-    borderWidth={1}
-    borderRadius={(iconSizes.icon20 + 2) * SQUIRCLE_BORDER_RADIUS_RATIO}
+    borderWidth="$spacing2"
+    borderRadius="$roundedFull"
     overflow="hidden"
+    backgroundColor="$statusSuccess"
+    p="$spacing1"
   >
-    <Shuffle size={iconSizes.icon20} color="white" backgroundColor="black" />
+    <Shuffle size={iconSizes.icon12} color="$surface1" backgroundColor="$statusSuccess" />
   </Flex>
 )

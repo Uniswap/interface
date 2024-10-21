@@ -12,7 +12,7 @@ import {
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { SUBSCRIPTION_CHAINIDS } from 'utilities/src/apollo/constants'
 import { usePrevious } from 'utilities/src/react/hooks'
 
@@ -33,7 +33,7 @@ function useIsRealtime() {
   const { chainId } = useAccount()
   const isRealtimeEnabled = useFeatureFlag(FeatureFlags.Realtime)
 
-  return isRealtimeEnabled && chainId && (SUBSCRIPTION_CHAINIDS as unknown as InterfaceChainId[]).includes(chainId)
+  return isRealtimeEnabled && chainId && (SUBSCRIPTION_CHAINIDS as unknown as UniverseChainId[]).includes(chainId)
 }
 
 function useHasAccountUpdate() {

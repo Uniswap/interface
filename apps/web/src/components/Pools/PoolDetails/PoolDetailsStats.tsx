@@ -5,7 +5,7 @@ import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
+import { chainIdToBackendChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { PoolData } from 'graphql/data/pools/usePoolData'
 import { getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
@@ -20,6 +20,7 @@ import { ClickableStyle, ThemedText } from 'theme/components'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const HeaderText = styled(Text)`
@@ -125,7 +126,7 @@ type TokenFullData = Token & {
   currency?: Currency
 }
 
-const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chainId?: SupportedInterfaceChainId }) => {
+const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chainId?: UniverseChainId }) => {
   const isScreenSize = useScreenSize()
   const screenIsNotLarge = isScreenSize['lg']
   const { formatNumber } = useFormatter()

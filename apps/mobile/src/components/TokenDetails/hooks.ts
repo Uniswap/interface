@@ -1,52 +1,9 @@
 import { useCallback, useMemo } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import { useBalances } from 'src/features/dataApi/balances'
-import {
-  Chain,
-  useTokenDetailsScreenLazyQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { useTokenDetailsScreenLazyQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { buildCurrencyId, buildNativeCurrencyId, currencyIdToChain } from 'wallet/src/utils/currencyId'
-
-/** Helper hook to retrieve balances across chains for a given currency, for the active account. */
-export function useCrossChainBalances(
-  currencyId: string,
-  bridgeInfo: Maybe<{ chain: Chain; address?: Maybe<string> }[]>,
-): {
-  currentChainBalance: PortfolioBalance | null
-  otherChainBalances: PortfolioBalance[] | null
-} {
-  const currentChainBalance = useBalances([currencyId])?.[0] ?? null
-  const currentChainId = currencyIdToChain(currencyId)
-
-  const bridgedCurrencyIds = useMemo(
-    () =>
-      bridgeInfo
-        ?.map(({ chain, address }) => {
-          const chainId = fromGraphQLChain(chain)
-          if (!chainId || chainId === currentChainId) {
-            return null
-          }
-          if (!address) {
-            return buildNativeCurrencyId(chainId)
-          }
-          return buildCurrencyId(chainId, address)
-        })
-        .filter((b): b is string => !!b),
-
-    [bridgeInfo, currentChainId],
-  )
-  const otherChainBalances = useBalances(bridgedCurrencyIds)
-
-  return {
-    currentChainBalance,
-    otherChainBalances,
-  }
-}
 
 /** Utility hook to simplify navigating to token details screen */
 export function useTokenDetailsNavigation(): {

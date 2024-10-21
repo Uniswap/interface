@@ -11,7 +11,6 @@ import {
   TouchableArea,
   isWeb,
   styled,
-  useDeviceInsets,
   useIsDarkMode,
 } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -20,6 +19,7 @@ import { iconSizes, spacing, zIndices } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { Scrollbar } from 'uniswap/src/components/misc/Scrollbar'
 import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { isAndroid, isInterface, isTouchable } from 'utilities/src/platform'
 
 const DEFAULT_MIN_WIDTH = 225
@@ -63,7 +63,7 @@ export function ActionSheetDropdown({
   closeOnSelect = true,
   ...contentProps
 }: ActionSheetDropdownProps): JSX.Element {
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const containerRef = useRef<View>(null)
   const [{ isOpen, toggleMeasurements }, setState] = useState<DropdownState>({
     isOpen: false,
@@ -210,15 +210,19 @@ function DropdownContent({
   closeOnSelect,
   ...rest
 }: DropdownContentProps): JSX.Element {
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const { fullWidth, fullHeight } = useDeviceDimensions()
 
   const scrollOffset = useSharedValue(0)
   const [contentHeight, setContentHeight] = useState(0)
 
-  const scrollHandler = useAnimatedScrollHandler((event) => {
-    scrollOffset.value = event.contentOffset.y
-  })
+  const scrollHandler = useAnimatedScrollHandler(
+    (event) => (scrollOffset.value = event.contentOffset.y),
+    // There seems to be a bug in `reanimated` that's causing the dependency array to not be automatically injected by the babel plugin,
+    // but it causes a crash when manually added on web. This is a workaround until the bug is fixed.
+    // The performance impact of not having the array is minimal on web, so this should be fine for now.
+    isWeb ? undefined : [scrollOffset],
+  )
 
   const containerProps = useMemo<FlexProps>(() => {
     if (alignment === 'left') {

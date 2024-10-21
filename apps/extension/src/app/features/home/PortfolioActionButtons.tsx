@@ -1,14 +1,16 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { cloneElement, memo } from 'react'
+import { cloneElement, memo, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useInterfaceBuyNavigator } from 'src/app/features/for/utils'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { Flex, Text, getTokenValue, useMedia } from 'ui/src'
 import { ArrowDownCircle, Buy, CoinConvert, SendAction } from 'ui/src/components/icons'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
+import { TestnetModeModal } from 'wallet/src/components/modals/TestnetModeModal'
 
 const ICON_COLOR = '$accent1'
 
@@ -70,6 +72,7 @@ function ActionButton({ label, Icon, onClick, url }: ActionButtonProps): JSX.Ele
 export const PortfolioActionButtons = memo(function _PortfolioActionButtons(): JSX.Element {
   const { t } = useTranslation()
   const media = useMedia()
+  const { isTestnetModeEnabled } = useEnabledChains()
 
   const onSendClick = (): void => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
@@ -95,12 +98,30 @@ export const PortfolioActionButtons = memo(function _PortfolioActionButtons(): J
     navigate(AppRoutes.Receive)
   }
 
-  const onBuyClick = useInterfaceBuyNavigator(ElementName.Buy)
+  const [isTestnetWarningModalOpen, setIsTestnetWarningModalOpen] = useState(false)
+  const handleTestnetWarningModalClose = useCallback(() => {
+    setIsTestnetWarningModalOpen(false)
+  }, [])
+
+  const onBuyNavigate = useInterfaceBuyNavigator(ElementName.Buy)
+  const onBuyClick = (): void => {
+    if (isTestnetModeEnabled) {
+      setIsTestnetWarningModalOpen(true)
+    } else {
+      onBuyNavigate()
+    }
+  }
 
   const isGrid = media.sm
 
   return (
     <Flex flexDirection={isGrid ? 'column' : 'row'} gap="$spacing8">
+      <TestnetModeModal
+        unsupported
+        isOpen={isTestnetWarningModalOpen}
+        descriptionCopy={t('tdp.noTestnetSupportDescription')}
+        onClose={handleTestnetWarningModalClose}
+      />
       <Flex row shrink gap="$spacing8" width={isGrid ? '100%' : '50%'}>
         <ActionButton Icon={<CoinConvert />} label={t('home.label.swap')} onClick={onSwapClick} />
         <ActionButton Icon={<Buy />} label={t('home.label.buy')} onClick={onBuyClick} />

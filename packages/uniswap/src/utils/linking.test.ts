@@ -12,14 +12,11 @@ describe(getExplorerLink, () => {
     expect(getExplorerLink(UniverseChainId.Polygon, 'hash', ExplorerDataType.TOKEN)).toEqual(
       'https://polygonscan.com/token/hash',
     )
-    expect(getExplorerLink(UniverseChainId.PolygonMumbai, 'hash', ExplorerDataType.BLOCK)).toEqual(
-      'https://mumbai.polygonscan.com/block/hash',
-    )
   })
 
   it('handles chain with explorer URL', () => {
-    expect(getExplorerLink(UniverseChainId.Goerli, 'hash', ExplorerDataType.TRANSACTION)).toEqual(
-      'https://goerli.etherscan.io/tx/hash',
+    expect(getExplorerLink(UniverseChainId.Sepolia, 'hash', ExplorerDataType.TRANSACTION)).toEqual(
+      'https://sepolia.etherscan.io/tx/hash',
     )
   })
 

@@ -6,9 +6,10 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { HeaderSkipButton, renderHeaderBackButton } from 'src/app/navigation/components'
 import { useOnboardingStackNavigation } from 'src/app/navigation/types'
 import { SHORT_SCREEN_HEADER_HEIGHT_RATIO, Screen } from 'src/components/layout/Screen'
-import { Flex, GeneratedIcon, SpaceTokens, Text, useDeviceInsets, useMedia } from 'ui/src'
+import { Flex, GeneratedIcon, SpaceTokens, Text, useMedia } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts } from 'ui/src/theme'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { isIOS } from 'utilities/src/platform'
 
 type OnboardingScreenProps = {
@@ -34,7 +35,7 @@ export function OnboardingScreen({
 }: PropsWithChildren<OnboardingScreenProps>): JSX.Element {
   const navigation = useOnboardingStackNavigation()
   const headerHeight = useHeaderHeight()
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const media = useMedia()
 
   const gapSize = media.short ? '$none' : '$spacing16'

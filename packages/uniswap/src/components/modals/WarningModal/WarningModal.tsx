@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactNode } from 'react'
+import { PropsWithChildren, ReactNode, useContext } from 'react'
 // eslint-disable-next-line no-restricted-imports -- type import is safe
 import type { ColorValue } from 'react-native'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
@@ -8,6 +8,7 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import { SwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isWeb } from 'utilities/src/platform'
 
@@ -133,6 +134,8 @@ export function WarningModal(props: PropsWithChildren<WarningModalProps>): JSX.E
   const { hideHandlebar, isDismissible = true, isOpen, maxWidth, modalName, onClose } = props
   const colors = useSporeColors()
 
+  const swapFormContext = useContext(SwapFormContext)
+
   return (
     <Modal
       backgroundColor={colors.surface1.val}
@@ -143,7 +146,14 @@ export function WarningModal(props: PropsWithChildren<WarningModalProps>): JSX.E
       name={modalName}
       onClose={onClose}
     >
-      <WarningModalContent {...props} />
+      {swapFormContext ? (
+        // When we render this modal inside the swap flow, we want to forward the context so that it's available inside the modal's Portal.
+        <SwapFormContext.Provider value={swapFormContext}>
+          <WarningModalContent {...props} />
+        </SwapFormContext.Provider>
+      ) : (
+        <WarningModalContent {...props} />
+      )}
     </Modal>
   )
 }

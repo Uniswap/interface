@@ -1,17 +1,18 @@
-import { BigNumber } from '@ethersproject/bignumber'
 // eslint-disable-next-line no-restricted-imports
 import {
+  PairPosition,
+  PoolPosition,
   Position,
   PositionStatus,
   ProtocolVersion,
+  Pair as RestPair,
   Pool as RestPool,
   Token as RestToken,
 } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
+import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Position as V3SDKPosition } from '@uniswap/v3-sdk'
 import { getPriceOrderingFromPositionForUI } from 'components/PositionListItem'
-import { usePool } from 'hooks/usePools'
-import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
@@ -79,7 +80,7 @@ export function getPoolFromRest({
   token0,
   token1,
 }: {
-  pool?: RestPool
+  pool?: RestPool | PoolPosition
   token0?: Token
   token1?: Token
 }): Pool | undefined {
@@ -87,7 +88,18 @@ export function getPoolFromRest({
     return undefined
   }
 
-  return new Pool(token0, token1, pool.fee, pool.sqrtPriceX96, pool.liquidity, pool.tick)
+  if (pool instanceof RestPool) {
+    return new Pool(token0, token1, pool.fee, pool.sqrtPriceX96, pool.liquidity, pool.tick)
+  }
+
+  if (pool instanceof PoolPosition) {
+    const feeTier = parseV3FeeTier(pool.feeTier)
+    if (feeTier) {
+      return new Pool(token0, token1, feeTier, pool.currentPrice, pool.liquidity, parseInt(pool.currentTick))
+    }
+  }
+
+  return undefined
 }
 
 function parseRestToken(token?: RestToken): Token | undefined {
@@ -97,6 +109,26 @@ function parseRestToken(token?: RestToken): Token | undefined {
   return new Token(token.chainId, token.address, token.decimals, token.symbol)
 }
 
+export function getPairFromRest({
+  pair,
+  token0,
+  token1,
+}: {
+  pair?: PairPosition | RestPair
+  token0: Token
+  token1: Token
+}): Pair | undefined {
+  if (!pair) {
+    return undefined
+  }
+
+  return new Pair(
+    CurrencyAmount.fromRawAmount(token0, pair.reserve0),
+    CurrencyAmount.fromRawAmount(token1, pair.reserve1),
+  )
+}
+
+// TODO: rename this because it conflicts with derivedPositionInfo
 export type PositionInfo = {
   restPosition: Position
   status: PositionStatus
@@ -205,7 +237,7 @@ export function useModalLiquidityPositionInfo(): PositionInfo | undefined {
  * V2-specific hooks for a position parsed using parseRestPosition.
  */
 export function useV2PositionDerivedInfo(positionInfo?: PositionInfo) {
-  const { currency0Amount, currency1Amount, totalSupply, liquidityAmount } = positionInfo ?? {}
+  const { currency0Amount, currency1Amount, totalSupply, liquidityAmount, restPosition } = positionInfo ?? {}
 
   const poolTokenPercentage = useMemo(() => {
     return !!liquidityAmount && !!totalSupply && JSBI.greaterThanOrEqual(totalSupply.quotient, liquidityAmount.quotient)
@@ -216,47 +248,71 @@ export function useV2PositionDerivedInfo(positionInfo?: PositionInfo) {
   const token0USDValue = useUSDCValue(currency0Amount)
   const token1USDValue = useUSDCValue(currency1Amount)
 
+  const currency0 = currency0Amount?.currency
+  const currency1 = currency1Amount?.currency
+  const token0: Token | undefined = currency0?.isNative ? currency0.wrapped : currency0
+  const token1: Token | undefined = currency1?.isNative ? currency1.wrapped : currency1
+
+  let currentPrice: Price<Token, Token> | undefined
+  if (restPosition?.position.case === 'v2Pair' && token0 && token1) {
+    currentPrice = getPairFromRest({ pair: restPosition.position.value, token0, token1 })?.token1Price
+  }
+
   return useMemo(
     () => ({
       poolTokenPercentage,
       token0USDValue,
       token1USDValue,
+      currentPrice,
     }),
-    [poolTokenPercentage, token0USDValue, token1USDValue],
+    [poolTokenPercentage, token0USDValue, token1USDValue, currentPrice],
   )
 }
 
 /**
  * V3-specific hooks for a position parsed using parseRestPosition.
  */
-export function useV3PositionDerivedInfo(positionInfo?: PositionInfo, tokenId?: string, collectAsWeth?: boolean) {
-  const { currency0Amount, currency1Amount, feeTier, liquidity, tickLower, tickUpper } = positionInfo ?? {}
+export function useV3PositionDerivedInfo(positionInfo?: PositionInfo) {
+  const {
+    restPosition,
+    token0UncollectedFees,
+    token1UncollectedFees,
+    currency0Amount,
+    currency1Amount,
+    liquidity,
+    tickLower,
+    tickUpper,
+  } = positionInfo ?? {}
   // TODO(WEB-4920): construct Pool object from backend data rather than using multicall
-  const [, pool] = usePool(currency0Amount?.currency, currency1Amount?.currency, parseV3FeeTier(feeTier))
-  const price0 = useUSDCPrice(currency0Amount?.currency)
-  const price1 = useUSDCPrice(currency1Amount?.currency)
+  const { price: price0 } = useUSDCPrice(currency0Amount?.currency)
+  const { price: price1 } = useUSDCPrice(currency1Amount?.currency)
 
-  // TODO(WEB-4920): use fees from REST response instead once they are included.
-  const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, BigNumber.from(tokenId), collectAsWeth)
+  const { feeValue0, feeValue1 } = useMemo(() => {
+    if (!currency0Amount || !currency1Amount) {
+      return {}
+    }
+    return {
+      feeValue0: token0UncollectedFees
+        ? CurrencyAmount.fromRawAmount(currency0Amount.currency, token0UncollectedFees)
+        : undefined,
+      feeValue1: token1UncollectedFees
+        ? CurrencyAmount.fromRawAmount(currency1Amount.currency, token1UncollectedFees)
+        : undefined,
+    }
+  }, [currency0Amount, currency1Amount, token0UncollectedFees, token1UncollectedFees])
+
   const { fiatFeeValue0, fiatFeeValue1 } = useMemo(() => {
-    if (!price0 || !price1 || !feeValue0 || !feeValue1) {
+    if (!price0 || !price1 || !currency0Amount || !currency1Amount || !feeValue0 || !feeValue1) {
       return {}
     }
 
-    const feeValue0Wrapped = feeValue0?.wrapped
-    const feeValue1Wrapped = feeValue1?.wrapped
-
-    if (!feeValue0Wrapped || !feeValue1Wrapped) {
-      return {}
-    }
-
-    const amount0 = price0.quote(feeValue0Wrapped)
-    const amount1 = price1.quote(feeValue1Wrapped)
+    const amount0 = price0.quote(feeValue0.wrapped)
+    const amount1 = price1.quote(feeValue1.wrapped)
     return {
       fiatFeeValue0: amount0,
       fiatFeeValue1: amount1,
     }
-  }, [price0, price1, feeValue0, feeValue1])
+  }, [price0, price1, currency0Amount, currency1Amount, feeValue0, feeValue1])
 
   const { fiatValue0, fiatValue1 } = useMemo(() => {
     if (!price0 || !price1 || !currency0Amount || !currency1Amount) {
@@ -269,7 +325,21 @@ export function useV3PositionDerivedInfo(positionInfo?: PositionInfo, tokenId?: 
       fiatValue1: amount1,
     }
   }, [price0, price1, currency0Amount, currency1Amount])
-  const { priceLower, priceUpper } = useMemo(() => {
+
+  let pool: Pool | undefined
+  if (restPosition?.position.case === 'v3Position') {
+    const currency0 = currency0Amount?.currency
+    const currency1 = currency1Amount?.currency
+    const token0: Token | undefined = currency0?.isNative ? currency0.wrapped : currency0
+    const token1: Token | undefined = currency1?.isNative ? currency1.wrapped : currency1
+
+    pool = getPoolFromRest({
+      pool: restPosition.position.value,
+      token0,
+      token1,
+    })
+  }
+  const priceOrdering = useMemo(() => {
     if (!pool || !liquidity || !tickLower || !tickUpper) {
       return {}
     }
@@ -281,18 +351,19 @@ export function useV3PositionDerivedInfo(positionInfo?: PositionInfo, tokenId?: 
     })
     return getPriceOrderingFromPositionForUI(sdkPosition)
   }, [liquidity, pool, tickLower, tickUpper])
+
   return useMemo(
     () => ({
       fiatFeeValue0,
       fiatFeeValue1,
       fiatValue0,
       fiatValue1,
-      priceLower,
-      priceUpper,
+      priceOrdering,
       feeValue0,
       feeValue1,
-      currentPrice: pool?.token1Price,
+      token0CurrentPrice: pool?.token0Price,
+      token1CurrentPrice: pool?.token1Price,
     }),
-    [feeValue0, feeValue1, fiatFeeValue0, fiatFeeValue1, fiatValue0, fiatValue1, priceLower, priceUpper, pool],
+    [fiatFeeValue0, fiatFeeValue1, fiatValue0, fiatValue1, priceOrdering, pool, feeValue0, feeValue1],
   )
 }

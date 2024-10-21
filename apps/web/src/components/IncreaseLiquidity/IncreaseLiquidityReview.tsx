@@ -1,62 +1,49 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useIncreaseLiquidityContext } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
-import { useV2PositionDerivedInfo } from 'components/Liquidity/utils'
-import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import { useIncreaseLiquidityTxContext } from 'components/IncreaseLiquidity/IncreaseLiquidityTxContext'
+import { TokenInfo } from 'components/Liquidity/TokenInfo'
+import { useV2PositionDerivedInfo, useV3PositionDerivedInfo } from 'components/Liquidity/utils'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
-import { useMemo } from 'react'
+import { useAccount } from 'hooks/useAccount'
+import useSelectChain from 'hooks/useSelectChain'
+import { useMemo, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { Button, Flex, Separator, Text } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
+import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
+import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { TransactionStep } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 
-function TokenInfo({
-  currencyAmount,
-  currencyUSDAmount,
-}: {
-  currencyAmount?: CurrencyAmount<Currency>
-  currencyUSDAmount?: CurrencyAmount<Currency>
-}) {
-  const { formatCurrencyAmount } = useLocalizationContext()
-
-  return (
-    <Flex row alignItems="center">
-      <Flex grow>
-        <Text variant="heading2">
-          {formatCurrencyAmount({
-            value: currencyAmount,
-            type: NumberType.TokenNonTx,
-          })}{' '}
-          {getSymbolDisplayText(currencyAmount?.currency.symbol)}
-        </Text>
-        <Text variant="body3" color="$neutral2">
-          {formatCurrencyAmount({
-            value: currencyUSDAmount,
-            type: NumberType.FiatStandard,
-          })}
-        </Text>
-      </Flex>
-      <CurrencyLogo currency={currencyAmount?.currency} size={iconSizes.icon36} />
-    </Flex>
-  )
-}
-
-export function IncreaseLiquidityReview() {
+export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const selectChain = useSelectChain()
+  const startChainId = useAccount().chainId
+  const account = useAccountMeta()
+
   const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
 
-  const { derivedIncreaseLiquidityInfo: derivedAddLiquidityInfo, increaseLiquidityState: addLiquidityState } =
-    useIncreaseLiquidityContext()
-  const { currencyAmounts, currencyAmountsUSDValue } = derivedAddLiquidityInfo
+  const { derivedIncreaseLiquidityInfo, increaseLiquidityState } = useIncreaseLiquidityContext()
+  const { txInfo, gasFeeEstimateUSD } = useIncreaseLiquidityTxContext()
 
-  if (!addLiquidityState.position) {
+  const { currencyAmounts, currencyAmountsUSDValue } = derivedIncreaseLiquidityInfo
+
+  const [steps, setSteps] = useState<TransactionStep[]>([])
+  const [currentStep, setCurrentStep] = useState<{ step: TransactionStep; accepted: boolean } | undefined>()
+
+  if (!increaseLiquidityState.position) {
     throw new Error('a position must be defined')
   }
 
-  const { currency0Amount, currency1Amount } = addLiquidityState.position
-  const { poolTokenPercentage } = useV2PositionDerivedInfo(addLiquidityState.position)
+  const { currency0Amount, currency1Amount } = increaseLiquidityState.position
+  const { poolTokenPercentage, currentPrice: v2Price } = useV2PositionDerivedInfo(increaseLiquidityState.position)
+  const { token1CurrentPrice: v3Price } = useV3PositionDerivedInfo(increaseLiquidityState.position)
 
   const newToken0Amount = useMemo(() => {
     return currencyAmounts?.TOKEN0?.add(currency0Amount)
@@ -68,6 +55,30 @@ export function IncreaseLiquidityReview() {
   }, [currency1Amount, currencyAmounts?.TOKEN1])
   const newToken1AmountUSD = useUSDCValue(newToken1Amount)
 
+  const onFailure = () => {
+    setCurrentStep(undefined)
+  }
+
+  const onIncreaseLiquidity = () => {
+    const isValidTx = isValidLiquidityTxContext(txInfo)
+    if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
+      return
+    }
+
+    dispatch(
+      liquiditySaga.actions.trigger({
+        selectChain,
+        startChainId,
+        account,
+        liquidityTxContext: txInfo,
+        setCurrentStep,
+        setSteps,
+        onSuccess: onClose,
+        onFailure,
+      }),
+    )
+  }
+
   return (
     <Flex gap="$gap16">
       <Flex gap="$gap16" px="$padding16">
@@ -77,93 +88,100 @@ export function IncreaseLiquidityReview() {
         </Text>
         <TokenInfo currencyAmount={currencyAmounts?.TOKEN1} currencyUSDAmount={currencyAmountsUSDValue?.TOKEN1} />
       </Flex>
-      <Separator mx="$padding16" />
-      <Flex gap="$gap8" px="$padding16">
-        <DetailLineItem
-          LineItem={{
-            Label: () => (
-              <Text variant="body3" color="$neutral2">
-                {t('common.rate')}
-              </Text>
-            ),
-            // TODO(WEB-4976): update with the actual rate. This comes from sqrtPrice and is the
-            // same as Current Price in v3 current code. Get from Jack
-            Value: () => <Text variant="body3">1 ETH = 1,607.58 DAI ($1,610.73)</Text>,
-          }}
-        />
+      {currentStep ? (
+        <ProgressIndicator currentStep={currentStep} steps={steps} />
+      ) : (
         <>
-          <DetailLineItem
-            LineItem={{
-              Label: () => (
-                <Text variant="body3" color="$neutral2">
-                  <Trans
-                    i18nKey="pool.newSpecificPosition"
-                    values={{ symbol: currencyAmounts?.TOKEN0?.currency.symbol }}
-                  />
-                </Text>
-              ),
-              Value: () => (
-                <Flex row gap="$gap4">
-                  <Text variant="body3">
-                    {formatCurrencyAmount({ value: newToken0Amount, type: NumberType.TokenNonTx })}{' '}
-                    {getSymbolDisplayText(newToken0Amount?.currency.symbol)}
-                  </Text>
+          <Separator mx="$padding16" />
+          <Flex gap="$gap8" px="$padding16">
+            <DetailLineItem
+              LineItem={{
+                Label: () => (
                   <Text variant="body3" color="$neutral2">
-                    {`(${formatCurrencyAmount({ value: newToken0AmountUSD, type: NumberType.FiatStandard })})`}
+                    {t('common.rate')}
                   </Text>
-                </Flex>
-              ),
-            }}
-          />
-          <DetailLineItem
-            LineItem={{
-              Label: () => (
-                <Text variant="body3" color="$neutral2">
-                  <Trans
-                    i18nKey="pool.newSpecificPosition"
-                    values={{ symbol: currencyAmounts?.TOKEN1?.currency.symbol }}
-                  />
-                </Text>
-              ),
-              Value: () => (
-                <Flex row gap="$gap4">
-                  <Text variant="body3">
-                    {formatCurrencyAmount({ value: newToken1Amount, type: NumberType.TokenNonTx })}{' '}
-                    {getSymbolDisplayText(newToken1Amount?.currency.symbol)}
-                  </Text>
+                ),
+                Value: () => (
+                  <Text variant="body3">{`1 ${(v3Price || v2Price)?.baseCurrency.symbol} = ${(v3Price || v2Price)?.toFixed()} ${(v3Price || v2Price)?.quoteCurrency.symbol}`}</Text>
+                ),
+              }}
+            />
+            <DetailLineItem
+              LineItem={{
+                Label: () => (
                   <Text variant="body3" color="$neutral2">
-                    {`(${formatCurrencyAmount({ value: newToken1AmountUSD, type: NumberType.FiatStandard })})`}
+                    <Trans
+                      i18nKey="pool.newSpecificPosition"
+                      values={{ symbol: currencyAmounts?.TOKEN0?.currency.symbol }}
+                    />
                   </Text>
-                </Flex>
-              ),
-            }}
-          />
+                ),
+                Value: () => (
+                  <Flex row gap="$gap4">
+                    <Text variant="body3">
+                      {formatCurrencyAmount({ value: newToken0Amount, type: NumberType.TokenNonTx })}{' '}
+                      {getSymbolDisplayText(newToken0Amount?.currency.symbol)}
+                    </Text>
+                    <Text variant="body3" color="$neutral2">
+                      {`(${formatCurrencyAmount({ value: newToken0AmountUSD, type: NumberType.FiatStandard })})`}
+                    </Text>
+                  </Flex>
+                ),
+              }}
+            />
+            <DetailLineItem
+              LineItem={{
+                Label: () => (
+                  <Text variant="body3" color="$neutral2">
+                    <Trans
+                      i18nKey="pool.newSpecificPosition"
+                      values={{ symbol: currencyAmounts?.TOKEN1?.currency.symbol }}
+                    />
+                  </Text>
+                ),
+                Value: () => (
+                  <Flex row gap="$gap4">
+                    <Text variant="body3">
+                      {formatCurrencyAmount({ value: newToken1Amount, type: NumberType.TokenNonTx })}{' '}
+                      {getSymbolDisplayText(newToken1Amount?.currency.symbol)}
+                    </Text>
+                    <Text variant="body3" color="$neutral2">
+                      {`(${formatCurrencyAmount({ value: newToken1AmountUSD, type: NumberType.FiatStandard })})`}
+                    </Text>
+                  </Flex>
+                ),
+              }}
+            />
+            {poolTokenPercentage ? (
+              <DetailLineItem
+                LineItem={{
+                  Label: () => (
+                    <Text variant="body3" color="$neutral2">
+                      {t('addLiquidity.shareOfPool')}
+                    </Text>
+                  ),
+                  Value: () => <Text>{formatPercent(poolTokenPercentage.toFixed())}</Text>,
+                }}
+              />
+            ) : null}
+            <DetailLineItem
+              LineItem={{
+                Label: () => (
+                  <Text variant="body3" color="$neutral2">
+                    {t('common.networkCost')}
+                  </Text>
+                ),
+                Value: () => (
+                  <Text variant="body3">
+                    {formatCurrencyAmount({ value: gasFeeEstimateUSD, type: NumberType.FiatGasPrice })}
+                  </Text>
+                ),
+              }}
+            />
+          </Flex>
+          <Button onPress={onIncreaseLiquidity}>{t('common.confirm')}</Button>
         </>
-        {poolTokenPercentage ? (
-          <DetailLineItem
-            LineItem={{
-              Label: () => (
-                <Text variant="body3" color="$neutral2">
-                  {t('addLiquidity.shareOfPool')}
-                </Text>
-              ),
-              Value: () => <Text>{formatPercent(poolTokenPercentage.toFixed())}</Text>,
-            }}
-          />
-        ) : null}
-        <DetailLineItem
-          LineItem={{
-            Label: () => (
-              <Text variant="body3" color="$neutral2">
-                {t('common.networkCost')}
-              </Text>
-            ),
-            // TODO(WEB-4978): calculate this value from the trading API
-            Value: () => <Text>$0</Text>,
-          }}
-        />
-      </Flex>
-      <Button>{t('common.confirm')}</Button>
+      )}
     </Flex>
   )
 }

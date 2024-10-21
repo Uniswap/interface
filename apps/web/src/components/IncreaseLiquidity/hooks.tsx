@@ -1,19 +1,13 @@
 // eslint-disable-next-line no-restricted-imports
-import { PoolPosition } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { Position } from '@uniswap/v3-sdk'
-import { IncreaseLiquidityInfo, IncreaseLiquidityState } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
-import { parseV3FeeTier } from 'components/Liquidity/utils'
+import { PoolPosition, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { IncreaseLiquidityState } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
+import { DepositInfo } from 'components/Liquidity/types'
+import { getPairFromRest, getPoolFromRest } from 'components/Liquidity/utils'
 import { useAccount } from 'hooks/useAccount'
-import { usePool } from 'hooks/usePools'
-import { useV2Pair } from 'hooks/useV2Pairs'
-import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
-import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
+import { UseDepositInfoProps, useDepositInfo } from 'pages/Pool/Positions/create/hooks'
 import { useMemo } from 'react'
-import { PositionField } from 'types/position'
-import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 
-export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): IncreaseLiquidityInfo {
+export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): DepositInfo {
   const account = useAccount()
   const { position: positionInfo, exactAmount, exactField } = state
 
@@ -21,34 +15,35 @@ export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): 
     throw new Error('no position available')
   }
 
-  const token0 = positionInfo.currency0Amount.currency
-  const token1 = positionInfo.currency1Amount.currency
+  const currency0 = positionInfo.currency0Amount.currency
+  const token0 = currency0.isNative ? currency0.wrapped : currency0
+  const currency1 = positionInfo.currency1Amount.currency
+  const token1 = currency1.isNative ? currency1.wrapped : currency1
 
-  const [token0Balance, token1Balance] = useCurrencyBalances(account.address, [token0, token1])
-
-  const [independentToken, dependentToken] = exactField === PositionField.TOKEN0 ? [token0, token1] : [token1, token0]
-  const independentAmount = tryParseCurrencyAmount(exactAmount, independentToken)
-
-  const [, pool] = usePool(token0, token1, parseV3FeeTier(positionInfo.feeTier))
-  const [, pair] = useV2Pair(token0, token1)
-
-  const dependentAmount: CurrencyAmount<Currency> | undefined = useMemo(() => {
-    // we wrap the currencies just to get the price in terms of the other token
-    const wrappedIndependentAmount = independentAmount?.wrapped
+  const depositInfoProps: UseDepositInfoProps = useMemo(() => {
+    if (positionInfo.restPosition.position.case === undefined) {
+      return {
+        protocolVersion: ProtocolVersion.UNSPECIFIED,
+        exactField,
+      }
+    }
 
     if (positionInfo.restPosition.position.case === 'v2Pair') {
-      const [token0Wrapped, token1Wrapped] = [token0?.wrapped, token1?.wrapped]
+      const pair = getPairFromRest({
+        pair: positionInfo.restPosition.position.value,
+        token0,
+        token1,
+      })
 
-      if (token0Wrapped && token1Wrapped && wrappedIndependentAmount && pair) {
-        const dependentTokenAmount =
-          exactField === PositionField.TOKEN0
-            ? pair.priceOf(token0Wrapped).quote(wrappedIndependentAmount)
-            : pair.priceOf(token1Wrapped).quote(wrappedIndependentAmount)
-        return dependentToken?.isNative
-          ? CurrencyAmount.fromRawAmount(dependentToken, dependentTokenAmount.quotient)
-          : dependentTokenAmount
+      return {
+        protocolVersion: ProtocolVersion.V2,
+        pair,
+        address: account.address,
+        token0: currency0,
+        token1: currency1,
+        exactField,
+        exactAmount,
       }
-      return undefined
     }
 
     if (positionInfo.restPosition.position.case === 'v3Position') {
@@ -57,62 +52,37 @@ export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): 
       const tickLower = parseInt(tickLowerStr)
       const tickUpper = parseInt(tickUpperStr)
 
-      if (
-        independentAmount &&
-        wrappedIndependentAmount &&
-        typeof tickLower === 'number' &&
-        typeof tickUpper === 'number' &&
-        pool
-      ) {
-        const position: Position | undefined = wrappedIndependentAmount.currency.equals(pool.token0)
-          ? Position.fromAmount0({
-              pool,
-              tickLower,
-              tickUpper,
-              amount0: independentAmount.quotient,
-              useFullPrecision: true, // we want full precision for the theoretical position
-            })
-          : Position.fromAmount1({
-              pool,
-              tickLower,
-              tickUpper,
-              amount1: independentAmount.quotient,
-            })
+      const pool = getPoolFromRest({ pool: position, token0, token1 })
 
-        const dependentTokenAmount = wrappedIndependentAmount.currency.equals(pool.token0)
-          ? position.amount1
-          : position.amount0
-        return dependentToken && CurrencyAmount.fromRawAmount(dependentToken, dependentTokenAmount.quotient)
+      return {
+        protocolVersion: ProtocolVersion.V3,
+        pool: pool ?? undefined,
+        address: account.address,
+        tickLower,
+        tickUpper,
+        token0,
+        token1,
+        exactField,
+        exactAmount,
       }
-
-      return undefined
     }
 
-    if (positionInfo.restPosition.position.case === 'v4Position') {
-      // TODO: calculate for v4
-      return undefined
+    // TODO: handle v4 case
+    return {
+      protocolVersion: ProtocolVersion.UNSPECIFIED,
+      exactField,
     }
-
-    return undefined
   }, [
-    dependentToken,
-    independentAmount,
-    pool,
-    positionInfo.restPosition.position,
+    account.address,
+    exactAmount,
     exactField,
-    pair,
-    token0.wrapped,
-    token1.wrapped,
+    positionInfo.restPosition.position.case,
+    positionInfo.restPosition.position.value,
+    currency0,
+    currency1,
+    token0,
+    token1,
   ])
 
-  const independentTokenUSDValue = useUSDCValue(independentAmount) || undefined
-  const dependentTokenUSDValue = useUSDCValue(dependentAmount) || undefined
-
-  const dependentField = exactField === PositionField.TOKEN0 ? PositionField.TOKEN1 : PositionField.TOKEN0
-  return {
-    currencyBalances: { [PositionField.TOKEN0]: token0Balance, [PositionField.TOKEN1]: token1Balance },
-    formattedAmounts: { [exactField]: exactAmount, [dependentField]: dependentAmount?.toExact() },
-    currencyAmounts: { [exactField]: independentAmount, [dependentField]: dependentAmount },
-    currencyAmountsUSDValue: { [exactField]: independentTokenUSDValue, [dependentField]: dependentTokenUSDValue },
-  }
+  return useDepositInfo(depositInfoProps)
 }

@@ -1,4 +1,3 @@
-import { REACTOR_ADDRESS_MAPPING } from '@uniswap/uniswapx-sdk'
 import { EthereumRpcErrorSchema } from 'src/app/features/dappRequests/types/ErrorTypes'
 import {
   EthersTransactionRequestSchema,
@@ -8,11 +7,7 @@ import { NonfungiblePositionManagerCallSchema } from 'src/app/features/dappReque
 import { UniversalRouterCallSchema } from 'src/app/features/dappRequests/types/UniversalRouterTypes'
 import { HomeTabs } from 'src/app/navigation/constants'
 import { MessageSchema } from 'src/background/messagePassing/messageTypes'
-import {
-  PermissionRequestSchema,
-  PermissionSchema,
-} from 'src/contentScript/WindowEthereumRequestTypes'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { PermissionRequestSchema, PermissionSchema } from 'src/contentScript/WindowEthereumRequestTypes'
 import { z } from 'zod'
 
 // ENUMS
@@ -51,7 +46,6 @@ export enum UniswapOpenSidebarTab {
   Activity = 'activity',
   Tokens = 'tokens',
 }
-
 
 // SCHEMAS + TYPES
 
@@ -117,9 +111,7 @@ export type ApproveSendTransactionRequest = z.infer<typeof ApproveSendTransactio
 const ContractInteractionSendTransactionRequestSchema = BaseSendTransactionRequestSchema.extend({
   contractInteractions: z.literal(EthSendTransactionRPCActions.ContractInteraction),
 })
-export type ContractInteractionSendTransactionRequest = z.infer<
-  typeof ContractInteractionSendTransactionRequestSchema
->
+export type ContractInteractionSendTransactionRequest = z.infer<typeof ContractInteractionSendTransactionRequestSchema>
 
 const SwapSendTransactionRequestSchema = BaseSendTransactionRequestSchema.extend({
   contractInteractions: z.literal(EthSendTransactionRPCActions.Swap),
@@ -138,10 +130,9 @@ const LPSendTransactionRequestSchema = BaseSendTransactionRequestSchema.extend({
 })
 export type LPSendTransactionRequest = z.infer<typeof LPSendTransactionRequestSchema>
 
-const UnknownContractInteractionSendTransactionRequestSchema =
-  BaseSendTransactionRequestSchema.extend({
-    contractInteractions: z.literal(EthSendTransactionRPCActions.Unknown).optional(),
-  })
+const UnknownContractInteractionSendTransactionRequestSchema = BaseSendTransactionRequestSchema.extend({
+  contractInteractions: z.literal(EthSendTransactionRPCActions.Unknown).optional(),
+})
 export type UnknownContractInteractionSendTransactionRequest = z.infer<
   typeof UnknownContractInteractionSendTransactionRequestSchema
 >
@@ -318,15 +309,11 @@ export function isErrorResponse(response: unknown): response is ErrorResponse {
   return ErrorResponseSchema.safeParse(response).success
 }
 
-export function isValidSendTransactionResponse(
-  response: unknown
-): response is SendTransactionResponse {
+export function isValidSendTransactionResponse(response: unknown): response is SendTransactionResponse {
   return SendTransactionResponseSchema.safeParse(response).success
 }
 
-export function isValidSignTransactionResponse(
-  response: unknown
-): response is SignTransactionResponse {
+export function isValidSignTransactionResponse(response: unknown): response is SignTransactionResponse {
   return SignTransactionResponseSchema.safeParse(response).success
 }
 
@@ -350,33 +337,20 @@ export function isValidAccountResponse(response: unknown): response is AccountRe
   return AccountResponseSchema.safeParse(response).success
 }
 
-export function isValidGetPermissionsResponse(
-  response: unknown
-): response is GetPermissionsResponse {
+export function isValidGetPermissionsResponse(response: unknown): response is GetPermissionsResponse {
   return GetPermissionsResponseSchema.safeParse(response).success
 }
 
-export function isValidRequestPermissionsResponse(
-  response: unknown
-): response is RequestPermissionsResponse {
+export function isValidRequestPermissionsResponse(response: unknown): response is RequestPermissionsResponse {
   return RequestPermissionsResponseSchema.safeParse(response).success
 }
 
-export function isApproveRequest(
-  request: SendTransactionRequest
-): request is ApproveSendTransactionRequest {
+export function isApproveRequest(request: SendTransactionRequest): request is ApproveSendTransactionRequest {
   return ApproveSendTransactionRequestSchema.safeParse(request).success
 }
 
-export function isSwapRequest(
-  request: SendTransactionRequest
-): request is SwapSendTransactionRequest {
+export function isSwapRequest(request: SendTransactionRequest): request is SwapSendTransactionRequest {
   return SwapSendTransactionRequestSchema.safeParse(request).success
-}
-
-export function isUniswapXSwapRequest(request: SignTypedDataRequest, chainId: UniverseChainId = UniverseChainId.Mainnet): boolean {
-  const parsedTypedData = JSON.parse(request.typedData)
-  return parsedTypedData?.message?.spender.toLowerCase() === REACTOR_ADDRESS_MAPPING[chainId]?.Dutch_V2?.toLowerCase()
 }
 
 export function isSignTypedDataRequest(request: DappRequest): request is SignTypedDataRequest {
@@ -407,8 +381,6 @@ export function isRequestAccountRequest(request: DappRequest): request is Reques
   return RequestAccountRequestSchema.safeParse(request).success
 }
 
-export function isRequestPermissionsRequest(
-  request: DappRequest
-): request is RequestPermissionsRequest {
+export function isRequestPermissionsRequest(request: DappRequest): request is RequestPermissionsRequest {
   return RequestPermissionsRequestSchema.safeParse(request).success
 }

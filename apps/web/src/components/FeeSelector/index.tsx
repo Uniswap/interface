@@ -20,7 +20,7 @@ import { ThemedText } from 'theme/components'
 import { RadioButtonGroup } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useFormatter } from 'utils/formatNumbers'
 
@@ -214,7 +214,7 @@ export default function FeeSelector({
                 FeeAmount.HIGH,
               ].map((_feeAmount, i) => {
                 const { supportedChains } = FEE_AMOUNT_DETAIL[_feeAmount]
-                if ((supportedChains as unknown as InterfaceChainId[]).includes(chainId)) {
+                if ((supportedChains as unknown as UniverseChainId[]).includes(chainId)) {
                   return (
                     <FeeOption
                       feeAmount={_feeAmount}

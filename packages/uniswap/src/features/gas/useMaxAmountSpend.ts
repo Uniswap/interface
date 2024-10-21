@@ -54,6 +54,8 @@ function useGetMinAmount(chainId?: UniverseChainId, txType?: TransactionType): J
   switch (chainId) {
     case UniverseChainId.Mainnet:
       return MIN_ETH_FOR_GAS
+    case UniverseChainId.Sepolia:
+      return MIN_ETH_FOR_GAS
     case UniverseChainId.Polygon:
       return MIN_POLYGON_FOR_GAS
     case UniverseChainId.Avalanche:
@@ -65,8 +67,10 @@ function useGetMinAmount(chainId?: UniverseChainId, txType?: TransactionType): J
     case UniverseChainId.Base:
     case UniverseChainId.Bnb:
     case UniverseChainId.Blast:
+    case UniverseChainId.WorldChain:
     case UniverseChainId.Zora:
     case UniverseChainId.Zksync:
+    case UniverseChainId.AstrochainSepolia:
       return MIN_L2_FOR_GAS
     default:
       logger.error(new Error('unhandled chain when getting min gas amount'), {

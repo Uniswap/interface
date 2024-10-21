@@ -2,7 +2,7 @@ import { BottomSheetSectionList } from '@gorhom/bottom-sheet'
 import { memo, useCallback } from 'react'
 import { ListRenderItemInfo, SectionList, SectionListData } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { Text, TouchableArea, isWeb, useDeviceInsets } from 'ui/src'
+import { Text, TouchableArea, isWeb } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { spacing } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
@@ -10,6 +10,7 @@ import { SearchableRecipient } from 'uniswap/src/features/address/types'
 import { SearchResultType, extractDomain } from 'uniswap/src/features/search/SearchResult'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 
 interface RecipientListProps {
@@ -19,7 +20,7 @@ interface RecipientListProps {
 }
 
 export function RecipientList({ onPress, sections, renderedInModal = false }: RecipientListProps): JSX.Element {
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
 
   const onRecipientPress = useCallback(
     (recipient: SearchableRecipient) => {

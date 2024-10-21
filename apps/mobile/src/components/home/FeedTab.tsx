@@ -9,13 +9,14 @@ import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading/loaders'
 import { openModal } from 'src/features/modals/modalSlice'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Text, useDeviceInsets, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { NoTransactions } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { selectWatchedAddressSet } from 'uniswap/src/features/favorites/selectors'
 import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { isAndroid } from 'utilities/src/platform'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { useFormattedTransactionDataForFeed } from 'wallet/src/features/activity/hooks'
@@ -41,7 +42,7 @@ export const FeedTab = memo(
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const colors = useSporeColors()
-    const insets = useDeviceInsets()
+    const insets = useAppInsets()
 
     const watchedWalletsSet = useSelector(selectWatchedAddressSet)
     const watchedWalletsList = useMemo(() => Array.from(watchedWalletsSet), [watchedWalletsSet])

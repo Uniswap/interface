@@ -1,4 +1,4 @@
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
+import { chainIdToBackendChain } from 'constants/chains'
 import {
   PoolTableSortState,
   TablePool,
@@ -12,13 +12,14 @@ import {
   useTopV2PairsQuery,
   useTopV3PoolsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const DEFAULT_QUERY_SIZE = 20
 
 export function usePoolsFromTokenAddress(
   tokenAddress: string,
   sortState: PoolTableSortState,
-  chainId?: SupportedInterfaceChainId,
+  chainId?: UniverseChainId,
 ) {
   const {
     loading: loadingV3,

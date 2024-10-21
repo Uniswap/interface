@@ -5,7 +5,7 @@ import { useCurrencyInfo } from 'hooks/Tokens'
 import styled, { css } from 'lib/styled-components'
 import { memo, useState } from 'react'
 import { useColorSchemeFromSeed } from 'ui/src'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const MissingImageLogo = styled.div<{ $size?: string; $textColor: string; $backgroundColor: string }>`
   --size: ${({ $size }) => $size};
@@ -148,7 +148,7 @@ export const L2LogoContainer = styled.div<{ $size: number }>`
   justify-content: center;
 `
 
-function SquareL2Logo({ chainId, size }: { chainId: InterfaceChainId; size: number }) {
+function SquareL2Logo({ chainId, size }: { chainId: UniverseChainId; size: number }) {
   if (chainId === UniverseChainId.Mainnet) {
     return null
   }

@@ -20,8 +20,9 @@ import { CurrencyState, SerializedCurrencyState, SwapInfo, SwapState } from 'sta
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { Trans } from 'uniswap/src/i18n'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { isAddress } from 'utilities/src/addresses'
@@ -387,10 +388,11 @@ export function useInitialCurrencyState(): {
   initialOutputCurrency?: Currency
   initialTypedValue?: string
   initialField?: CurrencyField
-  initialChainId: InterfaceChainId
+  initialChainId: UniverseChainId
   initialCurrencyLoading: boolean
 } {
   const { chainId, setIsUserSelectedToken } = useSwapAndLimitContext()
+  const { defaultChainId } = useEnabledChains()
 
   const parsedQs = useParsedQueryString()
   const parsedCurrencyState = useMemo(() => {
@@ -412,7 +414,7 @@ export function useInitialCurrencyState(): {
     if (!hasCurrencyQueryParams) {
       return {
         initialInputCurrencyAddress: 'ETH',
-        initialChainId: UniverseChainId.Mainnet,
+        initialChainId: defaultChainId,
       }
     }
     // Handle query params or disconnected state
@@ -431,6 +433,7 @@ export function useInitialCurrencyState(): {
     hasCurrencyQueryParams,
     parsedCurrencyState.inputCurrencyId,
     parsedCurrencyState.outputCurrencyId,
+    defaultChainId,
     supportedChainId,
   ])
 

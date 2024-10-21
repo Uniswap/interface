@@ -36,7 +36,7 @@ import { Chain, ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Trans } from 'uniswap/src/i18n'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const HEADER_DESCRIPTIONS: Record<PoolSortFields, ReactNode | undefined> = {
@@ -90,7 +90,7 @@ function PoolDescription({
   token0?: Token | TokenStats
   token1?: Token | TokenStats
   feeTier?: number
-  chainId: InterfaceChainId
+  chainId: UniverseChainId
   protocolVersion?: ProtocolVersion | string
 }) {
   const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)

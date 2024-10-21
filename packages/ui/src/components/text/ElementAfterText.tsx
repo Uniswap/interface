@@ -20,7 +20,7 @@ export function ElementAfterText({ element, text, wrapperProps, textProps }: Ele
 
   if (isWeb) {
     return (
-      <Flex row {...wrapperProps}>
+      <Flex row alignItems="center" {...wrapperProps}>
         <Text {...DEFAULT_TEXT_PROPS} {...textProps}>
           {text}
           {element}
@@ -29,7 +29,7 @@ export function ElementAfterText({ element, text, wrapperProps, textProps }: Ele
     )
   } else {
     return (
-      <Flex row pr={postTextElementPositionProps ? '$spacing24' : undefined} {...wrapperProps}>
+      <Flex row alignItems="center" pr={postTextElementPositionProps ? '$spacing24' : undefined} {...wrapperProps}>
         <Text {...DEFAULT_TEXT_PROPS} onTextLayout={onTextLayout} {...textProps}>
           {text}
         </Text>

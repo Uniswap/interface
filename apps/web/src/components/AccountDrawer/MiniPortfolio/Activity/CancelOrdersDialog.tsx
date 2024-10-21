@@ -15,7 +15,7 @@ import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { Plural, Trans, t } from 'uniswap/src/i18n'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -162,7 +162,7 @@ export function CancelOrdersDialog(
   }
 }
 
-function GasEstimateDisplay({ gasEstimateValue, chainId }: { gasEstimateValue?: string; chainId: InterfaceChainId }) {
+function GasEstimateDisplay({ gasEstimateValue, chainId }: { gasEstimateValue?: string; chainId: UniverseChainId }) {
   const gasFeeCurrencyAmount = CurrencyAmount.fromRawAmount(nativeOnChain(chainId), gasEstimateValue ?? '0')
   const gasFeeUSD = useStablecoinValue(gasFeeCurrencyAmount)
   const { formatCurrencyAmount } = useFormatter()

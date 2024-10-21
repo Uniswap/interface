@@ -2,7 +2,7 @@ import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 /**
@@ -42,7 +42,7 @@ function CurrencyAmount({
   amount,
   symbol,
 }: {
-  chainId: WalletChainId | null
+  chainId: UniverseChainId | null
   amount: string
   symbol: string
 }): JSX.Element {

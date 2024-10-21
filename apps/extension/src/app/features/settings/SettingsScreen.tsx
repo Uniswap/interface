@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -38,11 +38,25 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
 import { getFiatCurrencyName, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
-import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
-import { setCurrentFiatCurrency, setHideSmallBalances, setHideSpamTokens } from 'uniswap/src/features/settings/slice'
+import {
+  useEnabledChains,
+  useHideSmallBalancesSetting,
+  useHideSpamTokensSetting,
+} from 'uniswap/src/features/settings/hooks'
+import {
+  setCurrentFiatCurrency,
+  setHideSmallBalances,
+  setHideSpamTokens,
+  setIsTestnetModeEnabled,
+} from 'uniswap/src/features/settings/slice'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isDevEnv } from 'utilities/src/environment/env'
 import noop from 'utilities/src/react/noop'
+import { TestnetModeModal } from 'wallet/src/components/modals/TestnetModeModal'
 import { SettingsLanguageModal } from 'wallet/src/components/settings/language/SettingsLanguageModal'
 import { authActions } from 'wallet/src/features/auth/saga'
 import { AuthActionType } from 'wallet/src/features/auth/types'
@@ -58,11 +72,14 @@ export function SettingsScreen(): JSX.Element {
   const appFiatCurrencyInfo = useAppFiatCurrencyInfo()
 
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false)
+  const [isTestnetModalOpen, setIsTestnetModalOpen] = useState(false)
 
   const onPressLockWallet = async (): Promise<void> => {
     navigateBack()
     await dispatch(authActions.trigger({ type: AuthActionType.Lock }))
   }
+
+  // TODO(WALL-4908): consider wrapping handlers in useCallback
 
   const hideSpamTokens = useHideSpamTokensSetting()
   const handleSpamTokensToggle = async (): Promise<void> => {
@@ -74,9 +91,36 @@ export function SettingsScreen(): JSX.Element {
     await dispatch(setHideSmallBalances(!hideSmallBalances))
   }
 
+  const isTestnetModeFlagEnabled = useFeatureFlag(FeatureFlags.TestnetMode)
+  const { isTestnetModeEnabled } = useEnabledChains()
+  const handleTestnetModeToggle = async (isChecked: boolean): Promise<void> => {
+    const fireAnalytic = (): void => {
+      sendAnalyticsEvent(WalletEventName.TestnetModeToggled, {
+        enabled: isChecked,
+      })
+    }
+
+    // trigger before toggling on (ie disabling analytics)
+    if (isChecked) {
+      // doesn't fire on time without await and i have no idea why
+      await fireAnalytic()
+    }
+
+    dispatch(setIsTestnetModeEnabled(isChecked))
+    setIsTestnetModalOpen(isChecked)
+
+    // trigger after toggling off (ie enabling analytics)
+    if (!isChecked) {
+      // updateState()
+      fireAnalytic()
+    }
+  }
+  const handleTestnetModalClose = useCallback(() => setIsTestnetModalOpen(false), [])
+
   return (
     <>
       {isLanguageModalOpen ? <SettingsLanguageModal onClose={() => setIsLanguageModalOpen(false)} /> : undefined}
+      <TestnetModeModal isOpen={isTestnetModalOpen} onClose={handleTestnetModalClose} />
       <Flex fill backgroundColor="$surface1" gap="$spacing8">
         <ScreenHeader title={t('settings.title')} />
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -131,26 +175,38 @@ export function SettingsScreen(): JSX.Element {
             />
             <SettingsToggleRow
               Icon={Chart}
-              checked={hideSmallBalances}
+              checked={hideSmallBalances && !isTestnetModeEnabled}
               title={t('settings.setting.smallBalances.title')}
+              disabled={isTestnetModeEnabled}
               onCheckedChange={handleSmallBalancesToggle}
+            />
+            <SettingsToggleRow
+              Icon={ShieldQuestion}
+              checked={hideSpamTokens && !isTestnetModeEnabled}
+              title={t('settings.setting.unknownTokens.title')}
+              disabled={isTestnetModeEnabled}
+              onCheckedChange={handleSpamTokensToggle}
             />
             <SettingsItem
               Icon={Globe}
               title={t('settings.setting.wallet.connections.title')}
               onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ManageConnections}`)}
             />
-            <SettingsToggleRow
-              Icon={ShieldQuestion}
-              checked={hideSpamTokens}
-              title={t('settings.setting.unknownTokens.title')}
-              onCheckedChange={handleSpamTokensToggle}
-            />
             <SettingsItem
               Icon={LineChartDots}
               title={t('settings.setting.privacy.title')}
               onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.Privacy}`)}
             />
+            <>
+              {isTestnetModeFlagEnabled && (
+                <SettingsToggleRow
+                  Icon={ShieldQuestion}
+                  checked={isTestnetModeEnabled}
+                  title={t('settings.setting.wallet.testnetMode.title')}
+                  onCheckedChange={handleTestnetModeToggle}
+                />
+              )}
+            </>
           </SettingsSection>
           <SettingsSectionSeparator />
           <SettingsSection title={t('settings.section.security')}>
@@ -250,11 +306,13 @@ function SettingsToggleRow({
   Icon,
   title,
   checked,
+  disabled,
   onCheckedChange,
 }: {
   title: string
   Icon: GeneratedIcon
   checked: boolean
+  disabled?: boolean
   onCheckedChange: (checked: boolean) => void
 }): JSX.Element {
   return (
@@ -270,7 +328,7 @@ function SettingsToggleRow({
         <Icon color="$neutral2" size={iconSizes.icon24} />
         <Text>{title}</Text>
       </Flex>
-      <Switch checked={checked} variant="branded" onCheckedChange={onCheckedChange} />
+      <Switch checked={checked} variant="branded" disabled={disabled} onCheckedChange={onCheckedChange} />
     </Flex>
   )
 }

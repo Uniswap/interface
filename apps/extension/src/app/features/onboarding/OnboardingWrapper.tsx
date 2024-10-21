@@ -8,11 +8,14 @@ import { OnboardingMessageType } from 'src/background/messagePassing/types/Exten
 import { Flex, Image, useIsDarkMode } from 'ui/src'
 import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
 import { OnboardingContextProvider } from 'wallet/src/features/onboarding/OnboardingContext'
+import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
 
 export function OnboardingWrapper(): JSX.Element {
   const isDarkMode = useIsDarkMode()
   const [isHighlighted, setIsHighlighted] = useState(false)
   const dispatch = useDispatch()
+
+  useTestnetModeForLoggingAndAnalytics()
 
   useEffect(() => {
     dispatch(syncAppWithDeviceLanguage())

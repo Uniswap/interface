@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useMemo } from 'react'
+import { ComponentProps, useMemo } from 'react'
 import { Trans } from 'react-i18next'
 import { Text } from 'ui/src'
 import { Warning, WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
@@ -7,17 +7,21 @@ import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { type InsufficientNativeTokenWarningProps } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
+import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useNetworkColors } from 'uniswap/src/utils/colors'
 import { NumberType } from 'utilities/src/format/types'
 
-export function useInsufficientNativeTokenWarning({ flow, gasFee, warnings }: InsufficientNativeTokenWarningProps): {
+export function useInsufficientNativeTokenWarning({
+  flow,
+  gasFee,
+  warnings,
+}: ComponentProps<typeof InsufficientNativeTokenWarning>): {
   gasAmount: CurrencyAmount<NativeCurrency> | null | undefined
   gasAmountFiatFormatted: string
   nativeCurrency: Currency
@@ -26,12 +30,13 @@ export function useInsufficientNativeTokenWarning({ flow, gasFee, warnings }: In
   networkName: string
   modalOrTooltipMainMessage: JSX.Element
   warning: Warning
-  flow: InsufficientNativeTokenWarningProps['flow']
+  flow: ComponentProps<typeof InsufficientNativeTokenWarning>['flow']
 } | null {
+  const { defaultChainId } = useEnabledChains()
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const warning = warnings.find((w) => w.type === WarningLabel.InsufficientGasFunds)
   const nativeCurrency = warning?.currency
-  const chainId = nativeCurrency?.chainId ?? UniverseChainId.Mainnet
+  const chainId = nativeCurrency?.chainId ?? defaultChainId
 
   const nativeCurrencyInfo = useNativeCurrencyInfo(chainId)
 

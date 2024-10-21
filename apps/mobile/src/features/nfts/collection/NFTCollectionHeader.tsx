@@ -6,11 +6,12 @@ import { Loader } from 'src/components/loading/loaders'
 import { LongMarkdownText } from 'src/components/text/LongMarkdownText'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
 import { NFTCollectionData } from 'src/features/nfts/collection/types'
-import { Flex, FlexProps, Text, useDeviceInsets, useExtractedColors, useSporeColors } from 'ui/src'
+import { Flex, FlexProps, Text, useExtractedColors, useSporeColors } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
-import { Ethereum } from 'ui/src/components/logos'
+import { Ethereum } from 'ui/src/components/logos/Ethereum'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { NumberType } from 'utilities/src/format/types'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
@@ -33,7 +34,7 @@ export function NFTCollectionHeader({
   const { formatNumberOrString } = useLocalizationContext()
 
   // Style based on device sizing
-  const { top: deviceTopPadding } = useDeviceInsets()
+  const { top: deviceTopPadding } = useAppInsets()
   const adjustedBannerHeight = deviceTopPadding + NFT_BANNER_HEIGHT
 
   const bannerImageStyle: ImageStyle = {

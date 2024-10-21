@@ -1,6 +1,7 @@
 import { TradeType } from '@uniswap/sdk-core'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { ColorTokens, Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { PlusMinusButton, PlusMinusButtonType } from 'ui/src/components/button/PlusMinusButton'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
@@ -32,9 +33,15 @@ export const Slippage: SwapSettingConfig = {
       currentSlippage = autoSlippageTolerance
     }
 
+    const isBridgeTrade = derivedSwapInfo.trade.trade instanceof BridgeTrade
+
+    if (isBridgeTrade) {
+      currentSlippage = 0
+    }
+
     return (
       <Flex row gap="$spacing8">
-        {!isCustomSlippage ? (
+        {!isCustomSlippage && !isBridgeTrade ? (
           <Flex centered backgroundColor="$accent2" borderRadius="$roundedFull" px="$spacing8">
             <Text color="$accent1" variant="buttonLabel3">
               {t('swap.settings.slippage.control.auto')}
@@ -72,29 +79,42 @@ export const Slippage: SwapSettingConfig = {
       onPressPlusMinusButton,
     } = useSlippageSettings()
 
-    if (trade instanceof BridgeTrade) {
-      // Check exists to make sure trade conforms to TradeWithSlippage,
-      // since this component should not be rendered for bridge trades which don't have slippage
-      return null
-    }
+    const isBridgeTrade = trade instanceof BridgeTrade
+
+    const slippageMessage = useMemo(() => {
+      if (isBridgeTrade) {
+        return <WarningMessage text={t('swap.slippage.bridging')} color="$neutral2" />
+      } else {
+        return (
+          <SlippageMessage
+            inputWarning={inputWarning}
+            showSlippageWarning={showSlippageWarning}
+            slippageTolerance={currentSlippageTolerance}
+            trade={trade}
+          />
+        )
+      }
+    }, [currentSlippageTolerance, inputWarning, isBridgeTrade, showSlippageWarning, t, trade])
 
     return (
       <Flex centered gap="$spacing16">
-        <Text color="$neutral2" textAlign="center" variant="body2">
-          {t('swap.settings.slippage.description')}
-        </Text>
-        <LearnMoreLink url={uniswapUrls.helpArticleUrls.swapSlippage} />
+        {!isBridgeTrade && (
+          <Text color="$neutral2" textAlign="center" variant="body2">
+            {t('swap.settings.slippage.description')}
+          </Text>
+        )}
+        {!isBridgeTrade && <LearnMoreLink url={uniswapUrls.helpArticleUrls.swapSlippage} />}
         <Flex gap="$spacing12">
           <Flex centered row gap="$spacing16" mt="$spacing12">
             <PlusMinusButton
-              disabled={currentSlippageTolerance === 0}
+              disabled={currentSlippageTolerance === 0 || isBridgeTrade}
               type={PlusMinusButtonType.Minus}
               onPress={onPressPlusMinusButton}
             />
             <AnimatedFlex
               row
               alignItems="center"
-              backgroundColor={isEditingSlippage ? '$surface2' : '$surface1'}
+              backgroundColor={isEditingSlippage || isBridgeTrade ? '$surface2' : '$surface1'}
               borderColor="$surface3"
               borderRadius="$roundedFull"
               borderWidth={1}
@@ -102,28 +122,35 @@ export const Slippage: SwapSettingConfig = {
               p="$spacing16"
               style={inputAnimatedStyle}
             >
-              <TouchableArea hapticFeedback onPress={onPressAutoSlippage}>
+              <TouchableArea hapticFeedback onPress={isBridgeTrade ? undefined : onPressAutoSlippage}>
                 <Text color="$accent1" variant="buttonLabel2">
                   {t('swap.settings.slippage.control.auto')}
                 </Text>
               </TouchableArea>
-              <BottomSheetTextInput
-                keyboardType="numeric"
-                style={{
-                  color: autoSlippageEnabled ? colors.neutral2.get() : colors.neutral1.get(),
-                  fontSize: fonts.subheading1.fontSize,
-                  width: fonts.subheading1.fontSize * 4,
-                  padding: spacing.none,
-                  ...(!isWeb && {
-                    fontFamily: fonts.subheading1.family,
-                  }),
-                }}
-                textAlign="center"
-                value={autoSlippageEnabled ? autoSlippageTolerance.toFixed(2).toString() : inputSlippageTolerance}
-                onBlur={onBlurSlippageInput}
-                onChangeText={onChangeSlippageInput}
-                onFocus={onFocusSlippageInput}
-              />
+              {isBridgeTrade ? (
+                <Text color="$neutral2" textAlign="center" variant="subheading1">
+                  0.00
+                </Text>
+              ) : (
+                <BottomSheetTextInput
+                  keyboardType="numeric"
+                  style={{
+                    color: autoSlippageEnabled ? colors.neutral2.get() : colors.neutral1.get(),
+                    fontSize: fonts.subheading1.fontSize,
+                    width: fonts.subheading1.fontSize * 4,
+                    padding: spacing.none,
+                    ...(!isWeb && {
+                      fontFamily: fonts.subheading1.family,
+                    }),
+                  }}
+                  textAlign="center"
+                  value={autoSlippageEnabled ? autoSlippageTolerance.toFixed(2).toString() : inputSlippageTolerance}
+                  onBlur={onBlurSlippageInput}
+                  onChangeText={onChangeSlippageInput}
+                  onFocus={onFocusSlippageInput}
+                />
+              )}
+
               <Flex width={iconSizes.icon28}>
                 <Text color="$neutral2" textAlign="center" variant="subheading1">
                   %
@@ -131,17 +158,12 @@ export const Slippage: SwapSettingConfig = {
               </Flex>
             </AnimatedFlex>
             <PlusMinusButton
-              disabled={currentSlippageTolerance === MAX_CUSTOM_SLIPPAGE_TOLERANCE}
+              disabled={currentSlippageTolerance === MAX_CUSTOM_SLIPPAGE_TOLERANCE || isBridgeTrade}
               type={PlusMinusButtonType.Plus}
               onPress={onPressPlusMinusButton}
             />
           </Flex>
-          <SlippageMessage
-            inputWarning={inputWarning}
-            showSlippageWarning={showSlippageWarning}
-            slippageTolerance={currentSlippageTolerance}
-            trade={trade}
-          />
+          {slippageMessage}
         </Flex>
       </Flex>
     )
@@ -167,14 +189,7 @@ function SlippageMessage({
   const slippageTolerancePercent = slippageToleranceToPercent(slippageTolerance)
 
   if (inputWarning) {
-    return (
-      <Flex centered row gap="$spacing8" height={fonts.body2.lineHeight * 2 + spacing.spacing8}>
-        <AlertTriangleFilled color="$DEP_accentWarning" size="$icon.16" />
-        <Text color="$DEP_accentWarning" textAlign="center" variant="body2">
-          {inputWarning}
-        </Text>
-      </Flex>
-    )
+    return <WarningMessage showAlert text={inputWarning} color="$DEP_accentWarning" />
   }
 
   return trade ? (
@@ -205,4 +220,23 @@ function SlippageMessage({
   ) : showEmpty ? (
     <Flex height={fonts.body2.lineHeight} />
   ) : null
+}
+
+function WarningMessage({
+  text,
+  color,
+  showAlert = false,
+}: {
+  text: string
+  color: ColorTokens
+  showAlert?: boolean
+}): JSX.Element {
+  return (
+    <Flex row centered px="$spacing12" gap="$spacing8" height={fonts.body3.lineHeight * 2 + spacing.spacing8}>
+      {showAlert ?? <AlertTriangleFilled color={color} size="$icon.16" />}
+      <Text color={color} textAlign="center" variant="body3">
+        {text}
+      </Text>
+    </Flex>
+  )
 }

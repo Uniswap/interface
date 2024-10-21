@@ -14,7 +14,7 @@ import {
 import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { AttackType, CurrencyInfo, SafetyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import {
   currencyId,
@@ -24,7 +24,7 @@ import {
 } from 'uniswap/src/utils/currencyId'
 
 type BuildCurrencyParams = {
-  chainId?: Nullable<WalletChainId>
+  chainId?: Nullable<UniverseChainId>
   address?: Nullable<string>
   decimals?: Nullable<number>
   symbol?: Nullable<string>
@@ -37,6 +37,7 @@ type BuildCurrencyParams = {
 // Converts CurrencyId to ContractInput format for GQL token queries
 export function currencyIdToContractInput(id: CurrencyId): ContractInput {
   return {
+    // TODO: WALL-4919: Remove hardcoded Mainnet
     chain: toGraphQLChain(currencyIdToChain(id) ?? UniverseChainId.Mainnet) ?? Chain.Ethereum,
     address: currencyIdToGraphQLAddress(id) ?? undefined,
   }
@@ -44,7 +45,7 @@ export function currencyIdToContractInput(id: CurrencyId): ContractInput {
 
 export function tokenProjectToCurrencyInfos(
   tokenProjects: TokenProjectsQuery['tokenProjects'],
-  chainFilter?: WalletChainId | null,
+  chainFilter?: UniverseChainId | null,
 ): CurrencyInfo[] {
   return tokenProjects
     ?.flatMap((project) =>
@@ -87,7 +88,7 @@ export function tokenProjectToCurrencyInfos(
 }
 
 // use inverse check here (instead of isNativeAddress) so we can typeguard address as must be string if this is true
-function isNonNativeAddress(chainId: WalletChainId, address: Maybe<string>): address is string {
+function isNonNativeAddress(chainId: UniverseChainId, address: Maybe<string>): address is string {
   return !isNativeCurrencyAddress(chainId, address)
 }
 

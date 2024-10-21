@@ -13,7 +13,7 @@ import {
 import styled from 'lib/styled-components'
 import React, { memo } from 'react'
 import { Flex, SpinningLoader, styled as TamaguiStyled } from 'ui/src'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const UnknownContract = styled(UnknownStatus)`
   color: ${({ theme }) => theme.neutral2};
@@ -28,7 +28,7 @@ const LogoContainer = styled.div`
 `
 
 interface PortfolioLogoProps {
-  chainId: InterfaceChainId
+  chainId: UniverseChainId
   accountAddress?: string
   currencies?: Array<Currency | undefined>
   images?: Array<string | undefined>
@@ -37,7 +37,7 @@ interface PortfolioLogoProps {
   loading?: boolean
 }
 
-function SquareL2Logo({ chainId, size }: { chainId: InterfaceChainId; size: number }) {
+function SquareL2Logo({ chainId, size }: { chainId: UniverseChainId; size: number }) {
   if (chainId === UniverseChainId.Mainnet) {
     return null
   }

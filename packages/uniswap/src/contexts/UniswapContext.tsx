@@ -4,10 +4,12 @@ import { createContext, PropsWithChildren, useContext, useMemo, useState } from 
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { Connector } from 'wagmi'
 
 /** Stores objects/utils that exist on all platforms, abstracting away app-level specifics for each, in order to allow usage in cross-platform code. */
 interface UniswapContext {
   account?: AccountMeta
+  connector?: Connector
   navigateToBuyOrReceiveWithEmptyWallet?: () => void
   navigateToFiatOnRamp: (args: { prefilledCurrency?: FiatOnRampCurrency }) => void
   onSwapChainsChanged: (inputChainId: UniverseChainId, outputChainId?: UniverseChainId) => void
@@ -26,6 +28,7 @@ export const UniswapContext = createContext<UniswapContext | null>(null)
 export function UniswapProvider({
   children,
   account,
+  connector,
   navigateToBuyOrReceiveWithEmptyWallet,
   navigateToFiatOnRamp,
   onSwapChainsChanged,
@@ -39,6 +42,7 @@ export function UniswapProvider({
   const value: UniswapContext = useMemo(
     () => ({
       account,
+      connector,
       navigateToBuyOrReceiveWithEmptyWallet,
       onSwapChainsChanged: (inputChainId: UniverseChainId, outputChanId?: UniverseChainId): void => {
         onSwapChainsChanged(inputChainId, outputChanId)
@@ -54,6 +58,7 @@ export function UniswapProvider({
     }),
     [
       account,
+      connector,
       navigateToBuyOrReceiveWithEmptyWallet,
       signer,
       useProviderHook,
@@ -82,6 +87,11 @@ export function useUniswapContext(): UniswapContext {
 /** Cross-platform util for getting metadata for the active account/wallet, regardless of platform/environment. */
 export function useAccountMeta(): AccountMeta | undefined {
   return useUniswapContext().account
+}
+
+/** Cross-platform util for getting connector for the active account/wallet, only applicable to web, other platforms are undefined. */
+export function useConnector(): Connector | undefined {
+  return useUniswapContext().connector
 }
 
 /** Cross-platform util for getting an RPC provider for the given `chainId`, regardless of platform/environment. */

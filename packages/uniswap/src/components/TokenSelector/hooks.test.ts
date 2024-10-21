@@ -39,7 +39,7 @@ import {
 } from 'uniswap/src/test/fixtures'
 import { act, renderHook, waitFor } from 'uniswap/src/test/test-utils'
 import { createArray, queryResolvers } from 'uniswap/src/test/utils'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { portfolioBalancesById } from 'uniswap/src/utils/balances'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
@@ -651,7 +651,7 @@ describe(useCommonTokensOptionsWithFallback, () => {
       input: {
         portfolios: [portfolio({ tokenBalances })],
         tokenProjects: [tokenProject({ tokens })],
-        chainFilter: UniverseChainId.Mainnet as WalletChainId,
+        chainFilter: UniverseChainId.Mainnet as UniverseChainId,
       },
       output: {
         data: expect.toIncludeSameMembers([
@@ -721,7 +721,7 @@ describe(useFavoriteTokensOptions, () => {
       input: {
         portfolios: [portfolio({ tokenBalances })],
         tokenProjects: [tokenProject({ tokens: favoriteTokens })],
-        chainFilter: UniverseChainId.Mainnet as WalletChainId,
+        chainFilter: UniverseChainId.Mainnet as UniverseChainId,
       },
       output: {
         data: expect.toIncludeSameMembers([

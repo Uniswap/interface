@@ -3,7 +3,7 @@ import { filter } from 'uniswap/src/components/TokenSelector/filter'
 import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
 import { DAI, DAI_ARBITRUM_ONE } from 'uniswap/src/constants/tokens'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 const ETH = NativeCurrency.onChain(UniverseChainId.Mainnet)
@@ -43,7 +43,7 @@ const TEST_TOKEN_INPUT: TokenOption[] = [
 
 const filterAndGetCurrencies = (
   currencies: TokenOption[],
-  chainFilter: WalletChainId | null,
+  chainFilter: UniverseChainId | null,
   searchFilter?: string,
 ): Currency[] => filter(currencies, chainFilter, searchFilter).map((cm) => cm.currencyInfo.currency)
 

@@ -11,6 +11,7 @@ import {
   ClaimTransactionInfo,
   CollectFeesTransactionInfo,
   CreateV3PoolTransactionInfo,
+  DecreaseLiquidityTransactionInfo,
   DelegateTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
@@ -394,6 +395,32 @@ function IncreaseLiquiditySummary({ info }: { info: IncreaseLiquidityTransaction
   )
 }
 
+function DecreaseLiquiditySummary({ info }: { info: DecreaseLiquidityTransactionInfo }) {
+  const { token0CurrencyId, token1CurrencyId, token0CurrencyAmountRaw, token1CurrencyAmountRaw } = info
+
+  return (
+    <Trans
+      i18nKey="account.transactionSummary.removeLiquiditySummary"
+      components={{
+        base: (
+          <FormattedCurrencyAmountManaged
+            rawAmount={token0CurrencyAmountRaw}
+            currencyId={token0CurrencyId}
+            sigFigs={3}
+          />
+        ),
+        quote: (
+          <FormattedCurrencyAmountManaged
+            rawAmount={token1CurrencyAmountRaw}
+            currencyId={token1CurrencyId}
+            sigFigs={3}
+          />
+        ),
+      }}
+    />
+  )
+}
+
 export function TransactionSummary({ info }: { info: TransactionInfo }) {
   switch (info.type) {
     case TransactionType.ADD_LIQUIDITY_V3_POOL:
@@ -452,5 +479,8 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.INCREASE_LIQUIDITY:
       return <IncreaseLiquiditySummary info={info} />
+
+    case TransactionType.DECREASE_LIQUIDITY:
+      return <DecreaseLiquiditySummary info={info} />
   }
 }

@@ -5,6 +5,7 @@ import { StepRowProps, StepRowSkeleton } from 'uniswap/src/components/ConfirmSwa
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import {
+  DecreasePositionTransactionStep,
   IncreasePositionTransactionStep,
   IncreasePositionTransactionStepAsync,
 } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
@@ -15,17 +16,16 @@ const LPIcon = (): JSX.Element => (
   </Flex>
 )
 
-type LPSteps = IncreasePositionTransactionStep | IncreasePositionTransactionStepAsync
+type LPSteps = IncreasePositionTransactionStep | IncreasePositionTransactionStepAsync | DecreasePositionTransactionStep
 export function LPTransactionStepRow({ status }: StepRowProps<LPSteps>): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
 
-  // TODO: update to LP language
   const title = {
-    [StepStatus.Preview]: t('swap.confirmSwap'),
-    [StepStatus.Active]: t('common.confirmSwap'),
-    [StepStatus.InProgress]: t('common.swapPending'),
-    [StepStatus.Complete]: t('swap.confirmSwap'),
+    [StepStatus.Preview]: t('common.confirmWallet'),
+    [StepStatus.Active]: t('common.confirmWallet'),
+    [StepStatus.InProgress]: t('common.transactionPending'),
+    [StepStatus.Complete]: t('common.confirmWallet'),
   }[status]
 
   return (

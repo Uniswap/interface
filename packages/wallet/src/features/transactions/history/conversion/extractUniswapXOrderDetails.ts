@@ -35,6 +35,7 @@ export function extractUniswapXOrderDetails(transaction: TransactionListQueryRes
   return {
     routing,
     id: transaction.details.id,
+    // TODO: WALL-4919: Remove hardcoded Mainnet
     chainId: fromGraphQLChain(transaction.chain) ?? UniverseChainId.Mainnet,
     addedTime: transaction.timestamp * 1000, // convert to ms,
     status: remoteOrderStatusToLocalTxStatus(transaction.details.orderStatus),

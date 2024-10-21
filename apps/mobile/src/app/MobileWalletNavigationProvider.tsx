@@ -7,6 +7,7 @@ import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -141,13 +142,14 @@ function useNavigateToSend(): (args: NavigateToSendFlowArgs) => void {
 function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
   const dispatch = useDispatch()
 
+  const { defaultChainId } = useEnabledChains()
   return useCallback(
     (args: NavigateToSwapFlowArgs): void => {
-      const initialState = getNavigateToSwapFlowArgsInitialState(args)
+      const initialState = getNavigateToSwapFlowArgsInitialState(args, defaultChainId)
       dispatch(closeModal({ name: ModalName.Swap }))
       dispatch(openModal({ name: ModalName.Swap, initialState }))
     },
-    [dispatch],
+    [dispatch, defaultChainId],
   )
 }
 

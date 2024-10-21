@@ -12,7 +12,7 @@ import { TickProcessed, usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
 import { ISeriesApi, UTCTimestamp } from 'lightweight-charts'
 import { useEffect, useState } from 'react'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 interface LiquidityBarChartModelParams extends ChartModelParams<LiquidityBarData>, LiquidityBarProps {}
@@ -231,7 +231,7 @@ export function useLiquidityBarData({
   tokenB: Token
   feeTier: FeeAmount
   isReversed: boolean
-  chainId: InterfaceChainId
+  chainId: UniverseChainId
 }) {
   const { formatNumber, formatPrice } = useFormatter()
   const activePoolData = usePoolActiveLiquidity(tokenA, tokenB, feeTier, chainId)

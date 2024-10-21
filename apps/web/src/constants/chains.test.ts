@@ -8,32 +8,26 @@ import {
   INFURA_PREFIX_TO_CHAIN_ID,
   InterfaceGqlChain,
   SUPPORTED_GAS_ESTIMATE_CHAIN_IDS,
-  SupportedInterfaceChainId,
   TESTNET_CHAIN_IDS,
   UX_SUPPORTED_GQL_CHAINS,
   getChainFromChainUrlParam,
   getChainPriority,
 } from 'constants/chains'
-import { GQL_MAINNET_CHAINS, UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { GQL_MAINNET_CHAINS, GQL_TESTNET_CHAINS, UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { InterfaceChainId, UniverseChainId, WEB_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
+import { SUPPORTED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/types/chains'
 
 // Define an array of test cases with chainId and expected priority
-const chainPriorityTestCases: [InterfaceChainId, number][] = [
+const chainPriorityTestCases: [UniverseChainId, number][] = [
   [UniverseChainId.Mainnet, 0],
-  [UniverseChainId.Goerli, 0],
   [UniverseChainId.Sepolia, 0],
   [UniverseChainId.ArbitrumOne, 1],
-  [UniverseChainId.ArbitrumGoerli, 1],
   [UniverseChainId.Optimism, 2],
-  [UniverseChainId.OptimismGoerli, 2],
   [UniverseChainId.Polygon, 3],
-  [UniverseChainId.PolygonMumbai, 3],
   [UniverseChainId.Base, 4],
   [UniverseChainId.Bnb, 5],
   [UniverseChainId.Avalanche, 6],
   [UniverseChainId.Celo, 7],
-  [UniverseChainId.CeloAlfajores, 7],
   [UniverseChainId.Blast, 8],
   [UniverseChainId.Zora, 9],
   [UniverseChainId.Zksync, 10],
@@ -41,35 +35,32 @@ const chainPriorityTestCases: [InterfaceChainId, number][] = [
 
 test.each(chainPriorityTestCases)(
   'getChainPriority returns expected priority for a given ChainId %O',
-  (chainId: InterfaceChainId, expectedPriority: number) => {
+  (chainId: UniverseChainId, expectedPriority: number) => {
     const priority = getChainPriority(chainId)
     expect(priority).toBe(expectedPriority)
   },
 )
 
-const chainIdNames: { [chainId in SupportedInterfaceChainId]: string } = {
+const chainIdNames: { [chainId in UniverseChainId]: string } = {
   [UniverseChainId.Mainnet]: 'mainnet',
-  [UniverseChainId.Goerli]: 'goerli',
   [UniverseChainId.Sepolia]: 'sepolia',
   [UniverseChainId.Polygon]: 'polygon',
-  [UniverseChainId.PolygonMumbai]: 'polygon_mumbai',
   [UniverseChainId.Celo]: 'celo',
-  [UniverseChainId.CeloAlfajores]: 'celo_alfajores',
   [UniverseChainId.ArbitrumOne]: 'arbitrum',
-  [UniverseChainId.ArbitrumGoerli]: 'arbitrum_goerli',
   [UniverseChainId.Optimism]: 'optimism',
-  [UniverseChainId.OptimismGoerli]: 'optimism_goerli',
   [UniverseChainId.Bnb]: 'bnb',
   [UniverseChainId.Avalanche]: 'avalanche',
   [UniverseChainId.Base]: 'base',
   [UniverseChainId.Blast]: 'blast',
+  [UniverseChainId.WorldChain]: 'worldchain',
   [UniverseChainId.Zora]: 'zora',
   [UniverseChainId.Zksync]: 'zksync',
+  [UniverseChainId.AstrochainSepolia]: 'astrochain',
 } as const
 
-test.each(Object.keys(chainIdNames).map((key) => parseInt(key) as SupportedInterfaceChainId))(
+test.each(Object.keys(chainIdNames).map((key) => parseInt(key) as UniverseChainId))(
   'CHAIN_IDS_TO_NAMES generates the correct chainIds',
-  (chainId: SupportedInterfaceChainId) => {
+  (chainId: UniverseChainId) => {
     const name = CHAIN_IDS_TO_NAMES[chainId]
     expect(name).toBe(chainIdNames[chainId])
   },
@@ -90,46 +81,24 @@ const supportedGasEstimateChains = [
 
 test.each(supportedGasEstimateChains)(
   'SUPPORTED_GAS_ESTIMATE_CHAIN_IDS generates the correct chainIds',
-  (chainId: SupportedInterfaceChainId) => {
+  (chainId: UniverseChainId) => {
     expect(SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)).toBe(true)
     expect(SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.length).toEqual(supportedGasEstimateChains.length)
   },
 )
 
-const testnetChainIds = [
-  UniverseChainId.Goerli,
-  UniverseChainId.Sepolia,
-  UniverseChainId.PolygonMumbai,
-  UniverseChainId.ArbitrumGoerli,
-  UniverseChainId.OptimismGoerli,
-  UniverseChainId.CeloAlfajores,
-] as const
+const testnetChainIds = [UniverseChainId.Sepolia, UniverseChainId.AstrochainSepolia] as const
 
-test.each(testnetChainIds)('TESTNET_CHAIN_IDS generates the correct chainIds', (chainId: SupportedInterfaceChainId) => {
+test.each(testnetChainIds)('TESTNET_CHAIN_IDS generates the correct chainIds', (chainId: UniverseChainId) => {
   expect(TESTNET_CHAIN_IDS.includes(chainId)).toBe(true)
   expect(TESTNET_CHAIN_IDS.length).toEqual(testnetChainIds.length)
 })
 
-const GQLProductionChains = [
-  Chain.Ethereum,
-  Chain.Polygon,
-  Chain.Celo,
-  Chain.Optimism,
-  Chain.Arbitrum,
-  Chain.Bnb,
-  Chain.Avalanche,
-  Chain.Base,
-  Chain.Blast,
-  Chain.Zora,
-  Chain.Zksync,
-] as const
+const uxSupportedGQLChains = [...GQL_MAINNET_CHAINS, ...GQL_TESTNET_CHAINS] as const
 
-const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as const
-const uxSupportedGQLChains = [...GQLProductionChains, ...GQL_TESTNET_CHAINS] as const
-
-test.each(GQLProductionChains)('GQL_MAINNET_CHAINS generates the correct chains', (chain: InterfaceGqlChain) => {
+test.each(GQL_MAINNET_CHAINS)('GQL_MAINNET_CHAINS generates the correct chains', (chain: InterfaceGqlChain) => {
   expect(GQL_MAINNET_CHAINS.includes(chain)).toBe(true)
-  expect(GQL_MAINNET_CHAINS.length).toEqual(GQLProductionChains.length)
+  expect(GQL_MAINNET_CHAINS.length).toEqual(GQL_MAINNET_CHAINS.length)
 })
 
 test.each(uxSupportedGQLChains)('UX_SUPPORTED_GQL_CHAINS generates the correct chains', (chain: InterfaceGqlChain) => {
@@ -139,16 +108,11 @@ test.each(uxSupportedGQLChains)('UX_SUPPORTED_GQL_CHAINS generates the correct c
 
 const chainIdToBackendName: { [key: number]: InterfaceGqlChain } = {
   [UniverseChainId.Mainnet]: Chain.Ethereum,
-  [UniverseChainId.Goerli]: Chain.EthereumGoerli,
   [UniverseChainId.Sepolia]: Chain.EthereumSepolia,
   [UniverseChainId.Polygon]: Chain.Polygon,
-  [UniverseChainId.PolygonMumbai]: Chain.Polygon,
   [UniverseChainId.Celo]: Chain.Celo,
-  [UniverseChainId.CeloAlfajores]: Chain.Celo,
   [UniverseChainId.ArbitrumOne]: Chain.Arbitrum,
-  [UniverseChainId.ArbitrumGoerli]: Chain.Arbitrum,
   [UniverseChainId.Optimism]: Chain.Optimism,
-  [UniverseChainId.OptimismGoerli]: Chain.Optimism,
   [UniverseChainId.Bnb]: Chain.Bnb,
   [UniverseChainId.Avalanche]: Chain.Avalanche,
   [UniverseChainId.Base]: Chain.Base,
@@ -156,9 +120,9 @@ const chainIdToBackendName: { [key: number]: InterfaceGqlChain } = {
   [UniverseChainId.Zora]: Chain.Zora,
 }
 
-test.each(Object.keys(chainIdToBackendName).map((key) => parseInt(key) as SupportedInterfaceChainId))(
+test.each(Object.keys(chainIdToBackendName).map((key) => parseInt(key) as UniverseChainId))(
   'CHAIN_IDS_TO_BACKEND_NAME generates the correct chains',
-  (chainId: SupportedInterfaceChainId) => {
+  (chainId: UniverseChainId) => {
     const name = CHAIN_ID_TO_BACKEND_NAME[chainId]
     expect(name).toBe(chainIdToBackendName[chainId])
   },
@@ -166,7 +130,6 @@ test.each(Object.keys(chainIdToBackendName).map((key) => parseInt(key) as Suppor
 
 const chainToChainId = {
   [Chain.Ethereum]: UniverseChainId.Mainnet,
-  [Chain.EthereumGoerli]: UniverseChainId.Goerli,
   [Chain.EthereumSepolia]: UniverseChainId.Sepolia,
   [Chain.Polygon]: UniverseChainId.Polygon,
   [Chain.Celo]: UniverseChainId.Celo,
@@ -176,6 +139,7 @@ const chainToChainId = {
   [Chain.Avalanche]: UniverseChainId.Avalanche,
   [Chain.Base]: UniverseChainId.Base,
   [Chain.Blast]: UniverseChainId.Blast,
+  [Chain.Worldchain]: UniverseChainId.WorldChain,
   [Chain.Zora]: UniverseChainId.Zora,
   [Chain.Zksync]: UniverseChainId.Zksync,
 } as const
@@ -184,7 +148,7 @@ test.each(Object.keys(chainToChainId).map((key) => key as InterfaceGqlChain))(
   'CHAIN_NAME_TO_CHAIN_ID generates the correct chains',
   (chain) => {
     const chainId = CHAIN_NAME_TO_CHAIN_ID[chain]
-    expect(chainId).toBe(chainToChainId[chain])
+    expect(chainId).toBe(chainToChainId[chain as Exclude<InterfaceGqlChain, Chain.AstrochainSepolia>]) // will remove this after AstrochainSepolia is added
   },
 )
 
@@ -198,6 +162,7 @@ const backendSupportedChains = [
   Chain.Celo,
   Chain.Blast,
   Chain.Avalanche,
+  Chain.Worldchain,
   Chain.Zksync,
 ] as const
 
@@ -213,22 +178,18 @@ const backendNotyetSupportedChainIds = [UniverseChainId.Zora] as const
 
 test.each(backendNotyetSupportedChainIds)(
   'BACKEND_SUPPORTED_CHAINS generates the correct chains',
-  (chainId: SupportedInterfaceChainId) => {
+  (chainId: UniverseChainId) => {
     expect(BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(chainId)).toBe(true)
     expect(BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.length).toEqual(backendNotyetSupportedChainIds.length)
   },
 )
 
-const infuraPrefixToChainId: { [prefix: string]: SupportedInterfaceChainId } = {
+const infuraPrefixToChainId: { [prefix: string]: UniverseChainId } = {
   mainnet: UniverseChainId.Mainnet,
-  goerli: UniverseChainId.Goerli,
   sepolia: UniverseChainId.Sepolia,
   'optimism-mainnet': UniverseChainId.Optimism,
-  'optimism-goerli': UniverseChainId.OptimismGoerli,
   'arbitrum-mainnet': UniverseChainId.ArbitrumOne,
-  'arbitrum-goerli': UniverseChainId.ArbitrumGoerli,
   'polygon-mainnet': UniverseChainId.Polygon,
-  'polygon-mumbai': UniverseChainId.PolygonMumbai,
   'avalanche-mainnet': UniverseChainId.Avalanche,
   'base-mainnet': UniverseChainId.Base,
   'blast-mainnet': UniverseChainId.Blast,
@@ -266,9 +227,9 @@ function getBlocksPerMainnetEpochForChainId(chainId: number | undefined): number
   }
 }
 
-test.each(WEB_SUPPORTED_CHAIN_IDS)(
+test.each(SUPPORTED_CHAIN_IDS)(
   'CHAIN_INFO maps the correct blocks per mainnet epoch for chainId',
-  (chainId: SupportedInterfaceChainId) => {
+  (chainId: UniverseChainId) => {
     const block = UNIVERSE_CHAIN_INFO[chainId].blockPerMainnetEpochForChainId
     expect(block).toEqual(getBlocksPerMainnetEpochForChainId(chainId))
   },

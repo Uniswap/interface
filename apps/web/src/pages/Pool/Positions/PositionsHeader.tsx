@@ -1,7 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { getProtocolStatusLabel, getProtocolVersionLabel } from 'components/Liquidity/utils'
-import { useSupportedChainIds } from 'hooks/useSupportedChainIds'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ClickableTamaguiStyle } from 'theme/components'
@@ -12,6 +11,7 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { SortHorizontalLines } from 'ui/src/components/icons/SortHorizontalLines'
 import { ActionSheetDropdown } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useTranslation } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
@@ -33,7 +33,7 @@ export function PositionsHeader({
   onStatusChange,
 }: PositionsHeaderProps) {
   const { t } = useTranslation()
-  const { supported: supportedChains } = useSupportedChainIds()
+  const { chains } = useEnabledChains()
   const navigate = useNavigate()
 
   const filterOptions = useMemo(() => {
@@ -105,7 +105,7 @@ export function PositionsHeader({
         render: () => (
           <Flex row gap="$gap4" alignItems="center">
             <Text p="$spacing4" variant="body2">
-              {t('nav.tabs.createV2Position')}
+              {t('nav.tabs.createV4Position')}
             </Text>
             <ExternalLink size={16} color="$neutral1" />
           </Flex>
@@ -210,7 +210,7 @@ export function PositionsHeader({
             includeAllNetworks
             selectedChain={selectedChain}
             onPressChain={onChainChange}
-            chainIds={supportedChains}
+            chainIds={chains}
           />
         </Flex>
       </Flex>

@@ -1,7 +1,7 @@
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export interface TransactionSummaryLayoutProps {
   authTrigger?: AuthTrigger
@@ -24,7 +24,7 @@ export interface SwapSummaryCallbacks {
   useLatestSwapTransaction: (address: string) => TransactionDetails | undefined
   useSwapFormTransactionState: (
     address: Address | undefined,
-    chainId: WalletChainId | undefined,
+    chainId: UniverseChainId | undefined,
     txId: string | undefined,
   ) => TransactionState | undefined
   onRetryGenerator?: (swapFormState: TransactionState | undefined) => () => void

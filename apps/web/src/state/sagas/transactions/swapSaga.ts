@@ -22,6 +22,8 @@ import { call, put } from 'typed-redux-saga'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
@@ -54,10 +56,8 @@ import {
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { createSaga } from 'uniswap/src/utils/saga'
-import { errorToString } from 'utilities/src/errors'
 import { percentFromFloat } from 'utilities/src/format/percent'
 import { logger } from 'utilities/src/logger/logger'
-import { LoggerErrorContext } from 'utilities/src/logger/types'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 interface HandleSwapStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
@@ -135,14 +135,15 @@ type SwapParams = {
   setSteps: (steps: TransactionStep[]) => void
   onSuccess: () => void
   onFailure: (error?: Error) => void
+  v4Enabled: boolean
 }
 
 // eslint-disable-next-line consistent-return
 function* swap(params: SwapParams) {
-  const { swapTxContext, setSteps, selectChain, startChainId, onFailure } = params
+  const { swapTxContext, setSteps, selectChain, startChainId, v4Enabled, onFailure } = params
 
   try {
-    const steps = yield* call(generateTransactionSteps, swapTxContext)
+    const steps = yield* call(generateTransactionSteps, swapTxContext, v4Enabled)
     setSteps(steps)
 
     // Switch chains if needed
@@ -208,7 +209,9 @@ function* classicSwap(
       }
     } catch (error) {
       const displayableError = getDisplayableError(error, step)
-      logSwapError(displayableError, { tags: { file: 'swapSaga', function: 'classicSwap' } })
+      if (displayableError) {
+        logger.error(displayableError, { tags: { file: 'swapSaga', function: 'classicSwap' } })
+      }
       onFailure(displayableError)
       return
     }
@@ -256,28 +259,15 @@ function* uniswapXSwap(
       }
     } catch (error) {
       const displayableError = getDisplayableError(error, step)
-      logSwapError(displayableError, { tags: { file: 'swapSaga', function: 'uniswapXSwap' } })
+      if (displayableError) {
+        logger.error(displayableError, { tags: { file: 'swapSaga', function: 'uniswapXSwap' } })
+      }
       onFailure(displayableError)
       return
     }
   }
 
   yield* call(onSuccess)
-}
-
-function logSwapError(error: TransactionError | undefined, captureContext: LoggerErrorContext) {
-  if (error instanceof TransactionStepFailedError) {
-    logger.error(
-      {
-        ...error,
-        step: JSON.stringify(error.step),
-        originalError: errorToString(error.originalError),
-      },
-      captureContext,
-    )
-  } else if (error) {
-    logger.error(error, captureContext)
-  }
 }
 
 function getDisplayableError(error: Error, step: TransactionStep): TransactionError | undefined {
@@ -306,6 +296,7 @@ export function useSwapCallback(): SwapCallback {
   const swapStartTimestamp = useSelector(selectSwapStartTimestamp)
   const selectChain = useSelectChain()
   const startChainId = useAccount().chainId
+  const v4Enabled = useFeatureFlag(FeatureFlags.V4Everywhere)
 
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
 
@@ -342,6 +333,7 @@ export function useSwapCallback(): SwapCallback {
         setSteps,
         selectChain,
         startChainId,
+        v4Enabled,
       }
       appDispatch(swapSaga.actions.trigger(swapParams))
 
@@ -361,6 +353,6 @@ export function useSwapCallback(): SwapCallback {
       // Reset swap start timestamp now that the swap has been submitted
       appDispatch(updateSwapStartTimestamp({ timestamp: undefined }))
     },
-    [formatter, portfolioBalanceUsd, selectChain, startChainId, appDispatch, swapStartTimestamp],
+    [formatter, portfolioBalanceUsd, selectChain, startChainId, appDispatch, swapStartTimestamp, v4Enabled],
   )
 }

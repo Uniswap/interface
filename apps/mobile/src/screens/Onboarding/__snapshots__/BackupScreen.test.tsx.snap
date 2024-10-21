@@ -298,6 +298,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                         "flexDirection": "column",
                         "height": 28,
                         "justifyContent": "center",
+                        "marginTop": 4,
                         "width": 28,
                       }
                     }
@@ -402,6 +403,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                             {
                               "flex": 1,
                               "flexDirection": "column",
+                              "paddingBottom": 4,
+                              "paddingTop": 4,
                             }
                           }
                         >
@@ -426,6 +429,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                           style={
                             {
                               "alignItems": "center",
+                              "alignSelf": "flex-start",
                               "backgroundColor": "#FC72FF1f",
                               "borderBottomLeftRadius": 8,
                               "borderBottomRightRadius": 8,
@@ -433,8 +437,11 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                               "borderTopRightRadius": 8,
                               "flexDirection": "column",
                               "justifyContent": "center",
+                              "maxWidth": "30%",
+                              "paddingBottom": 8,
                               "paddingLeft": 8,
                               "paddingRight": 8,
+                              "paddingTop": 8,
                             }
                           }
                         >
@@ -448,6 +455,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                                 "fontSize": 15,
                                 "fontWeight": "500",
                                 "lineHeight": 17.25,
+                                "textAlign": "center",
                               }
                             }
                             suppressHighlighting={true}
@@ -1100,6 +1108,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                         "flexDirection": "column",
                         "height": 28,
                         "justifyContent": "center",
+                        "marginTop": 4,
                         "width": 28,
                       }
                     }
@@ -1204,6 +1213,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                             {
                               "flex": 1,
                               "flexDirection": "column",
+                              "paddingBottom": 4,
+                              "paddingTop": 4,
                             }
                           }
                         >
@@ -1228,6 +1239,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                           style={
                             {
                               "alignItems": "center",
+                              "alignSelf": "flex-start",
                               "backgroundColor": "#FC72FF1f",
                               "borderBottomLeftRadius": 8,
                               "borderBottomRightRadius": 8,
@@ -1235,8 +1247,11 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                               "borderTopRightRadius": 8,
                               "flexDirection": "column",
                               "justifyContent": "center",
+                              "maxWidth": "30%",
+                              "paddingBottom": 8,
                               "paddingLeft": 8,
                               "paddingRight": 8,
+                              "paddingTop": 8,
                             }
                           }
                         >
@@ -1250,6 +1265,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                                 "fontSize": 15,
                                 "fontWeight": "500",
                                 "lineHeight": 17.25,
+                                "textAlign": "center",
                               }
                             }
                             suppressHighlighting={true}

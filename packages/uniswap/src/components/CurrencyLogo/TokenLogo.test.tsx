@@ -50,12 +50,16 @@ describe('TokenLogo', () => {
       expect(fallbackText).toBeTruthy()
     })
 
-    it('renders fallback text when url is invalid', () => {
-      const { queryByText } = render(<TokenLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" url="invalid-url" />)
+    it('renders image for an absolute path (local file)', () => {
+      const { queryByTestId } = render(
+        <TokenLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" url="invalid-url" />,
+      )
 
-      const fallbackText = queryByText('DAI')
+      const tokenRemoteSvg = queryByTestId('svg-token-image')
+      const tokenImage = queryByTestId('img-token-image')
 
-      expect(fallbackText).toBeTruthy()
+      expect(tokenRemoteSvg).toBeFalsy()
+      expect(tokenImage).toBeTruthy()
     })
 
     it('does not render fallback text when url is valid', () => {

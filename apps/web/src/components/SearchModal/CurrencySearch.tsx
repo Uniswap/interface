@@ -3,12 +3,12 @@ import { Currency } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { useShowSwapNetworkNotification } from 'hooks/useShowSwapNetworkNotification'
-import { useSupportedChainIds } from 'hooks/useSupportedChainIds'
 import { useCallback, useEffect } from 'react'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { Flex } from 'ui/src'
 import { TokenSelectorContent, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/TokenSelector'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
@@ -29,7 +29,7 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss }: C
   const showSwapNetworkNotification = useShowSwapNetworkNotification()
 
   const selectChain = useSelectChain()
-  const { supported: supportedChains } = useSupportedChainIds()
+  const { chains } = useEnabledChains()
 
   const handleCurrencySelectTokenSelectorCallback = useCallback(
     async (currency: Currency) => {
@@ -67,7 +67,7 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss }: C
           activeAccountAddress={account.address!}
           isLimits={currentTab === SwapTab.Limit}
           chainId={!multichainUXEnabled || isUserSelectedToken ? chainId : undefined}
-          chainIds={supportedChains}
+          chainIds={chains}
           currencyField={currencyField}
           flow={TokenSelectorFlow.Swap}
           isSurfaceReady={true}

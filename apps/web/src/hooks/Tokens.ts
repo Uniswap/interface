@@ -1,20 +1,20 @@
 import { Currency, Token } from '@uniswap/sdk-core'
-import { SupportedInterfaceChainId, useSupportedChainId } from 'constants/chains'
+import { useSupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useMemo } from 'react'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useCurrencyInfo as useUniswapCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { isAddress, isSameAddress } from 'utilities/src/addresses'
 
 type Maybe<T> = T | undefined
 
-export function useCurrency(address?: string, chainId?: InterfaceChainId, skip?: boolean): Maybe<Currency> {
+export function useCurrency(address?: string, chainId?: UniverseChainId, skip?: boolean): Maybe<Currency> {
   const currencyInfo = useCurrencyInfo(address, chainId, skip)
   return currencyInfo?.currency
 }
@@ -22,11 +22,11 @@ export function useCurrency(address?: string, chainId?: InterfaceChainId, skip?:
 /**
  * Returns a CurrencyInfo from the tokenAddress+chainId pair.
  */
-export function useCurrencyInfo(currency?: Currency, chainId?: InterfaceChainId, skip?: boolean): Maybe<CurrencyInfo>
-export function useCurrencyInfo(address?: string, chainId?: InterfaceChainId, skip?: boolean): Maybe<CurrencyInfo>
+export function useCurrencyInfo(currency?: Currency, chainId?: UniverseChainId, skip?: boolean): Maybe<CurrencyInfo>
+export function useCurrencyInfo(address?: string, chainId?: UniverseChainId, skip?: boolean): Maybe<CurrencyInfo>
 export function useCurrencyInfo(
   addressOrCurrency?: string | Currency,
-  chainId?: InterfaceChainId,
+  chainId?: UniverseChainId,
   skip?: boolean,
 ): Maybe<CurrencyInfo> {
   const { chainId: connectedChainId } = useAccount()
@@ -104,7 +104,7 @@ const getAddress = (
   return undefined
 }
 
-export function useToken(tokenAddress?: string, chainId?: SupportedInterfaceChainId): Maybe<Token> {
+export function useToken(tokenAddress?: string, chainId?: UniverseChainId): Maybe<Token> {
   const formattedAddress = isAddress(tokenAddress)
   const { chainId: connectedChainId } = useAccount()
   const currency = useCurrency(formattedAddress ? formattedAddress : undefined, chainId ?? connectedChainId)

@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import { Edge, NativeSafeAreaViewProps } from 'react-native-safe-area-context'
-import { Flex, FlexProps, useDeviceInsets } from 'ui/src'
+import { Flex, FlexProps } from 'ui/src'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 
 // Used to determine amount of top padding for short screens
 export const SHORT_SCREEN_HEADER_HEIGHT_RATIO = 0.88
@@ -21,7 +22,7 @@ function SafeAreaWithInsets({ children, edges, noInsets, ...rest }: ScreenProps)
   // This is a known issue with react-native-safe-area-context, and the solution is to use
   // the useSafeAreaInsets hook instead. See:
   // https://github.com/th3rdwave/react-native-safe-area-context/issues/114
-  const insets = useDeviceInsets() // useDeviceInsets uses useSafeAreaInsets internally
+  const insets = useAppInsets() // useAppInsets uses useSafeAreaInsets internally
 
   const safeAreaStyles = useMemo(() => {
     const style: { [key: string]: number } = {}

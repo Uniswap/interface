@@ -38,6 +38,7 @@ export function* approveAndSwap(params: SwapParams) {
     const { swapTxContext, account, txId, analytics, onSuccess, onFailure } = params
     const { routing, approveTxRequest } = swapTxContext
     const isUniswapX = routing === Routing.DUTCH_V2 || routing === Routing.PRIORITY
+    const isBridge = routing === Routing.BRIDGE
     const chainId = swapTxContext.trade.inputAmount.currency.chainId
 
     // For classic swaps, trigger UI changes immediately after click
@@ -47,7 +48,8 @@ export function* approveAndSwap(params: SwapParams) {
     }
 
     // MEV protection is not needed for UniswapX approval and/or wrap transactions.
-    const submitViaPrivateRpc = !isUniswapX && (yield* call(shouldSubmitViaPrivateRpc, chainId))
+    // We disable for bridge to avoid any potential issues with BE checking status.
+    const submitViaPrivateRpc = !isUniswapX && !isBridge && (yield* call(shouldSubmitViaPrivateRpc, chainId))
     // We must manually set the nonce when submitting multiple transactions in a row,
     // otherwise for some L2s the Provider might fetch the same nonce for both transactions.
     let nonce = yield* call(tryGetNonce, account, chainId)

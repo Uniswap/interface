@@ -1,9 +1,9 @@
-import { parseCalldata as parseURCalldata } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/universalRouter'
+import { CommandParser, UniversalRouterCall } from '@uniswap/universal-router-sdk'
+import { V4BaseActionsParser, V4RouterCall } from '@uniswap/v4-sdk'
 import { EthSendTransactionRPCActions } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { EthersTransactionRequest } from 'src/app/features/dappRequests/types/EthersTypes'
 import { parseCalldata as parseNfPMCalldata } from 'src/app/features/dappRequests/types/NonfungiblePositionManager'
 import { NonfungiblePositionManagerCall } from 'src/app/features/dappRequests/types/NonfungiblePositionManagerTypes'
-import { UniversalRouterCall } from 'src/app/features/dappRequests/types/UniversalRouterTypes'
 import methodHashToFunctionSignature from 'utilities/src/calldata/methodHashToFunctionSignature'
 import noop from 'utilities/src/react/noop'
 
@@ -11,7 +11,7 @@ interface GetCalldataInfoFromTransactionReturnValue {
   functionSignature: string | undefined
   contractInteractions: EthSendTransactionRPCActions
   to: string | undefined
-  parsedCalldata?: UniversalRouterCall | NonfungiblePositionManagerCall
+  parsedCalldata?: V4RouterCall | UniversalRouterCall | NonfungiblePositionManagerCall
 }
 
 function getCalldataInfoFromTransaction(
@@ -32,7 +32,19 @@ function getCalldataInfoFromTransaction(
       return result
     }
     try {
-      const URCalldata = parseURCalldata(transaction.data)
+      const v4Calldata = V4BaseActionsParser.parseCalldata(transaction.data)
+
+      if (v4Calldata) {
+        result.contractInteractions = EthSendTransactionRPCActions.Swap
+        result.parsedCalldata = v4Calldata
+        return result
+      }
+    } catch (_e) {
+      noop()
+    }
+    try {
+      const URCalldata = CommandParser.parseCalldata(transaction.data)
+
       if (URCalldata) {
         result.contractInteractions = EthSendTransactionRPCActions.Swap
         result.parsedCalldata = URCalldata

@@ -4,7 +4,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { BridgeTransactionInfo, TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getFormattedCurrencyAmount } from 'uniswap/src/utils/currency'
-import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
+import { TransactionSummaryLayout } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE, useOnRetrySwap } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
@@ -46,21 +46,20 @@ export function BridgeSummaryItem({
     )
   }, [inputCurrencyInfo, outputCurrencyInfo, formatter, typeInfo])
 
+  const icon = useMemo(
+    () => (
+      <SplitLogo
+        inputCurrencyInfo={inputCurrencyInfo}
+        outputCurrencyInfo={outputCurrencyInfo}
+        size={TXN_HISTORY_ICON_SIZE}
+        chainId={transaction.chainId}
+        customIcon={BridgeIcon}
+      />
+    ),
+    [inputCurrencyInfo, outputCurrencyInfo, transaction.chainId],
+  )
+
   return (
-    <TransactionSummaryLayout
-      caption={caption}
-      icon={
-        <SplitLogo
-          inputCurrencyInfo={inputCurrencyInfo}
-          outputCurrencyInfo={outputCurrencyInfo}
-          size={TXN_HISTORY_ICON_SIZE}
-          chainId={transaction.chainId}
-          customIcon={BridgeIcon}
-        />
-      }
-      index={index}
-      transaction={transaction}
-      onRetry={onRetry}
-    />
+    <TransactionSummaryLayout caption={caption} icon={icon} index={index} transaction={transaction} onRetry={onRetry} />
   )
 }

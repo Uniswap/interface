@@ -134,6 +134,7 @@ describe('FavoriteWalletCard', () => {
             [defaultProps.address]: signerMnemonicAccount({ address: defaultProps.address }),
           },
         },
+        userSettings: {},
       })
       const { getByTestId } = render(<FavoriteWalletCard {...defaultProps} isEditing />, {
         store,

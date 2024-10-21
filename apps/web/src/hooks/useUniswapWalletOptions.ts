@@ -1,5 +1,5 @@
-import { CONNECTION } from 'components/Web3Provider/constants'
 import { useAccount } from 'hooks/useAccount'
+import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 
 //
 // Checks if the user is connected to the uniswap extension.
@@ -12,7 +12,8 @@ import { useAccount } from 'hooks/useAccount'
 //
 export function useIsUniExtensionAvailable() {
   const currentConnector = useAccount().connector
-  const currentConnectIsNotUniExtension = currentConnector && currentConnector.id !== CONNECTION.UNISWAP_EXTENSION_RDNS
+  const currentConnectIsNotUniExtension =
+    currentConnector && currentConnector.id !== CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS
 
   return !currentConnectIsNotUniExtension
 }

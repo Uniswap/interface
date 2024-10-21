@@ -35,6 +35,7 @@ export interface SettingsSectionItem {
   screenProps?: ValueOf<SettingsStackParamList> | NavigatorScreenParams<OnboardingStackParamList>
   externalLink?: string
   action?: JSX.Element
+  disabled?: boolean
   text: string
   subText?: string
   icon: JSX.Element
@@ -55,6 +56,7 @@ export function SettingsRow({
     modal,
     screenProps,
     externalLink,
+    disabled,
     action,
     icon,
     text,
@@ -103,7 +105,7 @@ export function SettingsRow({
           </Flex>
         </Flex>
         {onToggle && typeof isToggleEnabled === 'boolean' ? (
-          <Switch checked={isToggleEnabled} variant="branded" onCheckedChange={onToggle} />
+          <Switch checked={isToggleEnabled} variant="branded" disabled={disabled} onCheckedChange={onToggle} />
         ) : screen || modal ? (
           <Flex centered row>
             {currentSetting ? (

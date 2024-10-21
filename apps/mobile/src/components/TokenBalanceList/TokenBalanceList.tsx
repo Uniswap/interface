@@ -9,7 +9,7 @@ import { useAppStackNavigation } from 'src/app/navigation/types'
 import { TokenBalanceItemContextMenu } from 'src/components/TokenBalanceList/TokenBalanceItemContextMenu'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { TAB_BAR_HEIGHT, TAB_VIEW_SCROLL_THROTTLE, TabProps } from 'src/components/layout/TabHelpers'
-import { Flex, Loader, useDeviceInsets, useSporeColors } from 'ui/src'
+import { Flex, Loader, useSporeColors } from 'ui/src'
 import { ShieldCheck } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { zIndices } from 'ui/src/theme'
@@ -17,6 +17,7 @@ import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
@@ -73,7 +74,7 @@ export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, T
   ) {
     const { t } = useTranslation()
     const colors = useSporeColors()
-    const insets = useDeviceInsets()
+    const insets = useAppInsets()
 
     const { rows, balancesById, networkStatus, refetch } = useTokenBalanceListContext()
     const hasError = isError(networkStatus, !!balancesById)

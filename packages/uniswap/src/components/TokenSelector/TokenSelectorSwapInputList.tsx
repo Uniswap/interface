@@ -20,13 +20,14 @@ import {
 } from 'uniswap/src/components/TokenSelector/utils'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { GqlResult } from 'uniswap/src/data/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { isMobileApp } from 'utilities/src/platform'
 
 function useTokenSectionsForSwapInput({
   activeAccountAddress,
   chainFilter,
 }: TokenSectionsHookProps): GqlResult<TokenSection[]> {
+  const { defaultChainId, isTestnetModeEnabled } = useEnabledChains()
   const {
     data: portfolioTokenOptions,
     error: portfolioTokenOptionsError,
@@ -39,8 +40,8 @@ function useTokenSectionsForSwapInput({
     error: popularTokenOptionsError,
     refetch: refetchPopularTokenOptions,
     loading: popularTokenOptionsLoading,
-    // if there is no chain filter then we show mainnet tokens
-  } = usePopularTokensOptions(activeAccountAddress, chainFilter ?? UniverseChainId.Mainnet)
+    // if there is no chain filter then we show default chain tokens
+  } = usePopularTokensOptions(activeAccountAddress, chainFilter ?? defaultChainId)
 
   const {
     data: favoriteTokenOptions,
@@ -51,7 +52,7 @@ function useTokenSectionsForSwapInput({
 
   const { data: commonTokenOptions } = useCommonTokensOptionsWithFallback(
     activeAccountAddress,
-    chainFilter ?? UniverseChainId.Mainnet,
+    chainFilter ?? defaultChainId,
   )
 
   const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter)
@@ -85,6 +86,10 @@ function useTokenSectionsForSwapInput({
       return undefined
     }
 
+    if (isTestnetModeEnabled) {
+      return [...(suggestedSection ?? []), ...(portfolioSection ?? [])]
+    }
+
     return [
       ...(suggestedSection ?? []),
       ...(portfolioSection ?? []),
@@ -94,7 +99,15 @@ function useTokenSectionsForSwapInput({
       ...(isMobileApp ? favoriteSection ?? [] : []),
       ...(popularSection ?? []),
     ] satisfies TokenSection[]
-  }, [suggestedSection, favoriteSection, loading, popularSection, portfolioSection, recentSection])
+  }, [
+    suggestedSection,
+    favoriteSection,
+    loading,
+    popularSection,
+    portfolioSection,
+    recentSection,
+    isTestnetModeEnabled,
+  ])
 
   return useMemo(
     () => ({

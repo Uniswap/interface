@@ -9,6 +9,7 @@ import {
   ONESIGNAL_APP_ID,
   OPENAI_API_KEY,
   QUICKNODE_ARBITRUM_RPC_URL,
+  QUICKNODE_ASTROCHAIN_SEPOLIA_RPC_URL,
   QUICKNODE_AVAX_RPC_URL,
   QUICKNODE_BASE_RPC_URL,
   QUICKNODE_BLAST_RPC_URL,
@@ -17,6 +18,8 @@ import {
   QUICKNODE_MAINNET_RPC_URL,
   QUICKNODE_OP_RPC_URL,
   QUICKNODE_POLYGON_RPC_URL,
+  QUICKNODE_SEPOLIA_RPC_URL,
+  QUICKNODE_WORLDCHAIN_RPC_URL,
   QUICKNODE_ZKSYNC_RPC_URL,
   QUICKNODE_ZORA_RPC_URL,
   SENTRY_DSN,
@@ -63,7 +66,10 @@ export interface Config {
   quicknodePolygonRpcUrl: string
   quicknodeZoraRpcUrl: string
   quicknodeZkSyncRpcUrl: string
+  quicknodeWorldChainRpcUrl: string
+  quicknodeAstrochainSepoliaRpcUrl: string
   quicknodeMainnetRpcUrl: string
+  quicknodeSepoliaRpcUrl: string
   tradingApiKey: string
   firebaseAppCheckDebugToken: string
 }
@@ -117,10 +123,22 @@ const _config: Config = {
     process.env.REACT_APP_QUICKNODE_ZORA_RPC_URL || process.env.QUICKNODE_ZORA_RPC_URL || QUICKNODE_ZORA_RPC_URL,
   quicknodeZkSyncRpcUrl:
     process.env.REACT_APP_QUICKNODE_ZKSYNC_RPC_URL || process.env.QUICKNODE_ZKSYNC_RPC_URL || QUICKNODE_ZKSYNC_RPC_URL,
+  quicknodeWorldChainRpcUrl:
+    process.env.REACT_APP_QUICKNODE_WORLDCHAIN_RPC_URL ||
+    process.env.QUICKNODE_WORLDCHAIN_RPC_URL ||
+    QUICKNODE_WORLDCHAIN_RPC_URL,
+  quicknodeAstrochainSepoliaRpcUrl:
+    process.env.REACT_APP_QUICKNODE_ASTROCHAIN_SEPOLIA_RPC_URL ||
+    process.env.QUICKNODE_ASTROCHAIN_SEPOLIA_RPC_URL ||
+    QUICKNODE_ASTROCHAIN_SEPOLIA_RPC_URL,
   quicknodeMainnetRpcUrl:
     process.env.REACT_APP_QUICKNODE_MAINNET_RPC_URL ||
     process.env.QUICKNODE_MAINNET_RPC_URL ||
     QUICKNODE_MAINNET_RPC_URL,
+  quicknodeSepoliaRpcUrl:
+    process.env.REACT_APP_QUICKNODE_SEPOLIA_RPC_URL ||
+    process.env.QUICKNODE_SEPOLIA_RPC_URL ||
+    QUICKNODE_SEPOLIA_RPC_URL,
   tradingApiKey: process.env.REACT_APP_TRADING_API_KEY || process.env.TRADING_API_KEY || TRADING_API_KEY,
   firebaseAppCheckDebugToken: process.env.FIREBASE_APP_CHECK_DEBUG_TOKEN || FIREBASE_APP_CHECK_DEBUG_TOKEN,
 }

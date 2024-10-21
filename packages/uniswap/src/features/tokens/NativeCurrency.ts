@@ -3,7 +3,7 @@ import { Currency, NativeCurrency as NativeCurrencyClass, Token } from '@uniswap
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { wrappedNativeCurrency } from 'uniswap/src/utils/currency'
 
 export class NativeCurrency implements NativeCurrencyClass {
@@ -27,7 +27,7 @@ export class NativeCurrency implements NativeCurrencyClass {
     this.address = getNativeAddress(this.chainId)
   }
 
-  chainId: WalletChainId
+  chainId: UniverseChainId
   decimals: number
   name: string
   symbol: string

@@ -20,7 +20,7 @@ import {
   ContractInput,
   useUniswapPricesQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { CurrencyKey, currencyKey, currencyKeyFromGraphQL } from 'utils/currencyKey'
 
@@ -30,7 +30,7 @@ type ContractMap<T extends BaseContract> = { [key: number]: T }
 export function useContractMultichain<T extends BaseContract>(
   addressMap: AddressMap,
   ABI: any,
-  chainIds?: InterfaceChainId[],
+  chainIds?: UniverseChainId[],
 ): ContractMap<T> {
   const account = useAccount()
   const { provider: walletProvider } = useWeb3React()
@@ -58,11 +58,11 @@ export function useContractMultichain<T extends BaseContract>(
   }, [ABI, addressMap, chainIds, isSupportedChain, account.chainId, walletProvider])
 }
 
-export function useV3ManagerContracts(chainIds: InterfaceChainId[]): ContractMap<NonfungiblePositionManager> {
+export function useV3ManagerContracts(chainIds: UniverseChainId[]): ContractMap<NonfungiblePositionManager> {
   return useContractMultichain<NonfungiblePositionManager>(V3NFT_ADDRESSES, NFTPositionManagerJSON.abi, chainIds)
 }
 
-export function useInterfaceMulticallContracts(chainIds: InterfaceChainId[]): ContractMap<UniswapInterfaceMulticall> {
+export function useInterfaceMulticallContracts(chainIds: UniverseChainId[]): ContractMap<UniswapInterfaceMulticall> {
   return useContractMultichain<UniswapInterfaceMulticall>(MULTICALL_ADDRESSES, MulticallJSON.abi, chainIds)
 }
 

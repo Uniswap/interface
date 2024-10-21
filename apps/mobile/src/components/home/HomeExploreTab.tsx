@@ -8,7 +8,7 @@ import { TokenItemData } from 'src/components/explore/TokenItemData'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
 import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
-import { AnimatePresence, Flex, LinearGradient, Text, useDeviceInsets, useIsDarkMode, useSporeColors } from 'ui/src'
+import { AnimatePresence, Flex, LinearGradient, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { SwirlyArrowDown } from 'ui/src/components/icons'
 import { spacing, zIndices } from 'ui/src/theme'
 import {
@@ -22,6 +22,7 @@ import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { Experiments, OnboardingRedesignHomeScreenProperties } from 'uniswap/src/features/gating/experiments'
 import { useExperimentValue } from 'uniswap/src/features/gating/hooks'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { useTranslation } from 'uniswap/src/i18n'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
@@ -37,7 +38,7 @@ export const HomeExploreTab = memo(
   ) {
     const isDarkMode = useIsDarkMode()
     const colors = useSporeColors()
-    const insets = useDeviceInsets()
+    const insets = useAppInsets()
     const appFiatCurrency = useAppFiatCurrency()
     const [maxTokenPriceWrapperWidth, setMaxTokenPriceWrapperWidth] = useState(0)
 

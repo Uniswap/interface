@@ -1,5 +1,5 @@
 import type { SessionTypes } from '@walletconnect/types'
-import { SupportedInterfaceChainId } from 'constants/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 // Helper function to extract chainId from string in format 'eip155:{chainId}'
 function getChainIdFromFormattedString(item: string): number | null {
@@ -7,9 +7,7 @@ function getChainIdFromFormattedString(item: string): number | null {
   return splitItem.length > 1 && !isNaN(Number(splitItem[1])) ? Number(splitItem[1]) : null
 }
 
-export function getSupportedChainIdsFromWalletConnectSession(
-  session?: SessionTypes.Struct,
-): SupportedInterfaceChainId[] {
+export function getSupportedChainIdsFromWalletConnectSession(session?: SessionTypes.Struct): UniverseChainId[] {
   if (!session?.namespaces) {
     return []
   }
@@ -35,5 +33,5 @@ export function getSupportedChainIdsFromWalletConnectSession(
     })
     .filter((item) => item !== null) // Filter out any null values
 
-  return Array.from(new Set(allChainIds)) as SupportedInterfaceChainId[]
+  return Array.from(new Set(allChainIds)) as UniverseChainId[]
 }

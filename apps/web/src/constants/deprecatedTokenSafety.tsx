@@ -6,7 +6,7 @@
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans, t } from 'uniswap/src/i18n'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export const TOKEN_SAFETY_ARTICLE = 'https://support.uniswap.org/hc/en-us/articles/8723118437133'
 
@@ -88,7 +88,7 @@ export const BlockedWarning: Warning = {
   canProceed: false,
 }
 
-export function useTokenWarning(tokenAddress?: string, chainId?: InterfaceChainId | number): Warning | undefined {
+export function useTokenWarning(tokenAddress?: string, chainId?: UniverseChainId | number): Warning | undefined {
   const currencyInfo = useCurrencyInfo(tokenAddress, chainId)
   switch (currencyInfo?.safetyLevel) {
     case SafetyLevel.MediumWarning:

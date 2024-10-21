@@ -19,7 +19,7 @@ export function TransactionSummaryNetworkLogo({
   chainId,
   size = iconSizes.icon20,
 }: Pick<NetworkLogoProps, 'chainId' | 'size'>): JSX.Element {
-  return <NetworkLogo borderWidth={1} chainId={chainId} shape="square" size={size} />
+  return <NetworkLogo borderWidth={1.5} chainId={chainId} shape="square" size={size} />
 }
 
 function _NetworkLogo({

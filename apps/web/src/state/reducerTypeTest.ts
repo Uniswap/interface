@@ -33,7 +33,7 @@ import { UserSettingsState } from 'uniswap/src/features/settings/slice'
 import { TimingState } from 'uniswap/src/features/timing/slice'
 import { TokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 /**
  * WARNING:
@@ -138,7 +138,7 @@ assert<Equals<ApplicationState, ExpectedApplicationState>>()
 
 interface ExpectedWalletState {
   connectedWallets: Wallet[]
-  switchingChain: InterfaceChainId | false
+  switchingChain: UniverseChainId | false
 }
 
 assert<Equals<ConnectedWalletsState, ExpectedWalletState>>()

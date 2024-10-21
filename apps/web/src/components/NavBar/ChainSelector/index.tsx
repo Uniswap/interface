@@ -1,12 +1,12 @@
 import { CHAIN_IDS_TO_NAMES, useIsSupportedChainIdCallback } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
-import { useSupportedChainIds } from 'hooks/useSupportedChainIds'
 import { useCallback, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { Flex, Popover } from 'ui/src'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 type ChainSelectorProps = {
@@ -21,7 +21,7 @@ export const ChainSelector = ({ hideArrow }: ChainSelectorProps) => {
   const selectChain = useSelectChain()
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const { supported: supportedChains } = useSupportedChainIds()
+  const { chains } = useEnabledChains()
 
   const onSelectChain = useCallback(
     async (targetChainId: UniverseChainId | null) => {
@@ -51,7 +51,7 @@ export const ChainSelector = ({ hideArrow }: ChainSelectorProps) => {
         onPressChain={onSelectChain}
         showUnsupportedConnectedChainWarning={isUnsupportedConnectedChain}
         hideArrow={hideArrow}
-        chainIds={supportedChains}
+        chainIds={chains}
         styles={{
           sticky: true,
         }}

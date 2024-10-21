@@ -10,7 +10,8 @@ function _NewTag(): JSX.Element {
         shrink
         ml="$spacing6"
         px="$spacing4"
-        py="$spacing2"
+        pb="$spacing2"
+        pt={3} // hack to make box look visually more vertically centered with text
         backgroundColor="$accent2Hovered"
         borderRadius="$rounded6"
         alignItems="center"

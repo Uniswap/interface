@@ -1,11 +1,6 @@
 import { NetworkStatus } from '@apollo/client'
 import { Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
-import {
-  SupportedInterfaceChainId,
-  chainIdToBackendChain,
-  useIsSupportedChainId,
-  useSupportedChainId,
-} from 'constants/chains'
+import { chainIdToBackendChain, useIsSupportedChainId, useSupportedChainId } from 'constants/chains'
 import { PollingInterval } from 'graphql/data/util'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
@@ -19,7 +14,7 @@ import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 // ETH amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
-function getEthAmountOut(chainId: SupportedInterfaceChainId): CurrencyAmount<Currency> {
+function getEthAmountOut(chainId: UniverseChainId): CurrencyAmount<Currency> {
   return CurrencyAmount.fromRawAmount(nativeOnChain(chainId), chainId === UniverseChainId.Mainnet ? 50e18 : 10e18)
 }
 

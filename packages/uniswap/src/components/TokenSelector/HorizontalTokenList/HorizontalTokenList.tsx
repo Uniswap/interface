@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { OnSelectCurrency, TokenOption, TokenSection } from 'uniswap/src/components/TokenSelector/types'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
@@ -8,6 +9,6 @@ export type HorizontalTokenListProps = {
   section: TokenSection
 }
 
-export function HorizontalTokenList(_props: HorizontalTokenListProps): JSX.Element {
+export const HorizontalTokenList = memo(function HorizontalTokenList(_props: HorizontalTokenListProps): JSX.Element {
   throw new PlatformSplitStubError('TokenSectionBaseList')
-}
+})

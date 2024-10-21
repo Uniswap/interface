@@ -1,12 +1,12 @@
 import { Protocol, ZERO } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { FeeAmount, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 
 export interface RoutingDiagramEntry {
   percent: Percent
-  path: [Currency, Currency, FeeAmount][]
+  path: [Currency, Currency, FeeAmount, Protocol][]
   protocol: Protocol
 }
 
@@ -34,10 +34,14 @@ export default function getRoutingDiagramEntries(trade: ClassicTrade): RoutingDi
         break
       }
 
+      const poolProtocol =
+        nextPool instanceof Pair ? Protocol.V2 : nextPool instanceof V3Pool ? Protocol.V3 : Protocol.V4
+
       const entry: RoutingDiagramEntry['path'][0] = [
         tokenIn,
         tokenOut,
         nextPool instanceof Pair ? V2_DEFAULT_FEE_TIER : nextPool.fee,
+        poolProtocol,
       ]
       path.push(entry)
     }

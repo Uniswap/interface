@@ -4,6 +4,7 @@ import { navigate as rootNavigate } from 'src/app/navigation/rootNavigation'
 import { useAppStackNavigation, useExploreStackNavigation } from 'src/app/navigation/types'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
 import { useTransactionListLazyQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 
 /**
@@ -16,16 +17,18 @@ export function useEagerActivityNavigation(): {
 } {
   const navigation = useAppStackNavigation()
   const [load] = useTransactionListLazyQuery()
+  const { gqlChains } = useEnabledChains()
 
   const preload = useCallback(
     async (address: string) => {
       await load({
         variables: {
           address,
+          chains: gqlChains,
         },
       })
     },
-    [load],
+    [gqlChains, load],
   )
 
   const navigate = useCallback(
@@ -47,12 +50,13 @@ export function useEagerExternalProfileNavigation(): {
   const navigation = useExploreStackNavigation()
 
   const [load] = useTransactionListLazyQuery()
+  const { gqlChains } = useEnabledChains()
 
   const preload = useCallback(
     async (address: string) => {
-      await load({ variables: { address } })
+      await load({ variables: { address, chains: gqlChains } })
     },
-    [load],
+    [gqlChains, load],
   )
 
   const navigate = useCallback(
@@ -70,16 +74,18 @@ export function useEagerExternalProfileRootNavigation(): {
   navigate: (address: string, callback: () => void) => Promise<void>
 } {
   const [load] = useTransactionListLazyQuery()
+  const { gqlChains } = useEnabledChains()
 
   const preload = useCallback(
     async (address: string) => {
       await load({
         variables: {
           address,
+          chains: gqlChains,
         },
       })
     },
-    [load],
+    [gqlChains, load],
   )
 
   const navigate = useCallback(async (address: string, callback?: () => void) => {

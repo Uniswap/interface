@@ -12,7 +12,7 @@ import { ActionButtonStyle, ActionMenuFlyoutStyle } from 'components/Tokens/Toke
 import { LoadingBubble } from 'components/Tokens/loading'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
+import { chainIdToBackendChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
@@ -64,7 +64,7 @@ const IconBubble = styled(LoadingBubble)`
 `
 
 interface PoolDetailsBreadcrumbProps {
-  chainId?: SupportedInterfaceChainId
+  chainId?: UniverseChainId
   poolAddress?: string
   token0?: Token
   token1?: Token
@@ -120,7 +120,7 @@ const PoolDetailsTitle = ({
 }: {
   token0?: Token
   token1?: Token
-  chainId?: SupportedInterfaceChainId
+  chainId?: UniverseChainId
   feeTier?: number
   protocolVersion?: ProtocolVersion
   toggleReversed: React.DispatchWithoutAction

@@ -31,6 +31,7 @@ import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useTokenAndFiatDisplayAmounts } from 'uniswap/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -114,6 +115,7 @@ export const CurrencyInputPanel = memo(
       const indicativeDisplay = useIndicativeTextDisplay(props)
       const legacyDisplay = useLegacyTextDisplay(props)
 
+      const { isTestnetModeEnabled } = useEnabledChains()
       const display = indicativeQuotesEnabled ? indicativeDisplay : legacyDisplay
       const { value, color, usdValue } = display
 
@@ -327,13 +329,15 @@ export const CurrencyInputPanel = memo(
               <Flex row gap="$spacing8" justifyContent="space-between">
                 <TouchableArea
                   flexShrink={1}
-                  onPress={disabled ? onPressDisabledWithShakeAnimation : _onToggleIsFiatMode}
+                  onPress={disabled || isTestnetModeEnabled ? onPressDisabledWithShakeAnimation : _onToggleIsFiatMode}
                 >
-                  <Flex centered row shrink gap="$spacing4">
-                    <Text color="$neutral2" numberOfLines={1} variant="body3">
-                      {inputPanelFormattedValue}
-                    </Text>
-                  </Flex>
+                  {!isTestnetModeEnabled && (
+                    <Flex centered row shrink gap="$spacing4">
+                      <Text color="$neutral2" numberOfLines={1} variant="body3">
+                        {inputPanelFormattedValue}
+                      </Text>
+                    </Flex>
+                  )}
                 </TouchableArea>
                 <Flex row centered gap="$spacing4" justifyContent="flex-end">
                   {showInsufficientBalanceWarning && <AlertTriangleFilled color="$neutral2" size="$icon.16" />}

@@ -16,6 +16,7 @@ export interface Analytics {
     userIdGetter?: () => Promise<string>,
   ): Promise<void>
   setAllowAnalytics(allowed: boolean): Promise<void>
+  setTestnetMode(enabled: boolean): void
   sendEvent(eventName: string, eventProperties: Record<string, unknown>): void
   flushEvents(): void
   setUserProperty(property: string, value: UserPropertyValue, insert?: boolean): void
@@ -32,6 +33,9 @@ export const analytics: Analytics = {
   },
   setAllowAnalytics(_allowed: boolean): Promise<void> {
     throw new PlatformSplitStubError('flushAnalyticsEvents')
+  },
+  setTestnetMode(_enabled: boolean): void {
+    throw new PlatformSplitStubError('setTestnetMode')
   },
   sendEvent(_eventName: string, ..._eventProperties: unknown[]): void {
     throw new PlatformSplitStubError('sendAnalyticsEvent')

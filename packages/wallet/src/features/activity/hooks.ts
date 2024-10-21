@@ -1,5 +1,6 @@
 import { ApolloError, NetworkStatus } from '@apollo/client'
-import { useCallback, useMemo } from 'react'
+import isEqual from 'lodash/isEqual'
+import { useCallback, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
@@ -9,6 +10,7 @@ import {
 import { usePersistedError } from 'uniswap/src/features/dataApi/utils'
 import { selectNftsVisibility } from 'uniswap/src/features/favorites/selectors'
 import { useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
@@ -18,6 +20,7 @@ import {
   parseDataResponseToFeedTransactionDetails,
   parseDataResponseToTransactionDetails,
 } from 'wallet/src/features/transactions/history/utils'
+import { useMergeLocalAndRemoteTransactions } from 'wallet/src/features/transactions/hooks'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 const LOADING_ITEM = (index: number): LoadingItem => ({ itemType: 'LOADING', id: index })
@@ -34,6 +37,8 @@ export function useFormattedTransactionDataForFeed(
   keyExtractor: (item: TransactionDetails | SectionHeader | LoadingItem) => string
   onRetry: () => void
 } {
+  const { gqlChains } = useEnabledChains()
+
   const {
     refetch,
     networkStatus,
@@ -41,7 +46,7 @@ export function useFormattedTransactionDataForFeed(
     data,
     error: requestError,
   } = useFeedTransactionListQuery({
-    variables: { addresses },
+    variables: { addresses, chains: gqlChains },
     notifyOnNetworkStatusChange: true,
     // TODO: determine how often to poll for feed - currently slow
     pollInterval: PollingInterval.Slow,
@@ -122,10 +127,6 @@ export function useFormattedTransactionDataForFeed(
 export function useFormattedTransactionDataForActivity(
   address: Address,
   hideSpamTokens: boolean,
-  useMergeLocalFunction: (
-    address: Address,
-    remoteTransactions: TransactionDetails[] | undefined,
-  ) => TransactionDetails[] | undefined,
 ): {
   hasData: boolean
   isLoading: boolean
@@ -134,6 +135,8 @@ export function useFormattedTransactionDataForActivity(
   keyExtractor: (item: TransactionDetails | SectionHeader | LoadingItem) => string
   onRetry: () => void
 } {
+  const { gqlChains } = useEnabledChains()
+
   const {
     refetch,
     networkStatus,
@@ -141,7 +144,7 @@ export function useFormattedTransactionDataForActivity(
     data,
     error: requestError,
   } = useTransactionListQuery({
-    variables: { address },
+    variables: { address, chains: gqlChains },
     notifyOnNetworkStatusChange: true,
     // rely on TransactionHistoryUpdater for polling
     pollInterval: undefined,
@@ -175,7 +178,7 @@ export function useFormattedTransactionDataForActivity(
     return parseDataResponseToTransactionDetails(data, hideSpamTokens, nftVisibility, tokenVisibilityOverrides)
   }, [data, hideSpamTokens, tokenVisibilityOverrides, nftVisibility])
 
-  const transactions = useMergeLocalFunction(address, formattedTransactions)
+  const transactions = useMergeLocalAndRemoteTransactions(address, formattedTransactions)
 
   // Format transactions for section list
   const localizedDayjs = useLocalizedDayjs()
@@ -219,11 +222,34 @@ export function useFormattedTransactionDataForActivity(
     ]
   }, [showLoading, hasTransactions, pending, last24hTransactionList, priorByMonthTransactionList])
 
+  const memoizedSectionDataRef = useRef<typeof sectionData | undefined>(undefined)
+
+  // Each `transaction` object is recreated every time the query is refetched.
+  // To avoid re-rendering every single item (even the ones that didn't change), we go through the results and compare them with the previous results.
+  // If the `transaction` already exists in the previous results and is equal to the new one, we keep the reference to old one.
+  // This means that `TransactionSummaryLayout` won't re-render because the props will be exactly the same.
+  const memoizedSectionData = useMemo(() => {
+    if (!memoizedSectionDataRef.current || !sectionData) {
+      return sectionData
+    }
+
+    return sectionData.map((newItem) => {
+      const newItemKey = keyExtractor(newItem)
+      const oldItem = memoizedSectionDataRef.current?.find((_oldItem) => newItemKey === keyExtractor(_oldItem))
+      if (oldItem && isEqual(newItem, oldItem)) {
+        return oldItem
+      }
+      return newItem
+    })
+  }, [keyExtractor, sectionData])
+
+  memoizedSectionDataRef.current = memoizedSectionData
+
   const onRetry = useCallback(async () => {
     await refetch({
       address,
     })
   }, [address, refetch])
 
-  return { onRetry, sectionData, hasData, isError, isLoading, keyExtractor }
+  return { onRetry, sectionData: memoizedSectionData, hasData, isError, isLoading, keyExtractor }
 }

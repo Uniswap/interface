@@ -538,7 +538,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
       }
       suppressHighlighting={true}
     >
-      $500.00
+      $1
     </Text>
   </View>
 </View>

@@ -21,7 +21,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
@@ -34,13 +34,13 @@ interface LogoWithTxStatusBaseProps {
   txType: TransactionType
   txStatus: TransactionStatus
   size: number
-  chainId: WalletChainId | null
+  chainId: UniverseChainId | null
 }
 
 interface DappLogoWithTxStatusProps {
   event: WalletConnectEvent
   size: number
-  chainId: WalletChainId | null
+  chainId: UniverseChainId | null
   dappImageUrl: Maybe<string>
   dappName: string
 }
@@ -239,7 +239,7 @@ export function DappLogoWithWCBadge({
   dappImageUrl: Maybe<string>
   dappName: string
   size: number
-  chainId: WalletChainId | null
+  chainId: UniverseChainId | null
   hideWCBadge?: boolean
   circular?: boolean
 }): JSX.Element {

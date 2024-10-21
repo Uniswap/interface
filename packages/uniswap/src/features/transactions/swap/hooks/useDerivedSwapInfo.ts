@@ -4,6 +4,7 @@ import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useSetTradeSlippage } from 'uniswap/src/features/transactions/swap/hooks/useSetTradeSlippage'
@@ -12,7 +13,6 @@ import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUS
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { getWrapType, isWrapAction } from 'uniswap/src/features/transactions/swap/utils/wrap'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
@@ -36,6 +36,7 @@ export function useDerivedSwapInfo({
   } = state
 
   const account = useAccountMeta()
+  const { defaultChainId } = useEnabledChains()
 
   const currencyInInfo = useCurrencyInfo(
     currencyAssetIn ? buildCurrencyId(currencyAssetIn.chainId, currencyAssetIn.address) : undefined,
@@ -57,7 +58,7 @@ export function useDerivedSwapInfo({
   const currencyIn = currencyInInfo?.currency
   const currencyOut = currencyOutInfo?.currency
 
-  const chainId = currencyIn?.chainId ?? currencyOut?.chainId ?? UniverseChainId.Mainnet
+  const chainId = currencyIn?.chainId ?? currencyOut?.chainId ?? defaultChainId
 
   const { balance: tokenInBalance } = useOnChainCurrencyBalance(currencyIn, account?.address)
   const { balance: tokenOutBalance } = useOnChainCurrencyBalance(currencyOut, account?.address)

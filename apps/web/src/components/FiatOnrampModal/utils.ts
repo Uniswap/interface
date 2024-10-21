@@ -1,6 +1,6 @@
 import { WETH9 } from '@uniswap/sdk-core'
 import { MoonpaySupportedCurrencyCode } from 'components/FiatOnrampModal/constants'
-import { InterfaceGqlChain, getChainFromChainUrlParam, getChainUrlParam } from 'constants/chains'
+import { getChainFromChainUrlParam, getChainUrlParam, InterfaceGqlChain } from 'constants/chains'
 import {
   MATIC_MAINNET,
   USDC_ARBITRUM,

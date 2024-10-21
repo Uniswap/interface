@@ -14,6 +14,7 @@ import { SectionHeader, TokenSectionHeaderProps } from 'uniswap/src/components/T
 import { OnSelectCurrency, TokenOption, TokenSection } from 'uniswap/src/components/TokenSelector/types'
 import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
@@ -23,7 +24,7 @@ function isHorizontalListTokenItem(data: TokenOption | TokenOption[]): data is T
   return Array.isArray(data)
 }
 
-function TokenOptionItemWrapper({
+const TokenOptionItemWrapper = memo(function _TokenOptionItemWrapper({
   tokenOption,
   onSelectCurrency,
   section,
@@ -46,28 +47,37 @@ function TokenOptionItemWrapper({
     [index, onSelectCurrency, section, tokenOption.currencyInfo],
   )
 
+  const { isTestnetModeEnabled } = useEnabledChains()
+
   const { tokenWarningDismissed, onDismissTokenWarning: dismissWarningCallback } = useDismissedTokenWarnings(
     tokenOption.currencyInfo.currency,
   )
 
+  const tokenBalance = formatNumberOrString({
+    value: tokenOption.quantity,
+    type: NumberType.TokenTx,
+  })
+
+  const fiatBalance = convertFiatAmountFormatted(tokenOption.balanceUSD, NumberType.FiatTokenPrice)
+
+  const title = isTestnetModeEnabled ? tokenBalance : fiatBalance
+  const subtitle = isTestnetModeEnabled ? undefined : tokenBalance
+
   return (
     <TokenOptionItem
-      balance={convertFiatAmountFormatted(tokenOption.balanceUSD, NumberType.FiatTokenPrice)}
+      balance={title}
       dismissWarningCallback={dismissWarningCallback}
       isKeyboardOpen={isKeyboardOpen}
       option={tokenOption}
       quantity={tokenOption.quantity}
-      quantityFormatted={formatNumberOrString({
-        value: tokenOption.quantity,
-        type: NumberType.TokenTx,
-      })}
+      quantityFormatted={subtitle}
       showTokenAddress={showTokenAddress}
       showWarnings={showWarnings}
       tokenWarningDismissed={tokenWarningDismissed}
       onPress={onPress}
     />
   )
-}
+})
 
 function EmptyResults(): JSX.Element {
   const { t } = useTranslation()
@@ -142,7 +152,12 @@ function _TokenSelectorList({
 
   const renderSectionHeader = useCallback(
     ({ section }: { section: TokenSectionHeaderProps }): JSX.Element => (
-      <SectionHeader rightElement={section.rightElement} sectionKey={section.sectionKey} name={section.name} />
+      <SectionHeader
+        rightElement={section.rightElement}
+        endElement={section.endElement}
+        sectionKey={section.sectionKey}
+        name={section.name}
+      />
     ),
     [],
   )

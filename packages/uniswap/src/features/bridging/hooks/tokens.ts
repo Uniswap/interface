@@ -5,11 +5,14 @@ import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
 import { createEmptyTokenOptionFromBridgingToken } from 'uniswap/src/components/TokenSelector/utils'
 import { useTradingApiSwappableTokensQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
 import { tradingApiSwappableTokenToCurrencyInfo } from 'uniswap/src/data/apiClients/tradingApi/utils/tradingApiSwappableTokenToCurrencyInfo'
+import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
+import { useTokenProjectsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GetSwappableTokensResponse } from 'uniswap/src/data/tradingApi/__generated__'
 import { GqlResult } from 'uniswap/src/data/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import {
@@ -17,18 +20,18 @@ import {
   getTokenAddressFromChainForTradingApi,
   toTradingApiSupportedChainId,
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
-import { UniverseChainId, WALLET_SUPPORTED_CHAIN_IDS, WalletChainId } from 'uniswap/src/types/chains'
+import { COMBINED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 
 export function useBridgingTokenWithHighestBalance({
+  address,
   currencyAddress,
   currencyChainId,
-  otherChainBalances,
 }: {
+  address: Address
   currencyAddress: Address
-  currencyChainId: WalletChainId
-  otherChainBalances: PortfolioBalance[] | null
+  currencyChainId: UniverseChainId
 }):
   | {
       token: GetSwappableTokensResponse['tokens'][number]
@@ -38,8 +41,21 @@ export function useBridgingTokenWithHighestBalance({
   | undefined {
   const isBridgingEnabled = useFeatureFlag(FeatureFlags.Bridging)
 
+  const currencyId = buildCurrencyId(currencyChainId, currencyAddress)
   const tokenIn = currencyAddress ? getTokenAddressFromChainForTradingApi(currencyAddress, currencyChainId) : undefined
   const tokenInChainId = toTradingApiSupportedChainId(currencyChainId)
+
+  const { data: tokenProjectsData } = useTokenProjectsQuery({
+    variables: { contracts: [currencyIdToContractInput(currencyId)] },
+  })
+
+  const crossChainTokens = tokenProjectsData?.tokenProjects?.[0]?.tokens
+
+  const { otherChainBalances } = useCrossChainBalances({
+    address,
+    currencyId,
+    crossChainTokens,
+  })
 
   const { data: bridgingTokens } = useTradingApiSwappableTokensQuery({
     params:
@@ -177,7 +193,7 @@ function useBridgingTokensToTokenOptions(
     }
 
     // We sort the tokens by chain in the same order chains in the network selector
-    const chainOrder = WALLET_SUPPORTED_CHAIN_IDS
+    const chainOrder = COMBINED_CHAIN_IDS
     const sortedBridgingTokens = [...bridgingTokens].sort((a, b) => {
       if (!a || !b) {
         return 0

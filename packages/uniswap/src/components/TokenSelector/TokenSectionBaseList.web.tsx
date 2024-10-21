@@ -65,7 +65,7 @@ export function TokenSectionBaseList({
   const items = useMemo(() => {
     return sections.reduce((acc: BaseListData[], section) => {
       const sectionInfo: BaseListSectionRowInfo = {
-        section: { sectionKey: section.sectionKey, rightElement: section.rightElement },
+        section: { sectionKey: section.sectionKey, rightElement: section.rightElement, endElement: section.endElement },
         key: section.sectionKey,
         renderSectionHeader,
       }

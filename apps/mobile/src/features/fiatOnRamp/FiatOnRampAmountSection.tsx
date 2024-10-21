@@ -165,6 +165,35 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
       currency.currencyInfo?.currency,
     )
 
+    // Workaround to avoid incorrect input width calculations by react-native
+    // Decimal numbers were manually calculated for Basel Grotesk fonts and will
+    // require an adjustment when the font is changed
+    const calculatedInputWidth = [...value].reduce(
+      (acc, numStr) => {
+        switch (numStr) {
+          case '1':
+            return acc + fontSize * 0.393
+          case '2':
+          case '6':
+          case '8':
+            return acc + fontSize * 0.596
+          case '3':
+            return acc + fontSize * 0.595
+          case '4':
+          case '0':
+          default:
+            return acc + fontSize * 0.62
+          case '5':
+          case '7':
+            return acc + fontSize * 0.602
+          case '9':
+            return acc + fontSize * 0.607
+        }
+      },
+      // ensures a proper width for a "0" placeholder or adds 3 points for the input caret
+      value.length === 0 ? fontSize * 0.62 : 3,
+    )
+
     return (
       <Flex
         alignItems="center"
@@ -213,6 +242,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
               placeholderTextColor="$neutral3"
               px="$none"
               py="$none"
+              minWidth={calculatedInputWidth}
               returnKeyType={undefined}
               showSoftInputOnFocus={false}
               textAlign="left"

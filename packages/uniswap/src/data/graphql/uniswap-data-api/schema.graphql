@@ -1,26 +1,19 @@
 """This directive allows results to be deferred during execution"""
 directive @defer on FIELD
 
-"""
-Tells the service this field/object has access authorized by an API key.
-"""
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
-
 """Directs the schema to enforce authorization on a field"""
 directive @aws_auth(
   """List of cognito user pool groups which have access on this field"""
   cognito_groups: [String]
 ) on FIELD_DEFINITION
 
-"""
-Tells the service this field/object has access authorized by a Lambda Authorizer.
-"""
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an OIDC token.
-"""
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
+"""Tells the service which mutation triggers this subscription."""
+directive @aws_subscribe(
+  """
+  List of mutations which will trigger this subscription when they are called.
+  """
+  mutations: [String]
+) on FIELD_DEFINITION
 
 """
 Tells the service which subscriptions will be published to when this mutation is
@@ -34,6 +27,21 @@ directive @aws_publish(
 ) on FIELD_DEFINITION
 
 """
+Tells the service this field/object has access authorized by an API key.
+"""
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an OIDC token.
+"""
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by sigv4 signing.
+"""
+directive @aws_iam on OBJECT | FIELD_DEFINITION
+
+"""
 Tells the service this field/object has access authorized by a Cognito User Pools token.
 """
 directive @aws_cognito_user_pools(
@@ -42,17 +50,9 @@ directive @aws_cognito_user_pools(
 ) on OBJECT | FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by sigv4 signing.
+Tells the service this field/object has access authorized by a Lambda Authorizer.
 """
-directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""Tells the service which mutation triggers this subscription."""
-directive @aws_subscribe(
-  """
-  List of mutations which will trigger this subscription when they are called.
-  """
-  mutations: [String]
-) on FIELD_DEFINITION
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
 
 """
   Types, unions, and inputs (alphabetized):
@@ -187,6 +187,8 @@ enum Chain {
   BLAST
   ZORA
   ZKSYNC
+  ASTROCHAIN_SEPOLIA
+  WORLDCHAIN
   UNKNOWN_CHAIN
 }
 
@@ -1091,6 +1093,7 @@ enum SwapOrderType {
   DUTCH
   LIMIT
   DUTCH_V2
+  PRIORITY
 }
 
 type TimestampedAmount implements IAmount {

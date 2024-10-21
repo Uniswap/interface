@@ -1,6 +1,6 @@
 import { Percent } from '@uniswap/sdk-core'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
+import { chainIdToBackendChain } from 'constants/chains'
 import { OrderDirection } from 'graphql/data/util'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useAtomValue } from 'jotai/utils'
@@ -14,6 +14,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export function sortPools(pools: TablePool[], sortState: PoolTableSortState) {
   return pools.sort((a, b) => {
@@ -121,7 +122,7 @@ function useFilteredPools(pools: TablePool[]) {
   )
 }
 
-export function useTopPools(sortState: PoolTableSortState, chainId?: SupportedInterfaceChainId) {
+export function useTopPools(sortState: PoolTableSortState, chainId?: UniverseChainId) {
   const isWindowVisible = useIsWindowVisible()
   const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
   const {

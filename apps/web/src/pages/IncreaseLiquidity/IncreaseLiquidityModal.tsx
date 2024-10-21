@@ -4,10 +4,11 @@ import {
   useIncreaseLiquidityContext,
 } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
 import { IncreaseLiquidityReview } from 'components/IncreaseLiquidity/IncreaseLiquidityReview'
+import { IncreaseLiquidityTxContextProvider } from 'components/IncreaseLiquidity/IncreaseLiquidityTxContext'
 import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
 import { IncreaseLiquidityForm } from 'pages/IncreaseLiquidity/IncreaseLiquidityForm'
 import { useCloseModal } from 'state/application/hooks'
-import { Flex } from 'ui/src'
+import { Flex, HeightAnimator } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useTranslation } from 'uniswap/src/i18n'
@@ -24,7 +25,7 @@ function IncreaseLiquidityModalInner() {
       modalContent = <IncreaseLiquidityForm />
       break
     case IncreaseLiquidityStep.Review:
-      modalContent = <IncreaseLiquidityReview />
+      modalContent = <IncreaseLiquidityReview onClose={onClose} />
       break
   }
 
@@ -37,7 +38,7 @@ function IncreaseLiquidityModalInner() {
           goBack={step === IncreaseLiquidityStep.Review ? () => setStep(IncreaseLiquidityStep.Input) : undefined}
         />
       </Flex>
-      {modalContent}
+      <HeightAnimator animation="fast">{modalContent}</HeightAnimator>
     </Modal>
   )
 }
@@ -45,7 +46,9 @@ function IncreaseLiquidityModalInner() {
 export function IncreaseLiquidityModal() {
   return (
     <IncreaseLiquidityContextProvider>
-      <IncreaseLiquidityModalInner />
+      <IncreaseLiquidityTxContextProvider>
+        <IncreaseLiquidityModalInner />
+      </IncreaseLiquidityTxContextProvider>
     </IncreaseLiquidityContextProvider>
   )
 }

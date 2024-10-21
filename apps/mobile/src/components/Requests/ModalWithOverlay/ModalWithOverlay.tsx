@@ -13,10 +13,11 @@ import {
 } from 'react-native'
 import { AnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { ScrollDownOverlay } from 'src/components/Requests/ModalWithOverlay/ScrollDownOverlay'
-import { Button, Flex, useDeviceInsets } from 'ui/src'
+import { Button, Flex } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const MEASURE_LAYOUT_TIMEOUT = 100
@@ -156,7 +157,7 @@ function ModalFooter({
   onConfirm,
 }: ModalFooterProps): JSX.Element {
   const { t } = useTranslation()
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const { animatedPosition, animatedHandleHeight, animatedFooterHeight, animatedContainerHeight } =
     useBottomSheetInternal()
 

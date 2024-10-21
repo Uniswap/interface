@@ -55,6 +55,7 @@ export const createMockTradeWithStatus = (
         outputAmount,
       },
     ],
+    v4Routes: [],
     mixedRoutes: [],
   }),
   indicativeTrade: undefined,

@@ -8,7 +8,7 @@ import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { currencyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
 import { faker } from 'uniswap/src/test/shared'
 import { createFixture, randomChoice, randomEnumValue } from 'uniswap/src/test/utils'
-import { WALLET_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
+import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import {
   AppErrorNotification,
@@ -74,7 +74,7 @@ const transactionNotificationBase = createFixture<TransactionNotificationBase>()
   txType: randomEnumValue(TransactionType),
   txStatus: randomChoice(FINALIZED_TRANSACTION_STATUSES),
   txId: faker.datatype.uuid(),
-  chainId: randomChoice(WALLET_SUPPORTED_CHAIN_IDS),
+  chainId: randomChoice(SUPPORTED_CHAIN_IDS),
 }))
 
 export const approveTxNotification = createFixture<ApproveTxNotification>()(() => ({
@@ -160,7 +160,7 @@ export const successNotification = createFixture<SuccessNotification>()(() => ({
 export const swapNetworkNotification = createFixture<NetworkChangedNotification>()(() => ({
   ...appNotificationBase(),
   type: AppNotificationType.NetworkChanged,
-  chainId: randomChoice(WALLET_SUPPORTED_CHAIN_IDS),
+  chainId: randomChoice(SUPPORTED_CHAIN_IDS),
   flow: 'swap',
 }))
 

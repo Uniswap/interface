@@ -1,3 +1,5 @@
+import { PlatformSplitStubError } from 'utilities/src/errors'
+
 export const useIsShortMobileDevice = (): boolean => {
-  return false
+  throw new PlatformSplitStubError('useIsShortMobileDevice')
 }

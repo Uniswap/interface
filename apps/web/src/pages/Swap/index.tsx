@@ -28,6 +28,7 @@ import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generat
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -43,7 +44,7 @@ import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/ho
 import { Deadline } from 'uniswap/src/features/transactions/swap/settings/configs/Deadline'
 import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/asset'
 import { useTranslation } from 'uniswap/src/i18n'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -124,7 +125,7 @@ export function Swap({
   swapRedirectCallback,
 }: {
   className?: string
-  chainId?: InterfaceChainId
+  chainId?: UniverseChainId
   onCurrencyChange?: (selected: CurrencyState) => void
   disableTokenInputs?: boolean
   initialInputCurrency?: Currency
@@ -144,6 +145,7 @@ export function Swap({
   const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
 
   const universalSwapFlow = useFeatureFlag(FeatureFlags.UniversalSwap)
+  const { isTestnetModeEnabled } = useEnabledChains()
 
   const input = currencyToAsset(initialInputCurrency)
   const output = currencyToAsset(initialOutputCurrency)
@@ -158,7 +160,7 @@ export function Swap({
     selectingCurrencyField: isSwapTokenSelectorOpen ? CurrencyField.OUTPUT : undefined,
   })
 
-  if (universalSwapFlow) {
+  if (universalSwapFlow || isTestnetModeEnabled) {
     return (
       <SwapAndLimitContextProvider
         initialChainId={chainId}

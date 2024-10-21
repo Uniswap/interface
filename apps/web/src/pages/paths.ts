@@ -32,7 +32,7 @@ export const paths = [
   '/positions',
   '/positions/create',
   '/positions/create/:protocolVersion',
-  '/positions/v2/:currencyIdA/:currencyIdB',
+  '/positions/v2/:pairAddress',
   '/positions/v3/:tokenId',
   '/positions/v4/:tokenId',
   '/add/v2',

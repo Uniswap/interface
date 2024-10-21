@@ -1,10 +1,11 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, FlexProps, SpaceTokens, Text, isWeb, useDeviceInsets, useSporeColors } from 'ui/src'
+import { Flex, FlexProps, SpaceTokens, Text, isWeb, useSporeColors } from 'ui/src'
 import { X } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { isMobileApp } from 'utilities/src/platform'
 import { NftView } from 'wallet/src/components/nfts/NftView'
 import { NftViewWithContextMenu } from 'wallet/src/components/nfts/NftViewWithContextMenu'
@@ -33,7 +34,7 @@ export const ChooseNftModal = ({
   onClose,
 }: ChooseNftModalProps): JSX.Element => {
   const colors = useSporeColors()
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const { t } = useTranslation()
 
   const renderNFT = (item: NFTItem): JSX.Element => {

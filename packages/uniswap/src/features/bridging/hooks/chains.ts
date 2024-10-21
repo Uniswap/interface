@@ -18,8 +18,9 @@ export function useNumBridgingChains(): number {
   })
 
   const chainSet = useMemo(() => new Set(bridgingTokens?.tokens.map((t) => t.chainId)), [bridgingTokens])
+  const numChains = chainSet.size + 1
 
-  return chainSet.size + 1 ?? FALLBACK_NUM_CHAINS
+  return numChains > 4 ? numChains : FALLBACK_NUM_CHAINS
 }
 
 export function useIsBridgingChain(chainId: UniverseChainId): boolean {

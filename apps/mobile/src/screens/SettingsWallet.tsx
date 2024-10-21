@@ -33,11 +33,11 @@ import TextEditIcon from 'ui/src/assets/icons/textEdit.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useENS } from 'uniswap/src/features/ens/useENS'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
@@ -57,8 +57,9 @@ export function SettingsWallet({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const addressToAccount = useAccounts()
+  const { defaultChainId } = useEnabledChains()
   const currentAccount = addressToAccount[address]
-  const ensName = useENS(UniverseChainId.Mainnet, address)?.name
+  const ensName = useENS(defaultChainId, address)?.name
   const { unitag } = useUnitagByAddress(address)
   const readonly = currentAccount?.type === AccountType.Readonly
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
@@ -218,7 +219,8 @@ const renderItemSeparator = (): JSX.Element => <Flex pt="$spacing8" />
 
 function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
   const { t } = useTranslation()
-  const ensName = useENS(UniverseChainId.Mainnet, address)?.name
+  const { defaultChainId } = useEnabledChains()
+  const ensName = useENS(defaultChainId, address)?.name
   const { unitag } = useUnitagByAddress(address)
 
   const onPressEditProfile = (): void => {

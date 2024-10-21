@@ -1,5 +1,5 @@
 import { useNavigation } from '@react-navigation/core'
-import { default as React, useCallback, useMemo } from 'react'
+import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { SvgProps } from 'react-native-svg'
@@ -20,7 +20,7 @@ import { APP_FEEDBACK_LINK } from 'src/constants/urls'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricName, useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { Flex, IconProps, Text, useDeviceInsets, useSporeColors } from 'ui/src'
+import { Flex, IconProps, Text, useSporeColors } from 'ui/src'
 import BookOpenIcon from 'ui/src/assets/icons/book-open.svg'
 import ContrastIcon from 'ui/src/assets/icons/contrast.svg'
 import FaceIdIcon from 'ui/src/assets/icons/faceid.svg'
@@ -38,19 +38,29 @@ import {
   OSDynamicCloudIcon,
   ShieldQuestion,
   WavePulse,
+  Wrench,
 } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
-import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
-import { setHideSmallBalances, setHideSpamTokens } from 'uniswap/src/features/settings/slice'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import {
+  useEnabledChains,
+  useHideSmallBalancesSetting,
+  useHideSpamTokensSetting,
+} from 'uniswap/src/features/settings/hooks'
+import { setHideSmallBalances, setHideSpamTokens, setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
+import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { isAndroid } from 'utilities/src/platform'
+import { TestnetModeModal } from 'wallet/src/components/modals/TestnetModeModal'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { selectHapticsEnabled, setHapticsUserSettingEnabled } from 'wallet/src/features/appearance/slice'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
@@ -64,7 +74,7 @@ export function SettingsScreen(): JSX.Element {
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
   const dispatch = useDispatch()
   const colors = useSporeColors()
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const { deviceSupportsBiometrics } = useBiometricContext()
   const { t } = useTranslation()
 
@@ -96,6 +106,33 @@ export function SettingsScreen(): JSX.Element {
       dispatch(setHapticsUserSettingEnabled(!hapticsUserEnabled))
     }, AVOID_RENDER_DURING_ANIMATION_MS)
   }, [dispatch, hapticsUserEnabled])
+
+  const isTestnetModeFlagEnabled = useFeatureFlag(FeatureFlags.TestnetMode)
+  const [isTestnetModalOpen, setIsTestnetModalOpen] = useState(false)
+  const { isTestnetModeEnabled } = useEnabledChains()
+  const handleTestnetModeToggle = useCallback((): void => {
+    const newIsTestnetMode = !isTestnetModeEnabled
+
+    const fireAnalytic = (): void =>
+      sendAnalyticsEvent(WalletEventName.TestnetModeToggled, {
+        enabled: newIsTestnetMode,
+      })
+
+    setTimeout(() => {
+      // trigger before toggling on (ie disabling analytics)
+      if (newIsTestnetMode) {
+        fireAnalytic()
+      }
+
+      setIsTestnetModalOpen(newIsTestnetMode)
+      dispatch(setIsTestnetModeEnabled(newIsTestnetMode))
+
+      // trigger after toggling off (ie enabling analytics)
+      if (!newIsTestnetMode) {
+        fireAnalytic()
+      }
+    }, AVOID_RENDER_DURING_ANIMATION_MS)
+  }, [dispatch, isTestnetModeEnabled])
 
   // Signer account info
   const signerAccount = useSignerAccounts()[0]
@@ -151,13 +188,15 @@ export function SettingsScreen(): JSX.Element {
           {
             text: t('settings.setting.smallBalances.title'),
             icon: <Chart {...iconProps} />,
-            isToggleEnabled: hideSmallBalances,
+            isToggleEnabled: hideSmallBalances && !isTestnetModeEnabled,
+            disabled: isTestnetModeEnabled,
             onToggle: onToggleHideSmallBalances,
           },
           {
             text: t('settings.setting.unknownTokens.title'),
             icon: <ShieldQuestion {...iconProps} />,
-            isToggleEnabled: hideSpamTokens,
+            isToggleEnabled: hideSpamTokens && !isTestnetModeEnabled,
+            disabled: isTestnetModeEnabled,
             onToggle: onToggleHideSpamTokens,
           },
           {
@@ -171,7 +210,16 @@ export function SettingsScreen(): JSX.Element {
             text: t('settings.setting.privacy.title'),
             icon: <LineChartDots {...iconProps} />,
           },
-          // @TODO: [MOB-250] add back testnet toggle once we support testnets
+          ...(isTestnetModeFlagEnabled
+            ? [
+                {
+                  text: t('settings.setting.wallet.testnetMode.title'),
+                  icon: <Wrench {...iconProps} />,
+                  isToggleEnabled: isTestnetModeEnabled,
+                  onToggle: handleTestnetModeToggle,
+                },
+              ]
+            : []),
         ],
       },
       {
@@ -298,6 +346,9 @@ export function SettingsScreen(): JSX.Element {
     signerAccount?.address,
     walletNeedsRestore,
     hasCloudBackup,
+    isTestnetModeFlagEnabled,
+    isTestnetModeEnabled,
+    handleTestnetModeToggle,
   ])
 
   const renderItem = ({
@@ -312,8 +363,11 @@ export function SettingsScreen(): JSX.Element {
     return <SettingsRow key={item.screen} navigation={navigation} page={item} />
   }
 
+  const handleModalClose = useCallback(() => setIsTestnetModalOpen(false), [])
+
   return (
     <HeaderScrollScreen alwaysShowCenterElement centerElement={<Text variant="body1">{t('settings.title')}</Text>}>
+      <TestnetModeModal isOpen={isTestnetModalOpen} onClose={handleModalClose} />
       <Flex pb={insets.bottom - spacing.spacing16} pt="$spacing12" px="$spacing24">
         <SectionList
           ItemSeparatorComponent={renderItemSeparator}

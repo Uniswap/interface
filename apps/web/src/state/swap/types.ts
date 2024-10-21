@@ -1,7 +1,7 @@
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Dispatch, ReactNode, SetStateAction, createContext } from 'react'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
@@ -59,7 +59,7 @@ type SwapAndLimitContextType = {
     inputCurrency?: Currency
     outputCurrency?: Currency
   }
-  setSelectedChainId: Dispatch<SetStateAction<InterfaceChainId | undefined | null>>
+  setSelectedChainId: Dispatch<SetStateAction<UniverseChainId | undefined | null>>
   isUserSelectedToken: boolean
   setIsUserSelectedToken: Dispatch<SetStateAction<boolean>>
   setCurrencyState: Dispatch<SetStateAction<CurrencyState>>
@@ -67,9 +67,9 @@ type SwapAndLimitContextType = {
   setCurrentTab: Dispatch<SetStateAction<SwapTab>>
   // The chainId of the context - can be different from the connected Chain ID
   // if multichain UX is enabled, otherwise it will be the same as the connected chain ID
-  chainId?: InterfaceChainId
+  chainId?: UniverseChainId
   // The initial chain ID - used by TDP and PDP pages to keep swap scoped to the initial chain
-  initialChainId?: InterfaceChainId
+  initialChainId?: UniverseChainId
   multichainUXEnabled?: boolean
   // Components may use swap and limit context while outside of the context
   // this flag is used to determine if we should fallback to account.chainId

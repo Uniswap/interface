@@ -1,6 +1,7 @@
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import { isWeb } from 'tamagui'
 import { DEFAULT_BOTTOM_INSET } from 'ui/src/hooks/constants'
+// eslint-disable-next-line no-restricted-imports
 import { useDeviceInsets } from 'ui/src/hooks/useDeviceInsets'
 
 const IPHONE_MINI_SAFE_AREA_HEIGHT = 812 - DEFAULT_BOTTOM_INSET

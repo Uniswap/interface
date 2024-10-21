@@ -9,7 +9,7 @@ import {
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export function changeChain({
   activeConnectedAddress,
@@ -22,7 +22,7 @@ export function changeChain({
   dappUrl: string | undefined
   provider: JsonRpcProvider | undefined | null
   requestId: string
-  updatedChainId: WalletChainId | null
+  updatedChainId: UniverseChainId | null
 }): ChangeChainResponse | ErrorResponse {
   if (!updatedChainId) {
     return {

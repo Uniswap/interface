@@ -1,6 +1,5 @@
 import { MaxUint256, permit2Address } from '@uniswap/permit2-sdk'
 import { Currency } from '@uniswap/sdk-core'
-import { SupportedInterfaceChainId } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { ApproveInfo, WrapInfo } from 'state/routing/types'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
@@ -32,11 +31,11 @@ export async function getApproveInfo(
 
   // routing-api under estimates gas for Arbitrum swaps so it inflates cost per gas by a lot
   // so disable showing approves for Arbitrum until routing-api gives more accurate gas estimates
-  if (currency.chainId === UniverseChainId.ArbitrumOne || currency.chainId === UniverseChainId.ArbitrumGoerli) {
+  if (currency.chainId === UniverseChainId.ArbitrumOne) {
     return { needsApprove: false }
   }
 
-  const provider = RPC_PROVIDERS[currency.chainId as SupportedInterfaceChainId]
+  const provider = RPC_PROVIDERS[currency.chainId as UniverseChainId]
   const tokenContract = getContract(currency.address, ERC20_ABI, provider) as Erc20
 
   let approveGasUseEstimate
@@ -64,7 +63,7 @@ export async function getApproveInfo(
 export async function getWrapInfo(
   needsWrap: boolean,
   account: string | undefined,
-  chainId: SupportedInterfaceChainId,
+  chainId: UniverseChainId,
   amount: string,
   usdCostPerGas?: number,
 ): Promise<WrapInfo> {

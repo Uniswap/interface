@@ -8,7 +8,8 @@ import { Flex, Text, useSporeColors } from 'ui/src'
 import { TextVariantTokens, iconSizes } from 'ui/src/theme'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useENS } from 'uniswap/src/features/ens/useENS'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { EthMethod, EthTransaction } from 'uniswap/src/types/walletConnect'
 import { getValidAddress, shortenAddress } from 'uniswap/src/utils/addresses'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
@@ -38,7 +39,8 @@ type AddressButtonProps = {
 const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps): JSX.Element => {
   const { name } = useENS(chainId, address, false)
   const colors = useSporeColors()
-  const supportedChainId = toSupportedChainId(chainId) ?? UniverseChainId.Mainnet
+  const { defaultChainId } = useEnabledChains()
+  const supportedChainId = toSupportedChainId(chainId) ?? defaultChainId
 
   return (
     <LinkButton
@@ -109,7 +111,7 @@ function TransactionDetails({
   chainId,
   transaction,
 }: {
-  chainId: WalletChainId
+  chainId: UniverseChainId
   transaction: EthTransaction
 }): JSX.Element {
   const { t } = useTranslation()

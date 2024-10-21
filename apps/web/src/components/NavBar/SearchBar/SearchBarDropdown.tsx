@@ -31,7 +31,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
 import { Trans } from 'uniswap/src/i18n'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 interface SearchBarDropdownSectionProps {
@@ -365,7 +365,7 @@ function SearchBarDropdownContents({
   )
 }
 
-function ComingSoonText({ chainId }: { chainId: InterfaceChainId }) {
+function ComingSoonText({ chainId }: { chainId: UniverseChainId }) {
   const chainName = UNIVERSE_CHAIN_INFO[chainId]?.name
   return BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(chainId) ? (
     <Trans i18nKey="search.chainComing" values={{ chainName }} />

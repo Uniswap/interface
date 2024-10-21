@@ -1,5 +1,5 @@
 import { Flex, useIsDarkMode } from 'ui/src'
-import { PolygonPurple } from 'ui/src/components/logos'
+import { PolygonPurple } from 'ui/src/components/logos/PolygonPurple'
 import { colors, imageSizes, opacify } from 'ui/src/theme'
 
 export const PolygonElement = (): JSX.Element => {

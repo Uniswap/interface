@@ -39,7 +39,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getFormattedCurrencyAmount } from 'uniswap/src/utils/currency'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
@@ -63,7 +63,7 @@ export function useFormatExactCurrencyAmount(currencyAmount: string, currency: M
 /** Returns a new externalTransactionId and a callback to store the transaction. */
 export function useFiatOnRampTransactionCreator(
   ownerAddress: string,
-  chainId: WalletChainId,
+  chainId: UniverseChainId,
   serviceProvider?: string,
 ): {
   externalTransactionId: string

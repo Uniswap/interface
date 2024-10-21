@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { Trans } from 'uniswap/src/i18n'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const InvalidDetailsContainer = styled.div`
   padding-top: 128px;
@@ -43,7 +43,7 @@ export default function InvalidTokenDetails({
   pageChainId,
   isInvalidAddress,
 }: {
-  pageChainId: InterfaceChainId
+  pageChainId: UniverseChainId
   isInvalidAddress?: boolean
 }) {
   const { chainId } = useAccount()

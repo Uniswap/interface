@@ -18,6 +18,7 @@ jest.mock('uniswap/src/features/transactions/swap/hooks/useWrapTransactionReques
 jest.mock('uniswap/src/features/gas/hooks')
 jest.mock('uniswap/src/features/gating/hooks', () => {
   return {
+    ...jest.requireActual('uniswap/src/features/gating/hooks'),
     useDynamicConfigValue: jest.fn().mockImplementation((config: unknown, key: unknown, defaultVal: unknown) => {
       return defaultVal
     }),

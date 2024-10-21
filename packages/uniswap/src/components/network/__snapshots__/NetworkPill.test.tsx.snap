@@ -5,11 +5,11 @@ exports[`NetworkPill renders a NetworkPill with border 1`] = `
   style={
     {
       "alignItems": "center",
-      "backgroundColor": "#21C95E1a",
+      "backgroundColor": "#FFFFFF1a",
       "borderBottomLeftRadius": 999999,
       "borderBottomRightRadius": 999999,
       "borderBottomWidth": 1,
-      "borderColor": "#21C95E",
+      "borderColor": "#FFFFFF",
       "borderLeftWidth": 1,
       "borderRightWidth": 1,
       "borderStyle": "solid",
@@ -31,7 +31,7 @@ exports[`NetworkPill renders a NetworkPill with border 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#21C95E",
+        "color": "#FFFFFF",
         "fontFamily": "Basel Grotesk",
         "fontSize": 16,
         "fontWeight": "400",
@@ -41,7 +41,7 @@ exports[`NetworkPill renders a NetworkPill with border 1`] = `
     }
     suppressHighlighting={true}
   >
-    Görli
+    Ethereum
   </Text>
 </View>
 `;
@@ -51,7 +51,7 @@ exports[`NetworkPill renders a NetworkPill without image 1`] = `
   style={
     {
       "alignItems": "center",
-      "backgroundColor": "#21C95E1a",
+      "backgroundColor": "#FFFFFF1a",
       "borderBottomLeftRadius": 999999,
       "borderBottomRightRadius": 999999,
       "borderBottomWidth": 1,
@@ -77,7 +77,7 @@ exports[`NetworkPill renders a NetworkPill without image 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#21C95E",
+        "color": "#FFFFFF",
         "fontFamily": "Basel Grotesk",
         "fontSize": 16,
         "fontWeight": "400",
@@ -87,7 +87,7 @@ exports[`NetworkPill renders a NetworkPill without image 1`] = `
     }
     suppressHighlighting={true}
   >
-    Görli
+    Ethereum
   </Text>
 </View>
 `;
@@ -97,7 +97,7 @@ exports[`NetworkPill renders an InlineNetworkPill 1`] = `
   style={
     {
       "alignItems": "center",
-      "backgroundColor": "#21C95E1a",
+      "backgroundColor": "#FFFFFF1a",
       "borderBottomLeftRadius": 8,
       "borderBottomRightRadius": 8,
       "borderBottomWidth": 1,
@@ -123,7 +123,7 @@ exports[`NetworkPill renders an InlineNetworkPill 1`] = `
     maxFontSizeMultiplier={1.2}
     style={
       {
-        "color": "#21C95E",
+        "color": "#FFFFFF",
         "fontFamily": "Basel Grotesk",
         "fontSize": 14,
         "fontWeight": "500",
@@ -133,7 +133,7 @@ exports[`NetworkPill renders an InlineNetworkPill 1`] = `
     }
     suppressHighlighting={true}
   >
-    Görli
+    Ethereum
   </Text>
 </View>
 `;

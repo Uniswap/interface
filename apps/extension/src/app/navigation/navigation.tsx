@@ -17,6 +17,7 @@ import { AnimatePresence, Flex, SpinningLoader, styled } from 'ui/src'
 import { useIsChromeWindowFocusedWithTimeout } from 'uniswap/src/extension/useIsChromeWindowFocused'
 import { useAsyncData, usePrevious } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { TestnetModeBanner } from 'wallet/src/components/banners/TestnetModeBanner'
 import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
 import { QueuedOrderModal } from 'wallet/src/features/transactions/swap/modals/QueuedOrderModal'
@@ -110,6 +111,7 @@ export function WebNavigation(): JSX.Element {
           ]}
         >
           <Flex fill grow overflow="visible">
+            <TestnetModeBanner />
             {isLoggedIn === null ? (
               <Loading />
             ) : isLoggedIn === true ? (

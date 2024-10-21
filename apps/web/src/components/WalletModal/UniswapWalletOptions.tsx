@@ -3,7 +3,6 @@ import { GooglePlayStoreLogo } from 'components/Icons/GooglePlayStoreLogo'
 import { DownloadWalletOption } from 'components/WalletModal/DownloadWalletOption'
 import { DetectedBadge } from 'components/WalletModal/shared'
 import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
-import { CONNECTION } from 'components/Web3Provider/constants'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useConnect } from 'hooks/useConnect'
@@ -15,6 +14,7 @@ import { AppStoreLogo } from 'ui/src/components/icons/AppStoreLogo'
 import { PhoneDownload } from 'ui/src/components/icons/PhoneDownload'
 import { ScanQr } from 'ui/src/components/icons/ScanQr'
 import { iconSizes } from 'ui/src/theme'
+import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { Trans } from 'uniswap/src/i18n'
 import { isMobileWeb, isWebIOS } from 'utilities/src/platform'
 import { openDownloadApp } from 'utils/openDownloadApp'
@@ -44,10 +44,13 @@ export const AppIcon = styled.img`
 `
 
 export function UniswapWalletOptions() {
-  const uniswapExtensionConnector = useConnectorWithId(CONNECTION.UNISWAP_EXTENSION_RDNS)
-  const uniswapWalletConnectConnector = useConnectorWithId(CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID, {
-    shouldThrow: true,
-  })
+  const uniswapExtensionConnector = useConnectorWithId(CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS)
+  const uniswapWalletConnectConnector = useConnectorWithId(
+    CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
+    {
+      shouldThrow: true,
+    },
+  )
 
   const { connect } = useConnect()
 

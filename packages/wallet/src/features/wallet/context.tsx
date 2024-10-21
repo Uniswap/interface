@@ -3,7 +3,7 @@ import { Signer } from 'ethers'
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react'
 import { call, getContext } from 'typed-redux-saga'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
@@ -63,7 +63,7 @@ export function useProviderManager(): ProviderManager {
   return useContext(WalletContext).value.providers
 }
 
-export function useProvider(chainId: WalletChainId) {
+export function useProvider(chainId: UniverseChainId) {
   return useProviderManager().tryGetProvider(chainId)
 }
 
@@ -72,13 +72,13 @@ export function* getProviderManager() {
   return (yield* getContext<ProviderManager>('providers')) ?? walletContextValue.providers
 }
 
-export function* getProvider(chainId: WalletChainId) {
+export function* getProvider(chainId: UniverseChainId) {
   const providerManager = yield* call(getProviderManager)
   // Note, unlike useWalletProvider above, this throws on missing provider
   return providerManager.getProvider(chainId)
 }
 
-export function* getPrivateProvider(chainId: WalletChainId, account?: SignerMnemonicAccountMeta) {
+export function* getPrivateProvider(chainId: UniverseChainId, account?: SignerMnemonicAccountMeta) {
   let signer: Signer | undefined
   if (account) {
     const signerManager = yield* call(getSignerManager)
@@ -91,7 +91,7 @@ export function* getPrivateProvider(chainId: WalletChainId, account?: SignerMnem
 /**
  * Non-generator version of getProvider
  */
-export function getProviderSync(chainId: WalletChainId) {
+export function getProviderSync(chainId: UniverseChainId) {
   return walletContextValue.providers.getProvider(chainId)
 }
 

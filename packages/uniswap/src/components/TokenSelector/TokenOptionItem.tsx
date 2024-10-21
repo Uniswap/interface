@@ -31,7 +31,7 @@ interface OptionProps {
   // TODO(WEB-3643): Share localization context with WEB
   // (balance, quantityFormatted)
   balance: string
-  quantityFormatted: string
+  quantityFormatted?: string
   isSelected?: boolean
 }
 
@@ -175,9 +175,11 @@ function _TokenOptionItem({
           {!isSelected && quantity && quantity !== 0 ? (
             <Flex alignItems="flex-end">
               <Text variant="body1">{balance}</Text>
-              <Text color="$neutral2" variant="body3">
-                {quantityFormatted}
-              </Text>
+              {quantityFormatted && (
+                <Text color="$neutral2" variant="body3">
+                  {quantityFormatted}
+                </Text>
+              )}
             </Flex>
           ) : null}
         </Flex>

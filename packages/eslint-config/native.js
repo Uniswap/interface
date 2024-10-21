@@ -144,7 +144,7 @@ module.exports = {
           {
             name: 'react-native-safe-area-context',
             importNames: ['useSafeAreaInsets'],
-            message: 'Use our internal `useDeviceInsets` hook instead.',
+            message: 'Use our internal `useAppInsets` hook instead.',
           },
           {
             name: 'react-native',
@@ -161,6 +161,11 @@ module.exports = {
             name: 'wallet/src/data/__generated__/types-and-hooks',
             importNames: ['usePortfolioBalancesQuery'],
             message: 'Use `usePortfolioBalances` instead.',
+          },
+          {
+            name: 'uniswap/src/features/settings/selectors',
+            importNames: ['selectIsTestnetModeEnabled'],
+            message: 'Use `useEnabledChains` instead.',
           },
           {
             name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',

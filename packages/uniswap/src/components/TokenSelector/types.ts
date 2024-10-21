@@ -20,7 +20,6 @@ export enum TokenOptionSection {
   SearchResults = 'searchResults',
   SuggestedTokens = 'suggestedTokens',
   BridgingTokens = 'bridgingTokens',
-  SearchResultsByNetwork = 'searchResultsByNetwork',
 }
 
 export type TokenSection = {
@@ -28,6 +27,7 @@ export type TokenSection = {
   sectionKey: TokenOptionSection
   name?: string
   rightElement?: JSX.Element
+  endElement?: JSX.Element
 }
 
 export type TokenSectionsHookProps = {

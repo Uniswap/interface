@@ -22,12 +22,16 @@ export function* getChainId(request: GetChainIdRequest, { id }: SenderTabInfo, d
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function* getChainIdNoDappInfo(request: GetChainIdRequest, { id }: SenderTabInfo) {
-  // Sending mainnet as default chain for unconnected dapps
+export function* getChainIdNoDappInfo(
+  request: GetChainIdRequest,
+  { id }: SenderTabInfo,
+  defaultChainId: UniverseChainId,
+) {
+  // Sending default chain for unconnected dapps
   const response: ChainIdResponse = {
     type: DappResponseType.ChainIdResponse,
     requestId: request.requestId,
-    chainId: chainIdToHexadecimalString(UniverseChainId.Mainnet),
+    chainId: chainIdToHexadecimalString(defaultChainId),
   }
 
   yield* call(dappResponseMessageChannel.sendMessageToTab, id, response)

@@ -1,4 +1,3 @@
-import { SupportedInterfaceChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
@@ -12,6 +11,7 @@ import {
   UniswapXOrderDetails,
 } from 'state/signatures/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export function useAllSignatures(): { [id: string]: SignatureDetails } {
   const account = useAccount()
@@ -55,7 +55,7 @@ export function useAddOrder() {
     (
       offerer: string,
       orderHash: string,
-      chainId: SupportedInterfaceChainId,
+      chainId: UniverseChainId,
       expiry: number,
       swapInfo: UniswapXOrderDetails['swapInfo'],
       encodedOrder: string,

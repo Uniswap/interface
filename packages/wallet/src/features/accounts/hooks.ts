@@ -7,6 +7,7 @@ import {
 import { GqlResult } from 'uniswap/src/data/types'
 // eslint-disable-next-line no-restricted-imports
 import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 
 export function useAccountList({
   addresses,
@@ -22,9 +23,11 @@ export function useAccountList({
   networkStatus: NetworkStatus
   refetch: () => void
 } {
+  const { gqlChains } = useEnabledChains()
+
   const valueModifiers = usePortfolioValueModifiers(addresses)
   const { data, loading, networkStatus, refetch, startPolling, stopPolling } = useAccountListQuery({
-    variables: { addresses, valueModifiers },
+    variables: { addresses, valueModifiers, chains: gqlChains },
     notifyOnNetworkStatusChange,
     fetchPolicy,
   })

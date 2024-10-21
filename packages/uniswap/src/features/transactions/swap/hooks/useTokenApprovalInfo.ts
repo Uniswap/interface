@@ -12,12 +12,12 @@ import {
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export interface TokenApprovalInfoParams {
-  chainId: WalletChainId
+  chainId: UniverseChainId
   wrapType: WrapType
   currencyInAmount: Maybe<CurrencyAmount<Currency>>
   currencyOutAmount?: Maybe<CurrencyAmount<Currency>>

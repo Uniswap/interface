@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount, Percent, Price, TradeType } from '@uniswap/sd
 import { UnsignedV2DutchOrderInfo, V2DutchOrderTrade, PriorityOrderTrade as IPriorityOrderTrade, UnsignedPriorityOrderInfo } from '@uniswap/uniswapx-sdk'
 import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
+import { Route as V4RouteSDK } from '@uniswap/v4-sdk'
 import { AxiosError } from 'axios'
 import { BridgeQuoteResponse, ClassicQuoteResponse, DiscriminatedQuoteResponse, DutchQuoteResponse, PriorityQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { BigNumber, providers } from 'ethers/lib/ethers'
@@ -145,6 +146,11 @@ export class ClassicTrade<
     }[]
     readonly mixedRoutes: {
       mixedRoute: MixedRouteSDK<TInput, TOutput>
+      inputAmount: CurrencyAmount<TInput>
+      outputAmount: CurrencyAmount<TOutput>
+    }[]
+    readonly v4Routes: {
+      routev4: V4RouteSDK<TInput, TOutput>
       inputAmount: CurrencyAmount<TInput>
       outputAmount: CurrencyAmount<TOutput>
     }[]

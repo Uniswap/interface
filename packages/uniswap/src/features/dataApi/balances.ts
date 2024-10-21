@@ -1,6 +1,5 @@
 import { NetworkStatus, Reference, useApolloClient, WatchQueryFetchPolicy } from '@apollo/client'
 import { useCallback, useMemo } from 'react'
-import { GQL_MAINNET_CHAINS_MUTABLE } from 'uniswap/src/constants/chains'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
   ContractInput,
@@ -14,7 +13,11 @@ import { GqlResult } from 'uniswap/src/data/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency, currencyIdToContractInput, usePersistedError } from 'uniswap/src/features/dataApi/utils'
-import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
+import {
+  useEnabledChains,
+  useHideSmallBalancesSetting,
+  useHideSpamTokensSetting,
+} from 'uniswap/src/features/settings/hooks'
 import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -68,6 +71,8 @@ export function usePortfolioBalances({
 
   const valueModifiers = usePortfolioValueModifiers(address)
 
+  const { gqlChains } = useEnabledChains()
+
   const {
     data: balancesData,
     loading,
@@ -79,7 +84,7 @@ export function usePortfolioBalances({
     notifyOnNetworkStatusChange: true,
     onCompleted,
     pollInterval: internalPollInterval,
-    variables: address ? { ownerAddress: address, valueModifiers, chains: GQL_MAINNET_CHAINS_MUTABLE } : undefined,
+    variables: address ? { ownerAddress: address, valueModifiers, chains: gqlChains } : undefined,
     skip: !address,
   })
 
@@ -179,6 +184,7 @@ export function usePortfolioTotalValue({
   })
 
   const valueModifiers = usePortfolioValueModifiers(address)
+  const { gqlChains } = useEnabledChains()
 
   const {
     data: balancesData,
@@ -191,7 +197,7 @@ export function usePortfolioTotalValue({
     notifyOnNetworkStatusChange: true,
     onCompleted,
     pollInterval: internalPollInterval,
-    variables: address ? { ownerAddress: address, valueModifiers, chains: GQL_MAINNET_CHAINS_MUTABLE } : undefined,
+    variables: address ? { ownerAddress: address, valueModifiers, chains: gqlChains } : undefined,
     skip: !address,
   })
 
@@ -411,6 +417,7 @@ export function sortPortfolioBalances(balances: PortfolioBalance[]): PortfolioBa
  */
 export function usePortfolioCacheUpdater(address: string): PortfolioCacheUpdater {
   const apolloClient = useApolloClient()
+  const { gqlChains } = useEnabledChains()
 
   const updater = useCallback(
     (hidden: boolean, portfolioBalance?: PortfolioBalance) => {
@@ -422,6 +429,7 @@ export function usePortfolioCacheUpdater(address: string): PortfolioCacheUpdater
         query: PortfolioBalanceDocument,
         variables: {
           owner: address,
+          chains: gqlChains,
         },
       })?.portfolios?.[0]
 
@@ -466,7 +474,7 @@ export function usePortfolioCacheUpdater(address: string): PortfolioCacheUpdater
         },
       })
     },
-    [apolloClient, address],
+    [apolloClient, address, gqlChains],
   )
 
   return updater

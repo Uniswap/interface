@@ -7,15 +7,13 @@ import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { IndicativeLoadingWrapper } from 'uniswap/src/components/misc/IndicativeLoadingWrapper'
 import {
   useFormattedUniswapXGasFeeInfo,
+  useGasFeeFormattedAmounts,
   useGasFeeHighRelativeToValue,
-  useUSDValue,
 } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NetworkFeeWarning } from 'uniswap/src/features/transactions/swap/modals/NetworkFeeWarning'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { NumberType } from 'utilities/src/format/types'
 
 export function NetworkFee({
   chainId,
@@ -31,10 +29,12 @@ export function NetworkFee({
   indicative?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
-  const { convertFiatAmountFormatted } = useLocalizationContext()
 
-  const gasFeeUSD = useUSDValue(chainId, gasFee.value ?? undefined)
-  const gasFeeFormatted = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)
+  const { gasFeeFormatted, gasFeeUSD } = useGasFeeFormattedAmounts({
+    gasFee,
+    chainId,
+    placeholder: '-',
+  })
 
   const uniswapXGasFeeInfo = useFormattedUniswapXGasFeeInfo(uniswapXGasBreakdown, chainId)
 

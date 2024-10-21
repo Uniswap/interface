@@ -1,4 +1,4 @@
-import { PropsWithChildren, ReactElement, memo, useMemo } from 'react'
+import React, { PropsWithChildren, ReactElement, memo, useMemo } from 'react'
 import { I18nManager } from 'react-native'
 import { SharedValue, useDerivedValue } from 'react-native-reanimated'
 import { LineChart, LineChartProvider } from 'react-native-wagmi-charts'
@@ -11,10 +11,12 @@ import { useLineChartPrice } from 'src/components/PriceExplorer/usePrice'
 import { PriceNumberOfDigits, TokenSpotData, useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
 import { Loader } from 'src/components/loading/loaders'
 import { Flex, SegmentedControl, Text, useHapticFeedback } from 'ui/src'
+import GraphCurve from 'ui/src/assets/backgrounds/graph-curve.svg'
 import { spacing } from 'ui/src/theme'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -72,6 +74,9 @@ export const PriceExplorer = memo(function PriceExplorer({
     useTokenPriceHistory(currencyId)
   const { hapticFeedback } = useHapticFeedback()
 
+  const { isTestnetModeEnabled } = useEnabledChains()
+  const { chartHeight, chartWidth } = useChartDimensions()
+
   const { convertFiatAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount(1).amount
   const shouldShowAnimatedDot =
@@ -97,6 +102,10 @@ export const PriceExplorer = memo(function PriceExplorer({
       }
     )
   }, [data, convertedSpotValue])
+
+  if (isTestnetModeEnabled) {
+    return <GraphCurve height={chartHeight} width={chartWidth} opacity={0.25} />
+  }
 
   if (!loading && (!convertedPriceHistory || (!convertedSpot && selectedDuration === HistoryDuration.Day))) {
     // Propagate retry up while refetching, if available

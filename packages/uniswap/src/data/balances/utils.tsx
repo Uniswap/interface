@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { GQL_MAINNET_CHAINS_MUTABLE } from 'uniswap/src/constants/chains'
 import { PortfolioBalancesQueryResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { logger } from 'utilities/src/logger/logger'
 
 /**
@@ -13,13 +13,15 @@ export function useTotalBalancesUsdPerChain(
     undefined,
   )
 
+  const { gqlChains } = useEnabledChains()
+
   useEffect(() => {
     const calculateBalancesPerChain = async (): Promise<void> => {
       if (!portfolioBalances.data?.portfolios?.[0]?.tokenBalances) {
         return
       }
 
-      const totalBalances = GQL_MAINNET_CHAINS_MUTABLE.reduce(
+      const totalBalances = gqlChains.reduce(
         (chainAcc, chain) => {
           chainAcc[chain] =
             portfolioBalances.data?.portfolios?.[0]?.tokenBalances?.reduce((balanceAcc, tokenBalance) => {
@@ -37,7 +39,7 @@ export function useTotalBalancesUsdPerChain(
     }
 
     calculateBalancesPerChain().catch((error) => logger.error('useTotalBalancesUsdPerChain', error))
-  }, [portfolioBalances.data?.portfolios])
+  }, [portfolioBalances.data?.portfolios, gqlChains])
 
   return totalBalancesUsdPerChain
 }

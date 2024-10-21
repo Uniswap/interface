@@ -1,10 +1,10 @@
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { GQL_MAINNET_CHAINS_MUTABLE } from 'uniswap/src/constants/chains'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useTotalBalancesUsdPerChain } from 'uniswap/src/data/balances/utils'
 import { usePortfolioBalancesQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { MobileAppsFlyerEvents, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
@@ -48,9 +48,11 @@ export function useLastBalancesReporter(): void {
     fetchPolicy: 'cache-first',
   })
 
+  const { gqlChains } = useEnabledChains()
+
   const portfolioBalancesQuery = usePortfolioBalancesQuery({
     fetchPolicy: 'cache-only',
-    variables: account?.address ? { ownerAddress: account.address, chains: GQL_MAINNET_CHAINS_MUTABLE } : undefined,
+    variables: account?.address ? { ownerAddress: account.address, chains: gqlChains } : undefined,
   })
   const totalBalancesUsdPerChain = useTotalBalancesUsdPerChain(portfolioBalancesQuery)
 

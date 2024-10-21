@@ -4,7 +4,7 @@ import { Flex, Separator, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron, WalletFilled } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { RecipientList } from 'wallet/src/components/RecipientSearch/RecipientList'
 import { RecipientSelectSpeedBumps } from 'wallet/src/components/RecipientSearch/RecipientSelectSpeedBumps'
 import { useFilteredRecipientSections } from 'wallet/src/components/RecipientSearch/hooks'
@@ -12,7 +12,7 @@ import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 
 type RecipientPanelProps = {
-  chainId?: WalletChainId
+  chainId?: UniverseChainId
 }
 
 export function RecipientPanel({ chainId }: RecipientPanelProps): JSX.Element {

@@ -10,6 +10,7 @@ import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ElementName, ModalName, SectionName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InformationBanner } from 'wallet/src/components/banners/InformationBanner'
@@ -36,7 +37,13 @@ type TokenBalanceListProps = {
 export const TokenBalanceList = memo(function _TokenBalanceList({ owner }: TokenBalanceListProps): JSX.Element {
   const { navigateToTokenDetails } = useWalletNavigation()
 
+  const { isTestnetModeEnabled } = useEnabledChains()
+
   const onPressToken = (currencyId: string): void => {
+    if (isTestnetModeEnabled) {
+      return
+    }
+
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
       element: ElementName.TokenItem,
       section: SectionName.HomeTokensTab,

@@ -4,8 +4,9 @@ import { RefreshControl } from 'react-native'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
-import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
@@ -30,7 +31,7 @@ export const NftsTab = memo(
     ref,
   ) {
     const colors = useSporeColors()
-    const insets = useDeviceInsets()
+    const insets = useAppInsets()
     const navigation = useAppStackNavigation()
 
     const { onContentSizeChange, footerHeight, adaptiveFooter } = useAdaptiveFooter(

@@ -1,10 +1,10 @@
-import { CHAIN_IDS_TO_NAMES, SupportedInterfaceChainId } from 'constants/chains'
+import { CHAIN_IDS_TO_NAMES } from 'constants/chains'
 import AppJsonRpcProvider from 'rpc/AppJsonRpcProvider'
 import ConfiguredJsonRpcProvider from 'rpc/ConfiguredJsonRpcProvider'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { WEB_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
+import { SUPPORTED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/types/chains'
 
-function getAppProvider(chainId: SupportedInterfaceChainId) {
+function getAppProvider(chainId: UniverseChainId) {
   const info = UNIVERSE_CHAIN_INFO[chainId]
   return new AppJsonRpcProvider(
     info.rpcUrls.appOnly.http.map(
@@ -15,5 +15,5 @@ function getAppProvider(chainId: SupportedInterfaceChainId) {
 
 /** These are the only JsonRpcProviders used directly by the interface. */
 export const RPC_PROVIDERS = Object.fromEntries(
-  WEB_SUPPORTED_CHAIN_IDS.map((chain) => [chain as SupportedInterfaceChainId, getAppProvider(chain)]),
-) as Record<SupportedInterfaceChainId, AppJsonRpcProvider>
+  SUPPORTED_CHAIN_IDS.map((chain) => [chain as UniverseChainId, getAppProvider(chain)]),
+) as Record<UniverseChainId, AppJsonRpcProvider>

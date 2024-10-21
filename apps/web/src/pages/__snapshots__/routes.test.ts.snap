@@ -156,7 +156,7 @@ Array [
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
-    "path": "/positions/v2/:currencyIdA/:currencyIdB",
+    "path": "/positions/v2/:pairAddress",
   },
   Object {
     "enabled": [Function],

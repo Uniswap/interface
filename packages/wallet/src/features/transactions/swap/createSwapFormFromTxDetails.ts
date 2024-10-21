@@ -8,7 +8,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { currencyAddress, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
+import { currencyAddress, currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 
@@ -44,6 +44,7 @@ export function createSwapFormFromTxDetails({
     const { inputCurrencyAmountRaw, outputCurrencyAmountRaw } = getAmountsFromTrade(typeInfo)
     const inputAddress = currencyIdToAddress(typeInfo.inputCurrencyId)
     const outputAddress = currencyIdToAddress(typeInfo.outputCurrencyId)
+    const outputChainId = currencyIdToChain(typeInfo.outputCurrencyId)
 
     const inputAsset: CurrencyAsset = {
       address: inputAddress,
@@ -51,11 +52,13 @@ export function createSwapFormFromTxDetails({
       type: AssetType.Currency,
     }
 
-    const outputAsset: CurrencyAsset = {
-      address: outputAddress,
-      chainId,
-      type: AssetType.Currency,
-    }
+    const outputAsset: CurrencyAsset | null = outputChainId
+      ? {
+          address: outputAddress,
+          chainId: outputChainId,
+          type: AssetType.Currency,
+        }
+      : null
 
     const exactCurrencyField = isBridging
       ? CurrencyField.INPUT

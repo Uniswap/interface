@@ -5,7 +5,7 @@ import {
   SearchPopularTokensQuery,
   useSearchPopularTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 
 export type TopToken = NonNullable<NonNullable<SearchPopularTokensQuery['topTokens']>[0]>
@@ -17,6 +17,7 @@ export function usePopularTokens(): {
 } {
   // Load popular tokens by top Uniswap trading volume
   const { data, loading } = useSearchPopularTokensQuery()
+  const { defaultChainId } = useEnabledChains()
 
   const popularTokens = useMemo(() => {
     if (!data || !data.topTokens) {
@@ -27,7 +28,7 @@ export function usePopularTokens(): {
     // eth will be defined only if all the required data is available
     // when eth data is not fully available, we do not replace weth with eth
     const eth = data?.eth && data?.eth.length > 0 && data?.eth?.[0]?.project ? data.eth[0] : null
-    const wethAddress = getWrappedNativeAddress(UniverseChainId.Mainnet)
+    const wethAddress = getWrappedNativeAddress(defaultChainId)
 
     return data.topTokens
       .map((token) => {
@@ -45,7 +46,7 @@ export function usePopularTokens(): {
         return token
       })
       .filter((t): t is TopToken => Boolean(t))
-  }, [data])
+  }, [data, defaultChainId])
 
   return { popularTokens, loading }
 }

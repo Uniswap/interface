@@ -13,12 +13,12 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useNetworkColors } from 'uniswap/src/utils/colors'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
@@ -183,10 +183,11 @@ function CurrencyValueWithIcon({
   indicative: boolean
   isBridgeTrade: boolean
 }): JSX.Element {
+  const { defaultChainId } = useEnabledChains()
   const amountColor = indicative ? '$neutral2' : shouldDim ? '$neutral3' : '$neutral1'
   const fiatColor = indicative || shouldDim ? '$neutral3' : '$neutral2'
 
-  const chainId = toSupportedChainId(currencyInfo.currency.chainId) ?? UniverseChainId.Mainnet
+  const chainId = toSupportedChainId(currencyInfo.currency.chainId) ?? defaultChainId
   const networkColors = useNetworkColors(chainId)
   const networkLabel = UNIVERSE_CHAIN_INFO[chainId].label
   const networkColor = validColor(networkColors.foreground)

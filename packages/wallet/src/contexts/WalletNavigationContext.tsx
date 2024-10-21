@@ -4,7 +4,7 @@ import { AssetType } from 'uniswap/src/entities/assets'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { getSwapPrefilledState } from 'uniswap/src/features/transactions/swap/hooks/useSwapPrefilledState'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { getSendPrefilledState } from 'wallet/src/features/transactions/send/getSendPrefilledState'
@@ -16,7 +16,7 @@ type NavigateToTransactionFlowTransactionState = {
 type NavigateToSwapFlowPartialState = {
   currencyField: CurrencyField
   currencyAddress: Address
-  currencyChainId: WalletChainId
+  currencyChainId: UniverseChainId
 }
 
 type NavigateToSwapFlowWithActions = {
@@ -24,7 +24,7 @@ type NavigateToSwapFlowWithActions = {
 }
 
 type NavigateToSendFlowPartialState = {
-  chainId: WalletChainId
+  chainId: UniverseChainId
   currencyAddress?: Address
 }
 
@@ -56,7 +56,10 @@ function isNavigateToSendFlowArgsPartialState(args: NavigateToSendFlowArgs): arg
   return Boolean(args && (args as NavigateToSendFlowPartialState).chainId !== undefined)
 }
 
-export function getNavigateToSwapFlowArgsInitialState(args: NavigateToSwapFlowArgs): TransactionState | undefined {
+export function getNavigateToSwapFlowArgsInitialState(
+  args: NavigateToSwapFlowArgs,
+  defaultChainId: UniverseChainId,
+): TransactionState | undefined {
   if (isNavigateToTransactionFlowArgsInitialState(args)) {
     return args.initialState
   } else if (isNavigateToSwapFlowArgsPartialState(args)) {
@@ -65,7 +68,7 @@ export function getNavigateToSwapFlowArgsInitialState(args: NavigateToSwapFlowAr
     return {
       [CurrencyField.INPUT]: {
         address: DEFAULT_NATIVE_ADDRESS,
-        chainId: UniverseChainId.Mainnet,
+        chainId: defaultChainId,
         type: AssetType.Currency,
       },
       [CurrencyField.OUTPUT]: null,
@@ -90,7 +93,7 @@ export type NavigateToNftItemArgs = {
   owner?: Address
   address: Address
   tokenId: string
-  chainId?: WalletChainId
+  chainId?: UniverseChainId
   isSpam?: boolean
   fallbackData?: NFTItem
 }

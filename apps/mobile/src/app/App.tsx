@@ -77,7 +77,9 @@ import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
+import { TestnetModeBanner } from 'wallet/src/components/banners/TestnetModeBanner'
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
+import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
 // eslint-disable-next-line no-restricted-imports
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { initFirebaseAppCheck } from 'wallet/src/features/appCheck/appCheck'
@@ -359,6 +361,8 @@ function AppInner(): JSX.Element {
   const hapticsUserEnabled = useSelector(selectHapticsEnabled)
   const { setHapticsEnabled } = useHapticFeedback()
 
+  useTestnetModeForLoggingAndAnalytics()
+
   // handles AppsFlyer enable/disable based on the allow analytics toggle
   useEffect(() => {
     if (allowAnalytics) {
@@ -397,6 +401,7 @@ function AppInner(): JSX.Element {
     <>
       {openAIAssistantEnabled && <AIAssistantScreen />}
       <OfflineBanner />
+      <TestnetModeBanner />
       <AppStackNavigator />
       <StatusBar translucent backgroundColor="transparent" barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
     </>

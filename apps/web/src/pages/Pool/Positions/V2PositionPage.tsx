@@ -3,15 +3,17 @@ import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pool
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { parseRestPosition, useV2PositionDerivedInfo } from 'components/Liquidity/utils'
+import { LoadingRows } from 'components/Loader/styled'
 import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
 import { HeaderButton } from 'pages/Pool/Positions/PositionPage'
+import { LoadingRow } from 'pages/Pool/Positions/shared'
 import { useMemo } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { Flex, Main, Text, styled } from 'ui/src'
-import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
+import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -32,21 +34,20 @@ const BodyWrapper = styled(Main, {
 })
 
 export default function V2PositionPage() {
-  const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
+  const { pairAddress } = useParams<{ pairAddress: string }>()
   const account = useAccount()
 
-  const { data } = useGetPositionsQuery(
+  const { data, isLoading: positionLoading } = useGetPositionQuery(
     account.address
       ? {
-          token0: currencyIdA,
-          token1: currencyIdB,
-          address: account.address,
-          protocolVersions: [ProtocolVersion.V2],
+          owner: account.address,
+          protocolVersion: ProtocolVersion.V2,
+          pairAddress,
+          chainId: account.chainId,
         }
       : undefined,
   )
-  // TODO(WEB-4920): select the right position from the list, or use an endpoint that returns one position
-  const position = data?.positions[0]
+  const position = data?.position
   const positionInfo = useMemo(() => parseRestPosition(position), [position])
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
@@ -61,9 +62,25 @@ export default function V2PositionPage() {
     return <Navigate to="/pools" replace />
   }
 
-  if (!position || !positionInfo || !liquidityAmount || !currency0Amount || !currency1Amount) {
-    // TODO(WEB-4920): handle loading/error states
-    return null
+  if (positionLoading || !position || !positionInfo || !liquidityAmount || !currency0Amount || !currency1Amount) {
+    return (
+      <BodyWrapper>
+        <LoadingRows>
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+        </LoadingRows>
+      </BodyWrapper>
+    )
   }
 
   return (

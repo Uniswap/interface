@@ -3,7 +3,7 @@ import { AssetType } from 'uniswap/src/entities/assets'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FinalizedTransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 
 export enum AppNotificationType {
@@ -58,7 +58,7 @@ export interface TransactionNotificationBase extends AppNotificationBase {
   txType: TransactionType
   txStatus: FinalizedTransactionStatus
   txId: string
-  chainId: WalletChainId
+  chainId: UniverseChainId
   tokenAddress?: string
 }
 
@@ -220,7 +220,7 @@ export interface NotSupportedNetworkNotification extends AppNotificationBase {
 
 export interface TransactionPendingNotification extends AppNotificationBase {
   type: AppNotificationType.TransactionPending
-  chainId: WalletChainId
+  chainId: UniverseChainId
 }
 
 export interface PasswordChangedNotification extends AppNotificationBase {
