@@ -1,10 +1,18 @@
-import { assert, errorToString, NotImplementedError } from 'utilities/src/errors'
+import { assert, errorToString, NotImplementedError, PlatformSplitStubError } from 'utilities/src/errors'
 
-describe('NotImplementedError', () => {
+describe(NotImplementedError, () => {
   it('throws an error with the correct message', () => {
     expect(() => {
       throw new NotImplementedError('functionName')
-    }).toThrow('functionName() not implemented. Did you forget a platform override?')
+    }).toThrow('functionName is not implemented on this platform.')
+  })
+})
+
+describe(PlatformSplitStubError, () => {
+  it('throws an error with the correct message', () => {
+    expect(() => {
+      throw new PlatformSplitStubError('functionName')
+    }).toThrow('functionName not implemented. Did you forget a platform override?')
   })
 })
 

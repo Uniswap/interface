@@ -5,12 +5,14 @@ import {
   USDB_BLAST,
   USDC,
   USDC_ARBITRUM,
+  USDC_ASTROCHAIN_SEPOLIA,
   USDC_AVALANCHE,
   USDC_BASE,
   USDC_CELO,
-  USDC_GOERLI,
   USDC_OPTIMISM,
   USDC_POLYGON,
+  USDC_SEPOLIA,
+  USDC_WORLD_CHAIN,
   USDC_ZKSYNC,
   USDC_ZORA,
   USDT_BNB,
@@ -24,7 +26,7 @@ import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 // The amount is large enough to filter low liquidity pairs.
 export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
   [UniverseChainId.Mainnet]: CurrencyAmount.fromRawAmount(USDC, 100_000e6),
-  [UniverseChainId.Goerli]: CurrencyAmount.fromRawAmount(USDC_GOERLI, 100_000e6),
+  [UniverseChainId.Sepolia]: CurrencyAmount.fromRawAmount(USDC_SEPOLIA, 100_000e6),
   [UniverseChainId.ArbitrumOne]: CurrencyAmount.fromRawAmount(USDC_ARBITRUM, 10_000e6),
   [UniverseChainId.Base]: CurrencyAmount.fromRawAmount(USDC_BASE, 10_000e6),
   [UniverseChainId.Bnb]: CurrencyAmount.fromRawAmount(USDT_BNB, 10_000e18),
@@ -33,15 +35,20 @@ export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> }
   [UniverseChainId.Blast]: CurrencyAmount.fromRawAmount(USDB_BLAST, 10_000e18),
   [UniverseChainId.Avalanche]: CurrencyAmount.fromRawAmount(USDC_AVALANCHE, 10_000e6),
   [UniverseChainId.Celo]: CurrencyAmount.fromRawAmount(USDC_CELO, 10_000e18),
+  [UniverseChainId.WorldChain]: CurrencyAmount.fromRawAmount(USDC_WORLD_CHAIN, 10_000e6),
   [UniverseChainId.Zora]: CurrencyAmount.fromRawAmount(USDC_ZORA, 10_000e6),
   [UniverseChainId.Zksync]: CurrencyAmount.fromRawAmount(USDC_ZKSYNC, 10_000e6),
+  [UniverseChainId.AstrochainSepolia]: CurrencyAmount.fromRawAmount(USDC_ASTROCHAIN_SEPOLIA, 10_000e6),
 }
 
 /**
  * Returns the price in USDC of the input currency
  * @param currency currency to compute the USDC price of
  */
-export function useUSDCPrice(currency?: Currency): Price<Currency, Currency> | undefined {
+export function useUSDCPrice(currency?: Currency): {
+  price: Price<Currency, Currency> | undefined
+  isLoading: boolean
+} {
   const chainId = currency?.chainId
 
   const quoteAmount = chainId ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
@@ -53,7 +60,7 @@ export function useUSDCPrice(currency?: Currency): Price<Currency, Currency> | u
   )
   const amountSpecified = currencyIsStablecoin ? undefined : quoteAmount
 
-  const { trade } = useTrade({
+  const { trade, isLoading } = useTrade({
     amountSpecified,
     otherCurrency: currency,
     tradeType: TradeType.EXACT_OUTPUT,
@@ -63,27 +70,27 @@ export function useUSDCPrice(currency?: Currency): Price<Currency, Currency> | u
 
   return useMemo(() => {
     if (!stablecoin) {
-      return
+      return { price: undefined, isLoading: false }
     }
 
     if (currencyIsStablecoin) {
       // handle stablecoin
-      return new Price(stablecoin, stablecoin, '1', '1')
+      return { price: new Price(stablecoin, stablecoin, '1', '1'), isLoading: false }
     }
 
     if (!trade || !isClassic(trade) || !trade.routes?.[0] || !quoteAmount || !currency) {
-      return
+      return { price: undefined, isLoading }
     }
 
     const { numerator, denominator } = trade.routes[0].midPrice
-    return new Price(currency, stablecoin, denominator, numerator)
-  }, [currency, stablecoin, currencyIsStablecoin, quoteAmount, trade])
+    return { price: new Price(currency, stablecoin, denominator, numerator), isLoading }
+  }, [currency, stablecoin, currencyIsStablecoin, quoteAmount, trade, isLoading])
 }
 
 export function useUSDCValue(
   currencyAmount: CurrencyAmount<Currency> | undefined | null,
 ): CurrencyAmount<Currency> | null {
-  const price = useUSDCPrice(currencyAmount?.currency)
+  const { price } = useUSDCPrice(currencyAmount?.currency)
 
   return useMemo(() => {
     if (!price || !currencyAmount) {
@@ -95,4 +102,29 @@ export function useUSDCValue(
       return null
     }
   }, [currencyAmount, price])
+}
+
+/**
+ * @param currencyAmount
+ * @returns Returns fiat value of the currency amount, and loading status of the currency<->stable quote
+ */
+export function useUSDCValueWithStatus(currencyAmount: CurrencyAmount<Currency> | undefined | null): {
+  value: CurrencyAmount<Currency> | null
+  isLoading: boolean
+} {
+  const { price, isLoading } = useUSDCPrice(currencyAmount?.currency)
+
+  return useMemo(() => {
+    if (!price || !currencyAmount) {
+      return { value: null, isLoading }
+    }
+    try {
+      return { value: price.quote(currencyAmount), isLoading }
+    } catch (error) {
+      return {
+        value: null,
+        isLoading: false,
+      }
+    }
+  }, [currencyAmount, isLoading, price])
 }

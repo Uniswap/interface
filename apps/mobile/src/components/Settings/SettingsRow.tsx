@@ -9,14 +9,13 @@ import {
   SettingsStackParamList,
 } from 'src/app/navigation/types'
 import { openModal } from 'src/features/modals/modalSlice'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Switch, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { openUri } from 'uniswap/src/utils/linking'
-import { Switch } from 'wallet/src/components/buttons/Switch'
-import { Arrow } from 'wallet/src/components/icons/Arrow'
 
 export interface SettingsSection {
   subTitle: string
@@ -36,6 +35,7 @@ export interface SettingsSectionItem {
   screenProps?: ValueOf<SettingsStackParamList> | NavigatorScreenParams<OnboardingStackParamList>
   externalLink?: string
   action?: JSX.Element
+  disabled?: boolean
   text: string
   subText?: string
   icon: JSX.Element
@@ -56,6 +56,7 @@ export function SettingsRow({
     modal,
     screenProps,
     externalLink,
+    disabled,
     action,
     icon,
     text,
@@ -97,14 +98,14 @@ export function SettingsRow({
               {text}
             </Text>
             {subText && (
-              <Text color="$neutral2" numberOfLines={1} variant="buttonLabel4">
+              <Text color="$neutral2" numberOfLines={1} variant="buttonLabel2">
                 {subText}
               </Text>
             )}
           </Flex>
         </Flex>
         {onToggle && typeof isToggleEnabled === 'boolean' ? (
-          <Switch value={isToggleEnabled} onValueChange={onToggle} />
+          <Switch checked={isToggleEnabled} variant="branded" disabled={disabled} onCheckedChange={onToggle} />
         ) : screen || modal ? (
           <Flex centered row>
             {currentSetting ? (

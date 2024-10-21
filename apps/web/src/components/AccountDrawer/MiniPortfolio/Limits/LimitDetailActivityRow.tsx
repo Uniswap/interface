@@ -6,17 +6,17 @@ import {
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import PortfolioRow from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import { FormatType, formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
-import Column from 'components/Column'
-import Row from 'components/Row'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import { parseUnits } from 'ethers/lib/utils'
 import { useCurrencyInfo } from 'hooks/Tokens'
-import { useScreenSize } from 'hooks/screenSize'
+import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import styled, { useTheme } from 'lib/styled-components'
-import { Checkbox } from 'nft/components/layout/Checkbox'
 import { useMemo, useState } from 'react'
 import { ArrowRight } from 'react-feather'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { UniswapXOrderStatus } from 'types/uniswapx'
+import { Checkbox } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 
@@ -31,10 +31,6 @@ interface LimitDetailActivityRowProps {
   onToggleSelect: (order: Activity) => void
   selected: boolean
 }
-
-const StyledCheckbox = styled(Checkbox)<{ $visible?: boolean }>`
-  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
-`
 
 const TradeSummaryContainer = styled(Row)`
   * {
@@ -138,12 +134,12 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
         }}
       />
       {!cancelling && (
-        <StyledCheckbox
-          $visible={hovered || selected || isSmallScreen}
-          size={18}
-          hovered={false}
+        <Checkbox
+          variant="branded"
+          opacity={hovered || selected || isSmallScreen ? 1 : 0}
+          size="$icon.18"
           checked={selected}
-          onChange={() => onToggleSelect(order)}
+          onPress={() => onToggleSelect(order)}
         />
       )}
     </Row>

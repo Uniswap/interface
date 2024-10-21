@@ -4,7 +4,7 @@ import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20Interface } from 'uniswap/src/abis/types/Erc20'
 import { Erc20Bytes32Interface } from 'uniswap/src/abis/types/Erc20Bytes32'
 import { UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
@@ -39,7 +39,7 @@ async function fetchChunk(multicall: UniswapInterfaceMulticall, chunk: Call[]): 
   }
 }
 
-function tryParseToken(address: string, chainId: InterfaceChainId, data: CallResult[]) {
+function tryParseToken(address: string, chainId: UniverseChainId, data: CallResult[]) {
   try {
     const [nameData, symbolData, decimalsData, nameDataBytes32, symbolDataBytes32] = data
 
@@ -62,7 +62,7 @@ function tryParseToken(address: string, chainId: InterfaceChainId, data: CallRes
   }
 }
 
-function parseTokens(addresses: string[], chainId: InterfaceChainId, returnData: CallResult[]) {
+function parseTokens(addresses: string[], chainId: UniverseChainId, returnData: CallResult[]) {
   const tokenDataSlices = arrayToSlices(returnData, 5)
 
   return tokenDataSlices.reduce((acc: TokenMap, slice, index) => {
@@ -93,7 +93,7 @@ const TokenPromiseCache: { [key: CurrencyKey]: Promise<Token | undefined> | unde
 // Returns tokens using a single RPC call to the multicall contract
 export async function getTokensAsync(
   addresses: string[],
-  chainId: InterfaceChainId,
+  chainId: UniverseChainId,
   multicall: UniswapInterfaceMulticall,
 ): Promise<TokenMap> {
   if (addresses.length === 0) {

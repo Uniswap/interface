@@ -1,7 +1,7 @@
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { WalletChainId } from 'uniswap/src/types/chains'
-import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { useSwapProtectionSetting } from 'wallet/src/features/wallet/hooks'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
@@ -13,7 +13,7 @@ import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
  * 3. Private RPC is supported on chain
  *
  */
-export function useShouldUsePrivateRpc(chainId: Maybe<WalletChainId>): boolean {
+export function useShouldUsePrivateRpc(chainId: Maybe<UniverseChainId>): boolean {
   const privateRpcFeatureEnabled = useFeatureFlag(FeatureFlags.PrivateRpc)
   const swapProtectionSettingEnabled = useSwapProtectionSetting() === SwapProtectionSetting.On
   const privateRpcSupportedOnChain = chainId ? isPrivateRpcSupportedOnChain(chainId) : false

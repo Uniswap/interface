@@ -58,7 +58,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
           {
             "alignItems": "center",
             "flexDirection": "column",
-            "gap": 12,
+            "gap": 8,
             "justifyContent": "center",
             "marginBottom": 12,
             "marginLeft": 12,
@@ -67,22 +67,110 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
           }
         }
       >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "column",
+              "justifyContent": "center",
+              "marginBottom": 4,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "rgba(34,34,34,0.05)",
+                "borderBottomLeftRadius": 8,
+                "borderBottomRightRadius": 8,
+                "borderTopLeftRadius": 8,
+                "borderTopRightRadius": 8,
+                "flexDirection": "column",
+                "justifyContent": "center",
+                "paddingBottom": 12,
+                "paddingLeft": 12,
+                "paddingRight": 12,
+                "paddingTop": 12,
+              }
+            }
+          >
+            <RNSVGSvgView
+              align="xMidYMid"
+              bbHeight={18}
+              bbWidth={18}
+              fill="none"
+              focusable={false}
+              meetOrSlice={0}
+              minX={0}
+              minY={0}
+              strokeWidth={8}
+              style={
+                [
+                  {
+                    "backgroundColor": "transparent",
+                    "borderWidth": 0,
+                  },
+                  {
+                    "color": "#222222",
+                    "height": 18,
+                    "width": 18,
+                  },
+                  {
+                    "flex": 0,
+                    "height": 18,
+                    "width": 18,
+                  },
+                ]
+              }
+              tintColor="#222222"
+              vbHeight={20}
+              vbWidth={19}
+            >
+              <RNSVGGroup
+                fill={null}
+                propList={
+                  [
+                    "fill",
+                    "strokeWidth",
+                  ]
+                }
+                strokeWidth={8}
+              >
+                <RNSVGPath
+                  d="M9.51807 0C7.27807 1.111 5.5 2 0.5 3C0.5 4.137 0.5 7.70192 0.5 8.88892C0.5 15.5559 6.167 18.889 9.5 20C12.833 18.889 18.5 15.5559 18.5 8.88892C18.5 7.66392 18.5 4.194 18.5 3C13.5 2 11.7221 1.111 9.51807 0ZM13.042 8.53003L9.04199 12.53C8.89599 12.676 8.70396 12.75 8.51196 12.75C8.31996 12.75 8.12793 12.677 7.98193 12.53L5.98193 10.53C5.68893 10.237 5.68893 9.76199 5.98193 9.46899C6.27493 9.17599 6.74997 9.17599 7.04297 9.46899L8.51294 10.939L11.9829 7.46899C12.2759 7.17599 12.7509 7.17599 13.0439 7.46899C13.3369 7.76199 13.335 8.23703 13.042 8.53003Z"
+                  fill={
+                    {
+                      "type": 2,
+                    }
+                  }
+                  propList={
+                    [
+                      "fill",
+                    ]
+                  }
+                />
+              </RNSVGGroup>
+            </RNSVGSvgView>
+          </View>
+        </View>
         <Text
           allowFontScaling={false}
-          maxFontSizeMultiplier={1.2}
+          maxFontSizeMultiplier={1.4}
           style={
             {
               "color": "#222222",
-              "fontFamily": "Basel-Book",
-              "fontSize": 25,
-              "lineHeight": 32,
+              "fontFamily": "Basel Grotesk",
+              "fontSize": 19,
+              "fontWeight": "400",
+              "lineHeight": 24,
               "paddingTop": 0,
               "textAlign": "center",
             }
           }
           suppressHighlighting={true}
         >
-          Choose a backup method
+          Choose your backup method
         </Text>
         <Text
           allowFontScaling={true}
@@ -90,15 +178,16 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
           style={
             {
               "color": "#7D7D7D",
-              "fontFamily": "Basel-Book",
+              "fontFamily": "Basel Grotesk",
               "fontSize": 17,
+              "fontWeight": "400",
               "lineHeight": 24,
               "textAlign": "center",
             }
           }
           suppressHighlighting={true}
         >
-          Backups let you restore your wallet if you delete the app or lose your device
+          This is how you will recover your wallet if you delete the app or lose your device.
         </Text>
       </View>
       <View
@@ -133,13 +222,13 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 {
                   "flexDirection": "column",
                   "gap": 12,
-                  "shadowColor": "rgb(34,34,34)",
+                  "shadowColor": "rgb(0,0,0)",
                   "shadowOffset": {
-                    "height": 0,
+                    "height": 1,
                     "width": 0,
                   },
-                  "shadowOpacity": 0.050980392156862744,
-                  "shadowRadius": 8,
+                  "shadowOpacity": 0.0196078431372549,
+                  "shadowRadius": 6,
                 }
               }
             >
@@ -201,19 +290,16 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     style={
                       {
                         "alignItems": "center",
-                        "backgroundColor": "#FC72FF1f",
+                        "backgroundColor": "#FEF4FF",
                         "borderBottomLeftRadius": 999999,
                         "borderBottomRightRadius": 999999,
                         "borderTopLeftRadius": 999999,
                         "borderTopRightRadius": 999999,
                         "flexDirection": "column",
-                        "height": 24,
+                        "height": 28,
                         "justifyContent": "center",
-                        "paddingBottom": 16,
-                        "paddingLeft": 16,
-                        "paddingRight": 16,
-                        "paddingTop": 16,
-                        "width": 24,
+                        "marginTop": 4,
+                        "width": 28,
                       }
                     }
                   >
@@ -246,8 +332,8 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                         ]
                       }
                       tintColor="#FC72FF"
-                      vbHeight={24}
-                      vbWidth={24}
+                      vbHeight={16}
+                      vbWidth={16}
                     >
                       <RNSVGGroup
                         fill={null}
@@ -260,7 +346,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                         strokeWidth={8}
                       >
                         <RNSVGPath
-                          d="M15.03 9.09003C15.35 9.03003 15.67 9 16 9C18.76 9 21 11.24 21 14C21 16.76 18.76 19 16 19H9.5C5.91 19 3 16.09 3 12.5C3 8.91 5.91 6 9.5 6C11.146 6 12.648 6.61297 13.792 7.62097C14.274 8.04597 14.692 8.54103 15.03 9.09003Z"
+                          d="M9.26896 5.06732L9.26891 5.06728C8.50684 4.3958 7.50577 3.9872 6.4091 3.9872C4.01716 3.9872 2.07829 5.92607 2.07829 8.318C2.07829 10.7099 4.01716 12.6488 6.4091 12.6488H10.5455C12.4092 12.6488 13.9217 11.1363 13.9217 9.27255C13.9217 7.4088 12.4092 5.89629 10.5455 5.89629C10.3683 5.89629 10.1951 5.90917 10.023 5.9349C9.81109 5.61321 9.55717 5.32144 9.26896 5.06732Z"
                           fill={
                             {
                               "type": 2,
@@ -269,8 +355,16 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                           propList={
                             [
                               "fill",
+                              "stroke",
+                              "strokeWidth",
                             ]
                           }
+                          stroke={
+                            {
+                              "type": 2,
+                            }
+                          }
+                          strokeWidth="0.388889"
                         />
                       </RNSVGGroup>
                     </RNSVGSvgView>
@@ -304,21 +398,71 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                           }
                         }
                       >
-                        <Text
-                          allowFontScaling={false}
-                          maxFontSizeMultiplier={1.4}
+                        <View
                           style={
                             {
-                              "color": "#222222",
-                              "fontFamily": "Basel-Book",
-                              "fontSize": 17,
-                              "lineHeight": 24,
+                              "flex": 1,
+                              "flexDirection": "column",
+                              "paddingBottom": 4,
+                              "paddingTop": 4,
                             }
                           }
-                          suppressHighlighting={true}
                         >
-                          iCloud backup
-                        </Text>
+                          <Text
+                            allowFontScaling={false}
+                            maxFontSizeMultiplier={1.4}
+                            style={
+                              {
+                                "color": "#222222",
+                                "fontFamily": "Basel Grotesk",
+                                "fontSize": 17,
+                                "fontWeight": "400",
+                                "lineHeight": 24,
+                              }
+                            }
+                            suppressHighlighting={true}
+                          >
+                            Set a recovery password
+                          </Text>
+                        </View>
+                        <View
+                          style={
+                            {
+                              "alignItems": "center",
+                              "alignSelf": "flex-start",
+                              "backgroundColor": "#FC72FF1f",
+                              "borderBottomLeftRadius": 8,
+                              "borderBottomRightRadius": 8,
+                              "borderTopLeftRadius": 8,
+                              "borderTopRightRadius": 8,
+                              "flexDirection": "column",
+                              "justifyContent": "center",
+                              "maxWidth": "30%",
+                              "paddingBottom": 8,
+                              "paddingLeft": 8,
+                              "paddingRight": 8,
+                              "paddingTop": 8,
+                            }
+                          }
+                        >
+                          <Text
+                            allowFontScaling={true}
+                            maxFontSizeMultiplier={1.2}
+                            style={
+                              {
+                                "color": "#FC72FF",
+                                "fontFamily": "Basel Grotesk",
+                                "fontSize": 15,
+                                "fontWeight": "500",
+                                "lineHeight": 17.25,
+                                "textAlign": "center",
+                              }
+                            }
+                            suppressHighlighting={true}
+                          >
+                            Quick
+                          </Text>
+                        </View>
                       </View>
                       <Text
                         allowFontScaling={false}
@@ -326,14 +470,15 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                         style={
                           {
                             "color": "#7D7D7D",
-                            "fontFamily": "Basel-Book",
+                            "fontFamily": "Basel Grotesk",
                             "fontSize": 15,
+                            "fontWeight": "400",
                             "lineHeight": 20,
                           }
                         }
                         suppressHighlighting={true}
                       >
-                        Encrypt your recovery phrase with a secure password
+                        Back up your wallet via iCloud, protected by a recovery password.
                       </Text>
                     </View>
                   </View>
@@ -397,27 +542,75 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     style={
                       {
                         "alignItems": "center",
-                        "backgroundColor": "#FC72FF1f",
+                        "backgroundColor": "#FEF4FF",
                         "borderBottomLeftRadius": 999999,
                         "borderBottomRightRadius": 999999,
                         "borderTopLeftRadius": 999999,
                         "borderTopRightRadius": 999999,
                         "flexDirection": "column",
-                        "height": 24,
+                        "height": 28,
                         "justifyContent": "center",
-                        "paddingBottom": 16,
-                        "paddingLeft": 16,
-                        "paddingRight": 16,
-                        "paddingTop": 16,
-                        "width": 24,
+                        "width": 28,
                       }
                     }
                   >
-                    <svg
-                      color="#FC72FF"
-                      data-file-name="SvgPaperStack"
-                      height={16}
-                    />
+                    <RNSVGSvgView
+                      align="xMidYMid"
+                      bbHeight={12}
+                      bbWidth={12}
+                      fill="none"
+                      focusable={false}
+                      meetOrSlice={0}
+                      minX={0}
+                      minY={0}
+                      strokeWidth={8}
+                      style={
+                        [
+                          {
+                            "backgroundColor": "transparent",
+                            "borderWidth": 0,
+                          },
+                          {
+                            "color": "#FC72FF",
+                            "height": 12,
+                            "width": 12,
+                          },
+                          {
+                            "flex": 0,
+                            "height": 12,
+                            "width": 12,
+                          },
+                        ]
+                      }
+                      tintColor="#FC72FF"
+                      vbHeight={19}
+                      vbWidth={19}
+                    >
+                      <RNSVGGroup
+                        fill={null}
+                        propList={
+                          [
+                            "fill",
+                            "strokeWidth",
+                          ]
+                        }
+                        strokeWidth={8}
+                      >
+                        <RNSVGPath
+                          d="M14.0371 9.00194L5 18H0V13L8.99805 3.963C9.11505 3.845 9.3051 3.845 9.4231 3.963L14.0381 8.57799C14.1551 8.69499 14.1551 8.88494 14.0371 9.00194ZM15.1079 7.52794C15.2249 7.64494 15.415 7.64494 15.532 7.52794L17.4099 5.65001C18.1939 4.86601 18.1939 3.59405 17.4099 2.81005L15.1899 0.589953C14.4059 -0.194047 13.1341 -0.194047 12.3501 0.589953L10.4719 2.468C10.3549 2.58501 10.3549 2.77496 10.4719 2.89196L15.1079 7.52794ZM18 17.25H11C10.586 17.25 10.25 17.586 10.25 18C10.25 18.414 10.586 18.75 11 18.75H18C18.414 18.75 18.75 18.414 18.75 18C18.75 17.586 18.414 17.25 18 17.25Z"
+                          fill={
+                            {
+                              "type": 2,
+                            }
+                          }
+                          propList={
+                            [
+                              "fill",
+                            ]
+                          }
+                        />
+                      </RNSVGGroup>
+                    </RNSVGSvgView>
                   </View>
                   <View
                     style={
@@ -448,21 +641,31 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                           }
                         }
                       >
-                        <Text
-                          allowFontScaling={false}
-                          maxFontSizeMultiplier={1.4}
+                        <View
                           style={
                             {
-                              "color": "#222222",
-                              "fontFamily": "Basel-Book",
-                              "fontSize": 17,
-                              "lineHeight": 24,
+                              "flex": 1,
+                              "flexDirection": "column",
                             }
                           }
-                          suppressHighlighting={true}
                         >
-                          Manual backup
-                        </Text>
+                          <Text
+                            allowFontScaling={false}
+                            maxFontSizeMultiplier={1.4}
+                            style={
+                              {
+                                "color": "#222222",
+                                "fontFamily": "Basel Grotesk",
+                                "fontSize": 17,
+                                "fontWeight": "400",
+                                "lineHeight": 24,
+                              }
+                            }
+                            suppressHighlighting={true}
+                          >
+                            Write down recovery phrase
+                          </Text>
+                        </View>
                       </View>
                       <Text
                         allowFontScaling={false}
@@ -470,14 +673,15 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                         style={
                           {
                             "color": "#7D7D7D",
-                            "fontFamily": "Basel-Book",
+                            "fontFamily": "Basel Grotesk",
                             "fontSize": 15,
+                            "fontWeight": "400",
                             "lineHeight": 20,
                           }
                         }
                         suppressHighlighting={true}
                       >
-                        Write your recovery phrase down and store it in a safe location
+                        Record your 12 secret words on a piece of paper and store it in a safe place.
                       </Text>
                     </View>
                   </View>
@@ -541,7 +745,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       "borderWidth": 0,
                     },
                     {
-                      "color": "#CECECE",
+                      "color": "#BFBFBF",
                       "height": 20,
                       "width": 20,
                     },
@@ -552,7 +756,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     },
                   ]
                 }
-                tintColor="#CECECE"
+                tintColor="#BFBFBF"
                 vbHeight={24}
                 vbWidth={24}
               >
@@ -586,9 +790,10 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 maxFontSizeMultiplier={1.4}
                 style={
                   {
-                    "color": "#CECECE",
-                    "fontFamily": "Basel-Book",
+                    "color": "#BFBFBF",
+                    "fontFamily": "Basel Grotesk",
                     "fontSize": 17,
+                    "fontWeight": "400",
                     "lineHeight": 24,
                   }
                 }
@@ -663,7 +868,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
           {
             "alignItems": "center",
             "flexDirection": "column",
-            "gap": 12,
+            "gap": 8,
             "justifyContent": "center",
             "marginBottom": 12,
             "marginLeft": 12,
@@ -672,22 +877,110 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
           }
         }
       >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "column",
+              "justifyContent": "center",
+              "marginBottom": 4,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "rgba(34,34,34,0.05)",
+                "borderBottomLeftRadius": 8,
+                "borderBottomRightRadius": 8,
+                "borderTopLeftRadius": 8,
+                "borderTopRightRadius": 8,
+                "flexDirection": "column",
+                "justifyContent": "center",
+                "paddingBottom": 12,
+                "paddingLeft": 12,
+                "paddingRight": 12,
+                "paddingTop": 12,
+              }
+            }
+          >
+            <RNSVGSvgView
+              align="xMidYMid"
+              bbHeight={18}
+              bbWidth={18}
+              fill="none"
+              focusable={false}
+              meetOrSlice={0}
+              minX={0}
+              minY={0}
+              strokeWidth={8}
+              style={
+                [
+                  {
+                    "backgroundColor": "transparent",
+                    "borderWidth": 0,
+                  },
+                  {
+                    "color": "#222222",
+                    "height": 18,
+                    "width": 18,
+                  },
+                  {
+                    "flex": 0,
+                    "height": 18,
+                    "width": 18,
+                  },
+                ]
+              }
+              tintColor="#222222"
+              vbHeight={20}
+              vbWidth={19}
+            >
+              <RNSVGGroup
+                fill={null}
+                propList={
+                  [
+                    "fill",
+                    "strokeWidth",
+                  ]
+                }
+                strokeWidth={8}
+              >
+                <RNSVGPath
+                  d="M9.51807 0C7.27807 1.111 5.5 2 0.5 3C0.5 4.137 0.5 7.70192 0.5 8.88892C0.5 15.5559 6.167 18.889 9.5 20C12.833 18.889 18.5 15.5559 18.5 8.88892C18.5 7.66392 18.5 4.194 18.5 3C13.5 2 11.7221 1.111 9.51807 0ZM13.042 8.53003L9.04199 12.53C8.89599 12.676 8.70396 12.75 8.51196 12.75C8.31996 12.75 8.12793 12.677 7.98193 12.53L5.98193 10.53C5.68893 10.237 5.68893 9.76199 5.98193 9.46899C6.27493 9.17599 6.74997 9.17599 7.04297 9.46899L8.51294 10.939L11.9829 7.46899C12.2759 7.17599 12.7509 7.17599 13.0439 7.46899C13.3369 7.76199 13.335 8.23703 13.042 8.53003Z"
+                  fill={
+                    {
+                      "type": 2,
+                    }
+                  }
+                  propList={
+                    [
+                      "fill",
+                    ]
+                  }
+                />
+              </RNSVGGroup>
+            </RNSVGSvgView>
+          </View>
+        </View>
         <Text
           allowFontScaling={false}
-          maxFontSizeMultiplier={1.2}
+          maxFontSizeMultiplier={1.4}
           style={
             {
               "color": "#222222",
-              "fontFamily": "Basel-Book",
-              "fontSize": 25,
-              "lineHeight": 32,
+              "fontFamily": "Basel Grotesk",
+              "fontSize": 19,
+              "fontWeight": "400",
+              "lineHeight": 24,
               "paddingTop": 0,
               "textAlign": "center",
             }
           }
           suppressHighlighting={true}
         >
-          Choose a backup method
+          Choose your backup method
         </Text>
         <Text
           allowFontScaling={true}
@@ -695,15 +988,16 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
           style={
             {
               "color": "#7D7D7D",
-              "fontFamily": "Basel-Book",
+              "fontFamily": "Basel Grotesk",
               "fontSize": 17,
+              "fontWeight": "400",
               "lineHeight": 24,
               "textAlign": "center",
             }
           }
           suppressHighlighting={true}
         >
-          Backups let you restore your wallet if you delete the app or lose your device
+          This is how you will recover your wallet if you delete the app or lose your device.
         </Text>
       </View>
       <View
@@ -738,13 +1032,13 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 {
                   "flexDirection": "column",
                   "gap": 12,
-                  "shadowColor": "rgb(34,34,34)",
+                  "shadowColor": "rgb(0,0,0)",
                   "shadowOffset": {
-                    "height": 0,
+                    "height": 1,
                     "width": 0,
                   },
-                  "shadowOpacity": 0.050980392156862744,
-                  "shadowRadius": 8,
+                  "shadowOpacity": 0.0196078431372549,
+                  "shadowRadius": 6,
                 }
               }
             >
@@ -806,19 +1100,16 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     style={
                       {
                         "alignItems": "center",
-                        "backgroundColor": "#FC72FF1f",
+                        "backgroundColor": "#FEF4FF",
                         "borderBottomLeftRadius": 999999,
                         "borderBottomRightRadius": 999999,
                         "borderTopLeftRadius": 999999,
                         "borderTopRightRadius": 999999,
                         "flexDirection": "column",
-                        "height": 24,
+                        "height": 28,
                         "justifyContent": "center",
-                        "paddingBottom": 16,
-                        "paddingLeft": 16,
-                        "paddingRight": 16,
-                        "paddingTop": 16,
-                        "width": 24,
+                        "marginTop": 4,
+                        "width": 28,
                       }
                     }
                   >
@@ -851,8 +1142,8 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                         ]
                       }
                       tintColor="#FC72FF"
-                      vbHeight={24}
-                      vbWidth={24}
+                      vbHeight={16}
+                      vbWidth={16}
                     >
                       <RNSVGGroup
                         fill={null}
@@ -865,7 +1156,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                         strokeWidth={8}
                       >
                         <RNSVGPath
-                          d="M15.03 9.09003C15.35 9.03003 15.67 9 16 9C18.76 9 21 11.24 21 14C21 16.76 18.76 19 16 19H9.5C5.91 19 3 16.09 3 12.5C3 8.91 5.91 6 9.5 6C11.146 6 12.648 6.61297 13.792 7.62097C14.274 8.04597 14.692 8.54103 15.03 9.09003Z"
+                          d="M9.26896 5.06732L9.26891 5.06728C8.50684 4.3958 7.50577 3.9872 6.4091 3.9872C4.01716 3.9872 2.07829 5.92607 2.07829 8.318C2.07829 10.7099 4.01716 12.6488 6.4091 12.6488H10.5455C12.4092 12.6488 13.9217 11.1363 13.9217 9.27255C13.9217 7.4088 12.4092 5.89629 10.5455 5.89629C10.3683 5.89629 10.1951 5.90917 10.023 5.9349C9.81109 5.61321 9.55717 5.32144 9.26896 5.06732Z"
                           fill={
                             {
                               "type": 2,
@@ -874,8 +1165,16 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                           propList={
                             [
                               "fill",
+                              "stroke",
+                              "strokeWidth",
                             ]
                           }
+                          stroke={
+                            {
+                              "type": 2,
+                            }
+                          }
+                          strokeWidth="0.388889"
                         />
                       </RNSVGGroup>
                     </RNSVGSvgView>
@@ -909,21 +1208,71 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                           }
                         }
                       >
-                        <Text
-                          allowFontScaling={false}
-                          maxFontSizeMultiplier={1.4}
+                        <View
                           style={
                             {
-                              "color": "#222222",
-                              "fontFamily": "Basel-Book",
-                              "fontSize": 17,
-                              "lineHeight": 24,
+                              "flex": 1,
+                              "flexDirection": "column",
+                              "paddingBottom": 4,
+                              "paddingTop": 4,
                             }
                           }
-                          suppressHighlighting={true}
                         >
-                          iCloud backup
-                        </Text>
+                          <Text
+                            allowFontScaling={false}
+                            maxFontSizeMultiplier={1.4}
+                            style={
+                              {
+                                "color": "#222222",
+                                "fontFamily": "Basel Grotesk",
+                                "fontSize": 17,
+                                "fontWeight": "400",
+                                "lineHeight": 24,
+                              }
+                            }
+                            suppressHighlighting={true}
+                          >
+                            Set a recovery password
+                          </Text>
+                        </View>
+                        <View
+                          style={
+                            {
+                              "alignItems": "center",
+                              "alignSelf": "flex-start",
+                              "backgroundColor": "#FC72FF1f",
+                              "borderBottomLeftRadius": 8,
+                              "borderBottomRightRadius": 8,
+                              "borderTopLeftRadius": 8,
+                              "borderTopRightRadius": 8,
+                              "flexDirection": "column",
+                              "justifyContent": "center",
+                              "maxWidth": "30%",
+                              "paddingBottom": 8,
+                              "paddingLeft": 8,
+                              "paddingRight": 8,
+                              "paddingTop": 8,
+                            }
+                          }
+                        >
+                          <Text
+                            allowFontScaling={true}
+                            maxFontSizeMultiplier={1.2}
+                            style={
+                              {
+                                "color": "#FC72FF",
+                                "fontFamily": "Basel Grotesk",
+                                "fontSize": 15,
+                                "fontWeight": "500",
+                                "lineHeight": 17.25,
+                                "textAlign": "center",
+                              }
+                            }
+                            suppressHighlighting={true}
+                          >
+                            Quick
+                          </Text>
+                        </View>
                       </View>
                       <Text
                         allowFontScaling={false}
@@ -931,14 +1280,15 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                         style={
                           {
                             "color": "#7D7D7D",
-                            "fontFamily": "Basel-Book",
+                            "fontFamily": "Basel Grotesk",
                             "fontSize": 15,
+                            "fontWeight": "400",
                             "lineHeight": 20,
                           }
                         }
                         suppressHighlighting={true}
                       >
-                        Encrypt your recovery phrase with a secure password
+                        Back up your wallet via iCloud, protected by a recovery password.
                       </Text>
                     </View>
                   </View>
@@ -1002,27 +1352,75 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     style={
                       {
                         "alignItems": "center",
-                        "backgroundColor": "#FC72FF1f",
+                        "backgroundColor": "#FEF4FF",
                         "borderBottomLeftRadius": 999999,
                         "borderBottomRightRadius": 999999,
                         "borderTopLeftRadius": 999999,
                         "borderTopRightRadius": 999999,
                         "flexDirection": "column",
-                        "height": 24,
+                        "height": 28,
                         "justifyContent": "center",
-                        "paddingBottom": 16,
-                        "paddingLeft": 16,
-                        "paddingRight": 16,
-                        "paddingTop": 16,
-                        "width": 24,
+                        "width": 28,
                       }
                     }
                   >
-                    <svg
-                      color="#FC72FF"
-                      data-file-name="SvgPaperStack"
-                      height={16}
-                    />
+                    <RNSVGSvgView
+                      align="xMidYMid"
+                      bbHeight={12}
+                      bbWidth={12}
+                      fill="none"
+                      focusable={false}
+                      meetOrSlice={0}
+                      minX={0}
+                      minY={0}
+                      strokeWidth={8}
+                      style={
+                        [
+                          {
+                            "backgroundColor": "transparent",
+                            "borderWidth": 0,
+                          },
+                          {
+                            "color": "#FC72FF",
+                            "height": 12,
+                            "width": 12,
+                          },
+                          {
+                            "flex": 0,
+                            "height": 12,
+                            "width": 12,
+                          },
+                        ]
+                      }
+                      tintColor="#FC72FF"
+                      vbHeight={19}
+                      vbWidth={19}
+                    >
+                      <RNSVGGroup
+                        fill={null}
+                        propList={
+                          [
+                            "fill",
+                            "strokeWidth",
+                          ]
+                        }
+                        strokeWidth={8}
+                      >
+                        <RNSVGPath
+                          d="M14.0371 9.00194L5 18H0V13L8.99805 3.963C9.11505 3.845 9.3051 3.845 9.4231 3.963L14.0381 8.57799C14.1551 8.69499 14.1551 8.88494 14.0371 9.00194ZM15.1079 7.52794C15.2249 7.64494 15.415 7.64494 15.532 7.52794L17.4099 5.65001C18.1939 4.86601 18.1939 3.59405 17.4099 2.81005L15.1899 0.589953C14.4059 -0.194047 13.1341 -0.194047 12.3501 0.589953L10.4719 2.468C10.3549 2.58501 10.3549 2.77496 10.4719 2.89196L15.1079 7.52794ZM18 17.25H11C10.586 17.25 10.25 17.586 10.25 18C10.25 18.414 10.586 18.75 11 18.75H18C18.414 18.75 18.75 18.414 18.75 18C18.75 17.586 18.414 17.25 18 17.25Z"
+                          fill={
+                            {
+                              "type": 2,
+                            }
+                          }
+                          propList={
+                            [
+                              "fill",
+                            ]
+                          }
+                        />
+                      </RNSVGGroup>
+                    </RNSVGSvgView>
                   </View>
                   <View
                     style={
@@ -1053,21 +1451,31 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                           }
                         }
                       >
-                        <Text
-                          allowFontScaling={false}
-                          maxFontSizeMultiplier={1.4}
+                        <View
                           style={
                             {
-                              "color": "#222222",
-                              "fontFamily": "Basel-Book",
-                              "fontSize": 17,
-                              "lineHeight": 24,
+                              "flex": 1,
+                              "flexDirection": "column",
                             }
                           }
-                          suppressHighlighting={true}
                         >
-                          Manual backup
-                        </Text>
+                          <Text
+                            allowFontScaling={false}
+                            maxFontSizeMultiplier={1.4}
+                            style={
+                              {
+                                "color": "#222222",
+                                "fontFamily": "Basel Grotesk",
+                                "fontSize": 17,
+                                "fontWeight": "400",
+                                "lineHeight": 24,
+                              }
+                            }
+                            suppressHighlighting={true}
+                          >
+                            Write down recovery phrase
+                          </Text>
+                        </View>
                       </View>
                       <Text
                         allowFontScaling={false}
@@ -1075,14 +1483,15 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                         style={
                           {
                             "color": "#7D7D7D",
-                            "fontFamily": "Basel-Book",
+                            "fontFamily": "Basel Grotesk",
                             "fontSize": 15,
+                            "fontWeight": "400",
                             "lineHeight": 20,
                           }
                         }
                         suppressHighlighting={true}
                       >
-                        Write your recovery phrase down and store it in a safe location
+                        Record your 12 secret words on a piece of paper and store it in a safe place.
                       </Text>
                     </View>
                   </View>
@@ -1146,7 +1555,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       "borderWidth": 0,
                     },
                     {
-                      "color": "#CECECE",
+                      "color": "#BFBFBF",
                       "height": 20,
                       "width": 20,
                     },
@@ -1157,7 +1566,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     },
                   ]
                 }
-                tintColor="#CECECE"
+                tintColor="#BFBFBF"
                 vbHeight={24}
                 vbWidth={24}
               >
@@ -1191,9 +1600,10 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 maxFontSizeMultiplier={1.4}
                 style={
                   {
-                    "color": "#CECECE",
-                    "fontFamily": "Basel-Book",
+                    "color": "#BFBFBF",
+                    "fontFamily": "Basel Grotesk",
                     "fontSize": 17,
+                    "fontWeight": "400",
                     "lineHeight": 24,
                   }
                 }

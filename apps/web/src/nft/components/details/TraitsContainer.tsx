@@ -1,4 +1,4 @@
-import { OpacityHoverState } from 'components/Common'
+import { OpacityHoverState } from 'components/Common/styles'
 import styled from 'lib/styled-components'
 import { GenieAsset, Trait } from 'nft/types'
 import qs from 'query-string'

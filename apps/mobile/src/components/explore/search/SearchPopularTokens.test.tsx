@@ -1,9 +1,9 @@
 import React from 'react'
 import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
 import { render, screen } from 'src/test/test-utils'
+import { ethToken, usdcToken, wethToken } from 'uniswap/src/test/fixtures'
+import { queryResolvers } from 'uniswap/src/test/utils'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { ethToken, usdcToken, wethToken } from 'wallet/src/test/fixtures'
-import { queryResolvers } from 'wallet/src/test/utils'
 
 const { resolvers } = queryResolvers({
   topTokens: () => [wethToken(), usdcToken()],

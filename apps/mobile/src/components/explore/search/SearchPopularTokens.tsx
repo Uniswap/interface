@@ -4,16 +4,16 @@ import { SearchTokenItem } from 'src/components/explore/search/items/SearchToken
 import { getSearchResultId } from 'src/components/explore/search/utils'
 import { Flex, Loader } from 'ui/src'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
-import { TopToken, usePopularTokens } from 'wallet/src/features/tokens/hooks'
+import { TopToken, usePopularTokens } from 'uniswap/src/features/tokens/hooks'
 
 function gqlTokenToTokenSearchResult(token: Maybe<TopToken>): TokenSearchResult | null {
   if (!token || !token.project) {
     return null
   }
 
-  const { chain, address, symbol, project } = token
-  const { name } = project
+  const { name, chain, address, symbol, project, protectionInfo } = token
   const chainId = fromGraphQLChain(chain)
   if (!chainId || !symbol || !name) {
     return null
@@ -27,6 +27,7 @@ function gqlTokenToTokenSearchResult(token: Maybe<TopToken>): TokenSearchResult 
     symbol,
     logoUrl: project?.logoUrl ?? null,
     safetyLevel: project?.safetyLevel ?? null,
+    safetyInfo: getCurrencySafetyInfo(project.safetyLevel, protectionInfo),
   }
 }
 

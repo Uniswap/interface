@@ -4,10 +4,11 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { UnitagStackScreenProp } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
 import { UnitagWithProfilePicture } from 'src/components/unitags/UnitagWithProfilePicture'
-import { AnimatePresence, Button, Flex, Text, useDeviceInsets } from 'ui/src'
+import { AnimatePresence, Button, Flex, Text } from 'ui/src'
 import { AnimateInOrder } from 'ui/src/animations'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import {
   ENSElement,
@@ -27,7 +28,7 @@ export function UnitagConfirmationScreen({
 }: UnitagStackScreenProp<UnitagScreens.UnitagConfirmation>): JSX.Element {
   const { unitag, address, profilePictureUri } = route.params
   const dimensions = useDeviceDimensions()
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const { t } = useTranslation()
 
   const boxWidth = dimensions.fullWidth - insets.left - insets.right - spacing.spacing32

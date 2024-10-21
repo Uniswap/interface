@@ -7,15 +7,15 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { WalletChainId } from 'uniswap/src/types/chains'
-import { BuyNativeTokenButton } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/BuyNativeTokenButton'
+import { BuyNativeTokenButton } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/BuyNativeTokenButton'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export function BuyNativeTokenModal({
   chainId,
   currencyId,
   onClose,
 }: {
-  chainId: WalletChainId
+  chainId: UniverseChainId
   currencyId: string
   onClose: () => void
 }): JSX.Element | null {
@@ -44,11 +44,11 @@ export function BuyNativeTokenModal({
           </Flex>
         </Flex>
         <Flex centered gap="$spacing12" width="100%">
-          <BuyNativeTokenButton nativeCurrencyInfo={nativeCurrencyInfo} />
+          <BuyNativeTokenButton nativeCurrencyInfo={nativeCurrencyInfo} canBridge={false} />
           <Flex px="$spacing8" py="$spacing4">
             <LearnMoreLink
               textColor="$neutral2"
-              textVariant="buttonLabel3"
+              textVariant="buttonLabel2"
               url={uniswapUrls.helpArticleUrls.networkFeeInfo}
             />
           </Flex>

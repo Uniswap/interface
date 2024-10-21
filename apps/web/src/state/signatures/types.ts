@@ -1,4 +1,3 @@
-import { SupportedInterfaceChainId } from 'constants/chains'
 import { OffchainOrderType } from 'state/routing/types'
 import { ExactInputSwapTransactionInfo, ExactOutputSwapTransactionInfo } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
@@ -6,6 +5,7 @@ import {
   AssetActivityPartsFragment,
   SwapOrderDetailsPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { Prettify } from 'viem/chains'
 
 export type OrderActivity = AssetActivityPartsFragment & { details: SwapOrderDetailsPartsFragment }
@@ -14,19 +14,21 @@ export enum SignatureType {
   SIGN_UNISWAPX_ORDER = 'signUniswapXOrder',
   SIGN_UNISWAPX_V2_ORDER = 'signUniswapXV2Order',
   SIGN_LIMIT = 'signLimit',
+  SIGN_PRIORITY_ORDER = 'signPriorityOrder',
 }
 
 export const OFFCHAIN_ORDER_TYPE_TO_SIGNATURE_TYPE: Partial<Record<OffchainOrderType, SignatureType>> = {
   [OffchainOrderType.DUTCH_AUCTION]: SignatureType.SIGN_UNISWAPX_ORDER,
   [OffchainOrderType.DUTCH_V2_AUCTION]: SignatureType.SIGN_UNISWAPX_V2_ORDER,
   [OffchainOrderType.LIMIT_ORDER]: SignatureType.SIGN_LIMIT,
+  [OffchainOrderType.PRIORITY_ORDER]: SignatureType.SIGN_PRIORITY_ORDER,
 }
 
 interface BaseSignatureFields {
   type?: SignatureType
   id: string
   addedTime: number
-  chainId: SupportedInterfaceChainId
+  chainId: UniverseChainId
   expiry?: number
   offerer: string
 }

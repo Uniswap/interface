@@ -1,4 +1,4 @@
-import Row from 'components/Row'
+import Row from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { useLimitContext } from 'state/limit/LimitContext'
 import { ClickableStyle, ThemedText } from 'theme/components'
@@ -29,7 +29,8 @@ const LimitExpiryButton = styled.button<{ $selected: boolean }>`
 
 const EXPIRY_OPTIONS = [LimitsExpiry.Day, LimitsExpiry.Week, LimitsExpiry.Month, LimitsExpiry.Year]
 
-function getExpiryLabelText(expiry: LimitsExpiry) {
+// eslint-disable-next-line consistent-return
+function getExpiryLabelText(expiry: LimitsExpiry): string {
   switch (expiry) {
     case LimitsExpiry.Day:
       return t('common.oneDay')

@@ -3,7 +3,7 @@ import { InterfaceSectionName } from '@uniswap/analytics-events'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../../src/constants/misc'
-import { DAI, USDC_MAINNET } from '../../../src/constants/tokens'
+import { DAI, USDC_MAINNET, WBTC } from 'uniswap/src/constants/tokens'
 import { HARDHAT_TIMEOUT, getBalance, getTestSelector } from '../../utils'
 
 describe('Swap errors', () => {
@@ -32,8 +32,8 @@ describe('Swap errors', () => {
   })
 
   it('transaction past deadline', () => {
-    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
-    getBalance(USDC_MAINNET).then((initialBalance) => {
+    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${WBTC.address}`)
+    getBalance(WBTC).then((initialBalance) => {
       // Enter amount to swap
       cy.get('#swap-currency-output .token-amount-input').type('1').should('have.value', '1')
       cy.get('#swap-currency-input .token-amount-input').should('not.have.value', '')
@@ -61,7 +61,7 @@ describe('Swap errors', () => {
       cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
       cy.get(getTestSelector('popups')).should('not.contain', 'Swap failed')
       cy.get('#swap-currency-output').contains(`Balance: ${initialBalance}`)
-      getBalance(USDC_MAINNET).should('eq', initialBalance)
+      getBalance(WBTC).should('eq', initialBalance)
     })
   })
 

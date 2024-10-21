@@ -11,7 +11,7 @@ import { AssetType } from 'uniswap/src/entities/assets'
 import { ElementName, ModalName, SectionNameType } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField, CurrencyId } from 'uniswap/src/types/currency'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
@@ -19,7 +19,7 @@ import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext
 
 interface TokenMenuParams {
   currencyId: CurrencyId
-  chainId: WalletChainId
+  chainId: UniverseChainId
   analyticsSection: SectionNameType
   // token, which are in favorite section would have it defined
   onEditFavorites?: () => void

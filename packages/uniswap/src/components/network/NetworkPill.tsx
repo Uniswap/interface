@@ -3,11 +3,11 @@ import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { Pill } from 'uniswap/src/components/pill/Pill'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useNetworkColors } from 'uniswap/src/utils/colors'
 
 export type NetworkPillProps = {
-  chainId: WalletChainId
+  chainId: UniverseChainId
   showBackgroundColor?: boolean
   showBorder?: boolean
   showIcon?: boolean
@@ -36,5 +36,5 @@ export function NetworkPill({
 }
 
 export function InlineNetworkPill(props: NetworkPillProps): JSX.Element {
-  return <NetworkPill borderRadius="$rounded8" px="$spacing4" py="$none" textVariant="buttonLabel4" {...props} />
+  return <NetworkPill borderRadius="$rounded8" px="$spacing4" py="$none" textVariant="buttonLabel3" {...props} />
 }

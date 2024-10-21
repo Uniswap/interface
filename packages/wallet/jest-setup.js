@@ -3,12 +3,12 @@ import 'utilities/src/logger/mocks'
 
 import { localizeMock as mockRNLocalize } from 'react-native-localize/mock'
 import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
-import { mockLocalizationContext } from 'wallet/src/test/mocks/utils'
+import { mockLocalizationContext } from 'uniswap/src/test/mocks/locale'
 import { mockSharedPersistQueryClientProvider } from 'uniswap/src/test/mocks/mockSharedPersistQueryClientProvider'
 import { mockUIAssets } from 'ui/src/test/mocks/mockUIAssets'
 
 jest.mock('react-native-localize', () => mockRNLocalize)
-jest.mock('wallet/src/features/language/LocalizationContext', () => mockLocalizationContext)
+jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
 
 // Mock the appearance hook for all tests
 const mockAppearanceSetting = AppearanceSettingType.System
@@ -23,7 +23,16 @@ jest.mock('wallet/src/features/appearance/hooks', () => {
   }
 })
 
-jest.mock('utilities/src/environment', () => ({
+jest.mock('uniswap/src/features/gas/hooks', () => ({
+  useActiveGasStrategy: jest.fn().mockReturnValue({
+    limitInflationFactor: 1.15,
+    priceInflationFactor: 1.5,
+    percentileThresholdFor1559Fee: 75,
+  }),
+  useShadowGasStrategies: jest.fn().mockReturnValue([]),
+}))
+
+jest.mock('utilities/src/environment/env', () => ({
   isTestEnv: jest.fn(() => true),
   isDevEnv: jest.fn(() => false),
   isBetaEnv: jest.fn(() => false),
@@ -44,6 +53,11 @@ jest.mock('ui/src/components/Unicon', () => {
 // Use native modal
 jest.mock('uniswap/src/components/modals/Modal', () => {
   return jest.requireActual('uniswap/src/components/modals/Modal.native.tsx')
+})
+
+// Use native clickable
+jest.mock('ui/src/components/swipeablecards/ClickableWithinGesture', () => {
+  return jest.requireActual('ui/src/components/swipeablecards/ClickableWithinGesture.native.tsx')
 })
 
 import crypto from "crypto"

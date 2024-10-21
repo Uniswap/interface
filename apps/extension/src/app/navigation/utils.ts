@@ -68,6 +68,28 @@ export async function focusOrCreateOnboardingTab(page?: string): Promise<void> {
   })
 }
 
+export async function focusOrCreateUnitagClaimTab(): Promise<void> {
+  const extension = await chrome.management.getSelf()
+
+  const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/unitagClaim.html*` })
+  const tab = tabs[0]
+
+  const url = 'unitagClaim.html#/'
+
+  if (!tab?.id) {
+    await chrome.tabs.create({ url })
+    return
+  }
+
+  await chrome.tabs.update(tab.id, {
+    active: true,
+    highlighted: true,
+    url,
+  })
+
+  await chrome.windows.update(tab.windowId, { focused: true })
+}
+
 export async function focusOrCreateDappRequestWindow(tabId: number | undefined, windowId: number): Promise<void> {
   const extension = await chrome.management.getSelf()
 
@@ -150,7 +172,7 @@ export async function focusOrCreateTokensExploreTab({ currencyId }: { currencyId
       tags: { file: 'navigation/utils.ts', function: 'focusOrCreateTokensExploreTab' },
       extra: { currencyId },
     })
-    return
+    return undefined
   }
 
   return focusOrCreateUniswapInterfaceTab({

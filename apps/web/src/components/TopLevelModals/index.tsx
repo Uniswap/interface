@@ -16,21 +16,24 @@ import { useAccount } from 'hooks/useAccount'
 import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import Bag from 'nft/components/bag/Bag'
 import TransactionCompleteModal from 'nft/components/collection/TransactionCompleteModal'
+import { IncreaseLiquidityModal } from 'pages/IncreaseLiquidity/IncreaseLiquidityModal'
+import { RemoveLiquidityModal } from 'pages/RemoveLiquidity/RemoveLiquidityModal'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 
 export default function TopLevelModals() {
   const addressClaimOpen = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)
   const addressClaimToggle = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const blockedAccountModalOpen = useModalIsOpen(ApplicationModal.BLOCKED_ACCOUNT)
+  const isAddLiquidityModalOpen = useModalIsOpen(ModalName.AddLiquidity)
+  const isRemoveLiquidityModalOpen = useModalIsOpen(ModalName.RemoveLiquidity)
+
   const account = useAccount()
   useAccountRiskCheck(account.address)
   const accountBlocked = Boolean(blockedAccountModalOpen && account.isConnected)
   const shouldShowDevFlags = isDevEnv() || isBetaEnv()
-  const extensionIsLaunched = useFeatureFlag(FeatureFlags.ExtensionLaunch)
 
   return (
     <>
@@ -51,7 +54,10 @@ export default function TopLevelModals() {
       <PrivacyPolicyModal />
       <FeatureFlagModal />
       {shouldShowDevFlags && <DevFlagsBox />}
-      {extensionIsLaunched && <ExtensionLaunchModal />}
+      <ExtensionLaunchModal />
+
+      {isAddLiquidityModalOpen && <IncreaseLiquidityModal />}
+      {isRemoveLiquidityModalOpen && <RemoveLiquidityModal />}
     </>
   )
 }

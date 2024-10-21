@@ -6,10 +6,10 @@ import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { Button, Flex } from 'ui/src'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 
 type Props = {
   mnemonicId: string
@@ -73,29 +73,29 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss, walletNeedsRestore }:
         <WarningModal
           hideHandlebar
           caption={t('setting.recoveryPhrase.warning.view.message')}
-          closeText={t('common.button.close')}
-          confirmText={t('common.button.view')}
+          rejectText={t('common.button.close')}
+          acknowledgeText={t('common.button.view')}
           isDismissible={false}
           isOpen={showSeedPhraseViewWarningModal}
           modalName={ModalName.ViewSeedPhraseWarning}
           severity={WarningSeverity.High}
           title={t('setting.recoveryPhrase.warning.view.title')}
-          onCancel={(): void => {
+          onReject={(): void => {
             setShowSeedPhraseViewWarningModal(false)
             if (!showSeedPhrase) {
               onDismiss?.()
             }
           }}
-          onConfirm={onConfirmWarning}
+          onAcknowledge={onConfirmWarning}
         />
       )}
       <WarningModal
         caption={t('setting.recoveryPhrase.warning.screenshot.message')}
-        confirmText={t('common.button.close')}
+        acknowledgeText={t('common.button.close')}
         isOpen={showScreenShotWarningModal}
         modalName={ModalName.ScreenshotWarning}
         title={t('setting.recoveryPhrase.warning.screenshot.title')}
-        onConfirm={(): void => setShowScreenShotWarningModal(false)}
+        onAcknowledge={(): void => setShowScreenShotWarningModal(false)}
       />
     </>
   )

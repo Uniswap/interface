@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
+import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useAccount } from 'hooks/useAccount'
 import { useTotalSupply } from 'hooks/useTotalSupply'
 import { PairState, useV2Pair } from 'hooks/useV2Pairs'
@@ -183,7 +184,7 @@ export function useDerivedMintInfo(
 
   let error: ReactNode | undefined
   if (!account.isConnected) {
-    error = <Trans i18nKey="common.connectWallet.button" />
+    error = <ConnectWalletButtonText />
   }
 
   if (pairState === PairState.INVALID) {

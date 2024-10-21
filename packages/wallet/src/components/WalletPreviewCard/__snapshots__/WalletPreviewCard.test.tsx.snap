@@ -175,8 +175,9 @@ exports[`renders wallet preview card 1`] = `
                 {
                   "color": "#222222",
                   "flexShrink": 1,
-                  "fontFamily": "Basel-Book",
+                  "fontFamily": "Basel Grotesk",
                   "fontSize": 18,
+                  "fontWeight": "400",
                   "lineHeight": 24,
                   "overflow": "hidden",
                 }
@@ -209,7 +210,9 @@ exports[`renders wallet preview card 1`] = `
         meetOrSlice={0}
         minX={0}
         minY={0}
-        strokeWidth={8}
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth={6}
         style={
           [
             {
@@ -229,21 +232,28 @@ exports[`renders wallet preview card 1`] = `
           ]
         }
         tintColor="#FC72FF"
-        vbHeight={16}
-        vbWidth={16}
+        vbHeight={48}
+        vbWidth={48}
       >
         <RNSVGGroup
           fill={null}
           propList={
             [
               "fill",
+              "stroke",
               "strokeWidth",
+              "strokeLinecap",
             ]
           }
-          strokeWidth={8}
+          stroke={
+            {
+              "type": 2,
+            }
+          }
+          strokeLinecap={1}
+          strokeWidth={6}
         >
-          <RNSVGPath
-            d="M13.3334 4L6.00008 11.3333L2.66675 8"
+          <RNSVGLine
             fill={
               {
                 "payload": 4278190080,
@@ -253,9 +263,6 @@ exports[`renders wallet preview card 1`] = `
             propList={
               [
                 "stroke",
-                "strokeWidth",
-                "strokeLinecap",
-                "strokeLinejoin",
               ]
             }
             stroke={
@@ -263,9 +270,32 @@ exports[`renders wallet preview card 1`] = `
                 "type": 2,
               }
             }
-            strokeLinecap={1}
-            strokeLinejoin={1}
-            strokeWidth="2"
+            x1="11"
+            x2="18"
+            y1="26"
+            y2="33"
+          />
+          <RNSVGLine
+            fill={
+              {
+                "payload": 4278190080,
+                "type": 0,
+              }
+            }
+            propList={
+              [
+                "stroke",
+              ]
+            }
+            stroke={
+              {
+                "type": 2,
+              }
+            }
+            x1="18"
+            x2="38"
+            y1="33"
+            y2="14"
           />
         </RNSVGGroup>
       </RNSVGSvgView>

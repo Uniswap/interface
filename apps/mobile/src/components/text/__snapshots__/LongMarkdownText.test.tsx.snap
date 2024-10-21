@@ -58,7 +58,7 @@ exports[`LongMarkdownText renders without error 1`] = `
                 [
                   {
                     "color": "#222222",
-                    "fontFamily": "Basel-Book",
+                    "fontFamily": "Basel Grotesk",
                     "fontSize": 17,
                     "lineHeight": 24,
                   },
@@ -101,7 +101,7 @@ exports[`LongMarkdownText renders without error 1`] = `
               [
                 {
                   "color": "#222222",
-                  "fontFamily": "Basel-Book",
+                  "fontFamily": "Basel Grotesk",
                   "fontSize": 17,
                   "lineHeight": 24,
                 },

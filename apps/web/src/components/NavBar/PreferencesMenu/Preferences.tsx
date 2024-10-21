@@ -1,12 +1,12 @@
 import { PreferencesHeader } from 'components/NavBar/PreferencesMenu/Header'
 import { PreferencesView } from 'components/NavBar/PreferencesMenu/shared'
-import { LOCALE_LABEL } from 'constants/locales'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
-import { useActiveLocale } from 'hooks/useActiveLocale'
+import { useActiveLanguage } from 'hooks/useActiveLocale'
 import styled, { useTheme } from 'lib/styled-components'
 import { ChevronRight } from 'react-feather'
 import { ThemeSelector } from 'theme/components/ThemeToggle'
 import { Text } from 'ui/src'
+import { useLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { Trans, t } from 'uniswap/src/i18n'
 
 const Pref = styled.div`
@@ -38,7 +38,7 @@ function SelectButton({ label, onClick }: { label: string; onClick?: () => void 
   const theme = useTheme()
   return (
     <SelectButtonContainer onClick={onClick}>
-      <Text variant="buttonLabel3" color="$neutral1">
+      <Text variant="buttonLabel2" color="$neutral1">
         {label}
       </Text>
       <StyledChevron size={24} color={theme.neutral1} />
@@ -59,7 +59,8 @@ export function PreferenceSettings({
   showHeader?: boolean
 }) {
   const activeLocalCurrency = useActiveLocalCurrency()
-  const activeLocale = useActiveLocale()
+  const activeLanguage = useActiveLanguage()
+  const languageInfo = useLanguageInfo(activeLanguage)
 
   const items: SettingItem[] = [
     {
@@ -69,7 +70,7 @@ export function PreferenceSettings({
     {
       label: t('common.language'),
       component: (
-        <SelectButton label={LOCALE_LABEL[activeLocale]} onClick={() => setSettingsView(PreferencesView.LANGUAGE)} />
+        <SelectButton label={languageInfo.displayName} onClick={() => setSettingsView(PreferencesView.LANGUAGE)} />
       ),
     },
     {

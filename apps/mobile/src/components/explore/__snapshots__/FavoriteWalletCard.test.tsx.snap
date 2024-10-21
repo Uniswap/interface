@@ -221,8 +221,9 @@ exports[`FavoriteWalletCard renders without error 1`] = `
                   {
                     "color": "#222222",
                     "flexShrink": 1,
-                    "fontFamily": "Basel-Book",
+                    "fontFamily": "Basel Grotesk",
                     "fontSize": 19,
+                    "fontWeight": "400",
                     "lineHeight": 24,
                     "overflow": "hidden",
                   }
@@ -254,7 +255,7 @@ exports[`FavoriteWalletCard renders without error 1`] = `
             style={
               {
                 "alignItems": "center",
-                "backgroundColor": "#CECECE",
+                "backgroundColor": "#BFBFBF",
                 "borderBottomLeftRadius": 999999,
                 "borderBottomRightRadius": 999999,
                 "borderTopLeftRadius": 999999,

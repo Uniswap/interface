@@ -5,11 +5,15 @@ query SearchPopularTokens {
     chain
     symbol
     decimals
+    name
     project {
       id
-      name
       logoUrl
       safetyLevel
+    }
+    protectionInfo {
+      result
+      attackTypes
     }
   }
   # `topTokens` returns WETH rather than ETH
@@ -25,6 +29,10 @@ query SearchPopularTokens {
       name
       logoUrl
       safetyLevel
+    }
+    protectionInfo {
+      result
+      attackTypes
     }
   }
 }

@@ -1,10 +1,10 @@
-import { refitChartContentAtom } from 'components/Charts/TimeSelector'
-import { SeriesDataItemType } from 'components/Charts/types'
+import { PROTOCOL_LEGEND_ELEMENT_ID, SeriesDataItemType } from 'components/Charts/types'
 import { formatTickMarks } from 'components/Charts/utils'
 import { MissingDataBars } from 'components/Table/icons'
-import { useScreenSize } from 'hooks/screenSize'
+import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { atom } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
 import { DefaultTheme, useTheme } from 'lib/styled-components'
 import {
@@ -24,6 +24,8 @@ import { Flex, TamaguiElement, assertWebElement, styled } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 import { v4 as uuidv4 } from 'uuid'
+
+export const refitChartContentAtom = atom<(() => void) | undefined>(undefined)
 
 interface ChartUtilParams<TDataType extends SeriesDataItemType> {
   locale: string
@@ -132,12 +134,35 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
     const transformY = `calc(${yPx}px${yPct})`
 
     const tooltip = document.getElementById(this.tooltipId)
+    const legend = document.getElementById(PROTOCOL_LEGEND_ELEMENT_ID)
 
     if (tooltip) {
       tooltip.style.transform = `translate(${transformX}, ${transformY})`
 
       const tooltipMeasurement = tooltip.getBoundingClientRect()
       this._lastTooltipWidth = tooltipMeasurement?.width || null
+    }
+    if (legend) {
+      // keep legend centered on mouse cursor if hovered
+      legend.style.left = `${x}px`
+      const heroWidth = 230
+      // adjust height of tooltip if hovering below the hero text
+      if (x < heroWidth) {
+        legend.style.top = '80px'
+      } else {
+        legend.style.top = 'unset'
+      }
+      const transformOffset = 60
+      const maxXOffset = this.api.paneSize().width - 40
+      // keeps the legend centered on mouse x axis without getting cut off by chart edges
+      if (x < transformOffset) {
+        // Additional 4px of padding is added to prevent box-shadow from being cutoff
+        legend.style.transform = `translateX(-${x - 4}%)`
+      } else if (x > maxXOffset) {
+        legend.style.transform = `translateX(-${transformOffset + (x - maxXOffset)}%)`
+      } else {
+        legend.style.transform = `translateX(-${transformOffset}%)`
+      }
     }
   }
 

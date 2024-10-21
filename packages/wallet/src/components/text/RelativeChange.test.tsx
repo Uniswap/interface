@@ -1,15 +1,14 @@
 import renderer from 'react-test-renderer'
 import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
-import { Locale } from 'wallet/src/features/language/constants'
-import { TamaguiProvider } from 'wallet/src/provider/tamagui-provider'
-import { mockLocalizationContext } from 'wallet/src/test/mocks'
+import { Locale } from 'uniswap/src/features/language/constants'
+import { TamaguiProvider } from 'wallet/src/providers/tamagui-provider'
 
 // Needs to be imported after the mock localization context
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 
 const mockLocale = Locale.EnglishUnitedStates
 
-jest.mock('wallet/src/features/language/hooks', () => {
+jest.mock('uniswap/src/features/language/hooks', () => {
   return {
     useCurrentLocale: (): Locale => mockLocale,
   }
@@ -26,13 +25,11 @@ const mockFiatCurrencyInfo: FiatCurrencyInfo = {
   symbolAtFront: true,
 }
 
-jest.mock('wallet/src/features/fiatCurrency/hooks', () => {
+jest.mock('uniswap/src/features/fiatCurrency/hooks', () => {
   return {
     useAppFiatCurrencyInfo: (): FiatCurrencyInfo => mockFiatCurrencyInfo,
   }
 })
-
-jest.mock('wallet/src/features/language/LocalizationContext', () => mockLocalizationContext)
 
 it('renders a relative change', () => {
   const tree = renderer.create(

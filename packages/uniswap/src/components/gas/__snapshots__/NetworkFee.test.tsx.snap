@@ -1,0 +1,545 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "gap": 12,
+      "justifyContent": "space-between",
+    }
+  }
+>
+  <View
+    cancelable={true}
+    disabled={false}
+    focusable={true}
+    hitSlop={[Function]}
+    minPressDuration={0}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onPress={[Function]}
+    onPressIn={[Function]}
+    onPressOut={[Function]}
+    style={
+      {
+        "flexDirection": "column",
+        "flexShrink": 1,
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "flexShrink": 1,
+          "gap": 4,
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        maxFontSizeMultiplier={1.4}
+        numberOfLines={3}
+        style={
+          {
+            "color": "#9B9B9B",
+            "flexShrink": 1,
+            "fontFamily": "Basel Grotesk",
+            "fontSize": 14,
+            "fontWeight": "400",
+            "lineHeight": 20,
+          }
+        }
+        suppressHighlighting={true}
+      >
+        Network cost
+      </Text>
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight={16}
+        bbWidth={16}
+        fill="none"
+        focusable={false}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        strokeWidth={8}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "color": "#5E5E5E",
+              "height": 16,
+              "width": 16,
+            },
+            {
+              "flex": 0,
+              "height": 16,
+              "width": 16,
+            },
+          ]
+        }
+        tintColor="#5E5E5E"
+        vbHeight={16}
+        vbWidth={16}
+      >
+        <RNSVGGroup
+          fill={null}
+          propList={
+            [
+              "fill",
+              "strokeWidth",
+            ]
+          }
+          strokeWidth={8}
+        >
+          <RNSVGPath
+            d="M7.99992 1.33325C4.31792 1.33325 1.33325 4.31792 1.33325 7.99992C1.33325 11.6819 4.31792 14.6666 7.99992 14.6666C11.6819 14.6666 14.6666 11.6819 14.6666 7.99992C14.6666 4.31792 11.6819 1.33325 7.99992 1.33325ZM8.49992 10.9999C8.49992 11.2759 8.27592 11.4999 7.99992 11.4999C7.72392 11.4999 7.49992 11.2759 7.49992 10.9999V7.95256C7.49992 7.67656 7.72392 7.45256 7.99992 7.45256C8.27592 7.45256 8.49992 7.67656 8.49992 7.95256V10.9999ZM8.01327 6.33325C7.64527 6.33325 7.34318 6.03459 7.34318 5.66659C7.34318 5.29859 7.63859 4.99992 8.00659 4.99992H8.01327C8.38193 4.99992 8.67993 5.29859 8.67993 5.66659C8.67993 6.03459 8.38127 6.33325 8.01327 6.33325Z"
+            fill={
+              {
+                "type": 2,
+              }
+            }
+            propList={
+              [
+                "fill",
+              ]
+            }
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </View>
+  </View>
+  <style>
+    
+  @keyframes shine {
+    from {
+      -webkit-mask-position: 150%;
+    }
+    to {
+      -webkit-mask-position: -50%;
+    }
+  }
+
+  </style>
+  <View
+    style={
+      {
+        "WebkitMaskImage": "linear-gradient(-75deg, rgba(0,0,0,0.5) 30%, #000 50%, rgba(0,0,0,0.5) 70%)",
+        "WebkitMaskSize": "200%",
+        "animation": "shine 1s linear infinite",
+        "flexDirection": "column",
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "backgroundColor": "rgba(255,255,255,0.12)",
+          "borderBottomLeftRadius": 8,
+          "borderBottomRightRadius": 8,
+          "borderTopLeftRadius": 8,
+          "borderTopRightRadius": 8,
+          "flexDirection": "column",
+          "height": 20,
+          "width": 60,
+        }
+      }
+    />
+  </View>
+</View>
+`;
+
+exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "gap": 12,
+      "justifyContent": "space-between",
+    }
+  }
+>
+  <View
+    cancelable={true}
+    disabled={false}
+    focusable={true}
+    hitSlop={[Function]}
+    minPressDuration={0}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onPress={[Function]}
+    onPressIn={[Function]}
+    onPressOut={[Function]}
+    style={
+      {
+        "flexDirection": "column",
+        "flexShrink": 1,
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "flexShrink": 1,
+          "gap": 4,
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        maxFontSizeMultiplier={1.4}
+        numberOfLines={3}
+        style={
+          {
+            "color": "#9B9B9B",
+            "flexShrink": 1,
+            "fontFamily": "Basel Grotesk",
+            "fontSize": 14,
+            "fontWeight": "400",
+            "lineHeight": 20,
+          }
+        }
+        suppressHighlighting={true}
+      >
+        Network cost
+      </Text>
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight={16}
+        bbWidth={16}
+        fill="none"
+        focusable={false}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        strokeWidth={8}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "color": "#5E5E5E",
+              "height": 16,
+              "width": 16,
+            },
+            {
+              "flex": 0,
+              "height": 16,
+              "width": 16,
+            },
+          ]
+        }
+        tintColor="#5E5E5E"
+        vbHeight={16}
+        vbWidth={16}
+      >
+        <RNSVGGroup
+          fill={null}
+          propList={
+            [
+              "fill",
+              "strokeWidth",
+            ]
+          }
+          strokeWidth={8}
+        >
+          <RNSVGPath
+            d="M7.99992 1.33325C4.31792 1.33325 1.33325 4.31792 1.33325 7.99992C1.33325 11.6819 4.31792 14.6666 7.99992 14.6666C11.6819 14.6666 14.6666 11.6819 14.6666 7.99992C14.6666 4.31792 11.6819 1.33325 7.99992 1.33325ZM8.49992 10.9999C8.49992 11.2759 8.27592 11.4999 7.99992 11.4999C7.72392 11.4999 7.49992 11.2759 7.49992 10.9999V7.95256C7.49992 7.67656 7.72392 7.45256 7.99992 7.45256C8.27592 7.45256 8.49992 7.67656 8.49992 7.95256V10.9999ZM8.01327 6.33325C7.64527 6.33325 7.34318 6.03459 7.34318 5.66659C7.34318 5.29859 7.63859 4.99992 8.00659 4.99992H8.01327C8.38193 4.99992 8.67993 5.29859 8.67993 5.66659C8.67993 6.03459 8.38127 6.33325 8.01327 6.33325Z"
+            fill={
+              {
+                "type": 2,
+              }
+            }
+            propList={
+              [
+                "fill",
+              ]
+            }
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "gap": 8,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "flexDirection": "column",
+        }
+      }
+      testID="network-logo"
+    >
+      <div
+        className="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+        dir={null}
+        style={
+          {
+            "borderBottomColor": "rgba(19,19,19,1.00)",
+            "borderBottomLeftRadius": "4.8px",
+            "borderBottomRightRadius": "4.8px",
+            "borderBottomWidth": "0px",
+            "borderLeftColor": "rgba(19,19,19,1.00)",
+            "borderLeftWidth": "0px",
+            "borderRightColor": "rgba(19,19,19,1.00)",
+            "borderRightWidth": "0px",
+            "borderTopColor": "rgba(19,19,19,1.00)",
+            "borderTopLeftRadius": "4.8px",
+            "borderTopRightRadius": "4.8px",
+            "borderTopWidth": "0px",
+            "height": "16px",
+            "width": "16px",
+          }
+        }
+      >
+        <div
+          className="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+          dir={null}
+          suppressHydrationWarning={true}
+        />
+      </div>
+    </View>
+    <Text
+      allowFontScaling={false}
+      maxFontSizeMultiplier={1.4}
+      style={
+        {
+          "color": "#9B9B9B",
+          "fontFamily": "Basel Grotesk",
+          "fontSize": 14,
+          "fontWeight": "400",
+          "lineHeight": 20,
+        }
+      }
+      suppressHighlighting={true}
+    >
+      N/A
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`NetworkFee renders a NetworkFee normally 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "gap": 12,
+      "justifyContent": "space-between",
+    }
+  }
+>
+  <View
+    cancelable={true}
+    disabled={false}
+    focusable={true}
+    hitSlop={[Function]}
+    minPressDuration={0}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onPress={[Function]}
+    onPressIn={[Function]}
+    onPressOut={[Function]}
+    style={
+      {
+        "flexDirection": "column",
+        "flexShrink": 1,
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "flexShrink": 1,
+          "gap": 4,
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        maxFontSizeMultiplier={1.4}
+        numberOfLines={3}
+        style={
+          {
+            "color": "#9B9B9B",
+            "flexShrink": 1,
+            "fontFamily": "Basel Grotesk",
+            "fontSize": 14,
+            "fontWeight": "400",
+            "lineHeight": 20,
+          }
+        }
+        suppressHighlighting={true}
+      >
+        Network cost
+      </Text>
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight={16}
+        bbWidth={16}
+        fill="none"
+        focusable={false}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        strokeWidth={8}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "color": "#5E5E5E",
+              "height": 16,
+              "width": 16,
+            },
+            {
+              "flex": 0,
+              "height": 16,
+              "width": 16,
+            },
+          ]
+        }
+        tintColor="#5E5E5E"
+        vbHeight={16}
+        vbWidth={16}
+      >
+        <RNSVGGroup
+          fill={null}
+          propList={
+            [
+              "fill",
+              "strokeWidth",
+            ]
+          }
+          strokeWidth={8}
+        >
+          <RNSVGPath
+            d="M7.99992 1.33325C4.31792 1.33325 1.33325 4.31792 1.33325 7.99992C1.33325 11.6819 4.31792 14.6666 7.99992 14.6666C11.6819 14.6666 14.6666 11.6819 14.6666 7.99992C14.6666 4.31792 11.6819 1.33325 7.99992 1.33325ZM8.49992 10.9999C8.49992 11.2759 8.27592 11.4999 7.99992 11.4999C7.72392 11.4999 7.49992 11.2759 7.49992 10.9999V7.95256C7.49992 7.67656 7.72392 7.45256 7.99992 7.45256C8.27592 7.45256 8.49992 7.67656 8.49992 7.95256V10.9999ZM8.01327 6.33325C7.64527 6.33325 7.34318 6.03459 7.34318 5.66659C7.34318 5.29859 7.63859 4.99992 8.00659 4.99992H8.01327C8.38193 4.99992 8.67993 5.29859 8.67993 5.66659C8.67993 6.03459 8.38127 6.33325 8.01327 6.33325Z"
+            fill={
+              {
+                "type": 2,
+              }
+            }
+            propList={
+              [
+                "fill",
+              ]
+            }
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "gap": 8,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "flexDirection": "column",
+        }
+      }
+      testID="network-logo"
+    >
+      <div
+        className="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+        dir={null}
+        style={
+          {
+            "borderBottomColor": "rgba(19,19,19,1.00)",
+            "borderBottomLeftRadius": "4.8px",
+            "borderBottomRightRadius": "4.8px",
+            "borderBottomWidth": "0px",
+            "borderLeftColor": "rgba(19,19,19,1.00)",
+            "borderLeftWidth": "0px",
+            "borderRightColor": "rgba(19,19,19,1.00)",
+            "borderRightWidth": "0px",
+            "borderTopColor": "rgba(19,19,19,1.00)",
+            "borderTopLeftRadius": "4.8px",
+            "borderTopRightRadius": "4.8px",
+            "borderTopWidth": "0px",
+            "height": "16px",
+            "width": "16px",
+          }
+        }
+      >
+        <div
+          className="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+          dir={null}
+          suppressHydrationWarning={true}
+        />
+      </div>
+    </View>
+    <Text
+      allowFontScaling={false}
+      maxFontSizeMultiplier={1.4}
+      style={
+        {
+          "color": "#FFFFFF",
+          "fontFamily": "Basel Grotesk",
+          "fontSize": 14,
+          "fontWeight": "400",
+          "lineHeight": 20,
+        }
+      }
+      suppressHighlighting={true}
+    >
+      $1
+    </Text>
+  </View>
+</View>
+`;

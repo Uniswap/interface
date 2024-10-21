@@ -6,22 +6,24 @@ import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { ActionSheetModal } from 'uniswap/src/components/modals/ActionSheetModal'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { WALLET_SUPPORTED_CHAIN_IDS, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 type Props = {
-  selectedChainId: WalletChainId
-  onPressChain: (chainId: WalletChainId) => void
+  selectedChainId: UniverseChainId
+  onPressChain: (chainId: UniverseChainId) => void
   onClose: () => void
 }
 
 export const PendingConnectionSwitchNetworkModal = ({ selectedChainId, onPressChain, onClose }: Props): JSX.Element => {
   const colors = useSporeColors()
   const { t } = useTranslation()
+  const { chains: enabledChains } = useEnabledChains()
 
   const options = useMemo(
     () =>
-      WALLET_SUPPORTED_CHAIN_IDS.map((chainId) => {
+      enabledChains.map((chainId) => {
         const info = UNIVERSE_CHAIN_INFO[chainId]
         return {
           key: `${ElementName.NetworkButton}-${chainId}`,
@@ -44,7 +46,7 @@ export const PendingConnectionSwitchNetworkModal = ({ selectedChainId, onPressCh
           ),
         }
       }),
-    [selectedChainId, onPressChain, colors.accent1],
+    [selectedChainId, onPressChain, colors.accent1, enabledChains],
   )
 
   return (

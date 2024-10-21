@@ -1,6 +1,6 @@
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/DefaultMenu'
 import { useOpenLimitOrders, usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
-import { useFilterPossiblyMaliciousPositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools'
+import { useFilterPossiblyMaliciousPositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/PoolsTab'
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Pool } from 'components/Icons/Pool'
@@ -43,7 +43,7 @@ const DeepLinkButton = ({ Icon, Label, onPress }: { Icon: JSX.Element; Label: st
       hoverStyle={{ opacity: 0.9 }}
     >
       {Icon}
-      <Text display="flex" flex={1} variant="buttonLabel3">
+      <Text display="flex" flex={1} variant="buttonLabel2">
         {Label}
       </Text>
       <RotatableChevron width={iconSizes.icon20} height={iconSizes.icon20} color="$neutral3" direction="right" />

@@ -30,7 +30,7 @@ export const useMenuContent = (): MenuSection[] => {
       items: [
         { label: t('common.governance'), href: 'https://docs.rigoblock.com/governance' },
         { label: t('common.developers'), href: 'https://docs.rigoblock.com/introduction-to-rigoblock' },
-         { label: t('common.analytics'), href: 'https://defillama.com/protocol/rigoblock' },
+        { label: t('common.analytics'), href: 'https://defillama.com/protocol/rigoblock' },
       ],
     },
     {

@@ -52,8 +52,7 @@ export default function RadialGradientByChainUpdater(): null {
     }
 
     switch (chainId) {
-      case UniverseChainId.ArbitrumOne:
-      case UniverseChainId.ArbitrumGoerli: {
+      case UniverseChainId.ArbitrumOne: {
         setBackground(backgroundResetStyles)
         const arbitrumLightGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(205, 232, 251, 0) 0%, rgba(252, 243, 249, 0) 49.48%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
@@ -62,8 +61,7 @@ export default function RadialGradientByChainUpdater(): null {
         backgroundRadialGradientElement.style.background = darkMode ? arbitrumDarkGradient : arbitrumLightGradient
         break
       }
-      case UniverseChainId.Optimism:
-      case UniverseChainId.OptimismGoerli: {
+      case UniverseChainId.Optimism: {
         setBackground(backgroundResetStyles)
         const optimismLightGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(255, 251, 242, 0) 0%, rgba(255, 244, 249, 0) 50.52%, rgba(255, 255, 255, 0) 100%), #FFFFFF'
@@ -72,8 +70,7 @@ export default function RadialGradientByChainUpdater(): null {
         backgroundRadialGradientElement.style.background = darkMode ? optimismDarkGradient : optimismLightGradient
         break
       }
-      case UniverseChainId.Polygon:
-      case UniverseChainId.PolygonMumbai: {
+      case UniverseChainId.Polygon: {
         setBackground(backgroundResetStyles)
         const polygonLightGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(130, 71, 229, 0) 0%, rgba(200, 168, 255, 0.05) 52.6%, rgba(0, 0, 0, 0) 100%), #FFFFFF'
@@ -82,8 +79,7 @@ export default function RadialGradientByChainUpdater(): null {
         backgroundRadialGradientElement.style.background = darkMode ? polygonDarkGradient : polygonLightGradient
         break
       }
-      case UniverseChainId.Celo:
-      case UniverseChainId.CeloAlfajores: {
+      case UniverseChainId.Celo: {
         setBackground(backgroundResetStyles)
         const celoLightGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(186, 228, 210, 0) 0%, rgba(252, 243, 249, 0) 49.48%, rgba(255, 255, 255, 0) 100%), #FFFFFF'

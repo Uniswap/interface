@@ -1,11 +1,9 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
-import { RotatableChevron } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { Flex, ImpactFeedbackStyle, Separator, Text, TouchableArea } from 'ui/src'
+import { AnglesDownUp, SortVertical } from 'ui/src/components/icons'
+import { isMobileApp } from 'utilities/src/platform'
 
 export function HiddenTokensRow({
-  padded = false,
   numHidden,
   isExpanded,
   onPress,
@@ -18,47 +16,33 @@ export function HiddenTokensRow({
   const { t } = useTranslation()
 
   return (
-    <TouchableArea hapticFeedback activeOpacity={1} hapticStyle={ImpactFeedbackStyle.Light} onPress={onPress}>
-      <Flex row alignItems="center" justifyContent="space-between" px={padded ? '$spacing12' : '$none'} py="$spacing12">
-        <Text color="$neutral2" pl="$spacing8" variant="subheading2">
-          {t('tokens.hidden.label', { numHidden })}
-        </Text>
-        {/* just used for opacity styling, the parent TouchableArea handles event */}
-        <TouchableArea
-          hapticFeedback
-          hapticStyle={ImpactFeedbackStyle.Light}
-          testID={TestID.ShowHiddenTokens}
-          onPress={onPress}
-        >
-          <Flex
-            row
-            alignItems="center"
-            backgroundColor="$surface2"
-            borderRadius="$roundedFull"
-            gap="$spacing2"
-            justifyContent="center"
-            pl="$spacing12"
-            pr="$spacing8"
-            py="$spacing8"
-          >
-            <Text
-              allowFontScaling={false}
-              color="$neutral2"
-              textAlign="center"
-              userSelect="none"
-              variant="buttonLabel3"
-            >
-              {isExpanded ? t('common.button.hide') : t('common.button.show')}
+    <TouchableArea
+      hapticFeedback
+      activeOpacity={1}
+      hapticStyle={ImpactFeedbackStyle.Light}
+      mx={isMobileApp && '$spacing16'}
+      onPress={onPress}
+    >
+      <Flex row alignItems="center" justifyContent="space-between" py="$spacing8">
+        <Flex centered grow row gap="$spacing12">
+          <Separator />
+
+          <Flex centered row gap="$gap4">
+            <Text color="$neutral3" textAlign="center" variant="body3">
+              {t('hidden.tokens.info.text.button', { numHidden })}
             </Text>
-            <RotatableChevron
-              animation="semiBouncy"
-              color="$neutral2"
-              direction={isExpanded ? 'up' : 'down'}
-              height={iconSizes.icon16}
-              width={iconSizes.icon16}
-            />
+
+            <Flex centered justifyContent="center">
+              {isExpanded ? (
+                <AnglesDownUp color="$neutral3" size="$icon.16" />
+              ) : (
+                <SortVertical color="$neutral3" size="$icon.16" />
+              )}
+            </Flex>
           </Flex>
-        </TouchableArea>
+
+          <Separator />
+        </Flex>
       </Flex>
     </TouchableArea>
   )

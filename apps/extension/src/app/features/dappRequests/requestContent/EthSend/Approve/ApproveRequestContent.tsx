@@ -69,11 +69,9 @@ export function ApproveRequestContent({
   const { parsedTransactionData } = useNoYoloParser(dappRequest.transaction, activeChain)
 
   // To detect a revoke, both the transaction value and the parsed arg amount value must be zero
-  const isArgAmountZero = parsedTransactionData?.args.some((arg) => {
-    if (typeof arg === 'object' && arg._hex) {
-      return BigNumber.from(arg._hex).isZero()
-    }
-  })
+  const isArgAmountZero = parsedTransactionData?.args.some(
+    (arg) => typeof arg === 'object' && arg._hex && BigNumber.from(arg._hex).isZero(),
+  )
   const isRevoke = dappRequest.transaction.value === '0x0' && isArgAmountZero
 
   const tokenInfo = useDappRequestTokenRecipientInfo(dappRequest, dappUrl)

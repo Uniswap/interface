@@ -50,6 +50,7 @@ import { flexStyles, useHapticFeedback, useIsDarkMode } from 'ui/src'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
+import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { DUMMY_STATSIG_SDK_KEY, StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
@@ -60,6 +61,9 @@ import {
 } from 'uniswap/src/features/gating/hooks'
 import { loadStatsigOverrides } from 'uniswap/src/features/gating/overrides/customPersistedOverrides'
 import { Statsig, StatsigOptions, StatsigProvider, StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
+import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
+import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
+import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -73,23 +77,21 @@ import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
+import { TestnetModeBanner } from 'wallet/src/components/banners/TestnetModeBanner'
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
+import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
 // eslint-disable-next-line no-restricted-imports
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
-import { initFirebaseAppCheck } from 'wallet/src/features/appCheck'
+import { initFirebaseAppCheck } from 'wallet/src/features/appCheck/appCheck'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { selectHapticsEnabled } from 'wallet/src/features/appearance/slice'
-import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
-import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
-import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
-import { syncAppWithDeviceLanguage } from 'wallet/src/features/language/slice'
 import { clearNotificationQueue } from 'wallet/src/features/notifications/slice'
 import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import { SharedProvider } from 'wallet/src/provider'
+import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 import { beforeSend } from 'wallet/src/utils/sentry'
 
 enableFreeze(true)
@@ -224,14 +226,14 @@ function App(): JSX.Element | null {
             <I18nextProvider i18n={i18n}>
               <SentryTags>
                 <SafeAreaProvider>
-                  <SharedProvider reduxStore={store}>
+                  <SharedWalletProvider reduxStore={store}>
                     <AnalyticsNavigationContextProvider
                       shouldLogScreen={shouldLogScreen}
                       useIsPartOfNavigationTree={useIsPartOfNavigationTree}
                     >
                       <AppOuter />
                     </AnalyticsNavigationContextProvider>
-                  </SharedProvider>
+                  </SharedWalletProvider>
                 </SafeAreaProvider>
               </SentryTags>
             </I18nextProvider>
@@ -359,8 +361,7 @@ function AppInner(): JSX.Element {
   const hapticsUserEnabled = useSelector(selectHapticsEnabled)
   const { setHapticsEnabled } = useHapticFeedback()
 
-  // WALL-4357 Remove when A/A test is done, using it to check statsig migration
-  useFeatureFlag(FeatureFlags.AATest)
+  useTestnetModeForLoggingAndAnalytics()
 
   // handles AppsFlyer enable/disable based on the allow analytics toggle
   useEffect(() => {
@@ -400,6 +401,7 @@ function AppInner(): JSX.Element {
     <>
       {openAIAssistantEnabled && <AIAssistantScreen />}
       <OfflineBanner />
+      <TestnetModeBanner />
       <AppStackNavigator />
       <StatusBar translucent backgroundColor="transparent" barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
     </>

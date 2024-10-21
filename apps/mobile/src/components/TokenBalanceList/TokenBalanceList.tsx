@@ -1,7 +1,7 @@
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import { useFocusEffect } from '@react-navigation/core'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
-import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated'
@@ -9,13 +9,20 @@ import { useAppStackNavigation } from 'src/app/navigation/types'
 import { TokenBalanceItemContextMenu } from 'src/components/TokenBalanceList/TokenBalanceItemContextMenu'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { TAB_BAR_HEIGHT, TAB_VIEW_SCROLL_THROTTLE, TabProps } from 'src/components/layout/TabHelpers'
-import { Flex, Loader, useDeviceInsets, useSporeColors } from 'ui/src'
+import { Flex, Loader, useSporeColors } from 'ui/src'
+import { ShieldCheck } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { zIndices } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
+import { InformationBanner } from 'wallet/src/components/banners/InformationBanner'
+import { InfoLinkModal } from 'wallet/src/components/modals/InfoLinkModal'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { HiddenTokensRow } from 'wallet/src/features/portfolio/HiddenTokensRow'
 import { TokenBalanceItem } from 'wallet/src/features/portfolio/TokenBalanceItem'
@@ -67,7 +74,7 @@ export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, T
   ) {
     const { t } = useTranslation()
     const colors = useSporeColors()
-    const insets = useDeviceInsets()
+    const insets = useAppInsets()
 
     const { rows, balancesById, networkStatus, refetch } = useTokenBalanceListContext()
     const hasError = isError(networkStatus, !!balancesById)
@@ -204,16 +211,15 @@ export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, T
           contentContainerStyle={containerProps?.contentContainerStyle}
           data={data}
           getItemLayout={getItemLayout}
-          initialNumToRender={20}
+          initialNumToRender={10}
           keyExtractor={keyExtractor}
-          maxToRenderPerBatch={20}
+          maxToRenderPerBatch={10}
           refreshControl={refreshControl}
           refreshing={refreshing}
           renderItem={renderItem}
           scrollEventThrottle={containerProps?.scrollEventThrottle ?? TAB_VIEW_SCROLL_THROTTLE}
           showsVerticalScrollIndicator={false}
           testID={testID}
-          updateCellsBatchingPeriod={10}
           windowSize={isFocused ? 10 : 3}
           onContentSizeChange={onContentSizeChange}
           onMomentumScrollEnd={containerProps?.onMomentumScrollEnd}
@@ -242,16 +248,59 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
     setHiddenTokensExpanded,
   } = useTokenBalanceListContext()
 
+  const { t } = useTranslation()
+  const [isModalVisible, setModalVisible] = useState(false)
+
+  const handlePressToken = (): void => {
+    setModalVisible(true)
+  }
+
+  const closeModal = (): void => {
+    setModalVisible(false)
+  }
+
+  const handleAnalytics = (): void => {
+    sendAnalyticsEvent(WalletEventName.ExternalLinkOpened, {
+      url: uniswapUrls.helpArticleUrls.hiddenTokenInfo,
+    })
+  }
+
   if (item === HIDDEN_TOKEN_BALANCES_ROW) {
     return (
-      <HiddenTokensRow
-        padded
-        isExpanded={hiddenTokensExpanded}
-        numHidden={hiddenTokensCount}
-        onPress={(): void => {
-          setHiddenTokensExpanded(!hiddenTokensExpanded)
-        }}
-      />
+      <Flex grow>
+        <HiddenTokensRow
+          isExpanded={hiddenTokensExpanded}
+          numHidden={hiddenTokensCount}
+          onPress={(): void => {
+            setHiddenTokensExpanded(!hiddenTokensExpanded)
+          }}
+        />
+        {hiddenTokensExpanded && (
+          <Flex mx="$spacing12">
+            <InformationBanner infoText={t('hidden.tokens.info.banner.text')} onPress={handlePressToken} />
+          </Flex>
+        )}
+
+        <InfoLinkModal
+          showCloseButton
+          buttonText={t('common.button.close')}
+          buttonTheme="tertiary"
+          description={t('hidden.tokens.info.text.info')}
+          icon={
+            <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">
+              <ShieldCheck color="$neutral1" size="$icon.24" />
+            </Flex>
+          }
+          isOpen={isModalVisible}
+          linkText={t('common.button.learn')}
+          linkUrl={uniswapUrls.helpArticleUrls.hiddenTokenInfo}
+          name={ModalName.HiddenTokenInfoModal}
+          title={t('hidden.tokens.info.text.title')}
+          onAnalyticsEvent={handleAnalytics}
+          onButtonPress={closeModal}
+          onDismiss={closeModal}
+        />
+      </Flex>
     )
   }
 

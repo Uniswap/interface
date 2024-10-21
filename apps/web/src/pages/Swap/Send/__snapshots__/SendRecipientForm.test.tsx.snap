@@ -141,20 +141,6 @@ exports[`SendCurrencyInputform should render correctly with no verified recipien
 `;
 
 exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
 .c7 {
   height: 36px;
   width: 36px;
@@ -169,6 +155,20 @@ exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
 .c8 {
   -webkit-animation: 2s fvtopB linear infinite;
   animation: 2s fvtopB linear infinite;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .c2 {
@@ -351,7 +351,7 @@ exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
                   <img
                     height="18"
                     src="unitag-light-small.png"
-                    style="object-fit: contain;"
+                    style="object-fit: contain; vertical-align: bottom;"
                     width="18"
                   />
                 </div>
@@ -396,20 +396,6 @@ exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
 `;
 
 exports[`SendCurrencyInputform should render correctly with verified recipient 1`] = `
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
 .c7 {
   height: 36px;
   width: 36px;
@@ -424,6 +410,20 @@ exports[`SendCurrencyInputform should render correctly with verified recipient 1
 .c8 {
   -webkit-animation: 2s fvtopB linear infinite;
   animation: 2s fvtopB linear infinite;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .c2 {

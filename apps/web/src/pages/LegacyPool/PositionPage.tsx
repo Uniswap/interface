@@ -3,28 +3,22 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { InterfacePageName, LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
-import Badge from 'components/Badge'
+import Badge from 'components/Badge/Badge'
 import RangeBadge from 'components/Badge/RangeBadge'
-import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
-import { SmallButtonPrimary } from 'components/Button/index'
-import { DarkCard, LightCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
-import { DoubleCurrencyLogo } from 'components/DoubleLogo'
+import { ButtonConfirmed, ButtonGray, ButtonPrimary, SmallButtonPrimary } from 'components/Button/buttons'
+import { DarkCard, LightCard } from 'components/Card/cards'
+import { PositionNFT } from 'components/Liquidity/PositionNFT'
 import { LoadingFullscreen } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { getPriceOrderingFromPositionForUI } from 'components/PositionListItem'
 import RateToggle from 'components/RateToggle'
-import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
+import { AutoColumn } from 'components/deprecated/Column'
+import { RowBetween, RowFixed } from 'components/deprecated/Row'
 import { Dots } from 'components/swap/styled'
-import {
-  SupportedInterfaceChainId,
-  chainIdToBackendChain,
-  useIsSupportedChainId,
-  useSupportedChainId,
-} from 'constants/chains'
+import { chainIdToBackendChain, useIsSupportedChainId, useSupportedChainId } from 'constants/chains'
 import { getPoolDetailsURL, getTokenDetailsURL, isGqlSupportedChain } from 'graphql/data/util'
 import { useToken } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
@@ -40,7 +34,7 @@ import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import styled, { useTheme } from 'lib/styled-components'
 import { LoadingRows } from 'pages/LegacyPool/styled'
-import { PropsWithChildren, useCallback, useMemo, useRef, useState } from 'react'
+import { PropsWithChildren, useCallback, useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Link, useParams } from 'react-router-dom'
 import { useActiveSmartPool } from 'state/application/hooks'
@@ -48,17 +42,17 @@ import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { ClickableStyle, ExternalLink, HideExtraSmall, HideSmall, StyledRouterLink, ThemedText } from 'theme/components'
-import { Text } from 'ui/src'
+import { Switch, Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans, t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { currencyId } from 'utils/currencyId'
 import { WrongChainError } from 'utils/errors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 const PositionPageButtonPrimary = styled(ButtonPrimary)`
@@ -160,23 +154,6 @@ const ResponsiveButtonConfirmed = styled(ButtonConfirmed)`
   }
 `
 
-const NFTGrid = styled.div`
-  display: grid;
-  grid-template: 'overlap';
-  min-height: 400px;
-`
-
-const NFTCanvas = styled.canvas`
-  grid-area: overlap;
-`
-
-const NFTImage = styled.img`
-  grid-area: overlap;
-  height: 400px;
-  /* Ensures SVG appears on top of canvas. */
-  z-index: 1;
-`
-
 const StyledPoolLink = styled(Link)`
   text-decoration: none;
   ${ClickableStyle}
@@ -227,7 +204,7 @@ const TokenLink = ({
   children,
   chainId,
   address,
-}: PropsWithChildren<{ chainId: SupportedInterfaceChainId; address: string }>) => {
+}: PropsWithChildren<{ chainId: UniverseChainId; address: string }>) => {
   const tokenLink = getTokenDetailsURL({ address, chain: chainIdToBackendChain({ chainId }) })
   return <StyledRouterLink to={tokenLink}>{children}</StyledRouterLink>
 }
@@ -277,65 +254,6 @@ function getRatio(
   } catch {
     return undefined
   }
-}
-
-// snapshots a src img into a canvas
-function getSnapshot(src: HTMLImageElement, canvas: HTMLCanvasElement, targetHeight: number) {
-  const context = canvas.getContext('2d')
-
-  if (context) {
-    let { width, height } = src
-
-    // src may be hidden and not have the target dimensions
-    const ratio = width / height
-    height = targetHeight
-    width = Math.round(ratio * targetHeight)
-
-    // Ensure crispness at high DPIs
-    canvas.width = width * devicePixelRatio
-    canvas.height = height * devicePixelRatio
-    canvas.style.width = width + 'px'
-    canvas.style.height = height + 'px'
-    context.scale(devicePixelRatio, devicePixelRatio)
-
-    context.clearRect(0, 0, width, height)
-    context.drawImage(src, 0, 0, width, height)
-  }
-}
-
-function NFT({ image, height: targetHeight }: { image: string; height: number }) {
-  const [animate, setAnimate] = useState(false)
-
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const imageRef = useRef<HTMLImageElement>(null)
-
-  return (
-    <NFTGrid
-      onMouseEnter={() => {
-        setAnimate(true)
-      }}
-      onMouseLeave={() => {
-        // snapshot the current frame so the transition to the canvas is smooth
-        if (imageRef.current && canvasRef.current) {
-          getSnapshot(imageRef.current, canvasRef.current, targetHeight)
-        }
-        setAnimate(false)
-      }}
-    >
-      <NFTCanvas ref={canvasRef} />
-      <NFTImage
-        ref={imageRef}
-        src={image}
-        hidden={!animate}
-        onLoad={() => {
-          // snapshot for the canvas
-          if (imageRef.current && canvasRef.current) {
-            getSnapshot(imageRef.current, canvasRef.current, targetHeight)
-          }
-        }}
-      />
-    </NFTGrid>
-  )
 }
 
 const useInverter = ({
@@ -399,12 +317,12 @@ const PositionLabelRow = styled(RowFixed)({
 
 function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
   if (!tokenId) {
-    return
+    return undefined
   }
   try {
     return BigNumber.from(tokenId)
   } catch (error) {
-    return
+    return undefined
   }
 }
 
@@ -804,7 +722,7 @@ function PositionPageContent() {
                       minWidth: '340px',
                     }}
                   >
-                    <NFT image={metadata.result.image} height={400} />
+                    <PositionNFT image={metadata.result.image} height={400} />
                     {typeof account.chainId === 'number' && owner && !ownsNFT ? (
                       <ExternalLink href={getExplorerLink(account.chainId, owner, ExplorerDataType.ADDRESS)}>
                         <Trans i18nKey="pool.owner" />
@@ -974,10 +892,11 @@ function PositionPageContent() {
                           <ThemedText.DeprecatedMain>
                             <Trans i18nKey="pool.collectAs" values={{ nativeWrappedSymbol }} />
                           </ThemedText.DeprecatedMain>
-                          <Toggle
+                          <Switch
                             id="receive-as-weth"
-                            isActive={receiveWETH}
-                            toggle={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
+                            checked={receiveWETH}
+                            onCheckedChange={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
+                            variant="branded"
                           />
                         </RowBetween>
                       </AutoColumn>

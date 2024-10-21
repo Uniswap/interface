@@ -1,15 +1,15 @@
 import { Protocol } from '@uniswap/router-sdk'
-import Column from 'components/Column'
 import UniswapXBrandMark from 'components/Logo/UniswapXBrandMark'
 import QuestionHelper from 'components/QuestionHelper'
-import Row, { RowBetween } from 'components/Row'
-import Toggle from 'components/Toggle'
-import { isUniswapXSupportedChain } from 'constants/chains'
+import Column from 'components/deprecated/Column'
+import Row, { RowBetween } from 'components/deprecated/Row'
+import { useIsUniswapXSupportedChain } from 'constants/chains'
 import { atom, useAtom } from 'jotai'
 import styled from 'lib/styled-components'
 import { ReactNode, useCallback } from 'react'
 import { RouterPreference } from 'state/routing/types'
 import { ExternalLink, ThemedText } from 'theme/components'
+import { Switch } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { Trans, t } from 'uniswap/src/i18n'
 
@@ -106,7 +106,13 @@ function RoutePreferenceToggle({
         {text && <ThemedText.BodySmall color="neutral2">{text}</ThemedText.BodySmall>}
         {subheading && <ThemedText.BodySmall color="neutral2">{subheading}</ThemedText.BodySmall>}
       </LabelWrapper>
-      <Toggle id={`route-preference-toggle-${preference}`} isActive={isActive} disabled={disabled} toggle={toggle} />
+      <Switch
+        testID={`route-preference-toggle-${preference}`}
+        checked={isActive}
+        disabled={disabled}
+        variant="branded"
+        onCheckedChange={toggle}
+      />
     </RowBetween>
   )
 }
@@ -116,7 +122,7 @@ export default function MultipleRoutingOptions({ chainId }: { chainId?: number }
   const [, setRoutingPreferences] = useAtom(routingPreferencesAtom)
   const shouldDisableProtocolOptionToggle =
     !routePreferenceOptions[RoutePreferenceOption.v2] || !routePreferenceOptions[RoutePreferenceOption.v3]
-  const uniswapXSupportedChain = chainId && isUniswapXSupportedChain(chainId)
+  const uniswapXSupportedChain = useIsUniswapXSupportedChain(chainId)
   const handleSetRoutePreferenceOptions = useCallback(
     (options: RoutePreferenceOptionsType) => {
       if (options[RoutePreferenceOption.Optimal]) {

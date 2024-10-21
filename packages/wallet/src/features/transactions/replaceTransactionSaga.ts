@@ -2,22 +2,24 @@ import { BigNumber, providers } from 'ethers'
 import { call, put, select } from 'typed-redux-saga'
 import { addTransaction, deleteTransaction } from 'uniswap/src/features/transactions/slice'
 import {
+  BridgeTransactionDetails,
   ClassicTransactionDetails,
   TransactionDetails,
   TransactionStatus,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n/i18n'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { logger } from 'utilities/src/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { signAndSendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
-import { createTransactionId, getSerializableTransactionRequest } from 'wallet/src/features/transactions/utils'
+import { getSerializableTransactionRequest } from 'wallet/src/features/transactions/utils'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 
 export function* attemptReplaceTransaction(
-  transaction: ClassicTransactionDetails,
+  transaction: ClassicTransactionDetails | BridgeTransactionDetails,
   newTxRequest: providers.TransactionRequest,
   isCancellation = false,
 ) {

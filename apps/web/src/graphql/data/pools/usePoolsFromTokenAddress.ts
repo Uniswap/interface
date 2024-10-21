@@ -1,17 +1,25 @@
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
-import { PoolTableSortState, TablePool, V2_BIPS, calculateOneDayApr, sortPools } from 'graphql/data/pools/useTopPools'
+import { chainIdToBackendChain } from 'constants/chains'
+import {
+  PoolTableSortState,
+  TablePool,
+  V2_BIPS,
+  calculate1DVolOverTvl,
+  calculateApr,
+  sortPools,
+} from 'graphql/data/pools/useTopPools'
 import { useCallback, useMemo, useRef } from 'react'
 import {
   useTopV2PairsQuery,
   useTopV3PoolsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const DEFAULT_QUERY_SIZE = 20
 
 export function usePoolsFromTokenAddress(
   tokenAddress: string,
   sortState: PoolTableSortState,
-  chainId?: SupportedInterfaceChainId,
+  chainId?: UniverseChainId,
 ) {
   const {
     loading: loadingV3,
@@ -99,11 +107,11 @@ export function usePoolsFromTokenAddress(
           hash: pool.address,
           token0: pool.token0,
           token1: pool.token1,
-          txCount: pool.txCount,
           tvl: pool.totalLiquidity?.value,
           volume24h: pool.volume24h?.value,
           volumeWeek: pool.volumeWeek?.value,
-          oneDayApr: calculateOneDayApr(pool.volume24h?.value, pool.totalLiquidity?.value, pool.feeTier),
+          volOverTvl: calculate1DVolOverTvl(pool.volume24h?.value, pool.totalLiquidity?.value),
+          apr: calculateApr(pool.volume24h?.value, pool.totalLiquidity?.value, pool.feeTier),
           feeTier: pool.feeTier,
           protocolVersion: pool.protocolVersion,
         } as TablePool
@@ -114,11 +122,11 @@ export function usePoolsFromTokenAddress(
           hash: pool.address,
           token0: pool.token0,
           token1: pool.token1,
-          txCount: pool.txCount,
           tvl: pool.totalLiquidity?.value,
           volume24h: pool.volume24h?.value,
           volumeWeek: pool.volumeWeek?.value,
-          oneDayApr: calculateOneDayApr(pool.volume24h?.value, pool.totalLiquidity?.value, V2_BIPS),
+          volOverTvl: calculate1DVolOverTvl(pool.volume24h?.value, pool.totalLiquidity?.value),
+          apr: calculateApr(pool.volume24h?.value, pool.totalLiquidity?.value, V2_BIPS),
           feeTier: V2_BIPS,
           protocolVersion: pool.protocolVersion,
         } as TablePool

@@ -103,10 +103,10 @@ exports[`SplitLogo inline renders inline button 1`] = `
       style={
         {
           "color": "#9B9B9B",
-          "fontFamily": "Basel-Medium",
-          "fontSize": 12,
+          "fontFamily": "Basel Grotesk",
+          "fontSize": 16,
           "fontWeight": "500",
-          "lineHeight": 16,
+          "lineHeight": 18.4,
         }
       }
       suppressHighlighting={true}
@@ -133,7 +133,7 @@ exports[`SplitLogo renders without error 1`] = `
   onPressOut={[Function]}
   style={
     {
-      "backgroundColor": "#311C31",
+      "backgroundColor": "#361A37",
       "borderBottomLeftRadius": 12,
       "borderBottomRightRadius": 12,
       "borderTopLeftRadius": 12,
@@ -168,10 +168,10 @@ exports[`SplitLogo renders without error 1`] = `
       style={
         {
           "color": "#FC72FF",
-          "fontFamily": "Basel-Medium",
-          "fontSize": 12,
+          "fontFamily": "Basel Grotesk",
+          "fontSize": 14,
           "fontWeight": "500",
-          "lineHeight": 16,
+          "lineHeight": 16.099999999999998,
         }
       }
       suppressHighlighting={true}

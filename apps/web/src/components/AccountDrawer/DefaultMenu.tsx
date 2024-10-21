@@ -4,7 +4,7 @@ import LocalCurrencyMenu from 'components/AccountDrawer/LocalCurrencyMenu'
 import { LimitsMenu } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitsMenu'
 import { UniExtensionPoolsMenu } from 'components/AccountDrawer/MiniPortfolio/Pools/UniExtensionPoolsMenu'
 import SettingsMenu from 'components/AccountDrawer/SettingsMenu'
-import Column from 'components/Column'
+import Column from 'components/deprecated/Column'
 import WalletModal from 'components/WalletModal'
 import { useAccount } from 'hooks/useAccount'
 import { atom, useAtom } from 'jotai'
@@ -49,7 +49,7 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
       }, 250)
       return () => clearTimeout(timer)
     }
-    return
+    return undefined
   }, [drawerOpen, menu, closeSettings])
 
   useEffect(() => {
@@ -66,6 +66,7 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
   const isSendPage = page === '/send'
   const shouldQueryPoolBalances = useMemo(() => smartPoolAddress && !isSendPage, [smartPoolAddress, isSendPage])
 
+  // eslint-disable-next-line consistent-return
   const SubMenu = useMemo(() => {
     switch (menu) {
       case MenuState.DEFAULT:

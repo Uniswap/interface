@@ -7,12 +7,12 @@ import { useAnimatedScrollHandler, useSharedValue, withTiming } from 'react-nati
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
 import { ScrollHeader } from 'src/components/layout/screens/ScrollHeader'
-import { Loader } from 'src/components/loading'
+import { Loader } from 'src/components/loading/loaders'
 import { ListPriceBadge } from 'src/features/nfts/collection/ListPriceCard'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
 import { NFTCollectionHeader, NFT_BANNER_HEIGHT } from 'src/features/nfts/collection/NFTCollectionHeader'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
-import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useDeviceInsets } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { AnimatedBottomSheetFlashList, AnimatedFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -22,6 +22,7 @@ import {
   useNftCollectionScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isIOS } from 'utilities/src/platform'
 import { isError } from 'wallet/src/data/utils'
@@ -43,7 +44,7 @@ const keyExtractor = (item: NFTItem | string, index: number): string =>
 function gqlNFTAssetToNFTItem(data: NftCollectionScreenQuery | undefined): NFTItem[] | undefined {
   const items = data?.nftAssets?.edges?.flatMap((item) => item.node)
   if (!items) {
-    return
+    return undefined
   }
 
   return items.map((item): NFTItem => {
@@ -74,7 +75,7 @@ export function NFTCollectionScreen({
   renderedInModal = false,
 }: NFTCollectionScreenProps): ReactElement {
   const { t } = useTranslation()
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const dimensions = useDeviceDimensions()
   const navigation = useAppStackNavigation()
 
@@ -112,14 +113,17 @@ export function NFTCollectionScreen({
   const listRef = useRef<any>(null)
   useScrollToTop(listRef)
   const scrollY = useSharedValue(0)
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      scrollY.value = event.contentOffset.y
+  const scrollHandler = useAnimatedScrollHandler(
+    {
+      onScroll: (event) => {
+        scrollY.value = event.contentOffset.y
+      },
+      onEndDrag: (event) => {
+        scrollY.value = withTiming(event.contentOffset.y > 0 ? NFT_BANNER_HEIGHT : 0)
+      },
     },
-    onEndDrag: (event) => {
-      scrollY.value = withTiming(event.contentOffset.y > 0 ? NFT_BANNER_HEIGHT : 0)
-    },
-  })
+    [scrollY],
+  )
 
   const onPressItem = (asset: NFTItem): void => {
     navigation.navigate(MobileScreens.NFTItem, {

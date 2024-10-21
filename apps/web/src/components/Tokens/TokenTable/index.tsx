@@ -18,13 +18,19 @@ import {
   useSetSortMethod,
 } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { SupportedInterfaceChainId, chainIdToBackendChain, useChainFromUrlParam } from 'constants/chains'
+import { chainIdToBackendChain, getChainFromChainUrlParam, useChainFromUrlParam } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { SparklineMap, TopToken, useTopTokens } from 'graphql/data/TopTokens'
-import { OrderDirection, getSupportedGraphQlChain, getTokenDetailsURL } from 'graphql/data/util'
+import { OrderDirection, getSupportedGraphQlChain, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
+import useSimplePagination from 'hooks/useSimplePagination'
 import { useAtomValue } from 'jotai/utils'
-import { ReactElement, ReactNode, useMemo } from 'react'
+import { ReactElement, ReactNode, memo, useMemo } from 'react'
+import { TABLE_PAGE_SIZE, giveExploreStatDefaultValue } from 'state/explore'
+import { useTopTokens as useRestTopTokens } from 'state/explore/topTokens'
+import { TokenStat } from 'state/explore/types'
 import { Flex, Text, styled } from 'ui/src'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -49,6 +55,7 @@ const SparklineContainer = styled(Flex, {
 const TokenTableText = styled(Text, {
   variant: 'body2',
   color: '$neutral2',
+  maxWidth: '100%',
 })
 
 interface TokenTableValue {
@@ -65,11 +72,11 @@ interface TokenTableValue {
   linkState: { preloadedLogoSrc?: string }
 }
 
-function TokenDescription({ token }: { token: TopToken }) {
+function TokenDescription({ token }: { token: TopToken | TokenStat }) {
   return (
     <Flex row gap="$gap8">
       <QueryTokenLogo token={token} size={28} />
-      <EllipsisText data-testid="token-name">{token?.project?.name ?? token?.name}</EllipsisText>
+      <EllipsisText data-testid="token-name">{token?.name ?? token?.project?.name}</EllipsisText>
       <TokenTableText
         $platform-web={{
           minWidth: 'fit-content',
@@ -81,9 +88,56 @@ function TokenDescription({ token }: { token: TopToken }) {
   )
 }
 
-export function TopTokensTable() {
+export const TopTokensTable = memo(function TopTokensTable() {
   const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
-  const { tokens, tokenSortRank, loadingTokens, sparklines, error } = useTopTokens(chain.backendChain.chain)
+  const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
+  const {
+    tokens: gqlTokens,
+    tokenSortRank: gqlTokenSortRank,
+    loadingTokens: gqlLoadingTokens,
+    sparklines: gqlSparklines,
+    error: gqlError,
+  } = useTopTokens(chain.backendChain.chain, isRestExploreEnabled /* skip */)
+  const {
+    topTokens: restTopTokens,
+    tokenSortRank: restTokenSortRank,
+    isLoading: restIsLoading,
+    sparklines: restSparklines,
+    isError: restError,
+  } = useRestTopTokens()
+
+  const { page, loadMore } = useSimplePagination()
+
+  const { tokens, tokenSortRank, sparklines, loading, error } = useMemo(() => {
+    return isRestExploreEnabled
+      ? {
+          tokens: restTopTokens?.slice(0, page * TABLE_PAGE_SIZE),
+          tokenSortRank: restTokenSortRank,
+          loading: restIsLoading,
+          sparklines: restSparklines,
+          error: restError,
+        }
+      : {
+          tokens: gqlTokens,
+          tokenSortRank: gqlTokenSortRank,
+          loading: gqlLoadingTokens,
+          sparklines: gqlSparklines,
+          error: gqlError,
+        }
+  }, [
+    isRestExploreEnabled,
+    restTopTokens,
+    page,
+    restTokenSortRank,
+    restIsLoading,
+    restSparklines,
+    restError,
+    gqlTokens,
+    gqlTokenSortRank,
+    gqlLoadingTokens,
+    gqlSparklines,
+    gqlError,
+  ])
 
   return (
     <TableWrapper data-testid="top-tokens-explore-table">
@@ -91,13 +145,13 @@ export function TopTokensTable() {
         tokens={tokens}
         tokenSortRank={tokenSortRank}
         sparklines={sparklines}
-        loading={loadingTokens}
+        loading={loading}
+        loadMore={loadMore}
         error={error}
-        chainId={chain.id}
       />
     </TableWrapper>
   )
-}
+})
 
 const HEADER_TEXT: Record<TokenSortMethod, ReactNode> = {
   [TokenSortMethod.FULLY_DILUTED_VALUATION]: <Trans i18nKey="stats.fdv" />,
@@ -143,15 +197,13 @@ function TokenTable({
   loading,
   error,
   loadMore,
-  chainId,
 }: {
-  tokens?: readonly TopToken[]
+  tokens?: readonly TopToken[] | TokenStat[]
   tokenSortRank: Record<string, number>
   sparklines: SparklineMap
   loading: boolean
-  error?: ApolloError
+  error?: ApolloError | boolean
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
-  chainId: SupportedInterfaceChainId
 }) {
   const { formatFiatPrice, formatNumber, formatDelta } = useFormatter()
   const sortAscending = useAtomValue(sortAscendingAtom)
@@ -163,14 +215,19 @@ function TokenTable({
   const tokenTableValues: TokenTableValue[] | undefined = useMemo(
     () =>
       tokens?.map((token, i) => {
-        const delta1hr = token?.market?.pricePercentChange1Hour?.value
-        const delta1d = token?.market?.pricePercentChange1Day?.value
+        const isGqlToken = !!token && 'id' in token
+        const delta1hr = isGqlToken
+          ? token?.market?.pricePercentChange1Hour?.value
+          : token?.pricePercentChange1Hour?.value
+        const delta1d = isGqlToken ? token?.market?.pricePercentChange1Day?.value : token?.pricePercentChange1Day?.value
         const tokenSortIndex = tokenSortRank[token?.address ?? NATIVE_CHAIN_ID]
+        const chainId = getChainFromChainUrlParam(token?.chain.toLowerCase())?.id
+        const unwrappedToken = chainId ? unwrapToken(chainId, token) : token
 
         return {
           index: tokenSortIndex,
-          tokenDescription: <TokenDescription token={token} />,
-          price: token?.market?.price?.value ?? 0,
+          tokenDescription: <TokenDescription token={unwrappedToken} />,
+          price: isGqlToken ? token?.market?.price?.value ?? 0 : giveExploreStatDefaultValue(token?.price?.value),
           testId: `token-table-row-${token?.address}`,
           percentChange1hr: (
             <>
@@ -184,8 +241,10 @@ function TokenTable({
               <DeltaText delta={delta1d}>{formatDelta(delta1d)}</DeltaText>
             </>
           ),
-          fdv: token?.project?.markets?.[0]?.fullyDilutedValuation?.value ?? 0,
-          volume: token?.market?.volume?.value ?? 0,
+          fdv: isGqlToken
+            ? token?.project?.markets?.[0]?.fullyDilutedValuation?.value ?? 0
+            : giveExploreStatDefaultValue(token?.fullyDilutedValuation?.value),
+          volume: isGqlToken ? token?.market?.volume?.value ?? 0 : giveExploreStatDefaultValue(token?.volume?.value),
           sparkline: (
             <SparklineContainer>
               <ParentSize>
@@ -195,7 +254,9 @@ function TokenTable({
                       width={width}
                       height={height}
                       tokenData={token}
-                      pricePercentChange={token?.market?.pricePercentChange?.value}
+                      pricePercentChange={
+                        isGqlToken ? token?.market?.pricePercentChange?.value : token?.pricePercentChange1Day?.value
+                      }
                       sparklineMap={sparklines}
                     />
                   )
@@ -204,7 +265,7 @@ function TokenTable({
             </SparklineContainer>
           ),
           link: getTokenDetailsURL({
-            address: token?.address,
+            address: unwrappedToken?.address,
             chain: chainIdToBackendChain({ chainId, withFallback: true }),
           }),
           analytics: {
@@ -220,10 +281,10 @@ function TokenTable({
               search_token_address_input: filterString,
             },
           },
-          linkState: { preloadedLogoSrc: token?.project?.logoUrl },
+          linkState: { preloadedLogoSrc: isGqlToken ? token?.project?.logoUrl : token?.logo },
         }
       }) ?? [],
-    [chainId, filterString, formatDelta, sparklines, timePeriod, tokenSortRank, tokens],
+    [filterString, formatDelta, sparklines, timePeriod, tokenSortRank, tokens],
   )
 
   const showLoadingSkeleton = loading || !!error
@@ -254,7 +315,7 @@ function TokenTable({
         ),
         cell: (tokenDescription) => (
           <Cell justifyContent="flex-start" width={240} loading={showLoadingSkeleton} grow testId="name-cell">
-            {tokenDescription.getValue?.()}
+            <TokenTableText>{tokenDescription.getValue?.()}</TokenTableText>
           </Cell>
         ),
       }),

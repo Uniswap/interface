@@ -13,18 +13,17 @@ import {
   isTransactionRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, useSporeColors } from 'ui/src'
-import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
+import AlertTriangleFilled from 'ui/src/assets/icons/alert-triangle-filled.svg'
 import { iconSizes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
 import { EthMethod, isPrimaryTypePermit } from 'uniswap/src/types/walletConnect'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
-import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
 import { NetworkFeeFooter } from 'wallet/src/features/transactions/TransactionRequest/NetworkFeeFooter'
-import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 
 const MAX_MODAL_MESSAGE_HEIGHT = 200
 
@@ -86,7 +85,6 @@ export function WalletConnectRequestModalContent({
   }))
 
   const hasGasFee = methodCostsGas(request)
-  const gasFeeUSD = useUSDValue(chainId, gasFee?.value)
 
   return (
     <>
@@ -99,9 +97,21 @@ export function WalletConnectRequestModalContent({
             </SectionContainer>
           )}
         </Flex>
-
         <Flex gap="$spacing8" mb="$spacing12" pt="$spacing20" px="$spacing4">
-          <NetworkFeeFooter chainId={chainId} gasFeeUSD={hasGasFee ? gasFeeUSD : '0'} showNetworkLogo={hasGasFee} />
+          <NetworkFeeFooter
+            chainId={chainId}
+            gasFee={
+              hasGasFee
+                ? gasFee
+                : // Mock gas fee for non-transaction requests
+                  {
+                    value: '0',
+                    isLoading: false,
+                    error: null,
+                  }
+            }
+            showNetworkLogo={hasGasFee}
+          />
           <AddressFooter activeAccountAddress={request.account} px="$spacing8" />
         </Flex>
 
@@ -119,7 +129,11 @@ export function WalletConnectRequestModalContent({
           <BaseCard.InlineErrorState
             backgroundColor="$DEP_accentWarningSoft"
             icon={
-              <AlertTriangle color={colors.DEP_accentWarning.val} height={iconSizes.icon16} width={iconSizes.icon16} />
+              <AlertTriangleFilled
+                color={colors.DEP_accentWarning.val}
+                height={iconSizes.icon16}
+                width={iconSizes.icon16}
+              />
             }
             textColor="$DEP_accentWarning"
             title={t('walletConnect.request.error.network')}
@@ -171,7 +185,7 @@ function WarningSection({
   if (!isTransactionRequest(request)) {
     return (
       <Flex centered row alignSelf="center" gap="$spacing8">
-        <AlertTriangle color={colors.DEP_accentWarning.val} height={iconSizes.icon16} width={iconSizes.icon16} />
+        <AlertTriangleFilled color={colors.DEP_accentWarning.val} height={iconSizes.icon16} width={iconSizes.icon16} />
         <Text color="$neutral2" fontStyle="italic" variant="body3">
           {t('walletConnect.request.warning.general.message')}
         </Text>

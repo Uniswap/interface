@@ -1,8 +1,9 @@
 import { faker } from '@faker-js/faker'
 import { SectionListData } from 'react-native'
+import { SearchableRecipient } from 'uniswap/src/features/address/types'
+import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'uniswap/src/test/fixtures'
 import { filterSections } from 'wallet/src/components/RecipientSearch/utils'
-import { SearchableRecipient } from 'wallet/src/features/address/types'
-import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2, recipientSection } from 'wallet/src/test/fixtures'
+import { recipientSection } from 'wallet/src/test/fixtures'
 
 const recipientSections: ArrayOfLength<4, SectionListData<SearchableRecipient>> = [
   recipientSection({ addresses: [SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2] }),

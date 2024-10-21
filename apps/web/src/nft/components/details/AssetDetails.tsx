@@ -1,9 +1,9 @@
-import { OpacityHoverState, ScrollBarStyles } from 'components/Common'
+import { OpacityHoverState, ScrollBarStyles } from 'components/Common/styles'
 import Resource from 'components/Tokens/TokenDetails/Resource'
-import { MouseoverTooltip } from 'components/Tooltip/index'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { Box } from 'components/deprecated/Box'
 import { useNftActivity } from 'graphql/data/nft/NftActivity'
 import styled from 'lib/styled-components'
-import { Box } from 'nft/components/Box'
 import { Center } from 'nft/components/Flex'
 import { reduceFilters } from 'nft/components/collection/Activity'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
@@ -203,6 +203,7 @@ const AssetView = ({
   mediaType: MediaType
   asset: GenieAsset
   dominantColor: [number, number, number]
+  // eslint-disable-next-line consistent-return
 }) => {
   const style = { ['--shadow' as string]: `rgba(${dominantColor.join(', ')}, 0.5)` }
 

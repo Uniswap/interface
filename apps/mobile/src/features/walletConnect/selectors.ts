@@ -10,12 +10,12 @@ export const selectSessions =
   (address: Maybe<string>) =>
   (state: MobileState): WalletConnectSession[] | undefined => {
     if (!address) {
-      return
+      return undefined
     }
 
     const wcAccount = state.walletConnect.byAccount[address]
     if (!wcAccount) {
-      return
+      return undefined
     }
 
     return Object.values(wcAccount.sessions)
@@ -27,12 +27,12 @@ export const makeSelectSessions = (): Selector<MobileState, WalletConnectSession
     (_: MobileState, address: Maybe<Address>) => address,
     (sessionsByAccount, address) => {
       if (!address) {
-        return
+        return undefined
       }
 
       const wcAccount = sessionsByAccount[address]
       if (!wcAccount) {
-        return
+        return undefined
       }
 
       return Object.values(wcAccount.sessions)

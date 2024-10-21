@@ -1,0 +1,11 @@
+diff --git a/android/src/main/AndroidManifest.xml b/android/src/main/AndroidManifest.xml
+index 42d06e3881a66499d627e549f7db36e1cba43c38..3879b1c3fafeb2455f28cb58c7629eb85846fc70 100644
+--- a/android/src/main/AndroidManifest.xml
++++ b/android/src/main/AndroidManifest.xml
+@@ -1,5 +1,5 @@
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+   <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+-  <uses-permission android:name="android.permission.DETECT_SCREEN_CAPTURE" android:maxSdkVersion="34" />
++  <uses-permission android:name="android.permission.DETECT_SCREEN_CAPTURE" android:minSdkVersion="34" />
+ </manifest>

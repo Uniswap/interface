@@ -3,14 +3,15 @@ import { useCallback, useLayoutEffect, useState } from 'react'
 import { NativeSyntheticEvent, TextInputSelectionChangeEventData } from 'react-native'
 import { Flex, FlexProps, Text, TouchableArea } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons'
+import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { fonts } from 'ui/src/theme'
+import { AmountInput } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
+import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { WarningLabel } from 'uniswap/src/features/transactions/WarningModal/types'
+import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
+import { useTokenAndFiatDisplayAmounts } from 'uniswap/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
 import { ParsedWarnings } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { AmountInput } from 'wallet/src/components/input/AmountInput'
-import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
-import { useTokenAndFiatDisplayAmounts } from 'wallet/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
-import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
 type SendAmountInputProps = {
   currencyInfo: Maybe<CurrencyInfo>
@@ -43,6 +44,7 @@ export function SendAmountInput({
   ...rest
 }: SendAmountInputProps): JSX.Element {
   const { symbol } = useAppFiatCurrencyInfo()
+  const { isTestnetModeEnabled } = useEnabledChains()
 
   const onSelectionChange = useCallback(
     ({
@@ -143,14 +145,17 @@ export function SendAmountInput({
           </Text>
         )}
       </Flex>
-      <TouchableArea onPress={_onToggleIsFiatMode}>
-        <Flex centered row gap="$spacing4">
-          <Text color={subTextValueColor} textAlign="center" variant="subheading2">
-            {subTextValue}
-          </Text>
-          {!warning && <ArrowUpDown color="$neutral3" size="$icon.16" />}
-        </Flex>
-      </TouchableArea>
+      {/* hide on testnet mode if there's no warning, otherwise show */}
+      {(!isTestnetModeEnabled || warning) && (
+        <TouchableArea disabled={isTestnetModeEnabled} onPress={_onToggleIsFiatMode}>
+          <Flex centered row gap="$spacing4">
+            <Text color={subTextValueColor} textAlign="center" variant="subheading2">
+              {subTextValue}
+            </Text>
+            {!warning && <ArrowUpDown color="$neutral3" size="$icon.16" />}
+          </Flex>
+        </TouchableArea>
+      )}
     </Flex>
   )
 }

@@ -329,7 +329,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="_pt-_lg_0px _pr-_lg_1316331075 _pl-_lg_1316331075 _pb-_lg_52px _flexDirection-_xl_column _alignItems-_xl_center _gap-_xxl_60px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _width-10037 _gap-40px _pt-1316330269 _pb-1316330269 _pr-1316331106 _pl-1316331106"
+          class="_pt-_lg_0px _pr-_lg_1316331106 _pl-_lg_1316331106 _pb-_lg_52px _flexDirection-_xl_column _alignItems-_xl_center _gap-_xxl_60px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _width-10037 _gap-40px _pt-1316330300 _pb-1316330300 _pr-1316331137 _pl-1316331137"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _maxWidth-780px _overflowX-hidden _overflowY-hidden _width-10037 _flexGrow-1 _flexShrink-1"
@@ -386,10 +386,10 @@ exports[`TDP Skeleton should render correctly 1`] = `
             </nav>
             <div
               class="css-view-175oi2r"
-              style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; justify-content: space-between; align-items: center; gap: 20px; padding-top: 8px; margin-bottom: 20px;"
+              style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; justify-content: space-between; align-items: center; gap: 20px; padding-top: 8px; margin-bottom: 20px; z-index: 1;"
             >
               <div
-                class="_flexDirection-_md_column _alignItems-_md_flex-start _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _gap-1316331230 _alignItems-center _pt-1481558307 _minWidth-32px"
+                class="_flexDirection-_md_column _alignItems-_md_flex-start _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _gap-1316331261 _alignItems-center _pt-1481558307 _minWidth-32px"
               >
                 <div
                   class="c2 c3 c5"
@@ -662,7 +662,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
               style="margin-bottom: 24px;"
             />
             <div
-              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-1316330114"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-1316330145"
             >
               <div
                 class="c2 c3 c20 c22"
@@ -672,7 +672,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
               />
             </div>
             <div
-              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-1316330114"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-1316330145"
             >
               <div
                 class="c2 c3 c20 c22"

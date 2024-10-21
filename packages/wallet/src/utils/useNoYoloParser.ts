@@ -2,13 +2,13 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { ExplorerAbiFetcher, Parser, ProxyAbiFetcher, Transaction, TransactionDescription } from 'no-yolo-signatures'
 import { useEffect, useMemo, useState } from 'react'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { RPCType, WalletChainId } from 'uniswap/src/types/chains'
+import { RPCType, UniverseChainId } from 'uniswap/src/types/chains'
 import { EthTransaction } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 
 export function useNoYoloParser(
   transaction: EthTransaction,
-  chainId?: WalletChainId,
+  chainId?: UniverseChainId,
 ): { parsedTransactionData: TransactionDescription | undefined; isLoading: boolean } {
   const [isLoading, setIsLoading] = useState(true)
   const [parsedTransactionData, setParsedTransactionData] = useState<TransactionDescription | undefined>(undefined)
@@ -38,7 +38,7 @@ export function useNoYoloParser(
     const parseResult = async (): Promise<TransactionDescription | undefined> => {
       // no-yolo-parser library expects these fields to be defined
       if (!from || !to || !data) {
-        return
+        return undefined
       }
       return parser.parseAsResult(transaction as Transaction).then((result) => {
         if (!result.transactionDescription.ok) {

@@ -11,30 +11,32 @@ function CTAButton({
   title,
   element,
   onPress,
+  onPressDisabled,
   testID,
   tokenColor,
+  disabled,
 }: {
   title: string
   element: ElementNameType
   onPress: () => void
+  onPressDisabled?: () => void
   testID?: TestIDType
   tokenColor?: Maybe<string>
+  disabled?: boolean
 }): JSX.Element {
   const colors = useSporeColors()
-
   return (
     <Trace logPress element={element} section={SectionName.TokenDetails}>
       <Button
         fill
         hapticFeedback
+        opacity={disabled ? 0.5 : 1}
         color={tokenColor ? getContrastPassingTextColor(tokenColor) : '$white'}
         pressStyle={{ backgroundColor: validColor(opacify(60, tokenColor ?? colors.accent1.val)) }}
-        // idk why this eslint warning is coming up because it auto-sorts it back on format to invalid order
-        // eslint-disable-next-line react/jsx-sort-props
-        onPress={onPress}
         size="large"
         backgroundColor={validColor(tokenColor) ?? '$accent1'}
         testID={testID}
+        onPress={disabled ? onPressDisabled : onPress}
       >
         {title}
       </Button>
@@ -45,13 +47,17 @@ function CTAButton({
 export function TokenDetailsActionButtons({
   onPressBuy,
   onPressSell,
+  onPressDisabled,
   tokenColor,
   userHasBalance,
+  disabled,
 }: {
   onPressBuy: () => void
   onPressSell: () => void
+  onPressDisabled?: () => void
   tokenColor?: Maybe<string>
   userHasBalance: boolean
+  disabled: boolean
 }): JSX.Element {
   const { t } = useTranslation()
 
@@ -67,19 +73,23 @@ export function TokenDetailsActionButtons({
       px="$spacing16"
     >
       <CTAButton
+        disabled={disabled}
         element={ElementName.Buy}
         testID={TestID.TokenDetailsBuyButton}
         title={t('common.button.buy')}
         tokenColor={tokenColor}
         onPress={onPressBuy}
+        onPressDisabled={onPressDisabled}
       />
       {userHasBalance && (
         <CTAButton
+          disabled={disabled}
           element={ElementName.Sell}
           testID={TestID.TokenDetailsSellButton}
           title={t('common.button.sell')}
           tokenColor={tokenColor}
           onPress={onPressSell}
+          onPressDisabled={onPressDisabled}
         />
       )}
     </Flex>

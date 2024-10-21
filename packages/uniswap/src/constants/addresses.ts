@@ -1,8 +1,9 @@
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 type AddressMap = { [chainId: number]: string }
 
+const POL_MAINNET_ADDRESS = '0x455e53cbb86018ac2b8092fdcd39d8444affc3f6'
 const MATIC_MAINNET_ADDRESS = '0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0'
 const MATIC_BNB_ADDRESS = '0xcc42724c6683b7e57334c4e856f4c9965ed682bd'
 const MATIC_ARBITRUM_ADDRESS = '0x561877b6b3dd7651313794e5f2894b2f18be0766'
@@ -13,6 +14,7 @@ const CELO_MAINNET_ADDRESS = '0x471ece3750da237f93b8e339c536989b8978a438'
 const AVAX_BNB = '0x1ce0c2827e2ef14d5c4f29a091d735a204794041'
 
 export const BRIDGED_BASE_ADDRESSES = [
+  POL_MAINNET_ADDRESS,
   MATIC_MAINNET_ADDRESS,
   MATIC_BNB_ADDRESS,
   MATIC_ARBITRUM_ADDRESS,
@@ -33,10 +35,10 @@ export const GRG_ADDRESSES: AddressMap = {
   [UniverseChainId.Base]: '0x09188484e1Ab980DAeF53a9755241D759C5B7d60',
 }
 
-export function getNativeAddress(chainId: WalletChainId): string {
+export function getNativeAddress(chainId: UniverseChainId): string {
   return UNIVERSE_CHAIN_INFO[chainId].nativeCurrency.address
 }
 
-export function getWrappedNativeAddress(chainId: WalletChainId): string {
+export function getWrappedNativeAddress(chainId: UniverseChainId): string {
   return UNIVERSE_CHAIN_INFO[chainId].wrappedNativeCurrency.address
 }

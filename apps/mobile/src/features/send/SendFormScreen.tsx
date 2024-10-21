@@ -1,8 +1,7 @@
 import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, LayoutAnimation, TouchableWithoutFeedback } from 'react-native'
+import { TouchableWithoutFeedback } from 'react-native'
 import Animated from 'react-native-reanimated'
-import { useSelector } from 'react-redux'
 import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
 import { SendFormButton } from 'src/features/send/SendFormButton'
 import { SendHeader } from 'src/features/send/SendHeader'
@@ -12,35 +11,18 @@ import { Flex, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { iconSizes } from 'ui/src/theme'
 import { TokenSelectorModal, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/TokenSelector'
-import {
-  useCommonTokensOptions,
-  useFilterCallbacks,
-  usePopularTokensOptions,
-  usePortfolioTokenOptions,
-  useTokenSectionsForSearchResults,
-} from 'uniswap/src/components/TokenSelector/hooks'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
-import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useTokenWarningDismissed } from 'uniswap/src/features/tokens/slice/hooks'
 import {
   TransactionModalFooterContainer,
   TransactionModalInnerContainer,
 } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
-import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import {
-  useAddToSearchHistory,
-  useFavoriteTokensOptions,
-  useTokenSectionsForEmptySearch,
-} from 'wallet/src/components/TokenSelector/hooks'
-import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
-import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -88,7 +70,7 @@ function SendFormScreenContent({ hideContent }: { hideContent: boolean }): JSX.E
           >
             <Flex fill px="$spacing16">
               <RecipientSelect
-                chainId={derivedSendInfo.chainId}
+                chainId={derivedSendInfo.chainId as UniverseChainId}
                 focusInput={showRecipientSelector}
                 hideBackButton={true}
                 recipient={recipient}
@@ -123,13 +105,8 @@ export function SendFormContent({
 }): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
-  const { formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
-  const { navigateToBuyOrReceiveWithEmptyWallet } = useWalletNavigation()
 
   const activeAccountAddress = useActiveAccountAddressWithThrow()
-  const valueModifiers = usePortfolioValueModifiers(activeAccountAddress)
-  const { registerSearch } = useAddToSearchHistory()
-  const searchHistory = useSelector(selectSearchHistory)
 
   const { selectingCurrencyField, onSelectCurrency, updateSendForm } = useSendContext()
 
@@ -141,14 +118,14 @@ export function SendFormContent({
     <>
       <WarningModal
         caption={t('send.warning.viewOnly.message')}
-        confirmText={t('common.button.dismiss')}
+        acknowledgeText={t('common.button.dismiss')}
         icon={<EyeIcon color={colors.neutral2.get()} height={iconSizes.icon24} width={iconSizes.icon24} />}
         isOpen={showViewOnlyModal}
         modalName={ModalName.SwapWarning}
         severity={WarningSeverity.Low}
         title={t('send.warning.viewOnly.title')}
         onClose={(): void => setShowViewOnlyModal(false)}
-        onConfirm={(): void => setShowViewOnlyModal(false)}
+        onAcknowledge={(): void => setShowViewOnlyModal(false)}
       />
 
       <TouchableWithoutFeedback>
@@ -162,26 +139,10 @@ export function SendFormContent({
         <TokenSelectorModal
           isModalOpen
           activeAccountAddress={activeAccountAddress}
-          addToSearchHistoryCallback={registerSearch}
-          convertFiatAmountFormattedCallback={convertFiatAmountFormatted}
           currencyField={CurrencyField.INPUT}
           flow={TokenSelectorFlow.Send}
-          formatNumberOrStringCallback={formatNumberOrString}
-          navigateToBuyOrReceiveWithEmptyWalletCallback={navigateToBuyOrReceiveWithEmptyWallet}
-          searchHistory={searchHistory as TokenSearchResult[]}
-          useCommonTokensOptionsHook={useCommonTokensOptions}
-          useFavoriteTokensOptionsHook={useFavoriteTokensOptions}
-          useFilterCallbacksHook={useFilterCallbacks}
-          usePopularTokensOptionsHook={usePopularTokensOptions}
-          usePortfolioTokenOptionsHook={usePortfolioTokenOptions}
-          useTokenSectionsForEmptySearchHook={useTokenSectionsForEmptySearch}
-          useTokenSectionsForSearchResultsHook={useTokenSectionsForSearchResults}
-          useTokenWarningDismissedHook={useTokenWarningDismissed}
-          valueModifiers={valueModifiers}
           variation={TokenSelectorVariation.BalancesOnly}
           onClose={onHideTokenSelector}
-          onDismiss={() => Keyboard.dismiss()}
-          onPressAnimation={() => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)}
           onSelectCurrency={onSelectCurrency}
         />
       )}

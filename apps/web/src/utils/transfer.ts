@@ -5,7 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import { useCallback } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20 } from 'uniswap/src/abis/types'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -13,7 +13,7 @@ import { useAsyncData } from 'utilities/src/react/hooks'
 interface TransferInfo {
   provider?: Web3Provider
   account?: string
-  chainId?: InterfaceChainId
+  chainId?: UniverseChainId
   currencyAmount?: CurrencyAmount<Currency>
   toAddress?: string
 }
@@ -21,7 +21,7 @@ interface TransferInfo {
 interface TransferCurrencyParams {
   provider: Web3Provider
   account: string
-  chainId: InterfaceChainId
+  chainId: UniverseChainId
   toAddress: string
   tokenAddress: string
   amountInWei: string
@@ -39,7 +39,7 @@ async function getTransferTransaction(transferInfo: TransferInfo): Promise<Trans
   const { provider, account, chainId, currencyAmount, toAddress } = transferInfo
 
   if (!provider || !account || !chainId || !currencyAmount || !toAddress) {
-    return
+    return undefined
   }
 
   const currency = currencyAmount.currency

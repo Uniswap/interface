@@ -2,35 +2,41 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Button, Flex, Separator, Text, TouchableArea, isWeb, useHapticFeedback, useSporeColors } from 'ui/src'
+import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { BackArrow, X } from 'ui/src/components/icons'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
+import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
 import { TransactionModalFooterContainer } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
-import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
+import {
+  TransactionScreen,
+  useTransactionModalContext,
+} from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { Arrow } from 'wallet/src/components/icons/Arrow'
-import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { NFTTransfer } from 'wallet/src/components/nfts/NFTTransfer'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { TransactionDetails } from 'wallet/src/features/transactions/TransactionDetails/TransactionDetails'
-import { SendScreen, useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
+import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 import { useSendERC20Callback, useSendNFTCallback } from 'wallet/src/features/transactions/send/hooks/useSendCallback'
-import { useActiveAccountWithThrow, useAvatar } from 'wallet/src/features/wallet/hooks'
+import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function SendReviewDetails({
   authTrigger,
@@ -51,7 +57,8 @@ export function SendReviewDetails({
   const { formatCurrencyAmount, formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
   const { navigateToAccountActivityList } = useWalletNavigation()
 
-  const { derivedSendInfo, warnings, txRequest, gasFee, isFiatInput, setScreen } = useSendContext()
+  const { setScreen } = useTransactionModalContext()
+  const { derivedSendInfo, warnings, txRequest, gasFee, isFiatInput } = useSendContext()
   const { txId, chainId, recipient, currencyInInfo, currencyAmounts, nftIn, exactAmountFiat } = derivedSendInfo
 
   const { avatar } = useAvatar(recipient)
@@ -84,23 +91,25 @@ export function SendReviewDetails({
 
   const transferERC20Callback = useSendERC20Callback(
     txId,
-    chainId,
+    chainId as UniverseChainId,
     recipient,
     currencyInInfo ? currencyAddress(currencyInInfo.currency) : undefined,
     currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
     txRequest,
     onNext,
     currencyAmountUSD,
+    gasFee.gasEstimates,
   )
 
   const transferNFTCallback = useSendNFTCallback(
     txId,
-    chainId,
+    chainId as UniverseChainId,
     recipient,
     nftIn?.nftContract?.address,
     nftIn?.tokenId,
     txRequest,
     onNext,
+    gasFee.gasEstimates,
   )
 
   const submitTranaction = useCallback(() => {
@@ -118,7 +127,7 @@ export function SendReviewDetails({
       await authTrigger({
         successCallback: submitTranaction,
         failureCallback: () => {
-          setScreen(SendScreen.SendForm)
+          setScreen(TransactionScreen.Form)
         },
       })
     } else {
@@ -165,7 +174,7 @@ export function SendReviewDetails({
   )
 
   const onPrev = (): void => {
-    setScreen(SendScreen.SendForm)
+    setScreen(TransactionScreen.Form)
   }
 
   if (!recipient) {
@@ -177,17 +186,17 @@ export function SendReviewDetails({
       {transferWarning?.title && (
         <WarningModal
           caption={transferWarning.message}
-          closeText={blockingWarning ? undefined : t('send.warning.modal.button.cta.cancel')}
-          confirmText={
+          rejectText={blockingWarning ? undefined : t('send.warning.modal.button.cta.cancel')}
+          acknowledgeText={
             blockingWarning ? t('send.warning.modal.button.cta.blocking') : t('send.warning.modal.button.cta.confirm')
           }
           isOpen={showWarningModal}
           modalName={ModalName.SendWarning}
           severity={transferWarning.severity}
           title={transferWarning.title}
-          onCancel={onCloseWarning}
+          onReject={onCloseWarning}
           onClose={onCloseWarning}
-          onConfirm={onCloseWarning}
+          onAcknowledge={onCloseWarning}
         />
       )}
       <Flex gap="$spacing16" px="$spacing8">
@@ -254,6 +263,7 @@ export function SendReviewDetails({
               {t('common.wallet.label')}
             </Text>
             <AddressDisplay
+              disableForcedWidth
               address={account.address}
               hideAddressInSubtitle={true}
               horizontalGap="$spacing4"
@@ -262,7 +272,7 @@ export function SendReviewDetails({
             />
           </Flex>
         }
-        chainId={chainId}
+        chainId={chainId as UniverseChainId}
         gasFee={gasFee}
         showWarning={Boolean(transferWarning)}
         warning={transferWarning}

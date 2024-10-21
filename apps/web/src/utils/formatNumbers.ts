@@ -1,18 +1,14 @@
 import { formatEther as ethersFormatEther } from '@ethersproject/units'
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
-import {
-  DEFAULT_LOCAL_CURRENCY,
-  LOCAL_CURRENCY_SYMBOL_DISPLAY_TYPE,
-  SupportedLocalCurrency,
-} from 'constants/localCurrencies'
-import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
-import { useLocalCurrencyConversionRate } from 'graphql/data/ConversionRate'
+import { getCurrencySymbolDisplayType } from 'constants/localCurrencies'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useMemo } from 'react'
 import { Bound } from 'state/mint/v3/actions'
-import { Currency as GqlCurrency } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { DEFAULT_LOCAL_CURRENCY, FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { DEFAULT_LOCALE, Locale } from 'uniswap/src/features/language/constants'
 
 type Nullish<T> = T | null | undefined
 type NumberFormatOptions = Intl.NumberFormatOptions
@@ -195,7 +191,7 @@ const SEVEN_SIG_FIGS__SCI_NOTATION_CURRENCY: NumberFormatOptions = {
 // each rule must contain either an `upperBound` or an `exact` value.
 // upperBound => number will use that formatter as long as it is < upperBound
 // exact => number will use that formatter if it is === exact
-// if hardcodedinput is supplied it will override the input value or use the hardcoded output
+// if hardcoded input is supplied it will override the input value or use the hardcoded output
 type HardCodedInputFormat =
   | {
       input: number
@@ -514,8 +510,8 @@ interface FormatNumberOptions {
   input: Nullish<number>
   type?: FormatterType
   placeholder?: string
-  locale?: SupportedLocale
-  localCurrency?: SupportedLocalCurrency
+  locale?: Locale
+  localCurrency?: FiatCurrency
   conversionRate?: number
 }
 
@@ -536,7 +532,7 @@ function formatNumber({
   if (formatterOptions.currency) {
     input = conversionRate ? input * conversionRate : input
     formatterOptions.currency = localCurrency
-    formatterOptions.currencyDisplay = LOCAL_CURRENCY_SYMBOL_DISPLAY_TYPE[localCurrency]
+    formatterOptions.currencyDisplay = getCurrencySymbolDisplayType(localCurrency)
   }
 
   if (!hardCodedInput) {
@@ -558,8 +554,8 @@ interface FormatCurrencyAmountOptions {
   amount: Nullish<CurrencyAmount<Currency>>
   type?: FormatterType
   placeholder?: string
-  locale?: SupportedLocale
-  localCurrency?: SupportedLocalCurrency
+  locale?: Locale
+  localCurrency?: FiatCurrency
   conversionRate?: number
 }
 
@@ -581,7 +577,7 @@ export function formatCurrencyAmount({
   })
 }
 
-function formatPercent(percent: Percent | undefined, locale: SupportedLocale = DEFAULT_LOCALE) {
+function formatPercent(percent: Percent | undefined, locale: Locale = DEFAULT_LOCALE) {
   if (!percent) {
     return '-'
   }
@@ -593,7 +589,7 @@ function formatPercent(percent: Percent | undefined, locale: SupportedLocale = D
 }
 
 // Used to format floats representing percent change with fixed decimal places
-function formatDelta(delta: Nullish<number>, locale: SupportedLocale = DEFAULT_LOCALE) {
+function formatDelta(delta: Nullish<number>, locale: Locale = DEFAULT_LOCALE) {
   if (delta === null || delta === undefined || delta === Infinity || isNaN(delta)) {
     return '-'
   }
@@ -608,8 +604,8 @@ function formatDelta(delta: Nullish<number>, locale: SupportedLocale = DEFAULT_L
 interface FormatPriceOptions {
   price: Nullish<Price<Currency, Currency>>
   type?: FormatterType
-  locale?: SupportedLocale
-  localCurrency?: SupportedLocalCurrency
+  locale?: Locale
+  localCurrency?: FiatCurrency
   conversionRate?: number
 }
 
@@ -624,7 +620,13 @@ function formatPrice({
     return '-'
   }
 
-  return formatNumber({ input: parseFloat(price.toSignificant()), type, locale, localCurrency, conversionRate })
+  return formatNumber({
+    input: parseFloat(price.toSignificant()),
+    type,
+    locale,
+    localCurrency,
+    conversionRate,
+  })
 }
 
 interface FormatTickPriceOptions {
@@ -633,8 +635,8 @@ interface FormatTickPriceOptions {
   direction: Bound
   placeholder?: string
   numberType?: NumberType
-  locale?: SupportedLocale
-  localCurrency?: SupportedLocalCurrency
+  locale?: Locale
+  localCurrency?: FiatCurrency
   conversionRate?: number
 }
 
@@ -662,8 +664,8 @@ function formatTickPrice({
 interface FormatNumberOrStringOptions {
   input: Nullish<number | string>
   type: FormatterType
-  locale?: SupportedLocale
-  localCurrency?: SupportedLocalCurrency
+  locale?: Locale
+  localCurrency?: FiatCurrency
   conversionRate?: number
 }
 
@@ -686,8 +688,8 @@ function formatNumberOrString({
 interface FormatEtherOptions {
   input: Nullish<number | string>
   type: FormatterType
-  locale?: SupportedLocale
-  localCurrency?: SupportedLocalCurrency
+  locale?: Locale
+  localCurrency?: FiatCurrency
 }
 
 function formatEther({ input, type, locale, localCurrency }: FormatEtherOptions) {
@@ -700,8 +702,8 @@ function formatEther({ input, type, locale, localCurrency }: FormatEtherOptions)
 interface FormatFiatPriceOptions {
   price: Nullish<number | string>
   type?: FormatterType
-  locale?: SupportedLocale
-  localCurrency?: SupportedLocalCurrency
+  locale?: Locale
+  localCurrency?: FiatCurrency
   conversionRate?: number
 }
 
@@ -717,32 +719,12 @@ function formatFiatPrice({
 
 const MAX_AMOUNT_STR_LENGTH = 9
 
-function formatReviewSwapCurrencyAmount(
-  amount: CurrencyAmount<Currency>,
-  locale: SupportedLocale = DEFAULT_LOCALE,
-): string {
+function formatReviewSwapCurrencyAmount(amount: CurrencyAmount<Currency>, locale: Locale = DEFAULT_LOCALE): string {
   let formattedAmount = formatCurrencyAmount({ amount, type: NumberType.TokenTx, locale })
   if (formattedAmount.length > MAX_AMOUNT_STR_LENGTH) {
     formattedAmount = formatCurrencyAmount({ amount, type: NumberType.SwapTradeAmount, locale })
   }
   return formattedAmount
-}
-
-function convertToFiatAmount(
-  amount = 1,
-  toCurrency = DEFAULT_LOCAL_CURRENCY,
-  conversionRate = 1,
-): { amount: number; currency: SupportedLocalCurrency } {
-  const defaultResult = { amount, currency: DEFAULT_LOCAL_CURRENCY }
-
-  if (defaultResult.currency === toCurrency) {
-    return defaultResult
-  }
-
-  return {
-    amount: amount * conversionRate,
-    currency: toCurrency,
-  }
 }
 
 // TODO: https://linear.app/uniswap/issue/WEB-3495/import-useasyncdata-from-mobile
@@ -765,7 +747,7 @@ export function getFiatCurrencyComponents(
   const format = new Intl.NumberFormat(locale, {
     ...TWO_DECIMALS_CURRENCY,
     currency: localCurrency,
-    currencyDisplay: LOCAL_CURRENCY_SYMBOL_DISPLAY_TYPE[localCurrency],
+    currencyDisplay: getCurrencySymbolDisplayType(localCurrency),
   })
 
   // See MDN for official docs https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/formatToParts
@@ -805,8 +787,8 @@ export function getFiatCurrencyComponents(
 }
 
 export function useFormatterLocales(): {
-  formatterLocale: SupportedLocale
-  formatterLocalCurrency: SupportedLocalCurrency
+  formatterLocale: Locale
+  formatterLocalCurrency: FiatCurrency
 } {
   const activeLocale = useActiveLocale()
   const activeLocalCurrency = useActiveLocalCurrency()
@@ -818,8 +800,8 @@ export function useFormatterLocales(): {
 }
 
 function handleFallbackCurrency(
-  selectedCurrency: SupportedLocalCurrency,
-  previousSelectedCurrency: SupportedLocalCurrency | undefined,
+  selectedCurrency: FiatCurrency,
+  previousSelectedCurrency: FiatCurrency | undefined,
   previousConversionRate: number | undefined,
   shouldFallbackToUSD: boolean,
   shouldFallbackToPrevious: boolean,
@@ -836,16 +818,13 @@ function handleFallbackCurrency(
 // Constructs an object that injects the correct locale and local currency into each of the above formatter functions.
 export function useFormatter() {
   const { formatterLocale, formatterLocalCurrency } = useFormatterLocales()
-
-  const formatterLocalCurrencyIsUSD = formatterLocalCurrency === GqlCurrency.Usd
-  const { data: localCurrencyConversionRate, isLoading: localCurrencyConversionRateIsLoading } =
-    useLocalCurrencyConversionRate(formatterLocalCurrency, formatterLocalCurrencyIsUSD)
+  const { convertFiatAmount, conversionRate: localCurrencyConversionRate } = useLocalizationContext()
 
   const previousSelectedCurrency = usePrevious(formatterLocalCurrency)
   const previousConversionRate = usePrevious(localCurrencyConversionRate)
 
-  const shouldFallbackToPrevious = !localCurrencyConversionRate && localCurrencyConversionRateIsLoading
-  const shouldFallbackToUSD = !localCurrencyConversionRate && !localCurrencyConversionRateIsLoading
+  const shouldFallbackToPrevious = !localCurrencyConversionRate
+  const shouldFallbackToUSD = !localCurrencyConversionRate
   const currencyToFormatWith = handleFallbackCurrency(
     formatterLocalCurrency,
     previousSelectedCurrency,
@@ -949,11 +928,6 @@ export function useFormatter() {
     [currencyToFormatWith, formatterLocale],
   )
 
-  const convertToFiatAmountWithLocales = useCallback(
-    (amount?: number) => convertToFiatAmount(amount, currencyToFormatWith, localCurrencyConversionRateToFormatWith),
-    [currencyToFormatWith, localCurrencyConversionRateToFormatWith],
-  )
-
   const formatConvertedFiatNumberOrString = useCallback(
     (options: Omit<FormatNumberOrStringOptions, LocalesType>) =>
       formatNumberOrString({
@@ -967,7 +941,7 @@ export function useFormatter() {
 
   return useMemo(
     () => ({
-      convertToFiatAmount: convertToFiatAmountWithLocales,
+      convertToFiatAmount: convertFiatAmount,
       formatConvertedFiatNumberOrString,
       formatCurrencyAmount: formatCurrencyAmountWithLocales,
       formatEther: formatEtherwithLocales,
@@ -981,7 +955,7 @@ export function useFormatter() {
       formatTickPrice: formatTickPriceWithLocales,
     }),
     [
-      convertToFiatAmountWithLocales,
+      convertFiatAmount,
       formatConvertedFiatNumberOrString,
       formatCurrencyAmountWithLocales,
       formatDeltaWithLocales,

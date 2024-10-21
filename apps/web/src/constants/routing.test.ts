@@ -1,4 +1,4 @@
-import { COMMON_BASES } from 'constants/routing'
+import { COMMON_BASES } from 'uniswap/src/constants/routing'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 describe('Routing', () => {
@@ -17,7 +17,7 @@ describe('Routing', () => {
     })
     it('contains all coins for polygon', () => {
       const symbols = COMMON_BASES[UniverseChainId.Polygon].map((coin) => coin.currency.symbol)
-      expect(symbols).toEqual(['MATIC', 'WETH', 'USDC', 'GRG', 'USDT', 'WBTC'])
+      expect(symbols).toEqual(['POL', 'WETH', 'USDC', 'GRG', 'USDT', 'WBTC'])
     })
     it('contains all coins for celo', () => {
       const symbols = COMMON_BASES[UniverseChainId.Celo].map((coin) => coin.currency.symbol)

@@ -1,17 +1,17 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n/i18n'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { getValidAddress, shortenAddress } from 'uniswap/src/utils/addresses'
-import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { getCurrencyDisplayText, getFormattedCurrencyAmount, getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
-import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
 import { WalletConnectNotification } from 'wallet/src/features/notifications/types'
-import { getCurrencyDisplayText, getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 
+// eslint-disable-next-line consistent-return
 export const formWCNotificationTitle = (appNotification: WalletConnectNotification): string => {
   const { event, dappName, chainId } = appNotification
 
@@ -58,6 +58,17 @@ export const formApproveNotificationTitle = (
           currencySymbol: currencyDisplayText,
           address,
         })
+}
+
+export const formBridgeNotificationTitle = (txStatus: TransactionStatus): string => {
+  switch (txStatus) {
+    case TransactionStatus.Success:
+      return i18n.t('transaction.status.swap.success')
+    case TransactionStatus.Canceled:
+      return i18n.t('transaction.status.swap.canceled')
+    default:
+      return i18n.t('transaction.status.swap.failed')
+  }
 }
 
 export const formSwapNotificationTitle = (

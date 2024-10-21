@@ -1,7 +1,6 @@
-import celoLogo from 'assets/svg/celo_logo.svg'
-import logo from 'assets/svg/logo.svg'
 import { getChain, isSupportedChainId } from 'constants/chains'
-import { GRG, isCelo, nativeOnChain } from 'constants/tokens'
+import { CELO_LOGO } from 'ui/src/assets'
+import { GRG, isCelo, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress } from 'utilities/src/addresses'
 
@@ -28,7 +27,7 @@ export function getInitialLogoUrl(
   }
 
   if (chainId && isCelo(chainId) && address === nativeOnChain(chainId).wrapped.address) {
-    return celoLogo
+    return CELO_LOGO
   }
 
   if (checksummedAddress) {

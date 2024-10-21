@@ -1,4 +1,4 @@
-import { getTestSelector, getTestSelectorStartsWith, waitsForActiveChain } from '../utils'
+import { getTestSelector, getTestSelectorStartsWith } from '../utils'
 
 describe('Token explore', () => {
   before(() => {
@@ -28,7 +28,7 @@ describe('Token explore', () => {
         cy.wrap($elem.text()).as('dailyEthVol')
       })
     cy.get(getTestSelector('time-selector')).click()
-    cy.get(getTestSelector('1Y')).click()
+    cy.get(getTestSelector('1Y')).first().click()
     cy.get(getTestSelector('token-table-row-NATIVE'))
       .find(getTestSelector('volume-cell'))
       .then(function ($elem) {
@@ -58,8 +58,7 @@ describe('Token explore', () => {
   it('should update when token explore table network changed', () => {
     cy.visit('/explore/tokens/ethereum')
     cy.get(getTestSelector('tokens-network-filter-selected')).click()
-    cy.get(getTestSelector('tokens-network-filter-option-optimism')).click()
+    cy.get(getTestSelector('tokens-network-filter-option-optimism')).first().click()
     cy.get(getTestSelector('tokens-network-filter-selected')).invoke('attr', 'alt').should('eq', `Optimism logo`)
-    waitsForActiveChain('Ethereum')
   })
 })

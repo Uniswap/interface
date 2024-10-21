@@ -1,5 +1,5 @@
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import Row from 'components/Row'
+import Row from 'components/deprecated/Row'
 import { useTheme } from 'lib/styled-components'
 import { ArrowRight } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'

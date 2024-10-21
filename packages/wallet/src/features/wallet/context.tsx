@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { Signer } from 'ethers'
 import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react'
 import { call, getContext } from 'typed-redux-saga'
-import { RPCType, WalletChainId } from 'uniswap/src/types/chains'
+import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
@@ -61,8 +63,8 @@ export function useProviderManager(): ProviderManager {
   return useContext(WalletContext).value.providers
 }
 
-export function useProvider(chainId: WalletChainId, rpcType: RPCType = RPCType.Public) {
-  return useProviderManager().tryGetProvider(chainId, rpcType)
+export function useProvider(chainId: UniverseChainId) {
+  return useProviderManager().tryGetProvider(chainId)
 }
 
 export function* getProviderManager() {
@@ -70,17 +72,27 @@ export function* getProviderManager() {
   return (yield* getContext<ProviderManager>('providers')) ?? walletContextValue.providers
 }
 
-export function* getProvider(chainId: WalletChainId, rpcType: RPCType = RPCType.Public) {
+export function* getProvider(chainId: UniverseChainId) {
   const providerManager = yield* call(getProviderManager)
   // Note, unlike useWalletProvider above, this throws on missing provider
-  return providerManager.getProvider(chainId, rpcType)
+  return providerManager.getProvider(chainId)
+}
+
+export function* getPrivateProvider(chainId: UniverseChainId, account?: SignerMnemonicAccountMeta) {
+  let signer: Signer | undefined
+  if (account) {
+    const signerManager = yield* call(getSignerManager)
+    signer = yield* call([signerManager, signerManager.getSignerForAccount], account)
+  }
+  const providerManager = yield* call(getProviderManager)
+  return yield* call([providerManager, providerManager.getPrivateProvider], chainId, signer)
 }
 
 /**
  * Non-generator version of getProvider
  */
-export function getProviderSync(chainId: WalletChainId, rpcType: RPCType = RPCType.Public) {
-  return walletContextValue.providers.getProvider(chainId, rpcType)
+export function getProviderSync(chainId: UniverseChainId) {
+  return walletContextValue.providers.getProvider(chainId)
 }
 
 export function useContractManager(): ContractManager {

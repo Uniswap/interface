@@ -1,23 +1,20 @@
 import { renderHook } from '@testing-library/react'
 import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { DEFAULT_LOCAL_CURRENCY } from 'constants/localCurrencies'
-import { USDC_MAINNET } from 'constants/tokens'
-import { useLocalCurrencyConversionRate } from 'graphql/data/ConversionRate'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { mocked } from 'test-utils/mocked'
+import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { Currency } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { DEFAULT_LOCAL_CURRENCY, FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
+import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
+import { Locale } from 'uniswap/src/features/language/constants'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 jest.mock('hooks/useActiveLocale')
 jest.mock('hooks/useActiveLocalCurrency')
-jest.mock('graphql/data/ConversionRate')
+jest.mock('uniswap/src/features/fiatCurrency/hooks')
 
 describe('formatNumber', () => {
-  beforeEach(() => {
-    mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1.0, isLoading: false })
-  })
-
   it('formats token reference numbers correctly', () => {
     const { formatNumber } = renderHook(() => useFormatter()).result.current
 
@@ -31,7 +28,7 @@ describe('formatNumber', () => {
   })
 
   it('formats token reference numbers correctly with Dutch locale', () => {
-    mocked(useActiveLocale).mockReturnValue('nl-NL')
+    mocked(useActiveLocale).mockReturnValue(Locale.DutchNetherlands)
     const { formatNumber } = renderHook(() => useFormatter()).result.current
 
     expect(formatNumber({ input: 1234567000000000, type: NumberType.TokenNonTx })).toBe('>999\xa0bln.')
@@ -65,7 +62,7 @@ describe('formatNumber', () => {
   })
 
   it('formats token transaction numbers correctly with russian locale', () => {
-    mocked(useActiveLocale).mockReturnValue('ru-RU')
+    mocked(useActiveLocale).mockReturnValue(Locale.RussianRussia)
     const { formatNumber } = renderHook(() => useFormatter()).result.current
 
     expect(formatNumber({ input: 1234567.8901, type: NumberType.TokenTx })).toBe('1\xa0234\xa0567,89')
@@ -101,8 +98,8 @@ describe('formatNumber', () => {
   })
 
   it('formats fiat estimates on token details pages correctly with french locale and euro currency', () => {
-    mocked(useActiveLocale).mockReturnValue('fr-FR')
-    mocked(useActiveLocalCurrency).mockReturnValue(Currency.Eur)
+    mocked(useActiveLocale).mockReturnValue(Locale.FrenchFrance)
+    mocked(useActiveLocalCurrency).mockReturnValue(FiatCurrency.Euro)
     const { formatNumber } = renderHook(() => useFormatter()).result.current
 
     expect(formatNumber({ input: 1234567.891, type: NumberType.FiatTokenDetails })).toBe('1,23\xa0M\xa0€')
@@ -134,8 +131,8 @@ describe('formatNumber', () => {
   })
 
   it('formats fiat estimates for tokens correctly with spanish locale and yen currency', () => {
-    mocked(useActiveLocale).mockReturnValue('es-ES')
-    mocked(useActiveLocalCurrency).mockReturnValue(Currency.Jpy)
+    mocked(useActiveLocale).mockReturnValue(Locale.SpanishSpain)
+    mocked(useActiveLocalCurrency).mockReturnValue(FiatCurrency.JapaneseYen)
     const { formatNumber } = renderHook(() => useFormatter()).result.current
 
     expect(formatNumber({ input: 1234567.891, type: NumberType.FiatTokenPrice })).toBe('1,23\xa0M¥')
@@ -166,8 +163,8 @@ describe('formatNumber', () => {
   })
 
   it('formats fiat estimates for token stats correctly with japenese locale and cad currency', () => {
-    mocked(useActiveLocale).mockReturnValue('ja-JP')
-    mocked(useActiveLocalCurrency).mockReturnValue(Currency.Cad)
+    mocked(useActiveLocale).mockReturnValue(Locale.JapaneseJapan)
+    mocked(useActiveLocalCurrency).mockReturnValue(FiatCurrency.CanadianDollar)
     const { formatNumber } = renderHook(() => useFormatter()).result.current
 
     expect(formatNumber({ input: 1234576, type: NumberType.FiatTokenStats })).toBe('CA$123.5万')
@@ -189,8 +186,8 @@ describe('formatNumber', () => {
   })
 
   it('formats gas prices correctly with portugese locale and thai baht currency', () => {
-    mocked(useActiveLocale).mockReturnValue('pt-PR')
-    mocked(useActiveLocalCurrency).mockReturnValue(Currency.Thb)
+    mocked(useActiveLocale).mockReturnValue(Locale.PortugueseBrazil)
+    mocked(useActiveLocalCurrency).mockReturnValue(FiatCurrency.ThaiBaht)
     const { formatNumber } = renderHook(() => useFormatter()).result.current
 
     expect(formatNumber({ input: 1234567.891, type: NumberType.FiatGasPrice })).toBe('฿\xa01,23\xa0mi')
@@ -209,7 +206,7 @@ describe('formatNumber', () => {
   })
 
   it('formats token quantities prices correctly with nigerian naira currency', () => {
-    mocked(useActiveLocalCurrency).mockReturnValue(Currency.Ngn)
+    mocked(useActiveLocalCurrency).mockReturnValue(FiatCurrency.NigerianNaira)
     const { formatNumber } = renderHook(() => useFormatter()).result.current
 
     expect(formatNumber({ input: 1234567.891, type: NumberType.FiatTokenQuantity })).toBe('₦1.23M')
@@ -240,7 +237,7 @@ describe('formatNumber', () => {
   })
 
   it('formats Swap text input/output numbers correctly with Korean locale', () => {
-    mocked(useActiveLocale).mockReturnValue('ko-KR')
+    mocked(useActiveLocale).mockReturnValue(Locale.KoreanKorea)
     const { formatNumber } = renderHook(() => useFormatter()).result.current
 
     expect(formatNumber({ input: 1234567.8901, type: NumberType.SwapTradeAmount })).toBe('1234570')
@@ -285,9 +282,9 @@ describe('formatNumber', () => {
     expect(formatNumber({ input: 1234567000000000, type: NumberType.NFTCollectionStats })).toBe('1234.6T')
   })
 
-  it('formats NFT numbers correctly with brazilian portugese locale and braziliean real currency', () => {
-    mocked(useActiveLocale).mockReturnValue('pt-Br')
-    mocked(useActiveLocalCurrency).mockReturnValue(Currency.Brl)
+  it('formats NFT numbers correctly with brazilian portuguese locale and brazilian real currency', () => {
+    mocked(useActiveLocale).mockReturnValue(Locale.PortugueseBrazil)
+    mocked(useActiveLocalCurrency).mockReturnValue(FiatCurrency.BrazilianReal)
     const { formatNumber } = renderHook(() => useFormatter()).result.current
 
     expect(formatNumber({ input: 1234567000000000, type: NumberType.NFTTokenFloorPrice })).toBe('>999\xa0tri')
@@ -313,10 +310,6 @@ describe('formatNumber', () => {
 })
 
 describe('formatUSDPrice', () => {
-  beforeEach(() => {
-    mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1.0, isLoading: false })
-  })
-
   it('format fiat price correctly', () => {
     const { formatFiatPrice } = renderHook(() => useFormatter()).result.current
 
@@ -334,8 +327,8 @@ describe('formatUSDPrice', () => {
   })
 
   it('format fiat price correctly in euros with french locale', () => {
-    mocked(useActiveLocalCurrency).mockReturnValue(Currency.Eur)
-    mocked(useActiveLocale).mockReturnValue('fr-FR')
+    mocked(useActiveLocalCurrency).mockReturnValue(FiatCurrency.Euro)
+    mocked(useActiveLocale).mockReturnValue(Locale.FrenchFrance)
     const { formatFiatPrice } = renderHook(() => useFormatter()).result.current
 
     expect(formatFiatPrice({ price: 0.000000009876 })).toBe('<0,00000001\xa0€')
@@ -353,10 +346,6 @@ describe('formatUSDPrice', () => {
 })
 
 describe('formatPercent', () => {
-  beforeEach(() => {
-    mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1.0, isLoading: false })
-  })
-
   it('should correctly format undefined', () => {
     const { formatPercent } = renderHook(() => useFormatter()).result.current
 
@@ -374,7 +363,7 @@ describe('formatPercent', () => {
   })
 
   it('correctly formats a percent with french locale', () => {
-    mocked(useActiveLocale).mockReturnValue('fr-FR')
+    mocked(useActiveLocale).mockReturnValue(Locale.FrenchFrance)
     const { formatPercent } = renderHook(() => useFormatter()).result.current
 
     expect(formatPercent(new Percent(1, 100000))).toBe('0,001%')
@@ -386,10 +375,6 @@ describe('formatPercent', () => {
 })
 
 describe('formatReviewSwapCurrencyAmount', () => {
-  beforeEach(() => {
-    mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1.0, isLoading: false })
-  })
-
   it('should use TokenTx formatting under a default length', () => {
     const { formatReviewSwapCurrencyAmount } = renderHook(() => useFormatter()).result.current
 
@@ -398,7 +383,7 @@ describe('formatReviewSwapCurrencyAmount', () => {
   })
 
   it('should use TokenTx formatting under a default length with french locales', () => {
-    mocked(useActiveLocale).mockReturnValue('fr-FR')
+    mocked(useActiveLocale).mockReturnValue(Locale.FrenchFrance)
     const { formatReviewSwapCurrencyAmount } = renderHook(() => useFormatter()).result.current
 
     const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000') // 2,000 USDC
@@ -413,7 +398,7 @@ describe('formatReviewSwapCurrencyAmount', () => {
   })
 
   it('should use SwapTradeAmount formatting over the default length with french locales', () => {
-    mocked(useActiveLocale).mockReturnValue('fr-FR')
+    mocked(useActiveLocale).mockReturnValue(Locale.FrenchFrance)
     const { formatReviewSwapCurrencyAmount } = renderHook(() => useFormatter()).result.current
 
     const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000000') // 2,000,000 USDC
@@ -422,10 +407,6 @@ describe('formatReviewSwapCurrencyAmount', () => {
 })
 
 describe('formatDelta', () => {
-  beforeEach(() => {
-    mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1.0, isLoading: false })
-  })
-
   it.each([[null], [undefined], [Infinity], [NaN]])('should correctly format %p', (value) => {
     const { formatDelta } = renderHook(() => useFormatter()).result.current
 
@@ -443,7 +424,7 @@ describe('formatDelta', () => {
   })
 
   it('correctly formats a percent with 2 decimal places in french locale', () => {
-    mocked(useActiveLocale).mockReturnValue('fr-FR')
+    mocked(useActiveLocale).mockReturnValue(Locale.FrenchFrance)
     const { formatDelta } = renderHook(() => useFormatter()).result.current
 
     expect(formatDelta(0)).toBe('0,00%')
@@ -456,25 +437,15 @@ describe('formatDelta', () => {
 
 describe('formatToFiatAmount', () => {
   it('should return default values when undefined', () => {
-    mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1, isLoading: false })
     const { convertToFiatAmount } = renderHook(() => useFormatter()).result.current
 
-    expect(convertToFiatAmount()).toStrictEqual({ amount: 1.0, currency: DEFAULT_LOCAL_CURRENCY })
+    expect(convertToFiatAmount(1)).toStrictEqual({ amount: 1.0, currency: DEFAULT_LOCAL_CURRENCY })
   })
 
   it('should return input amount for same currency', () => {
-    mocked(useActiveLocalCurrency).mockReturnValue(Currency.Usd)
-    mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1, isLoading: false })
+    mocked(useAppFiatCurrency).mockReturnValue(FiatCurrency.UnitedStatesDollar)
     const { convertToFiatAmount } = renderHook(() => useFormatter()).result.current
 
     expect(convertToFiatAmount(12)).toStrictEqual({ amount: 12.0, currency: Currency.Usd })
-  })
-
-  it('should correctly convert different currency', () => {
-    mocked(useActiveLocalCurrency).mockReturnValue(Currency.Cad)
-    mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 0.5, isLoading: false })
-    const { convertToFiatAmount } = renderHook(() => useFormatter()).result.current
-
-    expect(convertToFiatAmount(12)).toStrictEqual({ amount: 6.0, currency: Currency.Cad })
   })
 })

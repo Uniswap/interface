@@ -1,10 +1,11 @@
-import { CONNECTION, useRecentConnectorId } from 'components/Web3Provider/constants'
+import { useRecentConnectorId } from 'components/Web3Provider/constants'
 import { useConnect } from 'hooks/useConnect'
 import { useCallback, useMemo } from 'react'
+import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { isMobileWeb, isTouchable, isWebAndroid, isWebIOS } from 'utilities/src/platform'
 import { Connector } from 'wagmi'
 
-type ConnectorID = (typeof CONNECTION)[keyof typeof CONNECTION]
+type ConnectorID = (typeof CONNECTION_PROVIDER_IDS)[keyof typeof CONNECTION_PROVIDER_IDS]
 
 const SHOULD_THROW = { shouldThrow: true } as const
 
@@ -41,7 +42,7 @@ function getInjectedConnectors(connectors: readonly Connector[], excludeUniswapC
   let isCoinbaseWalletBrowser = false
   const injectedConnectors = connectors.filter((c) => {
     // Special-case: Ignore coinbase eip6963-injected connector; coinbase connection is handled via the SDK connector.
-    if (c.id === CONNECTION.COINBASE_RDNS) {
+    if (c.id === CONNECTION_PROVIDER_IDS.COINBASE_RDNS) {
       if (isMobileWeb) {
         isCoinbaseWalletBrowser = true
       }
@@ -49,15 +50,20 @@ function getInjectedConnectors(connectors: readonly Connector[], excludeUniswapC
     }
 
     // Special-case: Ignore the Uniswap Extension injection here if it's being displayed separately.
-    if (c.id === CONNECTION.UNISWAP_EXTENSION_RDNS && excludeUniswapConnections) {
+    if (c.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS && excludeUniswapConnections) {
       return false
     }
 
-    return c.type === CONNECTION.INJECTED_CONNECTOR_TYPE && c.id !== CONNECTION.INJECTED_CONNECTOR_ID
+    return (
+      c.type === CONNECTION_PROVIDER_IDS.INJECTED_CONNECTOR_TYPE &&
+      c.id !== CONNECTION_PROVIDER_IDS.INJECTED_CONNECTOR_ID
+    )
   })
 
   // Special-case: Return deprecated window.ethereum connector when no eip6963 injectors are present.
-  const fallbackInjector = getConnectorWithId(connectors, CONNECTION.INJECTED_CONNECTOR_ID, { shouldThrow: true })
+  const fallbackInjector = getConnectorWithId(connectors, CONNECTION_PROVIDER_IDS.INJECTED_CONNECTOR_ID, {
+    shouldThrow: true,
+  })
   if (!injectedConnectors.length && Boolean(window.ethereum)) {
     return { injectedConnectors: [fallbackInjector], isCoinbaseWalletBrowser }
   }
@@ -90,11 +96,19 @@ export function useOrderedConnections(excludeUniswapConnections?: boolean): Inje
     )
     const injectedConnectors = injectedConnectorsBase.map((c) => ({ ...c, isInjected: true }))
 
-    const coinbaseSdkConnector = getConnectorWithId(connectors, CONNECTION.COINBASE_SDK_CONNECTOR_ID, SHOULD_THROW)
-    const walletConnectConnector = getConnectorWithId(connectors, CONNECTION.WALLET_CONNECT_CONNECTOR_ID, SHOULD_THROW)
+    const coinbaseSdkConnector = getConnectorWithId(
+      connectors,
+      CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID,
+      SHOULD_THROW,
+    )
+    const walletConnectConnector = getConnectorWithId(
+      connectors,
+      CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID,
+      SHOULD_THROW,
+    )
     const uniswapWalletConnectConnector = getConnectorWithId(
       connectors,
-      CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
+      CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
       SHOULD_THROW,
     )
     if (!coinbaseSdkConnector || !walletConnectConnector || !uniswapWalletConnectConnector) {
@@ -141,7 +155,7 @@ const ExtensionRequestArguments = {
 } as const
 
 export function useUniswapExtensionConnector() {
-  const connector = useConnectorWithId(CONNECTION.UNISWAP_EXTENSION_RDNS)
+  const connector = useConnectorWithId(CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS)
   const extensionRequest = useCallback(
     async <
       Type extends keyof typeof ExtensionRequestArguments,

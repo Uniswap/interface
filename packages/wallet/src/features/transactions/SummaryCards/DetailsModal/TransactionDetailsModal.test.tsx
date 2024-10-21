@@ -79,7 +79,7 @@ jest.mock('uniswap/src/features/gating/hooks', () => ({
   useFeatureFlag: jest.fn().mockReturnValue(true),
 }))
 
-jest.mock('wallet/src/features/language/localizedDayjs', () => ({
+jest.mock('uniswap/src/features/language/localizedDayjs', () => ({
   useFormattedDateTime: jest.fn(() => 'January 1, 2023 12:00 AM'),
   FORMAT_DATE_TIME_MEDIUM: 'MMMM D, YYYY h:mm A',
 }))
@@ -116,17 +116,27 @@ describe('TransactionDetails Components', () => {
   })
 
   it('renders TransactionDetailsInfoRows without error with isShowingMore false', () => {
-    const tree = render(<TransactionDetailsInfoRows isShowingMore={false} transactionDetails={mockTransaction} />, {
-      preloadedState,
-    })
+    const onClose = jest.fn()
+
+    const tree = render(
+      <TransactionDetailsInfoRows isShowingMore={false} transactionDetails={mockTransaction} onClose={onClose} />,
+      {
+        preloadedState,
+      },
+    )
 
     expect(tree).toMatchSnapshot()
   })
 
   it('renders TransactionDetailsInfoRows without error with isShowingMore true', () => {
-    const tree = render(<TransactionDetailsInfoRows isShowingMore={true} transactionDetails={mockTransaction} />, {
-      preloadedState,
-    })
+    const onClose = jest.fn()
+
+    const tree = render(
+      <TransactionDetailsInfoRows isShowingMore={true} transactionDetails={mockTransaction} onClose={onClose} />,
+      {
+        preloadedState,
+      },
+    )
 
     expect(tree).toMatchSnapshot()
   })

@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { useSporeColors } from 'ui/src'
 import { ShieldCheck } from 'ui/src/components/icons'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 
 export function SwapProtectionInfoModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }): JSX.Element {
   const colors = useSporeColors()
@@ -14,7 +14,8 @@ export function SwapProtectionInfoModal({ isOpen, onClose }: { isOpen: boolean; 
     <WarningModal
       backgroundIconColor={colors.DEP_accentSuccessSoft.val}
       caption={t('swap.settings.protection.description')}
-      closeText={t('common.button.close')}
+      rejectText={t('common.button.close')}
+      rejectButtonTheme="tertiary"
       icon={<ShieldCheck color="$statusSuccess" size="$icon.24" />}
       isOpen={isOpen}
       modalName={ModalName.SwapProtection}

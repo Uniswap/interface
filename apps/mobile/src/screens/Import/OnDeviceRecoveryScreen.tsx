@@ -17,19 +17,19 @@ import { Flex, Image, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { PapersText } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { DynamicConfigs, OnDeviceRecoveryConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
 import { useTimeout } from 'utilities/src/time/timing'
-import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
@@ -75,6 +75,7 @@ export function OnDeviceRecoveryScreen({
         if (mnemonicId !== selectedMnemonicId) {
           return Keyring.removeMnemonic(mnemonicId)
         }
+        return Promise.resolve()
       }),
     )
   }
@@ -86,6 +87,7 @@ export function OnDeviceRecoveryScreen({
         if (!selectedRecoveryWalletInfos.find((walletInfo) => walletInfo.address === address)) {
           return Keyring.removePrivateKey(address)
         }
+        return Promise.resolve()
       }),
     )
   }
@@ -237,7 +239,7 @@ export function OnDeviceRecoveryScreen({
                 </Text>
                 <Trace logPress element={ElementName.OnDeviceRecoveryImportOther}>
                   <TouchableArea alignItems="center" hitSlop={16} mb="$spacing12" testID={TestID.WatchWallet}>
-                    <Text color="$accent1" variant="buttonLabel3" onPress={onPressOtherWallet}>
+                    <Text color="$accent1" variant="buttonLabel2" onPress={onPressOtherWallet}>
                       {t('onboarding.import.onDeviceRecovery.other_options')}
                     </Text>
                   </TouchableArea>
@@ -247,15 +249,15 @@ export function OnDeviceRecoveryScreen({
           </Flex>
           <WarningModal
             caption={t('onboarding.import.onDeviceRecovery.warning.caption')}
-            closeText={t('common.button.back')}
-            confirmText={t('common.button.continue')}
+            rejectText={t('common.button.back')}
+            acknowledgeText={t('common.button.continue')}
             icon={<PapersText color={colors.neutral1.get()} size="$icon.20" strokeWidth={1.5} />}
             isOpen={showConfirmationModal}
             modalName={ModalName.OnDeviceRecoveryConfirmation}
             severity={WarningSeverity.None}
             title={t('onboarding.import.onDeviceRecovery.warning.title')}
             onClose={onPressClose}
-            onConfirm={onPressConfirm}
+            onAcknowledge={onPressConfirm}
           />
         </Screen>
       </Trace>

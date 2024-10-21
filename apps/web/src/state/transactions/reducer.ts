@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { PendingTransactionDetails, TransactionDetails, TransactionInfo } from 'state/transactions/types'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 // TODO(WEB-2053): update this to be a map of account -> chainId -> txHash -> TransactionDetails
 // to simplify usage, once we're able to invalidate localstorage
@@ -21,7 +21,7 @@ const localTransactionSlice = createSlice({
       transactions,
       {
         payload: { chainId, hash, ...details },
-      }: { payload: { chainId: InterfaceChainId } & Omit<PendingTransactionDetails, 'status' | 'addedTime'> },
+      }: { payload: { chainId: UniverseChainId } & Omit<PendingTransactionDetails, 'status' | 'addedTime'> },
     ) {
       if (transactions[chainId]?.[hash]) {
         throw Error('Attempted to add existing transaction.')
@@ -35,7 +35,7 @@ const localTransactionSlice = createSlice({
       }
       transactions[chainId] = txs
     },
-    clearAllTransactions(transactions, { payload: { chainId } }: { payload: { chainId: InterfaceChainId } }) {
+    clearAllTransactions(transactions, { payload: { chainId } }: { payload: { chainId: UniverseChainId } }) {
       if (!transactions[chainId]) {
         return
       }
@@ -43,7 +43,7 @@ const localTransactionSlice = createSlice({
     },
     removeTransaction(
       transactions,
-      { payload: { chainId, hash } }: { payload: { chainId: InterfaceChainId; hash: string } },
+      { payload: { chainId, hash } }: { payload: { chainId: UniverseChainId; hash: string } },
     ) {
       if (transactions[chainId][hash]) {
         delete transactions[chainId][hash]
@@ -53,7 +53,7 @@ const localTransactionSlice = createSlice({
       transactions,
       {
         payload: { chainId, hash, blockNumber },
-      }: { payload: { chainId: InterfaceChainId; hash: string; blockNumber: number } },
+      }: { payload: { chainId: UniverseChainId; hash: string; blockNumber: number } },
     ) {
       const tx = transactions[chainId]?.[hash]
       if (!tx || tx.status !== TransactionStatus.Pending) {
@@ -71,7 +71,7 @@ const localTransactionSlice = createSlice({
         payload: { chainId, hash, status, info },
       }: {
         payload: {
-          chainId: InterfaceChainId
+          chainId: UniverseChainId
           hash: string
           status: TransactionStatus
           info?: TransactionInfo
@@ -93,7 +93,7 @@ const localTransactionSlice = createSlice({
       transactions,
       {
         payload: { chainId, hash, cancelHash },
-      }: { payload: { chainId: InterfaceChainId; hash: string; cancelHash: string } },
+      }: { payload: { chainId: UniverseChainId; hash: string; cancelHash: string } },
     ) {
       const tx = transactions[chainId]?.[hash]
 

@@ -4,4 +4,6 @@ export const MIN_AUTO_SLIPPAGE_TOLERANCE = 0.5
 export const MAX_AUTO_SLIPPAGE_TOLERANCE = 5.5
 export const MAX_CUSTOM_SLIPPAGE_TOLERANCE = 20
 
+export const MAX_CUSTOM_DEADLINE = 3 * 24 * 60 // 3 days in minutes
+
 export const MAX_FIAT_INPUT_DECIMALS = 2

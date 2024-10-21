@@ -135,6 +135,7 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
   }, [hasSignerAccounts, hasViewOnlyAccounts, signerAccounts, viewOnlyAccounts])
 
   const renderItem = useCallback(
+    // eslint-disable-next-line consistent-return
     ({ item }: { item: AccountListItem }) => {
       switch (item.type) {
         case AccountListItemType.SignerHeader:

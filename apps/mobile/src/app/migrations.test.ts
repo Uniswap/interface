@@ -76,6 +76,10 @@ import {
   v72Schema,
   v73Schema,
   v74Schema,
+  v75Schema,
+  v76Schema,
+  v77Schema,
+  v78Schema,
   v7Schema,
   v8Schema,
   v9Schema,
@@ -88,7 +92,9 @@ import { initialModalsState } from 'src/features/modals/modalSlice'
 import { initialTweaksState } from 'src/features/tweaks/slice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { initialUniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
 import { initialFavoritesState } from 'uniswap/src/features/favorites/slice'
+import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { initialSearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
 import { initialUserSettingsState } from 'uniswap/src/features/settings/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -96,13 +102,11 @@ import { initialTokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { transactionDetails } from 'uniswap/src/test/fixtures'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
 import { initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
-import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
-import { initialLanguageState } from 'wallet/src/features/language/slice'
 import { initialNotificationsState } from 'wallet/src/features/notifications/slice'
 import { initialTelemetryState } from 'wallet/src/features/telemetry/slice'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
@@ -111,7 +115,11 @@ import { createMigrate } from 'wallet/src/state/createMigrate'
 import { HAYDEN_ETH_ADDRESS } from 'wallet/src/state/walletMigrations'
 import {
   testActivatePendingAccounts,
+  testAddCreatedOnboardingRedesignAccount,
   testAddedHapticSetting,
+  testMovedCurrencySetting,
+  testMovedLanguageSetting,
+  testMovedTokenWarnings,
   testMovedUserSettings,
   testRemoveHoldToSwap,
 } from 'wallet/src/state/walletMigrationsTests'
@@ -174,8 +182,7 @@ describe('Redux state migrations', () => {
       cloudBackup: initialCloudBackupState,
       ens: { ensForAddress: {} },
       favorites: initialFavoritesState,
-      fiatCurrencySettings: initialFiatCurrencyState,
-      languageSettings: initialLanguageState,
+      fiatCurrencySettings: { currentCurrency: FiatCurrency.UnitedStatesDollar },
       modals: initialModalsState,
       notifications: initialNotificationsState,
       passwordLockout: initialPasswordLockoutState,
@@ -188,6 +195,7 @@ describe('Redux state migrations', () => {
       tokens: initialTokensState,
       transactions: initialTransactionsState,
       tweaks: initialTweaksState,
+      uniswapBehaviorHistory: initialUniswapBehaviorHistoryState,
       userSettings: initialUserSettingsState,
       wallet: initialWalletState,
       walletConnect: initialWalletConnectState,
@@ -215,9 +223,9 @@ describe('Redux state migrations', () => {
       initialStateKeys.delete(key)
     }
 
-    expect(migratedSchemaKeys.size).toBe(0)
-    expect(latestSchemaKeys.size).toBe(0)
-    expect(initialStateKeys.size).toBe(0)
+    expect(Array.from(migratedSchemaKeys)).toEqual([])
+    expect(Array.from(latestSchemaKeys)).toEqual([])
+    expect(Array.from(initialStateKeys)).toEqual([])
   })
 
   // This is a precaution to ensure we do not attempt to access undefined properties during migrations
@@ -256,7 +264,7 @@ describe('Redux state migrations', () => {
     }
 
     const txDetails1 = {
-      chainId: UniverseChainId.Goerli,
+      chainId: UniverseChainId.Optimism,
       id: '1',
       from: '0xKingHodler',
       options: {
@@ -286,7 +294,7 @@ describe('Redux state migrations', () => {
           [UniverseChainId.Mainnet]: {
             '0': txDetails0,
           },
-          [UniverseChainId.Goerli]: {
+          [UniverseChainId.Optimism]: {
             '1': txDetails1,
           },
         },
@@ -305,8 +313,8 @@ describe('Redux state migrations', () => {
       TransactionStatus.Pending,
     )
     expect(newSchema.transactions['0xKingHodler'][UniverseChainId.Mainnet]).toBeUndefined()
-    expect(newSchema.transactions['0xKingHodler'][UniverseChainId.Goerli]['0']).toBeUndefined()
-    expect(newSchema.transactions['0xKingHodler'][UniverseChainId.Goerli]['1'].from).toEqual('0xKingHodler')
+    expect(newSchema.transactions['0xKingHodler'][UniverseChainId.Optimism]['0']).toBeUndefined()
+    expect(newSchema.transactions['0xKingHodler'][UniverseChainId.Optimism]['1'].from).toEqual('0xKingHodler')
 
     expect(newSchema.notifications.lastTxNotificationUpdate).toBeDefined()
     expect(newSchema.notifications.lastTxNotificationUpdate['0xShadowySuperCoder'][UniverseChainId.Mainnet]).toEqual(
@@ -673,6 +681,11 @@ describe('Redux state migrations', () => {
   })
 
   it('migrates from v18 to v19', () => {
+    const ROPSTEN = 3 as UniverseChainId
+    const RINKEBY = 4 as UniverseChainId
+    const GOERLI = 5 as UniverseChainId
+    const KOVAN = 42 as UniverseChainId
+
     const TEST_ADDRESS = '0xShadowySuperCoder'
     const txDetails0 = {
       chainId: UniverseChainId.Mainnet,
@@ -700,7 +713,7 @@ describe('Redux state migrations', () => {
 
     const TEST_ADDRESS_2 = '0xKingHodler'
     const txDetails1 = {
-      chainId: UniverseChainId.Goerli,
+      chainId: GOERLI,
       id: '1',
       from: TEST_ADDRESS_2,
       options: {
@@ -723,16 +736,16 @@ describe('Redux state migrations', () => {
       hash: '0x123',
     }
 
-    const ROPSTEN = 3 as WalletChainId
-    const RINKEBY = 4 as WalletChainId
-    const KOVAN = 42 as WalletChainId
-
     const transactions = {
       [TEST_ADDRESS]: {
         [UniverseChainId.Mainnet]: {
           '0': txDetails0,
         },
-        [UniverseChainId.Goerli]: {
+        [UniverseChainId.Base]: {
+          '0': txDetails0,
+          '1': txDetails1,
+        },
+        [GOERLI]: {
           '0': txDetails0,
           '1': txDetails1,
         },
@@ -771,22 +784,26 @@ describe('Redux state migrations', () => {
     const blocks = {
       byChainId: {
         [UniverseChainId.Mainnet]: { latestBlockNumber: 123456789 },
-        [UniverseChainId.Goerli]: { latestBlockNumber: 123456789 },
+        [UniverseChainId.Optimism]: { latestBlockNumber: 123456789 },
+        [UniverseChainId.ArbitrumOne]: { latestBlockNumber: 123456789 },
+        [UniverseChainId.Base]: { latestBlockNumber: 123456789 },
+        [GOERLI]: { latestBlockNumber: 123456789 },
         [ROPSTEN]: { latestBlockNumber: 123456789 },
         [RINKEBY]: { latestBlockNumber: 123456789 },
         [KOVAN]: { latestBlockNumber: 123456789 },
-        [UniverseChainId.Optimism]: { latestBlockNumber: 123456789 },
       },
     }
 
     const chains = {
       byChainId: {
+        [UniverseChainId.Mainnet]: { isActive: true },
+        [UniverseChainId.Optimism]: { isActive: true },
         [UniverseChainId.ArbitrumOne]: { isActive: true },
-        [UniverseChainId.Goerli]: { isActive: true },
+        [UniverseChainId.Base]: { isActive: true },
+        [GOERLI]: { isActive: true },
         [ROPSTEN]: { isActive: true },
         [RINKEBY]: { isActive: true },
         [KOVAN]: { isActive: true },
-        [UniverseChainId.Optimism]: { isActive: true },
       },
     }
 
@@ -800,7 +817,8 @@ describe('Redux state migrations', () => {
     const v19 = migrations[19](v18Stub)
 
     expect(v19.transactions[TEST_ADDRESS][UniverseChainId.Mainnet]).toBeDefined()
-    expect(v19.transactions[TEST_ADDRESS][UniverseChainId.Goerli]).toBeDefined()
+    expect(v19.transactions[TEST_ADDRESS][UniverseChainId.Base]).toBeDefined()
+    expect(v19.transactions[TEST_ADDRESS][GOERLI]).toBeUndefined()
     expect(v19.transactions[TEST_ADDRESS][ROPSTEN]).toBeUndefined()
     expect(v19.transactions[TEST_ADDRESS][RINKEBY]).toBeUndefined()
     expect(v19.transactions[TEST_ADDRESS][KOVAN]).toBeUndefined()
@@ -812,15 +830,19 @@ describe('Redux state migrations', () => {
     expect(v19.transactions[TEST_ADDRESS_2][KOVAN]).toBeUndefined()
 
     expect(v19.blocks.byChainId[UniverseChainId.Mainnet]).toBeDefined()
-    expect(v19.blocks.byChainId[UniverseChainId.Goerli]).toBeDefined()
     expect(v19.blocks.byChainId[UniverseChainId.Optimism]).toBeDefined()
+    expect(v19.blocks.byChainId[UniverseChainId.ArbitrumOne]).toBeDefined()
+    expect(v19.blocks.byChainId[UniverseChainId.Base]).toBeDefined()
+    expect(v19.blocks.byChainId[GOERLI]).toBeUndefined()
     expect(v19.blocks.byChainId[ROPSTEN]).toBeUndefined()
     expect(v19.blocks.byChainId[RINKEBY]).toBeUndefined()
     expect(v19.blocks.byChainId[KOVAN]).toBeUndefined()
 
-    expect(v19.chains.byChainId[UniverseChainId.ArbitrumOne]).toBeDefined()
-    expect(v19.chains.byChainId[UniverseChainId.Goerli]).toBeDefined()
+    expect(v19.chains.byChainId[UniverseChainId.Mainnet]).toBeDefined()
     expect(v19.chains.byChainId[UniverseChainId.Optimism]).toBeDefined()
+    expect(v19.chains.byChainId[UniverseChainId.ArbitrumOne]).toBeDefined()
+    expect(v19.chains.byChainId[UniverseChainId.Base]).toBeDefined()
+    expect(v19.chains.byChainId[GOERLI]).toBeUndefined()
     expect(v19.chains.byChainId[ROPSTEN]).toBeUndefined()
     expect(v19.chains.byChainId[RINKEBY]).toBeUndefined()
     expect(v19.chains.byChainId[KOVAN]).toBeUndefined()
@@ -969,7 +991,7 @@ describe('Redux state migrations', () => {
           '0': oldFiatOnRampTxDetails,
           '1': txDetailsConfirmed,
         },
-        [UniverseChainId.Goerli]: {
+        [UniverseChainId.Base]: {
           '0': { ...oldFiatOnRampTxDetails, status: TransactionStatus.Failed },
           '1': txDetailsConfirmed,
         },
@@ -1000,7 +1022,7 @@ describe('Redux state migrations', () => {
 
     // expect fiat onramp txdetails to change
     expect(v30.transactions[account.address][UniverseChainId.Mainnet]['0'].typeInfo).toEqual(expectedTypeInfo)
-    expect(v30.transactions[account.address][UniverseChainId.Goerli]['0']).toBeUndefined()
+    expect(v30.transactions[account.address][UniverseChainId.Base]['0']).toBeUndefined()
     expect(v30.transactions[account.address][UniverseChainId.ArbitrumOne]).toBeUndefined() // does not create an object for chain
     expect(v30.transactions['0xshadowySuperCoder'][UniverseChainId.ArbitrumOne]['0'].typeInfo).toEqual(expectedTypeInfo)
     expect(v30.transactions['0xshadowySuperCoder'][UniverseChainId.Optimism]['0'].typeInfo).toEqual(expectedTypeInfo)
@@ -1008,7 +1030,7 @@ describe('Redux state migrations', () => {
     expect(v30.transactions['0xdeleteMe']).toBe(undefined)
     // expect non-for txDetails to not change
     expect(v30.transactions[account.address][UniverseChainId.Mainnet]['1']).toEqual(txDetailsConfirmed)
-    expect(v30.transactions[account.address][UniverseChainId.Goerli]['1']).toEqual(txDetailsConfirmed)
+    expect(v30.transactions[account.address][UniverseChainId.Base]['1']).toEqual(txDetailsConfirmed)
     expect(v30.transactions['0xshadowySuperCoder'][UniverseChainId.ArbitrumOne]['1']).toEqual(txDetailsConfirmed)
     expect(v30.transactions['0xshadowySuperCoder'][UniverseChainId.Optimism]['2']).toEqual(txDetailsConfirmed)
   })
@@ -1500,7 +1522,7 @@ describe('Redux state migrations', () => {
           '0': oldFiatOnRampTxDetails,
           '1': txDetailsConfirmed,
         },
-        [UniverseChainId.Goerli]: {
+        [UniverseChainId.Optimism]: {
           '0': oldFiatOnRampTxDetails,
           '1': {
             ...oldFiatOnRampTxDetails,
@@ -1527,19 +1549,35 @@ describe('Redux state migrations', () => {
     expect(v74.transactions[account.address][UniverseChainId.Mainnet]['0']).toBe(undefined)
     expect(v74.transactions[account.address][UniverseChainId.Mainnet]['1']).toEqual(txDetailsConfirmed)
 
-    expect(v74.transactions[account.address][UniverseChainId.Goerli]['0']).toBe(undefined)
-    expect(v74.transactions[account.address][UniverseChainId.Goerli]['1'].typeInfo).toEqual({
+    expect(v74.transactions[account.address][UniverseChainId.Optimism]['0']).toBe(undefined)
+    expect(v74.transactions[account.address][UniverseChainId.Optimism]['1'].typeInfo).toEqual({
       ...oldFiatOnRampTxDetails.typeInfo,
       type: TransactionType.Send,
     })
-    expect(v74.transactions[account.address][UniverseChainId.Goerli]['2'].typeInfo).toEqual({
+    expect(v74.transactions[account.address][UniverseChainId.Optimism]['2'].typeInfo).toEqual({
       ...oldFiatOnRampTxDetails.typeInfo,
       type: TransactionType.Receive,
     })
-    expect(v74.transactions[account.address][UniverseChainId.Goerli]['3']).toEqual(txDetailsConfirmed)
+    expect(v74.transactions[account.address][UniverseChainId.Optimism]['3']).toEqual(txDetailsConfirmed)
   })
 
   it('migrates from v74 to v75', () => {
     testRemoveHoldToSwap(migrations[75], v74Schema)
+  })
+
+  it('migrates from v75 to v76', () => {
+    testAddCreatedOnboardingRedesignAccount(migrations[76], v75Schema)
+  })
+
+  it('migrates from v76 to v77', async () => {
+    testMovedTokenWarnings(migrations[77], v76Schema)
+  })
+
+  it('migrates from v77 to v78', async () => {
+    testMovedLanguageSetting(migrations[78], v77Schema)
+  })
+
+  it('migrates from v78 to v79', async () => {
+    testMovedCurrencySetting(migrations[79], v78Schema)
   })
 })

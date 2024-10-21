@@ -1,10 +1,10 @@
-import Column from 'components/Column'
-import Row from 'components/Row'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ExternalLink } from 'theme/components'
 import { Text } from 'ui/src'
-import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { iconSizes } from 'ui/src/theme'
 import { Trans } from 'uniswap/src/i18n'
 
@@ -41,7 +41,7 @@ export function PoolWarning({ title, subtitle, link }: PoolWarningProps) {
       <Row gap="md" height="100%">
         <StyledColumn>
           <IconContainer>
-            <AlertTriangle color="$statusCritical" size={iconSizes.icon20} />
+            <AlertTriangleFilled color="$statusCritical" size={iconSizes.icon20} />
           </IconContainer>
         </StyledColumn>
         <StyledColumn gap="xs">
@@ -52,7 +52,7 @@ export function PoolWarning({ title, subtitle, link }: PoolWarningProps) {
             {subtitle}
           </Text>
           <ExternalLink href={link}>
-            <Text variant="buttonLabel4" color="$neutral1">
+            <Text variant="buttonLabel3" color="$neutral1">
               <Trans i18nKey="common.button.learn" />
             </Text>
           </ExternalLink>

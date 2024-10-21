@@ -1,6 +1,6 @@
 // until the web app needs all of tamagui, avoid heavy imports there
 // eslint-disable-next-line no-restricted-imports
-import { createFont, isWeb } from '@tamagui/core'
+import { createFont, isAndroid, isWeb } from '@tamagui/core'
 import { needsSmallFont } from 'ui/src/utils/needs-small-font'
 import { isInterface } from 'utilities/src/platform'
 
@@ -14,15 +14,44 @@ const adjustedSize = (fontSize: number): number => {
   return fontSize + 1
 }
 
+// Note that React Native is a bit weird with fonts
+// on iOS you must refer to them by the family name in the file
+// on Android you must refer to them by the name of the file
+// on web, it's the full family name in the file
+const fontFamilyByPlatform = {
+  android: {
+    medium: 'Basel-Grotesk-Medium',
+    book: 'Basel-Grotesk-Book',
+  },
+  ios: {
+    medium: 'Basel Grotesk',
+    book: 'Basel Grotesk',
+  },
+  web: {
+    medium: 'Basel Grotesk Medium',
+    book: 'Basel Grotesk Book',
+  },
+}
+
+const platform = isWeb ? 'web' : isAndroid ? 'android' : 'ios'
+
 const fontFamily = {
   serif: 'serif',
   sansSerif: {
     // iOS uses the name embedded in the font
-    book: 'Basel-Book',
-    medium: 'Basel-Medium',
+    book: fontFamilyByPlatform[platform].book,
+    medium: fontFamilyByPlatform[platform].medium,
     monospace: 'InputMono-Regular',
   },
 }
+
+const baselMedium = isWeb
+  ? 'Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
+  : fontFamily.sansSerif.medium
+
+const baselBook = isWeb
+  ? 'Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
+  : fontFamily.sansSerif.book
 
 type SansSerifFontFamilyKey = keyof typeof fontFamily.sansSerif
 type SansSerifFontFamilyValue = (typeof fontFamily.sansSerif)[SansSerifFontFamilyKey]
@@ -52,6 +81,10 @@ const defaultWeights = {
   true: isInterface ? BOOK_WEIGHT_WEB : BOOK_WEIGHT,
   medium: isInterface ? MEDIUM_WEIGHT_WEB : MEDIUM_WEIGHT,
 }
+
+// on native, the Basel font files render down a few px
+// this adjusts them to be visually centered by default
+const NATIVE_LINE_HEIGHT_SCALE = 1.15
 
 export const fonts = {
   heading1: {
@@ -120,28 +153,28 @@ export const fonts = {
   buttonLabel1: {
     family: platformFontFamily('medium'),
     fontSize: adjustedSize(18),
-    lineHeight: 24,
+    lineHeight: adjustedSize(18) * NATIVE_LINE_HEIGHT_SCALE,
     fontWeight: MEDIUM_WEIGHT,
     maxFontSizeMultiplier: 1.2,
   },
   buttonLabel2: {
     family: platformFontFamily('medium'),
     fontSize: adjustedSize(16),
-    lineHeight: 24,
+    lineHeight: adjustedSize(16) * NATIVE_LINE_HEIGHT_SCALE,
     fontWeight: MEDIUM_WEIGHT,
     maxFontSizeMultiplier: 1.2,
   },
   buttonLabel3: {
     family: platformFontFamily('medium'),
     fontSize: adjustedSize(14),
-    lineHeight: 20,
+    lineHeight: adjustedSize(14) * NATIVE_LINE_HEIGHT_SCALE,
     fontWeight: MEDIUM_WEIGHT,
     maxFontSizeMultiplier: 1.2,
   },
   buttonLabel4: {
     family: platformFontFamily('medium'),
     fontSize: adjustedSize(12),
-    lineHeight: 16,
+    lineHeight: adjustedSize(12) * NATIVE_LINE_HEIGHT_SCALE,
     fontWeight: MEDIUM_WEIGHT,
     maxFontSizeMultiplier: 1.2,
   },
@@ -153,17 +186,16 @@ export const fonts = {
   },
 } as const
 
-const baselMedium = isWeb
-  ? 'Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
-  : 'Basel-Medium'
-
-const baselBook = isWeb
-  ? 'Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
-  : 'Basel-Book'
+// TODO: Tamagui breaks font weights on Android if face *not* defined
+// but breaks iOS if face is defined
+const face = {
+  [defaultWeights.book]: { normal: baselBook },
+  [defaultWeights.medium]: { normal: baselMedium },
+}
 
 export const headingFont = createFont({
   family: baselBook,
-  face: {},
+  ...(isAndroid ? { face } : null),
   size: {
     small: fonts.heading3.fontSize,
     medium: fonts.heading2.fontSize,
@@ -181,7 +213,7 @@ export const headingFont = createFont({
 
 export const subHeadingFont = createFont({
   family: baselBook,
-  face: {},
+  ...(isAndroid ? { face } : null),
   size: {
     small: fonts.subheading2.fontSize,
     large: fonts.subheading1.fontSize,
@@ -200,7 +232,7 @@ export const subHeadingFont = createFont({
 
 export const bodyFont = createFont({
   family: baselBook,
-  face: {},
+  ...(isAndroid ? { face } : null),
   size: {
     micro: fonts.body4.fontSize,
     small: fonts.body3.fontSize,

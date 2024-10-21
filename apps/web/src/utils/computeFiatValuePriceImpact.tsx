@@ -1,5 +1,5 @@
 import { Percent } from '@uniswap/sdk-core'
-import { BIPS_BASE } from 'constants/misc'
+import { BIPS_BASE } from 'uniswap/src/constants/misc'
 
 export function computeFiatValuePriceImpact(
   fiatValueInput: number | undefined | null,

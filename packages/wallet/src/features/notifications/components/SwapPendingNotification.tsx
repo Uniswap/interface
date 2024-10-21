@@ -19,13 +19,13 @@ export function SwapPendingNotification({ notification }: { notification: SwapPe
     <NotificationToast
       smallToast
       hideDelay={TRANSACTION_PENDING_NOTIFICATION_DELAY}
-      icon={<SpinningLoader color="$accent1" />}
-      iconPosition="right"
+      postCaptionElement={<SpinningLoader color="$accent1" />}
       title={notificationText}
     />
   )
 }
 
+// eslint-disable-next-line consistent-return
 function getNotificationText(wrapType: WrapType, t: TFunction): string {
   switch (wrapType) {
     case WrapType.NotApplicable:

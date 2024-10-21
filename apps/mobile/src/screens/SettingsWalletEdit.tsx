@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, KeyboardAvoidingView, TextInput as NativeTextInput, StyleSheet } from 'react-native'
+import { KeyboardAvoidingView, TextInput as NativeTextInput, StyleSheet } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { useDispatch } from 'react-redux'
 import { SettingsStackParamList } from 'src/app/navigation/types'
@@ -14,6 +14,7 @@ import { fonts } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { isIOS } from 'utilities/src/platform'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
@@ -48,7 +49,7 @@ export function SettingsWalletEdit({
   }
 
   const onFinishEditing = (): void => {
-    Keyboard.dismiss()
+    dismissNativeKeyboard()
     setShowEditButton(true)
     setNickname(nickname?.trim())
   }
@@ -98,6 +99,7 @@ export function SettingsWalletEdit({
                   disabled={!accountNameIsEditable}
                   fontFamily="$subHeading"
                   fontSize={fonts.subheading1.fontSize}
+                  fontWeight="$book"
                   m="$none"
                   maxLength={NICKNAME_MAX_LENGTH}
                   numberOfLines={1}

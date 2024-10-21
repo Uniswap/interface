@@ -3,9 +3,11 @@ import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { TransactionRequest, UwuLinkErc20Request } from 'src/features/walletConnect/walletConnectSlice'
 import { call, put } from 'typed-redux-saga'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { TransactionOriginType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { DappInfo, EthMethod, EthSignMethod, UwULinkMethod, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
+import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -13,7 +15,6 @@ import { SendTransactionParams, sendTransaction } from 'wallet/src/features/tran
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { getSignerManager } from 'wallet/src/features/wallet/context'
 import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/signing/signing'
-import { createSaga } from 'wallet/src/utils/saga'
 
 type SignMessageParams = {
   sessionId: string
@@ -22,7 +23,7 @@ type SignMessageParams = {
   account: Account
   method: EthSignMethod
   dapp: DappInfo
-  chainId: WalletChainId
+  chainId: UniverseChainId
 }
 
 type SignTransactionParams = {
@@ -32,12 +33,13 @@ type SignTransactionParams = {
   account: Account
   method: EthMethod.EthSendTransaction
   dapp: DappInfo
-  chainId: WalletChainId
+  chainId: UniverseChainId
   request: TransactionRequest | UwuLinkErc20Request
 }
 
 export function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
   const { sessionId, requestInternalId, account, method, chainId } = params
+  const { defaultChainId } = yield* getEnabledChainIdsSaga()
   try {
     const signerManager = yield* call(getSignerManager)
     let signature = ''
@@ -57,7 +59,7 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
       signature = yield* call(signTypedDataMessage, params.message, account, signerManager)
     } else if (method === EthMethod.EthSendTransaction && params.request.type === UwULinkMethod.Erc20Send) {
       const txParams: SendTransactionParams = {
-        chainId: params.transaction.chainId || UniverseChainId.Mainnet,
+        chainId: params.transaction.chainId || defaultChainId,
         account,
         options: {
           request: params.transaction,
@@ -75,7 +77,7 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
       signature = transactionResponse.hash
     } else if (method === EthMethod.EthSendTransaction) {
       const txParams: SendTransactionParams = {
-        chainId: params.transaction.chainId || UniverseChainId.Mainnet,
+        chainId: params.transaction.chainId || defaultChainId,
         account,
         options: {
           request: params.transaction,

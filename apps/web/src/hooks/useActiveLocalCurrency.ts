@@ -1,14 +1,9 @@
-import { DEFAULT_LOCAL_CURRENCY, SUPPORTED_LOCAL_CURRENCIES, SupportedLocalCurrency } from 'constants/localCurrencies'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useParsedQueryString from 'hooks/useParsedQueryString'
-import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
+import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
+import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { getFiatCurrencyComponents } from 'utils/formatNumbers'
-
-export const activeLocalCurrencyAtom = atomWithStorage<SupportedLocalCurrency>(
-  'activeLocalCurrency',
-  DEFAULT_LOCAL_CURRENCY,
-)
 
 function useUrlLocalCurrency() {
   const parsed = useParsedQueryString()
@@ -19,13 +14,11 @@ function useUrlLocalCurrency() {
   }
 
   const lowerCaseSupportedLocalCurrency = parsedLocalCurrency.toLowerCase()
-  return SUPPORTED_LOCAL_CURRENCIES.find(
-    (localCurrency) => localCurrency.toLowerCase() === lowerCaseSupportedLocalCurrency,
-  )
+  return ORDERED_CURRENCIES.find((localCurrency) => localCurrency.toLowerCase() === lowerCaseSupportedLocalCurrency)
 }
 
-export function useActiveLocalCurrency(): SupportedLocalCurrency {
-  const activeLocalCurrency = useAtomValue(activeLocalCurrencyAtom)
+export function useActiveLocalCurrency(): FiatCurrency {
+  const activeLocalCurrency = useAppFiatCurrency()
   const urlLocalCurrency = useUrlLocalCurrency()
 
   return useMemo(() => urlLocalCurrency ?? activeLocalCurrency, [activeLocalCurrency, urlLocalCurrency])

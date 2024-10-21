@@ -11,15 +11,14 @@ import {
 import { useCancelMultipleOrdersCallback } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
-import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
-import Column, { AutoColumn } from 'components/Column'
-import { OpacityHoverState } from 'components/Common'
+import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
+import { OpacityHoverState } from 'components/Common/styles'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import Modal from 'components/Modal'
-import Row from 'components/Row'
+import Column, { AutoColumn } from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
 import { SwapModalHeaderAmount } from 'components/swap/SwapModalHeaderAmount'
-import { Field } from 'components/swap/constants'
 import { useCurrency } from 'hooks/Tokens'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { atom } from 'jotai'
@@ -35,8 +34,9 @@ import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constant
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { CurrencyField } from 'uniswap/src/types/currency'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 type Logos = {
   inputLogo?: string
@@ -238,7 +238,7 @@ export function OrderContent({
       <OffchainModalDivider />
       <Column gap="md">
         <SwapModalHeaderAmount
-          field={Field.INPUT}
+          field={CurrencyField.INPUT}
           label={undefined}
           amount={amounts.inputAmount}
           currency={amounts.inputAmount.currency}
@@ -248,7 +248,7 @@ export function OrderContent({
         />
         <ArrowDown color={theme.neutral3} />
         <SwapModalHeaderAmount
-          field={Field.OUTPUT}
+          field={CurrencyField.OUTPUT}
           label={undefined}
           amount={amounts.outputAmount}
           currency={amounts.outputAmount.currency}

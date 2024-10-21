@@ -26,7 +26,7 @@ export const RemoteSvg = ({
 }: Props): JSX.Element | null => {
   const fetchSvg = useCallback(async () => {
     if (!imageHttpUrl) {
-      return
+      return undefined
     }
     try {
       const res = await fetch(imageHttpUrl)
@@ -38,6 +38,7 @@ export const RemoteSvg = ({
         tags: { file: 'RemoteSvg', function: 'fetchSvg' },
         extra: { imageHttpUrl },
       })
+      return undefined
     }
   }, [imageHttpUrl])
 

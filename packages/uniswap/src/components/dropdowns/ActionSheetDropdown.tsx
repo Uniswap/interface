@@ -11,7 +11,6 @@ import {
   TouchableArea,
   isWeb,
   styled,
-  useDeviceInsets,
   useIsDarkMode,
 } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -20,6 +19,7 @@ import { iconSizes, spacing, zIndices } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { Scrollbar } from 'uniswap/src/components/misc/Scrollbar'
 import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { isAndroid, isInterface, isTouchable } from 'utilities/src/platform'
 
 const DEFAULT_MIN_WIDTH = 225
@@ -51,6 +51,7 @@ type ActionSheetDropdownProps = PropsWithChildren<{
   testID?: string
   onDismiss?: () => void
   showArrow?: boolean
+  closeOnSelect?: boolean
 }>
 
 export function ActionSheetDropdown({
@@ -59,9 +60,10 @@ export function ActionSheetDropdown({
   testID,
   onDismiss,
   showArrow,
+  closeOnSelect = true,
   ...contentProps
 }: ActionSheetDropdownProps): JSX.Element {
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const containerRef = useRef<View>(null)
   const [{ isOpen, toggleMeasurements }, setState] = useState<DropdownState>({
     isOpen: false,
@@ -91,7 +93,7 @@ export function ActionSheetDropdown({
 
   useEffect(() => {
     if (!isWeb) {
-      return
+      return undefined
     }
 
     function resizeListener(): void {
@@ -162,6 +164,7 @@ export function ActionSheetDropdown({
                 dropdownMaxHeight={styles?.dropdownMaxHeight}
                 handleClose={closeDropdown}
                 toggleMeasurements={toggleMeasurements}
+                closeOnSelect={closeOnSelect}
               />
             </>
           )}
@@ -177,6 +180,7 @@ type DropdownContentProps = FlexProps & {
   dropdownMaxHeight?: number
   toggleMeasurements: LayoutMeasurements & { sticky?: boolean }
   handleClose?: () => void
+  closeOnSelect: boolean
 }
 
 /**
@@ -203,17 +207,22 @@ function DropdownContent({
   dropdownMaxHeight,
   toggleMeasurements,
   handleClose,
+  closeOnSelect,
   ...rest
 }: DropdownContentProps): JSX.Element {
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const { fullWidth, fullHeight } = useDeviceDimensions()
 
   const scrollOffset = useSharedValue(0)
   const [contentHeight, setContentHeight] = useState(0)
 
-  const scrollHandler = useAnimatedScrollHandler((event) => {
-    scrollOffset.value = event.contentOffset.y
-  })
+  const scrollHandler = useAnimatedScrollHandler(
+    (event) => (scrollOffset.value = event.contentOffset.y),
+    // There seems to be a bug in `reanimated` that's causing the dependency array to not be automatically injected by the babel plugin,
+    // but it causes a crash when manually added on web. This is a workaround until the bug is fixed.
+    // The performance impact of not having the array is minimal on web, so this should be fine for now.
+    isWeb ? undefined : [scrollOffset],
+  )
 
   const containerProps = useMemo<FlexProps>(() => {
     if (alignment === 'left') {
@@ -240,7 +249,7 @@ function DropdownContent({
   const [windowScrollY, setWindowScrollY] = useState(0)
   useEffect(() => {
     if (!isWeb) {
-      return
+      return undefined
     }
 
     function scrollListener(): void {
@@ -308,7 +317,9 @@ function DropdownContent({
                   borderRadius="$rounded8"
                   onPress={() => {
                     onPress()
-                    handleClose?.()
+                    if (closeOnSelect) {
+                      handleClose?.()
+                    }
                   }}
                 >
                   <Flex testID={key}>{render()}</Flex>

@@ -2,12 +2,18 @@ import { makeMutable } from 'react-native-reanimated'
 import configureMockStore from 'redux-mock-store'
 import FavoriteTokenCard, { FavoriteTokenCardProps } from 'src/components/explore/FavoriteTokenCard'
 import { act, cleanup, fireEvent, render, waitFor } from 'src/test/test-utils'
-import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
+import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
+import { Language } from 'uniswap/src/features/language/constants'
+import {
+  ON_PRESS_EVENT_PAYLOAD,
+  SAMPLE_CURRENCY_ID_1,
+  amount,
+  ethToken,
+  tokenMarket,
+  tokenProject,
+} from 'uniswap/src/test/fixtures'
+import { queryResolvers } from 'uniswap/src/test/utils'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
-import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
-import { Language } from 'wallet/src/features/language/constants'
-import { SAMPLE_CURRENCY_ID_1, amount, ethToken, tokenProject, tokenProjectMarket } from 'wallet/src/test/fixtures'
-import { queryResolvers } from 'wallet/src/test/utils'
 
 const mockedNavigation = {
   navigate: jest.fn(),
@@ -25,13 +31,10 @@ jest.mock('@react-navigation/native', () => {
 const mockStore = configureMockStore()
 
 const favoriteToken = ethToken({
-  project: tokenProject({
-    markets: [
-      tokenProjectMarket({
-        price: amount({ value: 12345.67 }),
-        pricePercentChange24h: amount({ value: 4.56 }),
-      }),
-    ],
+  project: tokenProject(),
+  market: tokenMarket({
+    price: amount({ value: 12345.67 }),
+    pricePercentChange: amount({ value: 4.56 }),
   }),
 })
 
@@ -92,7 +95,7 @@ describe('FavoriteTokenCard', () => {
       const { findByTestId } = render(<FavoriteTokenCard {...defaultProps} />, { resolvers })
 
       const touchable = await findByTestId(`token-box-${favoriteToken.symbol}`)
-      await act(() => {
+      act(() => {
         fireEvent.press(touchable, ON_PRESS_EVENT_PAYLOAD)
       })
 
@@ -129,8 +132,7 @@ describe('FavoriteTokenCard', () => {
     it('dispatches removeFavoriteToken action when remove button is pressed', async () => {
       const store = mockStore({
         favorites: { tokens: [] },
-        fiatCurrencySettings: { currentCurrency: FiatCurrency.UnitedStatesDollar },
-        languageSettings: { currentLanguage: Language.English },
+        userSettings: { currentCurrency: FiatCurrency.UnitedStatesDollar, currentLanguage: Language.English },
       })
       const { findByTestId } = render(<FavoriteTokenCard {...defaultProps} isEditing />, {
         resolvers,

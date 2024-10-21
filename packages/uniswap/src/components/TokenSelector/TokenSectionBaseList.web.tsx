@@ -1,3 +1,4 @@
+import isArray from 'lodash/isArray'
 import isEqual from 'lodash/isEqual'
 import React, { CSSProperties, Key, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
@@ -9,7 +10,7 @@ import {
   SectionRowInfo,
   TokenSectionBaseListProps,
 } from 'uniswap/src/components/TokenSelector/TokenSectionBaseList'
-import { isSuggestedTokenSection } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
+import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
 
 export const ITEM_SECTION_HEADER_ROW_HEIGHT = 40
 const ITEM_ROW_HEIGHT = 68
@@ -26,9 +27,9 @@ function isSectionHeader(rowInfo: BaseListData): rowInfo is BaseListSectionRowIn
   return !('renderItem' in rowInfo)
 }
 
-function isSuggestedTokenRowInfo(rowInfo: BaseListData): boolean {
+function isHorizontalTokenRowInfo(rowInfo: BaseListData): boolean {
   const isHeader = isSectionHeader(rowInfo)
-  return !isHeader && isSuggestedTokenSection(rowInfo.section)
+  return !isHeader && isArray(rowInfo.item)
 }
 
 export function TokenSectionBaseList({
@@ -64,11 +65,11 @@ export function TokenSectionBaseList({
   const items = useMemo(() => {
     return sections.reduce((acc: BaseListData[], section) => {
       const sectionInfo: BaseListSectionRowInfo = {
-        section: { sectionKey: section.sectionKey, rightElement: section.rightElement },
+        section: { sectionKey: section.sectionKey, rightElement: section.rightElement, endElement: section.endElement },
         key: section.sectionKey,
         renderSectionHeader,
       }
-      if (!isSuggestedTokenSection(section)) {
+      if (section.sectionKey !== TokenOptionSection.SuggestedTokens) {
         acc.push(sectionInfo)
       }
 
@@ -112,7 +113,13 @@ export function TokenSectionBaseList({
         return 0
       }
 
-      if (isSuggestedTokenRowInfo(item)) {
+      if (isHorizontalTokenRowInfo(item)) {
+        if (!isSectionHeader(item)) {
+          if (isArray(item.item) && !item.item.length) {
+            return 0
+          }
+        }
+
         const measuredHeight = rowHeightMap.current[index]
         if (measuredHeight) {
           return measuredHeight
@@ -229,7 +236,7 @@ function _Row({ index, itemData, style, windowWidth, updateRowHeight }: RowProps
 
   return (
     <Flex key={itemData?.key ?? index} grow alignItems="center" justifyContent="center" style={style}>
-      <Flex ref={rowRef} grow width="100%">
+      <Flex ref={rowRef} width="100%">
         {itemData &&
           (isSectionHeader(itemData) ? itemData.renderSectionHeader?.(itemData) : itemData.renderItem(itemData))}
       </Flex>

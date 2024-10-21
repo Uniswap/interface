@@ -16,18 +16,18 @@ import { navigate } from 'src/app/navigation/state'
 import { Button, Flex, MenuContent, MenuContentItem, Popover, ScrollView, Text, useSporeColors } from 'ui/src'
 import { WalletFilled, X } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { logger } from 'utilities/src/logger/logger'
 import { sleep } from 'utilities/src/time/timing'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { PlusCircle } from 'wallet/src/components/icons/PlusCircle'
-import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { useAccountList } from 'wallet/src/features/accounts/hooks'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
@@ -166,15 +166,15 @@ export function AccountSwitcherScreen(): JSX.Element {
       />
       <WarningModal
         caption={t('account.recoveryPhrase.remove.import.description')}
-        closeText={t('common.button.cancel')}
-        confirmText={t('common.button.continue')}
+        rejectText={t('common.button.cancel')}
+        acknowledgeText={t('common.button.continue')}
         icon={<WalletFilled color="$statusCritical" size="$icon.24" />}
         isOpen={showRemoveWalletModal}
         modalName={ModalName.RemoveWallet}
         severity={WarningSeverity.High}
         title={t('account.wallet.button.import')}
         onClose={() => setShowRemoveWalletModal(false)}
-        onConfirm={onNavigateToRemoveWallet}
+        onAcknowledge={onNavigateToRemoveWallet}
       />
       <CreateWalletModal
         isOpen={showCreateWalletModal}
@@ -190,6 +190,7 @@ export function AccountSwitcherScreen(): JSX.Element {
             address={activeAddress}
             captionVariant="body3"
             direction="column"
+            displayNameTextAlign="center"
             gapBetweenLines="$spacing8"
             horizontalGap="$spacing8"
             showViewOnlyBadge={isViewOnly}
@@ -246,7 +247,7 @@ export function AccountSwitcherScreen(): JSX.Element {
                 px="$spacing12"
               >
                 <PlusCircle />
-                <Text color="$neutral2" py="$spacing8" variant="buttonLabel3">
+                <Text color="$neutral2" py="$spacing8" variant="buttonLabel2">
                   {t('account.wallet.button.add')}
                 </Text>
               </Flex>

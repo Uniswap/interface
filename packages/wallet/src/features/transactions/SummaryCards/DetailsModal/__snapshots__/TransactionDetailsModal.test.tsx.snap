@@ -53,8 +53,9 @@ exports[`TransactionDetails Components renders TransactionDetailsContent without
         style={
           {
             "color": "#222222",
-            "fontFamily": "Basel-Book",
+            "fontFamily": "Basel Grotesk",
             "fontSize": 24,
+            "fontWeight": "400",
             "lineHeight": 32,
           }
         }
@@ -76,8 +77,9 @@ exports[`TransactionDetails Components renders TransactionDetailsContent without
           style={
             {
               "color": "#7D7D7D",
-              "fontFamily": "Basel-Book",
+              "fontFamily": "Basel Grotesk",
               "fontSize": 16,
+              "fontWeight": "400",
               "lineHeight": 24,
             }
           }
@@ -140,21 +142,7 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
           <View
             style={
               {
-                "borderBottomColor": "#FFFFFF",
-                "borderBottomLeftRadius": 6.8999999999999995,
-                "borderBottomRightRadius": 6.8999999999999995,
-                "borderBottomWidth": 1.5,
-                "borderLeftColor": "#FFFFFF",
-                "borderLeftWidth": 1.5,
-                "borderRightColor": "#FFFFFF",
-                "borderRightWidth": 1.5,
-                "borderStyle": "solid",
-                "borderTopColor": "#FFFFFF",
-                "borderTopLeftRadius": 6.8999999999999995,
-                "borderTopRightRadius": 6.8999999999999995,
-                "borderTopWidth": 1.5,
                 "flexDirection": "column",
-                "overflow": "hidden",
               }
             }
             testID="network-logo"
@@ -164,8 +152,20 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
               dir={null}
               style={
                 {
-                  "height": "20px",
-                  "width": "20px",
+                  "borderBottomColor": "rgba(255,255,255,1.00)",
+                  "borderBottomLeftRadius": "6.8999999999999995px",
+                  "borderBottomRightRadius": "6.8999999999999995px",
+                  "borderBottomWidth": "1.5px",
+                  "borderLeftColor": "rgba(255,255,255,1.00)",
+                  "borderLeftWidth": "1.5px",
+                  "borderRightColor": "rgba(255,255,255,1.00)",
+                  "borderRightWidth": "1.5px",
+                  "borderTopColor": "rgba(255,255,255,1.00)",
+                  "borderTopLeftRadius": "6.8999999999999995px",
+                  "borderTopRightRadius": "6.8999999999999995px",
+                  "borderTopWidth": "1.5px",
+                  "height": "23px",
+                  "width": "23px",
                 }
               }
             >
@@ -213,8 +213,9 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
           style={
             {
               "color": "#222222",
-              "fontFamily": "Basel-Book",
+              "fontFamily": "Basel Grotesk",
               "fontSize": 16,
+              "fontWeight": "400",
               "lineHeight": 24,
             }
           }
@@ -229,8 +230,9 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
         style={
           {
             "color": "#7D7D7D",
-            "fontFamily": "Basel-Book",
+            "fontFamily": "Basel Grotesk",
             "fontSize": 12,
+            "fontWeight": "400",
             "lineHeight": 16,
           }
         }
@@ -269,12 +271,11 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
       align="xMidYMid"
       bbHeight={20}
       bbWidth={20}
-      fill="currentColor"
+      fill="none"
       focusable={false}
       meetOrSlice={0}
       minX={0}
       minY={0}
-      stroke="currentColor"
       strokeWidth={8}
       style={
         [
@@ -299,27 +300,17 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
       vbWidth={18}
     >
       <RNSVGGroup
-        fill={
-          {
-            "type": 2,
-          }
-        }
+        fill={null}
         propList={
           [
             "fill",
-            "stroke",
             "strokeWidth",
           ]
-        }
-        stroke={
-          {
-            "type": 2,
-          }
         }
         strokeWidth={8}
       >
         <RNSVGPath
-          d="M9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
+          d="M9 3C9.55228 3 10 2.55228 10 2C10 1.44772 9.55228 1 9 1C8.44772 1 8 1.44772 8 2C8 2.55228 8.44772 3 9 3Z"
           fill={
             {
               "payload": 4278190080,
@@ -344,7 +335,7 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
           strokeWidth="2"
         />
         <RNSVGPath
-          d="M16 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
+          d="M16 3C16.5523 3 17 2.55228 17 2C17 1.44772 16.5523 1 16 1C15.4477 1 15 1.44772 15 2C15 2.55228 15.4477 3 16 3Z"
           fill={
             {
               "payload": 4278190080,
@@ -369,7 +360,7 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
           strokeWidth="2"
         />
         <RNSVGPath
-          d="M2 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
+          d="M2 3C2.55228 3 3 2.55228 3 2C3 1.44772 2.55228 1 2 1C1.44772 1 1 1.44772 1 2C1 2.55228 1.44772 3 2 3Z"
           fill={
             {
               "payload": 4278190080,
@@ -426,8 +417,9 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       style={
         {
           "color": "#7D7D7D",
-          "fontFamily": "Basel-Book",
+          "fontFamily": "Basel Grotesk",
           "fontSize": 14,
+          "fontWeight": "400",
           "lineHeight": 20,
         }
       }
@@ -448,21 +440,7 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       <View
         style={
           {
-            "borderBottomColor": "#FFFFFF",
-            "borderBottomLeftRadius": 4.8,
-            "borderBottomRightRadius": 4.8,
-            "borderBottomWidth": 0,
-            "borderLeftColor": "#FFFFFF",
-            "borderLeftWidth": 0,
-            "borderRightColor": "#FFFFFF",
-            "borderRightWidth": 0,
-            "borderStyle": "solid",
-            "borderTopColor": "#FFFFFF",
-            "borderTopLeftRadius": 4.8,
-            "borderTopRightRadius": 4.8,
-            "borderTopWidth": 0,
             "flexDirection": "column",
-            "overflow": "hidden",
           }
         }
         testID="network-logo"
@@ -472,6 +450,18 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
           dir={null}
           style={
             {
+              "borderBottomColor": "rgba(255,255,255,1.00)",
+              "borderBottomLeftRadius": "4.8px",
+              "borderBottomRightRadius": "4.8px",
+              "borderBottomWidth": "0px",
+              "borderLeftColor": "rgba(255,255,255,1.00)",
+              "borderLeftWidth": "0px",
+              "borderRightColor": "rgba(255,255,255,1.00)",
+              "borderRightWidth": "0px",
+              "borderTopColor": "rgba(255,255,255,1.00)",
+              "borderTopLeftRadius": "4.8px",
+              "borderTopRightRadius": "4.8px",
+              "borderTopWidth": "0px",
               "height": "16px",
               "width": "16px",
             }
@@ -513,14 +503,15 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       style={
         {
           "color": "#7D7D7D",
-          "fontFamily": "Basel-Book",
+          "fontFamily": "Basel Grotesk",
           "fontSize": 14,
+          "fontWeight": "400",
           "lineHeight": 20,
         }
       }
       suppressHighlighting={true}
     >
-      Transaction ID
+      Transaction
     </Text>
     <View
       style={
@@ -532,21 +523,6 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
         }
       }
     >
-      <Text
-        allowFontScaling={false}
-        maxFontSizeMultiplier={1.4}
-        style={
-          {
-            "color": "#222222",
-            "fontFamily": "Basel-Book",
-            "fontSize": 14,
-            "lineHeight": 20,
-          }
-        }
-        suppressHighlighting={true}
-      >
-        b568a9...0600
-      </Text>
       <View
         cancelable={true}
         disabled={false}
@@ -562,7 +538,10 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
         onPressOut={[Function]}
         style={
           {
-            "flexDirection": "column",
+            "alignItems": "center",
+            "flexDirection": "row",
+            "gap": 6,
+            "justifyContent": "center",
             "opacity": 1,
             "transform": [
               {
@@ -572,6 +551,22 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
           }
         }
       >
+        <Text
+          allowFontScaling={false}
+          maxFontSizeMultiplier={1.4}
+          style={
+            {
+              "color": "#222222",
+              "fontFamily": "Basel Grotesk",
+              "fontSize": 14,
+              "fontWeight": "400",
+              "lineHeight": 20,
+            }
+          }
+          suppressHighlighting={true}
+        >
+          b568a9...0600
+        </Text>
         <RNSVGSvgView
           align="xMidYMid"
           bbHeight={16}
@@ -589,7 +584,7 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
                 "borderWidth": 0,
               },
               {
-                "color": "#CECECE",
+                "color": "#BFBFBF",
                 "height": 16,
                 "width": 16,
               },
@@ -600,9 +595,9 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
               },
             ]
           }
-          tintColor="#CECECE"
-          vbHeight={16}
-          vbWidth={16}
+          tintColor="#BFBFBF"
+          vbHeight={24}
+          vbWidth={24}
         >
           <RNSVGGroup
             fill={null}
@@ -615,7 +610,7 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
             strokeWidth={8}
           >
             <RNSVGPath
-              d="M12.25 4.16667H6.41667C4.96533 4.16667 4.16667 4.96533 4.16667 6.41667V12.25C4.16667 13.7013 4.96533 14.5 6.41667 14.5H12.25C13.7013 14.5 14.5 13.7013 14.5 12.25V6.41667C14.5 4.96533 13.7013 4.16667 12.25 4.16667ZM13.5 12.25C13.5 13.138 13.138 13.5 12.25 13.5H6.41667C5.52867 13.5 5.16667 13.138 5.16667 12.25V6.41667C5.16667 5.52867 5.52867 5.16667 6.41667 5.16667H12.25C13.138 5.16667 13.5 5.52867 13.5 6.41667V12.25ZM2.5 3.74666V9.58667C2.5 10.3853 2.82206 10.582 2.92806 10.6473C3.16406 10.7913 3.23726 11.0993 3.09326 11.3347C2.9986 11.4887 2.83468 11.5733 2.66602 11.5733C2.57735 11.5733 2.48661 11.5493 2.40527 11.5C1.80461 11.132 1.5 10.4887 1.5 9.58667V3.74666C1.5 2.31866 2.31941 1.5 3.74674 1.5H9.58659C10.7099 1.5 11.2467 1.99265 11.5 2.40531C11.644 2.64065 11.57 2.94865 11.3346 3.09265C11.0986 3.23732 10.792 3.16266 10.6473 2.92733C10.5826 2.82133 10.3853 2.49935 9.58659 2.49935H3.74674C2.86141 2.50002 2.5 2.86133 2.5 3.74666Z"
+              d="M21 4V9C21 9.552 20.553 10 20 10C19.447 10 19 9.552 19 9V6.41406L11.707 13.707C11.512 13.902 11.256 14 11 14C10.744 14 10.488 13.902 10.293 13.707C9.90197 13.316 9.90197 12.684 10.293 12.293L17.5859 5H15C14.447 5 14 4.552 14 4C14 3.448 14.447 3 15 3H20C20.13 3 20.2601 3.0269 20.3821 3.0769C20.6271 3.1779 20.8221 3.37292 20.9231 3.61792C20.9741 3.73992 21 3.87 21 4ZM20 12C19.447 12 19 12.448 19 13V17C19 18.439 18.439 19 17 19H7C5.561 19 5 18.439 5 17V7C5 5.561 5.561 5 7 5H11C11.553 5 12 4.552 12 4C12 3.448 11.553 3 11 3H7C4.458 3 3 4.458 3 7V17C3 19.542 4.458 21 7 21H17C19.542 21 21 19.542 21 17V13C21 12.448 20.553 12 20 12Z"
               fill={
                 {
                   "type": 2,
@@ -624,16 +619,8 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
               propList={
                 [
                   "fill",
-                  "stroke",
-                  "strokeWidth",
                 ]
               }
-              stroke={
-                {
-                  "type": 2,
-                }
-              }
-              strokeWidth="0.5"
             />
           </RNSVGGroup>
         </RNSVGSvgView>
@@ -670,8 +657,9 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       style={
         {
           "color": "#7D7D7D",
-          "fontFamily": "Basel-Book",
+          "fontFamily": "Basel Grotesk",
           "fontSize": 14,
+          "fontWeight": "400",
           "lineHeight": 20,
         }
       }
@@ -692,21 +680,7 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       <View
         style={
           {
-            "borderBottomColor": "#FFFFFF",
-            "borderBottomLeftRadius": 4.8,
-            "borderBottomRightRadius": 4.8,
-            "borderBottomWidth": 0,
-            "borderLeftColor": "#FFFFFF",
-            "borderLeftWidth": 0,
-            "borderRightColor": "#FFFFFF",
-            "borderRightWidth": 0,
-            "borderStyle": "solid",
-            "borderTopColor": "#FFFFFF",
-            "borderTopLeftRadius": 4.8,
-            "borderTopRightRadius": 4.8,
-            "borderTopWidth": 0,
             "flexDirection": "column",
-            "overflow": "hidden",
           }
         }
         testID="network-logo"
@@ -716,6 +690,18 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
           dir={null}
           style={
             {
+              "borderBottomColor": "rgba(255,255,255,1.00)",
+              "borderBottomLeftRadius": "4.8px",
+              "borderBottomRightRadius": "4.8px",
+              "borderBottomWidth": "0px",
+              "borderLeftColor": "rgba(255,255,255,1.00)",
+              "borderLeftWidth": "0px",
+              "borderRightColor": "rgba(255,255,255,1.00)",
+              "borderRightWidth": "0px",
+              "borderTopColor": "rgba(255,255,255,1.00)",
+              "borderTopLeftRadius": "4.8px",
+              "borderTopRightRadius": "4.8px",
+              "borderTopWidth": "0px",
               "height": "16px",
               "width": "16px",
             }
@@ -757,14 +743,15 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       style={
         {
           "color": "#7D7D7D",
-          "fontFamily": "Basel-Book",
+          "fontFamily": "Basel Grotesk",
           "fontSize": 14,
+          "fontWeight": "400",
           "lineHeight": 20,
         }
       }
       suppressHighlighting={true}
     >
-      Transaction ID
+      Transaction
     </Text>
     <View
       style={
@@ -776,21 +763,6 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
         }
       }
     >
-      <Text
-        allowFontScaling={false}
-        maxFontSizeMultiplier={1.4}
-        style={
-          {
-            "color": "#222222",
-            "fontFamily": "Basel-Book",
-            "fontSize": 14,
-            "lineHeight": 20,
-          }
-        }
-        suppressHighlighting={true}
-      >
-        b568a9...0600
-      </Text>
       <View
         cancelable={true}
         disabled={false}
@@ -806,7 +778,10 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
         onPressOut={[Function]}
         style={
           {
-            "flexDirection": "column",
+            "alignItems": "center",
+            "flexDirection": "row",
+            "gap": 6,
+            "justifyContent": "center",
             "opacity": 1,
             "transform": [
               {
@@ -816,6 +791,22 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
           }
         }
       >
+        <Text
+          allowFontScaling={false}
+          maxFontSizeMultiplier={1.4}
+          style={
+            {
+              "color": "#222222",
+              "fontFamily": "Basel Grotesk",
+              "fontSize": 14,
+              "fontWeight": "400",
+              "lineHeight": 20,
+            }
+          }
+          suppressHighlighting={true}
+        >
+          b568a9...0600
+        </Text>
         <RNSVGSvgView
           align="xMidYMid"
           bbHeight={16}
@@ -833,7 +824,7 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
                 "borderWidth": 0,
               },
               {
-                "color": "#CECECE",
+                "color": "#BFBFBF",
                 "height": 16,
                 "width": 16,
               },
@@ -844,9 +835,9 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
               },
             ]
           }
-          tintColor="#CECECE"
-          vbHeight={16}
-          vbWidth={16}
+          tintColor="#BFBFBF"
+          vbHeight={24}
+          vbWidth={24}
         >
           <RNSVGGroup
             fill={null}
@@ -859,7 +850,7 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
             strokeWidth={8}
           >
             <RNSVGPath
-              d="M12.25 4.16667H6.41667C4.96533 4.16667 4.16667 4.96533 4.16667 6.41667V12.25C4.16667 13.7013 4.96533 14.5 6.41667 14.5H12.25C13.7013 14.5 14.5 13.7013 14.5 12.25V6.41667C14.5 4.96533 13.7013 4.16667 12.25 4.16667ZM13.5 12.25C13.5 13.138 13.138 13.5 12.25 13.5H6.41667C5.52867 13.5 5.16667 13.138 5.16667 12.25V6.41667C5.16667 5.52867 5.52867 5.16667 6.41667 5.16667H12.25C13.138 5.16667 13.5 5.52867 13.5 6.41667V12.25ZM2.5 3.74666V9.58667C2.5 10.3853 2.82206 10.582 2.92806 10.6473C3.16406 10.7913 3.23726 11.0993 3.09326 11.3347C2.9986 11.4887 2.83468 11.5733 2.66602 11.5733C2.57735 11.5733 2.48661 11.5493 2.40527 11.5C1.80461 11.132 1.5 10.4887 1.5 9.58667V3.74666C1.5 2.31866 2.31941 1.5 3.74674 1.5H9.58659C10.7099 1.5 11.2467 1.99265 11.5 2.40531C11.644 2.64065 11.57 2.94865 11.3346 3.09265C11.0986 3.23732 10.792 3.16266 10.6473 2.92733C10.5826 2.82133 10.3853 2.49935 9.58659 2.49935H3.74674C2.86141 2.50002 2.5 2.86133 2.5 3.74666Z"
+              d="M21 4V9C21 9.552 20.553 10 20 10C19.447 10 19 9.552 19 9V6.41406L11.707 13.707C11.512 13.902 11.256 14 11 14C10.744 14 10.488 13.902 10.293 13.707C9.90197 13.316 9.90197 12.684 10.293 12.293L17.5859 5H15C14.447 5 14 4.552 14 4C14 3.448 14.447 3 15 3H20C20.13 3 20.2601 3.0269 20.3821 3.0769C20.6271 3.1779 20.8221 3.37292 20.9231 3.61792C20.9741 3.73992 21 3.87 21 4ZM20 12C19.447 12 19 12.448 19 13V17C19 18.439 18.439 19 17 19H7C5.561 19 5 18.439 5 17V7C5 5.561 5.561 5 7 5H11C11.553 5 12 4.552 12 4C12 3.448 11.553 3 11 3H7C4.458 3 3 4.458 3 7V17C3 19.542 4.458 21 7 21H17C19.542 21 21 19.542 21 17V13C21 12.448 20.553 12 20 12Z"
               fill={
                 {
                   "type": 2,
@@ -868,16 +859,8 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
               propList={
                 [
                   "fill",
-                  "stroke",
-                  "strokeWidth",
                 ]
               }
-              stroke={
-                {
-                  "type": 2,
-                }
-              }
-              strokeWidth="0.5"
             />
           </RNSVGGroup>
         </RNSVGSvgView>

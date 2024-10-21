@@ -15,7 +15,7 @@
             "exclusiveFiller": "0xaAFb85ad4a412dd8adC49611496a7695A22f4aeb",
             "exclusivityOverrideBps": "100",
             "input": {
-                "token": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                "token": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
                 "startAmount": "200000000",
                 "endAmount": "200000000"
             },
@@ -166,7 +166,7 @@
             },
             "values": {
                 "permitted": {
-                    "token": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                    "token": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
                     "amount": {
                         "type": "BigNumber",
                         "hex": "0x0bebc200"
@@ -197,7 +197,7 @@
                         "type": "BigNumber",
                         "hex": "0x64"
                     },
-                    "inputToken": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                    "inputToken": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
                     "inputStartAmount": {
                         "type": "BigNumber",
                         "hex": "0x0bebc200"
@@ -258,7 +258,7 @@
                     "exclusiveFiller": "0xaAFb85ad4a412dd8adC49611496a7695A22f4aeb",
                     "exclusivityOverrideBps": "100",
                     "input": {
-                        "token": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                        "token": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
                         "startAmount": "200000000",
                         "endAmount": "200000000"
                     },
@@ -409,7 +409,7 @@
                     },
                     "values": {
                         "permitted": {
-                            "token": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                            "token": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
                             "amount": {
                                 "type": "BigNumber",
                                 "hex": "0x0bebc200"
@@ -440,7 +440,7 @@
                                 "type": "BigNumber",
                                 "hex": "0x64"
                             },
-                            "inputToken": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                            "inputToken": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
                             "inputStartAmount": {
                                 "type": "BigNumber",
                                 "hex": "0x0bebc200"
@@ -515,8 +515,8 @@
                             "tokenIn": {
                                 "chainId": 1,
                                 "decimals": "6",
-                                "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-                                "symbol": "USDC"
+                                "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+                                "symbol": "USDT"
                             },
                             "tokenOut": {
                                 "chainId": 1,
@@ -528,8 +528,8 @@
                                 "token": {
                                     "chainId": 1,
                                     "decimals": "6",
-                                    "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-                                    "symbol": "USDC"
+                                    "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+                                    "symbol": "USDT"
                                 },
                                 "quotient": "27487668611269"
                             },
@@ -547,7 +547,7 @@
                         }
                     ]
                 ],
-                "routeString": "[V2] 100.00% = USDC -- [0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc] --> WETH",
+                "routeString": "[V2] 100.00% = USDT -- [0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc] --> WETH",
                 "quoteId": "f46cf31c-251e-470c-bd57-13209015694e",
                 "portionBips": 15,
                 "portionRecipient": "0x37a8f295612602f2774d331e562be9e61B83a327",

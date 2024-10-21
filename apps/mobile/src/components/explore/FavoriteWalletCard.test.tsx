@@ -5,10 +5,10 @@ import { preloadedMobileState } from 'src/test/fixtures'
 import { fireEvent, render, waitFor } from 'src/test/test-utils'
 import * as ensHooks from 'uniswap/src/features/ens/api'
 import * as unitagHooks from 'uniswap/src/features/unitags/hooks'
-import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
+import { ON_PRESS_EVENT_PAYLOAD, SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
-import { SAMPLE_SEED_ADDRESS_1, preloadedWalletReducerState, signerMnemonicAccount } from 'wallet/src/test/fixtures'
+import { preloadedWalletReducerState, signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 const mockedNavigation = {
   navigate: jest.fn(),
@@ -59,9 +59,9 @@ describe('FavoriteWalletCard', () => {
     it('renders ens name if available', () => {
       jest.spyOn(ensHooks, 'useENSName').mockReturnValue({
         data: 'ensname.eth',
-        loading: false,
-        error: undefined,
-      })
+        isLoading: false,
+        error: null,
+      } as ReturnType<typeof ensHooks.useENSName>)
 
       const { queryByText } = render(<FavoriteWalletCard {...defaultProps} />)
 
@@ -134,6 +134,7 @@ describe('FavoriteWalletCard', () => {
             [defaultProps.address]: signerMnemonicAccount({ address: defaultProps.address }),
           },
         },
+        userSettings: {},
       })
       const { getByTestId } = render(<FavoriteWalletCard {...defaultProps} isEditing />, {
         store,

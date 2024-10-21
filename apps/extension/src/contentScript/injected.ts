@@ -31,7 +31,6 @@ import {
 } from 'src/contentScript/methodHandlers/utils'
 import { WindowEthereumRequest, isValidWindowEthereumRequest } from 'src/contentScript/types'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
-import { RPCType } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { arraysAreEqual } from 'utilities/src/primitives/array'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
@@ -204,7 +203,7 @@ async function init(): Promise<void> {
 
     if (chainId && !provider) {
       const chainIdNum = parseInt(chainId, 16)
-      const defaultProvider = walletContextValue.providers.getProvider(chainIdNum, RPCType.Public)
+      const defaultProvider = walletContextValue.providers.getProvider(chainIdNum)
       setProvider(defaultProvider)
     }
   } catch (error) {

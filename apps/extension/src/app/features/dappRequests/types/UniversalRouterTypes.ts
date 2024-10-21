@@ -1,255 +1,9 @@
 import { FeeAmount as FeeAmountV3 } from '@uniswap/v3-sdk'
 import { BigNumberSchema } from 'src/app/features/dappRequests/types/EthersTypes'
 import { z } from 'zod'
-
-// ENUMS
-
-// TODO: import from UR-sdk
-export enum CommandType {
-  V3SwapExactIn = 0x00,
-  V3SwapExactOut = 0x01,
-  Permit2TransferFrom = 0x02,
-  Permit2PermitBatch = 0x03,
-  SWEEP = 0x04,
-  TRANSFER = 0x05,
-  PayPortion = 0x06,
-
-  V2SwapExactIn = 0x08,
-  V2SwapExactOut = 0x09,
-  Permit2Permit = 0x0a,
-  WrapEth = 0x0b,
-  UnwrapWeth = 0x0c,
-  Permit2TransferFromBatch = 0x0d,
-  BalanceCheckErc20 = 0x0e,
-
-  // NFT-related command types
-  SEAPORT = 0x10,
-  LooksRare721 = 0x11,
-  NFTX = 0x12,
-  CRYPTOPUNKS = 0x13,
-  LooksRare1155 = 0x14,
-  OwnerCheck721 = 0x15,
-  OwnerCheck1155 = 0x16,
-  SweepErc721 = 0x17,
-
-  X2y2721 = 0x18,
-  SUDOSWAP = 0x19,
-  NFT20 = 0x1a,
-  X2y21155 = 0x1b,
-  FOUNDATION = 0x1c,
-  SweepErc1155 = 0x1d,
-  ElementMarket = 0x1e,
-
-  ExecuteSubPlan = 0x20,
-  Seaportv14 = 0x21,
-  ApproveErc20 = 0x22,
-}
-
-export enum Subparser {
-  V3PathExactIn,
-  V3PathExactOut,
-}
-
-const PERMIT_STRUCT =
-  '((address token,uint160 amount,uint48 expiration,uint48 nonce) details,address spender,uint256 sigDeadline)'
-
-const PERMIT_BATCH_STRUCT =
-  '((address token,uint160 amount,uint48 expiration,uint48 nonce)[] details,address spender,uint256 sigDeadline)'
-
-const PERMIT2_TRANSFER_FROM_STRUCT = '(address from,address to,uint160 amount,address token)'
-const PERMIT2_TRANSFER_FROM_BATCH_STRUCT = PERMIT2_TRANSFER_FROM_STRUCT + '[]'
-
-export const ABI_DEFINITION: { readonly [key in CommandType]: readonly ParamType[] } = {
-  // Batch Reverts
-  [CommandType.ExecuteSubPlan]: [
-    { name: 'commands', type: 'bytes' },
-    { name: 'inputs', type: 'bytes[]' },
-  ],
-
-  // Permit2 Actions
-  [CommandType.Permit2Permit]: [
-    { name: 'permit', type: PERMIT_STRUCT },
-    { name: 'signature', type: 'bytes' },
-  ],
-  [CommandType.Permit2PermitBatch]: [
-    { name: 'permit', type: PERMIT_BATCH_STRUCT },
-    { name: 'signature', type: 'bytes' },
-  ],
-  [CommandType.Permit2TransferFrom]: [
-    { name: 'token', type: 'address' },
-    { name: 'recipient', type: 'address' },
-    { name: 'amount', type: 'uint160' },
-  ],
-  [CommandType.Permit2TransferFromBatch]: [
-    {
-      name: 'transferFrom',
-      type: PERMIT2_TRANSFER_FROM_BATCH_STRUCT,
-    },
-  ],
-
-  // Uniswap Actions
-  [CommandType.V3SwapExactIn]: [
-    { name: 'recipient', type: 'address' },
-    { name: 'amountIn', type: 'uint256' },
-    { name: 'amountOutMin', type: 'uint256' },
-    { name: 'path', subparser: Subparser.V3PathExactIn, type: 'bytes' },
-    { name: 'payerIsUser', type: 'bool' },
-  ],
-  [CommandType.V3SwapExactOut]: [
-    { name: 'recipient', type: 'address' },
-    { name: 'amountOut', type: 'uint256' },
-    { name: 'amountInMax', type: 'uint256' },
-    { name: 'path', subparser: Subparser.V3PathExactOut, type: 'bytes' },
-    { name: 'payerIsUser', type: 'bool' },
-  ],
-  [CommandType.V2SwapExactIn]: [
-    { name: 'recipient', type: 'address' },
-    { name: 'amountIn', type: 'uint256' },
-    { name: 'amountOutMin', type: 'uint256' },
-    { name: 'path', type: 'address[]' },
-    { name: 'payerIsUser', type: 'bool' },
-  ],
-  [CommandType.V2SwapExactOut]: [
-    { name: 'recipient', type: 'address' },
-    { name: 'amountOut', type: 'uint256' },
-    { name: 'amountInMax', type: 'uint256' },
-    { name: 'path', type: 'address[]' },
-    { name: 'payerIsUser', type: 'bool' },
-  ],
-
-  // Token Actions and Checks
-  [CommandType.WrapEth]: [
-    { name: 'recipient', type: 'address' },
-    { name: 'amountMin', type: 'uint256' },
-  ],
-  [CommandType.UnwrapWeth]: [
-    { name: 'recipient', type: 'address' },
-    { name: 'amountMin', type: 'uint256' },
-  ],
-  [CommandType.SWEEP]: [
-    { name: 'token', type: 'address' },
-    { name: 'recipient', type: 'address' },
-    { name: 'amountMin', type: 'uint256' },
-  ],
-  [CommandType.SweepErc721]: [
-    { name: 'token', type: 'address' },
-    { name: 'recipient', type: 'address' },
-    { name: 'id', type: 'uint256' },
-  ],
-  [CommandType.SweepErc1155]: [
-    { name: 'token', type: 'address' },
-    { name: 'recipient', type: 'address' },
-    { name: 'id', type: 'uint256' },
-    { name: 'amount', type: 'uint256' },
-  ],
-  [CommandType.TRANSFER]: [
-    { name: 'token', type: 'address' },
-    { name: 'recipient', type: 'address' },
-    { name: 'value', type: 'uint256' },
-  ],
-  [CommandType.PayPortion]: [
-    { name: 'token', type: 'address' },
-    { name: 'recipient', type: 'address' },
-    { name: 'bips', type: 'uint256' },
-  ],
-  [CommandType.BalanceCheckErc20]: [
-    { name: 'owner', type: 'address' },
-    { name: 'token', type: 'address' },
-    { name: 'minBalance', type: 'uint256' },
-  ],
-  [CommandType.OwnerCheck721]: [
-    { name: 'owner', type: 'address' },
-    { name: 'token', type: 'address' },
-    { name: 'id', type: 'uint256' },
-  ],
-  [CommandType.OwnerCheck1155]: [
-    { name: 'owner', type: 'address' },
-    { name: 'token', type: 'address' },
-    { name: 'id', type: 'uint256' },
-    { name: 'minBalance', type: 'uint256' },
-  ],
-  [CommandType.ApproveErc20]: [
-    { name: 'token', type: 'address' },
-    { name: 'spenderId', type: 'uint256' },
-  ],
-
-  // NFT Markets
-  [CommandType.SEAPORT]: [
-    { name: 'value', type: 'uint256' },
-    { name: 'data', type: 'bytes' },
-  ],
-  [CommandType.Seaportv14]: [
-    { name: 'value', type: 'uint256' },
-    { name: 'data', type: 'bytes' },
-  ],
-  [CommandType.NFTX]: [
-    { name: 'value', type: 'uint256' },
-    { name: 'data', type: 'bytes' },
-  ],
-  [CommandType.LooksRare721]: [
-    { name: 'value', type: 'uint256' },
-    { name: 'data', type: 'bytes' },
-    { name: 'recipient', type: 'address' },
-    { name: 'token', type: 'address' },
-    { name: 'id', type: 'uint256' },
-  ],
-  [CommandType.LooksRare1155]: [
-    { name: 'value', type: 'uint256' },
-    { name: 'data', type: 'bytes' },
-    { name: 'recipient', type: 'address' },
-    { name: 'token', type: 'address' },
-    { name: 'id', type: 'uint256' },
-  ],
-  [CommandType.X2y2721]: [
-    { name: 'value', type: 'uint256' },
-    { name: 'data', type: 'bytes' },
-    { name: 'recipient', type: 'address' },
-    { name: 'token', type: 'address' },
-    { name: 'id', type: 'uint256' },
-  ],
-  [CommandType.X2y21155]: [
-    { name: 'value', type: 'uint256' },
-    { name: 'data', type: 'bytes' },
-    { name: 'recipient', type: 'address' },
-    { name: 'token', type: 'address' },
-    { name: 'id', type: 'uint256' },
-  ],
-  [CommandType.FOUNDATION]: [
-    { name: 'value', type: 'uint256' },
-    { name: 'data', type: 'bytes' },
-    { name: 'recipient', type: 'address' },
-    { name: 'token', type: 'address' },
-    { name: 'id', type: 'uint256' },
-  ],
-  [CommandType.SUDOSWAP]: [
-    { name: 'value', type: 'uint256' },
-    { name: 'data', type: 'bytes' },
-  ],
-  [CommandType.NFT20]: [
-    { name: 'value', type: 'uint256' },
-    { name: 'data', type: 'bytes' },
-  ],
-  [CommandType.CRYPTOPUNKS]: [
-    { name: 'punkId', type: 'uint256' },
-    { name: 'recipient', type: 'address' },
-    { name: 'value', type: 'uint256' },
-  ],
-  [CommandType.ElementMarket]: [
-    { name: 'value', type: 'uint256' },
-    { name: 'data', type: 'bytes' },
-  ],
-}
+import { CommandType } from '@uniswap/universal-router-sdk'
 
 // SCHEMAS + TYPES
-export const SubparserSchema = z.nativeEnum(Subparser)
-
-export const ParamTypeSchema = z.object({
-  name: z.string(),
-  type: z.string(),
-  subparser: SubparserSchema.optional(),
-})
-export type ParamType = z.infer<typeof ParamTypeSchema>
-
 export const CommandNameSchema = z.enum(
   Object.keys(CommandType) as [keyof typeof CommandType, ...Array<keyof typeof CommandType>]
 )
@@ -287,6 +41,13 @@ const AmountOutParamSchema = z.object({
 })
 export type AmountOutParam = z.infer<typeof AmountOutParamSchema>
 
+
+const AmountMinParamSchema = z.object({
+  name: z.literal('amountMin'),
+  value: BigNumberSchema,
+})
+export type AmountMinParam = z.infer<typeof AmountMinParamSchema>
+
 const FeeAmountSchema = z.nativeEnum(FeeAmountV3)
 export type FeeAmount = z.infer<typeof FeeAmountSchema>
 
@@ -306,6 +67,123 @@ const V3PathParamSchema = z.object({
 })
 export type V3Path = z.infer<typeof V3PathParamSchema>
 
+
+// V4 PARAMS
+
+// Define PoolKey which is used for the exact single swaps
+const PoolKeySchema = z.object({
+  currency0: z.string().refine((val) => val.startsWith('0x'), {
+    message: "currency0 must start with '0x'",
+  }),
+  currency1: z.string().refine((val) => val.startsWith('0x'), {
+    message: "currency1 must start with '0x'",
+  }),
+  fee: z.number(),
+  tickSpacing: z.number(),
+  hooks: z.string(),
+})
+
+// V4 SWAP_EXACT_IN_SINGLE
+const V4SwapExactInSingleSwapSchema = z.object({
+  poolKey: PoolKeySchema,
+  zeroForOne: z.boolean(),
+  amountIn: BigNumberSchema,
+  amountOutMinimum: BigNumberSchema,
+  sqrtPriceLimitX96: BigNumberSchema,
+  hookData: z.string(),
+})
+
+export const V4SwapExactInSingleParamSchema = z.object({
+  name: z.literal('SWAP_EXACT_IN_SINGLE'),
+  value: z.array(
+    z.object({
+      name: z.literal('swap'),
+      value: V4SwapExactInSingleSwapSchema,
+    }),
+  ),
+})
+export type V4SwapExactInSingleParam = z.infer<typeof V4SwapExactInSingleParamSchema>
+
+// V4 SWAP_EXACT_OUT_SINGLE
+const SwapExactOutSingleSwapSchema = z.object({
+  poolKey: PoolKeySchema,
+  zeroForOne: z.boolean(),
+  amountOut: BigNumberSchema,
+  amountInMaximum: BigNumberSchema,
+  sqrtPriceLimitX96: BigNumberSchema,
+  hookData: z.string(),
+})
+
+export const V4SwapExactOutSingleParamSchema = z.object({
+  name: z.literal('SWAP_EXACT_OUT_SINGLE'),
+  value: z.array(
+    z.object({
+      name: z.literal('swap'),
+      value: SwapExactOutSingleSwapSchema,
+    }),
+  ),
+})
+export type V4SwapExactOutSingleParam = z.infer<typeof V4SwapExactOutSingleParamSchema>
+
+// Define PathKey which is used for exact swaps with multiple hops
+const PathKeySchema = z.object({
+  intermediateCurrency: z.string().refine((val) => val.startsWith('0x'), {
+    message: "intermediateCurrency must start with '0x'",
+  }),
+  fee: z.number(),
+  tickSpacing: z.number(),
+  hooks: z.string().refine((val) => val.startsWith('0x'), {
+    message: "hooks must start with '0x'",
+  }),
+  hookData: z.string(),
+});
+
+// V4 SWAP_EXACT_IN
+const V4SwapExactInSchema = z.object({
+  currencyIn: z.string().refine((val) => val.startsWith('0x'), {
+    message: "currencyIn must start with '0x'",
+  }),
+  path: z.array(PathKeySchema),
+  amountIn: BigNumberSchema,
+  amountOutMinimum: BigNumberSchema,
+});
+
+export const V4SwapExactInParamSchema = z.object({
+  name: z.literal('SWAP_EXACT_IN'),
+  value: z.array(
+    z.object({
+      name: z.literal('swap'),
+      value: V4SwapExactInSchema,
+    }),
+  ),
+})
+export type V4SwapExactInParam = z.infer<typeof V4SwapExactInParamSchema>
+
+// V4 SWAP_EXACT_OUT
+const V4SwapExactOutSchema = z.object({
+  currencyOut: z.string().refine((val) => val.startsWith('0x'), {
+    message: "currencyOut must start with '0x'",
+  }),
+  path: z.array(PathKeySchema),
+  amountOut: BigNumberSchema,
+  amountInMaximum: BigNumberSchema,
+});
+
+export const V4SwapExactOutParamSchema = z.object({
+  name: z.literal('SWAP_EXACT_OUT'),
+  value: z.array(
+    z.object({
+      name: z.literal('swap'),
+      value: V4SwapExactOutSchema,
+    }),
+  ),
+});
+export type V4SwapExactOutParam = z.infer<typeof V4SwapExactOutParamSchema>;
+
+
+// END V4 PARAMS
+
+
 const PayerIsUserParamSchema = z.object({
   name: z.literal('payerIsUser'),
   value: z.boolean(),
@@ -317,6 +195,7 @@ export const ParamSchema = z.union([
   AmountInMaxParamSchema,
   AmountOutParamSchema,
   AmountOutMinParamSchema,
+  AmountMinParamSchema,
   V3PathParamSchema,
   PayerIsUserParamSchema,
   FallbackParamSchema,
@@ -331,38 +210,66 @@ export const FallbackCommandSchema = z.object({
 export type FallbackCommand = z.infer<typeof FallbackCommandSchema>
 
 const V2SwapExactInCommandSchema = z.object({
-  commandName: z.literal('V2SwapExactIn'),
-  commandType: z.literal(CommandType.V2SwapExactIn),
+  commandName: z.literal('V2_SWAP_EXACT_IN'),
+  commandType: z.literal(CommandType.V2_SWAP_EXACT_IN),
   params: z.array(ParamSchema),
 })
 export type V2SwapExactInCommand = z.infer<typeof V2SwapExactInCommandSchema>
 
 const V2SwapExactOutCommandSchema = z.object({
-  commandName: z.literal('V2SwapExactOut'),
-  commandType: z.literal(CommandType.V2SwapExactOut),
+  commandName: z.literal('V2_SWAP_EXACT_OUT'),
+  commandType: z.literal(CommandType.V2_SWAP_EXACT_OUT),
   params: z.array(ParamSchema),
 })
 export type V2SwapExactOutCommand = z.infer<typeof V2SwapExactOutCommandSchema>
 
 const V3SwapExactInCommandSchema = z.object({
-  commandName: z.literal('V3SwapExactIn'),
-  commandType: z.literal(CommandType.V3SwapExactIn),
+  commandName: z.literal('V3_SWAP_EXACT_IN'),
+  commandType: z.literal(CommandType.V3_SWAP_EXACT_IN),
   params: z.array(ParamSchema),
 })
 export type V3SwapExactInCommand = z.infer<typeof V3SwapExactInCommandSchema>
 
 const V3SwapExactOutCommandSchema = z.object({
-  commandName: z.literal('V3SwapExactOut'),
-  commandType: z.literal(CommandType.V3SwapExactOut),
+  commandName: z.literal('V3_SWAP_EXACT_OUT'),
+  commandType: z.literal(CommandType.V3_SWAP_EXACT_OUT),
   params: z.array(ParamSchema),
 })
 export type V3SwapExactOutCommand = z.infer<typeof V3SwapExactOutCommandSchema>
+
+const SweepCommandSchema = z.object({
+  commandName: z.literal('SWEEP'),
+  commandType: z.literal(CommandType.SWEEP),
+  params: z.array(ParamSchema),
+})
+export type SweepCommand = z.infer<typeof SweepCommandSchema>
+
+const UnwrapWethCommandSchema = z.object({
+  commandName: z.literal('UNWRAP_WETH'),
+  commandType: z.literal(CommandType.UNWRAP_WETH),
+  params: z.array(ParamSchema),
+})
+export type UnwrapWethCommand = z.infer<typeof UnwrapWethCommandSchema>
+
+
+const V4SwapCommandSchema = z.object({
+  commandName: z.literal('V4_SWAP'),
+  commandType: z.literal(CommandType.V4_SWAP),
+  params: z.array(z.union([
+    V4SwapExactInParamSchema, 
+    V4SwapExactOutParamSchema,
+    V4SwapExactInSingleParamSchema,
+    V4SwapExactOutSingleParamSchema,
+  ])),
+})
+export type V4SwapCommand = z.infer<typeof V4SwapCommandSchema>
 
 export const UniversalRouterSwapCommandSchema = z.union([
   V2SwapExactInCommandSchema,
   V2SwapExactOutCommandSchema,
   V3SwapExactInCommandSchema,
   V3SwapExactOutCommandSchema,
+  V4SwapCommandSchema,
 ])
 export type UniversalRouterSwapCommand = z.infer<typeof UniversalRouterSwapCommandSchema>
 
@@ -372,6 +279,9 @@ const UniversalRouterCommandSchema = z.union([
   V2SwapExactOutCommandSchema,
   V3SwapExactInCommandSchema,
   V3SwapExactOutCommandSchema,
+  V4SwapCommandSchema,
+  SweepCommandSchema,
+  UnwrapWethCommandSchema
 ])
 export type UniversalRouterCommand = z.infer<typeof UniversalRouterCommandSchema>
 
@@ -385,6 +295,14 @@ export function isURCommandASwap(
   command: UniversalRouterCommand
 ): command is UniversalRouterSwapCommand {
   return UniversalRouterSwapCommandSchema.safeParse(command).success
+}
+
+export function isUrCommandSweep(command: UniversalRouterCommand): command is SweepCommand {
+  return SweepCommandSchema.safeParse(command).success
+}
+
+export function isUrCommandUnwrapWeth(command: UniversalRouterCommand): command is UnwrapWethCommand {
+  return UnwrapWethCommandSchema.safeParse(command).success
 }
 
 export function isAmountInParam(param: Param): param is AmountInParam {
@@ -401,4 +319,8 @@ export function isAmountOutMinParam(param: Param): param is AmountOutMinParam {
 
 export function isAmountOutParam(param: Param): param is AmountOutParam {
   return AmountOutParamSchema.safeParse(param).success
+}
+
+export function isAmountMinParam(param: Param): param is AmountMinParam {
+  return AmountMinParamSchema.safeParse(param).success
 }

@@ -3,6 +3,10 @@ import { DAI_CURRENCY_INFO, ETH_CURRENCY_INFO, daiCurrencyInfo, ethCurrencyInfo 
 import { render, within } from 'uniswap/src/test/test-utils'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
+jest.mock('ui/src/components/UniversalImage/internal/PlainImage', () => ({
+  ...jest.requireActual('ui/src/components/UniversalImage/internal/PlainImage.web'),
+}))
+
 describe(SplitLogo, () => {
   it('renders without error', () => {
     const tree = render(

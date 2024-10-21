@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
+import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
+import { Language } from 'uniswap/src/features/language/constants'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
-import { initialLanguageState } from 'wallet/src/features/language/slice'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
 // only add fields that are persisted
@@ -367,7 +367,7 @@ export const v51Schema = {
       initialState: undefined,
     },
   },
-  languageSettings: initialLanguageState,
+  languageSettings: { currentLanguage: Language.English },
 }
 
 export const v52Schema = {
@@ -379,12 +379,12 @@ export const v52Schema = {
       initialState: undefined,
     },
   },
-  fiatCurrencySettings: initialFiatCurrencyState,
+  fiatCurrencySettings: { currentCurrency: FiatCurrency.UnitedStatesDollar },
 }
 
 const v53SchemaIntermediate = {
   ...v52Schema,
-  languageSettings: initialLanguageState,
+  languageSettings: { currentLanguage: Language.English },
   modals: { ...v52Schema.modals, ['language-selector']: undefined },
 }
 delete v53SchemaIntermediate.modals['language-selector']
@@ -578,6 +578,43 @@ delete v75SchemaIntermediate.behaviorHistory.hasSubmittedHoldToSwap
 
 export const v75Schema = v75SchemaIntermediate
 
+export const v76Schema = {
+  ...v75Schema,
+  behaviorHistory: {
+    ...v75Schema.behaviorHistory,
+    createdOnboardingRedesignAccount: false,
+  },
+}
+
+export const v77Schema = {
+  ...v76Schema,
+  tokens: {
+    dismissedTokenWarnings: {},
+  },
+}
+
+const v78SchemaIntermediate = {
+  ...v77Schema,
+  languageSettings: undefined,
+  userSettings: {
+    ...v77Schema.userSettings,
+    currentLanguage: v77Schema.languageSettings.currentLanguage,
+  },
+}
+delete v78SchemaIntermediate.languageSettings
+export const v78Schema = v78SchemaIntermediate
+
+const v79SchemaIntermediate = {
+  ...v78Schema,
+  fiatCurrencySettings: undefined,
+  userSettings: {
+    ...v78Schema.userSettings,
+    currentLanguage: v78Schema.fiatCurrencySettings.currentCurrency,
+  },
+}
+delete v79SchemaIntermediate.fiatCurrencySettings
+export const v79Schema = v79SchemaIntermediate
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v75Schema => v75Schema
+export const getSchema = (): typeof v79Schema => v79Schema

@@ -1,5 +1,5 @@
 import { useOrderedConnections } from 'components/WalletModal/useOrderedConnections'
-import { CONNECTION, useRecentConnectorId } from 'components/Web3Provider/constants'
+import { useRecentConnectorId } from 'components/Web3Provider/constants'
 import { mocked } from 'test-utils/mocked'
 import { renderHook } from 'test-utils/render'
 import {
@@ -11,6 +11,7 @@ import {
   UNISWAP_MOBILE_CONNECTOR,
   WALLET_CONNECT_CONNECTOR,
 } from 'test-utils/wagmi/fixtures'
+import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useConnect } from 'wagmi'
 
@@ -49,10 +50,10 @@ describe('useOrderedConnections', () => {
     const { result } = renderHook(() => useOrderedConnections())
 
     const expectedConnectors = [
-      { id: CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID },
-      { id: CONNECTION.METAMASK_RDNS },
-      { id: CONNECTION.WALLET_CONNECT_CONNECTOR_ID },
-      { id: CONNECTION.COINBASE_SDK_CONNECTOR_ID },
+      { id: CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID },
+      { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS },
+      { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID },
+      { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID },
     ]
 
     result.current.forEach((connector, index) => {
@@ -71,14 +72,14 @@ describe('useOrderedConnections', () => {
   })
 
   it('should place the most recent connector at the top of the list', () => {
-    mocked(useRecentConnectorId).mockReturnValue(CONNECTION.WALLET_CONNECT_CONNECTOR_ID)
+    mocked(useRecentConnectorId).mockReturnValue(CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID)
     const { result } = renderHook(() => useOrderedConnections())
 
     const expectedConnectors = [
-      { id: CONNECTION.WALLET_CONNECT_CONNECTOR_ID },
-      { id: CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID },
-      { id: CONNECTION.METAMASK_RDNS },
-      { id: CONNECTION.COINBASE_SDK_CONNECTOR_ID },
+      { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID },
+      { id: CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID },
+      { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS },
+      { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID },
     ]
 
     result.current.forEach((connector, index) => {
@@ -91,7 +92,7 @@ describe('useOrderedConnections', () => {
     UserAgentMock.isMobileWeb = true
     const { result } = renderHook(() => useOrderedConnections())
     expect(result.current.length).toEqual(1)
-    expect(result.current[0].id).toEqual(CONNECTION.METAMASK_RDNS)
+    expect(result.current[0].id).toEqual(CONNECTION_PROVIDER_IDS.METAMASK_RDNS)
   })
 
   it('should return only the Coinbase injected connector in the Coinbase Wallet', async () => {
@@ -107,7 +108,7 @@ describe('useOrderedConnections', () => {
     } as unknown as ReturnType<typeof useConnect>)
     const { result } = renderHook(() => useOrderedConnections())
     expect(result.current.length).toEqual(1)
-    expect(result.current[0].id).toEqual(CONNECTION.COINBASE_SDK_CONNECTOR_ID)
+    expect(result.current[0].id).toEqual(CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID)
   })
 
   it('should not return uniswap connections when excludeUniswapConnections is true', () => {
@@ -117,9 +118,9 @@ describe('useOrderedConnections', () => {
     const { result } = renderHook(() => useOrderedConnections(true))
 
     const expectedConnectors = [
-      { id: CONNECTION.METAMASK_RDNS },
-      { id: CONNECTION.WALLET_CONNECT_CONNECTOR_ID },
-      { id: CONNECTION.COINBASE_SDK_CONNECTOR_ID },
+      { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS },
+      { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID },
+      { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID },
     ]
 
     result.current.forEach((connector, index) => {
@@ -135,10 +136,10 @@ describe('useOrderedConnections', () => {
     } as unknown as ReturnType<typeof useConnect>)
     const { result } = renderHook(() => useOrderedConnections())
     const expectedConnectors = [
-      { id: CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID },
-      { id: CONNECTION.INJECTED_CONNECTOR_ID },
-      { id: CONNECTION.WALLET_CONNECT_CONNECTOR_ID },
-      { id: CONNECTION.COINBASE_SDK_CONNECTOR_ID },
+      { id: CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID },
+      { id: CONNECTION_PROVIDER_IDS.INJECTED_CONNECTOR_ID },
+      { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID },
+      { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID },
     ]
     result.current.forEach((connector, index) => {
       expect(connector.id).toEqual(expectedConnectors[index].id)
@@ -153,7 +154,7 @@ describe('useOrderedConnections', () => {
       connectors: [UNISWAP_MOBILE_CONNECTOR, INJECTED_CONNECTOR, WALLET_CONNECT_CONNECTOR, COINBASE_SDK_CONNECTOR],
     } as unknown as ReturnType<typeof useConnect>)
     const { result } = renderHook(() => useOrderedConnections())
-    const expectedConnectors = [{ id: CONNECTION.INJECTED_CONNECTOR_ID }]
+    const expectedConnectors = [{ id: CONNECTION_PROVIDER_IDS.INJECTED_CONNECTOR_ID }]
     result.current.forEach((connector, index) => {
       expect(connector.id).toEqual(expectedConnectors[index].id)
     })

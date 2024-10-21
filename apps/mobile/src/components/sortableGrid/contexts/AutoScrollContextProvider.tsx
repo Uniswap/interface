@@ -1,22 +1,11 @@
 import { PropsWithChildren, createContext, useContext, useMemo, useRef } from 'react'
 import { View } from 'react-native'
-import { SharedValue, runOnJS, useAnimatedReaction, useDerivedValue, useSharedValue } from 'react-native-reanimated'
-import { AUTO_SCROLL_THRESHOLD } from 'src/components/sortableGrid/constants'
+import { runOnJS, useAnimatedReaction, useDerivedValue, useSharedValue } from 'react-native-reanimated'
 import { useDragContext } from 'src/components/sortableGrid/contexts/DragContextProvider'
 import { useLayoutContext } from 'src/components/sortableGrid/contexts/LayoutContextProvider'
-import { useStableCallback } from 'src/components/sortableGrid/hooks'
-import { AutoScrollProps } from 'src/components/sortableGrid/types'
-
-export type AutoScrollContextType = {
-  // REFS
-  gridContainerRef: React.RefObject<View>
-  // MEASUREMENTS
-  containerStartOffset: SharedValue<number>
-  containerEndOffset: SharedValue<number>
-  scrollOffsetDiff: SharedValue<number>
-  startScrollOffset: SharedValue<number>
-  scrollY: SharedValue<number>
-}
+import { AUTO_SCROLL_THRESHOLD } from 'src/components/sortableGrid/internal/constants'
+import { useStableCallback } from 'src/components/sortableGrid/internal/utils'
+import { AutoScrollContextType, AutoScrollProps } from 'src/components/sortableGrid/types'
 
 const AutoScrollContext = createContext<AutoScrollContextType | null>(null)
 

@@ -1,4 +1,4 @@
-import Column from 'components/Column'
+import Column from 'components/deprecated/Column'
 import styled, { useTheme } from 'lib/styled-components'
 import { AlertTriangle } from 'react-feather'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'

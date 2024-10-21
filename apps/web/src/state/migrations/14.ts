@@ -1,9 +1,8 @@
 import { PersistState } from 'redux-persist'
-import { LocalWebTransactionState } from 'state/transactions/reducer'
 
-type PersistAppStateV13 = {
+type PersistAppStateV14 = {
   _persist: PersistState
-} & { transactions?: LocalWebTransactionState }
+}
 
 export const hideSmallBalancesAtomName = 'hideSmallBalances'
 export const hideSpamBalancesAtomName = 'hideSpamBalances'
@@ -11,9 +10,9 @@ export const hideSpamBalancesAtomName = 'hideSpamBalances'
 /**
  * Migrate existing setting atoms to shared redux state
  */
-export const migration14 = (state: PersistAppStateV13 | undefined) => {
+export const migration14 = (state: PersistAppStateV14 | undefined) => {
   if (!state) {
-    return
+    return undefined
   }
 
   const newState: any = { ...state }

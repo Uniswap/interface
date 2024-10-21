@@ -1,5 +1,5 @@
 import { NFTEventName } from '@uniswap/analytics-events'
-import { OpacityHoverState } from 'components/Common'
+import { OpacityHoverState } from 'components/Common/styles'
 import { Share } from 'components/Icons/Share'
 import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { useAccount } from 'hooks/useAccount'

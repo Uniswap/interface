@@ -10,7 +10,7 @@ function getChainIdFromName(name: string) {
 export function getParsedChainId(parsedQs?: ParsedQs) {
   const chain = parsedQs?.chain
   if (!chain || typeof chain !== 'string') {
-    return
+    return undefined
   }
 
   return getChainIdFromName(chain)

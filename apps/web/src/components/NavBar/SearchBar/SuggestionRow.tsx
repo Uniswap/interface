@@ -1,27 +1,29 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
-import Column from 'components/Column'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
-import { useAddRecentlySearchedAsset } from 'components/NavBar/SearchBar/RecentlySearchedAssets'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { DeltaArrow, DeltaText } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { useTokenWarning } from 'constants/tokenSafety'
+import Column from 'components/deprecated/Column'
+import { useTokenWarning } from 'constants/deprecatedTokenSafety'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { SearchToken } from 'graphql/data/SearchTokens'
+import { GqlSearchToken } from 'graphql/data/SearchTokens'
 import { getPoolDetailsURL, getTokenDetailsURL, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import styled, { css } from 'lib/styled-components'
 import { searchGenieCollectionToTokenSearchResult, searchTokenToTokenSearchResult } from 'lib/utils/searchBar'
 import { GenieCollection } from 'nft/types'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { Flex } from 'ui/src'
 import { Verified } from 'ui/src/components/icons/Verified'
 import { TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { addToSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const PriceChangeContainer = styled.div`
@@ -48,15 +50,12 @@ const SuggestionRowStyles = css<{ $isFocused: boolean }>`
   background: ${theme.surface2};
 `}
 `
+
 const StyledLink = styled(Link)`
   ${SuggestionRowStyles}
 `
 const SkeletonSuggestionRow = styled.div`
   ${SuggestionRowStyles}
-`
-const PrimaryContainer = styled(Column)`
-  align-items: flex-start;
-  width: 90%;
 `
 const CollectionImageStyles = css`
   width: 36px;
@@ -80,7 +79,7 @@ const SecondaryContainer = styled(Column)`
 `
 
 interface SuggestionRowProps {
-  suggestion: GenieCollection | SearchToken
+  suggestion: GenieCollection | GqlSearchToken
   isHovered: boolean
   setHoveredIndex: (index: number | undefined) => void
   toggleOpen: () => void
@@ -88,8 +87,8 @@ interface SuggestionRowProps {
   eventProperties: InterfaceSearchResultSelectionProperties
 }
 
-function suggestionIsToken(suggestion: GenieCollection | SearchToken): suggestion is SearchToken {
-  return (suggestion as SearchToken).decimals !== undefined
+function suggestionIsToken(suggestion: GenieCollection | GqlSearchToken): suggestion is GqlSearchToken {
+  return (suggestion as GqlSearchToken).decimals !== undefined
 }
 
 // Rigoblock pools do not generate volume
@@ -107,7 +106,7 @@ export function SuggestionRow({
   const { t } = useTranslation()
   const isToken = suggestionIsToken(suggestion)
   const isPool = suggestionIsSmartPool(suggestion)
-  const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const { formatFiatPrice, formatDelta, formatNumberOrString } = useFormatter()
   const [brokenCollectionImage, setBrokenCollectionImage] = useState(false)
@@ -119,21 +118,21 @@ export function SuggestionRow({
   const handleClick = useCallback(() => {
     const address =
       !suggestion.address && suggestion.standard === TokenStandard.Native ? NATIVE_CHAIN_ID : suggestion.address
-    const asset =
-      isToken && address
-        ? searchTokenToTokenSearchResult({
-            ...suggestion,
-            address,
-            chainId: supportedChainIdFromGQLChain(suggestion.chain) as UniverseChainId,
-            isNative: address === NATIVE_CHAIN_ID,
-            isToken: suggestion.standard === TokenStandard.Erc20,
-          })
-        : searchGenieCollectionToTokenSearchResult(suggestion as GenieCollection)
-    asset && addRecentlySearchedAsset(asset)
+
+    if (isToken && address) {
+      const chainId = supportedChainIdFromGQLChain(suggestion.chain)
+      if (chainId) {
+        const searchResult = searchTokenToTokenSearchResult({ ...suggestion, address, chainId })
+        dispatch(addToSearchHistory({ searchResult }))
+      }
+    } else {
+      const searchResult = searchGenieCollectionToTokenSearchResult(suggestion as GenieCollection)
+      dispatch(addToSearchHistory({ searchResult }))
+    }
 
     toggleOpen()
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
-  }, [suggestion, isToken, addRecentlySearchedAsset, toggleOpen, eventProperties])
+  }, [suggestion, isToken, toggleOpen, eventProperties, dispatch])
 
   const path = isPool
     ? getPoolDetailsURL(
@@ -156,6 +155,14 @@ export function SuggestionRow({
     }
   }, [toggleOpen, isHovered, suggestion, navigate, handleClick, path])
 
+  const shortenedAddress = useMemo<string | null>(() => {
+    if (isToken && suggestion.address && suggestion.address !== NATIVE_CHAIN_ID) {
+      return shortenAddress(suggestion.address)
+    }
+
+    return null
+  }, [suggestion, isToken])
+
   return (
     <StyledLink
       to={path}
@@ -165,7 +172,7 @@ export function SuggestionRow({
       onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
       data-testid={isToken ? `searchbar-token-row-${suggestion.chain}-${suggestion.address ?? NATIVE_CHAIN_ID}` : ''}
     >
-      <Flex row width="60%" gap="$spacing8">
+      <Flex row gap="$spacing8" shrink grow overflow="hidden">
         {isToken ? (
           <QueryTokenLogo
             token={suggestion}
@@ -182,19 +189,26 @@ export function SuggestionRow({
             onError={() => setBrokenCollectionImage(true)}
           />
         )}
-        <PrimaryContainer>
-          <Flex row gap="$spacing4" centered>
+        <Flex alignItems="flex-start" justifyContent="flex-start" shrink grow>
+          <Flex row gap="$spacing4" shrink width="95%">
             <PrimaryText lineHeight="24px">{suggestion.name}</PrimaryText>
             {isToken ? <TokenSafetyIcon warning={warning} /> : suggestion.isVerified && <Verified size={14} />}
           </Flex>
-          <ThemedText.SubHeaderSmall lineHeight="20px">
-            {isToken
-              ? suggestion.symbol
-              : t('search.results.count', {
-                  count: suggestion?.stats?.total_supply ?? 0,
-                })}
-          </ThemedText.SubHeaderSmall>
-        </PrimaryContainer>
+          <Flex row gap="$spacing4">
+            <ThemedText.SubHeaderSmall lineHeight="20px">
+              {isToken
+                ? suggestion.symbol
+                : t('search.results.count', {
+                    count: suggestion?.stats?.total_supply ?? 0,
+                  })}
+            </ThemedText.SubHeaderSmall>
+            {shortenedAddress && (
+              <ThemedText.SubHeaderSmall lineHeight="20px" color="neutral3">
+                {shortenedAddress}
+              </ThemedText.SubHeaderSmall>
+            )}
+          </Flex>
+        </Flex>
       </Flex>
 
       <SecondaryContainer>

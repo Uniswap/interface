@@ -1,6 +1,8 @@
 import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import { ApplicationModal, setOpenModal } from 'state/application/reducer'
-import { renderHook, waitFor } from 'test-utils/render'
+import { mocked } from 'test-utils/mocked'
+import { renderHook } from 'test-utils/render'
+import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 
 // Mock the useAppDispatch hook
 const dispatchMock = jest.fn()
@@ -9,48 +11,22 @@ jest.mock('state/hooks', () => ({
   useAppDispatch: () => dispatchMock,
 }))
 
+jest.mock('uniswap/src/features/trm/hooks', () => ({
+  useIsBlocked: jest.fn(),
+}))
+
 describe('useAccountRiskCheck', () => {
   it('should handle blocked account', async () => {
     const account = 'blocked-account'
-    const mockResponse = { block: true }
-    const fetchMock = jest.spyOn(window, 'fetch').mockResolvedValueOnce({
-      json: jest.fn().mockResolvedValueOnce(mockResponse),
-    } as any)
-
+    mocked(useIsBlocked).mockReturnValue({ isBlocked: true, isBlockedLoading: false })
     renderHook(() => useAccountRiskCheck(account))
-
-    await waitFor(() => {
-      expect(fetchMock).toHaveBeenCalledWith('https://beta.gateway.rigoblock.com/v1/screen', {
-        method: 'POST',
-        headers: new Headers({
-          'Content-Type': 'application/json',
-        }),
-        body: JSON.stringify({ address: account }),
-      })
-
-      expect(dispatchMock).toHaveBeenCalledWith(setOpenModal(ApplicationModal.BLOCKED_ACCOUNT))
-    })
+    expect(dispatchMock).toHaveBeenCalledWith(setOpenModal({ name: ApplicationModal.BLOCKED_ACCOUNT }))
   })
 
   it('should handle non-blocked account', async () => {
     const account = 'non-blocked-account'
-    const mockResponse = { block: false }
-    const fetchMock = jest.spyOn(window, 'fetch').mockResolvedValueOnce({
-      json: jest.fn().mockResolvedValueOnce(mockResponse),
-    } as any)
-
+    mocked(useIsBlocked).mockReturnValue({ isBlocked: false, isBlockedLoading: false })
     renderHook(() => useAccountRiskCheck(account))
-
-    await waitFor(() => {
-      expect(fetchMock).toHaveBeenCalledWith('https://beta.gateway.rigoblock.com/v1/screen', {
-        method: 'POST',
-        headers: new Headers({
-          'Content-Type': 'application/json',
-        }),
-        body: JSON.stringify({ address: account }),
-      })
-
-      expect(dispatchMock).not.toHaveBeenCalledWith(setOpenModal(ApplicationModal.BLOCKED_ACCOUNT))
-    })
+    expect(dispatchMock).not.toHaveBeenCalledWith(setOpenModal({ name: ApplicationModal.BLOCKED_ACCOUNT }))
   })
 })

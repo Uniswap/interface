@@ -245,22 +245,11 @@ query NftsTab(
   $first: Int
   $after: String
   $filter: NftBalancesFilterInput
+  $chains: [Chain!]!
 ) {
   nftBalances(
     ownerAddress: $ownerAddress
-    chains: [
-      ETHEREUM
-      POLYGON
-      ARBITRUM
-      OPTIMISM
-      BASE
-      BLAST
-      BNB
-      ZORA
-      CELO
-      AVALANCHE
-      ZKSYNC
-    ]
+    chains: $chains
     first: $first
     after: $after
     filter: $filter
@@ -312,22 +301,11 @@ query NftsTab(
 query PortfolioBalances(
   $ownerAddress: String!
   $valueModifiers: [PortfolioValueModifier!]
+  $chains: [Chain!]!
 ) {
   portfolios(
     ownerAddresses: [$ownerAddress]
-    chains: [
-      ETHEREUM
-      POLYGON
-      ARBITRUM
-      OPTIMISM
-      BASE
-      BNB
-      BLAST
-      ZORA
-      CELO
-      AVALANCHE
-      ZKSYNC
-    ]
+    chains: $chains
     valueModifiers: $valueModifiers
   ) {
     id
@@ -350,20 +328,32 @@ query PortfolioBalances(
       quantity
       isHidden
       denominatedValue {
+        id
         currency
         value
       }
       token {
-        chain
+        id
         address
-        symbol
+        chain
         decimals
+        name
+        standard
+        symbol
         project {
           id
-          name
-          logoUrl
-          safetyLevel
           isSpam
+          logoUrl
+          name
+          safetyLevel
+        }
+        feeData {
+          buyFeeBps
+          sellFeeBps
+        }
+        protectionInfo {
+          result
+          attackTypes
         }
       }
       tokenProjectMarket {
@@ -378,22 +368,11 @@ query PortfolioBalances(
 query MultiplePortfolioBalances(
   $ownerAddresses: [String!]!
   $valueModifiers: [PortfolioValueModifier!]
+  $chains: [Chain!]!
 ) {
   portfolios(
     ownerAddresses: $ownerAddresses
-    chains: [
-      ETHEREUM
-      POLYGON
-      ARBITRUM
-      OPTIMISM
-      BASE
-      BNB
-      BLAST
-      ZORA
-      CELO
-      AVALANCHE
-      ZKSYNC
-    ]
+    chains: $chains
     valueModifiers: $valueModifiers
   ) {
     id
@@ -425,9 +404,9 @@ query MultiplePortfolioBalances(
         address
         symbol
         decimals
+        name
         project {
           id
-          name
           logoUrl
           safetyLevel
           isSpam
@@ -445,22 +424,11 @@ query MultiplePortfolioBalances(
 query SelectWalletScreen(
   $ownerAddresses: [String!]!
   $valueModifiers: [PortfolioValueModifier!]
+  $chains: [Chain!]!
 ) {
   portfolios(
     ownerAddresses: $ownerAddresses
-    chains: [
-      ETHEREUM
-      POLYGON
-      ARBITRUM
-      OPTIMISM
-      BASE
-      BNB
-      BLAST
-      ZORA
-      CELO
-      AVALANCHE
-      ZKSYNC
-    ]
+    chains: $chains
     valueModifiers: $valueModifiers
   ) {
     id
@@ -474,42 +442,20 @@ query SelectWalletScreen(
 query TransactionHistoryUpdater(
   $addresses: [String!]!
   $onRampAuth: OnRampTransactionsAuth
+  $chains: [Chain!]!
 ) {
   portfolios(
     ownerAddresses: $addresses
-    chains: [
-      ETHEREUM
-      POLYGON
-      ARBITRUM
-      OPTIMISM
-      BASE
-      BNB
-      BLAST
-      ZORA
-      CELO
-      AVALANCHE
-      ZKSYNC
-    ]
+    chains: $chains
   ) {
     id
     ownerAddress
     assetActivities(
       pageSize: 1
       page: 1
-      chains: [
-        ETHEREUM
-        POLYGON
-        ARBITRUM
-        OPTIMISM
-        BASE
-        BNB
-        BLAST
-        ZORA
-        CELO
-        AVALANCHE
-        ZKSYNC
-      ]
+      chains: $chains
       onRampTransactionsAuth: $onRampAuth
+      includeBridging: true
     ) {
       id
       timestamp
@@ -543,6 +489,10 @@ query Token($chain: Chain!, $address: String) {
       buyFeeBps
       sellFeeBps
     }
+    protectionInfo {
+      result
+      attackTypes
+    }
   }
 }
 
@@ -557,6 +507,7 @@ query TokenDetailsScreen(
   $includeChineseTraditional: Boolean = false
 ) {
   token(chain: $chain, address: $address) {
+    id
     address
     chain
     symbol
@@ -619,16 +570,20 @@ query TokenDetailsScreen(
       buyFeeBps
       sellFeeBps
     }
+    protectionInfo {
+      result
+      attackTypes
+    }
   }
 }
 
 query TokenProjects($contracts: [ContractInput!]!) {
   tokenProjects(contracts: $contracts) {
     id
-    name
     logoUrl
     safetyLevel
     tokens {
+      name
       chain
       address
       decimals
@@ -637,41 +592,18 @@ query TokenProjects($contracts: [ContractInput!]!) {
   }
 }
 
-query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth) {
+query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth, $chains: [Chain!]!) {
   portfolios(
     ownerAddresses: [$address]
-    chains: [
-      ETHEREUM
-      POLYGON
-      ARBITRUM
-      OPTIMISM
-      BASE
-      BNB
-      BLAST
-      ZORA
-      CELO
-      AVALANCHE
-      ZKSYNC
-    ]
+    chains: $chains
   ) {
     id
     assetActivities(
       pageSize: 100
       page: 1
       includeOffChain: true
-      chains: [
-        ETHEREUM
-        POLYGON
-        ARBITRUM
-        OPTIMISM
-        BASE
-        BNB
-        BLAST
-        ZORA
-        CELO
-        AVALANCHE
-        ZKSYNC
-      ]
+      includeBridging: true
+      chains: $chains
       onRampTransactionsAuth: $onRampAuth
     ) {
       id
@@ -865,41 +797,18 @@ query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth) {
   }
 }
 
-query FeedTransactionList($addresses: [String!]!) {
+query FeedTransactionList($addresses: [String!]!, $chains: [Chain!]!) {
   portfolios(
     ownerAddresses: $addresses
-    chains: [
-      ETHEREUM
-      POLYGON
-      ARBITRUM
-      OPTIMISM
-      BASE
-      BNB
-      BLAST
-      ZORA
-      CELO
-      AVALANCHE
-      ZKSYNC
-    ]
+    chains: $chains
   ) {
     id
     ownerAddress
     assetActivities(
       pageSize: 30
+      includeBridging: true
       page: 1
-      chains: [
-        ETHEREUM
-        POLYGON
-        ARBITRUM
-        OPTIMISM
-        BASE
-        BNB
-        BLAST
-        ZORA
-        CELO
-        AVALANCHE
-        ZKSYNC
-      ]
+      chains: $chains
     ) {
       id
       timestamp
@@ -1014,21 +923,33 @@ query TopTokens(
       logoUrl
       isSpam
     }
+    feeData {
+      buyFeeBps
+      sellFeeBps
+    }
+    protectionInfo {
+      result
+      attackTypes
+    }
   }
 }
 
-query SearchTokens($searchQuery: String!, $chains: [Chain!]) {
+query SearchTokens($searchQuery: String!, $chains: [Chain!]!) {
   searchTokens(searchQuery: $searchQuery, chains: $chains) {
     id
     chain
     address
     decimals
     symbol
+    name
     project {
       id
-      name
       logoUrl
       safetyLevel
+    }
+    protectionInfo {
+      result
+      attackTypes
     }
   }
 }
@@ -1048,11 +969,15 @@ query ExploreSearch(
         value
       }
     }
+    name
     project {
       id
-      name
       logoUrl
       safetyLevel
+    }
+    protectionInfo {
+      result
+      attackTypes
     }
   }
   nftCollections(filter: $nftCollectionsFilter, first: 4) {
@@ -1089,9 +1014,9 @@ fragment TopTokenParts on Token {
       value
     }
   }
+  name
   project {
     id
-    name
     logoUrl
     markets(currencies: [USD]) {
       id
@@ -1136,8 +1061,8 @@ fragment AITopTokenParts on Token {
       value
     }
   }
+  name
   project {
-    name
     markets(currencies: [USD]) {
       price {
         value
@@ -1167,9 +1092,9 @@ fragment HomeScreenTokenParts on Token {
   symbol
   chain
   address
+  name
   project {
     id
-    name
     logoUrl
     markets(currencies: [USD]) {
       id
@@ -1194,22 +1119,23 @@ query HomeScreenTokens($contracts: [ContractInput!]!, $chain: Chain!) {
 
 query FavoriteTokenCard($chain: Chain!, $address: String) {
   token(chain: $chain, address: $address) {
-    symbol
-    chain
+    id
     address
+    chain
+    symbol
+    name
+    market(currency: USD) {
+      id
+      price {
+        value
+      }
+      pricePercentChange(duration: DAY) {
+        value
+      }
+    }
     project {
       id
-      name
       logoUrl
-      markets(currencies: [USD]) {
-        id
-        price {
-          value
-        }
-        pricePercentChange24h {
-          value
-        }
-      }
     }
   }
 }
@@ -1219,9 +1145,7 @@ query Tokens($contracts: [ContractInput!]!) {
     symbol
     chain
     address
-    project {
-      name
-    }
+    name
   }
 }
 

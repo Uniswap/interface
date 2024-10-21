@@ -1,12 +1,11 @@
 import { TFunction } from 'i18next'
 import { UnitagErrorCodes } from 'uniswap/src/features/unitags/types'
+import { UNITAG_VALID_REGEX } from 'wallet/src/features/unitags/constants'
 
 export function parseUnitagErrorCode(t: TFunction, unitag: string, errorCode: UnitagErrorCodes): string {
   switch (errorCode) {
     case UnitagErrorCodes.UnitagNotAvailable:
       return t('unitags.claim.error.unavailable')
-    case UnitagErrorCodes.RequiresENSMatch:
-      return t('unitags.claim.error.ens', { username: unitag })
     case UnitagErrorCodes.IPLimitReached:
     case UnitagErrorCodes.AddressLimitReached:
     case UnitagErrorCodes.DeviceLimitReached:
@@ -18,4 +17,15 @@ export function parseUnitagErrorCode(t: TFunction, unitag: string, errorCode: Un
     default:
       return t('unitags.claim.error.unknown')
   }
+}
+
+// Util to handle translations of `yourname`
+// If translated string only contains valid Unitag characters, return it lowercased and without spaces
+// Otherwise, return 'yourname'
+export const getYourNameString = (yourname: string): string => {
+  const noSpacesLowercase = yourname.replaceAll(' ', '').toLowerCase()
+  if (UNITAG_VALID_REGEX.test(noSpacesLowercase)) {
+    return noSpacesLowercase
+  }
+  return 'yourname'
 }

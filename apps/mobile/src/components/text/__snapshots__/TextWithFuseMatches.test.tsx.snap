@@ -15,8 +15,9 @@ exports[`renders text with few matches 1`] = `
     style={
       {
         "color": "#222222",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -30,8 +31,9 @@ exports[`renders text with few matches 1`] = `
     style={
       {
         "color": "#222222",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -44,9 +46,10 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#CECECE",
-        "fontFamily": "Basel-Book",
+        "color": "#BFBFBF",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -59,9 +62,10 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#CECECE",
-        "fontFamily": "Basel-Book",
+        "color": "#BFBFBF",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -75,8 +79,9 @@ exports[`renders text with few matches 1`] = `
     style={
       {
         "color": "#222222",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -90,8 +95,9 @@ exports[`renders text with few matches 1`] = `
     style={
       {
         "color": "#222222",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -105,8 +111,9 @@ exports[`renders text with few matches 1`] = `
     style={
       {
         "color": "#222222",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -120,8 +127,9 @@ exports[`renders text with few matches 1`] = `
     style={
       {
         "color": "#222222",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -135,8 +143,9 @@ exports[`renders text with few matches 1`] = `
     style={
       {
         "color": "#222222",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -149,9 +158,10 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#CECECE",
-        "fontFamily": "Basel-Book",
+        "color": "#BFBFBF",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -164,9 +174,10 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#CECECE",
-        "fontFamily": "Basel-Book",
+        "color": "#BFBFBF",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -179,9 +190,10 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#CECECE",
-        "fontFamily": "Basel-Book",
+        "color": "#BFBFBF",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -194,9 +206,10 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#CECECE",
-        "fontFamily": "Basel-Book",
+        "color": "#BFBFBF",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -209,9 +222,10 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#CECECE",
-        "fontFamily": "Basel-Book",
+        "color": "#BFBFBF",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -224,9 +238,10 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#CECECE",
-        "fontFamily": "Basel-Book",
+        "color": "#BFBFBF",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -239,9 +254,10 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#CECECE",
-        "fontFamily": "Basel-Book",
+        "color": "#BFBFBF",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -254,9 +270,10 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#CECECE",
-        "fontFamily": "Basel-Book",
+        "color": "#BFBFBF",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -269,9 +286,10 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#CECECE",
-        "fontFamily": "Basel-Book",
+        "color": "#BFBFBF",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -284,9 +302,10 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#CECECE",
-        "fontFamily": "Basel-Book",
+        "color": "#BFBFBF",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -299,9 +318,10 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#CECECE",
-        "fontFamily": "Basel-Book",
+        "color": "#BFBFBF",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -314,9 +334,10 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#CECECE",
-        "fontFamily": "Basel-Book",
+        "color": "#BFBFBF",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -329,9 +350,10 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#CECECE",
-        "fontFamily": "Basel-Book",
+        "color": "#BFBFBF",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -350,8 +372,9 @@ exports[`renders text without matches 1`] = `
   style={
     {
       "color": "#222222",
-      "fontFamily": "Basel-Book",
+      "fontFamily": "Basel Grotesk",
       "fontSize": 19,
+      "fontWeight": "400",
       "lineHeight": 24,
     }
   }

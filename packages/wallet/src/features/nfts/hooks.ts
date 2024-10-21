@@ -5,11 +5,7 @@ import { useNftsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__genera
 import { GqlResult } from 'uniswap/src/data/types'
 import { selectNftsVisibility } from 'uniswap/src/features/favorites/selectors'
 import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
-import {
-  EMPTY_NFT_ITEM,
-  HIDDEN_NFTS_ROW_LEFT_ITEM,
-  HIDDEN_NFTS_ROW_RIGHT_ITEM,
-} from 'wallet/src/features/nfts/constants'
+import { EMPTY_NFT_ITEM, HIDDEN_NFTS_ROW } from 'wallet/src/features/nfts/constants'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { getIsNftHidden } from 'wallet/src/features/nfts/utils'
 
@@ -69,8 +65,7 @@ export function useGroupNftsByVisibility(
         ...((hidden.length && [
           // to fill the gap for odd number of shown elements in 2 columns layout
           ...(shown.length % 2 ? [EMPTY_NFT_ITEM] : []),
-          HIDDEN_NFTS_ROW_LEFT_ITEM,
-          HIDDEN_NFTS_ROW_RIGHT_ITEM,
+          HIDDEN_NFTS_ROW,
         ]) ||
           []),
         ...((showHidden && hidden) || []),

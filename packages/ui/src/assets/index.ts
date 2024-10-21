@@ -8,10 +8,10 @@ export const POLYGON_LOGO = require('./logos/png/polygon-logo.png')
 export const BLAST_LOGO = require('./logos/png/blast-logo.png')
 export const AVALANCHE_LOGO = require('./logos/png/avalanche-logo.png')
 export const CELO_LOGO = require('./logos/png/celo-logo.png')
+export const WORLD_CHAIN_LOGO = require('./logos/png/world-chain-logo.png')
 export const ZORA_LOGO = require('./logos/png/zora-logo.png')
 export const ZKSYNC_LOGO = require('./logos/png/zksync-logo.png')
-export const GOERLI_LOGO = require('./logos/png/goerli-logo.png')
-export const MUMBAI_LOGO = require('./logos/png/mumbai-logo.png')
+export const ASTROCHAIN_SEPOLIA_LOGO = require('./logos/png/astrochain-sepolia-logo.png')
 export const RIGOBLOCK_LOGO_LARGE = require('./logos/png/rigoblock-logo-large.png')
 export const UNISWAP_LOGO = require('./logos/png/uniswap-logo.png')
 export const UNISWAP_LOGO_LARGE = require('./logos/png/uniswap-logo-large.png')
@@ -24,10 +24,13 @@ export const APP_SCREENSHOT_LIGHT = require('./misc/app-screenshot-light.png')
 export const APP_SCREENSHOT_DARK = require('./misc/app-screenshot-dark.png')
 export const CHROME_LOGO = require('./logos/png/chrome-logo.png')
 export const DOT_GRID = require('./misc/dot-grid.png')
+
 export const UNITAGS_BANNER_VERTICAL_LIGHT = require('./graphics/unitags-banner-v-light.png')
 export const UNITAGS_BANNER_VERTICAL_DARK = require('./graphics/unitags-banner-v-dark.png')
 export const UNITAGS_INTRO_BANNER_LIGHT = require('./graphics/unitags-intro-banner-light.png')
 export const UNITAGS_INTRO_BANNER_DARK = require('./graphics/unitags-intro-banner-dark.png')
+
+export const BRIDGING_BANNER = require('./graphics/bridging-banner.png')
 
 export const DAI_LOGO = require('./logos/png/dai-logo.png')
 export const USDC_LOGO = require('./logos/png/usdc-logo.png')
@@ -44,16 +47,6 @@ export const UNITAG_LIGHT = require('./graphics/unitag-light.png')
 
 export const UNITAG_DARK_SMALL = require('./graphics/unitag-dark-small.png')
 export const UNITAG_LIGHT_SMALL = require('./graphics/unitag-light-small.png')
-
-export const ONBOARDING_LANDING_LIGHT = {
-  ios: require(`./backgrounds/onboarding-landing-static-light.png`),
-  android: require(`./backgrounds/onboarding-landing-static-light.png`),
-}
-
-export const ONBOARDING_LANDING_DARK = {
-  ios: require(`./backgrounds/onboarding-landing-static-dark.png`),
-  android: require(`./backgrounds/onboarding-landing-static-dark.png`),
-}
 
 export const ONBOARDING_NOTIFICATIONS_DARK = {
   ios: require(`./backgrounds/ios/notifications-dark.png`),

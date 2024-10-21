@@ -3,29 +3,41 @@
 exports[`DatetimeText renders loading state 1`] = `null`;
 
 exports[`DatetimeText renders without error 1`] = `
-<TextInput
-  allowFontScaling={true}
-  collapsable={false}
-  editable={false}
-  jestAnimatedStyle={
-    {
-      "value": {},
-    }
-  }
-  maxFontSizeMultiplier={1.4}
+<View
   style={
     {
-      "color": "#7D7D7D",
-      "fontFamily": "Basel-Book",
-      "fontSize": 19,
-      "lineHeight": 24,
-      "padding": 0,
+      "alignItems": "flex-end",
+      "flexDirection": "column",
+      "gap": 2,
+      "marginTop": 2,
     }
   }
-  text="Thursday, November 1st, 2023"
-  underlineColorAndroid="transparent"
-  value="Thursday, November 1st, 2023"
-/>
+>
+  <TextInput
+    allowFontScaling={true}
+    collapsable={false}
+    editable={false}
+    jestAnimatedStyle={
+      {
+        "value": {},
+      }
+    }
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#7D7D7D",
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 19,
+        "fontWeight": "400",
+        "lineHeight": 24,
+        "padding": 0,
+      }
+    }
+    text="Thursday, November 1st, 2023"
+    underlineColorAndroid="transparent"
+    value="Thursday, November 1st, 2023"
+  />
+</View>
 `;
 
 exports[`PriceText renders loading state 1`] = `
@@ -52,8 +64,9 @@ exports[`PriceText renders loading state 1`] = `
     style={
       {
         "color": "#222222",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 106,
+        "fontWeight": "400",
         "lineHeight": 60,
         "padding": 0,
       }
@@ -90,8 +103,9 @@ exports[`PriceText renders without error 1`] = `
     style={
       {
         "color": "#222222",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 106,
+        "fontWeight": "400",
         "lineHeight": 60,
         "padding": 0,
       }
@@ -108,7 +122,7 @@ exports[`PriceText renders without error 1`] = `
     jestAnimatedStyle={
       {
         "value": {
-          "color": "#CECECE",
+          "color": "#BFBFBF",
           "fontSize": 106,
         },
       }
@@ -116,9 +130,10 @@ exports[`PriceText renders without error 1`] = `
     maxFontSizeMultiplier={1.2}
     style={
       {
-        "color": "#CECECE",
-        "fontFamily": "Basel-Book",
+        "color": "#BFBFBF",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 106,
+        "fontWeight": "400",
         "lineHeight": 60,
         "padding": 0,
       }
@@ -155,8 +170,9 @@ exports[`PriceText renders without error less than a dollar 1`] = `
     style={
       {
         "color": "#222222",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 106,
+        "fontWeight": "400",
         "lineHeight": 60,
         "padding": 0,
       }
@@ -182,8 +198,9 @@ exports[`PriceText renders without error less than a dollar 1`] = `
     style={
       {
         "color": "#222222",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 106,
+        "fontWeight": "400",
         "lineHeight": 60,
         "padding": 0,
       }
@@ -256,8 +273,9 @@ exports[`RelativeChangeText renders loading state 1`] = `
               maxFontSizeMultiplier={1.4}
               style={
                 {
-                  "fontFamily": "Basel-Book",
+                  "fontFamily": "Basel Grotesk",
                   "fontSize": 19,
+                  "fontWeight": "400",
                   "lineHeight": 24,
                   "marginHorizontal": 0,
                   "opacity": 0,
@@ -277,8 +295,9 @@ exports[`RelativeChangeText renders loading state 1`] = `
               }
               style={
                 {
-                  "fontFamily": "Basel-Book",
+                  "fontFamily": "Basel Grotesk",
                   "fontSize": 19,
+                  "fontWeight": "400",
                   "lineHeight": 24,
                   "opacity": 0,
                   "padding": 0,
@@ -425,8 +444,9 @@ exports[`RelativeChangeText renders without error 1`] = `
     style={
       {
         "color": "#FF5F52",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
         "padding": 0,
       }

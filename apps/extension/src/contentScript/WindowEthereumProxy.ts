@@ -106,6 +106,7 @@ export class WindowEthereumProxy extends EventEmitter {
           ...ethereumRequest,
           requestId,
         })
+        return Promise.resolve()
       } catch (error) {
         logger.info('WindowEthereumProxy.ts', 'request', 'Invalid request', args)
 

@@ -60,7 +60,7 @@ export function CopyButton({ onCopyPress }: { onCopyPress: () => Promise<void> }
                 color={valueCopied ? '$statusSuccess' : '$neutral2'}
                 cursor="pointer"
                 flexShrink={1}
-                variant="buttonLabel4"
+                variant="buttonLabel3"
                 x={valueCopied ? -2 : 0}
                 y={0.5}
               >

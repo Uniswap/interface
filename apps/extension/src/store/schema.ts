@@ -150,4 +150,41 @@ delete v11SchemaIntermediate.behaviorHistory.hasSubmittedHoldToSwap
 
 export const v11Schema = v11SchemaIntermediate
 
-export const getSchema = (): typeof v11Schema => v11Schema
+export const v12Schema = {
+  ...v11Schema,
+  behaviorHistory: {
+    ...v11Schema.behaviorHistory,
+    createdOnboardingRedesignAccount: false,
+  },
+}
+
+export const v13Schema = {
+  ...v12Schema,
+  tokens: {
+    dismissedTokenWarnings: {},
+  },
+}
+
+const v14SchemaIntermediate = {
+  ...v13Schema,
+  languageSettings: undefined,
+  userSettings: {
+    ...v13Schema.userSettings,
+    currentLanguage: v13Schema.languageSettings.currentLanguage,
+  },
+}
+delete v14SchemaIntermediate.languageSettings
+export const v14Schema = v14SchemaIntermediate
+
+const v15SchemaIntermediate = {
+  ...v14Schema,
+  fiatCurrencySettings: undefined,
+  userSettings: {
+    ...v14Schema.userSettings,
+    currentLanguage: v14Schema.fiatCurrencySettings.currentCurrency,
+  },
+}
+delete v15SchemaIntermediate.fiatCurrencySettings
+export const v15Schema = v15SchemaIntermediate
+
+export const getSchema = (): typeof v15Schema => v15Schema

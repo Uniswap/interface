@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
-import { isUniswapXSupportedChain } from 'constants/chains'
 import ms from 'ms'
 import {
   ClassicAPIConfig,
@@ -15,6 +14,7 @@ import {
   URAQuoteResponse,
   URAQuoteType,
   UniswapXConfig,
+  UniswapXPriorityOrdersConfig,
   UniswapXv2Config,
 } from 'state/routing/types'
 import { isExactInput, transformQuoteToTrade } from 'state/routing/utils'
@@ -44,7 +44,6 @@ const DEFAULT_QUERY_PARAMS = {
 function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   const {
     account,
-    tokenInChainId,
     uniswapXForceSyntheticQuotes,
     routerPreference,
     protocolPreferences,
@@ -53,12 +52,19 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
     forceOpenOrders,
     deadlineBufferSecs,
     isXv2Arbitrum,
+    isPriorityOrder,
+    isUniswapXSupportedChain,
   } = args
 
   const uniswapX: UniswapXConfig = {
     useSyntheticQuotes: uniswapXForceSyntheticQuotes,
     swapper: account,
     routingType: URAQuoteType.DUTCH_V1,
+  }
+
+  const uniswapXPriorityOrders: UniswapXPriorityOrdersConfig = {
+    routingType: URAQuoteType.PRIORITY,
+    swapper: account,
   }
 
   const uniswapXv2: UniswapXv2Config = {
@@ -86,12 +92,12 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
     // If the user has opted out of UniswapX during the opt-out transition period, we should respect that preference and only request classic quotes.
     routerPreference === RouterPreference.API ||
     routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ||
-    (!isUniswapXSupportedChain(tokenInChainId) && !isXv2Arbitrum)
+    !isUniswapXSupportedChain
   ) {
     return [classic]
   }
 
-  return [isXv2 || isXv2Arbitrum ? uniswapXv2 : uniswapX, classic]
+  return [isPriorityOrder ? uniswapXPriorityOrders : isXv2 || isXv2Arbitrum ? uniswapXv2 : uniswapX, classic]
 }
 
 export const routingApi = createApi({

@@ -1,20 +1,19 @@
 import { Currency } from '@uniswap/sdk-core'
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
-import { COMMON_BASES } from 'constants/routing'
-import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
+import { chainIdToBackendChain } from 'constants/chains'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { apolloClient } from 'graphql/data/apollo/client'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
+import { COMMON_BASES } from 'uniswap/src/constants/routing'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   Token,
   TokenDocument,
   TokenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isSameAddress } from 'utilities/src/addresses'
 
-export async function getCurrency(
-  currencyId: string,
-  chainId: SupportedInterfaceChainId,
-): Promise<Currency | undefined> {
+export async function getCurrency(currencyId: string, chainId: UniverseChainId): Promise<Currency | undefined> {
   const isNative =
     currencyId === NATIVE_CHAIN_ID || currencyId?.toLowerCase() === 'native' || currencyId?.toLowerCase() === 'eth'
   if (isNative) {

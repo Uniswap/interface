@@ -1,8 +1,7 @@
 import { TokenList } from '@uniswap/token-lists'
-import { SupportedLocale } from 'constants/locales'
 import multicall from 'lib/state/multicall'
 import { CombinedState } from 'redux'
-import { ApplicationModal, ApplicationState, PopupList, PopupType } from 'state/application/reducer'
+import { ApplicationState, OpenModalParams, PopupList, PopupType } from 'state/application/reducer'
 import { Field as BurnField } from 'state/burn/actions'
 import { BurnState } from 'state/burn/reducer'
 import { BurnV3State } from 'state/burn/v3/reducer'
@@ -22,11 +21,12 @@ import { SignatureState } from 'state/signatures/reducer'
 import { LocalWebTransactionState } from 'state/transactions/reducer'
 import { TransactionDetails } from 'state/transactions/types'
 import { UserState } from 'state/user/reducer'
-import { SerializedPair, SerializedToken, SlippageTolerance } from 'state/user/types'
+import { SerializedPair, SlippageTolerance } from 'state/user/types'
 import { ConnectedWalletsState } from 'state/wallets/reducer'
 import { Wallet } from 'state/wallets/types'
 import { InterfaceState } from 'state/webReducer'
 import { Equals, assert } from 'tsafe'
+import { UniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
 import { FavoritesState } from 'uniswap/src/features/favorites/slice'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { SearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
@@ -34,7 +34,7 @@ import { UserSettingsState } from 'uniswap/src/features/settings/slice'
 import { TimingState } from 'uniswap/src/features/timing/slice'
 import { TokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 /**
  * WARNING:
@@ -76,6 +76,7 @@ type ExpectedAppState = CombinedState<{
 
   // Uniswap State
   readonly [fiatOnRampAggregatorApi.reducerPath]: ReturnType<typeof fiatOnRampAggregatorApi.reducer>
+  readonly uniswapBehaviorHistory: UniswapBehaviorHistoryState
   readonly favorites: FavoritesState
   readonly searchHistory: Readonly<SearchHistoryState>
   readonly timing: TimingState
@@ -88,17 +89,11 @@ assert<Equals<InterfaceState, ExpectedAppState>>()
 
 interface ExpectedUserState {
   lastUpdateVersionTimestamp?: number
-  userLocale: SupportedLocale | null
   userRouterPreference: RouterPreference
   userHideClosedPositions: boolean
   userSlippageTolerance: number | SlippageTolerance.Auto
   userSlippageToleranceHasBeenMigratedToAuto: boolean
   userDeadline: number
-  tokens: {
-    [chainId: number]: {
-      [address: string]: SerializedToken
-    }
-  }
   pairs: {
     [chainId: number]: {
       [key: string]: SerializedPair
@@ -136,7 +131,7 @@ assert<Equals<ListsState, ExpectedListsState>>()
 interface ExpectedApplicationState {
   readonly chainId: number | null
   readonly fiatOnramp: { available: boolean; availabilityChecked: boolean }
-  readonly openModal: ApplicationModal | null
+  readonly openModal: OpenModalParams | null
   readonly smartPool: { address?: string | null; name: string | null }
   readonly popupList: PopupList
   readonly suppressedPopups: PopupType[]
@@ -146,7 +141,7 @@ assert<Equals<ApplicationState, ExpectedApplicationState>>()
 
 interface ExpectedWalletState {
   connectedWallets: Wallet[]
-  switchingChain: InterfaceChainId | false
+  switchingChain: UniverseChainId | false
 }
 
 assert<Equals<ConnectedWalletsState, ExpectedWalletState>>()

@@ -1,6 +1,5 @@
 import { CurrencyAmount, Percent, Token, TradeType, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
-import { DAI, DAI_ARBITRUM_ONE, USDC_ARBITRUM, USDC_MAINNET, USDT, WBTC, nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import JSBI from 'jsbi'
 import { expiryToDeadlineSeconds } from 'state/limit/expiryToDeadlineSeconds'
@@ -12,9 +11,19 @@ import {
   QuoteMethod,
   V2DutchOrderTrade,
 } from 'state/routing/types'
+import {
+  DAI,
+  DAI_ARBITRUM_ONE,
+  USDC_ARBITRUM,
+  USDC_MAINNET,
+  USDT,
+  WBTC,
+  nativeOnChain,
+} from 'uniswap/src/constants/tokens'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
+import { benignSafetyInfo } from 'uniswap/src/test/fixtures'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { UseAccountReturnType } from 'wagmi'
@@ -26,6 +35,7 @@ export const TEST_TOKEN_1_INFO: CurrencyInfo = {
     'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png',
   currencyId: 'ABC',
   safetyLevel: SafetyLevel.Verified,
+  safetyInfo: benignSafetyInfo,
 }
 export const TEST_TOKEN_2 = new Token(1, '0x0000000000000000000000000000000000000002', 18, 'DEF', 'Def')
 export const TEST_TOKEN_2_INFO: CurrencyInfo = {
@@ -34,6 +44,7 @@ export const TEST_TOKEN_2_INFO: CurrencyInfo = {
     'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png',
   currencyId: 'DEF',
   safetyLevel: SafetyLevel.Verified,
+  safetyInfo: benignSafetyInfo,
 }
 export const TEST_TOKEN_3 = new Token(1, '0x0000000000000000000000000000000000000003', 18, 'GHI', 'Ghi')
 export const TEST_TOKEN_3_INFO: CurrencyInfo = {
@@ -42,6 +53,7 @@ export const TEST_TOKEN_3_INFO: CurrencyInfo = {
     'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png',
   currencyId: 'GHI',
   safetyLevel: SafetyLevel.Verified,
+  safetyInfo: benignSafetyInfo,
 }
 export const ETH_MAINNET = nativeOnChain(UniverseChainId.Mainnet)
 
@@ -272,6 +284,7 @@ export const NATIVE_INFO: CurrencyInfo = {
   logoUrl: 'ethereum-logo.png',
   currencyId: 'ETH',
   safetyLevel: SafetyLevel.Verified,
+  safetyInfo: benignSafetyInfo,
 }
 
 export const WETH_INFO: CurrencyInfo = {
@@ -280,6 +293,7 @@ export const WETH_INFO: CurrencyInfo = {
     'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
   currencyId: WETH9[UniverseChainId.Mainnet].address,
   safetyLevel: SafetyLevel.Verified,
+  safetyInfo: benignSafetyInfo,
 }
 
 export const DAI_INFO: CurrencyInfo = {
@@ -288,6 +302,7 @@ export const DAI_INFO: CurrencyInfo = {
     'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png',
   currencyId: DAI.address,
   safetyLevel: SafetyLevel.Verified,
+  safetyInfo: benignSafetyInfo,
 }
 
 export const USDC_INFO: CurrencyInfo = {
@@ -296,6 +311,7 @@ export const USDC_INFO: CurrencyInfo = {
     'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
   currencyId: USDC_MAINNET.address,
   safetyLevel: SafetyLevel.Verified,
+  safetyInfo: benignSafetyInfo,
 }
 
 export const USDT_INFO: CurrencyInfo = {
@@ -304,6 +320,7 @@ export const USDT_INFO: CurrencyInfo = {
     'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png',
   currencyId: USDT.address,
   safetyLevel: SafetyLevel.Verified,
+  safetyInfo: benignSafetyInfo,
 }
 
 export const WBTC_INFO: CurrencyInfo = {
@@ -312,6 +329,7 @@ export const WBTC_INFO: CurrencyInfo = {
     'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png',
   currencyId: WBTC.address,
   safetyLevel: SafetyLevel.Verified,
+  safetyInfo: benignSafetyInfo,
 }
 
 export const DAI_ARBITRUM_INFO: CurrencyInfo = {
@@ -320,6 +338,7 @@ export const DAI_ARBITRUM_INFO: CurrencyInfo = {
     'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1/logo.png',
   currencyId: DAI_ARBITRUM_ONE.address,
   safetyLevel: SafetyLevel.Verified,
+  safetyInfo: benignSafetyInfo,
 }
 
 export const USDC_ARBITRUM_INFO: CurrencyInfo = {
@@ -328,6 +347,7 @@ export const USDC_ARBITRUM_INFO: CurrencyInfo = {
     'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xaf88d065e77c8cC2239327C5EDb3A432268e5831/logo.png',
   currencyId: USDC_ARBITRUM.address,
   safetyLevel: SafetyLevel.Verified,
+  safetyInfo: benignSafetyInfo,
 }
 
 export const USE_DISCONNECTED_ACCOUNT = {

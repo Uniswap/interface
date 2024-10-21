@@ -16,7 +16,6 @@ export function registerSetupTests() {
 
     // Log requests to hardhat.
     cy.intercept(/:8545/, logJsonRpc)
-
     Cypress.env('amplitudeEventCache', [])
 
     // Mock analytics responses to avoid analytics in tests.
@@ -41,6 +40,12 @@ export function registerSetupTests() {
 
     // Mock statsig to allow us to mock flags.
     cy.intercept(/statsig/, { statusCode: 409 })
+
+    // Mock graphql ops required by TokenSelector
+    cy.interceptGraphqlOperation('PortfolioBalances', 'portfolio_balances.json').as('PortfolioBalances')
+    cy.interceptGraphqlOperation('QuickTokenBalancesWeb', 'quick_token_balances.json').as('QuickTokenBalancesWeb')
+    cy.interceptGraphqlOperation('TopTokens', 'top_tokens.json').as('TopTokens')
+    cy.interceptGraphqlOperation('TokenProjects', 'token_projects.json').as('TokenProjects')
   })
 
   // Reset hardhat between suites to ensure isolation.

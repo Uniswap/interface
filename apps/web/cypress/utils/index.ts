@@ -72,7 +72,3 @@ export function resetHardhatChain() {
     hardhat.send('wallet_switchEthereumChain', [{ chainId: '0x1' }])
   })
 }
-
-export function waitsForActiveChain(chain: string) {
-  cy.get(getTestSelector('chain-selector-logo')).invoke('attr', 'alt').should('eq', `${chain} logo`)
-}

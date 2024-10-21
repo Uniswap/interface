@@ -1,11 +1,11 @@
-import { NotImplementedError } from 'utilities/src/errors'
+import { PlatformSplitStubError } from 'utilities/src/errors'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
 
 // matches amplitude supported values, not using amplitude's type to decouple from underlying library
 export type UserPropertyValue = number | string | boolean | Array<string | number>
 
 export async function getAnalyticsAtomDirect(_forceRead?: boolean): Promise<boolean> {
-  throw new NotImplementedError('getAnalyticsAtomDirect')
+  throw new PlatformSplitStubError('getAnalyticsAtomDirect')
 }
 
 export interface Analytics {
@@ -16,6 +16,7 @@ export interface Analytics {
     userIdGetter?: () => Promise<string>,
   ): Promise<void>
   setAllowAnalytics(allowed: boolean): Promise<void>
+  setTestnetMode(enabled: boolean): void
   sendEvent(eventName: string, eventProperties: Record<string, unknown>): void
   flushEvents(): void
   setUserProperty(property: string, value: UserPropertyValue, insert?: boolean): void
@@ -28,18 +29,21 @@ export const analytics: Analytics = {
     _initHash?: string,
     _userIdGetter?: () => Promise<string>,
   ): Promise<void> {
-    throw new NotImplementedError('initAnalytics')
+    throw new PlatformSplitStubError('initAnalytics')
   },
   setAllowAnalytics(_allowed: boolean): Promise<void> {
-    throw new NotImplementedError('flushAnalyticsEvents')
+    throw new PlatformSplitStubError('flushAnalyticsEvents')
+  },
+  setTestnetMode(_enabled: boolean): void {
+    throw new PlatformSplitStubError('setTestnetMode')
   },
   sendEvent(_eventName: string, ..._eventProperties: unknown[]): void {
-    throw new NotImplementedError('sendAnalyticsEvent')
+    throw new PlatformSplitStubError('sendAnalyticsEvent')
   },
   flushEvents(): void {
-    throw new NotImplementedError('flushAnalyticsEvents')
+    throw new PlatformSplitStubError('flushAnalyticsEvents')
   },
   setUserProperty(_property: string, _value: UserPropertyValue): void {
-    throw new NotImplementedError('setUserProperty')
+    throw new PlatformSplitStubError('setUserProperty')
   },
 }

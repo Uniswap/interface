@@ -118,7 +118,7 @@ export function LongMarkdownText(props: LongMarkdownTextProps): JSX.Element {
           py="$none"
           style={{ color: readMoreOrLessColor }}
           testID={TestID.ReadMoreButton}
-          variant="buttonLabel3"
+          variant="buttonLabel2"
           onPress={toggleExpanded}
         >
           {expanded ? t('common.longText.button.less') : t('common.longText.button.more')}

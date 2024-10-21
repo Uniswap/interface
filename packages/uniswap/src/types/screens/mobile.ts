@@ -1,3 +1,5 @@
+import { ExtensionOnboardingFlow, ExtensionScreens } from "uniswap/src/types/screens/extension";
+
 export enum MobileScreens {
   Dev = 'Dev',
   Education = 'Education',
@@ -58,6 +60,39 @@ export enum UnitagScreens {
   ChooseProfilePicture = 'ChooseProfilePicture',
   UnitagConfirmation = 'UnitagConfirmation',
   EditProfile = 'EditProfile',
+}
+
+export type UnitagEntryPoint = 
+  OnboardingScreens.Landing | 
+  MobileScreens.Home | 
+  MobileScreens.Settings | 
+  ExtensionOnboardingFlow.New | 
+  ExtensionScreens.Home
+
+export type UnitagStackParamList = SharedUnitagScreenParams & {
+  [UnitagScreens.UnitagConfirmation]: {
+    unitag: string
+    address: Address
+    profilePictureUri?: string
+  };
+  [UnitagScreens.EditProfile]: {
+    address: Address
+    unitag: string
+    entryPoint: UnitagScreens.UnitagConfirmation | MobileScreens.SettingsWallet
+  }
+}
+
+export type SharedUnitagScreenParams = {
+  [UnitagScreens.ClaimUnitag]: {
+    entryPoint: UnitagEntryPoint
+    address?: Address
+  };
+  [UnitagScreens.ChooseProfilePicture]: {
+    entryPoint: UnitagEntryPoint
+    unitag: string
+    unitagFontSize: number
+    address: Address
+  }
 }
 
 export enum FiatOnRampScreens {

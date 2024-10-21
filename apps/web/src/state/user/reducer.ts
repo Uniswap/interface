@@ -1,16 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { SupportedLocale } from 'constants/locales'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { RouterPreference } from 'state/routing/types'
-import { SerializedPair, SerializedToken, SlippageTolerance } from 'state/user/types'
+import { SerializedPair, SlippageTolerance } from 'state/user/types'
 
 const currentTimestamp = () => new Date().getTime()
 
 export interface UserState {
   // the timestamp of the last updateVersion action
   lastUpdateVersionTimestamp?: number
-
-  userLocale: SupportedLocale | null
 
   // which router should be used to calculate trades
   userRouterPreference: RouterPreference
@@ -26,12 +23,6 @@ export interface UserState {
 
   // deadline set by user in minutes, used in all txns
   userDeadline: number
-
-  tokens: {
-    [chainId: number]: {
-      [address: string]: SerializedToken
-    }
-  }
 
   pairs: {
     [chainId: number]: {
@@ -53,13 +44,11 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
-  userLocale: null,
   userRouterPreference: RouterPreference.X,
   userHideClosedPositions: false,
   userSlippageTolerance: SlippageTolerance.Auto,
   userSlippageToleranceHasBeenMigratedToAuto: true,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
-  tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
   showSurveyPopup: undefined,
@@ -70,12 +59,6 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    updateUserLocale(state, action) {
-      if (action.payload.userLocale !== state.userLocale) {
-        state.userLocale = action.payload.userLocale
-        state.timestamp = currentTimestamp()
-      }
-    },
     updateUserSlippageTolerance(state, action) {
       state.userSlippageTolerance = action.payload.userSlippageTolerance
       state.timestamp = currentTimestamp()
@@ -89,14 +72,6 @@ const userSlice = createSlice({
     },
     updateHideClosedPositions(state, action) {
       state.userHideClosedPositions = action.payload.userHideClosedPositions
-    },
-    addSerializedToken(state, { payload: { serializedToken } }) {
-      if (!state.tokens) {
-        state.tokens = {}
-      }
-      state.tokens[serializedToken.chainId] = state.tokens[serializedToken.chainId] || {}
-      state.tokens[serializedToken.chainId][serializedToken.address] = serializedToken
-      state.timestamp = currentTimestamp()
     },
     addSerializedPair(state, { payload: { serializedPair } }) {
       if (
@@ -117,12 +92,10 @@ const userSlice = createSlice({
 
 export const {
   addSerializedPair,
-  addSerializedToken,
   setOriginCountry,
   updateHideClosedPositions,
   updateUserRouterPreference,
   updateUserDeadline,
-  updateUserLocale,
   updateUserSlippageTolerance,
 } = userSlice.actions
 export default userSlice.reducer

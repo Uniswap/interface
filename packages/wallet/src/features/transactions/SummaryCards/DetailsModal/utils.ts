@@ -1,9 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { BridgeTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { NumberType } from 'utilities/src/format/types'
-import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
 import { SwapTypeTransactionInfo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 
@@ -61,7 +62,7 @@ export function getFormattedSwapRatio({
   outputCurrency,
   formatter,
 }: {
-  typeInfo: SwapTypeTransactionInfo
+  typeInfo: SwapTypeTransactionInfo | BridgeTransactionInfo
   inputCurrency: CurrencyInfo
   outputCurrency: CurrencyInfo
   formatter: LocalizationContextState

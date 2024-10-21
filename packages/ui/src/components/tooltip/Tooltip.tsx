@@ -3,7 +3,7 @@ import { Tooltip as TamaguiTooltip, styled, withStaticProperties } from 'tamagui
 export type { TooltipProps } from 'tamagui'
 
 const Content = styled(TamaguiTooltip.Content, {
-  animation: 'quick',
+  animation: 'fast',
   gap: '$spacing8',
   alignItems: 'center',
   backgroundColor: '$surface1',
@@ -12,10 +12,18 @@ const Content = styled(TamaguiTooltip.Content, {
   maxWidth: 350,
   px: '$spacing12',
   py: '$spacing12',
-  shadowColor: '$surface3',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.16,
-  shadowRadius: '$spacing12',
+  '$theme-dark': {
+    borderWidth: 1,
+    borderColor: '$surface2',
+    shadowOffset: { width: 0, height: 0 },
+    shadowRadius: '$none',
+  },
+  '$theme-light': {
+    shadowColor: '$surface3',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.04,
+    shadowRadius: '$spacing12',
+  },
   enterStyle: {
     y: -10,
     opacity: 0,
@@ -27,11 +35,17 @@ const Content = styled(TamaguiTooltip.Content, {
 })
 
 const Arrow = styled(TamaguiTooltip.Arrow, {
-  shadowColor: '$surface3',
-  shadowOffset: { width: 0, height: 4 },
-  shadowOpacity: 0.08,
-  shadowRadius: '$spacing16',
   size: '$spacing16',
+  '$theme-dark': {
+    borderWidth: 1,
+    borderColor: '$surface2',
+  },
+  '$theme-light': {
+    shadowColor: '$surface3',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: '$spacing16',
+  },
 })
 
 const TooltipRoot = styled(TamaguiTooltip, {

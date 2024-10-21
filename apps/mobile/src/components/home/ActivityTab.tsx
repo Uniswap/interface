@@ -8,9 +8,10 @@ import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { isAndroid } from 'utilities/src/platform'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { useActivityData } from 'wallet/src/features/activity/useActivityData'
@@ -35,7 +36,7 @@ export const ActivityTab = memo(
   ) {
     const dispatch = useDispatch()
     const colors = useSporeColors()
-    const insets = useDeviceInsets()
+    const insets = useAppInsets()
 
     const { trigger: biometricsTrigger } = useBiometricPrompt()
     const { requiredForTransactions: requiresBiometrics } = useBiometricAppSettings()
@@ -80,14 +81,13 @@ export const ActivityTab = memo(
           // `sectionData` will be either an array of transactions or an array of loading skeletons
           data={sectionData}
           estimatedItemSize={ESTIMATED_ITEM_SIZE}
-          initialNumToRender={20}
+          initialNumToRender={10}
           keyExtractor={keyExtractor}
-          maxToRenderPerBatch={20}
+          maxToRenderPerBatch={10}
           refreshControl={refreshControl}
           refreshing={refreshing}
           renderItem={renderActivityItem}
           showsVerticalScrollIndicator={false}
-          updateCellsBatchingPeriod={10}
           onContentSizeChange={onContentSizeChange}
           onRefresh={onRefresh}
           onScroll={scrollHandler}

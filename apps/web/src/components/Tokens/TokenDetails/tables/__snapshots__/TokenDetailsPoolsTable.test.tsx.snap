@@ -14,7 +14,7 @@ exports[`TDPPoolTable renders data filled state 1`] = `
 }
 
 .c4 img {
-  width: 14px;
+  width: 13px;
   height: 28px;
   object-fit: cover;
 }
@@ -36,6 +36,14 @@ exports[`TDPPoolTable renders data filled state 1`] = `
 }
 
 .c3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
   position: relative;
   top: 0;
   left: 0;
@@ -83,7 +91,7 @@ exports[`TDPPoolTable renders data filled state 1`] = `
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-end _backgroundColor-568007324 scrollbar-hidden"
               >
                 <div
-                  class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _minWidth-10037 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopRightRadius-1307610060 _borderTopLeftRadius-1307610060 _minHeight-52px _backgroundColor-568007293 _scrollbarWidth-none scrollbar-hidden"
+                  class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _minWidth-10037 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopRightRadius-1307610060 _borderTopLeftRadius-1307610060 _minHeight-52px _backgroundColor-568007293 _scrollbarWidth-none scrollbar-hidden"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -124,7 +132,7 @@ exports[`TDPPoolTable renders data filled state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <svg
                               class="c1"
@@ -164,54 +172,6 @@ exports[`TDPPoolTable renders data filled state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c0"
-                      >
-                        <div>
-                          <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
-                          >
-                            <span
-                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
-                              data-disable-theme="true"
-                            >
-                              1 day volume
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c0"
-                      >
-                        <div>
-                          <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
-                          >
-                            <span
-                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
-                              data-disable-theme="true"
-                            >
-                              7 day volume
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
                       class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
@@ -219,13 +179,61 @@ exports[`TDPPoolTable renders data filled state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <span
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
                               data-disable-theme="true"
                             >
-                              1 day APR
+                              APR
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c0"
+                      >
+                        <div>
+                          <div
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
+                          >
+                            <span
+                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+                              data-disable-theme="true"
+                            >
+                              1D vol
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c0"
+                      >
+                        <div>
+                          <div
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
+                          >
+                            <span
+                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+                              data-disable-theme="true"
+                            >
+                              7D vol
                             </span>
                           </div>
                         </div>
@@ -242,7 +250,7 @@ exports[`TDPPoolTable renders data filled state 1`] = `
                   href="/explore/pools/ethereum/0x123"
                 >
                   <div
-                    class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                    class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                   >
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -265,25 +273,29 @@ exports[`TDPPoolTable renders data filled state 1`] = `
                         class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _width-240px _flexGrow-1"
                       >
                         <div
-                          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331199 _alignItems-center"
+                          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331230 _alignItems-center"
                         >
                           <div
                             class="c3"
                           >
                             <div
-                              class="c4"
-                              size="28"
+                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
                             >
-                              <img
-                                class="c5"
+                              <div
+                                class="c4"
                                 size="28"
-                                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                              />
-                              <img
-                                class="c5"
-                                size="28"
-                                src="ethereum-logo.png"
-                              />
+                              >
+                                <img
+                                  class="c5"
+                                  size="28"
+                                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                                />
+                                <img
+                                  class="c5"
+                                  size="28"
+                                  src="ethereum-logo.png"
+                                />
+                              </div>
                             </div>
                           </div>
                           <span
@@ -319,6 +331,20 @@ exports[`TDPPoolTable renders data filled state 1`] = `
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                     >
                       <div
+                        class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
+                      >
+                        <span
+                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+                          data-disable-theme="true"
+                        >
+                          6%
+                        </span>
+                      </div>
+                    </div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                    >
+                      <div
                         class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
                       >
                         <span
@@ -343,20 +369,6 @@ exports[`TDPPoolTable renders data filled state 1`] = `
                         </span>
                       </div>
                     </div>
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                    >
-                      <div
-                        class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
-                      >
-                        <span
-                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
-                          data-disable-theme="true"
-                        >
-                          6%
-                        </span>
-                      </div>
-                    </div>
                   </div>
                 </a>
               </div>
@@ -371,7 +383,21 @@ exports[`TDPPoolTable renders data filled state 1`] = `
 
 exports[`TDPPoolTable renders error state 1`] = `
 <DocumentFragment>
-  .c6 {
+  .c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c6 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -385,20 +411,6 @@ exports[`TDPPoolTable renders error state 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
 }
 
 .c4 {
@@ -486,7 +498,7 @@ exports[`TDPPoolTable renders error state 1`] = `
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-end _backgroundColor-568007324 scrollbar-hidden"
               >
                 <div
-                  class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _minWidth-10037 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopRightRadius-1307610060 _borderTopLeftRadius-1307610060 _minHeight-52px _backgroundColor-568007293 _scrollbarWidth-none _opacity-0d0t446 scrollbar-hidden"
+                  class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _minWidth-10037 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopRightRadius-1307610060 _borderTopLeftRadius-1307610060 _minHeight-52px _backgroundColor-568007293 _scrollbarWidth-none _opacity-0d0t446 scrollbar-hidden"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -527,7 +539,7 @@ exports[`TDPPoolTable renders error state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <svg
                               class="c1"
@@ -567,54 +579,6 @@ exports[`TDPPoolTable renders error state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c0"
-                      >
-                        <div>
-                          <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
-                          >
-                            <span
-                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
-                              data-disable-theme="true"
-                            >
-                              1 day volume
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c0"
-                      >
-                        <div>
-                          <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
-                          >
-                            <span
-                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
-                              data-disable-theme="true"
-                            >
-                              7 day volume
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
                       class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
@@ -622,13 +586,61 @@ exports[`TDPPoolTable renders error state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <span
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
                               data-disable-theme="true"
                             >
-                              1 day APR
+                              APR
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c0"
+                      >
+                        <div>
+                          <div
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
+                          >
+                            <span
+                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+                              data-disable-theme="true"
+                            >
+                              1D vol
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c0"
+                      >
+                        <div>
+                          <div
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
+                          >
+                            <span
+                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+                              data-disable-theme="true"
+                            >
+                              7D vol
                             </span>
                           </div>
                         </div>
@@ -641,7 +653,7 @@ exports[`TDPPoolTable renders error state 1`] = `
                 class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_scroll _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _width-10037 _position-relative _justifyContent-flex-start _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopWidth-0px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _maxHeight-528px scrollbar-hidden"
               >
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -683,31 +695,31 @@ exports[`TDPPoolTable renders error state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
                       class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -717,7 +729,7 @@ exports[`TDPPoolTable renders error state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -759,31 +771,31 @@ exports[`TDPPoolTable renders error state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
                       class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -793,7 +805,7 @@ exports[`TDPPoolTable renders error state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -835,31 +847,31 @@ exports[`TDPPoolTable renders error state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
                       class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -869,7 +881,7 @@ exports[`TDPPoolTable renders error state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -911,31 +923,31 @@ exports[`TDPPoolTable renders error state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
                       class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -945,7 +957,7 @@ exports[`TDPPoolTable renders error state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -987,31 +999,31 @@ exports[`TDPPoolTable renders error state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
                       class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -1021,7 +1033,7 @@ exports[`TDPPoolTable renders error state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1063,31 +1075,31 @@ exports[`TDPPoolTable renders error state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
                       class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -1097,7 +1109,7 @@ exports[`TDPPoolTable renders error state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1139,31 +1151,31 @@ exports[`TDPPoolTable renders error state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
                       class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -1287,7 +1299,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-end _backgroundColor-568007324 scrollbar-hidden"
               >
                 <div
-                  class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _minWidth-10037 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopRightRadius-1307610060 _borderTopLeftRadius-1307610060 _minHeight-52px _backgroundColor-568007293 _scrollbarWidth-none scrollbar-hidden"
+                  class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _minWidth-10037 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopRightRadius-1307610060 _borderTopLeftRadius-1307610060 _minHeight-52px _backgroundColor-568007293 _scrollbarWidth-none scrollbar-hidden"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1328,7 +1340,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <svg
                               class="c1"
@@ -1368,54 +1380,6 @@ exports[`TDPPoolTable renders loading state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c0"
-                      >
-                        <div>
-                          <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
-                          >
-                            <span
-                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
-                              data-disable-theme="true"
-                            >
-                              1 day volume
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c0"
-                      >
-                        <div>
-                          <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
-                          >
-                            <span
-                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
-                              data-disable-theme="true"
-                            >
-                              7 day volume
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
                       class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
@@ -1423,13 +1387,61 @@ exports[`TDPPoolTable renders loading state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <span
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
                               data-disable-theme="true"
                             >
-                              1 day APR
+                              APR
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c0"
+                      >
+                        <div>
+                          <div
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
+                          >
+                            <span
+                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+                              data-disable-theme="true"
+                            >
+                              1D vol
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c0"
+                      >
+                        <div>
+                          <div
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
+                          >
+                            <span
+                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+                              data-disable-theme="true"
+                            >
+                              7D vol
                             </span>
                           </div>
                         </div>
@@ -1442,7 +1454,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_scroll _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _width-10037 _position-relative _justifyContent-flex-start _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopWidth-0px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _maxHeight-528px scrollbar-hidden"
               >
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1484,31 +1496,31 @@ exports[`TDPPoolTable renders loading state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
                       class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -1518,7 +1530,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1560,31 +1572,31 @@ exports[`TDPPoolTable renders loading state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
                       class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -1594,7 +1606,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1636,31 +1648,31 @@ exports[`TDPPoolTable renders loading state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
                       class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -1670,7 +1682,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1712,31 +1724,31 @@ exports[`TDPPoolTable renders loading state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
                       class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -1746,7 +1758,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1788,31 +1800,31 @@ exports[`TDPPoolTable renders loading state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
                       class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -1822,7 +1834,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1864,31 +1876,31 @@ exports[`TDPPoolTable renders loading state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
                       class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -1898,7 +1910,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1940,31 +1952,31 @@ exports[`TDPPoolTable renders loading state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c2 c3"
-                        data-testid="cell-loading-bubble"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
                       class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c2 c3"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"

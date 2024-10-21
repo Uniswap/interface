@@ -10,14 +10,14 @@ import { SortButton } from 'src/components/explore/SortButton'
 import { TokenItem } from 'src/components/explore/TokenItem'
 import { TokenItemData } from 'src/components/explore/TokenItemData'
 import { AnimatedBottomSheetFlatList } from 'src/components/layout/AnimatedFlatList'
-import { AutoScrollProps } from 'src/components/sortableGrid'
+import { AutoScrollProps } from 'src/components/sortableGrid/types'
 import {
   getClientTokensOrderByCompareFn,
   getTokenMetadataDisplayType,
   getTokensOrderByValues,
 } from 'src/features/explore/utils'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
-import { Flex, Loader, Text, useDeviceInsets } from 'ui/src'
+import { Flex, Loader, Text } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import { PollingInterval } from 'uniswap/src/constants/misc'
@@ -29,8 +29,9 @@ import {
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { usePersistedError } from 'uniswap/src/features/dataApi/utils'
 import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'uniswap/src/features/favorites/selectors'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { selectTokensOrderBy } from 'wallet/src/features/wallet/selectors'
@@ -39,12 +40,15 @@ type ExploreSectionsProps = {
   listRef: React.MutableRefObject<null>
 }
 
+type GqlToken = NonNullable<ExploreTokensTabQuery['topTokens']>[0]
+
 export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element {
   const { t } = useTranslation()
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const scrollY = useSharedValue(0)
   const headerRef = useRef<View>(null)
   const visibleListHeight = useSharedValue(0)
+  const { defaultChainId } = useEnabledChains()
 
   // Top tokens sorting
   const orderBy = useSelector(selectTokensOrderBy)
@@ -72,25 +76,31 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
 
   const topTokenItems = useMemo(() => {
     if (!data || !data.topTokens) {
-      return
+      return undefined
     }
 
     // special case to replace weth with eth because the backend does not return eth data
     // eth will be defined only if all the required data is available
     // when eth data is not fully available, we do not replace weth with eth
     const { eth } = data
-    const wethAddress = getWrappedNativeAddress(UniverseChainId.Mainnet)
+
+    const wethAddress = getWrappedNativeAddress(defaultChainId)
+
+    const isWeth = (token: GqlToken): boolean =>
+      areAddressesEqual(token?.address, wethAddress) && token?.chain === Chain.Ethereum
+
+    // Indentified by symbol because ETH token data comes with undefined address
+    const isEth = (token: GqlToken): boolean => token?.symbol === 'ETH'
 
     const topTokens = data.topTokens
+      .filter((token, _, tokens) => !(isWeth(token) && tokens.some(isEth)))
       .map((token) => {
         if (!token) {
-          return
+          return undefined
         }
 
-        const isWeth = areAddressesEqual(token.address, wethAddress) && token?.chain === Chain.Ethereum
-
         // manually replace weth with eth given backend only returns eth data as a proxy for eth
-        if (isWeth && eth) {
+        if (isWeth(token) && eth) {
           return gqlTokenToTokenItemData(eth)
         }
 
@@ -105,7 +115,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
     // Apply client side sort order
     const compareFn = getClientTokensOrderByCompareFn(clientOrderBy)
     return topTokens.sort(compareFn)
-  }, [data, clientOrderBy])
+  }, [data, clientOrderBy, defaultChainId])
 
   const renderItem: ListRenderItem<TokenItemData> = useCallback(
     ({ item, index }: ListRenderItemInfo<TokenItemData>) => {
@@ -130,9 +140,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
     await refetch()
   }, [refetch])
 
-  const scrollHandler = useAnimatedScrollHandler((e) => {
-    scrollY.value = e.contentOffset.y
-  })
+  const scrollHandler = useAnimatedScrollHandler((e) => (scrollY.value = e.contentOffset.y), [scrollY])
 
   // Use showLoading for showing full screen loading state
   // Used in each section to ensure loading state layout matches loaded state
@@ -224,8 +232,8 @@ function gqlTokenToTokenItemData(
     return null
   }
 
-  const { symbol, address, chain, project, market } = token
-  const { logoUrl, markets, name } = project
+  const { name, symbol, address, chain, project, market } = token
+  const { logoUrl, markets } = project
   const tokenProjectMarket = markets?.[0]
 
   const chainId = fromGraphQLChain(chain)

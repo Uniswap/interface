@@ -1,12 +1,13 @@
-import { put, takeLatest } from 'typed-redux-saga'
+import { put, select, takeLatest } from 'typed-redux-saga'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { STALE_TRANSACTION_TIME_MS } from 'uniswap/src/features/notifications/constants'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
-import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
+import { selectActiveAccountNotifications } from 'wallet/src/features/notifications/selectors'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { AppNotification, AppNotificationType } from 'wallet/src/features/notifications/types'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 
 export function* notificationWatcher() {
@@ -14,7 +15,8 @@ export function* notificationWatcher() {
 }
 
 export function* pushTransactionNotification(action: ReturnType<typeof finalizeTransaction>) {
-  if (shouldSuppressNotification(action.payload)) {
+  const existingNotifications = yield* select(selectActiveAccountNotifications)
+  if (shouldSuppressNotification({ tx: action.payload, existingNotifications })) {
     return
   }
 
@@ -35,6 +37,19 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         txType: TransactionType.Approve,
         tokenAddress: typeInfo.tokenAddress,
         spender: typeInfo.spender,
+      }),
+    )
+  } else if (typeInfo.type === TransactionType.Bridge) {
+    const { inputCurrencyAmountRaw, outputCurrencyAmountRaw } = getAmountsFromTrade(typeInfo)
+    yield* put(
+      pushNotification({
+        ...baseNotificationData,
+        type: AppNotificationType.Transaction,
+        txType: TransactionType.Bridge,
+        inputCurrencyId: typeInfo.inputCurrencyId,
+        outputCurrencyId: typeInfo.outputCurrencyId,
+        inputCurrencyAmountRaw,
+        outputCurrencyAmountRaw,
       }),
     )
   } else if (typeInfo.type === TransactionType.Swap) {
@@ -117,11 +132,29 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
   }
 }
 
-export const STALE_TRANSACTION_TIME_MS = ONE_MINUTE_MS * 30
+export function shouldSuppressNotification({
+  tx,
+  existingNotifications,
+}: {
+  tx: TransactionDetails
+  existingNotifications?: AppNotification[]
+}) {
+  if (existingNotifications) {
+    // For bridging, we may update transaction details (such as sendConfirmed field), but this shouldn't trigger a new notification
+    const existingBridgeNotification = existingNotifications.find(
+      (notification) =>
+        notification.type === AppNotificationType.Transaction &&
+        notification.txType === TransactionType.Bridge &&
+        notification.txId === tx.id,
+    )
+    if (existingBridgeNotification) {
+      return true
+    }
+  }
 
-// If a wrap or approve tx is submitted with a swap, then suppress the notification.
-export function shouldSuppressNotification(tx: TransactionDetails) {
   const staleTransaction = Date.now() > tx.addedTime + STALE_TRANSACTION_TIME_MS
+
+  // If a wrap or approve tx is submitted with a swap, then suppress the notification.
   const chainedTransaction =
     (tx.typeInfo.type === TransactionType.Approve || tx.typeInfo.type === TransactionType.Wrap) && tx.typeInfo.swapTxId
   return chainedTransaction || staleTransaction

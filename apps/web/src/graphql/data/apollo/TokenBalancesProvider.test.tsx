@@ -1,5 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react'
-import { PrefetchBalancesWrapper, useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
+import { PrefetchBalancesWrapper, useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAccount } from 'hooks/useAccount'
 import { mocked } from 'test-utils/mocked'
 import { render, renderHook } from 'test-utils/render'
@@ -18,7 +18,7 @@ const mockBalanceQueryResponse = [
 
 jest.mock('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks.ts', () => ({
   ...jest.requireActual('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks.ts'),
-  usePortfolioBalancesWebLazyQuery: () => mockBalanceQueryResponse,
+  usePortfolioBalancesLazyQuery: () => mockBalanceQueryResponse,
   useOnAssetActivitySubscription: jest.fn(),
 }))
 

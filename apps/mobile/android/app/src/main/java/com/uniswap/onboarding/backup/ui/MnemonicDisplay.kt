@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import com.uniswap.onboarding.shared.CopyButton
+import com.uniswap.theme.UniswapTheme
 import com.uniswap.theme.relativeOffset
 import kotlin.math.abs
 

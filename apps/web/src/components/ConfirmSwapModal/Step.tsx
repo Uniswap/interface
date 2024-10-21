@@ -1,10 +1,11 @@
-import Column from 'components/Column'
 import { CheckMark } from 'components/Icons/CheckMark'
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
-import Row, { RowBetween } from 'components/Row'
+import Column from 'components/deprecated/Column'
+import Row, { RowBetween } from 'components/deprecated/Row'
 import styled, { Keyframes, keyframes } from 'lib/styled-components'
 import { ReactElement, useEffect, useState } from 'react'
 import { ExternalLink, ThemedText } from 'theme/components'
+import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 
 export interface StepDetails {
   // Left-justified icon representing the step and grayed out when step is not active
@@ -21,21 +22,10 @@ export interface StepDetails {
   timeToStart?: number
   // Text shown when timeToStart is exceeded (countdown reaches zero)
   delayedStartTitle?: string
-  // Estimated amount of time in seconds for a pending step to complete (i.e. transaction confirmation time)
-  timeToEnd?: number | null
-  // Text shown when timeToEnd is exceeded (countdown reaches zero)
-  delayedEndTitle?: string
   // Anchor text displayed for the Learn-More link
   learnMoreLinkText?: string
   // URL for Learn-More link (opened in new tab)
   learnMoreLinkHref?: string
-}
-
-export enum StepStatus {
-  PREVIEW,
-  ACTIVE,
-  IN_PROGRESS,
-  COMPLETE,
 }
 
 const ringAnimation = keyframes`
@@ -74,13 +64,13 @@ function RippleAnimation({ rippleColor }: { rippleColor?: string }) {
 }
 
 function Icon({ stepStatus, icon, rippleColor }: { stepStatus: StepStatus; icon: ReactElement; rippleColor?: string }) {
-  if (stepStatus === StepStatus.IN_PROGRESS) {
+  if (stepStatus === StepStatus.InProgress) {
     return <LoaderV3 size="24px" stroke={rippleColor} fill={rippleColor} data-testid="loader-icon" />
   }
   return (
     <div>
-      {stepStatus === StepStatus.ACTIVE && <RippleAnimation rippleColor={rippleColor} />}
-      <IconWrapper isActive={stepStatus === StepStatus.ACTIVE} data-testid="step-icon">
+      {stepStatus === StepStatus.Active && <RippleAnimation rippleColor={rippleColor} />}
+      <IconWrapper isActive={stepStatus === StepStatus.Active} data-testid="step-icon">
         {icon}
       </IconWrapper>
     </div>
@@ -97,21 +87,17 @@ function Title({
   isTimeRemaining: boolean
 }) {
   switch (stepStatus) {
-    case StepStatus.PREVIEW:
+    case StepStatus.Preview:
       return <ThemedText.LabelSmall>{stepDetails.previewTitle}</ThemedText.LabelSmall>
-    case StepStatus.ACTIVE:
+    case StepStatus.Active:
       return (
         <ThemedText.BodySmall>
           {isTimeRemaining ? stepDetails.actionRequiredTitle : stepDetails.delayedStartTitle}
         </ThemedText.BodySmall>
       )
-    case StepStatus.IN_PROGRESS:
-      return (
-        <ThemedText.BodySmall>
-          {isTimeRemaining ? stepDetails.inProgressTitle : stepDetails.delayedEndTitle}
-        </ThemedText.BodySmall>
-      )
-    case StepStatus.COMPLETE:
+    case StepStatus.InProgress:
+      return <ThemedText.BodySmall>{isTimeRemaining ? stepDetails.inProgressTitle : null}</ThemedText.BodySmall>
+    case StepStatus.Complete:
       return <ThemedText.LabelSmall>{stepDetails.previewTitle}</ThemedText.LabelSmall>
     default:
       return null
@@ -145,13 +131,11 @@ export function Step({ stepStatus, stepDetails }: { stepStatus: StepStatus; step
   // (2) Step has an estimated amount of time in which it should be completed. Timer starts running when step is in progress.
   const [secondsRemaining, setSecondsRemaining] = useState<number | null>(null)
   useEffect(() => {
-    if (stepStatus === StepStatus.ACTIVE && stepDetails?.timeToStart) {
+    if (stepStatus === StepStatus.Active && stepDetails?.timeToStart) {
       setSecondsRemaining(stepDetails.timeToStart)
-    } else if (stepStatus === StepStatus.IN_PROGRESS && stepDetails?.timeToEnd) {
-      setSecondsRemaining(stepDetails.timeToEnd)
     } else {
       setSecondsRemaining(null)
-      return
+      return undefined
     }
 
     const timer = setInterval(() => {
@@ -165,7 +149,7 @@ export function Step({ stepStatus, stepDetails }: { stepStatus: StepStatus; step
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [stepStatus, stepDetails.timeToStart, stepDetails.timeToEnd])
+  }, [stepStatus, stepDetails.timeToStart])
 
   return (
     <Container>
@@ -177,7 +161,7 @@ export function Step({ stepStatus, stepDetails }: { stepStatus: StepStatus; step
             stepDetails={stepDetails}
             isTimeRemaining={secondsRemaining === null || secondsRemaining > 0}
           />
-          {stepStatus === StepStatus.ACTIVE && stepDetails.learnMoreLinkHref && (
+          {stepStatus === StepStatus.Active && stepDetails.learnMoreLinkHref && (
             <StyledExternalLink href={stepDetails.learnMoreLinkHref || ''}>
               {stepDetails.learnMoreLinkText}
             </StyledExternalLink>
@@ -185,7 +169,7 @@ export function Step({ stepStatus, stepDetails }: { stepStatus: StepStatus; step
         </Column>
       </Row>
       {secondsRemaining !== null && <Timer secondsRemaining={secondsRemaining} />}
-      {stepStatus === StepStatus.COMPLETE && <CheckMark />}
+      {stepStatus === StepStatus.Complete && <CheckMark />}
     </Container>
   )
 }

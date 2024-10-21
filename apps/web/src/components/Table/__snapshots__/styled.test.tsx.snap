@@ -96,7 +96,7 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
           href="/explore/tokens/polygon/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331168 _maxWidth-68px"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331199 _maxWidth-68px"
           >
             <div
               class="c1"
@@ -215,7 +215,7 @@ exports[`TokenLinkCell renders known token on mainnet 1`] = `
           href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331168 _maxWidth-68px"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331199 _maxWidth-68px"
           >
             <div
               class="c1"
@@ -322,7 +322,7 @@ exports[`TokenLinkCell renders unknown token 1`] = `
           href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331168 _maxWidth-68px"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331199 _maxWidth-68px"
           >
             <div
               class="c1"

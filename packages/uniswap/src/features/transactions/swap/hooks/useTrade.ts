@@ -1,25 +1,29 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
+import { WithV4Flag } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { useTradingApiQuoteQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiQuoteQuery'
 import { QuoteRequest, TradeType as TradingApiTradeType } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { useActiveGasStrategy, useShadowGasStrategies } from 'uniswap/src/features/gas/hooks'
+import { areEqualGasStrategies } from 'uniswap/src/features/gas/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useIndicativeTrade } from 'uniswap/src/features/transactions/swap/hooks/useIndicativeTrade'
 import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
 import { TradeWithStatus, UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
-  getRoutingPreferenceForSwapRequest,
   getTokenAddressForApi,
   toTradingApiSupportedChainId,
   transformTradingApiResponseToTrade,
+  useQuoteRoutingParams,
   validateTrade,
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { isMobileApp } from 'utilities/src/platform'
 import { ONE_SECOND_MS, inXMinutesUnix } from 'utilities/src/time/time'
-import { useDebounceWithStatus } from 'utilities/src/time/timing'
 
 // error strings hardcoded in @uniswap/unified-routing-api
 // https://github.com/Uniswap/unified-routing-api/blob/020ea371a00d4cc25ce9f9906479b00a43c65f2c/lib/util/errors.ts#L4
@@ -33,8 +37,6 @@ const UNCONNECTED_ADDRESS = '0xAAAA44272dc658575Ba38f43C438447dDED45358'
 
 const DEFAULT_SWAP_VALIDITY_TIME_MINS = 30
 
-const SWAP_FORM_DEBOUNCE_TIME_MS = 250
-
 export class NoRoutesError extends Error {
   constructor(message: string = 'No routes found') {
     super(message)
@@ -42,27 +44,21 @@ export class NoRoutesError extends Error {
   }
 }
 
-export function useTrade(args: UseTradeArgs): TradeWithStatus {
-  const {
-    account,
-    amountSpecified,
-    otherCurrency,
-    tradeType,
-    pollInterval,
-    customSlippageTolerance,
-    isUSDQuote,
-    skip,
-    tradeProtocolPreference,
-  } = args
+export function useTrade({
+  account,
+  amountSpecified: amount,
+  otherCurrency,
+  tradeType,
+  pollInterval,
+  customSlippageTolerance,
+  isUSDQuote,
+  skip,
+  selectedProtocols,
+  isDebouncing,
+}: UseTradeArgs): TradeWithStatus {
   const activeAccountAddress = account?.address
 
-  const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
-
   /***** Format request arguments ******/
-
-  const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(amountSpecified, SWAP_FORM_DEBOUNCE_TIME_MS)
-  const shouldDebounce = amountSpecified && debouncedAmountSpecified?.currency.chainId === otherCurrency?.chainId
-  const amount = shouldDebounce ? debouncedAmountSpecified : amountSpecified
 
   const currencyIn = tradeType === TradeType.EXACT_INPUT ? amount?.currency : otherCurrency
   const currencyOut = tradeType === TradeType.EXACT_OUTPUT ? amount?.currency : otherCurrency
@@ -73,8 +69,10 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
   const tokenOutChainId = toTradingApiSupportedChainId(currencyOut?.chainId)
   const tokenInAddress = getTokenAddressForApi(currencyIn)
   const tokenOutAddress = getTokenAddressForApi(currencyOut)
+  const activeGasStrategy = useActiveGasStrategy(tokenInChainId, 'swap')
+  const shadowGasStrategies = useShadowGasStrategies(tokenInChainId, 'swap')
 
-  const routingPreference = getRoutingPreferenceForSwapRequest(tradeProtocolPreference, uniswapXEnabled, isUSDQuote)
+  const routingParams = useQuoteRoutingParams(selectedProtocols, currencyIn?.chainId, currencyOut?.chainId, isUSDQuote)
 
   const requestTradeType =
     tradeType === TradeType.EXACT_INPUT ? TradingApiTradeType.EXACT_INPUT : TradingApiTradeType.EXACT_OUTPUT
@@ -88,12 +86,13 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
     !amount ||
     currencyInEqualsCurrencyOut
 
-  const quoteRequestArgs: QuoteRequest | undefined = useMemo(() => {
+  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
+
+  const quoteRequestArgs = useMemo((): WithV4Flag<QuoteRequest> | undefined => {
     if (skipQuery) {
       return undefined
     }
-
-    const quoteArgs: QuoteRequest = {
+    return {
       type: requestTradeType,
       amount: amount.quotient.toString(),
       swapper: activeAccountAddress ?? UNCONNECTED_ADDRESS,
@@ -102,21 +101,24 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
       tokenIn: tokenInAddress,
       tokenOut: tokenOutAddress,
       slippageTolerance: customSlippageTolerance,
-      routingPreference,
+      ...routingParams,
+      gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])],
+      v4Enabled,
     }
-
-    return quoteArgs
   }, [
     activeAccountAddress,
     amount,
     customSlippageTolerance,
+    activeGasStrategy,
+    shadowGasStrategies,
     requestTradeType,
-    routingPreference,
+    routingParams,
     skipQuery,
     tokenInAddress,
     tokenInChainId,
     tokenOutAddress,
     tokenOutChainId,
+    v4Enabled,
   ])
 
   /***** Fetch quote from trading API  ******/
@@ -134,9 +136,28 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
     immediateGcTime: internalPollInterval + ONE_SECOND_MS * 15,
   })
 
-  const { error, data, isLoading: queryIsLoading, isFetching } = response
+  const { error, data, isLoading: queryIsLoading, isFetching, errorUpdatedAt, dataUpdatedAt } = response
 
-  const isLoading = (amountSpecified && isDebouncing) || queryIsLoading
+  const errorRef = useRef<Error | null>(error)
+
+  // We want to keep the error while react-query is refetching, so that the error message doesn't go in and out while it's polling.
+  if (errorUpdatedAt > dataUpdatedAt) {
+    // If there's a new error, save the new one. If there's no error (we're re-fetching), keep the old one.
+    errorRef.current = error ?? errorRef.current
+  } else {
+    errorRef.current = error
+  }
+
+  const isLoading = (amount && isDebouncing) || queryIsLoading
+
+  const indicativeQuotesEnabled = useFeatureFlag(FeatureFlags.IndicativeSwapQuotes)
+  const indicative = useIndicativeTrade({
+    quoteRequestArgs,
+    currencyIn,
+    currencyOut,
+    customSlippageTolerance,
+    skip: !indicativeQuotesEnabled || isUSDQuote,
+  })
 
   /***** Format `trade` type, add errors if needed.  ******/
 
@@ -156,12 +177,29 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
       })
     }
 
+    let gasEstimates: GasFeeEstimates | undefined
+    if (data?.quote && 'gasEstimates' in data.quote && data.quote.gasEstimates) {
+      // Only classic quotes include gasEstimates
+      const activeGasEstimate = data.quote.gasEstimates.find((e) =>
+        areEqualGasStrategies(e.strategy, activeGasStrategy),
+      )
+      gasEstimates = activeGasEstimate
+        ? {
+            activeEstimate: activeGasEstimate,
+            shadowEstimates: data.quote.gasEstimates.filter((e) => e !== activeGasEstimate),
+          }
+        : undefined
+    }
+
     if (!data?.quote || !currencyIn || !currencyOut) {
       return {
         isLoading,
         isFetching,
         trade: null,
-        error,
+        indicativeTrade: isLoading ? indicative.trade : undefined,
+        isIndicativeLoading: isDebouncing || indicative.isLoading,
+        error: errorRef.current,
+        gasEstimates,
       }
     }
 
@@ -190,19 +228,25 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
         isLoading,
         isFetching,
         trade: null,
+        indicativeTrade: undefined, // We don't want to show the indicative trade if there is no completable trade
+        isIndicativeLoading: false,
         error: new NoRoutesError(),
+        gasEstimates,
       }
     }
 
     return {
-      isLoading: (amountSpecified && isDebouncing) || isLoading,
+      isLoading: isDebouncing || isLoading,
       isFetching,
       trade,
+      indicativeTrade: indicative.trade,
+      isIndicativeLoading: isDebouncing || indicative.isLoading,
       error,
+      gasEstimates,
     }
   }, [
+    activeGasStrategy,
     amount,
-    amountSpecified,
     currencyIn,
     currencyOut,
     customSlippageTolerance,
@@ -212,6 +256,8 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
     isFetching,
     isLoading,
     isUSDQuote,
+    indicative.trade,
+    indicative.isLoading,
     quoteRequestArgs,
     tradeType,
   ])

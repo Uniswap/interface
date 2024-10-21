@@ -1,5 +1,7 @@
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   ApproveTransactionInfo,
@@ -10,8 +12,7 @@ import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
+import { TransactionSummaryLayout } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
 
@@ -39,21 +40,19 @@ export function ApproveSummaryItem({
 
   const caption = `${amount ? amount + ' ' : ''}${getSymbolDisplayText(currencyInfo?.currency.symbol) ?? ''}`
 
-  return (
-    <TransactionSummaryLayout
-      caption={caption}
-      icon={
-        <LogoWithTxStatus
-          assetType={AssetType.Currency}
-          chainId={transaction.chainId}
-          currencyInfo={currencyInfo}
-          size={TXN_HISTORY_ICON_SIZE}
-          txStatus={transaction.status}
-          txType={TransactionType.Approve}
-        />
-      }
-      index={index}
-      transaction={transaction}
-    />
+  const icon = useMemo(
+    () => (
+      <LogoWithTxStatus
+        assetType={AssetType.Currency}
+        chainId={transaction.chainId}
+        currencyInfo={currencyInfo}
+        size={TXN_HISTORY_ICON_SIZE}
+        txStatus={transaction.status}
+        txType={TransactionType.Approve}
+      />
+    ),
+    [currencyInfo, transaction.chainId, transaction.status],
   )
+
+  return <TransactionSummaryLayout caption={caption} icon={icon} index={index} transaction={transaction} />
 }

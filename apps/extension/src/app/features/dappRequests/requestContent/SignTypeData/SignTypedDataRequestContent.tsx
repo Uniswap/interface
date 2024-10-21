@@ -4,13 +4,13 @@ import { UniswapXSwapRequestContent } from 'src/app/features/dappRequests/reques
 import { DomainContent } from 'src/app/features/dappRequests/requestContent/SignTypeData/DomainContent'
 import { MaybeExplorerLinkedAddress } from 'src/app/features/dappRequests/requestContent/SignTypeData/MaybeExplorerLinkedAddress'
 import { Permit2RequestContent } from 'src/app/features/dappRequests/requestContent/SignTypeData/Permit2/Permit2RequestContent'
-import { SignTypedDataRequest, isUniswapXSwapRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import { SignTypedDataRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { EIP712Message, isEIP712TypedData } from 'src/app/features/dappRequests/types/EIP712Types'
-import { isPermit2 } from 'src/app/features/dappRequests/types/Permit2Types'
+import { isPermit2, isUniswapXSwapRequest } from 'src/app/features/dappRequests/types/Permit2Types'
 import { Flex, Text } from 'ui/src'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { isAddress } from 'utilities/src/addresses'
-import { ExplorerDataType, getExplorerLink } from 'wallet/src/utils/linking'
 
 interface SignTypedDataRequestProps {
   dappRequest: SignTypedDataRequest
@@ -49,7 +49,11 @@ export function SignTypedDataRequestContent({ dappRequest }: SignTypedDataReques
     )
   }
 
-  if (isUniswapXSwapRequest(dappRequest)) {
+  const { name, version, chainId: domainChainId, verifyingContract, salt } = parsedTypedData?.domain || {}
+  const chainId = toSupportedChainId(domainChainId)
+
+  // this check needs to happen before isPermit2 since uniswapX requests are Permit2 requests
+  if (isUniswapXSwapRequest(parsedTypedData)) {
     return <UniswapXSwapRequestContent dappRequest={dappRequest} />
   }
 
@@ -57,10 +61,7 @@ export function SignTypedDataRequestContent({ dappRequest }: SignTypedDataReques
     return <Permit2RequestContent dappRequest={dappRequest} />
   }
 
-  const { name, version, chainId: domainChainId, verifyingContract, salt } = parsedTypedData?.domain || {}
-
   // todo(EXT-883): remove this when we start rejecting unsupported chain signTypedData requests
-  const chainId = toSupportedChainId(domainChainId)
   const renderMessageContent = (
     message: EIP712Message | EIP712Message[keyof EIP712Message],
     i = 1,
@@ -87,6 +88,8 @@ export function SignTypedDataRequestContent({ dappRequest }: SignTypedDataReques
         </Flex>
       ))
     }
+
+    return undefined
   }
 
   return (

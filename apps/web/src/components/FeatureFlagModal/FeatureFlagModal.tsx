@@ -1,7 +1,7 @@
-import { SmallButtonPrimary } from 'components/Button'
-import Column from 'components/Column'
+import { SmallButtonPrimary } from 'components/Button/buttons'
 import Modal from 'components/Modal'
-import Row from 'components/Row'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
 import styled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
@@ -13,7 +13,7 @@ import { DynamicConfigKeys, DynamicConfigs, QuickRouteChainsConfigKey } from 'un
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
-import { WEB_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
+import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 
 const Wrapper = styled(Column)`
   padding: 20px 16px;
@@ -154,7 +154,10 @@ function FeatureFlagOption({ flag, label }: FeatureFlagProps) {
   )
 }
 
-function DynamicConfigDropdown<Conf extends DynamicConfigs, Key extends DynamicConfigKeys[Conf]>({
+function DynamicConfigDropdown<
+  Conf extends Exclude<DynamicConfigs, DynamicConfigs.GasStrategies>,
+  Key extends DynamicConfigKeys[Conf],
+>({
   config,
   key,
   label,
@@ -214,6 +217,23 @@ export default function FeatureFlagModal() {
           </CloseButton>
         </Header>
         <FlagsColumn>
+          <FeatureFlagOption flag={FeatureFlags.V4Swap} label="Enable v4 in the shared swap flow" />
+          <FeatureFlagOption flag={FeatureFlags.UniversalSwap} label="Enable swap flow from the Uniswap Package" />
+          <FeatureFlagOption flag={FeatureFlags.Bridging} label="Bridging" />
+          <FeatureFlagOption flag={FeatureFlags.UniswapX} label="[Universal Swap Flow Only] Enable UniswapX" />
+          <FeatureFlagOption
+            flag={FeatureFlags.IndicativeSwapQuotes}
+            label="[Universal Swap Flow Only] Enable Quick Routes"
+          />
+          <FeatureFlagOption flag={FeatureFlags.TestnetMode} label="Testnet Mode" />
+          <FeatureFlagOption
+            flag={FeatureFlags.UniswapXPriorityOrders}
+            label="UniswapX Priority Orders (on Base only)"
+          />
+          <FeatureFlagOption
+            flag={FeatureFlags.SharedSwapArbitrumUniswapXExperiment}
+            label="[Universal Swap Flow Only] Enables receiving UniswapX orders on Arbitrum in the shared swap flow"
+          />
           <FeatureFlagOption
             flag={FeatureFlags.Eip6936Enabled}
             label="Enable EIP-6963: Multi Injected Provider Discovery"
@@ -226,19 +246,19 @@ export default function FeatureFlagModal() {
           <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
           <FeatureFlagOption flag={FeatureFlags.NavigationHotkeys} label="Navigation hotkeys" />
           <FeatureFlagOption flag={FeatureFlags.ForAggregator} label="Enable FOR aggregator web" />
+          <FeatureFlagOption flag={FeatureFlags.TokenProtection} label="Warning UX for scam/dangerous tokens" />
           <FeatureFlagGroup name="New Chains">
             <FeatureFlagOption flag={FeatureFlags.Zora} label="Enable Zora" />
           </FeatureFlagGroup>
           <FeatureFlagOption flag={FeatureFlags.L2NFTs} label="L2 NFTs" />
           <FeatureFlagGroup name="Multichain UX">
-            <FeatureFlagOption flag={FeatureFlags.MultichainUX} label="Enable Multichain Swap/Send UX" />
             <FeatureFlagOption flag={FeatureFlags.MultichainExplore} label="Enable Multichain Explore Page" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Quick routes">
             <FeatureFlagOption flag={FeatureFlags.QuickRouteMainnet} label="Enable quick routes for Mainnet" />
             <DynamicConfigDropdown
               selected={useQuickRouteChains()}
-              options={WEB_SUPPORTED_CHAIN_IDS}
+              options={SUPPORTED_CHAIN_IDS}
               parser={Number.parseInt}
               config={DynamicConfigs.QuickRouteChains}
               key={QuickRouteChainsConfigKey.Chains}
@@ -248,9 +268,6 @@ export default function FeatureFlagModal() {
           <FeatureFlagGroup name="UniswapX Flags">
             <FeatureFlagOption flag={FeatureFlags.UniswapXSyntheticQuote} label="Force synthetic quotes for UniswapX" />
             <FeatureFlagOption flag={FeatureFlags.UniswapXv2} label="UniswapX v2" />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Extension">
-            <FeatureFlagOption flag={FeatureFlags.ExtensionLaunch} label="General phase of go-to-market campaign" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Outage Banners">
             <FeatureFlagOption flag={FeatureFlags.OutageBannerArbitrum} label="Outage Banner for Arbitrum" />

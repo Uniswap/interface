@@ -28,7 +28,6 @@ export function HeaderText({
       <Text textAlign="center" variant="heading3">
         <Trans
           // `variant` prop must be first
-          // eslint-disable-next-line react/jsx-sort-props
           components={{ highlight: <Text variant="heading3" fontWeight="bold" /> }}
           i18nKey="qrScanner.request.withAmount"
           values={{
@@ -42,7 +41,6 @@ export function HeaderText({
       <Text textAlign="center" variant="heading3">
         <Trans
           // `variant` prop must be first
-          // eslint-disable-next-line react/jsx-sort-props
           components={{ highlight: <Text variant="heading3" fontWeight="bold" /> }}
           i18nKey="qrScanner.request.withoutAmount"
           values={{

@@ -17,13 +17,11 @@ describe('Wallet Dropdown', () => {
     })
   }
 
-  function itChangesLocale({ featureFlag = false }: { featureFlag?: boolean } = {}) {
+  function itChangesLocale() {
     it('should change locale', () => {
       cy.contains('Uniswap available in: English').should('not.exist')
 
-      if (featureFlag) {
         cy.get(getTestSelector('language-settings-button')).click()
-      }
 
       cy.get(getTestSelector('wallet-language-item')).contains('Afrikaans').click({ force: true })
       cy.location('search').should('include', 'lng=af-ZA')
@@ -77,7 +75,7 @@ describe('Wallet Dropdown', () => {
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
     })
-    itChangesLocale({ featureFlag: true })
+    itChangesLocale()
   })
 
   describe('testnet toggle', () => {
@@ -85,15 +83,17 @@ describe('Wallet Dropdown', () => {
       cy.visit('/swap')
     })
     it('should toggle testnet visibility', () => {
+      cy.get('#swap-currency-input .open-currency-select-button').click()
       cy.get(getTestSelector('chain-selector')).last().click()
-      cy.get(getTestSelector('chain-selector-options')).should('not.contain.text', 'Sepolia')
+      cy.get(getTestSelector('network-button-11155111')).should('not.exist')
 
-      cy.get(getTestSelector('web3-status-connected')).click()
+      cy.get(getTestSelector('web3-status-connected')).click({force: true})
       cy.get(getTestSelector('wallet-settings')).click()
-      cy.get('#testnets-toggle').click()
+      cy.get(getTestSelector('testnets-toggle')).click()
       cy.get(getTestSelector('close-account-drawer')).click()
+      cy.get('#swap-currency-input .open-currency-select-button').click()
       cy.get(getTestSelector('chain-selector')).last().click()
-      cy.get(getTestSelector('chain-selector-options')).should('contain.text', 'Sepolia')
+      cy.get(getTestSelector('network-button-11155111')).should('exist')
     })
   })
 

@@ -6,8 +6,8 @@ import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
 import { useSubmitOnEnter } from 'src/app/features/onboarding/utils'
 import { TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { CheckBox, Circle, Flex, IconProps, Square, Text } from 'ui/src'
-import { AlertTriangle, EyeOff, FileListLock, Key, PencilDetailed } from 'ui/src/components/icons'
+import { Circle, Flex, IconProps, LabeledCheckbox, Square, Text } from 'ui/src'
+import { AlertTriangleFilled, EyeOff, FileListLock, Key, PencilDetailed } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
@@ -82,7 +82,7 @@ export function ViewMnemonic(): JSX.Element {
             {viewStep === ViewStep.View ? (
               <FileListLock color="$neutral1" size={iconSizes.icon24} />
             ) : (
-              <AlertTriangle color="$statusCritical" size={iconSizes.icon24} />
+              <AlertTriangleFilled color="$statusCritical" size={iconSizes.icon24} />
             )}
           </Square>
         }
@@ -132,8 +132,8 @@ export function ViewMnemonic(): JSX.Element {
         ) : (
           <Flex gap="$spacing16" my="$spacing24" pt="$spacing8" width="100%">
             <MnemonicViewer mnemonic={onboardingAccountMnemonic} />
-            <Flex backgroundColor="$surface2" borderRadius="$rounded16" p="$spacing12">
-              <CheckBox
+            <Flex backgroundColor="$surface2" borderRadius="$rounded16" p="$spacing12" overflow="hidden">
+              <LabeledCheckbox
                 checked={disclaimerChecked}
                 text={<Text variant="body3">{t('onboarding.backup.view.disclaimer')}</Text>}
                 onCheckPressed={(currentValue: boolean): void => setDisclaimerChecked(!currentValue)}

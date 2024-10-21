@@ -32,11 +32,11 @@ import {
 import { dappInfoWC } from 'uniswap/src/test/fixtures/wallet/walletConnect'
 import { faker } from 'uniswap/src/test/shared'
 import { createFixture, randomChoice, randomEnumValue } from 'uniswap/src/test/utils'
-import { WALLET_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
+import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 
 export const transactionId = createFixture<TransactionId>()(() => ({
   id: faker.datatype.uuid(),
-  chainId: randomChoice(WALLET_SUPPORTED_CHAIN_IDS),
+  chainId: randomChoice(SUPPORTED_CHAIN_IDS),
 }))
 
 export const nftSummaryInfo = createFixture<NFTSummaryInfo>()(() => ({

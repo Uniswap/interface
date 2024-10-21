@@ -16,28 +16,28 @@ import {
 } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from 'components/Button'
-import { BlueCard, OutlineCard, YellowCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
+import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from 'components/Button/buttons'
+import { BlueCard, OutlineCard, YellowCard } from 'components/Card/cards'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import FeeSelector from 'components/FeeSelector'
 import HoverInlineText from 'components/HoverInlineText'
 import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
+import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 import { PositionPreview } from 'components/PositionPreview'
 import RangeSelector from 'components/RangeSelector'
 import PresetsButtons from 'components/RangeSelector/PresetsButtons'
 import RateToggle from 'components/RateToggle'
-import Row, { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { OutOfSyncWarning } from 'components/addLiquidity/OutOfSyncWarning'
 import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
 import { TokenTaxV3Warning } from 'components/addLiquidity/TokenTaxV3Warning'
+import { AutoColumn } from 'components/deprecated/Column'
+import Row, { RowBetween, RowFixed } from 'components/deprecated/Row'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { isSupportedChainId, useIsSupportedChainId } from 'constants/chains'
 import { ZERO_PERCENT } from 'constants/misc'
-import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
@@ -87,6 +87,7 @@ import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans, t } from 'uniswap/src/i18n'
@@ -564,7 +565,7 @@ function AddLiquidity() {
         element={InterfaceElementName.CONNECT_WALLET_BUTTON}
       >
         <ButtonLight onClick={accountDrawer.open} $borderRadius="12px" padding="12px">
-          <Trans i18nKey="common.connectWallet.button" />
+          <ConnectWalletButtonText />
         </ButtonLight>
       </Trace>
     ) : (

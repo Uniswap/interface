@@ -8,7 +8,7 @@ const onPressLearnMore = async (url: string): Promise<void> => {
 
 export const LearnMoreLink = ({
   url,
-  textVariant = 'buttonLabel3',
+  textVariant = 'buttonLabel2',
   textColor = '$accent1',
 }: {
   url: string

@@ -1,9 +1,9 @@
 import { NativeCurrency, Token } from '@uniswap/sdk-core'
-import { nativeOnChain } from 'constants/tokens'
 import { useMemo } from 'react'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
-export default function useNativeCurrency(chainId: InterfaceChainId | null | undefined): NativeCurrency | Token {
+export default function useNativeCurrency(chainId: UniverseChainId | null | undefined): NativeCurrency | Token {
   return useMemo(
     () =>
       chainId

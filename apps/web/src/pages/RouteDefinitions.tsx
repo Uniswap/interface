@@ -2,19 +2,16 @@ import { useAtom } from 'jotai'
 import { getExploreDescription, getExploreTitle } from 'pages/getExploreTitle'
 import { getAddLiquidityPageTitle, getPositionPageDescription, getPositionPageTitle } from 'pages/getPositionPageTitle'
 import { ReactNode, Suspense, lazy, useMemo } from 'react'
-import { Navigate, matchPath, useLocation } from 'react-router-dom'
+import { Navigate, Route, Routes, matchPath, useLocation } from 'react-router-dom'
 import { shouldDisableExploreRoutesAtom, shouldDisableNFTRoutesAtom } from 'state/application/atoms'
-import { SpinnerSVG } from 'theme/components'
 import { t } from 'uniswap/src/i18n'
 import { isBrowserRouterEnabled } from 'utils/env'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import CreatePool from 'pages/CreatePool'
 //import Landing from 'pages/Landing'
-import { NewPosition } from 'pages/LegacyPool/NewPosition'
+import { CreatePosition } from 'pages/Pool/Positions/create/CreatePosition'
 import Stake from 'pages/Stake'
 import Swap from 'pages/Swap'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
@@ -25,10 +22,13 @@ const AddLiquidityV2WithTokenRedirects = lazy(() => import('pages/AddLiquidityV2
 const RedirectExplore = lazy(() => import('pages/Explore/redirects'))
 const MigrateV2 = lazy(() => import('pages/MigrateV2'))
 const MigrateV2Pair = lazy(() => import('pages/MigrateV2/MigrateV2Pair'))
+const MigrateV3 = lazy(() => import('pages/MigrateV3'))
 const NotFound = lazy(() => import('pages/NotFound'))
 const Pool = lazy(() => import('pages/Pool'))
 const LegacyPool = lazy(() => import('pages/LegacyPool'))
 const LegacyPositionPage = lazy(() => import('pages/LegacyPool/PositionPage'))
+const PositionPage = lazy(() => import('pages/Pool/Positions/PositionPage'))
+const V2PositionPage = lazy(() => import('pages/Pool/Positions/V2PositionPage'))
 const LegacyPoolV2 = lazy(() => import('pages/LegacyPool/v2'))
 const PoolDetails = lazy(() => import('pages/PoolDetails'))
 const PoolFinder = lazy(() => import('pages/PoolFinder'))
@@ -36,28 +36,12 @@ const PoolPositionPage = lazy(() => import('pages/CreatePool/PoolPositionPage'))
 const RemoveLiquidity = lazy(() => import('pages/RemoveLiquidity'))
 const RemoveLiquidityV3 = lazy(() => import('pages/RemoveLiquidity/V3'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
-const Vote = lazy(() => import('pages/Vote'))
-
-// this is the same svg defined in assets/images/blue-loader.svg
-// it is defined here because the remote asset may not have had time to load when this file is executing
-const LazyLoadSpinner = () => (
-  <SpinnerSVG width="94" height="94" viewBox="0 0 94 94" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M92 47C92 22.1472 71.8528 2 47 2C22.1472 2 2 22.1472 2 47C2 71.8528 22.1472 92 47 92"
-      stroke="#2172E5"
-      strokeWidth="3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </SpinnerSVG>
-)
 
 interface RouterConfig {
   browserRouterEnabled?: boolean
   hash?: string
   shouldDisableNFTRoutes?: boolean
   shouldDisableExploreRoutes?: boolean
-  featureFlags: Partial<Record<FeatureFlags, boolean>>
 }
 
 /**
@@ -68,7 +52,6 @@ export function useRouterConfig(): RouterConfig {
   const { hash } = useLocation()
   const [shouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
   const [shouldDisableExploreRoutes] = useAtom(shouldDisableExploreRoutesAtom)
-  const v4Enabled = useFeatureFlag(FeatureFlags.V4Everywhere)
 
   return useMemo(
     () => ({
@@ -76,11 +59,8 @@ export function useRouterConfig(): RouterConfig {
       hash,
       shouldDisableNFTRoutes: Boolean(shouldDisableNFTRoutes),
       shouldDisableExploreRoutes: Boolean(shouldDisableExploreRoutes),
-      featureFlags: {
-        [FeatureFlags.V4Everywhere]: v4Enabled,
-      },
     }),
-    [browserRouterEnabled, hash, shouldDisableExploreRoutes, shouldDisableNFTRoutes, v4Enabled],
+    [browserRouterEnabled, hash, shouldDisableExploreRoutes, shouldDisableNFTRoutes],
   )
 }
 
@@ -95,7 +75,9 @@ const StaticTitlesAndDescriptions = {
   PDPDescription: t('title.tradeTokens'),
   NFTTitle: t('title.explore'),
   MigrateTitle: t('title.migratev2'),
+  MigrateTitleV3: t('title.migratev3'),
   MigrateDescription: t('title.easilyRemove'),
+  MigrateDescriptionV4: t('title.easilyRemoveV4'),
   AddLiquidityDescription: t('title.earnFees'),
 }
 
@@ -183,11 +165,19 @@ export const routes: RouteDefinition[] = [
     path: '/vote/*',
     getTitle: () => t('title.voteOnGov'),
     getDescription: () => t('title.uniToken'),
-    getElement: () => (
-      <Suspense fallback={<LazyLoadSpinner />}>
-        <Vote />
-      </Suspense>
-    ),
+    getElement: () => {
+      return (
+        <Routes>
+          <Route
+            path="*"
+            Component={() => {
+              window.location.href = 'https://vote.uniswapfoundation.org'
+              return null
+            }}
+          ></Route>
+        </Routes>
+      )
+    },
   }),
   createRouteDefinition({
     path: '/create-proposal',
@@ -225,6 +215,56 @@ export const routes: RouteDefinition[] = [
     getElement: () => <Swap />,
     getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
   }),
+  // Refreshed pool routes
+  createRouteDefinition({
+    path: '/positions/create',
+    getElement: () => <CreatePosition />,
+    getTitle: getPositionPageTitle,
+    getDescription: getPositionPageDescription,
+  }),
+  createRouteDefinition({
+    path: '/positions/create/:protocolVersion',
+    getElement: () => <CreatePosition />,
+    getTitle: getPositionPageTitle,
+    getDescription: getPositionPageDescription,
+  }),
+  createRouteDefinition({
+    path: '/positions',
+    getElement: () => <Pool />,
+    getTitle: getPositionPageTitle,
+    getDescription: getPositionPageDescription,
+  }),
+  createRouteDefinition({
+    path: '/positions/v2/:pairAddress',
+    getElement: () => <V2PositionPage />,
+    getTitle: getPositionPageTitle,
+    getDescription: getPositionPageDescription,
+  }),
+  createRouteDefinition({
+    path: '/positions/v3/:tokenId',
+    getElement: () => <PositionPage />,
+    getTitle: getPositionPageTitle,
+    getDescription: getPositionPageDescription,
+  }),
+  createRouteDefinition({
+    path: '/positions/v4/:tokenId',
+    getElement: () => <PositionPage />,
+    getTitle: getPositionPageTitle,
+    getDescription: getPositionPageDescription,
+  }),
+  createRouteDefinition({
+    path: '/migrate/v3/:tokenId',
+    getElement: () => <MigrateV3 />,
+    getTitle: () => StaticTitlesAndDescriptions.MigrateTitleV3,
+    getDescription: () => StaticTitlesAndDescriptions.MigrateDescriptionV4,
+  }),
+  // Legacy pool routes
+  createRouteDefinition({
+    path: '/pool',
+    getElement: () => <LegacyPool />,
+    getTitle: getPositionPageTitle,
+    getDescription: getPositionPageDescription,
+  }),
   createRouteDefinition({
     path: '/pool/v2/find',
     getElement: () => <PoolFinder />,
@@ -234,19 +274,6 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/pool/v2',
     getElement: () => <LegacyPoolV2 />,
-    getTitle: getPositionPageTitle,
-    getDescription: getPositionPageDescription,
-  }),
-  createRouteDefinition({
-    path: '/pool/new',
-    getElement: () => <NewPosition />,
-    getTitle: getPositionPageTitle,
-    getDescription: getPositionPageDescription,
-    enabled: (args) => args.featureFlags[FeatureFlags.V4Everywhere] ?? false,
-  }),
-  createRouteDefinition({
-    path: '/pool',
-    getElement: (args) => (args.featureFlags[FeatureFlags.V4Everywhere] ? <Pool /> : <LegacyPool />),
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
@@ -267,13 +294,6 @@ export const routes: RouteDefinition[] = [
     getElement: () => <LegacyPoolV2 />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
-  }),
-  createRouteDefinition({
-    path: '/pools/new',
-    getElement: () => <NewPosition />,
-    getTitle: getPositionPageTitle,
-    getDescription: getPositionPageDescription,
-    enabled: (args) => args.featureFlags[FeatureFlags.V4Everywhere] ?? false,
   }),
   createRouteDefinition({
     path: '/pools',

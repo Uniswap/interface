@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NewUserCTAButton displays a button with call to action text and icons 1`] = `
+<div>
+  <span
+    class=""
+    style="display: contents;"
+  >
+    <span
+      class=" _dsp_contents"
+    >
+      <span
+        class=" t_light _dsp_contents is_Theme"
+      >
+        <span
+          class="t_sub_theme t_primary_Button _dsp_contents is_Theme"
+        >
+          <button
+            class="is_Button _backgroundColor-0hover-568007293 _backgroundColor-0active-568007293 _opacity-0active-0d0t746 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _cursor-pointer _pt-1481558214 _pr-1481558214 _pb-1481558214 _pl-1481558214 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _gap-1481558245 _height-40px _borderTopWidth-1481558369 _borderRightWidth-1481558369 _borderBottomWidth-1481558369 _borderLeftWidth-1481558369 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _alignItems-center _backgroundColor-568007324 is_Button "
+            data-disable-theme="true"
+          >
+            <span
+              class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _whiteSpace-nowrap"
+              data-disable-theme="true"
+            >
+              Get the app
+            </span>
+          </button>
+        </span>
+      </span>
+    </span>
+  </span>
+</div>
+`;

@@ -1,28 +1,74 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { Signer } from 'ethers/lib/ethers'
-import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
+import { createContext, PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { Connector } from 'wagmi'
 
 /** Stores objects/utils that exist on all platforms, abstracting away app-level specifics for each, in order to allow usage in cross-platform code. */
 interface UniswapContext {
-  useProviderHook: (chainId: number) => JsonRpcProvider | undefined
-  signer: Signer | undefined
   account?: AccountMeta
-  throwOnUse?: boolean
+  connector?: Connector
+  navigateToBuyOrReceiveWithEmptyWallet?: () => void
+  navigateToFiatOnRamp: (args: { prefilledCurrency?: FiatOnRampCurrency }) => void
+  onSwapChainsChanged: (inputChainId: UniverseChainId, outputChainId?: UniverseChainId) => void
+  swapInputChainId?: UniverseChainId
+  signer: Signer | undefined
+  useProviderHook: (chainId: number) => JsonRpcProvider | undefined
+  // Used for triggering wallet connection on web
+  onConnectWallet?: () => void
+  // Used for web to open the token selector from a banner not in the swap flow
+  isSwapTokenSelectorOpen: boolean
+  setIsSwapTokenSelectorOpen: (open: boolean) => void
 }
 
-const UniswapContext = createContext<UniswapContext | null>(null)
+export const UniswapContext = createContext<UniswapContext | null>(null)
 
 export function UniswapProvider({
   children,
-  useProviderHook,
-  signer,
   account,
-  throwOnUse = false,
-}: PropsWithChildren<UniswapContext>): JSX.Element {
+  connector,
+  navigateToBuyOrReceiveWithEmptyWallet,
+  navigateToFiatOnRamp,
+  onSwapChainsChanged,
+  signer,
+  useProviderHook,
+  onConnectWallet,
+}: PropsWithChildren<Omit<UniswapContext, 'isSwapTokenSelectorOpen' | 'setIsSwapTokenSelectorOpen'>>): JSX.Element {
+  const [swapInputChainId, setSwapInputChainId] = useState<UniverseChainId>()
+  const [isSwapTokenSelectorOpen, setIsSwapTokenSelectorOpen] = useState<boolean>(false)
+
   const value: UniswapContext = useMemo(
-    () => ({ account, signer, useProviderHook, throwOnUse }),
-    [account, signer, useProviderHook, throwOnUse],
+    () => ({
+      account,
+      connector,
+      navigateToBuyOrReceiveWithEmptyWallet,
+      onSwapChainsChanged: (inputChainId: UniverseChainId, outputChanId?: UniverseChainId): void => {
+        onSwapChainsChanged(inputChainId, outputChanId)
+        setSwapInputChainId(inputChainId)
+      },
+      signer,
+      useProviderHook,
+      navigateToFiatOnRamp,
+      onConnectWallet,
+      swapInputChainId,
+      isSwapTokenSelectorOpen,
+      setIsSwapTokenSelectorOpen: (open: boolean) => setIsSwapTokenSelectorOpen(open),
+    }),
+    [
+      account,
+      connector,
+      navigateToBuyOrReceiveWithEmptyWallet,
+      signer,
+      useProviderHook,
+      navigateToFiatOnRamp,
+      onConnectWallet,
+      swapInputChainId,
+      onSwapChainsChanged,
+      isSwapTokenSelectorOpen,
+      setIsSwapTokenSelectorOpen,
+    ],
   )
 
   return <UniswapContext.Provider value={value}>{children}</UniswapContext.Provider>
@@ -33,8 +79,6 @@ export function useUniswapContext(): UniswapContext {
   const context = useContext(UniswapContext)
   if (!context) {
     throw new Error('useUniswapContext must be used within a UniswapProvider')
-  } else if (context.throwOnUse) {
-    throw new Error('a component is accessing useUniswapContext while throwOnUse is true')
   }
 
   return context
@@ -43,6 +87,11 @@ export function useUniswapContext(): UniswapContext {
 /** Cross-platform util for getting metadata for the active account/wallet, regardless of platform/environment. */
 export function useAccountMeta(): AccountMeta | undefined {
   return useUniswapContext().account
+}
+
+/** Cross-platform util for getting connector for the active account/wallet, only applicable to web, other platforms are undefined. */
+export function useConnector(): Connector | undefined {
+  return useUniswapContext().connector
 }
 
 /** Cross-platform util for getting an RPC provider for the given `chainId`, regardless of platform/environment. */

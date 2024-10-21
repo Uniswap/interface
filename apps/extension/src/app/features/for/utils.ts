@@ -6,7 +6,7 @@ import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -23,7 +23,7 @@ export function useInterfaceBuyNavigator(element?: ElementNameType): () => void 
   }
 }
 
-export function navigateToInterfaceFiatOnRamp(chainId?: WalletChainId): void {
+export function navigateToInterfaceFiatOnRamp(chainId?: UniverseChainId): void {
   const chainParam = chainId ? `?chain=${UNIVERSE_CHAIN_INFO[chainId].urlParam}` : ''
   focusOrCreateUniswapInterfaceTab({
     url: `${uniswapUrls.webInterfaceBuyUrl}${chainParam}`,

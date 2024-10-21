@@ -114,6 +114,22 @@ export const ThreeDecimals: FormatCreator = {
   },
 }
 
+export const NoDecimalsCurrency: FormatCreator = {
+  createFormat: (locale: string, currencyCode: string): Intl.NumberFormat => {
+    return getNumberFormat({
+      name: 'NoDecimalsCurrency',
+      locale,
+      props: {
+        notation: 'standard',
+        maximumFractionDigits: 0,
+        minimumFractionDigits: 0,
+        currency: currencyCode,
+        style: 'currency',
+      },
+    })
+  },
+}
+
 export const ThreeDecimalsCurrency: FormatCreator = {
   createFormat: (locale: string, currencyCode: string): Intl.NumberFormat => {
     return getNumberFormat({
@@ -449,7 +465,7 @@ export const fiatTokenStatsFormatter: Formatter = {
 
 export const fiatGasPriceFormatter: Formatter = {
   rules: [
-    { exact: 0, formatter: StandardCurrency },
+    { exact: 0, formatter: NoDecimalsCurrency },
     {
       upperBound: 0.01,
       overrideValue: 0.01,

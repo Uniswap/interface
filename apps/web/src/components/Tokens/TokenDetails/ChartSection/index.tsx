@@ -1,11 +1,10 @@
+import { refitChartContentAtom } from 'components/Charts/ChartModel'
 import { ChartSkeleton } from 'components/Charts/LoadingState'
 import { PriceChart, PriceChartData } from 'components/Charts/PriceChart'
 import { LineChart, StackedLineData } from 'components/Charts/StackedLineChart'
-import { refitChartContentAtom } from 'components/Charts/TimeSelector'
 import { VolumeChart } from 'components/Charts/VolumeChart'
 import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
-import PillMultiToggle, { PillMultiToggleOption } from 'components/Toggle/PillMultiToggle'
 import { AdvancedPriceChartToggle } from 'components/Tokens/TokenDetails/ChartSection/AdvancedPriceChartToggle'
 import { ChartTypeDropdown } from 'components/Tokens/TokenDetails/ChartSection/ChartTypeSelector'
 import {
@@ -19,12 +18,13 @@ import {
   ORDERED_TIMES,
   TimePeriodDisplay,
   getTimePeriodFromDisplay,
-} from 'components/Tokens/TokenTable/TimeSelector'
+} from 'components/Tokens/TokenTable/VolumeTimeFrameSelector'
 import { TimePeriod, toHistoryDuration } from 'graphql/data/util'
+import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useAtomValue } from 'jotai/utils'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useMemo, useState } from 'react'
-import { Flex, styled } from 'ui/src'
+import { Flex, SegmentedControl, SegmentedControlOption, styled } from 'ui/src'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
 
@@ -34,7 +34,7 @@ type TokenDetailsChartType = (typeof TDP_CHART_SELECTOR_OPTIONS)[number]
 
 export const DEFAULT_PILL_TIME_SELECTOR_OPTIONS = ORDERED_TIMES.map((time: TimePeriod) => ({
   value: DISPLAYS[time],
-})) as PillMultiToggleOption[]
+})) as SegmentedControlOption[]
 
 export const ChartActionsContainer = styled(Flex, {
   flexDirection: 'row-reverse',
@@ -84,6 +84,7 @@ export function useCreateTDPChartState(tokenDBAddress: string | undefined, curre
 
   return useMemo(() => {
     const { disableCandlestickUI } = priceQuery
+    // eslint-disable-next-line consistent-return
     const activeQuery = (() => {
       switch (chartType) {
         case ChartType.PRICE:
@@ -110,38 +111,36 @@ export function useCreateTDPChartState(tokenDBAddress: string | undefined, curre
 export default function ChartSection() {
   const { activeQuery, timePeriod, priceChartType } = useTDPContext().chartState
 
+  // eslint-disable-next-line consistent-return
+  const getSection = () => {
+    if (activeQuery.dataQuality === DataQuality.INVALID) {
+      return (
+        <ChartSkeleton
+          type={activeQuery.chartType}
+          height={TDP_CHART_HEIGHT_PX}
+          errorText={activeQuery.loading ? undefined : <InvalidChartMessage />}
+        />
+      )
+    }
+
+    const stale = activeQuery.dataQuality === DataQuality.STALE
+    switch (activeQuery.chartType) {
+      case ChartType.PRICE:
+        return (
+          <PriceChart data={activeQuery.entries} height={TDP_CHART_HEIGHT_PX} type={priceChartType} stale={stale} />
+        )
+      case ChartType.VOLUME:
+        return (
+          <VolumeChart data={activeQuery.entries} height={TDP_CHART_HEIGHT_PX} timePeriod={timePeriod} stale={stale} />
+        )
+      case ChartType.TVL:
+        return <LineChart data={activeQuery.entries} height={TDP_CHART_HEIGHT_PX} stale={stale} />
+    }
+  }
+
   return (
     <div data-cy={`tdp-${activeQuery.chartType}-chart-container`}>
-      {(() => {
-        if (activeQuery.dataQuality === DataQuality.INVALID) {
-          return (
-            <ChartSkeleton
-              type={activeQuery.chartType}
-              height={TDP_CHART_HEIGHT_PX}
-              errorText={activeQuery.loading ? undefined : <InvalidChartMessage />}
-            />
-          )
-        }
-
-        const stale = activeQuery.dataQuality === DataQuality.STALE
-        switch (activeQuery.chartType) {
-          case ChartType.PRICE:
-            return (
-              <PriceChart data={activeQuery.entries} height={TDP_CHART_HEIGHT_PX} type={priceChartType} stale={stale} />
-            )
-          case ChartType.VOLUME:
-            return (
-              <VolumeChart
-                data={activeQuery.entries}
-                height={TDP_CHART_HEIGHT_PX}
-                timePeriod={timePeriod}
-                stale={stale}
-              />
-            )
-          case ChartType.TVL:
-            return <LineChart data={activeQuery.entries} height={TDP_CHART_HEIGHT_PX} stale={stale} />
-        }
-      })()}
+      {getSection()}
       <ChartControls />
     </div>
   )
@@ -158,6 +157,7 @@ function ChartControls() {
     disableCandlestickUI,
   } = useTDPContext().chartState
   const refitChartContent = useAtomValue(refitChartContentAtom)
+  const isMediumScreen = !useScreenSize()['md']
 
   return (
     <ChartActionsContainer>
@@ -191,9 +191,10 @@ function ChartControls() {
         />
       </Flex>
       <Flex $md={{ width: '100%' }}>
-        <PillMultiToggle
+        <SegmentedControl
+          fullWidth={isMediumScreen}
           options={DEFAULT_PILL_TIME_SELECTOR_OPTIONS}
-          currentSelected={DISPLAYS[timePeriod]}
+          selectedOption={DISPLAYS[timePeriod]}
           onSelectOption={(option) => {
             const time = getTimePeriodFromDisplay(option as TimePeriodDisplay)
             if (time === timePeriod) {

@@ -8,6 +8,7 @@ export enum TopLevelRoutes {
 export enum OnboardingRoutes {
   Import = 'import',
   Create = 'create',
+  Claim = 'claim',
   Scan = 'scan',
   Reset = 'reset',
   ResetScan = 'reset-scan',
@@ -34,6 +35,7 @@ export enum SettingsRoutes {
   ViewRecoveryPhrase = 'view-recovery-phrase',
   RemoveRecoveryPhrase = 'remove-recovery-phrase',
   Privacy = 'privacy',
+  ManageConnections = 'manage-connections',
 }
 
 export enum RemoveRecoveryPhraseRoutes {

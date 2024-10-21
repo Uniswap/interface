@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { useOnChainCurrencyBalance, useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { useNFT } from 'wallet/src/features/nfts/hooks'
@@ -22,7 +22,8 @@ export function useDerivedSendInfo(state: TransactionState): DerivedSendInfo {
   } = state
 
   const activeAccount = useActiveAccount()
-  const chainId = tradeableAsset?.chainId ?? UniverseChainId.Mainnet
+  const { defaultChainId } = useEnabledChains()
+  const chainId = tradeableAsset?.chainId ?? defaultChainId
 
   const currencyInInfo = useCurrencyInfo(
     tradeableAsset?.type === AssetType.Currency
@@ -53,7 +54,7 @@ export function useDerivedSendInfo(state: TransactionState): DerivedSendInfo {
   )
 
   const { balance: nativeInBalance } = useOnChainNativeCurrencyBalance(
-    chainId ?? UniverseChainId.Mainnet,
+    chainId ?? defaultChainId,
     activeAccount?.address,
   )
 

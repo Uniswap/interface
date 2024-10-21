@@ -1,40 +1,6 @@
 """This directive allows results to be deferred during execution"""
 directive @defer on FIELD
 
-"""
-Tells the service this field/object has access authorized by a Cognito User Pools token.
-"""
-directive @aws_cognito_user_pools(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an API key.
-"""
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by a Lambda Authorizer.
-"""
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by sigv4 signing.
-"""
-directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service which subscriptions will be published to when this mutation is
-called. This directive is deprecated use @aws_susbscribe directive instead.
-"""
-directive @aws_publish(
-  """
-  List of subscriptions which will be published to when this mutation is called.
-  """
-  subscriptions: [String]
-) on FIELD_DEFINITION
-
 """Directs the schema to enforce authorization on a field"""
 directive @aws_auth(
   """List of cognito user pool groups which have access on this field"""
@@ -50,9 +16,43 @@ directive @aws_subscribe(
 ) on FIELD_DEFINITION
 
 """
+Tells the service which subscriptions will be published to when this mutation is
+called. This directive is deprecated use @aws_susbscribe directive instead.
+"""
+directive @aws_publish(
+  """
+  List of subscriptions which will be published to when this mutation is called.
+  """
+  subscriptions: [String]
+) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an API key.
+"""
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
+
+"""
 Tells the service this field/object has access authorized by an OIDC token.
 """
 directive @aws_oidc on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by sigv4 signing.
+"""
+directive @aws_iam on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by a Cognito User Pools token.
+"""
+directive @aws_cognito_user_pools(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by a Lambda Authorizer.
+"""
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
 
 """
   Types, unions, and inputs (alphabetized):
@@ -187,6 +187,8 @@ enum Chain {
   BLAST
   ZORA
   ZKSYNC
+  ASTROCHAIN_SEPOLIA
+  WORLDCHAIN
   UNKNOWN_CHAIN
 }
 
@@ -266,6 +268,9 @@ input DimensionsInput {
 type FeeData {
   sellFeeBps: String
   buyFeeBps: String
+  feeTakenOnTransfer: Boolean
+  externalTransferFailed: Boolean
+  sellReverted: Boolean
 }
 
 enum HighLow {
@@ -924,7 +929,7 @@ type Portfolio {
 
   """  TODO: (michael.zhang) replace with paginated query"""
   nftBalances: [NftBalance]
-  assetActivities(page: Int, pageSize: Int, includeOffChain: Boolean, onRampTransactionsAuth: OnRampTransactionsAuth, onRampTransactionIDs: [String!], chains: [Chain!], _fs: AssetActivitySwitch): [AssetActivity]
+  assetActivities(page: Int, pageSize: Int, includeOffChain: Boolean, onRampTransactionsAuth: OnRampTransactionsAuth, onRampTransactionIDs: [String!], chains: [Chain!], includeBridging: Boolean, _fs: AssetActivitySwitch): [AssetActivity]
 }
 
 """  Specify how the portfolio value should be calculated for each `ownerAddress`.
@@ -935,16 +940,46 @@ input PortfolioValueModifier {
   tokenExcludeOverrides: [ContractInput!]
   includeSmallBalances: Boolean
   includeSpamTokens: Boolean
+  tokenBalancesLimit: Int
 }
 
 enum PriceSource {
   SUBGRAPH_V2
   SUBGRAPH_V3
+  SUBGRAPH_V4
+}
+
+enum ProtectionAttackType {
+  UNKNOWN
+  METADATA
+  INORGANIC_VOLUME
+  AIRDROP_PATTERN
+  DYNAMIC_ANALYSIS
+  STATIC_CODE_SIGNATURE
+  KNOWN_MALICIOUS
+  IMPERSONATOR
+  UNSTABLE_TOKEN_PRICE
+  RUGPULL
+  HIGH_FEES
+}
+
+type ProtectionInfo {
+  result: ProtectionResult
+  attackTypes: [ProtectionAttackType]
+}
+
+enum ProtectionResult {
+  UNKNOWN
+  MALICIOUS
+  BENIGN
+  SPAM
+  WARNING
 }
 
 enum ProtocolVersion {
   V2
   V3
+  V4
 }
 
 type PushNotification {
@@ -962,9 +997,13 @@ type Query {
 
   """  returns top v3 pools sorted by total value locked in desc order"""
   topV3Pools(chain: Chain!, first: Int!, tvlCursor: Float, tokenFilter: String): [V3Pool!]
+  topV4Pools(chain: Chain!, first: Int!, tvlCursor: Float, tokenFilter: String): [V4Pool!]
   v3Pool(chain: Chain!, address: String!): V3Pool
+  v4Pool(chain: Chain!, poolId: String!): V4Pool
   v3PoolsForTokenPair(chain: Chain!, token0: String!, token1: String!): [V3Pool!]
+  v4PoolsForTokenPair(chain: Chain!, token0: String!, token1: String!): [V4Pool!]
   v3Transactions(chain: Chain!, first: Int!, timestampCursor: Int): [PoolTransaction!]
+  v4Transactions(chain: Chain!, first: Int!, timestampCursor: Int): [PoolTransaction!]
 
   """  returns top v2 pairs sorted by total value locked in desc order"""
   topV2Pairs(chain: Chain!, first: Int!, tvlCursor: Float, tokenFilter: String): [V2Pair!]
@@ -981,7 +1020,7 @@ type Query {
   token(chain: Chain!, address: String): Token
   tokenProjects(contracts: [ContractInput!]!): [TokenProject]
   searchTokens(searchQuery: String!, chains: [Chain!]): [Token]
-  portfolios(ownerAddresses: [String!]!, chains: [Chain!], lookupTokens: [ContractInput!], valueModifiers: [PortfolioValueModifier!]): [Portfolio]
+  portfolios(ownerAddresses: [String!]!, chains: [Chain!], lookupTokens: [ContractInput!], fungibleIds: [String!], valueModifiers: [PortfolioValueModifier!]): [Portfolio]
   topTokens(chain: Chain, page: Int, pageSize: Int, orderBy: TokenSortableField): [Token]
   topCollections(chains: [Chain!], orderBy: CollectionSortableField, duration: HistoryDuration, after: String, first: Int, cursor: String, limit: Int): NftCollectionConnection
   nftAssets(chain: Chain, address: String!, orderBy: NftAssetSortableField, asc: Boolean, filter: NftAssetsFilterInput, after: String, first: Int, before: String, last: Int): NftAssetConnection
@@ -990,7 +1029,7 @@ type Query {
   nftRoute(chain: Chain, senderAddress: String!, nftTrades: [NftTradeInput!]!, tokenTrades: [TokenTradeInput!]): NftRouteResponse
   nftActivity(chain: Chain, filter: NftActivityFilterInput, after: String, first: Int): NftActivityConnection
   nftCollectionBalances(chain: Chain, ownerAddress: String!, after: String, first: Int, before: String, last: Int): NftCollectionBalanceConnection
-  transactionNotification(chain: Chain!, address: String!, transactionHash: String!): TransactionNotification
+  transactionNotification(chain: Chain!, address: String!, transactionHash: String!, isBridging: Boolean): TransactionNotification
 }
 
 enum SafetyLevel {
@@ -1054,6 +1093,7 @@ enum SwapOrderType {
   DUTCH
   LIMIT
   DUTCH_V2
+  PRIORITY
 }
 
 type TimestampedAmount implements IAmount {
@@ -1090,6 +1130,8 @@ type Token implements IContract {
   project: TokenProject
   market(currency: Currency): TokenMarket
   feeData: FeeData
+  protectionInfo: ProtectionInfo
+  v4Transactions(first: Int!, timestampCursor: Int): [PoolTransaction]
   v3Transactions(first: Int!, timestampCursor: Int): [PoolTransaction]
   v2Transactions(first: Int!, timestampCursor: Int): [PoolTransaction]
 }
@@ -1322,9 +1364,11 @@ enum TransactionStatus {
 enum TransactionType {
   APPROVE
   BORROW
+  BRIDGING
   CANCEL
   CLAIM
   DEPLOYMENT
+  EXECUTE
   LEND
   MINT
   RECEIVE
@@ -1380,6 +1424,42 @@ type V3Pool implements IPool {
 }
 
 type V3PoolTick {
+  id: ID!
+  tickIdx: Int
+  liquidityGross: String
+  liquidityNet: String
+  price0: String
+  price1: String
+}
+
+type V4Pool {
+  id: ID!
+  protocolVersion: ProtocolVersion!
+  chain: Chain!
+  poolId: String!
+  createdAtTimestamp: Int
+  totalLiquidity: Amount
+  token0: Token
+  token0Supply: Float
+  token1: Token
+  token1Supply: Float
+  txCount: Int
+  feeTier: Float
+  hook: V4PoolHook
+  totalLiquidityPercentChange24h: Amount
+  cumulativeVolume(duration: HistoryDuration!): Amount
+  historicalVolume(duration: HistoryDuration!): [TimestampedAmount]
+  priceHistory(duration: HistoryDuration!): [TimestampedPoolPrice]
+  transactions(first: Int!, timestampCursor: Int): [PoolTransaction]
+  ticks(skip: Int, first: Int): [V4PoolTick]
+}
+
+type V4PoolHook {
+  id: ID!
+  address: String!
+}
+
+type V4PoolTick {
   id: ID!
   tickIdx: Int
   liquidityGross: String

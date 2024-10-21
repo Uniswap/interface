@@ -1,11 +1,11 @@
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, ListRenderItemInfo } from 'react-native'
+import { ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SvgUri } from 'react-native-svg'
-import { Loader } from 'src/components/loading'
-import { Flex, Text, TouchableArea, useDeviceInsets, useSporeColors } from 'ui/src'
+import { Loader } from 'src/components/loading/loaders'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
@@ -18,6 +18,7 @@ import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
 import { getCountryFlagSvgUrl } from 'uniswap/src/features/fiatOnRamp/utils'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { bubbleToTop } from 'utilities/src/primitives/array'
 import { useDebounce } from 'utilities/src/time/timing'
 
@@ -34,7 +35,7 @@ function key(item: FORCountry): string {
 
 function CountrySelectorContent({ onSelectCountry, countryCode }: CountrySelectorProps): JSX.Element {
   const { t } = useTranslation()
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const colors = useSporeColors()
 
   const { data, isLoading } = useFiatOnRampAggregatorCountryListQuery()
@@ -86,7 +87,6 @@ function CountrySelectorContent({ onSelectCountry, countryCode }: CountrySelecto
         py="$spacing8"
         value={searchText}
         onChangeText={setSearchText}
-        onDismiss={() => Keyboard.dismiss()}
       />
       <Flex grow>
         <AnimatedFlex grow entering={FadeIn} exiting={FadeOut}>

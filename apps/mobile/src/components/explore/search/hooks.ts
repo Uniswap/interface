@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { SearchResultType, WalletSearchResult } from 'uniswap/src/features/search/SearchResult'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useUnitagByAddress, useUnitagByName } from 'uniswap/src/features/unitags/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
@@ -13,6 +14,7 @@ export function useWalletSearchResults(query: string): {
   exactENSMatch: boolean
   exactUnitagMatch: boolean
 } {
+  const { defaultChainId } = useEnabledChains()
   const validAddress: Address | undefined = useMemo(() => getValidAddress(query, true, false) ?? undefined, [query])
 
   const querySkippedIfValidAddress = validAddress ? null : query
@@ -40,7 +42,7 @@ export function useWalletSearchResults(query: string): {
   // Search for matching EOA wallet address
   const { isSmartContractAddress, loading: loadingIsSmartContractAddress } = useIsSmartContractAddress(
     validAddress,
-    UniverseChainId.Mainnet,
+    defaultChainId,
   )
 
   const hasENSResult = dotEthName && dotEthAddress

@@ -11,14 +11,13 @@ import {
   FiatOnRampStackParamList,
   OnboardingStackParamList,
   SettingsStackParamList,
-  UnitagStackParamList,
 } from 'src/app/navigation/types'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { FiatOnRampProvider } from 'src/features/fiatOnRamp/FiatOnRampContext'
-import { ChooseProfilePictureScreen } from 'src/features/unitags/ChooseProfilePictureScreen'
 import { ClaimUnitagScreen } from 'src/features/unitags/ClaimUnitagScreen'
 import { EditUnitagProfileScreen } from 'src/features/unitags/EditUnitagProfileScreen'
+import { UnitagChooseProfilePicScreen } from 'src/features/unitags/UnitagChooseProfilePicScreen'
 import { UnitagConfirmationScreen } from 'src/features/unitags/UnitagConfirmationScreen'
 import { AppLoadingScreen } from 'src/screens/AppLoadingScreen'
 import { DevScreen } from 'src/screens/DevScreen'
@@ -63,12 +62,19 @@ import { SettingsWalletEdit } from 'src/screens/SettingsWalletEdit'
 import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManageConnection'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
-import { useDeviceInsets, useSporeColors } from 'ui/src'
+import { useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
-import { FiatOnRampScreens, MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
+import {
+  FiatOnRampScreens,
+  MobileScreens,
+  OnboardingScreens,
+  UnitagScreens,
+  UnitagStackParamList,
+} from 'uniswap/src/types/screens/mobile'
 import { OnboardingContextProvider } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
@@ -232,7 +238,7 @@ export function OnboardingStackNavigator(): JSX.Element {
           />
           <OnboardingStack.Screen component={ClaimUnitagScreen} name={UnitagScreens.ClaimUnitag} />
           <OnboardingStack.Screen
-            component={ChooseProfilePictureScreen}
+            component={UnitagChooseProfilePicScreen}
             name={UnitagScreens.ChooseProfilePicture}
             options={{ animation: 'fade' }}
           />
@@ -284,7 +290,7 @@ export function OnboardingStackNavigator(): JSX.Element {
 
 export function UnitagStackNavigator(): JSX.Element {
   const colors = useSporeColors()
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
 
   return (
     <UnitagStack.Navigator>
@@ -304,7 +310,7 @@ export function UnitagStackNavigator(): JSX.Element {
       >
         <UnitagStack.Screen component={ClaimUnitagScreen} name={UnitagScreens.ClaimUnitag} />
         <UnitagStack.Screen
-          component={ChooseProfilePictureScreen}
+          component={UnitagChooseProfilePicScreen}
           name={UnitagScreens.ChooseProfilePicture}
           options={{ ...TransitionPresets.ModalFadeTransition }}
         />

@@ -1,5 +1,6 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { memo, useEffect, useState } from 'react'
+import Animated, { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import { useDispatch, useSelector } from 'react-redux'
 import { useDappContext } from 'src/app/features/dapp/DappContext'
 import { useDappConnectedAccounts } from 'src/app/features/dapp/hooks'
@@ -9,27 +10,90 @@ import { selectPopupState } from 'src/app/features/popups/selectors'
 import { PopupName, closePopup, openPopup } from 'src/app/features/popups/slice'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { Circle, Flex, Image, Popover, Text, TouchableArea } from 'ui/src'
+import { Circle, Flex, Popover, Text, TouchableArea, UniversalImage } from 'ui/src'
 import { animationPresets } from 'ui/src/animations'
 import { CopyAlt, Globe, RotatableChevron, Settings } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
+import { borderRadii, iconSizes } from 'ui/src/theme'
+import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
+import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
+import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AnimatedUnitagDisplayName } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
+import useIsFocused from 'wallet/src/features/focus/useIsFocused'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 const POPUP_SHADOW_RADIUS = 4
 
 type PortfolioHeaderProps = {
   address: Address
+}
+
+// this variable is used to flag when user go to settings screen from home touching the settings icon
+// we can't use useState here because screen is mounted everytime screen is entered so all state would be lost
+// it's not in any kind of Context because it's only animation variable and it shouldn't trigger rerenders
+let shouldEnableAnimationNextEnter = false
+
+const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }): JSX.Element => {
+  const isScreenFocused = useIsFocused()
+  const pressProgress = useSharedValue(0)
+
+  useEffect(() => {
+    if (isScreenFocused && shouldEnableAnimationNextEnter) {
+      pressProgress.value = 1
+      pressProgress.value = withDelay(
+        50,
+        withTiming(0, {}, () => {
+          shouldEnableAnimationNextEnter = false
+        }),
+      )
+    }
+  }, [isScreenFocused, pressProgress])
+
+  const onBegin = (): void => {
+    pressProgress.value = withTiming(1)
+  }
+
+  const onCancel = (): void => {
+    pressProgress.value = withTiming(0)
+  }
+
+  const onPressSettingsLocal = (): void => {
+    shouldEnableAnimationNextEnter = true
+    onPressSettings()
+  }
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotate: `${pressProgress.value * 120}deg` }, { scale: 1 - pressProgress.value / 10 }],
+      opacity: 1 - pressProgress.value / 2,
+      justifyContent: 'center',
+    }
+  }, [pressProgress])
+
+  return (
+    <TouchableArea
+      hoverable
+      borderRadius="$roundedFull"
+      p="$spacing8"
+      onHoverIn={onBegin}
+      onHoverOut={onCancel}
+      onPress={onPressSettingsLocal}
+    >
+      <Animated.View style={animatedStyle} testID={TestID.AccountHeaderSettings}>
+        <Settings color="$neutral2" size="$icon.20" />
+      </Animated.View>
+    </TouchableArea>
+  )
 }
 
 export const PortfolioHeader = memo(function _PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element {
@@ -84,6 +148,10 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
     }
   }
 
+  const onPressSettings = (): void => {
+    navigate('/settings')
+  }
+
   return (
     <Flex gap="$spacing8">
       <Flex row justifyContent="space-between">
@@ -112,7 +180,12 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
             >
               <Popover.Trigger onPress={toggleConnectPopup}>
                 <TouchableArea hoverable borderRadius="$roundedFull" p="$spacing8">
-                  <ConnectionStatusIcon dappIconUrl={dappIconUrl} isConnected={isConnected} lastChainId={lastChainId} />
+                  <ConnectionStatusIcon
+                    dappIconUrl={dappIconUrl}
+                    dappUrl={dappUrl}
+                    isConnected={isConnected}
+                    lastChainId={lastChainId}
+                  />
                 </TouchableArea>
               </Popover.Trigger>
               <Popover.Content
@@ -139,14 +212,7 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
               </Popover.Content>
             </Popover>
           )}
-          <TouchableArea
-            hoverable
-            borderRadius="$roundedFull"
-            p="$spacing8"
-            onPress={(): void => navigate('/settings')}
-          >
-            <Settings color="$neutral2" size="$icon.20" />
-          </TouchableArea>
+          <RotatingSettingsIcon onPressSettings={onPressSettings} />
         </Flex>
       </Flex>
       <Flex row alignItems="center">
@@ -171,16 +237,23 @@ function ConnectionStatusIcon({
   isConnected,
   lastChainId,
   dappIconUrl,
+  dappUrl,
 }: {
   isConnected: boolean
-  lastChainId?: WalletChainId
+  lastChainId?: UniverseChainId
   dappIconUrl?: string
+  dappUrl?: string
 }): JSX.Element {
+  const uppercaseDappName = extractNameFromUrl(dappUrl).toUpperCase()
   const isConnectedToNetwork = isConnected && lastChainId
   return isConnectedToNetwork ? (
     <Flex>
-      <Image height={iconSizes.icon20} resizeMode="contain" source={{ uri: dappIconUrl }} width={iconSizes.icon20} />
-
+      <UniversalImage
+        fallback={<DappIconPlaceholder iconSize={iconSizes.icon20} name={uppercaseDappName} />}
+        size={{ height: iconSizes.icon20, width: iconSizes.icon20 }}
+        style={{ image: { borderRadius: borderRadii.rounded8 } }}
+        uri={dappIconUrl}
+      />
       <Flex backgroundColor="$surface2" borderRadius="$roundedFull" position="absolute" right={8} top={-3}>
         <Circle
           backgroundColor="$statusSuccess"

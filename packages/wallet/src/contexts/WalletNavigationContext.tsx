@@ -1,11 +1,13 @@
 import { createContext, ReactNode, useContext } from 'react'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/constants/chains'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import { getSwapPrefilledState } from 'uniswap/src/features/transactions/swap/hooks/useSwapPrefilledState'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { getSendPrefilledState } from 'wallet/src/features/transactions/send/getSendPrefilledState'
-import { getSwapPrefilledState } from 'wallet/src/features/transactions/swap/hooks/useSwapPrefilledState'
 
 type NavigateToTransactionFlowTransactionState = {
   initialState: TransactionState
@@ -14,17 +16,21 @@ type NavigateToTransactionFlowTransactionState = {
 type NavigateToSwapFlowPartialState = {
   currencyField: CurrencyField
   currencyAddress: Address
-  currencyChainId: WalletChainId
+  currencyChainId: UniverseChainId
+}
+
+type NavigateToSwapFlowWithActions = {
+  openTokenSelector: CurrencyField
 }
 
 type NavigateToSendFlowPartialState = {
-  chainId: WalletChainId
+  chainId: UniverseChainId
   currencyAddress?: Address
 }
 
 export type NavigateToSwapFlowArgs =
   // Depending on how much control you need, you can either pass a complete `TransactionState` object or just the currency, address and chain.
-  NavigateToTransactionFlowTransactionState | NavigateToSwapFlowPartialState | undefined
+  NavigateToTransactionFlowTransactionState | NavigateToSwapFlowPartialState | NavigateToSwapFlowWithActions | undefined
 
 // Same as above, but for send flow
 export type NavigateToSendFlowArgs =
@@ -42,16 +48,37 @@ function isNavigateToSwapFlowArgsPartialState(args: NavigateToSwapFlowArgs): arg
   return Boolean(args && (args as NavigateToSwapFlowPartialState).currencyAddress !== undefined)
 }
 
+function isNavigateToSwapFlowWithActions(args: NavigateToSwapFlowArgs): args is NavigateToSwapFlowWithActions {
+  return Boolean(args && (args as NavigateToSwapFlowWithActions).openTokenSelector !== undefined)
+}
+
 function isNavigateToSendFlowArgsPartialState(args: NavigateToSendFlowArgs): args is NavigateToSendFlowPartialState {
   return Boolean(args && (args as NavigateToSendFlowPartialState).chainId !== undefined)
 }
 
-export function getNavigateToSwapFlowArgsInitialState(args: NavigateToSwapFlowArgs): TransactionState | undefined {
-  return isNavigateToTransactionFlowArgsInitialState(args)
-    ? args.initialState
-    : isNavigateToSwapFlowArgsPartialState(args)
-      ? getSwapPrefilledState(args)
-      : undefined
+export function getNavigateToSwapFlowArgsInitialState(
+  args: NavigateToSwapFlowArgs,
+  defaultChainId: UniverseChainId,
+): TransactionState | undefined {
+  if (isNavigateToTransactionFlowArgsInitialState(args)) {
+    return args.initialState
+  } else if (isNavigateToSwapFlowArgsPartialState(args)) {
+    return getSwapPrefilledState(args) as TransactionState
+  } else if (isNavigateToSwapFlowWithActions(args)) {
+    return {
+      [CurrencyField.INPUT]: {
+        address: DEFAULT_NATIVE_ADDRESS,
+        chainId: defaultChainId,
+        type: AssetType.Currency,
+      },
+      [CurrencyField.OUTPUT]: null,
+      exactCurrencyField: CurrencyField.INPUT,
+      exactAmountToken: '',
+      selectingCurrencyField: CurrencyField.OUTPUT,
+    }
+  } else {
+    return undefined
+  }
 }
 
 export function getNavigateToSendFlowArgsInitialState(args: NavigateToSendFlowArgs): TransactionState | undefined {
@@ -66,7 +93,7 @@ export type NavigateToNftItemArgs = {
   owner?: Address
   address: Address
   tokenId: string
-  chainId?: WalletChainId
+  chainId?: UniverseChainId
   isSpam?: boolean
   fallbackData?: NFTItem
 }
@@ -77,6 +104,10 @@ export type NavigateToNftCollectionArgs = {
 
 export type NavigateToFiatOnRampArgs = {
   prefilledCurrency?: FiatOnRampCurrency
+}
+
+export type NavigateToExternalProfileArgs = {
+  address: Address
 }
 
 export type ShareTokenArgs = {
@@ -93,6 +124,7 @@ export type WalletNavigationContextState = {
   navigateToAccountTokenList: () => void
   // Action that should be taken when the user presses the "Buy crypto" or "Receive tokens" button when they open the Send flow with an empty wallet.
   navigateToBuyOrReceiveWithEmptyWallet: () => void
+  navigateToExternalProfile: (args: NavigateToExternalProfileArgs) => void
   navigateToFiatOnRamp: (args: NavigateToFiatOnRampArgs) => void
   navigateToNftDetails: (args: NavigateToNftItemArgs) => void
   navigateToNftCollection: (args: NavigateToNftCollectionArgs) => void

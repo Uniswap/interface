@@ -6,12 +6,12 @@ import { APP_STORE_LINK } from 'src/constants/urls'
 import { UpgradeStatus } from 'src/features/forceUpgrade/types'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { DynamicConfigs, ForceUpgradeConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { openUri } from 'uniswap/src/utils/linking'
-import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
@@ -65,7 +65,7 @@ export function ForceUpgradeModal(): JSX.Element {
   return (
     <>
       <WarningModal
-        confirmText={t('forceUpgrade.action.confirm')}
+        acknowledgeText={t('forceUpgrade.action.confirm')}
         hideHandlebar={upgradeStatus === UpgradeStatus.Required}
         isDismissible={upgradeStatus !== UpgradeStatus.Required}
         isOpen={isVisible}
@@ -73,13 +73,13 @@ export function ForceUpgradeModal(): JSX.Element {
         severity={WarningSeverity.High}
         title={t('forceUpgrade.title')}
         onClose={onClose}
-        onConfirm={onPressConfirm}
+        onAcknowledge={onPressConfirm}
       >
         <Text color="$neutral2" textAlign="center" variant="body2">
           {t('forceUpgrade.description')}
         </Text>
         {mnemonicId && (
-          <Text color="$accent1" variant="buttonLabel3" onPress={onPressViewRecovery}>
+          <Text color="$accent1" variant="buttonLabel2" onPress={onPressViewRecovery}>
             {t('forceUpgrade.action.recoveryPhrase')}
           </Text>
         )}

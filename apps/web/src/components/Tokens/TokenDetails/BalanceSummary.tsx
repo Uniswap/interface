@@ -1,5 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import { PortfolioBalance } from 'graphql/data/portfolios'
 import { getTokenDetailsURL, gqlToCurrency, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
 import styled from 'lib/styled-components'
@@ -7,12 +8,9 @@ import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
-import {
-  Chain,
-  PortfolioTokenBalancePartsFragment,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const BalancesCard = styled.div`
@@ -62,8 +60,8 @@ const BalanceAmountsContainer = styled.div<{ $alignLeft: boolean }>`
 
 interface BalanceProps {
   currency?: Currency
-  chainId?: InterfaceChainId
-  gqlBalance?: PortfolioTokenBalancePartsFragment
+  chainId?: UniverseChainId
+  gqlBalance?: PortfolioBalance
   alignLeft?: boolean
   onClick?: () => void
 }
@@ -91,7 +89,7 @@ const Balance = ({
       <PortfolioLogo
         currencies={currencies}
         chainId={chainId}
-        images={[gqlBalance?.tokenProjectMarket?.tokenProject.logoUrl]}
+        images={[gqlBalance?.token?.project?.logoUrl]}
         size={32}
       />
       <BalanceAmountsContainer $alignLeft={alignLeft}>
@@ -110,7 +108,7 @@ export const PageChainBalanceSummary = ({
   pageChainBalance,
   alignLeft = false,
 }: {
-  pageChainBalance?: PortfolioTokenBalancePartsFragment
+  pageChainBalance?: PortfolioBalance
   alignLeft?: boolean
 }) => {
   if (!pageChainBalance || !pageChainBalance.token) {
@@ -131,7 +129,7 @@ const OtherChainsBalanceSummary = ({
   otherChainBalances,
   hasPageChainBalance,
 }: {
-  otherChainBalances: readonly PortfolioTokenBalancePartsFragment[]
+  otherChainBalances: readonly PortfolioBalance[]
   hasPageChainBalance: boolean
 }) => {
   const navigate = useNavigate()
@@ -179,7 +177,7 @@ export default function BalanceSummary() {
   const { currencyChain, multiChainMap } = useTDPContext()
 
   const pageChainBalance = multiChainMap[currencyChain]?.balance
-  const otherChainBalances: PortfolioTokenBalancePartsFragment[] = []
+  const otherChainBalances: PortfolioBalance[] = []
   for (const [key, value] of Object.entries(multiChainMap)) {
     if (key !== currencyChain && value?.balance !== undefined) {
       otherChainBalances.push(value.balance)

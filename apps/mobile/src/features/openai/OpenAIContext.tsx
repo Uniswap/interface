@@ -9,6 +9,7 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ASSISTANT_ID, openai } from 'src/features/openai/assistant'
 import { FunctionName, PossibleFunctionArgs } from 'src/features/openai/functions'
+import { WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { DEFAULT_NATIVE_ADDRESS, UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import {
   SearchTokensDocument,
@@ -22,7 +23,6 @@ import { ALL_GQL_CHAINS } from 'uniswap/src/features/dataApi/searchTokens'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -71,7 +71,7 @@ async function handleRunStatus(
   if (run.status === 'completed') {
     processMessages()
   } else if (run.status === 'requires_action') {
-    return await handleRequiresAction(threadId, run, processMessages, toolsMap)
+    await handleRequiresAction(threadId, run, processMessages, toolsMap)
   } else {
     logger.debug('OpenAIContext.tsx', 'handleRunStatus', `Run did not complete: ${run.id}`)
   }
@@ -400,6 +400,7 @@ function _OpenAIContextProvider({ children }: { children: React.ReactNode }): JS
       })
       return listener.remove
     }
+    return undefined
   }, [mainThread, sendMessage])
 
   const value = {

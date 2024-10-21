@@ -1,19 +1,23 @@
-import Column from 'components/Column'
-import Row from 'components/Row'
+import { InterfaceElementName } from '@uniswap/analytics-events'
+import { GooglePlayStoreLogo } from 'components/Icons/GooglePlayStoreLogo'
 import { DownloadWalletOption } from 'components/WalletModal/DownloadWalletOption'
 import { DetectedBadge } from 'components/WalletModal/shared'
 import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
-import { CONNECTION } from 'components/Web3Provider/constants'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import { useConnect } from 'hooks/useConnect'
 import styled from 'lib/styled-components'
 import { Z_INDEX } from 'theme/zIndex'
-import { Image, Text } from 'ui/src'
+import { Flex, Image, Text } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
+import { AppStoreLogo } from 'ui/src/components/icons/AppStoreLogo'
+import { PhoneDownload } from 'ui/src/components/icons/PhoneDownload'
 import { ScanQr } from 'ui/src/components/icons/ScanQr'
 import { iconSizes } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { Trans } from 'uniswap/src/i18n'
+import { isMobileWeb, isWebIOS } from 'utilities/src/platform'
+import { openDownloadApp } from 'utils/openDownloadApp'
 
 export const OptionContainer = styled(Row)`
   padding: 16px;
@@ -40,11 +44,13 @@ export const AppIcon = styled.img`
 `
 
 export function UniswapWalletOptions() {
-  const uniswapExtensionConnector = useConnectorWithId(CONNECTION.UNISWAP_EXTENSION_RDNS)
-  const uniswapWalletConnectConnector = useConnectorWithId(CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID, {
-    shouldThrow: true,
-  })
-  const extensionIsLaunched = useFeatureFlag(FeatureFlags.ExtensionLaunch)
+  const uniswapExtensionConnector = useConnectorWithId(CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS)
+  const uniswapWalletConnectConnector = useConnectorWithId(
+    CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
+    {
+      shouldThrow: true,
+    },
+  )
 
   const { connect } = useConnect()
 
@@ -59,29 +65,62 @@ export function UniswapWalletOptions() {
           >
             <Image height={iconSizes.icon40} source={UNISWAP_LOGO} width={iconSizes.icon40} />
             <Row gap="xs">
-              <Text variant="buttonLabel3" color="$neutral1" whiteSpace="nowrap">
+              <Text variant="buttonLabel2" color="$neutral1" whiteSpace="nowrap">
                 <Trans i18nKey="common.extension" />
               </Text>
             </Row>
             <DetectedBadge />
           </OptionContainer>
-        ) : // If the extension is not detected, show the option to download the app
-        extensionIsLaunched ? (
+        ) : // If not on a mobile web browser show the download wallet modal (includes link to download extension)
+        !isMobileWeb ? (
           <DownloadWalletOption />
         ) : null}
         <OptionContainer gap="md" onClick={() => connect({ connector: uniswapWalletConnectConnector })}>
-          <ScanQr size="$icon.40" minWidth={40} color="$accent1" backgroundColor="$accent2" borderRadius={8} p={7} />
+          {isMobileWeb ? (
+            <Image height={iconSizes.icon40} source={UNISWAP_LOGO} width={iconSizes.icon40} />
+          ) : (
+            <ScanQr size="$icon.40" minWidth={40} color="$accent1" backgroundColor="$accent2" borderRadius={8} p={7} />
+          )}
           <Row gap="xs">
             <Column>
-              <Text variant="buttonLabel3" color="$neutral1" whiteSpace="nowrap">
+              <Text variant="buttonLabel2" color="$neutral1" whiteSpace="nowrap">
                 <Trans i18nKey="common.uniswapMobile" />
               </Text>
               <Text variant="body4" color="$neutral2" whiteSpace="nowrap">
-                <Trans i18nKey="wallet.scanToConnect" />
+                {isMobileWeb ? <Trans i18nKey="wallet.appSignIn" /> : <Trans i18nKey="wallet.scanToConnect" />}
               </Text>
             </Column>
           </Row>
         </OptionContainer>
+        {isMobileWeb && (
+          // If on a mobile web browser show the relevant app store download link
+          <OptionContainer
+            onClick={() => openDownloadApp({ element: InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON })}
+          >
+            <PhoneDownload size="$icon.40" minWidth={40} color="$accent1" backgroundColor="$accent2" borderRadius={8} />
+            <Row gap="xs">
+              <Flex grow>
+                <Text variant="buttonLabel3" color="$neutral1" whiteSpace="nowrap">
+                  <Trans i18nKey="common.getUniswapWallet" />
+                </Text>
+                <Text variant="body4" color="$neutral2" whiteSpace="nowrap">
+                  {isWebIOS ? (
+                    <Trans i18nKey="common.downloadAppStore" />
+                  ) : (
+                    <Trans i18nKey="common.downloadPlayStore" />
+                  )}
+                </Text>
+              </Flex>
+              {isWebIOS ? (
+                <AppStoreLogo size="$icon.24" />
+              ) : (
+                <Flex p="$padding6" borderRadius="$rounded8" backgroundColor="$neutral1">
+                  <GooglePlayStoreLogo />
+                </Flex>
+              )}
+            </Row>
+          </OptionContainer>
+        )}
       </Column>
     </Column>
   )

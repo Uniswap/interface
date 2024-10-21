@@ -20,7 +20,7 @@ import { ClickableTamaguiStyle } from 'theme/components'
 import { capitalize } from 'tsafe'
 import { Anchor, Flex, Text, TextProps, styled } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 const SWAP_COMPONENT_WIDTH = 360
 
@@ -73,10 +73,11 @@ export const TokenInfoContainer = styled(Flex, {
   pt: '$padding8',
   mb: '$spacing20',
   animation: 'quick',
+  zIndex: '$default',
 })
 
 export const TokenNameCell = styled(Flex, {
-  flexDirection: 'row',
+  row: true,
   gap: '$gap12',
   alignItems: 'center',
   pt: '$spacing4',

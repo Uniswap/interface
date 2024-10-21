@@ -1,11 +1,14 @@
 import { PropsWithChildren } from 'react'
 
-export const SWIPEABLE_CARD_Y_OFFSET = 8
+export type PickedCardProps = Pick<SwipeableCardProps, 'onPress'>
+
+export type ClickableWithinGestureProps = PropsWithChildren<{ onPress?: () => void }>
 
 export type SwipeableCardProps = PropsWithChildren<{
   stackIndex: number
   cardHeight: number
   disableSwipe: boolean
+  onPress?: () => void
   onSwiped: () => void
   onLayout: ({ height, yOffset }: { height: number; yOffset: number }) => void
 }>

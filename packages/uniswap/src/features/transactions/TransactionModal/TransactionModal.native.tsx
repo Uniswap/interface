@@ -1,5 +1,5 @@
 import { BottomSheetFooter, BottomSheetView, KEYBOARD_STATE, useBottomSheetInternal } from '@gorhom/bottom-sheet'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { StyleProp, TouchableWithoutFeedback, ViewStyle } from 'react-native'
 import {
   Extrapolate,
@@ -9,30 +9,37 @@ import {
   useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated'
-import { Flex, LinearGradient, useDeviceInsets, useSporeColors } from 'ui/src'
+import { Flex, LinearGradient, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { borderRadii, opacify } from 'ui/src/theme'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { TransactionModalContextProvider } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+import {
+  TransactionModalContextProvider,
+  TransactionScreen,
+} from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import {
   TransactionModalFooterContainerProps,
   TransactionModalInnerContainerProps,
   TransactionModalProps,
 } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalProps'
+import { TransactionModalUpdateLogger } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalUpdateLogger'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 
 const HANLDEBAR_HEIGHT = 32
 
 export function TransactionModal({
   children,
-  fullscreen,
   modalName,
   onClose,
   ...transactionContextProps
 }: TransactionModalProps): JSX.Element {
+  const [screen, setScreen] = useState<TransactionScreen>(TransactionScreen.Form)
+  const fullscreen = screen === TransactionScreen.Form
+
   const colors = useSporeColors()
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const dimensions = useDeviceDimensions()
 
   const backgroundColorValue = colors.surface1.get()
@@ -80,10 +87,13 @@ export function TransactionModal({
     >
       <TransactionModalContextProvider
         bottomSheetViewStyles={bottomSheetViewStyles}
+        screen={screen}
+        setScreen={setScreen}
         onClose={onClose}
         {...transactionContextProps}
       >
         {children}
+        <TransactionModalUpdateLogger modalName={modalName} />
       </TransactionModalContextProvider>
     </Modal>
   )
@@ -94,7 +104,7 @@ export function TransactionModalInnerContainer({
   fullscreen,
   children,
 }: TransactionModalInnerContainerProps): JSX.Element {
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
 
   const { animatedFooterHeight } = useBottomSheetInternal()
 
@@ -120,7 +130,7 @@ export function TransactionModalInnerContainer({
 }
 
 export function TransactionModalFooterContainer({ children }: TransactionModalFooterContainerProps): JSX.Element {
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const colors = useSporeColors()
 
   // Most of this logic is based on the `BottomSheetFooterContainer` component from `@gorhom/bottom-sheet`.

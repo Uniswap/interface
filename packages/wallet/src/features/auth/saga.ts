@@ -2,18 +2,20 @@ import { call } from 'typed-redux-saga'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
-import { AuthActionType, AuthBaseParams, AuthSagaError, UnlockParams } from 'wallet/src/features/auth/types'
+import { AuthActionType, AuthSagaError, LockParams, UnlockParams } from 'wallet/src/features/auth/types'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
-function* auth(params: AuthBaseParams) {
+function* auth(params: UnlockParams | LockParams) {
   logger.debug('authSaga', 'auth', `Using monitored auth saga`)
 
   if (params.type === AuthActionType.Unlock) {
-    return yield* call(unlock, params as UnlockParams)
+    return yield* call(unlock, params)
   } else if (params.type === AuthActionType.Lock) {
     return yield* call(lock)
   }
+
+  return undefined
 }
 
 function* unlock({ password }: UnlockParams) {
@@ -42,4 +44,4 @@ export const {
   wrappedSaga: authSaga,
   reducer: authReducer,
   actions: authActions,
-} = createMonitoredSaga<AuthBaseParams>(auth, 'auth', { showErrorNotification: false })
+} = createMonitoredSaga(auth, 'auth', { showErrorNotification: false })

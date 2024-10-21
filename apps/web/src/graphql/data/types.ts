@@ -1,10 +1,16 @@
-import { SupportedInterfaceChainId, isSupportedChainId } from 'constants/chains'
-import { COMMON_BASES, buildCurrencyInfo } from 'constants/routing'
-import { USDC_OPTIMISM } from 'constants/tokens'
+import { isSupportedChainId } from 'constants/chains'
 import { fiatOnRampToCurrency, gqlToCurrency } from 'graphql/data/util'
-import { Token as GqlToken, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { COMMON_BASES, buildCurrencyInfo } from 'uniswap/src/constants/routing'
+import { USDC_OPTIMISM } from 'uniswap/src/constants/tokens'
+import {
+  Token as GqlToken,
+  ProtectionResult,
+  SafetyLevel,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
+import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isSameAddress } from 'utilities/src/addresses'
 import { currencyId } from 'utils/currencyId'
 
@@ -28,16 +34,17 @@ export function gqlTokenToCurrencyInfo(token?: GqlToken): CurrencyInfo | undefin
     logoUrl: token.project?.logo?.url ?? token.project?.logoUrl,
     safetyLevel: token.project?.safetyLevel ?? SafetyLevel.StrongWarning,
     isSpam: token.project?.isSpam ?? false,
+    safetyInfo: getCurrencySafetyInfo(token.project?.safetyLevel, token.protectionInfo),
   }
   return currencyInfo
 }
 
 export function meldSupportedCurrencyToCurrencyInfo(forCurrency: FORSupportedToken): CurrencyInfo | undefined {
   if (!isSupportedChainId(Number(forCurrency.chainId))) {
-    return
+    return undefined
   }
 
-  const supportedChainId = Number(forCurrency.chainId) as SupportedInterfaceChainId
+  const supportedChainId = Number(forCurrency.chainId) as UniverseChainId
   const commonBases = COMMON_BASES[supportedChainId]
 
   const currencyInfo = commonBases.find((base) => {
@@ -61,13 +68,17 @@ export function meldSupportedCurrencyToCurrencyInfo(forCurrency: FORSupportedTok
 
   const currency = fiatOnRampToCurrency(forCurrency)
   if (!currency) {
-    return
+    return undefined
   }
   return {
     currency,
     currencyId: currencyId(currency),
     logoUrl: forCurrency.symbol,
     safetyLevel: SafetyLevel.Verified,
+    safetyInfo: {
+      tokenList: TokenList.Default,
+      protectionResult: ProtectionResult.Benign,
+    },
     isSpam: false,
   }
 }

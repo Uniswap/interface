@@ -41,7 +41,7 @@ export default function parseTradeTransaction(
 
   const chainId = fromGraphQLChain(transaction.chain)
   if (!chainId) {
-    return
+    return undefined
   }
 
   const txAssetChanges =
@@ -83,15 +83,14 @@ export default function parseTradeTransaction(
 
   // Invalid input/output info
   if (!sent || !received) {
-    return
+    return undefined
   }
 
   const onlyERC20Tokens = sent.__typename === 'TokenTransfer' && received.__typename === 'TokenTransfer'
   const containsNFT = sent.__typename === 'NftTransfer' || received.__typename === 'NftTransfer'
 
-  // TODO: [MOB-235] Currently no spec for advanced transfer types.
   if (!(onlyERC20Tokens || containsNFT)) {
-    return
+    return undefined
   }
 
   // Token swap
@@ -153,7 +152,7 @@ export default function parseTradeTransaction(
     }
 
     if (!inputCurrencyId || !outputCurrencyId) {
-      return
+      return undefined
     }
 
     return {
@@ -177,7 +176,7 @@ export default function parseTradeTransaction(
     const name = nftChange.asset?.name
     const collectionName = nftChange.asset?.collection?.name
     const imageURL = nftChange.asset?.image?.url
-    const tokenId = nftChange.asset?.name
+    const tokenId = nftChange.asset?.tokenId
     const purchaseCurrencyId =
       tokenChange.tokenStandard === TokenStandard.Native
         ? buildNativeCurrencyId(chainId)
@@ -223,4 +222,6 @@ export default function parseTradeTransaction(
       transactedUSDValue,
     }
   }
+
+  return undefined
 }

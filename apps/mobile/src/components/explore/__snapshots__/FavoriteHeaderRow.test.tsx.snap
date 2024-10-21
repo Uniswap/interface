@@ -20,8 +20,9 @@ exports[`FavoriteHeaderRow when editing renders without error 1`] = `
     style={
       {
         "color": "#7D7D7D",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 17,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -60,10 +61,10 @@ exports[`FavoriteHeaderRow when editing renders without error 1`] = `
       style={
         {
           "color": "#FC72FF",
-          "fontFamily": "Basel-Medium",
-          "fontSize": 15,
+          "fontFamily": "Basel Grotesk",
+          "fontSize": 17,
           "fontWeight": "500",
-          "lineHeight": 20,
+          "lineHeight": 19.549999999999997,
         }
       }
       suppressHighlighting={true}
@@ -95,8 +96,9 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
     style={
       {
         "color": "#7D7D7D",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 17,
+        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -134,12 +136,11 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
       align="xMidYMid"
       bbHeight={20}
       bbWidth={20}
-      fill="currentColor"
+      fill="none"
       focusable={false}
       meetOrSlice={0}
       minX={0}
       minY={0}
-      stroke="currentColor"
       strokeLinecap="round"
       strokeWidth={1}
       style={
@@ -165,29 +166,19 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
       vbWidth={18}
     >
       <RNSVGGroup
-        fill={
-          {
-            "type": 2,
-          }
-        }
+        fill={null}
         propList={
           [
             "fill",
-            "stroke",
             "strokeWidth",
             "strokeLinecap",
           ]
-        }
-        stroke={
-          {
-            "type": 2,
-          }
         }
         strokeLinecap={1}
         strokeWidth={1}
       >
         <RNSVGPath
-          d="M9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
+          d="M9 3C9.55228 3 10 2.55228 10 2C10 1.44772 9.55228 1 9 1C8.44772 1 8 1.44772 8 2C8 2.55228 8.44772 3 9 3Z"
           fill={
             {
               "payload": 4278190080,
@@ -212,7 +203,7 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
           strokeWidth="2"
         />
         <RNSVGPath
-          d="M16 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
+          d="M16 3C16.5523 3 17 2.55228 17 2C17 1.44772 16.5523 1 16 1C15.4477 1 15 1.44772 15 2C15 2.55228 15.4477 3 16 3Z"
           fill={
             {
               "payload": 4278190080,
@@ -237,7 +228,7 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
           strokeWidth="2"
         />
         <RNSVGPath
-          d="M2 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
+          d="M2 3C2.55228 3 3 2.55228 3 2C3 1.44772 2.55228 1 2 1C1.44772 1 1 1.44772 1 2C1 2.55228 1.44772 3 2 3Z"
           fill={
             {
               "payload": 4278190080,

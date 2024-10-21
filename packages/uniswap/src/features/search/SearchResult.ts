@@ -1,7 +1,10 @@
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { SafetyInfo } from 'uniswap/src/features/dataApi/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export type SearchResult = TokenSearchResult | WalletSearchResult | EtherscanSearchResult | NFTCollectionSearchResult
+
+export type InterfaceSearchResult = TokenSearchResult | NFTCollectionSearchResult
 
 // Retain original ordering as these are saved to storage and loaded back out
 export enum SearchResultType {
@@ -26,6 +29,11 @@ export interface TokenSearchResult extends SearchResultBase {
   name: string | null
   logoUrl: string | null
   safetyLevel: SafetyLevel | null
+  safetyInfo?: SafetyInfo | null
+}
+
+export function isTokenSearchResult(x: SearchResult): x is TokenSearchResult {
+  return x.type === SearchResultType.Token
 }
 
 export interface NFTCollectionSearchResult extends SearchResultBase {
@@ -35,6 +43,10 @@ export interface NFTCollectionSearchResult extends SearchResultBase {
   name: string
   imageUrl: string | null
   isVerified: boolean
+}
+
+export function isNFTCollectionSearchResult(x: SearchResult): x is NFTCollectionSearchResult {
+  return x.type === SearchResultType.NFTCollection
 }
 
 export interface EtherscanSearchResult extends SearchResultBase {

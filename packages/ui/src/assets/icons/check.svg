@@ -1,3 +1,6 @@
-<svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M13.3334 4L6.00008 11.3333L2.66675 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" stroke-width="5" stroke="currentColor"
+  stroke-linecap="round"
+  viewBox="0 0 48 48" fill="none">
+  <line x1="11" y1="26" x2="18" y2="33" />
+  <line x1="18" y1="33" x2="38" y2="14" />
 </svg>

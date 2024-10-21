@@ -142,6 +142,16 @@ const TransactionTitleTable: { [key in TransactionType]: { [state in Transaction
     [TransactionStatus.Confirmed]: t('common.limit.executed'),
     [TransactionStatus.Failed]: t('common.limit.failed'),
   },
+  [TransactionType.INCREASE_LIQUIDITY]: {
+    [TransactionStatus.Pending]: t('common.adding.liquidity'),
+    [TransactionStatus.Confirmed]: t('common.added.liquidity'),
+    [TransactionStatus.Failed]: t('common.add.liquidity.failed'),
+  },
+  [TransactionType.DECREASE_LIQUIDITY]: {
+    [TransactionStatus.Pending]: t('common.removing.liquidity'),
+    [TransactionStatus.Confirmed]: t('common.removed.liquidity'),
+    [TransactionStatus.Failed]: t('common.remove.liquidity.failed'),
+  },
   [TransactionType.SELL]: {
     [TransactionStatus.Pending]: t`Selling`,
     [TransactionStatus.Confirmed]: t`Sold`,
@@ -192,6 +202,8 @@ export const CancelledTransactionTitleTable: { [key in TransactionType]: string 
   [TransactionType.MIGRATE_LIQUIDITY_V3]: t('common.migrate.liquidity.cancelled'),
   [TransactionType.SUBMIT_PROPOSAL]: t('common.submit.proposal.cancelled'),
   [TransactionType.LIMIT]: t('common.limit.cancelled'),
+  [TransactionType.INCREASE_LIQUIDITY]: t('common.add.liquidity.cancelled'),
+  [TransactionType.DECREASE_LIQUIDITY]: t('common.remove.liquidity.cancelled'),
   [TransactionType.SELL]: t('common.sell.cancelled'),
   [TransactionType.SET_SPREAD]: t('common.set.spread.cancelled'),
   [TransactionType.SET_LOCKUP]: t('common.set.lockup.cancelled'),

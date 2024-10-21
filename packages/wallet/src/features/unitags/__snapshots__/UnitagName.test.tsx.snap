@@ -1,0 +1,155 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders UnitagName with a name 1`] = `
+<View
+  collapsable={false}
+  forwardedRef={[Function]}
+  jestAnimatedStyle={
+    {
+      "value": {
+        "opacity": 0,
+      },
+    }
+  }
+  style={
+    {
+      "alignItems": "center",
+      "alignSelf": "center",
+      "flexDirection": "row",
+      "gap": 4,
+      "opacity": 0,
+    }
+  }
+>
+  <Text
+    allowFontScaling={false}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#222222",
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 12,
+        "fontWeight": "400",
+        "lineHeight": 44,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    testing
+  </Text>
+  <View
+    collapsable={false}
+    forwardedRef={[Function]}
+    jestAnimatedStyle={
+      {
+        "value": {
+          "opacity": 0,
+          "right": -24,
+          "top": -4,
+          "transform": [
+            {
+              "translateX": 20,
+            },
+            {
+              "scale": 0.8,
+            },
+          ],
+        },
+      }
+    }
+    style={
+      {
+        "flexDirection": "row",
+        "opacity": 0,
+        "position": "absolute",
+        "right": -24,
+        "top": -4,
+        "transform": [
+          {
+            "translateX": 20,
+          },
+          {
+            "scale": 0.8,
+          },
+        ],
+      }
+    }
+  />
+</View>
+`;
+
+exports[`renders UnitagName without a name 1`] = `
+<View
+  collapsable={false}
+  forwardedRef={[Function]}
+  jestAnimatedStyle={
+    {
+      "value": {
+        "opacity": 0,
+      },
+    }
+  }
+  style={
+    {
+      "alignItems": "center",
+      "alignSelf": "center",
+      "flexDirection": "row",
+      "gap": 4,
+      "opacity": 0,
+    }
+  }
+>
+  <Text
+    allowFontScaling={false}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#222222",
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 12,
+        "fontWeight": "400",
+        "lineHeight": 44,
+      }
+    }
+    suppressHighlighting={true}
+  />
+  <View
+    collapsable={false}
+    forwardedRef={[Function]}
+    jestAnimatedStyle={
+      {
+        "value": {
+          "opacity": 0,
+          "right": -24,
+          "top": -4,
+          "transform": [
+            {
+              "translateX": 20,
+            },
+            {
+              "scale": 0.8,
+            },
+          ],
+        },
+      }
+    }
+    style={
+      {
+        "flexDirection": "row",
+        "opacity": 0,
+        "position": "absolute",
+        "right": -24,
+        "top": -4,
+        "transform": [
+          {
+            "translateX": 20,
+          },
+          {
+            "scale": 0.8,
+          },
+        ],
+      }
+    }
+  />
+</View>
+`;

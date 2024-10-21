@@ -1,10 +1,10 @@
 import { PersistState } from 'redux-persist'
+import { PreV16UserState } from 'state/migrations/oldTypes'
 import { RouterPreference } from 'state/routing/types'
-import { UserState } from 'state/user/reducer'
 
 export type PersistAppStateV5 = {
   _persist: PersistState
-} & { user?: UserState & { disabledUniswapX?: boolean; optedOutOfUniswapX?: boolean } }
+} & { user?: PreV16UserState & { disabledUniswapX?: boolean; optedOutOfUniswapX?: boolean } }
 
 /**
  * Migration to migrate users to UniswapX by default.

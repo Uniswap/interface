@@ -1,6 +1,4 @@
 import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
-import { CONNECTION } from 'components/Web3Provider/constants'
-import { WalletConnectConnector } from 'components/Web3Provider/walletConnect'
 import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'lib/styled-components'
 import { rootCssString } from 'nft/css/cssStringFromTheme'
 import { PropsWithChildren, useEffect, useMemo } from 'react'
@@ -8,8 +6,8 @@ import { ThemeColors, darkTheme, lightTheme } from 'theme/colors'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { darkDeprecatedTheme, lightDeprecatedTheme } from 'theme/deprecatedColors'
 import { getAccent2, getNeutralContrast } from 'theme/utils'
-
-export const NAV_HEIGHT = 72
+import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
+import { WalletConnectConnector } from 'uniswap/src/features/web3/walletConnect'
 
 export const MEDIA_WIDTHS = {
   deprecated_upToExtraSmall: 500,
@@ -151,7 +149,7 @@ export function ThemeProvider({ children, ...overriddenColors }: PropsWithChildr
   // eslint-disable-next-line react-hooks/exhaustive-deps -- only update when darkMode or overriddenColors' entries change
   const themeObject = useMemo(() => getTheme(darkMode, overriddenColors), [darkMode, JSON.stringify(overriddenColors)])
 
-  const walletConnectConnector = useConnectorWithId(CONNECTION.WALLET_CONNECT_CONNECTOR_ID, {
+  const walletConnectConnector = useConnectorWithId(CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, {
     shouldThrow: true,
   }) as WalletConnectConnector
   useEffect(() => {

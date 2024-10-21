@@ -1,16 +1,12 @@
 import { Currency, Token } from '@uniswap/sdk-core'
-import Modal from 'components/Modal'
 import { CurrencySearch } from 'components/SearchModal/CurrencySearch'
-import { CurrencySearchFilters, DeprecatedCurrencySearch } from 'components/SearchModal/DeprecatedCurrencySearch'
 import TokenSafety from 'components/TokenSafety'
 import useLast from 'hooks/useLast'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { useUserAddedTokens } from 'state/user/userAddedTokens'
-import { NAV_HEIGHT } from 'theme'
 import { AdaptiveWebModal } from 'ui/src'
 import { TOKEN_SELECTOR_WEB_MAX_WIDTH } from 'uniswap/src/components/TokenSelector/TokenSelector'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 interface CurrencySearchModalProps {
@@ -20,8 +16,6 @@ interface CurrencySearchModalProps {
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency | null
   showCurrencyAmount?: boolean
-  hideChainSwitch?: boolean
-  currencySearchFilters?: CurrencySearchFilters
   currencyField?: CurrencyField
   operatedPools?: Token[]
 }
@@ -36,18 +30,12 @@ export default memo(function CurrencySearchModal({
   isOpen,
   onDismiss,
   onCurrencySelect,
-  selectedCurrency,
-  otherSelectedCurrency,
-  showCurrencyAmount = true,
-  hideChainSwitch = false,
-  currencySearchFilters,
   currencyField = CurrencyField.INPUT,
   operatedPools,
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.search)
   const lastOpen = useLast(isOpen)
   const userAddedTokens = useUserAddedTokens()
-  const multichainFlagEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
 
   useEffect(() => {
     if (isOpen && !lastOpen) {
@@ -83,23 +71,13 @@ export default memo(function CurrencySearchModal({
   switch (modalView) {
     // we use DeprecatedCurrencySearch without multichain flag and for pool select
     case CurrencyModalView.search:
-      content = multichainFlagEnabled && !currencySearchFilters?.onlyDisplaySmartPools ? (
+      content = currencySearchFilters?.onlyDisplaySmartPools ? (
+      content = (
         <CurrencySearch
           currencyField={currencyField}
-          hideChainSwitch={hideChainSwitch}
           onCurrencySelect={onCurrencySelect}
           onDismiss={onDismiss}
-        />
-      ) : (
-        <DeprecatedCurrencySearch
-          isOpen={isOpen}
-          onDismiss={onDismiss}
-          onCurrencySelect={handleCurrencySelect}
-          selectedCurrency={selectedCurrency}
-          otherSelectedCurrency={otherSelectedCurrency}
-          showCurrencyAmount={showCurrencyAmount}
-          hideChainSwitch={hideChainSwitch}
-          filters={currencySearchFilters}
+          onlyDisplaySmartPools={currencySearchFilters?.onlyDisplaySmartPools}
           operatedPools={operatedPools}
         />
       )
@@ -109,15 +87,15 @@ export default memo(function CurrencySearchModal({
         content = (
           <TokenSafety
             token0={warningToken}
-            onContinue={() => handleCurrencySelect(warningToken)}
-            onCancel={() => setModalView(CurrencyModalView.search)}
+            onAcknowledge={() => handleCurrencySelect(warningToken)}
+            closeModalOnly={() => setModalView(CurrencyModalView.search)}
             showCancel={true}
           />
         )
       }
       break
   }
-  return multichainFlagEnabled ? (
+  return (
     <AdaptiveWebModal
       isOpen={isOpen}
       onClose={onDismiss}
@@ -126,18 +104,9 @@ export default memo(function CurrencySearchModal({
       px={0}
       py={0}
       flex={1}
-      $sm={{ height: `calc(100dvh - ${NAV_HEIGHT}px)` }}
+      $sm={{ height: `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)` }}
     >
       {content}
     </AdaptiveWebModal>
-  ) : (
-    <Modal
-      isOpen={isOpen}
-      onDismiss={onDismiss}
-      height="90vh"
-      maxHeight={modalView === CurrencyModalView.tokenSafety ? 400 : 700}
-    >
-      {content}
-    </Modal>
   )
 })

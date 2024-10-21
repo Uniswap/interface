@@ -90,9 +90,15 @@ type BackupReminderParams = {
   initialState?: undefined
 }
 
+type BackupWarningParams = {
+  name: typeof ModalName.BackupReminderWarning
+  initialState?: undefined
+}
+
 export type OpenModalParams =
   | AccountSwitcherModalParams
   | BackupReminderParams
+  | BackupWarningParams
   | KoreaCexTransferInfoModalParams
   | ExchangeTransferModalParams
   | ExperimentsModalParams

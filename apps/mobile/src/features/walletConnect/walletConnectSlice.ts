@@ -1,18 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ProposalTypes, SessionTypes } from '@walletconnect/types'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { DappInfo, EthMethod, EthSignMethod, EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
 
 export type WalletConnectPendingSession = {
   id: string
-  chains: WalletChainId[]
+  chains: UniverseChainId[]
   dapp: DappInfo
   proposalNamespaces: ProposalTypes.RequiredNamespaces
 }
 
 export type WalletConnectSession = {
   id: string
-  chains: WalletChainId[]
+  chains: UniverseChainId[]
   dapp: DappInfo
   namespaces: SessionTypes.Namespaces
 }
@@ -26,7 +26,7 @@ interface BaseRequest {
   internalId: string
   account: string
   dapp: DappInfo
-  chainId: WalletChainId
+  chainId: UniverseChainId
 }
 
 export interface SignRequest extends BaseRequest {

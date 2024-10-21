@@ -1,3 +1,4 @@
+import { REACTOR_ADDRESS_MAPPING } from '@uniswap/uniswapx-sdk'
 import { TypeDefinitionSchema } from 'src/app/features/dappRequests/types/EIP712Types'
 import { z } from 'zod'
 
@@ -38,4 +39,25 @@ type Permit2 = z.infer<typeof Permit2Schema>
 
 export function isPermit2(data: unknown): data is Permit2 {
   return Permit2Schema.safeParse(data).success
+}
+
+export const UniswapXSchema = Permit2Schema.refine(
+  (data) => {
+    try {   
+      const { message, domain } = data
+      const spender = message.spender?.toLowerCase()
+      const uniswapXAddress = REACTOR_ADDRESS_MAPPING?.[Number(domain.chainId)]?.Dutch_V2?.toLowerCase()
+      return uniswapXAddress && spender === uniswapXAddress
+    } catch {
+      return false
+    }
+  },
+  {
+    message: 'Invalid UniswapX request',
+  }
+)
+type UniswapX = z.infer<typeof UniswapXSchema>
+
+export function isUniswapXSwapRequest(data: unknown): data is UniswapX {
+  return UniswapXSchema.safeParse(data).success
 }

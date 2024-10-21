@@ -2,21 +2,22 @@ import { PropsWithChildren, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
-import { NetworksFooter } from 'src/app/features/dappRequests/requestContent/NetworksFooter'
 import { DappRequestStoreItem } from 'src/app/features/dappRequests/slice'
+import { DappRequestType } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { Anchor, AnimatePresence, Button, Flex, Text, UniversalImage, UniversalImageResizeMode, styled } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
+import { borderRadii, iconSizes } from 'ui/src/theme'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
 import { formatDappURL } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
-import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
 import { NetworkFeeFooter } from 'wallet/src/features/transactions/TransactionRequest/NetworkFeeFooter'
-import { hasSufficientFundsIncludingGas } from 'wallet/src/features/transactions/utils'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface DappRequestHeaderProps {
@@ -25,7 +26,7 @@ interface DappRequestHeaderProps {
 }
 
 interface DappRequestFooterProps {
-  chainId?: WalletChainId
+  chainId?: UniverseChainId
   connectedAccountAddress?: string
   confirmText: string
   maybeCloseOnConfirm?: boolean
@@ -107,7 +108,7 @@ export function DappRequestContent({
 
 function DappRequestHeader({ headerIcon, title }: DappRequestHeaderProps): JSX.Element {
   const { dappIconUrl, dappUrl } = useDappRequestQueueContext()
-  const hostname = new URL(dappUrl).hostname.toUpperCase()
+  const hostname = extractNameFromUrl(dappUrl).toUpperCase()
   const fallbackIcon = <DappIconPlaceholder iconSize={iconSizes.icon40} name={hostname} />
 
   return (
@@ -116,6 +117,7 @@ function DappRequestHeader({ headerIcon, title }: DappRequestHeaderProps): JSX.E
         <Flex grow>
           {headerIcon || (
             <UniversalImage
+              style={{ image: { borderRadius: borderRadii.rounded8 } }}
               fallback={fallbackIcon}
               size={{
                 width: iconSizes.icon40,
@@ -148,13 +150,13 @@ export function DappRequestFooter({
   maybeCloseOnConfirm,
   onCancel,
   onConfirm,
-  showAllNetworks,
   showNetworkCost,
   transactionGasFeeResult,
   isUniswapX,
 }: DappRequestFooterProps): JSX.Element {
   const { t } = useTranslation()
   const activeAccount = useActiveAccountWithThrow()
+  const { defaultChainId } = useEnabledChains()
   const {
     dappUrl,
     currentAccount,
@@ -172,8 +174,7 @@ export function DappRequestFooter({
     throw error
   }
 
-  const currentChainId = chainId || activeChain || UniverseChainId.Mainnet
-  const gasFeeUSD = useUSDValue(currentChainId, transactionGasFeeResult?.value)
+  const currentChainId = chainId || activeChain || defaultChainId
   const { balance: nativeBalance } = useOnChainNativeCurrencyBalance(currentChainId, currentAccount.address)
 
   const hasSufficientGas = hasSufficientFundsIncludingGas({
@@ -182,7 +183,12 @@ export function DappRequestFooter({
   })
 
   const shouldCloseSidebar = request.isSidebarClosed && totalRequestCount <= 1
-  const isConfirmDisabled = transactionGasFeeResult ? !gasFeeUSD || !hasSufficientGas : false
+
+  // Disable submission if no gas fee value
+  const isConfirmEnabled =
+    request.dappRequest.type === DappRequestType.SendTransaction
+      ? transactionGasFeeResult?.value && hasSufficientGas
+      : true
 
   const handleOnConfirm = useCallback(async () => {
     if (onConfirm) {
@@ -223,26 +229,25 @@ export function DappRequestFooter({
         {showNetworkCost && (
           <NetworkFeeFooter
             chainId={currentChainId}
-            gasFeeUSD={transactionGasFeeResult ? gasFeeUSD : '0'}
+            gasFee={transactionGasFeeResult}
             isUniswapX={isUniswapX}
             showNetworkLogo={!!transactionGasFeeResult}
           />
         )}
-        {showAllNetworks && <NetworksFooter />}
         <AddressFooter
           activeAccountAddress={activeAccount.address}
           connectedAccountAddress={connectedAccountAddress || currentAccount.address}
           px="$spacing8"
         />
         <Flex row gap="$spacing12" pt="$spacing8">
-          <Button flex={1} flexBasis={1} size="small" theme="secondary" onPress={handleOnCancel}>
+          <Button flex={1} flexBasis={1} size="medium" theme="secondary" onPress={handleOnCancel}>
             {t('common.button.cancel')}
           </Button>
           <Button
-            disabled={isConfirmDisabled}
+            disabled={!isConfirmEnabled}
             flex={1}
             flexBasis={1}
-            size="small"
+            size="medium"
             theme="primary"
             onPress={handleOnConfirm}
           >

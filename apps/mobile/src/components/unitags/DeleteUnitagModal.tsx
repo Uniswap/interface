@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
-import { AlertTriangle } from 'ui/src/components/icons'
+import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
@@ -93,7 +93,7 @@ export function DeleteUnitagModal({
           mb="$spacing8"
           minWidth="$spacing48"
         >
-          <AlertTriangle color="$statusCritical" size="$icon.24" />
+          <AlertTriangleFilled color="$statusCritical" size="$icon.24" />
         </Flex>
         <Text textAlign="center" variant="subheading1">
           {t('unitags.delete.confirm.title')}

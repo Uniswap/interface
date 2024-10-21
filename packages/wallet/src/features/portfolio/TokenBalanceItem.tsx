@@ -3,11 +3,12 @@ import { useTranslation } from 'react-i18next'
 import { Flex, ImpactFeedbackStyle, Shine, Text, TouchableArea, isWeb } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { disableOnPress } from 'wallet/src/utils/disableOnPress'
 
 /**
@@ -33,6 +34,8 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   const { currency } = currencyInfo
   const { t } = useTranslation()
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
+
+  const { isTestnetModeEnabled } = useEnabledChains()
 
   const onPress = (): void => {
     onPressToken?.(currencyInfo.currencyId)
@@ -75,28 +78,30 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
           </Flex>
         </Flex>
       </Flex>
-      <Flex justifyContent="space-between" position="relative">
-        <Shine disabled={!isLoading}>
-          {!portfolioBalance.balanceUSD ? (
-            <Flex centered fill>
-              <Text color="$neutral2">{t('common.text.notAvailable')}</Text>
-            </Flex>
-          ) : (
-            <Flex alignItems="flex-end" pl="$spacing8">
-              <Text color="$neutral1" numberOfLines={1} variant={isWeb ? 'body2' : 'body1'}>
-                {balance}
-              </Text>
-              <RelativeChange
-                alignRight
-                change={relativeChange24 ?? undefined}
-                negativeChangeColor="$statusCritical"
-                positiveChangeColor="$statusSuccess"
-                variant={isWeb ? 'body3' : 'body2'}
-              />
-            </Flex>
-          )}
-        </Shine>
-      </Flex>
+      {!isTestnetModeEnabled && (
+        <Flex justifyContent="space-between" position="relative">
+          <Shine disabled={!isLoading}>
+            {!portfolioBalance.balanceUSD ? (
+              <Flex centered fill>
+                <Text color="$neutral2">{t('common.text.notAvailable')}</Text>
+              </Flex>
+            ) : (
+              <Flex alignItems="flex-end" pl="$spacing8">
+                <Text color="$neutral1" numberOfLines={1} variant={isWeb ? 'body2' : 'body1'}>
+                  {balance}
+                </Text>
+                <RelativeChange
+                  alignRight
+                  change={relativeChange24 ?? undefined}
+                  negativeChangeColor="$statusCritical"
+                  positiveChangeColor="$statusSuccess"
+                  variant={isWeb ? 'body3' : 'body2'}
+                />
+              </Flex>
+            )}
+          </Shine>
+        </Flex>
+      )}
     </TouchableArea>
   )
 })

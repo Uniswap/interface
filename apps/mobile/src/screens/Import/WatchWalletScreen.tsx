@@ -3,25 +3,25 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { TFunction } from 'i18next'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
-import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Button, Flex, Text } from 'ui/src'
-import { GraduationCap } from 'ui/src/components/icons'
+import { Eye, GraduationCap } from 'ui/src/components/icons'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
 import { useENS } from 'uniswap/src/features/ens/useENS'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
-import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
 import { createViewOnlyAccount } from 'wallet/src/features/onboarding/createViewOnlyAccount'
 import { useIsSmartContractAddress } from 'wallet/src/features/transactions/send/hooks/useIsSmartContractAddress'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
@@ -75,8 +75,9 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
   const dispatch = useDispatch()
   const accounts = useAccounts()
   const initialAccounts = useRef(accounts)
+  const { defaultChainId } = useEnabledChains()
 
-  useAddBackButton(navigation)
+  useNavigationHeader(navigation)
 
   // Form values.
   const [value, setValue] = useState<string | undefined>(undefined)
@@ -89,15 +90,13 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
   const validAddress = getValidAddress(normalizedValue, true, false)
   const { isSmartContractAddress, loading } = useIsSmartContractAddress(
     (validAddress || resolvedAddress) ?? undefined,
-    UniverseChainId.Mainnet,
+    defaultChainId,
   )
   const address = isSmartContractAddress ? (validAddress || resolvedAddress) ?? undefined : undefined
-  const valueModifiers = usePortfolioValueModifiers(address)
   // Allow smart contracts with non-null balances
   const { data: balancesById } = usePortfolioBalances({
     address,
     fetchPolicy: 'cache-and-network',
-    valueModifiers,
   })
   const isValidSmartContract = isSmartContractAddress && !!balancesById
 
@@ -157,7 +156,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
   }, [value])
 
   return (
-    <SafeKeyboardOnboardingScreen title={t('account.wallet.watch.title')}>
+    <SafeKeyboardOnboardingScreen Icon={Eye} title={t('account.wallet.watch.title')}>
       <Flex $short={{ gap: '$none' }} gap="$spacing12">
         <GenericImportForm
           blurOnSubmit
@@ -171,7 +170,9 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           value={value}
           onChange={onChange}
           onSubmit={(): void => {
-            isValid && Keyboard.dismiss()
+            if (isValid) {
+              dismissNativeKeyboard()
+            }
           }}
         />
         <Flex

@@ -1,7 +1,7 @@
 import { InterfaceModalName } from '@uniswap/analytics-events'
-import { AutoColumn } from 'components/Column'
 import { ConfirmModalState } from 'components/ConfirmSwapModal'
 import Modal from 'components/Modal'
+import { AutoColumn } from 'components/deprecated/Column'
 import styled from 'lib/styled-components'
 import { PropsWithChildren, useRef } from 'react'
 import { animated, easings, useSpring } from 'react-spring'
