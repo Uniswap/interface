@@ -2,6 +2,7 @@ import {
   EXACT_INCENTIVE_QUERY,
   indexerTaraswap,
 } from "components/Incentives/types";
+import { BigNumber } from "ethers";
 import { useAccount } from "hooks/useAccount";
 import { useV3NFTPositionManagerContract } from "hooks/useContract";
 import { useV3StakerContract } from "hooks/useV3StakerContract";
@@ -15,9 +16,9 @@ export interface PositionDetails {
 }
 
 export interface RewardInfo {
-  pendingRewards: number;
-  maxRewards: number;
-  secondsInsideX128: number;
+  reward: BigNumber;
+  maxRewards: BigNumber;
+  secondsInsideX128: BigNumber;
 }
 
 export interface IncentiveKey {
@@ -33,6 +34,7 @@ export interface Incentive {
   id: string;
   rewardToken: {
     id: string;
+    symbol: string;
   };
   pool: {
     id: string;
@@ -292,6 +294,7 @@ const usePosition = (tokenId: number, incentiveId: string) => {
   }, [tokenId, address, nftManagerPositionsContract, v3StakerContract]);
 
   return {
+    incentive,
     isFetchingRewardInfo,
     isApproving,
     isTransferring,

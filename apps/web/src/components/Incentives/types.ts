@@ -181,6 +181,7 @@ query incentive($id: String!) {
     id
     rewardToken {
       id
+      symbol
     }
     pool{
       id

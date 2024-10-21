@@ -97,6 +97,7 @@ import { LoadingRows } from "./styled";
 import { STAKER_ADDRESS, useV3StakerContract } from "hooks/useV3StakerContract";
 import usePosition from "hooks/usePosition";
 import useTokenPosition from "hooks/useTokenPosition";
+import { formatEther } from "ethers/lib/utils";
 
 const PositionPageButtonPrimary = styled(ButtonPrimary)`
   width: 228px;
@@ -236,25 +237,19 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
   const [userDetails, setUserDetails] = useState({
     hasDeposited: false,
     hasStaked: false,
-    pendingRewards: 0,
+    pendingRewards: BigNumber.from(0),
   });
 
   const [isApproved, setIsApproved] = useState(false);
   const [refetch, setRefetch] = useState(1);
 
-  const formatNumber = (number: number): string => {
-    return new Intl.NumberFormat(navigator.language, {
-      style: "decimal",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(number);
-  };
   const formattedPendingRewards = useMemo(
-    () => formatNumber(userDetails.pendingRewards),
+    () => formatEther(userDetails.pendingRewards),
     [userDetails.pendingRewards]
   );
 
   const {
+    incentive,
     getRewardInfo,
     approve,
     transfer,
@@ -281,8 +276,10 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
     const depositData = await getDepositData();
     const hasDeposited = await isDeposited();
     const rewardInfo = await getRewardInfo();
-    const pendingRewards = rewardInfo?.pendingRewards ?? 0;
+    console.log("~ rewardInfo: ", rewardInfo);
+    const pendingRewards = rewardInfo?.reward ?? BigNumber.from(0);
     const hasStaked = (depositData?.numberOfStakes ?? 0) > 0;
+    console.log("$ pendingreward: ", pendingRewards, rewardInfo?.reward);
     return { hasDeposited, pendingRewards, hasStaked };
   };
 
@@ -295,10 +292,11 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
   useEffect(() => {
     fetchDepositAndRewards().then((data) => {
       if (data) {
+        console.log("~ data rewards: ", data);
         setUserDetails(data);
       }
     });
-  }, [refetch]);
+  }, [refetch, incentive]);
 
   const approveAndTransfer = useCallback(async () => {
     if (isApproved) {
@@ -358,7 +356,7 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
               <Trans i18nKey="common.incentives.pending.reward" />
             </ExtentsText>
             <ThemedText.DeprecatedMediumHeader textAlign="center">
-              {formattedPendingRewards}
+              {formattedPendingRewards} {incentive?.rewardToken.symbol}
             </ThemedText.DeprecatedMediumHeader>
           </AutoColumn>
         </LightCard>
