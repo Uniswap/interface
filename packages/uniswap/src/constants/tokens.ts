@@ -358,13 +358,14 @@ export const GRG: { [chainId: number]: Token } = {
     'GRG',
     'Rigo'
   ),
-  [UniverseChainId.Goerli]: new Token(
-    UniverseChainId.Goerli,
-    GRG_ADDRESSES[UniverseChainId.Goerli] as string,
-    18,
-    'GRG',
-    'Rigo'
-  ),
+  // TODO: add Sepolia GRG
+  //[UniverseChainId.Sepolia]: new Token(
+  //  UniverseChainId.Sepolia,
+  //  GRG_ADDRESSES[UniverseChainId.Sepolia] as string,
+  //  18,
+  //  'GRG',
+  //  'Rigo'
+  //),
   [UniverseChainId.Optimism]: new Token(
     UniverseChainId.Optimism,
     GRG_ADDRESSES[UniverseChainId.Optimism] as string,

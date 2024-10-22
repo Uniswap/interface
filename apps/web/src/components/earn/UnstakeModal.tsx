@@ -25,6 +25,7 @@ import { LoadingView, SubmittedView } from 'components/ModalViews'
 import Slider from 'components/Slider'
 import { useAccount } from 'hooks/useAccount'
 import { logger } from 'utilities/src/logger/logger'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -50,7 +51,7 @@ export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismi
   const account = useAccount()
 
   // state for unstake input
-  const [currencyValue] = useState<Token>(GRG[account.chainId ?? 1])
+  const [currencyValue] = useState<Token>(GRG[account.chainId ?? UniverseChainId.Mainnet])
 
   const { percent } = useBurnV3State()
   const { onPercentSelect } = useBurnV3ActionHandlers()

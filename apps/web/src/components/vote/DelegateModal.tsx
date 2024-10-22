@@ -37,6 +37,7 @@ import { ResponsiveHeaderText, SmallMaxButton } from 'pages/RemoveLiquidity/styl
 // TODO: check if should write into state stake hooks
 import { useBurnV3ActionHandlers, useBurnV3State } from 'state/burn/v3/hooks'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -67,7 +68,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
   const theme = useTheme()
 
   // state for delegate input
-  const [currencyValue] = useState<Currency>(GRG[account.chainId ?? 1])
+  const [currencyValue] = useState<Currency>(GRG[account.chainId ?? UniverseChainId.Mainnet])
   const [usingDelegate, setUsingDelegate] = useState(false)
   const [typed, setTyped] = useState('')
 
@@ -183,7 +184,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
   // usingDelegate equals isRbPool
   const [approval, approveCallback] = useApproveCallback(
     parsedAmount ?? undefined,
-    GRG_TRANSFER_PROXY_ADDRESSES[account.chainId ?? 1] ?? undefined,
+    GRG_TRANSFER_PROXY_ADDRESSES[account.chainId ?? UniverseChainId.Mainnet] ?? undefined,
     usingDelegate
   )
 

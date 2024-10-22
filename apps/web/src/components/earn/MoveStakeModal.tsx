@@ -39,6 +39,7 @@ import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import Slider from 'components/Slider'
 import { useAccount } from 'hooks/useAccount'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -63,7 +64,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
   const account = useAccount()
 
   // state for delegate input
-  const [currencyValue] = useState<Currency>(GRG[account.chainId ?? 1])
+  const [currencyValue] = useState<Currency>(GRG[account.chainId ?? UniverseChainId.Mainnet])
   const [typed, setTyped] = useState('')
   const [isPoolMoving, setIsPoolMoving] = useState(false)
 

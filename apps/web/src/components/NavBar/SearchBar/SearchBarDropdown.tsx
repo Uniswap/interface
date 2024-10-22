@@ -165,7 +165,7 @@ function SearchBarDropdownContents({
 }: SearchBarDropdownProps): JSX.Element {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
   //const { data: searchHistory } = useRecentlySearchedAssets()
-  const searchHistory: SearchToken[] = pools
+  const searchHistory: InterfaceRemoteSearchHistoryItem[] = pools
   const shortenedHistory = useMemo(
     () =>
       searchHistory?.filter((item) => 'isVerified' in (item as GenieCollection) || (item as Token).chain) ?? [
@@ -271,9 +271,11 @@ function SearchBarDropdownContents({
         header={<Trans i18nKey="common.smartPools" />}
       />
     ) : (
-      <NotFoundContainer>
+      <Flex py="$spacing4" px="$spacing16">
+      <Text variant="body3">
         <Trans i18nKey="smartPools.noneFound" />
-      </NotFoundContainer>
+      </Text>
+    </Flex>
     )
 
   const tokenSearchResults = displayTokens ? (

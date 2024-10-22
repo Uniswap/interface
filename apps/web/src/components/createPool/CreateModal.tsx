@@ -245,7 +245,6 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
             onCurrencySelect={handleCurrencySelect}
             selectedCurrency={currencyValue}
             showCurrencyAmount={false}
-            hideChainSwitch={true}
           />
         </ContentWrapper>
       )}

@@ -44,7 +44,6 @@ import {
   ProposalState,
   useProposalData,
   useQuorum,
-  useUserDelegatee,
   useUserVotes,
 } from 'state/governance/hooks'
 import { VoteOption } from 'state/governance/types'
@@ -256,11 +255,10 @@ export default function VotePage() {
     account.address,
     account.chainId ? GRG[account.chainId] : undefined,
   )
-  const userDelegatee: string | undefined = useUserDelegatee()
 
   // in blurb link to home page if they are able to unlock
   const showLinkForUnlock = Boolean(
-    grgBalance && JSBI.notEqual(grgBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS,
+    grgBalance && JSBI.notEqual(grgBalance.quotient, JSBI.BigInt(0)),
   )
 
   // show links in propsoal details if content is an address

@@ -36,16 +36,17 @@ export const wagmiConfig = createConfig({
     safe(),
   ],
   client({ chain }) {
-    const rpcUrl = chain.backendChain.chain === BackendChainId.Bnb
-      ? process.env.REACT_APP_BNB_RPC_URL
-      : chain.backendChain.chain === BackendChainId.Base
-      ? process.env.REACT_APP_BASE_MAINNET_RPC_URL
-      : chain.rpcUrls.appOnly.http[0] 
+    // TODO: modify this to inject rpc provider other than infura
+    //const rpcUrl = chain.id === UniverseChainId.Bnb
+    //  ? process.env.REACT_APP_BNB_RPC_URL
+    //  : chain.backendChain.chain === UniverseChainId.Base
+    //  ? process.env.REACT_APP_BASE_MAINNET_RPC_URL
+    //  : chain.rpcUrls.appOnly.http[0] 
     return createClient({
       chain,
       batch: { multicall: true },
       pollingInterval: 12_000,
-      transport: http(rpcUrl),
+      transport: http(chain.rpcUrls.appOnly.http[0]),
     })
   },
 })

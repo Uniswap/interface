@@ -8,18 +8,17 @@ import {
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 //import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@uniswap/universal-router-sdk'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button/buttons'
+import { ButtonGray, ButtonError, ButtonLight, ButtonPrimary } from 'components/Button/buttons'
 import { GrayCard } from 'components/Card/cards'
-import Column, { AutoColumn } from 'components/Column'
 import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
+import Column, { AutoColumn } from 'components/deprecated/Column'
 import ErrorIcon from 'components/Icons/Error'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import Row from 'components/deprecated/Row'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
-import Column, { AutoColumn } from 'components/deprecated/Column'
 import { RowFixed } from 'components/deprecated/Row'
 import PriceImpactModal from 'components/swap/PriceImpactModal'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
@@ -659,7 +658,6 @@ export function SwapForm({
           selectedCurrency={smartPool}
           operatedPools={operatedPools}
           showCurrencyAmount={false}
-          hideChainSwitch={true}
           currencySearchFilters={DISPLAY_POOLS_SEARCH_FILTERS}
         />
       )}

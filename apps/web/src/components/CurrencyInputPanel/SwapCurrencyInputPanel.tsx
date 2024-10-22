@@ -456,7 +456,6 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
             isOpen={modalOpen}
             onDismiss={handleDismissSearch}
             onCurrencySelect={onCurrencySelect}
-            hideChainSwitch={true}
             selectedCurrency={currency}
             otherSelectedCurrency={otherCurrency}
           />

@@ -3,24 +3,13 @@ import { isAddress } from '@ethersproject/address'
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/strings'
 // eslint-disable-next-line no-restricted-imports
 //import GovernorAlphaJSON from '@uniswap/governance/build/GovernorAlpha.json'
-import UniJSON from '@uniswap/governance/build/Uni.json'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { GOVERNANCE_PROXY_ADDRESSES, RB_REGISTRY_ADDRESSES, STAKING_PROXY_ADDRESSES } from 'constants/addresses'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
 import { ZERO_ADDRESS } from 'constants/misc'
-import {
-  BRAVO_START_BLOCK,
-  MOONBEAN_START_BLOCK,
-  ONE_BIP_START_BLOCK,
-  POLYGON_START_BLOCK,
-  UNISWAP_GRANTS_START_BLOCK,
-} from 'constants/proposals'
-import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
-import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useContract } from 'hooks/useContract'
@@ -37,7 +26,7 @@ import POOL_EXTENDED_ABI from 'uniswap/src/abis/pool-extended.json'
 import RB_REGISTRY_ABI from 'uniswap/src/abis/rb-registry.json'
 import STAKING_ABI from 'uniswap/src/abis/staking-impl.json'
 import STAKING_PROXY_ABI from 'uniswap/src/abis/staking-proxy.json'
-import { GRG, UNI } from 'uniswap/src/constants/tokens'
+import { GRG } from 'uniswap/src/constants/tokens'
 import { t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -49,14 +38,6 @@ function useGovernanceProxyContract(): Contract | null {
     GOVERNANCE_RB_ABI,
     true,
   )
-}
-
-const useLatestGovernanceContract = useGovernanceProxyContract
-
-function useUniContract() {
-  const { chainId } = useAccount()
-  const uniAddress = useMemo(() => (chainId ? UNI[chainId]?.address : undefined), [chainId])
-  return useContract(uniAddress, UniJSON.abi, true)
 }
 
 function useRegistryContract(): Contract | null {
@@ -115,7 +96,7 @@ export interface ProposalData {
 interface ProposedAction {
   target: string
   data: string
-  value: string
+  value: number
 }
 
 export interface CreateProposalData {
@@ -167,9 +148,11 @@ function useProposalCount(contract: Contract | null): number | undefined {
 
 interface FormattedProposalLog {
   description: string
-  details: { target: string; functionSig: string; callData: string }[]
+  actions: ProposedAction[]
   proposer: string
   proposalId: number
+  startBlockOrTime: number
+  endBlockOrTime: number
 }
 
 const FOUR_BYTES_DIR: { [sig: string]: string } = {
@@ -226,58 +209,23 @@ function useFormattedProposalCreatedLogs(
 
   return useMemo(() => {
     return useLogsResult?.logs
-      ?.map((log) => {
+      ?.map((log: { topics: string[], data: string }) => {
         const parsed = GovernanceInterface.parseLog(log).args
         return parsed
       })
-      ?.filter((parsed) => indices.flat().some((i) => i === parsed.proposalId.toNumber()))
-      ?.map((parsed) => {
-        let description!: string
-
+      ?.filter((parsed: any) => indices.flat().some((i) => i === parsed.proposalId))
+      ?.map((parsed: any) => {
+        const description: string = parsed.description
         const proposer = parsed.proposer.toString()
         const proposalId = parsed.proposalId
-        const startBlock = parseInt(parsed.startBlockOrTime?.toString())
-        try {
-          description = parsed.description
-        } catch (error) {
-          // replace invalid UTF-8 in the description with replacement characters
-          let onError = Utf8ErrorFuncs.replace
-
-          // Bravo proposal reverses the codepoints for U+2018 (‘) and U+2026 (…)
-          if (startBlock === BRAVO_START_BLOCK) {
-            const U2018 = [0xe2, 0x80, 0x98].toString()
-            const U2026 = [0xe2, 0x80, 0xa6].toString()
-            onError = (reason, offset, bytes, output) => {
-              if (reason === Utf8ErrorReason.UNEXPECTED_CONTINUE) {
-                const charCode = [bytes[offset], bytes[offset + 1], bytes[offset + 2]].reverse().toString()
-                if (charCode === U2018) {
-                  output.push(0x2018)
-                  return 2
-                } else if (charCode === U2026) {
-                  output.push(0x2026)
-                  return 2
-                }
-              }
-              return Utf8ErrorFuncs.replace(reason, offset, bytes, output)
-            }
-          }
-
-          description = JSON.parse(toUtf8String(error.error.value, onError)) || ''
-        }
-
-        // some proposals omit newlines
-        if (
-          startBlock === BRAVO_START_BLOCK ||
-          startBlock === ONE_BIP_START_BLOCK ||
-          startBlock === MOONBEAN_START_BLOCK
-        ) {
-          description = description.replace(/ {2}/g, '\n').replace(/\d\. /g, '\n$&')
-        }
 
         return {
           proposer,
           description,
           proposalId,
+          startBlockOrTime: parseInt(parsed.startBlockOrTime?.toString()),
+          endBlockOrTime: parseInt(parsed.startBlockOrTime?.toString()),
+          actions: parsed.actions,
           details: parsed.actions.map((action: ProposedAction) => {
             let calldata = action.data
 
@@ -327,10 +275,11 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
   // get metadata from past events
   let govStartBlock
 
+  // TODO: deploy on Sepolia
   if (chainId === UniverseChainId.Mainnet) {
     govStartBlock = 16620590
-  } else if (chainId === UniverseChainId.Goerli) {
-    govStartBlock = 8485377
+  } else if (chainId === UniverseChainId.Sepolia) {
+    govStartBlock = 6921639
   } else if (chainId === UniverseChainId.ArbitrumOne) {
     govStartBlock = 60590354
   } else if (chainId === UniverseChainId.Optimism) {
@@ -371,15 +320,8 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
       data: proposalsCallData.map((proposal, i) => {
         const startBlock = parseInt(proposal?.result?.proposalWrapper?.proposal?.startBlockOrTime?.toString())
 
-        let description = formattedLogs[i]?.description ?? ''
-        if (startBlock === UNISWAP_GRANTS_START_BLOCK) {
-          description = UNISWAP_GRANTS_PROPOSAL_DESCRIPTION
-        }
-
-        let title = description?.split(/#+\s|\n/g)[1]
-        if (startBlock === POLYGON_START_BLOCK) {
-          title = POLYGON_PROPOSAL_TITLE
-        }
+        const description = formattedLogs[i]?.description ?? ''
+        const title = description?.split(/#+\s|\n/g)[1]
 
         const details = proposal?.result?.proposalWrapper?.proposedAction.map((action: ProposedAction) => {
           let calldata = action.data
@@ -427,7 +369,7 @@ export function useProposalData(governorIndex: number, id: string): ProposalData
 }
 
 export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefined {
-  const latestGovernanceContract = useLatestGovernanceContract()
+  const latestGovernanceContract = useGovernanceProxyContract()
   const govParams = useSingleCallResult(latestGovernanceContract, 'governanceParameters')?.result?.[0]
   const quorumVotes = govParams?.params?.quorumThreshold
   const { chainId } = useAccount()
@@ -446,14 +388,6 @@ export function useQuorum(governorIndex: number): CurrencyAmount<Token> | undefi
   return CurrencyAmount.fromRawAmount(grg, quorumVotes)
 }
 
-// get the users delegatee if it exists
-export function useUserDelegatee(): string {
-  const account = useAccount()
-  const uniContract = useUniContract()
-  const { result } = useSingleCallResult(uniContract, 'delegates', [account.address])
-  return result?.[0] ?? undefined
-}
-
 // gets the users current votes
 export function useUserVotes(): { loading: boolean; votes?: CurrencyAmount<Token> } {
   const account = useAccount()
@@ -465,17 +399,6 @@ export function useUserVotes(): { loading: boolean; votes?: CurrencyAmount<Token
     const grg = account.chainId ? GRG[account.chainId] : undefined
     return { loading, votes: grg && result ? CurrencyAmount.fromRawAmount(grg, result?.[0]) : undefined }
   }, [account.chainId, loading, result])
-}
-
-// fetch available votes as of block (usually proposal start block)
-export function useUserVotesAsOfBlock(block: number | undefined): CurrencyAmount<Token> | undefined {
-  const account = useAccount()
-  const uniContract = useUniContract()
-
-  // check for available votes
-  const uni = useMemo(() => (account.chainId ? UNI[account.chainId] : undefined), [account.chainId])
-  const votes = useSingleCallResult(uniContract, 'getPriorVotes', [account.address, block ?? undefined])?.result?.[0]
-  return votes && uni ? CurrencyAmount.fromRawAmount(uni, votes) : undefined
 }
 
 export function usePoolIdByAddress(pool: string | undefined): {
@@ -534,7 +457,7 @@ export function useDelegateCallback(): (stakeData: StakeData | undefined) => und
       ])
       const delegatee = stakeData.pool
       if (!delegatee) {
-        return
+        return undefined
       }
       //const args = [delegatee]
       // if the staking pool does not exist, user creates it and becomes staking pal
@@ -574,7 +497,7 @@ export function useDelegatePoolCallback(): (stakeData: StakeData | undefined) =>
       const delegatee = stakeData.pool
       const poolInstance = stakeData.poolContract ?? undefined
       if (!delegatee) {
-        return
+        return undefined
       }
       //const args = [delegatee]
       // Rigoblock executes move stake inside stake method, in just 1 call
@@ -637,7 +560,7 @@ export function useMoveStakeCallback(): (stakeData: StakeData | undefined) => un
       ])
       const delegatee = stakeData.pool
       if (!delegatee) {
-        return
+        return undefined
       }
       //const args = [delegatee]
       // if the staking pool does not exist, user creates it and becomes staking pal
@@ -692,7 +615,7 @@ export function useDeactivateStakeCallback(): (stakeData: StakeData | undefined)
       const delegatee = stakeData.pool
       const poolInstance = stakeData.poolContract ?? undefined
       if (!delegatee) {
-        return
+        return undefined
       }
       // Rigoblock executes move stake inside stake method, in just 1 call
       const args = stakeData.isPoolMoving ? [stakeData.amount] : [[deactivateCall]]
@@ -737,13 +660,13 @@ export function useVoteCallback(): (
   voteOption: VoteOption,
 ) => undefined | Promise<string> {
   const account = useAccount()
-  const latestGovernanceContract = useLatestGovernanceContract()
+  const latestGovernanceContract = useGovernanceProxyContract()
   const addTransaction = useTransactionAdder()
 
   return useCallback(
     (proposalId: string | undefined, voteOption: VoteOption) => {
       if (!account.address || !latestGovernanceContract || !proposalId || !account.chainId) {
-        return
+        return undefined
       }
       const args = [proposalId, voteOption === VoteOption.For ? 0 : voteOption === VoteOption.Against ? 1 : 2]
       return latestGovernanceContract.estimateGas.castVote(...args, {}).then((estimatedGasLimit) => {
@@ -767,13 +690,13 @@ export function useVoteCallback(): (
 
 export function useQueueCallback(): (proposalId: string | undefined) => undefined | Promise<string> {
   const account = useAccount()
-  const latestGovernanceContract = useLatestGovernanceContract()
+  const latestGovernanceContract = useGovernanceProxyContract()
   const addTransaction = useTransactionAdder()
 
   return useCallback(
     (proposalId: string | undefined) => {
       if (!account.address || !latestGovernanceContract || !proposalId || !account.chainId) {
-        return
+        return undefined
       }
       const args = [proposalId]
       return latestGovernanceContract.estimateGas.queue(...args, {}).then((estimatedGasLimit) => {
@@ -795,13 +718,13 @@ export function useQueueCallback(): (proposalId: string | undefined) => undefine
 
 export function useExecuteCallback(): (proposalId: string | undefined) => undefined | Promise<string> {
   const account = useAccount()
-  const latestGovernanceContract = useLatestGovernanceContract()
+  const latestGovernanceContract = useGovernanceProxyContract()
   const addTransaction = useTransactionAdder()
 
   return useCallback(
     (proposalId: string | undefined) => {
       if (!account.address || !latestGovernanceContract || !proposalId || !account.chainId) {
-        return
+        return undefined
       }
       const args = [proposalId]
       return latestGovernanceContract.estimateGas.execute(...args, {}).then((estimatedGasLimit) => {
@@ -825,7 +748,7 @@ export function useCreateProposalCallback(): (
   createProposalData: CreateProposalData | undefined,
 ) => undefined | Promise<string> {
   const account = useAccount()
-  const latestGovernanceContract = useLatestGovernanceContract()
+  const latestGovernanceContract = useGovernanceProxyContract()
   const addTransaction = useTransactionAdder()
 
   return useCallback(
@@ -858,7 +781,7 @@ export function useCreateProposalCallback(): (
 }
 
 //export function useLatestProposalId(address: string | undefined): string | undefined {
-//  const latestGovernanceContract = useLatestGovernanceContract()
+//  const latestGovernanceContract = useGovernanceProxyContract()
 //  const res = useSingleCallResult(latestGovernanceContract, 'latestProposalIds', [address])
 //  return res?.result?.[0]?.toString()
 //}
@@ -866,7 +789,7 @@ export function useCreateProposalCallback(): (
 export function useProposalThreshold(): CurrencyAmount<Token> | undefined {
   const { chainId } = useAccount()
 
-  const latestGovernanceContract = useLatestGovernanceContract()
+  const latestGovernanceContract = useGovernanceProxyContract()
   const res = useSingleCallResult(latestGovernanceContract, 'governanceParameters')
   const grg = useMemo(() => (chainId ? GRG[chainId] : undefined), [chainId])
 

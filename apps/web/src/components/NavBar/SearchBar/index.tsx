@@ -231,14 +231,15 @@ export const SearchBar = ({
     //if (!uniquePools || !account.chainId) {
     //  return [mockToken]
     //}
-    // TODO: smart pools can have decimals != 18
+    // TODO: smart pools can have decimals != 18, but we probably do not use decimals from here
     return uniquePools?.map((p) => {
       const { name, symbol, pool: address } = p
       //if (!name || !symbol || !address) return
-      return new Token(account.chainId ?? 1, address ?? undefined, 18, symbol ?? 'NAN', name ?? '')
+      return new Token(account.chainId ?? UniverseChainId.Mainnet, address ?? undefined, 18, symbol ?? 'NAN', name ?? '')
     })
   }, [account.chainId, uniquePools])
 
+  // TODO: check if we can remove getTokenFilter module
   const filteredPools: Token[] = useMemo(() => {
     return Object.values(smartPools).filter(getTokenFilter(debouncedSearchValue))
   }, [smartPools, debouncedSearchValue])

@@ -1,6 +1,12 @@
 import searchIcon from 'assets/svg/search.svg'
+import { AutoColumn } from 'components/deprecated/Column'
 import { RowBetween } from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
+
+export const PaddedColumn = styled(AutoColumn)`
+  position: relative;
+  padding: 20px;
+`
 
 export const MenuItem = styled(RowBetween)<{ dim?: boolean }>`
   padding: 4px 20px;
@@ -51,4 +57,10 @@ export const SearchInput = styled.input`
     background-color: ${({ theme }) => theme.surface2};
     outline: none;
   }
+`
+
+export const Separator = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: ${({ theme }) => theme.surface3};
 `

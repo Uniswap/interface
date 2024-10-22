@@ -1,5 +1,5 @@
 import { getChain, isSupportedChainId } from 'constants/chains'
-import { CELO_LOGO } from 'ui/src/assets'
+import { CELO_LOGO, RIGOBLOCK_LOGO } from 'ui/src/assets'
 import { GRG, isCelo, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress } from 'utilities/src/addresses'
@@ -23,7 +23,7 @@ export function getInitialLogoUrl(
       address === GRG[UniverseChainId.Polygon].address) &&
     checksummedAddress
   ) {
-    return logo
+    return RIGOBLOCK_LOGO
   }
 
   if (chainId && isCelo(chainId) && address === nativeOnChain(chainId).wrapped.address) {

@@ -92,8 +92,8 @@ function suggestionIsToken(suggestion: GenieCollection | GqlSearchToken): sugges
 }
 
 // Rigoblock pools do not generate volume
-function suggestionIsSmartPool(suggestion: GenieCollection | SearchToken): suggestion is SearchToken {
-  return (suggestion as SearchToken).market?.volume24H?.value === 0
+function suggestionIsSmartPool(suggestion: GenieCollection | GqlSearchToken): suggestion is GqlSearchToken {
+  return (suggestion as GqlSearchToken).market?.volume24H?.value === 0
 }
 export function SuggestionRow({
   suggestion,

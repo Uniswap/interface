@@ -1,7 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import AddressInputPanel from 'components/AddressInputPanel'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import { CurrencySearchFilters } from 'components/SearchModal/DeprecatedCurrencySearch'
 import styled from 'lib/styled-components'
 import { ProposalAction } from 'pages/CreateProposal/ProposalActionSelector'
 import { Trans } from 'uniswap/src/i18n'
@@ -23,11 +22,6 @@ const ProposalActionDetailContainer = styled.div`
     margin-bottom: 10px;
   }
 `
-
-const CREATE_PROPOSAL_CURRENCY_SEARCH_FILTERS: CurrencySearchFilters = {
-  disableNonToken: true,
-  showCommonBases: false,
-}
 
 export const ProposalActionDetail = ({
   className,
@@ -115,7 +109,6 @@ export const ProposalActionDetail = ({
             showCurrencyAmount={false}
             hideBalance
             id="currency-input"
-            currencySearchFilters={CREATE_PROPOSAL_CURRENCY_SEARCH_FILTERS}
           />
         ) : null,
       )}

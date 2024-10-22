@@ -23,6 +23,8 @@ export function organizeSearchResults(
   tokenResults: GqlSearchToken[],
   collectionResults: GenieCollection[],
 ): [GqlSearchToken[], GqlSearchToken[], GenieCollection[]] {
+  const reducedPools =
+    poolResults?.slice(0, isNFTPage ? 3 : collectionResults.length < 3 ? 8 - collectionResults.length : 5) ?? []
   const reducedTokens =
     tokenResults?.slice(0, isNFTPage ? 3 : collectionResults.length < 3 ? 8 - collectionResults.length : 5) ?? []
   const reducedCollections = collectionResults.slice(0, 8 - reducedTokens.length)

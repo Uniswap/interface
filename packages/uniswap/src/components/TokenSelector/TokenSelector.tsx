@@ -60,7 +60,6 @@ export interface TokenSelectorProps {
   input?: TradeableAsset
   isSurfaceReady?: boolean
   isLimits?: boolean
-  hideChainSwitch?: boolean
   onClose: () => void
   onSelectChain?: (chainId: UniverseChainId | null) => void
   onSelectCurrency: (currency: Currency, currencyField: CurrencyField, isBridgePair: boolean) => void
@@ -341,7 +340,7 @@ function _TokenSelectorModal(props: TokenSelectorProps): JSX.Element {
       hideKeyboardOnDismiss
       hideKeyboardOnSwipeDown
       renderBehindBottomInset
-      backgroundColor={colors.surface1.val}
+      backgroundColor={colors?.surface1?.val}
       isModalOpen={isModalOpen}
       maxWidth={isWeb ? TOKEN_SELECTOR_WEB_MAX_WIDTH : undefined}
       maxHeight={isInterface ? TOKEN_SELECTOR_WEB_MAX_HEIGHT : undefined}

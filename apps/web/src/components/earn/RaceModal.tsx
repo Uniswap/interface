@@ -17,6 +17,7 @@ import { RowBetween } from 'components/deprecated/Row'
 import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import { useAccount } from 'hooks/useAccount'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -53,7 +54,7 @@ interface RaceModalProps {
 export default function RaceModal({ isOpen, poolAddress, poolName, onDismiss, title }: RaceModalProps) {
   const { chainId } = useAccount()
 
-  const [currencyValue] = useState<Token>(GRG[chainId ?? 1])
+  const [currencyValue] = useState<Token>(GRG[chainId ?? UniverseChainId.Mainnet])
   const raceCallback = useRaceCallback()
 
   // monitor call to help UI loading state

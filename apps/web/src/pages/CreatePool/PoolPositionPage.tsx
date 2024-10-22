@@ -52,6 +52,7 @@ import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 //import { currencyId } from 'utils/currencyId'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 //import { formatTickPrice } from 'utils/formatTickPrice'
 //import { unwrappedToken } from 'utils/unwrappedToken'
 
@@ -265,7 +266,7 @@ export default function PoolPositionPage() {
 
   let base = useCurrency(baseToken !== ZERO_ADDRESS ? baseToken : undefined)
   if (baseToken === ZERO_ADDRESS) {
-    base = nativeOnChain(account.chainId ?? 1)
+    base = nativeOnChain(account.chainId ?? UniverseChainId.Mainnet)
   }
 
   const pool = useCurrency(poolAddressFromUrl ?? undefined)

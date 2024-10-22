@@ -27,7 +27,8 @@ export const BRIDGED_BASE_ADDRESSES = [
 
 export const GRG_ADDRESSES: AddressMap = {
   [UniverseChainId.Mainnet]: '0x4FbB350052Bca5417566f188eB2EBCE5b19BC964',
-  [UniverseChainId.Goerli]: '0x076C619e7ebaBe40746106B66bFBed731F2c1339',
+  // TODO: change Sepolia GRG
+  [UniverseChainId.Sepolia]: '0x076C619e7ebaBe40746106B66bFBed731F2c1339',
   [UniverseChainId.ArbitrumOne]: '0x7F4638A58C0615037deCc86f1daE60E55fE92874',
   [UniverseChainId.Optimism]: '0xEcF46257ed31c329F204Eb43E254C609dee143B3',
   [UniverseChainId.Polygon]: '0xBC0BEA8E634ec838a2a45F8A43E7E16Cd2a8BA99',
