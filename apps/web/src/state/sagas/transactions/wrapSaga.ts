@@ -7,11 +7,8 @@ import { PopupType, addPopup } from 'state/application/reducer'
 import { HandleOnChainStepParams, handleOnChainStep } from 'state/sagas/transactions/utils'
 import { TransactionType, WrapTransactionInfo } from 'state/transactions/types'
 import { call, put } from 'typed-redux-saga'
+import { TransactionStepType, WrapTransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { WrapCallback, WrapCallbackParams } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
-import {
-  TransactionStepType,
-  WrapTransactionStep,
-} from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import noop from 'utilities/src/react/noop'

@@ -26,7 +26,7 @@ export function useAccountDrawer() {
 }
 
 // Only show Moonpay text if the user opens the Account Drawer by clicking 'Buy'
-export function useSetShowMoonpayText() {
+function useSetShowMoonpayText() {
   const updateShowMoonpayText = useUpdateAtom(showMoonpayTextAtom)
   return useCallback((newValue: boolean) => updateShowMoonpayText(newValue), [updateShowMoonpayText])
 }

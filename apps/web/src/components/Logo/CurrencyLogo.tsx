@@ -1,21 +1,29 @@
 import { Currency } from '@uniswap/sdk-core'
-import { TokenInfo } from '@uniswap/token-lists'
-import AssetLogo, { AssetLogoBaseProps } from 'components/Logo/AssetLogo'
+import { AssetLogoBaseProps } from 'components/Logo/AssetLogo'
+import { CurrencyLogo as UniverseCurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 
 export default function CurrencyLogo(
   props: AssetLogoBaseProps & {
     currency?: Currency | null
   },
 ) {
-  return (
-    <AssetLogo
-      currency={props.currency}
-      isNative={props.currency?.isNative}
-      chainId={props.currency?.chainId}
-      address={props.currency?.wrapped.address}
-      symbol={props.symbol ?? props.currency?.symbol}
-      primaryImg={(props.currency as TokenInfo)?.logoURI}
-      {...props}
-    />
-  )
+  const { currency, ...rest } = props
+
+  if (!currency) {
+    return null
+  }
+
+  return <_CurrencyLogo currency={currency} {...rest} />
+}
+
+const _CurrencyLogo = (
+  props: AssetLogoBaseProps & {
+    currency: Currency
+  },
+) => {
+  const currencyId = buildCurrencyId(props.currency.chainId, currencyAddress(props.currency))
+  const currencyInfo = useCurrencyInfo(currencyId)
+  return <UniverseCurrencyLogo currencyInfo={currencyInfo} {...props} />
 }

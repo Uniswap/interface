@@ -7,7 +7,7 @@ import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { TransactionStep } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
+import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 export interface StepRowProps<TStepType extends TransactionStep> {

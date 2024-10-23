@@ -15,7 +15,7 @@ import {
 } from 'state/transactions/types'
 import { isConfirmedTx, isPendingTx } from 'state/transactions/utils'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { SUPPORTED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/types/chains'
+import { COMBINED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/types/chains'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
@@ -72,10 +72,15 @@ export function useTransactionCanceller() {
 
 export function useMultichainTransactions(): [TransactionDetails, UniverseChainId][] {
   const state = useAppSelector((state) => state.localWebTransactions)
-  return SUPPORTED_CHAIN_IDS.flatMap((chainId) =>
-    state[chainId]
-      ? Object.values(state[chainId]).map((tx): [TransactionDetails, UniverseChainId] => [tx, chainId])
-      : [],
+
+  return useMemo(
+    () =>
+      COMBINED_CHAIN_IDS.flatMap((chainId) =>
+        state[chainId]
+          ? Object.values(state[chainId]).map((tx): [TransactionDetails, UniverseChainId] => [tx, chainId])
+          : [],
+      ),
+    [state],
   )
 }
 

@@ -9,13 +9,14 @@ import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import noop from 'utilities/src/react/noop'
 
-const numericInputRegex = RegExp('^\\d*(\\.\\d*)?$') // Matches only numeric values without commas
+export const numericInputRegex = RegExp('^\\d*(\\.\\d*)?$') // Matches only numeric values without commas
 
 type Props = {
   adjustWidthToContent?: boolean
   fiatCurrencyInfo?: FiatCurrencyInfo
   dimTextColor?: boolean
   maxDecimals?: number
+  inputEnforcer?: (value?: string) => boolean
 } & TextInputProps
 
 export function replaceSeparators({
@@ -88,6 +89,11 @@ export function parseValue({
   })
 }
 
+/** Returns true if the value matches a number or an empty string */
+function numericInputEnforcer(value?: string): boolean {
+  return !value || numericInputRegex.test(value)
+}
+
 export const AmountInput = forwardRef<Input, Props>(function _AmountInput(
   {
     onChangeText,
@@ -97,6 +103,7 @@ export const AmountInput = forwardRef<Input, Props>(function _AmountInput(
     showSoftInputOnFocus,
     maxDecimals,
     fiatCurrencyInfo,
+    inputEnforcer = numericInputEnforcer,
     ...rest
   },
   ref,
@@ -106,14 +113,12 @@ export const AmountInput = forwardRef<Input, Props>(function _AmountInput(
   const { groupingSeparator, decimalSeparator } = targetFiatCurrencyInfo
   const { decimalSeparator: nativeKeyboardDecimalSeparator } = getNumberFormatSettings()
 
-  const invalidInput = value && !numericInputRegex.test(value)
-
   useEffect(() => {
     // Resets input if non-numeric value is passed
-    if (invalidInput) {
+    if (!inputEnforcer(value)) {
       onChangeText?.('')
     }
-  }, [invalidInput, onChangeText, value])
+  }, [inputEnforcer, onChangeText, value])
 
   const handleChange = useCallback(
     (val: string) => {

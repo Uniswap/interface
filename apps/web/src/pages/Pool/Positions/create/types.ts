@@ -26,7 +26,7 @@ export const DEFAULT_POSITION_STATE: PositionState = {
   protocolVersion: ProtocolVersion.V4,
 }
 
-export type PositionInfo = {
+export type CreatePositionInfo = {
   protocolVersion: ProtocolVersion
   currencies: { [field in PositionField]?: Currency }
   tokens?: Token[]
@@ -52,7 +52,7 @@ export type CreatePositionContextType = {
   setStep: Dispatch<SetStateAction<PositionFlowStep>>
   positionState: PositionState
   setPositionState: Dispatch<SetStateAction<PositionState>>
-  derivedPositionInfo: PositionInfo
+  derivedPositionInfo: CreatePositionInfo
   feeTierSearchModalOpen: boolean
   setFeeTierSearchModalOpen: Dispatch<SetStateAction<boolean>>
 }
@@ -74,7 +74,14 @@ export interface PriceRangeInfo {
   pricesAtLimit?: (Price<Token, Token> | undefined)[]
   pricesAtTicks?: (Price<Token, Token> | undefined)[]
   baseAndQuoteTokens?: Token[]
-  invertPrice: boolean
+  invertPrice?: boolean
+  invalidPrice?: boolean
+  invalidRange?: boolean
+  outOfRange?: boolean
+  deposit0Disabled?: boolean
+  deposit1Disabled?: boolean
+  invalidPool?: boolean
+  isTaxed?: boolean
 }
 
 export type PriceRangeContextType = {

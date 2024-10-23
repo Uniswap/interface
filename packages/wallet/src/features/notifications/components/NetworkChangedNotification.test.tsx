@@ -1,6 +1,6 @@
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NetworkChangedNotification } from 'wallet/src/features/notifications/components/NetworkChangedNotification'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { renderWithProviders } from 'wallet/src/test/render'
 
 describe(NetworkChangedNotification, () => {

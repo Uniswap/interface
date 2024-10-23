@@ -1,9 +1,9 @@
 import { AppTFunction } from 'ui/src/i18n/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import {
-  TransactionStep,
-  TransactionStepType,
-} from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
+import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
+import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
+import { Sentry } from 'utilities/src/logger/Sentry'
+import { OverridesSentryFingerprint } from 'utilities/src/logger/types'
 
 /** Superclass used to differentiate categorized/known transaction errors from generic/unknown errors. */
 export abstract class TransactionError extends Error {}
@@ -17,10 +17,15 @@ export class UnexpectedTransactionStateError extends TransactionError {
 }
 
 /** Thrown when a transaction step fails for an unknown reason. */
-export class TransactionStepFailedError extends TransactionError {
+export class TransactionStepFailedError extends TransactionError implements OverridesSentryFingerprint {
   step: TransactionStep
   isBackendRejection: boolean
   originalError?: Error
+
+  // string fields for Sentry
+  originalErrorStringified?: string
+  originalErrorString?: string // originalErrorStringified error may get cut off by sentry size limits; this acts as minimal backup
+  stepStringified?: string
 
   constructor({
     message,
@@ -38,6 +43,45 @@ export class TransactionStepFailedError extends TransactionError {
     this.step = step
     this.isBackendRejection = isBackendRejection
     this.originalError = originalError
+
+    try {
+      this.originalErrorString = originalError?.toString()
+      this.originalErrorStringified = JSON.stringify(originalError, null, 2)
+      this.stepStringified = JSON.stringify(step, null, 2)
+    } catch {}
+  }
+
+  getFingerprint(): string[] {
+    const fingerprint: string[] = [this.step.type]
+
+    try {
+      if (
+        this.originalError &&
+        'code' in this.originalError &&
+        (typeof this.originalError.code === 'string' || typeof this.originalError.code === 'number')
+      ) {
+        fingerprint.push(String(this.originalError?.code))
+      }
+
+      if (this.originalError?.message) {
+        fingerprint.push(String(this.originalError?.message))
+      }
+
+      if (this.isBackendRejection && this.originalError instanceof FetchError && this.originalError.data?.detail) {
+        fingerprint.push(String(this.originalError.data.detail))
+      }
+    } catch (e) {
+      Sentry.addBreadCrumb({
+        level: 'info',
+        category: 'transaction',
+        message: `problem determining fingerprint for ${this.step.type}`,
+        data: {
+          errorMessage: e instanceof Error ? e.message : undefined,
+        },
+      })
+    }
+
+    return fingerprint
   }
 }
 

@@ -4,6 +4,8 @@ import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useSt
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagClaim } from 'uniswap/src/features/unitags/types'
@@ -19,8 +21,6 @@ import {
   setHasSkippedUnitagPrompt,
   setHasViewedWelcomeWalletCard,
 } from 'wallet/src/features/behaviorHistory/slice'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { createImportedAccounts } from 'wallet/src/features/onboarding/createImportedAccounts'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
 import { useClaimUnitag } from 'wallet/src/features/unitags/hooks'

@@ -1,7 +1,8 @@
-import { NetworkStatus } from '@apollo/client'
-import React, { useCallback, useMemo, useRef } from 'react'
+import { TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ListRenderItem, ListRenderItemInfo, StyleSheet, View } from 'react-native'
+import { ListRenderItem, ListRenderItemInfo, StyleSheet } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
 import { useSelector } from 'react-redux'
 import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
@@ -11,130 +12,84 @@ import { TokenItem } from 'src/components/explore/TokenItem'
 import { TokenItemData } from 'src/components/explore/TokenItemData'
 import { AnimatedBottomSheetFlatList } from 'src/components/layout/AnimatedFlatList'
 import { AutoScrollProps } from 'src/components/sortableGrid/types'
-import {
-  getClientTokensOrderByCompareFn,
-  getTokenMetadataDisplayType,
-  getTokensOrderByValues,
-} from 'src/features/explore/utils'
-import { usePollOnFocusOnly } from 'src/utils/hooks'
-import { Flex, Loader, Text } from 'ui/src'
+import { getTokenMetadataDisplayType } from 'src/features/explore/utils'
+import { Flex, Loader, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { iconSizes, spacing } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
-import { PollingInterval } from 'uniswap/src/constants/misc'
-import {
-  Chain,
-  ExploreTokensTabQuery,
-  useExploreTokensTabQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { NetworkPill } from 'uniswap/src/components/network/NetworkPill'
+import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
+import { useTokenRankingsQuery } from 'uniswap/src/data/rest/tokenRankings'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { usePersistedError } from 'uniswap/src/features/dataApi/utils'
 import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'uniswap/src/features/favorites/selectors'
 import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { selectTokensOrderBy } from 'wallet/src/features/wallet/selectors'
+import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 
 type ExploreSectionsProps = {
   listRef: React.MutableRefObject<null>
 }
 
-type GqlToken = NonNullable<ExploreTokensTabQuery['topTokens']>[0]
+type TokenItemDataWithMetadata = { tokenItemData: TokenItemData; tokenMetadataDisplayType: TokenMetadataDisplayType }
 
 export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element {
   const { t } = useTranslation()
   const insets = useAppInsets()
   const scrollY = useSharedValue(0)
-  const headerRef = useRef<View>(null)
   const visibleListHeight = useSharedValue(0)
-  const { defaultChainId } = useEnabledChains()
 
   // Top tokens sorting
   const orderBy = useSelector(selectTokensOrderBy)
-  const tokenMetadataDisplayType = getTokenMetadataDisplayType(orderBy)
-  const { clientOrderBy, serverOrderBy } = getTokensOrderByValues(orderBy)
 
-  const {
-    data,
-    networkStatus,
-    loading: requestLoading,
-    error: requestError,
-    refetch,
-    startPolling,
-    stopPolling,
-  } = useExploreTokensTabQuery({
-    variables: {
-      topTokensOrderBy: serverOrderBy,
-      chain: Chain.Ethereum,
-      pageSize: 100,
-    },
-    returnPartialData: true,
+  // Network filtering
+  const [selectedNetwork, setSelectedNetwork] = useState<UniverseChainId | null>(null)
+
+  const { data, isLoading, error, refetch, isFetching } = useTokenRankingsQuery({
+    chainId: selectedNetwork?.toString() ?? ALL_NETWORKS_ARG,
   })
 
-  usePollOnFocusOnly(startPolling, stopPolling, PollingInterval.Fast)
-
-  const topTokenItems = useMemo(() => {
-    if (!data || !data.topTokens) {
-      return undefined
+  const [topTokenItems, setTopTokenItems] = useState<TokenItemDataWithMetadata[] | undefined>(undefined)
+  useEffect(() => {
+    if (!data?.tokenRankings?.[orderBy]) {
+      setTopTokenItems(undefined)
+      return
     }
 
-    // special case to replace weth with eth because the backend does not return eth data
-    // eth will be defined only if all the required data is available
-    // when eth data is not fully available, we do not replace weth with eth
-    const { eth } = data
-
-    const wethAddress = getWrappedNativeAddress(defaultChainId)
-
-    const isWeth = (token: GqlToken): boolean =>
-      areAddressesEqual(token?.address, wethAddress) && token?.chain === Chain.Ethereum
-
-    // Indentified by symbol because ETH token data comes with undefined address
-    const isEth = (token: GqlToken): boolean => token?.symbol === 'ETH'
-
-    const topTokens = data.topTokens
-      .filter((token, _, tokens) => !(isWeth(token) && tokens.some(isEth)))
-      .map((token) => {
-        if (!token) {
-          return undefined
+    const tokenMetadataDisplayType = getTokenMetadataDisplayType(orderBy)
+    const topTokens: TokenItemDataWithMetadata[] | undefined = data.tokenRankings[orderBy]?.tokens?.reduce(
+      (acc: TokenItemDataWithMetadata[], tokenStat) => {
+        if (tokenStat) {
+          const tokenItemData = tokenStatsToTokenItemData(tokenStat)
+          if (tokenItemData) {
+            acc.push({ tokenItemData, tokenMetadataDisplayType })
+          }
         }
+        return acc
+      },
+      [],
+    )
 
-        // manually replace weth with eth given backend only returns eth data as a proxy for eth
-        if (isWeth(token) && eth) {
-          return gqlTokenToTokenItemData(eth)
-        }
+    setTopTokenItems(topTokens)
+  }, [orderBy, data])
 
-        return gqlTokenToTokenItemData(token)
-      })
-      .filter(Boolean) as TokenItemData[]
-
-    if (!clientOrderBy) {
-      return topTokens
-    }
-
-    // Apply client side sort order
-    const compareFn = getClientTokensOrderByCompareFn(clientOrderBy)
-    return topTokens.sort(compareFn)
-  }, [data, clientOrderBy, defaultChainId])
-
-  const renderItem: ListRenderItem<TokenItemData> = useCallback(
-    ({ item, index }: ListRenderItemInfo<TokenItemData>) => {
+  const renderItem: ListRenderItem<TokenItemDataWithMetadata> = useCallback(
+    ({ item: { tokenItemData, tokenMetadataDisplayType }, index }: ListRenderItemInfo<TokenItemDataWithMetadata>) => {
       return (
         <TokenItem
           eventName={MobileEventName.ExploreTokenItemSelected}
           index={index}
           metadataDisplayType={tokenMetadataDisplayType}
-          tokenItemData={item}
+          tokenItemData={tokenItemData}
         />
       )
     },
-    [tokenMetadataDisplayType],
+    [],
   )
-
-  // Don't want to show full screen loading state when changing tokens sort, which triggers NetworkStatus.setVariable request
-  const isLoading = networkStatus === NetworkStatus.loading || networkStatus === NetworkStatus.refetch
-  const hasAllData = !!data?.topTokens
-  const error = usePersistedError(requestLoading, requestError)
 
   const onRetry = useCallback(async () => {
     await refetch()
@@ -142,9 +97,16 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
 
   const scrollHandler = useAnimatedScrollHandler((e) => (scrollY.value = e.contentOffset.y), [scrollY])
 
-  // Use showLoading for showing full screen loading state
-  // Used in each section to ensure loading state layout matches loaded state
-  const showLoading = (!hasAllData && isLoading) || (!!error && isLoading)
+  const onSelectNetwork = useCallback((network: UniverseChainId | null) => {
+    sendAnalyticsEvent(MobileEventName.ExploreNetworkSelected, {
+      networkChainId: network ?? 'all',
+    })
+    setSelectedNetwork(network)
+  }, [])
+
+  const hasAllData = !!data
+  const isLoadingOrFetching = isLoading || isFetching
+  const showFullScreenLoadingState = (!hasAllData && isLoadingOrFetching) || (!!error && isLoadingOrFetching)
 
   if (!hasAllData && error) {
     return (
@@ -179,24 +141,14 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
           </Flex>
         }
         ListHeaderComponent={
-          <Flex ref={headerRef}>
+          <Flex>
             <FavoritesSection
-              containerRef={headerRef}
+              showLoading={false}
               scrollY={scrollY}
               scrollableRef={listRef}
-              showLoading={showLoading}
               visibleHeight={visibleListHeight}
             />
-            <Flex
-              row
-              alignItems="center"
-              justifyContent="space-between"
-              mb="$spacing8"
-              ml="$spacing16"
-              mr="$spacing12"
-              mt="$spacing16"
-              pl="$spacing4"
-            >
+            <Flex row alignItems="center" justifyContent="space-between" px="$spacing20">
               <Text color="$neutral2" flexShrink={0} paddingEnd="$spacing8" variant="subheading2">
                 {t('explore.tokens.top.title')}
               </Text>
@@ -204,52 +156,131 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
                 <SortButton orderBy={orderBy} />
               </Flex>
             </Flex>
+            <NetworkPillsRow
+              selectedNetwork={selectedNetwork}
+              onSelectNetwork={(network) => setImmediate(() => onSelectNetwork(network))}
+            />
           </Flex>
         }
         ListHeaderComponentStyle={styles.foreground}
         contentContainerStyle={{ paddingBottom: insets.bottom }}
-        data={showLoading ? undefined : topTokenItems}
+        data={showFullScreenLoadingState ? undefined : topTokenItems}
         keyExtractor={tokenKey}
-        removeClippedSubviews={false}
+        removeClippedSubviews={true}
         renderItem={renderItem}
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
+        windowSize={5}
+        maxToRenderPerBatch={10}
+        updateCellsBatchingPeriod={50}
+        initialNumToRender={15}
         onScroll={scrollHandler}
       />
     </Flex>
   )
 }
 
-const tokenKey = (token: TokenItemData): string => {
-  return token.address ? buildCurrencyId(token.chainId, token.address) : buildNativeCurrencyId(token.chainId)
+function NetworkPillsRow({
+  selectedNetwork,
+  onSelectNetwork,
+}: {
+  selectedNetwork: UniverseChainId | null
+  onSelectNetwork: (chainId: UniverseChainId | null) => void
+}): JSX.Element {
+  const colors = useSporeColors()
+  const { chains } = useEnabledChains()
+
+  const renderItem: ListRenderItem<UniverseChainId> = useCallback(
+    ({ item }: ListRenderItemInfo<UniverseChainId>) => {
+      return (
+        <TouchableArea onPress={() => onSelectNetwork(item)}>
+          <NetworkPill
+            key={item}
+            showIcon
+            backgroundColor={selectedNetwork === item ? '$surface3' : '$surface1'}
+            borderColor="$surface3"
+            borderRadius="$rounded12"
+            chainId={item}
+            foregroundColor={colors.neutral1.val}
+            iconSize={iconSizes.icon24}
+            pl="$spacing4"
+            pr="$spacing12"
+            py="$spacing4"
+            showBackgroundColor={false}
+            textVariant="buttonLabel3"
+          />
+        </TouchableArea>
+      )
+    },
+    [colors.neutral1.val, onSelectNetwork, selectedNetwork],
+  )
+
+  return (
+    <Flex py="$spacing16">
+      <FlatList
+        horizontal
+        ListHeaderComponent={
+          <AllNetworksPill selected={selectedNetwork === null} onPress={() => onSelectNetwork(null)} />
+        }
+        data={chains}
+        keyExtractor={(chainId: UniverseChainId) => chainId.toString()}
+        contentContainerStyle={{ alignItems: 'center', gap: spacing.spacing8, paddingRight: spacing.spacing8 }}
+        renderItem={renderItem}
+        showsHorizontalScrollIndicator={false}
+      />
+    </Flex>
+  )
 }
 
-function gqlTokenToTokenItemData(
-  token: Maybe<NonNullable<NonNullable<ExploreTokensTabQuery['topTokens']>[0]>>,
-): TokenItemData | null {
-  if (!token || !token.project) {
+function AllNetworksPill({ onPress, selected }: { onPress: () => void; selected: boolean }): JSX.Element {
+  const { t } = useTranslation()
+  return (
+    <Flex
+      centered
+      row
+      ml="$spacing8"
+      backgroundColor={selected ? '$surface3' : '$surface1'}
+      borderColor="$surface3"
+      borderRadius="$rounded12"
+      borderWidth={1}
+      gap="$spacing8"
+      pl="$spacing4"
+      pr="$spacing12"
+      py="$spacing4"
+      onPress={onPress}
+    >
+      <NetworkLogo chainId={null} size={iconSizes.icon24} />
+      <Text variant="buttonLabel3">{t('common.all')}</Text>
+    </Flex>
+  )
+}
+
+const tokenKey = (token: TokenItemDataWithMetadata): string => {
+  return token.tokenItemData.address
+    ? buildCurrencyId(token.tokenItemData.chainId, token.tokenItemData.address)
+    : buildNativeCurrencyId(token.tokenItemData.chainId)
+}
+
+function tokenStatsToTokenItemData(tokenStat: TokenStats): TokenItemData | null {
+  const formattedChain = fromGraphQLChain(tokenStat.chain)
+
+  if (!formattedChain) {
     return null
   }
 
-  const { name, symbol, address, chain, project, market } = token
-  const { logoUrl, markets } = project
-  const tokenProjectMarket = markets?.[0]
-
-  const chainId = fromGraphQLChain(chain)
-
   return {
-    chainId,
-    address,
-    name,
-    symbol,
-    logoUrl,
-    price: tokenProjectMarket?.price?.value,
-    marketCap: tokenProjectMarket?.marketCap?.value,
-    pricePercentChange24h: tokenProjectMarket?.pricePercentChange24h?.value,
-    volume24h: market?.volume?.value,
-    totalValueLocked: market?.totalValueLocked?.value,
-  } as TokenItemData
+    name: tokenStat.name ?? '',
+    logoUrl: tokenStat.logo ?? '',
+    chainId: formattedChain,
+    address: tokenStat.address,
+    symbol: tokenStat.symbol ?? '',
+    price: tokenStat.price?.value,
+    marketCap: tokenStat.fullyDilutedValuation?.value,
+    pricePercentChange24h: tokenStat.pricePercentChange1Day?.value,
+    volume24h: tokenStat.volume1Day?.value,
+    totalValueLocked: tokenStat.volume1Day?.value,
+  }
 }
 
 type FavoritesSectionProps = AutoScrollProps & {
@@ -265,7 +296,7 @@ function FavoritesSection(props: FavoritesSectionProps): JSX.Element | null {
   }
 
   return (
-    <Flex backgroundColor="$transparent" gap="$spacing12" pb="$spacing12" pt="$spacing8" px="$spacing12" zIndex={1}>
+    <Flex gap="$spacing12" pb="$spacing12" px="$spacing12" zIndex={1}>
       {hasFavoritedTokens && <FavoriteTokensGrid {...props} />}
       {hasFavoritedWallets && <FavoriteWalletsGrid {...props} />}
     </Flex>

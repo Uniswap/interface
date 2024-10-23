@@ -12,7 +12,7 @@ import {
   TokenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { AttackType, CurrencyInfo, SafetyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
+import { AttackType, CurrencyInfo, PortfolioBalance, SafetyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
@@ -211,4 +211,20 @@ export function usePersistedError(loading: boolean, error?: ApolloError): Apollo
   }
 
   return persistedErrorRef.current
+}
+
+export function sortByName(unsortedBalances?: PortfolioBalance[]): PortfolioBalance[] {
+  if (!unsortedBalances) {
+    return []
+  }
+
+  return unsortedBalances.sort((a, b) => {
+    if (!a.currencyInfo.currency.name) {
+      return 1
+    }
+    if (!b.currencyInfo.currency.name) {
+      return -1
+    }
+    return a.currencyInfo.currency.name?.localeCompare(b.currencyInfo.currency.name)
+  })
 }

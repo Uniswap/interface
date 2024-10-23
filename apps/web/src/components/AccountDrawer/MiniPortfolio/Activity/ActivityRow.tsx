@@ -12,7 +12,11 @@ import styled from 'lib/styled-components'
 import { useCallback } from 'react'
 import { SignatureType } from 'state/signatures/types'
 import { EllipsisStyle, ThemedText } from 'theme/components'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { BridgeIcon } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
+import {
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
@@ -59,7 +63,11 @@ export function ActivityRow({ activity }: { activity: Activity }) {
     prefixIconSrc,
     suffixIconSrc,
     offchainOrderDetails,
+    type,
   } = activity
+
+  // TODO(WEB-5146): Create tamagui universal Activity component, remove one off bridge styling
+  const isBridge = type === TransactionType.Bridging
 
   const openOffchainActivityModal = useOpenOffchainActivityModal()
 
@@ -86,7 +94,13 @@ export function ActivityRow({ activity }: { activity: Activity }) {
       <PortfolioRow
         left={
           <Column>
-            <PortfolioLogo chainId={chainId} currencies={currencies} images={logos} accountAddress={otherAccount} />
+            <PortfolioLogo
+              chainId={chainId}
+              currencies={currencies}
+              images={logos}
+              accountAddress={otherAccount}
+              customIcon={isBridge ? BridgeIcon : undefined}
+            />
           </Column>
         }
         title={

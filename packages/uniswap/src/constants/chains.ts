@@ -202,7 +202,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     statusPage: undefined,
     supportsClientSideRouting: true,
     supportsGasEstimates: false,
-    urlParam: 'sepolia',
+    urlParam: 'ethereum_sepolia',
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',
       symbol: 'WETH',
@@ -679,7 +679,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     },
     blockPerMainnetEpochForChainId: 1, // TODO: verify
     blockWaitMsBeforeWarning: undefined,
-    bridge: 'https://superbridge.app/world-chain',
+    bridge: 'https://world-chain.superbridge.app/app',
     chainPriority: 11,
     docs: 'https://docs.worldcoin.org/',
     elementName: ElementName.ChainWorldChain,
@@ -731,7 +731,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     assetRepoNetworkName: 'zora',
     backendChain: {
       chain: BackendChainId.Zora as InterfaceGqlChain,
-      backendSupported: false,
+      backendSupported: true,
       isSecondaryChain: false,
       nativeTokenBackendAddress: undefined,
     },
@@ -887,7 +887,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     statusPage: undefined,
     supportsClientSideRouting: true,
     supportsGasEstimates: false,
-    urlParam: 'astrochain-sepolia',
+    urlParam: 'astrochain_sepolia',
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',
       symbol: 'WETH',

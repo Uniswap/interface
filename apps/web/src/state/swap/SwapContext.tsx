@@ -8,6 +8,7 @@ import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
 import { CurrencyState, SwapAndLimitContext, SwapContext, SwapState, initialSwapState } from 'state/swap/types'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
@@ -45,11 +46,14 @@ export function SwapAndLimitContextProvider({
   const previousInitialInputCurrency = usePrevious(initialInputCurrency)
   const previousInitialOutputCurrency = usePrevious(initialOutputCurrency)
   const previousInitialChainId = usePrevious(initialChainId)
+  const { isTestnetModeEnabled } = useEnabledChains()
+  const previousIsTestnetModeEnabled = usePrevious(isTestnetModeEnabled)
 
   useEffect(() => {
     if (
       !areCurrenciesEqual(previousInitialInputCurrency, initialInputCurrency) ||
-      !areCurrenciesEqual(previousInitialOutputCurrency, initialOutputCurrency)
+      !areCurrenciesEqual(previousInitialOutputCurrency, initialOutputCurrency) ||
+      previousIsTestnetModeEnabled !== isTestnetModeEnabled
     ) {
       // prefilled state may load in -- i.e. `outputCurrency` URL param pulling from gql
       setCurrencyState(prefilledState)
@@ -60,6 +64,8 @@ export function SwapAndLimitContextProvider({
     prefilledState,
     previousInitialInputCurrency,
     previousInitialOutputCurrency,
+    isTestnetModeEnabled,
+    previousIsTestnetModeEnabled,
   ])
 
   useEffect(() => {

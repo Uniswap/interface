@@ -19,9 +19,9 @@ import {
 import { AssetType, CurrencyAsset } from 'uniswap/src/entities/assets'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { usePortfolioBalances, useTokenBalancesGroupedByVisibility } from 'uniswap/src/features/dataApi/balances'
-import { ALL_GQL_CHAINS } from 'uniswap/src/features/dataApi/searchTokens'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -137,6 +137,7 @@ function _OpenAIContextProvider({ children }: { children: React.ReactNode }): JS
   })
 
   const activeAddress = useActiveAccountAddress() || undefined
+  const { gqlChains } = useEnabledChains()
 
   const signerAccount = useSignerAccounts()[0]
   // We sync backup state across all accounts under the same mnemonic, so can check status with any account.
@@ -210,7 +211,7 @@ function _OpenAIContextProvider({ children }: { children: React.ReactNode }): JS
         const { text, chain } = args
         const { data } = await apollo.query({
           query: SearchTokensDocument,
-          variables: { searchQuery: text, chains: chain ? [chain] : ALL_GQL_CHAINS },
+          variables: { searchQuery: text, chains: chain ? [chain] : gqlChains },
         })
         return { data }
       },
@@ -311,6 +312,7 @@ function _OpenAIContextProvider({ children }: { children: React.ReactNode }): JS
     shownTokens,
     signerAccount?.address,
     swapSwarning,
+    gqlChains,
   ])
 
   const processMessages = useCallback(async () => {

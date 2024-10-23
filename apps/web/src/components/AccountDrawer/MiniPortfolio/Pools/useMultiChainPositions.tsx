@@ -13,7 +13,6 @@ import {
   usePoolPriceMap,
   useV3ManagerContracts,
 } from 'components/AccountDrawer/MiniPortfolio/Pools/hooks'
-import { PRODUCTION_CHAIN_IDS } from 'constants/chains'
 import { BigNumber } from 'ethers/lib/ethers'
 import { Interface } from 'ethers/lib/utils'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -21,6 +20,7 @@ import { PositionDetails } from 'types/position'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
 import { UniswapV3PoolInterface } from 'uniswap/src/abis/types/v3/UniswapV3Pool'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
@@ -62,10 +62,9 @@ type UseMultiChainPositionsData = { positions?: PositionInfo[]; loading: boolean
  * @param chains - chains to fetch positions from
  * @returns positions, fees
  */
-export default function useMultiChainPositions(
-  account: string,
-  chains = PRODUCTION_CHAIN_IDS,
-): UseMultiChainPositionsData {
+export default function useMultiChainPositions(account: string): UseMultiChainPositionsData {
+  const { chains } = useEnabledChains()
+
   const pms = useV3ManagerContracts(chains)
   const multicalls = useInterfaceMulticallContracts(chains)
 

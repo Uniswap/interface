@@ -60,7 +60,7 @@ export function useActiveAccount(): Account | null {
 }
 
 export function useActiveSignerAccount(): SignerMnemonicAccount | null {
-  const activeAccount = useSelector(selectActiveAccount)
+  const activeAccount = useActiveAccount()
   return activeAccount?.type === AccountType.SignerMnemonic ? activeAccount : null
 }
 
@@ -75,7 +75,7 @@ export function useNativeAccountExists(): boolean {
 export function useActiveAccountAddressWithThrow(): Address {
   const addressRef = useRef<string | null>(null)
   const isFocused = useIsFocused()
-  const activeAccountAddress = useSelector(selectActiveAccountAddress)
+  const activeAccountAddress = useActiveAccountAddress()
 
   // Update the account address only when the screen is focused
   // or the address haven't been set yet
@@ -94,7 +94,7 @@ export function useActiveAccountAddressWithThrow(): Address {
 }
 
 export function useActiveAccountWithThrow(): Account {
-  const activeAccount = useSelector(selectActiveAccount)
+  const activeAccount = useActiveAccount()
   if (!activeAccount) {
     throw new Error('No active account')
   }

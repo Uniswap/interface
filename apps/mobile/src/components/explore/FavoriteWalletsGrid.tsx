@@ -67,6 +67,7 @@ export function FavoriteWalletsGrid({ showLoading, ...rest }: FavoriteWalletsGri
         editingTitle={t('explore.wallets.favorite.title.edit')}
         isEditing={isEditing}
         title={t('explore.wallets.favorite.title.default')}
+        disabled={showLoading}
         onPress={(): void => setIsEditing(!isEditing)}
       />
       {showLoading ? (

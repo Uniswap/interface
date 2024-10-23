@@ -1,13 +1,14 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import { ScantasticCompleteNotification } from 'src/features/notifications/ScantasticCompleteNotification'
 import { WCNotification } from 'src/features/notifications/WCNotification'
+import { useSelectAddressNotifications } from 'uniswap/src/features/notifications/hooks'
+import { AppNotification, AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { SharedNotificationToastRouter } from 'wallet/src/features/notifications/components/SharedNotificationToastRouter'
-import { selectActiveAccountNotifications } from 'wallet/src/features/notifications/selectors'
-import { AppNotification, AppNotificationType } from 'wallet/src/features/notifications/types'
+import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 export function NotificationToastWrapper(): JSX.Element | null {
-  const notifications = useSelector(selectActiveAccountNotifications)
+  const activeAccountAddress = useActiveAccountAddress()
+  const notifications = useSelectAddressNotifications(activeAccountAddress)
   const notification = notifications?.[0]
 
   if (!notification) {

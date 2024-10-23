@@ -11,14 +11,17 @@ import { updateDappConnectedAddressFromExtension } from 'src/app/features/dapp/a
 import { useDappConnectedAccounts } from 'src/app/features/dapp/hooks'
 import { isConnectedAccount } from 'src/app/features/dapp/utils'
 import { PopupName, openPopup } from 'src/app/features/popups/slice'
-import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes } from 'src/app/navigation/constants'
+import { AppRoutes, OnboardingRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
+import { focusOrCreateUnitagTab } from 'src/app/navigation/utils'
 import { Button, Flex, MenuContent, MenuContentItem, Popover, ScrollView, Text, useSporeColors } from 'ui/src'
 import { WalletFilled, X } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -281,6 +284,20 @@ export function AccountSwitcherScreen(): JSX.Element {
 
 const UnitagActionButton = (): JSX.Element => {
   const { t } = useTranslation()
+  const isClaimUnitagEnabled = useFeatureFlag(FeatureFlags.ExtensionClaimUnitag)
+
+  const onPressEditProfile = useCallback(async () => {
+    await focusOrCreateUnitagTab(OnboardingRoutes.EditProfile)
+  }, [])
+
+  if (isClaimUnitagEnabled) {
+    return (
+      <Button color="$neutral1" size="small" testID={TestID.AccountCard} theme="tertiary" onPress={onPressEditProfile}>
+        {t('account.wallet.header.button.disabled.title')}
+      </Button>
+    )
+  }
+
   return (
     <ComingSoon placement="top">
       <Button color="$neutral2" disabled={true} size="small" testID={TestID.AccountCard} theme="secondary">

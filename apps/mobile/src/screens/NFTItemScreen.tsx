@@ -40,6 +40,8 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -51,8 +53,6 @@ import { isAndroid, isIOS } from 'utilities/src/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { useNFTContextMenu } from 'wallet/src/features/nfts/useNftContextMenu'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const MAX_NFT_IMAGE_HEIGHT = 375

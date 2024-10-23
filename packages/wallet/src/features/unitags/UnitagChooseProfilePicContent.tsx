@@ -8,6 +8,7 @@ import { useENSName } from 'uniswap/src/features/ens/api'
 import { UnitagClaimSource } from 'uniswap/src/features/unitags/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { MobileScreens, OnboardingScreens, UnitagEntryPoint } from 'uniswap/src/types/screens/mobile'
 import { isMobileApp } from 'utilities/src/platform'
 import { useAvatarSelectionHandler } from 'wallet/src/features/unitags/AvatarSelection'
@@ -18,6 +19,8 @@ import { useClaimUnitag } from 'wallet/src/features/unitags/hooks'
 
 function convertEntryPointToAnalyticsSource(entryPoint: UnitagEntryPoint): UnitagClaimSource {
   switch (entryPoint) {
+    case ExtensionScreens.Home:
+    // falls through
     case MobileScreens.Home:
       return 'home'
     case MobileScreens.Settings:

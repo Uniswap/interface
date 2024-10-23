@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
@@ -7,13 +6,15 @@ import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { isExtension } from 'utilities/src/platform'
+import { UnitagName } from 'wallet/src/features/unitags/UnitagName'
 import { deleteUnitag } from 'wallet/src/features/unitags/api'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
@@ -22,14 +23,15 @@ export function DeleteUnitagModal({
   unitag,
   address,
   onClose,
+  goBack,
 }: {
   unitag: string
   address: Address
   onClose: () => void
+  goBack?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const navigation = useNavigation()
   const dispatch = useDispatch()
   const { triggerRefetchUnitags } = useUnitagUpdater()
   const account = useAccount(address)
@@ -71,7 +73,7 @@ export function DeleteUnitagModal({
             title: t('unitags.notification.delete.title'),
           }),
         )
-        navigation.goBack()
+        goBack?.()
         onClose()
       }
     } catch (e) {
@@ -98,10 +100,13 @@ export function DeleteUnitagModal({
         <Text textAlign="center" variant="subheading1">
           {t('unitags.delete.confirm.title')}
         </Text>
-        <Text color="$neutral2" textAlign="center" variant="body2">
+        <Text color="$neutral2" textAlign="center" variant={isExtension ? 'body3' : 'body2'}>
           {t('unitags.delete.confirm.subtitle')}
         </Text>
-        <Flex centered row gap="$spacing12" pt="$spacing24">
+        <Flex py="$spacing24">
+          <UnitagName name={unitag} fontSize={fonts.heading3.fontSize} />
+        </Flex>
+        <Flex centered row width="100%">
           <Button fill disabled={isDeleting} testID={TestID.Remove} theme="detrimental" onPress={onDelete}>
             {isDeleting ? (
               <Flex height={fonts.buttonLabel1.lineHeight}>

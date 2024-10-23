@@ -1,12 +1,11 @@
 import { useCallback, useMemo } from 'react'
-import { Chain, useSearchTokensQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useSearchTokensQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { gqlTokenToCurrencyInfo, usePersistedError } from 'uniswap/src/features/dataApi/utils'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-
-export const ALL_GQL_CHAINS = Object.values(Chain)
 
 export function useSearchTokens(
   searchQuery: string | null,
@@ -14,10 +13,11 @@ export function useSearchTokens(
   skip: boolean,
 ): GqlResult<CurrencyInfo[]> {
   const gqlChainFilter = chainFilter ? toGraphQLChain(chainFilter) : null
+  const { gqlChains } = useEnabledChains()
   const { data, loading, error, refetch } = useSearchTokensQuery({
     variables: {
       searchQuery: searchQuery ?? '',
-      chains: gqlChainFilter ? [gqlChainFilter] : ALL_GQL_CHAINS,
+      chains: gqlChainFilter ? [gqlChainFilter] : gqlChains,
     },
     skip,
   })

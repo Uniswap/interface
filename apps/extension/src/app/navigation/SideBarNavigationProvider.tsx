@@ -5,6 +5,7 @@ import { useCopyToClipboard } from 'src/app/hooks/useOnCopyToClipboard'
 import { AppRoutes, HomeQueryParams, HomeTabs } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { SidebarLocationState, focusOrCreateTokensExploreTab } from 'src/app/navigation/utils'
+import { CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -22,7 +23,6 @@ import {
   getNavigateToSendFlowArgsInitialState,
   getNavigateToSwapFlowArgsInitialState,
 } from 'wallet/src/contexts/WalletNavigationContext'
-import { CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { getNftUrl, getTokenUrl } from 'wallet/src/utils/linking'
 
 export function SideBarNavigationProvider({ children }: PropsWithChildren): JSX.Element {

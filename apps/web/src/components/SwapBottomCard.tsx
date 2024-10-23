@@ -7,7 +7,7 @@ import { ArrowUpRight } from 'react-feather'
 import { useSelector } from 'react-redux'
 import { useAppDispatch } from 'state/hooks'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
-import { ExternalLink, HideSmall } from 'theme/components'
+import { ClickableTamaguiStyle, ExternalLink, HideSmall } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { ElementAfterText, Flex, Text, TouchableArea, TouchableAreaEvent, useSporeColors } from 'ui/src'
 import { BRIDGING_BANNER } from 'ui/src/assets'
@@ -37,7 +37,7 @@ export function SwapBottomCard() {
 
   const hasViewedBridgingBanner = useSelector(selectHasViewedBridgingBanner)
   const bridgingEnabled = useFeatureFlag(FeatureFlags.Bridging)
-  const isBridgingSupported = useIsBridgingChain(chainId ?? UniverseChainId.Mainnet)
+  const isBridgingSupportedChain = useIsBridgingChain(chainId ?? UniverseChainId.Mainnet)
   const numBridgingChains = useNumBridgingChains()
   const handleBridgingDismiss = useCallback(
     (shouldNavigate: boolean) => {
@@ -61,13 +61,14 @@ export function SwapBottomCard() {
     return null
   }
 
-  const shouldShowBridgingBanner = bridgingEnabled && !hasViewedBridgingBanner && isBridgingSupported
+  const isBridgingBannerChain = chainId === null || chainId === UniverseChainId.Mainnet || isBridgingSupportedChain
+  const shouldShowBridgingBanner = bridgingEnabled && !hasViewedBridgingBanner && isBridgingBannerChain
 
   const shouldShowLegacyTreatment = !bridgingEnabled
 
   if (shouldShowBridgingBanner) {
     return (
-      <TouchableArea onPress={() => handleBridgingDismiss(true)}>
+      <TouchableArea {...ClickableTamaguiStyle} onPress={() => handleBridgingDismiss(true)}>
         <CardInner
           isAbsoluteImage
           image={
@@ -84,7 +85,7 @@ export function SwapBottomCard() {
         />
       </TouchableArea>
     )
-  } else if (shouldShowLegacyTreatment || !isBridgingSupported) {
+  } else if (shouldShowLegacyTreatment || !isBridgingSupportedChain) {
     return <NetworkAlert chainId={chainId} />
   } else {
     return null

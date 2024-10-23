@@ -27,7 +27,7 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { TransactionStep } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
+import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 import useResizeObserver from 'use-resize-observer'
 import { useAccount } from 'wagmi'
@@ -76,7 +76,7 @@ function RemoveLiquidityModalInner() {
     throw new Error('RemoveLiquidityModal must have an initial state when opening')
   }
 
-  const { restPosition, currency0Amount, currency1Amount } = positionInfo
+  const { currency0Amount, currency1Amount } = positionInfo
 
   return (
     <Modal name={ModalName.AddLiquidity} onClose={closeModal} isDismissible>
@@ -104,7 +104,7 @@ function RemoveLiquidityModalInner() {
           <>
             {/* Position info */}
             <Flex width="100%" row justifyContent="center">
-              <LiquidityPositionInfo position={restPosition} />
+              <LiquidityPositionInfo positionInfo={positionInfo} />
             </Flex>
             {/* Percent input panel */}
             <Flex p="$padding16" gap="$gap12">

@@ -10,10 +10,13 @@ import { GraphqlProvider } from 'src/app/apollo'
 import { ErrorElement } from 'src/app/components/ErrorElement'
 import { TraceUserProperties } from 'src/app/components/Trace/TraceUserProperties'
 import { ClaimUnitagSteps, OnboardingStepsProvider } from 'src/app/features/onboarding/OnboardingSteps'
+import { EditUnitagProfileScreen } from 'src/app/features/unitags/EditUnitagProfileScreen'
 import { UnitagChooseProfilePicScreen } from 'src/app/features/unitags/UnitagChooseProfilePicScreen'
 import { UnitagClaimContextProvider } from 'src/app/features/unitags/UnitagClaimContext'
+import { UnitagConfirmationScreen } from 'src/app/features/unitags/UnitagConfirmationScreen'
 import { UnitagCreateUsernameScreen } from 'src/app/features/unitags/UnitagCreateUsernameScreen'
 import { UnitagIntroScreen } from 'src/app/features/unitags/UnitagIntroScreen'
+import { OnboardingRoutes } from 'src/app/navigation/constants'
 import { setRouter, setRouterState } from 'src/app/navigation/state'
 import { SentryAppNameTag, initializeSentry, sentryCreateHashRouter } from 'src/app/sentry'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
@@ -45,6 +48,11 @@ const router = sentryCreateHashRouter([
     element: <UnitagClaimAppInner />,
     errorElement: <ErrorElement />,
   },
+  {
+    path: OnboardingRoutes.EditProfile,
+    element: <EditProfileAppInner />,
+    errorElement: <ErrorElement />,
+  },
 ])
 
 /**
@@ -61,13 +69,30 @@ setRouter(router)
 function UnitagClaimAppInner(): JSX.Element {
   useTestnetModeForLoggingAndAnalytics()
   return (
-    <Flex alignItems="center" justifyContent="center" minHeight="100vh" width="100%">
+    <Flex centered height="100vh" width="100%">
       <OnboardingStepsProvider
         disableRedirect
         steps={{
           [ClaimUnitagSteps.Intro]: <UnitagIntroScreen />,
           [ClaimUnitagSteps.CreateUsername]: <UnitagCreateUsernameScreen />,
           [ClaimUnitagSteps.ChooseProfilePic]: <UnitagChooseProfilePicScreen />,
+          [ClaimUnitagSteps.Confirmation]: <UnitagConfirmationScreen />,
+          [ClaimUnitagSteps.EditProfile]: <EditUnitagProfileScreen enableBack />,
+        }}
+        ContainerComponent={UnitagClaimContextProvider}
+      />
+      <Outlet />
+    </Flex>
+  )
+}
+
+function EditProfileAppInner(): JSX.Element {
+  return (
+    <Flex centered>
+      <OnboardingStepsProvider
+        disableRedirect
+        steps={{
+          [ClaimUnitagSteps.Intro]: <EditUnitagProfileScreen />,
         }}
         ContainerComponent={UnitagClaimContextProvider}
       />

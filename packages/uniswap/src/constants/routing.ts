@@ -20,7 +20,6 @@ import {
   PORTAL_ETH_CELO,
   UNI,
   USDC_ARBITRUM,
-  USDC_ASTROCHAIN_SEPOLIA,
   USDC_AVALANCHE,
   USDC_BASE,
   USDC_BSC,
@@ -166,7 +165,8 @@ export const COMMON_BASES: ChainCurrencyList = {
   [UniverseChainId.AstrochainSepolia]: [
     nativeOnChain(UniverseChainId.AstrochainSepolia),
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.AstrochainSepolia] as Token,
-    USDC_ASTROCHAIN_SEPOLIA,
+    // TODO(WEB-5160): re-add usdc sepolia
+    // USDC_ASTROCHAIN_SEPOLIA,
   ].map(buildCurrencyInfo),
 }
 

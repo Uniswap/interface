@@ -12,7 +12,11 @@ interface UniswapContext {
   connector?: Connector
   navigateToBuyOrReceiveWithEmptyWallet?: () => void
   navigateToFiatOnRamp: (args: { prefilledCurrency?: FiatOnRampCurrency }) => void
-  onSwapChainsChanged: (inputChainId: UniverseChainId, outputChainId?: UniverseChainId) => void
+  onSwapChainsChanged: (args: {
+    chainId: UniverseChainId
+    prevChainId?: UniverseChainId
+    outputChainId?: UniverseChainId
+  }) => void
   swapInputChainId?: UniverseChainId
   signer: Signer | undefined
   useProviderHook: (chainId: number) => JsonRpcProvider | undefined
@@ -44,9 +48,17 @@ export function UniswapProvider({
       account,
       connector,
       navigateToBuyOrReceiveWithEmptyWallet,
-      onSwapChainsChanged: (inputChainId: UniverseChainId, outputChanId?: UniverseChainId): void => {
-        onSwapChainsChanged(inputChainId, outputChanId)
-        setSwapInputChainId(inputChainId)
+      onSwapChainsChanged: ({
+        chainId,
+        prevChainId,
+        outputChainId,
+      }: {
+        chainId: UniverseChainId
+        prevChainId?: UniverseChainId
+        outputChainId?: UniverseChainId
+      }): void => {
+        onSwapChainsChanged({ chainId, prevChainId, outputChainId })
+        setSwapInputChainId(chainId)
       },
       signer,
       useProviderHook,

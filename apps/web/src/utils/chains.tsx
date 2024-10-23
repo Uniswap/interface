@@ -7,8 +7,13 @@ function getChainIdFromName(name: string) {
   return chainId ? parseInt(chainId) : undefined
 }
 
-export function getParsedChainId(parsedQs?: ParsedQs) {
-  const chain = parsedQs?.chain
+export enum ParsedChainIdKey {
+  INPUT = 'input',
+  OUTPUT = 'output',
+}
+
+export function getParsedChainId(parsedQs?: ParsedQs, key: ParsedChainIdKey = ParsedChainIdKey.INPUT) {
+  const chain = key === ParsedChainIdKey.INPUT ? parsedQs?.chain : parsedQs?.outputChain
   if (!chain || typeof chain !== 'string') {
     return undefined
   }

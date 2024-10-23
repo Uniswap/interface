@@ -32,12 +32,12 @@ import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/
 import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
 import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/transactionState'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid, isIOS } from 'utilities/src/platform'
-import { TestnetModeModal } from 'wallet/src/components/modals/TestnetModeModal'
 import { setHasUsedExplore } from 'wallet/src/features/behaviorHistory/slice'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 

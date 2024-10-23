@@ -1,6 +1,9 @@
 import { SwapEventName } from '@uniswap/analytics-events'
-import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
-import { logSwapQuoteRequest, logSwapSuccess, logUniswapXSwapSuccess } from 'tracing/swapFlowLoggers'
+import { SignatureType } from 'state/signatures/types'
+import { TransactionType } from 'state/transactions/types'
+import { logSwapFinalized, logUniswapXSwapFinalized } from 'tracing/swapFlowLoggers'
+import { UniswapXOrderStatus } from 'types/uniswapx'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -28,7 +31,14 @@ describe('swapFlowLoggers', () => {
     const mockChainId = 1
     const mockAnalyticsContext = { page: 'mockContext' }
 
-    logSwapSuccess(mockHash, mockChainId, mockAnalyticsContext)
+    logSwapFinalized(
+      mockHash,
+      mockChainId,
+      mockChainId,
+      mockAnalyticsContext,
+      TransactionStatus.Confirmed,
+      TransactionType.SWAP,
+    )
 
     expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SWAP_TRANSACTION_COMPLETED, {
       transactionOriginType: TransactionOriginType.Internal,
@@ -37,6 +47,8 @@ describe('swapFlowLoggers', () => {
       time_to_swap_since_first_input: 100,
       hash: mockHash,
       chain_id: mockChainId,
+      chain_id_in: mockChainId,
+      chain_id_out: mockChainId,
       ...mockAnalyticsContext,
     })
   })
@@ -47,7 +59,14 @@ describe('swapFlowLoggers', () => {
     const mockChainId = 1
     const mockAnalyticsContext = { page: 'mockContext' }
 
-    logUniswapXSwapSuccess(mockHash, mockOrderHash, mockChainId, mockAnalyticsContext)
+    logUniswapXSwapFinalized(
+      mockHash,
+      mockOrderHash,
+      mockChainId,
+      mockAnalyticsContext,
+      SignatureType.SIGN_UNISWAPX_V2_ORDER,
+      UniswapXOrderStatus.FILLED,
+    )
 
     expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SWAP_TRANSACTION_COMPLETED, {
       transactionOriginType: TransactionOriginType.Internal,
@@ -69,30 +88,6 @@ describe('swapFlowLoggers', () => {
     expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SWAP_FIRST_ACTION, {
       time_to_first_swap_action: 100,
       ...mockAnalyticsContext,
-    })
-  })
-
-  it('logSwapQuoteRequest calls sendAnalyticsEvent with correct parameters', () => {
-    const mockChainId = 1
-
-    logSwapQuoteRequest(mockChainId, RouterPreference.X)
-
-    expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SWAP_QUOTE_FETCH, {
-      chainId: mockChainId,
-      isQuickRoute: false,
-      time_to_first_quote_request: 100,
-      time_to_first_quote_request_since_first_input: 100,
-    })
-  })
-
-  it('logSwapQuoteRequest excludes perf metrics for price quotes', () => {
-    const mockChainId = 1
-
-    logSwapQuoteRequest(mockChainId, INTERNAL_ROUTER_PREFERENCE_PRICE)
-
-    expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SWAP_QUOTE_FETCH, {
-      chainId: mockChainId,
-      isQuickRoute: false,
     })
   })
 })
