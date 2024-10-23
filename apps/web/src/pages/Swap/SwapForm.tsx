@@ -16,7 +16,6 @@ import Column, { AutoColumn } from 'components/deprecated/Column'
 import ErrorIcon from 'components/Icons/Error'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import Row from 'components/deprecated/Row'
-import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { RowFixed } from 'components/deprecated/Row'
@@ -578,10 +577,6 @@ export function SwapForm({
   // @ts-ignore
   const isUsingBlockedExtension = window.ethereum?.['isPocketUniverseZ']
 
-  const DISPLAY_POOLS_SEARCH_FILTERS: CurrencySearchFilters = {
-    onlyDisplaySmartPools: true,
-  }
-
   return (
     <>
       <TokenSafetyModal
@@ -658,7 +653,6 @@ export function SwapForm({
           selectedCurrency={smartPool}
           operatedPools={operatedPools}
           showCurrencyAmount={false}
-          currencySearchFilters={DISPLAY_POOLS_SEARCH_FILTERS}
         />
       )}
       {showPriceImpactModal && showPriceImpactWarning && (

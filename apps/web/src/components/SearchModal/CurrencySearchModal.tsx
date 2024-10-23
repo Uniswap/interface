@@ -1,13 +1,32 @@
 import { Currency, Token } from '@uniswap/sdk-core'
-import { CurrencySearch, CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
+import { CurrencyRow } from 'components/SearchModal//CurrencyList'
+import { CurrencySearch } from 'components/SearchModal/CurrencySearch'
 import TokenSafety from 'components/TokenSafety'
 import useLast from 'hooks/useLast'
+import styled from 'lib/styled-components'
 import { memo, useCallback, useEffect, useState } from 'react'
+import { useSelectActiveSmartPool } from 'state/application/hooks'
 import { useUserAddedTokens } from 'state/user/userAddedTokens'
 import { AdaptiveWebModal } from 'ui/src'
 import { TOKEN_SELECTOR_WEB_MAX_WIDTH } from 'uniswap/src/components/TokenSelector/TokenSelector'
 import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 import { CurrencyField } from 'uniswap/src/types/currency'
+
+const PoolListWrapper = styled.div`
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+`
+
+const PoolListContainer = styled.div`
+  width: 100%;
+  padding: 32px 25px;
+  display: flex;
+  flex-flow: column;
+  align-items: left;
+`
 
 interface CurrencySearchModalProps {
   isOpen: boolean
@@ -17,7 +36,6 @@ interface CurrencySearchModalProps {
   otherSelectedCurrency?: Currency | null
   showCurrencyAmount?: boolean
   currencyField?: CurrencyField
-  currencySearchFilters?: CurrencySearchFilters
   operatedPools?: Token[]
 }
 
@@ -25,6 +43,7 @@ enum CurrencyModalView {
   search,
   importToken,
   tokenSafety,
+  poolsList,
 }
 
 export default memo(function CurrencySearchModal({
@@ -32,7 +51,6 @@ export default memo(function CurrencySearchModal({
   onDismiss,
   onCurrencySelect,
   currencyField = CurrencyField.INPUT,
-  currencySearchFilters,
   operatedPools,
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.search)
@@ -40,10 +58,12 @@ export default memo(function CurrencySearchModal({
   const userAddedTokens = useUserAddedTokens()
 
   useEffect(() => {
-    if (isOpen && !lastOpen) {
+    if (isOpen && !lastOpen && operatedPools?.length === 0) {
       setModalView(CurrencyModalView.search)
+    } else {
+      setModalView(CurrencyModalView.poolsList)
     }
-  }, [isOpen, lastOpen])
+  }, [isOpen, lastOpen, operatedPools?.length])
 
   const showTokenSafetySpeedbump = (token: Token) => {
     setWarningToken(token)
@@ -53,7 +73,7 @@ export default memo(function CurrencySearchModal({
   const handleCurrencySelect = useCallback(
     (currency: Currency, hasWarning?: boolean) => {
       if (
-        !currencySearchFilters?.onlyDisplaySmartPools &&
+        operatedPools?.length === 0 &&
         hasWarning &&
         currency.isToken &&
         !userAddedTokens.find((token) => token.equals(currency))
@@ -64,11 +84,14 @@ export default memo(function CurrencySearchModal({
         onDismiss()
       }
     },
-    [onDismiss, onCurrencySelect, userAddedTokens, currencySearchFilters?.onlyDisplaySmartPools],
+    [onDismiss, onCurrencySelect, userAddedTokens, operatedPools],
   )
   // used for token safety
   const [warningToken, setWarningToken] = useState<Token | undefined>()
 
+  const onPoolSelect = useSelectActiveSmartPool()
+
+  // TODO: update default pool in store
   let content = null
   switch (modalView) {
     // we use DeprecatedCurrencySearch without multichain flag and for pool select
@@ -78,9 +101,30 @@ export default memo(function CurrencySearchModal({
           currencyField={currencyField}
           onCurrencySelect={onCurrencySelect}
           onDismiss={onDismiss}
-          onlyDisplaySmartPools={currencySearchFilters?.onlyDisplaySmartPools}
-          operatedPools={operatedPools}
         />
+      )
+      break
+    case CurrencyModalView.poolsList:
+      content = (
+        <PoolListWrapper>
+          <PoolListContainer>
+            {operatedPools?.map((pool) => (
+              <CurrencyRow
+                key={pool.address}
+                currency={pool}
+                onSelect={() => {
+                  onPoolSelect(pool)
+                  onCurrencySelect(pool)
+                }}
+                isSelected={false} // Adjust as needed
+                balance={undefined}
+                isSmartPool={true}
+                eventProperties={{}}
+                otherSelected={false}
+              />
+            ))}
+          </PoolListContainer>
+        </PoolListWrapper>
       )
       break
     case CurrencyModalView.tokenSafety:

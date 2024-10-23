@@ -2,6 +2,7 @@ import { Bag } from 'components/NavBar/Bag'
 import { ChainSelector } from 'components/NavBar/ChainSelector'
 import { CompanyMenu } from 'components/NavBar/CompanyMenu'
 import { NewUserCTAButton } from 'components/NavBar/DownloadApp/NewUserCTAButton'
+import PoolSelect from 'components/NavBar//PoolSelect'
 import { PreferenceMenu } from 'components/NavBar/PreferencesMenu'
 import { useTabsVisible } from 'components/NavBar/ScreenSizes'
 import { SearchBar } from 'components/NavBar/SearchBar'
@@ -20,6 +21,7 @@ import { useIsSwapPage } from 'hooks/useIsSwapPage'
 import styled, { css } from 'lib/styled-components'
 import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
+import { useOperatedPools } from 'state/pool/hooks'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -69,6 +71,18 @@ const SearchContainer = styled.div`
   height: 42px;
 `
 
+// TODO: customize
+const SelectedPoolContainer = styled.div`
+  display: flex;
+  flex: 1;
+  flex-shrink: 1;
+  justify-content: center;
+  align-self: center;
+  align-items: flex-start;
+  height: 42px;
+  margin-right: 64px;
+`
+
 function useShouldHideChainSelector() {
   const isNftPage = useIsNftPage()
   const isLandingPage = useIsLandingPage()
@@ -110,7 +124,9 @@ export default function Navbar() {
     useIsAccountCTAExperimentControl()
 
   const shouldDisplayCreateAccountButton = false
+  const operatedPools = useOperatedPools()
 
+  // TODO: display pool and swap only if user has operated pools
   return (
     <Nav>
       <NavContents>
@@ -119,6 +135,9 @@ export default function Navbar() {
           {areTabsVisible && <Tabs />}
         </Left>
 
+        <SelectedPoolContainer>
+          {operatedPools && operatedPools.length > 0 && <PoolSelect operatedPools={operatedPools} />}
+        </SelectedPoolContainer>
         <SearchContainer>
           {!collapseSearchBar && <SearchBar maxHeight={NAV_SEARCH_MAX_HEIGHT} fullScreen={isSmallScreen} />}
         </SearchContainer>

@@ -16,22 +16,14 @@ import { SwapTab } from 'uniswap/src/types/screens/interface'
 // eslint-disable-next-line no-restricted-imports
 import { usePrevious } from 'utilities/src/react/hooks'
 
-export interface CurrencySearchFilters {
-  onlyDisplaySmartPools?: boolean
-}
-
-// TODO: remove boolean if we pass operated pools only when we need to display them
 interface CurrencySearchProps {
   currencyField: CurrencyField
-  onlyDisplaySmartPools?: boolean
-  currencySearchFilters?: CurrencySearchFilters
-  operatedPools?: Currency[]
   onCurrencySelect: (currency: Currency) => void
   onDismiss: () => void
 }
 
 // TODO: we moved filtering by operate pool to currency search modal, check if needed
-export function CurrencySearch({ currencyField /*, currencySearchFilters, operatedPools*/, onCurrencySelect, onDismiss }: CurrencySearchProps) {
+export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss }: CurrencySearchProps) {
   const account = useAccount()
   const { chainId, setSelectedChainId, isUserSelectedToken, setIsUserSelectedToken, currentTab, multichainUXEnabled } =
     useSwapAndLimitContext()
