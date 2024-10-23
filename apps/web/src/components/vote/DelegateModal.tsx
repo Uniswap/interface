@@ -126,7 +126,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
 
   const stakeData = useMemo(() => {
     if (!poolId) {
-      return
+      return undefined
     }
     return {
       amount: parsedAmount?.quotient.toString(),

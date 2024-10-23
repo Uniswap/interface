@@ -1,7 +1,6 @@
 /* eslint-disable max-lines */
-import { Currency, NativeCurrency, Token, UNI_ADDRESSES, WETH9 } from '@uniswap/sdk-core'
+import { Currency, NativeCurrency, Token, /*UNI_ADDRESSES, WETH9*/ } from '@uniswap/sdk-core'
 import invariant from 'tiny-invariant'
-import { GRG_ADDRESSES } from 'uniswap/src/constants/addresses'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export const USDC_SEPOLIA = new Token(
@@ -329,21 +328,23 @@ export const MATIC_MAINNET = new Token(
 export const UNI = {
   [UniverseChainId.Mainnet]: new Token(
     UniverseChainId.Mainnet,
-    UNI_ADDRESSES[UniverseChainId.Mainnet] as string,
+    '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984' as string,
     18,
     'UNI',
     'Uniswap',
   ),
   [UniverseChainId.Optimism]: new Token(
     UniverseChainId.Optimism,
-    UNI_ADDRESSES[UniverseChainId.Optimism] as string,
+    '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984' as string,
+    //UNI_ADDRESSES[UniverseChainId.Optimism] as string,
     18,
     'UNI',
     'Uniswap',
   ),
   [UniverseChainId.Sepolia]: new Token(
     UniverseChainId.Sepolia,
-    UNI_ADDRESSES[UniverseChainId.Sepolia] as string,
+    '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984' as string,
+    //UNI_ADDRESSES[UniverseChainId.Sepolia] as string,
     18,
     'UNI',
     'Uniswap',
@@ -353,50 +354,50 @@ export const UNI = {
 export const GRG: { [chainId: number]: Token } = {
   [UniverseChainId.Mainnet]: new Token(
     UniverseChainId.Mainnet,
-    GRG_ADDRESSES[UniverseChainId.Mainnet] as string,
+    '0x4FbB350052Bca5417566f188eB2EBCE5b19BC964',
     18,
     'GRG',
     'Rigo'
   ),
   // TODO: add Sepolia GRG
-  //[UniverseChainId.Sepolia]: new Token(
-  //  UniverseChainId.Sepolia,
-  //  GRG_ADDRESSES[UniverseChainId.Sepolia] as string,
-  //  18,
-  //  'GRG',
-  //  'Rigo'
-  //),
+  [UniverseChainId.Sepolia]: new Token(
+    UniverseChainId.Sepolia,
+    '0x076C619e7ebaBe40746106B66bFBed731F2c1339',
+    18,
+    'GRG',
+    'Rigo'
+  ),
   [UniverseChainId.Optimism]: new Token(
     UniverseChainId.Optimism,
-    GRG_ADDRESSES[UniverseChainId.Optimism] as string,
+    '0xEcF46257ed31c329F204Eb43E254C609dee143B3',
     18,
     'GRG',
     'Rigo'
   ),
   [UniverseChainId.Bnb]: new Token(
     UniverseChainId.Bnb,
-    GRG_ADDRESSES[UniverseChainId.Bnb] as string,
+    '0x3d473C3eF4Cd4C909b020f48477a2EE2617A8e3C',
     18,
     'GRG',
     'Rigo'
   ),
   [UniverseChainId.Polygon]: new Token(
     UniverseChainId.Polygon,
-    GRG_ADDRESSES[UniverseChainId.Polygon] as string,
+    '0xBC0BEA8E634ec838a2a45F8A43E7E16Cd2a8BA99',
     18,
     'GRG',
     'Rigo'
   ),
   [UniverseChainId.Base]: new Token(
     UniverseChainId.Base,
-    GRG_ADDRESSES[UniverseChainId.Base] as string,
+    '0x09188484e1Ab980DAeF53a9755241D759C5B7d60',
     18,
     'GRG',
     'Rigo'
   ),
   [UniverseChainId.ArbitrumOne]: new Token(
     UniverseChainId.ArbitrumOne,
-    GRG_ADDRESSES[UniverseChainId.ArbitrumOne] as string,
+    '0x7F4638A58C0615037deCc86f1daE60E55fE92874',
     18,
     'GRG',
     'Rigo'
@@ -434,7 +435,14 @@ export const MNW = new Token(
 )
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
-  ...(WETH9 as Record<UniverseChainId, Token>),
+  //...(WETH9 as Record<UniverseChainId, Token>),
+  [UniverseChainId.Mainnet]: new Token(
+    UniverseChainId.Mainnet,
+    '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+    18,
+    'WETH',
+    'Wrapped Ether',
+  ),
   [UniverseChainId.Optimism]: new Token(
     UniverseChainId.Optimism,
     '0x4200000000000000000000000000000000000006',

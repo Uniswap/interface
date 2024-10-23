@@ -219,6 +219,11 @@ type ActiveChainIdFeatureFlags = UniverseChainId.WorldChain
 
 export function filterChainIdsByFeatureFlag(featureFlaggedChainIds: {
   [UniverseChainId.WorldChain]: boolean
+  [UniverseChainId.Avalanche]: boolean
+  [UniverseChainId.Blast]: boolean
+  [UniverseChainId.Celo]: boolean
+  [UniverseChainId.Zora]: boolean
+  [UniverseChainId.Zksync]: boolean
 }): UniverseChainId[] {
   return COMBINED_CHAIN_IDS.filter((chainId) => {
     return featureFlaggedChainIds[chainId as ActiveChainIdFeatureFlags] ?? true
@@ -231,14 +236,19 @@ export function useFeatureFlaggedChainIds(): UniverseChainId[] {
   // Example: [ChainId.BLAST]: useFeatureFlag(FeatureFlags.BLAST)
   // IMPORTANT: Don't forget to also update getEnabledChainIdsSaga
 
-  const worldChainEnabled = useFeatureFlag(FeatureFlags.WorldChain)
+  //const worldChainEnabled = useFeatureFlag(FeatureFlags.WorldChain)
 
   return useMemo(
     () =>
       filterChainIdsByFeatureFlag({
-        [UniverseChainId.WorldChain]: worldChainEnabled,
+        [UniverseChainId.WorldChain]: false, //worldChainEnabled,
+        [UniverseChainId.Avalanche]: false,
+        [UniverseChainId.Blast]: false,
+        [UniverseChainId.Celo]: false,
+        [UniverseChainId.Zora]: false,
+        [UniverseChainId.Zksync]: false
       }),
-    [worldChainEnabled],
+    [/*worldChainEnabled*/],
   )
 }
 

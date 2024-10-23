@@ -4,7 +4,6 @@ import {
   BUSD_BSC,
   DAI,
   DAI_AVALANCHE,
-  DAI_BSC,
   ETH_BSC,
   GRG,
   USDC_AVALANCHE,

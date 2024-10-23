@@ -6,7 +6,6 @@ import { NAV_BREAKPOINT } from 'components/NavBar/ScreenSizes'
 import { SearchBarDropdown } from 'components/NavBar/SearchBar/SearchBarDropdown'
 import Row from 'components/deprecated/Row'
 import { chainIdToBackendChain } from 'constants/chains'
-import { ZERO_ADDRESS } from 'constants/misc'
 import { GqlSearchToken, useSearchTokens } from 'graphql/data/SearchTokens'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
@@ -247,7 +246,7 @@ export const SearchBar = ({
   // TODO: check using a different struct for pools
   const searchPools: GqlSearchToken[] | undefined = useMemo(() => {
     if (!chain) {
-      return
+      return undefined
     }
     return filteredPools.map((p) => {
       const { name, symbol, address } = p

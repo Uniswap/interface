@@ -141,7 +141,7 @@ function ExistingUserCTAButton() {
 
   return (
     <StyledConnectButton tabIndex={-1} data-testid="navbar-connect-wallet">
-      <Text variant="buttonLabel3" color="$accent1" whiteSpace="nowrap">
+      <Text variant="buttonLabel3" color="theme.accent1" whiteSpace="nowrap">
         {isSignIn ? t('nav.signIn.button') : isLogIn ? t('nav.logIn.button') : t('common.connect.button')}
       </Text>
     </StyledConnectButton>

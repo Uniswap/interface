@@ -9,10 +9,15 @@ export function* getEnabledChainIdsSaga() {
   const testnetModeFeatureFlag = getFeatureFlag(FeatureFlags.Datadog)
   const testnetModeEnabled = yield* select(selectIsTestnetModeEnabled)
 
-  const worldChainEnabled = getFeatureFlag(FeatureFlags.WorldChain)
+  //const worldChainEnabled = getFeatureFlag(FeatureFlags.WorldChain)
 
   const featureFlaggedChainIds = filterChainIdsByFeatureFlag({
-    [UniverseChainId.WorldChain]: worldChainEnabled,
+    [UniverseChainId.WorldChain]: false, //worldChainEnabled,
+    [UniverseChainId.Avalanche]: false,
+    [UniverseChainId.Blast]: false,
+    [UniverseChainId.Celo]: false,
+    [UniverseChainId.Zora]: false,
+    [UniverseChainId.Zksync]: false
   })
 
   return yield* call(getEnabledChains, {

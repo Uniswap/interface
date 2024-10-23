@@ -111,7 +111,7 @@ export default function SellModal({
     return JSBI.greaterThanOrEqual(poolBaseTokenBalance.quotient, expectedBaseTokens.quotient)
   }, [poolBaseTokenBalance, expectedBaseTokens, parsedAmount, poolInfo])
 
-  async function onSell() {
+  async function onSell(): Promise<void | undefined> {
     setAttempting(true)
     if (poolContract && parsedAmount && poolInfo /*&& deadline*/) {
       const args = [parsedAmount.quotient.toString(), minimumAmount?.quotient.toString()]
@@ -134,6 +134,8 @@ export default function SellModal({
             setAttempting(false)
           })
       })
+    } else {
+      return undefined
     }
   }
 

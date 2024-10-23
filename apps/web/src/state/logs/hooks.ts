@@ -39,7 +39,7 @@ export function useLogs(filter: Filter | undefined): UseLogsResult {
 
   useEffect(() => {
     if (!filter || !chainId) {
-      return
+      return undefined
     }
 
     dispatch(addListener({ chainId, filter }))

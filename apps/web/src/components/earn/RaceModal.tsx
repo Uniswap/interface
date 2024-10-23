@@ -54,7 +54,7 @@ interface RaceModalProps {
 export default function RaceModal({ isOpen, poolAddress, poolName, onDismiss, title }: RaceModalProps) {
   const { chainId } = useAccount()
 
-  const [currencyValue] = useState<Token>(GRG[chainId ?? UniverseChainId.Mainnet])
+  const [currencyValue] = useState<Token | undefined>(GRG[chainId ?? UniverseChainId.Mainnet])
   const raceCallback = useRaceCallback()
 
   // monitor call to help UI loading state
@@ -79,7 +79,7 @@ export default function RaceModal({ isOpen, poolAddress, poolName, onDismiss, ti
 
   async function onRace() {
     // if callback not returned properly ignore
-    if (!raceCallback || !poolAddress || !poolName || !currencyValue.isToken) {
+    if (!raceCallback || !poolAddress || !poolName || !currencyValue?.isToken) {
       return
     }
     setAttempting(true)

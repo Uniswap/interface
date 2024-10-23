@@ -17,7 +17,6 @@ import {
   COMMON_CONTRACT_NAMES,
   DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
 } from 'constants/governance'
-import { ZERO_ADDRESS } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'

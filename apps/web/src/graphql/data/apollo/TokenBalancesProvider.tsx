@@ -2,7 +2,7 @@ import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activ
 import { AdaptiveTokenBalancesProvider } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAssetActivitySubscription } from 'graphql/data/apollo/AssetActivityProvider'
 import { useAccount } from 'hooks/useAccount'
-import { PropsWithChildren, useCallback, useEffect, useMemo } from 'react'
+import { PropsWithChildren, useCallback, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useActiveSmartPool } from 'state/application/hooks'
 import { GQL_MAINNET_CHAINS_MUTABLE } from 'uniswap/src/constants/chains'

@@ -51,7 +51,10 @@ export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismi
   const account = useAccount()
 
   // state for unstake input
-  const [currencyValue] = useState<Token>(GRG[account.chainId ?? UniverseChainId.Mainnet])
+  const [currencyValue] = useState<Token | undefined>(GRG[account.chainId ?? UniverseChainId.Mainnet])
+  if (!currencyValue) {
+    throw new Error ('No GRG token found to unstake')
+  }
 
   const { percent } = useBurnV3State()
   const { onPercentSelect } = useBurnV3ActionHandlers()
@@ -93,7 +96,7 @@ export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismi
     setStakeAmount(parsedAmount)
 
     // if callback not returned properly ignore
-    if (!unstakeCallback || !freeStakeBalance || !parsedAmount || !currencyValue.isToken) {
+    if (!unstakeCallback || !freeStakeBalance || !parsedAmount || !currencyValue?.isToken) {
       return
     }
 

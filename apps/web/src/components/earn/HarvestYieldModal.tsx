@@ -49,9 +49,10 @@ export default function HarvestYieldModal({
   onDismiss,
   title,
 }: HarvestYieldModalProps) {
+  //const { chainId } = useAccount()
   const { chainId } = useAccount()
 
-  const [currencyValue] = useState<Token>(GRG[chainId ?? UniverseChainId.Mainnet])
+  const [currencyValue] = useState<Token | undefined>(GRG[chainId ?? UniverseChainId.Mainnet])
   const harvestCallback = useHarvestCallback()
 
   // monitor call to help UI loading state
@@ -73,7 +74,7 @@ export default function HarvestYieldModal({
 
   async function onHarvest() {
     // if callback not returned properly ignore
-    if (!harvestCallback || !poolIds || poolIds?.length === 0 || !currencyValue.isToken) {
+    if (!harvestCallback || !poolIds || poolIds?.length === 0 || !currencyValue?.isToken) {
       return
     }
     setAttempting(true)

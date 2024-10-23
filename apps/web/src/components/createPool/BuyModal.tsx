@@ -90,7 +90,7 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
     }
   }, [parsedAmount, poolInfo])
 
-  async function onBuy() {
+  async function onBuy(): Promise<void | undefined> {
     setAttempting(true)
     if (poolContract && parsedAmount && poolInfo /*&& deadline*/) {
       if (approval === ApprovalState.APPROVED) {
@@ -121,6 +121,8 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
         setAttempting(false)
         throw new Error('Attempting to stake without approval. Please contact support.')
       }
+    } else {
+      return undefined
     }
   }
 

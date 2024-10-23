@@ -109,6 +109,8 @@ export default function Navbar() {
   const { isControl: isSignInExperimentControl, isLoading: isSignInExperimentControlLoading } =
     useIsAccountCTAExperimentControl()
 
+  const shouldDisplayCreateAccountButton = false
+
   return (
     <Nav>
       <NavContents>
@@ -124,13 +126,13 @@ export default function Navbar() {
         <Right>
           {collapseSearchBar && <SearchBar maxHeight={NAV_SEARCH_MAX_HEIGHT} fullScreen={isSmallScreen} />}
           {isNftPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}
-          {isSignInExperimentControl && !isSignInExperimentControlLoading && isLandingPage && !isSmallScreen && (
+          {shouldDisplayCreateAccountButton && isSignInExperimentControl && !isSignInExperimentControlLoading && isLandingPage && !isSmallScreen && (
             <NewUserCTAButton />
           )}
           {!account.isConnected && !account.isConnecting && <PreferenceMenu />}
           {!hideChainSelector && <ChainSelector />}
           <Web3Status />
-          {!isSignInExperimentControl && !isSignInExperimentControlLoading && !account.address && !isMediumScreen && (
+          {shouldDisplayCreateAccountButton && !isSignInExperimentControl && !isSignInExperimentControlLoading && !account.address && !isMediumScreen && (
             <NewUserCTAButton />
           )}
         </Right>

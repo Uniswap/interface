@@ -2,8 +2,9 @@ import { useAtom } from 'jotai'
 import { getExploreDescription, getExploreTitle } from 'pages/getExploreTitle'
 import { getAddLiquidityPageTitle, getPositionPageDescription, getPositionPageTitle } from 'pages/getPositionPageTitle'
 import { ReactNode, Suspense, lazy, useMemo } from 'react'
-import { Navigate, Route, Routes, matchPath, useLocation } from 'react-router-dom'
+import { Navigate, matchPath, useLocation } from 'react-router-dom'
 import { shouldDisableExploreRoutesAtom, shouldDisableNFTRoutesAtom } from 'state/application/atoms'
+import { SpinnerSVG } from 'theme/components'
 import { t } from 'uniswap/src/i18n'
 import { isBrowserRouterEnabled } from 'utils/env'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
@@ -36,6 +37,21 @@ const PoolPositionPage = lazy(() => import('pages/CreatePool/PoolPositionPage'))
 const RemoveLiquidity = lazy(() => import('pages/RemoveLiquidity'))
 const RemoveLiquidityV3 = lazy(() => import('pages/RemoveLiquidity/V3'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
+const Vote = lazy(() => import('pages/Vote'))
+
+// this is the same svg defined in assets/images/blue-loader.svg
+// it is defined here because the remote asset may not have had time to load when this file is executing
+const LazyLoadSpinner = () => (
+  <SpinnerSVG width="94" height="94" viewBox="0 0 94 94" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path
+      d="M92 47C92 22.1472 71.8528 2 47 2C22.1472 2 2 22.1472 2 47C2 71.8528 22.1472 92 47 92"
+      stroke="#2172E5"
+      strokeWidth="3"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </SpinnerSVG>
+)
 
 interface RouterConfig {
   browserRouterEnabled?: boolean
@@ -67,7 +83,7 @@ export function useRouterConfig(): RouterConfig {
 // SEO titles and descriptions sourced from https://docs.google.com/spreadsheets/d/1_6vSxGgmsx6QGEZ4mdHppv1VkuiJEro3Y_IopxUHGB4/edit#gid=0
 // getTitle and getDescription are used as static metatags for SEO. Dynamic metatags should be set in the page component itself
 const StaticTitlesAndDescriptions = {
-  UniswapTitle: t('title.uniswapTradeCrypto'),
+  RigoblockTitle: t('title.rigoblockTradeCrypto'),
   SwapTitle: t('title.buySellTradeEthereum'),
   SwapDescription: t('title.swappingMadeSimple'),
   DetailsPageBaseTitle: t('common.buyAndSell'),
@@ -94,7 +110,7 @@ export interface RouteDefinition {
 function createRouteDefinition(route: Partial<RouteDefinition>): RouteDefinition {
   return {
     getElement: () => null,
-    getTitle: () => StaticTitlesAndDescriptions.UniswapTitle,
+    getTitle: () => StaticTitlesAndDescriptions.RigoblockTitle,
     getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
     enabled: () => true,
     path: '/',
@@ -107,7 +123,7 @@ function createRouteDefinition(route: Partial<RouteDefinition>): RouteDefinition
 export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/',
-    getTitle: () => StaticTitlesAndDescriptions.UniswapTitle,
+    getTitle: () => StaticTitlesAndDescriptions.RigoblockTitle,
     getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
     getElement: (args) => {
       return args.browserRouterEnabled && args.hash ? (
@@ -165,19 +181,11 @@ export const routes: RouteDefinition[] = [
     path: '/vote/*',
     getTitle: () => t('title.voteOnGov'),
     getDescription: () => t('title.uniToken'),
-    getElement: () => {
-      return (
-        <Routes>
-          <Route
-            path="*"
-            Component={() => {
-              window.location.href = 'https://vote.uniswapfoundation.org'
-              return null
-            }}
-          ></Route>
-        </Routes>
-      )
-    },
+    getElement: () => (
+      <Suspense fallback={<LazyLoadSpinner />}>
+        <Vote />
+      </Suspense>
+    ),
   }),
   createRouteDefinition({
     path: '/create-proposal',
@@ -195,16 +203,16 @@ export const routes: RouteDefinition[] = [
     getElement: () => <Swap />,
     getTitle: () => t('title.sendTokens'),
   }),
-  createRouteDefinition({
-    path: '/limits',
-    getElement: () => <Navigate to="/limit" replace />,
-    getTitle: () => t('title.placeLimit'),
-  }),
-  createRouteDefinition({
-    path: '/limit',
-    getElement: () => <Swap />,
-    getTitle: () => t('title.placeLimit'),
-  }),
+  //createRouteDefinition({
+  //  path: '/limits',
+  //  getElement: () => <Navigate to="/limit" replace />,
+  //  getTitle: () => t('title.placeLimit'),
+  //}),
+  //createRouteDefinition({
+  //  path: '/limit',
+  //  getElement: () => <Swap />,
+  //  getTitle: () => t('title.placeLimit'),
+  //}),
   createRouteDefinition({
     path: '/buy',
     getElement: () => <Swap />,
@@ -423,7 +431,7 @@ export const routes: RouteDefinition[] = [
       ':poolAddress/:returnPage/:poolStake/:apr/:poolOwnStake/:irr',
     ],
     getElement: () => <PoolPositionPage />,
-    getTitle: () => t`Provide liquidity to pools on Uniswap`,
+    getTitle: () => t`Provide liquidity to pools on Rigoblock`,
   }),
   createRouteDefinition({ path: '*', getElement: () => <Navigate to="/not-found" replace /> }),
   createRouteDefinition({ path: '/not-found', getElement: () => <NotFound /> }),

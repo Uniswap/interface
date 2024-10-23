@@ -3,7 +3,6 @@ import Badge from 'components/Badge/Badge'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import {
   InterfaceRemoteSearchHistoryItem,
-  useRecentlySearchedAssets,
 } from 'components/NavBar/SearchBar/RecentlySearchedAssets'
 import { SkeletonRow, SuggestionRow } from 'components/NavBar/SearchBar/SuggestionRow'
 import QuestionHelper from 'components/QuestionHelper'

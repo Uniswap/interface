@@ -26,7 +26,6 @@ export type TabsItem = MenuItem & {
 export const useTabsContent = (props?: { includeNftsLink?: boolean }): TabsSection[] => {
   const { t } = useTranslation()
   const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
-  const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
   const { pathname } = useLocation()
   const theme = useTheme()
   const areTabsVisible = useTabsVisible()
@@ -35,18 +34,17 @@ export const useTabsContent = (props?: { includeNftsLink?: boolean }): TabsSecti
     {
       title: areTabsVisible ? t('common.explore') : t('common.mint'),
       href: '/mint',
-      isActive: pathname.startsWith('/mint') || pathname.startsWith('/stake') || pathname.startsWith('/vote'),
+      isActive: pathname.startsWith('/mint') || pathname.startsWith('/stake'),
       items: [
         { label: t('common.mint'), quickKey: 'T', href: '/mint', internal: true },
         { label: t('common.stake'), quickKey: 'P', href: '/stake', internal: true },
-        { label: t('common.vote'), quickKey: 'X', href: '/vote', internal: true },
         //{ label: t('common.nfts'), quickKey: 'N', href: '/nfts', internal: true },
       ],
     },
     {
       title: t('common.trade'),
       href: '/swap',
-      isActive: pathname.startsWith('/swap') || pathname.startsWith('/limit') || pathname.startsWith('/send'),
+      isActive: pathname.startsWith('/swap') /*|| pathname.startsWith('/limit')*/ || pathname.startsWith('/send'),
       items: [
         {
           label: t('common.swap'),

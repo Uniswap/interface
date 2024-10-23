@@ -31,12 +31,12 @@ export const SUPPORTED_CHAIN_IDS: UniverseChainId[] = [
   UniverseChainId.Optimism,
   UniverseChainId.Base,
   UniverseChainId.Bnb,
-  //UniverseChainId.Blast,
-  //UniverseChainId.Avalanche,
-  //UniverseChainId.Celo,
-  //UniverseChainId.WorldChain,
-  //UniverseChainId.Zora,
-  //UniverseChainId.Zksync,
+  UniverseChainId.Blast,
+  UniverseChainId.Avalanche,
+  UniverseChainId.Celo,
+  UniverseChainId.WorldChain,
+  UniverseChainId.Zora,
+  UniverseChainId.Zksync,
 ]
 
 export const SUPPORTED_TESTNET_CHAIN_IDS: UniverseChainId[] = [UniverseChainId.Sepolia, UniverseChainId.AstrochainSepolia]

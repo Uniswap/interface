@@ -3,10 +3,8 @@ import { Currency } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { useShowSwapNetworkNotification } from 'hooks/useShowSwapNetworkNotification'
-import { useAtomValue } from 'jotai/utils'
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useLocation } from 'react-router-dom'
-import { useActiveSmartPool, useAddPopup, useRemovePopup } from 'state/application/hooks'
+import { useCallback, useEffect } from 'react'
+import { useActiveSmartPool } from 'state/application/hooks'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { Flex } from 'ui/src'
 import { TokenSelectorContent, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/TokenSelector'
@@ -33,7 +31,7 @@ interface CurrencySearchProps {
 }
 
 // TODO: we moved filtering by operate pool to currency search modal, check if needed
-export function CurrencySearch({ currencyField, currencySearchFilters, operatedPools, onCurrencySelect, onDismiss }: CurrencySearchProps) {
+export function CurrencySearch({ currencyField /*, currencySearchFilters, operatedPools*/, onCurrencySelect, onDismiss }: CurrencySearchProps) {
   const account = useAccount()
   const { chainId, setSelectedChainId, isUserSelectedToken, setIsUserSelectedToken, currentTab, multichainUXEnabled } =
     useSwapAndLimitContext()
