@@ -79,7 +79,7 @@ export const uniswapUrls = {
   unitagsApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Unitags)}/v2/unitags`,
   scantasticApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Scantastic)}/v2/scantastic`,
   fiatOnRampApiUrl: `${getRbCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/fiat-on-ramp`,
-  tradingApiUrl: getCloudflareApiBaseUrl(TrafficFlows.TradingApi),
+  tradingApiUrl: getRbCloudflareApiBaseUrl(TrafficFlows.TradingApi),
 
   // API Paths
   trmPath: '/v1/screen',

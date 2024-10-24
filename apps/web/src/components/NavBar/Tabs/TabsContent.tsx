@@ -23,7 +23,7 @@ export type TabsItem = MenuItem & {
   quickKey: string
 }
 
-export const useTabsContent = (props?: { includeNftsLink?: boolean }): TabsSection[] => {
+export const useTabsContent = (props?: { includeNftsLink?: boolean; userIsOperator: boolean }): TabsSection[] => {
   const { t } = useTranslation()
   const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
   const { pathname } = useLocation()
@@ -46,13 +46,13 @@ export const useTabsContent = (props?: { includeNftsLink?: boolean }): TabsSecti
       href: '/swap',
       isActive: pathname.startsWith('/swap') /*|| pathname.startsWith('/limit')*/ || pathname.startsWith('/send'),
       items: [
-        {
+        ...(props?.userIsOperator ? [{
           label: t('common.swap'),
           icon: <SwapV2 fill={theme.neutral2} />,
           quickKey: 'U',
           href: '/swap',
           internal: true,
-        },
+        }] : []),
         //{
         //  label: t('swap.limit'),
         //  icon: <Limit fill={theme.neutral2} />,
@@ -100,7 +100,7 @@ export const useTabsContent = (props?: { includeNftsLink?: boolean }): TabsSecti
     //    { label: t('common.nfts'), quickKey: 'N', href: '/nfts', internal: true },
     //  ],
     //},
-    {
+    ...(props?.userIsOperator ? [{
       title: t('common.pool'),
       href: '/pool',
       isActive: pathname.startsWith('/pool'),
@@ -113,7 +113,7 @@ export const useTabsContent = (props?: { includeNftsLink?: boolean }): TabsSecti
           internal: true,
         },
       ],
-    },
+    }] : []),
     ...(!areTabsVisible || props?.includeNftsLink
       ? [
           //{

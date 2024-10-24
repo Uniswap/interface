@@ -159,8 +159,8 @@ const Tab = ({
   )
 }
 
-export function Tabs() {
-  const tabsContent: TabsSection[] = useTabsContent()
+export function Tabs({ userIsOperator }: { userIsOperator: boolean }) {
+  const tabsContent: TabsSection[] = useTabsContent({ userIsOperator })
   return (
     <>
       {tabsContent.map(({ title, isActive, href, items }, index) => (

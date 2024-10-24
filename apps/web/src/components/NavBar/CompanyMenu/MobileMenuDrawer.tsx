@@ -12,6 +12,7 @@ import styled, { useTheme } from 'lib/styled-components'
 import { Socials } from 'pages/Landing/sections/Footer'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronDown } from 'react-feather'
+import { useActiveSmartPool } from 'state/application/hooks'
 import { Accordion, AnimateTransition, Flex, Square, Text } from 'ui/src'
 import { useTranslation } from 'uniswap/src/i18n'
 
@@ -75,7 +76,8 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
   )
   const onExitPreferencesMenu = useCallback(() => changeView(PreferencesView.SETTINGS), [changeView])
   const { t } = useTranslation()
-  const tabsContent = useTabsContent({ includeNftsLink: true })
+  const userIsOperator = useActiveSmartPool().name !== undefined
+  const tabsContent = useTabsContent({ includeNftsLink: true, userIsOperator })
   const menuContent = useMenuContent()
 
   // Collapse sections on close

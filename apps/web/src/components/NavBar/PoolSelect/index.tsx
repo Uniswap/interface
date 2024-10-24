@@ -1,8 +1,9 @@
 import { Currency, Token } from '@uniswap/sdk-core';
 import { ButtonGray } from 'components/Button/buttons'
+import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import styled from 'lib/styled-components'
 import React, { useState } from 'react';
-import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import { Trans } from 'uniswap/src/i18n'
 
 const PoolSelectButton = styled(ButtonGray)<{
     visible: boolean
@@ -66,7 +67,9 @@ const PoolSelect: React.FC<PoolSelectProps> = ({ operatedPools }) => {
       >
         {operatedPools?.length > 0 && (
           <StyledTokenName className="pool-name-container" active={true}>
-            {selectedPool?.name && selectedPool.name.length > 3 && selectedPool.name}
+            <Trans>
+              {selectedPool?.name && selectedPool.name.length > 3 && selectedPool.name}
+            </Trans>
           </StyledTokenName>
         )}
       </PoolSelectButton>

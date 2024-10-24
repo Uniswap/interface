@@ -125,6 +125,7 @@ export default function Navbar() {
 
   const shouldDisplayCreateAccountButton = false
   const operatedPools = useOperatedPools()
+  const userIsOperator: boolean = operatedPools ? operatedPools?.length > 0 : false
 
   // TODO: display pool and swap only if user has operated pools
   return (
@@ -132,7 +133,7 @@ export default function Navbar() {
       <NavContents>
         <Left>
           <CompanyMenu />
-          {areTabsVisible && <Tabs />}
+          {areTabsVisible && <Tabs userIsOperator={userIsOperator} />}
         </Left>
 
         <SelectedPoolContainer>
