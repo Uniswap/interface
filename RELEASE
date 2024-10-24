@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmYjBEq2Z9Ya4rgSfzw4kyr2m3ihsk87Mnr7fKyBbHXsFN`
-- CIDv1: `bafybeie2livmn2qvua4kx42aaenzc7ukda3dnsjm3n5ovk7n256gajg5xe`
+- CIDv0: `QmYH4Tb7M6EoFHKRNyCBHHFeNadwnrmibmQmknWHSQxj8R`
+- CIDv1: `bafybeietvftf6vmileh7kp3srslms4azyza5cmgu6ttrzikjzz4dkrryxy`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeie2livmn2qvua4kx42aaenzc7ukda3dnsjm3n5ovk7n256gajg5xe.ipfs.dweb.link/
-- https://bafybeie2livmn2qvua4kx42aaenzc7ukda3dnsjm3n5ovk7n256gajg5xe.ipfs.cf-ipfs.com/
-- [ipfs://QmYjBEq2Z9Ya4rgSfzw4kyr2m3ihsk87Mnr7fKyBbHXsFN/](ipfs://QmYjBEq2Z9Ya4rgSfzw4kyr2m3ihsk87Mnr7fKyBbHXsFN/)
+- https://bafybeietvftf6vmileh7kp3srslms4azyza5cmgu6ttrzikjzz4dkrryxy.ipfs.dweb.link/
+- https://bafybeietvftf6vmileh7kp3srslms4azyza5cmgu6ttrzikjzz4dkrryxy.ipfs.cf-ipfs.com/
+- [ipfs://QmYH4Tb7M6EoFHKRNyCBHHFeNadwnrmibmQmknWHSQxj8R/](ipfs://QmYH4Tb7M6EoFHKRNyCBHHFeNadwnrmibmQmknWHSQxj8R/)
 
-## 5.54.0 (2024-10-23)
+## 5.55.0 (2024-10-24)
 
 
 ### Features
 
-* **web:** add mainnet to bridge banner - prod (#13298) 7d8d807
+* **web:** only show bridging card on swap tab- prod (#13338) 95e03e4
 
 

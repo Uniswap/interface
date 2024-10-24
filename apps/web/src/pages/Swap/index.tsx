@@ -184,7 +184,6 @@ export function Swap({
                 swapRedirectCallback={swapRedirectCallback}
                 prefilledState={prefilledState}
               />
-              <SwapBottomCard />
             </Flex>
           </SwapFormContextProvider>
         </PrefetchBalancesWrapper>
@@ -374,16 +373,19 @@ function UniversalSwapFlow({
           </Flex>
         )}
         {currentTab === SwapTab.Swap && (
-          <SwapFlow
-            customSettings={WEB_CUSTOM_SWAP_SETTINGS}
-            hideHeader={hideHeader}
-            hideFooter={hideFooter}
-            onClose={noop}
-            swapRedirectCallback={swapRedirectCallback}
-            swapCallback={swapCallback}
-            wrapCallback={wrapCallback}
-            prefilledState={prefilledState}
-          />
+          <Flex gap="$spacing16">
+            <SwapFlow
+              customSettings={WEB_CUSTOM_SWAP_SETTINGS}
+              hideHeader={hideHeader}
+              hideFooter={hideFooter}
+              onClose={noop}
+              swapRedirectCallback={swapRedirectCallback}
+              swapCallback={swapCallback}
+              wrapCallback={wrapCallback}
+              prefilledState={prefilledState}
+            />
+            <SwapBottomCard />
+          </Flex>
         )}
         {currentTab === SwapTab.Limit && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
         {currentTab === SwapTab.Send && (
