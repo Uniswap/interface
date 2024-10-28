@@ -166,7 +166,7 @@ const FOUR_BYTES_DIR: { [sig: string]: string } = {
   '0xd784d426': 'setImplementation(address)',
   '0x83f94db7': 'upgradeImplementation(address)',
   '0x42f1181e': 'addAuthorizedAddress(address)',
-  '0x37b006a6': 'detachStakingContract',
+  '0x37b006a6': 'detachStakingContract()',
   '0x66615d56': 'attachStakingContract(address)',
   '0x70712939': 'removeAuthorizedAddress(address)',
   '0xf2fde38b': 'transferOwnership(address)',
@@ -213,7 +213,7 @@ function useFormattedProposalCreatedLogs(
         const parsed = GovernanceInterface.parseLog(log).args
         return parsed
       })
-      ?.filter((parsed: any) => indices.flat().some((i) => i === parsed.proposalId))
+      //?.filter((parsed: any) => indices.flat().some((i) => i === parsed.proposalId))
       ?.map((parsed: any) => {
         const description: string = parsed.description
         const proposer = parsed.proposer.toString()
@@ -246,7 +246,7 @@ function useFormattedProposalCreatedLogs(
           }),
         }
       })
-  }, [indices, useLogsResult])
+  }, [/*indices,*/ useLogsResult])
 }
 
 function countToIndices(count: number | undefined, skip = 0) {
@@ -287,13 +287,12 @@ export function useAllProposalData(): { data: ProposalData[]; loading: boolean }
   } else if (chainId === UniverseChainId.Polygon) {
     govStartBlock = 39249858
   } else if (chainId === UniverseChainId.Base) {
-    // quicknode returns only a very limited number of logs, therefore we won't see proposal details
-    govStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber //2570523
+    govStartBlock = 2570523 //typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
   } else if (chainId === UniverseChainId.Bnb) {
-    // since bsc enpoints will return an end on historical logs, we try to get proposal logs in the last 40k blocks
-    govStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber //29095808
+    govStartBlock = 29095808 //typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
   }
 
+  // TODO: bsc endpoint is only proxied through infura and always returns and error for past logs
   const formattedLogsV1 = useFormattedProposalCreatedLogs(gov, govProposalIndexes, govStartBlock)
 
   // TODO: we must use staked GRG instead

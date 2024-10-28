@@ -5,6 +5,7 @@ import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useShowSwapNetworkNotification } from 'hooks/useShowSwapNetworkNotification'
 import { PropsWithChildren, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useActiveSmartPool } from 'state/application/hooks'
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
 
@@ -15,17 +16,18 @@ function useWebProvider(chainId: number) {
 
 function useWagmiAccount(): AccountMeta | undefined {
   const account = useAccount()
+  const activeSmartPool = useActiveSmartPool()
 
   return useMemo(() => {
-    if (!account.address) {
+    if (!activeSmartPool?.address || !account.address) {
       return undefined
     }
 
     return {
-      address: account.address,
+      address: activeSmartPool?.address ?? account.address,
       type: AccountType.SignerMnemonic,
     }
-  }, [account.address])
+  }, [activeSmartPool?.address, account.address])
 }
 
 // Abstracts web-specific transaction flow objects for usage in cross-platform flows in the `uniswap` package.

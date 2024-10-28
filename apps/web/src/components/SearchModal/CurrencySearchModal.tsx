@@ -66,8 +66,10 @@ export default memo(function CurrencySearchModal({
   }, [isOpen, lastOpen, operatedPools?.length])
 
   const showTokenSafetySpeedbump = (token: Token) => {
-    setWarningToken(token)
-    setModalView(CurrencyModalView.tokenSafety)
+    if (token.symbol !== 'GRG') {
+      setWarningToken(token)
+      setModalView(CurrencyModalView.tokenSafety)
+    }
   }
 
   const handleCurrencySelect = useCallback(

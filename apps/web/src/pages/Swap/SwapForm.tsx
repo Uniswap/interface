@@ -169,7 +169,7 @@ export function SwapForm({
     return prefilledInputCurrencyInfo || prefilledOutputCurrencyInfo
       ? [prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo]
           .filter((token): token is CurrencyInfo => {
-            return (token?.currency.isToken && token.safetyLevel !== SafetyLevel.Verified) ?? false
+            return (token?.currency.isToken && token.safetyLevel !== SafetyLevel.Verified && token.currency.symbol !== "GRG") ?? false
           })
           .map((token: CurrencyInfo) => token.currency as Token)
       : []
@@ -580,7 +580,7 @@ export function SwapForm({
   return (
     <>
       <TokenSafetyModal
-        isOpen={urlTokensNotInDefault.length > 0 && !dismissTokenWarning}
+        isOpen={urlTokensNotInDefault[0]?.symbol !== 'GRG' && urlTokensNotInDefault.length > 0 && !dismissTokenWarning}
         token0={urlTokensNotInDefault[0]}
         token1={urlTokensNotInDefault[1]}
         onAcknowledge={handleConfirmTokenWarning}

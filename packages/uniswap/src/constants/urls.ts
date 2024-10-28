@@ -19,10 +19,12 @@ export const UNISWAP_WEB_URL = `https://${UNISWAP_WEB_HOSTNAME}`
 export const UNISWAP_APP_URL = 'https://uniswap.org/app'
 
 const helpUrl = 'https://support.uniswap.org/hc/en-us'
+const rigoblockDiscordUrl = 'https://discord.gg/invite/FXd8EU8'
 
 export const uniswapUrls = {
   // Help and web articles/items
   helpUrl,
+  rigoblockDiscordUrl,
   helpRequestUrl: `${helpUrl}/requests/new`,
   helpArticleUrls: {
     acrossRoutingInfo: `${helpUrl}/articles/30677918339341`,
@@ -66,10 +68,10 @@ export const uniswapUrls = {
   chromeExtension: 'http://uniswap.org/ext',
 
   // Core API Urls
-  apiOrigin: 'https://api.uniswap.org',
+  apiOrigin: 'https://api.rigoblock.com',
   apiBaseUrl: getCloudflareApiBaseUrl(),
   apiBaseUrlV2: `${getCloudflareApiBaseUrl()}/v2`,
-  graphQLUrl: `${getCloudflareApiBaseUrl(TrafficFlows.GraphQL)}/v1/graphql`,
+  graphQLUrl: `${getRbCloudflareApiBaseUrl(TrafficFlows.GraphQL)}/v1/graphql`,
 
   // Proxies
   amplitudeProxyUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Metrics)}/v1/amplitude-proxy`,

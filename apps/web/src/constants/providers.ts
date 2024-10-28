@@ -8,13 +8,13 @@ function getAppProvider(chainId: UniverseChainId) {
   const info = UNIVERSE_CHAIN_INFO[chainId]
   return new AppJsonRpcProvider(
     info.rpcUrls.appOnly.http.map(
-      (url, index) => {
-        const overrideUrl = index === 0 && chainId === UniverseChainId.Bnb
-          ? process.env.REACT_APP_BNB_RPC_URL
-          : index === 0 && chainId === UniverseChainId.Base
-          ? process.env.REACT_APP_BASE_MAINNET_RPC_URL
-          : url
-        return new ConfiguredJsonRpcProvider(overrideUrl, { chainId, name: CHAIN_IDS_TO_NAMES[chainId] }
+      (url /*, index*/) => {
+        //const overrideUrl = index === 0 && chainId === UniverseChainId.Bnb
+        //  ? process.env.REACT_APP_BNB_RPC_URL
+        //  : index === 0 && chainId === UniverseChainId.Base
+        //  ? process.env.REACT_APP_BASE_MAINNET_RPC_URL
+        //  : url
+        return new ConfiguredJsonRpcProvider(url, { chainId, name: CHAIN_IDS_TO_NAMES[chainId] }
       )},
     ),
   )
@@ -24,3 +24,8 @@ function getAppProvider(chainId: UniverseChainId) {
 export const RPC_PROVIDERS = Object.fromEntries(
   SUPPORTED_CHAIN_IDS.map((chain) => [chain as UniverseChainId, getAppProvider(chain)]),
 ) as Record<UniverseChainId, AppJsonRpcProvider>
+
+export function getBackupRpcProvider(chainId: UniverseChainId) {
+  const url = 'https://api.rigoblock.com/logs'
+  return new AppJsonRpcProvider([new ConfiguredJsonRpcProvider(url, { chainId, name: CHAIN_IDS_TO_NAMES[chainId] })]);
+}

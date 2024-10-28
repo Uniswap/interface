@@ -144,8 +144,8 @@ export function registerCommands() {
 
   Cypress.Commands.add('interceptGraphqlOperation', (operationName, fixturePath) => {
     const graphqlInterceptions = Cypress.env('graphqlInterceptions')
-    cy.intercept(/(?:interface|beta).gateway.uniswap.org\/v1\/graphql/, (req) => {
-      req.headers['origin'] = 'https://app.uniswap.org'
+    cy.intercept(/(?:interface|beta).gateway.rigoblock.com\/v1\/graphql/, (req) => {
+      req.headers['origin'] = 'https://app.rigoblock.com'
       const currentOperationName = req.body.operationName
 
       if (graphqlInterceptions.has(currentOperationName)) {
@@ -160,8 +160,8 @@ export function registerCommands() {
   })
 
   Cypress.Commands.add('interceptQuoteRequest', (fixturePath) => {
-    return cy.intercept(/(?:interface|beta).gateway.uniswap.org\/v2\/quote/, (req) => {
-      req.headers['origin'] = 'https://app.uniswap.org'
+    return cy.intercept(/(?:interface|beta).gateway.rigoblock.com\/v2\/quote/, (req) => {
+      req.headers['origin'] = 'https://app.rigoblock.com'
       req.reply({ fixture: fixturePath })
     })
   })

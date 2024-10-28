@@ -115,7 +115,8 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
         http: ['https://rpc.mevblocker.io/?referrer=uniswapwallet'],
       },
       [RPCType.Public]: {
-        http: [config.quicknodeMainnetRpcUrl],
+        //http: [config.quicknodeMainnetRpcUrl],
+        http: [`https://mainnet.infura.io/v3/${config.infuraKey}`],
       },
       default: {
         http: ['https://cloudflare-eth.com'],
@@ -180,7 +181,8 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {
       [RPCType.Public]: {
-        http: [config.quicknodeSepoliaRpcUrl],
+        //http: [config.quicknodeSepoliaRpcUrl],
+        http: [`https://sepolia.infura.io/v3/${config.infuraKey}`],
       },
       default: {
         http: ['https://rpc.sepolia.org/'],
@@ -255,7 +257,10 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     supportsGasEstimates: true,
     urlParam: 'arbitrum',
     rpcUrls: {
-      [RPCType.Public]: { http: [config.quicknodeArbitrumRpcUrl] },
+      [RPCType.Public]: {
+        //http: [config.quicknodeArbitrumRpcUrl],
+        http: [`https://arbitrum-mainnet.infura.io/v3/${config.infuraKey}`],
+      },
       default: { http: ['https://arb1.arbitrum.io/rpc'] },
       fallback: { http: ['https://arbitrum.public-rpc.com'] },
       appOnly: {
@@ -309,7 +314,10 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
     rpcUrls: {
-      [RPCType.Public]: { http: [config.quicknodeOpRpcUrl] },
+      [RPCType.Public]: {
+        //http: [config.quicknodeOpRpcUrl],
+        http: [`https://optimism-mainnet.infura.io/v3/${config.infuraKey}`],
+      },
       [RPCType.PublicAlt]: { http: ['https://mainnet.optimism.io'] },
       default: { http: ['https://mainnet.optimism.io/'] },
       fallback: { http: ['https://rpc.ankr.com/optimism'] },
@@ -369,7 +377,10 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     supportsGasEstimates: true,
     urlParam: 'base',
     rpcUrls: {
-      [RPCType.Public]: { http: [config.quicknodeBaseRpcUrl] },
+      [RPCType.Public]: {
+        //http: [config.quicknodeBaseRpcUrl],
+        http: [`https://base-mainnet.infura.io/v3/${config.infuraKey}`],
+      },
       default: { http: ['https://mainnet.base.org/'] },
       fallback: { http: ['https://1rpc.io/base', 'https://base.meowrpc.com'] },
       appOnly: { http: [`https://base-mainnet.infura.io/v3/${config.infuraKey}`] },
@@ -424,7 +435,10 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     networkLayer: NetworkLayer.L1,
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {
-      [RPCType.Public]: { http: [config.quicknodeBnbRpcUrl] },
+      [RPCType.Public]: {
+        //http: [config.quicknodeBnbRpcUrl],
+        http: [`https://bsc-mainnet.infura.io/v3/${config.infuraKey}`],
+      },
       default: { http: ['https://bsc-dataseed1.bnbchain.org'] },
       appOnly: { http: [`https://bsc-mainnet.infura.io/v3/${config.infuraKey}`, config.quicknodeBnbRpcUrl] },
     },
@@ -480,7 +494,10 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     networkLayer: NetworkLayer.L1,
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {
-      [RPCType.Public]: { http: [config.quicknodePolygonRpcUrl] },
+      [RPCType.Public]: {
+        //http: [config.quicknodePolygonRpcUrl],
+        http: [`https://polygon-mainnet.infura.io/v3/${config.infuraKey}`],
+      },
       [RPCType.PublicAlt]: { http: ['https://polygon-rpc.com/'] },
       default: { http: ['https://polygon-rpc.com/'] },
       appOnly: { http: [`https://polygon-mainnet.infura.io/v3/${config.infuraKey}`] },

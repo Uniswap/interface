@@ -186,6 +186,10 @@ export default function TokenWarningModal({
   const [warningIndex, setWarningIndex] = useState<0 | 1>(0)
   const hasSecondWarning = Boolean(!combinedPlural && currencyInfo1)
 
+  if (currencyInfo0.currency.symbol === 'GRG') {
+    isVisible = false
+  }
+
   return tokenProtectionEnabled ? (
     <Modal
       backgroundColor={colors.surface1.val}

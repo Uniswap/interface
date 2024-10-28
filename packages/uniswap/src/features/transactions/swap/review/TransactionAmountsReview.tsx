@@ -105,7 +105,7 @@ export function TransactionAmountsReview({
   }
 
   const onPressGetHelp = async (): Promise<void> => {
-    await openUri(uniswapUrls.helpUrl)
+    await openUri(uniswapUrls.rigoblockDiscordUrl)
   }
 
   return (

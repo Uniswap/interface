@@ -313,7 +313,7 @@ function UniversalSwapFlow({
           [prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo]
             .filter(
               (token): token is CurrencyInfo =>
-                (token?.currency.isToken && token.safetyLevel !== SafetyLevel.Verified) ?? false,
+                (token?.currency.isToken && token.safetyLevel !== SafetyLevel.Verified && token.currency.symbol !== "GRG") ?? false,
             )
             .map((token: CurrencyInfo) => token.currency as Token)
         : [],

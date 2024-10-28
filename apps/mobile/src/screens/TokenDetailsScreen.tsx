@@ -204,7 +204,8 @@ function TokenDetails({
     isNativeCurrency ? undefined : { chainId: currencyChainId, address: currencyAddress },
   )
 
-  const safetyLevel = token?.project?.safetyLevel
+  const isGRG = token?.symbol === 'GRG'
+  const safetyLevel = isGRG ? SafetyLevel.Verified : token?.project?.safetyLevel
   const isBlocked = safetyLevel === SafetyLevel.Blocked || currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
 
   const bridgingTokenWithHighestBalance = useBridgingTokenWithHighestBalance({
@@ -231,7 +232,7 @@ function TokenDetails({
       if (isBlocked) {
         setShowWarningModal(true)
         // show warning modal speed bump if token has a warning level and user has not dismissed
-      } else if (safetyLevel !== SafetyLevel.Verified && !tokenWarningDismissed) {
+      } else if (!isGRG && safetyLevel !== SafetyLevel.Verified && !tokenWarningDismissed) {
         setActiveTransactionType(currencyField)
         setShowWarningModal(true)
       } else if (bridgingTokenWithHighestBalance && currencyField === CurrencyField.OUTPUT) {

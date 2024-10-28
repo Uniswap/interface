@@ -67,9 +67,12 @@ export interface PoolRegisteredLog {
   userHasStake?: boolean
 }
 
-function useStartBlock(chainId: number | undefined): number | undefined {
+function useStartBlock(chainId?: number): {fromBlock: number, toBlock?: number } {
   let registryStartBlock
   const blockNumber = useBlockNumber()
+
+  // TODO: bsc is served by infura via proxy, and returns an error on past logs regardless of range
+  const toBlock: number | undefined = chainId === 56 ? blockNumber : undefined
 
   if (chainId === UniverseChainId.Mainnet) {
     registryStartBlock = 15834693
@@ -82,20 +85,20 @@ function useStartBlock(chainId: number | undefined): number | undefined {
   } else if (chainId === UniverseChainId.Polygon) {
     registryStartBlock = 35228892
   } else if (chainId === UniverseChainId.Base) {
-    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
+    registryStartBlock = 2565256 //typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
   } else if (chainId === UniverseChainId.Bnb) {
-    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
+    registryStartBlock = 25549625 //typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
   } else {
-    registryStartBlock = undefined
+    registryStartBlock = 1000
   }
 
-  return registryStartBlock
+  return { fromBlock: registryStartBlock, toBlock }
 }
 
 /**
  * Need pool events to get list of pools by owner.
  */
-function useFormattedPoolCreatedLogs(contract: Contract | null, fromBlock: number): PoolRegisteredLog[] | undefined {
+function useFormattedPoolCreatedLogs(contract: Contract | null, fromBlock: number, toBlock: number | undefined): PoolRegisteredLog[] | undefined {
   // create filters for Registered events
   const filter = useMemo(() => {
     const logFilter = contract?.filters?.Registered()
@@ -105,12 +108,16 @@ function useFormattedPoolCreatedLogs(contract: Contract | null, fromBlock: numbe
     return {
       ...logFilter,
       fromBlock,
+      toBlock
     }
-  }, [contract, fromBlock])
+  }, [contract, fromBlock, toBlock])
 
   const useLogsResult = useLogs(filter)
 
   // TODO: define Result type
+  // TODO: since we use our rpc endpoints as backup, which return multichain pools,
+  //  we should check whether to filter by chain, or display chain on ui (but not clickable pool)
+  //  and handle rpc call on non-existing pools on a chain, as that will return empty data.
   return useMemo(() => {
     return useLogsResult?.logs
       ?.map((log: any) => {
@@ -133,34 +140,9 @@ function useFormattedPoolCreatedLogs(contract: Contract | null, fromBlock: numbe
 export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolean } {
   const account = useAccount()
   const registry = useRegistryContract()
-  const blockNumber = useBlockNumber()
+  const { fromBlock, toBlock } = useStartBlock(account.chainId)
 
-  // get metadata from past events
-  let registryStartBlock
-
-  if (account.chainId === UniverseChainId.Mainnet) {
-    registryStartBlock = 15834693
-  } else if (account.chainId === UniverseChainId.Sepolia) {
-    registryStartBlock = 7807806
-  } else if (account.chainId === UniverseChainId.ArbitrumOne) {
-    registryStartBlock = 35439804
-  } else if (account.chainId === UniverseChainId.Optimism) {
-    registryStartBlock = 34629059
-  } else if (account.chainId === UniverseChainId.Polygon) {
-    registryStartBlock = 35228892
-  } else if (account.chainId === UniverseChainId.Base && blockNumber) {
-    // TODO: check
-    //registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
-    registryStartBlock = 2743831
-  } else if (account.chainId === UniverseChainId.Bnb && blockNumber) {
-    // TODO: check
-    //registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
-    registryStartBlock = 25575661
-  } else {
-    registryStartBlock = blockNumber as number
-  }
-
-  const formattedLogsV1: PoolRegisteredLog[] | undefined = useFormattedPoolCreatedLogs(registry, registryStartBlock)
+  const formattedLogsV1: PoolRegisteredLog[] | undefined = useFormattedPoolCreatedLogs(registry, fromBlock, toBlock)
 
   const poolsFromList = usePoolsFromList(registry, account.chainId)
 
@@ -255,7 +237,8 @@ export function useCreateCallback(): (
 export function useRegisteredPools(): PoolRegisteredLog[] | undefined {
   const account = useAccount()
   const registry = useRegistryContract()
-  const fromBlock = useStartBlock(account.chainId)
+  const { fromBlock, toBlock } = useStartBlock(account.chainId)
+
   // create filters for Registered events
   const filter = useMemo(() => {
     const filter = registry?.filters?.Registered()
@@ -265,8 +248,9 @@ export function useRegisteredPools(): PoolRegisteredLog[] | undefined {
     return {
       ...filter,
       fromBlock,
+      toBlock
     }
-  }, [registry, fromBlock])
+  }, [registry, fromBlock, toBlock])
   const logs = useAppSelector((state) => state.logs)
   if (!account.chainId || !filter) {
     return []
