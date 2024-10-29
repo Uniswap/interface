@@ -9,23 +9,15 @@ import {
   Position as RestPosition,
   Token as RestToken,
 } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, Position as V4Position } from '@uniswap/v4-sdk'
 import { PositionInfo } from 'components/Liquidity/types'
-import { PriceOrdering, getPriceOrderingFromPositionForUI } from 'components/PositionListItem'
 import { ZERO_ADDRESS } from 'constants/misc'
-import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
-import JSBI from 'jsbi'
-import { useMemo } from 'react'
-import { useAppSelector } from 'state/hooks'
-import { Bound } from 'state/mint/v3/actions'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
-import { useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export function getProtocolVersionLabel(version: ProtocolVersion): string | undefined {
   switch (version) {
@@ -133,7 +125,7 @@ export function getPoolFromRest({
 
   if (pool instanceof RestPool) {
     if (protocolVersion === ProtocolVersion.V3) {
-      return new V3Pool(token0, token1, pool.fee, pool.sqrtPriceX96, pool.liquidity, pool.tick)
+      return new V3Pool(token0 as Token, token1 as Token, pool.fee, pool.sqrtPriceX96, pool.liquidity, pool.tick)
     }
 
     return new V4Pool(
@@ -141,7 +133,7 @@ export function getPoolFromRest({
       token1,
       pool.fee,
       pool.tickSpacing,
-      hooks || '',
+      hooks || ZERO_ADDRESS,
       pool.sqrtPriceX96,
       pool.liquidity,
       pool.tick,
@@ -152,16 +144,24 @@ export function getPoolFromRest({
     if (protocolVersion === ProtocolVersion.V3) {
       const feeTier = parseV3FeeTier(pool.feeTier)
       if (feeTier) {
-        return new V3Pool(token0, token1, feeTier, pool.currentPrice, pool.liquidity, parseInt(pool.currentTick))
+        return new V3Pool(
+          token0 as Token,
+          token1 as Token,
+          feeTier,
+          pool.currentPrice,
+          pool.currentLiquidity,
+          parseInt(pool.currentTick),
+        )
       }
     }
 
+    const fee = parseInt(pool.feeTier ?? '')
     return new V4Pool(
       token0,
       token1,
-      parseInt(pool.feeTier),
+      fee,
       parseInt(pool.tickSpacing),
-      hooks || '',
+      hooks || ZERO_ADDRESS,
       pool.currentPrice,
       pool.liquidity,
       parseInt(pool.currentTick),
@@ -254,6 +254,7 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       feeTier: parseV3FeeTier(v3Position.feeTier),
       version: ProtocolVersion.V3,
       pool,
+      poolId: position.position.value.poolId,
       position: sdkPosition,
       tickLower: v3Position.tickLower,
       tickUpper: v3Position.tickUpper,
@@ -285,20 +286,21 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
           tickUpper: Number(v4Position.tickUpper),
         })
       : undefined
-
+    const poolId = V4Pool.getPoolId(token0, token1, Number(v4Position.feeTier), Number(v4Position.tickSpacing), hook)
     return {
       status: position.status,
-      feeTier: v4Position?.feeTier,
+      feeTier: v4Position.feeTier,
       version: ProtocolVersion.V4,
       position: sdkPosition,
       pool,
+      poolId,
       v4hook: hook,
       tokenId: v4Position.tokenId,
-      tickLower: v4Position?.tickLower,
-      tickUpper: v4Position?.tickUpper,
-      tickSpacing: Number(v4Position?.tickSpacing),
-      currency0Amount: CurrencyAmount.fromRawAmount(token0, v4Position?.amount0 ?? 0),
-      currency1Amount: CurrencyAmount.fromRawAmount(token1, v4Position?.amount1 ?? 0),
+      tickLower: v4Position.tickLower,
+      tickUpper: v4Position.tickUpper,
+      tickSpacing: Number(v4Position.tickSpacing),
+      currency0Amount: CurrencyAmount.fromRawAmount(token0, v4Position.amount0 ?? 0),
+      currency1Amount: CurrencyAmount.fromRawAmount(token1, v4Position.amount1 ?? 0),
       token0UncollectedFees: v4Position.token0UncollectedFees,
       token1UncollectedFees: v4Position.token1UncollectedFees,
       liquidity: v4Position.liquidity,
@@ -308,171 +310,7 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
   }
 }
 
-/**
- * Parses the Positions API object from the modal state and returns the relevant information for the modals.
- */
-export function useModalLiquidityPositionInfo(): PositionInfo | undefined {
-  const modalState = useAppSelector((state) => state.application.openModal)
-  return modalState?.initialState
-}
-
-export function useGetPoolTokenPercentage(positionInfo?: PositionInfo) {
-  const { totalSupply, liquidityAmount } = positionInfo ?? {}
-
-  const poolTokenPercentage = useMemo(() => {
-    return !!liquidityAmount && !!totalSupply && JSBI.greaterThanOrEqual(totalSupply.quotient, liquidityAmount.quotient)
-      ? new Percent(liquidityAmount.quotient, totalSupply.quotient)
-      : undefined
-  }, [liquidityAmount, totalSupply])
-
-  return poolTokenPercentage
-}
-
-/**
- * V3-specific hooks for a position parsed using parseRestPosition.
- */
-export function useV3OrV4PositionDerivedInfo(positionInfo?: PositionInfo) {
-  const {
-    token0UncollectedFees,
-    token1UncollectedFees,
-    currency0Amount,
-    currency1Amount,
-    liquidity,
-    tickLower,
-    tickUpper,
-  } = positionInfo ?? {}
-  const { price: price0 } = useUSDCPrice(currency0Amount?.currency)
-  const { price: price1 } = useUSDCPrice(currency1Amount?.currency)
-
-  const { feeValue0, feeValue1 } = useMemo(() => {
-    if (!currency0Amount || !currency1Amount) {
-      return {}
-    }
-    return {
-      feeValue0: token0UncollectedFees
-        ? CurrencyAmount.fromRawAmount(currency0Amount.currency, token0UncollectedFees)
-        : undefined,
-      feeValue1: token1UncollectedFees
-        ? CurrencyAmount.fromRawAmount(currency1Amount.currency, token1UncollectedFees)
-        : undefined,
-    }
-  }, [currency0Amount, currency1Amount, token0UncollectedFees, token1UncollectedFees])
-
-  const { fiatFeeValue0, fiatFeeValue1 } = useMemo(() => {
-    const amount0 = feeValue0 ? price0?.quote(feeValue0) : undefined
-    const amount1 = feeValue1 ? price1?.quote(feeValue1) : undefined
-    return {
-      fiatFeeValue0: amount0,
-      fiatFeeValue1: amount1,
-    }
-  }, [price0, price1, feeValue0, feeValue1])
-
-  const { fiatValue0, fiatValue1 } = useMemo(() => {
-    if (!price0 || !price1 || !currency0Amount || !currency1Amount) {
-      return {}
-    }
-    const amount0 = price0.quote(currency0Amount)
-    const amount1 = price1.quote(currency1Amount)
-    return {
-      fiatValue0: amount0,
-      fiatValue1: amount1,
-    }
-  }, [price0, price1, currency0Amount, currency1Amount])
-
-  const priceOrdering = useMemo(() => {
-    if (
-      (positionInfo?.version !== ProtocolVersion.V3 && positionInfo?.version !== ProtocolVersion.V4) ||
-      !positionInfo.position ||
-      !liquidity ||
-      !tickLower ||
-      !tickUpper
-    ) {
-      return {}
-    }
-    return getPriceOrderingFromPositionForUI(positionInfo.position)
-  }, [liquidity, tickLower, tickUpper, positionInfo])
-
-  return useMemo(
-    () => ({
-      fiatFeeValue0,
-      fiatFeeValue1,
-      fiatValue0,
-      fiatValue1,
-      priceOrdering,
-      feeValue0,
-      feeValue1,
-      token0CurrentPrice:
-        positionInfo?.version === ProtocolVersion.V3 || positionInfo?.version === ProtocolVersion.V4
-          ? positionInfo.pool?.token0Price
-          : undefined,
-      token1CurrentPrice:
-        positionInfo?.version === ProtocolVersion.V3 || positionInfo?.version === ProtocolVersion.V4
-          ? positionInfo.pool?.token1Price
-          : undefined,
-    }),
-    [fiatFeeValue0, fiatFeeValue1, fiatValue0, fiatValue1, priceOrdering, feeValue0, feeValue1, positionInfo],
-  )
-}
-
-export function useGetRangeDisplay({
-  token0CurrentPrice,
-  token1CurrentPrice,
-  priceOrdering,
-  pricesInverted,
-  feeTier,
-  tickLower,
-  tickUpper,
-}: {
-  token0CurrentPrice?: Price<Currency, Currency>
-  token1CurrentPrice?: Price<Currency, Currency>
-  priceOrdering: PriceOrdering
-  feeTier?: string
-  tickLower?: string
-  tickUpper?: string
-  pricesInverted: boolean
-}): {
-  currentPrice?: Price<Currency, Currency>
-  minPrice: string
-  maxPrice: string
-  tokenASymbol?: string
-  tokenBSymbol?: string
-} {
-  const { formatTickPrice } = useFormatter()
-
-  const { currentPrice, priceLower, priceUpper, base, quote } = calculateInvertedValues({
-    token0CurrentPrice,
-    token1CurrentPrice,
-    ...priceOrdering,
-    invert: pricesInverted,
-  })
-
-  const isTickAtLimit = useIsTickAtLimit(parseV3FeeTier(feeTier), Number(tickLower), Number(tickUpper))
-
-  const minPrice = formatTickPrice({
-    price: priceLower,
-    atLimit: isTickAtLimit,
-    direction: Bound.LOWER,
-    numberType: NumberType.TokenTx,
-  })
-  const maxPrice = formatTickPrice({
-    price: priceUpper,
-    atLimit: isTickAtLimit,
-    direction: Bound.UPPER,
-    numberType: NumberType.TokenTx,
-  })
-  const tokenASymbol = quote?.symbol
-  const tokenBSymbol = base?.symbol
-
-  return {
-    currentPrice,
-    minPrice,
-    maxPrice,
-    tokenASymbol,
-    tokenBSymbol,
-  }
-}
-
-function calculateInvertedValues({
+export function calculateInvertedValues({
   token0CurrentPrice,
   token1CurrentPrice,
   priceLower,
@@ -502,4 +340,101 @@ function calculateInvertedValues({
     quote: invert ? base : quote,
     base: invert ? quote : base,
   }
+}
+
+export function calculateTickSpacingFromFeeAmount(feeAmount: number): number {
+  return (2 * feeAmount) / 100
+}
+
+export function calculateInvertedPrice({ price, invert }: { price?: Price<Currency, Currency>; invert: boolean }) {
+  const currentPrice = invert ? price?.invert() : price
+
+  return {
+    price: currentPrice,
+    quote: currentPrice?.quoteCurrency,
+    base: currentPrice?.baseCurrency,
+  }
+}
+
+export enum HookFlag {
+  BeforeAddLiquidity = 'before-add-liquidity',
+  AfterAddLiquidity = 'after-add-liquidity',
+  BeforeRemoveLiquidity = 'before-remove-liquidity',
+  AfterRemoveLiquidity = 'after-remove-liquidity',
+  BeforeSwap = 'before-swap',
+  AfterSwap = 'after-swap',
+  BeforeDonate = 'before-donate',
+  AfterDonate = 'after-donate',
+  BeforeSwapReturnsDelta = 'before-swap-returns-delta',
+  AfterSwapReturnsDelta = 'after-swap-returns-delta',
+  AfterAddLiquidityReturnsDelta = 'after-add-liquidity-returns-delta',
+  AfterRemoveLiquidityReturnsDelta = 'after-remove-liquidity-returns-delta',
+}
+
+// The flags are ordered with the dangerous ones on top so they are rendered first
+const FLAGS: { [key in HookFlag]: number } = {
+  [HookFlag.BeforeRemoveLiquidity]: 1 << 9,
+  [HookFlag.AfterRemoveLiquidity]: 1 << 8,
+  [HookFlag.BeforeAddLiquidity]: 1 << 11,
+  [HookFlag.AfterAddLiquidity]: 1 << 10,
+  [HookFlag.BeforeSwap]: 1 << 7,
+  [HookFlag.AfterSwap]: 1 << 6,
+  [HookFlag.BeforeDonate]: 1 << 5,
+  [HookFlag.AfterDonate]: 1 << 4,
+  [HookFlag.BeforeSwapReturnsDelta]: 1 << 3,
+  [HookFlag.AfterSwapReturnsDelta]: 1 << 2,
+  [HookFlag.AfterAddLiquidityReturnsDelta]: 1 << 1,
+  [HookFlag.AfterRemoveLiquidityReturnsDelta]: 1 << 0,
+}
+
+export function getFlagsFromContractAddress(contractAddress: Address): HookFlag[] {
+  // Extract the last 4 hexadecimal digits from the address
+  const last4Hex = contractAddress.slice(-4)
+
+  // Convert the hex string to a binary string
+  const binaryStr = parseInt(last4Hex, 16).toString(2)
+
+  // Parse the last 12 bits of the binary string
+  const relevantBits = binaryStr.slice(-12)
+
+  // Determine which flags are active
+  const activeFlags = Object.entries(FLAGS)
+    .filter(([, bitPosition]) => (parseInt(relevantBits, 2) & bitPosition) !== 0)
+    .map(([flag]) => flag as HookFlag)
+
+  return activeFlags
+}
+
+export interface FlagWarning {
+  name: string
+  info: string
+  dangerous: boolean
+}
+
+export function getFlagWarning(flag: HookFlag, t: AppTFunction): FlagWarning | undefined {
+  switch (flag) {
+    case HookFlag.BeforeSwap:
+    case HookFlag.BeforeSwapReturnsDelta:
+      return {
+        name: t('common.swap'),
+        info: t('position.hook.swapWarning'),
+        dangerous: false,
+      }
+    case HookFlag.BeforeAddLiquidity:
+    case HookFlag.AfterAddLiquidity:
+      return {
+        name: t('common.addLiquidity'),
+        info: t('position.hook.liquidityWarning'),
+        dangerous: false,
+      }
+    case HookFlag.BeforeRemoveLiquidity:
+    case HookFlag.AfterRemoveLiquidity:
+      return {
+        name: t('pool.removeLiquidity'),
+        info: t('position.hook.removeWarning'),
+        dangerous: true,
+      }
+  }
+
+  return undefined
 }

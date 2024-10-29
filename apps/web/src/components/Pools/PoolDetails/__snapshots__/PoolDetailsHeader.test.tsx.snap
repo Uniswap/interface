@@ -284,7 +284,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   min-width: 0;
 }
 
-.c13 {
+.c10 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -311,7 +311,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   gap: 12px;
 }
 
-.c14 {
+.c11 {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
@@ -331,21 +331,13 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   gap: 8px;
 }
 
-.c15 {
+.c12 {
   display: inline-block;
   height: inherit;
 }
 
 .c7 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c10 {
-  color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
@@ -409,29 +401,6 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   animation: iAjNNh 125ms ease-in;
   -webkit-animation-duration: 250ms;
   animation-duration: 250ms;
-}
-
-.c11 {
-  background: #F9F9F9;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
-.c12 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  fill: #7D7D7D;
-}
-
-.c12:hover {
-  opacity: 0.6;
-}
-
-.c12:active {
-  opacity: 0.4;
 }
 
 .c6 {
@@ -540,27 +509,41 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
                 </div>
               </div>
               <div
-                class="c10 c11 css-1m65e73"
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331199 _alignItems-center"
               >
-                0.05%
-              </div>
-              <svg
-                class="c12"
-                data-testid="toggle-tokens-reverse-arrows"
-                fill="none"
-                height="20"
-                viewBox="0 0 20 20"
-                width="20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M2.05836 6.27468C2.00086 6.21718 1.95514 6.14789 1.92348 6.07123C1.86014 5.91873 1.86014 5.74623 1.92348 5.59373C1.95514 5.51706 2.00086 5.44798 2.05836 5.39048L5.3917 2.05715C5.63586 1.81298 6.03173 1.81298 6.27589 2.05715C6.52006 2.30132 6.52006 2.69718 6.27589 2.94134L4.00925 5.20799H14.1667C14.5117 5.20799 14.7917 5.48799 14.7917 5.83299C14.7917 6.17799 14.5117 6.45799 14.1667 6.45799H4.00925L6.27589 8.72463C6.52006 8.9688 6.52006 9.36466 6.27589 9.60882C6.15423 9.73049 5.9942 9.79213 5.8342 9.79213C5.6742 9.79213 5.51418 9.73132 5.39251 9.60882L2.05836 6.27468ZM18.0766 13.9271C18.045 13.8504 17.9992 13.7813 17.9417 13.7238L14.6084 10.3905C14.3642 10.1463 13.9684 10.1463 13.7242 10.3905C13.4801 10.6346 13.4801 11.0305 13.7242 11.2747L15.9909 13.5413H5.83339C5.48839 13.5413 5.20839 13.8213 5.20839 14.1663C5.20839 14.5113 5.48839 14.7913 5.83339 14.7913H15.9909L13.7242 17.058C13.4801 17.3021 13.4801 17.698 13.7242 17.9422C13.8459 18.0638 14.0059 18.1255 14.1659 18.1255C14.3259 18.1255 14.4859 18.0647 14.6076 17.9422L17.9409 14.6088C17.9984 14.5513 18.0442 14.4822 18.0758 14.4056C18.14 14.2522 18.14 14.0804 18.0766 13.9271Z"
+                <span
+                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _pt-2px _pb-2px _pr-6px _pl-6px _backgroundColor-568007293 _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202 _borderTopLeftRadius-4px _borderBottomLeftRadius-4px"
+                  data-disable-theme="true"
                 />
-              </svg>
+                <span
+                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _pt-2px _pb-2px _pr-6px _pl-6px _backgroundColor-568007293 _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202 _borderTopRightRadius-4px _borderBottomRightRadius-4px"
+                  data-disable-theme="true"
+                >
+                  0.05%
+                </span>
+              </div>
+              <div
+                class="_opacity-0hover-0d0t846 _opacity-0active-0d0t7546 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
+              >
+                <svg
+                  data-testid="toggle-tokens-reverse-arrows"
+                  fill="none"
+                  height="100%"
+                  stroke-width="8"
+                  style="color: rgb(125, 125, 125); width: 20px; height: 20px; cursor: pointer; text-decoration: none; transition-duration: 0.2s; opacity: 1; transform: rotate(90deg);"
+                  viewBox="0 0 16 16"
+                  width="100%"
+                >
+                  <path
+                    d="M7.33336 4.00003V14C7.33336 14.2694 7.1714 14.5127 6.92206 14.6161C6.8394 14.6501 6.75269 14.6667 6.66669 14.6667C6.49336 14.6667 6.32267 14.5987 6.19534 14.4714L2.862 11.1381C2.60134 10.8774 2.60134 10.456 2.862 10.1953C3.12267 9.93468 3.54405 9.93468 3.80471 10.1953L6.00002 12.3907V4.00003C6.00002 3.63203 6.29802 3.33337 6.66669 3.33337C7.03536 3.33337 7.33336 3.63203 7.33336 4.00003ZM13.8047 4.86201L10.4714 1.52868C10.2807 1.33801 9.99532 1.28132 9.74465 1.38399C9.49532 1.48732 9.33336 1.7307 9.33336 2.00003V12C9.33336 12.368 9.63136 12.6667 10 12.6667C10.3687 12.6667 10.6667 12.368 10.6667 12V3.60941L12.862 5.80472C13.1227 6.06539 13.544 6.06539 13.8047 5.80472C14.0654 5.54405 14.0654 5.12268 13.8047 4.86201Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
           <div
-            class="c13 c14"
+            class="c10 c11"
             width="max-content"
           >
             <div
@@ -572,7 +555,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
                 id="Dropdown"
               >
                 <div
-                  class="c15"
+                  class="c12"
                   style="width: 100%;"
                 >
                   <div>
@@ -617,7 +600,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
                 id="Dropdown"
               >
                 <div
-                  class="c15"
+                  class="c12"
                   style="width: 100%;"
                 >
                   <div>

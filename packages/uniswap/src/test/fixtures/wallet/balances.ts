@@ -1,13 +1,14 @@
 import { Portfolio, Token, TokenBalance } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { buildCurrency } from 'uniswap/src/features/dataApi/utils'
+import { buildCurrency, getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 import { currencyInfo, portfolio, tokenBalance } from 'uniswap/src/test/fixtures'
 import { faker } from 'uniswap/src/test/shared'
 import { createFixture } from 'uniswap/src/test/utils'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 const portfolioBalanceBase = createFixture<PortfolioBalance>()(() => ({
+  id: faker.datatype.uuid(),
   cacheId: faker.datatype.uuid(),
   quantity: faker.datatype.float({ min: 0, max: 1000, precision: 0.01 }),
   balanceUSD: faker.datatype.float({ min: 0, max: 1000, precision: 0.01 }),
@@ -36,6 +37,8 @@ export const portfolioBalance = createFixture<PortfolioBalance, PortfolioBalance
     decimals: balance.token.decimals,
     symbol: balance.token.symbol,
     name: balance.token.name,
+    buyFeeBps: balance.token.feeData?.buyFeeBps,
+    sellFeeBps: balance.token.feeData?.sellFeeBps,
   })
 
   if (!currency) {
@@ -43,6 +46,7 @@ export const portfolioBalance = createFixture<PortfolioBalance, PortfolioBalance
   }
 
   return {
+    id: balance.id,
     cacheId: `${balance.__typename}:${balance.id}`,
     quantity: balance.quantity,
     balanceUSD: balance.denominatedValue?.value,
@@ -57,6 +61,8 @@ export const portfolioBalance = createFixture<PortfolioBalance, PortfolioBalance
       logoUrl: balance.token.project?.logoUrl,
       isSpam: balance.token.project?.isSpam,
       safetyLevel: balance.token.project?.safetyLevel,
+      spamCode: balance.token.project?.spamCode,
+      safetyInfo: getCurrencySafetyInfo(balance.token.project?.safetyLevel, balance.token.protectionInfo),
     },
   }
 })

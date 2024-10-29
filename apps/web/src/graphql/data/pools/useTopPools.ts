@@ -1,20 +1,7 @@
 import { Percent } from '@uniswap/sdk-core'
-import { exploreSearchStringAtom } from 'components/Tokens/state'
-import { chainIdToBackendChain } from 'constants/chains'
 import { OrderDirection } from 'graphql/data/util'
-import useIsWindowVisible from 'hooks/useIsWindowVisible'
-import { useAtomValue } from 'jotai/utils'
-import { useMemo } from 'react'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
-import {
-  ProtocolVersion,
-  Token,
-  useTopV2PairsQuery,
-  useTopV3PoolsQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export function sortPools(pools: TablePool[], sortState: PoolTableSortState) {
   return pools.sort((a, b) => {
@@ -92,93 +79,4 @@ export enum PoolSortFields {
 export type PoolTableSortState = {
   sortBy: PoolSortFields
   sortDirection: OrderDirection
-}
-
-function useFilteredPools(pools: TablePool[]) {
-  const filterString = useAtomValue(exploreSearchStringAtom)
-
-  const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
-
-  return useMemo(
-    () =>
-      pools.filter((pool) => {
-        const addressIncludesFilterString = pool.hash.toLowerCase().includes(lowercaseFilterString)
-        const token0IncludesFilterString = pool.token0?.symbol?.toLowerCase().includes(lowercaseFilterString)
-        const token1IncludesFilterString = pool.token1?.symbol?.toLowerCase().includes(lowercaseFilterString)
-        const token0HashIncludesFilterString = pool.token0?.address?.toLowerCase().includes(lowercaseFilterString)
-        const token1HashIncludesFilterString = pool.token1?.address?.toLowerCase().includes(lowercaseFilterString)
-        const poolName = `${pool.token0?.symbol}/${pool.token1?.symbol}`.toLowerCase()
-        const poolNameIncludesFilterString = poolName.includes(lowercaseFilterString)
-        return (
-          token0IncludesFilterString ||
-          token1IncludesFilterString ||
-          addressIncludesFilterString ||
-          token0HashIncludesFilterString ||
-          token1HashIncludesFilterString ||
-          poolNameIncludesFilterString
-        )
-      }),
-    [lowercaseFilterString, pools],
-  )
-}
-
-export function useTopPools(sortState: PoolTableSortState, chainId?: UniverseChainId) {
-  const isWindowVisible = useIsWindowVisible()
-  const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
-  const {
-    loading: loadingV3,
-    error: errorV3,
-    data: dataV3,
-  } = useTopV3PoolsQuery({
-    variables: { first: 100, chain: chainIdToBackendChain({ chainId, withFallback: true }) },
-    skip: !isWindowVisible || isRestExploreEnabled,
-  })
-  const {
-    loading: loadingV2,
-    error: errorV2,
-    data: dataV2,
-  } = useTopV2PairsQuery({
-    variables: { first: 100, chain: chainIdToBackendChain({ chainId, withFallback: true }) },
-    skip: !isWindowVisible || !chainId || isRestExploreEnabled,
-  })
-  const loading = loadingV3 || loadingV2
-
-  const unfilteredPools = useMemo(() => {
-    // TODO(WEB-4818): add v4 pools here
-    const topV3Pools: TablePool[] =
-      dataV3?.topV3Pools?.map((pool) => {
-        return {
-          hash: pool.address,
-          token0: pool.token0,
-          token1: pool.token1,
-          tvl: pool.totalLiquidity?.value,
-          volume24h: pool.volume24h?.value,
-          volumeWeek: pool.volumeWeek?.value,
-          apr: calculateApr(pool.volume24h?.value, pool.totalLiquidity?.value, pool.feeTier),
-          volOverTvl: calculate1DVolOverTvl(pool.volume24h?.value, pool.totalLiquidity?.value),
-          feeTier: pool.feeTier,
-          protocolVersion: pool.protocolVersion,
-        } as TablePool
-      }) ?? []
-    const topV2Pairs: TablePool[] =
-      dataV2?.topV2Pairs?.map((pool) => {
-        return {
-          hash: pool.address,
-          token0: pool.token0,
-          token1: pool.token1,
-          tvl: pool.totalLiquidity?.value,
-          volume24h: pool.volume24h?.value,
-          volumeWeek: pool.volumeWeek?.value,
-          volOverTvl: calculate1DVolOverTvl(pool.volume24h?.value, pool.totalLiquidity?.value),
-          apr: calculateApr(pool.volume24h?.value, pool.totalLiquidity?.value, V2_BIPS),
-          feeTier: V2_BIPS,
-          protocolVersion: pool.protocolVersion,
-        } as TablePool
-      }) ?? []
-
-    return sortPools([...topV3Pools, ...topV2Pairs], sortState)
-  }, [dataV2?.topV2Pairs, dataV3?.topV3Pools, sortState])
-
-  const filteredPools = useFilteredPools(unfilteredPools).slice(0, 100)
-  return { topPools: filteredPools, loading, errorV3, errorV2 }
 }

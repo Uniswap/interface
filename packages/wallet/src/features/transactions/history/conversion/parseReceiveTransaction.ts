@@ -1,3 +1,4 @@
+import { SpamCode } from 'uniswap/src/data/types'
 import { AssetType } from 'uniswap/src/entities/assets'
 import {
   ReceiveTokenTransactionInfo,
@@ -5,7 +6,6 @@ import {
   TransactionListQueryResponse,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { SpamCode } from 'wallet/src/data/types'
 import {
   deriveCurrencyAmountFromAssetResponse,
   getAddressFromAsset,

@@ -3,8 +3,7 @@ import { Flex, FlexProps, Text, isWeb } from 'ui/src'
 import { Wrench } from 'ui/src/components/icons/Wrench'
 // eslint-disable-next-line no-restricted-imports
 import { useDeviceInsets } from 'ui/src/hooks/useDeviceInsets'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
-import { TESTNET_MODE_BANNER_HEIGHT } from 'uniswap/src/hooks/useAppInsets'
+import { TESTNET_MODE_BANNER_HEIGHT, useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { isInterface, isMobileApp } from 'utilities/src/platform'
 
 export function TestnetModeBanner(props: FlexProps): JSX.Element | null {

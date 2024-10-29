@@ -3,6 +3,7 @@ import {
   ClickableWithinGesture,
   ElementAfterText,
   Flex,
+  FlexProps,
   GeneratedIcon,
   IconProps,
   Text,
@@ -15,11 +16,16 @@ import { CardImage, CardImageGraphicSizeInfo } from 'uniswap/src/components/card
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { OnboardingCardLoggingName } from 'uniswap/src/features/telemetry/types'
+import {
+  CardLoggingName,
+  DappRequestCardLoggingName,
+  OnboardingCardLoggingName,
+} from 'uniswap/src/features/telemetry/types'
 import { useTranslation } from 'uniswap/src/i18n'
 import { isExtension } from 'utilities/src/platform'
 
 export enum CardType {
+  Default,
   Required,
   Dismissible,
   Swipe,
@@ -55,10 +61,23 @@ export type IntroCardProps = {
   description: string
   cardType: CardType
   isNew?: boolean
-  loggingName: OnboardingCardLoggingName
+  loggingName: CardLoggingName
+  containerProps?: FlexProps
 
   onPress?: () => void
   onClose?: () => void
+}
+
+export function isOnboardingCardLoggingName(
+  name: OnboardingCardLoggingName | DappRequestCardLoggingName,
+): name is OnboardingCardLoggingName {
+  return Object.values(OnboardingCardLoggingName).includes(name as OnboardingCardLoggingName)
+}
+
+export function isDappRequestCardLoggingName(
+  name: OnboardingCardLoggingName | DappRequestCardLoggingName,
+): name is DappRequestCardLoggingName {
+  return Object.values(DappRequestCardLoggingName).includes(name as DappRequestCardLoggingName)
 }
 
 export function IntroCard({
@@ -67,6 +86,7 @@ export function IntroCard({
   description,
   cardType,
   isNew = false,
+  containerProps,
   loggingName,
   onPress,
   onClose,
@@ -80,17 +100,29 @@ export function IntroCard({
   const closeHandler = useCallback(() => {
     if (onClose) {
       onClose()
-      sendAnalyticsEvent(WalletEventName.OnboardingIntroCardClosed, {
-        card_name: loggingName,
-      })
+      if (isOnboardingCardLoggingName(loggingName)) {
+        sendAnalyticsEvent(WalletEventName.OnboardingIntroCardClosed, {
+          card_name: loggingName,
+        })
+      } else if (isDappRequestCardLoggingName(loggingName)) {
+        sendAnalyticsEvent(WalletEventName.DappRequestCardClosed, {
+          card_name: loggingName,
+        })
+      }
     }
   }, [loggingName, onClose])
 
   const pressHandler = useCallback(() => {
     onPress?.()
-    sendAnalyticsEvent(WalletEventName.OnboardingIntroCardPressed, {
-      card_name: loggingName,
-    })
+    if (isOnboardingCardLoggingName(loggingName)) {
+      sendAnalyticsEvent(WalletEventName.OnboardingIntroCardPressed, {
+        card_name: loggingName,
+      })
+    } else if (isDappRequestCardLoggingName(loggingName)) {
+      sendAnalyticsEvent(WalletEventName.DappRequestCardPressed, {
+        card_name: loggingName,
+      })
+    }
   }, [loggingName, onPress])
 
   const GraphicElement = useMemo(() => {
@@ -124,7 +156,7 @@ export function IntroCard({
             px="$spacing8"
             py="$spacing4"
           >
-            <Text color="$neutral2" variant="buttonLabel3">
+            <Text color="$neutral2" variant="buttonLabel4">
               {t('onboarding.home.intro.label.required')}
             </Text>
           </Flex>
@@ -166,6 +198,7 @@ export function IntroCard({
         pr={cardPadding}
         overflow="hidden"
         py={cardPadding}
+        {...containerProps}
       >
         {GraphicElement}
 

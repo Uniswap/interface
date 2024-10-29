@@ -32,6 +32,14 @@ query RecentlySearchedAssets(
     standard
     address
     symbol
+    feeData {
+      buyFeeBps
+      sellFeeBps
+    }
+    protectionInfo {
+      attackTypes
+      result
+    }
     market(currency: USD) {
       id
       price {

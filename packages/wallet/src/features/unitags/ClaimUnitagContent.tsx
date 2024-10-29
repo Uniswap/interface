@@ -1,10 +1,10 @@
 import { EventConsumer, EventMapBase } from '@react-navigation/core'
 import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, LayoutChangeEvent } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
-import { AnimatePresence, Button, Flex, FlexProps, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatePresence, Button, Flex, FlexProps, Input, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
@@ -22,7 +22,7 @@ import {
 import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { logger } from 'utilities/src/logger/logger'
-import { isExtension } from 'utilities/src/platform'
+import { isExtension, isMobileApp } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { UnitagInfoModal } from 'wallet/src/features/unitags/UnitagInfoModal'
 import { UnitagName } from 'wallet/src/features/unitags/UnitagName'
@@ -35,6 +35,7 @@ const MAX_UNITAG_CHAR_LENGTH = 20
 const MAX_INPUT_FONT_SIZE = 36
 const MIN_INPUT_FONT_SIZE = 22
 const MAX_CHAR_PIXEL_WIDTH = 20
+const SLIDE_IN_AMOUNT = isExtension ? 0 : 40
 
 // Used in dynamic font size width calculation to ignore `.` characters
 const UNITAG_SUFFIX_CHARS_ONLY = UNITAG_SUFFIX.replaceAll('.', '')
@@ -48,7 +49,7 @@ export type ClaimUnitagContentProps = {
   animateY?: boolean
   navigationEventConsumer?: EventConsumer<EventMapBase>
   onNavigateContinue?: (params: SharedUnitagScreenParams[UnitagScreens.ChooseProfilePicture]) => void
-  onComplete?: () => void
+  onComplete?: (unitag: string) => void
 }
 
 export function ClaimUnitagContent({
@@ -61,6 +62,7 @@ export function ClaimUnitagContent({
 }: ClaimUnitagContentProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const textInputRef = useRef<Input>(null)
 
   const inputPlaceholder = getYourNameString(t('unitags.claim.username.default'))
 
@@ -89,6 +91,14 @@ export function ClaimUnitagContent({
     MIN_INPUT_FONT_SIZE,
   )
 
+  const focusUniTagTextInput = (): void | null => textInputRef.current && textInputRef.current.focus()
+
+  useEffect(() => {
+    return navigationEventConsumer?.addListener('transitionEnd', () => {
+      focusUniTagTextInput()
+    })
+  }, [navigationEventConsumer])
+
   useEffect(() => {
     const unsubscribe = navigationEventConsumer?.addListener('focus', () => {
       // Reset the Unitag to check
@@ -108,6 +118,7 @@ export function ClaimUnitagContent({
       setTimeout(() => {
         setShowTextInputView(true)
         addressViewOpacity.value = withTiming(1, { duration: ONE_SECOND_MS / 2 })
+        focusUniTagTextInput()
       }, ONE_SECOND_MS)
     })
 
@@ -134,7 +145,7 @@ export function ClaimUnitagContent({
         onSetFontSize(text + UNITAG_SUFFIX_CHARS_ONLY)
       }
 
-      setUnitagInputValue(text?.trim())
+      setUnitagInputValue(text?.trim().toLocaleLowerCase())
     },
     [inputPlaceholder, onSetFontSize],
   )
@@ -176,7 +187,7 @@ export function ClaimUnitagContent({
       )
       // Navigate to ChooseProfilePicture screen after initial delay + translation to allow animations to finish
       setTimeout(() => {
-        onComplete?.()
+        onComplete?.(unitag)
         if (unitagAddress && onNavigateContinue) {
           onNavigateContinue({ unitag, entryPoint, address: unitagAddress, unitagFontSize: fontSize })
         }
@@ -244,7 +255,7 @@ export function ClaimUnitagContent({
     <>
       <Flex
         centered
-        gap="$spacing16"
+        gap="$spacing12"
         mt="$spacing24"
         onLayout={(event): void => {
           onLayout(event)
@@ -269,17 +280,19 @@ export function ClaimUnitagContent({
                 key="input-container"
                 row
                 animation="quick"
-                enterStyle={{ opacity: 0, x: 40 }}
-                exitStyle={{ opacity: 0, x: 40 }}
+                enterStyle={{ opacity: 0, x: SLIDE_IN_AMOUNT }}
+                exitStyle={{ opacity: 0, x: SLIDE_IN_AMOUNT }}
                 gap="$none"
                 {...extensionStyling}
               >
                 <TextInput
-                  autoFocus
-                  blurOnSubmit
+                  ref={textInputRef}
+                  autoFocus={!isMobileApp}
+                  blurOnSubmit={!isExtension}
                   autoCapitalize="none"
                   autoCorrect={false}
                   borderWidth={0}
+                  borderRadius={isExtension ? 0 : undefined}
                   fontFamily="$heading"
                   fontSize={isExtension ? fonts.subheading1.fontSize : fontSize}
                   fontWeight="$book"
@@ -291,16 +304,18 @@ export function ClaimUnitagContent({
                   testID={TestID.WalletNameInput}
                   textAlign="left"
                   value={unitagInputValue}
+                  width={isExtension ? '100%' : undefined}
                   minWidth={unitagNameinputMinWidth}
                   onChangeText={onChangeTextInput}
+                  onSubmitEditing={onPressContinue}
                   onLayout={getInitialUnitagNameInputWidth}
                 />
                 <Text
                   key={UNITAG_SUFFIX}
                   animation="lazy"
                   color="$neutral1"
-                  enterStyle={{ opacity: 0, x: 40 }}
-                  exitStyle={{ opacity: 0, x: 40 }}
+                  enterStyle={{ opacity: 0, x: SLIDE_IN_AMOUNT }}
+                  exitStyle={{ opacity: 0, x: SLIDE_IN_AMOUNT }}
                   fontFamily="$heading"
                   fontSize={isExtension ? fonts.subheading1.fontSize : fontSize}
                   fontWeight="$book"
@@ -337,7 +352,7 @@ export function ClaimUnitagContent({
           </Text>
         </Flex>
       </Flex>
-      <Flex gap="$spacing24" pt={isExtension ? '$spacing24' : undefined} justifyContent="flex-end">
+      <Flex gap="$spacing24" justifyContent="flex-end">
         <Button
           disabled={
             (entryPoint === OnboardingScreens.Landing && !unitagAddress) ||

@@ -4,9 +4,13 @@ import { UnitagAddressResponse, UnitagUsernameResponse } from 'uniswap/src/featu
 
 // TODO(WALL-4256): delete these helpers and just use `useUnitagsAddressQuery` and `useUnitagsUsernameQuery` where needed.
 
-export const useUnitagByAddress = (address?: Address): { unitag?: UnitagAddressResponse; loading: boolean } => {
-  const { data, isLoading } = useUnitagsAddressQuery({ params: address ? { address } : undefined })
-  return { unitag: data, loading: isLoading }
+export const useUnitagByAddress = (
+  address?: Address,
+): { unitag?: UnitagAddressResponse; loading: boolean; pending: boolean; fetching: boolean } => {
+  const { data, isLoading, isPending, isFetching } = useUnitagsAddressQuery({
+    params: address ? { address } : undefined,
+  })
+  return { unitag: data, loading: isLoading, pending: isPending, fetching: isFetching }
 }
 
 export const useUnitagByName = (username?: string): { unitag?: UnitagUsernameResponse; loading: boolean } => {

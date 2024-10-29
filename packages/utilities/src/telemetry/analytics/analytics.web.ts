@@ -2,7 +2,7 @@ import { flush, getUserId, Identify, identify, init, setDeviceId, track } from '
 // eslint-disable-next-line no-restricted-imports
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
 // eslint-disable-next-line no-restricted-imports
-import { Analytics, UserPropertyValue } from 'utilities/src/telemetry/analytics/analytics'
+import { Analytics, TestnetModeConfig, UserPropertyValue } from 'utilities/src/telemetry/analytics/analytics'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
 import {
   ALLOW_ANALYTICS_ATOM_KEY,
@@ -11,10 +11,12 @@ import {
   DUMMY_KEY,
 } from 'utilities/src/telemetry/analytics/constants'
 import { generateAnalyticsLoggers } from 'utilities/src/telemetry/analytics/logging'
+import { getProcessedEvent } from 'utilities/src/telemetry/analytics/utils'
 
 const loggers = generateAnalyticsLoggers('telemetry/analytics.web')
 let allowAnalytics: boolean = true
 let testnetMode: boolean = false
+let testnetModeConfig: TestnetModeConfig | undefined
 let commitHash: Maybe<string>
 let userId: Maybe<string>
 
@@ -101,22 +103,31 @@ export const analytics: Analytics = {
       setDeviceId(ANONYMOUS_DEVICE_ID)
     }
   },
-  setTestnetMode(enabled: boolean): void {
+  setTestnetMode(enabled: boolean, config: TestnetModeConfig): void {
     testnetMode = enabled
+    testnetModeConfig = config
   },
   async sendEvent(eventName: string, eventProperties?: Record<string, unknown>): Promise<void> {
     if (!(await getAnalyticsAtomDirect()) && !ANONYMOUS_EVENT_NAMES.includes(eventName)) {
       return
     }
-    if (testnetMode) {
-      return
-    }
-    const finalProperties = {
+    const propertiesWithHash: Record<string, unknown> = {
       ...eventProperties,
       ...(commitHash ? { git_commit_hash: commitHash } : {}),
     }
-    loggers.sendEvent(eventName, finalProperties)
-    track(eventName, finalProperties)
+
+    const processedTestnetEvent = getProcessedEvent({
+      eventName,
+      eventProperties: propertiesWithHash,
+      testnetModeConfig,
+      isTestnetMode: testnetMode,
+    })
+
+    if (processedTestnetEvent) {
+      const { eventName: processedEventName, eventProperties: processedEventProperties } = processedTestnetEvent
+      loggers.sendEvent(processedEventName, processedEventProperties)
+      track(processedEventName, processedEventProperties)
+    }
   },
   flushEvents(): void {
     loggers.flushEvents()

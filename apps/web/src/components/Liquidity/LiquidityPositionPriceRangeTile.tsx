@@ -1,8 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
-import { PositionStatus } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Price } from '@uniswap/sdk-core'
-import { LiquidityPositionStatusIndicator } from 'components/Liquidity/LiquidityPositionStatusIndicator'
-import { useGetRangeDisplay } from 'components/Liquidity/utils'
+import { useGetRangeDisplay } from 'components/Liquidity/hooks'
 import { PriceOrdering } from 'components/PositionListItem'
 import { useMemo, useState } from 'react'
 import { Flex, SegmentedControl, SegmentedControlOption, Text, styled } from 'ui/src'
@@ -19,7 +17,6 @@ const InnerTile = styled(Flex, {
 })
 
 interface LiquidityPositionPriceRangeTileProps {
-  status?: PositionStatus
   priceOrdering: PriceOrdering
   token0CurrentPrice: Price<Currency, Currency>
   token1CurrentPrice: Price<Currency, Currency>
@@ -29,7 +26,6 @@ interface LiquidityPositionPriceRangeTileProps {
 }
 
 export function LiquidityPositionPriceRangeTile({
-  status,
   priceOrdering,
   token0CurrentPrice,
   token1CurrentPrice,
@@ -77,7 +73,6 @@ export function LiquidityPositionPriceRangeTile({
           <Text variant="subheading1">
             <Trans i18nKey="pool.priceRange" />
           </Text>
-          {status && <LiquidityPositionStatusIndicator status={status} />}
         </Flex>
         <SegmentedControl
           options={controlOptions}
@@ -87,7 +82,7 @@ export function LiquidityPositionPriceRangeTile({
           }}
         />
       </Flex>
-      <Flex row width="100%" gap="$gap12">
+      <Flex row width="100%" gap="$gap12" $lg={{ row: false }}>
         <InnerTile>
           <Text variant="subheading2" color="$neutral2">
             <Trans i18nKey="pool.minPrice" />

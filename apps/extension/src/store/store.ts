@@ -13,6 +13,7 @@ import {
   readDeprecatedReduxedChromeStorage,
 } from 'src/store/reduxedChromeStorageToReduxPersistMigration'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { createDatadogReduxEnhancer } from 'utilities/src/logger/Datadog'
 import { createStore } from 'wallet/src/state'
 import { createMigrate } from 'wallet/src/state/createMigrate'
 
@@ -38,6 +39,13 @@ const sentryReduxEnhancer = createReduxEnhancer({
   // },
 })
 
+const dataDogReduxEnhancer = createDatadogReduxEnhancer({
+  shouldLogReduxState: (state: ExtensionState): boolean => {
+    // Do not log the state if a user has opted out of analytics.
+    return !!state.telemetry.allowAnalytics
+  },
+})
+
 const setupStore = (preloadedState?: PreloadedState<ExtensionState>): ReturnType<typeof createStore> => {
   return createStore({
     reducer: persistedReducer,
@@ -45,7 +53,7 @@ const setupStore = (preloadedState?: PreloadedState<ExtensionState>): ReturnType
     additionalSagas: [rootExtensionSaga],
     middlewareBefore: __DEV__ ? [loggerMiddleware] : [],
     middlewareAfter: [fiatOnRampAggregatorApi.middleware],
-    enhancers: [sentryReduxEnhancer],
+    enhancers: [sentryReduxEnhancer, dataDogReduxEnhancer],
   })
 }
 

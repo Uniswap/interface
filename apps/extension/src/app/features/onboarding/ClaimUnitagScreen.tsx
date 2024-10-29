@@ -15,12 +15,16 @@ import { ClaimUnitagContent } from 'wallet/src/features/unitags/ClaimUnitagConte
 export function ClaimUnitagScreen(): JSX.Element {
   const { t } = useTranslation()
   const { goToNextStep } = useOnboardingSteps()
-  const { resetOnboardingContextData, getOnboardingAccountAddress } = useOnboardingContext()
+  const { resetOnboardingContextData, getOnboardingAccountAddress, addUnitagClaim } = useOnboardingContext()
   const onboardingAccountAddress = getOnboardingAccountAddress()
 
-  const onNextStep = useCallback(async () => {
-    goToNextStep()
-  }, [goToNextStep])
+  const onComplete = useCallback(
+    (unitag: string) => {
+      addUnitagClaim({ username: unitag })
+      goToNextStep()
+    },
+    [goToNextStep, addUnitagClaim],
+  )
 
   const handleBack = useCallback(() => {
     // reset the pending mnemonic when going back from password screen
@@ -44,14 +48,14 @@ export function ClaimUnitagScreen(): JSX.Element {
         subtitle={t('unitags.onboarding.claim.subtitle')}
         title={t('unitags.onboarding.claim.title.choose')}
         onBack={handleBack}
-        onSkip={onNextStep}
+        onSkip={goToNextStep}
       >
         <Flex gap="$spacing16" py="$spacing24" width="100%">
           <ClaimUnitagContent
             animateY={false}
             entryPoint={ExtensionOnboardingFlow.New}
             unitagAddress={onboardingAccountAddress}
-            onComplete={onNextStep}
+            onComplete={onComplete}
           />
         </Flex>
       </OnboardingScreen>

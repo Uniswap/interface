@@ -6,82 +6,125 @@ If you have suggestions on how we can improve the app, or would like to report a
 
 ## Setup
 
-### Requirements
-
 This guide assumes that:
 
 - You are using a Mac (you will need a Mac computer in order to run the Xcode iOS Simulator)
 - You are using an Apple Silicon Mac (if you’re not sure, go to  → About this Mac and check if the chip name starts with "Apple")
 
-Note: if you are indeed using an Apple Silicon Mac, we recommend setting up your environment _without_ using Rosetta. Some instructions on how to do that can be found [here](https://medium.com/@davidjasonharding/developing-a-react-native-app-on-an-m1-mac-without-rosetta-29fcc7314d70).
+Note: If you are indeed using an Apple Silicon Mac, we recommend setting up your environment _without_ using Rosetta. Some instructions on how to do that can be found [here](https://medium.com/@davidjasonharding/developing-a-react-native-app-on-an-m1-mac-without-rosetta-29fcc7314d70).
+
+- [React Native Requirements](#packages-and-software)
+- [iOS Setup](#ios-setup)
+  - NOTE: Start downloading [Xcode](#xcode) first since it's a large file
+- [Android Setup](#android-setup)
 
 ### Packages and Software
+
+1. Install `homebrew`. We’ll be using Homebrew to install many of the other required tools through the command line. Open a terminal and Copy and paste the command from [brew.sh](https://brew.sh/) into your terminal and run it
+2. Install `nvm` [Node Version Manager](https://github.com/nvm-sh/nvm) While not required, it makes it easy to install Node and switch between different versions. A minimum Node version of 18 (verify version in `.nvmrc`) is required to use this repository.
+
+   - Copy the curl command listed under _Install & Update Script_ on [this page](https://github.com/nvm-sh/nvm#install--update-script) and run it in your terminal.
+   - To make sure nvm installed correctly, try running `nvm -v` (you may need to re-source your shell with `source {base config}`). It should return a version number. If it returns something like `zsh: command not found: nvm`, it hasn’t been installed correctly.
+
+3. Install `node`
+
+    Run the following command in your terminal:
+
+    ```bash
+    nvm install 18
+    nvm use 18
+    ```
+
+    Quit and re-open the terminal, and then run to confirm that v18 is running
+
+    ```bash
+    > node -v
+    v18.20.4
+    ```
+
+    Alternatively, to automatically try to find and use an `.nvmrc` file in your workspace, per the [official nvm docs for zsh](https://github.com/nvm-sh/nvm?tab=readme-ov-file#zsh), add the following script to your shell (typically `~/.zshrc` on mac):
+
+    ```zsh
+    # place this after nvm initialization!
+    autoload -U add-zsh-hook
+
+    load-nvmrc() {
+      local nvmrc_path
+      nvmrc_path="$(nvm_find_nvmrc)"
+
+      if [ -n "$nvmrc_path" ]; then
+        local nvmrc_node_version
+        nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
+
+        if [ "$nvmrc_node_version" = "N/A" ]; then
+          nvm install
+        elif [ "$nvmrc_node_version" != "$(nvm version)" ]; then
+          nvm use
+          # Optionally, add `>/dev/null 2>&1` after `nvm use` to suppress output
+        fi
+      elif [ -n "$(PWD=$OLDPWD nvm_find_nvmrc)" ] && [ "$(nvm version)" != "$(nvm version default)" ]; then
+        echo "Reverting to nvm default version"
+        nvm use default
+      fi
+    }
+
+    add-zsh-hook chpwd load-nvmrc
+    load-nvmrc
+    ```
+
+4. Install `yarn`. We use yarn as our package manager and to run scripts.
+
+    Run the following command to install it (npm comes with node, so it should work if the above step has been completed correctly)
+
+    ```bash
+    npm install --global yarn
+    ```
+
+    Check version to verify installation
+
+    ```bash
+    > yarn -v
+    3.2.3
+    ```
+
+5. Install `ruby`
+
+    Use `rbenv` to install a specific version of `ruby`:
+
+    ```bash
+    brew install rbenv ruby-build
+    ```
+
+    Run init and follow the instructions to complete the installation.
+
+    ```bash
+    rbenv init
+    ```
+
+    After following the instructions, make sure you `source` your `.zshrc` or `.bash_profile`, or start a new terminal session.
+
+    Install a version of `ruby` and set as the default.
+
+    ```bash
+    rbenv install 3.2.2
+    rbenv global 3.2.2
+    ```
+
+6. Install cocoapods and fastlane using bundler (make sure to run in `mobile`)
+
+    ```bash
+    bundle install
+    ```
+
+    Note: In the case you run into permission issues when installing ruby, [you may need to add some permissions to make it work.](https://stackoverflow.com/a/50181250)
+
+### iOS Setup
 
 #### Xcode
 
 You should start with downloading Xcode if you don't already have it installed, since the file is so large. You can find it here: [developer.apple.com/xcode](https://developer.apple.com/xcode/)
 
-You must use **XCode 15** to compile the app.
-
-#### Homebrew
-
-We’ll be using Homebrew to install many of the other required tools through the command line.
-
-1. Open a terminal
-2. Copy and paste the command from [brew.sh](https://brew.sh/) into your terminal and run it
-
-#### nvm
-
-`nvm` is the Node Version Manager. While not required, it makes it easy to install Node and switch between different versions. A minimum Node version of 18 is required to use this repository.
-
-Copy the curl command listed under _Install & Update Script_ on [this page](https://github.com/nvm-sh/nvm#install--update-script) and run it in your terminal.
-
-To make sure nvm installed correctly, try running `nvm -v` (you may need to quit and re-open the terminal window). It should return a version number. If it returns something like `zsh: command not found: nvm`, it hasn’t been installed correctly.
-
-#### node
-
-Now we want to use nvm to install a specific version of node.
-
-Run the following command in your terminal:
-`nvm install 18`
-
-and then when it’s finished, run:
-`nvm use 18`
-
-Quit and re-open the terminal, and then run:
-`node -v`
-
-to make sure you get a version number that starts with `v18.`.
-
-#### yarn
-
-We use yarn as our package manager and to run scripts.
-
-Run the following command to install it:
-`npm install --global yarn`
-(npm comes with node, so it should work if the above step has been completed correctly)
-
-Then run:
-`yarn -v`
-to see if it installed correctly.
-
-#### Ruby
-
-Use `rbenv` to install a specific version of `ruby`:
-`brew install rbenv ruby-build`
-
-Run `rbenv init` and follow the instructions to complete the installation.
-
-After following the instructions, make sure you `source` your `.zshrc` or `.bash_profile`, or start a new terminal session.
-
-Install a version of `ruby`:
-`rbenv install 3.2.2`
-
-Set this as your default version:
-`rbenv global 3.2.2`
-
-Install cocoapods and fastlane using bundler (make sure to run in `mobile`)
-`bundle install`
+You must use **XCode 15** to compile the app. [Older versions of xCode can be found here](https://developer.apple.com/download/all/?q=xcode).
 
 #### Add Xcode Command Line Tools
 
@@ -89,68 +132,61 @@ Open Xcode and go to:
 
 `Preferences → Locations → Command Line Tools`
 
-And select the version that pops up.
+Select the version that pops up.
 
-#### JDK (Android)
+### Android Setup
 
-Taken from [RN instructions](https://reactnative.dev/docs/environment-setup?guide=native&platform=android)
+1. Install [Android Studio](https://developer.android.com/studio)
+2. Install the JDK. Taken from [RN instructions](https://reactnative.dev/docs/set-up-your-environment?platform=android)
 
-```
-brew install --cask zulu@17
+    ```bash
+    brew install --cask zulu@17
 
-# Get path to where cask was installed to double-click installer
-brew info --cask zulu@17
-```
+    # Get path to where cask was installed to double-click installer
+    brew info --cask zulu@17
+    ```
 
-Add the following to your .rc file
-`export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home`
+    Add the following to your .rc file
+    `export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home`
 
-#### Android Studio
+    [Also verify that in Android Studio it is using the correct JDK.](https://developer.android.com/build/jdks#jdk-config-in-studio)
 
-Install [Android Studio](https://developer.android.com/studio)
+3. Add the following to your `.rc` file
 
-Add the following to your .rc file
+    ```bash
+    export ANDROID_HOME=$HOME/Library/Android/sdk
+    export PATH=$PATH:$ANDROID_HOME/emulator
+    export PATH=$PATH:$ANDROID_HOME/platform-tools
+    ```
 
-```
-export ANDROID_HOME=$HOME/Library/Android/sdk
-export PATH=$PATH:$ANDROID_HOME/emulator
-export PATH=$PATH:$ANDROID_HOME/platform-tools
-```
+4. Install an emulator. Android Studio should have an emulator already, but if not:
+   Open the project at `universe/apps/mobile/android`
+   Tools -> Device Manager to create a new emulator
 
-Android Studio should have an emulator already, but if not:
-Open the project at `universe/apps/mobile/android`
-Tools -> Device Manager to create a new emulator
-
-## Deploying to Physical Android Device
+#### Deploying to Physical Android Device
 
 1. Enable developer mode on Android
 
-  1. Open Settings 
-  2. Tap About phone or About device 
-  3. Tap Software information 
-  4. Tap Build number seven times in a row 
-  5. A message will appear when you're close to enabling Developer mode
+   - Open Settings
+   - Tap About phone or About device
+   - Tap Software information
+   - Tap Build number seven times in a row
+   - A message will appear when you're close to enabling Developer mode
+   - Enable USB Debugging: Go to Developer Options in settings and enable USB Debugging
 
-2. Enable USB Debugging
+2. Connect device and Allow communication
 
-  Go to Developer Options in settings and enable USB Debugging
+    - Pop up message must appear and enable transfer.
+    - Run the following command to verify your device has been detected: `adb devices`
 
-3. Connect device and Allow communication
+3. In your terminal run
 
-  Pop up message must appear and enable transfer.
-  Run the following command to verify your device has been detected:
+    ```bash
+    adb reverse tcp:8081 tcp:8081
+    yarn mobile android
+    ```
 
-`adb devices`
-
-4. In your terminal run
-
-```
-adb reverse tcp:8081 tcp:8081
-yarn mobile android
-```
-
-if it fails, quit the terminal and run it directly from Android Studio. Once you get the first build retry the previous step.
-
+If it fails, quit the terminal and run it directly from Android Studio. Once you get the first build running, retry the previous step.
 
 ## Development
 
@@ -181,6 +217,14 @@ Or you can use one command to run them all one after the other: `yarn && yarn po
 You can also run the app from Xcode, which is necessary for any Swift related changes. Xcode will automatically start the metro bundler.
 
 Hopefully you now (after a few minutes) see the Uniswap Wallet running in the iOS Simulator!
+
+#### Running on a Physical iOS Device
+
+1. Follow all steps listed above.
+2. Sign into your `@uniswap.org` Apple ID (`Cmd + ,` -> Accounts tab) + download provisioning profiles
+3. Connect your iOS device + follow the on-screen prompts to trust your computer
+4. Select the Uniswap target + your connect device, then `Cmd + R` or use the ▶️ button the start the build
+5. You may get an error about your device not yet being added to the Uniswap Apple Developer account; if so, click `Register` and restart the build
 
 ### Enabling Flipper
 
@@ -213,29 +257,29 @@ We use `redux-persist` to persist the Redux state between user sessions. Most of
 ### Common issues
 
 - `zsh: command not found: [package name]`
-This means whichever package you're trying to run (`[package name]`) wasn’t correctly installed, or your Terminal can’t figure out how to run it. If you just installed it, try quitting terminal and re-opening it. Otherwise try reinstalling the package.
+  This means whichever package you're trying to run (`[package name]`) wasn’t correctly installed, or your Terminal can’t figure out how to run it. If you just installed it, try quitting terminal and re-opening it. Otherwise try reinstalling the package.
 
 - `Failed to load 'glog' podspec:`
-Resolve this issue by checking the path of Xcode, make sure is inside Applications and with the name `Xcode`
-Once confirm run the following commands:
+  Resolve this issue by checking the path of Xcode, make sure is inside Applications and with the name `Xcode`
+  Once confirm run the following commands:
 
 `sudo xcode-select --switch /Applications/Xcode.app`
 `pod install`
 
 - `unable to open file (in target "OneSignalNotificationServiceExtension" in project "Uniswap")`.
-Resolve this issue by navigating to the `ios/` directory and running `pod update`.
+  Resolve this issue by navigating to the `ios/` directory and running `pod update`.
 
 - `Build target hermes-engine: Command PhaseScriptExecution failed with a nonzero exit code`
-Node isn't being located correctly during the build phase.  Run `which node` and copy the resulting path into `.xcode.env.local`.  More context [here](https://github.com/facebook/react-native/issues/42221).
+  Node isn't being located correctly during the build phase. Run `which node` and copy the resulting path into `.xcode.env.local`. More context [here](https://github.com/facebook/react-native/issues/42221).
 
 - `CocoaPods could not find compatible versions for pod "hermes-engine"`
-The following commands can help you fix these types of errors:
+  The following commands can help you fix these types of errors:
 
 `cd ios && pod install --repo-update`
 `cd ios && pod repo update`
 `cd ios && pod update hermes-engine --no-repo-update`
 
-Context: https://uniswapteam.slack.com/archives/C02GYG8TU12/p1692640189802989?thread_ts=1692635970.952869&cid=C02GYG8TU12
+Context: <https://uniswapteam.slack.com/archives/C02GYG8TU12/p1692640189802989?thread_ts=1692635970.952869&cid=C02GYG8TU12>
 
 ### Common fixes
 

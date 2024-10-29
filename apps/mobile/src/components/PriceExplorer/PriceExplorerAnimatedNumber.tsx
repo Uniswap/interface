@@ -1,5 +1,5 @@
 import { SCREEN_WIDTH } from '@gorhom/bottom-sheet'
-import _ from 'lodash'
+import times from 'lodash/times'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import Animated, {
@@ -252,26 +252,23 @@ const Numbers = ({
 
   const commaIndex = numberOfDigits.left + Math.floor((numberOfDigits.left - 1) / 3)
 
-  return _.times(
-    numberOfDigits.left + numberOfDigits.right + Math.floor((numberOfDigits.left - 1) / 3) + 1,
-    (index) => (
-      <Animated.View
+  return times(numberOfDigits.left + numberOfDigits.right + Math.floor((numberOfDigits.left - 1) / 3) + 1, (index) => (
+    <Animated.View
+      key={`$number_${index - commaIndex}`}
+      style={[{ height: DIGIT_HEIGHT }, AnimatedCharStyles.wrapperStyle]}
+    >
+      <RollNumber
         key={`$number_${index - commaIndex}`}
-        style={[{ height: DIGIT_HEIGHT }, AnimatedCharStyles.wrapperStyle]}
-      >
-        <RollNumber
-          key={`$number_${index - commaIndex}`}
-          chars={chars}
-          commaIndex={commaIndex}
-          currency={currency}
-          decimalPlace={decimalPlace}
-          hidePlaceholder={hidePlaceholder}
-          index={index}
-          shouldAnimate={price.shouldAnimate}
-        />
-      </Animated.View>
-    ),
-  )
+        chars={chars}
+        commaIndex={commaIndex}
+        currency={currency}
+        decimalPlace={decimalPlace}
+        hidePlaceholder={hidePlaceholder}
+        index={index}
+        shouldAnimate={price.shouldAnimate}
+      />
+    </Animated.View>
+  ))
 }
 
 const LoadingWrapper = (): JSX.Element | null => {

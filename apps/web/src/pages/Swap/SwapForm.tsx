@@ -51,7 +51,6 @@ import { ExternalLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
@@ -98,15 +97,22 @@ export function SwapForm({
     setDismissTokenWarning(true)
   }, [])
 
-  // dismiss warning if all imported tokens are in active lists
-  const urlTokensNotInDefault = useMemo(() => {
-    return prefilledInputCurrencyInfo || prefilledOutputCurrencyInfo
-      ? [prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo]
-          .filter((token): token is CurrencyInfo => {
-            return (token?.currency.isToken && token.safetyLevel !== SafetyLevel.Verified) ?? false
-          })
-          .map((token: CurrencyInfo) => token.currency as Token)
-      : []
+  // dismiss warning if prefilled tokens don't have warnings
+  const prefilledTokensWithWarnings: { field: CurrencyField; token: Token }[] = useMemo(() => {
+    const tokens = []
+    if (
+      prefilledInputCurrencyInfo?.currency.isToken &&
+      prefilledInputCurrencyInfo.safetyLevel !== SafetyLevel.Verified
+    ) {
+      tokens.push({ field: CurrencyField.INPUT, token: prefilledInputCurrencyInfo.currency as Token })
+    }
+    if (
+      prefilledOutputCurrencyInfo?.currency.isToken &&
+      prefilledOutputCurrencyInfo.safetyLevel !== SafetyLevel.Verified
+    ) {
+      tokens.push({ field: CurrencyField.OUTPUT, token: prefilledOutputCurrencyInfo.currency as Token })
+    }
+    return tokens
   }, [prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo])
 
   const theme = useTheme()
@@ -505,23 +511,25 @@ export function SwapForm({
 
   return (
     <>
-      <TokenSafetyModal
-        isOpen={urlTokensNotInDefault.length > 0 && !dismissTokenWarning}
-        token0={urlTokensNotInDefault[0]}
-        token1={urlTokensNotInDefault[1]}
-        onAcknowledge={handleConfirmTokenWarning}
-        onReject={() => {
-          setDismissTokenWarning(true)
-          onCurrencySelection(CurrencyField.INPUT, undefined)
-          onCurrencySelection(CurrencyField.OUTPUT, undefined)
-        }}
-        closeModalOnly={() => {
-          setDismissTokenWarning(true)
-        }}
-        onToken0BlockAcknowledged={() => onCurrencySelection(CurrencyField.INPUT, undefined)}
-        onToken1BlockAcknowledged={() => onCurrencySelection(CurrencyField.OUTPUT, undefined)}
-        showCancel={true}
-      />
+      {prefilledTokensWithWarnings.length >= 1 && (
+        <TokenSafetyModal
+          isOpen={prefilledTokensWithWarnings.length >= 1 && !dismissTokenWarning}
+          token0={prefilledTokensWithWarnings[0].token}
+          token1={prefilledTokensWithWarnings[1]?.token}
+          onAcknowledge={handleConfirmTokenWarning}
+          onReject={() => {
+            setDismissTokenWarning(true)
+            onCurrencySelection(CurrencyField.INPUT, undefined)
+            onCurrencySelection(CurrencyField.OUTPUT, undefined)
+          }}
+          closeModalOnly={() => {
+            setDismissTokenWarning(true)
+          }}
+          onToken0BlockAcknowledged={() => onCurrencySelection(prefilledTokensWithWarnings[0].field, undefined)}
+          onToken1BlockAcknowledged={() => onCurrencySelection(prefilledTokensWithWarnings[1].field, undefined)}
+          showCancel={true}
+        />
+      )}
       {trade && showConfirm && (
         <ConfirmSwapModal
           trade={trade}

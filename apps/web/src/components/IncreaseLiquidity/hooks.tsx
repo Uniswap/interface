@@ -19,24 +19,24 @@ export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): 
   const currency1 = positionInfo.currency1Amount.currency
   const token1 = currency1.isNative ? currency1.wrapped : currency1
 
-  const depositInfoProps: UseDepositInfoProps = useMemo(() => {
+  const depositInfoProps = useMemo((): UseDepositInfoProps => {
     if (positionInfo.version === ProtocolVersion.V2) {
       return {
         protocolVersion: ProtocolVersion.V2,
         pair: positionInfo.pair,
         address: account.address,
-        token0: currency0,
-        token1: currency1,
+        token0,
+        token1,
         exactField,
         exactAmount,
       }
     }
 
-    if (positionInfo.version === ProtocolVersion.V3) {
-      const { tickLower: tickLowerStr, tickUpper: tickUpperStr } = positionInfo
-      const tickLower = tickLowerStr ? parseInt(tickLowerStr) : undefined
-      const tickUpper = tickUpperStr ? parseInt(tickUpperStr) : undefined
+    const { tickLower: tickLowerStr, tickUpper: tickUpperStr } = positionInfo
+    const tickLower = tickLowerStr ? parseInt(tickLowerStr) : undefined
+    const tickUpper = tickUpperStr ? parseInt(tickUpperStr) : undefined
 
+    if (positionInfo.version === ProtocolVersion.V3) {
       return {
         protocolVersion: ProtocolVersion.V3,
         pool: positionInfo.pool,
@@ -50,7 +50,20 @@ export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): 
       }
     }
 
-    // TODO: handle v4 case
+    if (positionInfo.version === ProtocolVersion.V4) {
+      return {
+        protocolVersion: ProtocolVersion.V4,
+        pool: positionInfo.pool,
+        address: account.address,
+        tickLower,
+        tickUpper,
+        token0: currency0,
+        token1: currency1,
+        exactField,
+        exactAmount,
+      }
+    }
+
     return {
       protocolVersion: ProtocolVersion.UNSPECIFIED,
       exactField,

@@ -1,6 +1,7 @@
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/constants/chains'
 import { TransactionType as RemoteTransactionType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { SpamCode } from 'uniswap/src/data/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import {
   TransactionDetails,
@@ -11,7 +12,6 @@ import {
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { SpamCode } from 'wallet/src/data/types'
 import parseApproveTransaction from 'wallet/src/features/transactions/history/conversion/parseApproveTransaction'
 import parseBridgingTransaction from 'wallet/src/features/transactions/history/conversion/parseBridgingTransaction'
 import parseNFTMintTransaction from 'wallet/src/features/transactions/history/conversion/parseMintTransaction'

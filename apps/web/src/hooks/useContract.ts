@@ -2,6 +2,7 @@ import { Contract } from '@ethersproject/contracts'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
+  CHAIN_TO_ADDRESSES_MAP,
   ENS_REGISTRAR_ADDRESSES,
   MULTICALL_ADDRESSES,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
@@ -177,12 +178,17 @@ export function useMainnetInterfaceMulticall() {
   ) as UniswapInterfaceMulticall
 }
 
-export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean): NonfungiblePositionManager | null {
+export function useV3NFTPositionManagerContract(
+  withSignerIfPossible?: boolean,
+  chainId?: UniverseChainId,
+): NonfungiblePositionManager | null {
   const account = useAccount()
+  const chainIdToUse = chainId ?? account.chainId
   const contract = useContract<NonfungiblePositionManager>(
-    account.chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId] : undefined,
+    chainIdToUse ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainIdToUse] : undefined,
     NFTPositionManagerABI,
     withSignerIfPossible,
+    chainIdToUse,
   )
   useEffect(() => {
     if (contract && account.isConnected) {
@@ -192,10 +198,43 @@ export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean):
           name: 'V3NonfungiblePositionManager',
           address: contract.address,
           withSignerIfPossible,
-          chainId: account.chainId,
+          chainId: chainIdToUse,
         },
       })
     }
-  }, [account.isConnected, account.chainId, contract, withSignerIfPossible])
+  }, [account.isConnected, chainIdToUse, contract, withSignerIfPossible])
+  return contract
+}
+
+/**
+ * NOTE: the return type of this contract and the ABI used are just a generic ERC721,
+ * so you can only use this to call tokenURI or other Position NFT related functions.
+ */
+export function useV4NFTPositionManagerContract(
+  withSignerIfPossible?: boolean,
+  chainId?: UniverseChainId,
+): Erc721 | null {
+  const account = useAccount()
+  const chainIdToUse = chainId ?? account.chainId
+
+  const contract = useContract<Erc721>(
+    chainIdToUse ? CHAIN_TO_ADDRESSES_MAP[chainIdToUse].v4PositionManagerAddress : undefined,
+    NFTPositionManagerABI,
+    withSignerIfPossible,
+    chainIdToUse,
+  )
+  useEffect(() => {
+    if (contract && account.isConnected) {
+      sendAnalyticsEvent(InterfaceEventName.WALLET_PROVIDER_USED, {
+        source: 'useV4NFTPositionManagerContract',
+        contract: {
+          name: 'V4NonfungiblePositionManager',
+          address: contract.address,
+          withSignerIfPossible,
+          chainId: chainIdToUse,
+        },
+      })
+    }
+  }, [account.isConnected, chainIdToUse, contract, withSignerIfPossible])
   return contract
 }

@@ -21,7 +21,7 @@ import {
 import { BRIDGED_BASE_ADDRESSES, getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
-import { DAI, USDC, USDT, WBTC } from 'uniswap/src/constants/tokens'
+import { USDC, USDT, WBTC } from 'uniswap/src/constants/tokens'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
@@ -35,7 +35,12 @@ import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
 import { usePopularTokens as usePopularTokensGql } from 'uniswap/src/features/dataApi/topTokens'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { buildCurrency, gqlTokenToCurrencyInfo, usePersistedError } from 'uniswap/src/features/dataApi/utils'
+import {
+  buildCurrency,
+  buildCurrencyInfo,
+  gqlTokenToCurrencyInfo,
+  usePersistedError,
+} from 'uniswap/src/features/dataApi/utils'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -71,7 +76,6 @@ const baseCurrencyIds = [
   buildNativeCurrencyId(UniverseChainId.Bnb),
   buildNativeCurrencyId(UniverseChainId.Celo),
   buildNativeCurrencyId(UniverseChainId.Avalanche),
-  currencyId(DAI),
   currencyId(USDC),
   currencyId(USDT),
   currencyId(WBTC),
@@ -98,6 +102,7 @@ export function searchResultToCurrencyInfo({
   logoUrl,
   safetyLevel,
   safetyInfo,
+  feeData,
 }: TokenSearchResult): CurrencyInfo | null {
   const currency = buildCurrency({
     chainId: chainId as UniverseChainId,
@@ -105,13 +110,15 @@ export function searchResultToCurrencyInfo({
     decimals: 0, // this does not matter in a context of CurrencyInfo here, as we do not provide any balance
     symbol,
     name,
+    buyFeeBps: feeData?.buyFeeBps,
+    sellFeeBps: feeData?.sellFeeBps,
   })
 
   if (!currency) {
     return null
   }
 
-  const currencyInfo: CurrencyInfo = {
+  return buildCurrencyInfo({
     currency,
     currencyId: currencyId(currency),
     logoUrl,
@@ -119,8 +126,7 @@ export function searchResultToCurrencyInfo({
     // defaulting to not spam, as user has searched and chosen this token before
     isSpam: false,
     safetyInfo,
-  }
-  return currencyInfo
+  })
 }
 
 export function useAllCommonBaseCurrencies(): GqlResult<CurrencyInfo[]> {
@@ -227,6 +233,12 @@ function currencyInfoToTokenSearchResult(currencyInfo: CurrencyInfo): TokenSearc
     logoUrl: currencyInfo.logoUrl ?? null,
     safetyLevel: currencyInfo.safetyLevel ?? null,
     safetyInfo: currencyInfo.safetyInfo,
+    feeData: currencyInfo.currency.isToken
+      ? {
+          buyFeeBps: currencyInfo.currency.buyFeeBps?.gt(0) ? currencyInfo.currency.buyFeeBps.toString() : undefined,
+          sellFeeBps: currencyInfo.currency.sellFeeBps?.gt(0) ? currencyInfo.currency.sellFeeBps.toString() : undefined,
+        }
+      : null,
   }
 }
 

@@ -14,6 +14,7 @@ import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension } from 'utilities/src/platform'
+import { ModalBackButton } from 'wallet/src/components/modals/ModalBackButton'
 import { UnitagName } from 'wallet/src/features/unitags/UnitagName'
 import { deleteUnitag } from 'wallet/src/features/unitags/api'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
@@ -23,12 +24,12 @@ export function DeleteUnitagModal({
   unitag,
   address,
   onClose,
-  goBack,
+  onSuccess,
 }: {
   unitag: string
   address: Address
   onClose: () => void
-  goBack?: () => void
+  onSuccess?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -73,7 +74,7 @@ export function DeleteUnitagModal({
             title: t('unitags.notification.delete.title'),
           }),
         )
-        goBack?.()
+        onSuccess?.()
         onClose()
       }
     } catch (e) {
@@ -86,7 +87,8 @@ export function DeleteUnitagModal({
 
   return (
     <Modal isDismissible name={ModalName.UnitagsDelete} onClose={onClose}>
-      <Flex centered gap="$spacing12" pb="$spacing12" pt="$spacing12" px="$spacing24">
+      {isExtension && <ModalBackButton onBack={onClose} />}
+      <Flex centered gap="$spacing12" pb="$spacing12" pt={isExtension ? '$spacing24' : '$spacing12'} px="$spacing24">
         <Flex
           centered
           backgroundColor="$DEP_accentCriticalSoft"

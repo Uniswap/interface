@@ -1,4 +1,4 @@
-import { Price, Token } from '@uniswap/sdk-core'
+import { Currency, Price, Token } from '@uniswap/sdk-core'
 import {
   FeeAmount,
   TICK_SPACINGS,
@@ -9,7 +9,7 @@ import {
 } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 
-export function tryParsePrice(baseToken?: Token, quoteToken?: Token, value?: string) {
+export function tryParsePrice<T extends Currency>(baseToken?: T, quoteToken?: T, value?: string) {
   if (!baseToken || !quoteToken || !value) {
     return undefined
   }

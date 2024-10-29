@@ -1,4 +1,4 @@
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FeeData, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SafetyInfo } from 'uniswap/src/features/dataApi/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
@@ -30,6 +30,7 @@ export interface TokenSearchResult extends SearchResultBase {
   logoUrl: string | null
   safetyLevel: SafetyLevel | null
   safetyInfo?: SafetyInfo | null
+  feeData?: FeeData | null
 }
 
 export function isTokenSearchResult(x: SearchResult): x is TokenSearchResult {

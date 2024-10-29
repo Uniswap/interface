@@ -109,8 +109,8 @@ export function SettingsRow({
         ) : screen || modal ? (
           <Flex centered row>
             {currentSetting ? (
-              <Flex row shrink alignItems="flex-end" flexBasis="30%" justifyContent="flex-end">
-                <Text adjustsFontSizeToFit color="$neutral2" mr="$spacing8" numberOfLines={1} variant="body3">
+              <Flex shrink alignItems="flex-end" flexBasis="35%" justifyContent="flex-end">
+                <Text adjustsFontSizeToFit color="$neutral2" mr="$spacing8" numberOfLines={2} variant="body3">
                   {currentSetting}
                 </Text>
               </Flex>

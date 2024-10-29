@@ -122,8 +122,10 @@ const FormWarning = memo(function FormWarning({
 
 function EmptyRow(): JSX.Element {
   return (
-    <Flex centered gap="$spacing8" height={iconSizes.icon16}>
-      <Text variant="body3"> </Text>
+    <Flex row centered p="$spacing2">
+      <Flex row minHeight={iconSizes.icon16}>
+        <Text variant="body3"> </Text>
+      </Flex>
     </Flex>
   )
 }

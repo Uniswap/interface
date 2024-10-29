@@ -113,6 +113,7 @@ export function NetworkFilter({
       showArrow={!hideArrow}
       styles={{
         alignment: 'right',
+        buttonPaddingY: '$none',
         ...styles,
       }}
       testID="chain-selector"

@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash'
+import isEqual from 'lodash/isEqual'
 import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
@@ -229,12 +229,16 @@ export function useRecipients(
   )
 }
 
-export function useFilteredRecipientSections(searchPattern: string, debounceDelayMs?: number): RecipientSection[] {
+export function useFilteredRecipientSections(
+  searchPattern: string,
+  debounceDelayMs?: number,
+): { sections: RecipientSection[]; loading: boolean } {
   const sectionsRef = useRef<RecipientSection[]>([])
   const { sections, searchableRecipientOptions, loading, debouncedPattern } = useRecipients(
     searchPattern,
     debounceDelayMs,
   )
+  const isDebouncingOrLoading = loading || searchPattern !== debouncedPattern
 
   const getFilteredSections = useCallback(() => {
     const filteredAddresses = filterRecipientByNameAndAddress(debouncedPattern, searchableRecipientOptions).map(
@@ -259,5 +263,5 @@ export function useFilteredRecipientSections(searchPattern: string, debounceDela
     }
   }
 
-  return sectionsRef.current
+  return { sections: sectionsRef.current, loading: isDebouncingOrLoading }
 }

@@ -1,3 +1,5 @@
+import { logger } from 'utilities/src/logger/logger'
+
 /**
  * Given a URI that may be ipfs, ipns, http, https, ar, or data protocol, return the fetch-able http(s) URLs for the same content
  * @param uri to convert to fetch-able http url
@@ -81,19 +83,38 @@ export function isGifUri(uri: Maybe<string>): boolean {
   return isSegmentUri(uri, '.gif')
 }
 
-function truncateQueryParams(url: string): string {
-  // In fact, the first element will be always returned below. url is
-  // added as a fallback just to satisfy TypeScript.
-  return url.split('?')[0] ?? url
+function parseUrl(url?: string): URL | undefined {
+  if (!url) {
+    return undefined
+  }
+
+  try {
+    return new URL(url)
+  } catch (error) {
+    logger.error(error, {
+      tags: { file: 'format/urls', function: 'parseUrl' },
+      extra: { url },
+    })
+    return undefined
+  }
 }
 
 /**
- * Removes query params, safe prefixes and trailing slashes from URL to improve human readability.
+ * Formats the app url by only returning the host url. If the url is not
+ * secure, the base url is shown instead.
  *
- * @param {string} url The URL to check.
+ * See tests for examples.
  */
 export function formatDappURL(url: string): string {
-  const truncatedURL = truncateQueryParams(url)
+  return parseUrl(url)?.origin?.replace('https://', '') ?? ''
+}
 
-  return truncatedURL?.replace('https://', '').replace('www.', '').replace(/\/$/, '')
+/** Returns the url host (doesn't include http or https) */
+export function extractUrlHost(url?: string): string | undefined {
+  return parseUrl(url)?.host
+}
+
+/** Returns the url origin (includes http or https) */
+export function extractBaseUrl(url?: string): string | undefined {
+  return parseUrl(url)?.origin
 }

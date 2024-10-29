@@ -254,7 +254,7 @@ export function useMergeLocalAndRemoteTransactions(
       // If the local tx is not finalized and remote is, then finalize local state so confirmation toast is sent
       // TODO(MOB-1573): This should be done further upstream when parsing data not in a display hook
       if (!isFinalizedTx(localTx)) {
-        const mergedTx = { ...localTx, status: remoteTx.status }
+        const mergedTx = { ...localTx, status: remoteTx.status, networkFee: remoteTx.networkFee }
         if (isFinalizedTx(mergedTx)) {
           dispatch(finalizeTransaction(mergedTx))
         }

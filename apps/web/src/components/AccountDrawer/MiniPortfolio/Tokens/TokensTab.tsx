@@ -34,13 +34,15 @@ export default function Tokens() {
   const hideSpam = useHideSpamTokensSetting()
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
+  const { isTestnetModeEnabled } = useEnabledChains()
+
   const { data } = useTokenBalancesQuery({ cacheOnly: !accountDrawer.isOpen })
 
   const tokenBalances = data?.portfolios?.[0]?.tokenBalances
 
   const { visibleTokens, hiddenTokens } = useMemo(
-    () => splitHiddenTokens(tokenBalances ?? [], { hideSmallBalances, hideSpam }),
-    [hideSmallBalances, tokenBalances, hideSpam],
+    () => splitHiddenTokens(tokenBalances ?? [], { hideSmallBalances, hideSpam, isTestnetModeEnabled }),
+    [hideSmallBalances, tokenBalances, hideSpam, isTestnetModeEnabled],
   )
 
   if (!data) {

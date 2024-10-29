@@ -4,6 +4,7 @@ import {
   InterfacePageName,
   InterfaceSectionName,
 } from '@uniswap/analytics-events'
+import { OnboardingCardLoggingName } from 'uniswap/src/features/telemetry/types'
 
 export const ModalName = {
   AccountEdit: 'account-edit-modal',
@@ -41,8 +42,10 @@ export const ModalName = {
   KoreaCexTransferInfoModal: 'korea-cex-transfer-info-modal',
   HiddenTokenInfoModal: 'hidden-token-info-modal',
   HiddenNFTInfoModal: 'hidden-nft-info-modal',
+  Hook: 'hook',
   Legal: 'legal',
   LanguageSelector: 'language-selector-modal',
+  MigrateLiquidity: 'migrate-liquidity',
   NewAddressWarning: 'new-address-warning-modal',
   NetworkFeeInfo: 'network-fee-info',
   NetworkSelector: 'network-selector-modal',
@@ -72,6 +75,7 @@ export const ModalName = {
   SlippageInfo: 'slippage-info-modal',
   StorageWarning: 'storage-warning-modal',
   Swap: 'swap-modal',
+  SwapError: 'swap-error-modal',
   SwapReview: 'swap-review-modal',
   SwapSettings: 'swap-settings-modal',
   SwapWarning: 'swap-warning-modal',
@@ -112,6 +116,7 @@ export const ElementName = {
   AddViewOnlyWallet: 'add-view-only-wallet',
   AddCloudBackup: 'add-cloud-backup',
   AlreadyHaveWalletSignIn: 'already-have-wallet-sign-in',
+  BackButton: 'back-button',
   Buy: 'buy',
   BuyNativeTokenButton: 'buy-native-token-button',
   BridgeNativeTokenButton: 'bridge-native-token-button',
@@ -148,6 +153,7 @@ export const ElementName = {
   GetHelp: 'get-help',
   ImportAccount: 'import-account',
   LimitOrderButton: 'limit-order-button',
+  MaybeLaterButton: 'maybe-later-button',
   MoonpayExplorerView: 'moonpay-explorer-view',
   NetworkButton: 'network-button',
   Next: 'next',
@@ -203,7 +209,10 @@ export const ElementName = {
   // alphabetize additional values.
 } as const
 
-export type ElementNameType = (typeof ElementName)[keyof typeof ElementName] | InterfaceElementName
+export type ElementNameType =
+  | (typeof ElementName)[keyof typeof ElementName]
+  | InterfaceElementName
+  | OnboardingCardLoggingName
 
 /**
  * Possible names for the section property in TraceContext

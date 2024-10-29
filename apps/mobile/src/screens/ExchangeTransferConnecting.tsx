@@ -66,7 +66,7 @@ export function ExchangeTransferConnecting({
     serviceProvider: serviceProvider.serviceProvider,
     walletAddress: activeAccountAddress,
     externalSessionId: externalTransactionId,
-    redirectUrl: `${uniswapUrls.redirectUrlBase}/?screen=transaction&fiatOnRamp=true&userAddress=${activeAccountAddress}`,
+    redirectUrl: `${uniswapUrls.redirectUrlBase}?screen=transaction&fiatOnRamp=true&userAddress=${activeAccountAddress}`,
   })
 
   useEffect(() => {

@@ -87,14 +87,11 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
 
     const colorsCount = options.colors.length
     const isHovered = options.hoveredLogicalIndex && options.hoveredLogicalIndex !== -1
-    const isMultichainExploreEnabled = !!options.gradients
     areaPaths.forEach((areaPath, index) => {
       // Modification: determine area fill opacity based on number of lines and hover state
 
       if (areaPaths.length === 1) {
         ctx.globalAlpha = 0.12 // single-line charts have low opacity fill
-      } else if (!isMultichainExploreEnabled) {
-        ctx.globalAlpha = isHovered ? 0.24 : 1
       }
 
       const gradient = options.gradients
@@ -109,7 +106,7 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
       ctx.fill(areaPath)
     })
 
-    ctx.lineWidth = options.lineWidth * (isMultichainExploreEnabled ? 1 : renderingScope.verticalPixelRatio)
+    ctx.lineWidth = options.lineWidth
     ctx.lineJoin = 'round'
 
     fullLinesMeshed.toReversed().forEach((linePath, index) => {
@@ -117,7 +114,7 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
       const color = options.colors[unreversedIndex % colorsCount]
       ctx.strokeStyle = color
       ctx.fillStyle = color
-      ctx.globalAlpha = isHovered && isMultichainExploreEnabled ? 0.24 : 1
+      ctx.globalAlpha = isHovered ? 0.24 : 1
 
       // Bottom line is just the x-axis, which should not be drawn
       if (index !== fullLinesMeshed.length - 1) {

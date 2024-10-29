@@ -44,7 +44,6 @@ import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
-const BIO_TEXT_INPUT_LINES = 6
 const PADDING_WIDTH = isExtension ? '$none' : '$spacing16'
 
 const isProfileMetadataEdited = (
@@ -254,6 +253,7 @@ export function EditUnitagProfileContent({
     placeholderTextColor: '$neutral3',
     returnKeyType: 'done',
     textAlign: 'left',
+    borderRadius: isExtension ? 0 : undefined,
   }
 
   return (
@@ -346,14 +346,13 @@ export function EditUnitagProfileContent({
                 {!loading ? (
                   <TextInput
                     autoCorrect
-                    multiline={isMobileApp}
-                    maxHeight={fonts.body1.lineHeight * BIO_TEXT_INPUT_LINES}
-                    rows={BIO_TEXT_INPUT_LINES}
+                    height={fonts.subheading1.lineHeight}
                     placeholder={t('unitags.profile.bio.placeholder')}
                     value={bioInput}
+                    verticalAlign="top"
                     onChangeText={setBioInput}
                     {...inputProps}
-                    pt="$spacing4"
+                    mt="$spacing4"
                   />
                 ) : null}
                 {!loading ? (
@@ -363,8 +362,10 @@ export function EditUnitagProfileContent({
                       autoCapitalize="none"
                       autoComplete="off"
                       autoCorrect={false}
+                      height={fonts.subheading1.lineHeight}
                       placeholder={t('unitags.editProfile.placeholder')}
                       value={twitterInput}
+                      verticalAlign="top"
                       onChangeText={onSetTwitterInput}
                       {...inputProps}
                     />

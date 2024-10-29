@@ -16,7 +16,7 @@ import {
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { createEmptyBalanceOption } from 'uniswap/src/components/TokenSelector/utils'
 import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Chain, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { tokenProjectToCurrencyInfos } from 'uniswap/src/features/dataApi/utils'
 import { UniswapState } from 'uniswap/src/state/uniswapReducer'
@@ -49,12 +49,12 @@ jest.mock('uniswap/src/features/telemetry/send')
 
 const eth = ethToken()
 const dai = daiToken()
-const usdc = usdcBaseToken()
+const usdc_base = usdcBaseToken()
 const ethBalance = tokenBalance({ token: eth })
 const daiBalance = tokenBalance({ token: dai })
-const usdcBalance = tokenBalance({ token: usdc })
-const favoriteTokens = [eth, dai, usdc]
-const favoriteTokenBalances = [ethBalance, daiBalance, usdcBalance]
+const usdcBaseBalance = tokenBalance({ token: usdc_base })
+const favoriteTokens = [eth, dai, usdc_base]
+const favoriteTokenBalances = [ethBalance, daiBalance, usdcBaseBalance]
 
 const favoriteCurrencyIds = favoriteTokens.map((t) =>
   buildCurrencyId(fromGraphQLChain(t.chain) ?? UniverseChainId.Mainnet, t.address),
@@ -139,11 +139,12 @@ describe(useAllCommonBaseCurrencies, () => {
 describe(useFavoriteCurrencies, () => {
   const project = tokenProject({
     // Add some more tokens to check if favorite tokens are filtered properly
-    tokens: [usdcArbitrumToken(), usdcBaseToken(), ...favoriteTokens, usdcToken()],
+    tokens: [usdcArbitrumToken(), usdcToken(), ...favoriteTokens],
+    safetyLevel: SafetyLevel.Verified,
   })
   const projectWithFavoritesOnly = tokenProject({
-    ...project,
     tokens: favoriteTokens,
+    safetyLevel: SafetyLevel.Verified,
   })
 
   const cases = [
@@ -616,8 +617,8 @@ describe(usePopularTokensOptions, () => {
 })
 
 describe(useCommonTokensOptionsWithFallback, () => {
-  const tokens = [eth, dai, usdc]
-  const tokenBalances = [ethBalance, daiBalance, usdcBalance]
+  const tokens = [eth, dai, usdc_base]
+  const tokenBalances = [ethBalance, daiBalance, usdcBaseBalance]
 
   const cases = [
     {

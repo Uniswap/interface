@@ -50,6 +50,7 @@ import {
 } from 'uniswap/src/constants/tokens'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isSameAddress } from 'utilities/src/addresses'
 
@@ -68,14 +69,14 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT,
     WBTC,
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Mainnet] as Token,
-  ].map(buildCurrencyInfo),
+  ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Sepolia]: [
     nativeOnChain(UniverseChainId.Sepolia),
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Sepolia] as Token,
     USDC_SEPOLIA,
     UNI[UniverseChainId.Sepolia],
-  ].map(buildCurrencyInfo),
+  ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.ArbitrumOne]: [
     nativeOnChain(UniverseChainId.ArbitrumOne),
@@ -85,7 +86,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT_ARBITRUM_ONE,
     WBTC_ARBITRUM_ONE,
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.ArbitrumOne] as Token,
-  ].map(buildCurrencyInfo),
+  ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Optimism]: [
     nativeOnChain(UniverseChainId.Optimism),
@@ -95,18 +96,18 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT_OPTIMISM,
     WBTC_OPTIMISM,
     WETH9[UniverseChainId.Optimism] as Token,
-  ].map(buildCurrencyInfo),
+  ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Base]: [
     nativeOnChain(UniverseChainId.Base),
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Base] as Token,
     USDC_BASE,
-  ].map(buildCurrencyInfo),
+  ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Blast]: [
     nativeOnChain(UniverseChainId.Blast),
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Blast] as Token,
-  ].map(buildCurrencyInfo),
+  ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Polygon]: [
     nativeOnChain(UniverseChainId.Polygon),
@@ -115,7 +116,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     DAI_POLYGON,
     USDT_POLYGON,
     WBTC_POLYGON,
-  ].map(buildCurrencyInfo),
+  ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Celo]: [
     nativeOnChain(UniverseChainId.Celo),
@@ -124,7 +125,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     PORTAL_ETH_CELO,
     USDC_CELO,
     WBTC_CELO,
-  ].map(buildCurrencyInfo),
+  ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Bnb]: [
     nativeOnChain(UniverseChainId.Bnb),
@@ -134,7 +135,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     ETH_BSC,
     BTC_BSC,
     BUSD_BSC,
-  ].map(buildCurrencyInfo),
+  ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Avalanche]: [
     nativeOnChain(UniverseChainId.Avalanche),
@@ -142,32 +143,32 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDC_AVALANCHE,
     USDT_AVALANCHE,
     WETH_AVALANCHE,
-  ].map(buildCurrencyInfo),
+  ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.WorldChain]: [
     nativeOnChain(UniverseChainId.WorldChain),
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.WorldChain] as Token,
     USDC_WORLD_CHAIN,
-  ].map(buildCurrencyInfo),
+  ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Zora]: [
     nativeOnChain(UniverseChainId.Zora),
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Zora] as Token,
     USDC_ZORA,
-  ].map(buildCurrencyInfo),
+  ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Zksync]: [
     nativeOnChain(UniverseChainId.Zksync),
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Zksync] as Token,
     USDC_ZKSYNC,
-  ].map(buildCurrencyInfo),
+  ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.AstrochainSepolia]: [
     nativeOnChain(UniverseChainId.AstrochainSepolia),
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.AstrochainSepolia] as Token,
     // TODO(WEB-5160): re-add usdc sepolia
     // USDC_ASTROCHAIN_SEPOLIA,
-  ].map(buildCurrencyInfo),
+  ].map(buildPartialCurrencyInfo),
 }
 
 function getNativeLogoURI(chainId: UniverseChainId = UniverseChainId.Mainnet): ImageSourcePropType {
@@ -194,15 +195,15 @@ function getTokenLogoURI(chainId: UniverseChainId, address: string): ImageSource
     : undefined
 }
 
-export function buildCurrencyInfo(commonBase: Currency): CurrencyInfo {
+export function buildPartialCurrencyInfo(commonBase: Currency): CurrencyInfo {
   const logoUrl = commonBase.isNative
     ? getNativeLogoURI(commonBase.chainId)
     : getTokenLogoURI(commonBase.chainId, commonBase.address)
 
-  return {
+  return buildCurrencyInfo({
     currency: commonBase,
     logoUrl,
     safetyLevel: SafetyLevel.Verified,
     isSpam: false,
-  } as CurrencyInfo
+  } as CurrencyInfo)
 }

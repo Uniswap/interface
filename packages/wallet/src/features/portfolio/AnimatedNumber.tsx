@@ -379,23 +379,16 @@ const ReanimatedNumber = ({
   }, [chars])
 
   if (loading) {
-    const placeholderChars = [...loadingPlaceholderText]
-
     return (
       <TextLoaderWrapper loadingShimmer={loading !== 'no-shimmer'}>
-        <Flex alignItems="flex-start" borderRadius="$rounded4" flexDirection="row" opacity={0}>
-          {placeholderChars.map((_, index) => (
-            <Char
-              key={index === 0 ? `$_sign_${colors.neutral1.val}` : `$_number_${placeholderChars.length - index}`}
-              chars={placeholderChars}
-              charsSizes={charsSizes}
-              commonPrefixLength={commonPrefixLength}
-              currency={currency}
-              index={index}
-              nextColor={nextColor}
-              shouldFadeDecimals={shouldFadeDecimals}
-            />
-          ))}
+        <Flex borderRadius="$rounded4" flexDirection="row">
+          <Text
+            allowFontScaling={false}
+            style={[AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT, fontFamily: fonts.buttonLabel1.family }]}
+            opacity={0}
+          >
+            {loadingPlaceholderText}
+          </Text>
         </Flex>
       </TextLoaderWrapper>
     )

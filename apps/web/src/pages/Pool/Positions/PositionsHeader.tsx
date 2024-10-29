@@ -1,21 +1,22 @@
 // eslint-disable-next-line no-restricted-imports
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { getProtocolStatusLabel, getProtocolVersionLabel } from 'components/Liquidity/utils'
+import { useAccount } from 'hooks/useAccount'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { Flex, LabeledCheckbox, Text } from 'ui/src'
-import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { SortHorizontalLines } from 'ui/src/components/icons/SortHorizontalLines'
 import { ActionSheetDropdown } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
-import { useTranslation } from 'uniswap/src/i18n'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 type PositionsHeaderProps = {
+  showFilters?: boolean
   selectedChain: UniverseChainId | null
   selectedVersions?: ProtocolVersion[]
   selectedStatus?: PositionStatus[]
@@ -25,6 +26,7 @@ type PositionsHeaderProps = {
 }
 
 export function PositionsHeader({
+  showFilters = true,
   selectedChain,
   selectedVersions,
   selectedStatus,
@@ -33,6 +35,7 @@ export function PositionsHeader({
   onStatusChange,
 }: PositionsHeaderProps) {
   const { t } = useTranslation()
+  const { isConnected } = useAccount()
   const { chains } = useEnabledChains()
   const navigate = useNavigate()
 
@@ -95,125 +98,118 @@ export function PositionsHeader({
     ]
   }, [onStatusChange, onVersionChange, selectedStatus, selectedVersions, t])
 
-  const createOptions = useMemo(() => {
-    return [
-      {
-        key: 'PositionsHeader-create-v4',
-        onPress: () => {
-          navigate('/positions/create/v4')
-        },
-        render: () => (
-          <Flex row gap="$gap4" alignItems="center">
-            <Text p="$spacing4" variant="body2">
-              {t('nav.tabs.createV4Position')}
-            </Text>
-            <ExternalLink size={16} color="$neutral1" />
-          </Flex>
-        ),
-      },
-      {
-        key: 'PositionsHeader-create-v3',
-        onPress: () => {
-          navigate('/positions/create/v3')
-        },
-        render: () => (
-          <Flex row gap="$gap4" alignItems="center">
-            <Text p="$spacing4" variant="body2">
-              {t('nav.tabs.createV3Position')}
-            </Text>
-            <ExternalLink size={16} color="$neutral1" />
-          </Flex>
-        ),
-      },
-      {
-        key: 'PositionsHeader-create-v2',
-        onPress: () => {
-          navigate('/positions/create/v2')
-        },
-        render: () => (
-          <Flex row gap="$gap4" alignItems="center">
-            <Text p="$spacing4" variant="body2">
-              {t('nav.tabs.createV2Position')}
-            </Text>
-            <ExternalLink size={16} color="$neutral1" />
-          </Flex>
-        ),
-      },
-    ]
-  }, [t, navigate])
+  const createOptions = useMemo(
+    () =>
+      [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4].map((version) => {
+        const protocolVersionLabel = getProtocolVersionLabel(version)?.toLowerCase()
+        return {
+          key: `PositionsHeader-create-${protocolVersionLabel}`,
+          onPress: () => {
+            navigate(`/positions/create/${protocolVersionLabel}`)
+          },
+          render: () => (
+            <Flex p="$spacing8">
+              <Text variant="body2">
+                <Trans i18nKey="position.new.protocol" values={{ protocol: protocolVersionLabel }} />
+              </Text>
+            </Flex>
+          ),
+        }
+      }),
+    [navigate],
+  )
 
   return (
     <Flex gap={20}>
       <Text variant="heading2">{t('pool.positions.title')}</Text>
-      <Flex row gap="$gap12">
-        <Flex gap="$spacing1" row>
-          <Flex
-            row
-            gap="$gap8"
-            px="$padding16"
-            backgroundColor="$surface3"
-            borderTopLeftRadius="$rounded16"
-            borderBottomLeftRadius="$rounded16"
-            alignItems="center"
-            my="$spacing8"
-            {...ClickableTamaguiStyle}
-            onPress={() => {
-              navigate('/positions/create/v4')
-            }}
-          >
-            <Plus size={24} color="$neutral1" />
-            <Text variant="buttonLabel2">{t('common.new')}</Text>
-          </Flex>
-          <ActionSheetDropdown options={createOptions} showArrow={false} closeOnSelect={false}>
+
+      {isConnected && (
+        <Flex row gap="$gap12">
+          <Flex gap="$spacing1" row>
             <Flex
-              borderTopRightRadius="$rounded16"
-              borderBottomRightRadius="$rounded16"
-              backgroundColor="$surface3"
-              justifyContent="center"
-              alignItems="center"
+              row
+              gap="$gap8"
               px="$padding16"
-              py="$spacing8"
+              backgroundColor="$surface3"
+              borderTopLeftRadius="$rounded16"
+              borderBottomLeftRadius="$rounded16"
+              alignItems="center"
               {...ClickableTamaguiStyle}
+              onPress={() => {
+                navigate('/positions/create/v4')
+              }}
             >
-              <RotatableChevron direction="down" height={24} width={24} color="$neutral1" />
+              <Plus size={24} color="$neutral1" />
+              <Text variant="buttonLabel2">{t('common.new')}</Text>
             </Flex>
-          </ActionSheetDropdown>
-        </Flex>
-        <ActionSheetDropdown
-          options={filterOptions}
-          showArrow={false}
-          closeOnSelect={false}
-          testID="lp-version-selector"
-        >
-          <Flex
-            borderRadius="$rounded16"
-            backgroundColor="$surface3"
-            justifyContent="center"
-            alignItems="center"
-            px="$padding16"
-            py="$spacing8"
-            {...ClickableTamaguiStyle}
-          >
-            <SortHorizontalLines size={24} color="$neutral1" />
+            <ActionSheetDropdown
+              options={createOptions}
+              showArrow={false}
+              closeOnSelect={false}
+              styles={{
+                dropdownMinWidth: 200,
+                buttonPaddingY: '$none',
+              }}
+            >
+              <Flex
+                borderTopRightRadius="$rounded16"
+                borderBottomRightRadius="$rounded16"
+                backgroundColor="$surface3"
+                justifyContent="center"
+                alignItems="center"
+                px="$padding16"
+                py="$spacing8"
+                {...ClickableTamaguiStyle}
+              >
+                <RotatableChevron direction="down" height={24} width={24} color="$neutral1" />
+              </Flex>
+            </ActionSheetDropdown>
           </Flex>
-        </ActionSheetDropdown>
-        <Flex
-          alignItems="center"
-          justifyContent="center"
-          backgroundColor="$surface3"
-          borderRadius="$rounded16"
-          px="$padding12"
-          my="$spacing8"
-          {...ClickableTamaguiStyle}
-        >
-          <NetworkFilter
-            includeAllNetworks
-            selectedChain={selectedChain}
-            onPressChain={onChainChange}
-            chainIds={chains}
-          />
+          {showFilters && (
+            <>
+              <ActionSheetDropdown
+                options={filterOptions}
+                showArrow={false}
+                closeOnSelect={false}
+                testID="lp-version-selector"
+                styles={{
+                  buttonPaddingY: '$none',
+                }}
+              >
+                <Flex
+                  borderRadius="$rounded16"
+                  backgroundColor="$surface3"
+                  justifyContent="center"
+                  alignItems="center"
+                  px="$padding16"
+                  py="$spacing8"
+                  {...ClickableTamaguiStyle}
+                >
+                  <SortHorizontalLines size={24} color="$neutral1" />
+                </Flex>
+              </ActionSheetDropdown>
+              <Flex
+                alignItems="center"
+                justifyContent="center"
+                backgroundColor="$surface3"
+                borderRadius="$rounded16"
+                px="$padding12"
+                {...ClickableTamaguiStyle}
+              >
+                <NetworkFilter
+                  includeAllNetworks
+                  selectedChain={selectedChain}
+                  onPressChain={onChainChange}
+                  chainIds={chains}
+                  styles={{
+                    buttonPaddingY: '$spacing8',
+                  }}
+                />
+              </Flex>
+            </>
+          )}
         </Flex>
-      </Flex>
+      )}
     </Flex>
   )
 }

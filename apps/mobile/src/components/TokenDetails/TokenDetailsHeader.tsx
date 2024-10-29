@@ -7,6 +7,8 @@ import {
   TokenDetailsScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export interface TokenDetailsHeaderProps {
@@ -20,9 +22,12 @@ export function TokenDetailsHeader({
   loading = false,
   onPressWarningIcon,
 }: TokenDetailsHeaderProps): JSX.Element {
+  const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
   const token = data?.token
   const tokenProject = token?.project
-
+  const shouldShowWarningIcon =
+    !tokenProtectionEnabled &&
+    (tokenProject?.safetyLevel === SafetyLevel.StrongWarning || tokenProject?.safetyLevel === SafetyLevel.Blocked)
   return (
     <Flex gap="$spacing12" mx="$spacing16">
       <TokenLogo
@@ -42,9 +47,7 @@ export function TokenDetailsHeader({
         >
           {token?.name ?? '—'}
         </Text>
-        {/* Suppress warning icon on low warning level */}
-        {(tokenProject?.safetyLevel === SafetyLevel.StrongWarning ||
-          tokenProject?.safetyLevel === SafetyLevel.Blocked) && (
+        {shouldShowWarningIcon && (
           <TouchableArea onPress={onPressWarningIcon}>
             <WarningIcon safetyLevel={tokenProject?.safetyLevel} size="$icon.20" strokeColorOverride="$neutral3" />
           </TouchableArea>

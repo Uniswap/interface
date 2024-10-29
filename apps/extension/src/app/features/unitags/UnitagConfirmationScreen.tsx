@@ -8,12 +8,12 @@ import { Button, Flex, Text } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
 import { UnitagWithProfilePicture } from 'wallet/src/features/unitags/UnitagWithProfilePicture'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
-import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function UnitagConfirmationScreen(): JSX.Element {
   const { t } = useTranslation()
 
-  const address = useActiveAccountAddressWithThrow()
+  const address = useAccountAddressFromUrlWithThrow()
   const { unitag, profilePicUri } = useUnitagClaimContext()
   const { goToNextStep } = useOnboardingSteps()
 
@@ -35,7 +35,7 @@ export function UnitagConfirmationScreen(): JSX.Element {
   return (
     <OnboardingScreen>
       <Flex grow gap="$spacing12" pt="$spacing24">
-        <Flex centered>
+        <Flex centered py="$spacing12">
           <UnitagWithProfilePicture address={address} profilePictureUri={profilePicUri} unitag={unitag} />
         </Flex>
         <Flex centered gap="$spacing12">

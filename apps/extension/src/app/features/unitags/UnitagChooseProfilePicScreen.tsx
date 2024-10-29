@@ -13,12 +13,12 @@ import { ExtensionUnitagClaimScreens } from 'uniswap/src/types/screens/extension
 import { logger } from 'utilities/src/logger/logger'
 import { extensionNftModalProps } from 'wallet/src/features/unitags/ChooseNftModal'
 import { UnitagChooseProfilePicContent } from 'wallet/src/features/unitags/UnitagChooseProfilePicContent'
-import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function UnitagChooseProfilePicScreen(): JSX.Element {
   const { goToNextStep, goToPreviousStep } = useOnboardingSteps()
   const { unitag, entryPoint, setProfilePicUri } = useUnitagClaimContext()
-  const address = useActiveAccountAddressWithThrow()
+  const address = useAccountAddressFromUrlWithThrow()
 
   const onNavigateContinue = useCallback(
     async (imageUri: string | undefined) => {
@@ -51,8 +51,8 @@ export function UnitagChooseProfilePicScreen(): JSX.Element {
             <Person color="$neutral1" size={iconSizes.icon24} />
           </Square>
         }
-        title={t('unitags.onboarding.claim.title.choose')}
-        subtitle={t('unitags.onboarding.claim.subtitle')}
+        title={t('unitags.onboarding.profile.title')}
+        subtitle={t('unitags.onboarding.profile.subtitle')}
         onBack={goToPreviousStep}
       >
         <Flex gap="$spacing24" pt="$spacing24" width="100%">

@@ -6,10 +6,13 @@ import { LiquidityPositionAmountsTile } from 'components/Liquidity/LiquidityPosi
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { LiquidityPositionPriceRangeTile } from 'components/Liquidity/LiquidityPositionPriceRangeTile'
 import { PositionNFT } from 'components/Liquidity/PositionNFT'
-import { parseRestPosition, useV3OrV4PositionDerivedInfo } from 'components/Liquidity/utils'
+import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
+import { parseRestPosition } from 'components/Liquidity/utils'
 import { LoadingFullscreen, LoadingRows } from 'components/Loader/styled'
 import { useChainFromUrlParam } from 'constants/chains'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
+import NotFound from 'pages/NotFound'
 import { ClaimFeeModal } from 'pages/Pool/Positions/ClaimFeeModal'
 import { LoadingRow, useRefetchOnLpModalClose } from 'pages/Pool/Positions/shared'
 import { useMemo, useState } from 'react'
@@ -18,12 +21,12 @@ import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { ClickableTamaguiStyle } from 'theme/components'
-import { Flex, Main, Switch, Text, styled } from 'ui/src'
+import { Button, Flex, Main, Switch, Text, styled } from 'ui/src'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { useAccount } from 'wagmi'
 
@@ -61,8 +64,20 @@ export const HeaderButton = styled(Flex, {
   } as const,
 })
 
+function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
+  if (!tokenId) {
+    return undefined
+  }
+  try {
+    return BigNumber.from(tokenId)
+  } catch (error) {
+    return undefined
+  }
+}
+
 export default function PositionPage() {
-  const { tokenId } = useParams<{ tokenId: string }>()
+  const { tokenId: tokenIdFromUrl } = useParams<{ tokenId: string }>()
+  const tokenId = parseTokenId(tokenIdFromUrl)
   const chainInfo = useChainFromUrlParam()
   const account = useAccount()
   const { pathname } = useLocation()
@@ -70,23 +85,19 @@ export default function PositionPage() {
     data,
     isLoading: positionLoading,
     refetch,
-  } = useGetPositionQuery(
-    account.address
-      ? {
-          owner: account.address,
-          protocolVersion: pathname.includes('v3')
-            ? ProtocolVersion.V3
-            : pathname.includes('v4')
-              ? ProtocolVersion.V4
-              : ProtocolVersion.UNSPECIFIED,
-          tokenId,
-          chainId: chainInfo?.id ?? account.chainId,
-        }
-      : undefined,
-  )
+  } = useGetPositionQuery({
+    owner: account?.address ?? ZERO_ADDRESS,
+    protocolVersion: pathname.includes('v3')
+      ? ProtocolVersion.V3
+      : pathname.includes('v4')
+        ? ProtocolVersion.V4
+        : ProtocolVersion.UNSPECIFIED,
+    tokenId: tokenIdFromUrl,
+    chainId: chainInfo?.id ?? account.chainId,
+  })
   const position = data?.position
   const positionInfo = useMemo(() => parseRestPosition(position), [position])
-  const metadata = usePositionTokenURI(tokenId ? BigNumber.from(tokenId) : undefined)
+  const metadata = usePositionTokenURI(tokenId, chainInfo?.id, positionInfo?.version)
 
   useRefetchOnLpModalClose(refetch)
 
@@ -97,6 +108,7 @@ export default function PositionPage() {
   const { value: v4Enabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Everywhere)
   const { formatCurrencyAmount } = useFormatter()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const { currency0Amount, currency1Amount, status } = positionInfo ?? {}
   const {
@@ -115,7 +127,7 @@ export default function PositionPage() {
     return <Navigate to="/pools" replace />
   }
 
-  if (positionLoading || !position || !positionInfo || !currency0Amount || !currency1Amount) {
+  if (positionLoading) {
     return (
       <BodyWrapper>
         <LoadingRows>
@@ -135,6 +147,24 @@ export default function PositionPage() {
     )
   }
 
+  if (!position || !positionInfo || !currency0Amount || !currency1Amount) {
+    return (
+      <NotFound
+        title={<Text variant="heading2">{t('position.notFound')}</Text>}
+        subtitle={
+          <Flex centered maxWidth="75%" mt="$spacing20">
+            <Text color="$neutral2" variant="heading3" textAlign="center">
+              {t('position.notFound.description')}
+            </Text>
+          </Flex>
+        }
+        actionButton={<Button onPress={() => navigate('/positions')}>{t('common.backToPositions')}</Button>}
+      />
+    )
+  }
+
+  // TODO (WEB-4920): hide action buttons if position owner is not connected wallet.
+
   return (
     <BodyWrapper>
       <Flex gap="$gap20">
@@ -145,20 +175,27 @@ export default function PositionPage() {
             </BreadcrumbNavLink>
           </BreadcrumbNavContainer>
         </Flex>
-        <Flex row justifyContent="space-between" alignItems="center">
+        <Flex
+          row
+          $lg={{ row: false, alignItems: 'flex-start', gap: '$gap16' }}
+          justifyContent="space-between"
+          alignItems="center"
+        >
           <LiquidityPositionInfo positionInfo={positionInfo} />
           {status !== PositionStatus.CLOSED && (
             <Flex row gap="$gap12" alignItems="center">
-              <HeaderButton
-                emphasis="secondary"
-                onPress={() => {
-                  navigate(`/migrate/v3/${tokenId}`)
-                }}
-              >
-                <Text variant="buttonLabel2" color="$neutral1">
-                  <Trans i18nKey="pool.migrateToV4" />
-                </Text>
-              </HeaderButton>
+              {positionInfo.version === ProtocolVersion.V3 && (
+                <HeaderButton
+                  emphasis="secondary"
+                  onPress={() => {
+                    navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenIdFromUrl}`)
+                  }}
+                >
+                  <Text variant="buttonLabel2" color="$neutral1">
+                    <Trans i18nKey="pool.migrateToV4" />
+                  </Text>
+                </HeaderButton>
+              )}
               <HeaderButton
                 emphasis="secondary"
                 onPress={() => {
@@ -183,7 +220,7 @@ export default function PositionPage() {
           )}
         </Flex>
       </Flex>
-      <Flex row width="100%" gap="$gap16">
+      <Flex row $lg={{ row: false }} width="100%" gap="$gap16">
         <Flex grow backgroundColor="$surface2" borderRadius="$rounded12" justifyContent="center" alignItems="center">
           {'result' in metadata ? (
             <PositionNFT image={metadata.result.image} height={400} />
@@ -216,7 +253,7 @@ export default function PositionPage() {
           <Flex p="$padding12" backgroundColor="$surface2" borderRadius="$rounded16">
             <Flex row width="100%" justifyContent="space-between" alignItems="center">
               <Text variant="subheading1">
-                <Trans i18nKey="pool.unclaimedFees" />
+                <Trans i18nKey="pool.uncollectedFees" />
               </Text>
               <HeaderButton
                 emphasis="primary"
@@ -225,7 +262,7 @@ export default function PositionPage() {
                 }}
               >
                 <Text variant="buttonLabel4" color="$surface1">
-                  <Trans i18nKey="pool.claimFees" />
+                  <Trans i18nKey="pool.collectFees" />
                 </Text>
               </HeaderButton>
             </Flex>
@@ -245,24 +282,25 @@ export default function PositionPage() {
                 fiatValue1={fiatFeeValue1}
               />
             )}
-            <Flex row width="100%" justifyContent="space-between" mt="$spacing16">
-              <Text variant="body1">
-                <Trans i18nKey="pool.collectAs" values={{ nativeWrappedSymbol: 'WETH' }} />
-              </Text>
-              <Switch
-                variant="default"
-                checked={collectAsWeth}
-                onCheckedChange={() => {
-                  setCollectAsWeth((prev) => !prev)
-                }}
-              />
-            </Flex>
+            {positionInfo.version !== ProtocolVersion.V4 && (
+              <Flex row width="100%" justifyContent="space-between" mt="$spacing16">
+                <Text variant="body1">
+                  <Trans i18nKey="pool.collectAs" values={{ nativeWrappedSymbol: 'WETH' }} />
+                </Text>
+                <Switch
+                  variant="default"
+                  checked={collectAsWeth}
+                  onCheckedChange={() => {
+                    setCollectAsWeth((prev) => !prev)
+                  }}
+                />
+              </Flex>
+            )}
           </Flex>
         </Flex>
       </Flex>
       {priceOrdering && token0CurrentPrice && token1CurrentPrice && (
         <LiquidityPositionPriceRangeTile
-          status={status}
           priceOrdering={priceOrdering}
           feeTier={positionInfo.feeTier?.toString()}
           tickLower={positionInfo.tickLower}
@@ -279,6 +317,7 @@ export default function PositionPage() {
         token1Fees={feeValue1}
         token0FeesUsd={fiatFeeValue0}
         token1FeesUsd={fiatFeeValue1}
+        collectAsWETH={collectAsWeth}
       />
     </BodyWrapper>
   )

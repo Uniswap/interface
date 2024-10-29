@@ -1,8 +1,15 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { useV3NFTPositionManagerContract } from 'hooks/useContract'
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { useV3NFTPositionManagerContract, useV4NFTPositionManagerContract } from 'hooks/useContract'
+import { useEthersProvider } from 'hooks/useEthersProvider'
 import JSBI from 'jsbi'
-import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
+import { NEVER_RELOAD } from 'lib/hooks/multicall'
+import multicall from 'lib/state/multicall'
 import { useMemo } from 'react'
+import { Erc721 } from 'uniswap/src/abis/types/Erc721'
+import { NonfungiblePositionManager } from 'uniswap/src/abis/types/v3/NonfungiblePositionManager'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 type TokenId = number | JSBI | BigNumber
 
@@ -27,16 +34,37 @@ type UsePositionTokenURIResult =
       loading: true
     }
 
-export function usePositionTokenURI(tokenId: TokenId | undefined): UsePositionTokenURIResult {
-  const contract = useV3NFTPositionManagerContract()
+function useNFTPositionManagerContract(
+  version: ProtocolVersion,
+  chainId?: UniverseChainId,
+): NonfungiblePositionManager | Erc721 | null {
+  const v3Contract = useV3NFTPositionManagerContract(false, chainId)
+  const v4Contract = useV4NFTPositionManagerContract(false, chainId)
+  return version === ProtocolVersion.V3 ? v3Contract : v4Contract
+}
+
+export function usePositionTokenURI(
+  tokenId: TokenId | undefined,
+  chainId?: UniverseChainId,
+  version?: ProtocolVersion,
+): UsePositionTokenURIResult {
+  const contract = useNFTPositionManagerContract(version ?? ProtocolVersion.V3, chainId)
   const inputs = useMemo(
     () => [tokenId instanceof BigNumber ? tokenId.toHexString() : tokenId?.toString(16)],
     [tokenId],
   )
-  const { result, error, loading, valid } = useSingleCallResult(contract, 'tokenURI', inputs, {
-    ...NEVER_RELOAD,
-    gasRequired: 3_000_000,
-  })
+  const latestBlock = useEthersProvider({ chainId })?.blockNumber
+  const { result, error, loading, valid } = multicall.hooks.useSingleCallResult(
+    chainId,
+    latestBlock,
+    contract,
+    'tokenURI',
+    inputs,
+    {
+      ...NEVER_RELOAD,
+      gasRequired: 3_000_000,
+    },
+  )
 
   return useMemo(() => {
     if (error || !valid || !tokenId) {

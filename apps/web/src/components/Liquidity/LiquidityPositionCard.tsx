@@ -1,8 +1,9 @@
 // eslint-disable-next-line no-restricted-imports
+import { PositionStatus } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { LiquidityPositionFeeStats } from 'components/Liquidity/LiquidityPositionFeeStats'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
+import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
 import { PositionInfo } from 'components/Liquidity/types'
-import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/utils'
 import { Flex, FlexProps } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
@@ -20,7 +21,7 @@ export function LiquidityPositionCard({ liquidityPosition, ...rest }: { liquidit
     fiatValue0 && fiatValue1
       ? formatCurrencyAmount({
           value: fiatValue0.add(fiatValue1),
-          type: NumberType.FiatTokenPrice,
+          type: NumberType.FiatStandard,
         })
       : undefined
   const v2FormattedUsdValue =
@@ -32,7 +33,8 @@ export function LiquidityPositionCard({ liquidityPosition, ...rest }: { liquidit
     fiatFeeValue0 && fiatFeeValue1
       ? formatCurrencyAmount({
           value: fiatFeeValue0.add(fiatFeeValue1),
-          type: NumberType.FiatTokenPrice,
+          type:
+            liquidityPosition.status === PositionStatus.CLOSED ? NumberType.FiatStandard : NumberType.FiatTokenPrice,
         })
       : undefined
 

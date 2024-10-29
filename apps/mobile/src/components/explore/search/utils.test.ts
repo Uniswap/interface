@@ -6,6 +6,7 @@ import {
 } from 'src/components/explore/search/utils'
 import { Chain, ExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
 import { amount, ethToken, nftCollection, nftContract, token, tokenMarket } from 'uniswap/src/test/fixtures'
 import { createArray } from 'uniswap/src/test/utils'
@@ -14,14 +15,14 @@ type ExploreSearchResult = NonNullable<ExploreSearchQuery>
 
 describe(formatTokenSearchResults, () => {
   it('returns undefined if there is no data', () => {
-    expect(formatTokenSearchResults(undefined, '')).toEqual(undefined)
+    expect(formatTokenSearchResults(undefined, '', null)).toEqual(undefined)
   })
 
   it('filters out duplicate results', () => {
     const searchToken = token()
     const data = createArray(2, () => searchToken)
 
-    const result = formatTokenSearchResults(data, '')
+    const result = formatTokenSearchResults(data, '', null)
 
     expect(result).toHaveLength(1)
     expect(result?.[0]?.address).toEqual(data[0].address)
@@ -44,7 +45,7 @@ describe(formatTokenSearchResults, () => {
       }),
     ]
 
-    const result = formatTokenSearchResults(data, '')
+    const result = formatTokenSearchResults(data, '', null)
 
     // Filters out the first token (both tokens share the same project id)
     expect(result).toHaveLength(1)
@@ -58,7 +59,7 @@ describe(formatTokenSearchResults, () => {
       token({ name: 'Uniswap' }),
     ]
 
-    const result = formatTokenSearchResults(data, 'uniswap')
+    const result = formatTokenSearchResults(data, 'uniswap', null)
 
     expect(result).toHaveLength(2)
     expect(result?.[0]?.name).toEqual('Uniswap')
@@ -69,7 +70,7 @@ describe(formatTokenSearchResults, () => {
     const searchToken = token()
     const data = [searchToken]
 
-    const result = formatTokenSearchResults(data, '')
+    const result = formatTokenSearchResults(data, '', null)
 
     expect(result).toHaveLength(1)
     expect(result?.[0]?.type).toEqual(SearchResultType.Token)
@@ -79,6 +80,10 @@ describe(formatTokenSearchResults, () => {
     expect(result?.[0]?.symbol).toEqual(searchToken.symbol)
     expect(result?.[0]?.logoUrl).toEqual(searchToken.project?.logoUrl)
     expect(result?.[0]?.safetyLevel).toEqual(searchToken.project?.safetyLevel)
+    expect(result?.[0]?.feeData).toEqual(searchToken.feeData)
+    expect(result?.[0]?.safetyInfo).toEqual(
+      getCurrencySafetyInfo(searchToken.project?.safetyLevel, searchToken.protectionInfo),
+    )
   })
 
   describe(gqlNFTToNFTCollectionSearchResult, () => {
@@ -106,7 +111,7 @@ describe(formatTokenSearchResults, () => {
 
   describe(formatNFTCollectionSearchResults, () => {
     it('returns undefined if there is no data', () => {
-      expect(formatNFTCollectionSearchResults(undefined)).toEqual(undefined)
+      expect(formatNFTCollectionSearchResults(undefined, null)).toEqual(undefined)
     })
 
     it('filters out nfts that cannot be formatted', () => {
@@ -115,7 +120,7 @@ describe(formatTokenSearchResults, () => {
         edges: [...topNFTCollections.map((nft) => ({ node: nft })), { node: nftCollection({ name: undefined }) }],
       }
 
-      const result = formatNFTCollectionSearchResults(nftSearchResult)
+      const result = formatNFTCollectionSearchResults(nftSearchResult, null)
 
       expect(result).toHaveLength(2)
       expect(result?.[0]?.address).toEqual(topNFTCollections[0].nftContracts[0]?.address)

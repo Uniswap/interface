@@ -119,7 +119,7 @@ export const TokenItem = memo(function _TokenItem({
           <Flex centered row gap="$spacing4">
             {!hideNumberedList && (
               <Flex minWidth={spacing.spacing16} mr="$spacing8">
-                <Text color="$neutral2" variant="buttonLabel2">
+                <Text color="$neutral2" variant="body3">
                   {index + 1}
                 </Text>
               </Flex>

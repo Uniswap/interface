@@ -1,6 +1,8 @@
-import { Percent } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
+// eslint-disable-next-line no-restricted-imports
+import { useAllFeeTierPoolData } from 'components/Liquidity/hooks'
+import { calculateTickSpacingFromFeeAmount } from 'components/Liquidity/utils'
 import { StyledPercentInput } from 'components/PercentInput'
+import { useAccount } from 'hooks/useAccount'
 import ms from 'ms'
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { NumericalInputMimic, NumericalInputSymbolContainer } from 'pages/Swap/common/shared'
@@ -8,25 +10,29 @@ import { useEffect, useState } from 'react'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import styled from 'styled-components'
 import { ClickableTamaguiStyle, CloseIcon } from 'theme/components'
-import { Button, Flex, Input, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { Search } from 'ui/src/components/icons/Search'
+import { AmountInput, numericInputRegex } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useTranslation } from 'uniswap/src/i18n'
 import useResizeObserver from 'use-resize-observer'
-import { useFormatter } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const FeeTierPercentInput = styled(StyledPercentInput)`
+  flex-grow: 0;
   text-align: end;
   justify-content: flex-end;
 `
 
 export function FeeTierSearchModal() {
+  const { chainId } = useAccount()
   const {
-    positionState: { fee: selectedFee },
+    positionState: { fee: selectedFee, protocolVersion },
+    derivedPositionInfo,
     setPositionState,
     feeTierSearchModalOpen,
     setFeeTierSearchModalOpen,
@@ -40,11 +46,13 @@ export function FeeTierSearchModal() {
   const [searchValue, setSearchValue] = useState('')
   const [createFeeValue, setCreateFeeValue] = useState('')
   const [createModeEnabled, setCreateModeEnabled] = useState(false)
-  const { formatPercent } = useFormatter()
+  const { formatPercent, formatNumberOrString } = useFormatter()
   const [autoDecrementing, setAutoDecrementing] = useState(false)
   const [autoIncrementing, setAutoIncrementing] = useState(false)
   const [holdDuration, setHoldDuration] = useState(0)
   const hiddenObserver = useResizeObserver<HTMLElement>()
+
+  const feeTierData = useAllFeeTierPoolData({ chainId, protocolVersion, currencies: derivedPositionInfo.currencies })
 
   useEffect(() => {
     let interval: NodeJS.Timeout
@@ -71,11 +79,17 @@ export function FeeTierSearchModal() {
         setCreateFeeValue((prev) => {
           let newValue = parseFloat(prev)
           if (autoDecrementing) {
+            if (!prev || prev === '') {
+              return '0'
+            }
             newValue -= 0.01
             if (newValue < 0) {
               return '0'
             }
           } else if (autoIncrementing) {
+            if (!prev || prev === '') {
+              return '0.01'
+            }
             newValue += 0.01
             if (newValue > 100) {
               return '100'
@@ -98,8 +112,7 @@ export function FeeTierSearchModal() {
     }
   }, [autoDecrementing, autoIncrementing, holdDuration])
 
-  // TODO(WEB-4920): use tiers from Positions API for this specific pool, not presets.
-  const feeTiers = [FeeAmount.LOWEST, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH]
+  const feeHundredthsOfBips = Math.round(parseFloat(createFeeValue) * 10000)
 
   return (
     <Modal name={ModalName.FeeTierSearch} onClose={onClose} isDismissible isModalOpen={feeTierSearchModalOpen}>
@@ -142,7 +155,7 @@ export function FeeTierSearchModal() {
                       return '0'
                     }
                     const newValue = parseFloat(prev) - 0.01
-                    if (newValue < 0) {
+                    if (isNaN(newValue) || newValue < 0) {
                       return '0'
                     }
                     return newValue.toFixed(2)
@@ -150,10 +163,12 @@ export function FeeTierSearchModal() {
                 }}
                 {...ClickableTamaguiStyle}
               >
-                <Text variant="heading3">-</Text>
+                <Text variant="heading3" mb="$spacing4">
+                  -
+                </Text>
               </Flex>
               <Flex grow justifyContent="flex-end">
-                <Flex row maxWidth="100%" alignItems="center">
+                <Flex row maxWidth="100%" centered>
                   <FeeTierPercentInput
                     value={createFeeValue}
                     onUserInput={(input) => {
@@ -223,66 +238,111 @@ export function FeeTierSearchModal() {
               }}
               disabled={!createFeeValue || createFeeValue === '0' || createFeeValue === ''}
               onPress={() => {
-                const feeBips = Math.round(parseFloat(createFeeValue) * 100)
-                setPositionState((prevState) => ({ ...prevState, fee: feeBips }))
+                setPositionState((prevState) => ({
+                  ...prevState,
+                  fee: {
+                    feeAmount: feeHundredthsOfBips,
+                    tickSpacing: calculateTickSpacingFromFeeAmount(feeHundredthsOfBips),
+                  },
+                }))
                 onClose()
               }}
             >
-              {/* TODO(WEB-4920): change this button label to "Select existing tier" if the value matches an existing tier. */}
               <Text variant="buttonLabel2" color="$surface1">
-                {t('fee.tier.create.button')}
+                {feeTierData[feeHundredthsOfBips] ? t('fee.tier.select.existing.button') : t('fee.tier.create.button')}
               </Text>
             </Button>
           </Flex>
         ) : (
           <>
-            <Flex row py="$padding12" px="$padding8" backgroundColor="$surface2" borderRadius="$rounded24">
+            <Flex
+              row
+              alignItems="center"
+              py="$padding12"
+              px="$padding8"
+              backgroundColor="$surface2"
+              borderRadius="$rounded24"
+              gap="$gap8"
+            >
               <Search size={20} color="$neutral2" />
-              <Input
+              <AmountInput
                 width="100%"
-                height="100%"
-                fontWeight="$book"
+                autoFocus
+                alignSelf="stretch"
                 backgroundColor="$transparent"
-                placeholder={t('fee.tier.search.short')}
-                placeholderTextColor="$neutral2"
-                onChange={(event: any) => {
-                  setSearchValue(event.target.value)
-                }}
+                borderRadius={0}
+                borderWidth={0}
+                textAlign="left"
                 value={searchValue}
+                fontFamily="$subHeading"
+                fontSize={18}
+                px="$none"
+                py="$none"
+                placeholder={t('fee.tier.search.short')}
+                placeholderTextColor="$neutral3"
+                onChangeText={(value) => {
+                  if (value === '.') {
+                    setSearchValue('0.')
+                    return
+                  }
+                  // Prevent two decimals
+                  if (value.indexOf('.') !== -1 && value.indexOf('.', value.indexOf('.') + 1) !== -1) {
+                    return
+                  }
+                  // Prevent addition of non-numeric characters to the end of the string
+                  if (!numericInputRegex.test(value)) {
+                    setSearchValue(value.slice(0, -1))
+                    return
+                  }
+
+                  const newValue = parseFloat(value)
+                  if (newValue > 100) {
+                    setSearchValue('100')
+                    return
+                  }
+
+                  setSearchValue(newValue >= 0 ? value : '')
+                }}
               />
             </Flex>
-            <Flex width="100%" gap="$gap4">
-              {/* TODO(WEB-4920): filter fee tiers based on search term */}
-              {feeTiers.map((feeTier) => (
-                <Flex
-                  row
-                  alignItems="center"
-                  gap="$spacing24"
-                  key={feeTier}
-                  py="$padding12"
-                  px="$padding16"
-                  justifyContent="space-between"
-                  {...ClickableTamaguiStyle}
-                  onPress={() => {
-                    setPositionState((prevState) => ({ ...prevState, fee: feeTier }))
-                    onClose()
-                  }}
-                >
-                  <Flex>
-                    <Text variant="subheading2">{formatPercent(new Percent(feeTier, 1000000))}</Text>
-                    <Flex row gap="$gap12" alignItems="center">
-                      {/* TODO(WEB-4920): use real data from positions API */}
-                      <Text variant="body3" color="$neutral2">
-                        $289.6K TVL
-                      </Text>
-                      <Text variant="body3" color="$neutral2">
-                        {t('fee.tier.percent.select', { percentage: 4 })}
-                      </Text>
+            <Flex width="100%" gap="$gap4" maxHeight={350} overflow="scroll">
+              {Object.values(feeTierData)
+                .filter((data) => data.formattedFee.includes(searchValue) || searchValue.includes(data.id))
+                .map((pool) => (
+                  <Flex
+                    row
+                    alignItems="center"
+                    gap="$spacing24"
+                    key={pool.id}
+                    py="$padding12"
+                    px="$padding16"
+                    justifyContent="space-between"
+                    {...ClickableTamaguiStyle}
+                    onPress={() => {
+                      setPositionState((prevState) => ({
+                        ...prevState,
+                        fee: {
+                          feeAmount: pool.fee,
+                          tickSpacing: calculateTickSpacingFromFeeAmount(pool.fee),
+                        },
+                      }))
+                      onClose()
+                    }}
+                  >
+                    <Flex>
+                      <Text variant="subheading2">{pool.formattedFee}</Text>
+                      <Flex row gap="$gap12" alignItems="center">
+                        <Text variant="body3" color="$neutral2">
+                          {formatNumberOrString({ input: pool.totalLiquidityUsd, type: NumberType.ChartFiatValue })}
+                        </Text>
+                        <Text variant="body3" color="$neutral2">
+                          {t('fee.tier.percent.select', { percentage: formatPercent(pool.percentage) })}
+                        </Text>
+                      </Flex>
                     </Flex>
+                    {pool.fee === selectedFee.feeAmount && <CheckCircleFilled size="$icon.24" color="$accent3" />}
                   </Flex>
-                  {feeTier === selectedFee && <CheckCircleFilled size="$icon.24" color="$accent3" />}
-                </Flex>
-              ))}
+                ))}
             </Flex>
             <Flex py="$padding12" gap="$gap12" alignItems="center">
               <Text variant="body3" color="$neutral2">

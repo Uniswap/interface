@@ -12,6 +12,7 @@ export enum WarningSeverity {
 
 export type WarningColor = {
   text: ColorTokens
+  headerText: ColorTokens
   background: ColorTokens
   buttonTheme: ThemeNames
 }

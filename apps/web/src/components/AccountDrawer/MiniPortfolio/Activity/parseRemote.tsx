@@ -17,7 +17,7 @@ import { parseRemote as parseRemoteSignature } from 'state/signatures/parseRemot
 import { OrderActivity, SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { TransactionType as LocalTransactionType } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, styled } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -182,6 +182,13 @@ function getChainIdFromGqlTokenOrCurrency(token?: TokenAssetPartsFragment | Curr
   return supportedChainIdFromGQLChain(token.chain) ?? null
 }
 
+const StyledBridgeAmountText = styled(Text, {
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  variant: 'body2',
+})
+
 export function getBridgeDescriptor({
   tokenIn,
   inputAmount,
@@ -198,14 +205,14 @@ export function getBridgeDescriptor({
   return (
     <Flex row alignItems="center" gap="4px">
       <NetworkLogo chainId={inputChain} size={16} borderRadius={6} />
-      <Text variant="body2">
+      <StyledBridgeAmountText>
         {inputAmount}&nbsp;{tokenIn?.symbol ?? t('common.unknown')}
-      </Text>
+      </StyledBridgeAmountText>
       <Arrow direction="e" color="$neutral3" size={iconSizes.icon16} />
       <NetworkLogo chainId={outputChain} size={16} borderRadius={6} />
-      <Text variant="body2">
+      <StyledBridgeAmountText>
         {outputAmount}&nbsp;{tokenOut?.symbol ?? t('common.unknown')}
-      </Text>
+      </StyledBridgeAmountText>
     </Flex>
   )
 }

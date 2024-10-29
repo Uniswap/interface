@@ -42,6 +42,7 @@ export type ActionSheetDropdownStyleProps = {
   buttonPaddingX?: FlexProps['px']
   buttonPaddingY?: FlexProps['py']
   dropdownMaxHeight?: number
+  dropdownMinWidth?: number
   dropdownZIndex?: FlexProps['zIndex']
 }
 
@@ -190,6 +191,7 @@ const ActionSheetBackdropWithContent = memo(function ActionSheetBackdropWithCont
               {...contentProps}
               alignment={styles?.alignment}
               dropdownMaxHeight={styles?.dropdownMaxHeight}
+              dropdownMinWidth={styles?.dropdownMinWidth}
               handleClose={closeDropdown}
               toggleMeasurements={toggleMeasurements}
               closeOnSelect={closeOnSelect}
@@ -205,6 +207,7 @@ type DropdownContentProps = FlexProps & {
   options: MenuItemProp[]
   alignment?: 'left' | 'right'
   dropdownMaxHeight?: number
+  dropdownMinWidth?: number
   toggleMeasurements: LayoutMeasurements & { sticky?: boolean }
   handleClose?: () => void
   closeOnSelect: boolean
@@ -232,6 +235,7 @@ function DropdownContent({
   options,
   alignment = 'left',
   dropdownMaxHeight,
+  dropdownMinWidth,
   toggleMeasurements,
   handleClose,
   closeOnSelect,
@@ -300,10 +304,10 @@ function DropdownContent({
     <TouchableWhenOpen
       animation="quicker"
       maxHeight={maxHeight}
-      minWidth={DEFAULT_MIN_WIDTH}
+      minWidth={dropdownMinWidth ?? DEFAULT_MIN_WIDTH}
       position="absolute"
       testID="dropdown-content"
-      top={toggleMeasurements.y + toggleMeasurements.height - windowScrollY}
+      top={toggleMeasurements.y + toggleMeasurements.height - windowScrollY + spacing.spacing8}
       {...containerProps}
     >
       <BaseCard.Shadow

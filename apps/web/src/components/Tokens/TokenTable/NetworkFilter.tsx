@@ -6,6 +6,7 @@ import { AllNetworksIcon } from 'components/Tokens/TokenTable/icons'
 import {
   BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS,
   BACKEND_SUPPORTED_CHAINS,
+  BACKEND_SUPPORTED_TESTNET_CHAINS,
   InterfaceGqlChain,
   useChainFromUrlParam,
   useIsSupportedChainIdCallback,
@@ -20,8 +21,7 @@ import { useNavigate } from 'react-router-dom'
 import { EllipsisTamaguiStyle } from 'theme/components'
 import { Flex, FlexProps, ScrollView, Text, styled } from 'ui/src'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useTranslation } from 'uniswap/src/i18n'
@@ -54,12 +54,10 @@ const StyledDropdown = {
 export default function TableNetworkFilter() {
   const [isMenuOpen, toggleMenu] = useState(false)
   const isSupportedChainCallback = useIsSupportedChainIdCallback()
-  const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
+  const { isTestnetModeEnabled } = useEnabledChains()
 
   const exploreParams = useExploreParams()
-  const currentChain = getSupportedGraphQlChain(useChainFromUrlParam(), {
-    fallbackToEthereum: !isMultichainExploreEnabled,
-  })
+  const currentChain = getSupportedGraphQlChain(useChainFromUrlParam())
   const tab = exploreParams.tab
 
   return (
@@ -79,9 +77,7 @@ export default function TableNetworkFilter() {
           }
           internalMenuItems={
             <ScrollView px="$spacing8">
-              {isMultichainExploreEnabled && (
-                <TableNetworkItem display="All networks" toggleMenu={toggleMenu} tab={tab} />
-              )}
+              <TableNetworkItem display="All networks" toggleMenu={toggleMenu} tab={tab} />
               {BACKEND_SUPPORTED_CHAINS.map((network) => {
                 const chainId = supportedChainIdFromGQLChain(network)
                 const isSupportedChain = isSupportedChainCallback(chainId)
@@ -96,6 +92,22 @@ export default function TableNetworkFilter() {
                   />
                 ) : null
               })}
+              {isTestnetModeEnabled
+                ? BACKEND_SUPPORTED_TESTNET_CHAINS.map((network) => {
+                    const chainId = supportedChainIdFromGQLChain(network)
+                    const isSupportedChain = isSupportedChainCallback(chainId)
+                    const chainInfo = isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId] : undefined
+                    return chainInfo ? (
+                      <TableNetworkItem
+                        key={network}
+                        display={network}
+                        chainInfo={chainInfo}
+                        toggleMenu={toggleMenu}
+                        tab={tab}
+                      />
+                    ) : null
+                  })
+                : null}
               {BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.map((network) => {
                 const isSupportedChain = isSupportedChainCallback(network)
                 const chainInfo = isSupportedChain ? UNIVERSE_CHAIN_INFO[network] : undefined
@@ -136,14 +148,10 @@ const TableNetworkItem = memo(function TableNetworkItem({
   const navigate = useNavigate()
   const theme = useTheme()
   const { t } = useTranslation()
-  const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
   const chainId = chainInfo?.id
   const exploreParams = useExploreParams()
-  const currentChain = getSupportedGraphQlChain(
-    useChainFromUrlParam(),
-    isMultichainExploreEnabled ? undefined : { fallbackToEthereum: true },
-  )
-  const isAllNetworks = display === 'All networks' && isMultichainExploreEnabled
+  const currentChain = getSupportedGraphQlChain(useChainFromUrlParam())
+  const isAllNetworks = display === 'All networks'
   const isCurrentChain = isAllNetworks
     ? !currentChain
     : currentChain?.backendChain.chain === display && exploreParams.chainName

@@ -9,7 +9,7 @@ import {
 } from 'components/Tokens/state'
 import { getChainFromChainUrlParam } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { SparklineMap } from 'graphql/data/TopTokens'
+import { SparklineMap } from 'graphql/data/types'
 import { PricePoint, TimePeriod, unwrapToken } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { useContext, useMemo } from 'react'

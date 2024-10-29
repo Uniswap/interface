@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { TextInput } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { RecipientScanModal } from 'src/components/RecipientSelect/RecipientScanModal'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Loader, Text, TouchableArea, useSporeColors } from 'ui/src'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
@@ -51,7 +51,7 @@ export function _RecipientSelect({
   const [showQRScanner, setShowQRScanner] = useState(false)
   const [checkSpeedBumps, setCheckSpeedBumps] = useState(false)
   const [selectedRecipient, setSelectedRecipient] = useState(recipient)
-  const sections = useFilteredRecipientSections(pattern)
+  const { sections, loading } = useFilteredRecipientSections(pattern)
 
   useEffect(() => {
     if (focusInput) {
@@ -104,7 +104,9 @@ export function _RecipientSelect({
           onBack={recipient ? onHideRecipientSelector : undefined}
           onChangeText={setPattern}
         />
-        {!sections.length ? (
+        {loading ? (
+          <Loader.SearchResult />
+        ) : !sections.length ? (
           <Flex centered gap="$spacing12" mt="$spacing24" px="$spacing24">
             <Text variant="buttonLabel2">{t('send.recipient.results.empty')}</Text>
             <Text color="$neutral3" textAlign="center" variant="body1">
@@ -112,7 +114,6 @@ export function _RecipientSelect({
             </Text>
           </Flex>
         ) : (
-          // Show either suggested recipients or filtered sections based on query
           <RecipientList renderedInModal={renderedInModal} sections={sections} onPress={onSelect} />
         )}
       </AnimatedFlex>

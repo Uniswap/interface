@@ -1,6 +1,7 @@
 import {
   BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS,
   BACKEND_SUPPORTED_CHAINS,
+  BACKEND_SUPPORTED_TESTNET_CHAINS,
   CHAIN_IDS_TO_NAMES,
   CHAIN_ID_TO_BACKEND_NAME,
   CHAIN_NAME_TO_CHAIN_ID,
@@ -172,6 +173,16 @@ test.each(backendSupportedChains)(
   (chain: InterfaceGqlChain) => {
     expect(BACKEND_SUPPORTED_CHAINS.includes(chain)).toBe(true)
     expect(BACKEND_SUPPORTED_CHAINS.length).toEqual(backendSupportedChains.length)
+  },
+)
+
+const backendSupportedTestnetChains = [Chain.EthereumSepolia, Chain.AstrochainSepolia] as const
+
+test.each(backendSupportedTestnetChains)(
+  'BACKEND_SUPPORTED_TESTNET_CHAINS generates the correct chains',
+  (chain: InterfaceGqlChain) => {
+    expect(BACKEND_SUPPORTED_TESTNET_CHAINS.includes(chain)).toBe(true)
+    expect(BACKEND_SUPPORTED_TESTNET_CHAINS.length).toEqual(backendSupportedTestnetChains.length)
   },
 )
 

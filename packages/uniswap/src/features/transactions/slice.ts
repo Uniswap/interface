@@ -45,11 +45,14 @@ const slice = createSlice({
       state[from]![chainId]![id] = transaction
     },
     finalizeTransaction: (state, { payload: transaction }: PayloadAction<FinalizedTransactionDetails>) => {
-      const { chainId, id, status, receipt, from, hash } = transaction
+      const { chainId, id, status, receipt, from, hash, networkFee } = transaction
       assert(state?.[from]?.[chainId]?.[id], `finalizeTransaction: Attempted to finalize a missing tx with id ${id}`)
       state[from]![chainId]![id]!.status = status
       if (receipt) {
         state[from]![chainId]![id]!.receipt = receipt
+      }
+      if (networkFee) {
+        state[from]![chainId]![id]!.networkFee = networkFee
       }
       if (isUniswapX(transaction) && status === TransactionStatus.Success) {
         assert(hash, `finalizeTransaction: Attempted to finalize an order without providing the fill tx hash`)

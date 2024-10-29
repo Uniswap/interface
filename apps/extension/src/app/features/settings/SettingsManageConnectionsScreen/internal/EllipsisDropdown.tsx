@@ -1,12 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { removeAllDappConnectionsForAccount } from 'src/app/features/dapp/actions'
-import { ContextMenu, Flex, TouchableArea } from 'ui/src'
+import { Flex, TouchableArea } from 'ui/src'
 import { Ellipsis, Power } from 'ui/src/components/icons'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { ContextMenu } from 'wallet/src/components/menu/ContextMenu'
 import { useActiveAccountAddress, useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const PowerCircle = (): JSX.Element => (

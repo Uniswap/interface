@@ -278,6 +278,10 @@ query NftsTab(
               height
             }
           }
+          thumbnail {
+            id
+            url
+          }
           name
           tokenId
           description
@@ -296,6 +300,27 @@ query NftsTab(
       startCursor
     }
   }
+}
+
+# We use this fragment to optimize how we render each row in the Tokens tab.
+# We should keep it small, only include the fields we need to render that row,
+# and avoid including fields that might change too often.
+fragment TokenBalanceMainParts on TokenBalance {
+  ...TokenBalanceQuantityParts
+  denominatedValue {
+    currency
+    value
+  }
+  tokenProjectMarket {
+    relativeChange24: pricePercentChange(duration: DAY) {
+      value
+    }
+  }
+}
+
+fragment TokenBalanceQuantityParts on TokenBalance {
+  id
+  quantity
 }
 
 query PortfolioBalances(
@@ -324,14 +349,8 @@ query PortfolioBalances(
 
     # Individual portfolio token balances
     tokenBalances {
-      id
-      quantity
+      ...TokenBalanceMainParts
       isHidden
-      denominatedValue {
-        id
-        currency
-        value
-      }
       token {
         id
         address
@@ -346,6 +365,7 @@ query PortfolioBalances(
           logoUrl
           name
           safetyLevel
+          spamCode
         }
         feeData {
           buyFeeBps
@@ -354,11 +374,6 @@ query PortfolioBalances(
         protectionInfo {
           result
           attackTypes
-        }
-      }
-      tokenProjectMarket {
-        relativeChange24: pricePercentChange(duration: DAY) {
-          value
         }
       }
     }
@@ -588,6 +603,14 @@ query TokenProjects($contracts: [ContractInput!]!) {
       address
       decimals
       symbol
+      feeData {
+        buyFeeBps
+        sellFeeBps
+      }
+      protectionInfo {
+        result
+        attackTypes
+      }
     }
   }
 }
@@ -947,6 +970,10 @@ query SearchTokens($searchQuery: String!, $chains: [Chain!]!) {
       logoUrl
       safetyLevel
     }
+    feeData {
+      buyFeeBps
+      sellFeeBps
+    }
     protectionInfo {
       result
       attackTypes
@@ -978,6 +1005,10 @@ query ExploreSearch(
     protectionInfo {
       result
       attackTypes
+    }
+    feeData {
+      buyFeeBps
+      sellFeeBps
     }
   }
   nftCollections(filter: $nftCollectionsFilter, first: 4) {

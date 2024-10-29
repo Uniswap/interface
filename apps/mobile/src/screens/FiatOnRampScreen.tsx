@@ -54,6 +54,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { FORAmountEnteredProperties } from 'uniswap/src/features/telemetry/types'
 import {
   DecimalPadCalculateSpace,
+  DecimalPadCalculatedSpaceId,
   DecimalPadInput,
   DecimalPadInputRef,
 } from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPadInput'
@@ -329,6 +330,8 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
 
     setValue('')
     setAmount(0)
+    valueRef.current = ''
+    resetSelection({ start: 0 })
     setQuoteCurrency(defaultCurrency)
 
     sendAnalyticsEvent(FiatOffRampEventName.FORBuySellToggled, {
@@ -399,7 +402,9 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
                 setShowTokenSelector(true)
               }}
             />
-            <DecimalPadCalculateSpace decimalPadRef={decimalPadRef} isShortMobileDevice={isShortMobileDevice} />
+
+            <DecimalPadCalculateSpace id={DecimalPadCalculatedSpaceId.FiatOnRamp} decimalPadRef={decimalPadRef} />
+
             <AnimatedFlex
               bottom={0}
               exiting={FadeOutDown}

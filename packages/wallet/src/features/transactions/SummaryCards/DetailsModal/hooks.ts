@@ -8,10 +8,10 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionDetails, isFinalizedTx } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useFormattedCurrencyAmountAndUSDValue } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
-import { buildCurrencyId } from 'wallet/src/utils/currencyId'
+import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 export function useNetworkFee(transactionDetails: TransactionDetails): {
   value: string
@@ -21,12 +21,19 @@ export function useNetworkFee(transactionDetails: TransactionDetails): {
 
   const currencyId = transactionDetails.networkFee
     ? buildCurrencyId(transactionDetails.chainId, transactionDetails.networkFee.tokenAddress)
-    : undefined
+    : buildNativeCurrencyId(transactionDetails.chainId)
   const currencyInfo = useCurrencyInfo(currencyId)
+
+  const currencyAmountRaw =
+    transactionDetails.networkFee?.quantity != null
+      ? transactionDetails.networkFee.quantity
+      : isFinalizedTx(transactionDetails)
+        ? '0'
+        : undefined
 
   return useFormattedCurrencyAmountAndUSDValue({
     currency: currencyInfo?.currency,
-    currencyAmountRaw: transactionDetails.networkFee?.quantity,
+    currencyAmountRaw,
     valueType: ValueType.Exact,
     formatter,
     isApproximateAmount: false,

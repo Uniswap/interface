@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmYH4Tb7M6EoFHKRNyCBHHFeNadwnrmibmQmknWHSQxj8R`
-- CIDv1: `bafybeietvftf6vmileh7kp3srslms4azyza5cmgu6ttrzikjzz4dkrryxy`
+- CIDv0: `QmPq9sW2ih541PM9991Trh3Cocrdstrh63m6UWRbZb6Nqo`
+- CIDv1: `bafybeiawfdwfe6ayrmkbbgbjos2noxf2w7ihz4tk7x5tu67ybggnmuvrni`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,104 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeietvftf6vmileh7kp3srslms4azyza5cmgu6ttrzikjzz4dkrryxy.ipfs.dweb.link/
-- https://bafybeietvftf6vmileh7kp3srslms4azyza5cmgu6ttrzikjzz4dkrryxy.ipfs.cf-ipfs.com/
-- [ipfs://QmYH4Tb7M6EoFHKRNyCBHHFeNadwnrmibmQmknWHSQxj8R/](ipfs://QmYH4Tb7M6EoFHKRNyCBHHFeNadwnrmibmQmknWHSQxj8R/)
+- https://bafybeiawfdwfe6ayrmkbbgbjos2noxf2w7ihz4tk7x5tu67ybggnmuvrni.ipfs.dweb.link/
+- https://bafybeiawfdwfe6ayrmkbbgbjos2noxf2w7ihz4tk7x5tu67ybggnmuvrni.ipfs.cf-ipfs.com/
+- [ipfs://QmPq9sW2ih541PM9991Trh3Cocrdstrh63m6UWRbZb6Nqo/](ipfs://QmPq9sW2ih541PM9991Trh3Cocrdstrh63m6UWRbZb6Nqo/)
 
-## 5.55.0 (2024-10-24)
+## 5.56.0 (2024-10-29)
 
 
 ### Features
 
-* **web:** only show bridging card on swap tab- prod (#13338) 95e03e4
+* **web:** add empty states for not connected wallets and wallets with no positions (#12973) 31320f1
+* **web:** add entry points for new lp flow (#13053) 1a7a2d9
+* **web:** add hook parsing util (#13364) ed1eeb6
+* **web:** add mainnet to bridge banner (#13296) 9f2fe44
+* **web:** add new TokenWarningCard to tdp and pdp (#12667) 36688f1
+* **web:** add the hook modal (#13371) d18aae7
+* **web:** add warning icon to search bar (#12768) 830022a
+* **web:** adding liquidity create step (#13014) 5ec4b90
+* **web:** adding v4 to the liquidity flow (#12793) 966a85d
+* **web:** closed Positions CTA at bottom of positions list (#13308) 2220383
+* **web:** handle insufficient swap approvals (#13201) 60f699a
+* **web:** improve fingerprinting for swap errors (#13045) cc066b9
+* **web:** improve remove liquidity modal (#12936) 1ab10ca
+* **web:** include poolId on positionInfo object (#13269) 14c26a1
+* **web:** LP creation default one input to native currency (#13167) 9de127c
+* **web:** migrate v3 liquidity review modal, saga logic (#13008) 3017b06
+* **web:** mweb layouts for new lp pages (#13317) d0836e0
+* **web:** redesigned pool table tabs (#13291) 918ee0f
+* **web:** remove manual wrapping step (#13022) 956377a
+* **web:** Remove Vanilla Extract from non-nft code (#12504) 07440e5
+* **web:** support v4 position NFT images (#13349) 88062c8
+* **web:** truncate bridge activity for smaller screens (#13074) 1a79bda
+* **web:** UI updates for the pdp page for v4 (#12878) 491748a
+* **web:** updates types in Create flow to support native (#13024) 5657b0e
+* **web:** use live fee tier data for position creation flow (#12880) 9939608
+* **web:** use tickspacings when fees are selected (#12945) c5908fd
+* **web:** v2 create flow setup (#12767) 4a17ba4
+* **web:** v3-v4 migrate calldata query (#12902) c4e9646
+* **web:** v4 create flow creating a pool (#12747) 64dcd7d
+* **web:** v4 url redirects (#13237) d91a04c
+
+
+### Bug Fixes
+
+* **web:** [v4] fix "New" button styling on positions page (#13143) 24e8bb9
+* **web:** [v4] fix reset button (#13160) 8b10c23
+* **web:** [v4] normalize language to  collect fees (#13150) 97b4fee
+* **web:** [v4] polish (#13204) 9735bed
+* **web:** Add 3s delay to portfolio balance refetch (#13367) 4605961
+* **web:** add help center links (#13147) a9239c4
+* **web:** add missing breadcrumb to LP create page (#13306) f0743d2
+* **web:** Align Continue button text (#13023) 9bfcaf5
+* **web:** allow pool creation on testnets (#13009) 05dfe00
+* **web:** bugs in create flow when initializing pool (#13282) c333def
+* **web:** check wrapped input approvals for all uniswapx types (#13377) 59a8378
+* **web:** create fee tier alignment and nan (#13157) 701c7a9
+* **web:** default price range fix (#13169) adc95d6
+* **web:** display bridging options in unconnected state (#13048) 0961f12
+* **web:** dont hide position filters (#13194) 2a6b72a
+* **web:** fallback to local activity if remote is empty (#13135) b5129d8
+* **web:** fix blocked tokens on TDP (#12742) d364216
+* **web:** fix broken worldchain images (#13028) b9d436d
+* **web:** fix crashe in create flow when changing tokens (#13264) 63b9734
+* **web:** Fix explore table only scrolling once (#13110) 73083d7
+* **web:** fix fee modal crash (#13083) 91983fc
+* **web:** fix formatting for closed positions (#13172) bfdedd9
+* **web:** fix link to PosDP from migratev3 page (#13311) a8e2050
+* **web:** fix network filter on explore (#12876) e6aaa50
+* **web:** handle account chain id switch (#12994) 45fcd58
+* **web:** handle selecting coin on diff chain (#13149) 49c903d
+* **web:** keep old data in positions list while loading new filter results (#13299) 6cc7159
+* **web:** mock pair and mock pool price numerator and denominators are switched (#13279) efe13f3
+* **web:** navbar links for v4 positions pages (#13271) 2b3821e
+* **web:** numeric input validation in fee tiers search (#13304) b51bf90
+* **web:** Only poll for bridging status updates if pending txs (#13066) f31d0fc
+* **web:** only show bridging card on swap tab (#13333) c1f3eba
+* **web:** persist positions filters and remove "closed" from default filter (#13168) f10fc62
+* **web:** prevent swap flow from continuing when approval has not bee… (#13374) 7421208
+* **web:** Redirect to security measures article while clicking button in ResetComplete step (#12606) e917818
+* **web:** remove outputPositionLiquidity from migration request (#13156) 2b4d71c
+* **web:** remove second status on pdp (#13210) db5f3e1
+* **web:** remove v2 liquidity (add approve step) (#13314) ce48a33
+* **web:** show liqudity info badge in step and confirmation (#13312) 0c23eff
+* **web:** show Not Found on PosDP if it doesn't exist (#13250) 0177752
+* **web:** temp endpoints (#13093) a50b98d
+* **web:** unichain modal button widths (#13092) 0eb5abe
+* **web:** Unstick continue button from SettingsRecoveryPhrase screen (#12609) 10b17a2
+* **web:** update approved token (#13357) de06e23
+* **web:** update v2 remove on L2 functionality (#13037) 6971b0b
+* **web:** use position chain id (#13001) 3872b9a
+* **web:** use prod url for positions API (#13351) e25b4ca
+* **web:** v4 create flow - reset tokens on chain changed (#13249) ae6ef1a
+* **web:** v4 fixes (#13223) 6ad8335
+* **web:** v4 poolsQueryEnabledCheck (#13078) b9f210d
+* **web:** various trading api calls fixes (#13102) ecb1c30
+
+
+### Continuous Integration
+
+* **web:** update sitemaps afffa8d
 
 

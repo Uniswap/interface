@@ -216,7 +216,7 @@ function* classicSwap(
       }
     } catch (error) {
       const displayableError = getDisplayableError(error, step)
-      if (displayableError) {
+      if (displayableError && displayableError.logToSentry) {
         logger.error(displayableError, { tags: { file: 'swapSaga', function: 'classicSwap' } })
       }
       onFailure(displayableError)
@@ -266,7 +266,7 @@ function* uniswapXSwap(
       }
     } catch (error) {
       const displayableError = getDisplayableError(error, step)
-      if (displayableError) {
+      if (displayableError && displayableError.logToSentry) {
         logger.error(displayableError, { tags: { file: 'swapSaga', function: 'uniswapXSwap' } })
       }
       onFailure(displayableError)
@@ -306,7 +306,7 @@ export function useSwapCallback(): SwapCallback {
   const swapStartTimestamp = useSelector(selectSwapStartTimestamp)
   const selectChain = useSelectChain()
   const startChainId = useAccount().chainId
-  const v4Enabled = useFeatureFlag(FeatureFlags.V4Everywhere)
+  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
 
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
 

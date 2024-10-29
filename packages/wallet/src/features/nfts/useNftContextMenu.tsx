@@ -171,7 +171,7 @@ export function useNFTContextMenu({
                       : {
                           systemIcon: 'trash',
                         }),
-
+                    destructive: true,
                     onPress: onPressReport,
                   },
                 ]

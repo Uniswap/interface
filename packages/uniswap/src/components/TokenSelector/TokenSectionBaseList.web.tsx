@@ -1,6 +1,8 @@
 import isArray from 'lodash/isArray'
 import isEqual from 'lodash/isEqual'
 import React, { CSSProperties, Key, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+// eslint-disable-next-line no-restricted-imports
+import { LayoutChangeEvent } from 'react-native'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { VariableSizeList as List } from 'react-window'
 import { Flex, useWindowDimensions } from 'ui/src'
@@ -39,6 +41,7 @@ export function TokenSectionBaseList({
   renderSectionHeader,
   sections,
   sectionListRef,
+  expandedItems,
 }: TokenSectionBaseListProps): JSX.Element {
   const ref = useRef<List>(null)
   const rowHeightMap = useRef<{ [key: number]: number }>({})
@@ -81,22 +84,20 @@ export function TokenSectionBaseList({
             index,
             key: keyExtractor?.(item, index),
             renderItem,
+            expanded: expandedItems?.includes(keyExtractor?.(item, index) ?? '') ?? false,
           }
           return itemInfo
         }),
       )
     }, [])
-  }, [sections, renderSectionHeader, keyExtractor, renderItem])
+  }, [sections, renderSectionHeader, keyExtractor, renderItem, expandedItems])
 
+  // Used for rendering the sticky header
   const activeSessionIndex = useMemo(() => {
     return items.slice(0, firstVisibleIndex + 1).reduceRight((acc, item, index) => {
       return acc === -1 && isSectionHeader(item) ? index : acc
     }, -1)
   }, [firstVisibleIndex, items])
-
-  useEffect(() => {
-    rowHeightMap.current = {}
-  }, [items])
 
   const updateRowHeight = useCallback((index: number, height: number) => {
     if (rowHeightMap.current[index] !== height) {
@@ -220,23 +221,22 @@ type RowProps = {
   windowWidth: number
   updateRowHeight?: (index: number, height: number) => void
 }
-function _Row({ index, itemData, style, windowWidth, updateRowHeight }: RowProps): JSX.Element {
+function _Row({ index, itemData, style, updateRowHeight }: RowProps): JSX.Element {
   const rowRef = useRef<HTMLElement>(null)
 
-  useEffect(() => {
-    // We need to run this in the next tick to get the correct height.
-    setTimeout(() => {
-      const height = rowRef.current?.getBoundingClientRect().height
-      if (!height || !updateRowHeight) {
-        return
+  const handleLayout = useCallback(
+    (e: LayoutChangeEvent) => {
+      const height = e.nativeEvent.layout.height
+      if (height && updateRowHeight) {
+        updateRowHeight(index, height)
       }
-      updateRowHeight(index, height)
-    }, 0)
-  }, [updateRowHeight, index, windowWidth, itemData.key])
+    },
+    [updateRowHeight, index],
+  )
 
   return (
     <Flex key={itemData?.key ?? index} grow alignItems="center" justifyContent="center" style={style}>
-      <Flex ref={rowRef} width="100%">
+      <Flex ref={rowRef} width="100%" onLayout={handleLayout}>
         {itemData &&
           (isSectionHeader(itemData) ? itemData.renderSectionHeader?.(itemData) : itemData.renderItem(itemData))}
       </Flex>

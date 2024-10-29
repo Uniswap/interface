@@ -39,6 +39,7 @@ import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { isDetoxBuild } from 'utilities/src/environment/constants'
 import { NumberType } from 'utilities/src/format/types'
 import { usePrevious } from 'utilities/src/react/hooks'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 type CurrentInputPanelProps = {
   autoFocus?: boolean
@@ -148,22 +149,36 @@ export const CurrencyInputPanel = memo(
         onToggleIsFiatMode(currencyField)
       }, [currencyField, onToggleIsFiatMode])
 
-      // the focus state for native Inputs can sometimes be out of sync with the controlled `focus`
-      // prop. When the internal focus state differs from our `focus` prop, sync the internal
-      // focus state to be what our prop says it should be
+      // For native mobile, given that we're using a custom `DecimalPad`,
+      // the input's focus state can sometimes be out of sync with the controlled `focus` prop.
+      // When this happens, we want to sync the input's focus state by either auto-focusing or blurring it.
       const isTextInputRefActuallyFocused = inputRef.current?.isFocused()
       useEffect(() => {
+        if (isWeb) {
+          // We do not want to force-focus the `input` on web.
+          // This is only needed when using native mobile's custom `DecimalPad`.
+          return
+        }
+
+        if (focus === undefined) {
+          // Ignore this effect unless `focus` is explicitly set to a boolean.
+          return
+        }
+
         if (focus && !isTextInputRefActuallyFocused) {
-          inputRef.current?.focus()
           resetSelection?.({
             start: value?.length ?? 0,
             end: value?.length ?? 0,
             currencyField,
           })
+          setTimeout(() => {
+            // We need to wait for the token selector sheet to fully close before triggering this or else it won't work.
+            inputRef.current?.focus()
+          }, ONE_SECOND_MS / 2)
         } else if (!focus && isTextInputRefActuallyFocused) {
           inputRef.current?.blur()
         }
-      }, [currencyField, focus, inputRef, isTextInputRefActuallyFocused, resetSelection, value?.length])
+      }, [currencyField, focus, isTextInputRefActuallyFocused, resetSelection, value?.length])
 
       const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing(
         MAX_CHAR_PIXEL_WIDTH,
@@ -281,7 +296,7 @@ export const CurrencyInputPanel = memo(
                       autoFocus={autoFocus ?? focus}
                       backgroundColor="$transparent"
                       borderWidth={0}
-                      color={color}
+                      color={showInsufficientBalanceWarning ? '$statusCritical' : color}
                       disabled={disabled || !currencyInfo}
                       flex={1}
                       focusable={!disabled && Boolean(currencyInfo)}

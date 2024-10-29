@@ -13,6 +13,10 @@ export enum OnboardingRoutes {
   Reset = 'reset',
   ResetScan = 'reset-scan',
   UnsupportedBrowser = 'unsupported-browser',
+}
+
+export enum UnitagClaimRoutes {
+  ClaimIntro = 'claim-intro',
   EditProfile = 'edit-profile',
 }
 

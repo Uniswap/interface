@@ -101,6 +101,14 @@ export function useActiveAccountWithThrow(): Account {
   return activeAccount
 }
 
+export function useAccountAddressFromUrlWithThrow(): Address {
+  const storedAddress = useActiveAccountAddressWithThrow()
+  // Using href instead of search to account for hash paths
+  const urlAddress = new URLSearchParams(window.location.href.split('?')[1]).get('address')
+
+  return urlAddress ? urlAddress : storedAddress
+}
+
 export function useSwapProtectionSetting(): SwapProtectionSetting {
   return useSelector(selectWalletSwapProtectionSetting)
 }

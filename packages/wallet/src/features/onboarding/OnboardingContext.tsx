@@ -13,7 +13,7 @@ import { ImportType } from 'uniswap/src/types/onboarding'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import { isExtension } from 'utilities/src/platform'
+import { isExtension, isMobileApp } from 'utilities/src/platform'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
 import {
   setBackupReminderLastSeenTs,
@@ -455,7 +455,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
         onboardingAccount,
       )
 
-      if (claimError) {
+      if (claimError && !extensionOnboardingFlow) {
         dispatch(
           pushNotification({
             type: AppNotificationType.Error,
@@ -479,8 +479,10 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
     })
 
     if (importType === ImportType.CreateNew) {
-      // Dismiss unitags prompt if the onboarding method prompts for unitags (create new)
-      dispatch(setHasSkippedUnitagPrompt(true))
+      if (isMobileApp) {
+        // Dismiss unitags prompt if the onboarding method prompts for unitags (create new)
+        dispatch(setHasSkippedUnitagPrompt(true))
+      }
 
       // Reset the last timestamp for having shown the backup reminder modal
       dispatch(setBackupReminderLastSeenTs(undefined))
@@ -559,7 +561,6 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
 
   const resetOnboardingContextData = (): void => {
     setOnboardingAccount(undefined)
-    setUnitagClaim(undefined)
     setImportedAccounts(undefined)
     setOnboardingAccountMnemonic(undefined)
   }
@@ -628,12 +629,19 @@ export function useCreateOnboardingAccountIfNone(): void {
  * Triggers onboarding finish on screen mount for extension only
  * Extracted into hook for reusability.
  */
-export function useFinishOnboarding(callback?: () => void, extensionOnboardingFlow?: ExtensionOnboardingFlow): void {
+export function useFinishOnboarding(
+  callback?: () => void,
+  extensionOnboardingFlow?: ExtensionOnboardingFlow,
+  pendingClaim?: boolean,
+): void {
   const { finishOnboarding, getOnboardingAccountAddress } = useOnboardingContext()
   const onboardingAccountAddress = getOnboardingAccountAddress()
   const importType = onboardingAccountAddress ? ImportType.CreateNew : ImportType.RestoreMnemonic
 
   useEffect(() => {
+    if (pendingClaim) {
+      return
+    }
     finishOnboarding({ importType, extensionOnboardingFlow })
       .then(callback)
       .catch((e) => {
@@ -641,7 +649,7 @@ export function useFinishOnboarding(callback?: () => void, extensionOnboardingFl
           tags: { file: 'useFinishOnboarding', function: 'finishOnboarding' },
         })
       })
-  }, [finishOnboarding, importType, callback, extensionOnboardingFlow])
+  }, [finishOnboarding, importType, callback, extensionOnboardingFlow, pendingClaim])
 }
 
 // Checks if context function is used on the proper platform

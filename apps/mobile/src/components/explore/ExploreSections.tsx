@@ -149,7 +149,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
               visibleHeight={visibleListHeight}
             />
             <Flex row alignItems="center" justifyContent="space-between" px="$spacing20">
-              <Text color="$neutral2" flexShrink={0} paddingEnd="$spacing8" variant="subheading2">
+              <Text color="$neutral2" flexShrink={0} paddingEnd="$spacing8" variant="subheading1">
                 {t('explore.tokens.top.title')}
               </Text>
               <Flex flexShrink={1}>
@@ -217,7 +217,7 @@ function NetworkPillsRow({
   )
 
   return (
-    <Flex py="$spacing16">
+    <Flex py="$spacing8">
       <FlatList
         horizontal
         ListHeaderComponent={

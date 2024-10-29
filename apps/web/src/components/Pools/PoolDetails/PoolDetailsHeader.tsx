@@ -3,10 +3,10 @@ import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from
 import { DropdownSelector } from 'components/DropdownSelector'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
-import { ReverseArrow } from 'components/Icons/ReverseArrow'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
 import { DetailBubble } from 'components/Pools/PoolDetails/shared'
+import { PoolDetailsBadge } from 'components/Pools/PoolTable/PoolTable'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
 import { ActionButtonStyle, ActionMenuFlyoutStyle } from 'components/Tokens/TokenDetails/shared'
 import { LoadingBubble } from 'components/Tokens/loading'
@@ -20,8 +20,10 @@ import styled, { useTheme } from 'lib/styled-components'
 import React, { useMemo, useState } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Link } from 'react-router-dom'
-import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
+import { ClickableStyle, ClickableTamaguiStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
+import { Flex, TouchableArea } from 'ui/src'
+import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans, t } from 'uniswap/src/i18n'
@@ -44,17 +46,6 @@ const HeaderContainer = styled.div`
   width: 100%;
   ${textFadeIn};
   animation-duration: ${({ theme }) => theme.transition.duration.medium};
-`
-
-const Badge = styled(ThemedText.LabelMicro)`
-  background: ${({ theme }) => theme.surface2};
-  padding: 2px 6px;
-  border-radius: 4px;
-`
-
-const ToggleReverseArrows = styled(ReverseArrow)`
-  ${ClickableStyle}
-  fill: ${({ theme }) => theme.neutral2};
 `
 
 const IconBubble = styled(LoadingBubble)`
@@ -150,9 +141,26 @@ const PoolDetailsTitle = ({
           </StyledLink>
         </PoolName>
       </div>
-      {protocolVersion === ProtocolVersion.V2 && <Badge>v2</Badge>}
-      {!!feePercent && <Badge>{feePercent}</Badge>}
-      <ToggleReverseArrows data-testid="toggle-tokens-reverse-arrows" onClick={toggleReversed} />
+      <Flex row gap="$gap4" alignItems="center">
+        <PoolDetailsBadge variant="body3" $position="left">
+          {protocolVersion?.toLowerCase()}
+        </PoolDetailsBadge>
+        {/* TODO(WEB-5364): add hook badge when data available, it should have a hover state and link out to the explorer */}
+        {!!feePercent && (
+          <PoolDetailsBadge variant="body3" $position="right">
+            {feePercent}
+          </PoolDetailsBadge>
+        )}
+      </Flex>
+      <TouchableArea hoverStyle={{ opacity: 0.8 }} onPress={toggleReversed}>
+        <ArrowUpDown
+          {...ClickableTamaguiStyle}
+          size="$icon.20"
+          testID="toggle-tokens-reverse-arrows"
+          rotate="90deg"
+          color="$neutral2"
+        />
+      </TouchableArea>
     </StyledPoolDetailsTitle>
   )
 }

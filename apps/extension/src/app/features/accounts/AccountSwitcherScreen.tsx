@@ -11,10 +11,10 @@ import { updateDappConnectedAddressFromExtension } from 'src/app/features/dapp/a
 import { useDappConnectedAccounts } from 'src/app/features/dapp/hooks'
 import { isConnectedAccount } from 'src/app/features/dapp/utils'
 import { PopupName, openPopup } from 'src/app/features/popups/slice'
-import { AppRoutes, OnboardingRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes } from 'src/app/navigation/constants'
+import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes, UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { focusOrCreateUnitagTab } from 'src/app/navigation/utils'
-import { Button, Flex, MenuContent, MenuContentItem, Popover, ScrollView, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Popover, ScrollView, Text, useSporeColors } from 'ui/src'
 import { WalletFilled, X } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
@@ -31,11 +31,18 @@ import { logger } from 'utilities/src/logger/logger'
 import { sleep } from 'utilities/src/time/timing'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { PlusCircle } from 'wallet/src/components/icons/PlusCircle'
+import { MenuContent } from 'wallet/src/components/menu/MenuContent'
+import { MenuContentItem } from 'wallet/src/components/menu/types'
 import { useAccountList } from 'wallet/src/features/accounts/hooks'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
-import { useActiveAccountWithThrow, useDisplayName, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import {
+  useActiveAccountAddressWithThrow,
+  useActiveAccountWithThrow,
+  useDisplayName,
+  useSignerAccounts,
+} from 'wallet/src/features/wallet/hooks'
 import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
@@ -284,11 +291,12 @@ export function AccountSwitcherScreen(): JSX.Element {
 
 const UnitagActionButton = (): JSX.Element => {
   const { t } = useTranslation()
+  const address = useActiveAccountAddressWithThrow()
   const isClaimUnitagEnabled = useFeatureFlag(FeatureFlags.ExtensionClaimUnitag)
 
   const onPressEditProfile = useCallback(async () => {
-    await focusOrCreateUnitagTab(OnboardingRoutes.EditProfile)
-  }, [])
+    await focusOrCreateUnitagTab(address, UnitagClaimRoutes.EditProfile)
+  }, [address])
 
   if (isClaimUnitagEnabled) {
     return (

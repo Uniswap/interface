@@ -1,10 +1,16 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, Price, Token } from '@uniswap/sdk-core'
+import { Currency, Price } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { FeeAmount, Pool } from '@uniswap/v3-sdk'
+import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
+import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { Dispatch, SetStateAction } from 'react'
 import { PositionField } from 'types/position'
+
+export type FeeData = {
+  feeAmount: number
+  tickSpacing: number
+}
 
 export enum PositionFlowStep {
   SELECT_TOKENS_AND_FEE_TIER,
@@ -15,37 +21,41 @@ export enum PositionFlowStep {
 export interface PositionState {
   protocolVersion: ProtocolVersion
   currencyInputs: { [field in PositionField]?: Currency }
-  fee: number // Denoted in hundredths of bips
+  fee: FeeData
   hook?: string
 }
 
 export const DEFAULT_POSITION_STATE: PositionState = {
   currencyInputs: {},
-  fee: FeeAmount.MEDIUM,
+  fee: { feeAmount: FeeAmount.MEDIUM, tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM] },
   hook: undefined,
   protocolVersion: ProtocolVersion.V4,
 }
 
-export type CreatePositionInfo = {
+export type OptionalCurrency = Currency | undefined
+type BaseCreatePositionInfo = {
   protocolVersion: ProtocolVersion
-  currencies: { [field in PositionField]?: Currency }
-  tokens?: Token[]
-  sortedTokens?: Token[]
-} & (
-  | {
-      protocolVersion: ProtocolVersion.V3 | ProtocolVersion.V4
-      pool?: Pool
-      tokens?: Token[]
-      sortedTokens?: Token[]
-    }
-  | {
-      protocolVersion: ProtocolVersion.V2
-      pair?: Pair
-    }
-  | {
-      protocolVersion: ProtocolVersion.UNSPECIFIED
-    }
-)
+  currencies: [OptionalCurrency, OptionalCurrency]
+  creatingPoolOrPair?: boolean
+  poolOrPairLoading?: boolean
+}
+
+export type CreateV4PositionInfo = BaseCreatePositionInfo & {
+  protocolVersion: ProtocolVersion.V4
+  pool?: V4Pool
+}
+
+export type CreateV3PositionInfo = BaseCreatePositionInfo & {
+  protocolVersion: ProtocolVersion.V3
+  pool?: V3Pool
+}
+
+export type CreateV2PositionInfo = BaseCreatePositionInfo & {
+  protocolVersion: ProtocolVersion.V2
+  pair?: Pair
+}
+
+export type CreatePositionInfo = CreateV4PositionInfo | CreateV3PositionInfo | CreateV2PositionInfo
 
 export type CreatePositionContextType = {
   step: PositionFlowStep
@@ -55,34 +65,62 @@ export type CreatePositionContextType = {
   derivedPositionInfo: CreatePositionInfo
   feeTierSearchModalOpen: boolean
   setFeeTierSearchModalOpen: Dispatch<SetStateAction<boolean>>
+  createPoolInfoDismissed: boolean
+  setCreatePoolInfoDismissed: Dispatch<SetStateAction<boolean>>
 }
 
 export interface PriceRangeState {
   priceInverted: boolean
   fullRange: boolean
-  minPrice: string
-  maxPrice: string
+  // When these are undefined, LiquidityChartRangeInput will calculate and set reasonable default values.
+  minPrice?: string
+  maxPrice?: string
+  initialPriceInverted: boolean
+  initialPrice: string
 }
 
-export interface PriceRangeInfo {
-  ticks?: (number | undefined)[]
-  ticksAtLimit: boolean[]
-  tickSpaceLimits: (number | undefined)[]
-  isSorted: boolean
-  price?: Price<Token, Token>
-  prices?: (Price<Token, Token> | undefined)[]
-  pricesAtLimit?: (Price<Token, Token> | undefined)[]
-  pricesAtTicks?: (Price<Token, Token> | undefined)[]
-  baseAndQuoteTokens?: Token[]
-  invertPrice?: boolean
-  invalidPrice?: boolean
-  invalidRange?: boolean
-  outOfRange?: boolean
-  deposit0Disabled?: boolean
-  deposit1Disabled?: boolean
-  invalidPool?: boolean
-  isTaxed?: boolean
+type BasePriceRangeInfo = {
+  protocolVersion: ProtocolVersion
+  deposit0Disabled: boolean
+  deposit1Disabled: boolean
+  price?: Price<Currency, Currency>
 }
+
+export type OptionalCurrencyPrice = Price<Currency, Currency> | undefined
+export type OptionalNumber = number | undefined
+type BasePoolPriceRangeInfo = {
+  ticks: [OptionalNumber, OptionalNumber]
+  ticksAtLimit: [boolean, boolean]
+  tickSpaceLimits: [OptionalNumber, OptionalNumber]
+  isSorted: boolean
+  invertPrice: boolean
+  invalidPrice: boolean
+  invalidRange: boolean
+  outOfRange: boolean
+  prices: [OptionalCurrencyPrice, OptionalCurrencyPrice]
+  pricesAtLimit: [OptionalCurrencyPrice, OptionalCurrencyPrice]
+  pricesAtTicks: [OptionalCurrencyPrice, OptionalCurrencyPrice]
+}
+
+export type V4PriceRangeInfo = BasePriceRangeInfo &
+  BasePoolPriceRangeInfo & {
+    protocolVersion: ProtocolVersion.V4
+    mockPool?: V4Pool
+  }
+
+export type V3PriceRangeInfo = BasePriceRangeInfo &
+  BasePoolPriceRangeInfo & {
+    protocolVersion: ProtocolVersion.V3
+    mockPool?: V3Pool
+    isTaxed?: boolean
+  }
+
+export type V2PriceRangeInfo = BasePriceRangeInfo & {
+  protocolVersion: ProtocolVersion.V2
+  mockPair?: Pair
+}
+
+export type PriceRangeInfo = V4PriceRangeInfo | V3PriceRangeInfo | V2PriceRangeInfo
 
 export type PriceRangeContextType = {
   priceRangeState: PriceRangeState

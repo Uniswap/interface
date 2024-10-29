@@ -1,14 +1,15 @@
 import { isSupportedChainId } from 'constants/chains'
-import { fiatOnRampToCurrency, gqlToCurrency } from 'graphql/data/util'
-import { COMMON_BASES, buildCurrencyInfo } from 'uniswap/src/constants/routing'
+import { PricePoint, fiatOnRampToCurrency, gqlToCurrency } from 'graphql/data/util'
+import { COMMON_BASES, buildPartialCurrencyInfo } from 'uniswap/src/constants/routing'
 import { USDC_OPTIMISM } from 'uniswap/src/constants/tokens'
 import {
   Token as GqlToken,
   ProtectionResult,
   SafetyLevel,
+  TopTokens100Query,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
-import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
+import { buildCurrencyInfo, getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isSameAddress } from 'utilities/src/addresses'
@@ -28,14 +29,14 @@ export function gqlTokenToCurrencyInfo(token?: GqlToken): CurrencyInfo | undefin
     return undefined
   }
 
-  const currencyInfo: CurrencyInfo = {
+  const currencyInfo: CurrencyInfo = buildCurrencyInfo({
     currency,
     currencyId: currencyId(currency),
     logoUrl: token.project?.logo?.url ?? token.project?.logoUrl,
     safetyLevel: token.project?.safetyLevel ?? SafetyLevel.StrongWarning,
     isSpam: token.project?.isSpam ?? false,
     safetyInfo: getCurrencySafetyInfo(token.project?.safetyLevel, token.protectionInfo),
-  }
+  })
   return currencyInfo
 }
 
@@ -63,14 +64,14 @@ export function meldSupportedCurrencyToCurrencyInfo(forCurrency: FORSupportedTok
 
   // Special case for *bridged* USDC on Optimism, which we otherwise don't use in our app.
   if (isSameAddress(forCurrency.address, '0x7f5c764cbc14f9669b88837ca1490cca17c31607')) {
-    return buildCurrencyInfo(USDC_OPTIMISM)
+    return buildPartialCurrencyInfo(USDC_OPTIMISM)
   }
 
   const currency = fiatOnRampToCurrency(forCurrency)
   if (!currency) {
     return undefined
   }
-  return {
+  return buildCurrencyInfo({
     currency,
     currencyId: currencyId(currency),
     logoUrl: forCurrency.symbol,
@@ -80,5 +81,8 @@ export function meldSupportedCurrencyToCurrencyInfo(forCurrency: FORSupportedTok
       protectionResult: ProtectionResult.Benign,
     },
     isSpam: false,
-  }
+  })
 }
+
+export type SparklineMap = { [key: string]: PricePoint[] | undefined }
+export type TopToken = NonNullable<NonNullable<TopTokens100Query>['topTokens']>[number]

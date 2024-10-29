@@ -1,6 +1,8 @@
 import { TransactionRequest, TransactionResponse } from '@ethersproject/providers'
+import { formatEther } from '@ethersproject/units'
 import { BigNumber, providers } from 'ethers/lib/ethers'
 import merge from 'lodash/merge'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   ClassicTransactionDetails,
@@ -76,6 +78,12 @@ export const getTxFixtures = <T extends ClassicTransactionDetails>(transaction?:
     ...txDetailsPending,
     status: TransactionStatus.Success,
     receipt: txReceipt,
+    networkFee: {
+      quantity: formatEther(ethersTxReceipt.effectiveGasPrice.mul(ethersTxReceipt.gasUsed)),
+      tokenSymbol: NativeCurrency.onChain(txDetailsPending.chainId).symbol,
+      tokenAddress: NativeCurrency.onChain(txDetailsPending.chainId).address,
+      chainId: txDetailsPending.chainId,
+    },
   })
   const txDetailsFailed = finalizedTransactionDetails({
     ...txDetailsPending,

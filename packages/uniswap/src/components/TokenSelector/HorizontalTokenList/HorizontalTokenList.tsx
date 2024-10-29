@@ -7,6 +7,8 @@ export type HorizontalTokenListProps = {
   onSelectCurrency: OnSelectCurrency
   index: number
   section: TokenSection
+  expanded?: boolean
+  onExpand?: () => void
 }
 
 export const HorizontalTokenList = memo(function HorizontalTokenList(_props: HorizontalTokenListProps): JSX.Element {

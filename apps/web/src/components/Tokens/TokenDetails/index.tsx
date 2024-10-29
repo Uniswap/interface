@@ -2,7 +2,7 @@ import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import { MobileBottomBar, TDPActionTabs } from 'components/NavBar/MobileBottomBar'
-import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
+import TokenSafetyMessage from 'components/TokenSafety/DeprecatedTokenSafetyMessage'
 import { ActivitySection } from 'components/Tokens/TokenDetails/ActivitySection'
 import BalanceSummary, { PageChainBalanceSummary } from 'components/Tokens/TokenDetails/BalanceSummary'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
@@ -21,13 +21,19 @@ import { ScrollDirection, useScroll } from 'hooks/useScroll'
 import deprecatedStyled from 'lib/styled-components'
 import { Swap } from 'pages/Swap'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
-import { PropsWithChildren, useCallback, useMemo } from 'react'
+import { PropsWithChildren, useCallback, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { CurrencyState } from 'state/swap/types'
 import { Flex, useIsTouchDevice } from 'ui/src'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
+import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { Trans } from 'uniswap/src/i18n'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { getInitialLogoUrl } from 'utils/getInitialLogoURL'
 
@@ -80,7 +86,10 @@ function useSwapInitialInputCurrency() {
 
 function TDPSwapComponent() {
   const { address, currency, currencyChainId, warning } = useTDPContext()
+  const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
   const navigate = useNavigate()
+
+  const currencyInfo = useCurrencyInfo(currencyId(currency))
 
   const handleCurrencyChange = useCallback(
     (tokens: CurrencyState) => {
@@ -124,6 +133,9 @@ function TDPSwapComponent() {
   // Other token to prefill the swap form with
   const initialInputCurrency = useSwapInitialInputCurrency()
 
+  const [showWarningModal, setShowWarningModal] = useState(false)
+  const closeWarningModal = useCallback(() => setShowWarningModal(false), [])
+
   return (
     <>
       <Swap
@@ -134,7 +146,23 @@ function TDPSwapComponent() {
         onCurrencyChange={handleCurrencyChange}
         compact
       />
-      {warning && <TokenSafetyMessage tokenAddress={address} warning={warning} />}
+      {tokenProtectionEnabled ? (
+        <>
+          <TokenWarningCard currencyInfo={currencyInfo} onPress={() => setShowWarningModal(true)} />
+          {currencyInfo && (
+            // Intentionally duplicative with the TokenWarningModal in the swap component; this one only displays when user clicks "i" Info button on the TokenWarningCard
+            <TokenWarningModal
+              currencyInfo0={currencyInfo}
+              isInfoOnlyWarning
+              isVisible={showWarningModal}
+              closeModalOnly={closeWarningModal}
+              onAcknowledge={closeWarningModal}
+            />
+          )}
+        </>
+      ) : (
+        warning && <TokenSafetyMessage tokenAddress={address} warning={warning} />
+      )}
     </>
   )
 }

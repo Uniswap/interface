@@ -6,7 +6,8 @@ import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { LockPreviewImage } from 'src/features/onboarding/LockPreviewImage'
 import { Button, Flex, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { setBackupReminderLastSeenTs } from 'wallet/src/features/behaviorHistory/slice'
@@ -58,19 +59,23 @@ export function BackupReminderModal(): JSX.Element {
           </Text>
         </Flex>
         <Flex row gap="$spacing8">
-          <Button
-            alignSelf="center"
-            color="$neutral2"
-            flex={1}
-            size="medium"
-            theme="secondary"
-            onPress={onPressMaybeLater}
-          >
-            {t('common.button.later')}
-          </Button>
-          <Button alignSelf="center" flex={1} size="medium" theme="primary" onPress={onPressBackup}>
-            {t('common.button.continue')}
-          </Button>
+          <Trace logPress element={ElementName.MaybeLaterButton} modal={ModalName.BackupReminder}>
+            <Button
+              alignSelf="center"
+              color="$neutral2"
+              flex={1}
+              size="medium"
+              theme="secondary"
+              onPress={onPressMaybeLater}
+            >
+              {t('common.button.later')}
+            </Button>
+          </Trace>
+          <Trace logPress element={ElementName.Continue} modal={ModalName.BackupReminder}>
+            <Button alignSelf="center" flex={1} size="medium" theme="primary" onPress={onPressBackup}>
+              {t('common.button.continue')}
+            </Button>
+          </Trace>
         </Flex>
       </Flex>
     </Modal>

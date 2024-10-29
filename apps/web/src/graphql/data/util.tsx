@@ -1,5 +1,5 @@
-import { OperationVariables, QueryResult } from '@apollo/client'
 import { DeepPartial } from '@apollo/client/utilities'
+import { BigNumber } from '@ethersproject/bignumber'
 import { DataTag, DefaultError, QueryKey, UndefinedInitialDataOptions, queryOptions } from '@tanstack/react-query'
 import { Currency, Token } from '@uniswap/sdk-core'
 import {
@@ -16,7 +16,6 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { DefaultTheme } from 'lib/styled-components'
 import ms from 'ms'
 import { ExploreTab } from 'pages/Explore'
-import { useEffect } from 'react'
 import { TokenStat } from 'state/explore/types'
 import { ThemeColors } from 'theme/colors'
 import { GQL_MAINNET_CHAINS, UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
@@ -38,21 +37,6 @@ export enum PollingInterval {
   Normal = ms(`1m`),
   Fast = AVERAGE_L1_BLOCK_TIME,
   LightningMcQueen = ms(`3s`), // approx block interval for polygon
-}
-
-// Polls a query only when the current component is mounted, as useQuery's pollInterval prop will continue to poll after unmount
-export function usePollQueryWhileMounted<T, K extends OperationVariables>(
-  queryResult: QueryResult<T, K>,
-  interval: PollingInterval,
-) {
-  const { startPolling, stopPolling } = queryResult
-
-  useEffect(() => {
-    startPolling(interval)
-    return stopPolling
-  }, [interval, startPolling, stopPolling])
-
-  return queryResult
 }
 
 export enum TimePeriod {
@@ -81,10 +65,6 @@ export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
 
 export type PricePoint = { timestamp: number; value: number }
 
-export function isPricePoint(p: PricePoint | undefined): p is PricePoint {
-  return p !== undefined
-}
-
 export function isGqlSupportedChain(chainId?: UniverseChainId) {
   return !!chainId && GQL_MAINNET_CHAINS.includes(UNIVERSE_CHAIN_INFO[chainId].backendChain.chain)
 }
@@ -111,6 +91,9 @@ export function gqlToCurrency(token: DeepPartial<GqlToken | TokenStat>): Currenc
       token.decimals ?? 18,
       token.symbol ?? undefined,
       token.name ?? token.project?.name ?? undefined,
+      undefined,
+      token.feeData?.buyFeeBps ? BigNumber.from(token.feeData.buyFeeBps) : undefined,
+      token.feeData?.sellFeeBps ? BigNumber.from(token.feeData.sellFeeBps) : undefined,
     )
   }
 }

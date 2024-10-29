@@ -15,7 +15,7 @@ export function getSymbolDisplayText(symbol: Maybe<string>): Maybe<string> {
   }
 
   return symbol.length > DEFAULT_MAX_SYMBOL_CHARACTERS
-    ? symbol?.substring(0, DEFAULT_MAX_SYMBOL_CHARACTERS - 3) + '...'
+    ? symbol?.substring(0, DEFAULT_MAX_SYMBOL_CHARACTERS - 1) + '…'
     : symbol
 }
 

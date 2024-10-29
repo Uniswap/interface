@@ -26,6 +26,7 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import {
+  DecimalPadCalculatedSpaceId,
   DecimalPadCalculateSpace,
   DecimalPadInput,
   DecimalPadInputRef,
@@ -66,7 +67,7 @@ import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { NumberType } from 'utilities/src/format/types'
-import { isExtension, isInterface } from 'utilities/src/platform'
+import { isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const SWAP_DIRECTION_BUTTON_SIZE = {
@@ -133,6 +134,7 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
     exactAmountTokenRef,
     exactCurrencyField,
     focusOnCurrencyField,
+    selectingCurrencyField,
     input,
     isFiatMode,
     output,
@@ -528,7 +530,8 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
     [focusOnCurrencyField],
   )
 
-  const showFooter = !hideFooter && exactAmountToken && input && output
+  // We *always* want to show the footer on native mobile because it's used to calculate the available space for the `DecimalPad`.
+  const showFooter = Boolean(!hideFooter && (isMobileApp || (exactAmountToken && input && output)))
 
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
@@ -551,7 +554,8 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
               currencyBalance={currencyBalances[CurrencyField.INPUT]}
               currencyField={CurrencyField.INPUT}
               currencyInfo={currencies[CurrencyField.INPUT]}
-              focus={focusOnCurrencyField === CurrencyField.INPUT}
+              // We do not want to force-focus the input when the token selector is open.
+              focus={selectingCurrencyField ? undefined : focusOnCurrencyField === CurrencyField.INPUT}
               isFiatMode={isFiatMode && exactFieldIsInput}
               isIndicativeLoading={trade.isIndicativeLoading}
               isLoading={!exactFieldIsInput && isSwapDataLoading}
@@ -589,7 +593,8 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
               currencyField={CurrencyField.OUTPUT}
               currencyInfo={currencies[CurrencyField.OUTPUT]}
               disabled={exactOutputDisabled}
-              focus={focusOnCurrencyField === CurrencyField.OUTPUT}
+              // We do not want to force-focus the input when the token selector is open.
+              focus={selectingCurrencyField ? undefined : focusOnCurrencyField === CurrencyField.OUTPUT}
               isFiatMode={isFiatMode && exactFieldIsOutput}
               isLoading={!exactFieldIsOutput && isSwapDataLoading}
               resetSelection={resetSelection}
@@ -630,6 +635,7 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
             )}
           </Flex>
         </Trace>
+
         <Accordion collapsible type="single" overflow="hidden">
           <Accordion.Item value="a1" className="gas-container">
             {/* <Accordion.HeightAnimator> attaches an absolutely positioned element that cannot be targeted without the below style */}
@@ -646,6 +652,11 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
                   <SwapFormButton wrapCallback={wrapCallback} />
                 </Flex>
               )}
+              {/*
+              IMPORTANT: If you modify the footer layout, you must test this on a small device and verify that the `DecimalPad` is able to
+                         properly calculate the correct height and it does not change its height when the gas and warning rows are shown/hidden,
+                         or when moving from the review screen back to the form screen.
+              */}
               {showFooter && (
                 <Flex minHeight="$spacing40" pt={isShortMobileDevice ? '$spacing8' : '$spacing12'}>
                   <AnimatePresence>
@@ -662,9 +673,11 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
           </Accordion.Item>
         </Accordion>
       </Flex>
+
       {!isWeb && (
         <>
-          <DecimalPadCalculateSpace decimalPadRef={decimalPadRef} isShortMobileDevice={isShortMobileDevice} />
+          <DecimalPadCalculateSpace id={DecimalPadCalculatedSpaceId.Swap} decimalPadRef={decimalPadRef} />
+
           <Flex
             $short={{ gap: '$none' }}
             animation="quick"

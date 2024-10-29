@@ -4,7 +4,13 @@ import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SearchResultsLoader } from 'src/components/explore/search/SearchResultsLoader'
 import { SectionHeaderText } from 'src/components/explore/search/SearchSectionHeader'
-import { SEARCH_RESULT_HEADER_KEY } from 'src/components/explore/search/constants'
+import {
+  EtherscanHeaderItem,
+  NFTHeaderItem,
+  SEARCH_RESULT_HEADER_KEY,
+  TokenHeaderItem,
+  WalletHeaderItem,
+} from 'src/components/explore/search/constants'
 import { useWalletSearchResults } from 'src/components/explore/search/hooks'
 import { SearchENSAddressItem } from 'src/components/explore/search/items/SearchENSAddressItem'
 import { SearchEtherscanItem } from 'src/components/explore/search/items/SearchEtherscanItem'
@@ -14,16 +20,13 @@ import { SearchUnitagItem } from 'src/components/explore/search/items/SearchUnit
 import { SearchWalletByAddressItem } from 'src/components/explore/search/items/SearchWalletByAddressItem'
 import { SearchResultOrHeader } from 'src/components/explore/search/types'
 import {
-  filterSearchResultsByChainId,
   formatNFTCollectionSearchResults,
   formatTokenSearchResults,
   getSearchResultId,
 } from 'src/components/explore/search/utils'
 import { Flex, Text } from 'ui/src'
-import { Coin, Gallery, Person } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { useExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import {
@@ -32,35 +35,9 @@ import {
   TokenSearchResult,
 } from 'uniswap/src/features/search/SearchResult'
 import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
-import i18n from 'uniswap/src/i18n/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
-
-const ICON_SIZE = '$icon.24'
-const ICON_COLOR = '$neutral2'
-
-const WalletHeaderItem: SearchResultOrHeader = {
-  icon: <Person color={ICON_COLOR} size={ICON_SIZE} />,
-  type: SEARCH_RESULT_HEADER_KEY,
-  title: i18n.t('explore.search.section.wallets'),
-}
-const TokenHeaderItem: SearchResultOrHeader = {
-  icon: <Coin color={ICON_COLOR} size={ICON_SIZE} />,
-  type: SEARCH_RESULT_HEADER_KEY,
-  title: i18n.t('explore.search.section.tokens'),
-}
-const NFTHeaderItem: SearchResultOrHeader = {
-  icon: <Gallery color={ICON_COLOR} size={ICON_SIZE} />,
-  type: SEARCH_RESULT_HEADER_KEY,
-  title: i18n.t('explore.search.section.nft'),
-}
-const EtherscanHeaderItem: (chainId: UniverseChainId) => SearchResultOrHeader = (chainId: UniverseChainId) => ({
-  type: SEARCH_RESULT_HEADER_KEY,
-  title: i18n.t('explore.search.action.viewEtherscan', {
-    blockExplorerName: UNIVERSE_CHAIN_INFO[chainId].explorer.name,
-  }),
-})
 
 const IGNORED_ERRORS = ['Subgraph provider undefined not supported']
 
@@ -93,13 +70,7 @@ export function SearchResultsSection({
       return undefined
     }
 
-    const formattedTokenSearchResults = formatTokenSearchResults(searchResultsData.searchTokens, searchQuery)
-
-    if (!selectedChain) {
-      return formattedTokenSearchResults
-    }
-
-    return filterSearchResultsByChainId(formattedTokenSearchResults, selectedChain)
+    return formatTokenSearchResults(searchResultsData.searchTokens, searchQuery, selectedChain)
   }, [selectedChain, searchQuery, searchResultsData])
 
   // Search for matching NFT collections
@@ -109,13 +80,7 @@ export function SearchResultsSection({
       return undefined
     }
 
-    const formattedNftCollectionSearchResults = formatNFTCollectionSearchResults(searchResultsData.nftCollections)
-
-    if (!selectedChain) {
-      return formattedNftCollectionSearchResults
-    }
-
-    return filterSearchResultsByChainId(formattedNftCollectionSearchResults, selectedChain)
+    return formatNFTCollectionSearchResults(searchResultsData.nftCollections, selectedChain)
   }, [searchResultsData, selectedChain])
 
   // Search for matching wallets
@@ -187,7 +152,7 @@ export function SearchResultsSection({
 
   // Don't wait for wallet search results if there are already token search results, do wait for token results
   if (searchResultsLoading) {
-    return <SearchResultsLoader />
+    return <SearchResultsLoader selectedChain={selectedChain} />
   }
 
   if (error) {
@@ -209,7 +174,7 @@ export function SearchResultsSection({
     <Flex grow gap="$spacing8" pb="$spacing36">
       <FlatList
         ListEmptyComponent={
-          <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing8" mx="$spacing8">
+          <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing8" mx="$spacing20">
             <Text color="$neutral2" variant="body1">
               <Trans
                 components={{ highlight: <Text color="$neutral1" variant="body1" /> }}
