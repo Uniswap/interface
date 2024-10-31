@@ -22,7 +22,6 @@ import {
   currencyIdToGraphQLAddress,
   isNativeCurrencyAddress,
 } from 'uniswap/src/utils/currencyId'
-import { sortKeysRecursively } from 'utilities/src/primitives/objects'
 
 type BuildCurrencyParams = {
   chainId?: Nullable<UniverseChainId>
@@ -52,7 +51,7 @@ export function tokenProjectToCurrencyInfos(
     ?.flatMap((project) =>
       project?.tokens.map((token) => {
         const { logoUrl, safetyLevel } = project ?? {}
-        const { name, chain, address, decimals, symbol, feeData, protectionInfo } = token ?? {}
+        const { name, chain, address, decimals, symbol } = token ?? {}
         const chainId = fromGraphQLChain(chain)
 
         if (chainFilter && chainFilter !== chainId) {
@@ -65,8 +64,6 @@ export function tokenProjectToCurrencyInfos(
           decimals,
           symbol,
           name,
-          buyFeeBps: feeData?.buyFeeBps,
-          sellFeeBps: feeData?.sellFeeBps,
         })
 
         if (!currency) {
@@ -78,7 +75,10 @@ export function tokenProjectToCurrencyInfos(
           currencyId: currencyId(currency),
           logoUrl,
           safetyLevel,
-          safetyInfo: getCurrencySafetyInfo(safetyLevel, protectionInfo),
+          safetyInfo: {
+            tokenList: getTokenListFromSafetyLevel(project?.safetyLevel),
+            protectionResult: ProtectionResult.Unknown,
+          },
         })
 
         return currencyInfo
@@ -113,13 +113,11 @@ export function buildCurrency(args: BuildCurrencyParams): Token | NativeCurrency
     return undefined
   }
 
-  const cacheKey = JSON.stringify(sortKeysRecursively(args))
+  const cacheKey = JSON.stringify(args, Object.keys(args).sort())
 
-  const cachedCurrency = CURRENCY_CACHE.get(cacheKey)
-
-  if (cachedCurrency) {
+  if (CURRENCY_CACHE.has(cacheKey)) {
     // This allows us to better memoize components that use a `Currency` as a dependency.
-    return cachedCurrency
+    return CURRENCY_CACHE.get(cacheKey)
   }
 
   const buyFee = buyFeeBps && BigNumber.from(buyFeeBps).gt(0) ? BigNumber.from(buyFeeBps) : undefined
@@ -136,7 +134,13 @@ export function buildCurrency(args: BuildCurrencyParams): Token | NativeCurrency
 const CURRENCY_INFO_CACHE = new Map<string, CurrencyInfo>()
 
 export function buildCurrencyInfo(args: CurrencyInfo): CurrencyInfo {
-  const cacheKey = JSON.stringify(sortKeysRecursively(args))
+  const sortedArgs = Object.fromEntries(
+    Object.keys(args)
+      .sort()
+      .map((key) => [key, args[key as keyof CurrencyInfo]]),
+  ) as CurrencyInfo
+
+  const cacheKey = JSON.stringify(sortedArgs)
 
   const cachedCurrencyInfo = CURRENCY_INFO_CACHE.get(cacheKey)
 
@@ -170,8 +174,6 @@ function getHighestPriorityAttackType(attackTypes?: (ProtectionAttackType | unde
     return AttackType.Impersonator
   } else if (attackTypeSet.has(ProtectionAttackType.AirdropPattern)) {
     return AttackType.Airdrop
-  } else if (attackTypeSet.has(ProtectionAttackType.HighFees)) {
-    return AttackType.HighFees
   } else {
     return AttackType.Other
   }

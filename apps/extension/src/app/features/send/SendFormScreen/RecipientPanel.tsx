@@ -35,7 +35,7 @@ export function RecipientPanel({ chainId }: RecipientPanelProps): JSX.Element {
     onSetShowRecipientSelector(!showRecipientSelector)
   }, [onSetShowRecipientSelector, showRecipientSelector])
 
-  const { sections } = useFilteredRecipientSections(pattern)
+  const sections = useFilteredRecipientSections(pattern)
 
   const onSelectRecipient = useCallback((newRecipient: string) => {
     setSelectedRecipient(newRecipient)

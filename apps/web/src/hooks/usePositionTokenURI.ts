@@ -1,14 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
-// eslint-disable-next-line no-restricted-imports
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { useV3NFTPositionManagerContract, useV4NFTPositionManagerContract } from 'hooks/useContract'
+import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useEthersProvider } from 'hooks/useEthersProvider'
 import JSBI from 'jsbi'
 import { NEVER_RELOAD } from 'lib/hooks/multicall'
 import multicall from 'lib/state/multicall'
 import { useMemo } from 'react'
-import { Erc721 } from 'uniswap/src/abis/types/Erc721'
-import { NonfungiblePositionManager } from 'uniswap/src/abis/types/v3/NonfungiblePositionManager'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 type TokenId = number | JSBI | BigNumber
@@ -34,21 +30,11 @@ type UsePositionTokenURIResult =
       loading: true
     }
 
-function useNFTPositionManagerContract(
-  version: ProtocolVersion,
-  chainId?: UniverseChainId,
-): NonfungiblePositionManager | Erc721 | null {
-  const v3Contract = useV3NFTPositionManagerContract(false, chainId)
-  const v4Contract = useV4NFTPositionManagerContract(false, chainId)
-  return version === ProtocolVersion.V3 ? v3Contract : v4Contract
-}
-
 export function usePositionTokenURI(
   tokenId: TokenId | undefined,
   chainId?: UniverseChainId,
-  version?: ProtocolVersion,
 ): UsePositionTokenURIResult {
-  const contract = useNFTPositionManagerContract(version ?? ProtocolVersion.V3, chainId)
+  const contract = useV3NFTPositionManagerContract(false, chainId)
   const inputs = useMemo(
     () => [tokenId instanceof BigNumber ? tokenId.toHexString() : tokenId?.toString(16)],
     [tokenId],

@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { Flex, useIsShortMobileDevice } from 'ui/src'
+import { Flex } from 'ui/src'
 import { TextInputProps } from 'uniswap/src/components/input/TextInput'
 import { DecimalPad } from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPad'
 // eslint-disable-next-line no-restricted-imports -- type import is safe
@@ -39,14 +39,6 @@ export type DecimalPadInputRef = {
   setMaxHeight(height: number): void
 }
 
-export enum DecimalPadCalculatedSpaceId {
-  Swap,
-  Send,
-  FiatOnRamp,
-}
-
-const precalculatedSpace: Partial<Record<DecimalPadCalculatedSpaceId, number | undefined>> = {}
-
 /*
 This component is used to calculate the space that the `DecimalPad` can use.
 We position the `DecimalPad` with `position: absolute` at the bottom of the screen instead of
@@ -54,34 +46,18 @@ putting it inside this container in order to avoid any overflows while the `Deci
 is automatically resizing to find the right size for the screen.
 */
 export function DecimalPadCalculateSpace({
-  id,
+  isShortMobileDevice,
   decimalPadRef,
 }: {
-  id: DecimalPadCalculatedSpaceId
+  isShortMobileDevice: boolean
   decimalPadRef: RefObject<DecimalPadInputRef>
 }): JSX.Element {
-  const isShortMobileDevice = useIsShortMobileDevice()
-
   const onBottomScreenLayout = useCallback(
     (event: LayoutChangeEvent): void => {
-      const height = event.nativeEvent.layout.height
-      decimalPadRef.current?.setMaxHeight(height)
-      precalculatedSpace[id] = height
+      decimalPadRef.current?.setMaxHeight(event.nativeEvent.layout.height)
     },
-    [decimalPadRef, id],
+    [decimalPadRef],
   )
-
-  useEffect(() => {
-    const precalculatedHeight = precalculatedSpace[id]
-
-    if (precalculatedHeight) {
-      // If we have already rendered this screen, we already know how much space this phone has,
-      // so we optimistically set the height instead of waiting for the layout event.
-      // This improves the perceived loading time of the `DecimalPad`,
-      // given that it fades in only after the height is known.
-      decimalPadRef.current?.setMaxHeight(precalculatedHeight)
-    }
-  }, [decimalPadRef, id])
 
   return <Flex fill mt={isShortMobileDevice ? '$spacing2' : '$spacing8'} onLayout={onBottomScreenLayout} />
 }
@@ -107,7 +83,7 @@ export const DecimalPadInput = memo(
     useEffect(() => {
       updateDisabledKeys(valueRef.current)
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [valueRef, selectionRef, maxDecimals])
+    }, [valueRef, selectionRef])
 
     useImperativeHandle(ref, () => ({
       updateDisabledKeys(): void {

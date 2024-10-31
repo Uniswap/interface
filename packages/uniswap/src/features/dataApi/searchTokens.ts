@@ -19,7 +19,7 @@ export function useSearchTokens(
       searchQuery: searchQuery ?? '',
       chains: gqlChainFilter ? [gqlChainFilter] : gqlChains,
     },
-    skip: skip || !searchQuery,
+    skip,
   })
 
   const persistedError = usePersistedError(loading, error)

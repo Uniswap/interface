@@ -317,8 +317,8 @@ function createMockV3Pool({
   const wrappedPrice = new Price(
     price.baseCurrency.wrapped,
     price.quoteCurrency.wrapped,
-    price.denominator,
-    price.numerator,
+    price.numerator.toString(),
+    price.denominator.toString(),
   )
 
   const invertedPrice = wrappedPrice.baseCurrency.sortsBefore(wrappedPrice.quoteCurrency)
@@ -377,8 +377,8 @@ function createMockPair({
 
   if (baseToken && quoteToken && price) {
     return new Pair(
-      CurrencyAmount.fromRawAmount(baseToken, price.numerator),
-      CurrencyAmount.fromRawAmount(quoteToken, price.denominator),
+      CurrencyAmount.fromRawAmount(baseToken, price.denominator),
+      CurrencyAmount.fromRawAmount(quoteToken, price.numerator),
     )
   } else {
     return undefined
@@ -533,14 +533,13 @@ export function getV3PriceRangeInfo({
     getCurrencyWithWrap(baseCurrency, protocolVersion),
     getCurrencyWithWrap(quoteCurrency, protocolVersion),
   ]
-  const initialPriceTokens = getInvertedTuple(
-    [getCurrencyWithWrap(currencies[0], protocolVersion), getCurrencyWithWrap(currencies[1], protocolVersion)],
-    state.initialPriceInverted,
-  )
+  const baseInitialPriceCurrency = state.initialPriceInverted
+    ? getCurrencyWithWrap(currencies[0], protocolVersion)
+    : getCurrencyWithWrap(currencies[1], protocolVersion)
 
   const price = derivedPositionInfo.creatingPoolOrPair
     ? getInitialPrice({
-        baseCurrency: initialPriceTokens[0],
+        baseCurrency: baseInitialPriceCurrency,
         sortedCurrencies: sortedTokens,
         initialPrice: state.initialPrice,
       })

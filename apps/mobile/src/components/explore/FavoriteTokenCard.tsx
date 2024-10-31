@@ -1,7 +1,7 @@
 import React, { memo, useCallback } from 'react'
 import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { SharedValue } from 'react-native-reanimated'
+import { FadeIn, SharedValue } from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
@@ -125,6 +125,7 @@ function FavoriteTokenCard({
           borderColor={opacify(0.05, colors.surface3.val)}
           borderRadius="$rounded16"
           borderWidth={isDarkMode ? '$none' : '$spacing1'}
+          entering={FadeIn}
           hapticFeedback={!isEditing}
           hapticStyle={ImpactFeedbackStyle.Light}
           m="$spacing4"

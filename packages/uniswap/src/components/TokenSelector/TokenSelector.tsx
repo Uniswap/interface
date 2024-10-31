@@ -146,7 +146,6 @@ export function TokenSelectorContent({
         position: searchContext.position,
         suggestion_count: searchContext.suggestionCount,
         query: searchContext.query,
-        tokenSection: section.sectionKey,
       })
 
       const isBridgePair = section.sectionKey === TokenOptionSection.BridgingTokens

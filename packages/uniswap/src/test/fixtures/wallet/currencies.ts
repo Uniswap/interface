@@ -21,11 +21,6 @@ type CurrencyInfoOptions = {
   nativeCurrency: NativeCurrency
 }
 
-export const benignSafetyInfo = {
-  tokenList: TokenList.Default,
-  protectionResult: ProtectionResult.Benign,
-}
-
 export const currencyInfo = createFixture<CurrencyInfo, CurrencyInfoOptions>({
   nativeCurrency: MAINNET_CURRENCY,
 })(({ nativeCurrency }) => ({
@@ -33,7 +28,6 @@ export const currencyInfo = createFixture<CurrencyInfo, CurrencyInfoOptions>({
   currency: nativeCurrency,
   logoUrl: faker.image.imageUrl(),
   safetyLevel: SafetyLevel.Verified,
-  safetyInfo: benignSafetyInfo,
 }))
 
 export const ethCurrencyInfo = createFixture<CurrencyInfo>()(() =>
@@ -79,6 +73,11 @@ export const UNI_CURRENCY_INFO = uniCurrencyInfo()
 export const DAI_CURRENCY_INFO = daiCurrencyInfo()
 export const ARBITRUM_DAI_CURRENCY_INFO = arbitrumDaiCurrencyInfo()
 export const USDC_CURRENCY_INFO = usdcCurrencyInfo()
+
+export const benignSafetyInfo = {
+  tokenList: TokenList.Default,
+  protectionResult: ProtectionResult.Benign,
+}
 
 export const removeSafetyInfo = (item: Maybe<CurrencyInfo>): Maybe<CurrencyInfo> => {
   if (!item) {

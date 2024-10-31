@@ -18,10 +18,10 @@ import {
   useSetSortMethod,
 } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { chainIdToBackendChain, getChainFromChainUrlParam } from 'constants/chains'
+import { chainIdToBackendChain, getChainFromChainUrlParam, useChainFromUrlParam } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { SparklineMap, TopToken } from 'graphql/data/types'
-import { OrderDirection, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
+import { SparklineMap, TopToken, useTopTokens } from 'graphql/data/TopTokens'
+import { OrderDirection, getSupportedGraphQlChain, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
 import useSimplePagination from 'hooks/useSimplePagination'
 import { useAtomValue } from 'jotai/utils'
 import { ReactElement, ReactNode, memo, useMemo } from 'react'
@@ -29,6 +29,8 @@ import { TABLE_PAGE_SIZE, giveExploreStatDefaultValue } from 'state/explore'
 import { useTopTokens as useRestTopTokens } from 'state/explore/topTokens'
 import { TokenStat } from 'state/explore/types'
 import { Flex, Text, styled } from 'ui/src'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -87,19 +89,65 @@ function TokenDescription({ token }: { token: TopToken | TokenStat }) {
 }
 
 export const TopTokensTable = memo(function TopTokensTable() {
-  const { topTokens, tokenSortRank, isLoading, sparklines, isError } = useRestTopTokens()
+  const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
+  const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
+  const {
+    tokens: gqlTokens,
+    tokenSortRank: gqlTokenSortRank,
+    loadingTokens: gqlLoadingTokens,
+    sparklines: gqlSparklines,
+    error: gqlError,
+  } = useTopTokens(chain.backendChain.chain, isRestExploreEnabled /* skip */)
+  const {
+    topTokens: restTopTokens,
+    tokenSortRank: restTokenSortRank,
+    isLoading: restIsLoading,
+    sparklines: restSparklines,
+    isError: restError,
+  } = useRestTopTokens()
 
   const { page, loadMore } = useSimplePagination()
+
+  const { tokens, tokenSortRank, sparklines, loading, error } = useMemo(() => {
+    return isRestExploreEnabled
+      ? {
+          tokens: restTopTokens?.slice(0, page * TABLE_PAGE_SIZE),
+          tokenSortRank: restTokenSortRank,
+          loading: restIsLoading,
+          sparklines: restSparklines,
+          error: restError,
+        }
+      : {
+          tokens: gqlTokens,
+          tokenSortRank: gqlTokenSortRank,
+          loading: gqlLoadingTokens,
+          sparklines: gqlSparklines,
+          error: gqlError,
+        }
+  }, [
+    isRestExploreEnabled,
+    restTopTokens,
+    page,
+    restTokenSortRank,
+    restIsLoading,
+    restSparklines,
+    restError,
+    gqlTokens,
+    gqlTokenSortRank,
+    gqlLoadingTokens,
+    gqlSparklines,
+    gqlError,
+  ])
 
   return (
     <TableWrapper data-testid="top-tokens-explore-table">
       <TokenTable
-        tokens={topTokens?.slice(0, page * TABLE_PAGE_SIZE)}
+        tokens={tokens}
         tokenSortRank={tokenSortRank}
         sparklines={sparklines}
-        loading={isLoading}
+        loading={loading}
         loadMore={loadMore}
-        error={isError}
+        error={error}
       />
     </TableWrapper>
   )

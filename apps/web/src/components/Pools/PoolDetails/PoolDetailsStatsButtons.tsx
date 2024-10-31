@@ -6,7 +6,7 @@ import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { SwapWrapperOuter } from 'components/swap/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
-import TokenSafetyMessage from 'components/TokenSafety/DeprecatedTokenSafetyMessage'
+import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import { chainIdToBackendChain } from 'constants/chains'
 import { getPriorityWarning, StrongWarning, useTokenWarning } from 'constants/deprecatedTokenSafety'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
@@ -16,7 +16,7 @@ import { useAccount } from 'hooks/useAccount'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import styled from 'lib/styled-components'
 import { Swap } from 'pages/Swap'
-import { useCallback, useMemo, useReducer, useState } from 'react'
+import { useMemo, useReducer } from 'react'
 import { Plus, X } from 'react-feather'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { BREAKPOINTS } from 'theme'
@@ -25,15 +25,9 @@ import { opacify } from 'theme/utils'
 import { Z_INDEX } from 'theme/zIndex'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
-import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
-import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { Trans } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { currencyId } from 'uniswap/src/utils/currencyId'
+import { currencyId } from 'utils/currencyId'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const PoolDetailsStatsButtonsRow = styled(Row)`
@@ -164,8 +158,6 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
   const location = useLocation()
   const currency0 = token0 && gqlToCurrency(token0)
   const currency1 = token1 && gqlToCurrency(token1)
-  const currencyInfo0 = useCurrencyInfo(currency0 && currencyId(currency0))
-  const currencyInfo1 = useCurrencyInfo(currency1 && currencyId(currency1))
 
   // Mobile Balance Data
   const { data: balanceQuery } = useTokenBalancesQuery()
@@ -202,9 +194,7 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
       if (account.chainId !== chainId && chainId) {
         await switchChain(chainId)
       }
-      const currency0Address = currency0.isNative ? 'ETH' : currency0.address
-      const currency1Address = currency1.isNative ? 'ETH' : currency1.address
-      navigate(`/add/${currency0Address}/${currency1Address}/${feeTier}${tokenId ? `/${tokenId}` : ''}`, {
+      navigate(`/add/${currencyId(currency0)}/${currencyId(currency1)}/${feeTier}${tokenId ? `/${tokenId}` : ''}`, {
         state: { from: location.pathname },
       })
     }
@@ -216,15 +206,6 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
   const token0Warning = useTokenWarning(token0?.address, chainId)
   const token1Warning = useTokenWarning(token1?.address, chainId)
   const priorityWarning = getPriorityWarning(token0Warning, token1Warning)
-
-  const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
-  const [showWarningModal, setShowWarningModal] = useState(false)
-  const closeWarningModal = useCallback(() => setShowWarningModal(false), [])
-  const [warningModalCurrencyInfo, setWarningModalCurrencyInfo] = useState<Maybe<CurrencyInfo>>()
-  const onWarningCardCtaPressed = useCallback((currencyInfo: Maybe<CurrencyInfo>) => {
-    setWarningModalCurrencyInfo(currencyInfo)
-    setShowWarningModal(true)
-  }, [])
 
   if (loading || !currency0 || !currency1) {
     return (
@@ -301,30 +282,13 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
           compact
           disableTokenInputs={chainId !== account.chainId}
         />
-        {tokenProtectionEnabled ? (
-          <>
-            <TokenWarningCard currencyInfo={currencyInfo0} onPress={() => onWarningCardCtaPressed(currencyInfo0)} />
-            <TokenWarningCard currencyInfo={currencyInfo1} onPress={() => onWarningCardCtaPressed(currencyInfo1)} />
-            {warningModalCurrencyInfo && (
-              // Intentionally duplicative with the TokenWarningModal in the swap component; this one only displays when user clicks "i" Info button on the TokenWarningCard
-              <TokenWarningModal
-                currencyInfo0={warningModalCurrencyInfo}
-                isInfoOnlyWarning
-                isVisible={showWarningModal}
-                closeModalOnly={closeWarningModal}
-                onAcknowledge={closeWarningModal}
-              />
-            )}
-          </>
-        ) : (
-          Boolean(priorityWarning) && (
-            <TokenSafetyMessage
-              tokenAddress={(priorityWarning === token0Warning ? token0?.address : token1?.address) ?? ''}
-              warning={priorityWarning ?? StrongWarning}
-              plural={Boolean(token0Warning && token1Warning)}
-              tokenSymbol={priorityWarning === token0Warning ? token0?.symbol : token1?.symbol}
-            />
-          )
+        {Boolean(priorityWarning) && (
+          <TokenSafetyMessage
+            tokenAddress={(priorityWarning === token0Warning ? token0?.address : token1?.address) ?? ''}
+            warning={priorityWarning ?? StrongWarning}
+            plural={Boolean(token0Warning && token1Warning)}
+            tokenSymbol={priorityWarning === token0Warning ? token0?.symbol : token1?.symbol}
+          />
         )}
       </SwapModalWrapper>
       <Scrim

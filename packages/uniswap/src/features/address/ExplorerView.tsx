@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 import { Anchor, Flex, Text, TouchableArea } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { CopyAlt } from 'ui/src/components/icons/CopyAlt'
+import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { MicroConfirmation } from 'uniswap/src/components/MicroConfirmation'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
@@ -55,6 +56,9 @@ export function ExplorerView({ currency, modalName }: { currency: Currency; moda
               <Text variant="body3" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
                 {explorerLink}
               </Text>
+              <Flex centered>
+                <ExternalLink size="$icon.16" color="$neutral1" />
+              </Flex>
             </Flex>
           </Anchor>
         </Flex>

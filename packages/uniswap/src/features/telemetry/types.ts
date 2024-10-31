@@ -23,7 +23,6 @@ import {
   WalletConnectionResult,
 } from '@uniswap/analytics-events'
 import { Protocol } from '@uniswap/router-sdk'
-import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
 import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import {
@@ -733,7 +732,6 @@ export type UniverseEventProperties = {
         AssetDetailsBaseProperties &
         SearchResultContextProperties & {
           field: CurrencyField
-          tokenSection: TokenOptionSection
         })
     | InterfaceTokenSelectedProperties
   [UnitagEventName.UnitagBannerActionTaken]: {

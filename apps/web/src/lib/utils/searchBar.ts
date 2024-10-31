@@ -1,6 +1,5 @@
 import { GqlSearchToken } from 'graphql/data/SearchTokens'
 import { GenieCollection } from 'nft/types'
-import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 import {
   NFTCollectionSearchResult,
   SearchResultType,
@@ -39,8 +38,6 @@ export const searchTokenToTokenSearchResult = (
     name: searchToken.name ?? null,
     logoUrl: searchToken.project?.logoUrl ?? null,
     safetyLevel: searchToken.project?.safetyLevel ?? null,
-    safetyInfo: getCurrencySafetyInfo(searchToken.project?.safetyLevel, searchToken.protectionInfo),
-    feeData: searchToken.feeData ?? null,
   }
 }
 

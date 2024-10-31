@@ -327,26 +327,29 @@ export function ClaimUnitagContent({
             )}
           </AnimatePresence>
         </AnimatedFlex>
-        <AnimatedFlex
-          row
-          alignItems="center"
-          gap="$spacing8"
-          style={addressViewAnimatedStyle}
-          onPress={onPressAddressTooltip}
-        >
-          <Text color="$neutral2" variant="subheading2">
-            {shortenAddress(unitagAddress ?? ADDRESS_ZERO)}
-          </Text>
-          <TouchableArea
-            onPress={(): void => {
-              dismissNativeKeyboard()
-              setShowInfoModal(true)
-            }}
+        {unitagAddress && (
+          <AnimatedFlex
+            row
+            alignItems="center"
+            gap="$spacing8"
+            style={addressViewAnimatedStyle}
+            onPress={onPressAddressTooltip}
           >
-            <InfoCircleFilled color={colors.neutral3.get()} size="$icon.20" />
-          </TouchableArea>
-        </AnimatedFlex>
-        <Flex row gap="$spacing8" minHeight={fonts.body2.lineHeight}>
+            <Text color="$neutral2" variant="subheading2">
+              {shortenAddress(unitagAddress ?? ADDRESS_ZERO)}
+            </Text>
+            <TouchableArea
+              onPress={(): void => {
+                dismissNativeKeyboard()
+                setShowInfoModal(true)
+              }}
+            >
+              <InfoCircleFilled color={colors.neutral3.get()} size="$icon.20" />
+            </TouchableArea>
+          </AnimatedFlex>
+        )}
+
+        <Flex row gap="$spacing8" minHeight={fonts.body2.lineHeight} mt={unitagAddress ? undefined : '$spacing24'}>
           <Text color="$statusCritical" textAlign="center" variant="body2">
             {canClaimUnitagNameError}
           </Text>

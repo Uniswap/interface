@@ -7,7 +7,6 @@ import Column from 'components/deprecated/Column'
 import { useTokenWarning } from 'constants/deprecatedTokenSafety'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { GqlSearchToken } from 'graphql/data/SearchTokens'
-import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
 import { getTokenDetailsURL, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import styled, { css } from 'lib/styled-components'
 import { searchGenieCollectionToTokenSearchResult, searchTokenToTokenSearchResult } from 'lib/utils/searchBar'
@@ -18,14 +17,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { Flex } from 'ui/src'
 import { Verified } from 'ui/src/components/icons/Verified'
-import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
-import { Token, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { addToSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
-import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
@@ -110,15 +105,10 @@ export function SuggestionRow({
   const navigate = useNavigate()
   const { formatFiatPrice, formatDelta, formatNumberOrString } = useFormatter()
   const [brokenCollectionImage, setBrokenCollectionImage] = useState(false)
-
-  const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
   const warning = useTokenWarning(
     isToken ? suggestion.address : undefined,
     isToken ? supportedChainIdFromGQLChain(suggestion.chain) : UniverseChainId.Mainnet,
   )
-  const tokenWarningSeverity = isToken
-    ? getTokenWarningSeverity(gqlTokenToCurrencyInfo(suggestion as Token)) // casting GqlSearchToken to Token
-    : undefined
 
   const handleClick = useCallback(() => {
     const address =
@@ -190,23 +180,9 @@ export function SuggestionRow({
           />
         )}
         <Flex alignItems="flex-start" justifyContent="flex-start" shrink grow>
-          <Flex
-            row
-            gap="$spacing4"
-            shrink
-            width="95%"
-            {...(isToken && tokenProtectionEnabled && { alignItems: 'center' })}
-          >
+          <Flex row gap="$spacing4" shrink width="95%">
             <PrimaryText lineHeight="24px">{suggestion.name}</PrimaryText>
-            {isToken ? (
-              tokenProtectionEnabled ? (
-                <WarningIcon severity={tokenWarningSeverity} size="$icon.16" />
-              ) : (
-                <TokenSafetyIcon warning={warning} />
-              )
-            ) : (
-              suggestion.isVerified && <Verified size={14} />
-            )}
+            {isToken ? <TokenSafetyIcon warning={warning} /> : suggestion.isVerified && <Verified size={14} />}
           </Flex>
           <Flex row gap="$spacing4">
             <ThemedText.SubHeaderSmall lineHeight="20px">

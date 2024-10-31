@@ -229,16 +229,12 @@ export function useRecipients(
   )
 }
 
-export function useFilteredRecipientSections(
-  searchPattern: string,
-  debounceDelayMs?: number,
-): { sections: RecipientSection[]; loading: boolean } {
+export function useFilteredRecipientSections(searchPattern: string, debounceDelayMs?: number): RecipientSection[] {
   const sectionsRef = useRef<RecipientSection[]>([])
   const { sections, searchableRecipientOptions, loading, debouncedPattern } = useRecipients(
     searchPattern,
     debounceDelayMs,
   )
-  const isDebouncingOrLoading = loading || searchPattern !== debouncedPattern
 
   const getFilteredSections = useCallback(() => {
     const filteredAddresses = filterRecipientByNameAndAddress(debouncedPattern, searchableRecipientOptions).map(
@@ -263,5 +259,5 @@ export function useFilteredRecipientSections(
     }
   }
 
-  return { sections: sectionsRef.current, loading: isDebouncingOrLoading }
+  return sectionsRef.current
 }

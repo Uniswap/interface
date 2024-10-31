@@ -6,7 +6,7 @@ import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
-import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
+import { getWarningIconColorOverride } from 'uniswap/src/components/warnings/utils'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -24,6 +24,7 @@ interface OptionProps {
   onPress: () => void
   showTokenAddress?: boolean
   tokenWarningDismissed: boolean
+  dismissWarningCallback: () => void
   quantity: number | null
   // TODO(WEB-4731): Remove isKeyboardOpen dependency
   isKeyboardOpen?: boolean
@@ -35,12 +36,15 @@ interface OptionProps {
 }
 
 function getTokenWarningDetails(currencyInfo: CurrencyInfo): {
-  severity: WarningSeverity
+  severity: WarningSeverity | undefined
+  isWarningSevere: boolean
   isNonDefaultList: boolean
   isBlocked: boolean
 } {
   const { safetyLevel, safetyInfo } = currencyInfo
   const severity = getTokenWarningSeverity(currencyInfo)
+  const isWarningSevere =
+    severity === WarningSeverity.Blocked || severity === WarningSeverity.High || severity === WarningSeverity.Medium
   const isNonDefaultList =
     safetyLevel === SafetyLevel.MediumWarning ||
     safetyLevel === SafetyLevel.StrongWarning ||
@@ -48,6 +52,7 @@ function getTokenWarningDetails(currencyInfo: CurrencyInfo): {
   const isBlocked = severity === WarningSeverity.Blocked || safetyLevel === SafetyLevel.Blocked
   return {
     severity,
+    isWarningSevere,
     isNonDefaultList,
     isBlocked,
   }
@@ -59,6 +64,7 @@ function _TokenOptionItem({
   onPress,
   showTokenAddress,
   tokenWarningDismissed,
+  dismissWarningCallback,
   balance,
   quantity,
   quantityFormatted,
@@ -70,12 +76,11 @@ function _TokenOptionItem({
   const [showWarningModal, setShowWarningModal] = useState(false)
   const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
 
-  const { severity, isBlocked, isNonDefaultList } = getTokenWarningDetails(currencyInfo)
-  // in token selector, we only show the warning icon if token is >=Medium severity
-  const { colorSecondary: warningIconColor } = getWarningIconColors(severity)
+  const { severity, isBlocked, isNonDefaultList, isWarningSevere } = getTokenWarningDetails(currencyInfo)
+  const warningIconColor = getWarningIconColorOverride(severity)
   const shouldShowWarningModalOnPress = !tokenProtectionEnabled
     ? isBlocked || (isNonDefaultList && !tokenWarningDismissed)
-    : isBlocked || (severity !== WarningSeverity.None && !tokenWarningDismissed)
+    : isWarningSevere && !tokenWarningDismissed
 
   const handleShowWarningModal = useCallback((): void => {
     dismissNativeKeyboard()
@@ -100,9 +105,10 @@ function _TokenOptionItem({
   }, [showWarnings, shouldShowWarningModalOnPress, onPress, isKeyboardOpen, handleShowWarningModal])
 
   const onAcceptTokenWarning = useCallback(() => {
+    dismissWarningCallback()
     setShowWarningModal(false)
     onPress()
-  }, [onPress])
+  }, [dismissWarningCallback, onPress])
 
   return (
     <>

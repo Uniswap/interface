@@ -33,7 +33,7 @@ export function formatTokenSearchResults(
       return tokensMap
     }
 
-    const { name, chain, address, symbol, project, market, protectionInfo, feeData } = token
+    const { name, chain, address, symbol, project, market, protectionInfo } = token
     const chainId = fromGraphQLChain(chain)
 
     const shoulderFilterByChain = !!selectedChain
@@ -55,7 +55,6 @@ export function formatTokenSearchResults(
       logoUrl: logoUrl ?? null,
       volume1D: market?.volume?.value ?? 0,
       safetyInfo: getCurrencySafetyInfo(safetyLevel, protectionInfo),
-      feeData: feeData ?? null,
     }
 
     // For token results that share the same TokenProject id, use the token with highest volume

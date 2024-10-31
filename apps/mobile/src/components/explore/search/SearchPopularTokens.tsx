@@ -4,11 +4,9 @@ import { FlatList, ListRenderItemInfo } from 'react-native'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { getSearchResultId } from 'src/components/explore/search/utils'
 import { Flex, Loader } from 'ui/src'
-import { ProtectionResult, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
 import { useTokenRankingsQuery } from 'uniswap/src/data/rest/tokenRankings'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { RankingType } from 'wallet/src/features/wallet/types'
@@ -34,14 +32,7 @@ function tokenStatsToTokenSearchResult(token: Maybe<TokenRankingsStat>): TokenSe
     name,
     symbol,
     logoUrl: logo ?? null,
-    // BE has confirmed that all of these TokenRankingsStat tokens are Verified SafetyLevel, and design confirmed that we can hide the warning icon here
-    safetyLevel: SafetyLevel.Verified,
-    safetyInfo: {
-      tokenList: TokenList.Default,
-      attackType: undefined,
-      protectionResult: ProtectionResult.Benign,
-    },
-    feeData: null,
+    safetyLevel: null,
   }
 }
 

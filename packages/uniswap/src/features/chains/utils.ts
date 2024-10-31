@@ -8,6 +8,8 @@ import {
 } from 'uniswap/src/constants/chains'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import {
   COMBINED_CHAIN_IDS,
   InterfaceGqlChain,
@@ -187,11 +189,13 @@ export function toUniswapWebAppLink(chainId: UniverseChainId): string | null {
   }
 }
 
+type ActiveChainIdFeatureFlags = UniverseChainId.WorldChain
+
 export function filterChainIdsByFeatureFlag(featureFlaggedChainIds: {
-  [key in UniverseChainId]?: boolean
+  [UniverseChainId.WorldChain]: boolean
 }): UniverseChainId[] {
   return COMBINED_CHAIN_IDS.filter((chainId) => {
-    return featureFlaggedChainIds[chainId] ?? true
+    return featureFlaggedChainIds[chainId as ActiveChainIdFeatureFlags] ?? true
   })
 }
 
@@ -201,7 +205,15 @@ export function useFeatureFlaggedChainIds(): UniverseChainId[] {
   // Example: [ChainId.BLAST]: useFeatureFlag(FeatureFlags.BLAST)
   // IMPORTANT: Don't forget to also update getEnabledChainIdsSaga
 
-  return useMemo(() => filterChainIdsByFeatureFlag({}), [])
+  const worldChainEnabled = useFeatureFlag(FeatureFlags.WorldChain)
+
+  return useMemo(
+    () =>
+      filterChainIdsByFeatureFlag({
+        [UniverseChainId.WorldChain]: worldChainEnabled,
+      }),
+    [worldChainEnabled],
+  )
 }
 
 export function getEnabledChains({

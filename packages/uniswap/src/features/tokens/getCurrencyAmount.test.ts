@@ -3,7 +3,6 @@ import { DAI } from 'uniswap/src/constants/tokens'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { noOpFunction } from 'utilities/src/test/utils'
 
-const ZERO_DAI = CurrencyAmount.fromRawAmount(DAI, '0')
 const ONE_DAI = CurrencyAmount.fromRawAmount(DAI, '1000000000000000000')
 const HALF_DAI = CurrencyAmount.fromRawAmount(DAI, '500000000000000000')
 const FRACTION_OF_DAI = CurrencyAmount.fromRawAmount(DAI, '1000000000000000')
@@ -29,12 +28,8 @@ describe(getCurrencyAmount, () => {
     expect(getCurrencyAmount({ value: '1000000000', valueType: ValueType.Exact, currency: undefined })).toBeUndefined()
   })
 
-  it('return 0 when float value is 0', () => {
-    expect(getCurrencyAmount({ value: '0', valueType: ValueType.Exact, currency: DAI })).toEqual(ZERO_DAI)
-  })
-
-  it('return undefined when float value is undefined', () => {
-    expect(getCurrencyAmount({ value: undefined, valueType: ValueType.Exact, currency: DAI })).toBeUndefined()
+  it('return null when float value is 0', () => {
+    expect(getCurrencyAmount({ value: '0', valueType: ValueType.Exact, currency: DAI })).toBeNull()
   })
 
   it('parse standard float amount', () => {
@@ -94,7 +89,7 @@ describe(getCurrencyAmount, () => {
         valueType: ValueType.Exact,
         currency: DAI,
       }),
-    ).toEqual(ZERO_DAI)
+    ).toBeNull()
   })
 
   it('handle invalid values', () => {

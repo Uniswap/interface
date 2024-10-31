@@ -16,8 +16,6 @@ type InlineWarningCardProps = {
   checked?: boolean
   setChecked?: (checked: boolean) => void
   hideCtaIcon?: boolean
-  headingTestId?: string
-  descriptionTestId?: string
 }
 
 export function InlineWarningCard({
@@ -30,9 +28,7 @@ export function InlineWarningCard({
   checked,
   setChecked,
   hideCtaIcon,
-  headingTestId,
-  descriptionTestId,
-}: InlineWarningCardProps): JSX.Element | null {
+}: InlineWarningCardProps): JSX.Element {
   const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
   const [checkedFallback, setCheckedFallback] = useState(false)
   const { color, textColor, backgroundColor } = getWarningIconColors(severity)
@@ -45,11 +41,6 @@ export function InlineWarningCard({
     } else {
       setCheckedFallback(!isChecked)
     }
-  }
-
-  if (severity === WarningSeverity.None || !WarningIcon) {
-    // !WarningIcon for typecheck; should only be null if WarningSeverity == None
-    return null
   }
 
   const checkboxElement = checkboxLabel ? (
@@ -74,19 +65,13 @@ export function InlineWarningCard({
       color={textColor}
       description={
         <Flex gap="$spacing8">
-          <Text color="$neutral2" variant="body3" testID={descriptionTestId}>
+          <Text color="$neutral2" variant="body3">
             {description}
           </Text>
           {checkboxElement}
         </Flex>
       }
-      heading={
-        heading && (
-          <Text color={textColor} variant="body3" testID={headingTestId}>
-            {heading}
-          </Text>
-        )
-      }
+      heading={heading}
       iconBackgroundColor={heroIcon ? backgroundColor : undefined}
       iconColor={color}
       onPressCtaButton={onPressCtaButton}

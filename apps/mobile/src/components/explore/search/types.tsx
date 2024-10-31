@@ -1,5 +1,8 @@
+import { SEARCH_RESULT_HEADER_KEY } from 'src/components/explore/search/constants'
 import { SearchResult } from 'uniswap/src/features/search/SearchResult'
 
-export type SearchHeaderKey = 'header'
-export type SearchHeader = { type: SearchHeaderKey; title: string; icon?: JSX.Element }
-export type SearchResultOrHeader = SearchResult | SearchHeader
+// Header type used to render header text instead of SearchResult item
+
+export type SearchResultOrHeader =
+  | SearchResult
+  | { type: typeof SEARCH_RESULT_HEADER_KEY; title: string; icon?: JSX.Element }

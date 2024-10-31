@@ -10,12 +10,11 @@ import { useEffect, useState } from 'react'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import styled from 'styled-components'
 import { ClickableTamaguiStyle, CloseIcon } from 'theme/components'
-import { Button, Flex, Text } from 'ui/src'
+import { Button, Flex, Input, Text } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { Search } from 'ui/src/components/icons/Search'
-import { AmountInput, numericInputRegex } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useTranslation } from 'uniswap/src/i18n'
@@ -79,17 +78,11 @@ export function FeeTierSearchModal() {
         setCreateFeeValue((prev) => {
           let newValue = parseFloat(prev)
           if (autoDecrementing) {
-            if (!prev || prev === '') {
-              return '0'
-            }
             newValue -= 0.01
             if (newValue < 0) {
               return '0'
             }
           } else if (autoIncrementing) {
-            if (!prev || prev === '') {
-              return '0.01'
-            }
             newValue += 0.01
             if (newValue > 100) {
               return '100'
@@ -255,54 +248,19 @@ export function FeeTierSearchModal() {
           </Flex>
         ) : (
           <>
-            <Flex
-              row
-              alignItems="center"
-              py="$padding12"
-              px="$padding8"
-              backgroundColor="$surface2"
-              borderRadius="$rounded24"
-              gap="$gap8"
-            >
+            <Flex row py="$padding12" px="$padding8" backgroundColor="$surface2" borderRadius="$rounded24">
               <Search size={20} color="$neutral2" />
-              <AmountInput
+              <Input
                 width="100%"
-                autoFocus
-                alignSelf="stretch"
+                height="100%"
+                fontWeight="$book"
                 backgroundColor="$transparent"
-                borderRadius={0}
-                borderWidth={0}
-                textAlign="left"
-                value={searchValue}
-                fontFamily="$subHeading"
-                fontSize={18}
-                px="$none"
-                py="$none"
                 placeholder={t('fee.tier.search.short')}
-                placeholderTextColor="$neutral3"
-                onChangeText={(value) => {
-                  if (value === '.') {
-                    setSearchValue('0.')
-                    return
-                  }
-                  // Prevent two decimals
-                  if (value.indexOf('.') !== -1 && value.indexOf('.', value.indexOf('.') + 1) !== -1) {
-                    return
-                  }
-                  // Prevent addition of non-numeric characters to the end of the string
-                  if (!numericInputRegex.test(value)) {
-                    setSearchValue(value.slice(0, -1))
-                    return
-                  }
-
-                  const newValue = parseFloat(value)
-                  if (newValue > 100) {
-                    setSearchValue('100')
-                    return
-                  }
-
-                  setSearchValue(newValue >= 0 ? value : '')
+                placeholderTextColor="$neutral2"
+                onChange={(event: any) => {
+                  setSearchValue(event.target.value)
                 }}
+                value={searchValue}
               />
             </Flex>
             <Flex width="100%" gap="$gap4" maxHeight={350} overflow="scroll">

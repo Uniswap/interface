@@ -1,6 +1,5 @@
 /* eslint-disable-next-line no-restricted-imports */
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Pool } from 'components/Icons/Pool'
 import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
 import { PositionInfo } from 'components/Liquidity/types'
@@ -17,11 +16,9 @@ import { ChevronLeft, ChevronRight } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
-import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { X } from 'ui/src/components/icons/X'
 import { iconSizes } from 'ui/src/theme'
 import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { useTranslation } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -31,7 +28,6 @@ function EmptyPositionsView({ isConnected }: { isConnected: boolean }) {
   const colors = useSporeColors()
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const accountDrawer = useAccountDrawer()
 
   return (
     <Flex
@@ -43,14 +39,6 @@ function EmptyPositionsView({ isConnected }: { isConnected: boolean }) {
       borderStyle="solid"
       gap="$gap8"
       p="$padding16"
-      cursor={isConnected ? 'auto' : 'pointer'}
-      onPress={
-        isConnected
-          ? undefined
-          : () => {
-              accountDrawer.toggle()
-            }
-      }
     >
       <Flex p="$padding8" borderRadius="$rounded12" backgroundColor="$accent2">
         <Pool width={iconSizes.icon24} height={iconSizes.icon24} color={colors.accent1.val} />
@@ -85,14 +73,13 @@ export default function Positions() {
   const [chainFilter, setChainFilter] = useAtom(chainFilterAtom)
   const [versionFilter, setVersionFilter] = useAtom(versionFilterAtom)
   const [statusFilter, setStatusFilter] = useAtom(statusFilterAtom)
-  const [closedCTADismissed, setClosedCTADismissed] = useState(false)
 
   const navigate = useNavigate()
   const account = useAccount()
   const { address, isConnected } = account
   const [currentPage, setCurrentPage] = useState(0)
 
-  const { data, isPlaceholderData } = useGetPositionsQuery(
+  const { data, isLoading: positionsLoading } = useGetPositionsQuery(
     {
       address,
       chainIds: chainFilter ? [chainFilter] : undefined,
@@ -129,7 +116,7 @@ export default function Positions() {
   return (
     <Flex width="100%" gap="$spacing24">
       <PositionsHeader
-        showFilters={account.isConnected}
+        showFilters={currentPageItems.length > 0}
         selectedChain={chainFilter}
         selectedVersions={versionFilter}
         selectedStatus={statusFilter}
@@ -151,9 +138,9 @@ export default function Positions() {
           }
         }}
       />
-      {data || !account.address ? (
+      {!positionsLoading ? (
         currentPageItems.length > 0 ? (
-          <Flex gap="$gap16" mb="$spacing16" opacity={isPlaceholderData ? 0.6 : 1}>
+          <Flex gap="$gap16" mb="$spacing16">
             {currentPageItems.map((position, index) => {
               return (
                 position && (
@@ -170,7 +157,8 @@ export default function Positions() {
         ) : (
           <EmptyPositionsView isConnected={isConnected} />
         )
-      ) : (
+      ) : null}
+      {!data && positionsLoading && (
         <LoadingRows>
           <LoadingRow />
           <LoadingRow />
@@ -184,33 +172,6 @@ export default function Positions() {
           <LoadingRow />
           <LoadingRow />
         </LoadingRows>
-      )}
-      {!statusFilter.includes(PositionStatus.CLOSED) && !closedCTADismissed && account.address && (
-        <Flex
-          borderWidth="$spacing1"
-          borderColor="$surface3"
-          borderRadius="$rounded12"
-          mb="$spacing24"
-          p="$padding12"
-          gap="$gap12"
-          row
-          centered
-        >
-          <Flex height="100%">
-            <InfoCircleFilled color="$neutral2" size="$icon.20" />
-          </Flex>
-          <Flex grow>
-            <Text variant="body3" color="$neutral1">
-              <Trans i18nKey="pool.closedCTA.title" />
-            </Text>
-            <Text variant="body3" color="$neutral2">
-              <Trans i18nKey="pool.closedCTA.description" />
-            </Text>
-          </Flex>
-          <Flex height="100%" onPress={() => setClosedCTADismissed(true)} cursor="pointer">
-            <X color="$neutral2" size="$icon.20" />
-          </Flex>
-        </Flex>
       )}
       {!!pageCount && pageCount > 1 && data?.positions && (
         <Flex row gap="$gap12" alignItems="center" mb="$spacing24">

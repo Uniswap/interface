@@ -200,7 +200,7 @@ function TokenDetails({
 
   const [showWarningModal, setShowWarningModal] = useState(false)
   const [showBuyNativeTokenModal, setShowBuyNativeTokenModal] = useState(false)
-  const { tokenWarningDismissed } = useDismissedTokenWarnings(
+  const { tokenWarningDismissed, onDismissTokenWarning } = useDismissedTokenWarnings(
     isNativeCurrency ? undefined : { chainId: currencyChainId, address: currencyAddress },
   )
 
@@ -294,11 +294,12 @@ function TokenDetails({
   ])
 
   const onAcceptWarning = useCallback(() => {
+    onDismissTokenWarning()
     setShowWarningModal(false)
     if (activeTransactionType !== undefined) {
       navigateToSwapFlow({ currencyField: activeTransactionType, currencyAddress, currencyChainId })
     }
-  }, [activeTransactionType, currencyAddress, currencyChainId, navigateToSwapFlow])
+  }, [activeTransactionType, currencyAddress, currencyChainId, onDismissTokenWarning, navigateToSwapFlow])
 
   const openTokenWarningModal = (): void => {
     setShowWarningModal(true)
@@ -344,7 +345,9 @@ function TokenDetails({
             </AnimatedFlex>
           ) : null}
           <Flex gap="$spacing16" mb="$spacing8" px="$spacing16">
-            {tokenProtectionEnabled && <TokenWarningCard currencyInfo={currencyInfo} onPress={openTokenWarningModal} />}
+            {tokenProtectionEnabled && (
+              <TokenWarningCard currencyInfo={currencyInfo} onPressCtaButton={openTokenWarningModal} />
+            )}
             {isChainEnabled && (
               <TokenBalances
                 currentChainBalance={currentChainBalance}

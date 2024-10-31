@@ -397,10 +397,7 @@ function _OpenAIContextProvider({ children }: { children: React.ReactNode }): JS
       const listener = Linking.addEventListener('url', (event) => {
         if (event.url.startsWith('uniswap://openai')) {
           const capturedPhrase = decodeURI(event.url.split('uniswap://openai?capturedPhrase=')[1] ?? '')
-          capturedPhrase &&
-            sendMessage(capturedPhrase).catch((e) =>
-              logger.error(e, { tags: { file: 'OpenAIContext', function: 'siriListener' } }),
-            )
+          capturedPhrase && sendMessage(capturedPhrase).catch(console.error)
         }
       })
       return listener.remove

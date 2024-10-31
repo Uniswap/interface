@@ -24,13 +24,6 @@ const Transaction = memo(function _Transaction({ repeat = 1 }: { repeat?: number
   )
 })
 
-/**
- * Loader used for search results e.g. search, recipient etc...
- */
-const SearchResult = memo(function _SearchResult({ repeat = 1 }: { repeat?: number }): JSX.Element {
-  return <Transaction repeat={repeat} />
-})
-
 const TransferInstitution = memo(function _TransferInstitution({
   itemsCount,
   iconSize,
@@ -137,7 +130,6 @@ export const Loader = {
   Box,
   NFT,
   Image,
-  SearchResult,
   Token,
   TransferInstitution,
   Transaction,

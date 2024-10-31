@@ -37,7 +37,7 @@ export function SettingsRecoveryPhrase({
         </Flex>
       </Flex>
       <Flex grow>{children}</Flex>
-      <Flex mt="$spacing12">
+      <Flex>
         <Button
           disabled={!nextButtonEnabled}
           flexGrow={1}

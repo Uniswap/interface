@@ -21,11 +21,7 @@ export function safetyLevelToWarningSeverity(safetyLevel: Maybe<SafetyLevel>): W
   }
 }
 
-// eslint-disable-next-line consistent-return
-export function getWarningIcon(
-  severity: WarningSeverity,
-  tokenProtectionEnabled: boolean = false,
-): GeneratedIcon | null {
+export function getWarningIcon(severity?: WarningSeverity, tokenProtectionEnabled: boolean = false): GeneratedIcon {
   switch (severity) {
     case WarningSeverity.High:
       return tokenProtectionEnabled ? OctagonExclamation : AlertTriangleFilled
@@ -34,16 +30,15 @@ export function getWarningIcon(
     case WarningSeverity.Blocked:
       return Blocked
     case WarningSeverity.Low:
-      return InfoCircleFilled
     case WarningSeverity.None:
-      return null
+      return InfoCircleFilled
+    default:
+      return AlertTriangleFilled
   }
 }
 
 export function getWarningIconColors(severity?: WarningSeverity): {
   color: ColorTokens
-  /** `colorSecondary` used instead of `color` in certain places, such as token selector & mobile search */
-  colorSecondary: ColorTokens | undefined
   backgroundColor: ColorTokens
   textColor: ColorTokens
 } {
@@ -51,30 +46,21 @@ export function getWarningIconColors(severity?: WarningSeverity): {
     case WarningSeverity.High:
       return {
         color: '$statusCritical',
-        colorSecondary: '$statusCritical',
         backgroundColor: '$DEP_accentCriticalSoft',
         textColor: '$statusCritical',
       }
     case WarningSeverity.Medium:
       return {
         color: '$DEP_accentWarning',
-        colorSecondary: '$neutral2',
         backgroundColor: '$DEP_accentWarningSoft',
         textColor: '$DEP_accentWarning',
       }
     case WarningSeverity.Blocked:
-      return {
-        color: '$neutral2',
-        colorSecondary: '$neutral2',
-        backgroundColor: '$surface3',
-        textColor: '$neutral1',
-      }
     case WarningSeverity.Low:
     case WarningSeverity.None:
     default:
       return {
         color: '$neutral2',
-        colorSecondary: undefined,
         backgroundColor: '$surface3',
         textColor: '$neutral1',
       }
@@ -97,5 +83,19 @@ export function getWarningButtonProps(severity?: WarningSeverity): { theme: Them
         buttonTextColor: '$neutral1',
         theme: 'secondary',
       }
+  }
+}
+
+export function getWarningIconColorOverride(severity?: WarningSeverity): ColorTokens | undefined {
+  switch (severity) {
+    case WarningSeverity.High:
+      return '$statusCritical'
+    case WarningSeverity.Medium:
+    case WarningSeverity.Blocked:
+      return '$neutral2'
+    case WarningSeverity.Low:
+    case WarningSeverity.None:
+    default:
+      return undefined
   }
 }

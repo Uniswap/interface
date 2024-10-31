@@ -18,7 +18,6 @@ import {
   buildCurrency,
   buildCurrencyInfo,
   currencyIdToContractInput,
-  getCurrencySafetyInfo,
   sortByName,
   usePersistedError,
 } from 'uniswap/src/features/dataApi/utils'
@@ -58,6 +57,7 @@ export type PortfolioCacheUpdater = (hidden: boolean, portfolioBalance?: Portfol
  *  we don't need to duplicate the polling interval when token selector is open
  * @param onCompleted
  * @param fetchPolicy
+ * @returns
  */
 export function usePortfolioBalances({
   address,
@@ -103,10 +103,6 @@ export function usePortfolioBalances({
 
     const byId: Record<CurrencyId, PortfolioBalance> = {}
     balancesForAddress.forEach((balance) => {
-      if (!balance) {
-        return
-      }
-
       const {
         __typename: tokenBalanceType,
         id: tokenBalanceId,
@@ -115,16 +111,15 @@ export function usePortfolioBalances({
         tokenProjectMarket,
         quantity,
         isHidden,
-      } = balance
-
-      // require all of these fields to be defined
-      if (!quantity || !token) {
-        return
-      }
-
-      const { name, address: tokenAddress, chain, decimals, symbol, project, feeData, protectionInfo } = token
+      } = balance || {}
+      const { name, address: tokenAddress, chain, decimals, symbol, project } = token || {}
       const { logoUrl, isSpam, safetyLevel, spamCode } = project || {}
       const chainId = fromGraphQLChain(chain)
+
+      // require all of these fields to be defined
+      if (!balance || !quantity || !token) {
+        return
+      }
 
       const currency = buildCurrency({
         chainId,
@@ -132,9 +127,8 @@ export function usePortfolioBalances({
         decimals,
         symbol,
         name,
-        buyFeeBps: feeData?.buyFeeBps,
-        sellFeeBps: feeData?.sellFeeBps,
       })
+
       if (!currency) {
         return
       }
@@ -143,16 +137,14 @@ export function usePortfolioBalances({
 
       const currencyInfo = buildCurrencyInfo({
         currency,
-        currencyId: id,
+        currencyId: currencyId(currency),
         logoUrl,
         isSpam,
         safetyLevel,
-        safetyInfo: getCurrencySafetyInfo(safetyLevel, protectionInfo),
         spamCode,
       })
 
       const portfolioBalance = buildPortfolioBalance({
-        id: tokenBalanceId,
         cacheId: `${tokenBalanceType}:${tokenBalanceId}`,
         quantity,
         balanceUSD: denominatedValue?.value,

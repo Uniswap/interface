@@ -6,7 +6,6 @@ import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { useActiveGasStrategy, useShadowGasStrategies } from 'uniswap/src/features/gas/hooks'
 import { areEqualGasStrategies } from 'uniswap/src/features/gas/types'
 import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
-import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   getTokenAddressForApi,
   toTradingApiSupportedChainId,
@@ -40,9 +39,8 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): TokenAppr
   const isWrap = wrapType !== WrapType.NotApplicable
 
   const address = account?.address
-  const inputWillBeWrapped = routing && isUniswapX({ routing })
   // Off-chain orders must have wrapped currencies approved, rather than natives.
-  const currencyIn = inputWillBeWrapped ? currencyInAmount?.currency.wrapped : currencyInAmount?.currency
+  const currencyIn = routing === Routing.DUTCH_V2 ? currencyInAmount?.currency.wrapped : currencyInAmount?.currency
   const amount = currencyInAmount?.quotient.toString()
 
   const tokenInAddress = getTokenAddressForApi(currencyIn)

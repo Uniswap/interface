@@ -15,11 +15,6 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
 import {
-  getHighestFeeSeverity,
-  getRelevantTokenWarningSeverity,
-  getShouldDisplayTokenWarningCard,
-} from 'uniswap/src/features/transactions/TransactionDetails/utils'
-import {
   TransactionModalFooterContainer,
   TransactionModalInnerContainer,
 } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
@@ -64,7 +59,7 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
   const [showWarningModal, setShowWarningModal] = useState(false)
   const [warningAcknowledged, setWarningAcknowledged] = useState(false)
   const [shouldSubmitTx, setShouldSubmitTx] = useState(false)
-  const [tokenWarningChecked, setTokenWarningChecked] = useState(false)
+  const [feeOnTransferWarningChecked, setFeeOnTransferWarningChecked] = useState(false)
 
   // Submission error UI is currently interface-only
   const [submissionError, setSubmissionError] = useState<Error>()
@@ -243,17 +238,13 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
   }, [authTrigger, hapticFeedback, onFailure, submitTransaction, updateSwapForm])
 
   const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
-  const { severity: feeSeverity, tokenProtectionWarning: feeWarning } = getHighestFeeSeverity(feeOnTransferProps)
-  const tokenWarningProps = getRelevantTokenWarningSeverity(acceptedDerivedSwapInfo)
-  const { shouldDisplayTokenWarningCard } = getShouldDisplayTokenWarningCard({
-    severity: tokenWarningProps.severity,
-    tokenProtectionWarning: tokenWarningProps.tokenProtectionWarning,
-    feeSeverity,
-    feeWarning,
-  })
-  const isTokenWarningBlocking = tokenProtectionEnabled && shouldDisplayTokenWarningCard && !tokenWarningChecked
+  const isFeeOnTransferWarningBlocking = tokenProtectionEnabled && !feeOnTransferWarningChecked && !!feeOnTransferProps
   const submitButtonDisabled =
-    (!validSwap && !isWrap) || !!blockingWarning || newTradeRequiresAcceptance || isSubmitting || isTokenWarningBlocking
+    (!validSwap && !isWrap) ||
+    !!blockingWarning ||
+    newTradeRequiresAcceptance ||
+    isSubmitting ||
+    isFeeOnTransferWarningBlocking
 
   const showUniswapXSubmittingUI = isUniswapX(swapTxContext) && isSubmitting && !isInterface
 
@@ -364,9 +355,8 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
                 customSlippageTolerance={customSlippageTolerance}
                 derivedSwapInfo={derivedSwapInfo}
                 feeOnTransferProps={feeOnTransferProps}
-                tokenWarningProps={tokenWarningProps}
-                tokenWarningChecked={tokenWarningChecked}
-                setTokenWarningChecked={setTokenWarningChecked}
+                feeOnTransferWarningChecked={feeOnTransferWarningChecked}
+                setFeeOnTransferWarningChecked={setFeeOnTransferWarningChecked}
                 gasFee={gasFee}
                 newTradeRequiresAcceptance={newTradeRequiresAcceptance}
                 uniswapXGasBreakdown={uniswapXGasBreakdown}

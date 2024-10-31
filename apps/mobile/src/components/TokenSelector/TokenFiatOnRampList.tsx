@@ -48,7 +48,7 @@ function TokenOptionItemWrapper({
     [currencyInfo, balanceUSD, quantity, isUnsupported],
   )
   const onPress = useCallback(() => onSelectCurrency?.(currency), [currency, onSelectCurrency])
-  const { tokenWarningDismissed } = useDismissedTokenWarnings(currencyInfo?.currency)
+  const { tokenWarningDismissed, onDismissTokenWarning } = useDismissedTokenWarnings(currencyInfo?.currency)
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
   if (!option) {
@@ -62,6 +62,7 @@ function TokenOptionItemWrapper({
   return (
     <TokenOptionItem
       balance={convertFiatAmountFormatted(option.balanceUSD, NumberType.FiatTokenPrice)}
+      dismissWarningCallback={onDismissTokenWarning}
       isSelected={isSelected}
       option={option}
       quantity={option.quantity}
@@ -145,10 +146,6 @@ function _TokenFiatOnRampList({
       renderItem={renderItem}
       renderSectionHeader={({ section }) => {
         if (section.title !== ListSection.UNSUPPORTED) {
-          return <></>
-        }
-
-        if (section.data.length === 0) {
           return <></>
         }
 

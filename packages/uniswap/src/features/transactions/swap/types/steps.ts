@@ -66,7 +66,6 @@ export interface TokenApprovalTransactionStep extends OnChainTransactionFields {
   type: TransactionStepType.TokenApprovalTransaction
   token: Token
   spender: string
-  pair?: [Currency, Currency]
   // TODO(WEB-5083): this is used to distinguish a revoke from an approve. It can likely be replaced by a boolean because for LP stuff the amount isn't straight forward.
   amount: string
 }

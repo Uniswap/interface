@@ -3,7 +3,6 @@ import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { TradeType } from '@uniswap/sdk-core'
 import { BigNumber, BigNumberish, providers } from 'ethers'
-import { formatEther } from 'ethers/lib/utils'
 import { call, delay, fork, put, race, select, take, takeEvery } from 'typed-redux-saga'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
@@ -15,7 +14,6 @@ import { pushNotification, setNotificationStatus } from 'uniswap/src/features/no
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { MobileAppsFlyerEvents, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import {
   makeSelectTransaction,
   selectIncompleteTransactions,
@@ -327,35 +325,23 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
 
   const ethersReceipt = yield* call(waitForReceipt, hash, provider)
   const receipt = receiptFromEthersReceipt(ethersReceipt)
-  const nativeCurrency = NativeCurrency.onChain(transaction.chainId)
 
-  const networkFee = {
-    quantity: formatEther(ethersReceipt.effectiveGasPrice.mul(ethersReceipt.gasUsed)),
-    tokenSymbol: nativeCurrency.symbol,
-    tokenAddress: nativeCurrency.address,
-    chainId: transaction.chainId,
-  }
-
-  if (
-    isBridge(transaction) &&
-    getFinalizedTransactionStatus(transaction.status, ethersReceipt?.status) === TransactionStatus.Success
-  ) {
-    // Only the send part was successful, wait for receive part to be confirmed on chain.
-    // Bridge swaps become non-cancellable after the send transaction is confirmed on chain.
-    if (!transaction.sendConfirmed) {
-      const updatedTransaction: BridgeTransactionDetails = {
-        ...transaction,
-        sendConfirmed: true,
-        networkFee,
+  if (isBridge(transaction)) {
+    status = getFinalizedTransactionStatus(transaction.status, ethersReceipt?.status)
+    if (status === TransactionStatus.Success) {
+      // Only the send part was successful, wait for receive part to be confirmed on chain.
+      // Bridge swaps become non-cancellable after the send transaction is confirmed on chain.
+      if (!transaction.sendConfirmed) {
+        const updatedTransaction: BridgeTransactionDetails = { ...transaction, sendConfirmed: true }
+        yield* put(transactionActions.updateTransaction(updatedTransaction))
+        // Updating the transaction will trigger a new watch.
+        // Return undefined to break out of the current watcher.
+        return undefined
       }
-      yield* put(transactionActions.updateTransaction(updatedTransaction))
-      // Updating the transaction will trigger a new watch.
-      // Return undefined to break out of the current watcher.
-      return undefined
-    }
 
-    // Send part was successful, poll for bridging status from BE
-    status = yield* call(waitForBridgingStatus, transaction)
+      // Send part was successful, poll for bridging status from BE
+      status = yield* call(waitForBridgingStatus, transaction)
+    }
   }
 
   // Classic transaction status is based on receipt, while UniswapX status is based backend response.
@@ -363,7 +349,7 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
     status = getFinalizedTransactionStatus(transaction.status, ethersReceipt?.status)
   }
 
-  return { ...transaction, status, receipt, hash, networkFee }
+  return { ...transaction, status, receipt, hash }
 }
 
 function* waitForBridgingStatus(transaction: TransactionDetails) {

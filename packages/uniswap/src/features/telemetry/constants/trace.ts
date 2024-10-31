@@ -42,7 +42,6 @@ export const ModalName = {
   KoreaCexTransferInfoModal: 'korea-cex-transfer-info-modal',
   HiddenTokenInfoModal: 'hidden-token-info-modal',
   HiddenNFTInfoModal: 'hidden-nft-info-modal',
-  Hook: 'hook',
   Legal: 'legal',
   LanguageSelector: 'language-selector-modal',
   MigrateLiquidity: 'migrate-liquidity',

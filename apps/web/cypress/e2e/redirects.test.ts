@@ -21,15 +21,3 @@ describe('RedirectExplore', () => {
     cy.url().should('match', /\/explore\/tokens\/optimism\/NATIVE/)
   })
 })
-
-describe('Legacy Pool Redirects', () => {
-  it('should redirect /pool to /positions', () => {
-    cy.visit('/pool')
-    cy.url().should('match', /\/positions/)
-  })
-
-  it('should redirect /pool/:tokenId with chain param to /positions/v3/:chainName/:tokenId', () => {
-    cy.visit('/pool/123?chain=mainnet')
-    cy.url().should('match', /\/positions\/v3\/ethereum\/123/)
-  })
-})

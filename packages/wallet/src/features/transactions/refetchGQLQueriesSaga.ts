@@ -118,12 +118,6 @@ function getCurrenciesWithExpectedUpdates(transaction: TransactionDetails): Set<
     case TransactionType.Wrap:
       currenciesWithBalToUpdate.add(buildWrappedNativeCurrencyId(txChainId))
       break
-    case TransactionType.OnRampPurchase:
-    case TransactionType.OnRampTransfer:
-      currenciesWithBalToUpdate.add(
-        buildCurrencyId(txChainId, transaction.typeInfo.destinationTokenAddress).toLowerCase(),
-      )
-      break
   }
 
   return currenciesWithBalToUpdate

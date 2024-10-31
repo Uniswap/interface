@@ -51,6 +51,3 @@ packages/uniswap/src/i18n/locales/source/*_old.json
 
 # Vercel
 .vercel
-
-# CodeTours Extension
-.tours/*

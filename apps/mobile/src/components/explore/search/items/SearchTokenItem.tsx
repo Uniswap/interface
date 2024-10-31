@@ -7,7 +7,7 @@ import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
-import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
+import { getWarningIconColorOverride } from 'uniswap/src/components/warnings/utils'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { addToSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
@@ -28,12 +28,11 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
   const dispatch = useDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
-  const { chainId, address, name, symbol, logoUrl, safetyLevel, safetyInfo, feeData } = token
+  const { chainId, address, name, symbol, logoUrl, safetyLevel, safetyInfo } = token
   const currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId as UniverseChainId)
   const currencyInfo = useCurrencyInfo(currencyId)
   const severity = getTokenWarningSeverity(currencyInfo)
-  // in mobile search, we only show the warning icon if token is >=Medium severity
-  const { colorSecondary: warningIconColor } = getWarningIconColors(severity)
+  const warningIconColor = getWarningIconColorOverride(severity)
 
   const onPress = (): void => {
     tokenDetailsNavigation.preload(currencyId)
@@ -61,7 +60,6 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
           logoUrl,
           safetyLevel,
           safetyInfo,
-          feeData,
         },
       }),
     )

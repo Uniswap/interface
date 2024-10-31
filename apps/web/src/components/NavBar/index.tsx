@@ -23,6 +23,8 @@ import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 
@@ -76,12 +78,20 @@ function useShouldHideChainSelector() {
   const isSwapPage = useIsSwapPage()
   const isLimitPage = useIsLimitPage()
   const isExplorePage = useIsExplorePage()
+  const { value: multichainExploreFlagEnabled, isLoading: isMultichainExploreFlagLoading } = useFeatureFlagWithLoading(
+    FeatureFlags.MultichainExplore,
+  )
 
   const baseHiddenPages = isNftPage
-  const multichainHiddenPages =
-    isLandingPage || isSendPage || isSwapPage || isLimitPage || baseHiddenPages || isExplorePage
+  const multichainHiddenPages = isLandingPage || isSendPage || isSwapPage || isLimitPage || baseHiddenPages
+  const multichainExploreHiddenPages = multichainHiddenPages || isExplorePage
 
-  return multichainHiddenPages
+  const hideChainSelector =
+    multichainExploreFlagEnabled || isMultichainExploreFlagLoading
+      ? multichainExploreHiddenPages
+      : multichainHiddenPages
+
+  return hideChainSelector
 }
 
 export default function Navbar() {

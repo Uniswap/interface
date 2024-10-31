@@ -67,7 +67,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
   const sortedCurrencies = getSortedCurrenciesTuple(TOKEN0, TOKEN1)
   const validCurrencyInput = validateCurrencyInput(sortedCurrencies)
   const poolsQueryEnabled = poolEnabledProtocolVersion(protocolVersion) && validCurrencyInput
-  const { data: poolData, isLoading: poolIsLoading } = useGetPoolsByTokens(
+  const { data: poolData } = useGetPoolsByTokens(
     {
       fee: state.fee.feeAmount,
       chainId,
@@ -91,11 +91,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
       : undefined
   }, [pairsQueryEnabled, protocolVersion, sortedCurrencies, validCurrencyInput])
 
-  const {
-    data: pairData,
-    isFetched: pairIsFetched,
-    isLoading: pairIsLoading,
-  } = useGetPair(
+  const { data: pairData, isFetched: pairIsFetched } = useGetPair(
     {
       chainId: chainId ?? (UniverseChainId.Mainnet as number),
       pairAddress,
@@ -142,7 +138,6 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
         protocolVersion,
         pair,
         creatingPoolOrPair,
-        poolOrPairLoading: pairIsLoading,
       } satisfies CreateV2PositionInfo
     }
 
@@ -157,7 +152,6 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
           protocolVersion,
         }),
         creatingPoolOrPair,
-        poolOrPairLoading: poolIsLoading,
       } satisfies CreateV3PositionInfo
     }
 
@@ -172,20 +166,8 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
         hooks: pool?.hooks?.address || '',
       }),
       creatingPoolOrPair,
-      poolOrPairLoading: poolIsLoading,
     } satisfies CreateV4PositionInfo
-  }, [
-    TOKEN0,
-    TOKEN1,
-    protocolVersion,
-    pool,
-    sortedCurrencies,
-    creatingPoolOrPair,
-    poolIsLoading,
-    pair,
-    pairIsLoading,
-    poolData?.pools,
-  ])
+  }, [TOKEN0, TOKEN1, protocolVersion, pool, sortedCurrencies, creatingPoolOrPair, pair, poolData?.pools])
 }
 
 export function useDerivedPriceRangeInfo(state: PriceRangeState): PriceRangeInfo {

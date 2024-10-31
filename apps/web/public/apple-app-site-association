@@ -42,12 +42,5 @@
         ]
       }
     ]
-  },
-  "webcredentials": {
-    "apps": [
-      "JH3UHGZD75.com.uniswap.mobile",
-      "JH3UHGZD75.com.uniswap.mobile.beta",
-      "JH3UHGZD75.com.uniswap.mobile.dev"
-    ]
   }
 }

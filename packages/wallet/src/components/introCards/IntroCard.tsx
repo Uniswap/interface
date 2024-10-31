@@ -156,7 +156,7 @@ export function IntroCard({
             px="$spacing8"
             py="$spacing4"
           >
-            <Text color="$neutral2" variant="buttonLabel4">
+            <Text color="$neutral2" variant="buttonLabel3">
               {t('onboarding.home.intro.label.required')}
             </Text>
           </Flex>

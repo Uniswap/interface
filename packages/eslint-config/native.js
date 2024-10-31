@@ -312,7 +312,7 @@ module.exports = {
     },
     // enforce saga imports from typed-redux-saga
     {
-      files: ['./**/*.ts', './**/*.tsx'],
+      files: ['./**/*.ts'],
       excludedFiles: ['./**/*.test.ts', './**/*.test.tsx'],
       rules: {
         '@jambit/typed-redux-saga/use-typed-effects': 'error',

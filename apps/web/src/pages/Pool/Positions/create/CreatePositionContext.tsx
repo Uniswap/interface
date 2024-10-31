@@ -31,16 +31,7 @@ export const useCreatePositionContext = () => {
   return useContext(CreatePositionContext)
 }
 
-export const DEFAULT_PRICE_RANGE_STATE_CREATING_POOL: PriceRangeState = {
-  priceInverted: false,
-  fullRange: true,
-  minPrice: '',
-  maxPrice: '',
-  initialPrice: '',
-  initialPriceInverted: false,
-}
-
-export const DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS: PriceRangeState = {
+export const DEFAULT_PRICE_RANGE_STATE: PriceRangeState = {
   priceInverted: false,
   fullRange: false,
   minPrice: undefined,
@@ -50,7 +41,7 @@ export const DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS: PriceRangeState = {
 }
 
 export const PriceRangeContext = React.createContext<PriceRangeContextType>({
-  priceRangeState: DEFAULT_PRICE_RANGE_STATE_CREATING_POOL,
+  priceRangeState: DEFAULT_PRICE_RANGE_STATE,
   setPriceRangeState: () => undefined,
   derivedPriceRangeInfo: {
     protocolVersion: ProtocolVersion.V4,

@@ -59,7 +59,7 @@ export function useExploreTokenContextMenu({
   const onPressSwap = useCallback(() => {
     const swapFormState: TransactionState = {
       exactCurrencyField: CurrencyField.INPUT,
-      exactAmountToken: '',
+      exactAmountToken: '0',
       [CurrencyField.INPUT]: null,
       [CurrencyField.OUTPUT]: {
         chainId,

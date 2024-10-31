@@ -81,19 +81,12 @@ export function LaunchModal({
             </Flex>
             <Flex gap="$gap8" row>
               <Trace logPress element={InterfaceElementName.CLOSE_BUTTON}>
-                <Button
-                  size="small"
-                  theme="secondary"
-                  fontSize="$micro"
-                  fill
-                  flexBasis={0}
-                  onPress={() => setShowModal(false)}
-                >
+                <Button size="small" theme="secondary" fontSize="$micro" fill onPress={() => setShowModal(false)}>
                   {t('common.button.dismiss')}
                 </Button>
               </Trace>
               <Trace logPress element={InterfaceElementName.LEARN_MORE_LINK}>
-                <Button size="small" fontSize="$micro" fill flexBasis={0} onPress={() => openUri(learnMoreUrl)}>
+                <Button size="small" fontSize="$micro" fill onPress={() => openUri(learnMoreUrl)}>
                   {t('common.button.learn')}
                 </Button>
               </Trace>

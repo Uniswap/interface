@@ -1,15 +1,16 @@
 import 'test-utils/tokens/mocks'
 
+import { ApolloError } from '@apollo/client'
 import { Percent } from '@uniswap/sdk-core'
 import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'
+import { useTopPools } from 'graphql/data/pools/useTopPools'
 import Router from 'react-router-dom'
-import { useTopPools } from 'state/explore/topPools'
 import { mocked } from 'test-utils/mocked'
-import { validParams, validRestPoolToken0, validRestPoolToken1 } from 'test-utils/pools/fixtures'
+import { validBEPoolToken0, validBEPoolToken1, validParams } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
-jest.mock('state/explore/topPools')
+jest.mock('graphql/data/pools/useTopPools')
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useParams: jest.fn(),
@@ -22,8 +23,9 @@ describe('PoolTable', () => {
 
   it('renders loading state', () => {
     mocked(useTopPools).mockReturnValue({
-      isLoading: true,
-      isError: false,
+      loading: true,
+      errorV3: undefined,
+      errorV2: undefined,
       topPools: [],
     })
 
@@ -34,8 +36,9 @@ describe('PoolTable', () => {
 
   it('renders error state', () => {
     mocked(useTopPools).mockReturnValue({
-      isLoading: false,
-      isError: true,
+      loading: false,
+      errorV3: new ApolloError({ errorMessage: 'error fetching data' }),
+      errorV2: new ApolloError({ errorMessage: 'error fetching data' }),
       topPools: [],
     })
 
@@ -47,10 +50,8 @@ describe('PoolTable', () => {
   it('renders data filled state', () => {
     const mockData = [
       {
-        id: '1',
-        chain: 'mainnet',
-        token0: validRestPoolToken0,
-        token1: validRestPoolToken1,
+        token0: validBEPoolToken0,
+        token1: validBEPoolToken1,
         feeTier: 10000,
         hash: '0x123',
         txCount: 200,
@@ -64,8 +65,9 @@ describe('PoolTable', () => {
     ]
     mocked(useTopPools).mockReturnValue({
       topPools: mockData,
-      isLoading: false,
-      isError: false,
+      loading: false,
+      errorV3: undefined,
+      errorV2: undefined,
     })
 
     const { asFragment } = render(<TopPoolTable />)

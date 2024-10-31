@@ -12,7 +12,7 @@ import {
 } from 'pages/Pool/Positions/create/ContextProviders'
 import {
   DEFAULT_DEPOSIT_STATE,
-  DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS,
+  DEFAULT_PRICE_RANGE_STATE,
   useCreatePositionContext,
   useDepositContext,
   usePriceRangeContext,
@@ -26,7 +26,7 @@ import { useCallback, useMemo } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Navigate, useParams } from 'react-router-dom'
 import { PositionField } from 'types/position'
-import { Button, Flex, Text, useMedia } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 import { Settings } from 'ui/src/components/icons/Settings'
@@ -60,7 +60,7 @@ function CreatePositionInner() {
   }, [creatingPoolOrPair, setStep, step, v2Selected])
 
   return (
-    <Flex gap="$spacing24" maxWidth="calc(min(580px, 90vw))">
+    <Flex gap="$spacing24">
       {step === PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER ? (
         <SelectTokensStep onContinue={handleContinue} />
       ) : step === PositionFlowStep.PRICE_RANGE ? (
@@ -115,7 +115,17 @@ const Sidebar = () => {
   }, [creatingPoolOrPair, protocolVersion, step, t])
 
   return (
-    <Flex width={360}>
+    <Flex gap={32} width={360}>
+      <Flex gap="$gap20">
+        <BreadcrumbNavContainer aria-label="breadcrumb-nav">
+          <BreadcrumbNavLink to="/positions">
+            <Trans i18nKey="pool.positions.title" /> <ChevronRight size={14} />
+          </BreadcrumbNavLink>
+        </BreadcrumbNavContainer>
+        <Text variant="heading2">
+          <Trans i18nKey="position.new" />
+        </Text>
+      </Flex>
       <PoolProgressIndicator steps={PoolProgressSteps} />
     </Flex>
   )
@@ -133,14 +143,14 @@ const Toolbar = () => {
       positionState.currencyInputs === DEFAULT_POSITION_STATE.currencyInputs &&
       positionState.fee === DEFAULT_POSITION_STATE.fee &&
       positionState.hook === DEFAULT_POSITION_STATE.hook &&
-      priceRangeState.initialPrice === DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS.initialPrice &&
+      priceRangeState === DEFAULT_PRICE_RANGE_STATE &&
       depositState === DEFAULT_DEPOSIT_STATE
     )
   }, [positionState.currencyInputs, positionState.fee, positionState.hook, priceRangeState, depositState])
 
   const handleReset = useCallback(() => {
     setPositionState({ ...DEFAULT_POSITION_STATE, protocolVersion })
-    setPriceRangeState(DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS)
+    setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
     setDepositState(DEFAULT_DEPOSIT_STATE)
     setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
   }, [protocolVersion, setDepositState, setPositionState, setPriceRangeState, setStep])
@@ -152,7 +162,7 @@ const Toolbar = () => {
         currencyInputs: prevState.currencyInputs,
         protocolVersion: version,
       }))
-      setPriceRangeState(DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS)
+      setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
       setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
     },
     [setPositionState, setPriceRangeState, setStep],
@@ -180,7 +190,7 @@ const Toolbar = () => {
   )
 
   return (
-    <Flex flexDirection="row-reverse" gap="$gap8" centered>
+    <Flex flexDirection="row-reverse" alignItems="flex-end" height={88} gap="$gap8">
       <Button
         theme="tertiary"
         py="$spacing8"
@@ -204,7 +214,7 @@ const Toolbar = () => {
       >
         <Button
           theme="tertiary"
-          py="$spacing6"
+          py={6}
           pl="$spacing12"
           pr="$spacing8"
           alignItems="center"
@@ -212,7 +222,7 @@ const Toolbar = () => {
           borderRadius="$rounded12"
           borderColor="$surface3"
           borderWidth="$spacing1"
-          gap="$gap4"
+          gap={6}
         >
           <Text variant="buttonLabel4">
             <Trans
@@ -235,7 +245,7 @@ const Toolbar = () => {
         onPress={handleReset}
         disabled={isFormUnchanged}
       >
-        <RotateLeft size={iconSizes.icon16} color="$neutral1" />
+        <RotateLeft size={iconSizes.icon16} />
         <Text variant="buttonLabel4">
           <Trans i18nKey="common.button.reset" />
         </Text>
@@ -248,7 +258,6 @@ export function CreatePosition() {
   const { value: v4Enabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Everywhere)
   const { protocolVersion } = useParams<{ protocolVersion: string }>()
   const account = useAccount()
-  const media = useMedia()
 
   if (!isLoading && !v4Enabled) {
     return <Navigate to="/pools" replace />
@@ -269,30 +278,10 @@ export function CreatePosition() {
       <PriceRangeContextProvider>
         <DepositContextProvider>
           <CreateTxContextProvider>
-            <Flex gap={32} mt="$spacing48">
-              <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-                <BreadcrumbNavLink to="/positions">
-                  <Trans i18nKey="pool.positions.title" /> <ChevronRight size={14} />
-                </BreadcrumbNavLink>
-                <BreadcrumbNavLink to="/positions/create">
-                  <Trans i18nKey="pool.newPosition.title" /> <ChevronRight size={14} />
-                </BreadcrumbNavLink>
-              </BreadcrumbNavContainer>
-              <Flex
-                row
-                alignItems="flex-start"
-                gap="$gap20"
-                width="100%"
-                justifyContent="space-between"
-                $lg={{ row: false }}
-              >
-                <Text variant="heading2">
-                  <Trans i18nKey="position.new" />
-                </Text>
+            <Flex row gap={60} width={1000} mt="$spacing48">
+              <Sidebar />
+              <Flex gap={32} width="100%" maxWidth={580}>
                 <Toolbar />
-              </Flex>
-              <Flex row gap={32} width="100%">
-                {!media.xl && <Sidebar />}
                 <CreatePositionInner />
               </Flex>
             </Flex>

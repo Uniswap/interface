@@ -5,11 +5,11 @@ import { useQuery } from '@connectrpc/connect-query'
 import { UseQueryResult } from '@tanstack/react-query'
 import { listPools } from '@uniswap/client-pools/dist/pools/v1/api-PoolsService_connectquery'
 import { ListPoolsRequest, ListPoolsResponse } from '@uniswap/client-pools/dist/pools/v1/api_pb'
-import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
+import { getPositionsTestTransport } from 'uniswap/src/data/rest/getPositions'
 
 export function useGetPoolsByTokens(
   input?: PartialMessage<ListPoolsRequest>,
   enabled = true,
 ): UseQueryResult<ListPoolsResponse, ConnectError> {
-  return useQuery(listPools, input, { transport: uniswapGetTransport, enabled })
+  return useQuery(listPools, input, { transport: getPositionsTestTransport, enabled })
 }

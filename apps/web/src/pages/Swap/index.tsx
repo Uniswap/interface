@@ -27,6 +27,7 @@ import { AppTFunction } from 'ui/src/i18n/types'
 import { zIndices } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
@@ -183,6 +184,7 @@ export function Swap({
                 swapRedirectCallback={swapRedirectCallback}
                 prefilledState={prefilledState}
               />
+              <SwapBottomCard />
             </Flex>
           </SwapFormContextProvider>
         </PrefetchBalancesWrapper>
@@ -307,61 +309,58 @@ function UniversalSwapFlow({
   const prefilledOutputCurrencyInfo = useCurrencyInfo(initialOutputCurrency ? currencyId(initialOutputCurrency) : '')
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const closeTokenWarning = useCallback(() => setDismissTokenWarning(true), [setDismissTokenWarning])
-  const prefilledTokensWithWarnings: { field: CurrencyField; token: Token }[] = useMemo(() => {
-    const tokens = []
-    if (
-      prefilledInputCurrencyInfo?.currency.isToken &&
-      prefilledInputCurrencyInfo.safetyLevel !== SafetyLevel.Verified
-    ) {
-      tokens.push({ field: CurrencyField.INPUT, token: prefilledInputCurrencyInfo.currency as Token })
-    }
-    if (
-      prefilledOutputCurrencyInfo?.currency.isToken &&
-      prefilledOutputCurrencyInfo.safetyLevel !== SafetyLevel.Verified
-    ) {
-      tokens.push({ field: CurrencyField.OUTPUT, token: prefilledOutputCurrencyInfo.currency as Token })
-    }
-    return tokens
-  }, [prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo])
-  const { updateSwapForm } = useSwapFormContext()
-  const onTokenBlockAcknowledged = useCallback(
-    (field: CurrencyField) => {
-      updateSwapForm({ [field]: undefined, selectingCurrencyField: undefined })
-      onCurrencyChange?.({ [field === CurrencyField.INPUT ? 'inputCurrency' : 'outputCurrency']: undefined })
-    },
-    [updateSwapForm, onCurrencyChange],
+  const urlTokensNotInDefault = useMemo(
+    () =>
+      prefilledInputCurrencyInfo || prefilledOutputCurrencyInfo
+        ? // dismiss warning if all imported tokens are in active lists
+          [prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo]
+            .filter(
+              (token): token is CurrencyInfo =>
+                (token?.currency.isToken && token.safetyLevel !== SafetyLevel.Verified) ?? false,
+            )
+            .map((token: CurrencyInfo) => token.currency as Token)
+        : [],
+    [prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo],
   )
+
+  const { updateSwapForm } = useSwapFormContext()
 
   return (
     <>
-      {prefilledTokensWithWarnings.length >= 1 && (
-        <TokenSafetyModal
-          isOpen={prefilledTokensWithWarnings.length >= 1 && !dismissTokenWarning}
-          token0={prefilledTokensWithWarnings[0].token}
-          token1={prefilledTokensWithWarnings[1]?.token}
-          onAcknowledge={closeTokenWarning}
-          onReject={() => {
-            closeTokenWarning()
-            updateSwapForm({
-              [CurrencyField.INPUT]: undefined,
-              [CurrencyField.OUTPUT]: undefined,
-              selectingCurrencyField: undefined,
-            })
-            onCurrencyChange?.({
-              inputCurrency: undefined,
-              outputCurrency: undefined,
-            })
-          }}
-          closeModalOnly={closeTokenWarning}
-          onToken0BlockAcknowledged={() =>
-            prefilledTokensWithWarnings.length >= 1 && onTokenBlockAcknowledged(prefilledTokensWithWarnings[0].field)
-          }
-          onToken1BlockAcknowledged={() =>
-            prefilledTokensWithWarnings.length == 2 && onTokenBlockAcknowledged(prefilledTokensWithWarnings[1].field)
-          }
-          showCancel={true}
-        />
-      )}
+      <TokenSafetyModal
+        isOpen={urlTokensNotInDefault.length > 0 && !dismissTokenWarning}
+        token0={urlTokensNotInDefault[0]}
+        token1={urlTokensNotInDefault[1]}
+        onAcknowledge={closeTokenWarning}
+        onReject={() => {
+          closeTokenWarning()
+          updateSwapForm({
+            [CurrencyField.INPUT]: undefined,
+            [CurrencyField.OUTPUT]: undefined,
+            selectingCurrencyField: undefined,
+          })
+          onCurrencyChange?.({
+            inputCurrency: undefined,
+            outputCurrency: undefined,
+          })
+        }}
+        closeModalOnly={closeTokenWarning}
+        onToken0BlockAcknowledged={() => {
+          updateSwapForm({
+            [CurrencyField.INPUT]: undefined,
+            selectingCurrencyField: undefined,
+          })
+          onCurrencyChange?.({ inputCurrency: undefined })
+        }}
+        onToken1BlockAcknowledged={() => {
+          updateSwapForm({
+            [CurrencyField.OUTPUT]: undefined,
+            selectingCurrencyField: undefined,
+          })
+          onCurrencyChange?.({ outputCurrency: undefined })
+        }}
+        showCancel={true}
+      />
       <Flex>
         {!hideHeader && (
           <Flex row gap="$spacing16">
@@ -375,19 +374,16 @@ function UniversalSwapFlow({
           </Flex>
         )}
         {currentTab === SwapTab.Swap && (
-          <Flex gap="$spacing16">
-            <SwapFlow
-              customSettings={WEB_CUSTOM_SWAP_SETTINGS}
-              hideHeader={hideHeader}
-              hideFooter={hideFooter}
-              onClose={noop}
-              swapRedirectCallback={swapRedirectCallback}
-              swapCallback={swapCallback}
-              wrapCallback={wrapCallback}
-              prefilledState={prefilledState}
-            />
-            <SwapBottomCard />
-          </Flex>
+          <SwapFlow
+            customSettings={WEB_CUSTOM_SWAP_SETTINGS}
+            hideHeader={hideHeader}
+            hideFooter={hideFooter}
+            onClose={noop}
+            swapRedirectCallback={swapRedirectCallback}
+            swapCallback={swapCallback}
+            wrapCallback={wrapCallback}
+            prefilledState={prefilledState}
+          />
         )}
         {currentTab === SwapTab.Limit && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
         {currentTab === SwapTab.Send && (

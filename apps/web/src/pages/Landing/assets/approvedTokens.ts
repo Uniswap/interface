@@ -88,14 +88,13 @@ export const approvedERC20: InteractiveToken[] = [
       'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0F5D2fB29fb7d3CFeE444a200298f468908cC942/logo.png',
   },
   {
-    name: 'Polygon',
-    symbol: 'POL',
+    name: 'Matic',
+    symbol: 'MATIC',
     address: '0x0000000000000000000000000000000000001010',
     chain: Chain.Polygon,
     standard: TokenStandard.ERC20,
     color: '#833ADD',
-    logoUrl:
-      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/polygon/assets/0x0000000000000000000000000000000000001010/logo.png',
+    logoUrl: 'https://app.uniswap.org/static/media/matic-token-icon.efed2ee4e843195b44bf68ffc7439403.svg',
   },
   {
     name: 'Moss Carbon Credit',

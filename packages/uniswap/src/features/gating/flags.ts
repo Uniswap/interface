@@ -47,15 +47,18 @@ export enum FeatureFlags {
   GqlTokenLists,
   LimitsFees,
   L2NFTs,
+  MultichainExplore,
   MultipleRoutingOptions,
   QuickRouteMainnet,
   Realtime,
+  RestExplore,
   TraceJsonRpc,
   UniswapXSyntheticQuote,
   UniswapXv2,
   V2Everywhere,
   V4Everywhere,
   Zora,
+  WorldChain,
   // TODO(WEB-3625): Remove these once we have a generalized system for outage banners.
   OutageBannerArbitrum,
   OutageBannerOptimism,
@@ -76,6 +79,7 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.SharedSwapArbitrumUniswapXExperiment, 'shared_swap_arbitrum_uniswapx_experiment'],
   [FeatureFlags.TestnetMode, 'testnet-mode'],
   [FeatureFlags.V4Swap, 'v4_swap'],
+  [FeatureFlags.WorldChain, 'world_chain'],
 
   // Web Specific
   [FeatureFlags.UniversalSwap, 'universal_swap'],
@@ -84,9 +88,11 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.GqlTokenLists, 'gql_token_lists'],
   [FeatureFlags.LimitsFees, 'limits_fees'],
   [FeatureFlags.L2NFTs, 'l2_nfts'],
+  [FeatureFlags.MultichainExplore, 'multichain_explore'],
   [FeatureFlags.MultipleRoutingOptions, 'multiple_routing_options'],
   [FeatureFlags.QuickRouteMainnet, 'enable_quick_route_mainnet'],
   [FeatureFlags.Realtime, 'realtime'],
+  [FeatureFlags.RestExplore, 'rest_explore'],
   [FeatureFlags.TraceJsonRpc, 'traceJsonRpc'],
   [FeatureFlags.AstroChainLaunchModal, 'astro_chain_launch_modal'],
   [FeatureFlags.UniswapXSyntheticQuote, 'uniswapx_synthetic_quote'],
@@ -114,6 +120,7 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.SharedSwapArbitrumUniswapXExperiment, 'shared_swap_arbitrum_uniswapx_experiment'],
   [FeatureFlags.TestnetMode, 'testnet-mode'],
   [FeatureFlags.V4Swap, 'v4_swap'],
+  [FeatureFlags.WorldChain, 'world_chain'],
 
   // Wallet Specific
   [FeatureFlags.Datadog, 'datadog'],

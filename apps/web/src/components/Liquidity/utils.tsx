@@ -254,7 +254,6 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       feeTier: parseV3FeeTier(v3Position.feeTier),
       version: ProtocolVersion.V3,
       pool,
-      poolId: position.position.value.poolId,
       position: sdkPosition,
       tickLower: v3Position.tickLower,
       tickUpper: v3Position.tickUpper,
@@ -286,21 +285,19 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
           tickUpper: Number(v4Position.tickUpper),
         })
       : undefined
-    const poolId = V4Pool.getPoolId(token0, token1, Number(v4Position.feeTier), Number(v4Position.tickSpacing), hook)
     return {
       status: position.status,
-      feeTier: v4Position.feeTier,
+      feeTier: v4Position?.feeTier,
       version: ProtocolVersion.V4,
       position: sdkPosition,
       pool,
-      poolId,
       v4hook: hook,
       tokenId: v4Position.tokenId,
-      tickLower: v4Position.tickLower,
-      tickUpper: v4Position.tickUpper,
-      tickSpacing: Number(v4Position.tickSpacing),
-      currency0Amount: CurrencyAmount.fromRawAmount(token0, v4Position.amount0 ?? 0),
-      currency1Amount: CurrencyAmount.fromRawAmount(token1, v4Position.amount1 ?? 0),
+      tickLower: v4Position?.tickLower,
+      tickUpper: v4Position?.tickUpper,
+      tickSpacing: Number(v4Position?.tickSpacing),
+      currency0Amount: CurrencyAmount.fromRawAmount(token0, v4Position?.amount0 ?? 0),
+      currency1Amount: CurrencyAmount.fromRawAmount(token1, v4Position?.amount1 ?? 0),
       token0UncollectedFees: v4Position.token0UncollectedFees,
       token1UncollectedFees: v4Position.token1UncollectedFees,
       liquidity: v4Position.liquidity,
@@ -354,87 +351,4 @@ export function calculateInvertedPrice({ price, invert }: { price?: Price<Curren
     quote: currentPrice?.quoteCurrency,
     base: currentPrice?.baseCurrency,
   }
-}
-
-export enum HookFlag {
-  BeforeAddLiquidity = 'before-add-liquidity',
-  AfterAddLiquidity = 'after-add-liquidity',
-  BeforeRemoveLiquidity = 'before-remove-liquidity',
-  AfterRemoveLiquidity = 'after-remove-liquidity',
-  BeforeSwap = 'before-swap',
-  AfterSwap = 'after-swap',
-  BeforeDonate = 'before-donate',
-  AfterDonate = 'after-donate',
-  BeforeSwapReturnsDelta = 'before-swap-returns-delta',
-  AfterSwapReturnsDelta = 'after-swap-returns-delta',
-  AfterAddLiquidityReturnsDelta = 'after-add-liquidity-returns-delta',
-  AfterRemoveLiquidityReturnsDelta = 'after-remove-liquidity-returns-delta',
-}
-
-// The flags are ordered with the dangerous ones on top so they are rendered first
-const FLAGS: { [key in HookFlag]: number } = {
-  [HookFlag.BeforeRemoveLiquidity]: 1 << 9,
-  [HookFlag.AfterRemoveLiquidity]: 1 << 8,
-  [HookFlag.BeforeAddLiquidity]: 1 << 11,
-  [HookFlag.AfterAddLiquidity]: 1 << 10,
-  [HookFlag.BeforeSwap]: 1 << 7,
-  [HookFlag.AfterSwap]: 1 << 6,
-  [HookFlag.BeforeDonate]: 1 << 5,
-  [HookFlag.AfterDonate]: 1 << 4,
-  [HookFlag.BeforeSwapReturnsDelta]: 1 << 3,
-  [HookFlag.AfterSwapReturnsDelta]: 1 << 2,
-  [HookFlag.AfterAddLiquidityReturnsDelta]: 1 << 1,
-  [HookFlag.AfterRemoveLiquidityReturnsDelta]: 1 << 0,
-}
-
-export function getFlagsFromContractAddress(contractAddress: Address): HookFlag[] {
-  // Extract the last 4 hexadecimal digits from the address
-  const last4Hex = contractAddress.slice(-4)
-
-  // Convert the hex string to a binary string
-  const binaryStr = parseInt(last4Hex, 16).toString(2)
-
-  // Parse the last 12 bits of the binary string
-  const relevantBits = binaryStr.slice(-12)
-
-  // Determine which flags are active
-  const activeFlags = Object.entries(FLAGS)
-    .filter(([, bitPosition]) => (parseInt(relevantBits, 2) & bitPosition) !== 0)
-    .map(([flag]) => flag as HookFlag)
-
-  return activeFlags
-}
-
-export interface FlagWarning {
-  name: string
-  info: string
-  dangerous: boolean
-}
-
-export function getFlagWarning(flag: HookFlag, t: AppTFunction): FlagWarning | undefined {
-  switch (flag) {
-    case HookFlag.BeforeSwap:
-    case HookFlag.BeforeSwapReturnsDelta:
-      return {
-        name: t('common.swap'),
-        info: t('position.hook.swapWarning'),
-        dangerous: false,
-      }
-    case HookFlag.BeforeAddLiquidity:
-    case HookFlag.AfterAddLiquidity:
-      return {
-        name: t('common.addLiquidity'),
-        info: t('position.hook.liquidityWarning'),
-        dangerous: false,
-      }
-    case HookFlag.BeforeRemoveLiquidity:
-    case HookFlag.AfterRemoveLiquidity:
-      return {
-        name: t('pool.removeLiquidity'),
-        info: t('position.hook.removeWarning'),
-        dangerous: true,
-      }
-  }
-
-  return undefined
 }

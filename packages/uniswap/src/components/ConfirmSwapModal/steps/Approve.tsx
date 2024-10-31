@@ -12,7 +12,7 @@ export function TokenApprovalTransactionStepRow({
   status,
 }: StepRowProps<TokenApprovalTransactionStep>): JSX.Element {
   const { t } = useTranslation()
-  const { token, pair } = step
+  const { token } = step
   const symbol = token.symbol
 
   const title = {
@@ -26,7 +26,6 @@ export function TokenApprovalTransactionStepRow({
     <StepRowSkeleton
       title={title}
       currency={token}
-      pair={pair}
       learnMore={{
         url: uniswapUrls.helpArticleUrls.approvalsExplainer,
         text: t('common.whyApprove'),

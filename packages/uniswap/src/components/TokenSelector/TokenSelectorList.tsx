@@ -49,7 +49,9 @@ const TokenOptionItemWrapper = memo(function _TokenOptionItemWrapper({
 
   const { isTestnetModeEnabled } = useEnabledChains()
 
-  const { tokenWarningDismissed } = useDismissedTokenWarnings(tokenOption.currencyInfo.currency)
+  const { tokenWarningDismissed, onDismissTokenWarning: dismissWarningCallback } = useDismissedTokenWarnings(
+    tokenOption.currencyInfo.currency,
+  )
 
   const tokenBalance = formatNumberOrString({
     value: tokenOption.quantity,
@@ -64,6 +66,7 @@ const TokenOptionItemWrapper = memo(function _TokenOptionItemWrapper({
   return (
     <TokenOptionItem
       balance={title}
+      dismissWarningCallback={dismissWarningCallback}
       isKeyboardOpen={isKeyboardOpen}
       option={tokenOption}
       quantity={tokenOption.quantity}

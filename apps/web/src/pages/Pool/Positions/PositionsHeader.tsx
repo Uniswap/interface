@@ -16,7 +16,7 @@ import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 type PositionsHeaderProps = {
-  showFilters?: boolean
+  showFilters: boolean
   selectedChain: UniverseChainId | null
   selectedVersions?: ProtocolVersion[]
   selectedStatus?: PositionStatus[]
@@ -26,7 +26,7 @@ type PositionsHeaderProps = {
 }
 
 export function PositionsHeader({
-  showFilters = true,
+  showFilters,
   selectedChain,
   selectedVersions,
   selectedStatus,

@@ -8,7 +8,6 @@ const WarningContainer = styled(Flex, {
   justifyContent: 'center',
 })
 
-/** @deprecated use WarningIcon from packages/uniswap instead */
 export default function TokenSafetyIcon({ warning }: { warning?: Warning }) {
   const colors = useSporeColors()
   switch (warning?.level) {

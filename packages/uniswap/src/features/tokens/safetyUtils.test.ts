@@ -40,12 +40,9 @@ describe('safetyUtils', () => {
   } as CurrencyInfo
 
   describe('getTokenWarningSeverity', () => {
-    it('should return None when currencyInfo is fully undefined', () => {
-      expect(getTokenWarningSeverity(undefined)).toBe(WarningSeverity.None)
-    })
-
-    it('should return Low when currencyInfo is defined but safetyInfo is undefined', () => {
-      expect(getTokenWarningSeverity({ ...mockCurrencyInfo, safetyInfo: undefined })).toBe(WarningSeverity.Low)
+    it('should return undefined when currencyInfo is not provided', () => {
+      expect(getTokenWarningSeverity(undefined)).toBeUndefined()
+      expect(getTokenWarningSeverity({ ...mockCurrencyInfo, safetyInfo: undefined })).toBeUndefined()
     })
 
     it('should return Low for non-default token', () => {

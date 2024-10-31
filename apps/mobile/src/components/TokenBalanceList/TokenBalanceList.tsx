@@ -1,7 +1,7 @@
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import { useFocusEffect } from '@react-navigation/core'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
-import { forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated'
@@ -22,7 +22,6 @@ import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
-import { useValueAsRef } from 'utilities/src/react/useValueAsRef'
 import { InformationBanner } from 'wallet/src/components/banners/InformationBanner'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { HiddenTokensRow } from 'wallet/src/features/portfolio/HiddenTokensRow'
@@ -73,10 +72,12 @@ export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, T
     },
     ref,
   ) {
+    const { t } = useTranslation()
     const colors = useSporeColors()
     const insets = useAppInsets()
 
-    const { rows, balancesById } = useTokenBalanceListContext()
+    const { rows, balancesById, networkStatus, refetch } = useTokenBalanceListContext()
+    const hasError = isError(networkStatus, !!balancesById)
 
     const { onContentSizeChange, adaptiveFooter } = useAdaptiveFooter(containerProps?.contentContainerStyle)
 
@@ -89,7 +90,8 @@ export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, T
     const [isFocused, setIsFocused] = useState<boolean>(true)
     const [cachedRows, setCachedRows] = useState<TokenBalanceListRow[] | null>(null)
 
-    const rowsRef = useValueAsRef(rows)
+    const rowsRef = useRef(rows)
+    rowsRef.current = rows
 
     useFocusEffect(
       useCallback(() => {
@@ -99,7 +101,7 @@ export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, T
           setCachedRows(rowsRef.current)
           setIsFocused(false)
         }
-      }, [rowsRef]),
+      }, []),
     )
 
     const navigation = useAppStackNavigation()
@@ -130,19 +132,49 @@ export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, T
     // In order to avoid unnecessary re-renders of the entire FlatList, the `renderItem` function should never change.
     // That's why we use a context provider so that each row can read from there instead of passing down new props every time the data changes.
     const renderItem = useCallback(
-      ({ item }: { item: TokenBalanceListRow }): JSX.Element => <TokenBalanceItemRow item={item} />,
+      ({ item, index }: { item: TokenBalanceListRow; index: number }): JSX.Element => (
+        <TokenBalanceItemRow index={index} item={item} />
+      ),
       [],
     )
 
     const keyExtractor = useCallback((item: TokenBalanceListRow): string => item, [])
 
     const ListEmptyComponent = useMemo(() => {
-      return <EmptyComponent renderEmpty={empty} />
-    }, [empty])
+      if (hasError) {
+        return (
+          <Flex pt="$spacing24">
+            <BaseCard.ErrorState
+              retryButtonLabel={t('common.button.retry')}
+              title={t('home.tokens.error.load')}
+              onRetry={(): void | undefined => refetch?.()}
+            />
+          </Flex>
+        )
+      }
+
+      if (isNonPollingRequestInFlight(networkStatus)) {
+        return (
+          <Flex px="$spacing24">
+            <Loader.Token withPrice repeat={6} />
+          </Flex>
+        )
+      }
+
+      return (
+        <Flex grow px="$spacing24">
+          {empty}
+        </Flex>
+      )
+    }, [hasError, empty, t, networkStatus, refetch])
 
     const ListHeaderComponent = useMemo(() => {
-      return <HeaderComponent />
-    }, [])
+      return hasError ? (
+        <AnimatedFlex entering={FadeInDown} exiting={FadeOut} px="$spacing24" py="$spacing8">
+          <BaseCard.InlineErrorState title={t('home.tokens.error.fetch')} onRetry={refetch} />
+        </AnimatedFlex>
+      ) : null
+    }, [hasError, refetch, t])
 
     // add negative z index to prevent footer from covering hidden tokens row when minimized
     const ListFooterComponentStyle = useMemo(() => ({ zIndex: zIndices.negative }), [])
@@ -200,81 +232,79 @@ export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, T
   },
 )
 
-const HeaderComponent = memo(function _HeaderComponent(): JSX.Element | null {
-  const { t } = useTranslation()
-  const { balancesById, networkStatus, refetch } = useTokenBalanceListContext()
-  const hasError = isError(networkStatus, !!balancesById)
-
-  return hasError ? (
-    <AnimatedFlex entering={FadeInDown} exiting={FadeOut} px="$spacing24" py="$spacing8">
-      <BaseCard.InlineErrorState title={t('home.tokens.error.fetch')} onRetry={refetch} />
-    </AnimatedFlex>
-  ) : null
-})
-
-const EmptyComponent = memo(function _EmptyComponent({
-  renderEmpty,
+const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
+  item,
+  index,
 }: {
-  renderEmpty?: JSX.Element | null
-}): JSX.Element {
+  item: TokenBalanceListRow
+  index?: number
+}) {
+  const {
+    balancesById,
+    hiddenTokensCount,
+    hiddenTokensExpanded,
+    isWarmLoading,
+    onPressToken,
+    setHiddenTokensExpanded,
+  } = useTokenBalanceListContext()
+
   const { t } = useTranslation()
-  const { balancesById, networkStatus, refetch } = useTokenBalanceListContext()
+  const [isModalVisible, setModalVisible] = useState(false)
 
-  const shouldShowLoaderSkeleton = isNonPollingRequestInFlight(networkStatus)
-  const hasError = isError(networkStatus, !!balancesById)
+  const handlePressToken = (): void => {
+    setModalVisible(true)
+  }
 
-  if (hasError) {
+  const closeModal = (): void => {
+    setModalVisible(false)
+  }
+
+  const handleAnalytics = (): void => {
+    sendAnalyticsEvent(WalletEventName.ExternalLinkOpened, {
+      url: uniswapUrls.helpArticleUrls.hiddenTokenInfo,
+    })
+  }
+
+  if (item === HIDDEN_TOKEN_BALANCES_ROW) {
     return (
-      <Flex pt="$spacing24">
-        <BaseCard.ErrorState
-          retryButtonLabel={t('common.button.retry')}
-          title={t('home.tokens.error.load')}
-          onRetry={(): void | undefined => refetch?.()}
+      <Flex grow>
+        <HiddenTokensRow
+          isExpanded={hiddenTokensExpanded}
+          numHidden={hiddenTokensCount}
+          onPress={(): void => {
+            setHiddenTokensExpanded(!hiddenTokensExpanded)
+          }}
+        />
+        {hiddenTokensExpanded && (
+          <Flex mx="$spacing12">
+            <InformationBanner infoText={t('hidden.tokens.info.banner.text')} onPress={handlePressToken} />
+          </Flex>
+        )}
+
+        <InfoLinkModal
+          showCloseButton
+          buttonText={t('common.button.close')}
+          buttonTheme="tertiary"
+          description={t('hidden.tokens.info.text.info')}
+          icon={
+            <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">
+              <ShieldCheck color="$neutral1" size="$icon.24" />
+            </Flex>
+          }
+          isOpen={isModalVisible}
+          linkText={t('common.button.learn')}
+          linkUrl={uniswapUrls.helpArticleUrls.hiddenTokenInfo}
+          name={ModalName.HiddenTokenInfoModal}
+          title={t('hidden.tokens.info.text.title')}
+          onAnalyticsEvent={handleAnalytics}
+          onButtonPress={closeModal}
+          onDismiss={closeModal}
         />
       </Flex>
     )
   }
 
-  if (shouldShowLoaderSkeleton) {
-    return (
-      <Flex px="$spacing24">
-        <Loader.Token withPrice repeat={6} />
-      </Flex>
-    )
-  }
-
-  return (
-    <Flex grow px="$spacing24">
-      {renderEmpty}
-    </Flex>
-  )
-})
-
-const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: TokenBalanceListRow }) {
-  const { balancesById, isWarmLoading, onPressToken } = useTokenBalanceListContext()
-
   const portfolioBalance = balancesById?.[item]
-  const hasPortfolioBalance = !!portfolioBalance
-
-  const tokenBalanceItem = useMemo(() => {
-    if (!hasPortfolioBalance) {
-      return null
-    }
-
-    return (
-      <TokenBalanceItem
-        padded
-        portfolioBalanceId={portfolioBalance.id}
-        isLoading={isWarmLoading}
-        currencyInfo={portfolioBalance.currencyInfo}
-        onPressToken={onPressToken}
-      />
-    )
-  }, [hasPortfolioBalance, portfolioBalance?.id, portfolioBalance?.currencyInfo, isWarmLoading, onPressToken])
-
-  if (item === HIDDEN_TOKEN_BALANCES_ROW) {
-    return <HiddenTokensRowWrapper />
-  }
 
   if (!portfolioBalance) {
     // This can happen when the view is out of focus and the user sells/sends 100% of a token's balance.
@@ -288,65 +318,14 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
   }
 
   return (
-    <TokenBalanceItemContextMenu portfolioBalance={portfolioBalance}>{tokenBalanceItem}</TokenBalanceItemContextMenu>
-  )
-})
-
-const HiddenTokensRowWrapper = memo(function HiddenTokensRowWrapper(): JSX.Element {
-  const { t } = useTranslation()
-
-  const { hiddenTokensCount, hiddenTokensExpanded, setHiddenTokensExpanded } = useTokenBalanceListContext()
-
-  const [isModalVisible, setModalVisible] = useState(false)
-
-  const handlePressToken = useCallback((): void => {
-    setModalVisible(true)
-  }, [])
-
-  const closeModal = useCallback((): void => {
-    setModalVisible(false)
-  }, [])
-
-  const handleAnalytics = useCallback((): void => {
-    sendAnalyticsEvent(WalletEventName.ExternalLinkOpened, {
-      url: uniswapUrls.helpArticleUrls.hiddenTokenInfo,
-    })
-  }, [])
-
-  return (
-    <Flex grow>
-      <HiddenTokensRow
-        isExpanded={hiddenTokensExpanded}
-        numHidden={hiddenTokensCount}
-        onPress={(): void => {
-          setHiddenTokensExpanded(!hiddenTokensExpanded)
-        }}
+    <TokenBalanceItemContextMenu portfolioBalance={portfolioBalance}>
+      <TokenBalanceItem
+        padded
+        index={index}
+        isLoading={isWarmLoading}
+        portfolioBalance={portfolioBalance}
+        onPressToken={onPressToken}
       />
-      {hiddenTokensExpanded && (
-        <Flex mx="$spacing12">
-          <InformationBanner infoText={t('hidden.tokens.info.banner.text')} onPress={handlePressToken} />
-        </Flex>
-      )}
-
-      <InfoLinkModal
-        showCloseButton
-        buttonText={t('common.button.close')}
-        buttonTheme="tertiary"
-        description={t('hidden.tokens.info.text.info')}
-        icon={
-          <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">
-            <ShieldCheck color="$neutral1" size="$icon.24" />
-          </Flex>
-        }
-        isOpen={isModalVisible}
-        linkText={t('common.button.learn')}
-        linkUrl={uniswapUrls.helpArticleUrls.hiddenTokenInfo}
-        name={ModalName.HiddenTokenInfoModal}
-        title={t('hidden.tokens.info.text.title')}
-        onAnalyticsEvent={handleAnalytics}
-        onButtonPress={closeModal}
-        onDismiss={closeModal}
-      />
-    </Flex>
+    </TokenBalanceItemContextMenu>
   )
 })

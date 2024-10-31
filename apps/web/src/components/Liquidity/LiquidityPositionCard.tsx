@@ -1,5 +1,4 @@
 // eslint-disable-next-line no-restricted-imports
-import { PositionStatus } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { LiquidityPositionFeeStats } from 'components/Liquidity/LiquidityPositionFeeStats'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
@@ -21,7 +20,7 @@ export function LiquidityPositionCard({ liquidityPosition, ...rest }: { liquidit
     fiatValue0 && fiatValue1
       ? formatCurrencyAmount({
           value: fiatValue0.add(fiatValue1),
-          type: NumberType.FiatStandard,
+          type: NumberType.FiatTokenPrice,
         })
       : undefined
   const v2FormattedUsdValue =
@@ -33,8 +32,7 @@ export function LiquidityPositionCard({ liquidityPosition, ...rest }: { liquidit
     fiatFeeValue0 && fiatFeeValue1
       ? formatCurrencyAmount({
           value: fiatFeeValue0.add(fiatFeeValue1),
-          type:
-            liquidityPosition.status === PositionStatus.CLOSED ? NumberType.FiatStandard : NumberType.FiatTokenPrice,
+          type: NumberType.FiatTokenPrice,
         })
       : undefined
 

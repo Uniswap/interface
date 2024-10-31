@@ -24,7 +24,7 @@ import { V2Unsupported } from 'components/V2Unsupported'
 import { AutoColumn, ColumnCenter } from 'components/deprecated/Column'
 import Row, { RowBetween, RowFixed } from 'components/deprecated/Row'
 import { Dots } from 'components/swap/styled'
-import { chainIdToBackendChain, useIsSupportedChainId } from 'constants/chains'
+import { useIsSupportedChainId } from 'constants/chains'
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
@@ -40,7 +40,7 @@ import { PositionPageUnsupportedContent } from 'pages/LegacyPool/PositionPage'
 import { ClickableText, MaxButton, Wrapper } from 'pages/LegacyPool/styled'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Field } from 'state/burn/actions'
 import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from 'state/burn/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
@@ -49,12 +49,9 @@ import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -65,17 +62,9 @@ const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
 export default function RemoveLiquidityWrapper() {
   const { chainId } = useAccount()
-  const isV4EverywhereEnabled = useFeatureFlag(FeatureFlags.V4Everywhere)
   const isSupportedChain = useIsSupportedChainId(chainId)
   const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
-
-  if (isV4EverywhereEnabled) {
-    // TODO(WEB-5361): prefill poolId from legacy URL /remove/ETH/0x123
-    const chainName = chainIdToBackendChain({ chainId: chainId ?? UniverseChainId.Mainnet }).toLowerCase()
-    return <Navigate to={`/positions/v2/${chainName}`} replace />
-  }
-
   if (isSupportedChain && currencyA !== currencyB) {
     return <RemoveLiquidity />
   } else {

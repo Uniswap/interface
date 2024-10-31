@@ -310,17 +310,7 @@ export function SelectTokensStep({
               </Button>
             </Flex>
             {isShowMoreFeeTiersEnabled && (
-              <Flex
-                display="flex"
-                $platform-web={{
-                  display: 'grid',
-                }}
-                gridTemplateColumns="repeat(4, 1fr)"
-                $md={{
-                  gridTemplateColumns: 'repeat(2, 1fr)',
-                }}
-                gap={10}
-              >
+              <Flex row gap={10}>
                 {feeTiers.map((feeTier) => (
                   <FeeTier
                     key={feeTier.value.feeAmount}

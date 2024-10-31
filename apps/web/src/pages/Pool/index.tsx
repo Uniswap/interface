@@ -48,7 +48,7 @@ export default function Pool() {
       <Flex grow>
         <Positions />
       </Flex>
-      <Flex gap="$gap20" mb="$spacing24">
+      <Flex gap="$gap20">
         <Text variant="subheading1">{t('liquidity.learnMoreLabel')}</Text>
         <Flex gap="$gap12">
           <LearnMoreTile

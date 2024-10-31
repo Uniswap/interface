@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react'
+import { fireEvent, screen } from '@testing-library/react'
 import { PrefetchBalancesWrapper, useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAccount } from 'hooks/useAccount'
 import { mocked } from 'test-utils/mocked'
@@ -7,8 +7,6 @@ import { useOnAssetActivitySubscription } from 'uniswap/src/data/graphql/uniswap
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
-// TODO(WEB-5370): Remove this delay + waitFor once we've integrated wallet's refetch logic
-jest.setTimeout(10000)
 const mockLazyFetch = jest.fn()
 const mockBalanceQueryResponse = [
   mockLazyFetch,
@@ -47,17 +45,17 @@ describe('TokenBalancesProvider', () => {
     mocked(useAccount).mockReturnValue({ address: '0xaddress1', chainId: 1 } as any)
   })
 
-  it('TokenBalancesProvider should not fetch balances without calls to useOnAssetActivitySubscription', async () => {
+  it('TokenBalancesProvider should not fetch balances without calls to useOnAssetActivitySubscription', () => {
     render(<div />)
-    await waitFor(() => expect(mockLazyFetch).toHaveBeenCalledTimes(0), { timeout: 3500 })
+    expect(mockLazyFetch).toHaveBeenCalledTimes(0)
   })
 
   describe('useTokenBalancesQuery', () => {
-    it('should only refetch balances when stale', async () => {
+    it('should only refetch balances when stale', () => {
       const { rerender, unmount } = renderHook(() => useTokenBalancesQuery())
 
       // Rendering useTokenBalancesQuery should trigger a fetch
-      await waitFor(() => expect(mockLazyFetch).toHaveBeenCalledTimes(1), { timeout: 3500 })
+      expect(mockLazyFetch).toHaveBeenCalledTimes(1)
 
       // Rerender to clear staleness
       rerender()
@@ -65,31 +63,31 @@ describe('TokenBalancesProvider', () => {
       // Receiving a new value from subscription should trigger a fetch while useTokenBalancesQuery hooks are mounted
       triggerSubscriptionUpdate()
       rerender()
-      await waitFor(() => expect(mockLazyFetch).toHaveBeenCalledTimes(2), { timeout: 3500 })
+      expect(mockLazyFetch).toHaveBeenCalledTimes(2)
 
       // Unmounting the hooks should not trigger any fetches
       unmount()
-      await waitFor(() => expect(mockLazyFetch).toHaveBeenCalledTimes(2), { timeout: 3500 })
+      expect(mockLazyFetch).toHaveBeenCalledTimes(2)
 
       // Receiving a new value from subscription should NOT trigger a fetch if no useTokenBalancesQuery hooks are mounted
       triggerSubscriptionUpdate()
-      await waitFor(() => expect(mockLazyFetch).toHaveBeenCalledTimes(2), { timeout: 3500 })
+      expect(mockLazyFetch).toHaveBeenCalledTimes(2)
     })
 
-    it('should use cached balances across multiple hook calls', async () => {
+    it('should use cached balances across multiple hook calls', () => {
       renderHook(() => ({
         hook1: useTokenBalancesQuery(),
         hook2: useTokenBalancesQuery(),
       }))
 
       // Rendering useTokenBalancesQuery twice should only trigger one fetch
-      await waitFor(() => expect(mockLazyFetch).toHaveBeenCalledTimes(1), { timeout: 3500 })
+      expect(mockLazyFetch).toHaveBeenCalledTimes(1)
     })
 
-    it('should refetch when account changes', async () => {
+    it('should refetch when account changes', () => {
       const { rerender } = renderHook(() => useTokenBalancesQuery())
 
-      await waitFor(() => expect(mockLazyFetch).toHaveBeenCalledTimes(1), { timeout: 3500 })
+      expect(mockLazyFetch).toHaveBeenCalledTimes(1)
 
       // Rerender to clear staleness
       rerender()
@@ -98,12 +96,12 @@ describe('TokenBalancesProvider', () => {
       mocked(useAccount).mockReturnValue({ address: '0xaddress2', chainId: 1 } as any)
       rerender()
 
-      await waitFor(() => expect(mockLazyFetch).toHaveBeenCalledTimes(2), { timeout: 3500 })
+      expect(mockLazyFetch).toHaveBeenCalledTimes(2)
     })
   })
 
   describe('PrefetchBalancesWrapper', () => {
-    it('should fetch balances when a PrefetchBalancesWrapper is hovered', async () => {
+    it('should fetch balances when a PrefetchBalancesWrapper is hovered', () => {
       const { rerender } = render(
         <PrefetchBalancesWrapper>
           <div>hi</div>
@@ -119,17 +117,17 @@ describe('TokenBalancesProvider', () => {
       )
 
       // Should not fetch balances before hover
-      await waitFor(() => expect(mockLazyFetch).toHaveBeenCalledTimes(0), { timeout: 3500 })
+      expect(mockLazyFetch).toHaveBeenCalledTimes(0)
 
       // Hovering component should trigger a fetch
       fireEvent.mouseEnter(wrappedComponent)
       fireEvent.mouseLeave(wrappedComponent)
-      await waitFor(() => expect(mockLazyFetch).toHaveBeenCalledTimes(1), { timeout: 4000 })
+      expect(mockLazyFetch).toHaveBeenCalledTimes(1)
 
       // Subsequent hover should not trigger a fetch
       fireEvent.mouseEnter(wrappedComponent)
       fireEvent.mouseLeave(wrappedComponent)
-      await waitFor(() => expect(mockLazyFetch).toHaveBeenCalledTimes(1), { timeout: 4000 })
+      expect(mockLazyFetch).toHaveBeenCalledTimes(1)
 
       // Subsequent hover should trigger a fetch if the subscription has updated
       triggerSubscriptionUpdate()
@@ -138,10 +136,10 @@ describe('TokenBalancesProvider', () => {
           <div>hi</div>
         </PrefetchBalancesWrapper>,
       )
-      await waitFor(() => expect(mockLazyFetch).toHaveBeenCalledTimes(1), { timeout: 4000 })
+      expect(mockLazyFetch).toHaveBeenCalledTimes(1)
       fireEvent.mouseEnter(wrappedComponent)
       fireEvent.mouseLeave(wrappedComponent)
-      await waitFor(() => expect(mockLazyFetch).toHaveBeenCalledTimes(2), { timeout: 4000 })
+      expect(mockLazyFetch).toHaveBeenCalledTimes(2)
     })
   })
 })

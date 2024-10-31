@@ -34,7 +34,6 @@ export type CurrencyInfo = {
 
 // Portfolio balance as exposed to the app
 export type PortfolioBalance = {
-  id: string
   cacheId: string
   quantity: number // float representation of balance
   balanceUSD: Maybe<number>

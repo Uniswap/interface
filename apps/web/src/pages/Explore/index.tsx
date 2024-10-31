@@ -19,8 +19,12 @@ import { useNavigate } from 'react-router-dom'
 import { ExploreContextProvider } from 'state/explore'
 import { TamaguiClickableStyle } from 'theme/components'
 import { Flex, Text, styled as tamaguiStyled } from 'ui/src'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans } from 'uniswap/src/i18n'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export enum ExploreTab {
   Tokens = 'tokens',
@@ -89,6 +93,7 @@ const HeaderTab = tamaguiStyled(Text, {
 const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const tabNavRef = useRef<HTMLDivElement>(null)
   const resetManualOutage = useResetAtom(manualChainOutageAtom)
+  const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
 
   const initialKey: number = useMemo(() => {
     const key = initialTab && Pages.findIndex((page) => page.key === initialTab)
@@ -114,8 +119,12 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const { tab: tabName } = useExploreParams()
   const tab = tabName ?? ExploreTab.Tokens
 
-  const chain = useChainFromUrlParam()
-
+  const chainWithoutFallback = useChainFromUrlParam()
+  const chain = useMemo(() => {
+    return isMultichainExploreEnabled
+      ? chainWithoutFallback
+      : chainWithoutFallback ?? UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet]
+  }, [chainWithoutFallback, isMultichainExploreEnabled])
   useEffect(() => {
     const tabIndex = Pages.findIndex((page) => page.key === tab)
     if (tabIndex !== -1) {
@@ -172,7 +181,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
             >
               {Pages.map(({ title, loggingElementName, key }, index) => {
                 // disable Transactions tab if no chain is selected
-                const disabled = key === ExploreTab.Transactions && !chain
+                const disabled = isMultichainExploreEnabled && key === ExploreTab.Transactions && !chain
                 const url = getTokenExploreURL({ tab: key, chain: chain?.backendChain.chain })
                 return (
                   <Trace

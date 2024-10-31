@@ -10,9 +10,7 @@ import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
 import { parseRestPosition } from 'components/Liquidity/utils'
 import { LoadingFullscreen, LoadingRows } from 'components/Loader/styled'
 import { useChainFromUrlParam } from 'constants/chains'
-import { ZERO_ADDRESS } from 'constants/misc'
 import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
-import NotFound from 'pages/NotFound'
 import { ClaimFeeModal } from 'pages/Pool/Positions/ClaimFeeModal'
 import { LoadingRow, useRefetchOnLpModalClose } from 'pages/Pool/Positions/shared'
 import { useMemo, useState } from 'react'
@@ -21,12 +19,12 @@ import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { ClickableTamaguiStyle } from 'theme/components'
-import { Button, Flex, Main, Switch, Text, styled } from 'ui/src'
+import { Flex, Main, Switch, Text, styled } from 'ui/src'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { useAccount } from 'wagmi'
 
@@ -64,20 +62,8 @@ export const HeaderButton = styled(Flex, {
   } as const,
 })
 
-function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
-  if (!tokenId) {
-    return undefined
-  }
-  try {
-    return BigNumber.from(tokenId)
-  } catch (error) {
-    return undefined
-  }
-}
-
 export default function PositionPage() {
-  const { tokenId: tokenIdFromUrl } = useParams<{ tokenId: string }>()
-  const tokenId = parseTokenId(tokenIdFromUrl)
+  const { tokenId } = useParams<{ tokenId: string }>()
   const chainInfo = useChainFromUrlParam()
   const account = useAccount()
   const { pathname } = useLocation()
@@ -85,19 +71,23 @@ export default function PositionPage() {
     data,
     isLoading: positionLoading,
     refetch,
-  } = useGetPositionQuery({
-    owner: account?.address ?? ZERO_ADDRESS,
-    protocolVersion: pathname.includes('v3')
-      ? ProtocolVersion.V3
-      : pathname.includes('v4')
-        ? ProtocolVersion.V4
-        : ProtocolVersion.UNSPECIFIED,
-    tokenId: tokenIdFromUrl,
-    chainId: chainInfo?.id ?? account.chainId,
-  })
+  } = useGetPositionQuery(
+    account.address
+      ? {
+          owner: account.address,
+          protocolVersion: pathname.includes('v3')
+            ? ProtocolVersion.V3
+            : pathname.includes('v4')
+              ? ProtocolVersion.V4
+              : ProtocolVersion.UNSPECIFIED,
+          tokenId,
+          chainId: chainInfo?.id ?? account.chainId,
+        }
+      : undefined,
+  )
   const position = data?.position
   const positionInfo = useMemo(() => parseRestPosition(position), [position])
-  const metadata = usePositionTokenURI(tokenId, chainInfo?.id, positionInfo?.version)
+  const metadata = usePositionTokenURI(tokenId ? BigNumber.from(tokenId) : undefined, chainInfo?.id)
 
   useRefetchOnLpModalClose(refetch)
 
@@ -108,7 +98,6 @@ export default function PositionPage() {
   const { value: v4Enabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Everywhere)
   const { formatCurrencyAmount } = useFormatter()
   const navigate = useNavigate()
-  const { t } = useTranslation()
 
   const { currency0Amount, currency1Amount, status } = positionInfo ?? {}
   const {
@@ -127,7 +116,7 @@ export default function PositionPage() {
     return <Navigate to="/pools" replace />
   }
 
-  if (positionLoading) {
+  if (positionLoading || !position || !positionInfo || !currency0Amount || !currency1Amount) {
     return (
       <BodyWrapper>
         <LoadingRows>
@@ -147,24 +136,6 @@ export default function PositionPage() {
     )
   }
 
-  if (!position || !positionInfo || !currency0Amount || !currency1Amount) {
-    return (
-      <NotFound
-        title={<Text variant="heading2">{t('position.notFound')}</Text>}
-        subtitle={
-          <Flex centered maxWidth="75%" mt="$spacing20">
-            <Text color="$neutral2" variant="heading3" textAlign="center">
-              {t('position.notFound.description')}
-            </Text>
-          </Flex>
-        }
-        actionButton={<Button onPress={() => navigate('/positions')}>{t('common.backToPositions')}</Button>}
-      />
-    )
-  }
-
-  // TODO (WEB-4920): hide action buttons if position owner is not connected wallet.
-
   return (
     <BodyWrapper>
       <Flex gap="$gap20">
@@ -175,12 +146,7 @@ export default function PositionPage() {
             </BreadcrumbNavLink>
           </BreadcrumbNavContainer>
         </Flex>
-        <Flex
-          row
-          $lg={{ row: false, alignItems: 'flex-start', gap: '$gap16' }}
-          justifyContent="space-between"
-          alignItems="center"
-        >
+        <Flex row justifyContent="space-between" alignItems="center">
           <LiquidityPositionInfo positionInfo={positionInfo} />
           {status !== PositionStatus.CLOSED && (
             <Flex row gap="$gap12" alignItems="center">
@@ -188,7 +154,7 @@ export default function PositionPage() {
                 <HeaderButton
                   emphasis="secondary"
                   onPress={() => {
-                    navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenIdFromUrl}`)
+                    navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenId}`)
                   }}
                 >
                   <Text variant="buttonLabel2" color="$neutral1">
@@ -220,7 +186,7 @@ export default function PositionPage() {
           )}
         </Flex>
       </Flex>
-      <Flex row $lg={{ row: false }} width="100%" gap="$gap16">
+      <Flex row width="100%" gap="$gap16">
         <Flex grow backgroundColor="$surface2" borderRadius="$rounded12" justifyContent="center" alignItems="center">
           {'result' in metadata ? (
             <PositionNFT image={metadata.result.image} height={400} />
@@ -301,6 +267,7 @@ export default function PositionPage() {
       </Flex>
       {priceOrdering && token0CurrentPrice && token1CurrentPrice && (
         <LiquidityPositionPriceRangeTile
+          status={status}
           priceOrdering={priceOrdering}
           feeTier={positionInfo.feeTier?.toString()}
           tickLower={positionInfo.tickLower}

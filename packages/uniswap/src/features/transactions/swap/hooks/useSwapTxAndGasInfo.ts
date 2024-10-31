@@ -137,13 +137,11 @@ function getTotalGasFee(
   tokenApprovalInfo: TokenApprovalInfoWithGas,
   account?: AccountMeta,
 ): GasFeeResult {
-  const isConnected = !!account?.address
-  const blockingUnknownApprovalStatus = isConnected && tokenApprovalInfo.action === ApprovalAction.Unknown
-  const isLoading = swapGasResult.isLoading || (blockingUnknownApprovalStatus && tokenApprovalInfo.isLoading)
-
-  const approvalError =
-    blockingUnknownApprovalStatus && !tokenApprovalInfo.isLoading ? new Error('Approval action unknown') : null
-  let error = swapGasResult.error ?? approvalError
+  const isConnected = account?.address
+  const isLoading = (isConnected && !tokenApprovalInfo) || swapGasResult.isLoading
+  const hasApprovalError =
+    isConnected && !tokenApprovalInfo?.isLoading && tokenApprovalInfo.action === ApprovalAction.Unknown
+  let error = swapGasResult.error ?? hasApprovalError ? new Error('Approval action unknown') : null
 
   // If swap requires revocation we expect simulation error so set error to null
   if (tokenApprovalInfo?.action === ApprovalAction.RevokeAndPermit2Approve) {
@@ -168,7 +166,7 @@ function getTotalGasFee(
   // Do not populate gas fee:
   // - If errors exist on swap or approval requests.
   // - If we don't have both the approval and transaction gas fees.
-  if (approvalGasFeeMissing || swapGasFeeMissing || blockingUnknownApprovalStatus || error) {
+  if (approvalGasFeeMissing || swapGasFeeMissing || hasApprovalError || error) {
     return { value: undefined, error, isLoading }
   }
 

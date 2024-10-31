@@ -1,12 +1,11 @@
+// eslint-disable-next-line no-restricted-imports
 import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
 import { DepositState } from 'components/Liquidity/types'
-import { useAccount } from 'hooks/useAccount'
 import {
   CreatePositionContext,
   CreateTxContext,
   DEFAULT_DEPOSIT_STATE,
-  DEFAULT_PRICE_RANGE_STATE_CREATING_POOL,
-  DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS,
+  DEFAULT_PRICE_RANGE_STATE,
   DepositContext,
   PriceRangeContext,
   useCreatePositionContext,
@@ -29,14 +28,10 @@ import {
   generateCreateCalldataQueryParams,
   generateCreatePositionTxRequest,
 } from 'pages/Pool/Positions/create/utils'
-import { useEffect, useMemo, useState } from 'react'
-import { PositionField } from 'types/position'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { useMemo, useState } from 'react'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
-import { UniverseChainId } from 'uniswap/src/types/chains'
-import { usePrevious } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function CreatePositionContextProvider({
@@ -51,20 +46,6 @@ export function CreatePositionContextProvider({
   const derivedPositionInfo = useDerivedPositionInfo(positionState)
   const [feeTierSearchModalOpen, setFeeTierSearchModalOpen] = useState(false)
   const [createPoolInfoDismissed, setCreatePoolInfoDismissed] = useState(false)
-
-  const account = useAccount()
-  const prevChainId = usePrevious(account.chainId)
-  useEffect(() => {
-    if (prevChainId && prevChainId !== account.chainId) {
-      setPositionState((prevState) => ({
-        ...prevState,
-        currencyInputs: {
-          [PositionField.TOKEN0]: nativeOnChain(account.chainId ?? UniverseChainId.Mainnet),
-        },
-      }))
-      setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
-    }
-  }, [account.chainId, prevChainId])
 
   return (
     <CreatePositionContext.Provider
@@ -87,19 +68,7 @@ export function CreatePositionContextProvider({
 }
 
 export function PriceRangeContextProvider({ children }: { children: React.ReactNode }) {
-  const { derivedPositionInfo } = useCreatePositionContext()
-  const [priceRangeState, setPriceRangeState] = useState<PriceRangeState>(DEFAULT_PRICE_RANGE_STATE_CREATING_POOL)
-
-  useEffect(() => {
-    // creatingPoolOrPair is calculated in the previous step of the create flow, so
-    // it's safe to reset PriceRangeState to defaults when it changes.
-    setPriceRangeState(
-      derivedPositionInfo.creatingPoolOrPair
-        ? DEFAULT_PRICE_RANGE_STATE_CREATING_POOL
-        : DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS,
-    )
-  }, [derivedPositionInfo.creatingPoolOrPair])
-
+  const [priceRangeState, setPriceRangeState] = useState<PriceRangeState>(DEFAULT_PRICE_RANGE_STATE)
   const derivedPriceRangeInfo = useDerivedPriceRangeInfo(priceRangeState)
 
   return (

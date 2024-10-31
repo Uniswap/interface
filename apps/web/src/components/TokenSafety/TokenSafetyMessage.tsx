@@ -47,7 +47,6 @@ type TokenSafetyMessageProps = {
   tokenSymbol?: string
 }
 
-/** @deprecated Use TokenWarningCard from packages/uniswap instead */
 export default function TokenSafetyMessage({
   warning,
   tokenAddress,

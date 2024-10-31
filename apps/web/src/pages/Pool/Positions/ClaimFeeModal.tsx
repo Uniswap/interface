@@ -164,9 +164,7 @@ export function ClaimFeeModal({
             }
           }}
         >
-          <Text variant="buttonLabel2" color="$neutralContrast">
-            {t('common.collect.button')}
-          </Text>
+          <Text variant="buttonLabel2">{t('common.collect.button')}</Text>
         </Button>
       </Flex>
     </Modal>

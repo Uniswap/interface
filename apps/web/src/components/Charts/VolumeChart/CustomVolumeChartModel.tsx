@@ -9,6 +9,7 @@ export type CustomVolumeChartModelParams = {
   colors: string[]
   headerHeight: number
   useThinCrosshair?: boolean
+  isMultichainExploreEnabled?: boolean
   background?: string
 }
 
@@ -25,6 +26,7 @@ export class CustomVolumeChartModel<TDataType extends CustomHistogramData> exten
     this.series = this.api.addCustomSeries(
       new CustomHistogramSeries({
         colors: params.colors,
+        isMultichainExploreEnabled: params.isMultichainExploreEnabled,
         background: params.background,
       }),
     )

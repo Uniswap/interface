@@ -1,11 +1,11 @@
 import { PropsWithChildren, SyntheticEvent, useEffect, useRef, useState } from 'react'
-import { Popover, PopperProps, Portal } from 'ui/src'
+import { Popover, PopperProps, Portal } from 'tamagui'
 import { Flex, FlexProps } from 'ui/src/components/layout'
+import { MenuContent } from 'ui/src/components/menu/MenuContent'
+import { MenuContentItem } from 'ui/src/components/menu/types'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { zIndices } from 'ui/src/theme'
 import { usePrevious } from 'utilities/src/react/hooks'
-import { MenuContent } from 'wallet/src/components/menu/MenuContent'
-import { MenuContentItem } from 'wallet/src/components/menu/types'
 
 type ContextMenuProps = {
   menuOptions: MenuContentItem[]

@@ -17,8 +17,4 @@ fragment SimpleTokenDetails on Token {
     buyFeeBps
     sellFeeBps
   }
-  protectionInfo {
-    attackTypes
-    result
-  }
 }

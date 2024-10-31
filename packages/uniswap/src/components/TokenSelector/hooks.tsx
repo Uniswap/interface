@@ -102,7 +102,6 @@ export function searchResultToCurrencyInfo({
   logoUrl,
   safetyLevel,
   safetyInfo,
-  feeData,
 }: TokenSearchResult): CurrencyInfo | null {
   const currency = buildCurrency({
     chainId: chainId as UniverseChainId,
@@ -110,8 +109,6 @@ export function searchResultToCurrencyInfo({
     decimals: 0, // this does not matter in a context of CurrencyInfo here, as we do not provide any balance
     symbol,
     name,
-    buyFeeBps: feeData?.buyFeeBps,
-    sellFeeBps: feeData?.sellFeeBps,
   })
 
   if (!currency) {
@@ -233,12 +230,6 @@ function currencyInfoToTokenSearchResult(currencyInfo: CurrencyInfo): TokenSearc
     logoUrl: currencyInfo.logoUrl ?? null,
     safetyLevel: currencyInfo.safetyLevel ?? null,
     safetyInfo: currencyInfo.safetyInfo,
-    feeData: currencyInfo.currency.isToken
-      ? {
-          buyFeeBps: currencyInfo.currency.buyFeeBps?.gt(0) ? currencyInfo.currency.buyFeeBps.toString() : undefined,
-          sellFeeBps: currencyInfo.currency.sellFeeBps?.gt(0) ? currencyInfo.currency.sellFeeBps.toString() : undefined,
-        }
-      : null,
   }
 }
 

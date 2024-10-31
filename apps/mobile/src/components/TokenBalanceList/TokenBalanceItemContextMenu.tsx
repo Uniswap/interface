@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, memo, useMemo } from 'react'
+import React, { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { borderRadii } from 'ui/src/theme'
@@ -6,12 +6,13 @@ import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generat
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useTokenContextMenu } from 'wallet/src/features/portfolio/useTokenContextMenu'
 
-export const TokenBalanceItemContextMenu = memo(function _TokenBalanceItemContextMenu({
+export const TokenBalanceItemContextMenu = memo(function _TokenBalanceItem({
   portfolioBalance,
   children,
-}: PropsWithChildren<{
+}: {
   portfolioBalance: PortfolioBalance
-}>) {
+  children: React.ReactNode
+}) {
   const { t } = useTranslation()
 
   const { menuActions, onContextMenuPress } = useTokenContextMenu({

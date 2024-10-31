@@ -55,7 +55,6 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
       action: {
         currency0Amount: currency0AmountToRemove,
         currency1Amount: currency1AmountToRemove,
-        liquidityToken: positionInfo.liquidityToken,
       },
       approvePositionTokenRequest,
       txRequest,

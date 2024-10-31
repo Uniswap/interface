@@ -15354,7 +15354,7 @@ __metadata:
     "@types/uuid": 9.0.1
     "@uniswap/analytics-events": 2.38.0
     "@uniswap/eslint-config": "workspace:^"
-    "@uniswap/uniswapx-sdk": 2.1.0-beta.18
+    "@uniswap/uniswapx-sdk": ^2.1.0-beta.14
     "@uniswap/universal-router-sdk": 4.5.2
     "@uniswap/v3-sdk": 3.18.1
     "@uniswap/v4-sdk": 1.10.3
@@ -15489,10 +15489,10 @@ __metadata:
     "@uniswap/permit2-sdk": 1.3.0
     "@uniswap/redux-multicall": 1.1.8
     "@uniswap/router-sdk": 1.14.3
-    "@uniswap/sdk-core": 5.9.0
+    "@uniswap/sdk-core": 5.8.4
     "@uniswap/smart-order-router": 3.17.3
     "@uniswap/token-lists": 1.0.0-beta.33
-    "@uniswap/uniswapx-sdk": 2.1.0-beta.18
+    "@uniswap/uniswapx-sdk": ^2.1.0-beta.14
     "@uniswap/universal-router-sdk": 4.5.2
     "@uniswap/v2-core": 1.0.1
     "@uniswap/v2-periphery": 1.1.0-beta.0
@@ -15714,7 +15714,7 @@ __metadata:
     "@uniswap/client-explore": 0.0.10
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/ethers-rs-mobile": 0.0.5
-    "@uniswap/sdk-core": 5.9.0
+    "@uniswap/sdk-core": 5.8.4
     "@walletconnect/core": 2.17.1
     "@walletconnect/react-native-compat": 2.17.1
     "@walletconnect/types": 2.17.1
@@ -15849,9 +15849,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/sdk-core@npm:5.9.0":
-  version: 5.9.0
-  resolution: "@uniswap/sdk-core@npm:5.9.0"
+"@uniswap/sdk-core@npm:5.8.4":
+  version: 5.8.4
+  resolution: "@uniswap/sdk-core@npm:5.8.4"
   dependencies:
     "@ethersproject/address": ^5.0.2
     "@ethersproject/bytes": ^5.7.0
@@ -15862,7 +15862,7 @@ __metadata:
     jsbi: ^3.1.4
     tiny-invariant: ^1.1.0
     toformat: ^2.0.0
-  checksum: 2bb52a473053f50da68254a9521f907fd34c3eb1c67cda9c0cbe1302da245fe5378a31afdad281a20618ec7f4b9be934c3badf8704a9ab2ae5296f90ae4725a8
+  checksum: 4979c9b568cb80c89f08bb06dda1f71705a588e101e175f5f1ec303caa7c25b66e607883644afea5cba5678d14e6cf1314157de1846c3ca6b1689b33fa7c7aa2
   languageName: node
   linkType: hard
 
@@ -15919,16 +15919,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/uniswapx-sdk@npm:2.1.0-beta.18":
-  version: 2.1.0-beta.18
-  resolution: "@uniswap/uniswapx-sdk@npm:2.1.0-beta.18"
+"@uniswap/uniswapx-sdk@npm:^2.1.0-beta.14":
+  version: 2.1.0-beta.14
+  resolution: "@uniswap/uniswapx-sdk@npm:2.1.0-beta.14"
   dependencies:
     "@ethersproject/bytes": ^5.7.0
     "@ethersproject/providers": ^5.7.0
     "@uniswap/permit2-sdk": ^1.2.1
     "@uniswap/sdk-core": ^5.0.0
     ethers: ^5.7.0
-  checksum: e29dac0f0f3201b3961aff5f946da9989736972995efcc8fab577002a250863a4cb623b02059294662837314501a16df0d9f8400d918a3165a2296caf078f550
+  checksum: 1e608a9958c4e95cde3a507e4808e76750fe4161ccae1a9d449bb7647ec613290b27fa09365913e44463337d22f374602391597c75aa4a9d6ec3a4ccab07f94d
   languageName: node
   linkType: hard
 
@@ -45170,8 +45170,8 @@ __metadata:
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/permit2-sdk": 1.3.0
     "@uniswap/router-sdk": 1.14.3
-    "@uniswap/sdk-core": 5.9.0
-    "@uniswap/uniswapx-sdk": 2.1.0-beta.18
+    "@uniswap/sdk-core": 5.8.4
+    "@uniswap/uniswapx-sdk": ^2.1.0-beta.14
     "@uniswap/v2-sdk": 4.6.1
     "@uniswap/v3-sdk": 3.18.1
     "@uniswap/v4-sdk": 1.10.3
@@ -45728,7 +45728,7 @@ __metadata:
     "@uniswap/analytics": 1.7.0
     "@uniswap/analytics-events": 2.38.0
     "@uniswap/eslint-config": "workspace:^"
-    "@uniswap/sdk-core": 5.9.0
+    "@uniswap/sdk-core": 5.8.4
     aws-appsync-auth-link: 3.0.7
     aws-appsync-subscription-link: 3.1.3
     dayjs: 1.11.7
@@ -46278,8 +46278,8 @@ __metadata:
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/permit2-sdk": 1.3.0
     "@uniswap/router-sdk": 1.14.3
-    "@uniswap/sdk-core": 5.9.0
-    "@uniswap/uniswapx-sdk": 2.1.0-beta.18
+    "@uniswap/sdk-core": 5.8.4
+    "@uniswap/uniswapx-sdk": ^2.1.0-beta.14
     "@uniswap/universal-router-sdk": 4.5.2
     "@uniswap/v3-sdk": 3.18.1
     apollo3-cache-persist: 0.14.1

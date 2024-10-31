@@ -65,18 +65,3 @@ export function getAllKeysOfNestedObject(obj: Record<string, unknown>, prefix = 
     return [...res, prefix + el]
   }, [])
 }
-
-export function sortKeysRecursively<T extends Record<string, unknown>>(input: T): T {
-  if (typeof input !== 'object' || input === null || Array.isArray(input)) {
-    return input
-  }
-
-  const sortedKeys = Object.keys(input).sort()
-
-  const sortedObj = sortedKeys.reduce((acc: Record<string, unknown>, key: string) => {
-    acc[key] = sortKeysRecursively(input[key] as T)
-    return acc
-  }, {})
-
-  return sortedObj as T
-}

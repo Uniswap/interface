@@ -10,7 +10,6 @@ import { iconSizes } from 'ui/src/theme'
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { NumberType } from 'utilities/src/format/types'
-import { usePrevious } from 'utilities/src/react/hooks'
 
 export const Container = styled(Flex, {
   gap: 32,
@@ -64,16 +63,12 @@ export function AdvancedButton({
 export function CreatingPoolInfo() {
   const { derivedPositionInfo, createPoolInfoDismissed, setCreatePoolInfoDismissed } = useCreatePositionContext()
 
-  const previouslyCreatingPoolOrPair = usePrevious(derivedPositionInfo.creatingPoolOrPair)
-
-  const shouldShowDisabled = previouslyCreatingPoolOrPair && derivedPositionInfo.poolOrPairLoading
-
-  if ((!shouldShowDisabled && !derivedPositionInfo.creatingPoolOrPair) || createPoolInfoDismissed) {
+  if (!derivedPositionInfo.creatingPoolOrPair || createPoolInfoDismissed) {
     return null
   }
 
   return (
-    <Container row gap="$spacing12" opacity={shouldShowDisabled ? 0.4 : 1}>
+    <Container row gap="$spacing12">
       <InfoCircleFilled flexShrink={0} size={iconSizes.icon20} color="$neutral2" />
       <Flex flexWrap="wrap" flexShrink={1}>
         <Text variant="subheading1">

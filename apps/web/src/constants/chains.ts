@@ -134,17 +134,6 @@ export const BACKEND_SUPPORTED_CHAINS = Object.keys(UNIVERSE_CHAIN_INFO)
   })
   .map((key) => UNIVERSE_CHAIN_INFO[parseInt(key) as UniverseChainId].backendChain.chain as InterfaceGqlChain)
 
-export const BACKEND_SUPPORTED_TESTNET_CHAINS = Object.keys(UNIVERSE_CHAIN_INFO)
-  .filter((key) => {
-    const chainId = parseInt(key) as UniverseChainId
-    return (
-      UNIVERSE_CHAIN_INFO[chainId].backendChain.backendSupported &&
-      !UNIVERSE_CHAIN_INFO[chainId].backendChain.isSecondaryChain &&
-      UNIVERSE_CHAIN_INFO[chainId].testnet
-    )
-  })
-  .map((key) => UNIVERSE_CHAIN_INFO[parseInt(key) as UniverseChainId].backendChain.chain as InterfaceGqlChain)
-
 export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = GQL_MAINNET_CHAINS.filter(
   (chain) => !BACKEND_SUPPORTED_CHAINS.includes(chain),
 ).map((chain) => CHAIN_NAME_TO_CHAIN_ID[chain]) as [UniverseChainId]

@@ -11,7 +11,6 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 interface Props {
   // TODO (WALL-4626): remove SafetyLevel entirely
-  /** @deprecated use severity instead */
   safetyLevel?: Maybe<SafetyLevel>
   severity?: WarningSeverity
   // To override the normally associated safetyLevel<->color mapping
@@ -31,7 +30,7 @@ export default function WarningIcon({
   const { color: defaultIconColor, backgroundColor } = getWarningIconColors(severityToUse)
   const color = strokeColorOverride ?? defaultIconColor
   const Icon = getWarningIcon(severityToUse, tokenProtectionEnabled)
-  const icon = Icon ? <Icon color={color} {...rest} /> : null
+  const icon = <Icon color={color} {...rest} />
   return heroIcon ? (
     <Flex borderRadius="$rounded12" p="$spacing12" backgroundColor={backgroundColor}>
       {icon}

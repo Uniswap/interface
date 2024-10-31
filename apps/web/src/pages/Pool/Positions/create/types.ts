@@ -37,7 +37,6 @@ type BaseCreatePositionInfo = {
   protocolVersion: ProtocolVersion
   currencies: [OptionalCurrency, OptionalCurrency]
   creatingPoolOrPair?: boolean
-  poolOrPairLoading?: boolean
 }
 
 export type CreateV4PositionInfo = BaseCreatePositionInfo & {

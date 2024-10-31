@@ -102,37 +102,22 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
     if (!account.address) {
       return
     }
-    // adds a 3 second delay to account for dependency latency after an account update
-    // TODO(WEB-5370): Remove this delay once we've integrated wallet's refetch logic
-    setTimeout(
-      () => {
-        account.address &&
-          lazyFetch({
-            variables: {
-              ownerAddress: account.address,
-              chains: gqlChains,
-              valueModifiers: [
-                {
-                  ownerAddress: account.address,
-                  includeSpamTokens: valueModifiers.includeSpamTokens,
-                  includeSmallBalances: valueModifiers.includeSmallBalances,
-                  tokenExcludeOverrides: [],
-                  tokenIncludeOverrides: [],
-                },
-              ],
-            },
-          })
+    lazyFetch({
+      variables: {
+        ownerAddress: account.address,
+        chains: gqlChains,
+        valueModifiers: [
+          {
+            ownerAddress: account.address,
+            includeSpamTokens: valueModifiers.includeSpamTokens,
+            includeSmallBalances: valueModifiers.includeSmallBalances,
+            tokenExcludeOverrides: [],
+            tokenIncludeOverrides: [],
+          },
+        ],
       },
-      hasAccountUpdate ? 3000 : 0,
-    )
-  }, [
-    account.address,
-    hasAccountUpdate,
-    lazyFetch,
-    gqlChains,
-    valueModifiers.includeSpamTokens,
-    valueModifiers.includeSmallBalances,
-  ])
+    })
+  }, [account.address, lazyFetch, valueModifiers, gqlChains])
 
   return (
     <AdaptiveTokenBalancesProvider

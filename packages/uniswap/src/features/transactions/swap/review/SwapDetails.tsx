@@ -7,11 +7,8 @@ import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/FeeOnTransferFee'
 import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
-import {
-  FeeOnTransferFeeGroupProps,
-  TokenWarningProps,
-} from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/modals/AcrossRoutingInfo'
 import { EstimatedTime } from 'uniswap/src/features/transactions/swap/review/EstimatedTime'
 import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/review/MaxSlippageRow'
@@ -30,8 +27,7 @@ interface SwapDetailsProps {
   customSlippageTolerance?: number
   derivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>
   feeOnTransferProps?: FeeOnTransferFeeGroupProps
-  tokenWarningProps: TokenWarningProps
-  tokenWarningChecked?: boolean
+  feeOnTransferWarningChecked?: boolean
   gasFallbackUsed?: boolean
   gasFee: GasFeeResult
   uniswapXGasBreakdown?: UniswapXGasBreakdown
@@ -39,7 +35,7 @@ interface SwapDetailsProps {
   warning?: Warning
   onAcceptTrade: () => void
   onShowWarning?: () => void
-  setTokenWarningChecked?: (checked: boolean) => void
+  setFeeOnTransferWarningChecked?: (checked: boolean) => void
 }
 
 export function SwapDetails({
@@ -48,15 +44,14 @@ export function SwapDetails({
   customSlippageTolerance,
   derivedSwapInfo,
   feeOnTransferProps,
-  tokenWarningProps,
-  tokenWarningChecked,
+  feeOnTransferWarningChecked,
   gasFee,
   uniswapXGasBreakdown,
   newTradeRequiresAcceptance,
   warning,
   onAcceptTrade,
   onShowWarning,
-  setTokenWarningChecked,
+  setFeeOnTransferWarningChecked,
 }: SwapDetailsProps): JSX.Element {
   const { t } = useTranslation()
 
@@ -100,9 +95,8 @@ export function SwapDetails({
         }
         chainId={acceptedTrade.inputAmount.currency.chainId}
         feeOnTransferProps={feeOnTransferProps}
-        tokenWarningProps={tokenWarningProps}
-        tokenWarningChecked={tokenWarningChecked}
-        setTokenWarningChecked={setTokenWarningChecked}
+        feeOnTransferWarningChecked={feeOnTransferWarningChecked}
+        setFeeOnTransferWarningChecked={setFeeOnTransferWarningChecked}
         gasFee={gasFee}
         swapFee={acceptedTrade.swapFee}
         swapFeeUsd={swapFeeUsd}

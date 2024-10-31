@@ -1,84 +1,43 @@
-import { PropsWithChildren, useState } from 'react'
+import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, TouchableArea } from 'ui/src'
-import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
-import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import TokenWarningModal, { FeeRow, WarningModalInfoContainer } from 'uniswap/src/features/tokens/TokenWarningModal'
-import { getModalHeaderText, getModalSubtitleTokenWarningText } from 'uniswap/src/features/tokens/safetyUtils'
-import { FoTFeeType, TokenFeeInfo } from 'uniswap/src/features/transactions/TransactionDetails/types'
-import { getFeeSeverity } from 'uniswap/src/features/transactions/TransactionDetails/utils'
-import { isInterface } from 'utilities/src/platform'
+import { isWeb } from 'ui/src'
+import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
+import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
+import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TokenFeeInfo, getFeeSeverity } from 'uniswap/src/features/transactions/TransactionDetails/FeeOnTransferFee'
 
-export function FeeOnTransferWarning({
-  children,
-  feeInfo,
-  feeType,
-}: PropsWithChildren<{ feeInfo: TokenFeeInfo; feeType: FoTFeeType }>): JSX.Element {
+export function FeeOnTransferWarning({ children, feeInfo }: PropsWithChildren<{ feeInfo: TokenFeeInfo }>): JSX.Element {
   const { t } = useTranslation()
-  const { formatPercent } = useLocalizationContext()
-  const [showModal, setShowModal] = useState(false)
-
-  const { fee, tokenSymbol } = feeInfo
-  const feePercent = parseFloat(fee.toFixed())
-  const formattedFeePercent = formatPercent(feePercent)
-
-  const { tokenProtectionWarning } = getFeeSeverity(feeInfo.fee)
-  // These should never be null bc tokenProtectionWarning is never None
-  const title = getModalHeaderText({ t, tokenProtectionWarning, tokenSymbol0: tokenSymbol }) ?? ''
-  const subtitle =
-    getModalSubtitleTokenWarningText({ t, tokenProtectionWarning, tokenSymbol, formattedFeePercent }) ?? ''
-
-  if (isInterface) {
-    return (
-      <InfoTooltip
-        {...{
-          text: subtitle,
-          title,
-          placement: 'top',
-        }}
-        button={
-          <WarningModalInfoContainer>
-            <FeeRow feePercent={feePercent} feeType={feeType} />
-          </WarningModalInfoContainer>
-        }
-        trigger={<InfoCircle color="$neutral3" size="$icon.16" />}
-        triggerPlacement="end"
-      >
-        {children}
-      </InfoTooltip>
-    )
-  }
-
-  const onPress = (): void => {
-    setShowModal(true)
-  }
-
-  const onClose = (): void => {
-    setShowModal(false)
-  }
+  const { severity } = getFeeSeverity(feeInfo.fee)
+  const caption = t('swap.warning.feeOnTransfer.message')
+  const title = t('swap.warning.feeOnTransfer.title')
 
   return (
-    <>
-      <TouchableArea flexShrink={1} onPress={onPress}>
-        <Flex row shrink alignItems="center" gap="$spacing4">
-          {children}
-          <InfoCircle color="$neutral3" size="$icon.16" />
-        </Flex>
-      </TouchableArea>
-      {feeInfo.currencyInfo && (
-        <TokenWarningModal
-          isInfoOnlyWarning
-          isVisible={showModal}
-          currencyInfo0={feeInfo.currencyInfo}
-          feeOnTransferOverride={{
-            fee: feeInfo.fee,
-            feeType,
-          }}
-          closeModalOnly={onClose}
-          onAcknowledge={onClose}
+    <WarningInfo
+      infoButton={
+        <LearnMoreLink
+          textVariant={isWeb ? 'buttonLabel3' : undefined}
+          url={uniswapUrls.helpArticleUrls.feeOnTransferHelp}
         />
-      )}
-    </>
+      }
+      modalProps={{
+        caption,
+        rejectText: t('common.button.close'),
+        icon: <WarningIcon heroIcon severity={severity} size="$icon.24" />,
+        modalName: ModalName.FOTInfo,
+        title,
+        rejectButtonTheme: 'tertiary',
+        backgroundIconColor: false,
+      }}
+      tooltipProps={{
+        text: caption,
+        title,
+        placement: 'top',
+      }}
+    >
+      {children}
+    </WarningInfo>
   )
 }

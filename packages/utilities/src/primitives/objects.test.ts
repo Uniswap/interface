@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
-import { flattenObjectOfObjects, sortKeysRecursively, unnestObject } from 'utilities/src/primitives/objects'
+import { flattenObjectOfObjects, unnestObject } from 'utilities/src/primitives/objects'
 
 const DAI = new Token(1, '0x6b175474e89094c44da98b954eedeac495271d0f', 18, 'DAI', 'Dai Stablecoin')
 
@@ -44,37 +44,5 @@ describe(unnestObject, () => {
       'b.0.c': 1,
       'b.1.d': 2,
     })
-  })
-})
-
-describe(sortKeysRecursively, () => {
-  it('should sort the keys of an object', () => {
-    const obj = { b: 2, f: 1, d: 3, c: 4, e: 5, a: 6 }
-    const result = JSON.stringify(sortKeysRecursively(obj))
-    expect(result).toBe('{"a":6,"b":2,"c":4,"d":3,"e":5,"f":1}')
-  })
-
-  it('should handle an empty object', () => {
-    const obj = {}
-    const result = JSON.stringify(sortKeysRecursively(obj))
-    expect(result).toBe('{}')
-  })
-
-  it('should handle an object with arrays without sorting the arrays', () => {
-    const obj = { b: [3, '2', 1], a: [1, 2, '3'] }
-    const result = JSON.stringify(sortKeysRecursively(obj))
-    expect(result).toBe(`{"a":[1,2,"3"],"b":[3,"2",1]}`)
-  })
-
-  it('should handle deep nested objects', () => {
-    const obj = {
-      a: {
-        d: { b: 2, a: 1 },
-        c: { z: 10, a: { x: { b: 'test', a: 'blah', x: null } } },
-      },
-      b: 1,
-    }
-    const result = JSON.stringify(sortKeysRecursively(obj))
-    expect(result).toBe(`{"a":{"c":{"a":{"x":{"a":"blah","b":"test","x":null}},"z":10},"d":{"a":1,"b":2}},"b":1}`)
   })
 })
