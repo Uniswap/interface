@@ -48,6 +48,7 @@ function getAssetMediaType(asset: GenieAsset | WalletAsset) {
   return assetMediaType
 }
 
+// eslint-disable-next-line consistent-return
 export function getNftDisplayComponent(
   asset: GenieAsset | WalletAsset,
   mediaShouldBePlaying: boolean,
@@ -127,7 +128,11 @@ export function useSelectAsset({
         return
       }
 
-      return isSelected ? unselectAsset?.() : selectAsset?.()
+      if (isSelected) {
+        unselectAsset?.()
+      } else {
+        selectAsset?.()
+      }
     },
     [selectAsset, isDisabled, onClick, unselectAsset, isSelected],
   )

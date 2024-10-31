@@ -1,13 +1,13 @@
 import { act } from '@testing-library/react'
 import { Percent } from '@uniswap/sdk-core'
-import { USDC_MAINNET } from 'constants/tokens'
 import store from 'state'
 import { RouterPreference } from 'state/routing/types'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import { updateUserSlippageTolerance } from 'state/user/reducer'
 import { SlippageTolerance } from 'state/user/types'
-import { deserializeToken, serializeToken } from 'state/user/utils'
 import { renderHook } from 'test-utils/render'
+import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { deserializeToken, serializeToken } from 'uniswap/src/utils/currency'
 
 describe('serializeToken', () => {
   it('serializes the token', () => {

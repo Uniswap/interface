@@ -1,9 +1,9 @@
-import { memo } from 'react'
-import { Flex, Text, UniversalImage, useIsDarkMode, useSporeColors } from 'ui/src'
+import { memo, useState } from 'react'
+import { Flex, FlexProps, Text, UniversalImage, useColorSchemeFromSeed, useSporeColors } from 'ui/src'
 import { iconSizes, validColor } from 'ui/src/theme'
-import { useLogolessColorScheme } from 'ui/src/utils/colors'
 import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 interface TokenLogoProps {
@@ -14,7 +14,11 @@ interface TokenLogoProps {
   size?: number
   hideNetworkLogo?: boolean
   networkLogoBorderWidth?: number
+  backgroundColor?: FlexProps['borderColor']
 }
+
+const TESTNET_BORDER_DIVISOR = 15
+const BORDER_OFFSET = 4
 
 export const TokenLogo = memo(function _TokenLogo({
   url,
@@ -24,24 +28,33 @@ export const TokenLogo = memo(function _TokenLogo({
   size = iconSizes.icon40,
   hideNetworkLogo,
   networkLogoBorderWidth = 1.5,
+  // used to shave token image for testnet border
+  backgroundColor = '$background',
 }: TokenLogoProps): JSX.Element {
+  const [showBackground, setShowBackground] = useState(false)
+
   const colors = useSporeColors()
-  const isDarkMode = useIsDarkMode()
-  const logolessColorScheme = useLogolessColorScheme(name ?? symbol ?? '')
+  const { foreground, background } = useColorSchemeFromSeed(name ?? symbol ?? '')
+
+  const isTestnetToken = UNIVERSE_CHAIN_INFO[chainId as UniverseChainId]?.testnet
+  const borderWidth = isTestnetToken ? size / TESTNET_BORDER_DIVISOR : 0
 
   const showNetworkLogo = !hideNetworkLogo && chainId && chainId !== UniverseChainId.Mainnet
   const networkLogoSize = Math.round(size * STATUS_RATIO)
 
-  const { foreground, background } = isDarkMode ? logolessColorScheme.dark : logolessColorScheme.light
+  const borderOffset = isTestnetToken ? BORDER_OFFSET : 0
+
+  const tokenSize = size - borderWidth - borderOffset
+
   const fallback = (
     <Flex
       alignItems="center"
       borderRadius="$roundedFull"
-      height={size}
+      height={tokenSize}
       justifyContent="center"
       px="$spacing8"
       style={{ backgroundColor: background }}
-      width={size}
+      width={tokenSize}
     >
       <Text
         adjustsFontSizeToFit
@@ -68,22 +81,59 @@ export const TokenLogo = memo(function _TokenLogo({
 
   const tokenImage = (
     <UniversalImage
+      allowLocalUri
       fallback={fallback}
-      size={{ height: size, width: size }}
+      size={{ height: tokenSize, width: tokenSize }}
       style={{
         image: {
-          backgroundColor: colors.surface3.val,
           borderRadius: size / 2,
         },
       }}
       testID="token-image"
       uri={url ?? undefined}
+      onLoad={() => setShowBackground(true)}
     />
   )
 
   return (
-    <Flex alignItems="center" height={size} justifyContent="center" testID="token-logo" width={size}>
+    <Flex
+      alignItems="center"
+      height={size}
+      justifyContent="center"
+      testID="token-logo"
+      width={size}
+      position="relative"
+    >
+      <Flex
+        opacity={showBackground ? 1 : 0}
+        height="96%"
+        width="96%"
+        zIndex={-1}
+        backgroundColor={colors.white.val}
+        position="absolute"
+        top="2%"
+        left="2%"
+        borderRadius={size / 2}
+        // shave off for border
+        {...(isTestnetToken && {
+          style: { boxSizing: 'border-box' },
+          borderWidth,
+          borderColor: backgroundColor,
+        })}
+      />
       {tokenImage}
+      {isTestnetToken && (
+        <Flex
+          borderRadius={size / 2}
+          borderStyle="dashed"
+          borderColor="$neutral3"
+          borderWidth={borderWidth}
+          height={size}
+          width={size}
+          style={{ boxSizing: 'border-box' }}
+          position="absolute"
+        />
+      )}
       {showNetworkLogo && (
         <Flex bottom={-2} position="absolute" right={-3}>
           <NetworkLogo borderWidth={networkLogoBorderWidth} chainId={chainId} size={networkLogoSize} />

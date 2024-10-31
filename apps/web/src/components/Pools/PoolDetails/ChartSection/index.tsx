@@ -1,22 +1,24 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ChartHeader } from 'components/Charts/ChartHeader'
-import { Chart } from 'components/Charts/ChartModel'
+import { Chart, refitChartContentAtom } from 'components/Charts/ChartModel'
 import { LiquidityBarChartModel, useLiquidityBarData } from 'components/Charts/LiquidityChart'
 import { LiquidityBarData } from 'components/Charts/LiquidityChart/renderer'
 import { ChartSkeleton } from 'components/Charts/LoadingState'
 import { PriceChartData, PriceChartDelta, PriceChartModel } from 'components/Charts/PriceChart'
-import { refitChartContentAtom } from 'components/Charts/TimeSelector'
 import { VolumeChart } from 'components/Charts/VolumeChart'
 import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
 import { usePDPPriceChartData, usePDPVolumeChartData } from 'components/Pools/PoolDetails/ChartSection/hooks'
-import PillMultiToggle from 'components/Toggle/PillMultiToggle'
 import { ChartActionsContainer, DEFAULT_PILL_TIME_SELECTOR_OPTIONS } from 'components/Tokens/TokenDetails/ChartSection'
 import { ChartTypeDropdown } from 'components/Tokens/TokenDetails/ChartSection/ChartTypeSelector'
 import { ChartQueryResult, DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
-import { DISPLAYS, TimePeriodDisplay, getTimePeriodFromDisplay } from 'components/Tokens/TokenTable/TimeSelector'
+import {
+  DISPLAYS,
+  TimePeriodDisplay,
+  getTimePeriodFromDisplay,
+} from 'components/Tokens/TokenTable/VolumeTimeFrameSelector'
 import { PoolData } from 'graphql/data/pools/usePoolData'
 import { TimePeriod, gqlToCurrency, supportedChainIdFromGQLChain, toHistoryDuration } from 'graphql/data/util'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
@@ -25,9 +27,10 @@ import styled, { useTheme } from 'lib/styled-components'
 import { useMemo, useState } from 'react'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
+import { SegmentedControl } from 'ui/src'
 import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans, t } from 'uniswap/src/i18n'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const PDP_CHART_HEIGHT_PX = 356
@@ -99,13 +102,23 @@ function usePDPChartState(
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
   const [chartType, setChartType] = useState<PoolsDetailsChartType>(ChartType.VOLUME)
 
+  const isV2 = protocolVersion === ProtocolVersion.V2
   const isV3 = protocolVersion === ProtocolVersion.V3
-  const variables = { address: poolData?.address ?? '', chain, duration: toHistoryDuration(timePeriod), isV3 }
+  const isV4 = protocolVersion === ProtocolVersion.V4
+  const variables = {
+    addressOrId: poolData?.address ?? '',
+    chain,
+    duration: toHistoryDuration(timePeriod),
+    isV4,
+    isV3,
+    isV2,
+  }
 
   const priceQuery = usePDPPriceChartData(variables, poolData, tokenA, tokenB, isReversed)
   const volumeQuery = usePDPVolumeChartData(variables)
 
   return useMemo(() => {
+    // eslint-disable-next-line consistent-return
     const activeQuery = (() => {
       switch (chartType) {
         case ChartType.PRICE:
@@ -151,6 +164,7 @@ export default function ChartSection(props: ChartSectionProps) {
   // TODO(WEB-3740): Integrate BE tick query, remove special casing for liquidity chart
   const loading = props.loading || (activeQuery.chartType !== ChartType.LIQUIDITY ? activeQuery?.loading : false)
 
+  // eslint-disable-next-line consistent-return
   const ChartBody = (() => {
     if (!currencyA || !currencyB || !props.poolData || !props.chain) {
       return <ChartSkeleton type={activeQuery.chartType} height={PDP_CHART_HEIGHT_PX} />
@@ -216,9 +230,9 @@ export default function ChartSection(props: ChartSectionProps) {
         />
         {activeQuery.chartType !== ChartType.LIQUIDITY && (
           <TimePeriodSelectorContainer>
-            <PillMultiToggle
+            <SegmentedControl
               options={filteredTimeOptions.options}
-              currentSelected={filteredTimeOptions.selected}
+              selectedOption={filteredTimeOptions.selected}
               onSelectOption={(option) => {
                 const time = getTimePeriodFromDisplay(option as TimePeriodDisplay)
                 if (time === timePeriod) {
@@ -365,7 +379,7 @@ function LiquidityChart({
   tokenB: Token
   feeTier: FeeAmount
   isReversed: boolean
-  chainId: InterfaceChainId
+  chainId: UniverseChainId
 }) {
   const tokenADescriptor = tokenA.symbol ?? tokenA.name ?? t('common.tokenA')
   const tokenBDescriptor = tokenB.symbol ?? tokenB.name ?? t('common.tokenB')

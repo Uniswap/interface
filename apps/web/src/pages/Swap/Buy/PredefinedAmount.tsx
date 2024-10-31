@@ -12,7 +12,7 @@ interface PredefinedAmountProps {
   onClick: () => void
 }
 
-const ClickablePill = styled(Pill)<{ $disabled: boolean; $active: boolean }>`
+export const ClickablePill = styled(Pill)<{ $disabled: boolean; $active: boolean }>`
   background-color: ${({ $disabled, $active, theme }) =>
     $disabled ? theme.surface2 : $active ? theme.surface3 : theme.surface1};
   user-select: none;
@@ -43,7 +43,7 @@ export function PredefinedAmount({ currentAmount, amount, disabled = false, onCl
       foregroundColor={colors[disabled ? 'neutral3' : active ? 'neutral1' : 'neutral2'].val}
       label={formatFiatOnRampFiatAmount(amount, meldSupportedFiatCurrency ?? fallbackCurrencyInfo)}
       px="$spacing16"
-      textVariant="buttonLabel3"
+      textVariant="buttonLabel2"
     />
   )
 }

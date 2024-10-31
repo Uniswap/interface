@@ -6,7 +6,7 @@ import { ActivityIndicator, Alert, Image, Platform, StyleSheet } from 'react-nat
 import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
-import { enroll, tryLocalAuthenticate } from 'src/features/biometrics'
+import { enroll, tryLocalAuthenticate } from 'src/features/biometrics/biometrics'
 import {
   biometricAuthenticationSuccessful,
   checkOsBiometricAuthEnabled,
@@ -16,14 +16,14 @@ import {
 import { setRequiredForTransactions } from 'src/features/biometrics/slice'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
-import { Button, Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Button, Flex, useIsDarkMode, useSporeColors } from 'ui/src'
 import { SECURITY_SCREEN_BACKGROUND_DARK, SECURITY_SCREEN_BACKGROUND_LIGHT } from 'ui/src/assets'
 import FaceIcon from 'ui/src/assets/icons/faceid-thin.svg'
 import FingerprintIcon from 'ui/src/assets/icons/fingerprint.svg'
+import { Lock } from 'ui/src/components/icons'
 import { borderRadii, imageSizes, opacify } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isIOS } from 'utilities/src/platform'
@@ -52,7 +52,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
     }
   }, [isLoadingAccount, onCompleteOnboarding])
 
-  const onMaybeLaterPressed = useCallback(async () => {
+  const onSkipPressed = useCallback(async () => {
     if (params?.importType === ImportType.Watch) {
       await onPressNext()
     } else {
@@ -107,6 +107,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
         </Flex>
       )}
       <OnboardingScreen
+        Icon={Lock}
         childrenGap="$none"
         subtitle={
           isIOS
@@ -116,6 +117,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
             : t('onboarding.security.subtitle.android')
         }
         title={t('onboarding.security.title')}
+        onSkip={onSkipPressed}
       >
         <Flex centered shrink gap="$spacing16" my="$spacing12" position="relative" py="$spacing24">
           <Flex pt="$spacing24">
@@ -139,22 +141,13 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
             )}
           </Flex>
         </Flex>
-        <Flex gap="$spacing24">
-          <Trace logPress element={ElementName.Skip}>
-            <TouchableArea testID={TestID.Skip} onPress={onMaybeLaterPressed}>
-              <Text color="$accent1" textAlign="center" variant="buttonLabel2">
-                {t('common.button.later')}
-              </Text>
-            </TouchableArea>
-          </Trace>
-          <Trace logPress element={ElementName.Enable}>
-            <Button theme="primary" onPress={onPressEnableSecurity}>
-              {isIOS
-                ? t('onboarding.security.button.confirm.ios', { biometricsMethod })
-                : t('onboarding.security.button.confirm.android')}
-            </Button>
-          </Trace>
-        </Flex>
+        <Trace logPress element={ElementName.Enable}>
+          <Button theme="primary" onPress={onPressEnableSecurity}>
+            {isIOS
+              ? t('onboarding.security.button.confirm.ios', { biometricsMethod })
+              : t('onboarding.security.button.confirm.android')}
+          </Button>
+        </Trace>
       </OnboardingScreen>
     </>
   )

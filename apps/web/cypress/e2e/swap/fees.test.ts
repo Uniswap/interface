@@ -1,6 +1,6 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { URAQuoteResponse } from 'state/routing/types'
-import { USDC_MAINNET } from '../../../src/constants/tokens'
+import { USDT } from 'uniswap/src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'
 
 describe('Swap with fees', () => {
@@ -17,12 +17,12 @@ describe('Swap with fees', () => {
       })
     })
 
-    it('displays $0 fee on swaps without fees', () => {
+    it('displays $0 fee on swaps without fees', () => {  
       // Set up a stablecoin <> stablecoin swap (no fees)
       cy.get('#swap-currency-input .open-currency-select-button').click()
-      cy.contains('DAI').click()
+      cy.get(getTestSelector('token-option-1-WETH')).click()
       cy.get('#swap-currency-output .open-currency-select-button').click()
-      cy.contains('USDC').click()
+      cy.get(getTestSelector('token-option-1-USDT')).click()
       cy.get('#swap-currency-output .token-amount-input').type('1')
 
       // Verify 0 fee UI is displayed
@@ -31,25 +31,25 @@ describe('Swap with fees', () => {
       cy.contains('$0')
     })
 
-    it('swaps ETH for USDC exact-out with swap fee', () => {
+    it('swaps ETH for USDT exact-out with swap fee', () => {
       cy.hardhat().then((hardhat) => {
-        getBalance(USDC_MAINNET).then((initialBalance) => {
+        getBalance(USDT).then((initialBalance) => {
           // Set up swap
           cy.get('#swap-currency-output .open-currency-select-button').click()
-          cy.contains('USDC').click()
+          cy.get(getTestSelector('token-option-1-USDT')).click()
           cy.get('#swap-currency-output .token-amount-input').type('1')
 
           cy.wait('@quoteFetch')
             .its('response.body')
             .then(({ quote: { portionBips, portionRecipient, portionAmount } }) => {
-              // Fees are generally expected to always be enabled for ETH -> USDC swaps
+              // Fees are generally expected to always be enabled for ETH -> USDT swaps
               // If the routing api does not include a fee, end the test early rather than manually update routes and hardcode fee vars
               if (portionRecipient) {
                 return
               }
 
-              cy.then(() => hardhat.getBalance(portionRecipient, USDC_MAINNET)).then((initialRecipientBalance) => {
-                const feeCurrencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, portionAmount)
+              cy.then(() => hardhat.getBalance(portionRecipient, USDT)).then((initialRecipientBalance) => {
+                const feeCurrencyAmount = CurrencyAmount.fromRawAmount(USDT, portionAmount)
 
                 // Initiate transaction
                 cy.get('#swap-button').click()
@@ -68,10 +68,10 @@ describe('Swap with fees', () => {
                 // Verify the post-fee output is the expected exact-out amount
                 const finalBalance = initialBalance + 1
                 cy.get('#swap-currency-output').contains(`Balance: ${finalBalance}`)
-                getBalance(USDC_MAINNET).should('eq', finalBalance)
+                getBalance(USDT).should('eq', finalBalance)
 
                 // Verify fee recipient received fee
-                cy.then(() => hardhat.getBalance(portionRecipient, USDC_MAINNET)).then((finalRecipientBalance) => {
+                cy.then(() => hardhat.getBalance(portionRecipient, USDT)).then((finalRecipientBalance) => {
                   const expectedFinalRecipientBalance = initialRecipientBalance.add(feeCurrencyAmount)
                   cy.then(() => finalRecipientBalance.equalTo(expectedFinalRecipientBalance)).should('be.true')
                 })
@@ -81,23 +81,23 @@ describe('Swap with fees', () => {
       })
     })
 
-    it('swaps ETH for USDC exact-in with swap fee', () => {
+    it('swaps ETH for USDT exact-in with swap fee', () => {
       cy.hardhat().then((hardhat) => {
         // Set up swap
         cy.get('#swap-currency-output .open-currency-select-button').click()
-        cy.contains('USDC').click()
+        cy.get(getTestSelector('token-option-1-USDT')).click()
         cy.get('#swap-currency-input .token-amount-input').type('.01')
 
         cy.wait('@quoteFetch')
           .its('response.body')
           .then(({ quote: { portionBips, portionRecipient } }) => {
-            // Fees are generally expected to always be enabled for ETH -> USDC swaps
+            // Fees are generally expected to always be enabled for ETH -> USDT swaps
             // If the routing api does not include a fee, end the test early rather than manually update routes and hardcode fee vars
             if (portionRecipient) {
               return
             }
 
-            cy.then(() => hardhat.getBalance(portionRecipient, USDC_MAINNET)).then((initialRecipientBalance) => {
+            cy.then(() => hardhat.getBalance(portionRecipient, USDT)).then((initialRecipientBalance) => {
               // Initiate transaction
               cy.get('#swap-button').click()
               cy.contains('Review swap')
@@ -113,7 +113,7 @@ describe('Swap with fees', () => {
               cy.get(getTestSelector('popups')).contains('Swapped')
 
               // Verify fee recipient received fee
-              cy.then(() => hardhat.getBalance(portionRecipient, USDC_MAINNET)).then((finalRecipientBalance) => {
+              cy.then(() => hardhat.getBalance(portionRecipient, USDT)).then((finalRecipientBalance) => {
                 cy.then(() => finalRecipientBalance.greaterThan(initialRecipientBalance)).should('be.true')
               })
             })
@@ -137,9 +137,9 @@ describe('Swap with fees', () => {
 
         // Setup swap
         cy.get('#swap-currency-input .open-currency-select-button').click()
-        cy.contains('USDC').click()
+        cy.get(getTestSelector('token-option-1-USDT')).click()
         cy.get('#swap-currency-output .open-currency-select-button').click()
-        cy.contains('ETH').click()
+        cy.get(getTestSelector('token-option-1-ETH')).click()
         cy.get('#swap-currency-input .token-amount-input').type('200')
 
         // Verify fee UI is displayed

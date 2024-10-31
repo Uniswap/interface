@@ -18,14 +18,14 @@ import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
 import { signWcRequestActions } from 'src/features/walletConnect/signWcRequestSaga'
 import { WalletConnectRequest, isTransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { GasSpeed } from 'uniswap/src/features/gas/types'
+import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { EthMethod, UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { formatExternalTxnWithGasEstimates } from 'wallet/src/features/gas/formatExternalTxnWithGasEstimates'
-import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
-import { useIsBlocked, useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
+import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 interface Props {
@@ -58,7 +58,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
 
   const signerAccounts = useSignerAccounts()
   const signerAccount = signerAccounts.find((account) => areAddressesEqual(account.address, request.account))
-  const gasFee = useTransactionGasFee(tx, GasSpeed.Urgent)
+  const gasFee = useTransactionGasFee(tx)
 
   const hasSufficientFunds = useHasSufficientFunds({
     account: request.account,

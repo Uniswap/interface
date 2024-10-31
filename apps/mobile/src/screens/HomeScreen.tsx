@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, StyleProp, View, ViewProps, ViewStyle } from 'react-native'
 import Animated, {
   FadeIn,
-  FadeOut,
   interpolateColor,
   useAnimatedRef,
   useAnimatedScrollHandler,
@@ -41,7 +40,6 @@ import {
   TabLabelProps,
   useScrollSync,
 } from 'src/components/layout/TabHelpers'
-import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
 import { openModal } from 'src/features/modals/modalSlice'
 import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
 import { AIAssistantOverlay } from 'src/features/openai/AIAssistantOverlay'
@@ -50,7 +48,7 @@ import { removePendingSession } from 'src/features/walletConnect/walletConnectSl
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
 import { hideSplashScreen } from 'src/utils/splashScreen'
 import { useOpenBackupReminderModal } from 'src/utils/useOpenBackupReminderModal'
-import { Flex, Text, TouchableArea, useDeviceInsets, useHapticFeedback, useMedia, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useHapticFeedback, useMedia, useSporeColors } from 'ui/src'
 import ReceiveIcon from 'ui/src/assets/icons/arrow-down-circle.svg'
 import BuyIcon from 'ui/src/assets/icons/buy.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-home.svg'
@@ -64,6 +62,7 @@ import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexT
 import { Experiments, OnboardingRedesignHomeScreenProperties } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getExperimentValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import {
   ElementName,
@@ -73,18 +72,18 @@ import {
   SectionName,
   SectionNameType,
 } from 'uniswap/src/features/telemetry/constants'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { useTimeout } from 'utilities/src/time/timing'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { selectHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/selectors'
-import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
+import { TestnetModeModal } from 'wallet/src/components/modals/TestnetModeModal'
+import { selectCreatedOnboardingRedesignAccount } from 'wallet/src/features/behaviorHistory/selectors'
 import { useSelectAddressHasNotifications } from 'wallet/src/features/notifications/hooks'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
 import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
 import { useHeartbeatReporter, useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks'
-import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type HomeRoute = {
@@ -104,7 +103,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const { t } = useTranslation()
   const colors = useSporeColors()
   const media = useMedia()
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const dimensions = useDeviceDimensions()
   const dispatch = useDispatch()
   const isFocused = useIsFocused()
@@ -112,16 +111,15 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const isHomeScreenBlur = !isFocused || isModalOpen
   const { hapticFeedback } = useHapticFeedback()
 
-  const hasSkippedUnitagPrompt = useSelector(selectHasSkippedUnitagPrompt)
   const showFeedTab = useFeatureFlag(FeatureFlags.FeedTab)
 
-  const portfolioValueModifiers = usePortfolioValueModifiers(activeAccount.address) ?? []
-  const { data: balancesById } = usePortfolioBalances({
+  const { data: balancesById, loading: areBalancesLoading } = usePortfolioBalances({
     address: activeAccount.address,
-    valueModifiers: portfolioValueModifiers,
   })
-  const [showOnboardingRedesign, setShowOnboardingRedesign] = useState(false)
   const accountHasNoTokens = balancesById && !Object.entries(balancesById).length
+  const [showOnboardingHomeRedesign, setShowOnboardingHomeRedesign] = useState(false)
+  const isOnboardingRedesignAccount = useSelector(selectCreatedOnboardingRedesignAccount)
+  const showOnboardingIntroCards = showOnboardingHomeRedesign || isOnboardingRedesignAccount
 
   useEffect(() => {
     // Sets experiment value and exposes user only if they have no tokens
@@ -131,11 +129,11 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
         OnboardingRedesignHomeScreenProperties.Enabled,
         false,
       )
-      setShowOnboardingRedesign(experimentEnabled)
+      setShowOnboardingHomeRedesign(experimentEnabled)
     } else {
-      setShowOnboardingRedesign(false)
+      setShowOnboardingHomeRedesign(false)
     }
-  }, [accountHasNoTokens, balancesById, showOnboardingRedesign])
+  }, [accountHasNoTokens, balancesById, showOnboardingHomeRedesign])
 
   // opens the wallet restore modal if recovery phrase is missing after the app is opened
   useWalletRestore({ openModalImmediately: true })
@@ -146,7 +144,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
 
   const [routeTabIndex, setRouteTabIndex] = useState(props?.route?.params?.tab ?? HomeScreenTabIndex.Tokens)
   // Ensures that tabIndex has the proper value between the empty state and non-empty state
-  const tabIndex = showOnboardingRedesign ? 0 : routeTabIndex
+  const tabIndex = showOnboardingHomeRedesign ? HomeScreenTabIndex.Tokens : routeTabIndex
 
   // Necessary to declare these as direct dependencies due to race condition with initializing react-i18next and useMemo
   const tokensTitle = t('home.tokens.title')
@@ -156,7 +154,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const exploreTitle = t('home.explore.title')
 
   const routes = useMemo((): HomeRoute[] => {
-    if (showOnboardingRedesign) {
+    if (showOnboardingHomeRedesign) {
       return [
         {
           key: SectionName.HomeExploreTab,
@@ -176,7 +174,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     }
 
     return tabs
-  }, [showOnboardingRedesign, tokensTitle, nftsTitle, activityTitle, showFeedTab, exploreTitle, feedTitle])
+  }, [showOnboardingHomeRedesign, tokensTitle, nftsTitle, activityTitle, showFeedTab, exploreTitle, feedTitle])
 
   useEffect(
     function syncTabIndex() {
@@ -207,21 +205,37 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     setIsLayoutReady(true)
   }, [])
 
+  // IMPORTANT: We must manually pass a dependency array to `useAnimatedScrollHandler`
+  //            because the reanimated babel plugin is not automatically injecting these.
+
   const tokensTabScrollValue = useSharedValue(0)
   const tokensTabScrollHandler = useAnimatedScrollHandler(
     (event) => (tokensTabScrollValue.value = event.contentOffset.y),
+    [tokensTabScrollValue],
   )
+
   const nftsTabScrollValue = useSharedValue(0)
-  const nftsTabScrollHandler = useAnimatedScrollHandler((event) => (nftsTabScrollValue.value = event.contentOffset.y))
+  const nftsTabScrollHandler = useAnimatedScrollHandler(
+    (event) => (nftsTabScrollValue.value = event.contentOffset.y),
+    [nftsTabScrollValue],
+  )
+
   const activityTabScrollValue = useSharedValue(0)
   const activityTabScrollHandler = useAnimatedScrollHandler(
     (event) => (activityTabScrollValue.value = event.contentOffset.y),
+    [activityTabScrollValue],
   )
+
   const feedTabScrollValue = useSharedValue(0)
-  const feedTabScrollHandler = useAnimatedScrollHandler((event) => (feedTabScrollValue.value = event.contentOffset.y))
+  const feedTabScrollHandler = useAnimatedScrollHandler(
+    (event) => (feedTabScrollValue.value = event.contentOffset.y),
+    [feedTabScrollValue],
+  )
+
   const exploreTabScrollValue = useSharedValue(0)
   const exploreTabScrollHandler = useAnimatedScrollHandler(
     (event) => (exploreTabScrollValue.value = event.contentOffset.y),
+    [exploreTabScrollValue],
   )
 
   const tokensTabScrollRef = useAnimatedRef<FlatList<TokenBalanceListRow>>()
@@ -235,7 +249,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const exploreTabScrollRef = useAnimatedRef<FlatList<any>>()
 
   const currentScrollValue = useDerivedValue(() => {
-    if (showOnboardingRedesign) {
+    if (showOnboardingHomeRedesign) {
       return exploreTabScrollValue.value
     } else if (tabIndex === HomeScreenTabIndex.Tokens) {
       return tokensTabScrollValue.value
@@ -248,7 +262,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   }, [
     activityTabScrollValue.value,
     exploreTabScrollValue.value,
-    showOnboardingRedesign,
+    showOnboardingHomeRedesign,
     feedTabScrollValue.value,
     nftsTabScrollValue.value,
     tabIndex,
@@ -297,7 +311,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   useScrollToTop(
     useRef({
       scrollToTop: () => {
-        if (showOnboardingRedesign) {
+        if (showOnboardingHomeRedesign) {
           exploreTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
         } else if (currentTabIndex.value === HomeScreenTabIndex.NFTs && isNftTabsAtTop.value) {
           setRouteTabIndex(HomeScreenTabIndex.Tokens)
@@ -348,16 +362,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
 
   const cexTransferProviders = useCexTransferProviders()
-
-  const onPressBuy = useCallback(
-    () =>
-      dispatch(
-        openModal({
-          name: disableForKorea ? ModalName.KoreaCexTransferInfoModal : ModalName.FiatOnRampAggregator,
-        }),
-      ),
-    [dispatch, disableForKorea],
-  )
+  const { isTestnetModeEnabled } = useEnabledChains()
 
   const onPressScan = useCallback(() => {
     // in case we received a pending session from a previous scan after closing modal
@@ -383,6 +388,24 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const sendLabel = t('home.label.send')
   const receiveLabel = t('home.label.receive')
   const scanLabel = t('home.label.scan')
+
+  const [isTestnetWarningModalOpen, setIsTestnetWarningModalOpen] = useState(false)
+
+  const handleTestnetWarningModalClose = useCallback(() => {
+    setIsTestnetWarningModalOpen(false)
+  }, [])
+
+  const onPressBuy = useCallback((): void => {
+    if (isTestnetModeEnabled) {
+      setIsTestnetWarningModalOpen(true)
+      return
+    }
+    dispatch(
+      openModal({
+        name: disableForKorea ? ModalName.KoreaCexTransferInfoModal : ModalName.FiatOnRampAggregator,
+      }),
+    )
+  }, [dispatch, isTestnetModeEnabled, disableForKorea])
 
   const actions = useMemo(
     (): QuickAction[] => [
@@ -421,39 +444,37 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     [buyLabel, sendLabel, scanLabel, receiveLabel, onPressBuy, onPressScan, onPressSend, onPressReceive],
   )
 
-  const { canClaimUnitag } = useCanActiveAddressClaimUnitag()
-
   // This hooks handles the logic for when to open the BackupReminderModal
   useOpenBackupReminderModal(activeAccount)
 
-  const shouldPromptUnitag = isSignerAccount && !hasSkippedUnitagPrompt && canClaimUnitag
   const viewOnlyLabel = t('home.warning.viewOnly')
 
-  const promoBanner = useMemo(() => {
-    if (showOnboardingRedesign) {
-      return (
-        <Flex pt="$spacing12">
-          <OnboardingIntroCardStack />
-        </Flex>
-      )
-    } else if (shouldPromptUnitag) {
-      return (
-        <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
-          <UnitagBanner address={activeAccount.address} entryPoint={MobileScreens.Home} />
-        </AnimatedFlex>
-      )
-    }
-    return null
-  }, [shouldPromptUnitag, activeAccount.address, showOnboardingRedesign])
+  const promoBanner = useMemo(
+    () => (
+      <OnboardingIntroCardStack
+        isLoading={areBalancesLoading && balancesById === undefined}
+        hasTokens={!accountHasNoTokens}
+        onboardingRedesignBackupEnabled={isOnboardingRedesignAccount}
+        onboardingRedesignHomeEnabled={showOnboardingHomeRedesign}
+      />
+    ),
+    [accountHasNoTokens, areBalancesLoading, balancesById, isOnboardingRedesignAccount, showOnboardingHomeRedesign],
+  )
 
   const contentHeader = useMemo(() => {
     return (
       <Flex
         backgroundColor="$surface1"
         gap="$spacing8"
-        pb={showOnboardingRedesign ? '$spacing8' : '$spacing16'}
+        pb={showOnboardingIntroCards ? '$spacing8' : '$spacing16'}
         px="$spacing12"
       >
+        <TestnetModeModal
+          unsupported
+          isOpen={isTestnetWarningModalOpen}
+          descriptionCopy={t('tdp.noTestnetSupportDescription')}
+          onClose={handleTestnetWarningModalClose}
+        />
         <AccountHeader />
         <Flex pb="$spacing8" px="$spacing12">
           <PortfolioBalance owner={activeAccount.address} />
@@ -473,7 +494,10 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       </Flex>
     )
   }, [
-    showOnboardingRedesign,
+    handleTestnetWarningModalClose,
+    isTestnetWarningModalOpen,
+    t,
+    showOnboardingIntroCards,
     activeAccount.address,
     isSignerAccount,
     actions,
@@ -482,7 +506,8 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     promoBanner,
   ])
 
-  const paddingTop = headerHeight + TAB_BAR_HEIGHT + (showOnboardingRedesign ? 0 : TAB_STYLES.tabListInner.paddingTop)
+  const paddingTop =
+    headerHeight + TAB_BAR_HEIGHT + (showOnboardingHomeRedesign ? 0 : TAB_STYLES.tabListInner.paddingTop)
   const paddingBottom = insets.bottom + SWAP_BUTTON_HEIGHT + TAB_STYLES.tabListInner.paddingBottom + spacing.spacing12
 
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(
@@ -563,7 +588,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
                 {...sceneProps}
                 indicatorStyle={TAB_STYLES.activeTabIndicator}
                 navigationState={{ index: tabIndex, routes }}
-                pressColor={colors.surface3.val} // Android only
+                pressColor="transparent" // Android only
                 renderLabel={renderTabLabel}
                 style={[
                   TAB_STYLES.tabBar,

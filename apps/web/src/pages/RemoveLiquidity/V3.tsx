@@ -4,20 +4,18 @@ import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
 import { CurrencyAmount, Percent, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import RangeBadge from 'components/Badge/RangeBadge'
-import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
-import { LightCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
-import { DoubleCurrencyLogo } from 'components/DoubleLogo'
+import { ButtonConfirmed, ButtonPrimary } from 'components/Button/buttons'
+import { LightCard } from 'components/Card/cards'
 import Loader from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { AddRemoveTabs } from 'components/NavigationTabs'
-import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import Slider from 'components/Slider'
-import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
+import { AutoColumn } from 'components/deprecated/Column'
+import { AutoRow, RowBetween, RowFixed } from 'components/deprecated/Row'
 import { Break } from 'components/earn/styled'
 import { useIsSupportedChainId } from 'constants/chains'
-import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
@@ -37,7 +35,8 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
-import { Text } from 'ui/src'
+import { Switch, Text } from 'ui/src'
+import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
@@ -470,10 +469,11 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                       }}
                     />
                   </ThemedText.DeprecatedMain>
-                  <Toggle
+                  <Switch
                     id="receive-as-weth"
-                    isActive={receiveWETH}
-                    toggle={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
+                    checked={receiveWETH}
+                    onCheckedChange={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
+                    variant="branded"
                   />
                 </RowBetween>
               )}

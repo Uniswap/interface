@@ -1,5 +1,5 @@
 import { useQueries } from '@tanstack/react-query'
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
+import { chainIdToBackendChain } from 'constants/chains'
 import { apolloClient } from 'graphql/data/apollo/client'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
 import { apolloQueryOptions } from 'graphql/data/util'
@@ -13,6 +13,7 @@ import {
   TokenDocument,
   TokenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { hasURL } from 'utils/urlChecks'
 
 function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[] {
@@ -21,7 +22,7 @@ function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[]
   )
 }
 
-function getPositionCurrencyInfosQueryOptions(position: PositionDetails, chainId?: SupportedInterfaceChainId) {
+function getPositionCurrencyInfosQueryOptions(position: PositionDetails, chainId?: UniverseChainId) {
   return apolloQueryOptions({
     queryKey: ['positionCurrencyInfo', position],
     queryFn: async () => {

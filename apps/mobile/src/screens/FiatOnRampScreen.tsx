@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { ComponentProps, useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,69 +13,63 @@ import { FiatOnRampAmountSection, FiatOnRampAmountSectionRef } from 'src/feature
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { FiatOnRampCountryListModal } from 'src/features/fiatOnRamp/FiatOnRampCountryListModal'
 import { FiatOnRampTokenSelectorModal } from 'src/features/fiatOnRamp/FiatOnRampTokenSelector'
+import { OffRampPopover } from 'src/features/fiatOnRamp/OffRampPopover'
 import { Flex, Text, isWeb, useIsDarkMode, useIsShortMobileDevice } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
+import { PillMultiToggle } from 'uniswap/src/components/pill/PillMultiToggle'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
+import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
+import { useLocalFiatToUSDConverter } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
+import { TokenSelectorBalanceDisplay } from 'uniswap/src/features/fiatOnRamp/TokenSelectorBalanceDisplay'
+import UnsupportedTokenModal from 'uniswap/src/features/fiatOnRamp/UnsupportedTokenModal'
 import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fiatOnRamp/api'
-import {
-  FORQuote,
-  FORServiceProvider,
-  FiatOnRampCurrency,
-  InitialQuoteSelection,
-} from 'uniswap/src/features/fiatOnRamp/types'
-import { getServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
-import { FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
-import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
-import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
-import { usePrevious } from 'utilities/src/react/hooks'
-import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
-import { useLocalFiatToUSDConverter } from 'wallet/src/features/fiatCurrency/hooks'
 import {
   useFiatOnRampQuotes,
   useFiatOnRampSupportedTokens,
+  useFormatExactCurrencyAmount,
   useMeldFiatCurrencySupportInfo,
   useParseFiatOnRampError,
-} from 'wallet/src/features/fiatOnRamp/hooks'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
+} from 'uniswap/src/features/fiatOnRamp/hooks'
+import {
+  FORCurrencyOrBalance,
+  FORServiceProvider,
+  FiatOnRampCurrency,
+  InitialQuoteSelection,
+  RampToggle,
+} from 'uniswap/src/features/fiatOnRamp/types'
+import {
+  getServiceProviderLogo,
+  isSupportedFORCurrency,
+  selectInitialQuote,
+} from 'uniswap/src/features/fiatOnRamp/utils'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { FiatOffRampEventName, FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { FORAmountEnteredProperties } from 'uniswap/src/features/telemetry/types'
 import {
   DecimalPadCalculateSpace,
   DecimalPadInput,
   DecimalPadInputRef,
-} from 'wallet/src/features/transactions/swap/DecimalPadInput'
+} from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPadInput'
+import { CurrencyField } from 'uniswap/src/types/currency'
+import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
+import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
+import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
+import { isIOS } from 'utilities/src/platform'
+import { usePrevious } from 'utilities/src/react/hooks'
+import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
+import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.AmountInput>
 
 const ON_SELECTION_CHANGE_WAIT_TIME_MS = 500
-
-function selectInitialQuote(quotes: FORQuote[] | undefined): {
-  quote: FORQuote | undefined
-  type: InitialQuoteSelection | undefined
-} {
-  const quoteFromLastUsedProvider = quotes?.find((q) => q.isMostRecentlyUsedProvider)
-  if (quoteFromLastUsedProvider) {
-    return {
-      quote: quoteFromLastUsedProvider,
-      type: InitialQuoteSelection.MostRecent,
-    }
-  }
-
-  const bestQuote = quotes && quotes.length && quotes[0]
-  if (bestQuote) {
-    return {
-      quote: quotes.reduce<FORQuote>((prev, curr) => {
-        return curr.destinationAmount > prev.destinationAmount ? curr : prev
-      }, bestQuote),
-      type: InitialQuoteSelection.Best,
-    }
-  }
-  return { quote: undefined, type: undefined }
-}
 
 function preloadServiceProviderLogos(serviceProviders: FORServiceProvider[], isDarkMode: boolean): void {
   FastImage.preload(
@@ -85,6 +80,9 @@ function preloadServiceProviderLogos(serviceProviders: FORServiceProvider[], isD
 const PREDEFINED_AMOUNTS_SUPPORTED_CURRENCIES = ['usd', 'eur', 'gbp', 'aud', 'cad', 'sgd']
 
 export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
+  const isOffRampEnabled = useFeatureFlag(FeatureFlags.FiatOffRamp)
+  const [showUnsupportedTokenModal, setShowUnsupportedTokenModal] = useState(false)
+  const [unsupportedCurrency, setUnsupportedCurrency] = useState<FiatOnRampCurrency>()
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const isDarkMode = useIsDarkMode()
@@ -131,7 +129,10 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     setAmount,
     setBaseCurrencyInfo,
     quoteCurrency,
+    defaultCurrency,
     setQuoteCurrency,
+    setIsOffRamp,
+    isOffRamp,
   } = useFiatOnRampContext()
 
   const { appFiatCurrencySupportedInMeld, meldSupportedFiatCurrency, supportedFiatCurrencies } =
@@ -212,13 +213,16 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const fiatToUSDConverter = useLocalFiatToUSDConverter()
 
   const onChangeValue =
-    (source: UniverseEventProperties[FiatOnRampEventName.FiatOnRampAmountEntered]['source']) =>
+    (source: FORAmountEnteredProperties['source']) =>
     (newAmount: string): void => {
       amountUpdatedTimeRef.current = Date.now()
-      sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampAmountEntered, {
-        source,
-        amountUSD: fiatToUSDConverter(parseFloat(newAmount)),
-      })
+      sendAnalyticsEvent(
+        isOffRamp ? FiatOffRampEventName.FiatOffRampAmountEntered : FiatOnRampEventName.FiatOnRampAmountEntered,
+        {
+          source,
+          amountUSD: fiatToUSDConverter(parseFloat(newAmount)),
+        },
+      )
       const truncatedValue = truncateToMaxDecimals({
         value: newAmount,
         maxDecimals: MAX_FIAT_INPUT_DECIMALS,
@@ -233,9 +237,6 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
       }
       decimalPadRef.current?.updateDisabledKeys()
     }
-
-  // we only show loading when there are no errors and quote value is not empty
-  const buttonDisabled = selectTokenLoading || !!quotesError || !selectedQuote?.destinationAmount
 
   const onContinue = (): void => {
     if (quotes && quoteCurrency?.currencyInfo?.currency) {
@@ -254,13 +255,23 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     countryCode,
   })
 
-  const onSelectCurrency = (newCurrency: FiatOnRampCurrency): void => {
-    setQuoteCurrency(newCurrency)
+  const onSelectCurrency = (currency: FORCurrencyOrBalance): void => {
     setShowTokenSelector(false)
-    if (newCurrency.currencyInfo?.currency.symbol) {
-      sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampTokenSelected, {
-        token: newCurrency.currencyInfo.currency.symbol.toLowerCase(),
-      })
+    if (isSupportedFORCurrency(currency)) {
+      setQuoteCurrency(currency)
+    } else {
+      setUnsupportedCurrency(currency)
+      setShowUnsupportedTokenModal(true)
+    }
+
+    if (currency.currencyInfo?.currency.symbol) {
+      sendAnalyticsEvent(
+        isOffRamp ? FiatOffRampEventName.FiatOffRampTokenSelected : FiatOnRampEventName.FiatOnRampTokenSelected,
+        {
+          token: currency.currencyInfo.currency.symbol.toLowerCase(),
+          isUnsupported: !isSupportedFORCurrency(currency),
+        },
+      )
     }
   }
 
@@ -271,7 +282,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
 
   const notAvailableInThisRegion = supportedFiatCurrencies?.length === 0
 
-  const { errorText, errorColor } = useParseFiatOnRampError(
+  const { errorText } = useParseFiatOnRampError(
     !notAvailableInThisRegion && quotesError,
     meldSupportedFiatCurrency.code,
   )
@@ -292,26 +303,87 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     [amountUpdatedTimeRef],
   )
 
+  const activeAccount = useActiveAccountWithThrow()
+  const { data: balancesById } = usePortfolioBalances({ address: activeAccount.address })
+  const portfolioBalance = quoteCurrency.currencyInfo && balancesById?.[quoteCurrency.currencyInfo.currencyId]
+  const formattedAmount = useFormatExactCurrencyAmount(
+    portfolioBalance?.quantity.toString() || '0',
+    quoteCurrency.currencyInfo?.currency,
+  )
+
+  const { navigateToSwapFlow } = useWalletNavigation()
+  const onAcceptUnsupportedTokenSwap = useCallback(() => {
+    setShowUnsupportedTokenModal(false)
+
+    if (unsupportedCurrency?.currencyInfo) {
+      navigateToSwapFlow({
+        currencyField: CurrencyField.INPUT,
+        currencyAddress: currencyIdToAddress(unsupportedCurrency.currencyInfo?.currencyId),
+        currencyChainId: unsupportedCurrency.currencyInfo?.currency.chainId,
+      })
+    }
+  }, [navigateToSwapFlow, unsupportedCurrency])
+
+  const onPillToggle = (option: string | number): void => {
+    setIsOffRamp(option === RampToggle.SELL)
+
+    setValue('')
+    setAmount(0)
+    setQuoteCurrency(defaultCurrency)
+
+    sendAnalyticsEvent(FiatOffRampEventName.FORBuySellToggled, {
+      value: option === RampToggle.SELL ? RampToggle.SELL : RampToggle.BUY,
+    })
+  }
+
+  // we only show loading when there are no errors and quote value is not empty
+  const buttonDisabled =
+    notAvailableInThisRegion || selectTokenLoading || !!quotesError || !selectedQuote?.destinationAmount
+
   return (
     <Screen edges={['top']}>
       <HandleBar backgroundColor="none" />
       <AnimatedFlex row height="100%" pt="$spacing12">
         {isSheetReady && (
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing16" px="$spacing24" width="100%">
-            <Flex row alignItems="center" justifyContent="space-between">
-              <Text variant="subheading1">{t('common.button.buy')}</Text>
-              <FiatOnRampCountryPicker
-                countryCode={countryCode}
-                onPress={(): void => {
-                  setSelectingCountry(true)
-                }}
-              />
-            </Flex>
+            {isOffRampEnabled ? (
+              <Flex row justifyContent="center" mt={isShortMobileDevice ? 0 : '$spacing6'}>
+                <OffRampPopover
+                  triggerContent={
+                    <PillMultiToggle
+                      defaultOption={RampToggle.BUY}
+                      options={[
+                        { value: RampToggle.BUY, display: t('common.button.buy') },
+                        { value: RampToggle.SELL, display: t('common.button.sell') },
+                      ]}
+                      onSelectOption={onPillToggle}
+                    />
+                  }
+                />
+                <Flex position="absolute" right={0} top="$spacing6">
+                  <FiatOnRampCountryPicker
+                    countryCode={countryCode}
+                    onPress={(): void => {
+                      setSelectingCountry(true)
+                    }}
+                  />
+                </Flex>
+              </Flex>
+            ) : (
+              <Flex row justifyContent="space-between">
+                <Text variant="subheading1">{t('common.button.buy')}</Text>
+                <FiatOnRampCountryPicker
+                  countryCode={countryCode}
+                  onPress={(): void => {
+                    setSelectingCountry(true)
+                  }}
+                />
+              </Flex>
+            )}
             <FiatOnRampAmountSection
               ref={inputRef}
               appFiatCurrencySupported={appFiatCurrencySupportedInMeld}
               currency={quoteCurrency}
-              errorColor={errorColor}
               errorText={errorText}
               fiatCurrencyInfo={meldSupportedFiatCurrency}
               notAvailableInThisRegion={notAvailableInThisRegion}
@@ -331,14 +403,25 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
             <AnimatedFlex
               bottom={0}
               exiting={FadeOutDown}
-              gap="$spacing8"
+              gap={isShortMobileDevice ? 0 : '$spacing8'}
               left={0}
               opacity={decimalPadReady ? 1 : 0}
-              pb="$spacing24"
+              // android devices require more bottom padding
+              pb={isShortMobileDevice && isIOS ? '$spacing4' : '$spacing24'}
               position="absolute"
               px="$spacing24"
               right={0}
             >
+              {quoteCurrency.currencyInfo && (
+                <TokenSelectorBalanceDisplay
+                  disabled={notAvailableInThisRegion}
+                  formattedAmount={formattedAmount}
+                  selectedCurrencyInfo={quoteCurrency.currencyInfo}
+                  onPress={(): void => {
+                    setShowTokenSelector(true)
+                  }}
+                />
+              )}
               <Flex grow justifyContent="flex-end">
                 <DecimalPadInput
                   ref={decimalPadRef}
@@ -355,6 +438,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
                 eligible
                 continueButtonText={t('common.button.continue')}
                 disabled={buttonDisabled}
+                isLoading={selectTokenLoading}
                 onPress={onContinue}
               />
             </AnimatedFlex>
@@ -372,12 +456,28 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
       )}
       {showTokenSelector && countryCode && (
         <FiatOnRampTokenSelectorModal
+          balancesById={balancesById}
           error={supportedTokensError}
+          isOffRamp={isOffRamp}
           list={supportedTokensList}
           loading={supportedTokensLoading}
+          selectedCurrency={quoteCurrency}
           onClose={(): void => setShowTokenSelector(false)}
           onRetry={supportedTokensRefetch}
           onSelectCurrency={onSelectCurrency}
+        />
+      )}
+      {showUnsupportedTokenModal && (
+        <UnsupportedTokenModal
+          isVisible
+          onAccept={onAcceptUnsupportedTokenSwap}
+          onBack={(): void => {
+            setShowUnsupportedTokenModal(false)
+            setShowTokenSelector(true)
+          }}
+          onClose={(): void => {
+            setShowUnsupportedTokenModal(false)
+          }}
         />
       )}
     </Screen>

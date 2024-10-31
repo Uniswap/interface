@@ -1,9 +1,10 @@
 import { Token } from '@uniswap/sdk-core'
-import { DAI, NATIVE_CHAIN_ID } from 'constants/tokens'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { TEST_TOKEN_1 } from 'test-utils/constants'
 import { renderHook } from 'test-utils/render'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { DAI } from 'uniswap/src/constants/tokens'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { useCurrencyInfo as useUniswapCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -29,14 +30,18 @@ describe('useCurrencyInfo', () => {
     it('calls useUniswapCurrencyInfo with the correct arguments', () => {
       renderHook(() => useCurrencyInfo(DAI.address, UniverseChainId.Mainnet))
 
-      expect(useUniswapCurrencyInfo).toHaveBeenCalledWith(`${UniverseChainId.Mainnet}-${DAI.address}`)
+      expect(useUniswapCurrencyInfo).toHaveBeenCalledWith(`${UniverseChainId.Mainnet}-${DAI.address}`, {
+        skip: undefined,
+      })
     })
 
     it('calls useUniswapCurrencyInfo with the correct arguments when Currency is provided', () => {
       const currency = new Token(UniverseChainId.Mainnet, DAI.address, 18, DAI.symbol, DAI.name)
       renderHook(() => useCurrencyInfo(currency))
 
-      expect(useUniswapCurrencyInfo).toHaveBeenCalledWith(`${UniverseChainId.Mainnet}-${DAI.address}`)
+      expect(useUniswapCurrencyInfo).toHaveBeenCalledWith(`${UniverseChainId.Mainnet}-${DAI.address}`, {
+        skip: undefined,
+      })
     })
   })
 
@@ -46,6 +51,7 @@ describe('useCurrencyInfo', () => {
 
       expect(useUniswapCurrencyInfo).toHaveBeenCalledWith(
         `${UniverseChainId.Mainnet}-${UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet].nativeCurrency.address}`,
+        { skip: undefined },
       )
     })
 
@@ -54,6 +60,7 @@ describe('useCurrencyInfo', () => {
 
       expect(useUniswapCurrencyInfo).toHaveBeenCalledWith(
         `${UniverseChainId.Mainnet}-${UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet].nativeCurrency.address}`,
+        { skip: undefined },
       )
     })
 
@@ -63,6 +70,7 @@ describe('useCurrencyInfo', () => {
 
       expect(useUniswapCurrencyInfo).toHaveBeenCalledWith(
         `${UniverseChainId.Mainnet}-${UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet].nativeCurrency.address}`,
+        { skip: undefined },
       )
     })
   })

@@ -9,20 +9,20 @@ import {
 import { Currency, CurrencyAmount, Percent, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { computePairAddress } from '@uniswap/v2-sdk'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
-import { BlueCard, LightCard } from 'components/Card'
-import { AutoColumn, ColumnCenter } from 'components/Column'
+import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button/buttons'
+import { BlueCard, LightCard } from 'components/Card/cards'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import { DoubleCurrencyLogo } from 'components/DoubleLogo'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
+import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 import { MinimalPositionCard } from 'components/PositionCard'
-import Row, { AutoRow, RowBetween, RowFlat } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { V2Unsupported } from 'components/V2Unsupported'
+import { AutoColumn, ColumnCenter } from 'components/deprecated/Column'
+import Row, { AutoRow, RowBetween, RowFlat } from 'components/deprecated/Row'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { ZERO_PERCENT } from 'constants/misc'
-import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
@@ -47,6 +47,7 @@ import { TransactionInfo, TransactionType } from 'state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
+import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
@@ -128,7 +129,7 @@ export default function AddLiquidity() {
     (accumulator, field) => {
       return {
         ...accumulator,
-        [field]: maxAmountSpend(currencyBalances[field]),
+        [field]: maxAmountSpend(currencyBalances[field], true),
       }
     },
     {},
@@ -469,7 +470,7 @@ export default function AddLiquidity() {
                 element={InterfaceElementName.CONNECT_WALLET_BUTTON}
               >
                 <ButtonLight onClick={accountDrawer.open}>
-                  <Trans i18nKey="common.connectWallet.button" />
+                  <ConnectWalletButtonText />
                 </ButtonLight>
               </Trace>
             ) : (

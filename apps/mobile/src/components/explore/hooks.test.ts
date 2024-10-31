@@ -6,8 +6,8 @@ import { renderHookWithProviders } from 'src/test/render'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FavoritesState } from 'uniswap/src/features/favorites/slice'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
+import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
 import { cleanup } from 'wallet/src/test/test-utils'
 
 const tokenId = SAMPLE_SEED_ADDRESS_1
@@ -131,7 +131,7 @@ describe(useExploreTokenContextMenu, () => {
     })
 
     it("dispatches add to favorites redux action when 'Favorite token' is pressed", async () => {
-      const store = mockStore({ favorites: { tokens: [] }, appearance: { theme: 'system' } })
+      const store = mockStore({ favorites: { tokens: [] }, appearance: { theme: 'system' }, userSettings: {} })
       const { result } = renderHookWithProviders(() => useExploreTokenContextMenu(tokenMenuParams), {
         resolvers,
         store,
@@ -158,6 +158,7 @@ describe(useExploreTokenContextMenu, () => {
       const store = mockStore({
         favorites: { tokens: [tokenMenuParams.currencyId.toLowerCase()] },
         appearance: { theme: 'system' },
+        userSettings: {},
       })
       const { result } = renderHookWithProviders(() => useExploreTokenContextMenu(tokenMenuParams), {
         resolvers,
@@ -186,6 +187,7 @@ describe(useExploreTokenContextMenu, () => {
     const store = mockStore({
       favorites: { tokens: [] },
       selectedAppearanceSettings: { theme: 'system' },
+      userSettings: {},
     })
     const { result } = renderHookWithProviders(() => useExploreTokenContextMenu(tokenMenuParams), {
       store,

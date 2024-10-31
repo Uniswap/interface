@@ -1,61 +1,44 @@
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
-import Badge from 'components/Badge'
-import Column from 'components/Column'
-import { ScrollBarStyles } from 'components/Common'
+import Badge from 'components/Badge/Badge'
 import { ChainLogo } from 'components/Logo/ChainLogo'
+import {
+  InterfaceRemoteSearchHistoryItem,
+} from 'components/NavBar/SearchBar/RecentlySearchedAssets'
 import { SkeletonRow, SuggestionRow } from 'components/NavBar/SearchBar/SuggestionRow'
-import Row from 'components/Row'
+import QuestionHelper from 'components/QuestionHelper'
 import { SuspendConditionally } from 'components/Suspense/SuspendConditionally'
 import { SuspenseWithPreviousRenderAsFallback } from 'components/Suspense/SuspenseWithPreviousRenderAsFallback'
 import { BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS } from 'constants/chains'
-import { SearchToken } from 'graphql/data/SearchTokens'
+import { GqlSearchToken } from 'graphql/data/SearchTokens'
 import useTrendingTokens from 'graphql/data/TrendingTokens'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { useAccount } from 'hooks/useAccount'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
-import styled from 'lib/styled-components'
+import deprecatedStyled from 'lib/styled-components'
 import { GenieCollection } from 'nft/types'
 import { useEffect, useMemo, useState } from 'react'
 import { Clock, TrendingUp } from 'react-feather'
 import { useLocation } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
-import { Flex } from 'ui/src'
+import { Flex, Text, useScrollbarStyles } from 'ui/src'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { HistoryDuration, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import {
+  HistoryDuration,
+  SafetyLevel,
+  Token,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
 import { Trans } from 'uniswap/src/i18n'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-
-const SearchBarDropdownContainer = styled(Column)<{ $loading: boolean }>`
-  width: 100%;
-  backdrop-filter: blur(60px);
-  overflow-y: auto;
-  transition: 125;
-  opacity: ${({ $loading }) => ($loading ? '0.3' : '1')};
-  ${ScrollBarStyles}
-`
-const DropdownHeader = styled(Row)`
-  color: ${({ theme }) => theme.neutral2};
-  line-height: 20px;
-  padding: 4px 16px;
-  font-weight: 500;
-  font-size: 14px;
-`
-const NotFoundContainer = styled.div`
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 500;
-  color: ${({ theme }) => theme.neutral2};
-  padding: 4px 16px;
-`
 
 interface SearchBarDropdownSectionProps {
   toggleOpen: () => void
-  suggestions: (GenieCollection | SearchToken | undefined)[]
+  suggestions: (InterfaceRemoteSearchHistoryItem | undefined)[]
   header: JSX.Element
   headerIcon?: JSX.Element
+  headerInfoText?: JSX.Element
   hoveredIndex?: number
   startingIndex: number
   setHoveredIndex: (index: number | undefined) => void
@@ -68,6 +51,7 @@ function SearchBarDropdownSection({
   suggestions,
   header,
   headerIcon = undefined,
+  headerInfoText,
   hoveredIndex,
   startingIndex,
   setHoveredIndex,
@@ -76,10 +60,11 @@ function SearchBarDropdownSection({
 }: SearchBarDropdownSectionProps) {
   return (
     <Flex gap="$spacing4" data-testid="searchbar-dropdown">
-      <DropdownHeader gap="8px">
+      <Flex row alignItems="center" py="$spacing4" px="$spacing16" gap="8px">
         {headerIcon ? headerIcon : null}
-        {header}
-      </DropdownHeader>
+        <Text variant="body3">{header}</Text>
+        {headerInfoText ? <QuestionHelper text={headerInfoText} /> : null}
+      </Flex>
       <Flex gap="$spacing4">
         {suggestions.map((suggestion, index) =>
           isLoading || !suggestion ? (
@@ -106,11 +91,11 @@ function SearchBarDropdownSection({
   )
 }
 
-function isKnownToken(token: SearchToken) {
+function isKnownToken(token: GqlSearchToken) {
   return token.project?.safetyLevel == SafetyLevel.Verified || token.project?.safetyLevel == SafetyLevel.MediumWarning
 }
 
-const ChainComingSoonBadge = styled(Badge)`
+const ChainComingSoonBadge = deprecatedStyled(Badge)`
   align-items: center;
   background-color: ${({ theme }) => theme.surface2};
   color: ${({ theme }) => theme.neutral2};
@@ -126,8 +111,8 @@ const ChainComingSoonBadge = styled(Badge)`
 
 interface SearchBarDropdownProps {
   toggleOpen: () => void
-  pools: SearchToken[]
-  tokens: SearchToken[]
+  pools: GqlSearchToken[]
+  tokens: GqlSearchToken[]
   collections: GenieCollection[]
   queryText: string
   hasInput: boolean
@@ -139,9 +124,19 @@ export function SearchBarDropdown(props: SearchBarDropdownProps) {
   const account = useAccount()
   const showChainComingSoonBadge =
     account.chainId && BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(account.chainId) && !isLoading
+  const scrollBarStyles = useScrollbarStyles()
 
   return (
-    <SearchBarDropdownContainer $loading={isLoading}>
+    <Flex
+      width="100%"
+      backdropFilter="blur(60px)"
+      animation="fast"
+      opacity={isLoading ? 0.3 : 1}
+      style={scrollBarStyles}
+      $platform-web={{
+        overflowY: 'auto',
+      }}
+    >
       <SuspenseWithPreviousRenderAsFallback>
         <SuspendConditionally if={isLoading}>
           <SearchBarDropdownContents {...props} />
@@ -155,7 +150,7 @@ export function SearchBarDropdown(props: SearchBarDropdownProps) {
           </ThemedText.BodySmall>
         </ChainComingSoonBadge>
       )}
-    </SearchBarDropdownContainer>
+    </Flex>
   )
 }
 
@@ -169,8 +164,14 @@ function SearchBarDropdownContents({
 }: SearchBarDropdownProps): JSX.Element {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
   //const { data: searchHistory } = useRecentlySearchedAssets()
-  const searchHistory: SearchToken[] = pools
-  const shortenedHistory = useMemo(() => searchHistory?.slice(0, 2) ?? [...Array<SearchToken>(2)], [searchHistory])
+  const searchHistory: InterfaceRemoteSearchHistoryItem[] = pools
+  const shortenedHistory = useMemo(
+    () =>
+      searchHistory?.filter((item) => 'isVerified' in (item as GenieCollection) || (item as Token).chain) ?? [
+        ...Array<GqlSearchToken>(2),
+      ],
+    [searchHistory],
+  )
   const { pathname } = useLocation()
   const isNFTPage = useIsNftPage()
   const isTokenPage = pathname.includes('/explore')
@@ -205,7 +206,7 @@ function SearchBarDropdownContents({
 
   const trendingTokensLength = !isNFTPage ? 3 : 2
   const trendingTokens = useMemo(
-    () => trendingTokenData?.slice(0, trendingTokensLength) ?? [...Array<SearchToken>(trendingTokensLength)],
+    () => trendingTokenData?.slice(0, trendingTokensLength) ?? [...Array<GqlSearchToken>(trendingTokensLength)],
     [trendingTokenData, trendingTokensLength],
   )
 
@@ -269,9 +270,11 @@ function SearchBarDropdownContents({
         header={<Trans i18nKey="common.smartPools" />}
       />
     ) : (
-      <NotFoundContainer>
+      <Flex py="$spacing4" px="$spacing16">
+      <Text variant="body3">
         <Trans i18nKey="smartPools.noneFound" />
-      </NotFoundContainer>
+      </Text>
+    </Flex>
     )
 
   const tokenSearchResults = displayTokens ? (
@@ -289,9 +292,11 @@ function SearchBarDropdownContents({
         header={<Trans i18nKey="common.tokens" />}
       />
     ) : (
-      <NotFoundContainer>
-        <Trans i18nKey="tokens.noneFound" />
-      </NotFoundContainer>
+      <Flex py="$spacing4" px="$spacing16">
+        <Text variant="body3">
+          <Trans i18nKey="tokens.noneFound" />
+        </Text>
+      </Flex>
     )
   ) : null
 
@@ -310,9 +315,9 @@ function SearchBarDropdownContents({
         header={<Trans i18nKey="nft.collections" />}
       />
     ) : (
-      <NotFoundContainer>
+      <Flex py="$spacing4" px="$spacing16">
         <Trans i18nKey="nft.noneFound" />
-      </NotFoundContainer>
+      </Flex>
     )
   ) : null
 
@@ -363,8 +368,9 @@ function SearchBarDropdownContents({
             suggestion_type: NavBarSearchTypes.TOKEN_TRENDING,
             ...eventProperties,
           }}
-          header={<Trans i18nKey="tokens.selector.section.popular" />}
+          header={<Trans i18nKey="explore.search.section.popularTokens" />}
           headerIcon={<TrendingUp width={20} height={20} />}
+          headerInfoText={<Trans i18nKey="explore.search.section.popularTokenInfo" />}
           isLoading={!trendingTokenData}
         />
       )}
@@ -381,6 +387,7 @@ function SearchBarDropdownContents({
           }}
           header={<Trans i18nKey="nft.popularCollections" />}
           headerIcon={<TrendingUp width={20} height={20} />}
+          headerInfoText={<Trans i18nKey="nft.popularCollectionsInfo" />}
           isLoading={trendingCollectionsAreLoading}
         />
       )}
@@ -388,7 +395,7 @@ function SearchBarDropdownContents({
   )
 }
 
-function ComingSoonText({ chainId }: { chainId: InterfaceChainId }) {
+function ComingSoonText({ chainId }: { chainId: UniverseChainId }) {
   const chainName = UNIVERSE_CHAIN_INFO[chainId]?.name
   return BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(chainId) ? (
     <Trans i18nKey="search.chainComing" values={{ chainName }} />

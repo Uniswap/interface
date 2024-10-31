@@ -3,21 +3,23 @@ import { providers } from 'ethers'
 import { useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { AssetType } from 'uniswap/src/entities/assets'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { sendTokenActions } from 'wallet/src/features/transactions/send/sendTokenSaga'
 import { SendTokenParams } from 'wallet/src/features/transactions/send/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
-/** Helper transfer callback for ERC20s */
+/** Helper send callback for ERC20s */
 export function useSendERC20Callback(
   txId?: string,
-  chainId?: WalletChainId,
+  chainId?: UniverseChainId,
   toAddress?: Address,
   tokenAddress?: Address,
   amountInWei?: string,
   transferTxWithGasSettings?: providers.TransactionRequest,
   onSubmit?: () => void,
   currencyAmountUSD?: Maybe<CurrencyAmount<Currency>>, // for analytics
+  gasEstimates?: GasFeeEstimates,
 ): (() => void) | null {
   const account = useActiveAccount()
 
@@ -32,6 +34,7 @@ export function useSendERC20Callback(
           type: AssetType.Currency,
           txId,
           currencyAmountUSD,
+          gasEstimates,
         }
       : undefined,
     transferTxWithGasSettings,
@@ -39,15 +42,16 @@ export function useSendERC20Callback(
   )
 }
 
-/** Helper transfer callback for NFTs */
+/** Helper send callback for NFTs */
 export function useSendNFTCallback(
   txId?: string,
-  chainId?: WalletChainId,
+  chainId?: UniverseChainId,
   toAddress?: Address,
   tokenAddress?: Address,
   tokenId?: string,
   txRequest?: providers.TransactionRequest,
   onSubmit?: () => void,
+  gasEstimates?: GasFeeEstimates,
 ): (() => void) | null {
   const account = useActiveAccount()
 
@@ -61,6 +65,7 @@ export function useSendNFTCallback(
           tokenId,
           type: AssetType.ERC721,
           txId,
+          gasEstimates,
         }
       : undefined,
     txRequest,

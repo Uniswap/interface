@@ -20,6 +20,7 @@ export const enum SentryAppNameTag {
   ContentScript = 'content-script',
   Background = 'background',
   Popup = 'popup',
+  UnitagClaim = 'unitag-claim',
 }
 
 export function initializeSentry(appNameTag: SentryAppNameTag, sentryUserId: string): void {

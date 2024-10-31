@@ -5,7 +5,7 @@ import deprecatedStyled, { useTheme } from 'lib/styled-components'
 import { Discord, Github, Twitter } from 'pages/Landing/components/Icons'
 import { Wiggle } from 'pages/Landing/components/animations'
 import { useMemo } from 'react'
-import { useTogglePrivacyPolicy } from 'state/application/hooks'
+import { useActiveSmartPool, useTogglePrivacyPolicy } from 'state/application/hooks'
 import { Anchor, Flex, Separator, Text, styled } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useTranslation } from 'uniswap/src/i18n'
@@ -74,7 +74,8 @@ function FooterSection({ title, items }: { title: string; items: MenuItem[] }) {
 export function Footer() {
   const { t } = useTranslation()
   const togglePrivacyPolicy = useTogglePrivacyPolicy()
-  const tabsContent = useTabsContent({ includeNftsLink: true })
+  const userIsOperator = useActiveSmartPool().name !== undefined
+  const tabsContent = useTabsContent({ includeNftsLink: true, userIsOperator })
   const appSectionItems: MenuItem[] = useMemo(() => {
     return tabsContent.map((tab) => ({
       label: tab.title,

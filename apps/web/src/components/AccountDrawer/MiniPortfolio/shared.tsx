@@ -1,5 +1,5 @@
-import Column from 'components/Column'
-import Row from 'components/Row'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import styled, { useTheme } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ArrowRight } from 'react-feather'
@@ -33,7 +33,7 @@ export function TabButton({ text, icon, extraWarning, onClick, disabled, classNa
         <Row gap="md">
           {icon}
           <Column>
-            <Text variant="buttonLabel4" color="$neutral2" lineHeight={20} fontWeight="$medium">
+            <Text variant="buttonLabel3" color="$neutral2" lineHeight={20} fontWeight="$medium">
               {text}
             </Text>
             {extraWarning && <ThemedText.LabelMicro>{extraWarning}</ThemedText.LabelMicro>}

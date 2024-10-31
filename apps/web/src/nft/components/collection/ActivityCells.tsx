@@ -1,7 +1,7 @@
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { Box } from 'components/deprecated/Box'
 import styled from 'lib/styled-components'
-import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/Activity.css'
 import {
@@ -35,10 +35,10 @@ import {
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const AddressLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.neutral1};

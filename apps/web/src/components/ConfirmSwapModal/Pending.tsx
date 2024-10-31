@@ -5,10 +5,10 @@ import {
   LogoContainer,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/Logos'
 import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
-import Column, { ColumnCenter } from 'components/Column'
 import { TradeSummary } from 'components/ConfirmSwapModal/TradeSummary'
 import { slideInAnimation, slideOutAnimation } from 'components/ConfirmSwapModal/animations'
-import Row from 'components/Row'
+import Column, { ColumnCenter } from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
@@ -26,7 +26,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans, t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 const Container = styled(ColumnCenter)`
   margin: 48px 0 8px;
@@ -137,7 +137,7 @@ export function Pending({
     } else if (uniswapXOrder && uniswapXOrder.status === UniswapXOrderStatus.FILLED) {
       txHash = uniswapXOrder.txHash
     } else {
-      return
+      return undefined
     }
     return getExplorerLink(chainId || UniverseChainId.Mainnet, txHash, ExplorerDataType.TRANSACTION)
   }, [chainId, swapResult, uniswapXOrder])

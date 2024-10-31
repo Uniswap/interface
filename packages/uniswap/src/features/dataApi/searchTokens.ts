@@ -26,7 +26,7 @@ export function useSearchTokens(
 
   const formattedData = useMemo(() => {
     if (!data || !data.searchTokens) {
-      return
+      return undefined
     }
 
     return data.searchTokens

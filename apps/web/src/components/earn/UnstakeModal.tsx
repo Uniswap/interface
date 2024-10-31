@@ -5,26 +5,27 @@ import { ReactNode, /*useCallback,*/ useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'lib/styled-components'
 import { ThemedText } from 'theme/components/text'
+import { GRG } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
-import { GRG } from 'constants/tokens'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import { ResponsiveHeaderText, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
 // TODO: check if should write into state stake hooks
 import { useBurnV3ActionHandlers, useBurnV3State } from 'state/burn/v3/hooks'
 import { useUnstakeCallback } from 'state/stake/hooks'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
-import { /*ButtonConfirmed,*/ ButtonPrimary } from 'components/Button'
+import { /*ButtonConfirmed,*/ ButtonPrimary } from 'components/Button/buttons'
 //import { ButtonError } from '../Button'
-import { LightCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
+import { LightCard } from 'components/Card/cards'
+import { AutoColumn } from 'components/deprecated/Column'
+import { AutoRow, RowBetween } from 'components/deprecated/Row'
 import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
-import { AutoRow, RowBetween } from 'components/Row'
 import Slider from 'components/Slider'
 import { useAccount } from 'hooks/useAccount'
 import { logger } from 'utilities/src/logger/logger'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -50,7 +51,10 @@ export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismi
   const account = useAccount()
 
   // state for unstake input
-  const [currencyValue] = useState<Token>(GRG[account.chainId ?? 1])
+  const [currencyValue] = useState<Token | undefined>(GRG[account.chainId ?? UniverseChainId.Mainnet])
+  if (!currencyValue) {
+    throw new Error ('No GRG token found to unstake')
+  }
 
   const { percent } = useBurnV3State()
   const { onPercentSelect } = useBurnV3ActionHandlers()
@@ -92,7 +96,7 @@ export default function UnstakeModal({ isOpen, isPool, freeStakeBalance, onDismi
     setStakeAmount(parsedAmount)
 
     // if callback not returned properly ignore
-    if (!unstakeCallback || !freeStakeBalance || !parsedAmount || !currencyValue.isToken) {
+    if (!unstakeCallback || !freeStakeBalance || !parsedAmount || !currencyValue?.isToken) {
       return
     }
 

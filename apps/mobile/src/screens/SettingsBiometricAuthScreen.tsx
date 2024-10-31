@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
-import { enroll } from 'src/features/biometrics'
+import { enroll } from 'src/features/biometrics/biometrics'
 import {
   checkOsBiometricAuthEnabled,
   useBiometricAppSettings,
@@ -19,9 +19,8 @@ import {
   setRequiredForAppAccess,
   setRequiredForTransactions,
 } from 'src/features/biometrics/slice'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, Switch, Text, TouchableArea } from 'ui/src'
 import { isAndroid, isIOS } from 'utilities/src/platform'
-import { Switch } from 'wallet/src/components/buttons/Switch'
 import { openSettings } from 'wallet/src/utils/linking'
 
 interface BiometricAuthSetting {
@@ -177,7 +176,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
               onValueChange(!value)
             }}
           >
-            <Switch pointerEvents="none" value={value} onValueChange={onValueChange} />
+            <Switch checked={value} pointerEvents="none" variant="branded" onCheckedChange={onValueChange} />
           </TouchableArea>
         </Flex>
       </Flex>

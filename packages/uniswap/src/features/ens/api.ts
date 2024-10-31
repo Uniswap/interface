@@ -1,15 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { skipToken, useQuery } from '@tanstack/react-query'
 import { providers } from 'ethers/lib/ethers'
-import { useMemo } from 'react'
-import { useRestQuery } from 'uniswap/src/data/rest'
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
-// stub endpoint to conform to REST endpoint styles
-// Rest link should intercept and use custom fetcher instead
-export const STUB_ONCHAIN_ENS_ENDPOINT = '/onchain-ens'
+const ONCHAIN_ENS_CACHE_KEY = 'OnchainENS'
 
 export enum EnsLookupType {
   Name = 'name',
@@ -22,7 +19,7 @@ export enum EnsLookupType {
 export type EnsLookupParams = {
   type: EnsLookupType
   nameOrAddress: string
-  chainId: WalletChainId
+  chainId: UniverseChainId
 }
 
 async function getNameFetch(address: string, provider: providers.JsonRpcProvider) {
@@ -54,76 +51,57 @@ async function getTextFetch(key: string, name: string, provider: providers.JsonR
   return text ?? null
 }
 
-export const getOnChainEnsFetch = async (params: EnsLookupParams): Promise<Response> => {
+async function getOnChainEnsFetch(params: EnsLookupParams): Promise<string | null> {
   const { type, nameOrAddress } = params
-  const provider = createEthersProvider(UniverseChainId.Mainnet)
-  if (!provider) {
-    return new Response(JSON.stringify({ data: undefined }))
-  }
 
-  let response: string | null
+  const provider = createEthersProvider(UniverseChainId.Mainnet)
+
+  if (!provider) {
+    return null
+  }
 
   switch (type) {
     case EnsLookupType.Name:
-      response = await getNameFetch(nameOrAddress, provider)
-      break
+      return await getNameFetch(nameOrAddress, provider)
     case EnsLookupType.Address:
-      response = await getAddressFetch(nameOrAddress, provider)
-      break
+      return await getAddressFetch(nameOrAddress, provider)
     case EnsLookupType.Avatar:
-      response = await getAvatarFetch(nameOrAddress, provider)
-      break
+      return await getAvatarFetch(nameOrAddress, provider)
     case EnsLookupType.Description:
-      response = await getTextFetch('description', nameOrAddress, provider)
-      break
+      return await getTextFetch('description', nameOrAddress, provider)
     case EnsLookupType.TwitterUsername:
-      response = await getTextFetch('com.twitter', nameOrAddress, provider)
-      break
+      return await getTextFetch('com.twitter', nameOrAddress, provider)
     default:
       throw new Error(`Invalid ENS lookup type: ${type}`)
   }
-
-  return new Response(JSON.stringify({ data: response }))
 }
 
 function useEnsQuery(
   type: EnsLookupType,
   nameOrAddress?: string | null,
-  chainId: WalletChainId = UniverseChainId.Mainnet,
+  chainId: UniverseChainId = UniverseChainId.Mainnet,
 ) {
-  const result = useRestQuery<{ data: Maybe<string>; timestamp: number }, EnsLookupParams>(
-    STUB_ONCHAIN_ENS_ENDPOINT, // will invoke `getOnChainEnsFetch`
-    // the query is skipped if this is not defined so the assertion is okay
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    { type, nameOrAddress: nameOrAddress!, chainId },
-    ['data'],
-    { ttlMs: 5 * ONE_MINUTE_MS, skip: !nameOrAddress },
-  )
-
-  const { data, error } = result
-
-  return useMemo(
-    () => ({
-      ...result,
-      data: data?.data,
-      error,
-    }),
-    [data, error, result],
-  )
+  return useQuery<string | null>({
+    queryKey: [ONCHAIN_ENS_CACHE_KEY, chainId, type, nameOrAddress],
+    queryFn: nameOrAddress
+      ? async (): ReturnType<typeof getOnChainEnsFetch> => await getOnChainEnsFetch({ type, nameOrAddress, chainId })
+      : skipToken,
+    staleTime: 5 * ONE_MINUTE_MS,
+  })
 }
 
-export function useENSName(address?: Address, chainId: WalletChainId = UniverseChainId.Mainnet) {
+export function useENSName(address?: Address, chainId: UniverseChainId = UniverseChainId.Mainnet) {
   return useEnsQuery(EnsLookupType.Name, address, chainId)
 }
-export function useAddressFromEns(maybeName: string | null, chainId: WalletChainId = UniverseChainId.Mainnet) {
+export function useAddressFromEns(maybeName: string | null, chainId: UniverseChainId = UniverseChainId.Mainnet) {
   return useEnsQuery(EnsLookupType.Address, maybeName, chainId)
 }
-export function useENSAvatar(address?: string | null, chainId: WalletChainId = UniverseChainId.Mainnet) {
+export function useENSAvatar(address?: string | null, chainId: UniverseChainId = UniverseChainId.Mainnet) {
   return useEnsQuery(EnsLookupType.Avatar, address, chainId)
 }
-export function useENSDescription(name?: string | null, chainId: WalletChainId = UniverseChainId.Mainnet) {
+export function useENSDescription(name?: string | null, chainId: UniverseChainId = UniverseChainId.Mainnet) {
   return useEnsQuery(EnsLookupType.Description, name, chainId)
 }
-export function useENSTwitterUsername(name?: string | null, chainId: WalletChainId = UniverseChainId.Mainnet) {
+export function useENSTwitterUsername(name?: string | null, chainId: UniverseChainId = UniverseChainId.Mainnet) {
   return useEnsQuery(EnsLookupType.TwitterUsername, name, chainId)
 }

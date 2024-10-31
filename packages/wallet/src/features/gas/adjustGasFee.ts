@@ -1,10 +1,11 @@
 import { BigNumber, BigNumberish, providers } from 'ethers'
-import { FeeType, GasFeeResult } from 'uniswap/src/features/gas/types'
+import { FeeType } from 'uniswap/src/data/tradingApi/types'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { BigNumberMax } from 'wallet/src/utils/number'
 
 export type FeeDetails =
-  | { type: FeeType.Legacy; params: { gasPrice: string } }
-  | { type: FeeType.Eip1559; params: { maxFeePerGas: string; maxPriorityFeePerGas: string } }
+  | { type: FeeType.LEGACY; params: { gasPrice: string } }
+  | { type: FeeType.EIP1559; params: { maxFeePerGas: string; maxPriorityFeePerGas: string } }
 
 /**
  * Returns gas prices params adjusted by provided factor.
@@ -25,7 +26,7 @@ export function getAdjustedGasFeeDetails(
       'gasPrice' in currentGasFeeParams ? currentGasFeeParams.gasPrice : currentGasFeeParams.maxFeePerGas
 
     return {
-      type: FeeType.Legacy,
+      type: FeeType.LEGACY,
       params: {
         gasPrice: multiplyByFactor(request.gasPrice, currentGasPrice, adjustmentFactor),
       },
@@ -41,7 +42,7 @@ export function getAdjustedGasFeeDetails(
       'maxFeePerGas' in currentGasFeeParams ? currentGasFeeParams.maxPriorityFeePerGas : currentGasFeeParams.gasPrice
 
     return {
-      type: FeeType.Eip1559,
+      type: FeeType.EIP1559,
       params: {
         maxFeePerGas: multiplyByFactor(request.maxFeePerGas, currentMaxFeePerGas, adjustmentFactor),
         maxPriorityFeePerGas: multiplyByFactor(

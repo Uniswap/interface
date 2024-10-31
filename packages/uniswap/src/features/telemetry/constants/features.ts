@@ -9,6 +9,16 @@ export enum UnitagEventName {
   UnitagRemoved = 'Unitag Removed',
 }
 
+export enum FiatOffRampEventName {
+  FORBuySellToggled = 'Fiat OnRamp Buy Sell Toggled',
+  FiatOffRampAmountEntered = 'Fiat OffRamp Amount Entered',
+  FiatOffRampTransactionUpdated = 'Fiat OffRamp Transaction Updated', // TODO: must implement
+  FiatOffRampTokenSelected = 'Fiat OffRamp Token Selected',
+  FiatOffRampWidgetOpened = 'Fiat OffRamp Widget Opened',
+  FiatOffRampWidgetCompleted = 'Fiat OffRamp Widget Completed', // TODO: must implement
+  FiatOffRampFundsSent = 'Fiat OffRamp Funds Sent', // TODO: must implement
+}
+
 export enum FiatOnRampEventName {
   FiatOnRampAmountEntered = 'Fiat OnRamp Amount Entered',
   FiatOnRampTransactionUpdated = 'Fiat OnRamp Transaction Updated',

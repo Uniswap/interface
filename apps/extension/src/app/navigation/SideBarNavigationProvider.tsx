@@ -5,10 +5,11 @@ import { useCopyToClipboard } from 'src/app/hooks/useOnCopyToClipboard'
 import { AppRoutes, HomeQueryParams, HomeTabs } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { SidebarLocationState, focusOrCreateTokensExploreTab } from 'src/app/navigation/utils'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import {
   NavigateToFiatOnRampArgs,
@@ -22,7 +23,7 @@ import {
   getNavigateToSwapFlowArgsInitialState,
 } from 'wallet/src/contexts/WalletNavigationContext'
 import { CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { ExplorerDataType, getExplorerLink, getNftUrl, getTokenUrl } from 'wallet/src/utils/linking'
+import { getNftUrl, getTokenUrl } from 'wallet/src/utils/linking'
 
 export function SideBarNavigationProvider({ children }: PropsWithChildren): JSX.Element {
   const handleShareNft = useHandleShareNft()
@@ -39,6 +40,9 @@ export function SideBarNavigationProvider({ children }: PropsWithChildren): JSX.
     // no-op until we have proper NFT collection
   }, [])
   const navigateToFiatOnRamp = useNavigateToFiatOnRamp()
+  const navigateToExternalProfile = useCallback(() => {
+    // no-op until we have an external profile screen on extension
+  }, [])
 
   return (
     <WalletNavigationProvider
@@ -47,6 +51,7 @@ export function SideBarNavigationProvider({ children }: PropsWithChildren): JSX.
       navigateToAccountActivityList={navigateToAccountActivityList}
       navigateToAccountTokenList={navigateToAccountTokenList}
       navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
+      navigateToExternalProfile={navigateToExternalProfile}
       navigateToFiatOnRamp={navigateToFiatOnRamp}
       navigateToNftCollection={navigateToNftCollection}
       navigateToNftDetails={navigateToNftDetails}
@@ -151,13 +156,17 @@ function useNavigateToSend(): (args: NavigateToSendFlowArgs) => void {
 }
 
 function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
-  return useCallback((args: NavigateToSwapFlowArgs): void => {
-    const initialState = getNavigateToSwapFlowArgsInitialState(args)
+  const { defaultChainId } = useEnabledChains()
+  return useCallback(
+    (args: NavigateToSwapFlowArgs): void => {
+      const initialState = getNavigateToSwapFlowArgsInitialState(args, defaultChainId)
 
-    const state: SidebarLocationState = initialState ? { initialTransactionState: initialState } : undefined
+      const state: SidebarLocationState = initialState ? { initialTransactionState: initialState } : undefined
 
-    navigate(AppRoutes.Swap, { state })
-  }, [])
+      navigate(AppRoutes.Swap, { state })
+    },
+    [defaultChainId],
+  )
 }
 
 function useNavigateToTokenDetails(): (currencyId: string) => void {
@@ -167,10 +176,14 @@ function useNavigateToTokenDetails(): (currencyId: string) => void {
 }
 
 function useNavigateToNftDetails(): (args: NavigateToNftItemArgs) => void {
-  return useCallback(({ address, tokenId, chainId }: NavigateToNftItemArgs): void => {
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(getExplorerLink(chainId ?? UniverseChainId.Mainnet, `${address}/${tokenId}`, ExplorerDataType.NFT))
-  }, [])
+  const { defaultChainId } = useEnabledChains()
+  return useCallback(
+    ({ address, tokenId, chainId }: NavigateToNftItemArgs): void => {
+      // eslint-disable-next-line security/detect-non-literal-fs-filename
+      window.open(getExplorerLink(chainId ?? defaultChainId, `${address}/${tokenId}`, ExplorerDataType.NFT))
+    },
+    [defaultChainId],
+  )
 }
 
 function useNavigateToBuyOrReceiveWithEmptyWallet(): () => void {

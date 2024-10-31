@@ -1,6 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
-import { ButtonPrimary } from 'components/Button'
-import { AutoColumn } from 'components/Column'
+import { ButtonPrimary } from 'components/Button/buttons'
+import { AutoColumn } from 'components/deprecated/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import TokenSafetyLabel from 'components/TokenSafety/TokenSafetyLabel'
 import {
@@ -10,14 +10,14 @@ import {
   TOKEN_SAFETY_ARTICLE,
   useTokenWarning,
   Warning,
-} from 'constants/tokenSafety'
+} from 'constants/deprecatedTokenSafety'
 import styled from 'lib/styled-components'
-import { ExternalLink as LinkIconFeather } from 'react-feather'
 import { Text } from 'rebass'
-import { useAddUserToken } from 'state/user/hooks'
-import { ButtonText, CopyLinkIcon, ExternalLink } from 'theme/components'
+import { ButtonText, ExternalLink } from 'theme/components'
+import { ExplorerView } from 'uniswap/src/features/address/ExplorerView'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { Trans } from 'uniswap/src/i18n'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const Wrapper = styled.div`
   width: 100%;
@@ -121,77 +121,6 @@ const LinkColumn = styled(AutoColumn)`
   position: relative;
 `
 
-const ExplorerContainer = styled.div`
-  width: 100%;
-  height: 32px;
-  margin-top: 10px;
-  font-size: 20px;
-  background-color: ${({ theme }) => theme.accent2};
-  color: ${({ theme }) => theme.accent1};
-  border-radius: 8px;
-  padding: 2px 12px;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-`
-
-const ExplorerLinkWrapper = styled.div`
-  display: flex;
-  overflow: hidden;
-  align-items: center;
-  cursor: pointer;
-
-  :hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-  :active {
-    opacity: ${({ theme }) => theme.opacity.click};
-  }
-`
-
-const ExplorerLink = styled.div`
-  display: block;
-  font-size: 14px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-`
-const ExplorerLinkIcon = styled(LinkIconFeather)`
-  height: 16px;
-  width: 18px;
-  margin-left: 8px;
-`
-
-const LinkIconWrapper = styled.div`
-  justify-content: center;
-  display: flex;
-`
-
-function ExternalLinkIcon() {
-  return (
-    <LinkIconWrapper>
-      <ExplorerLinkIcon />
-    </LinkIconWrapper>
-  )
-}
-
-function ExplorerView({ token }: { token: Token }) {
-  if (token) {
-    const explorerLink = getExplorerLink(token?.chainId, token?.address, ExplorerDataType.TOKEN)
-    return (
-      <ExplorerContainer>
-        <ExplorerLinkWrapper onClick={() => window.open(explorerLink, '_blank')}>
-          <ExplorerLink>{explorerLink}</ExplorerLink>
-          <ExternalLinkIcon />
-        </ExplorerLinkWrapper>
-        <CopyLinkIcon toCopy={explorerLink} />
-      </ExplorerContainer>
-    )
-  } else {
-    return null
-  }
-}
-
 const StyledExternalLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.accent1};
   stroke: currentColor;
@@ -199,15 +128,22 @@ const StyledExternalLink = styled(ExternalLink)`
 `
 
 export interface TokenSafetyProps {
-  token0?: Token
+  token0: Token
   token1?: Token
-  onContinue: () => void
-  onCancel: () => void
+  onAcknowledge: () => void
+  closeModalOnly: () => void
   onBlocked?: () => void
   showCancel?: boolean
 }
 
-export default function TokenSafety({ token0, token1, onContinue, onCancel, onBlocked, showCancel }: TokenSafetyProps) {
+export default function TokenSafety({
+  token0,
+  token1,
+  onAcknowledge,
+  closeModalOnly: onClose,
+  onBlocked,
+  showCancel,
+}: TokenSafetyProps) {
   const logos = []
   const urls = []
 
@@ -220,11 +156,11 @@ export default function TokenSafety({ token0, token1, onContinue, onCancel, onBl
   // Logic for only showing the 'unsupported' warning if one is supported and other isn't
   if (token0 && token0Warning && (token0Unsupported || !(token1Warning && token1Unsupported))) {
     logos.push(<CurrencyLogo key={token0.address} currency={token0} size={48} />)
-    urls.push(<ExplorerView token={token0} />)
+    urls.push(<ExplorerView currency={token0} modalName={ModalName.TokenWarningModal} />)
   }
   if (token1 && token1Warning && (token1Unsupported || !(token0Warning && token0Unsupported))) {
     logos.push(<CurrencyLogo key={token1.address} currency={token1} size={48} />)
-    urls.push(<ExplorerView token={token1} />)
+    urls.push(<ExplorerView currency={token1} modalName={ModalName.TokenWarningModal} />)
   }
 
   const plural = logos.length > 1
@@ -234,16 +170,13 @@ export default function TokenSafety({ token0, token1, onContinue, onCancel, onBl
     displayWarning = token1Warning
   }
 
-  // If a warning is acknowledged, import these tokens
-  const addToken = useAddUserToken()
+  // dismiss token warnings on acknowledgement
+  const { onDismissTokenWarning: onDismissToken0 } = useDismissedTokenWarnings(token0)
+  const { onDismissTokenWarning: onDismissToken1 } = useDismissedTokenWarnings(token1)
   const acknowledge = () => {
-    if (token0) {
-      addToken(token0)
-    }
-    if (token1) {
-      addToken(token1)
-    }
-    onContinue()
+    onDismissToken0()
+    onDismissToken1()
+    onAcknowledge()
   }
 
   const { heading, description } = getWarningCopy(displayWarning, plural)
@@ -273,7 +206,7 @@ export default function TokenSafety({ token0, token1, onContinue, onCancel, onBl
         <Buttons
           warning={displayWarning}
           onContinue={acknowledge}
-          onCancel={onCancel}
+          onCancel={onClose}
           onBlocked={onBlocked}
           showCancel={showCancel}
         />
@@ -290,7 +223,7 @@ export default function TokenSafety({ token0, token1, onContinue, onCancel, onBl
             {heading} {description} {learnMoreUrl}
           </InfoText>
         </ShortColumn>
-        <Buttons warning={StrongWarning} onCancel={onCancel} showCancel={true} />
+        <Buttons warning={StrongWarning} onCancel={onClose} showCancel={true} />
       </Container>
     </Wrapper>
   )

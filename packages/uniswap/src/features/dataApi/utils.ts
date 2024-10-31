@@ -5,14 +5,16 @@ import { useRef } from 'react'
 import {
   Chain,
   ContractInput,
+  ProtectionAttackType,
+  ProtectionResult,
   SafetyLevel,
   TokenProjectsQuery,
   TokenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { AttackType, CurrencyInfo, SafetyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import {
   currencyId,
@@ -22,7 +24,7 @@ import {
 } from 'uniswap/src/utils/currencyId'
 
 type BuildCurrencyParams = {
-  chainId?: Nullable<WalletChainId>
+  chainId?: Nullable<UniverseChainId>
   address?: Nullable<string>
   decimals?: Nullable<number>
   symbol?: Nullable<string>
@@ -35,6 +37,7 @@ type BuildCurrencyParams = {
 // Converts CurrencyId to ContractInput format for GQL token queries
 export function currencyIdToContractInput(id: CurrencyId): ContractInput {
   return {
+    // TODO: WALL-4919: Remove hardcoded Mainnet
     chain: toGraphQLChain(currencyIdToChain(id) ?? UniverseChainId.Mainnet) ?? Chain.Ethereum,
     address: currencyIdToGraphQLAddress(id) ?? undefined,
   }
@@ -42,13 +45,13 @@ export function currencyIdToContractInput(id: CurrencyId): ContractInput {
 
 export function tokenProjectToCurrencyInfos(
   tokenProjects: TokenProjectsQuery['tokenProjects'],
-  chainFilter?: WalletChainId | null,
+  chainFilter?: UniverseChainId | null,
 ): CurrencyInfo[] {
   return tokenProjects
     ?.flatMap((project) =>
       project?.tokens.map((token) => {
-        const { logoUrl, safetyLevel, name } = project ?? {}
-        const { chain, address, decimals, symbol } = token ?? {}
+        const { logoUrl, safetyLevel } = project ?? {}
+        const { name, chain, address, decimals, symbol } = token ?? {}
         const chainId = fromGraphQLChain(chain)
 
         if (chainFilter && chainFilter !== chainId) {
@@ -72,6 +75,10 @@ export function tokenProjectToCurrencyInfos(
           currencyId: currencyId(currency),
           logoUrl,
           safetyLevel,
+          safetyInfo: {
+            tokenList: getTokenListFromSafetyLevel(project?.safetyLevel),
+            protectionResult: ProtectionResult.Unknown,
+          },
         }
 
         return currencyInfo
@@ -81,7 +88,7 @@ export function tokenProjectToCurrencyInfos(
 }
 
 // use inverse check here (instead of isNativeAddress) so we can typeguard address as must be string if this is true
-function isNonNativeAddress(chainId: WalletChainId, address: Maybe<string>): address is string {
+function isNonNativeAddress(chainId: UniverseChainId, address: Maybe<string>): address is string {
   return !isNativeCurrencyAddress(chainId, address)
 }
 
@@ -119,8 +126,45 @@ export function buildCurrency({
     : NativeCurrency.onChain(chainId)
 }
 
+function getTokenListFromSafetyLevel(safetyInfo?: SafetyLevel): TokenList {
+  switch (safetyInfo) {
+    case SafetyLevel.Blocked:
+      return TokenList.Blocked
+    case SafetyLevel.Verified:
+      return TokenList.Default
+    default:
+      return TokenList.NonDefault
+  }
+}
+
+// Priority based on Token Protection PRD spec
+function getHighestPriorityAttackType(attackTypes?: (ProtectionAttackType | undefined)[]): AttackType | undefined {
+  if (!attackTypes || attackTypes.length === 0) {
+    return undefined
+  }
+  const attackTypeSet = new Set(attackTypes)
+  if (attackTypeSet.has(ProtectionAttackType.Impersonator)) {
+    return AttackType.Impersonator
+  } else if (attackTypeSet.has(ProtectionAttackType.AirdropPattern)) {
+    return AttackType.Airdrop
+  } else {
+    return AttackType.Other
+  }
+}
+
+export function getCurrencySafetyInfo(
+  safetyLevel?: SafetyLevel,
+  protectionInfo?: NonNullable<TokenQuery['token']>['protectionInfo'],
+): SafetyInfo {
+  return {
+    tokenList: getTokenListFromSafetyLevel(safetyLevel),
+    attackType: getHighestPriorityAttackType(protectionInfo?.attackTypes),
+    protectionResult: protectionInfo?.result ?? ProtectionResult.Unknown,
+  }
+}
+
 export function gqlTokenToCurrencyInfo(token: NonNullable<NonNullable<TokenQuery['token']>>): CurrencyInfo | null {
-  const { chain, address, decimals, symbol, project, feeData } = token
+  const { name, chain, address, decimals, symbol, project, feeData, protectionInfo } = token
   const chainId = fromGraphQLChain(chain)
 
   const currency = buildCurrency({
@@ -128,7 +172,7 @@ export function gqlTokenToCurrencyInfo(token: NonNullable<NonNullable<TokenQuery
     address,
     decimals,
     symbol,
-    name: project?.name,
+    name,
     buyFeeBps: feeData?.buyFeeBps,
     sellFeeBps: feeData?.sellFeeBps,
   })
@@ -141,6 +185,8 @@ export function gqlTokenToCurrencyInfo(token: NonNullable<NonNullable<TokenQuery
     currency,
     currencyId: currencyId(currency),
     logoUrl: project?.logoUrl,
+    safetyInfo: getCurrencySafetyInfo(project?.safetyLevel, protectionInfo),
+    // TODO (WALL-4626): remove safetyLevel in lieu of safetyInfo.tokenList
     safetyLevel: project?.safetyLevel ?? SafetyLevel.StrongWarning,
     // defaulting to not spam. currently this flow triggers when a user is searching
     // for a token, in which case the user probably doesn't expect the token to be spam

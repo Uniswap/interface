@@ -1,4 +1,4 @@
-import { isDevEnv, isTestEnv } from 'utilities/src/environment'
+import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
 import { isAndroid, isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
 
 enum TrafficFlows {
@@ -19,26 +19,33 @@ export const UNISWAP_WEB_URL = `https://${UNISWAP_WEB_HOSTNAME}`
 export const UNISWAP_APP_URL = 'https://uniswap.org/app'
 
 const helpUrl = 'https://support.uniswap.org/hc/en-us'
+const rigoblockDiscordUrl = 'https://discord.gg/invite/FXd8EU8'
 
 export const uniswapUrls = {
   // Help and web articles/items
   helpUrl,
+  rigoblockDiscordUrl,
   helpRequestUrl: `${helpUrl}/requests/new`,
   helpArticleUrls: {
+    acrossRoutingInfo: `${helpUrl}/articles/30677918339341`,
     approvalsExplainer: `${helpUrl}/articles/8120520483085-What-is-an-approval-transaction`,
     cexTransferKorea: `${helpUrl}/articles/29425131525901-How-to-transfer-crypto-to-a-Uniswap-Wallet-in-Korea`,
     extensionHelp: `${helpUrl}/categories/25219141467405`,
     extensionDappTroubleshooting: `${helpUrl}/articles/25811698471565-Connecting-Uniswap-Extension-Beta-to-other-dapps`,
     feeOnTransferHelp: `${helpUrl}/articles/18673568523789-What-is-a-token-fee-`,
     howToSwapTokens: `${helpUrl}/articles/8370549680909-How-to-swap-tokens-`,
+    hiddenTokenInfo: `${helpUrl}/articles/30432674756749-How-to-hide-and-unhide-tokens-in-the-Uniswap-Wallet`,
+    hiddenNFTInfo: `${helpUrl}/articles/14185028445837-How-to-hide-and-unhide-NFTs-in-the-Uniswap-Wallet`,
     impermanentLoss: `${helpUrl}/articles/20904453751693-What-is-Impermanent-Loss`,
     limitsFailure: `${helpUrl}/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute`,
     limitsInfo: `${helpUrl}/sections/24372644881293`,
     limitsNetworkSupport: `${helpUrl}/articles/24470251716237-What-networks-do-limits-support`,
+    lpCollectFees: `${helpUrl}/articles/20901267003789-How-to-collect-fees-from-a-liquidity-pool-on-Uniswap-v3`,
     fiatOnRampHelp: `${helpUrl}/articles/11306574799117`,
     transferCryptoHelp: `${helpUrl}/articles/27103878635661-How-to-transfer-crypto-from-a-Robinhood-or-Coinbase-account-to-the-Uniswap-Wallet`,
     moonpayRegionalAvailability: `${helpUrl}/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-`,
     networkFeeInfo: `${helpUrl}/articles/8370337377805-What-is-a-network-fee-`,
+    priceImpact: `${helpUrl}/articles/8671539602317-What-is-Price-Impact`,
     recoveryPhraseHowToImport: `${helpUrl}/articles/11380692567949-How-to-import-a-recovery-phrase-into-the-Uniswap-Wallet`,
     recoveryPhraseHowToFind: `${helpUrl}/articles/11306360177677-How-to-find-my-recovery-phrase-in-the-Uniswap-Wallet`,
     recoveryPhraseForgotten: `${helpUrl}/articles/11306367118349`,
@@ -61,10 +68,10 @@ export const uniswapUrls = {
   chromeExtension: 'http://uniswap.org/ext',
 
   // Core API Urls
-  apiOrigin: 'https://api.uniswap.org',
+  apiOrigin: 'https://api.rigoblock.com',
   apiBaseUrl: getCloudflareApiBaseUrl(),
   apiBaseUrlV2: `${getCloudflareApiBaseUrl()}/v2`,
-  graphQLUrl: `${getCloudflareApiBaseUrl(TrafficFlows.GraphQL)}/v1/graphql`,
+  graphQLUrl: `${getRbCloudflareApiBaseUrl(TrafficFlows.GraphQL)}/v1/graphql`,
 
   // Proxies
   amplitudeProxyUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Metrics)}/v1/amplitude-proxy`,
@@ -74,17 +81,25 @@ export const uniswapUrls = {
   unitagsApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Unitags)}/v2/unitags`,
   scantasticApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Scantastic)}/v2/scantastic`,
   fiatOnRampApiUrl: `${getRbCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/fiat-on-ramp`,
-  tradingApiUrl: getCloudflareApiBaseUrl(TrafficFlows.TradingApi),
+  tradingApiUrl: getRbCloudflareApiBaseUrl(TrafficFlows.TradingApi),
 
   // API Paths
   trmPath: '/v1/screen',
   gasServicePath: '/v1/gas-fee',
   tradingApiPaths: {
     quote: '/v1/quote',
+    indicativeQuote: '/v1/indicative_quote',
     approval: '/v1/check_approval',
     swap: '/v1/swap',
     order: '/v1/order',
     orders: '/v1/orders',
+    swaps: '/v1/swaps',
+    swappableTokens: '/v1/swappable_tokens',
+    createLp: '/v1/lp/create',
+    increaseLp: '/v1/lp/increase',
+    decreaseLp: '/v1/lp/decrease',
+    claimLpFees: '/v1/lp/claim',
+    lpApproval: '/v1/lp/approve',
   },
 
   // App and Redirect URL's

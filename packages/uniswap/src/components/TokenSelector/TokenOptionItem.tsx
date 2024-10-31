@@ -1,19 +1,27 @@
 import React, { useCallback, useState } from 'react'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { GRG } from 'uniswap/src/constants/tokens'
+import { Check } from 'ui/src/components/icons/Check'
+import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
-import WarningIcon from 'uniswap/src/components/icons/WarningIcon'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
+import { getWarningIconColorOverride } from 'uniswap/src/components/warnings/utils'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
+import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { isInterface } from 'utilities/src/platform'
 
 interface OptionProps {
   option: TokenOption
   showWarnings: boolean
-  onDismiss?: () => void
   onPress: () => void
   showTokenAddress?: boolean
   tokenWarningDismissed: boolean
@@ -24,13 +32,36 @@ interface OptionProps {
   // TODO(WEB-3643): Share localization context with WEB
   // (balance, quantityFormatted)
   balance: string
-  quantityFormatted: string
+  quantityFormatted?: string
+  isSelected?: boolean
+}
+
+function getTokenWarningDetails(currencyInfo: CurrencyInfo): {
+  severity: WarningSeverity | undefined
+  isWarningSevere: boolean
+  isNonDefaultList: boolean
+  isBlocked: boolean
+} {
+  const { safetyLevel, safetyInfo } = currencyInfo
+  const severity = getTokenWarningSeverity(currencyInfo)
+  const isWarningSevere =
+    severity === WarningSeverity.Blocked || severity === WarningSeverity.High || severity === WarningSeverity.Medium
+  const isNonDefaultList =
+    safetyLevel === SafetyLevel.MediumWarning ||
+    safetyLevel === SafetyLevel.StrongWarning ||
+    safetyInfo?.tokenList === TokenList.NonDefault
+  const isBlocked = severity === WarningSeverity.Blocked || safetyLevel === SafetyLevel.Blocked
+  return {
+    severity,
+    isWarningSevere,
+    isNonDefaultList,
+    isBlocked,
+  }
 }
 
 function _TokenOptionItem({
   option,
   showWarnings,
-  onDismiss,
   onPress,
   showTokenAddress,
   tokenWarningDismissed,
@@ -39,16 +70,24 @@ function _TokenOptionItem({
   quantity,
   quantityFormatted,
   isKeyboardOpen,
+  isSelected,
 }: OptionProps): JSX.Element {
-  const { currencyInfo } = option
-  const { currency, currencyId, logoUrl } = currencyInfo
+  const { currencyInfo, isUnsupported } = option
+  const { currency } = currencyInfo
   let { safetyLevel } = currencyInfo
   const [showWarningModal, setShowWarningModal] = useState(false)
+  const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
+
+  const { severity, isBlocked, isNonDefaultList, isWarningSevere } = getTokenWarningDetails(currencyInfo)
+  const warningIconColor = getWarningIconColorOverride(severity)
+  const shouldShowWarningModalOnPress = !tokenProtectionEnabled
+    ? isBlocked || (isNonDefaultList && !tokenWarningDismissed)
+    : isWarningSevere && !tokenWarningDismissed
 
   const handleShowWarningModal = useCallback((): void => {
-    onDismiss?.()
+    dismissNativeKeyboard()
     setShowWarningModal(true)
-  }, [onDismiss, setShowWarningModal])
+  }, [setShowWarningModal])
 
   if (currency.isToken && currency.address.toLowerCase() === GRG[currency.chainId]?.address.toLowerCase()) {
     safetyLevel = SafetyLevel.Verified
@@ -56,12 +95,7 @@ function _TokenOptionItem({
 
   // TODO: do not display warning for GRG[chainId]
   const onPressTokenOption = useCallback(() => {
-    if (
-      showWarnings &&
-      (safetyLevel === SafetyLevel.Blocked ||
-        ((safetyLevel === SafetyLevel.MediumWarning || safetyLevel === SafetyLevel.StrongWarning) &&
-          !tokenWarningDismissed))
-    ) {
+    if (showWarnings && shouldShowWarningModalOnPress) {
       // On mobile web we need to wait for the keyboard to hide
       // before showing the modal to avoid height issues
       if (isKeyboardOpen && isInterface) {
@@ -75,7 +109,7 @@ function _TokenOptionItem({
     }
 
     onPress()
-  }, [showWarnings, safetyLevel, isKeyboardOpen, tokenWarningDismissed, handleShowWarningModal, onPress])
+  }, [showWarnings, shouldShowWarningModalOnPress, onPress, isKeyboardOpen, handleShowWarningModal])
 
   const onAcceptTokenWarning = useCallback(() => {
     dismissWarningCallback()
@@ -90,7 +124,7 @@ function _TokenOptionItem({
         animation="300ms"
         hapticStyle={ImpactFeedbackStyle.Light}
         hoverStyle={{ backgroundColor: '$surface1Hovered' }}
-        opacity={showWarnings && safetyLevel === SafetyLevel.Blocked ? 0.5 : 1}
+        opacity={(showWarnings && severity === WarningSeverity.Blocked) || isUnsupported ? 0.5 : 1}
         width="100%"
         onPress={onPressTokenOption}
       >
@@ -101,6 +135,9 @@ function _TokenOptionItem({
           justifyContent="space-between"
           px="$spacing16"
           py="$spacing12"
+          style={{
+            pointerEvents: 'auto',
+          }}
           testID={`token-option-${currency.chainId}-${currency.symbol}`}
         >
           <Flex row shrink alignItems="center" gap="$spacing12">
@@ -115,9 +152,9 @@ function _TokenOptionItem({
                 <Text color="$neutral1" numberOfLines={1} variant="body1">
                   {currency.name}
                 </Text>
-                {(safetyLevel === SafetyLevel.Blocked || safetyLevel === SafetyLevel.StrongWarning) && (
+                {warningIconColor && (
                   <Flex>
-                    <WarningIcon safetyLevel={safetyLevel} size="$icon.16" strokeColorOverride="neutral3" />
+                    <WarningIcon severity={severity} size="$icon.16" strokeColorOverride={warningIconColor} />
                   </Flex>
                 )}
               </Flex>
@@ -136,24 +173,30 @@ function _TokenOptionItem({
             </Flex>
           </Flex>
 
-          {quantity && quantity !== 0 ? (
+          {isSelected && (
+            <Flex grow alignItems="flex-end" justifyContent="center">
+              <Check color="$accent1" size={iconSizes.icon20} />
+            </Flex>
+          )}
+
+          {!isSelected && quantity && quantity !== 0 ? (
             <Flex alignItems="flex-end">
               <Text variant="body1">{balance}</Text>
-              <Text color="$neutral2" variant="body3">
-                {quantityFormatted}
-              </Text>
+              {quantityFormatted && (
+                <Text color="$neutral2" variant="body3">
+                  {quantityFormatted}
+                </Text>
+              )}
             </Flex>
           ) : null}
         </Flex>
       </TouchableArea>
 
       <TokenWarningModal
-        currencyId={currencyId}
+        currencyInfo0={currencyInfo}
         isVisible={showWarningModal}
-        safetyLevel={safetyLevel}
-        tokenLogoUrl={logoUrl}
-        onAccept={onAcceptTokenWarning}
-        onClose={(): void => setShowWarningModal(false)}
+        closeModalOnly={(): void => setShowWarningModal(false)}
+        onAcknowledge={onAcceptTokenWarning}
       />
     </>
   )

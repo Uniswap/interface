@@ -4,7 +4,13 @@ import { StyleSheet } from 'react-native'
 import type { IconProps } from 'ui/src'
 import { Flex, useSporeColors } from 'ui/src'
 import WalletConnectLogo from 'ui/src/assets/icons/walletconnect.svg'
-import { AlertTriangle, Approve, ArrowDownInCircle, ArrowUpInCircle, QuestionInCircle } from 'ui/src/components/icons'
+import {
+  AlertTriangleFilled,
+  Approve,
+  ArrowDownInCircle,
+  ArrowUpInCircle,
+  QuestionInCircle,
+} from 'ui/src/components/icons'
 import { borderRadii } from 'ui/src/theme'
 import { CurrencyLogo, STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -15,7 +21,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
@@ -28,13 +34,13 @@ interface LogoWithTxStatusBaseProps {
   txType: TransactionType
   txStatus: TransactionStatus
   size: number
-  chainId: WalletChainId | null
+  chainId: UniverseChainId | null
 }
 
 interface DappLogoWithTxStatusProps {
   event: WalletConnectEvent
   size: number
-  chainId: WalletChainId | null
+  chainId: UniverseChainId | null
   dappImageUrl: Maybe<string>
   dappName: string
 }
@@ -169,7 +175,9 @@ export function DappLogoWithTxStatus({
       case WalletConnectEvent.TransactionConfirmed:
         return <Approve color={green} fill={fill} size={statusSize} testID="icon-approve" />
       case WalletConnectEvent.TransactionFailed:
-        return <AlertTriangle color={yellow} fill={fill} size={statusSize} testID="icon-alert" />
+        return <AlertTriangleFilled color={yellow} fill={fill} size={statusSize} testID="icon-alert" />
+      default:
+        return undefined
     }
   }
 
@@ -231,7 +239,7 @@ export function DappLogoWithWCBadge({
   dappImageUrl: Maybe<string>
   dappName: string
   size: number
-  chainId: WalletChainId | null
+  chainId: UniverseChainId | null
   hideWCBadge?: boolean
   circular?: boolean
 }): JSX.Element {

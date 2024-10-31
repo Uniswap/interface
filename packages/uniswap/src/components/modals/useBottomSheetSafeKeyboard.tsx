@@ -1,7 +1,9 @@
-import { NotImplementedError } from 'utilities/src/errors'
+import { PlatformSplitStubError } from 'utilities/src/errors'
 
-export function useBottomSheetSafeKeyboard(): {
+export interface KeyboardInfo {
   keyboardHeight: number
-} {
-  throw new NotImplementedError('useBottomSheetSafeKeyboard')
+}
+
+export function useBottomSheetSafeKeyboard(): KeyboardInfo {
+  throw new PlatformSplitStubError('useBottomSheetSafeKeyboard')
 }

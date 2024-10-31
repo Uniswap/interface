@@ -10,6 +10,7 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.concurrentRe
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
 import com.facebook.react.modules.i18nmanager.I18nUtil
+import expo.modules.ReactActivityDelegateWrapper
 
 
 class MainActivity : ReactActivity() {
@@ -40,12 +41,10 @@ class MainActivity : ReactActivity() {
    * (aka React 18) with two boolean flags.
    */
   override fun createReactActivityDelegate(): ReactActivityDelegate? {
-    return DefaultReactActivityDelegate(
+    return ReactActivityDelegateWrapper(
       this,
-      mainComponentName,  // If you opted-in for the New Architecture, we enable the Fabric Renderer.
-      fabricEnabled,  // fabricEnabled
-      // If you opted-in for the New Architecture, we enable Concurrent React (i.e. React 18).
-      concurrentReactEnabled // concurrentRootEnabled
+      BuildConfig.IS_NEW_ARCHITECTURE_ENABLED,
+      DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
     )
   }
 }

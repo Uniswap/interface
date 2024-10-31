@@ -18,6 +18,31 @@ exports.shared = {
       message:
         'Avoid using due to issue with unsupported locales. Use utilities/src/device/locales.ts getDeviceLocales instead',
     },
+    {
+      name: 'uniswap/src/features/dataApi/balances',
+      importNames: ['usePortfolioValueModifiers'],
+      message:
+        'Use the wrapper hooks `usePortfolioTotalValue`, `useAccountList` or `usePortfolioBalances` instead of `usePortfolioValueModifiers` directly.',
+    },
+    {
+      name: 'utilities/src/format/localeBased',
+      message: 'Use via `useLocalizationContext` instead.',
+    },
+    {
+      name: 'uniswap/src/features/fiatCurrency/conversion',
+      importNames: ['useFiatConverter'],
+      message: 'Use via `useLocalizationContext` instead.',
+    },
+    {
+      name: 'uniswap/src/features/language/formatter',
+      importNames: ['useLocalizedFormatter'],
+      message: 'Use via `useLocalizationContext` instead.',
+    },
+    {
+      name: 'ui/src/hooks/useDeviceInsets',
+      importNames: ['useDeviceInsets'],
+      message: 'Use `useAppInsets` instead.'
+    },
   ],
   patterns: [
     {
@@ -34,6 +59,14 @@ exports.crossPlatform = {
       name: 'ethers',
       message: "Please import from '@ethersproject/module' directly to support tree-shaking.",
     },
+    {
+      name: 'ui/src/components/icons',
+      message: "Please import icons directly from their respective files, e.g. `ui/src/components/icons/SpecificIcon`. This is to avoid importing the entire icons folder when only some icons are needed, which increases bundle size",
+    },
+    {
+      name: 'ui/src/components/logos',
+      message: "Please import logos directly from their respective files, e.g. `ui/src/components/logos/SpecificLogo`. This is to avoid importing the entire logos folder when only some logos are needed, which increases bundle size",
+    },
   ],
   patterns: [
     ...exports.shared.patterns,
@@ -44,6 +77,8 @@ exports.crossPlatform = {
         '!react-native-reanimated',
         '!react-native-image-colors',
         '!@testing-library/react-native',
+        '!@react-native-community/netinfo',
+        '!react-native-localize',
       ],
       message:
         "React Native modules should not be imported outside of .native.ts files. If this is a .native.ts file, add an ignore comment to the top of the file. If you're trying to import a cross-platform module, add it to the whitelist in crossPlatform.js.",

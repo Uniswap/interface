@@ -98,6 +98,8 @@ export async function getSupportedURI(
       value: parseUwuLinkDataFromDeeplink(uri),
     }
   }
+
+  return undefined
 }
 
 async function getWcUriWithCustomPrefix(uri: string, prefix: string): Promise<{ uri: string; type: URIType } | null> {
@@ -160,7 +162,7 @@ export function parseScantasticParams(uri: string): ScantasticParams | undefined
         },
         extra: { uri },
       })
-      return
+      return undefined
     }
   }
 
@@ -186,5 +188,6 @@ export function parseScantasticParams(uri: string): ScantasticParams | undefined
         function: 'parseScantasticParams',
       },
     })
+    return undefined
   }
 }

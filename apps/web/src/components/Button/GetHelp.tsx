@@ -1,5 +1,5 @@
 import { EnvelopeHeartIcon } from 'components/Icons/EnvelopeHeart'
-import Row from 'components/Row'
+import Row from 'components/deprecated/Row'
 import { RigoblockUrls } from 'constants/rigoblockUrls'
 import styled from 'lib/styled-components'
 import { ExternalLink } from 'theme/components'

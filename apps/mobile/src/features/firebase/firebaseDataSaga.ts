@@ -5,11 +5,12 @@ import { getFirebaseUidOrError, getFirestoreMetadataRef, getFirestoreUidRef } fr
 import { getOneSignalUserIdOrError } from 'src/features/notifications/Onesignal'
 import { all, call, put, select, takeEvery, takeLatest } from 'typed-redux-saga'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { Language } from 'uniswap/src/features/language/constants'
+import { getLocale } from 'uniswap/src/features/language/hooks'
+import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
+import { setCurrentLanguage } from 'uniswap/src/features/settings/slice'
 import { logger } from 'utilities/src/logger/logger'
 import { getKeys } from 'utilities/src/primitives/objects'
-import { Language } from 'wallet/src/features/language/constants'
-import { getLocale } from 'wallet/src/features/language/hooks'
-import { selectCurrentLanguage, setCurrentLanguage } from 'wallet/src/features/language/slice'
 import {
   EditAccountAction,
   TogglePushNotificationParams,
@@ -103,29 +104,28 @@ function* updateFirebaseLanguage(addresses: Address[], language: Language) {
 
 function* editAccountDataInFirebase(actionData: ReturnType<typeof editAccountActions.trigger>) {
   const { payload } = actionData
-  const { type, address } = payload
 
-  switch (type) {
+  switch (payload.type) {
     case EditAccountAction.Remove: {
       const accountsToRemove = payload.accounts
       yield* all(
-        accountsToRemove.map((account: { address: Address; pushNotificationsEnabled: boolean }) =>
+        accountsToRemove.map((account: { address: Address; pushNotificationsEnabled?: boolean }) =>
           call(removeAccountFromFirebase, account.address, account.pushNotificationsEnabled),
         ),
       )
       return
     }
     case EditAccountAction.Rename:
-      yield* call(renameAccountInFirebase, address, payload.newName)
+      yield* call(renameAccountInFirebase, payload.address, payload.newName)
       break
     case EditAccountAction.TogglePushNotification:
       yield* call(toggleFirebaseNotificationSettings, payload)
       break
     case EditAccountAction.ToggleTestnetSettings:
-      yield* call(maybeUpdateFirebaseMetadata, address, { testnetsEnabled: payload.enabled })
+      yield* call(maybeUpdateFirebaseMetadata, payload.address, { testnetsEnabled: payload.enabled })
       break
     case EditAccountAction.UpdateLanguage:
-      yield* call(maybeUpdateFirebaseMetadata, address, { locale: payload.locale })
+      yield* call(maybeUpdateFirebaseMetadata, payload.address, { locale: payload.locale })
       break
     default:
       break
@@ -151,7 +151,7 @@ function* addAccountToFirebase(account: Account) {
   }
 }
 
-export function* removeAccountFromFirebase(address: Address, notificationsEnabled: boolean) {
+export function* removeAccountFromFirebase(address: Address, notificationsEnabled: boolean | undefined) {
   try {
     if (!notificationsEnabled) {
       return
@@ -167,7 +167,7 @@ export function* removeAccountFromFirebase(address: Address, notificationsEnable
 
 const selectAccountNotificationSetting = makeSelectAccountNotificationSetting()
 
-export function* renameAccountInFirebase(address: Address, newName: string) {
+export function* renameAccountInFirebase(address: Address | undefined, newName: string) {
   if (!address) {
     throw new Error('Address is required for renameAccountInFirebase')
   }
@@ -237,7 +237,11 @@ async function disassociateFirebaseUidFromAddresses(addresses: Address[]): Promi
   await batch.commit()
 }
 
-function* maybeUpdateFirebaseMetadata(address: Address, metadata: AccountMetadata) {
+function* maybeUpdateFirebaseMetadata(address: Address | undefined, metadata: AccountMetadata) {
+  if (!address) {
+    return
+  }
+
   const notificationsEnabled = yield* select(selectAccountNotificationSetting, address)
 
   if (!notificationsEnabled) {

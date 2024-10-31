@@ -1,10 +1,4 @@
-export interface SerializedToken {
-  chainId: number
-  address: string
-  decimals: number
-  symbol?: string
-  name?: string
-}
+import { SerializedToken } from 'uniswap/src/features/tokens/slice/types'
 
 export interface SerializedPair {
   token0: SerializedToken

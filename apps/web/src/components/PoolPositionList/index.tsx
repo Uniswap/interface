@@ -1,6 +1,6 @@
 import { Interface } from '@ethersproject/abi'
+import { RowFixed } from 'components/deprecated/Row'
 import PoolPositionListItem from 'components/PoolPositionListItem'
-import { RowFixed } from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'uniswap/src/i18n'
@@ -95,12 +95,12 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
         const { result: pool, loading } = result
         // if pool is not correctly returned by endpoint it means endpoint is down, and we don't want to display pools
         if (!account.chainId || loading || !pool) {
-          return
+          return undefined
         }
 
         const { decimals, owner } = pool[0]
         if (!decimals || !owner) {
-          return
+          return undefined
         }
         const shouldDisplay = filterByOperator
           ? Boolean(owner === account.address || Number(userBalances?.[i]?.result) > 0)

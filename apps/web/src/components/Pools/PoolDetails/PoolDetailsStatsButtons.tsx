@@ -1,18 +1,18 @@
 import { Scrim } from 'components/AccountDrawer'
 import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
-import Column from 'components/Column'
 import { CurrencySelect } from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import { ReverseArrow } from 'components/Icons/ReverseArrow'
-import Row from 'components/Row'
 import { SwapWrapperOuter } from 'components/swap/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
-import { chainIdToBackendChain, SupportedInterfaceChainId } from 'constants/chains'
-import { getPriorityWarning, StrongWarning, useTokenWarning } from 'constants/tokenSafety'
-import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
+import { chainIdToBackendChain } from 'constants/chains'
+import { getPriorityWarning, StrongWarning, useTokenWarning } from 'constants/deprecatedTokenSafety'
+import { useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { gqlToCurrency } from 'graphql/data/util'
-import { useScreenSize } from 'hooks/screenSize'
+import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useAccount } from 'hooks/useAccount'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import styled from 'lib/styled-components'
@@ -26,6 +26,7 @@ import { opacify } from 'theme/utils'
 import { Z_INDEX } from 'theme/zIndex'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyId } from 'utils/currencyId'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -133,7 +134,7 @@ const MobileBalance = styled(Column)`
 `
 
 interface PoolDetailsStatsButtonsProps {
-  chainId?: SupportedInterfaceChainId
+  chainId?: UniverseChainId
   token0?: Token
   token1?: Token
   feeTier?: number

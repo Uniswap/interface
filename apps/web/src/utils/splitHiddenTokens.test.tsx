@@ -11,6 +11,11 @@ const nativeToken: Token = {
   id: 'native-token',
   chain: Chain.Ethereum,
   standard: TokenStandard.Native,
+  project: {
+    id: '',
+    tokens: [],
+    isSpam: false,
+  },
 }
 
 const nonnativeToken: Token = {
@@ -29,15 +34,6 @@ const tokens: TokenBalance[] = [
       id: '',
       value: 0.5,
     },
-    tokenProjectMarket: {
-      id: '',
-      currency: Currency.Eth,
-      tokenProject: {
-        id: '',
-        tokens: [nativeToken],
-        isSpam: false,
-      },
-    },
     token: nativeToken,
   },
   {
@@ -49,16 +45,14 @@ const tokens: TokenBalance[] = [
       currency: Currency.Usd,
       value: 0.01,
     },
-    tokenProjectMarket: {
-      id: '',
-      currency: Currency.Eth,
-      tokenProject: {
+    token: {
+      ...nonnativeToken,
+      project: {
         id: '',
         tokens: [nonnativeToken],
         isSpam: false,
       },
     },
-    token: nonnativeToken,
   },
   // spam
   {
@@ -69,16 +63,14 @@ const tokens: TokenBalance[] = [
       id: '',
       value: 100,
     },
-    tokenProjectMarket: {
-      id: '',
-      currency: Currency.Eth,
-      tokenProject: {
+    token: {
+      ...nonnativeToken,
+      project: {
         id: '',
         tokens: [nonnativeToken],
         isSpam: true,
       },
     },
-    token: nonnativeToken,
   },
   // valid
   {
@@ -89,16 +81,14 @@ const tokens: TokenBalance[] = [
       id: '',
       value: 100,
     },
-    tokenProjectMarket: {
-      id: '',
-      currency: Currency.Eth,
-      tokenProject: {
+    token: {
+      ...nonnativeToken,
+      project: {
         id: '',
         tokens: [nonnativeToken],
         isSpam: false,
       },
     },
-    token: nonnativeToken,
   },
   // empty value
   {
@@ -110,16 +100,14 @@ const tokens: TokenBalance[] = [
       // @ts-ignore this is evidently possible but not represented in our types
       value: undefined,
     },
-    tokenProjectMarket: {
-      id: '',
-      currency: Currency.Eth,
-      tokenProject: {
+    token: {
+      ...nonnativeToken,
+      project: {
         id: '',
         tokens: [nonnativeToken],
         isSpam: false,
       },
     },
-    token: nonnativeToken,
   },
 ]
 

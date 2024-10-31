@@ -8,11 +8,31 @@ exports[`TokenLogo renders without error 1`] = `
       "flexDirection": "column",
       "height": 40,
       "justifyContent": "center",
+      "position": "relative",
       "width": 40,
     }
   }
   testID="token-logo"
 >
+  <View
+    style={
+      {
+        "backgroundColor": "#FFFFFF",
+        "borderBottomLeftRadius": 20,
+        "borderBottomRightRadius": 20,
+        "borderTopLeftRadius": 20,
+        "borderTopRightRadius": 20,
+        "flexDirection": "column",
+        "height": "96%",
+        "left": "2%",
+        "opacity": 0,
+        "position": "absolute",
+        "top": "2%",
+        "width": "96%",
+        "zIndex": -1,
+      }
+    }
+  />
   <View
     style={
       {
@@ -24,11 +44,11 @@ exports[`TokenLogo renders without error 1`] = `
     <img
       height={40}
       onError={[Function]}
+      onLoad={[Function]}
       src="https://example.com"
       style={
         {
           "aspectRatio": undefined,
-          "backgroundColor": "rgba(255,255,255,0.12)",
           "borderRadius": 20,
           "objectFit": "contain",
         }
@@ -49,21 +69,7 @@ exports[`TokenLogo renders without error 1`] = `
     <View
       style={
         {
-          "borderBottomColor": "#131313",
-          "borderBottomLeftRadius": 6.8999999999999995,
-          "borderBottomRightRadius": 6.8999999999999995,
-          "borderBottomWidth": 1.5,
-          "borderLeftColor": "#131313",
-          "borderLeftWidth": 1.5,
-          "borderRightColor": "#131313",
-          "borderRightWidth": 1.5,
-          "borderStyle": "solid",
-          "borderTopColor": "#131313",
-          "borderTopLeftRadius": 6.8999999999999995,
-          "borderTopRightRadius": 6.8999999999999995,
-          "borderTopWidth": 1.5,
           "flexDirection": "column",
-          "overflow": "hidden",
         }
       }
       testID="network-logo"
@@ -73,8 +79,20 @@ exports[`TokenLogo renders without error 1`] = `
         dir={null}
         style={
           {
-            "height": "20px",
-            "width": "20px",
+            "borderBottomColor": "rgba(19,19,19,1.00)",
+            "borderBottomLeftRadius": "6.8999999999999995px",
+            "borderBottomRightRadius": "6.8999999999999995px",
+            "borderBottomWidth": "1.5px",
+            "borderLeftColor": "rgba(19,19,19,1.00)",
+            "borderLeftWidth": "1.5px",
+            "borderRightColor": "rgba(19,19,19,1.00)",
+            "borderRightWidth": "1.5px",
+            "borderTopColor": "rgba(19,19,19,1.00)",
+            "borderTopLeftRadius": "6.8999999999999995px",
+            "borderTopRightRadius": "6.8999999999999995px",
+            "borderTopWidth": "1.5px",
+            "height": "23px",
+            "width": "23px",
           }
         }
       >

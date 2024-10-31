@@ -1,21 +1,15 @@
-import { useNetInfo } from '@react-native-community/netinfo'
 import { TFunction } from 'i18next'
 import _ from 'lodash'
+import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
-import { getNetworkWarning } from 'uniswap/src/features/transactions/WarningModal/getNetworkWarning'
-import {
-  Warning,
-  WarningAction,
-  WarningLabel,
-  WarningSeverity,
-} from 'uniswap/src/features/transactions/WarningModal/types'
+import { getNetworkWarning } from 'uniswap/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
+import { useIsOffline } from 'utilities/src/connection/useIsOffline'
 import { useMemoCompare } from 'utilities/src/react/hooks'
-import { isOffline } from 'wallet/src/features/transactions/utils'
 
 export function getSendWarnings(t: TFunction, derivedSendInfo: DerivedSendInfo, offline: boolean): Warning[] {
   const warnings: Warning[] = []
@@ -31,7 +25,7 @@ export function getSendWarnings(t: TFunction, derivedSendInfo: DerivedSendInfo, 
   const isMissingRequiredParams = checkIsMissingRequiredParams(
     currencyInInfo,
     nftIn,
-    chainId,
+    chainId as UniverseChainId,
     recipient,
     !!currencyAmountIn,
     !!currencyBalanceIn,
@@ -65,13 +59,7 @@ export function getSendWarnings(t: TFunction, derivedSendInfo: DerivedSendInfo, 
 }
 
 export function useSendWarnings(t: TFunction, derivedSendInfo: DerivedSendInfo): Warning[] {
-  const networkStatus = useNetInfo()
-  // First `useNetInfo` call always results with unknown state,
-  // which we want to ignore here until state is determined,
-  // otherwise it leads to immediate re-renders of views dependent on useSendWarnings.
-  //
-  // See for more here: https://github.com/react-native-netinfo/react-native-netinfo/pull/444
-  const offline = isOffline(networkStatus)
+  const offline = useIsOffline()
 
   return useMemoCompare(() => getSendWarnings(t, derivedSendInfo, offline), _.isEqual)
 }
@@ -79,7 +67,7 @@ export function useSendWarnings(t: TFunction, derivedSendInfo: DerivedSendInfo):
 const checkIsMissingRequiredParams = (
   currencyInInfo: Maybe<CurrencyInfo>,
   nftIn: GQLNftAsset | undefined,
-  chainId: WalletChainId | undefined,
+  chainId: UniverseChainId | undefined,
   recipient: Address | undefined,
   hasCurrencyAmount: boolean,
   hasCurrencyBalance: boolean,

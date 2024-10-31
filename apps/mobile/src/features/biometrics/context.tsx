@@ -1,6 +1,6 @@
 import { hasHardwareAsync } from 'expo-local-authentication'
 import React, { createContext, PropsWithChildren, useContext, useState } from 'react'
-import { BiometricAuthenticationStatus } from 'src/features/biometrics'
+import { BiometricAuthenticationStatus } from 'src/features/biometrics/biometrics'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { debounceCallback } from 'utilities/src/time/timing'
 

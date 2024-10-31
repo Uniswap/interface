@@ -2,7 +2,7 @@
 import { ApolloError } from '@apollo/client'
 import { TransactionRequest as EthersTransactionRequest } from '@ethersproject/providers'
 import { SerializedError } from '@reduxjs/toolkit'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 // eslint-disable-next-line no-restricted-imports
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import {
@@ -18,16 +18,16 @@ import {
   NavBarSearchTypes,
   SharedEventName,
   SwapEventName,
+  SwapPriceImpactUserResponse,
   SwapPriceUpdateUserResponse,
   WalletConnectionResult,
 } from '@uniswap/analytics-events'
 import { Protocol } from '@uniswap/router-sdk'
-import {
-  Currency as FiatCurrency,
-  NftStandard,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import {
   ExtensionEventName,
+  FiatOffRampEventName,
   FiatOnRampEventName,
   InstitutionTransferEventName,
   InterfaceEventNameLocal,
@@ -40,7 +40,7 @@ import {
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { UnitagClaimContext } from 'uniswap/src/features/unitags/types'
 import { RenderPassReport } from 'uniswap/src/types/RenderPassReport'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { ImportType } from 'uniswap/src/types/onboarding'
@@ -51,12 +51,26 @@ import { EthMethod, UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap
 import { WidgetEvent, WidgetType } from 'uniswap/src/types/widgets'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
-// Events related to Moonpay internal transactions
-// NOTE: we do not currently have access to the full life cycle of these txs
-// because we do not yet use Moonpay's webhook
-export type MoonpayTransactionEventProperties = ITraceContext &
-  // allow any object of strings for now
-  Record<string, string>
+export type GasEstimateAccuracyProperties = {
+  tx_hash?: string
+  transaction_type: string
+  chain_id: number
+  final_status?: string
+  time_to_confirmed_ms?: number
+  blocks_to_confirmed?: number
+  gas_use_diff?: number
+  gas_use_diff_percentage?: number
+  gas_used?: number
+  gas_price_diff?: number
+  gas_price_diff_percentage?: number
+  gas_price?: number
+  max_priority_fee_per_gas?: string
+  private_rpc?: boolean
+  is_shadow?: boolean
+  name?: string
+  out_of_gas: boolean
+  timed_out: boolean
+}
 
 export type AssetDetailsBaseProperties = {
   name?: string
@@ -81,26 +95,58 @@ type OnboardingCompletedProps = {
   cloud_backup_used: boolean
 }
 
+export type SwapRouting =
+  | 'classic'
+  | 'uniswap_x'
+  | 'uniswap_x_v2'
+  | 'priority_order'
+  | 'bridge'
+  | 'limit_order'
+  | 'priority'
+  | 'none'
+
 export type SwapTradeBaseProperties = {
+  routing?: SwapRouting
+  total_balances_usd?: number
   transactionOriginType: string
+  // We have both `allowed_slippage` (percentage) and `allowed_slippage_basis_points` because web and wallet used to track this in different ways.
+  // We should eventually standardize on one or the other.
+  allowed_slippage?: number
   allowed_slippage_basis_points?: number
   token_in_symbol?: string
   token_out_symbol?: string
   token_in_address?: string
   token_out_address?: string
   price_impact_basis_points?: string | number
-  estimated_network_fee_usd?: number
+  estimated_network_fee_usd?: string
   chain_id?: number
   token_in_amount?: string | number
   token_out_amount?: string | number
   token_in_amount_usd?: number
   token_out_amount_usd?: number
+  token_in_amount_max?: string
+  token_out_amount_min?: string
+  token_in_detected_tax?: number
+  token_out_detected_tax?: number
+  minimum_output_after_slippage?: string
   fee_amount?: string
+  // `requestId` is the same as `ura_request_id`. We should eventually standardize on one or the other.
   requestId?: string
+  ura_request_id?: string
+  ura_block_number?: string
+  ura_quote_id?: string
+  ura_quote_block_number?: string
   quoteId?: string
+  swap_quote_block_number?: string
+  fee_usd?: number
+  type?: TradeType
+  // Legacy props only used on web. We might be able to delete these after we delete the old swap flow.
+  method?: 'ROUTING_API' | 'QUICK_ROUTE' | 'CLIENT_SIDE_FALLBACK'
+  offchain_order_type?: 'Dutch' | 'Dutch_V2' | 'Limit' | 'Dutch_V1_V2' | 'Priority'
 } & ITraceContext
 
 type BaseSwapTransactionResultProperties = {
+  routing: SwapTradeBaseProperties['routing']
   transactionOriginType: string
   time_to_swap?: number
   time_to_swap_since_first_input?: number
@@ -123,20 +169,18 @@ type BaseSwapTransactionResultProperties = {
   transactedUSDValue?: number
 }
 
-// TODO(WEB-4345): Update to use trading api enum rather than hardcoded strings
-type ClassicSwapTransactionResultProperties = BaseSwapTransactionResultProperties & {
-  routing: 'CLASSIC'
-}
+type ClassicSwapTransactionResultProperties = BaseSwapTransactionResultProperties
 
 type UniswapXTransactionResultProperties = BaseSwapTransactionResultProperties & {
-  routing: 'DUTCH_V2' | 'DUTCH_LIMIT'
   order_hash: string
 }
+
+type BridgeSwapTransactionResultProperties = BaseSwapTransactionResultProperties
 
 type FailedUniswapXOrderResultProperties = Omit<UniswapXTransactionResultProperties, 'hash'>
 
 type TransferProperties = {
-  chainId: WalletChainId
+  chainId: UniverseChainId
   tokenAddress: Address
   toAddress: Address
   amountUSD?: number
@@ -149,9 +193,9 @@ export type WindowEthereumRequestProperties = {
 }
 
 export type DappContextProperties = {
-  dappUrl: string
-  chainId: WalletChainId
-  activeConnectedAddress: Address
+  dappUrl?: string
+  chainId?: UniverseChainId
+  activeConnectedAddress?: Address
   connectedAddresses: Address[]
 }
 
@@ -161,6 +205,10 @@ export type SwapPriceUpdateActionProperties = {
   token_in_symbol?: string
   token_out_symbol?: string
   price_update_basis_points?: number
+}
+
+export type SwapPriceImpactActionProperties = {
+  response: SwapPriceImpactUserResponse
 }
 
 export type InterfaceSearchResultSelectionProperties = {
@@ -193,9 +241,7 @@ type NFTBagProperties = {
 
 type InterfaceTokenSelectedProperties = {
   is_imported_by_user: boolean
-  // TODO(WEB-4739): Remove total_balances_usd when we clean up old token selector
-  total_balances_usd?: number
-  token_balance_usd?: number
+  token_balance_usd?: number | string
 }
 
 export enum DappRequestAction {
@@ -208,6 +254,34 @@ export enum OnboardingCardLoggingName {
   FundWallet = 'fund_wallet',
   RecoveryBackup = 'recovery_backup',
   ClaimUnitag = 'claim_unitag',
+  BridgingBanner = 'bridging_banner',
+}
+
+export type FORAmountEnteredProperties = ITraceContext & {
+  source: 'chip' | 'textInput'
+  amountUSD?: number
+}
+
+export type FORTokenSelectedProperties = ITraceContext & { token: string; isUnsupported?: boolean }
+
+export type FORTransactionUpdatedProperties = {
+  status: string
+  externalTransactionId: string
+  serviceProvider: string
+}
+
+export type FORWidgetOpenedProperties = ITraceContext & {
+  countryCode?: string
+  countryState?: string
+  cryptoCurrency: string
+  externalTransactionId: string
+  fiatCurrency: string
+  preselectedServiceProvider?: string
+  serviceProvider: string
+}
+
+type OnboardingCardEventProperties = ITraceContext & {
+  card_name: OnboardingCardLoggingName
 }
 
 // Please sort new values by EventName type!
@@ -218,6 +292,8 @@ export type UniverseEventProperties = {
   [ExtensionEventName.ChangeLockedState]: { locked: boolean; location: 'background' | 'sidebar' }
   [ExtensionEventName.DappConnect]: DappContextProperties
   [ExtensionEventName.DappConnectRequest]: DappContextProperties
+  [ExtensionEventName.DappDisconnect]: DappContextProperties
+  [ExtensionEventName.DappDisconnectAll]: Pick<DappContextProperties, 'activeConnectedAddress'>
   [ExtensionEventName.DappRequest]: DappContextProperties & { action: DappRequestAction; requestType: string } // TODO: requestType should be of the type DappRequestType
   [ExtensionEventName.DappChangeChain]: Omit<DappContextProperties, 'connectedAddresses'>
   [ExtensionEventName.DappTroubleConnecting]: Pick<DappContextProperties, 'dappUrl'>
@@ -233,25 +309,19 @@ export type UniverseEventProperties = {
   }
   [ExtensionEventName.SidebarDisconnect]: undefined
   [ExtensionEventName.UnknownMethodRequest]: WindowEthereumRequestProperties
-  [FiatOnRampEventName.FiatOnRampAmountEntered]: ITraceContext & {
-    source: 'chip' | 'textInput'
-    amountUSD?: number
+  [FiatOffRampEventName.FORBuySellToggled]: ITraceContext & {
+    value: 'BUY' | 'SELL'
   }
-  [FiatOnRampEventName.FiatOnRampTokenSelected]: ITraceContext & { token: string }
-  [FiatOnRampEventName.FiatOnRampTransactionUpdated]: {
-    status: string
-    externalTransactionId: string
-    serviceProvider: string
-  }
-  [FiatOnRampEventName.FiatOnRampWidgetOpened]: ITraceContext & {
-    countryCode?: string
-    countryState?: string
-    cryptoCurrency: string
-    externalTransactionId: string
-    fiatCurrency: string
-    preselectedServiceProvider?: string
-    serviceProvider: string
-  }
+  [FiatOffRampEventName.FiatOffRampAmountEntered]: FORAmountEnteredProperties
+  [FiatOffRampEventName.FiatOffRampTokenSelected]: FORTokenSelectedProperties
+  [FiatOffRampEventName.FiatOffRampTransactionUpdated]: FORTransactionUpdatedProperties
+  [FiatOffRampEventName.FiatOffRampWidgetOpened]: FORWidgetOpenedProperties
+  [FiatOffRampEventName.FiatOffRampWidgetCompleted]: undefined
+  [FiatOffRampEventName.FiatOffRampFundsSent]: undefined
+  [FiatOnRampEventName.FiatOnRampAmountEntered]: FORAmountEnteredProperties
+  [FiatOnRampEventName.FiatOnRampTokenSelected]: FORTokenSelectedProperties
+  [FiatOnRampEventName.FiatOnRampTransactionUpdated]: FORTransactionUpdatedProperties
+  [FiatOnRampEventName.FiatOnRampWidgetOpened]: FORWidgetOpenedProperties
   [InstitutionTransferEventName.InstitutionTransferTransactionUpdated]: {
     status: string
     externalTransactionId: string
@@ -349,14 +419,19 @@ export type UniverseEventProperties = {
     navbar_search_input_text: string
     hasInput: boolean
   } & ITraceContext
-  [InterfaceEventName.CHAIN_CHANGED]: {
-    result: WalletConnectionResult.SUCCEEDED
-    wallet_address?: string
-    wallet_type: string
-    chain_id?: number
-    previousConnectedChainId: number
-    page?: InterfacePageName
-  }
+  [InterfaceEventName.CHAIN_CHANGED]:
+    | {
+        result: WalletConnectionResult.SUCCEEDED
+        wallet_address?: string
+        wallet_type: string
+        chain_id?: number
+        previousConnectedChainId: number
+        page?: InterfacePageName
+      }
+    | {
+        chain: string
+        page: InterfacePageName.EXPLORE_PAGE
+      }
   [InterfaceEventName.EXPLORE_SEARCH_SELECTED]: undefined
   [InterfaceEventName.LANGUAGE_SELECTED]: {
     previous_language: string
@@ -451,9 +526,6 @@ export type UniverseEventProperties = {
     enabled: boolean
   }
   [MobileEventName.OnboardingCompleted]: OnboardingCompletedProps & ITraceContext
-  [MobileEventName.OnboardingIntroCardSwiped]: ITraceContext & {
-    card_name: OnboardingCardLoggingName
-  }
   [MobileEventName.PerformanceReport]: RenderPassReport
   [MobileEventName.ShareLinkOpened]: {
     entity: ShareableEntity
@@ -571,11 +643,16 @@ export type UniverseEventProperties = {
   }
   [SharedEventName.NAVBAR_CLICKED]: undefined
   [SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED]: undefined
+  [SwapEventName.SWAP_PRICE_IMPACT_ACKNOWLEDGED]: SwapPriceImpactActionProperties
   [SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED]: SwapPriceUpdateActionProperties
   [SwapEventName.SWAP_TRANSACTION_COMPLETED]:
     | ClassicSwapTransactionResultProperties
     | UniswapXTransactionResultProperties
-  [SwapEventName.SWAP_TRANSACTION_FAILED]: ClassicSwapTransactionResultProperties | FailedUniswapXOrderResultProperties
+    | BridgeSwapTransactionResultProperties
+  [SwapEventName.SWAP_TRANSACTION_FAILED]:
+    | ClassicSwapTransactionResultProperties
+    | FailedUniswapXOrderResultProperties
+    | BridgeSwapTransactionResultProperties
   [SwapEventName.SWAP_DETAILS_EXPANDED]: ITraceContext | undefined
   [SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED]: ITraceContext
   [SwapEventName.SWAP_QUOTE_RECEIVED]: {
@@ -625,6 +702,10 @@ export type UniverseEventProperties = {
     wallets: string[]
     balances: number[]
   }
+  [UniswapEventName.BalancesReportPerChain]: {
+    total_balances_usd_per_chain: Record<string, number>
+    wallet: string
+  }
   [UniswapEventName.TokenSelected]:
     | (ITraceContext &
         AssetDetailsBaseProperties &
@@ -650,6 +731,10 @@ export type UniverseEventProperties = {
     twitter: boolean
   }
   [UnitagEventName.UnitagRemoved]: undefined
+  [WalletEventName.ExternalLinkOpened]: {
+    url: string
+  }
+  [WalletEventName.GasEstimateAccuracy]: GasEstimateAccuracyProperties
   [WalletEventName.TokenVisibilityChanged]: { currencyId: string; visible: boolean }
   [WalletEventName.TransferSubmitted]: TransferProperties
   [WalletEventName.WalletAdded]: OnboardingCompletedProps & ITraceContext
@@ -663,7 +748,7 @@ export type UniverseEventProperties = {
   }
   [WalletEventName.NFTVisibilityChanged]: {
     tokenId?: string
-    chainId?: WalletChainId
+    chainId?: UniverseChainId
     contractAddress?: Address
     isSpam?: boolean
     visible: boolean
@@ -672,6 +757,9 @@ export type UniverseEventProperties = {
     shown: number
     hidden: number
   }
+  [WalletEventName.OnboardingIntroCardSwiped]: OnboardingCardEventProperties
+  [WalletEventName.OnboardingIntroCardPressed]: OnboardingCardEventProperties
+  [WalletEventName.OnboardingIntroCardClosed]: OnboardingCardEventProperties
   [WalletEventName.PerformanceGraphql]: {
     dataSize: number
     duration: number
@@ -691,15 +779,16 @@ export type UniverseEventProperties = {
   }
   [WalletEventName.SwapSubmitted]: (
     | {
-        routing: 'CLASSIC'
         transaction_hash: string
       }
     | {
-        routing: 'DUTCH_V2'
         order_hash: string
       }
   ) &
     SwapTradeBaseProperties
+  [WalletEventName.TestnetModeToggled]: {
+    enabled: boolean
+  }
   [WalletEventName.ViewRecoveryPhrase]: undefined
   // Please sort new values by EventName type!
 }

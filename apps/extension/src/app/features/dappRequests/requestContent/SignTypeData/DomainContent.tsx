@@ -2,7 +2,7 @@ import { MaybeExplorerLinkedAddress } from 'src/app/features/dappRequests/reques
 import { EIP712DomainType } from 'src/app/features/dappRequests/types/EIP712Types'
 import { Flex, Text } from 'ui/src'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { ExplorerDataType, getExplorerLink } from 'wallet/src/utils/linking'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 export const DomainContent = ({
   chainId: domainChainId,

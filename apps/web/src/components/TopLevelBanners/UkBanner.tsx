@@ -72,7 +72,7 @@ export const useRenderUkBanner = () => {
 export const bannerText = t('notice.uk')
 
 export function UkBanner() {
-  const openDisclaimer = useOpenModal(ApplicationModal.UK_DISCLAIMER)
+  const openDisclaimer = useOpenModal({ name: ApplicationModal.UK_DISCLAIMER })
 
   return (
     <BannerWrapper>

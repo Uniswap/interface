@@ -1,12 +1,15 @@
+/* eslint-disable complexity */
 import { AssetType } from 'uniswap/src/entities/assets'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ApproveNotification } from 'wallet/src/features/notifications/components/ApproveNotification'
+import { BridgeNotification } from 'wallet/src/features/notifications/components/BridgeNotification'
 import { ChangeAssetVisibilityNotification } from 'wallet/src/features/notifications/components/ChangeAssetVisibilityNotification'
 import { ChooseCountryNotification } from 'wallet/src/features/notifications/components/ChooseCountryNotification'
 import { CopiedNotification } from 'wallet/src/features/notifications/components/CopiedNotification'
 import { CopyFailedNotification } from 'wallet/src/features/notifications/components/CopyFailedNotification'
 import { DefaultNotification } from 'wallet/src/features/notifications/components/DefaultNotification'
 import { ErrorNotification } from 'wallet/src/features/notifications/components/ErrorNotification'
+import { NetworkChangedBridgeNotification } from 'wallet/src/features/notifications/components/NetworkChangedBridgeNotification'
 import { NetworkChangedNotification } from 'wallet/src/features/notifications/components/NetworkChangedNotification'
 import { SuccessNotification } from 'wallet/src/features/notifications/components/SuccessNotification'
 import { SwapNotification } from 'wallet/src/features/notifications/components/SwapNotification'
@@ -37,6 +40,8 @@ export function SharedNotificationToastRouter({ notification }: { notification: 
       return <ChooseCountryNotification notification={notification} />
     case AppNotificationType.NetworkChanged:
       return <NetworkChangedNotification notification={notification} />
+    case AppNotificationType.NetworkChangedBridge:
+      return <NetworkChangedBridgeNotification notification={notification} />
     case AppNotificationType.SwapPending:
       return <SwapPendingNotification notification={notification} />
     case AppNotificationType.TransferCurrencyPending:
@@ -47,6 +52,8 @@ export function SharedNotificationToastRouter({ notification }: { notification: 
       switch (notification.txType) {
         case TransactionType.Approve:
           return <ApproveNotification notification={notification} />
+        case TransactionType.Bridge:
+          return <BridgeNotification notification={notification} />
         case TransactionType.Swap:
           return <SwapNotification notification={notification} />
         case TransactionType.Wrap:

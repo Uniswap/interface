@@ -16,12 +16,12 @@ import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { Flex, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { iconSizes } from 'ui/src/theme'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
-import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { useActiveAccount, useActiveAccountAddressWithThrow, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 const WalletConnectModalName = {
@@ -97,7 +97,7 @@ export function WalletConnectModals(): JSX.Element {
             dispatch(removeRequest({ requestInternalId: currRequest.internalId, account: currRequest.account }))
           }
         >
-          <RequestModal currRequest={currRequest} />{' '}
+          <RequestModal currRequest={currRequest} />
         </ErrorBoundary>
       ) : null}
     </>
@@ -128,7 +128,7 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
     return (
       <WarningModal
         caption={t('walletConnect.request.warning.message')}
-        closeText={t('common.button.dismiss')}
+        rejectText={t('common.button.dismiss')}
         icon={
           <EyeIcon color={colors.neutral2.get()} height={iconSizes.icon24} strokeWidth={1.5} width={iconSizes.icon24} />
         }
@@ -136,7 +136,7 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
         modalName={ModalName.WCViewOnlyWarning}
         severity={WarningSeverity.None}
         title={t('walletConnect.request.warning.title')}
-        onCancel={onClose}
+        onReject={onClose}
         onClose={onClose}
       >
         <Flex alignSelf="stretch" backgroundColor="$surface2" borderRadius="$rounded16" p="$spacing16">

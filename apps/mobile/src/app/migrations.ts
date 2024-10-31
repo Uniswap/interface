@@ -6,6 +6,8 @@
 import dayjs from 'dayjs'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
+import { Language } from 'uniswap/src/features/language/constants'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
 import {
@@ -13,14 +15,13 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
-import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
-import { initialLanguageState } from 'wallet/src/features/language/slice'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import {
   activatePendingAccounts,
+  addCreatedOnboardingRedesignAccountBehaviorHistory,
   addExploreAndWelcomeBehaviorHistory,
   addHapticSetting,
   addRoutingFieldToTransactions,
@@ -28,6 +29,9 @@ import {
   deleteDefaultFavoritesFromFavoritesState,
   deleteExtensionOnboardingState,
   deleteHoldToSwapBehaviorHistory,
+  moveCurrencySetting,
+  moveDismissedTokenWarnings,
+  moveLanguageSetting,
   moveUserSettings,
   removeUniconV2BehaviorState,
   removeWalletIsUnlockedState,
@@ -237,7 +241,7 @@ export const migrations = {
   17: (state: any) => {
     const accounts: Record<Address, Account> | undefined = state?.wallet?.accounts
     if (!accounts) {
-      return
+      return undefined
     }
 
     for (const account of Object.values(accounts)) {
@@ -260,11 +264,11 @@ export const migrations = {
 
     const chainState:
       | {
-          byChainId: Partial<Record<WalletChainId, { isActive: boolean }>>
+          byChainId: Partial<Record<UniverseChainId, { isActive: boolean }>>
         }
       | undefined = newState?.chains
     const newChainState = Object.keys(chainState?.byChainId ?? {}).reduce<{
-      byChainId: Partial<Record<WalletChainId, { isActive: boolean }>>
+      byChainId: Partial<Record<UniverseChainId, { isActive: boolean }>>
     }>(
       (tempState, chainIdString) => {
         const chainId = toSupportedChainId(chainIdString)
@@ -716,21 +720,21 @@ export const migrations = {
   51: function addLanguageSettings(state: any) {
     return {
       ...state,
-      languageSettings: initialLanguageState,
+      languageSettings: { currentLanguage: Language.English },
     }
   },
 
   52: function addFiatCurrencySettings(state: any) {
     return {
       ...state,
-      fiatCurrencySettings: initialFiatCurrencyState,
+      fiatCurrencySettings: { currentCurrency: FiatCurrency.UnitedStatesDollar },
     }
   },
 
   53: function updateLanguageSettings(state: any) {
     return {
       ...state,
-      languageSettings: initialLanguageState,
+      languageSettings: { currentLanguage: Language.English },
     }
   },
 
@@ -936,6 +940,14 @@ export const migrations = {
   },
 
   75: deleteHoldToSwapBehaviorHistory,
+
+  76: addCreatedOnboardingRedesignAccountBehaviorHistory,
+
+  77: moveDismissedTokenWarnings,
+
+  78: moveLanguageSetting,
+
+  79: moveCurrencySetting,
 }
 
-export const MOBILE_STATE_VERSION = 75
+export const MOBILE_STATE_VERSION = 79

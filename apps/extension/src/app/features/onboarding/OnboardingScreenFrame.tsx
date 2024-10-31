@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { OnboardingScreenProps } from 'src/app/features/onboarding/OnboardingScreenProps'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons'
@@ -17,6 +18,8 @@ export function OnboardingScreenFrame({
   title,
   warningSubtitle,
 }: Partial<OnboardingScreenProps>): JSX.Element {
+  const { t } = useTranslation()
+
   if (!title) {
     return <>{children}</>
   }
@@ -48,8 +51,8 @@ export function OnboardingScreenFrame({
             top="$none"
             onPress={onSkip}
           >
-            <Text color="$neutral2" variant="buttonLabel3">
-              Skip
+            <Text color="$neutral2" variant="buttonLabel2">
+              {t('common.button.skip')}
             </Text>
           </TouchableArea>
         )}

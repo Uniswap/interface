@@ -5,10 +5,15 @@ import {
   useNavigation,
 } from '@react-navigation/native'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
-import { EducationContentType } from 'src/components/education'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
-import { FiatOnRampScreens, MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
+import {
+  FiatOnRampScreens,
+  MobileScreens,
+  OnboardingScreens,
+  SharedUnitagScreenParams,
+  UnitagStackParamList,
+} from 'uniswap/src/types/screens/mobile'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 
 type NFTItemScreenParams = {
@@ -70,24 +75,9 @@ export type OnboardingStackBaseParams = {
   entryPoint: OnboardingEntryPoint
 }
 
-export type UnitagEntryPoint = OnboardingScreens.Landing | MobileScreens.Home | MobileScreens.Settings
-
-export type SharedUnitagScreenParams = {
-  [UnitagScreens.ClaimUnitag]: {
-    entryPoint: UnitagEntryPoint
-    address?: Address
-  }
-  [UnitagScreens.ChooseProfilePicture]: {
-    entryPoint: UnitagEntryPoint
-    unitag: string
-    unitagFontSize: number
-    address: Address
-  }
-}
-
 export type OnboardingStackParamList = {
   [OnboardingScreens.AppLoading]: undefined
-  [OnboardingScreens.BackupManual]: BackupFormParams & OnboardingStackBaseParams
+  [OnboardingScreens.BackupManual]: BackupFormParams & OnboardingStackBaseParams & { fromCloudBackup?: boolean }
   [OnboardingScreens.BackupCloudPasswordCreate]: BackupFormParams & OnboardingStackBaseParams
   [OnboardingScreens.BackupCloudPasswordConfirm]: CloudBackupFormParams & OnboardingStackBaseParams
   [OnboardingScreens.BackupCloudProcessing]: CloudBackupFormParams & OnboardingStackBaseParams
@@ -112,19 +102,6 @@ export type OnboardingStackParamList = {
   [OnboardingScreens.SelectWallet]: OnboardingStackBaseParams
   [OnboardingScreens.WatchWallet]: OnboardingStackBaseParams
 } & SharedUnitagScreenParams
-
-export type UnitagStackParamList = SharedUnitagScreenParams & {
-  [UnitagScreens.UnitagConfirmation]: {
-    unitag: string
-    address: Address
-    profilePictureUri?: string
-  }
-  [UnitagScreens.EditProfile]: {
-    address: Address
-    unitag: string
-    entryPoint: UnitagScreens.UnitagConfirmation | MobileScreens.SettingsWallet
-  }
-}
 
 export type AppStackParamList = {
   [MobileScreens.Education]: {
@@ -183,6 +160,10 @@ export type RootParamList = AppStackParamList &
   SettingsStackParamList &
   UnitagStackParamList &
   FiatOnRampStackParamList
+
+export enum EducationContentType {
+  SeedPhrase,
+}
 
 export const useAppStackNavigation = (): AppStackNavigationProp => useNavigation<AppStackNavigationProp>()
 export const useExploreStackNavigation = (): ExploreStackNavigationProp => useNavigation<ExploreStackNavigationProp>()

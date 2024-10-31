@@ -1,7 +1,7 @@
 import { QueryClientProvider } from '@tanstack/react-query'
 import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { recentConnectorIdAtom } from 'components/Web3Provider/constants'
-import { queryClient, wagmiConfig } from 'components/Web3Provider/wagmi'
+import { queryClient, wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { walletTypeToAmplitudeWalletType } from 'components/Web3Provider/walletConnect'
 import { useIsSupportedChainId } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'

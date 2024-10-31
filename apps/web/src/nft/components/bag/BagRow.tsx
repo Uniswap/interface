@@ -1,9 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther as ethersFormatEther } from '@ethersproject/units'
 import clsx from 'clsx'
-import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
+import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
+import { Box } from 'components/deprecated/Box'
 import styled from 'lib/styled-components'
-import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/bag/BagRow.css'
 import { TimedLoader } from 'nft/components/bag/TimedLoader'
@@ -280,7 +280,7 @@ export const UnavailableAssetsHeaderRow = ({
         clearUnavailableAssets()
         setDidOpenUnavailableAssets(false)
       }
-      return
+      return undefined
     }
 
     const intervalId = setInterval(() => {

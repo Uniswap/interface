@@ -2,11 +2,12 @@ import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers/lib/ethers'
 import { GeneratedIcon } from 'ui/src'
+import { Warning, WarningColor } from 'uniswap/src/components/modals/WarningModal/types'
 import { TransactionListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { AssetType } from 'uniswap/src/entities/assets'
-import { Warning, WarningColor } from 'uniswap/src/features/transactions/WarningModal/types'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { DappInfo } from 'uniswap/src/types/walletConnect'
 
 export type WarningWithStyle = {
@@ -26,11 +27,11 @@ export type ParsedWarnings = {
   warnings: Warning[]
 }
 
-export type ChainIdToTxIdToDetails = Partial<Record<WalletChainId, { [txId: string]: TransactionDetails }>>
+export type ChainIdToTxIdToDetails = Partial<Record<UniverseChainId, { [txId: string]: TransactionDetails }>>
 
 // Basic identifying info for a transaction
 export interface TransactionId {
-  chainId: WalletChainId
+  chainId: UniverseChainId
   // moonpay externalTransactionId
   id: string
 }
@@ -40,8 +41,8 @@ export type TransactionListQueryResponse = NonNullable<
 >[0]
 
 /**
- * Marks if a transaction was initiated natively within app, or from external source. 
- * External transactions are initiated from dapps, WC, uwulink, etc. 
+ * Marks if a transaction was initiated natively within app, or from external source.
+ * External transactions are initiated from dapps, WC, uwulink, etc.
  */
 export enum TransactionOriginType  {
   Internal = 'internal',
@@ -52,7 +53,7 @@ interface BaseTransactionDetails extends TransactionId {
   from: Address
 
   transactionOriginType: TransactionOriginType
-  
+
   // Specific info for the tx type
   typeInfo: TransactionTypeInfo
 
@@ -80,11 +81,17 @@ export type TransactionNetworkFee = {
   quantity: string
   tokenSymbol: string
   tokenAddress: string
-  chainId: WalletChainId
+  chainId: UniverseChainId
+}
+
+export type GasFeeEstimates = {
+  activeEstimate: GasEstimate
+  shadowEstimates?: GasEstimate[]
+  blockSubmitted?: number
 }
 
 export interface UniswapXOrderDetails extends BaseTransactionDetails {
-  routing: Routing.DUTCH_V2 | Routing.DUTCH_LIMIT
+  routing: Routing.DUTCH_V2 | Routing.DUTCH_LIMIT | Routing.PRIORITY
 
   // Note: `orderHash` is an off-chain value used to track orders before they're filled on-chain.
   // UniswapX orders will also have a transaction `hash` if they become filled.
@@ -102,7 +109,16 @@ export interface ClassicTransactionDetails extends BaseTransactionDetails {
   options: TransactionOptions
 }
 
-export type TransactionDetails = UniswapXOrderDetails | ClassicTransactionDetails
+export interface BridgeTransactionDetails extends BaseTransactionDetails {
+  routing: Routing.BRIDGE
+
+  // Info for submitting the tx
+  options: TransactionOptions
+
+  sendConfirmed?: boolean
+}
+
+export type TransactionDetails = UniswapXOrderDetails | ClassicTransactionDetails | BridgeTransactionDetails
 
 export enum TransactionStatus {
   Canceled = 'cancelled',
@@ -151,7 +167,7 @@ export type FinalizedTransactionDetails = TransactionDetails &
 
 export type TransactionOptions = {
   request: providers.TransactionRequest
-  timeoutMs?: number
+  timeoutTimestampMs?: number
   submitViaPrivateRpc?: boolean
 }
 
@@ -185,6 +201,7 @@ export enum NFTTradeType {
 export enum TransactionType {
   // Token Specific
   Approve = 'approve',
+  Bridge = 'bridge',
   Swap = 'swap',
   Wrap = 'wrap',
 
@@ -213,6 +230,7 @@ export interface BaseTransactionInfo {
   transactedUSDValue?: number
   isSpam?: boolean
   externalDappInfo?: DappInfo
+  gasEstimates?: GasFeeEstimates
 }
 
 export interface ApproveTransactionInfo extends BaseTransactionInfo {
@@ -235,6 +253,17 @@ export interface BaseSwapTransactionInfo extends BaseTransactionInfo {
   routeString?: string
   gasUseEstimate?: string
   protocol?: Protocol
+}
+
+export interface BridgeTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.Bridge
+  inputCurrencyId: string
+  inputCurrencyAmountRaw: string
+  outputCurrencyId: string
+  outputCurrencyAmountRaw: string
+  quoteId?: string
+  gasUseEstimate?: string
+  routingDappInfo?: DappInfoTransactionDetails
 }
 
 export interface ExactInputSwapTransactionInfo extends BaseSwapTransactionInfo {
@@ -296,7 +325,7 @@ export interface OnRampTransactionInfo extends BaseTransactionInfo {
   id: string
   destinationTokenSymbol: string
   destinationTokenAddress: string
-  destinationTokenAmount: number
+  destinationTokenAmount?: number
   serviceProvider: ServiceProviderInfo
   // Fees are in units of the sourceCurrency for purchases,
   // and in units of the destinationToken for transfers
@@ -308,7 +337,7 @@ export interface OnRampTransactionInfo extends BaseTransactionInfo {
 export interface OnRampPurchaseInfo extends OnRampTransactionInfo {
   type: TransactionType.OnRampPurchase
   sourceCurrency: string
-  sourceAmount: number
+  sourceAmount?: number
 }
 
 export interface OnRampTransferInfo extends OnRampTransactionInfo {
@@ -366,6 +395,7 @@ export interface UnknownTransactionInfo extends BaseTransactionInfo {
 
 export type TransactionTypeInfo =
   | ApproveTransactionInfo
+  | BridgeTransactionInfo
   | ExactOutputSwapTransactionInfo
   | ExactInputSwapTransactionInfo
   | ConfirmedSwapTransactionInfo
@@ -386,6 +416,10 @@ export function isConfirmedSwapTypeInfo(typeInfo: TransactionTypeInfo): typeInfo
     (typeInfo as ConfirmedSwapTransactionInfo).inputCurrencyAmountRaw &&
       (typeInfo as ConfirmedSwapTransactionInfo).outputCurrencyAmountRaw,
   )
+}
+
+export function isBridgeTypeInfo(typeInfo: TransactionTypeInfo): typeInfo is BridgeTransactionInfo {
+  return typeInfo.type === TransactionType.Bridge
 }
 
 export function isFinalizedTxStatus(status: TransactionStatus): status is FinalizedTransactionStatus {

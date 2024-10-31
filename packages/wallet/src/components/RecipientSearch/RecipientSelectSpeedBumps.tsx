@@ -4,13 +4,14 @@ import { useSporeColors } from 'ui/src'
 import { Eye } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { PaginatedModalRenderer } from 'uniswap/src/components/modals/PaginatedModals'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isSameAddress } from 'utilities/src/addresses'
 import { NewAddressWarningModal } from 'wallet/src/components/RecipientSearch/modals/NewAddressWarningModal'
 import { ConditionalModalRenderer, SpeedBumps } from 'wallet/src/components/modals/SpeedBumps'
-import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { useIsErc20Contract } from 'wallet/src/features/contracts/hooks'
 import { useAllTransactionsBetweenAddresses } from 'wallet/src/features/transactions/hooks/useAllTransactionsBetweenAddresses'
 import { useIsSmartContractAddress } from 'wallet/src/features/transactions/send/hooks/useIsSmartContractAddress'
@@ -22,7 +23,7 @@ import {
 
 interface RecipientSelectSpeedBumpsProps {
   recipientAddress?: string
-  chainId?: WalletChainId
+  chainId?: UniverseChainId
   checkSpeedBumps: boolean
   setCheckSpeedBumps: (value: boolean) => void
   onConfirm: () => void
@@ -36,14 +37,19 @@ export function RecipientSelectSpeedBumps({
 }: RecipientSelectSpeedBumpsProps): JSX.Element | null {
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const { defaultChainId } = useEnabledChains()
 
   const activeAddress = useActiveAccountAddressWithThrow()
   const viewOnlyAccounts = useViewOnlyAccounts()
   const currentSignerAccounts = useSignerAccounts()
   const previousTransactions = useAllTransactionsBetweenAddresses(activeAddress, recipientAddress)
-  const { isSmartContractAddress, loading: addressLoading } = useIsSmartContractAddress(
+  const { isSmartContractAddress, loading: smartContractLoading } = useIsSmartContractAddress(
     recipientAddress,
-    chainId ?? UniverseChainId.Mainnet,
+    chainId ?? defaultChainId,
+  )
+  const { isERC20ContractAddress, loading: erc20ContractLoading } = useIsErc20Contract(
+    recipientAddress,
+    chainId ?? defaultChainId,
   )
 
   const renderViewOnlyWarning = useCallback<PaginatedModalRenderer>(
@@ -52,8 +58,8 @@ export function RecipientSelectSpeedBumps({
         isOpen
         backgroundIconColor={colors.surface2.val}
         caption={t('send.recipient.warning.viewOnly.message')}
-        closeText={t('common.button.goBack')}
-        confirmText={t('common.button.understand')}
+        rejectText={t('common.button.goBack')}
+        acknowledgeText={t('common.button.understand')}
         icon={<Eye color="$neutral2" size={iconSizes.icon24} />}
         modalName={ModalName.RecipientSelectViewOnlyWarning}
         severity={WarningSeverity.High}
@@ -74,8 +80,8 @@ export function RecipientSelectSpeedBumps({
       <WarningModal
         isOpen
         caption={t('send.warning.self.message')}
-        closeText={t('common.button.cancel')}
-        confirmText={t('common.button.understand')}
+        rejectText={t('common.button.cancel')}
+        acknowledgeText={t('common.button.understand')}
         modalName={ModalName.RecipientSelectSelfSendWarning}
         severity={WarningSeverity.High}
         title={t('send.warning.self.title')}
@@ -90,8 +96,8 @@ export function RecipientSelectSpeedBumps({
       <WarningModal
         isOpen
         caption={t('send.warning.erc20.message')}
-        closeText={t('common.button.cancel')}
-        confirmText={t('common.button.understand')}
+        rejectText={t('common.button.cancel')}
+        acknowledgeText={t('common.button.understand')}
         modalName={ModalName.RecipientSelectErc20Warning}
         severity={WarningSeverity.High}
         title={t('send.warning.erc20.title')}
@@ -106,8 +112,8 @@ export function RecipientSelectSpeedBumps({
       <WarningModal
         isOpen
         caption={t('send.warning.smartContract.message')}
-        closeText={t('common.button.cancel')}
-        confirmText={t('common.button.understand')}
+        rejectText={t('common.button.cancel')}
+        acknowledgeText={t('common.button.understand')}
         modalName={ModalName.RecipientSelectSmartContractWarning}
         severity={WarningSeverity.None}
         title={t('send.warning.smartContract.title')}
@@ -130,17 +136,17 @@ export function RecipientSelectSpeedBumps({
   )
 
   const shouldWarnViewOnly = isViewOnlyRecipient
+  const shouldWarnERC20 = isERC20ContractAddress
+  const shouldWarnSmartContract = isNewRecipient && !isSignerRecipient && isSmartContractAddress && !shouldWarnERC20
+  const shouldWarnNewAddress = isNewRecipient && !isSignerRecipient && !shouldWarnSmartContract && !shouldWarnERC20
   const shouldWarnSelfSend = isSameAddress(activeAddress, recipientAddress)
-  const shouldWarnErc20 = useIsErc20Contract(recipientAddress, chainId ?? UniverseChainId.Mainnet)
-  const shouldWarnSmartContract = isNewRecipient && !isSignerRecipient && isSmartContractAddress
-  const shouldWarnNewAddress = isNewRecipient && !isSignerRecipient && !shouldWarnSmartContract
 
   const modalRenderers = useMemo<ConditionalModalRenderer[]>(
     () => [
       { renderModal: renderViewOnlyWarning, condition: shouldWarnViewOnly },
       { renderModal: renderNewAddressWarning, condition: shouldWarnNewAddress },
       { renderModal: renderSelfSendWarning, condition: shouldWarnSelfSend },
-      { renderModal: renderErc20Warning, condition: shouldWarnErc20 },
+      { renderModal: renderErc20Warning, condition: shouldWarnERC20 },
       { renderModal: renderSmartContractWarning, condition: shouldWarnSmartContract },
     ],
     [
@@ -152,7 +158,7 @@ export function RecipientSelectSpeedBumps({
       shouldWarnViewOnly,
       shouldWarnNewAddress,
       shouldWarnSelfSend,
-      shouldWarnErc20,
+      shouldWarnERC20,
       shouldWarnSmartContract,
     ],
   )
@@ -160,9 +166,9 @@ export function RecipientSelectSpeedBumps({
   return (
     <SpeedBumps
       // Wait until the address is loaded before checking speed bumps
-      checkSpeedBumps={checkSpeedBumps && !addressLoading}
+      checkSpeedBumps={checkSpeedBumps && !smartContractLoading && !erc20ContractLoading}
       // Don't check speed bumps if the current account is view-only
-      // (the user won't be able to complete the transfer anyway)
+      // (the user won't be able to complete the send anyway)
       modalRenderers={isActiveViewOnly ? [] : modalRenderers}
       {...rest}
     />

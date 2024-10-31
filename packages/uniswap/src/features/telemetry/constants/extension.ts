@@ -6,6 +6,8 @@ export enum ExtensionEventName {
   DappChangeChain = 'Dapp Change Chain',
   DappConnect = 'Dapp Connect',
   DappConnectRequest = 'Dapp Connect Request',
+  DappDisconnect = 'Dapp Disconnect',
+  DappDisconnectAll = 'Dapp Disconnect All',
   DappRequest = 'Dapp Request',
   DappTroubleConnecting = 'Dapp Trouble Connecting',
   DeprecatedMethodRequest = 'Deprecated Method Request',

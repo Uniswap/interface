@@ -46,6 +46,7 @@ module.exports = {
     'spellcheck',
     '@typescript-eslint',
     '@jambit/typed-redux-saga',
+    'check-file',
   ],
   rules: {
     ...complexityRules,
@@ -72,7 +73,9 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'error',
     // use throughout the app when importing devtools, or in test files
     '@typescript-eslint/no-var-requires': 'off',
+    'check-file/no-index': ['error', { ignoreMiddleExtensions: true }],
     '@typescript-eslint/no-require-imports': 'off',
+    'consistent-return': ['error', { treatUndefinedAsUnspecified: false }],
     '@typescript-eslint/no-unused-expressions': [
       2,
       {
@@ -139,21 +142,9 @@ module.exports = {
             message: "Please import from 'tamagui' directly to prevent mismatches.",
           },
           {
-            name: 'utilities/src/format/localeBased',
-            message: 'Use via `useLocalizationContext` instead.',
-          },
-          {
-            name: 'wallet/src/features/fiatCurrency/conversion',
-            message: 'Use via `useLocalizationContext` instead.',
-          },
-          {
-            name: 'wallet/src/features/language/formatter',
-            message: 'Use via `useLocalizationContext` instead.',
-          },
-          {
             name: 'react-native-safe-area-context',
             importNames: ['useSafeAreaInsets'],
-            message: 'Use our internal `useDeviceInsets` hook instead.',
+            message: 'Use our internal `useAppInsets` hook instead.',
           },
           {
             name: 'react-native',
@@ -161,27 +152,30 @@ module.exports = {
             message: 'Use our custom Switch component instead.',
           },
           {
+            name: 'react-native',
+            importNames: ['Keyboard'],
+            message:
+              'Please use dismissNativeKeyboard() instead for dismissals. addListener is okay to ignore this import for!',
+          },
+          {
             name: 'wallet/src/data/__generated__/types-and-hooks',
             importNames: ['usePortfolioBalancesQuery'],
             message: 'Use `usePortfolioBalances` instead.',
+          },
+          {
+            name: 'uniswap/src/features/settings/selectors',
+            importNames: ['selectIsTestnetModeEnabled'],
+            message: 'Use `useEnabledChains` instead.',
           },
           {
             name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',
             importNames: ['useAccountListQuery'],
             message: 'Use `useAccountList` instead.',
           },
-          // TODO(WALL-3643): Re-enable this rule once valueModifiers are shared via redux
-          // {
-          //   name: 'wallet/src/features/dataApi/balances',
-          //   importNames: ['usePortfolioValueModifiers'],
-          //   message:
-          //     'Use the wrapper hooks `usePortfolioTotalValue`, `useAccountList` or `usePortfolioBalances` instead of `usePortfolioValueModifiers` directly.',
-          // },
           {
             name: '@gorhom/bottom-sheet',
             importNames: ['BottomSheetTextInput'],
-            message:
-              'Use our internal `BottomSheetTextInput` wrapper from `/uniswap/src/components/modals/Modal`.',
+            message: 'Use our internal `BottomSheetTextInput` wrapper from `/uniswap/src/components/modals/Modal`.',
           },
           {
             name: 'expo-haptics',
@@ -212,11 +206,6 @@ module.exports = {
 
     'no-restricted-syntax': [
       'error',
-      {
-        selector: "NewExpression[callee.name='InMemoryCache']",
-        message:
-          'Use `createNewInMemoryCache()` instead of `new InMemoryCache()` to correctly support our custom `ttlMs` cache invalidation policy (see `useRestQuery`). See PR #5683 for details.',
-      },
       {
         selector:
           "CallExpression[callee.property.name='sendMessage'][callee.object.property.name='tabs'][callee.object.object.name='chrome']",
@@ -255,7 +244,7 @@ module.exports = {
         callbacksLast: true,
         shorthandFirst: true,
         ignoreCase: false,
-        noSortAlphabetically: false,
+        noSortAlphabetically: true,
         reservedFirst: true,
       },
     ],

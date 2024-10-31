@@ -1,7 +1,6 @@
 import { Percent, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { Pair, computePairAddress } from '@uniswap/v2-sdk'
 import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
-import { SupportedLocale } from 'constants/locales'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from 'constants/routing'
 import { gqlToCurrency } from 'graphql/data/util'
@@ -12,39 +11,19 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { RouterPreference } from 'state/routing/types'
 import {
   addSerializedPair,
-  addSerializedToken,
   updateHideClosedPositions,
   updateUserDeadline,
-  updateUserLocale,
   updateUserRouterPreference,
   updateUserSlippageTolerance,
 } from 'state/user/reducer'
 import { SerializedPair, SlippageTolerance } from 'state/user/types'
-import { deserializeToken, serializeToken } from 'state/user/utils'
 import {
   Chain,
   TokenSortableField,
   useTopTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
-
-export function useUserLocale(): SupportedLocale | null {
-  return useAppSelector((state) => state.user.userLocale)
-}
-
-export function useUserLocaleManager(): [SupportedLocale | null, (newLocale: SupportedLocale) => void] {
-  const dispatch = useAppDispatch()
-  const locale = useUserLocale()
-
-  const setLocale = useCallback(
-    (newLocale: SupportedLocale) => {
-      dispatch(updateUserLocale({ userLocale: newLocale }))
-    },
-    [dispatch],
-  )
-
-  return [locale, setLocale]
-}
+import { deserializeToken, serializeToken } from 'uniswap/src/utils/currency'
 
 export function useRouterPreference(): [RouterPreference, (routerPreference: RouterPreference) => void] {
   const dispatch = useAppDispatch()
@@ -144,16 +123,6 @@ export function useUserTransactionTTL(): [number, (slippage: number) => void] {
   )
 
   return [deadline, setUserDeadline]
-}
-
-export function useAddUserToken(): (token: Token) => void {
-  const dispatch = useAppDispatch()
-  return useCallback(
-    (token: Token) => {
-      dispatch(addSerializedToken({ serializedToken: serializeToken(token) }))
-    },
-    [dispatch],
-  )
 }
 
 function serializePair(pair: Pair): SerializedPair {

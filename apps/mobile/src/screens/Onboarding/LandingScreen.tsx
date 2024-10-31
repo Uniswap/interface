@@ -11,16 +11,20 @@ import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
 import { hideSplashScreen } from 'src/utils/splashScreen'
 import { Flex, Text, TouchableArea, useHapticFeedback } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { Experiments, OnboardingRedesignRecoveryBackupProperties } from 'uniswap/src/features/gating/experiments'
+import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
-import { isDevEnv } from 'utilities/src/environment'
 import { isDetoxBuild } from 'utilities/src/environment/constants'
+import { isDevEnv } from 'utilities/src/environment/env'
+import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { LANDING_ANIMATION_DURATION, LandingBackground } from 'wallet/src/components/landing/LandingBackground'
+import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Landing>
@@ -41,20 +45,45 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
   }, [actionButtonsOpacity])
 
   const { canClaimUnitag } = useCanAddressClaimUnitag()
+  const { getOnboardingAccount, generateOnboardingAccount } = useOnboardingContext()
 
-  const onPressCreateWallet = useCallback((): void => {
+  const onPressCreateWallet = useCallback(async (): Promise<void> => {
     if (canClaimUnitag) {
       navigation.navigate(UnitagScreens.ClaimUnitag, {
         entryPoint: OnboardingScreens.Landing,
       })
     } else {
-      // If can't claim, go direct to welcome screen
-      navigation.navigate(OnboardingScreens.WelcomeWallet, {
-        importType: ImportType.CreateNew,
-        entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
-      })
+      const onboardingExperimentEnabled = getExperimentValue(
+        Experiments.OnboardingRedesignRecoveryBackup,
+        OnboardingRedesignRecoveryBackupProperties.Enabled,
+        false,
+      )
+
+      if (onboardingExperimentEnabled) {
+        const onboardingAccount = getOnboardingAccount()
+        if (!onboardingAccount) {
+          try {
+            await generateOnboardingAccount()
+          } catch (e) {
+            logger.error(e, {
+              tags: { file: 'LandingScreen.tsx', function: 'onPressCreateWallet' },
+            })
+          }
+        }
+
+        navigation.navigate(OnboardingScreens.Notifications, {
+          importType: ImportType.CreateNew,
+          entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
+        })
+      } else {
+        // If can't claim, go direct to welcome screen
+        navigation.navigate(OnboardingScreens.WelcomeWallet, {
+          importType: ImportType.CreateNew,
+          entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
+        })
+      }
     }
-  }, [canClaimUnitag, navigation])
+  }, [canClaimUnitag, generateOnboardingAccount, getOnboardingAccount, navigation])
 
   const onPressImportWallet = (): void => {
     navigation.navigate(OnboardingScreens.ImportMethod, {
@@ -93,7 +122,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
                     testID={TestID.CreateAccount}
                     onPress={onPressCreateWallet}
                   >
-                    <Text color="$white" variant="buttonLabel2">
+                    <Text color="$white" variant="buttonLabel1">
                       {t('onboarding.landing.button.create')}
                     </Text>
                   </TouchableArea>
@@ -114,9 +143,9 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
                   onPress={onPressImportWallet}
                 >
                   <Text
-                    $short={{ variant: 'buttonLabel2', fontSize: '$medium' }}
+                    $short={{ variant: 'buttonLabel1', fontSize: '$medium' }}
                     color="$accent1"
-                    variant="buttonLabel2"
+                    variant="buttonLabel1"
                   >
                     {t('onboarding.landing.button.add')}
                   </Text>

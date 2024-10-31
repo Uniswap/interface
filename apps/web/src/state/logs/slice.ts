@@ -105,4 +105,4 @@ const slice = createSlice({
 })
 
 export default slice.reducer
-export const { addListener, removeListener, fetchedLogs, fetchedLogsError, fetchingLogs } = slice.actions
+export const { addListener, fetchedLogs, fetchedLogsError, fetchingLogs, removeListener } = slice.actions

@@ -24,7 +24,7 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
    * calls and deep object traversals.
    */
   stateTransformer: (state: InterfaceState): DeepPartial<InterfaceState> => {
-    const { application, user, localWebTransactions } = state
+    const { application, user, localWebTransactions, userSettings } = state
 
     return {
       application: {
@@ -35,7 +35,6 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
       },
       user: {
         lastUpdateVersionTimestamp: user.lastUpdateVersionTimestamp,
-        userLocale: user.userLocale,
         userRouterPreference: user.userRouterPreference,
         userHideClosedPositions: user.userHideClosedPositions,
         userSlippageTolerance: user.userSlippageTolerance,
@@ -43,6 +42,9 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
         userDeadline: user.userDeadline,
         timestamp: user.timestamp,
         showSurveyPopup: user.showSurveyPopup,
+      },
+      userSettings: {
+        currentLanguage: userSettings.currentLanguage,
       },
       localWebTransactions,
     }

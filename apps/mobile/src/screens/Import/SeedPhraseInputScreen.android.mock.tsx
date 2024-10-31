@@ -1,11 +1,13 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
-import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { onRestoreComplete } from 'src/screens/Import/onRestoreComplete'
+import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { QuestionInCircleFilled } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -31,6 +33,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 // Original SeedPhraseInputScreen component including JS input field. Used as a mock for Android Detox e2e testing.
 export function SeedPhraseInputScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
   const { generateImportedAccounts } = useOnboardingContext()
 
   /**
@@ -48,7 +51,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
 
   const isRestoringMnemonic = params.importType === ImportType.RestoreMnemonic
 
-  useAddBackButton(navigation)
+  useNavigationHeader(navigation)
 
   const signerAccounts = useSignerAccounts()
   const mnemonicId = (isRestoringMnemonic && signerAccounts[0]?.mnemonicId) || undefined
@@ -77,11 +80,8 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
       await generateImportedAccounts({ mnemonicId, backupType: BackupType.Manual })
     }
 
-    // restore flow is handled in saga after `restoreMnemonicComplete` is dispatched
-    if (!isRestoringMnemonic) {
-      navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
-    }
-  }, [value, mnemonicId, generateImportedAccounts, isRestoringMnemonic, t, navigation, params])
+    onRestoreComplete({ isRestoringMnemonic, dispatch, params, navigation })
+  }, [value, mnemonicId, isRestoringMnemonic, t, generateImportedAccounts, dispatch, navigation, params])
 
   const onBlur = useCallback(() => {
     const { error, invalidWord } = validateMnemonic(value)

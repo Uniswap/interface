@@ -4,8 +4,8 @@ import { flexColumnNoWrap } from 'theme/styles'
 import { Trans, t } from 'uniswap/src/i18n'
 
 import { ThemedText } from 'theme/components/text'
-import { AutoColumn } from 'components/Column'
-import { RowBetween } from 'components/Row'
+import { AutoColumn } from 'components/deprecated/Column'
+import { RowBetween } from 'components/deprecated/Row'
 
 const InputPanel = styled.div`
   ${flexColumnNoWrap};

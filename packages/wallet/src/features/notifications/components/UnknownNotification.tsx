@@ -1,4 +1,4 @@
-import { AlertTriangle, CheckmarkCircle } from 'ui/src/components/icons'
+import { AlertTriangleFilled, CheckmarkCircle } from 'ui/src/components/icons'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -31,7 +31,7 @@ export function UnknownTxNotification({
   ) : txStatus === TransactionStatus.Success ? (
     <CheckmarkCircle size="$icon.24" />
   ) : (
-    <AlertTriangle color="$statusCritical" size="$icon.24" />
+    <AlertTriangleFilled color="$statusCritical" size="$icon.24" />
   )
 
   const { navigateToAccountActivityList } = useWalletNavigation()

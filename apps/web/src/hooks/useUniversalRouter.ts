@@ -3,9 +3,14 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
 import { MulticallExtended, PaymentsExtended, SwapRouter } from '@uniswap/router-sdk'
 import { Percent } from '@uniswap/sdk-core'
-import { FlatFeeOptions /*, SwapRouter, UNIVERSAL_ROUTER_ADDRESS*/ } from '@uniswap/universal-router-sdk'
+import {
+  FlatFeeOptions,
+  //SwapRouter,
+  //UNIVERSAL_ROUTER_ADDRESS,
+  //UniversalRouterVersion,
+} from '@uniswap/universal-router-sdk'
 import { FeeOptions /*, toHex*/ } from '@uniswap/v3-sdk'
-import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
+import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/useTotalBalancesUsdForAnalytics'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { PermitSignature } from 'hooks/usePermitAllowance'

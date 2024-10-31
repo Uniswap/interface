@@ -20,7 +20,7 @@ export const useKeyPress = ({
 }) => {
   useEffect(() => {
     if (!keys || disabled) {
-      return
+      return undefined
     }
     const onKeyPress = (event: any) => {
       const wasAnyKeyPressed = keys.some((key) => event.key === key)

@@ -1,4 +1,5 @@
-import { NATIVE_CHAIN_ID, UNI } from 'constants/tokens'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { UNI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getTestSelector } from '../utils'
 
@@ -7,7 +8,7 @@ const UNI_ADDRESS = UNI[UniverseChainId.Mainnet].address.toLowerCase()
 describe('Universal search bar', () => {
   function openSearch() {
     // can't just type "/" because on mobile it doesn't respond to that
-    return cy.get('[data-cy="nav-search-container"] [data-cy="nav-search-icon"]').click()
+    return cy.get('[data-cy="nav-search-container"] [data-cy="nav-search-icon"]').first().click()
   }
 
   beforeEach(() => {

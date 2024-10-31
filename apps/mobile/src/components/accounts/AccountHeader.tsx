@@ -8,6 +8,7 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useHapticFeedback } from 'ui/src'
 import { CopyAlt, Settings } from 'ui/src/components/icons'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
@@ -15,13 +16,13 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
-import { isDevEnv } from 'utilities/src/environment'
+import { isDevEnv } from 'utilities/src/environment/env'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AnimatedUnitagDisplayName } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { selectActiveAccount, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
@@ -36,6 +37,7 @@ const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }):
   }, [isScreenFocused, pressProgress])
 
   const tap = Gesture.Tap()
+    .withTestId(TestID.AccountHeaderSettings)
     .shouldCancelWhenOutside(true)
     .onBegin(() => {
       pressProgress.value = withTiming(1)
@@ -58,7 +60,7 @@ const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }):
 
   return (
     <GestureDetector gesture={tap}>
-      <Animated.View style={animatedStyle} testID={TestID.AccountHeaderSettings}>
+      <Animated.View style={animatedStyle}>
         <Settings color="$neutral2" opacity={0.8} size="$icon.24" />
       </Animated.View>
     </GestureDetector>

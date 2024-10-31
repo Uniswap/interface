@@ -1,12 +1,9 @@
 import { UNI_ADDRESSES } from '@uniswap/sdk-core'
-import { MATIC_POLYGON, UNI } from 'constants/tokens'
 import { parse } from 'qs'
 import { queryParametersToCurrencyState, useInitialCurrencyState } from 'state/swap/hooks'
 import { ETH_MAINNET } from 'test-utils/constants'
-import { mocked } from 'test-utils/mocked'
 import { renderHook, waitFor } from 'test-utils/render'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { UNI, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 jest.mock('uniswap/src/features/gating/hooks', () => {
@@ -87,8 +84,6 @@ describe('hooks', () => {
   })
 
   describe('#useInitialCurrencyState', () => {
-    mocked(useFeatureFlag).mockImplementation((f) => f === FeatureFlags.MultichainUX)
-
     describe('Disconnected wallet', () => {
       test('optimism output UNI', () => {
         jest.mock('hooks/useParsedQueryString', () => ({
@@ -191,7 +186,7 @@ describe('hooks', () => {
               {
                 tokenBalances: [
                   {
-                    token: MATIC_POLYGON,
+                    token: nativeOnChain(UniverseChainId.Polygon),
                     denominatedValue: {
                       value: 1000,
                     },

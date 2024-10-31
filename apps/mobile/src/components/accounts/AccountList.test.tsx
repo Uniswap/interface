@@ -1,16 +1,19 @@
 import { AccountList } from 'src/components/accounts/AccountList'
 import { cleanup, fireEvent, render, screen } from 'src/test/test-utils'
-import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
+import { Locale } from 'uniswap/src/features/language/constants'
+import { ON_PRESS_EVENT_PAYLOAD, amounts, portfolio } from 'uniswap/src/test/fixtures'
+import { mockLocalizedFormatter } from 'uniswap/src/test/mocks'
+import { createArray, queryResolvers } from 'uniswap/src/test/utils'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { NumberType } from 'utilities/src/format/types'
-import { ACCOUNT, amounts, portfolio, readOnlyAccount, signerMnemonicAccount } from 'wallet/src/test/fixtures'
-import { mockLocalizedFormatter } from 'wallet/src/test/mocks'
-import { createArray, queryResolvers } from 'wallet/src/test/utils'
+import { ACCOUNT, readOnlyAccount, signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 const tokensTotalDenominatedValue = amounts.md()
 const { resolvers } = queryResolvers({
   portfolios: () => [portfolio({ tokensTotalDenominatedValue })],
 })
+
+const formatter = mockLocalizedFormatter(Locale.EnglishUnitedStates)
 
 describe(AccountList, () => {
   it('renders without error', async () => {
@@ -18,7 +21,7 @@ describe(AccountList, () => {
 
     expect(
       await screen.findByText(
-        mockLocalizedFormatter.formatNumberOrString({
+        formatter.formatNumberOrString({
           value: tokensTotalDenominatedValue.value,
           type: NumberType.PortfolioBalance,
           currencyCode: 'usd',
@@ -36,7 +39,7 @@ describe(AccountList, () => {
     // go to success state
     expect(
       await screen.findByText(
-        mockLocalizedFormatter.formatNumberOrString({
+        formatter.formatNumberOrString({
           value: tokensTotalDenominatedValue.value,
           type: NumberType.PortfolioBalance,
           currencyCode: 'usd',

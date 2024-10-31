@@ -11,7 +11,8 @@ import {
   useTransactionListLazyQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
-import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
+import { useEnabledChains, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
+import { useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
@@ -24,7 +25,6 @@ import {
 } from 'wallet/src/features/notifications/slice'
 import { ReceiveCurrencyTxNotification, ReceiveNFTNotification } from 'wallet/src/features/notifications/types'
 import { parseDataResponseToTransactionDetails } from 'wallet/src/features/transactions/history/utils'
-import { useSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
 import { useAccounts, useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
@@ -46,17 +46,19 @@ export function TransactionHistoryUpdater(): JSX.Element | null {
     return Object.keys(allAccounts).filter((address) => address !== activeAccountAddress)
   }, [activeAccountAddress, allAccounts])
 
+  const { gqlChains } = useEnabledChains()
+
   // Poll at different intervals to reduce requests made for non active accounts.
 
   const { data: activeAccountData } = useTransactionHistoryUpdaterQuery({
-    variables: { addresses: activeAccountAddress ?? [] },
+    variables: { addresses: activeAccountAddress ?? [], chains: gqlChains },
     pollInterval: PollingInterval.KindaFast,
     fetchPolicy: 'network-only', // Ensure latest data.
     skip: !activeAccountAddress,
   })
 
   const { data: nonActiveAccountData } = useTransactionHistoryUpdaterQuery({
-    variables: { addresses: nonActiveAccountAddresses },
+    variables: { addresses: nonActiveAccountAddresses, chains: gqlChains },
     pollInterval: PollingInterval.Normal,
     fetchPolicy: 'network-only', // Ensure latest data.
     skip: nonActiveAccountAddresses.length === 0,
@@ -182,6 +184,7 @@ export function useFetchAndDispatchReceiveNotification(): (
 ) => Promise<void> {
   const [fetchFullTransactionData] = useTransactionListLazyQuery()
   const dispatch = useDispatch()
+  const { gqlChains } = useEnabledChains()
 
   return async (
     address: string,
@@ -190,7 +193,7 @@ export function useFetchAndDispatchReceiveNotification(): (
   ): Promise<void> => {
     // Fetch full transaction history for user address.
     const { data: fullTransactionData } = await fetchFullTransactionData({
-      variables: { address },
+      variables: { address, chains: gqlChains },
       fetchPolicy: 'network-only', // Ensure latest data.
     })
 
@@ -214,12 +217,12 @@ export function getReceiveNotificationFromData(
   hideSpamTokens = false,
 ): ReceiveCurrencyTxNotification | ReceiveNFTNotification | undefined {
   if (!data || !lastTxNotificationUpdateTimestamp) {
-    return
+    return undefined
   }
 
   const parsedTxHistory = parseDataResponseToTransactionDetails(data, hideSpamTokens)
   if (!parsedTxHistory) {
-    return
+    return undefined
   }
 
   const latestReceivedTx = parsedTxHistory
@@ -232,13 +235,9 @@ export function getReceiveNotificationFromData(
         tx.status === TransactionStatus.Success,
     )
 
-  if (!latestReceivedTx) {
-    return
-  }
-
   // Suppress notification if rules apply
-  if (shouldSuppressNotification(latestReceivedTx)) {
-    return
+  if (!latestReceivedTx || shouldSuppressNotification({ tx: latestReceivedTx })) {
+    return undefined
   }
 
   return buildReceiveNotification(latestReceivedTx, address)

@@ -4,12 +4,12 @@ import { Contract, ContractInterface } from 'ethers'
 import { useMemo } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20 } from 'uniswap/src/abis/types'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { useContractManager, useProvider } from 'wallet/src/features/wallet/context'
 
 export function useContract<T extends Contract = Contract>(
-  chainId: WalletChainId,
+  chainId: UniverseChainId,
   addressOrAddressMap: string | { [chainId: number]: string } | undefined,
   ABI: ContractInterface,
 ): T | null {
@@ -38,6 +38,6 @@ export function useContract<T extends Contract = Contract>(
   }, [chainId, addressOrAddressMap, ABI, provider, contractsManager]) as T
 }
 
-export function useTokenContract(chainId: WalletChainId, tokenAddress?: Address): Erc20 | null {
+export function useTokenContract(chainId: UniverseChainId, tokenAddress?: Address): Erc20 | null {
   return useContract<Erc20>(chainId, tokenAddress, ERC20_ABI)
 }

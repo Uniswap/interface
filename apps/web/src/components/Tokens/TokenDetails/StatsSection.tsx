@@ -10,7 +10,7 @@ import { ExternalLink, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { Trans } from 'uniswap/src/i18n'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export const StatWrapper = styled.div`
@@ -85,7 +85,7 @@ function Stat({
 }
 
 type StatsSectionProps = {
-  chainId: InterfaceChainId
+  chainId: UniverseChainId
   address: string
   tokenQueryData: TokenQueryData
 }

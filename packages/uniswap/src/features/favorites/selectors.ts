@@ -3,8 +3,8 @@ import { CurrencyIdToVisibility, NFTKeyToVisibility } from 'uniswap/src/features
 import { UniswapRootState } from 'uniswap/src/state'
 import { unique } from 'utilities/src/primitives/array'
 
-export const selectFavoriteTokens = (state: UniswapRootState): string[] => unique(state.favorites.tokens)
-
+const selectFavoriteTokensWithPossibleDuplicates = (state: UniswapRootState): string[] => state.favorites.tokens
+export const selectFavoriteTokens = createSelector(selectFavoriteTokensWithPossibleDuplicates, unique)
 export const selectHasFavoriteTokens = createSelector(selectFavoriteTokens, (tokens) => Boolean(tokens?.length > 0))
 
 export const makeSelectHasTokenFavorited = (): Selector<UniswapRootState, boolean, [string]> =>

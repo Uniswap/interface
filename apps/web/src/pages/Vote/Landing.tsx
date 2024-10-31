@@ -1,9 +1,10 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import { ButtonPrimary } from 'components/Button'
-import { AutoColumn } from 'components/Column'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { ButtonPrimary } from 'components/Button/buttons'
+import { AutoColumn } from 'components/deprecated/Column'
+import { AutoRow, RowBetween } from 'components/deprecated/Row'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
 import Loader from 'components/Icons/LoadingSpinner'
-import { AutoRow, RowBetween } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import Toggle from 'components/Toggle'
 import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/styled'
@@ -19,7 +20,7 @@ import { Link } from 'react-router-dom'
 import { Button } from 'rebass/styled-components'
 import { useCloseModal, useModalIsOpen, useToggleDelegateModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { ProposalData, ProposalState, useAllProposalData, useUserVotes } from 'state/governance/hooks'
+import { ProposalData, ProposalState, useAllProposalData, useProposalThreshold, useUserVotes } from 'state/governance/hooks'
 import { ExternalLink, ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans } from 'uniswap/src/i18n'
@@ -117,6 +118,14 @@ export default function Landing() {
 
   // show delegation option if they have have a balance, but have not delegated
   const showUnlockVoting = availableVotes && Boolean(JSBI.equal(availableVotes.quotient, JSBI.BigInt(0)))
+  const proposalThreshold: CurrencyAmount<Token> | undefined = useProposalThreshold()
+  const formattedProposalThreshold = proposalThreshold
+    ? JSBI.divide(
+        proposalThreshold.quotient,
+        JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(proposalThreshold.currency.decimals)),
+      ).toLocaleString()
+    : undefined
+
   return (
     <>
       <Trace logImpression page={InterfacePageName.VOTE_PAGE}>
@@ -243,7 +252,12 @@ export default function Landing() {
           </TopSection>
 
           <ThemedText.DeprecatedSubHeader color="text3">
-            <Trans i18nKey="vote.landing.minThresholdRequired.error" />
+            <Trans
+              i18nKey="vote.landing.minThresholdRequired.error"
+              values={{
+                formattedProposalThreshold,
+              }}
+            />
           </ThemedText.DeprecatedSubHeader>
         </PageWrapper>
       </Trace>

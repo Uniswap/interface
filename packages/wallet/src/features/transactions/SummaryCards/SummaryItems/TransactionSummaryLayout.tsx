@@ -2,7 +2,7 @@ import { memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence, Flex, SpinningLoader, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
-import { AlertTriangle, UniswapX } from 'ui/src/components/icons'
+import { AlertTriangleFilled, UniswapX } from 'ui/src/components/icons'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -25,16 +25,31 @@ import { openTransactionLink } from 'wallet/src/utils/linking'
 
 const LOADING_SPINNER_SIZE = 20
 
-function TransactionSummaryLayout({
+export const TransactionSummaryLayout = memo(function _TransactionSummaryLayout(
+  props: TransactionSummaryLayoutProps,
+): JSX.Element {
+  // Monitor latest nonce to identify queued transactions.
+  // We moved this outside of `TransactionSummaryLayoutContent` to avoid re-rendering the entire component when the nonce changes,
+  // given that we do not care about the nonce itself but just about the `isQueued` boolean.
+  const isQueued = useIsQueuedTransaction(props.transaction)
+
+  return <TransactionSummaryLayoutContent {...props} isQueued={isQueued} />
+})
+
+/**
+ * IMPORTANT: If you add any new hooks to this component, make sure to profile the app using `react-devtools` to verify
+ *            that the component is not re-rendering unnecessarily.
+ */
+const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutContent({
   authTrigger,
   transaction,
   title,
   caption,
-  postCaptionElement,
   icon,
   index,
   onRetry,
-}: TransactionSummaryLayoutProps): JSX.Element {
+  isQueued,
+}: TransactionSummaryLayoutProps & { isQueued: boolean }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const isTransactionDetailsModalEnabled = useFeatureFlag(FeatureFlags.TransactionDetailsSheet)
@@ -52,9 +67,6 @@ function TransactionSummaryLayout({
 
   const inProgress = status === TransactionStatus.Cancelling || status === TransactionStatus.Pending
   const isCancel = status === TransactionStatus.Canceled || status === TransactionStatus.Cancelling
-
-  // Monitor latest nonce to identify queued transactions.
-  const queued = useIsQueuedTransaction(transaction)
 
   const { openActionsModal, renderModals } = useTransactionActions({
     authTrigger,
@@ -87,7 +99,7 @@ function TransactionSummaryLayout({
     />
   ) : status === TransactionStatus.Failed ? (
     <Flex grow alignItems="flex-end" justifyContent="space-between">
-      <AlertTriangle
+      <AlertTriangleFilled
         color={colors.DEP_accentWarning.val}
         fill={colors.DEP_accentWarning.val}
         size={TXN_STATUS_ICON_SIZE}
@@ -118,7 +130,7 @@ function TransactionSummaryLayout({
             </Flex>
           )}
           <Flex grow shrink>
-            <Flex grow>
+            <Flex grow gap="$spacing2">
               <Flex grow row alignItems="center" gap="$spacing4" justifyContent="space-between">
                 <Flex row shrink alignItems="center" gap="$spacing4">
                   {walletDisplayName ? (
@@ -135,15 +147,10 @@ function TransactionSummaryLayout({
                 {!inProgress && rightBlock}
               </Flex>
               <Flex grow row gap="$spacing16">
-                <Flex grow row shrink>
-                  <Text color="$neutral1" variant="body2">
-                    {caption}
-                  </Text>
-                  {postCaptionElement}
-                </Flex>
+                {typeof caption === 'string' ? <Text flex={1}>{caption}</Text> : caption}
                 {status === TransactionStatus.Failed && onRetry && (
                   <Flex flexShrink={0}>
-                    <Text color="$accent1" variant="buttonLabel3" onPress={onRetry}>
+                    <Text color="$accent1" variant="buttonLabel2" onPress={onRetry}>
                       {t('common.button.retry')}
                     </Text>
                   </Flex>
@@ -153,7 +160,7 @@ function TransactionSummaryLayout({
           </Flex>
           {inProgress && (
             <Flex justifyContent="center">
-              <SpinningLoader disabled={queued} size={LOADING_SPINNER_SIZE} />
+              <SpinningLoader color="$accent1" disabled={isQueued} size={LOADING_SPINNER_SIZE} />
             </Flex>
           )}
         </Flex>
@@ -170,6 +177,4 @@ function TransactionSummaryLayout({
       {renderModals()}
     </>
   )
-}
-
-export default memo(TransactionSummaryLayout)
+})

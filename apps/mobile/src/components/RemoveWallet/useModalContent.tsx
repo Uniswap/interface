@@ -149,5 +149,7 @@ export const useModalContent = ({
         actionButtonTheme: 'secondary',
       }
     }
+
+    return undefined
   }, [account, associatedAccounts, currentStep, displayName, isRemovingRecoveryPhrase, isReplacing, t])
 }

@@ -2,7 +2,9 @@ import { Currency } from '@uniswap/sdk-core'
 import { BigNumberish } from 'ethers'
 import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { makeSelectTransaction, useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
@@ -14,10 +16,9 @@ import {
   isFinalizedTx,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ensureLeading0x } from 'uniswap/src/utils/addresses'
 import { areCurrencyIdsEqual, buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { makeSelectTransaction, useSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
 import {
   createSwapFormFromTxDetails,
   createWrapFormFromTxDetails,
@@ -34,7 +35,7 @@ export function usePendingTransactions(
   const transactions = useSelectAddressTransactions(address)
   return useMemo(() => {
     if (!transactions) {
-      return
+      return undefined
     }
     return transactions.filter(
       (tx: { status: TransactionStatus; typeInfo: { type: TransactionType } }) =>
@@ -69,7 +70,7 @@ export function useErroredQueuedOrders(address: Address | null): ErroredQueuedOr
   const transactions = useSelectAddressTransactions(address)
   return useMemo(() => {
     if (!transactions) {
-      return
+      return undefined
     }
     const erroredQueuedOrders: ErroredQueuedOrder[] = []
     for (const tx of transactions) {
@@ -86,7 +87,7 @@ export function useSortedPendingTransactions(address: Address | null): Transacti
   const transactions = usePendingTransactions(address)
   return useMemo(() => {
     if (!transactions) {
-      return
+      return undefined
     }
     return transactions.sort((a: TransactionDetails, b: TransactionDetails) => a.addedTime - b.addedTime)
   }, [transactions])
@@ -94,7 +95,7 @@ export function useSortedPendingTransactions(address: Address | null): Transacti
 
 export function useSelectTransaction(
   address: Address | undefined,
-  chainId: WalletChainId | undefined,
+  chainId: UniverseChainId | undefined,
   txId: string | undefined,
 ): TransactionDetails | undefined {
   const selectTransaction = useMemo(makeSelectTransaction, [])
@@ -103,16 +104,20 @@ export function useSelectTransaction(
 
 export function useCreateSwapFormState(
   address: Address | undefined,
-  chainId: WalletChainId | undefined,
+  chainId: UniverseChainId | undefined,
   txId: string | undefined,
 ): TransactionState | undefined {
   const transaction = useSelectTransaction(address, chainId, txId)
 
   const inputCurrencyId =
-    transaction?.typeInfo.type === TransactionType.Swap ? transaction.typeInfo.inputCurrencyId : undefined
+    transaction?.typeInfo.type === TransactionType.Swap || transaction?.typeInfo.type === TransactionType.Bridge
+      ? transaction.typeInfo.inputCurrencyId
+      : undefined
 
   const outputCurrencyId =
-    transaction?.typeInfo.type === TransactionType.Swap ? transaction.typeInfo.outputCurrencyId : undefined
+    transaction?.typeInfo.type === TransactionType.Swap || transaction?.typeInfo.type === TransactionType.Bridge
+      ? transaction.typeInfo.outputCurrencyId
+      : undefined
 
   const inputCurrencyInfo = useCurrencyInfo(inputCurrencyId)
   const outputCurrencyInfo = useCurrencyInfo(outputCurrencyId)
@@ -132,7 +137,7 @@ export function useCreateSwapFormState(
 
 export function useCreateWrapFormState(
   address: Address | undefined,
-  chainId: WalletChainId | undefined,
+  chainId: UniverseChainId | undefined,
   txId: string | undefined,
   inputCurrency: Maybe<Currency>,
   outputCurrency: Maybe<Currency>,
@@ -161,6 +166,8 @@ export function useMergeLocalAndRemoteTransactions(
 ): TransactionDetails[] | undefined {
   const dispatch = useDispatch()
   const localTransactions = useSelectAddressTransactions(address)
+
+  const { chains } = useEnabledChains()
 
   // Merge local and remote txs into one array and reconcile data discrepancies
   return useMemo((): TransactionDetails[] | undefined => {
@@ -192,11 +199,17 @@ export function useMergeLocalAndRemoteTransactions(
         const orderHash = ensureLeading0x(tx.orderHash.toLowerCase())
         return orderHashToTxHashMap.get(orderHash) ?? orderHash
       }
+      return undefined
     }
 
     const hashes = new Set<string>()
     const offChainFiatOnRampTxs = new Map<string, TransactionDetails>()
     function addToMap(map: HashToTxMap, tx: TransactionDetails): HashToTxMap {
+      // If the FOR tx was done on a disabled chain, then omit it
+      if (!chains.includes(tx.chainId)) {
+        return map
+      }
+
       const hash = getTrackingHash(tx)
       if (hash) {
         map.set(hash, tx)
@@ -227,6 +240,11 @@ export function useMergeLocalAndRemoteTransactions(
         continue
       }
 
+      // If the tx was done on a disabled chain, then omit it
+      if (!chains.includes(localTx.chainId)) {
+        continue
+      }
+
       // If the BE hasn't detected the tx, then use local data
       if (!remoteTx) {
         deDupedTxs.push(localTx)
@@ -244,6 +262,13 @@ export function useMergeLocalAndRemoteTransactions(
 
       // If the tx isn't successful, then prefer local data
       if (remoteTx.status !== TransactionStatus.Success) {
+        deDupedTxs.push(localTx)
+        continue
+      }
+
+      // If the local tx is canceled and the remote tx is successful, the transaction is a cancellation,
+      // and we have better data about the user's intent locally
+      if (localTx.status === TransactionStatus.Canceled && remoteTx.status === TransactionStatus.Success) {
         deDupedTxs.push(localTx)
         continue
       }
@@ -282,7 +307,7 @@ export function useMergeLocalAndRemoteTransactions(
 
       return a.addedTime > b.addedTime ? -1 : 1
     })
-  }, [dispatch, localTransactions, remoteTransactions])
+  }, [dispatch, localTransactions, remoteTransactions, chains])
 }
 
 function useLowestPendingNonce(): BigNumberish | undefined {
@@ -292,7 +317,7 @@ function useLowestPendingNonce(): BigNumberish | undefined {
   return useMemo(() => {
     let min: BigNumberish | undefined
     if (!pending) {
-      return
+      return undefined
     }
     pending.map((txn: TransactionDetails) => {
       if (isClassic(txn)) {

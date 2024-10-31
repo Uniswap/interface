@@ -1,18 +1,29 @@
 import React from 'react'
-import { Flex, Text, TextProps } from 'ui/src'
+import { Flex, Text, TextProps, TouchableArea } from 'ui/src'
 
 interface SectionHeaderTextProps {
   title: string
   icon?: JSX.Element
+  afterIcon?: JSX.Element
+  onPress?: () => void
 }
 
-export const SectionHeaderText = ({ title, icon, ...rest }: SectionHeaderTextProps & TextProps): JSX.Element => {
+export const SectionHeaderText = ({
+  title,
+  icon,
+  afterIcon,
+  onPress,
+  ...rest
+}: SectionHeaderTextProps & TextProps): JSX.Element => {
   return (
-    <Flex row alignItems="center" gap="$spacing8" mb="$spacing4" mx="$spacing20" {...rest}>
-      {icon && icon}
-      <Text color="$neutral2" variant="subheading2">
-        {title}
-      </Text>
-    </Flex>
+    <TouchableArea disabled={!onPress} onPress={onPress}>
+      <Flex row alignItems="center" gap="$spacing4" mb="$spacing4" mx="$spacing20" {...rest}>
+        {icon && icon}
+        <Text color="$neutral2" pl={icon ? '$spacing4' : '$none'} variant="subheading2">
+          {title}
+        </Text>
+        {afterIcon && afterIcon}
+      </Flex>
+    </TouchableArea>
   )
 }

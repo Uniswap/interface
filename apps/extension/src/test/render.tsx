@@ -13,8 +13,8 @@ import { ExtensionState, extensionReducer } from 'src/store/extensionReducer'
 import { AppStore } from 'src/store/store'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
-import { SharedProvider } from 'wallet/src/provider'
-import { AutoMockedApolloProvider } from 'wallet/src/test/mocks'
+import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
+import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
@@ -50,9 +50,9 @@ export function renderWithProviders(
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
       <AutoMockedApolloProvider resolvers={resolvers}>
-        <SharedProvider reduxStore={store}>
+        <SharedWalletProvider reduxStore={store}>
           <UnitagUpdaterContextProvider>{children}</UnitagUpdaterContextProvider>
-        </SharedProvider>
+        </SharedWalletProvider>
       </AutoMockedApolloProvider>
     )
   }
@@ -112,7 +112,7 @@ export function renderHookWithProviders<P, R>(
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
       <AutoMockedApolloProvider resolvers={resolvers}>
-        <SharedProvider reduxStore={store}>{children}</SharedProvider>
+        <SharedWalletProvider reduxStore={store}>{children}</SharedWalletProvider>
       </AutoMockedApolloProvider>
     )
   }

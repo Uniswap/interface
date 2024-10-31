@@ -5,39 +5,47 @@ import { isInterface } from 'utilities/src/platform'
  */
 export enum FeatureFlags {
   // Shared
+  Bridging,
   ForAggregator,
   DisableFiatOnRampKorea,
+  IndicativeSwapQuotes,
+  TokenProtection,
+  SelfReportSpamNFTs,
+  UniswapXPriorityOrders,
+  SharedSwapArbitrumUniswapXExperiment,
+  V4Swap,
 
   // Wallet
+  FlashbotsPrivateRpc,
   PrivateRpc,
   PortionFields,
   TransactionDetailsSheet,
   OpenAIAssistant,
   UnitagsDeviceAttestation,
   UniswapX,
+  TestnetMode,
 
   // Mobile
-  AATest,
   Datadog,
   ExtensionPromotionGA,
   FeedTab,
   OnboardingKeyring,
   Scantastic,
   UwULink,
+  FiatOffRamp,
 
   // Extension
   ExtensionAutoConnect,
+  ExtensionClaimUnitag,
 
   // Web
   AATestWeb,
   UniversalSwap,
   NavigationHotkeys,
   Eip6936Enabled,
-  ExtensionLaunch,
   GqlTokenLists,
   LimitsFees,
   L2NFTs,
-  MultichainUX,
   MultichainExplore,
   MultipleRoutingOptions,
   QuickRouteMainnet,
@@ -49,6 +57,7 @@ export enum FeatureFlags {
   V2Everywhere,
   V4Everywhere,
   Zora,
+  WorldChain,
   // TODO(WEB-3625): Remove these once we have a generalized system for outage banners.
   OutageBannerArbitrum,
   OutageBannerOptimism,
@@ -58,16 +67,26 @@ export enum FeatureFlags {
 // These names must match the gate name on statsig
 export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   // Shared
+  [FeatureFlags.Bridging, 'bridging'],
   [FeatureFlags.ForAggregator, 'for_aggregator_web'],
+  [FeatureFlags.IndicativeSwapQuotes, 'indicative-quotes'],
+  [FeatureFlags.TokenProtection, 'token_protection'],
+  [FeatureFlags.PortionFields, 'portion-fields'],
+  [FeatureFlags.UniswapX, 'uniswapx'],
+  [FeatureFlags.Datadog, 'datadog'],
+  [FeatureFlags.UniswapXPriorityOrders, 'uniswapx_priority_orders'],
+  [FeatureFlags.SharedSwapArbitrumUniswapXExperiment, 'shared_swap_arbitrum_uniswapx_experiment'],
+  [FeatureFlags.TestnetMode, 'testnet-mode'],
+  [FeatureFlags.V4Swap, 'v4_swap'],
+  [FeatureFlags.WorldChain, 'world_chain'],
 
   // Web Specific
+  [FeatureFlags.UniversalSwap, 'universal_swap'],
   [FeatureFlags.NavigationHotkeys, 'navigation_hotkeys'],
   [FeatureFlags.Eip6936Enabled, 'eip6963_enabled'],
-  [FeatureFlags.ExtensionLaunch, 'extension_launch'],
   [FeatureFlags.GqlTokenLists, 'gql_token_lists'],
   [FeatureFlags.LimitsFees, 'limits_fees'],
   [FeatureFlags.L2NFTs, 'l2_nfts'],
-  [FeatureFlags.MultichainUX, 'multichain_ux'],
   [FeatureFlags.MultichainExplore, 'multichain_explore'],
   [FeatureFlags.MultipleRoutingOptions, 'multiple_routing_options'],
   [FeatureFlags.QuickRouteMainnet, 'enable_quick_route_mainnet'],
@@ -84,19 +103,27 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.OutageBannerArbitrum, 'outage_banner_feb_2024_arbitrum'],
   [FeatureFlags.OutageBannerOptimism, 'outage_banner_feb_2024_optimism'],
   [FeatureFlags.OutageBannerPolygon, 'outage_banner_feb_2024_polygon'],
-  [FeatureFlags.UniversalSwap, 'universal_swap'],
 ])
 
 // These names must match the gate name on statsig
 export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   // Shared
+  [FeatureFlags.Bridging, 'bridging'],
   [FeatureFlags.ForAggregator, 'for-aggregator'],
   [FeatureFlags.DisableFiatOnRampKorea, 'disable-fiat-onramp-korea'],
+  [FeatureFlags.IndicativeSwapQuotes, 'indicative-quotes'],
+  [FeatureFlags.TokenProtection, 'token_protection'],
+  [FeatureFlags.SelfReportSpamNFTs, 'self-report-spam-nfts'],
+  [FeatureFlags.UniswapXPriorityOrders, 'uniswapx_priority_orders'],
+  [FeatureFlags.SharedSwapArbitrumUniswapXExperiment, 'shared_swap_arbitrum_uniswapx_experiment'],
+  [FeatureFlags.TestnetMode, 'testnet-mode'],
+  [FeatureFlags.V4Swap, 'v4_swap'],
+  [FeatureFlags.WorldChain, 'world_chain'],
 
   // Wallet Specific
-  [FeatureFlags.AATest, 'aatest1'],
   [FeatureFlags.Datadog, 'datadog'],
   [FeatureFlags.FeedTab, 'feed-tab'],
+  [FeatureFlags.FlashbotsPrivateRpc, 'flashbots-private-rpc'],
   [FeatureFlags.PrivateRpc, 'mev-blocker'],
   [FeatureFlags.OpenAIAssistant, 'openai-assistant'],
   [FeatureFlags.OnboardingKeyring, 'onboarding-keyring'],
@@ -106,8 +133,10 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.UnitagsDeviceAttestation, 'unitags-device-attestation'],
   [FeatureFlags.UwULink, 'uwu-link'],
   [FeatureFlags.UniswapX, 'uniswapx'],
+  [FeatureFlags.FiatOffRamp, 'fiat-offramp'],
   // Extension Specific
   [FeatureFlags.ExtensionAutoConnect, 'extension-auto-connect'],
+  [FeatureFlags.ExtensionClaimUnitag, 'extension-claim-unitag'],
 ])
 
 export enum FeatureFlagClient {

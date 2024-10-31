@@ -4,46 +4,15 @@ import { RestLink } from 'apollo-link-rest'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { REQUEST_SOURCE, getVersionHeader } from 'uniswap/src/data/constants'
-import { EnsLookupParams, STUB_ONCHAIN_ENS_ENDPOINT, getOnChainEnsFetch } from 'uniswap/src/features/ens/api'
-import {
-  BalanceLookupParams,
-  STUB_ONCHAIN_BALANCES_ENDPOINT,
-  getOnChainBalancesFetch,
-} from 'uniswap/src/features/portfolio/api'
 import { logger } from 'utilities/src/logger/logger'
 import { isMobileApp } from 'utilities/src/platform'
-
-// mapping from endpoint to custom fetcher, when needed
-function getCustomFetcherMap(
-  restUri: string,
-): Record<string, ((body: BalanceLookupParams) => Promise<Response>) | ((body: EnsLookupParams) => Promise<Response>)> {
-  return {
-    [restUri + STUB_ONCHAIN_BALANCES_ENDPOINT]: getOnChainBalancesFetch,
-    [restUri + STUB_ONCHAIN_ENS_ENDPOINT]: getOnChainEnsFetch,
-  }
-}
 
 // Handles fetching data from REST APIs
 // Responses will be stored in graphql cache
 export const getRestLink = (): ApolloLink => {
   const restUri = uniswapUrls.apiBaseUrl
 
-  // On-chain balances are fetched with ethers.provider
-  // When we detect a request to the balances endpoint, we provide a custom fetcher.
-  const fetchMap = getCustomFetcherMap(restUri)
-  const customFetch: RestLink.CustomFetch = (uri, options) => {
-    const customFetcher = fetchMap[uri.toString()]
-
-    if (customFetcher) {
-      return customFetcher(JSON.parse(options.body?.toString() ?? ''))
-    }
-
-    // Otherwise, use regular browser fetch
-    return fetch(uri, options)
-  }
-
   return new RestLink({
-    customFetch,
     uri: restUri,
     headers: {
       'Content-Type': 'application/json',

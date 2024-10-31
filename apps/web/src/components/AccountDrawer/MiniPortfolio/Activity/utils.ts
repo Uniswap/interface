@@ -1,7 +1,7 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Web3Provider } from '@ethersproject/providers'
 import { permit2Address } from '@uniswap/permit2-sdk'
-import { CosignedV2DutchOrder, DutchOrder, getCancelMultipleParams } from '@uniswap/uniswapx-sdk'
+import { CosignedPriorityOrder, CosignedV2DutchOrder, DutchOrder, getCancelMultipleParams } from '@uniswap/uniswapx-sdk'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { ContractTransaction } from 'ethers/lib/ethers'
@@ -18,7 +18,7 @@ import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__g
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { t } from 'uniswap/src/i18n'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -94,13 +94,15 @@ export const createGroups = (activities: Array<Activity> = [], hideSpam = false)
 
 function getCancelMultipleUniswapXOrdersParams(
   orders: Array<{ encodedOrder: string; type: SignatureType }>,
-  chainId: InterfaceChainId,
+  chainId: UniverseChainId,
 ) {
   const nonces = orders
     .map(({ encodedOrder, type }) =>
       type === SignatureType.SIGN_UNISWAPX_V2_ORDER
         ? CosignedV2DutchOrder.parse(encodedOrder, chainId)
-        : DutchOrder.parse(encodedOrder, chainId),
+        : type === SignatureType.SIGN_PRIORITY_ORDER
+          ? CosignedPriorityOrder.parse(encodedOrder, chainId)
+          : DutchOrder.parse(encodedOrder, chainId),
     )
     .map((order) => order.info.nonce)
   return getCancelMultipleParams(nonces)
@@ -147,13 +149,13 @@ async function cancelMultipleUniswapXOrders({
   provider,
 }: {
   orders: Array<{ encodedOrder: string; type: SignatureType }>
-  chainId: InterfaceChainId
+  chainId: UniverseChainId
   permit2: Permit2 | null
   provider?: Web3Provider
 }) {
   const cancelParams = getCancelMultipleUniswapXOrdersParams(orders, chainId)
   if (!permit2 || !provider) {
-    return
+    return undefined
   }
   try {
     const transactions: ContractTransaction[] = []
@@ -172,12 +174,12 @@ async function cancelMultipleUniswapXOrders({
 
 async function getCancelMultipleUniswapXOrdersTransaction(
   orders: Array<{ encodedOrder: string; type: SignatureType }>,
-  chainId: InterfaceChainId,
+  chainId: UniverseChainId,
   permit2: Permit2,
 ): Promise<TransactionRequest | undefined> {
   const cancelParams = getCancelMultipleUniswapXOrdersParams(orders, chainId)
   if (!permit2 || cancelParams.length === 0) {
-    return
+    return undefined
   }
   try {
     const tx = await permit2.populateTransaction.invalidateUnorderedNonces(cancelParams[0].word, cancelParams[0].mask)
@@ -199,7 +201,7 @@ export function useCreateCancelTransactionRequest(
   params:
     | {
         orders: Array<{ encodedOrder: string; type: SignatureType }>
-        chainId: InterfaceChainId
+        chainId: UniverseChainId
       }
     | undefined,
 ): TransactionRequest | undefined {
@@ -211,7 +213,7 @@ export function useCreateCancelTransactionRequest(
       params.orders.filter(({ encodedOrder }) => Boolean(encodedOrder)).length === 0 ||
       !permit2
     ) {
-      return
+      return undefined
     }
     return getCancelMultipleUniswapXOrdersTransaction(params.orders, params.chainId, permit2)
   }, [params, permit2])

@@ -75,7 +75,7 @@ export function WalletSettings(): JSX.Element {
       })}
       {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
         <Button theme="tertiary" onPress={toggleViewAll}>
-          <Text color="$neutral1" variant="buttonLabel4">
+          <Text color="$neutral1" variant="buttonLabel2">
             {showAll ? t('settings.section.wallet.button.viewLess') : t('settings.section.wallet.button.viewAll')}
           </Text>
         </Button>

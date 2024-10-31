@@ -7,21 +7,23 @@ import {
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import PortfolioRow from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
-import Column, { AutoColumn } from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
-import { AutoRow } from 'components/Row'
-import { SupportedInterfaceChainId, useIsSupportedChainId } from 'constants/chains'
+import { LoaderV3 } from 'components/Icons/LoadingSpinner'
+import Column, { AutoColumn } from 'components/deprecated/Column'
+import { AutoRow } from 'components/deprecated/Row'
+import { useIsSupportedChainId } from 'constants/chains'
 import styled from 'lib/styled-components'
 import { X } from 'react-feather'
 import { useOrder } from 'state/signatures/hooks'
 import { useTransaction } from 'state/transactions/hooks'
 import { EllipsisStyle, ThemedText } from 'theme/components'
+import { Flex, useSporeColors } from 'ui/src'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { useFormatter } from 'utils/formatNumbers'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const StyledClose = styled(X)<{ $padding: number }>`
   position: absolute;
@@ -68,7 +70,7 @@ const PopupAlertTriangle = styled(AlertTriangleFilled)`
   height: 32px;
 `
 
-export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: InterfaceChainId; onClose: () => void }) {
+export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: UniverseChainId; onClose: () => void }) {
   const isSupportedChain = useIsSupportedChainId(chainId)
   const chainInfo = isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId] : undefined
 
@@ -102,13 +104,16 @@ const Descriptor = styled(ThemedText.BodySmall)`
 type ActivityPopupContentProps = { activity: Activity; onClick: () => void; onClose: () => void }
 function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupContentProps) {
   const success = activity.status === TransactionStatus.Confirmed && !activity.cancelled
+  const pending = activity.status === TransactionStatus.Pending
+
+  const showPortfolioLogo = success || pending || !!activity.offchainOrderDetails
+  const colors = useSporeColors()
 
   return (
     <PopupContainer>
-      <StyledClose $padding={16} onClick={onClose} />
       <PortfolioRow
         left={
-          success || !!activity.offchainOrderDetails ? (
+          showPortfolioLogo ? (
             <Column>
               <PortfolioLogo
                 chainId={activity.chainId}
@@ -125,6 +130,13 @@ function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupConte
         descriptor={<Descriptor color="neutral2">{activity.descriptor}</Descriptor>}
         onClick={onClick}
       />
+      {pending ? (
+        <Flex position="absolute" top={24} right={16}>
+          <LoaderV3 color={colors.accent1.variable} size="20px" />
+        </Flex>
+      ) : (
+        <StyledClose $padding={16} onClick={onClose} />
+      )}
     </PopupContainer>
   )
 }
@@ -134,7 +146,7 @@ export function TransactionPopupContent({
   hash,
   onClose,
 }: {
-  chainId: SupportedInterfaceChainId
+  chainId: UniverseChainId
   hash: string
   onClose: () => void
 }) {

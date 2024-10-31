@@ -1,34 +1,34 @@
 import { Percent } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
-import Column from 'components/Column'
-import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
 import { DropdownSelector } from 'components/DropdownSelector'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import { ReverseArrow } from 'components/Icons/ReverseArrow'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
 import { DetailBubble } from 'components/Pools/PoolDetails/shared'
-import Row from 'components/Row'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
 import { ActionButtonStyle, ActionMenuFlyoutStyle } from 'components/Tokens/TokenDetails/shared'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
-import { BIPS_BASE } from 'constants/misc'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
+import { chainIdToBackendChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
-import { useScreenSize } from 'hooks/screenSize'
+import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import styled, { useTheme } from 'lib/styled-components'
 import React, { useMemo, useState } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
+import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans, t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const StyledExternalLink = styled(ExternalLink)`
   &:hover {
@@ -64,7 +64,7 @@ const IconBubble = styled(LoadingBubble)`
 `
 
 interface PoolDetailsBreadcrumbProps {
-  chainId?: SupportedInterfaceChainId
+  chainId?: UniverseChainId
   poolAddress?: string
   token0?: Token
   token1?: Token
@@ -120,7 +120,7 @@ const PoolDetailsTitle = ({
 }: {
   token0?: Token
   token1?: Token
-  chainId?: SupportedInterfaceChainId
+  chainId?: UniverseChainId
   feeTier?: number
   protocolVersion?: ProtocolVersion
   toggleReversed: React.DispatchWithoutAction

@@ -8,11 +8,12 @@ import GlobeIcon from 'ui/src/assets/icons/globe-filled.svg'
 import TwitterIcon from 'ui/src/assets/icons/x-twitter.svg'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { TokenDetailsScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { currencyIdToAddress, currencyIdToChain, isDefaultNativeAddress } from 'wallet/src/utils/currencyId'
-import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'wallet/src/utils/linking'
+import { getTwitterLink } from 'wallet/src/utils/linking'
 
 export function TokenDetailsLinks({
   currencyId,
@@ -22,9 +23,10 @@ export function TokenDetailsLinks({
   data: TokenDetailsScreenQuery | undefined
 }): JSX.Element {
   const { t } = useTranslation()
+  const { defaultChainId } = useEnabledChains()
 
   const { homepageUrl, twitterName } = data?.token?.project ?? {}
-  const chainId = currencyIdToChain(currencyId) ?? UniverseChainId.Mainnet
+  const chainId = currencyIdToChain(currencyId) ?? defaultChainId
   const address = currencyIdToAddress(currencyId)
   const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
   const explorerName = UNIVERSE_CHAIN_INFO[chainId].explorer.name

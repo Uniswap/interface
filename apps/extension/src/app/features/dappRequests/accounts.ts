@@ -17,16 +17,17 @@ import { extractBaseUrl } from 'src/app/features/dappRequests/utils'
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { call, put, select } from 'typed-redux-saga'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
+import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { getProvider } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 
 function getAccountResponse(
-  chainId: WalletChainId,
+  chainId: UniverseChainId,
   dappRequest: DappRequest,
   provider: JsonRpcProvider,
   dappInfo: DappInfo,
@@ -47,7 +48,7 @@ function getAccountResponse(
 
 function sendAccountResponseAnalyticsEvent(
   senderUrl: string,
-  chainId: WalletChainId,
+  chainId: UniverseChainId,
   dappInfo: DappInfo,
   accountResponse: AccountResponse,
 ): void {
@@ -86,12 +87,13 @@ export function* saveAccount({ url, favIconUrl }: SenderTabInfo) {
   const activeAccount = yield* select(selectActiveAccount)
   const dappUrl = extractBaseUrl(url)
   const dappInfo = yield* call(dappStore.getDappInfo, dappUrl)
+  const { defaultChainId } = yield* call(getEnabledChainIdsSaga)
 
   if (!dappUrl || !activeAccount) {
-    return
+    return undefined
   }
 
-  yield* call(saveDappConnection, dappUrl, activeAccount)
+  yield* call(saveDappConnection, dappUrl, activeAccount, favIconUrl)
   // No dapp info means that this is a first time connection request
   if (!dappInfo) {
     yield* put(
@@ -102,7 +104,7 @@ export function* saveAccount({ url, favIconUrl }: SenderTabInfo) {
     )
   }
 
-  const chainId = dappInfo?.lastChainId ?? UniverseChainId.Mainnet
+  const chainId = dappInfo?.lastChainId ?? defaultChainId
   const provider = yield* call(getProvider, chainId)
   const connectedAddresses = (dappUrl && (yield* call(dappStore.getDappOrderedConnectedAddresses, dappUrl))) || []
 

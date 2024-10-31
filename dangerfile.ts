@@ -1,4 +1,6 @@
 import { danger, fail, markdown, message, warn } from 'danger'
+import * as fs from 'fs'
+import { dirname } from 'path'
 
 function getIndicesOf(searchStr: string, str: string): number[] {
   var searchStrLen = searchStr.length
@@ -29,6 +31,37 @@ async function getLinesAddedByFile(files: string[], { exclude = [] }: { exclude?
       })
     }),
   )
+}
+
+// Put any files here that we explicitly want to ignore!
+const IGNORED_SPLIT_RULE_FILES: string[] = []
+
+function checkSplitFiles() {
+  const touchedFiles = danger.git.modified_files.concat(danger.git.created_files)
+
+  touchedFiles.forEach((file) => {
+    const isWebFile = file.endsWith('.web.ts') || file.endsWith('.web.tsx')
+    const isNativeFile = file.endsWith('.native.ts') || file.endsWith('.native.tsx')
+
+    if ((!isWebFile && !isNativeFile) || IGNORED_SPLIT_RULE_FILES.includes(file)) {
+      return
+    }
+
+    const baseFile = file.substring(0, file.indexOf(isWebFile ? '.web.ts' : '.native.ts'))
+    const extension = file.indexOf('.tsx') !== -1 ? 'tsx' : 'ts'
+
+    if (isWebFile && !fs.existsSync(`${dirname(__filename)}/${baseFile}.native.${extension}`)) {
+      fail(`\`${baseFile}.web.${extension}\` must also have a \`${baseFile}.native.${extension}\` file.`)
+    }
+
+    if (isNativeFile && !fs.existsSync(`${dirname(__filename)}/${baseFile}.web.${extension}`)) {
+      fail(`\`${baseFile}.native.${extension}\` must also have a \`${baseFile}.web.${extension}\` file.`)
+    }
+
+    if (!fs.existsSync(`${dirname(__filename)}/${baseFile}.${extension}`)) {
+      fail(`\`${file}\` must have base stub file \`${baseFile}.${extension}\``)
+    }
+  })
 }
 
 async function processAddChanges() {
@@ -92,10 +125,10 @@ async function processAddChanges() {
     `'ui/src/loading'`,
     `'ui/src/assets'`,
     `'ui/src/components/icons'`,
-    `'ui/src/components/logos'`,
     `'ui/src/icons'`,
     `'ui/src/animations'`,
     `'ui/src/hooks/useDeviceDimensions'`,
+    `'ui/src/hooks/useDeviceInsets'`,
     `'ui/src/components/layout/AnimatedFlex'`,
     `'ui/src/components/text/AnimatedText'`,
     `'ui/src/components/AnimatedFlashList/AnimatedFlashList'`,
@@ -142,13 +175,6 @@ async function processAddChanges() {
     if (/(useSelector|appSelect|select)\(\s*makeSelect/.test(concatenatedAddedLines)) {
       fail(
         `It appears you may be creating a new selector on every render. See PR #5172 for details on how to fix this.`,
-      )
-    }
-
-    // Check for discouraged usage of usePortfolioValueModifiers
-    if (concatenatedAddedLines.includes('usePortfolioValueModifiers')) {
-      warn(
-        "Use the wrapper hooks `usePortfolioTotalValue`, `useAccountList` or `usePortfolioBalances` instead of `usePortfolioValueModifiers` directly. If you're using usePortfolioValueModifiers inside these hooks you can ignore this warning.",
       )
     }
   })
@@ -211,6 +237,9 @@ if (envChanged) {
   )
 }
 
+// Check native and web file splits
+checkSplitFiles()
+
 // Run checks on added changes
 processAddChanges()
 
@@ -236,7 +265,7 @@ if (danger.github.pr.additions < danger.github.pr.deletions) {
 }
 
 // GraphQL update warnings
-const updatedGraphQLfile = danger.git.modified_files.find((file) => file.includes('__generated__/types-and-hooks.ts'))
+const updatedGraphQLfile = danger.git.modified_files.find((file) => file.endsWith('.graphql'))
 
 if (updatedGraphQLfile) {
   warn(
@@ -320,7 +349,7 @@ if (
   (updatedMobileMigrationsFile && !updatedMobileMigrationsTestFile) ||
   (updatedExtensionMigrationsFile && !updatedExtensionMigrationsTestFile)
 ) {
-  fail('You updated the migrations file but did not write any new tests. Each migration must have a test!')
+  warn('You updated the migrations file but did not write any new tests. Each migration must have a test!')
 }
 
 if (updatedMobileMigrationsFile !== updatedExtensionMigrationsFile) {

@@ -1,12 +1,12 @@
 import { Currency, CurrencyAmount, Fraction } from '@uniswap/sdk-core'
-import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import JSBI from 'jsbi'
 import formatLocaleNumber from 'lib/utils/formatLocaleNumber'
+import { DEFAULT_LOCALE, Locale } from 'uniswap/src/features/language/constants'
 
 export function formatCurrencyAmount(
   amount: CurrencyAmount<Currency> | undefined,
   sigFigs: number,
-  locale: SupportedLocale = DEFAULT_LOCALE,
+  locale: Locale = DEFAULT_LOCALE,
   fixedDecimals?: number,
 ): string {
   if (!amount) {

@@ -2,20 +2,19 @@ import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
-import { ButtonGray } from 'components/Button'
-import { AutoColumn } from 'components/Column'
+import { ButtonGray } from 'components/Button/buttons'
 import { FiatValue } from 'components/CurrencyInputPanel/FiatValue'
 import { formatCurrencySymbol } from 'components/CurrencyInputPanel/utils'
-import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { StyledNumericalInput } from 'components/NumericalInput'
-import { RowBetween, RowFixed } from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import { CurrencySearchFilters } from 'components/SearchModal/DeprecatedCurrencySearch'
 import Tooltip from 'components/Tooltip'
+import { AutoColumn } from 'components/deprecated/Column'
+import { RowBetween, RowFixed } from 'components/deprecated/Row'
 import { useIsSupportedChainId } from 'constants/chains'
-import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
+import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAccount } from 'hooks/useAccount'
 import styled, { useTheme } from 'lib/styled-components'
 import ms from 'ms'
@@ -236,7 +235,6 @@ interface SwapCurrencyInputPanelProps {
   locked?: boolean
   loading?: boolean
   disabled?: boolean
-  currencySearchFilters?: CurrencySearchFilters
   numericalInputSettings?: {
     disabled?: boolean
     onDisabledClick?: () => void
@@ -267,7 +265,6 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
       loading = false,
       disabled = false,
       initialCurrencyLoading = false,
-      currencySearchFilters,
       currencyField,
       numericalInputSettings,
       label,
@@ -459,10 +456,8 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
             isOpen={modalOpen}
             onDismiss={handleDismissSearch}
             onCurrencySelect={onCurrencySelect}
-            hideChainSwitch={true}
             selectedCurrency={currency}
             otherSelectedCurrency={otherCurrency}
-            currencySearchFilters={currencySearchFilters}
           />
         )}
       </InputPanel>

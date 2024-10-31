@@ -1,5 +1,7 @@
 import { useCallback } from 'react'
 import { Flex, useHapticFeedback } from 'ui/src'
+import { easeInEaseOutLayoutAnimation } from 'ui/src/animations/layout/layoutAnimation'
+import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
 import { Ellipsis } from 'ui/src/components/icons/Ellipsis'
 import { colors, iconSizes } from 'ui/src/theme'
 import { NetworkLogo, SQUIRCLE_BORDER_RADIUS_RATIO } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -8,18 +10,21 @@ import {
   ActionSheetDropdownStyleProps,
 } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
 import { useNetworkOptions } from 'uniswap/src/components/network/hooks'
-import { UniverseChainId, WALLET_SUPPORTED_CHAIN_IDS, WalletChainId } from 'uniswap/src/types/chains'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { isMobileApp } from 'utilities/src/platform'
 
 const ELLIPSIS = 'ellipsis'
 const NETWORK_ICON_SIZE = iconSizes.icon20
 const NETWORK_ICON_SHIFT = 8
 
 interface NetworkFilterProps {
+  chainIds: UniverseChainId[]
   selectedChain: UniverseChainId | null
   onPressChain: (chainId: UniverseChainId | null) => void
-  onPressAnimation?: () => void
   onDismiss?: () => void
   includeAllNetworks?: boolean
+  showUnsupportedConnectedChainWarning?: boolean
   styles?: ActionSheetDropdownStyleProps
   hideArrow?: boolean
 }
@@ -41,7 +46,7 @@ export function NetworksInSeries({
     ...(ellipsisPosition === 'start' ? [ELLIPSIS] : []),
     ...networks,
     ...(ellipsisPosition === 'end' ? [ELLIPSIS] : []),
-  ] as Array<WalletChainId | typeof ELLIPSIS>
+  ] as Array<UniverseChainId | typeof ELLIPSIS>
 
   const renderItem = useCallback(
     ({ item: chainId }: { item: ListItem }) => (
@@ -72,29 +77,34 @@ export function NetworksInSeries({
 }
 
 export function NetworkFilter({
+  chainIds,
   selectedChain,
   onPressChain,
-  onPressAnimation,
   onDismiss,
   includeAllNetworks,
+  showUnsupportedConnectedChainWarning,
   styles,
   hideArrow = false,
 }: NetworkFilterProps): JSX.Element {
   const { hapticFeedback } = useHapticFeedback()
+  const { defaultChainId } = useEnabledChains()
   const onPress = useCallback(
     async (chainId: UniverseChainId | null) => {
-      onPressAnimation?.()
+      // Ensures smooth animation on mobile
+      if (isMobileApp) {
+        easeInEaseOutLayoutAnimation()
+      }
       await hapticFeedback.selection()
       onPressChain(chainId)
     },
-    [onPressAnimation, hapticFeedback, onPressChain],
+    [hapticFeedback, onPressChain],
   )
 
   const networkOptions = useNetworkOptions({
     selectedChain,
     onPress,
     includeAllNetworks,
-    chainIds: WALLET_SUPPORTED_CHAIN_IDS,
+    chainIds,
   })
 
   return (
@@ -108,10 +118,11 @@ export function NetworkFilter({
       testID="chain-selector"
       onDismiss={onDismiss}
     >
-      <NetworkLogo
-        chainId={selectedChain ?? (includeAllNetworks ? null : UniverseChainId.Mainnet)}
-        size={NETWORK_ICON_SIZE}
-      />
+      {showUnsupportedConnectedChainWarning ? (
+        <AlertTriangle color="$neutral2" size={20} />
+      ) : (
+        <NetworkLogo chainId={selectedChain ?? (includeAllNetworks ? null : defaultChainId)} size={NETWORK_ICON_SIZE} />
+      )}
     </ActionSheetDropdown>
   )
 }

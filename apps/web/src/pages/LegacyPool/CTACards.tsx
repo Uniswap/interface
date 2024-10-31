@@ -1,4 +1,4 @@
-import { AutoColumn } from 'components/Column'
+import { AutoColumn } from 'components/deprecated/Column'
 import { useSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import styled, { css } from 'lib/styled-components'

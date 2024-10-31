@@ -1,13 +1,13 @@
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount /*, Token*/ } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { ButtonConfirmed, ButtonError } from 'components/Button'
-import { AutoColumn } from 'components/Column'
+import { ButtonConfirmed, ButtonError } from 'components/Button/buttons'
+import { AutoColumn } from 'components/deprecated/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
+import { RowBetween } from 'components/deprecated/Row'
 import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
 import ProgressCircles from 'components/ProgressSteps'
-import { RowBetween } from 'components/Row'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { Trans } from 'uniswap/src/i18n'
 import JSBI from 'jsbi'
@@ -90,7 +90,7 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
     }
   }, [parsedAmount, poolInfo])
 
-  async function onBuy() {
+  async function onBuy(): Promise<void | undefined> {
     setAttempting(true)
     if (poolContract && parsedAmount && poolInfo /*&& deadline*/) {
       if (approval === ApprovalState.APPROVED) {
@@ -121,6 +121,8 @@ export default function BuyModal({ isOpen, onDismiss, poolInfo, userBaseTokenBal
         setAttempting(false)
         throw new Error('Attempting to stake without approval. Please contact support.')
       }
+    } else {
+      return undefined
     }
   }
 

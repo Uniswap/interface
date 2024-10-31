@@ -2,9 +2,9 @@ import { Interface } from '@ethersproject/abi'
 import { getAddress, isAddress } from '@ethersproject/address'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { ButtonError } from 'components/Button'
-import { BlueCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
+import { ButtonError } from 'components/Button/buttons'
+import { BlueCard } from 'components/Card/cards'
+import { AutoColumn } from 'components/deprecated/Column'
 import {
   AUTHORITY_ADDRESSES,
   GOVERNANCE_PROXY_ADDRESSES,
@@ -40,9 +40,10 @@ import TOKEN_ABI from 'uniswap/src/abis/erc20.json'
 import GOVERNANCE_RB_ABI from 'uniswap/src/abis/governance.json'
 import RB_POOL_FACTORY_ABI from 'uniswap/src/abis/rb-pool-factory.json'
 import STAKING_PROXY_ABI from 'uniswap/src/abis/staking-proxy.json'
+import { GRG } from 'uniswap/src/constants/tokens'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans } from 'uniswap/src/i18n'
-import { GRG } from 'constants/tokens'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;
@@ -144,7 +145,7 @@ export default function CreateProposal() {
   const [proposalAction, setProposalAction] = useState(ProposalAction.UPGRADE_IMPLEMENTATION)
   const [toAddressValue, setToAddressValue] = useState('')
   // TODO: check we are covering all chains
-  const [currencyValue, setCurrencyValue] = useState<Currency>(GRG[account.chainId ?? 1])
+  const [currencyValue, setCurrencyValue] = useState<Currency>(GRG[account.chainId ?? UniverseChainId.Mainnet])
   const [amountValue, setAmountValue] = useState('')
   const [titleValue, setTitleValue] = useState('')
   const [bodyValue, setBodyValue] = useState('')
@@ -272,7 +273,7 @@ ${bodyValue}
       case ProposalAction.UPGRADE_IMPLEMENTATION: {
         values = [[getAddress(toAddressValue)]]
         interfaces = [new Interface(RB_POOL_FACTORY_ABI)]
-        targets = [RB_FACTORY_ADDRESSES[account.chainId ?? 1]]
+        targets = [RB_FACTORY_ADDRESSES[account.chainId ?? UniverseChainId.Mainnet]]
         methods = ['setImplementation']
         break
       }
@@ -280,20 +281,20 @@ ${bodyValue}
       case ProposalAction.UPGRADE_GOVERNANCE: {
         values = [[getAddress(toAddressValue)]]
         interfaces = [new Interface(GOVERNANCE_RB_ABI)]
-        targets = [GOVERNANCE_PROXY_ADDRESSES[account.chainId ?? 1]]
+        targets = [GOVERNANCE_PROXY_ADDRESSES[account.chainId ?? UniverseChainId.Mainnet]]
         methods = ['upgradeImplementation']
         break
       }
 
       case ProposalAction.UPGRADE_STAKING: {
         values = [
-          [STAKING_PROXY_ADDRESSES[account.chainId ?? 1]],
+          [STAKING_PROXY_ADDRESSES[account.chainId ?? UniverseChainId.Mainnet]],
           [],
           [getAddress(toAddressValue)],
-          [STAKING_PROXY_ADDRESSES[account.chainId ?? 1]],
+          [STAKING_PROXY_ADDRESSES[account.chainId ?? UniverseChainId.Mainnet]],
         ]
         interfaces = [new Interface(STAKING_PROXY_ABI)]
-        targets = [STAKING_PROXY_ADDRESSES[account.chainId ?? 1]]
+        targets = [STAKING_PROXY_ADDRESSES[account.chainId ?? UniverseChainId.Mainnet]]
         methods = ['addAuthorizedAddress', 'detachStakingContract', 'attachStakingContract', 'removeAuthorizedAddress']
         break
       }
@@ -302,7 +303,7 @@ ${bodyValue}
       case ProposalAction.ADD_ADAPTER: {
         values = [[getAddress(toAddressValue), true]]
         interfaces = [new Interface(AUTHORITY_ABI)]
-        targets = [AUTHORITY_ADDRESSES[account.chainId ?? 1]]
+        targets = [AUTHORITY_ADDRESSES[account.chainId ?? UniverseChainId.Mainnet]]
         methods = ['setAdapter']
         break
       }
@@ -311,7 +312,7 @@ ${bodyValue}
       case ProposalAction.REMOVE_ADAPTER: {
         values = [[getAddress(toAddressValue), false]]
         interfaces = [new Interface(AUTHORITY_ABI)]
-        targets = [AUTHORITY_ADDRESSES[account.chainId ?? 1]]
+        targets = [AUTHORITY_ADDRESSES[account.chainId ?? UniverseChainId.Mainnet]]
         methods = ['setAdapter']
         break
       }
@@ -321,7 +322,7 @@ ${bodyValue}
     for (let i = 0; i < values.length; i++) {
       createProposalData.actions[i] = {
         target: targets[0],
-        value: '0',
+        value: 0,
         data: interfaces[0].encodeFunctionData(methods[i], values[i]),
       }
     }

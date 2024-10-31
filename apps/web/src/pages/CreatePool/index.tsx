@@ -1,13 +1,13 @@
 import { InterfaceElementName, InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonPrimary } from 'components/Button'
-import { OutlineCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
+import { ButtonPrimary } from 'components/Button/buttons'
+import { OutlineCard } from 'components/Card/cards'
+import { AutoColumn } from 'components/deprecated/Column'
+import { RowBetween, RowFixed } from 'components/deprecated/Row'
 import CreateModal from 'components/createPool/CreateModal'
 import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/styled'
 import Loader from 'components/Icons/LoadingSpinner'
 import PoolPositionList from 'components/PoolPositionList'
-import { RowBetween, RowFixed } from 'components/Row'
 import { Trans } from 'uniswap/src/i18n'
 import { useAccount } from 'hooks/useAccount'
 import { useCloseModal, useModalIsOpen, useToggleCreateModal } from 'state/application/hooks'
@@ -74,7 +74,7 @@ export default function CreatePool() {
   const accountDrawer = useAccountDrawer()
 
   const open = useModalIsOpen(ApplicationModal.CREATE)
-  const closeModal = useCloseModal()
+  const closeModal = useCloseModal(ApplicationModal.CREATE)
   const toggleCreateModal = useToggleCreateModal()
   const { data: allPools, loading: loadingPools } = useAllPoolsData()
 
@@ -106,7 +106,7 @@ export default function CreatePool() {
 
         <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
           <DataRow style={{ alignItems: 'baseline' }}>
-            <CreateModal isOpen={open} onDismiss={closeModal} title={<Trans>Create Pool</Trans>} />
+            <CreateModal isOpen={open} onDismiss={() => closeModal()} title={<Trans>Create Pool</Trans>} />
             <WrapSmall>
               <ThemedText.DeprecatedMediumHeader style={{ marginTop: '0.5rem' }}>
                 <Trans>Pools</Trans>

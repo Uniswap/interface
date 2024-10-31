@@ -7,7 +7,7 @@ import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { Trans } from 'uniswap/src/i18n'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const LOGO_SIZE = 20
 
@@ -56,8 +56,8 @@ const CaptionText = styled.div`
 
 interface ChainSelectorRowProps {
   disabled?: boolean
-  targetChain: InterfaceChainId
-  onSelectChain: (targetChain: number) => void
+  targetChain: UniverseChainId
+  onSelectChain?: (targetChain: number) => void
   isPending: boolean
 }
 export default function ChainSelectorRow({ disabled, targetChain, onSelectChain, isPending }: ChainSelectorRowProps) {
@@ -75,7 +75,7 @@ export default function ChainSelectorRow({ disabled, targetChain, onSelectChain,
         data-testid={`${label}-selector`}
         $disabled={!!disabled}
         onClick={() => {
-          if (!disabled) {
+          if (!disabled && onSelectChain) {
             onSelectChain(targetChain)
           }
         }}

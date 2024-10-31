@@ -51,7 +51,7 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
   const account = useAccount()
   const { unitag } = useUnitagByAddress(account.address)
   const { ENSName } = useENSName(account.address)
-  const openAddressQRModal = useOpenModal(ApplicationModal.RECEIVE_CRYPTO_QR)
+  const openAddressQRModal = useOpenModal({ name: ApplicationModal.RECEIVE_CRYPTO_QR })
 
   const onPressShowWalletQr = (): void => {
     onClose()

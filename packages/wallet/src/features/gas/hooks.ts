@@ -1,75 +1,18 @@
 import { BigNumber, providers } from 'ethers'
 import { useCallback, useMemo } from 'react'
-import { PollingInterval } from 'uniswap/src/constants/misc'
 import { TRANSACTION_CANCELLATION_GAS_FACTOR } from 'uniswap/src/constants/transactions'
-import { useGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
-import { FeeType, GasFeeResult, GasSpeed } from 'uniswap/src/features/gas/types'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
-import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { FeeType } from 'uniswap/src/data/tradingApi/types'
+import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { FeeDetails, getAdjustedGasFeeDetails } from 'wallet/src/features/gas/adjustGasFee'
 import { getCancelOrderTxRequest } from 'wallet/src/features/transactions/cancelTransactionSaga'
 
 export type CancelationGasFeeDetails = {
   cancelRequest: providers.TransactionRequest
   cancelationGasFee: string
-}
-
-export function useTransactionGasFee(
-  tx: providers.TransactionRequest | undefined,
-  speed: GasSpeed = GasSpeed.Urgent,
-  skip?: boolean,
-  refetchInterval?: PollingInterval,
-): GasFeeResult {
-  const pollingIntervalForChain = usePollingIntervalByChain(tx?.chainId)
-
-  const { data, error, isLoading } = useGasFeeQuery({
-    params: skip ? undefined : tx,
-    refetchInterval,
-    staleTime: pollingIntervalForChain,
-    immediateGcTime: pollingIntervalForChain + 15 * ONE_SECOND_MS,
-  })
-
-  return useMemo(() => {
-    if (!data) {
-      return { error: error ?? null, isLoading }
-    }
-
-    const params =
-      data.type === FeeType.Eip1559
-        ? {
-            maxPriorityFeePerGas: data.maxPriorityFeePerGas[speed],
-            maxFeePerGas: data.maxFeePerGas[speed],
-            gasLimit: data.gasLimit,
-          }
-        : {
-            gasPrice: data.gasPrice[speed],
-            gasLimit: data.gasLimit,
-          }
-    return {
-      value: data.gasFee[speed],
-      isLoading,
-      error: error ?? null,
-      params,
-    }
-  }, [data, error, isLoading, speed])
-}
-
-export function useUSDValue(chainId?: WalletChainId, ethValueInWei?: string): string | undefined {
-  const currencyAmount = getCurrencyAmount({
-    value: ethValueInWei,
-    valueType: ValueType.Raw,
-    currency: chainId ? NativeCurrency.onChain(chainId) : undefined,
-  })
-
-  return useUSDCValue(currencyAmount)?.toExact()
 }
 
 /**
@@ -89,19 +32,19 @@ export function useCancelationGasFeeInfo(transaction: TransactionDetails): Cance
   const isUniswapXTx = isUniswapX(transaction)
 
   const uniswapXCancelRequest = useUniswapXCancelRequest(transaction)
-  const uniswapXGasFee = useTransactionGasFee(uniswapXCancelRequest?.data, GasSpeed.Urgent, !isUniswapXTx)
+  const uniswapXGasFee = useTransactionGasFee(uniswapXCancelRequest?.data, !isUniswapXTx)
 
-  const baseTxGasFee = useTransactionGasFee(classicCancelRequest, GasSpeed.Urgent, /* skip = */ isUniswapXTx)
+  const baseTxGasFee = useTransactionGasFee(classicCancelRequest, /* skip = */ isUniswapXTx)
   return useMemo(() => {
     if (isUniswapXTx) {
       if (!uniswapXCancelRequest.data || !uniswapXGasFee.value) {
-        return
+        return undefined
       }
       return { cancelRequest: uniswapXCancelRequest.data, cancelationGasFee: uniswapXGasFee.value }
     }
 
     if (!baseTxGasFee.params) {
-      return
+      return undefined
     }
 
     let adjustedFeeDetails: FeeDetails | undefined
@@ -116,7 +59,7 @@ export function useCancelationGasFeeInfo(transaction: TransactionDetails): Cance
         tags: { file: 'features/gas/hooks.ts', function: 'getAdjustedGasFeeDetails' },
         extra: { request: transaction.options.request, currentGasFeeParams: baseTxGasFee.params },
       })
-      return
+      return undefined
     }
 
     const cancelRequest = {
@@ -141,7 +84,7 @@ export function useCancelationGasFeeInfo(transaction: TransactionDetails): Cance
 
 function getCancelationGasFee(adjustedFeeDetails: FeeDetails, gasLimit: string): string {
   // doing object destructuring here loses ts checks based on FeeDetails.type >:(
-  if (adjustedFeeDetails.type === FeeType.Legacy) {
+  if (adjustedFeeDetails.type === FeeType.LEGACY) {
     return BigNumber.from(gasLimit).mul(adjustedFeeDetails.params.gasPrice).toString()
   }
 

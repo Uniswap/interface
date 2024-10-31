@@ -1,13 +1,14 @@
-import { BIPS_BASE } from 'constants/misc'
 import { parseEther } from 'ethers/lib/utils'
 import { GenieCollection, WalletAsset } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
+import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import {
   Chain,
   NftAsset,
   useNftBalanceQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 
 type UseNftBalanceParams = {
   ownerAddress: string
@@ -51,6 +52,7 @@ export function useNftBalance({
     },
     skip,
   })
+  const hideSpam = useHideSpamTokensSetting()
 
   const hasNext = data?.nftBalances?.pageInfo?.hasNextPage
   const loadMore = useCallback(
@@ -63,7 +65,12 @@ export function useNftBalance({
     [data?.nftBalances?.pageInfo?.endCursor, fetchMore],
   )
 
-  const walletAssets: WalletAsset[] | undefined = data?.nftBalances?.edges?.map((queryAsset) => {
+  // If hideSpam is true, filter out spam NFTs
+  const filteredQueryAssets = hideSpam
+    ? data?.nftBalances?.edges?.filter((queryAsset) => !(queryAsset?.node.ownedAsset as NonNullable<NftAsset>).isSpam)
+    : data?.nftBalances?.edges
+
+  const walletAssets: WalletAsset[] | undefined = filteredQueryAssets?.map((queryAsset) => {
     const asset = queryAsset?.node.ownedAsset as NonNullable<NftAsset>
     const ethPrice = parseEther(wrapScientificNotation(asset?.listings?.edges[0]?.node.price.value ?? 0)).toString()
     return {

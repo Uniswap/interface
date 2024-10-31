@@ -1,10 +1,10 @@
-import { SupportedInterfaceChainId } from 'constants/chains'
 import { FilledUniswapXOrderDetails, SignatureDetails, UnfilledUniswapXOrderDetails } from 'state/signatures/types'
 import { ConfirmedTransactionDetails, TransactionDetails } from 'state/transactions/types'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 interface BaseUpdate<T> {
   type: string
-  chainId: SupportedInterfaceChainId
+  chainId: UniverseChainId
   original: T
   update: Partial<T>
 }

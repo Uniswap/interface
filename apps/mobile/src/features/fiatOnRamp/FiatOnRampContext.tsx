@@ -25,9 +25,12 @@ interface FiatOnRampContextType {
   baseCurrencyInfo?: FiatCurrencyInfo
   setBaseCurrencyInfo: (baseCurrency: FiatCurrencyInfo | undefined) => void
   quoteCurrency: FiatOnRampCurrency
+  defaultCurrency: FiatOnRampCurrency
   setQuoteCurrency: (quoteCurrency: FiatOnRampCurrency) => void
   amount?: number
   setAmount: (amount: number | undefined) => void
+  isOffRamp: boolean
+  setIsOffRamp: (isOffRamp: boolean) => void
 }
 
 const initialState: FiatOnRampContextType = {
@@ -41,6 +44,9 @@ const initialState: FiatOnRampContextType = {
   countryCode: '',
   countryState: undefined,
   quoteCurrency: { currencyInfo: undefined },
+  defaultCurrency: { currencyInfo: undefined },
+  isOffRamp: false,
+  setIsOffRamp: () => undefined,
 }
 
 const FiatOnRampContext = createContext<FiatOnRampContextType>(initialState)
@@ -56,6 +62,7 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
   const [countryState, setCountryState] = useState<string | undefined>()
   const [baseCurrencyInfo, setBaseCurrencyInfo] = useState<FiatCurrencyInfo>()
   const [amount, setAmount] = useState<number>()
+  const [isOffRamp, setIsOffRamp] = useState<boolean>(false)
 
   const { initialState: initialModalState } = useSelector(selectModalState(ModalName.FiatOnRampAggregator))
   const prefilledCurrency = initialModalState?.prefilledCurrency
@@ -64,12 +71,11 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
   const ethCurrencyInfo = useCurrencyInfo(
     buildCurrencyId(UniverseChainId.Mainnet, getNativeAddress(UniverseChainId.Mainnet)),
   )
-  const [quoteCurrency, setQuoteCurrency] = useState<FiatOnRampCurrency>(
-    prefilledCurrency ?? {
-      currencyInfo: ethCurrencyInfo,
-      meldCurrencyCode: 'ETH',
-    },
-  )
+  const defaultCurrency: FiatOnRampCurrency = {
+    currencyInfo: ethCurrencyInfo,
+    meldCurrencyCode: 'ETH',
+  }
+  const [quoteCurrency, setQuoteCurrency] = useState<FiatOnRampCurrency>(prefilledCurrency ?? defaultCurrency)
 
   return (
     <FiatOnRampContext.Provider
@@ -85,9 +91,12 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
         baseCurrencyInfo,
         setBaseCurrencyInfo,
         quoteCurrency,
+        defaultCurrency,
         setQuoteCurrency,
         amount,
         setAmount,
+        isOffRamp,
+        setIsOffRamp,
       }}
     >
       {children}

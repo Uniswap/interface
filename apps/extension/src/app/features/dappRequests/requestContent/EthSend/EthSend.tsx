@@ -8,11 +8,11 @@ import { SwapRequestContent } from 'src/app/features/dappRequests/requestContent
 import { DappRequestStoreItemForEthSendTxn } from 'src/app/features/dappRequests/slice'
 import { isApproveRequest, isLPRequest, isSwapRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { GasFeeResult, GasSpeed } from 'uniswap/src/features/gas/types'
+import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import { formatExternalTxnWithGasEstimates } from 'wallet/src/features/gas/formatExternalTxnWithGasEstimates'
-import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 
 interface EthSendRequestContentProps {
   request: DappRequestStoreItemForEthSendTxn
@@ -24,11 +24,13 @@ export function EthSendRequestContent({ request }: EthSendRequestContentProps): 
   const chainId = useDappLastChainId(dappUrl)
 
   // Gas service requires a chain id
-  const formattedTxnForGasQuery = { ...dappRequest.transaction, chainId }
+  const formattedTxnForGasQuery = useMemo(
+    () => ({ ...dappRequest.transaction, chainId }),
+    [dappRequest.transaction, chainId],
+  )
 
   const transactionGasFeeResult = useTransactionGasFee(
     formattedTxnForGasQuery,
-    /*speed=*/ GasSpeed.Urgent,
     /*skip=*/ !formattedTxnForGasQuery,
     /*pollingInterval=*/ PollingInterval.LightningMcQueen,
   )

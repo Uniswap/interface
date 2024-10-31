@@ -8,76 +8,40 @@ import { Chain as WagmiChain } from 'wagmi/chains'
 
 export enum UniverseChainId {
   Mainnet = UniswapSDKChainId.MAINNET,
-  Goerli = UniswapSDKChainId.GOERLI,
   Sepolia = UniswapSDKChainId.SEPOLIA,
   Optimism = UniswapSDKChainId.OPTIMISM,
-  OptimismGoerli = UniswapSDKChainId.OPTIMISM_GOERLI,
   ArbitrumOne = UniswapSDKChainId.ARBITRUM_ONE,
-  ArbitrumGoerli = UniswapSDKChainId.ARBITRUM_GOERLI,
   Polygon = UniswapSDKChainId.POLYGON,
-  PolygonMumbai = UniswapSDKChainId.POLYGON_MUMBAI,
   Avalanche = UniswapSDKChainId.AVALANCHE,
   Celo = UniswapSDKChainId.CELO,
-  CeloAlfajores = UniswapSDKChainId.CELO_ALFAJORES,
   Bnb = UniswapSDKChainId.BNB,
   Base = UniswapSDKChainId.BASE,
   Blast = UniswapSDKChainId.BLAST,
+  WorldChain = UniswapSDKChainId.WORLDCHAIN,
   Zora = UniswapSDKChainId.ZORA,
   Zksync = UniswapSDKChainId.ZKSYNC,
+  AstrochainSepolia = UniswapSDKChainId.ASTROCHAIN_SEPOLIA,
 }
 
-export type WalletChainId =
-  | UniverseChainId.Mainnet
-  | UniverseChainId.Goerli
-  | UniverseChainId.ArbitrumOne
-  | UniverseChainId.Avalanche
-  | UniverseChainId.Base
-  | UniverseChainId.Celo
-  | UniverseChainId.Optimism
-  | UniverseChainId.Polygon
-  | UniverseChainId.PolygonMumbai
-  | UniverseChainId.Blast
-  | UniverseChainId.Bnb
-  | UniverseChainId.Zora
-  | UniverseChainId.Zksync
-
 // DON'T CHANGE - order here determines ordering of networks in app
-// TODO: [MOB-250] Add back in testnets once our endpoints support them
-export const WALLET_SUPPORTED_CHAIN_IDS: WalletChainId[] = [
+export const SUPPORTED_CHAIN_IDS: UniverseChainId[] = [
   UniverseChainId.Mainnet,
   UniverseChainId.Polygon,
   UniverseChainId.ArbitrumOne,
   UniverseChainId.Optimism,
   UniverseChainId.Base,
   UniverseChainId.Bnb,
-  //UniverseChainId.Blast,
-  //UniverseChainId.Avalanche,
-  //UniverseChainId.Celo,
-  //UniverseChainId.Zora,
-  //UniverseChainId.Zksync,
+  UniverseChainId.Blast,
+  UniverseChainId.Avalanche,
+  UniverseChainId.Celo,
+  UniverseChainId.WorldChain,
+  UniverseChainId.Zora,
+  UniverseChainId.Zksync,
 ]
 
-export type InterfaceChainId = UniverseChainId
+export const SUPPORTED_TESTNET_CHAIN_IDS: UniverseChainId[] = [UniverseChainId.Sepolia, UniverseChainId.AstrochainSepolia]
 
-export const WEB_SUPPORTED_CHAIN_IDS: InterfaceChainId[] = [
-  UniverseChainId.Mainnet,
-  UniverseChainId.Goerli,
-  UniverseChainId.Sepolia,
-  UniverseChainId.Optimism,
-  UniverseChainId.OptimismGoerli,
-  UniverseChainId.ArbitrumOne,
-  UniverseChainId.ArbitrumGoerli,
-  UniverseChainId.Polygon,
-  UniverseChainId.PolygonMumbai,
-  //UniverseChainId.Avalanche,
-  //UniverseChainId.Celo,
-  //UniverseChainId.CeloAlfajores,
-  UniverseChainId.Bnb,
-  UniverseChainId.Base,
-  //UniverseChainId.Blast,
-  //UniverseChainId.Zora,
-  //UniverseChainId.Zksync,
-]
+export const COMBINED_CHAIN_IDS: UniverseChainId[] = [...SUPPORTED_CHAIN_IDS, ...SUPPORTED_TESTNET_CHAIN_IDS]
 
 export enum RPCType {
   Public = 'public',
@@ -96,7 +60,7 @@ export interface RetryOptions {
   maxWait: number
 }
 
-export type InterfaceGqlChain = Exclude<BackendChainId, BackendChainId.UnknownChain>
+export type InterfaceGqlChain = Exclude<BackendChainId, BackendChainId.UnknownChain| BackendChainId.EthereumGoerli>
 
 export interface BackendChain {
   chain: InterfaceGqlChain
@@ -142,6 +106,7 @@ export interface UniverseChainInfo extends WagmiChain {
     decimals: number // 18,
     address: string // '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
     explorerLink?: string // Special override for native ETH explorer link
+    logo: ImageSourcePropType
   }
   readonly networkLayer: NetworkLayer
   readonly pendingTransactionsRetryOptions: RetryOptions | undefined

@@ -1,38 +1,27 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
-import { CHAIN_IDS_TO_NAMES, useIsSupportedChainIdCallback } from 'constants/chains'
+import { useIsSupportedChainIdCallback } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { useCallback } from 'react'
-import { useLocation, useSearchParams } from 'react-router-dom'
-import { useAppDispatch } from 'state/hooks'
+import { useDispatch } from 'react-redux'
 import { endSwitchingChain, startSwitchingChain } from 'state/wallets/reducer'
 import { trace } from 'tracing/trace'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
-import { logger } from 'utilities/src/logger/logger'
-import { getCurrentPageFromLocation } from 'utils/urlRoutes'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useSwitchChain as useSwitchChainWagmi } from 'wagmi'
 
 export function useSwitchChain() {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const isSupportedChainCallback = useIsSupportedChainIdCallback()
-  const multichainUXEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
   const { switchChain } = useSwitchChainWagmi()
   const account = useAccount()
-  const [searchParams, setSearchParams] = useSearchParams()
-
-  const { pathname } = useLocation()
-  const page = getCurrentPageFromLocation(pathname)
 
   return useCallback(
-    (chainId: InterfaceChainId) => {
+    (chainId: UniverseChainId) => {
       const isSupportedChain = isSupportedChainCallback(chainId)
       if (!isSupportedChain) {
         throw new Error(`Chain ${chainId} not supported for connector (${account.connector?.name})`)
       }
       if (account.chainId === chainId) {
         // some wallets (e.g. SafeWallet) only support single-chain & will throw error on `switchChain` even if already on the correct chain
-        return
+        return undefined
       }
       return trace(
         { name: 'Switch chain', op: 'wallet.switch_chain' },
@@ -42,20 +31,6 @@ export function useSwitchChain() {
             switchChain(
               { chainId },
               {
-                onSuccess() {
-                  try {
-                    if (multichainUXEnabled || page === InterfacePageName.EXPLORE_PAGE) {
-                      return
-                    }
-                    searchParams.set('chain', CHAIN_IDS_TO_NAMES[chainId])
-                    setSearchParams(searchParams, { replace: true })
-                  } catch (error) {
-                    logger.warn('useSwitchChain', 'useSwitchChain', 'Failed to set SearchParams', {
-                      error,
-                      searchParams,
-                    })
-                  }
-                },
                 onSettled(_, error) {
                   dispatch(endSwitchingChain())
                   if (error) {
@@ -69,16 +44,6 @@ export function useSwitchChain() {
           }),
       )
     },
-    [
-      isSupportedChainCallback,
-      account.chainId,
-      account.connector?.name,
-      dispatch,
-      switchChain,
-      multichainUXEnabled,
-      page,
-      searchParams,
-      setSearchParams,
-    ],
+    [isSupportedChainCallback, account.chainId, account.connector?.name, dispatch, switchChain],
   )
 }

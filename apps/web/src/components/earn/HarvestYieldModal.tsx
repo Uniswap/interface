@@ -5,20 +5,21 @@ import { ReactNode, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'lib/styled-components'
 import { ThemedText } from 'theme/components/text'
+import { GRG } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { logger } from 'utilities/src/logger/logger'
 
-import { GRG } from 'constants/tokens'
 import { useHarvestCallback } from 'state/stake/hooks'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
-import { ButtonPrimary } from 'components/Button'
-import { LightCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
+import { ButtonPrimary } from 'components/Button/buttons'
+import { LightCard } from 'components/Card/cards'
+import { AutoColumn } from 'components/deprecated/Column'
+import { RowBetween } from 'components/deprecated/Row'
 import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
-import { RowBetween } from 'components/Row'
 import { useAccount } from 'hooks/useAccount'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -48,9 +49,10 @@ export default function HarvestYieldModal({
   onDismiss,
   title,
 }: HarvestYieldModalProps) {
+  //const { chainId } = useAccount()
   const { chainId } = useAccount()
 
-  const [currencyValue] = useState<Token>(GRG[chainId ?? 1])
+  const [currencyValue] = useState<Token | undefined>(GRG[chainId ?? UniverseChainId.Mainnet])
   const harvestCallback = useHarvestCallback()
 
   // monitor call to help UI loading state
@@ -72,7 +74,7 @@ export default function HarvestYieldModal({
 
   async function onHarvest() {
     // if callback not returned properly ignore
-    if (!harvestCallback || !poolIds || poolIds?.length === 0 || !currencyValue.isToken) {
+    if (!harvestCallback || !poolIds || poolIds?.length === 0 || !currencyValue?.isToken) {
       return
     }
     setAttempting(true)

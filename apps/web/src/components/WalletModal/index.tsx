@@ -1,20 +1,22 @@
 import { useShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import Column from 'components/Column'
 import { CollapsedIcon } from 'components/Icons/Collapse'
 import { ExpandIcon } from 'components/Icons/Expand'
-import Row, { AutoRow } from 'components/Row'
 import ConnectionErrorView from 'components/WalletModal/ConnectionErrorView'
 import { Option } from 'components/WalletModal/Option'
 import PrivacyPolicyNotice from 'components/WalletModal/PrivacyPolicyNotice'
 import { UniswapWalletOptions } from 'components/WalletModal/UniswapWalletOptions'
 import { useOrderedConnections } from 'components/WalletModal/useOrderedConnections'
-import { useIsUniExtensionAvailable, useUniswapWalletOptions } from 'hooks/useUniswapWalletOptions'
+import Column from 'components/deprecated/Column'
+import Row, { AutoRow } from 'components/deprecated/Row'
+import { useIsUniExtensionAvailable } from 'hooks/useUniswapWalletOptions'
 import styled, { css } from 'lib/styled-components'
 import { useReducer } from 'react'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
 import { Text } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
+import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
+import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
 
 const Wrapper = styled.div<{ isUniExtensionAvailable?: boolean }>`
   ${flexColumnNoWrap};
@@ -69,21 +71,25 @@ const StyledCollapsedIcon = styled(CollapsedIcon)`
 `
 
 export default function WalletModal() {
+  const { t } = useTranslation()
   const showMoonpayText = useShowMoonpayText()
-  const showUniswapWalletOptions = useUniswapWalletOptions()
-  const connectors = useOrderedConnections(showUniswapWalletOptions)
+  const shouldDisplayUniSeparately = false
+  const connectors = useOrderedConnections(shouldDisplayUniSeparately /** include uniswap connectors since they're not shown separately */)
   const isUniExtensionAvailable = useIsUniExtensionAvailable()
   const [showOtherWallets, toggleShowOtherWallets] = useReducer((s) => !s, true)
 
+  const isSignIn = useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.SignInSignUp
+  const isLogIn = useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.LogInCreateAccount
+
   return (
-    <Wrapper data-testid="wallet-modal" isUniExtensionAvailable={isUniExtensionAvailable}>
+    <Wrapper data-testid="wallet-modal" isUniExtensionAvailable={isUniExtensionAvailable && shouldDisplayUniSeparately}>
       <ConnectionErrorView />
       <AutoRow justify="space-between" width="100%">
-        <ThemedText.SubHeader>
-          <Trans i18nKey="common.connectAWallet.button" />
-        </ThemedText.SubHeader>
+        <Text variant="subheading2">
+          {isSignIn ? t('nav.signIn.button') : isLogIn ? t('nav.logIn.button') : t('common.connectAWallet.button')}
+        </Text>
       </AutoRow>
-      {showUniswapWalletOptions && (
+      {shouldDisplayUniSeparately &&  (
         <>
           <UniswapWalletOptions />
           <OtherWalletsDividerRow

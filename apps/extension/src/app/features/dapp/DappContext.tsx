@@ -1,19 +1,21 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { updateDisplayNameFromTab } from 'src/app/features/dapp/actions'
 import { useDappConnectedAccounts, useDappLastChainId } from 'src/app/features/dapp/hooks'
+import { dappStore } from 'src/app/features/dapp/store'
 import { isConnectedAccount } from 'src/app/features/dapp/utils'
 import { extractBaseUrl } from 'src/app/features/dappRequests/utils'
 import { closePopup, PopupName } from 'src/app/features/popups/slice'
 import { backgroundToSidePanelMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { BackgroundToSidePanelRequestType } from 'src/background/messagePassing/types/requests'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 type DappContextState = {
   dappUrl: string
   dappIconUrl?: string
   isConnected: boolean
-  lastChainId?: WalletChainId
+  lastChainId?: UniverseChainId
 }
 
 const DappContext = createContext<DappContextState | undefined>(undefined)
@@ -30,22 +32,31 @@ export function DappContextProvider({ children }: { children: ReactNode }): JSX.
   const isConnected = !!activeAddress && isConnectedAccount(connectedAccounts, activeAddress)
 
   useEffect(() => {
-    const updateDappInfo = (): void => {
-      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        const tab = tabs[0]
-        if (tab) {
-          setDappUrl(extractBaseUrl(tab?.url) || '')
-          setDappIconUrl(tab.favIconUrl)
+    const updateDappInfo = async (): Promise<void> => {
+      const [tab] = (await chrome.tabs.query({ active: true, currentWindow: true })) || []
+
+      if (tab) {
+        const newDappUrl = extractBaseUrl(tab?.url)
+        setDappUrl(newDappUrl || '')
+        setDappIconUrl(tab.favIconUrl)
+
+        if (!newDappUrl) {
+          return
         }
-      })
+
+        dappStore.updateDappIconUrl(newDappUrl, tab.favIconUrl)
+        await updateDisplayNameFromTab(newDappUrl)
+      }
     }
 
+    // need to update dapp info on mount
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     updateDappInfo()
 
     return backgroundToSidePanelMessageChannel.addMessageListener(
       BackgroundToSidePanelRequestType.TabActivated,
       async (_message) => {
-        updateDappInfo()
+        await updateDappInfo()
         dispatch(closePopup(PopupName.Connect))
       },
     )

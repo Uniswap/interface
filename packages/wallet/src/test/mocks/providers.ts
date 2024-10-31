@@ -6,7 +6,7 @@ import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { ethersTransactionReceipt } from 'uniswap/src/test/fixtures'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 
@@ -37,7 +37,7 @@ export const getTxProvidersMocks = (txReceipt?: TransactionReceipt): TxProviders
     getTransactionCount: (): number => 1000,
     estimateGas: (): BigNumber => BigNumber.from('30000'),
     sendTransaction: (): { hash: string } => ({ hash: '0xabcdef' }),
-    detectNetwork: (): { name: string; chainId: WalletChainId } => ({
+    detectNetwork: (): { name: string; chainId: UniverseChainId } => ({
       name: 'mainnet',
       chainId: 1,
     }),

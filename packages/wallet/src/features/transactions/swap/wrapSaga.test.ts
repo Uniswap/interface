@@ -6,8 +6,11 @@ import {
   TransactionType,
   WrapTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { ethersTransactionRequest } from 'uniswap/src/test/fixtures'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { WrapParams, wrap } from 'wallet/src/features/transactions/swap/wrapSaga'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
@@ -19,6 +22,7 @@ const wrapTxInfo: WrapTransactionInfo = {
   unwrapped: false,
   currencyAmountRaw: '200000',
   swapTxId: undefined,
+  gasEstimates: undefined,
 }
 
 const unwrapTxInfo: WrapTransactionInfo = {
@@ -48,6 +52,8 @@ describe(wrap, () => {
         options: { request: txRequest },
       })
       .next()
+      .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.Wrap }))
+      .next()
       .isDone()
   })
 
@@ -69,6 +75,8 @@ describe(wrap, () => {
         typeInfo: unwrapTxInfo,
         options: { request: txRequest },
       })
+      .next()
+      .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.Unwrap }))
       .next()
       .isDone()
   })

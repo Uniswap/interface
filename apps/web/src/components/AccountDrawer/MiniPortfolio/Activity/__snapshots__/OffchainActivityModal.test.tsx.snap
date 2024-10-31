@@ -1,65 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`OrderContent should render without error, filled order 1`] = `
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c10 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c12 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c17 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
 .c1 {
   box-sizing: border-box;
   margin: 0;
@@ -176,6 +117,65 @@ exports[`OrderContent should render without error, filled order 1`] = `
   background-color: #22222212;
 }
 
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c17 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .c20 {
   cursor: auto;
   color: #7D7D7D;
@@ -218,14 +218,6 @@ exports[`OrderContent should render without error, filled order 1`] = `
   user-select: text;
 }
 
-.c14 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
 .c15 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -255,7 +247,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
 }
 
 .c4 img {
-  width: 20px;
+  width: 19px;
   height: 40px;
   object-fit: cover;
 }
@@ -296,6 +288,14 @@ exports[`OrderContent should render without error, filled order 1`] = `
   left: 0;
 }
 
+.c14 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c9 {
   margin: 28px 0;
 }
@@ -330,12 +330,12 @@ exports[`OrderContent should render without error, filled order 1`] = `
                   <img
                     class="c5"
                     size="40"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    src="blank_token.svg"
                   />
                   <img
                     class="c5"
                     size="40"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                    src="blank_token.svg"
                   />
                 </div>
               </div>
@@ -372,7 +372,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
                 >
                   <div
                     class="c13 css-vhdk4b"
-                    data-testid="INPUT-amount"
+                    data-testid="input-amount"
                   >
                     252.074
                      
@@ -442,7 +442,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
                 >
                   <div
                     class="c13 css-vhdk4b"
-                    data-testid="OUTPUT-amount"
+                    data-testid="output-amount"
                   >
                     0.10684
                      
@@ -560,65 +560,6 @@ exports[`OrderContent should render without error, filled order 1`] = `
 `;
 
 exports[`OrderContent should render without error, limit order 1`] = `
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c10 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c12 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c17 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
 .c1 {
   box-sizing: border-box;
   margin: 0;
@@ -807,6 +748,65 @@ exports[`OrderContent should render without error, limit order 1`] = `
   background-color: transparent;
 }
 
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c17 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .c20 {
   cursor: auto;
   color: #7D7D7D;
@@ -849,14 +849,6 @@ exports[`OrderContent should render without error, limit order 1`] = `
   user-select: text;
 }
 
-.c14 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
 .c15 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -886,7 +878,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
 }
 
 .c4 img {
-  width: 20px;
+  width: 19px;
   height: 40px;
   object-fit: cover;
 }
@@ -938,6 +930,14 @@ exports[`OrderContent should render without error, limit order 1`] = `
   line-height: 16px;
 }
 
+.c14 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c9 {
   margin: 28px 0;
 }
@@ -977,12 +977,12 @@ exports[`OrderContent should render without error, limit order 1`] = `
                   <img
                     class="c5"
                     size="40"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    src="blank_token.svg"
                   />
                   <img
                     class="c5"
                     size="40"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                    src="blank_token.svg"
                   />
                 </div>
               </div>
@@ -1019,7 +1019,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
                 >
                   <div
                     class="c13 css-vhdk4b"
-                    data-testid="INPUT-amount"
+                    data-testid="input-amount"
                   >
                     252.074
                      
@@ -1089,7 +1089,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
                 >
                   <div
                     class="c13 css-vhdk4b"
-                    data-testid="OUTPUT-amount"
+                    data-testid="output-amount"
                   >
                     0.10684
                      
@@ -1235,65 +1235,6 @@ exports[`OrderContent should render without error, limit order 1`] = `
 `;
 
 exports[`OrderContent should render without error, open order 1`] = `
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c10 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c12 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c17 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
 .c1 {
   box-sizing: border-box;
   margin: 0;
@@ -1463,6 +1404,65 @@ exports[`OrderContent should render without error, open order 1`] = `
   background-color: transparent;
 }
 
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c17 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .c20 {
   cursor: auto;
   color: #7D7D7D;
@@ -1505,14 +1505,6 @@ exports[`OrderContent should render without error, open order 1`] = `
   user-select: text;
 }
 
-.c14 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
 .c15 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1542,7 +1534,7 @@ exports[`OrderContent should render without error, open order 1`] = `
 }
 
 .c4 img {
-  width: 20px;
+  width: 19px;
   height: 40px;
   object-fit: cover;
 }
@@ -1581,6 +1573,14 @@ exports[`OrderContent should render without error, open order 1`] = `
   position: relative;
   top: 0;
   left: 0;
+}
+
+.c14 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .c9 {
@@ -1622,12 +1622,12 @@ exports[`OrderContent should render without error, open order 1`] = `
                   <img
                     class="c5"
                     size="40"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    src="blank_token.svg"
                   />
                   <img
                     class="c5"
                     size="40"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                    src="blank_token.svg"
                   />
                 </div>
               </div>
@@ -1664,7 +1664,7 @@ exports[`OrderContent should render without error, open order 1`] = `
                 >
                   <div
                     class="c13 css-vhdk4b"
-                    data-testid="INPUT-amount"
+                    data-testid="input-amount"
                   >
                     252.074
                      
@@ -1734,7 +1734,7 @@ exports[`OrderContent should render without error, open order 1`] = `
                 >
                   <div
                     class="c13 css-vhdk4b"
-                    data-testid="OUTPUT-amount"
+                    data-testid="output-amount"
                   >
                     0.10684
                      

@@ -9,7 +9,6 @@ import { useWeb3React } from '@web3-react/core'
 import { RB_FACTORY_ADDRESSES, RB_REGISTRY_ADDRESSES } from 'constants/addresses'
 import { POOLS_LIST } from 'constants/lists'
 import { ZERO_ADDRESS } from 'constants/misc'
-import { GRG } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useContract } from 'hooks/useContract'
 import usePrevious from 'hooks/usePrevious'
@@ -29,6 +28,7 @@ import { TransactionType } from 'state/transactions/types'
 import POOL_EXTENDED_ABI from 'uniswap/src/abis/pool-extended.json'
 import RB_POOL_FACTORY_ABI from 'uniswap/src/abis/rb-pool-factory.json'
 import RB_REGISTRY_ABI from 'uniswap/src/abis/rb-registry.json'
+import { GRG } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
@@ -67,13 +67,16 @@ export interface PoolRegisteredLog {
   userHasStake?: boolean
 }
 
-function useStartBlock(chainId: number | undefined): number | undefined {
+function useStartBlock(chainId?: number): {fromBlock: number, toBlock?: number } {
   let registryStartBlock
   const blockNumber = useBlockNumber()
 
+  // TODO: bsc is served by infura via proxy, and returns an error on past logs regardless of range
+  const toBlock: number | undefined = chainId === 56 ? blockNumber : undefined
+
   if (chainId === UniverseChainId.Mainnet) {
     registryStartBlock = 15834693
-  } else if (chainId === UniverseChainId.Goerli) {
+  } else if (chainId === UniverseChainId.Sepolia) {
     registryStartBlock = 7807806
   } else if (chainId === UniverseChainId.ArbitrumOne) {
     registryStartBlock = 35439804
@@ -82,20 +85,20 @@ function useStartBlock(chainId: number | undefined): number | undefined {
   } else if (chainId === UniverseChainId.Polygon) {
     registryStartBlock = 35228892
   } else if (chainId === UniverseChainId.Base) {
-    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
+    registryStartBlock = 2565256 //typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
   } else if (chainId === UniverseChainId.Bnb) {
-    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
+    registryStartBlock = 25549625 //typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
   } else {
-    registryStartBlock = undefined
+    registryStartBlock = 1000
   }
 
-  return registryStartBlock
+  return { fromBlock: registryStartBlock, toBlock }
 }
 
 /**
  * Need pool events to get list of pools by owner.
  */
-function useFormattedPoolCreatedLogs(contract: Contract | null, fromBlock: number): PoolRegisteredLog[] | undefined {
+function useFormattedPoolCreatedLogs(contract: Contract | null, fromBlock: number, toBlock: number | undefined): PoolRegisteredLog[] | undefined {
   // create filters for Registered events
   const filter = useMemo(() => {
     const logFilter = contract?.filters?.Registered()
@@ -105,18 +108,23 @@ function useFormattedPoolCreatedLogs(contract: Contract | null, fromBlock: numbe
     return {
       ...logFilter,
       fromBlock,
+      toBlock
     }
-  }, [contract, fromBlock])
+  }, [contract, fromBlock, toBlock])
 
   const useLogsResult = useLogs(filter)
 
+  // TODO: define Result type
+  // TODO: since we use our rpc endpoints as backup, which return multichain pools,
+  //  we should check whether to filter by chain, or display chain on ui (but not clickable pool)
+  //  and handle rpc call on non-existing pools on a chain, as that will return empty data.
   return useMemo(() => {
     return useLogsResult?.logs
-      ?.map((log) => {
+      ?.map((log: any) => {
         const parsed = RegistryInterface.parseLog(log).args
         return parsed
       })
-      ?.map((parsed) => {
+      ?.map((parsed: any) => {
         const group = parsed.group
         const pool = parsed.pool
         const name = parseBytes32String(parsed.name)
@@ -132,30 +140,9 @@ function useFormattedPoolCreatedLogs(contract: Contract | null, fromBlock: numbe
 export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolean } {
   const account = useAccount()
   const registry = useRegistryContract()
-  const blockNumber = useBlockNumber()
+  const { fromBlock, toBlock } = useStartBlock(account.chainId)
 
-  // get metadata from past events
-  let registryStartBlock
-
-  if (account.chainId === UniverseChainId.Mainnet) {
-    registryStartBlock = 15834693
-  } else if (account.chainId === UniverseChainId.Goerli) {
-    registryStartBlock = 7807806
-  } else if (account.chainId === UniverseChainId.ArbitrumOne) {
-    registryStartBlock = 35439804
-  } else if (account.chainId === UniverseChainId.Optimism) {
-    registryStartBlock = 34629059
-  } else if (account.chainId === UniverseChainId.Polygon) {
-    registryStartBlock = 35228892
-  } else if (account.chainId === UniverseChainId.Base && blockNumber) {
-    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
-  } else if (account.chainId === UniverseChainId.Bnb && blockNumber) {
-    registryStartBlock = typeof blockNumber === 'number' ? blockNumber - 4000 : blockNumber
-  } else {
-    registryStartBlock = blockNumber as number
-  }
-
-  const formattedLogsV1: PoolRegisteredLog[] | undefined = useFormattedPoolCreatedLogs(registry, registryStartBlock)
+  const formattedLogsV1: PoolRegisteredLog[] | undefined = useFormattedPoolCreatedLogs(registry, fromBlock, toBlock)
 
   const poolsFromList = usePoolsFromList(registry, account.chainId)
 
@@ -180,11 +167,11 @@ export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolea
 // Bsc endpoints have eth_getLogs limit, so we query pools before recent history from pools list endpoint
 export function usePoolsFromList(
   regitry: Contract | null,
-  chainId: number | undefined
+  chainId?: number
 ): PoolRegisteredLog[] | undefined {
   const poolsFromList = usePoolsFromUrl(POOLS_LIST)
   const pools = useMemo(
-    () => poolsFromList?.filter((n) => n.chainId === Number(chainId ?? 1)),
+    () => poolsFromList?.filter((n) => n.chainId === chainId ?? UniverseChainId.Mainnet),
     [chainId, poolsFromList]
   )
   const poolAddresses = useMemo(() => pools?.map((p) => [p.address]), [pools])
@@ -250,7 +237,8 @@ export function useCreateCallback(): (
 export function useRegisteredPools(): PoolRegisteredLog[] | undefined {
   const account = useAccount()
   const registry = useRegistryContract()
-  const fromBlock = useStartBlock(account.chainId)
+  const { fromBlock, toBlock } = useStartBlock(account.chainId)
+
   // create filters for Registered events
   const filter = useMemo(() => {
     const filter = registry?.filters?.Registered()
@@ -260,8 +248,9 @@ export function useRegisteredPools(): PoolRegisteredLog[] | undefined {
     return {
       ...filter,
       fromBlock,
+      toBlock
     }
-  }, [registry, fromBlock])
+  }, [registry, fromBlock, toBlock])
   const logs = useAppSelector((state) => state.logs)
   if (!account.chainId || !filter) {
     return []
@@ -441,7 +430,7 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
 
   const delegatedStakes = useMemo(() => {
     if (!stakesLoading && !stakesError && addresses && poolIds) {
-      return poolsStakes.map((call, i) => {
+      return poolsStakes.map((call: any, i: number) => {
         const id = poolIds[i]
         const result = call.result as CallStateResult
         return {
@@ -455,7 +444,7 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
 
   const delegatedOwnStakes = useMemo(() => {
     if (!ownStakesLoading && !ownStakesError && addresses && poolIds) {
-      return poolsOwnStakes.map((call, i) => {
+      return poolsOwnStakes.map((call: any, i: number) => {
         const id = poolIds[i]
         const result = call.result as CallStateResult
         return {
@@ -467,11 +456,11 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
     return undefined
   }, [ownStakesLoading, ownStakesError, addresses, poolIds, poolsOwnStakes])
 
-  const totalDelegatedStake = delegatedStakes?.reduce((prev, curr) => prev + Number(curr.delegatedStake), 0)
-  const totalPoolsOwnStake = delegatedOwnStakes?.reduce((prev, curr) => prev + Number(curr.poolOwnStake), 0)
+  const totalDelegatedStake = delegatedStakes?.reduce((prev: any, curr: any) => prev + Number(curr.delegatedStake), 0)
+  const totalPoolsOwnStake = delegatedOwnStakes?.reduce((prev: any, curr: any) => prev + Number(curr.poolOwnStake), 0)
   // TODO: check if should pass supply from parent
   const account = useWeb3React()
-  const supplyAmount = useTotalSupply(GRG[account.chainId ?? 1])
+  const supplyAmount = useTotalSupply(GRG[account.chainId ?? UniverseChainId.Mainnet])
 
   const yieldData = useMemo(() => {
     if (!delegatedStakes || !delegatedOwnStakes || !totalDelegatedStake || !totalPoolsOwnStake || !supplyAmount) {
@@ -541,7 +530,7 @@ export function useOperatedPools() {
   // TODO: careful: on swap page returns [], only by goint to 'Mint' page will it query events
   const operatedPools: Token[] | undefined = useMemo(() => {
     if (!account.address || !account.chainId || !results || !poolAddresses) {
-      return
+      return undefined
     }
     const mockToken = new Token(0, account.address, 1)
     return results
@@ -570,7 +559,7 @@ export function useOperatedPools() {
 
   const defaultPool = useMemo(() => {
     if (!operatedPools) {
-      return
+      return undefined
     }
     return operatedPools[0]
   }, [operatedPools])

@@ -13,6 +13,7 @@ import {
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { SpamCode } from 'wallet/src/data/types'
 import parseApproveTransaction from 'wallet/src/features/transactions/history/conversion/parseApproveTransaction'
+import parseBridgingTransaction from 'wallet/src/features/transactions/history/conversion/parseBridgingTransaction'
 import parseNFTMintTransaction from 'wallet/src/features/transactions/history/conversion/parseMintTransaction'
 import parseOnRampTransaction from 'wallet/src/features/transactions/history/conversion/parseOnRampTransaction'
 import parseReceiveTransaction from 'wallet/src/features/transactions/history/conversion/parseReceiveTransaction'
@@ -44,6 +45,9 @@ export default function extractTransactionDetails(
       break
     case RemoteTransactionType.Receive:
       typeInfo = parseReceiveTransaction(transaction)
+      break
+    case RemoteTransactionType.Bridging:
+      typeInfo = parseBridgingTransaction(transaction)
       break
     case RemoteTransactionType.Swap:
     case RemoteTransactionType.SwapOrder:
@@ -103,6 +107,7 @@ export default function extractTransactionDetails(
   return {
     routing: transaction.details.type === RemoteTransactionType.SwapOrder ? Routing.DUTCH_V2 : Routing.CLASSIC,
     id: transaction.details.hash,
+    // TODO: WALL-4919: Remove hardcoded Mainnet
     // fallback to mainnet, although this should never happen
     chainId: chainId ?? UniverseChainId.Mainnet,
     hash: transaction.details.hash,

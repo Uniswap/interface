@@ -1,4 +1,4 @@
-import { Warning } from 'constants/tokenSafety'
+import { Warning } from 'constants/deprecatedTokenSafety'
 import { AlertTriangle, Slash } from 'react-feather'
 import { Flex, styled, useSporeColors } from 'ui/src'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'

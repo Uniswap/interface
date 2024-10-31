@@ -1,6 +1,6 @@
 import { InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
+import { Box } from 'components/deprecated/Box'
 import styled from 'lib/styled-components'
-import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/ActivitySwitcher.css'
 import { useIsCollectionLoading } from 'nft/hooks'

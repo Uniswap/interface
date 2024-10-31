@@ -1,18 +1,30 @@
 import type { Filter } from '@ethersproject/providers'
-import { useWeb3React } from '@web3-react/core'
+//import { useWeb3React } from '@web3-react/core'
+import { getBackupRpcProvider, RPC_PROVIDERS } from 'constants/providers'
 import { useAccount } from 'hooks/useAccount'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { fetchedLogs, fetchedLogsError, fetchingLogs } from 'state/logs/slice'
 import { isHistoricalLog, keyToFilter } from 'state/logs/utils'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 
 export default function Updater(): null {
   const dispatch = useAppDispatch()
   const state = useAppSelector((state) => state.logs)
   const { chainId } = useAccount()
-  const { provider } = useWeb3React()
+  //const { provider } = useWeb3React()
+  // TODO: test that using our providers works inside mobile wallets
+  // TODO: should be dependent on chainId, so we can switch provider on switch chain, unless we
+  //  use our multichain provider
+  let provider = RPC_PROVIDERS[chainId ?? UniverseChainId.Mainnet]
+
+  // TODO: check if we want to use our endpoints as addition to use onchain logs and ours combined
+  // TODO: check define provider inside useEffect, so will update on chain switch.
+  if (chainId === UniverseChainId.Bnb) {
+    provider = getBackupRpcProvider(chainId ?? UniverseChainId.Mainnet)
+  }
 
   const blockNumber = useBlockNumber()
 

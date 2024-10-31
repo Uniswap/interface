@@ -1,10 +1,11 @@
 query AccountList(
   $addresses: [String!]!
   $valueModifiers: [PortfolioValueModifier!]
+  $chains: [Chain!]
 ) {
   portfolios(
     ownerAddresses: $addresses
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB, BLAST, ZORA, CELO, AVALANCHE, ZKSYNC]
+    chains: $chains
     valueModifiers: $valueModifiers
   ) {
     id

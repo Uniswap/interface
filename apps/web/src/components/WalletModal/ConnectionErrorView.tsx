@@ -1,4 +1,4 @@
-import { ButtonEmpty, ButtonPrimary } from 'components/Button'
+import { ButtonEmpty, ButtonPrimary } from 'components/Button/buttons'
 import Modal from 'components/Modal'
 import { useConnect } from 'hooks/useConnect'
 import styled from 'lib/styled-components'

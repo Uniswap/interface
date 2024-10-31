@@ -8,12 +8,12 @@ import { X } from 'react-feather'
 import { PoolInfo /*,useDerivedPoolInfo*/ } from 'state/buy/hooks'
 import styled from 'lib/styled-components'
 import { ThemedText } from 'theme/components/text'
+import { GRG } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { logger } from 'utilities/src/logger/logger'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { TextButton } from 'components/vote/DelegateModal'
-import { GRG } from 'constants/tokens'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
 import useENS from 'hooks/useENS'
 import { ResponsiveHeaderText, SmallMaxButton } from 'pages/RemoveLiquidity/styled'
@@ -30,15 +30,16 @@ import {
 import { useFreeStakeBalance } from 'state/stake/hooks'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import AddressInputPanel from 'components/AddressInputPanel'
-import { /*ButtonConfirmed,*/ ButtonPrimary } from 'components/Button'
+import { /*ButtonConfirmed,*/ ButtonPrimary } from 'components/Button/buttons'
 //import { ButtonError } from '../Button'
-import { LightCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
+import { LightCard } from 'components/Card/cards'
+import { AutoColumn } from 'components/deprecated/Column'
+import { AutoRow, RowBetween } from 'components/deprecated/Row'
 import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
-import { AutoRow, RowBetween } from 'components/Row'
 import Slider from 'components/Slider'
 import { useAccount } from 'hooks/useAccount'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -63,7 +64,7 @@ export default function MoveStakeModal({ isOpen, poolInfo, isDeactivate, onDismi
   const account = useAccount()
 
   // state for delegate input
-  const [currencyValue] = useState<Currency>(GRG[account.chainId ?? 1])
+  const [currencyValue] = useState<Currency>(GRG[account.chainId ?? UniverseChainId.Mainnet])
   const [typed, setTyped] = useState('')
   const [isPoolMoving, setIsPoolMoving] = useState(false)
 

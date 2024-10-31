@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getUniqueId } from 'react-native-device-info'
 import { useDispatch } from 'react-redux'
+import { useUnitagsClaimEligibilityQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsClaimEligibilityQuery'
 import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -17,15 +18,14 @@ import {
   UnitagGetAvatarUploadUrlResponse,
 } from 'uniswap/src/features/unitags/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
-import { getFirebaseAppCheckToken } from 'wallet/src/features/appCheck'
+import { getFirebaseAppCheckToken } from 'wallet/src/features/appCheck/appCheck'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import { claimUnitag, getUnitagAvatarUploadUrl, useUnitagClaimEligibilityQuery } from 'wallet/src/features/unitags/api'
+import { claimUnitag, getUnitagAvatarUploadUrl } from 'wallet/src/features/unitags/api'
 import { isLocalFileUri, uploadAndUpdateAvatarAfterClaim } from 'wallet/src/features/unitags/avatars'
 import { AVATAR_UPLOAD_CREDS_EXPIRY_SECONDS, UNITAG_VALID_REGEX } from 'wallet/src/features/unitags/constants'
 import { parseUnitagErrorCode } from 'wallet/src/features/unitags/utils'
@@ -45,24 +45,29 @@ export const useCanActiveAddressClaimUnitag = (): {
   const { refetchUnitagsCounter } = useUnitagUpdater()
   const skip = !deviceId
 
-  const { loading, data, refetch } = useUnitagClaimEligibilityQuery({
-    address: activeAddress,
-    deviceId: deviceId ?? '', // this is fine since we skip if deviceId is undefined
-    skip,
+  const { isLoading, data, refetch } = useUnitagsClaimEligibilityQuery({
+    params: skip
+      ? undefined
+      : {
+          address: activeAddress,
+          deviceId,
+        },
   })
 
   // Force refetch of canClaimUnitag if refetchUnitagsCounter changes
   useEffect(() => {
-    if (skip || loading) {
+    if (skip || isLoading) {
       return
     }
 
-    refetch?.()
+    refetch().catch((error) =>
+      logger.error(error, { tags: { file: 'unitags/hooks.ts', function: 'useCanActiveAddressClaimUnitag' } }),
+    )
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refetchUnitagsCounter])
 
   return {
-    canClaimUnitag: !loading && !!data?.canClaim,
+    canClaimUnitag: !isLoading && !!data?.canClaim,
   }
 }
 
@@ -73,26 +78,32 @@ export const useCanAddressClaimUnitag = (
   const { data: deviceId } = useAsyncData(getUniqueId)
   const { refetchUnitagsCounter } = useUnitagUpdater()
   const skip = !deviceId
-  const { loading, data, refetch } = useUnitagClaimEligibilityQuery({
-    address,
-    deviceId: deviceId ?? '', // this is fine since we skip if deviceId is undefined
-    isUsernameChange,
-    skip,
+
+  const { isLoading, data, refetch } = useUnitagsClaimEligibilityQuery({
+    params: skip
+      ? undefined
+      : {
+          address,
+          deviceId,
+          isUsernameChange,
+        },
   })
 
   // Force refetch of canClaimUnitag if refetchUnitagsCounter changes
   useEffect(() => {
-    if (skip || loading) {
+    if (skip || isLoading) {
       return
     }
 
-    refetch?.()
+    refetch().catch((error) =>
+      logger.error(error, { tags: { file: 'unitags/hooks.ts', function: 'useCanAddressClaimUnitag' } }),
+    )
     // Skip is included in the dependency array here bc of useAsyncData -- on mount deviceId is undefined so refetch would be skipped if not included
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refetchUnitagsCounter, skip])
 
   return {
-    canClaimUnitag: !loading && !!data?.canClaim,
+    canClaimUnitag: !isLoading && !!data?.canClaim,
     errorCode: data?.errorCode,
   }
 }
@@ -115,10 +126,7 @@ export const getUnitagFormatError = (unitag: string, t: TFunction): string | und
   return undefined
 }
 
-export const useCanClaimUnitagName = (
-  unitagAddress: Address | undefined,
-  unitag: string | undefined,
-): { error: string | undefined; loading: boolean; requiresENSMatch: boolean } => {
+export const useCanClaimUnitagName = (unitag: string | undefined): { error: string | undefined; loading: boolean } => {
   const { t } = useTranslation()
 
   // Check for length and alphanumeric characters
@@ -130,19 +138,14 @@ export const useCanClaimUnitagName = (
     params: unitagToSearch ? { username: unitagToSearch } : undefined,
     staleTime: 2 * ONE_MINUTE_MS,
   })
-  const { loading: ensLoading, address: ensAddress } = useENS(UniverseChainId.Mainnet, unitagToSearch, true)
+  const { loading: ensLoading } = useENS(UniverseChainId.Mainnet, unitagToSearch, true)
   const loading = unitagLoading || ensLoading
 
-  // Check for availability and ENS match
-  const dataLoaded = !loading && !!data
-  const ensAddressMatchesUnitagAddress = areAddressesEqual(unitagAddress, ensAddress)
-  if (dataLoaded && !data.available) {
+  // Check for availability
+  if (!loading && !!data && !data.available) {
     error = t('unitags.claim.error.unavailable')
   }
-  if (dataLoaded && data.requiresEnsMatch && !ensAddressMatchesUnitagAddress) {
-    error = t('unitags.claim.error.ensMismatch')
-  }
-  return { error, loading, requiresENSMatch: data?.requiresEnsMatch ?? false }
+  return { error, loading }
 }
 
 /**

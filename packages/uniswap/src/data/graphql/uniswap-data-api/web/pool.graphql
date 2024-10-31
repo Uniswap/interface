@@ -57,8 +57,72 @@ query V3Pool($chain: Chain!, $address: String!) {
   }
 }
 
-query PoolPriceHistory($chain: Chain!, $address: String!, $duration: HistoryDuration!, $isV3: Boolean!) {
-  v3Pool(chain: $chain, address: $address) @include(if: $isV3) {
+query V4Pool($chain: Chain!, $poolId: String!) {
+  v4Pool(chain: $chain, poolId: $poolId) {
+    id
+    protocolVersion
+    feeTier
+    poolId
+    hook {
+      id
+      address
+    }
+    token0 {
+      ...SimpleTokenDetails
+      project {
+        id
+        markets(currencies: [USD]) {
+          id
+          price {
+            id
+            value
+          }
+        }
+        logo {
+          id
+          url
+        }
+      }
+    }
+    token0Supply
+    token1 {
+      ...SimpleTokenDetails
+      project {
+        id
+        markets(currencies: [USD]) {
+          id
+          price {
+            id
+            value
+          }
+        }
+        logo {
+          id
+          url
+        }
+      }
+    }
+    token1Supply
+    txCount
+    volume24h: cumulativeVolume(duration: DAY) {
+      value
+    }
+    historicalVolume(duration: WEEK) {
+      value
+      timestamp
+    }
+    totalLiquidity {
+      value
+    }
+    totalLiquidityPercentChange24h {
+      value
+    }
+  }
+}
+
+query PoolPriceHistory($chain: Chain!, $addressOrId: String!, $duration: HistoryDuration!, $isV4: Boolean!, $isV3: Boolean!, $isV2: Boolean!) {
+  v4Pool(chain: $chain, poolId: $addressOrId)
+  @include (if: $isV4) {
     id
     priceHistory(duration: $duration) {
       id
@@ -67,7 +131,18 @@ query PoolPriceHistory($chain: Chain!, $address: String!, $duration: HistoryDura
       timestamp
     }
   }
-  v2Pair(chain: $chain, address: $address) @skip(if: $isV3) {
+  v3Pool(chain: $chain, address: $addressOrId) 
+  @include (if: $isV3) {
+    id
+    priceHistory(duration: $duration) {
+      id
+      token0Price
+      token1Price
+      timestamp
+    }
+  }
+  v2Pair(chain: $chain, address: $addressOrId)
+  @include (if: $isV2) {
     id
     priceHistory(duration: $duration) {
       id
@@ -78,8 +153,9 @@ query PoolPriceHistory($chain: Chain!, $address: String!, $duration: HistoryDura
   }
 }
 
-query PoolVolumeHistory($chain: Chain!, $address: String!, $duration: HistoryDuration!, $isV3: Boolean!) {
-  v3Pool(chain: $chain, address: $address) @include(if: $isV3) {
+query PoolVolumeHistory($chain: Chain!, $addressOrId: String!, $duration: HistoryDuration!, $isV4: Boolean!, $isV3: Boolean!, $isV2: Boolean!) {
+  v4Pool(chain: $chain, poolId: $addressOrId) 
+  @include (if: $isV4) {
     id
     historicalVolume(duration: $duration) {
       id
@@ -87,7 +163,17 @@ query PoolVolumeHistory($chain: Chain!, $address: String!, $duration: HistoryDur
       timestamp
     }
   }
-  v2Pair(chain: $chain, address: $address) @skip(if: $isV3) {
+  v3Pool(chain: $chain, address: $addressOrId) 
+  @include (if: $isV3) {
+    id
+    historicalVolume(duration: $duration) {
+      id
+      value
+      timestamp
+    }
+  }
+  v2Pair(chain: $chain, address: $addressOrId) 
+  @include (if: $isV2) {
     id
     historicalVolume(duration: $duration) {
       id

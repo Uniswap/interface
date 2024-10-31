@@ -6,11 +6,11 @@ import { useLineChartPrice, useLineChartRelativeChange } from 'src/components/Pr
 import { AnimatedText } from 'src/components/text/AnimatedText'
 import { Flex, useSporeColors } from 'ui/src'
 import { AnimatedCaretChange } from 'ui/src/components/icons'
+import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
+import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isAndroid } from 'utilities/src/platform'
-import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
-import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
-import { useCurrentLocale } from 'wallet/src/features/language/hooks'
 
 export function PriceText({ maxWidth }: { loading: boolean; maxWidth?: number }): JSX.Element {
   const price = useLineChartPrice()
@@ -91,5 +91,9 @@ export function DatetimeText({ loading }: { loading: boolean }): JSX.Element | n
     return null
   }
 
-  return <AnimatedText color="$neutral2" text={datetime.formatted} variant="body1" />
+  return (
+    <Flex alignItems={isAndroid ? 'center' : 'flex-end'} gap="$spacing2" mt={isAndroid ? '$none' : '$spacing2'}>
+      <AnimatedText color="$neutral2" text={datetime.formatted} variant="body1" />
+    </Flex>
+  )
 }

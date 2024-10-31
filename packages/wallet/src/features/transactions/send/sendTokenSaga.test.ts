@@ -27,24 +27,24 @@ const account = signerMnemonicAccount()
 const { txRequest, ethersTxReceipt } = getTxFixtures()
 const { mockProvider } = getTxProvidersMocks(ethersTxReceipt)
 
-const erc20TranferParams: SendCurrencyParams = {
+const erc20TransferParams: SendCurrencyParams = {
   txId: '1',
   type: AssetType.Currency,
   account,
   tokenAddress: DAI.address,
-  chainId: UniverseChainId.Goerli,
+  chainId: UniverseChainId.Mainnet,
   toAddress: '0xdefaced',
   amountInWei: '100000000000000000',
   currencyAmountUSD: undefined,
 }
-const nativeTranferParams: SendCurrencyParams = {
-  ...erc20TranferParams,
-  tokenAddress: getNativeAddress(UniverseChainId.Goerli),
+const nativeTransferParams: SendCurrencyParams = {
+  ...erc20TransferParams,
+  tokenAddress: getNativeAddress(UniverseChainId.Mainnet),
 }
 const erc721TransferParams: SendNFTParams = {
   txId: '1',
   type: AssetType.ERC721,
-  chainId: UniverseChainId.Goerli,
+  chainId: UniverseChainId.Mainnet,
   account,
   toAddress: '0xdefaced',
   tokenAddress: '0xdeadbeef',
@@ -58,38 +58,39 @@ const erc1155TransferParams: SendNFTParams = {
 
 const typeInfo: SendTokenTransactionInfo = {
   assetType: AssetType.Currency,
-  currencyAmountRaw: erc20TranferParams.amountInWei,
-  recipient: erc20TranferParams.toAddress,
-  tokenAddress: erc20TranferParams.tokenAddress,
+  currencyAmountRaw: erc20TransferParams.amountInWei,
+  recipient: erc20TransferParams.toAddress,
+  tokenAddress: erc20TransferParams.tokenAddress,
   type: TransactionType.Send,
   currencyAmountUSD: undefined,
+  gasEstimates: undefined,
 }
 
 describe('sendTokenSaga', () => {
   it('Transfers native currency', async () => {
     const tx = {
       from: account.address,
-      to: nativeTranferParams.toAddress,
-      value: nativeTranferParams.amountInWei,
+      to: nativeTransferParams.toAddress,
+      value: nativeTransferParams.amountInWei,
     }
 
     await expectSaga(sendToken, {
-      sendTokenParams: nativeTranferParams,
+      sendTokenParams: nativeTransferParams,
       txRequest: tx,
     })
       .provide([
-        [call(getProvider, nativeTranferParams.chainId), mockProvider],
+        [call(getProvider, nativeTransferParams.chainId), mockProvider],
         [call(getContractManager), mockContractManager],
         [matchers.call.fn(sendTransaction), true],
       ])
       .call(sendTransaction, {
         transactionOriginType: TransactionOriginType.Internal,
-        chainId: nativeTranferParams.chainId,
-        account: nativeTranferParams.account,
+        chainId: nativeTransferParams.chainId,
+        account: nativeTransferParams.account,
         options: { request: tx },
         typeInfo: {
           ...typeInfo,
-          tokenAddress: nativeTranferParams.tokenAddress,
+          tokenAddress: nativeTransferParams.tokenAddress,
         },
         txId: '1',
       })
@@ -97,7 +98,7 @@ describe('sendTokenSaga', () => {
   })
   it('Transfers token currency', async () => {
     const params = {
-      ...erc20TranferParams,
+      ...erc20TransferParams,
       tokenAddress: DAI.address,
     }
 
@@ -106,14 +107,14 @@ describe('sendTokenSaga', () => {
       txRequest,
     })
       .provide([
-        [call(getProvider, erc20TranferParams.chainId), mockProvider],
+        [call(getProvider, erc20TransferParams.chainId), mockProvider],
         [call(getContractManager), mockContractManager],
         [matchers.call.fn(sendTransaction), true],
       ])
       .call(sendTransaction, {
         transactionOriginType: TransactionOriginType.Internal,
-        chainId: erc20TranferParams.chainId,
-        account: erc20TranferParams.account,
+        chainId: erc20TransferParams.chainId,
+        account: erc20TransferParams.account,
         options: { request: txRequest },
         typeInfo,
         txId: '1',
@@ -139,6 +140,7 @@ describe('sendTokenSaga', () => {
           tokenId: erc721TransferParams.tokenId,
           type: TransactionType.Send,
           currencyAmountUSD: undefined,
+          gasEstimates: undefined,
         },
         txId: '1',
       })
@@ -165,6 +167,7 @@ describe('sendTokenSaga', () => {
           tokenId: erc1155TransferParams.tokenId,
           type: TransactionType.Send,
           currencyAmountUSD: undefined,
+          gasEstimates: undefined,
         },
         txId: '1',
       })
@@ -177,11 +180,11 @@ describe('sendTokenSaga', () => {
       getBalance: jest.fn(() => BigNumber.from('0')),
     }
     await expectSaga(sendToken, {
-      sendTokenParams: nativeTranferParams,
+      sendTokenParams: nativeTransferParams,
       txRequest,
     })
       .provide([
-        [call(getProvider, nativeTranferParams.chainId), provider],
+        [call(getProvider, nativeTransferParams.chainId), provider],
         [call(getContractManager), mockContractManager],
       ])
       .silentRun()

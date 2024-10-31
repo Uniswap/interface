@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { DdLogs, DdRum, ErrorSource, RumActionType } from '@datadog/mobile-react-native'
+import { DdLogs, DdRum, DdSdkReactNative, ErrorSource, RumActionType } from '@datadog/mobile-react-native'
 import dayjs from 'dayjs'
 import { AnyAction, PreloadedState, Reducer, StoreEnhancerStoreCreator } from 'redux'
 import { addErrorExtras } from 'utilities/src/logger/logger'
@@ -124,4 +124,8 @@ export function attachUnhandledRejectionHandler(): void {
       }
     },
   })
+}
+
+export async function setAttributesToDatadog(attributes: { [key: string]: unknown }): Promise<void> {
+  await DdSdkReactNative.setAttributes(attributes)
 }

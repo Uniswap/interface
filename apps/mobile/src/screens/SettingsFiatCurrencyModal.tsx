@@ -7,10 +7,10 @@ import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Check } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
+import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
+import { useAppFiatCurrency, useFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
+import { setCurrentFiatCurrency } from 'uniswap/src/features/settings/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { FiatCurrency, ORDERED_CURRENCIES } from 'wallet/src/features/fiatCurrency/constants'
-import { useAppFiatCurrency, useFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
-import { setCurrentFiatCurrency } from 'wallet/src/features/fiatCurrency/slice'
 
 export function SettingsFiatCurrencyModal(): JSX.Element {
   const dispatch = useDispatch()

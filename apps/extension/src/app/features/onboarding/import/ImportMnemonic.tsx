@@ -1,5 +1,5 @@
 import { wordlists } from 'ethers'
-import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   NativeSyntheticEvent,
@@ -24,6 +24,8 @@ import { EditAccountAction, editAccountActions } from 'wallet/src/features/walle
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { isValidMnemonicWord, validateMnemonic } from 'wallet/src/utils/mnemonics'
 
+const inputRefs: Array<Input | null> = Array(24).fill(null)
+
 export function ImportMnemonic(): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -32,8 +34,6 @@ export function ImportMnemonic(): JSX.Element {
   const [expanded, setExpanded] = useState(false)
   const [errors, setErrors] = useState<Record<number, boolean | undefined>>({})
   const isEmptyMnemonic = useMemo(() => !mnemonic.join(' ').toLocaleLowerCase().trim(), [mnemonic])
-
-  const inputRefs = useRef<Array<Input | null>>(Array(24).fill(null))
 
   const accounts = useSignerAccounts()
 
@@ -65,7 +65,7 @@ export function ImportMnemonic(): JSX.Element {
       setErrors({})
 
       // We focus the last input on the next tick after the state has been updated.
-      setTimeout(() => inputRefs.current[words.length - 1]?.focus(), 0)
+      setTimeout(() => inputRefs[words.length - 1]?.focus(), 0)
 
       // Clear clipboard after paste
       navigator.clipboard.writeText('').catch(() => {})
@@ -86,7 +86,7 @@ export function ImportMnemonic(): JSX.Element {
 
         // Focus next input when the space key is pressed.
         if (word.length > 1 && word.endsWith(' ')) {
-          inputRefs.current[index + 1]?.focus()
+          inputRefs[index + 1]?.focus()
         }
 
         newMnemonic[index] = word.trim()
@@ -100,7 +100,7 @@ export function ImportMnemonic(): JSX.Element {
       (event: NativeSyntheticEvent<TextInputKeyPressEventData>): void => {
         // Focus previous input when the backspace key is pressed.
         if (event.nativeEvent.key === 'Backspace' && !mnemonic[index] && index > 0) {
-          inputRefs.current[index - 1]?.focus()
+          inputRefs[index - 1]?.focus()
         }
       },
     [mnemonic],
@@ -235,7 +235,7 @@ export function ImportMnemonic(): JSX.Element {
                       <Flex key={index} position="relative" style={styles.recoveryPhraseWord}>
                         <RecoveryPhraseWord
                           key={index + 'input'}
-                          ref={(ref) => (inputRefs.current[index] = ref)}
+                          ref={(ref) => (inputRefs[index] = ref)}
                           handleBlur={handleBlur}
                           handleChange={handleChange}
                           handleKeyPress={handleKeyPress}

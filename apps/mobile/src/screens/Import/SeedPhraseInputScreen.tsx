@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent } from 'react-native'
+import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
@@ -13,9 +14,10 @@ import {
   StringKey,
   handleSubmit,
 } from 'src/screens/Import/SeedPhraseInput'
-import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { onRestoreComplete } from 'src/screens/Import/onRestoreComplete'
+import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
-import { QuestionInCircleFilled } from 'ui/src/components/icons'
+import { PapersText, QuestionInCircleFilled } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -31,6 +33,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 export function SeedPhraseInputScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
   const { generateImportedAccounts } = useOnboardingContext()
 
   /**
@@ -47,7 +50,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
   const seedPhraseInputRef = useRef<NativeSeedPhraseInputRef>(null)
   const isRestoringMnemonic = params.importType === ImportType.RestoreMnemonic
 
-  useAddBackButton(navigation)
+  useNavigationHeader(navigation)
 
   const signerAccounts = useSignerAccounts()
   const targetMnemonicId = (isRestoringMnemonic && signerAccounts[0]?.mnemonicId) || undefined
@@ -56,12 +59,9 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
     async (storedMnemonicId: string) => {
       await generateImportedAccounts({ mnemonicId: storedMnemonicId, backupType: BackupType.Manual })
 
-      // restore flow is handled in saga after `restoreMnemonicComplete` is dispatched
-      if (!isRestoringMnemonic) {
-        navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
-      }
+      onRestoreComplete({ isRestoringMnemonic, dispatch, params, navigation })
     },
-    [generateImportedAccounts, isRestoringMnemonic, navigation, params],
+    [dispatch, generateImportedAccounts, isRestoringMnemonic, navigation, params],
   )
 
   const onPressRecoveryHelpButton = (): Promise<void> => openUri(uniswapUrls.helpArticleUrls.recoveryPhraseHowToImport)
@@ -72,6 +72,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
 
   return (
     <SafeKeyboardOnboardingScreen
+      Icon={PapersText}
       footer={
         <Trace logPress element={ElementName.Next}>
           <Button

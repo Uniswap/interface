@@ -1,8 +1,8 @@
 import Circle from 'assets/images/blue-loader.svg'
-import { ButtonPrimary } from 'components/Button'
-import { AutoColumn, ColumnCenter } from 'components/Column'
+import { ButtonPrimary } from 'components/Button/buttons'
+import { AutoColumn, ColumnCenter } from 'components/deprecated/Column'
+import { RowBetween } from 'components/deprecated/Row'
 import Modal from 'components/Modal'
-import { RowBetween } from 'components/Row'
 import { useAccount } from 'hooks/useAccount'
 import styled, { useTheme } from 'lib/styled-components'
 import { useState } from 'react'
@@ -10,8 +10,8 @@ import { ArrowUpCircle, X } from 'react-feather'
 import { useQueueCallback } from 'state/governance/hooks'
 import { CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
 import { Trans } from 'uniswap/src/i18n'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;

@@ -3,37 +3,29 @@ import { Currency } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { ReactNode, createContext, useCallback, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { WarningAction } from 'uniswap/src/components/modals/WarningModal/types'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
-import { GasFeeResult, GasSpeed } from 'uniswap/src/features/gas/types'
-import { SearchContext } from 'uniswap/src/features/search/SearchContext'
-import { WarningAction } from 'uniswap/src/features/transactions/WarningModal/types'
+import { AssetType } from 'uniswap/src/entities/assets'
+import { useTransactionGasFee, useTransactionGasWarning } from 'uniswap/src/features/gas/hooks'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
+import { useFormattedWarnings } from 'uniswap/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { ParsedWarnings } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
-import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
-import { useParsedSendWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
-import { useTransactionGasWarning } from 'wallet/src/features/transactions/hooks/useTransactionGasWarning'
 import { useDerivedSendInfo } from 'wallet/src/features/transactions/send/hooks/useDerivedSendInfo'
 import { useSendTransactionRequest } from 'wallet/src/features/transactions/send/hooks/useSendTransactionRequest'
 import { useSendWarnings } from 'wallet/src/features/transactions/send/hooks/useSendWarnings'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
-export enum SendScreen {
-  SendForm,
-  SendReview,
-}
-
-const ETH_TRADEABLE_ASSET: TradeableAsset = {
-  address: getNativeAddress(UniverseChainId.Mainnet),
-  chainId: UniverseChainId.Mainnet,
-  type: AssetType.Currency,
-}
-
-export const DEFAULT_SEND_STATE: Readonly<TransactionState> = {
-  [CurrencyField.INPUT]: ETH_TRADEABLE_ASSET,
+export const getDefaultSendState = (defaultChainId: UniverseChainId): Readonly<TransactionState> => ({
+  [CurrencyField.INPUT]: {
+    address: getNativeAddress(defaultChainId),
+    chainId: defaultChainId,
+    type: AssetType.Currency,
+  },
   [CurrencyField.OUTPUT]: null,
   exactCurrencyField: CurrencyField.INPUT,
   focusOnCurrencyField: CurrencyField.INPUT,
@@ -43,16 +35,14 @@ export const DEFAULT_SEND_STATE: Readonly<TransactionState> = {
   selectingCurrencyField: undefined,
   showRecipientSelector: true,
   customSlippageTolerance: undefined,
-}
+})
 
 type SendContextState = {
-  screen: SendScreen
-  setScreen: (newScreen: SendScreen) => void
   derivedSendInfo: ReturnType<typeof useDerivedSendInfo>
   gasFee: GasFeeResult
   warnings: ParsedWarnings
   txRequest: TransactionRequest | undefined
-  onSelectCurrency: (currency: Currency, _: CurrencyField, context: SearchContext) => void
+  onSelectCurrency: (currency: Currency, _currencyField: CurrencyField, _isBridgePair: boolean) => void
   updateSendForm: (newState: Partial<TransactionState>) => void
 } & TransactionState
 
@@ -67,10 +57,11 @@ export function SendContextProvider({
 }): JSX.Element {
   const { t } = useTranslation()
   const account = useActiveAccountWithThrow()
+  const { defaultChainId } = useEnabledChains()
+  const defaultSendState = getDefaultSendState(defaultChainId)
 
   // state
-  const [sendForm, setSendForm] = useState<TransactionState>(prefilledTransactionState || DEFAULT_SEND_STATE)
-  const [screen, setScreen] = useState<SendScreen>(SendScreen.SendForm)
+  const [sendForm, setSendForm] = useState<TransactionState>(prefilledTransactionState || defaultSendState)
   const updateSendForm = useCallback(
     (newState: Parameters<SendContextState['updateSendForm']>[0]): void => {
       setSendForm((prevState) => ({ ...prevState, ...newState }))
@@ -84,7 +75,6 @@ export function SendContextProvider({
   const txRequest = useSendTransactionRequest(derivedSendInfo)
   const gasFee = useTransactionGasFee(
     txRequest,
-    GasSpeed.Urgent,
     warnings.some((warning) => warning.action === WarningAction.DisableReview),
   )
   const txRequestWithGasSettings = useMemo(
@@ -99,11 +89,11 @@ export function SendContextProvider({
   const allSendWarnings = useMemo(() => {
     return !gasWarning ? warnings : [...warnings, gasWarning]
   }, [warnings, gasWarning])
-  const parsedSendWarnings = useParsedSendWarnings(allSendWarnings)
+  const parsedSendWarnings = useFormattedWarnings(allSendWarnings)
 
   // helper function for currency selection
   const onSelectCurrency = useCallback(
-    (currency: Currency, _: CurrencyField) => {
+    (currency: Currency, _currencyField: CurrencyField, _isBridgePair: boolean) => {
       updateSendForm({
         [CurrencyField.INPUT]: {
           address: currencyAddress(currency),
@@ -119,8 +109,6 @@ export function SendContextProvider({
   const state: SendContextState = useMemo(() => {
     return {
       derivedSendInfo,
-      screen,
-      setScreen,
       gasFee,
       warnings: parsedSendWarnings,
       txRequest: txRequestWithGasSettings,
@@ -137,14 +125,13 @@ export function SendContextProvider({
       isFiatInput: sendForm.isFiatInput,
       selectingCurrencyField: sendForm.selectingCurrencyField,
       showRecipientSelector: sendForm.showRecipientSelector,
+      selectedProtocols: sendForm.selectedProtocols,
       customSlippageTolerance: sendForm.customSlippageTolerance,
-      tradeProtocolPreference: sendForm.tradeProtocolPreference,
     }
   }, [
     derivedSendInfo,
     gasFee,
     parsedSendWarnings,
-    screen,
     sendForm.customSlippageTolerance,
     sendForm.exactAmountFiat,
     sendForm.exactAmountToken,
@@ -156,7 +143,7 @@ export function SendContextProvider({
     sendForm.recipient,
     sendForm.selectingCurrencyField,
     sendForm.showRecipientSelector,
-    sendForm.tradeProtocolPreference,
+    sendForm.selectedProtocols,
     sendForm.txId,
     txRequestWithGasSettings,
     onSelectCurrency,

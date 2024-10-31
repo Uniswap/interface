@@ -3,7 +3,7 @@ import { t } from 'i18next'
 import { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Flex, Separator, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
-import { AlertTriangle } from 'ui/src/components/icons'
+import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -12,6 +12,7 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { updateTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   QueuedOrderStatus,
@@ -28,7 +29,6 @@ import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext
 import { SwapTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/SwapTransactionDetails'
 import { isSwapTransactionInfo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
 import { ErroredQueuedOrderStatus, useErroredQueuedOrders } from 'wallet/src/features/transactions/hooks'
-import { useSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
 import { useActiveSignerAccount } from 'wallet/src/features/wallet/hooks'
 
 const QUEUE_STATUS_TO_MESSAGE = {
@@ -92,7 +92,7 @@ export function QueuedOrderModal(): JSX.Element | null {
         <Flex gap="$spacing12" pb={isWeb ? '$none' : '$spacing12'} px={isWeb ? '$none' : '$spacing24'}>
           <Flex centered gap="$spacing8">
             <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" mb="$spacing8" p="$spacing12">
-              <AlertTriangle color="$black" size="$icon.24" />
+              <AlertTriangleFilled color="$black" size="$icon.24" />
             </Flex>
 
             <Text textAlign="center" variant="subheading1">
@@ -105,7 +105,7 @@ export function QueuedOrderModal(): JSX.Element | null {
             </Text>
             <LearnMoreLink
               textColor="$neutral1"
-              textVariant="buttonLabel3"
+              textVariant="buttonLabel2"
               url={uniswapUrls.helpArticleUrls.uniswapXFailure}
             />
           </Flex>
@@ -119,12 +119,12 @@ export function QueuedOrderModal(): JSX.Element | null {
               size={buttonSize}
               onPress={onRetry}
             >
-              <Text color="$white" variant="buttonLabel3">
+              <Text color="$white" variant="buttonLabel2">
                 {t('common.button.retry')}
               </Text>
             </Button>
             <Button {...platformButtonStyling} size={buttonSize} theme="secondary" onPress={onCancel}>
-              <Text variant="buttonLabel3">{t('common.button.cancel')}</Text>
+              <Text variant="buttonLabel2">{t('common.button.cancel')}</Text>
             </Button>
           </Flex>
         </Flex>
@@ -142,7 +142,7 @@ function useTransactionState(transaction: TransactionDetails | undefined): Trans
 
   return useMemo(() => {
     if (!isSwap || !inputCurrency || !outputCurrency) {
-      return
+      return undefined
     }
 
     const input: TradeableAsset = {

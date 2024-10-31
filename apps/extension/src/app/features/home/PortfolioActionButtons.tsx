@@ -1,14 +1,16 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { cloneElement, memo } from 'react'
+import { cloneElement, memo, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useInterfaceBuyNavigator } from 'src/app/features/for/utils'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { Flex, Text, getTokenValue, useMedia } from 'ui/src'
 import { ArrowDownCircle, Buy, CoinConvert, SendAction } from 'ui/src/components/icons'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
+import { TestnetModeModal } from 'wallet/src/components/modals/TestnetModeModal'
 
 const ICON_COLOR = '$accent1'
 
@@ -51,13 +53,16 @@ function ActionButton({ label, Icon, onClick, url }: ActionButtonProps): JSX.Ele
       gap="$spacing12"
       hoverStyle={{ cursor: 'pointer', opacity: 0.8 }}
       justifyContent="space-between"
-      p="$spacing12"
+      // Reduced button label line height to 11 as suggested by design to eliminate extra bottom space.
+      pb={11}
       pressStyle={{ opacity: 0.5 }}
+      pt="$spacing12"
+      px="$spacing12"
       userSelect="none"
       onPress={actionHandler}
     >
       {cloneElement(Icon, { color: ICON_COLOR, size: getTokenValue('$icon.24') })}
-      <Text color="$accent1" fontWeight="600" variant="buttonLabel3">
+      <Text color="$accent1" fontWeight="600" variant="buttonLabel2">
         {label}
       </Text>
     </Flex>
@@ -67,6 +72,7 @@ function ActionButton({ label, Icon, onClick, url }: ActionButtonProps): JSX.Ele
 export const PortfolioActionButtons = memo(function _PortfolioActionButtons(): JSX.Element {
   const { t } = useTranslation()
   const media = useMedia()
+  const { isTestnetModeEnabled } = useEnabledChains()
 
   const onSendClick = (): void => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
@@ -92,12 +98,30 @@ export const PortfolioActionButtons = memo(function _PortfolioActionButtons(): J
     navigate(AppRoutes.Receive)
   }
 
-  const onBuyClick = useInterfaceBuyNavigator(ElementName.Buy)
+  const [isTestnetWarningModalOpen, setIsTestnetWarningModalOpen] = useState(false)
+  const handleTestnetWarningModalClose = useCallback(() => {
+    setIsTestnetWarningModalOpen(false)
+  }, [])
+
+  const onBuyNavigate = useInterfaceBuyNavigator(ElementName.Buy)
+  const onBuyClick = (): void => {
+    if (isTestnetModeEnabled) {
+      setIsTestnetWarningModalOpen(true)
+    } else {
+      onBuyNavigate()
+    }
+  }
 
   const isGrid = media.sm
 
   return (
     <Flex flexDirection={isGrid ? 'column' : 'row'} gap="$spacing8">
+      <TestnetModeModal
+        unsupported
+        isOpen={isTestnetWarningModalOpen}
+        descriptionCopy={t('tdp.noTestnetSupportDescription')}
+        onClose={handleTestnetWarningModalClose}
+      />
       <Flex row shrink gap="$spacing8" width={isGrid ? '100%' : '50%'}>
         <ActionButton Icon={<CoinConvert />} label={t('home.label.swap')} onClick={onSwapClick} />
         <ActionButton Icon={<Buy />} label={t('home.label.buy')} onClick={onBuyClick} />

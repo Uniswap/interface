@@ -1,5 +1,5 @@
-import Column from 'components/Column'
-import { ScrollBarStyles } from 'components/Common'
+import { ScrollBarStyles } from 'components/Common/styles'
+import Column from 'components/deprecated/Column'
 import styled from 'lib/styled-components'
 import { ArrowLeft } from 'react-feather'
 import { ClickableStyle, ThemedText } from 'theme/components'

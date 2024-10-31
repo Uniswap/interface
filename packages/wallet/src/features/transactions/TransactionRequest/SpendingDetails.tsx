@@ -3,17 +3,17 @@ import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { useUSDValueOfGasFee } from 'uniswap/src/features/gas/hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { isMobileApp } from 'utilities/src/platform'
-import { useUSDValue } from 'wallet/src/features/gas/hooks'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 
-export function SpendingEthDetails({ value, chainId }: { value: string; chainId: WalletChainId }): JSX.Element {
+export function SpendingEthDetails({ value, chainId }: { value: string; chainId: UniverseChainId }): JSX.Element {
   const variant = isMobileApp ? 'body3' : 'body4'
 
   const { t } = useTranslation()
@@ -27,7 +27,8 @@ export function SpendingEthDetails({ value, chainId }: { value: string; chainId:
         currency: nativeCurrencyInfo.currency,
       })
     : null
-  const usdValue = useUSDValue(chainId, value)
+
+  const { value: usdValue } = useUSDValueOfGasFee(chainId, value)
 
   const tokenAmountWithSymbol =
     formatCurrencyAmount({ value: nativeCurrencyAmount, type: NumberType.TokenTx }) +

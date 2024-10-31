@@ -15,12 +15,12 @@ import { Link, MoreHorizontal } from 'react-feather'
 import { useSearchParams } from 'react-router-dom'
 import { EllipsisTamaguiStyle } from 'theme/components'
 import { Flex, Text, WebBottomSheet, useMedia, useSporeColors } from 'ui/src'
-import { Check } from 'ui/src/components/icons'
+import { Check } from 'ui/src/components/icons/Check'
 import { iconSizes } from 'ui/src/theme'
 import { useTranslation } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { isMobileWeb } from 'utilities/src/platform'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 export const TokenDetailsHeader = () => {
   const { address, currency, tokenQuery } = useTDPContext()

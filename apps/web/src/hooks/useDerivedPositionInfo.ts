@@ -3,6 +3,9 @@ import { useCurrency } from 'hooks/Tokens'
 import { usePool } from 'hooks/usePools'
 import { PositionDetails } from 'types/position'
 
+/**
+ * @deprecated Legacy Pools pages. Use this instead: apps/web/src/pages/Pool/Positions/create/hooks.tsx
+ */
 export function useDerivedPositionInfo(positionDetails: PositionDetails | undefined): {
   position?: Position
   pool?: Pool

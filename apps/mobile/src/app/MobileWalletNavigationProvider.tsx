@@ -7,6 +7,7 @@ import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -14,6 +15,7 @@ import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { logger } from 'utilities/src/logger/logger'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import {
+  NavigateToExternalProfileArgs,
   NavigateToFiatOnRampArgs,
   NavigateToNftCollectionArgs,
   NavigateToNftItemArgs,
@@ -40,6 +42,7 @@ export function MobileWalletNavigationProvider({ children }: PropsWithChildren):
   const navigateToSwapFlow = useNavigateToSwapFlow()
   const navigateToTokenDetails = useNavigateToTokenDetails()
   const navigateToFiatOnRamp = useNavigateToFiatOnRamp()
+  const navigateToExternalProfile = useNavigateToExternalProfile()
 
   return (
     <WalletNavigationProvider
@@ -48,6 +51,7 @@ export function MobileWalletNavigationProvider({ children }: PropsWithChildren):
       navigateToAccountActivityList={navigateToAccountActivityList}
       navigateToAccountTokenList={navigateToAccountTokenList}
       navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
+      navigateToExternalProfile={navigateToExternalProfile}
       navigateToFiatOnRamp={navigateToFiatOnRamp}
       navigateToNftCollection={navigateToNftCollection}
       navigateToNftDetails={navigateToNftDetails}
@@ -138,13 +142,14 @@ function useNavigateToSend(): (args: NavigateToSendFlowArgs) => void {
 function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
   const dispatch = useDispatch()
 
+  const { defaultChainId } = useEnabledChains()
   return useCallback(
     (args: NavigateToSwapFlowArgs): void => {
-      const initialState = getNavigateToSwapFlowArgsInitialState(args)
+      const initialState = getNavigateToSwapFlowArgsInitialState(args, defaultChainId)
       dispatch(closeModal({ name: ModalName.Swap }))
       dispatch(openModal({ name: ModalName.Swap, initialState }))
     },
-    [dispatch],
+    [dispatch, defaultChainId],
   )
 }
 
@@ -222,5 +227,18 @@ function useNavigateToFiatOnRamp(): (args: NavigateToFiatOnRampArgs) => void {
       dispatch(openModal({ name: ModalName.FiatOnRampAggregator, initialState: { prefilledCurrency } }))
     },
     [dispatch],
+  )
+}
+
+function useNavigateToExternalProfile(): (args: NavigateToExternalProfileArgs) => void {
+  const navigation = useAppStackNavigation()
+
+  return useCallback(
+    ({ address }: NavigateToExternalProfileArgs): void => {
+      navigation.navigate(MobileScreens.ExternalProfile, {
+        address,
+      })
+    },
+    [navigation],
   )
 }

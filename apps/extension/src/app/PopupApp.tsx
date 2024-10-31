@@ -18,6 +18,8 @@ import { getReduxPersistor, getReduxStore } from 'src/store/store'
 import { Button, Flex, Image, Text } from 'ui/src'
 import { CHROME_LOGO, UNISWAP_LOGO } from 'ui/src/assets'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
+import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
@@ -25,10 +27,8 @@ import i18n from 'uniswap/src/i18n/i18n'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { logger } from 'utilities/src/logger/logger'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
-import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
-import { syncAppWithDeviceLanguage } from 'wallet/src/features/language/slice'
-import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
-import { SharedProvider } from 'wallet/src/provider'
+import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
+import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
 getLocalUserId()
   .then((userId) => {
@@ -55,6 +55,7 @@ function PopupContent(): JSX.Element {
   useEffect(() => {
     dispatch(syncAppWithDeviceLanguage())
   }, [dispatch])
+  useTestnetModeForLoggingAndAnalytics()
 
   const searchParams = new URLSearchParams(window.location.search)
   const tabId = searchParams.get('tabId')
@@ -128,22 +129,20 @@ export default function PopupApp(): JSX.Element {
       <PersistGate persistor={getReduxPersistor()}>
         <ExtensionStatsigProvider>
           <I18nextProvider i18n={i18n}>
-            <SharedProvider reduxStore={getReduxStore()}>
+            <SharedWalletProvider reduxStore={getReduxStore()}>
               <ErrorBoundary>
                 <GraphqlProvider>
                   <LocalizationContextProvider>
                     <UnitagUpdaterContextProvider>
-                      <WalletUniswapProvider>
-                        <TraceUserProperties />
-                        <DappContextProvider>
-                          <RouterProvider router={router} />
-                        </DappContextProvider>
-                      </WalletUniswapProvider>
+                      <TraceUserProperties />
+                      <DappContextProvider>
+                        <RouterProvider router={router} />
+                      </DappContextProvider>
                     </UnitagUpdaterContextProvider>
                   </LocalizationContextProvider>
                 </GraphqlProvider>
               </ErrorBoundary>
-            </SharedProvider>
+            </SharedWalletProvider>
           </I18nextProvider>
         </ExtensionStatsigProvider>
       </PersistGate>

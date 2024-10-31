@@ -12,27 +12,18 @@ import { TokenSelectorSendList } from 'uniswap/src/components/TokenSelector/Toke
 import { TokenSelectorSwapInputList } from 'uniswap/src/components/TokenSelector/TokenSelectorSwapInputList'
 import { TokenSelectorSwapOutputList } from 'uniswap/src/components/TokenSelector/TokenSelectorSwapOutputList'
 import { flowToModalName } from 'uniswap/src/components/TokenSelector/flowToModalName'
-import {
-  ConvertFiatAmountFormattedCallback,
-  FilterCallbacksHookType,
-  TokenOptionsHookType,
-  TokenOptionsWithBalanceOnlySearchHookType,
-  TokenOptionsWithChainFilterHookType,
-  TokenSection,
-  TokenSectionsForEmptySearchHookType,
-  TokenSelectorFlow,
-  TokenWarningDismissedHook,
-} from 'uniswap/src/components/TokenSelector/types'
+import { useFilterCallbacks } from 'uniswap/src/components/TokenSelector/hooks'
+import { TokenOptionSection, TokenSection, TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import PasteButton from 'uniswap/src/components/buttons/PasteButton'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
-import { PortfolioValueModifier } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
+import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
-import { TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName, SectionName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -41,94 +32,67 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getClipboard } from 'uniswap/src/utils/clipboard'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { isExtension, isInterface, isMobileApp, isMobileWeb } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useDebounce } from 'utilities/src/time/timing'
 
 export const TOKEN_SELECTOR_WEB_MAX_WIDTH = 400
+export const TOKEN_SELECTOR_WEB_MAX_HEIGHT = 700
 
 export enum TokenSelectorVariation {
   // used for Send flow, only show currencies with a balance
   BalancesOnly = 'balances-only',
 
-  // used for Swap input. tokens with balances + popular
-  BalancesAndPopular = 'balances-and-popular',
-
-  // used for Swap output. suggested (common bases), favorites + popular (top tokens)
-  SuggestedAndFavoritesAndPopular = 'suggested-and-favorites-and-popular',
+  // Swap input and output sections specced in 'Multichain UX: Token Selector and Swap' doc on Notion
+  SwapInput = 'swap-input', // balances, recent searches, favorites, popular
+  SwapOutput = 'swap-output', // suggested bases, balances, recent searches, favorites, popular
 }
 
 export interface TokenSelectorProps {
+  variation: TokenSelectorVariation
   isModalOpen: boolean
   currencyField: CurrencyField
   flow: TokenSelectorFlow
   activeAccountAddress?: string
   chainId?: UniverseChainId
-  valueModifiers?: PortfolioValueModifier[]
-  searchHistory?: TokenSearchResult[]
+  chainIds?: UniverseChainId[]
+  input?: TradeableAsset
   isSurfaceReady?: boolean
   isLimits?: boolean
-  hideChainSwitch?: boolean
   onClose: () => void
-  onDismiss: () => void
-  onPressAnimation: () => void
   onSelectChain?: (chainId: UniverseChainId | null) => void
-  onSelectCurrency: (currency: Currency, currencyField: CurrencyField, context: SearchContext) => void
-  variation: TokenSelectorVariation
-  addToSearchHistoryCallback: (currencyInfo: CurrencyInfo) => void
-  navigateToBuyOrReceiveWithEmptyWalletCallback: () => void
-  convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
-  formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
-  useTokenWarningDismissedHook: TokenWarningDismissedHook
-  useCommonTokensOptionsHook: TokenOptionsHookType
-  useFavoriteTokensOptionsHook: TokenOptionsHookType
-  usePopularTokensOptionsHook: TokenOptionsWithChainFilterHookType
-  usePortfolioTokenOptionsHook: TokenOptionsHookType
-  useTokenSectionsForEmptySearchHook: TokenSectionsForEmptySearchHookType
-  useTokenSectionsForSearchResultsHook: TokenOptionsWithBalanceOnlySearchHookType
-  useFilterCallbacksHook: FilterCallbacksHookType
+  onSelectCurrency: (currency: Currency, currencyField: CurrencyField, isBridgePair: boolean) => void
 }
 
 export function TokenSelectorContent({
   currencyField,
   flow,
-  searchHistory,
-  onSelectCurrency,
-  chainId,
-  valueModifiers,
-  onClose,
   variation,
+  input,
+  activeAccountAddress,
+  chainId,
+  chainIds,
   isSurfaceReady = true,
   isLimits,
-  hideChainSwitch,
-  activeAccountAddress,
-  onDismiss,
+  onClose,
   onSelectChain,
-  onPressAnimation,
-  addToSearchHistoryCallback,
-  convertFiatAmountFormattedCallback,
-  formatNumberOrStringCallback,
-  navigateToBuyOrReceiveWithEmptyWalletCallback,
-  useCommonTokensOptionsHook,
-  useFavoriteTokensOptionsHook,
-  usePopularTokensOptionsHook,
-  usePortfolioTokenOptionsHook,
-  useTokenWarningDismissedHook,
-  useTokenSectionsForEmptySearchHook,
-  useTokenSectionsForSearchResultsHook,
-  useFilterCallbacksHook,
+  onSelectCurrency,
 }: Omit<TokenSelectorProps, 'isModalOpen'>): JSX.Element {
   const { onChangeChainFilter, onChangeText, searchFilter, chainFilter, parsedChainFilter, parsedSearchFilter } =
-    useFilterCallbacksHook(chainId ?? null, flow)
+    useFilterCallbacks(chainId ?? null, flow)
   const debouncedSearchFilter = useDebounce(searchFilter)
   const debouncedParsedSearchFilter = useDebounce(parsedSearchFilter)
   const scrollbarStyles = useScrollbarStyles()
   const isKeyboardOpen = useIsKeyboardOpen()
+  const { navigateToBuyOrReceiveWithEmptyWallet } = useUniswapContext()
 
   const media = useMedia()
   const isSmallScreen = (media.sm && isInterface) || isMobileApp || isMobileWeb
 
   const [hasClipboardString, setHasClipboardString] = useState(false)
+
+  const { chains: enabledChains, isTestnetModeEnabled } = useEnabledChains()
 
   // Check if user clipboard has any text to show paste button
   useEffect(() => {
@@ -149,7 +113,7 @@ export function TokenSelectorContent({
   const { t } = useTranslation()
   const { page } = useTrace()
 
-  // Log currency field only for Swap as for Transfer it's always input
+  // Log currency field only for swap as for send it's always input
   const currencyFieldName =
     flow === TokenSelectorFlow.Swap
       ? currencyField === CurrencyField.INPUT
@@ -183,7 +147,8 @@ export function TokenSelectorContent({
         query: searchContext.query,
       })
 
-      onSelectCurrency(currencyInfo.currency, currencyField, searchContext)
+      const isBridgePair = section.sectionKey === TokenOptionSection.BridgingTokens
+      onSelectCurrency(currencyInfo.currency, currencyField, isBridgePair)
     },
     [flow, page, currencyField, onSelectCurrency, debouncedSearchFilter],
   )
@@ -199,8 +164,8 @@ export function TokenSelectorContent({
 
   const onSendEmptyActionPress = useCallback(() => {
     onClose()
-    navigateToBuyOrReceiveWithEmptyWalletCallback()
-  }, [navigateToBuyOrReceiveWithEmptyWalletCallback, onClose])
+    navigateToBuyOrReceiveWithEmptyWallet?.()
+  }, [navigateToBuyOrReceiveWithEmptyWallet, onClose])
 
   function onCancel(): void {
     setSearchInFocus(false)
@@ -214,16 +179,11 @@ export function TokenSelectorContent({
   const shouldAutoFocusSearch = isWeb && !media.sm
 
   const tokenSelector = useMemo(() => {
-    if (searchInFocus && !searchFilter) {
+    if (searchInFocus && !searchFilter && !isTestnetModeEnabled) {
       return (
         <TokenSelectorEmptySearchList
           chainFilter={chainFilter}
-          convertFiatAmountFormattedCallback={convertFiatAmountFormattedCallback}
-          formatNumberOrStringCallback={formatNumberOrStringCallback}
           isKeyboardOpen={isKeyboardOpen}
-          useTokenSectionsForEmptySearchHook={useTokenSectionsForEmptySearchHook}
-          useTokenWarningDismissedHook={useTokenWarningDismissedHook}
-          onDismiss={onDismiss}
           onSelectCurrency={onSelectCurrencyCallback}
         />
       )
@@ -233,20 +193,14 @@ export function TokenSelectorContent({
       return (
         <TokenSelectorSearchResultsList
           activeAccountAddress={activeAccountAddress}
-          addToSearchHistoryCallback={addToSearchHistoryCallback}
           chainFilter={chainFilter}
-          convertFiatAmountFormattedCallback={convertFiatAmountFormattedCallback}
           debouncedParsedSearchFilter={debouncedParsedSearchFilter}
           debouncedSearchFilter={debouncedSearchFilter}
-          formatNumberOrStringCallback={formatNumberOrStringCallback}
           isBalancesOnlySearch={variation === TokenSelectorVariation.BalancesOnly}
           isKeyboardOpen={isKeyboardOpen}
           parsedChainFilter={parsedChainFilter}
           searchFilter={searchFilter}
-          useTokenSectionsForSearchResultsHook={useTokenSectionsForSearchResultsHook}
-          useTokenWarningDismissedHook={useTokenWarningDismissedHook}
-          valueModifiers={valueModifiers}
-          onDismiss={onDismiss}
+          input={input}
           onSelectCurrency={onSelectCurrencyCallback}
         />
       )
@@ -258,81 +212,47 @@ export function TokenSelectorContent({
           <TokenSelectorSendList
             activeAccountAddress={activeAccountAddress}
             chainFilter={chainFilter}
-            convertFiatAmountFormattedCallback={convertFiatAmountFormattedCallback}
-            formatNumberOrStringCallback={formatNumberOrStringCallback}
             isKeyboardOpen={isKeyboardOpen}
-            searchHistory={searchHistory}
-            usePortfolioTokenOptionsHook={usePortfolioTokenOptionsHook}
-            useTokenWarningDismissedHook={useTokenWarningDismissedHook}
-            valueModifiers={valueModifiers}
-            onDismiss={onDismiss}
             onEmptyActionPress={onSendEmptyActionPress}
             onSelectCurrency={onSelectCurrencyCallback}
           />
         )
-      case TokenSelectorVariation.BalancesAndPopular:
+      case TokenSelectorVariation.SwapInput:
         return (
           <TokenSelectorSwapInputList
             activeAccountAddress={activeAccountAddress}
             chainFilter={chainFilter}
-            convertFiatAmountFormattedCallback={convertFiatAmountFormattedCallback}
-            formatNumberOrStringCallback={formatNumberOrStringCallback}
             isKeyboardOpen={isKeyboardOpen}
-            searchHistory={searchHistory}
-            useFavoriteTokensOptionsHook={useFavoriteTokensOptionsHook}
-            usePopularTokensOptionsHook={usePopularTokensOptionsHook}
-            usePortfolioTokenOptionsHook={usePortfolioTokenOptionsHook}
-            useTokenWarningDismissedHook={useTokenWarningDismissedHook}
-            valueModifiers={valueModifiers}
-            onDismiss={onDismiss}
             onSelectCurrency={onSelectCurrencyCallback}
           />
         )
-      case TokenSelectorVariation.SuggestedAndFavoritesAndPopular:
+      case TokenSelectorVariation.SwapOutput:
         return (
           <TokenSelectorSwapOutputList
+            input={input}
             activeAccountAddress={activeAccountAddress}
             chainFilter={chainFilter}
-            convertFiatAmountFormattedCallback={convertFiatAmountFormattedCallback}
-            formatNumberOrStringCallback={formatNumberOrStringCallback}
             isKeyboardOpen={isKeyboardOpen}
-            searchHistory={searchHistory}
-            useCommonTokensOptionsHook={useCommonTokensOptionsHook}
-            useFavoriteTokensOptionsHook={useFavoriteTokensOptionsHook}
-            usePopularTokensOptionsHook={usePopularTokensOptionsHook}
-            usePortfolioTokenOptionsHook={usePortfolioTokenOptionsHook}
-            useTokenWarningDismissedHook={useTokenWarningDismissedHook}
-            valueModifiers={valueModifiers}
-            onDismiss={onDismiss}
             onSelectCurrency={onSelectCurrencyCallback}
           />
         )
     }
+
+    return undefined
   }, [
     searchInFocus,
     searchFilter,
-    searchHistory,
+    isTestnetModeEnabled,
     variation,
-    activeAccountAddress,
-    isKeyboardOpen,
     chainFilter,
-    parsedChainFilter,
-    debouncedSearchFilter,
-    debouncedParsedSearchFilter,
-    valueModifiers,
-    onDismiss,
-    addToSearchHistoryCallback,
-    convertFiatAmountFormattedCallback,
-    formatNumberOrStringCallback,
+    isKeyboardOpen,
     onSelectCurrencyCallback,
+    activeAccountAddress,
+    debouncedParsedSearchFilter,
+    debouncedSearchFilter,
+    parsedChainFilter,
+    input,
     onSendEmptyActionPress,
-    useCommonTokensOptionsHook,
-    useFavoriteTokensOptionsHook,
-    usePopularTokensOptionsHook,
-    usePortfolioTokenOptionsHook,
-    useTokenSectionsForEmptySearchHook,
-    useTokenSectionsForSearchResultsHook,
-    useTokenWarningDismissedHook,
   ])
 
   return (
@@ -354,19 +274,16 @@ export function TokenSelectorContent({
               endAdornment={
                 <Flex row alignItems="center">
                   {hasClipboardString && <PasteButton inline onPress={handlePaste} />}
-                  {!hideChainSwitch && (
-                    <NetworkFilter
-                      includeAllNetworks
-                      selectedChain={chainFilter}
-                      styles={isExtension ? { dropdownZIndex: zIndices.overlay } : undefined}
-                      onDismiss={onDismiss}
-                      onPressAnimation={onPressAnimation}
-                      onPressChain={(newChainId) => {
-                        onChangeChainFilter(newChainId)
-                        onSelectChain?.(newChainId)
-                      }}
-                    />
-                  )}
+                  <NetworkFilter
+                    includeAllNetworks={!isTestnetModeEnabled}
+                    chainIds={chainIds || enabledChains}
+                    selectedChain={chainFilter}
+                    styles={isExtension ? { dropdownZIndex: zIndices.overlay } : undefined}
+                    onPressChain={(newChainId) => {
+                      onChangeChainFilter(newChainId)
+                      onSelectChain?.(newChainId)
+                    }}
+                  />
                 </Flex>
               }
               placeholder={t('tokens.selector.search.placeholder')}
@@ -375,7 +292,6 @@ export function TokenSelectorContent({
               value={searchFilter ?? ''}
               onCancel={isWeb ? undefined : onCancel}
               onChangeText={onChangeText}
-              onDismiss={onDismiss}
               onFocus={onFocus}
             />
           </Flex>
@@ -400,16 +316,14 @@ export function TokenSelectorContent({
 }
 
 function TokenSelectorModalContent(props: TokenSelectorProps): JSX.Element {
+  const { isModalOpen } = props
   const { isSheetReady } = useBottomSheetContext()
-
-  const { isModalOpen, onDismiss } = props
 
   useEffect(() => {
     if (isModalOpen) {
       // Dismiss native keyboard when opening modal in case it was opened by the current screen.
-      onDismiss()
+      dismissNativeKeyboard()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isModalOpen])
 
   return <TokenSelectorContent {...props} isSurfaceReady={isSheetReady} />
@@ -426,9 +340,10 @@ function _TokenSelectorModal(props: TokenSelectorProps): JSX.Element {
       hideKeyboardOnDismiss
       hideKeyboardOnSwipeDown
       renderBehindBottomInset
-      backgroundColor={colors.surface1.val}
+      backgroundColor={colors?.surface1?.val}
       isModalOpen={isModalOpen}
       maxWidth={isWeb ? TOKEN_SELECTOR_WEB_MAX_WIDTH : undefined}
+      maxHeight={isInterface ? TOKEN_SELECTOR_WEB_MAX_HEIGHT : undefined}
       name={ModalName.TokenSelector}
       padding="$none"
       snapPoints={['65%', '100%']}

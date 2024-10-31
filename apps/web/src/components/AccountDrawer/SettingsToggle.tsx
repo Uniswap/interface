@@ -1,9 +1,9 @@
-import Column from 'components/Column'
-import Row from 'components/Row'
-import Toggle from 'components/Toggle'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ThemedText } from 'theme/components'
+import { Switch } from 'ui/src'
 
 const StyledColumn = styled(Column)`
   width: 100%;
@@ -14,11 +14,12 @@ interface SettingsToggleProps {
   title: ReactNode
   description?: string
   dataid?: string
+  disabled?: boolean
   isActive: boolean
   toggle: () => void
 }
 
-export function SettingsToggle({ title, description, dataid, isActive, toggle }: SettingsToggleProps) {
+export function SettingsToggle({ title, description, dataid, isActive, toggle, disabled }: SettingsToggleProps) {
   return (
     <Row align="center">
       <StyledColumn>
@@ -33,7 +34,7 @@ export function SettingsToggle({ title, description, dataid, isActive, toggle }:
           </Row>
         )}
       </StyledColumn>
-      <Toggle id={dataid} isActive={isActive} toggle={toggle} />
+      <Switch testID={dataid} variant="branded" checked={isActive} onCheckedChange={toggle} disabled={disabled} />
     </Row>
   )
 }

@@ -25,10 +25,11 @@ import { X } from 'ui/src/components/icons/X'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { SHADOW_OFFSET_SMALL } from 'uniswap/src/components/BaseCard/BaseCard'
-import ViewGestureHandler from 'uniswap/src/components/ViewGestureHandler'
+import { ViewGestureHandler } from 'uniswap/src/components/ViewGestureHandler/ViewGestureHandler'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { isAndroid, isIOS } from 'utilities/src/platform'
 
 const DEFAULT_MIN_HEIGHT = 48
@@ -45,7 +46,6 @@ export const springConfig = {
 export type SearchTextInputProps = InputProps & {
   onCancel?: () => void
   onClose?: () => void
-  onDismiss: () => void
   clearIcon?: JSX.Element
   disableClearable?: boolean
   endAdornment?: JSX.Element | null
@@ -71,7 +71,6 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       onClose,
       onChangeText,
       onFocus,
-      onDismiss,
       placeholder,
       py = '$spacing12',
       px = '$spacing16',
@@ -93,7 +92,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       inputRef.current?.clear()
       setIsFocus(false)
       setShowClearButton(false)
-      onDismiss()
+      dismissNativeKeyboard()
       sendAnalyticsEvent(WalletEventName.ExploreSearchCancel, { query: value || '' })
       onChangeText?.('')
       onCancel?.()
@@ -112,10 +111,6 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     const onTextInputFocus = (e: NativeSyntheticEvent<TextInputFocusEventData>): void => {
       onFocus?.(e)
       setIsFocus(true)
-    }
-
-    const onTextInputSubmitEditing = (): void => {
-      onDismiss()
     }
 
     const onChangeTextInput = useCallback(
@@ -143,7 +138,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           px={px}
           py={py}
           {...(showShadow && {
-            shadowColor: '$DEP_brandedAccentSoft',
+            shadowColor: '$shadowColor',
             shadowOffset: SHADOW_OFFSET_SMALL,
             shadowOpacity: 0.25,
             shadowRadius: 6,
@@ -169,6 +164,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
                 backgroundColor="$transparent"
                 borderWidth={0}
                 fontFamily="$body"
+                fontWeight="$book"
                 height="100%"
                 maxFontSizeMultiplier={fonts.body1.maxFontSizeMultiplier}
                 outlineColor="transparent"
@@ -197,7 +193,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
                 width="100%"
                 onChangeText={onChangeTextInput}
                 onFocus={onTextInputFocus}
-                onSubmitEditing={onTextInputSubmitEditing}
+                onSubmitEditing={dismissNativeKeyboard}
               />
             </ViewGestureHandler>
           </Flex>

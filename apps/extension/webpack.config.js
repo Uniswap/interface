@@ -10,6 +10,7 @@ const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 const { sentryWebpackPlugin } = require('@sentry/webpack-plugin')
 
 const NODE_ENV = process.env.NODE_ENV || 'development'
+const POLL_ENV = process.env.WEBPACK_POLLING_INTERVAL
 
 // if not set tamagui wont add nice data-at, data-in etc debug attributes
 process.env.NODE_ENV = NODE_ENV
@@ -26,6 +27,7 @@ const compileNodeModules = [
   // the build proess (to the appropriate loader) and don't exclude them with other node_modules
   'expo-clipboard',
   'expo-linear-gradient',
+  'react-native-image-picker',
 ]
 
 // This is needed for webpack to compile JavaScript.
@@ -92,6 +94,9 @@ const {
 } = isDevelopment
   ? {
       dir: 'dev',
+      watchOptions: {
+        poll: POLL_ENV ? Number(POLL_ENV) : undefined,
+      },
       devServer: {
         // watchFiles: ['src/**/*', 'webpack.config.js'],
         host: '127.0.0.1',
@@ -167,12 +172,13 @@ module.exports = (env) => {
     mode: NODE_ENV,
     entry: {
       background: './src/background/background.ts',
-      onboarding: './src/onboarding/onboarding.tsx',
-      loadSidebar: './src/sidebar/loadSidebar.ts',
-      sidebar: './src/sidebar/sidebar.tsx',
+      onboarding: './src/entry/onboarding.tsx',
+      loadSidebar: './src/entry/loadSidebar.ts',
+      sidebar: './src/entry/sidebar.tsx',
       injected: './src/contentScript/injected.ts',
       ethereum: './src/contentScript/ethereum.ts',
-      popup: './src/popup/popup.tsx',
+      popup: './src/entry/popup.tsx',
+      unitagClaim: './src/entry/unitagClaim.tsx',
     },
     output: {
       filename: '[name].js',

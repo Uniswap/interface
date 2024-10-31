@@ -1,12 +1,12 @@
 import { Token } from '@uniswap/sdk-core'
 import { PersistState } from 'redux-persist'
-import { UserState } from 'state/user/reducer'
-import { serializeToken } from 'state/user/utils'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { PreV16UserState } from 'state/migrations/oldTypes'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { serializeToken } from 'uniswap/src/utils/currency'
 
 export type PersistAppStateV3 = {
   _persist: PersistState
-} & { user?: UserState }
+} & { user?: PreV16UserState }
 
 /**
  * Migration to clear users' imported token lists, after
@@ -15,17 +15,14 @@ export type PersistAppStateV3 = {
 export const migration3 = (state: PersistAppStateV3 | undefined) => {
   if (state?.user) {
     // Update USDC.e tokens to use the the new USDC.e symbol (from USDC)
-    const USDCe_ADDRESSES: { [key in InterfaceChainId]?: string } = {
+    const USDCe_ADDRESSES: { [key in UniverseChainId]?: string } = {
       [UniverseChainId.Optimism]: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
-      [UniverseChainId.OptimismGoerli]: '0x7E07E15D2a87A24492740D16f5bdF58c16db0c4E',
       [UniverseChainId.ArbitrumOne]: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
-      [UniverseChainId.ArbitrumGoerli]: '0x8FB1E3fC51F3b789dED7557E680551d93Ea9d892',
       [UniverseChainId.Avalanche]: '0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664',
       [UniverseChainId.Polygon]: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-      [UniverseChainId.PolygonMumbai]: '0xe11a86849d99f524cac3e7a0ec1241828e332c62',
     }
     for (const [chainId, address] of Object.entries(USDCe_ADDRESSES)) {
-      const chainIdKey = Number(chainId) as InterfaceChainId
+      const chainIdKey = Number(chainId) as UniverseChainId
       if (state.user.tokens?.[chainIdKey]?.[address]) {
         state.user.tokens[chainIdKey][address] = serializeToken(
           new Token(chainIdKey, address, 6, 'USDC.e', 'Bridged USDC'),

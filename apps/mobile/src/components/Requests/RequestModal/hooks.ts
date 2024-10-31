@@ -1,10 +1,11 @@
 import { useMemo } from 'react'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
-import { hasSufficientFundsIncludingGas } from 'wallet/src/features/transactions/utils'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export function useHasSufficientFunds({
   account,
@@ -13,12 +14,13 @@ export function useHasSufficientFunds({
   value,
 }: {
   account?: string
-  chainId?: WalletChainId
+  chainId?: UniverseChainId
   gasFee: GasFeeResult
   value?: string
 }): boolean {
-  const nativeCurrency = NativeCurrency.onChain(chainId || UniverseChainId.Mainnet)
-  const { balance: nativeBalance } = useOnChainNativeCurrencyBalance(chainId ?? UniverseChainId.Mainnet, account)
+  const { defaultChainId } = useEnabledChains()
+  const nativeCurrency = NativeCurrency.onChain(chainId || defaultChainId)
+  const { balance: nativeBalance } = useOnChainNativeCurrencyBalance(chainId ?? defaultChainId, account)
 
   const hasSufficientFunds = useMemo(() => {
     const transactionAmount =

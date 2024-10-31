@@ -1,19 +1,19 @@
 import { Currency } from '@uniswap/sdk-core'
 import blankTokenUrl from 'assets/svg/blank_token.svg'
 import { ReactComponent as UnknownStatus } from 'assets/svg/contract-interaction.svg'
+import Identicon from 'components/Identicon'
+import { ChainLogo } from 'components/Logo/ChainLogo'
 import {
   CircleLogoImage,
   DoubleCurrencyLogo,
   DoubleLogo,
   L2LogoContainer,
   SingleLogoContainer,
-} from 'components/DoubleLogo'
-import Identicon from 'components/Identicon'
-import { ChainLogo } from 'components/Logo/ChainLogo'
+} from 'components/Logo/DoubleLogo'
 import styled from 'lib/styled-components'
-import React from 'react'
+import React, { memo } from 'react'
 import { Flex, SpinningLoader, styled as TamaguiStyled } from 'ui/src'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const UnknownContract = styled(UnknownStatus)`
   color: ${({ theme }) => theme.neutral2};
@@ -28,7 +28,7 @@ const LogoContainer = styled.div`
 `
 
 interface PortfolioLogoProps {
-  chainId: InterfaceChainId
+  chainId: UniverseChainId
   accountAddress?: string
   currencies?: Array<Currency | undefined>
   images?: Array<string | undefined>
@@ -37,7 +37,7 @@ interface PortfolioLogoProps {
   loading?: boolean
 }
 
-function SquareL2Logo({ chainId, size }: { chainId: InterfaceChainId; size: number }) {
+function SquareL2Logo({ chainId, size }: { chainId: UniverseChainId; size: number }) {
   if (chainId === UniverseChainId.Mainnet) {
     return null
   }
@@ -63,7 +63,7 @@ const AbsoluteCenteredElement = TamaguiStyled(Flex, {
 /**
  * Renders an image by prioritizing a list of sources, and then eventually a fallback contract icon
  */
-export function PortfolioLogo(props: PortfolioLogoProps) {
+export const PortfolioLogo = memo(function PortfolioLogo(props: PortfolioLogoProps) {
   return (
     <LogoContainer style={props.style}>
       <Flex position="relative">
@@ -77,11 +77,14 @@ export function PortfolioLogo(props: PortfolioLogoProps) {
       <SquareL2Logo chainId={props.chainId} size={props.size ?? LOGO_DEFAULT_SIZE} />
     </LogoContainer>
   )
-}
+})
 
 function getLogo({ accountAddress, currencies, images, size = LOGO_DEFAULT_SIZE }: PortfolioLogoProps) {
   if (accountAddress) {
     return <Identicon account={accountAddress} size={size} />
+  }
+  if (images && images?.length >= 2) {
+    return <DoubleLogo logo1={images[0]} logo2={images[images.length - 1]} size={size} />
   }
   if (currencies && currencies.length) {
     return <DoubleCurrencyLogo currencies={currencies} size={size} />
@@ -92,9 +95,6 @@ function getLogo({ accountAddress, currencies, images, size = LOGO_DEFAULT_SIZE 
         <CircleLogoImage size={size} src={images[0] ?? blankTokenUrl} />
       </SingleLogoContainer>
     )
-  }
-  if (images && images?.length >= 2) {
-    return <DoubleLogo logo1={images[0]} logo2={images[images.length - 1]} size={size} />
   }
   return <UnknownContract width={size} height={size} />
 }

@@ -1,6 +1,7 @@
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
-import { NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { chainIdToBackendChain } from 'constants/chains'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCallback, useMemo, useRef } from 'react'
+import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import {
   PoolTransactionType,
   ProtocolVersion,
@@ -43,7 +44,7 @@ const PoolTransactionDefaultQuerySize = 25
 
 export function usePoolTransactions(
   address: string,
-  chainId?: SupportedInterfaceChainId,
+  chainId?: UniverseChainId,
   // sortState: PoolTxTableSortState, TODO(WEB-3706): Implement sorting when BE supports
   filter: PoolTableTransactionType[] = [
     PoolTableTransactionType.BUY,

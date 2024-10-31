@@ -3,7 +3,9 @@ import reducer, {
   addPopup,
   ApplicationModal,
   ApplicationState,
+  PopupType,
   removePopup,
+  setCloseModal,
   setOpenModal,
   setSmartPoolValue,
   updateChainId,
@@ -26,27 +28,27 @@ describe('application reducer', () => {
   describe('popupList', () => {
     describe('addPopup', () => {
       it('adds the popup to list with a generated id', () => {
-        store.dispatch(addPopup({ content: { txn: { hash: 'abc' } } }))
+        store.dispatch(addPopup({ content: { type: PopupType.Transaction, hash: 'abc' } }))
         const list = store.getState().popupList
         expect(list).toEqual([
           {
             key: expect.any(String),
             show: true,
-            content: { txn: { hash: 'abc' } },
+            content: { type: PopupType.Transaction, hash: 'abc' },
             removeAfterMs: 10000,
           },
         ])
       })
 
       it('replaces any existing popups with the same key', () => {
-        store.dispatch(addPopup({ key: 'abc', content: { txn: { hash: 'abc' } } }))
-        store.dispatch(addPopup({ key: 'abc', content: { txn: { hash: 'def' } } }))
+        store.dispatch(addPopup({ key: 'abc', content: { type: PopupType.Transaction, hash: 'abc' } }))
+        store.dispatch(addPopup({ key: 'abc', content: { type: PopupType.Transaction, hash: 'abc' } }))
         const list = store.getState().popupList
         expect(list).toEqual([
           {
             key: 'abc',
             show: true,
-            content: { txn: { hash: 'def' } },
+            content: { type: PopupType.Transaction, hash: 'abc' },
             removeAfterMs: 10000,
           },
         ])
@@ -55,7 +57,7 @@ describe('application reducer', () => {
 
     describe('removePopup', () => {
       beforeEach(() => {
-        store.dispatch(addPopup({ key: 'abc', content: { txn: { hash: 'abc' } } }))
+        store.dispatch(addPopup({ key: 'abc', content: { type: PopupType.Transaction, hash: 'abc' } }))
       })
 
       it('hides the popup', () => {
@@ -65,7 +67,7 @@ describe('application reducer', () => {
           {
             key: 'abc',
             show: false,
-            content: { txn: { hash: 'abc' } },
+            content: { type: PopupType.Transaction, hash: 'abc' },
             removeAfterMs: 10000,
           },
         ])
@@ -75,9 +77,9 @@ describe('application reducer', () => {
 
   describe('setOpenModal', () => {
     it('should correctly set the open modal', () => {
-      store.dispatch(setOpenModal(ApplicationModal.CLAIM_POPUP))
-      expect(store.getState().openModal).toEqual(ApplicationModal.CLAIM_POPUP)
-      store.dispatch(setOpenModal(null))
+      store.dispatch(setOpenModal({ name: ApplicationModal.CLAIM_POPUP }))
+      expect(store.getState().openModal).toEqual({ name: ApplicationModal.CLAIM_POPUP })
+      store.dispatch(setCloseModal())
       expect(store.getState().openModal).toEqual(null)
     })
   })

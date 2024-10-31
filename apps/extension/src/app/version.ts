@@ -1,4 +1,4 @@
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment'
+import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 import { StatsigEnvironmentTier } from 'wallet/src/version'
 
 // TODO: Add to analytics package and remove

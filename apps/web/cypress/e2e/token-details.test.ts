@@ -1,8 +1,8 @@
 import { WETH9 } from '@uniswap/sdk-core'
+import { ARB, UNI } from 'uniswap/src/constants/tokens'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'utilities/src/addresses'
-import { ARB, UNI } from '../../src/constants/tokens'
 import { getTestSelector } from '../utils'
 
 const UNI_MAINNET = UNI[UniverseChainId.Mainnet]
@@ -83,7 +83,7 @@ describe('Token details', () => {
     // Warning label should show if relevant ([spec](https://www.notion.so/3f7fce6f93694be08a94a6984d50298e))
     cy.get('[data-cy="token-safety-message"]').contains(/Warning/)
     cy.get('[data-cy="token-safety-description"]').contains(
-      /This token isn’t traded on leading U.S. centralized exchanges or frequently swapped on Uniswap./
+      /This token isn’t traded on leading U.S. centralized exchanges or frequently swapped on Uniswap./,
     )
   })
 
@@ -105,15 +105,15 @@ describe('Token details', () => {
 
     it('should automatically navigate to the new TDP', () => {
       cy.get(`#swap-currency-output .open-currency-select-button`).click()
-      cy.get('[data-reach-dialog-content]').contains('WETH').click()
-      cy.url().should('include', `${WETH9[1].address}`)
+      cy.get('[data-reach-dialog-content]').contains('WETH').click({ force: true })
+      cy.url().should('include', `${WETH9[1].address.toLowerCase()}`)
       cy.url().should('not.include', `${UNI_MAINNET.address}`)
     })
 
     it('should not share swap state with the main swap page', () => {
       cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'UNI')
       cy.get(`#swap-currency-input .open-currency-select-button`).click()
-      cy.contains('WETH').click()
+      cy.get(getTestSelector('token-option-1-WETH')).click()
       cy.visit('/swap')
       cy.contains('UNI').should('not.exist')
       cy.contains('WETH').should('not.exist')

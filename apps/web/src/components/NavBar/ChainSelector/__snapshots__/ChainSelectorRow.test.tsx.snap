@@ -106,96 +106,6 @@ exports[`ChainSelectorRow should match snapshot for chainId 1 1`] = `
 </div>
 `;
 
-exports[`ChainSelectorRow should match snapshot for chainId 5 1`] = `
-.c0 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background: none;
-  border: none;
-  border-radius: 12px;
-  color: #222222;
-  cursor: pointer;
-  display: grid;
-  grid-template-columns: min-content 1fr min-content;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  line-height: 20px;
-  opacity: 1;
-  padding: 10px 8px;
-  text-align: left;
-  outline: none;
-  -webkit-transition: 250ms ease background-color;
-  transition: 250ms ease background-color;
-  width: 100%;
-}
-
-.c0:hover {
-  background-color: #22222212;
-}
-
-.c1 {
-  grid-column: 2;
-  grid-row: 1;
-  font-size: 16px;
-  font-weight: 485;
-}
-
-.c2 {
-  grid-column: 3;
-  grid-row: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  width: 20px;
-}
-
-<div>
-  <span
-    class=""
-    style="display: contents;"
-  >
-    <span
-      class=" _dsp_contents"
-    >
-      <span
-        class=" t_light _dsp_contents is_Theme"
-      >
-        <button
-          class="c0"
-          data-testid="Görli-selector"
-        >
-          <img
-            alt="Görli logo"
-            aria-labelledby="titleID"
-            height="20px"
-            src="ethereum-logo.png"
-            style="margin-right: 12px; border-radius: 6px;"
-            width="20px"
-          />
-          <div
-            class="c1"
-          >
-            Görli
-          </div>
-          <div
-            class="c2"
-          />
-        </button>
-      </span>
-    </span>
-  </span>
-</div>
-`;
-
 exports[`ChainSelectorRow should match snapshot for chainId 10 1`] = `
 .c0 {
   -webkit-align-items: center;
@@ -556,7 +466,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 324 1`] = `
 </div>
 `;
 
-exports[`ChainSelectorRow should match snapshot for chainId 420 1`] = `
+exports[`ChainSelectorRow should match snapshot for chainId 480 1`] = `
 .c0 {
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -588,13 +498,6 @@ exports[`ChainSelectorRow should match snapshot for chainId 420 1`] = `
 }
 
 .c1 {
-  grid-column: 2;
-  grid-row: 1;
-  font-size: 16px;
-  font-weight: 485;
-}
-
-.c2 {
   grid-column: 3;
   grid-row: 1;
   display: -webkit-box;
@@ -621,23 +524,10 @@ exports[`ChainSelectorRow should match snapshot for chainId 420 1`] = `
       >
         <button
           class="c0"
-          data-testid="Optimism Görli-selector"
+          data-testid="undefined-selector"
         >
-          <img
-            alt="Optimism Görli logo"
-            aria-labelledby="titleID"
-            height="20px"
-            src="optimism-logo.png"
-            style="margin-right: 12px; border-radius: 6px;"
-            width="20px"
-          />
           <div
             class="c1"
-          >
-            Optimism Görli
-          </div>
-          <div
-            class="c2"
           />
         </button>
       </span>
@@ -1006,186 +896,6 @@ exports[`ChainSelectorRow should match snapshot for chainId 43114 1`] = `
 </div>
 `;
 
-exports[`ChainSelectorRow should match snapshot for chainId 44787 1`] = `
-.c0 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background: none;
-  border: none;
-  border-radius: 12px;
-  color: #222222;
-  cursor: pointer;
-  display: grid;
-  grid-template-columns: min-content 1fr min-content;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  line-height: 20px;
-  opacity: 1;
-  padding: 10px 8px;
-  text-align: left;
-  outline: none;
-  -webkit-transition: 250ms ease background-color;
-  transition: 250ms ease background-color;
-  width: 100%;
-}
-
-.c0:hover {
-  background-color: #22222212;
-}
-
-.c1 {
-  grid-column: 2;
-  grid-row: 1;
-  font-size: 16px;
-  font-weight: 485;
-}
-
-.c2 {
-  grid-column: 3;
-  grid-row: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  width: 20px;
-}
-
-<div>
-  <span
-    class=""
-    style="display: contents;"
-  >
-    <span
-      class=" _dsp_contents"
-    >
-      <span
-        class=" t_light _dsp_contents is_Theme"
-      >
-        <button
-          class="c0"
-          data-testid="Celo Alfajores-selector"
-        >
-          <img
-            alt="Celo Alfajores logo"
-            aria-labelledby="titleID"
-            height="20px"
-            src="celo-logo.png"
-            style="margin-right: 12px; border-radius: 6px;"
-            width="20px"
-          />
-          <div
-            class="c1"
-          >
-            Celo Alfajores
-          </div>
-          <div
-            class="c2"
-          />
-        </button>
-      </span>
-    </span>
-  </span>
-</div>
-`;
-
-exports[`ChainSelectorRow should match snapshot for chainId 80001 1`] = `
-.c0 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background: none;
-  border: none;
-  border-radius: 12px;
-  color: #222222;
-  cursor: pointer;
-  display: grid;
-  grid-template-columns: min-content 1fr min-content;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  line-height: 20px;
-  opacity: 1;
-  padding: 10px 8px;
-  text-align: left;
-  outline: none;
-  -webkit-transition: 250ms ease background-color;
-  transition: 250ms ease background-color;
-  width: 100%;
-}
-
-.c0:hover {
-  background-color: #22222212;
-}
-
-.c1 {
-  grid-column: 2;
-  grid-row: 1;
-  font-size: 16px;
-  font-weight: 485;
-}
-
-.c2 {
-  grid-column: 3;
-  grid-row: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  width: 20px;
-}
-
-<div>
-  <span
-    class=""
-    style="display: contents;"
-  >
-    <span
-      class=" _dsp_contents"
-    >
-      <span
-        class=" t_light _dsp_contents is_Theme"
-      >
-        <button
-          class="c0"
-          data-testid="Polygon Mumbai-selector"
-        >
-          <img
-            alt="Polygon Mumbai logo"
-            aria-labelledby="titleID"
-            height="20px"
-            src="polygon-logo.png"
-            style="margin-right: 12px; border-radius: 6px;"
-            width="20px"
-          />
-          <div
-            class="c1"
-          >
-            Polygon Mumbai
-          </div>
-          <div
-            class="c2"
-          />
-        </button>
-      </span>
-    </span>
-  </span>
-</div>
-`;
-
 exports[`ChainSelectorRow should match snapshot for chainId 81457 1`] = `
 .c0 {
   -webkit-align-items: center;
@@ -1276,96 +986,6 @@ exports[`ChainSelectorRow should match snapshot for chainId 81457 1`] = `
 </div>
 `;
 
-exports[`ChainSelectorRow should match snapshot for chainId 421613 1`] = `
-.c0 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background: none;
-  border: none;
-  border-radius: 12px;
-  color: #222222;
-  cursor: pointer;
-  display: grid;
-  grid-template-columns: min-content 1fr min-content;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  line-height: 20px;
-  opacity: 1;
-  padding: 10px 8px;
-  text-align: left;
-  outline: none;
-  -webkit-transition: 250ms ease background-color;
-  transition: 250ms ease background-color;
-  width: 100%;
-}
-
-.c0:hover {
-  background-color: #22222212;
-}
-
-.c1 {
-  grid-column: 2;
-  grid-row: 1;
-  font-size: 16px;
-  font-weight: 485;
-}
-
-.c2 {
-  grid-column: 3;
-  grid-row: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  width: 20px;
-}
-
-<div>
-  <span
-    class=""
-    style="display: contents;"
-  >
-    <span
-      class=" _dsp_contents"
-    >
-      <span
-        class=" t_light _dsp_contents is_Theme"
-      >
-        <button
-          class="c0"
-          data-testid="Arbitrum Goerli-selector"
-        >
-          <img
-            alt="Arbitrum Goerli logo"
-            aria-labelledby="titleID"
-            height="20px"
-            src="arbitrum-logo.png"
-            style="margin-right: 12px; border-radius: 6px;"
-            width="20px"
-          />
-          <div
-            class="c1"
-          >
-            Arbitrum Goerli
-          </div>
-          <div
-            class="c2"
-          />
-        </button>
-      </span>
-    </span>
-  </span>
-</div>
-`;
-
 exports[`ChainSelectorRow should match snapshot for chainId 7777777 1`] = `
 .c0 {
   -webkit-align-items: center;
@@ -1398,76 +1018,6 @@ exports[`ChainSelectorRow should match snapshot for chainId 7777777 1`] = `
 }
 
 .c1 {
-  grid-column: 3;
-  grid-row: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  width: 20px;
-}
-
-<div>
-  <span
-    class=""
-    style="display: contents;"
-  >
-    <span
-      class=" _dsp_contents"
-    >
-      <span
-        class=" t_light _dsp_contents is_Theme"
-      >
-        <button
-          class="c0"
-          data-testid="undefined-selector"
-        >
-          <div
-            class="c1"
-          />
-        </button>
-      </span>
-    </span>
-  </span>
-</div>
-`;
-
-exports[`ChainSelectorRow should match snapshot for chainId 11155111 1`] = `
-.c0 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background: none;
-  border: none;
-  border-radius: 12px;
-  color: #222222;
-  cursor: pointer;
-  display: grid;
-  grid-template-columns: min-content 1fr min-content;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  line-height: 20px;
-  opacity: 1;
-  padding: 10px 8px;
-  text-align: left;
-  outline: none;
-  -webkit-transition: 250ms ease background-color;
-  transition: 250ms ease background-color;
-  width: 100%;
-}
-
-.c0:hover {
-  background-color: #22222212;
-}
-
-.c1 {
   grid-column: 2;
   grid-row: 1;
   font-size: 16px;
@@ -1501,20 +1051,20 @@ exports[`ChainSelectorRow should match snapshot for chainId 11155111 1`] = `
       >
         <button
           class="c0"
-          data-testid="Sepolia-selector"
+          data-testid="Zora Network-selector"
         >
           <img
-            alt="Sepolia logo"
+            alt="Zora Network logo"
             aria-labelledby="titleID"
             height="20px"
-            src="ethereum-logo.png"
+            src="zora-logo.png"
             style="margin-right: 12px; border-radius: 6px;"
             width="20px"
           />
           <div
             class="c1"
           >
-            Sepolia
+            Zora Network
           </div>
           <div
             class="c2"

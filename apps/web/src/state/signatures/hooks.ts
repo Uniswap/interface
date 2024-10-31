@@ -1,4 +1,3 @@
-import { SupportedInterfaceChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
@@ -12,6 +11,7 @@ import {
   UniswapXOrderDetails,
 } from 'state/signatures/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export function useAllSignatures(): { [id: string]: SignatureDetails } {
   const account = useAccount()
@@ -35,9 +35,12 @@ export function useOrder(orderHash: string): UniswapXOrderDetails | undefined {
     const order = signatures[orderHash]
     if (
       !order ||
-      ![SignatureType.SIGN_UNISWAPX_ORDER, SignatureType.SIGN_UNISWAPX_V2_ORDER, SignatureType.SIGN_LIMIT].includes(
-        order.type as SignatureType,
-      )
+      ![
+        SignatureType.SIGN_UNISWAPX_ORDER,
+        SignatureType.SIGN_UNISWAPX_V2_ORDER,
+        SignatureType.SIGN_LIMIT,
+        SignatureType.SIGN_PRIORITY_ORDER,
+      ].includes(order.type as SignatureType)
     ) {
       return undefined
     }
@@ -52,7 +55,7 @@ export function useAddOrder() {
     (
       offerer: string,
       orderHash: string,
-      chainId: SupportedInterfaceChainId,
+      chainId: UniverseChainId,
       expiry: number,
       swapInfo: UniswapXOrderDetails['swapInfo'],
       encodedOrder: string,
@@ -102,7 +105,8 @@ function isPendingOrder(signature: SignatureDetails): signature is UniswapXOrder
     ].includes(signature.status)
   } else if (
     signature.type === SignatureType.SIGN_UNISWAPX_ORDER ||
-    signature.type === SignatureType.SIGN_UNISWAPX_V2_ORDER
+    signature.type === SignatureType.SIGN_UNISWAPX_V2_ORDER ||
+    signature.type === SignatureType.SIGN_PRIORITY_ORDER
   ) {
     return [
       UniswapXOrderStatus.OPEN,

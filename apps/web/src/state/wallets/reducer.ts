@@ -1,13 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { shallowEqual } from 'react-redux'
 import { Wallet } from 'state/wallets/types'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export interface ConnectedWalletsState {
   // Used to track wallets that have been connected by the user in current session, and remove them when deliberately disconnected.
   // Used to compute is_reconnect event property for analytics
   connectedWallets: Wallet[]
-  switchingChain: InterfaceChainId | false
+  switchingChain: UniverseChainId | false
 }
 
 const initialState: ConnectedWalletsState = {

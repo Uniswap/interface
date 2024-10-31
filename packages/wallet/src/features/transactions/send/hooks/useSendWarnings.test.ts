@@ -1,16 +1,14 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
+import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
-import { WarningLabel } from 'uniswap/src/features/transactions/WarningModal/types'
 import { DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
 import i18n from 'uniswap/src/i18n/i18n'
 import { uniCurrencyInfo } from 'uniswap/src/test/fixtures'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getSendWarnings } from 'wallet/src/features/transactions/send/hooks/useSendWarnings'
-import { isOffline } from 'wallet/src/features/transactions/utils'
-import { networkDown, networkUnknown, networkUp } from 'wallet/src/test/fixtures'
 
 const ETH = NativeCurrency.onChain(UniverseChainId.Mainnet)
 
@@ -124,39 +122,39 @@ const insufficientBalanceState: DerivedSendInfo = {
 
 describe(getSendWarnings, () => {
   it('does not error when Currency with balances and amounts is provided', () => {
-    const warnings = getSendWarnings(i18n.t, sendCurrency, isOffline(networkUp()))
+    const warnings = getSendWarnings(i18n.t, sendCurrency, false)
     expect(warnings.length).toBe(0)
   })
 
   it('errors if there is no internet', () => {
-    const warnings = getSendWarnings(i18n.t, sendCurrency, isOffline(networkDown()))
+    const warnings = getSendWarnings(i18n.t, sendCurrency, true)
     expect(warnings.length).toBe(1)
   })
 
-  it('does not error when network state is unknown', () => {
-    const warnings = getSendWarnings(i18n.t, sendNFT, isOffline(networkUnknown()))
+  it('does not error when offline is false', () => {
+    const warnings = getSendWarnings(i18n.t, sendNFT, false)
     expect(warnings.length).toBe(0)
   })
 
   it('does not error when correctly formed NFT is provided', () => {
-    const warnings = getSendWarnings(i18n.t, sendNFT, isOffline(networkUp()))
+    const warnings = getSendWarnings(i18n.t, sendNFT, false)
     expect(warnings.length).toBe(0)
   })
 
   it('catches incomplete form errors: no recipient', async () => {
-    const warnings = getSendWarnings(i18n.t, sendState, isOffline(networkUp()))
+    const warnings = getSendWarnings(i18n.t, sendState, false)
     expect(warnings.length).toBe(1)
     expect(warnings[0]?.type).toEqual(WarningLabel.FormIncomplete)
   })
 
   it('catches incomplete form errors: no amount', async () => {
-    const warnings = getSendWarnings(i18n.t, sendState2, isOffline(networkUp()))
+    const warnings = getSendWarnings(i18n.t, sendState2, false)
     expect(warnings.length).toBe(1)
     expect(warnings[0]?.type).toEqual(WarningLabel.FormIncomplete)
   })
 
   it('catches insufficient balance errors', () => {
-    const warnings = getSendWarnings(i18n.t, insufficientBalanceState, isOffline(networkUp()))
+    const warnings = getSendWarnings(i18n.t, insufficientBalanceState, false)
     expect(warnings.length).toBe(1)
     expect(warnings[0]?.type).toEqual(WarningLabel.InsufficientFunds)
   })
@@ -170,7 +168,7 @@ describe(getSendWarnings, () => {
       },
     }
 
-    const warnings = getSendWarnings(i18n.t, incompleteAndInsufficientBalanceState, isOffline(networkUp()))
+    const warnings = getSendWarnings(i18n.t, incompleteAndInsufficientBalanceState, false)
     expect(warnings.length).toBe(2)
   })
 })

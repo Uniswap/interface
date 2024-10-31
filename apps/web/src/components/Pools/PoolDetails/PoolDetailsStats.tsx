@@ -1,24 +1,26 @@
 import { Currency } from '@uniswap/sdk-core'
-import Column from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DetailBubble } from 'components/Pools/PoolDetails/shared'
-import Row from 'components/Row'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
-import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
+import { chainIdToBackendChain } from 'constants/chains'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { PoolData } from 'graphql/data/pools/usePoolData'
 import { getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
-import { useScreenSize } from 'hooks/screenSize'
+import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import styled, { css, useTheme } from 'lib/styled-components'
 import { ReactNode, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, ThemedText } from 'theme/components'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const HeaderText = styled(Text)`
@@ -124,7 +126,7 @@ type TokenFullData = Token & {
   currency?: Currency
 }
 
-const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chainId?: SupportedInterfaceChainId }) => {
+const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chainId?: UniverseChainId }) => {
   const isScreenSize = useScreenSize()
   const screenIsNotLarge = isScreenSize['lg']
   const { formatNumber } = useFormatter()

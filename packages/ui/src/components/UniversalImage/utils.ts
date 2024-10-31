@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useRef } from 'react'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 
@@ -44,22 +44,20 @@ function freezeSvgAnimations(svg: string): string {
 }
 
 export function useSvgData(uri: string, autoplay = false): SvgData | undefined {
-  const { fetchSvgData, abortRequest } = useMemo(() => {
-    const controller = new AbortController()
+  const controllerRef = useRef(new AbortController())
 
-    const fetchData = async (): Promise<SvgData | undefined> => {
-      try {
-        return await fetchSVG(uri, autoplay, controller.signal)
-      } catch (error) {
-        logger.error(error, { tags: { file: 'WebSvgUri', function: 'fetchSvg' }, extra: { uri } })
-      }
-    }
-
-    return {
-      fetchSvgData: fetchData,
-      abortRequest: () => controller.abort(),
+  const fetchSvgData = useCallback(async (): Promise<SvgData | undefined> => {
+    try {
+      return await fetchSVG(uri, autoplay, controllerRef.current.signal)
+    } catch (error) {
+      logger.error(error, { tags: { file: 'WebSvgUri', function: 'fetchSvg' }, extra: { uri } })
+      return undefined
     }
   }, [autoplay, uri])
 
-  return useAsyncData(fetchSvgData, abortRequest).data
+  return useAsyncData(fetchSvgData, () => {
+    controllerRef.current.abort()
+    // Create a new AbortController for the next request
+    controllerRef.current = new AbortController()
+  }).data
 }

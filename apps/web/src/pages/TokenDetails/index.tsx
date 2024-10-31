@@ -3,9 +3,9 @@ import { useCreateTDPChartState } from 'components/Tokens/TokenDetails/ChartSect
 import InvalidTokenDetails from 'components/Tokens/TokenDetails/InvalidTokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
 import { useChainFromUrlParam } from 'constants/chains'
-import { useTokenWarning } from 'constants/tokenSafety'
-import { NATIVE_CHAIN_ID, UNKNOWN_TOKEN_SYMBOL, nativeOnChain } from 'constants/tokens'
-import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
+import { useTokenWarning } from 'constants/deprecatedTokenSafety'
+import { NATIVE_CHAIN_ID, UNKNOWN_TOKEN_SYMBOL } from 'constants/tokens'
+import { useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { getSupportedGraphQlChain, gqlToCurrency } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
@@ -19,12 +19,13 @@ import { Helmet } from 'react-helmet-async/lib/index'
 import { useLocation, useParams } from 'react-router-dom'
 import { formatTokenMetatagTitleName } from 'shared-cloud/metatags'
 import { ThemeProvider } from 'theme'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress } from 'utilities/src/addresses'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
-function useOnChainToken(address: string | undefined, chainId: InterfaceChainId, skip: boolean) {
+function useOnChainToken(address: string | undefined, chainId: UniverseChainId, skip: boolean) {
   const token = useCurrency(!skip ? address : undefined, chainId)
 
   if (skip || !address || (token && token?.symbol === UNKNOWN_TOKEN_SYMBOL)) {
@@ -38,7 +39,7 @@ function useOnChainToken(address: string | undefined, chainId: InterfaceChainId,
 function useTDPCurrency(
   tokenQuery: ReturnType<typeof useTokenWebQuery>,
   tokenAddress: string,
-  currencyChainId: InterfaceChainId,
+  currencyChainId: UniverseChainId,
   isNative: boolean,
 ) {
   const { chainId } = useAccount()
@@ -122,7 +123,7 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
   const tokenColor =
     useSrcColor(
       extractedColorSrc,
-      tokenQuery.data?.token?.project?.name ?? tokenQuery.data?.token?.name,
+      tokenQuery.data?.token?.name ?? tokenQuery.data?.token?.project?.name,
       theme.surface2,
     ).tokenColor ?? undefined
 

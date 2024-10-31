@@ -1,26 +1,16 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
-import {
-  logSwapQuoteRequest,
-  logSwapSuccess,
-  logUniswapXSwapSuccess,
-  maybeLogFirstSwapAction,
-} from 'tracing/swapFlowLoggers'
+import { logSwapQuoteRequest, logSwapSuccess, logUniswapXSwapSuccess } from 'tracing/swapFlowLoggers'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 jest.mock('uniswap/src/features/telemetry/send', () => ({
   sendAnalyticsEvent: jest.fn(),
 }))
 
-jest.mock('./SwapEventTimestampTracker', () => ({
-  SwapEventType: {
-    FIRST_SWAP_ACTION: 'FIRST_SWAP_ACTION',
-    FIRST_QUOTE_FETCH_STARTED: 'FIRST_QUOTE_FETCH_STARTED',
-    FIRST_SWAP_SIGNATURE_REQUESTED: 'FIRST_SWAP_SIGNATURE_REQUESTED',
-    FIRST_SWAP_SIGNATURE_COMPLETED: 'FIRST_SWAP_SIGNATURE_COMPLETED',
-    FIRST_SWAP_SUCCESS: 'FIRST_SWAP_SUCCESS',
-  },
+jest.mock('uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker', () => ({
+  ...jest.requireActual('uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'),
   timestampTracker: {
     hasTimestamp: () => false,
     setElapsedTime: () => 100,
@@ -42,7 +32,7 @@ describe('swapFlowLoggers', () => {
 
     expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SWAP_TRANSACTION_COMPLETED, {
       transactionOriginType: TransactionOriginType.Internal,
-      routing: 'CLASSIC',
+      routing: 'classic',
       time_to_swap: 100,
       time_to_swap_since_first_input: 100,
       hash: mockHash,
@@ -61,7 +51,7 @@ describe('swapFlowLoggers', () => {
 
     expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SWAP_TRANSACTION_COMPLETED, {
       transactionOriginType: TransactionOriginType.Internal,
-      routing: 'DUTCH_V2',
+      routing: 'uniswap_x_v2',
       time_to_swap: 100,
       time_to_swap_since_first_input: 100,
       hash: mockHash,

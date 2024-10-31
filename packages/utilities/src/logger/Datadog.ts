@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { StoreEnhancerStoreCreator } from 'redux'
-import { NotImplementedError } from 'utilities/src/errors'
+import { PlatformSplitStubError } from 'utilities/src/errors'
 import { LogLevel, LoggerErrorContext } from 'utilities/src/logger/types'
-
-export function setupDatadog(): void {
-  throw new NotImplementedError('Please use the web implementation from Datadog.web.ts')
-}
 
 interface Config {
   shouldLogReduxState: (state: any) => boolean
 }
 
+export function setupDatadog(_envNameFunc: () => string): void {
+  throw new PlatformSplitStubError('setupDatadog')
+}
+
 export function createDatadogReduxEnhancer(
   _config: Config,
 ): (next: StoreEnhancerStoreCreator) => StoreEnhancerStoreCreator {
-  throw new NotImplementedError('createDatadogReduxEnhancer')
+  throw new PlatformSplitStubError('createDatadogReduxEnhancer')
 }
 
 export function logToDatadog(
@@ -26,7 +26,7 @@ export function logToDatadog(
     functionName: string
   },
 ): void {
-  throw new NotImplementedError('Please use the web / native implementation from Datadog.web.ts or Datadog.native.ts')
+  throw new PlatformSplitStubError('logToDatadog')
 }
 
 export function logWarningToDatadog(
@@ -38,13 +38,17 @@ export function logWarningToDatadog(
     functionName: string
   },
 ): void {
-  throw new NotImplementedError('Please use the web / native implementation from Datadog.web.ts or Datadog.native.ts')
+  throw new PlatformSplitStubError('logWarningToDatadog')
 }
 
 export function logErrorToDatadog(_error: Error, _context?: LoggerErrorContext): void {
-  throw new NotImplementedError('Please use the web / native implementation from Datadog.web.ts or Datadog.native.ts')
+  throw new PlatformSplitStubError('logErrorToDatadog')
 }
 
 export function attachUnhandledRejectionHandler(): void {
-  throw new NotImplementedError('attachUnhandledRejectionHandler')
+  throw new PlatformSplitStubError('attachUnhandledRejectionHandler')
+}
+
+export async function setAttributesToDatadog(_attributes: { [key: string]: unknown }): Promise<void> {
+  throw new PlatformSplitStubError('setAttributes')
 }

@@ -96,7 +96,7 @@ export function extractFiatOnRampTransactionDetails(
         function: 'extractFiatOnRampTransactionDetails',
       },
     })
-    return
+    return undefined
   }
 }
 
@@ -114,6 +114,7 @@ export function extractOnRampTransactionDetails(transaction: TransactionListQuer
   return {
     routing: Routing.CLASSIC,
     id: transaction.details.onRampTransfer.externalSessionId,
+    // TODO: WALL-4919: Remove hardcoded Mainnet
     chainId: fromGraphQLChain(transaction.chain) ?? UniverseChainId.Mainnet,
     addedTime: transaction.timestamp * 1000, // convert to ms,
     status: remoteTxStatusToLocalTxStatus(RemoteTransactionType.OnRamp, transaction.details.status),

@@ -1,5 +1,4 @@
 import { Fraction, TradeType } from '@uniswap/sdk-core'
-import { nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import useENSName from 'hooks/useENSName'
@@ -12,10 +11,12 @@ import {
   ClaimTransactionInfo,
   CollectFeesTransactionInfo,
   CreateV3PoolTransactionInfo,
+  DecreaseLiquidityTransactionInfo,
   DelegateTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   ExecuteTransactionInfo,
+  IncreaseLiquidityTransactionInfo,
   MigrateV2LiquidityToV3TransactionInfo,
   QueueTransactionInfo,
   RemoveLiquidityV3TransactionInfo,
@@ -25,6 +26,7 @@ import {
   VoteTransactionInfo,
   WrapTransactionInfo,
 } from 'state/transactions/types'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { Trans } from 'uniswap/src/i18n'
 
 function formatAmount(amountRaw: string, decimals: number, sigFigs: number): string {
@@ -392,6 +394,50 @@ function SetSmartPoolValueSummary() {
   return <Trans>Set smart pool value</Trans>
 }
 
+
+function IncreaseLiquiditySummary({ info }: { info: IncreaseLiquidityTransactionInfo }) {
+  const { token0CurrencyId, token1CurrencyId } = info
+  const token0Currency = useCurrency(token0CurrencyId)
+  const token1Currency = useCurrency(token1CurrencyId)
+
+  // TODO(WEB-5081): update to match mocks
+  return (
+    <Trans
+      i18nKey="account.transactionSummary.addLiquidity"
+      values={{
+        baseSymbol: token0Currency?.symbol,
+        quoteSymbol: token1Currency?.symbol,
+      }}
+    />
+  )
+}
+
+function DecreaseLiquiditySummary({ info }: { info: DecreaseLiquidityTransactionInfo }) {
+  const { token0CurrencyId, token1CurrencyId, token0CurrencyAmountRaw, token1CurrencyAmountRaw } = info
+
+  return (
+    <Trans
+      i18nKey="account.transactionSummary.removeLiquiditySummary"
+      components={{
+        base: (
+          <FormattedCurrencyAmountManaged
+            rawAmount={token0CurrencyAmountRaw}
+            currencyId={token0CurrencyId}
+            sigFigs={3}
+          />
+        ),
+        quote: (
+          <FormattedCurrencyAmountManaged
+            rawAmount={token1CurrencyAmountRaw}
+            currencyId={token1CurrencyId}
+            sigFigs={3}
+          />
+        ),
+      }}
+    />
+  )
+}
+
 export function TransactionSummary({ info }: { info: TransactionInfo }) {
   switch (info.type) {
     case TransactionType.ADD_LIQUIDITY_V3_POOL:
@@ -447,6 +493,12 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.SEND:
       return <SendSummary info={info} />
+
+    case TransactionType.INCREASE_LIQUIDITY:
+      return <IncreaseLiquiditySummary info={info} />
+
+    case TransactionType.DECREASE_LIQUIDITY:
+      return <DecreaseLiquiditySummary info={info} />
 
     case TransactionType.BUY:
       return <BuySmartPoolSummary />

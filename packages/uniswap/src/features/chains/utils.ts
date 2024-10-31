@@ -1,30 +1,35 @@
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { ChainId } from '@uniswap/sdk-core'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { useMemo } from 'react'
+import {
+  GQL_MAINNET_CHAINS_MUTABLE,
+  GQL_TESTNET_CHAINS_MUTABLE,
+  UNIVERSE_CHAIN_INFO,
+} from 'uniswap/src/constants/chains'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { NetworkLayer, UniverseChainId, WALLET_SUPPORTED_CHAIN_IDS, WalletChainId } from 'uniswap/src/types/chains'
-import { isTestEnv } from 'utilities/src/environment'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import {
+  COMBINED_CHAIN_IDS,
+  InterfaceGqlChain,
+  NetworkLayer,
+  SUPPORTED_CHAIN_IDS,
+  SUPPORTED_TESTNET_CHAIN_IDS,
+  UniverseChainId,
+} from 'uniswap/src/types/chains'
 
 export function toGraphQLChain(chainId: ChainId | number): Chain | undefined {
   switch (chainId) {
     case ChainId.MAINNET:
       return Chain.Ethereum
-    case ChainId.ARBITRUM_ONE:
-      return Chain.Arbitrum
-    case ChainId.ARBITRUM_GOERLI:
-      return Chain.Arbitrum
-    case ChainId.GOERLI:
-      return Chain.EthereumGoerli
     case ChainId.SEPOLIA:
       return Chain.EthereumSepolia
+    case ChainId.ARBITRUM_ONE:
+      return Chain.Arbitrum
     case ChainId.OPTIMISM:
       return Chain.Optimism
-    case ChainId.OPTIMISM_GOERLI:
-      return Chain.Optimism
     case ChainId.POLYGON:
-      return Chain.Polygon
-    case ChainId.POLYGON_MUMBAI:
       return Chain.Polygon
     case ChainId.BASE:
       return Chain.Base
@@ -34,31 +39,32 @@ export function toGraphQLChain(chainId: ChainId | number): Chain | undefined {
     //  return Chain.Avalanche
     //case ChainId.CELO:
     //  return Chain.Celo
-    //case ChainId.CELO_ALFAJORES:
-    //  return Chain.Celo
     //case ChainId.BLAST:
     //  return Chain.Blast
+    //case ChainId.WORLDCHAIN:
+    //  return Chain.Worldchain
     //case ChainId.ZORA:
     //  return Chain.Zora
     //case ChainId.ZKSYNC:
     //  return Chain.Zksync
+    //case ChainId.ASTROCHAIN_SEPOLIA:
+    //  return Chain.AstrochainSepolia
   }
   return undefined
 }
 
 // Some code from the web app uses chainId types as numbers
 // This validates them as coerces into SupportedChainId
-export function toSupportedChainId(chainId?: BigNumberish): WalletChainId | null {
-  // Support Goerli for testing
-  const ids = isTestEnv() ? [UniverseChainId.Goerli, ...WALLET_SUPPORTED_CHAIN_IDS] : WALLET_SUPPORTED_CHAIN_IDS
+export function toSupportedChainId(chainId?: BigNumberish): UniverseChainId | null {
+  const ids = COMBINED_CHAIN_IDS
 
   if (!chainId || !ids.map((c) => c.toString()).includes(chainId.toString())) {
     return null
   }
-  return parseInt(chainId.toString(), 10) as WalletChainId
+  return parseInt(chainId.toString(), 10) as UniverseChainId
 }
 
-export function chainIdToHexadecimalString(chainId: WalletChainId): string {
+export function chainIdToHexadecimalString(chainId: UniverseChainId): string {
   return BigNumber.from(chainId).toHexString()
 }
 
@@ -71,17 +77,17 @@ export function isL2ChainId(chainId?: UniverseChainId): boolean {
 }
 
 export function isMainnetChainId(chainId?: UniverseChainId): boolean {
-  return chainId === UniverseChainId.Mainnet
+  return chainId === UniverseChainId.Mainnet || chainId === UniverseChainId.Sepolia
 }
 
-export function fromGraphQLChain(chain: Chain | undefined): WalletChainId | null {
+export function fromGraphQLChain(chain: Chain | undefined): UniverseChainId | null {
   switch (chain) {
     case Chain.Ethereum:
       return UniverseChainId.Mainnet
     case Chain.Arbitrum:
       return UniverseChainId.ArbitrumOne
-    case Chain.EthereumGoerli:
-      return UniverseChainId.Goerli
+    case Chain.EthereumSepolia:
+      return UniverseChainId.Sepolia
     case Chain.Optimism:
       return UniverseChainId.Optimism
     case Chain.Polygon:
@@ -96,20 +102,24 @@ export function fromGraphQLChain(chain: Chain | undefined): WalletChainId | null
     //  return UniverseChainId.Avalanche
     //case Chain.Celo:
     //  return UniverseChainId.Celo
+    //case Chain.Worldchain:
+    //  return UniverseChainId.WorldChain
     //case Chain.Zora:
     //  return UniverseChainId.Zora
     //case Chain.Zksync:
     //  return UniverseChainId.Zksync
+    //case Chain.AstrochainSepolia:
+    //  return UniverseChainId.AstrochainSepolia
   }
 
   return null
 }
 
-export function getPollingIntervalByBlocktime(chainId?: WalletChainId): PollingInterval {
+export function getPollingIntervalByBlocktime(chainId?: UniverseChainId): PollingInterval {
   return isMainnetChainId(chainId) ? PollingInterval.Fast : PollingInterval.LightningMcQueen
 }
 
-export function fromMoonpayNetwork(moonpayNetwork: string | undefined): WalletChainId | undefined {
+export function fromMoonpayNetwork(moonpayNetwork: string | undefined): UniverseChainId | undefined {
   switch (moonpayNetwork) {
     case Chain.Arbitrum.toLowerCase():
       return UniverseChainId.ArbitrumOne
@@ -135,10 +145,12 @@ export function fromMoonpayNetwork(moonpayNetwork: string | undefined): WalletCh
   }
 }
 
-export function fromUniswapWebAppLink(network: string | null): WalletChainId | null {
+export function fromUniswapWebAppLink(network: string | null): UniverseChainId | null {
   switch (network) {
     case Chain.Ethereum.toLowerCase():
       return UniverseChainId.Mainnet
+    case Chain.EthereumSepolia.toLowerCase():
+      return UniverseChainId.Sepolia
     case Chain.Arbitrum.toLowerCase():
       return UniverseChainId.ArbitrumOne
     case Chain.Optimism.toLowerCase():
@@ -155,19 +167,25 @@ export function fromUniswapWebAppLink(network: string | null): WalletChainId | n
     //  return UniverseChainId.Avalanche
     //case Chain.Celo.toLowerCase():
     //  return UniverseChainId.Celo
+    //case Chain.Worldchain.toLowerCase():
+    //  return UniverseChainId.WorldChain
     //case Chain.Zora.toLowerCase():
     //  return UniverseChainId.Zora
     //case Chain.Zksync.toLowerCase():
     //  return UniverseChainId.Zksync
+    //case Chain.AstrochainSepolia.toLowerCase():
+    //  return UniverseChainId.AstrochainSepolia
     default:
       throw new Error(`Network "${network}" can not be mapped`)
   }
 }
 
-export function toUniswapWebAppLink(chainId: WalletChainId): string | null {
+export function toUniswapWebAppLink(chainId: UniverseChainId): string | null {
   switch (chainId) {
     case UniverseChainId.Mainnet:
       return Chain.Ethereum.toLowerCase()
+    case UniverseChainId.Sepolia:
+      return Chain.EthereumSepolia.toLowerCase()
     case UniverseChainId.ArbitrumOne:
       return Chain.Arbitrum.toLowerCase()
     case UniverseChainId.Optimism:
@@ -184,11 +202,100 @@ export function toUniswapWebAppLink(chainId: WalletChainId): string | null {
     //  return Chain.Avalanche.toLowerCase()
     //case UniverseChainId.Celo:
     //  return Chain.Celo.toLowerCase()
+    //case UniverseChainId.WorldChain:
+    //  return Chain.Worldchain.toLowerCase()
     //case UniverseChainId.Zora:
     //  return Chain.Zora.toLowerCase()
     //case UniverseChainId.Zksync:
     //  return Chain.Zksync.toLowerCase()
+    //case UniverseChainId.AstrochainSepolia:
+    //  return Chain.AstrochainSepolia.toLowerCase()
     default:
       throw new Error(`ChainID "${chainId}" can not be mapped`)
+  }
+}
+
+type ActiveChainIdFeatureFlags = UniverseChainId.WorldChain
+
+export function filterChainIdsByFeatureFlag(featureFlaggedChainIds: {
+  [UniverseChainId.WorldChain]: boolean
+  [UniverseChainId.Avalanche]: boolean
+  [UniverseChainId.Blast]: boolean
+  [UniverseChainId.Celo]: boolean
+  [UniverseChainId.Zora]: boolean
+  [UniverseChainId.Zksync]: boolean
+}): UniverseChainId[] {
+  return COMBINED_CHAIN_IDS.filter((chainId) => {
+    return featureFlaggedChainIds[chainId as ActiveChainIdFeatureFlags] ?? true
+  })
+}
+
+// Used to feature flag chains. If a chain is not included in the object, it is considered enabled by default.
+export function useFeatureFlaggedChainIds(): UniverseChainId[] {
+  // You can use the useFeatureFlag hook here to enable/disable chains based on feature flags.
+  // Example: [ChainId.BLAST]: useFeatureFlag(FeatureFlags.BLAST)
+  // IMPORTANT: Don't forget to also update getEnabledChainIdsSaga
+
+  //const worldChainEnabled = useFeatureFlag(FeatureFlags.WorldChain)
+
+  return useMemo(
+    () =>
+      filterChainIdsByFeatureFlag({
+        [UniverseChainId.WorldChain]: false, //worldChainEnabled,
+        [UniverseChainId.Avalanche]: false,
+        [UniverseChainId.Blast]: false,
+        [UniverseChainId.Celo]: false,
+        [UniverseChainId.Zora]: false,
+        [UniverseChainId.Zksync]: false
+      }),
+    [/*worldChainEnabled*/],
+  )
+}
+
+export function getEnabledChains({
+  isTestnetModeEnabled,
+  featureFlaggedChainIds,
+  connectedWalletChainIds,
+}: {
+  isTestnetModeEnabled: boolean
+  featureFlaggedChainIds: UniverseChainId[]
+  connectedWalletChainIds?: UniverseChainId[]
+}): {
+  chains: UniverseChainId[]
+  gqlChains: InterfaceGqlChain[]
+  defaultChainId: UniverseChainId
+  isTestnetModeEnabled: boolean
+} {
+  if (isTestnetModeEnabled) {
+    const supportedTestnetChainIds = SUPPORTED_TESTNET_CHAIN_IDS.filter(
+      (chainId) =>
+        featureFlaggedChainIds.includes(chainId) &&
+        (connectedWalletChainIds ? connectedWalletChainIds.includes(chainId) : true),
+    )
+
+    return {
+      chains: supportedTestnetChainIds,
+      gqlChains: GQL_TESTNET_CHAINS_MUTABLE,
+      defaultChainId: UniverseChainId.Sepolia as UniverseChainId,
+      isTestnetModeEnabled,
+    }
+  }
+
+  const supportedChainIds = SUPPORTED_CHAIN_IDS.filter(
+    (chainId) =>
+      featureFlaggedChainIds.includes(chainId) &&
+      (connectedWalletChainIds ? connectedWalletChainIds.includes(chainId) : true),
+  )
+
+  const supportedGqlChains = GQL_MAINNET_CHAINS_MUTABLE.filter((chain) => {
+    const chainId = fromGraphQLChain(chain)
+    return chainId && supportedChainIds.includes(chainId)
+  })
+
+  return {
+    chains: supportedChainIds,
+    gqlChains: supportedGqlChains,
+    defaultChainId: UniverseChainId.Mainnet as UniverseChainId,
+    isTestnetModeEnabled,
   }
 }

@@ -8,7 +8,7 @@ import { AccountList } from 'src/components/accounts/AccountList'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { Button, Flex, Text, TouchableArea, useDeviceInsets, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
 import { ActionSheetModal, MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
@@ -16,6 +16,7 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
@@ -56,7 +57,7 @@ export function AccountSwitcherModal(): JSX.Element {
  * TODO [MOB-259] Once testing works with the Modal stop exporting this component.
  */
 export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Element | null {
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const dimensions = useDeviceDimensions()
   const { t } = useTranslation()
   const activeAccountAddress = useActiveAccountAddress()
@@ -276,7 +277,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
       <TouchableArea hapticFeedback mt="$spacing16" onPress={onPressAddWallet}>
         <Flex row alignItems="center" gap="$spacing8" ml="$spacing24">
           <PlusCircle />
-          <Text color="$neutral2" variant="buttonLabel3">
+          <Text color="$neutral2" variant="buttonLabel2">
             {t('account.wallet.button.add')}
           </Text>
         </Flex>

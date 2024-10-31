@@ -12,6 +12,7 @@ import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biomet
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import Checkmark from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -19,7 +20,6 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
@@ -105,7 +105,7 @@ export function SettingsCloudBackupStatus({
             </Text>
             <Flex alignItems="flex-end" flexGrow={1} gap="$spacing4">
               <Flex row alignItems="center" gap="$spacing12" justifyContent="space-around">
-                <Text color="$neutral2" variant="buttonLabel4">
+                <Text color="$neutral2" variant="buttonLabel3">
                   {t('settings.setting.backup.status.recoveryPhrase.backed')}
                 </Text>
 
@@ -113,7 +113,7 @@ export function SettingsCloudBackupStatus({
                 <Checkmark color={colors.statusSuccess.val} height={iconSizes.icon24} width={iconSizes.icon24} />
               </Flex>
               {googleDriveEmail && (
-                <Text color="$neutral3" variant="buttonLabel4">
+                <Text color="$neutral3" variant="buttonLabel3">
                   {googleDriveEmail}
                 </Text>
               )}
@@ -135,15 +135,15 @@ export function SettingsCloudBackupStatus({
         caption={t('settings.setting.backup.delete.warning', {
           cloudProviderName: getCloudProviderName(),
         })}
-        closeText={t('common.button.close')}
-        confirmText={t('common.button.delete')}
+        rejectText={t('common.button.close')}
+        acknowledgeText={t('common.button.delete')}
         isOpen={showBackupDeleteWarning}
         modalName={ModalName.ViewSeedPhraseWarning}
         title={t('settings.setting.backup.delete.confirm.title')}
         onClose={(): void => {
           setShowBackupDeleteWarning(false)
         }}
-        onConfirm={onConfirmDeleteBackup}
+        onAcknowledge={onConfirmDeleteBackup}
       >
         {associatedAccounts.length > 1 && (
           <Flex>

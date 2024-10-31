@@ -1,28 +1,26 @@
+import { skipToken, useQuery } from '@tanstack/react-query'
 import { Currency, CurrencyAmount, NativeCurrency as NativeCurrencyClass } from '@uniswap/sdk-core'
 import { Contract } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
-import { useRestQuery } from 'uniswap/src/data/rest'
 import { getPollingIntervalByBlocktime } from 'uniswap/src/features/chains/utils'
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyAddress as getCurrencyAddress } from 'uniswap/src/utils/currencyId'
 
-// stub endpoint to conform to REST endpoint styles
-// Rest link should intercept and use custom fetcher instead
-export const STUB_ONCHAIN_BALANCES_ENDPOINT = '/onchain-balances'
+const ONCHAIN_BALANCES_CACHE_KEY = 'OnchainBalances'
 
 export type BalanceLookupParams = {
   currencyAddress?: Address
-  chainId?: WalletChainId
+  chainId?: UniverseChainId
   currencyIsNative?: boolean
   accountAddress?: string
 }
 
 /** Custom fetcher that uses an ethers provider to fetch. */
-export const getOnChainBalancesFetch = async (params: BalanceLookupParams): Promise<Response> => {
+export async function getOnChainBalancesFetch(params: BalanceLookupParams): Promise<{ balance?: string }> {
   const { currencyAddress, chainId, currencyIsNative, accountAddress } = params
   if (!currencyAddress || !chainId || !accountAddress) {
     throw new Error(`currencyAddress, chainId, or accountAddress is not defined`)
@@ -30,40 +28,43 @@ export const getOnChainBalancesFetch = async (params: BalanceLookupParams): Prom
 
   const provider = createEthersProvider(chainId)
   if (!provider) {
-    return new Response(JSON.stringify({ balance: undefined }))
+    return { balance: undefined }
   }
 
   // native amount lookup
   if (currencyIsNative) {
     const nativeBalance = await provider.getBalance(accountAddress)
-    return new Response(JSON.stringify({ balance: nativeBalance?.toString() }))
+    return { balance: nativeBalance?.toString() }
   }
 
   // erc20 lookup
   const erc20Contract = new Contract(currencyAddress, ERC20_ABI, provider)
   const balance = await erc20Contract.callStatic.balanceOf?.(accountAddress)
-  return new Response(JSON.stringify({ balance: balance.toString() }))
+  return { balance: balance.toString() }
 }
 
 export function useOnChainCurrencyBalance(
   currency?: Currency | null,
   accountAddress?: Address,
 ): { balance: CurrencyAmount<Currency> | undefined; isLoading: boolean; error: unknown } {
-  const { data, error } = useRestQuery<{ balance?: string }, BalanceLookupParams>(
-    STUB_ONCHAIN_BALANCES_ENDPOINT,
-    {
-      currencyAddress: currency ? getCurrencyAddress(currency) : undefined,
-      chainId: currency?.chainId,
-      currencyIsNative: currency?.isNative,
-      accountAddress,
-    },
-    ['balance'],
-    {
-      pollInterval: getPollingIntervalByBlocktime(currency?.chainId),
-      ttlMs: getPollingIntervalByBlocktime(currency?.chainId),
-      skip: !currency,
-    },
-  )
+  const refetchInterval = getPollingIntervalByBlocktime(currency?.chainId)
+
+  const { data, error } = useQuery<{ balance?: string }>({
+    queryKey: [ONCHAIN_BALANCES_CACHE_KEY, accountAddress, currency],
+    queryFn:
+      currency && accountAddress
+        ? async (): ReturnType<typeof getOnChainBalancesFetch> =>
+            await getOnChainBalancesFetch({
+              currencyAddress: getCurrencyAddress(currency),
+              chainId: currency.chainId,
+              currencyIsNative: currency.isNative,
+              accountAddress,
+            })
+        : skipToken,
+    staleTime: refetchInterval,
+    refetchInterval,
+    gcTime: refetchInterval * 2,
+  })
 
   return useMemo(
     () => ({
@@ -71,12 +72,12 @@ export function useOnChainCurrencyBalance(
       isLoading: !data?.balance,
       error,
     }),
-    [data, currency, error],
+    [data?.balance, currency, error],
   )
 }
 
 export function useOnChainNativeCurrencyBalance(
-  chain: WalletChainId,
+  chain: UniverseChainId,
   accountAddress?: Address,
 ): { balance: CurrencyAmount<NativeCurrencyClass> | undefined; isLoading: boolean } {
   const currency = NativeCurrency.onChain(chain)

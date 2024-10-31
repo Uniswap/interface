@@ -8,7 +8,7 @@ import JSBI from 'jsbi'
 import ms from 'ms'
 import { useEffect, useMemo, useState } from 'react'
 import { useAllV3TicksQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 
@@ -32,7 +32,7 @@ function useTicksFromSubgraph(
   currencyB: Currency | undefined,
   feeAmount: FeeAmount | undefined,
   skip = 0,
-  chainId: InterfaceChainId,
+  chainId: UniverseChainId,
 ) {
   const poolAddress =
     currencyA && currencyB && feeAmount
@@ -63,7 +63,7 @@ function useAllV3Ticks(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
   feeAmount: FeeAmount | undefined,
-  chainId: InterfaceChainId,
+  chainId: UniverseChainId,
 ): {
   isLoading: boolean
   error: unknown
@@ -94,7 +94,7 @@ export function usePoolActiveLiquidity(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
   feeAmount: FeeAmount | undefined,
-  chainId?: InterfaceChainId,
+  chainId?: UniverseChainId,
 ): {
   isLoading: boolean
   error: any

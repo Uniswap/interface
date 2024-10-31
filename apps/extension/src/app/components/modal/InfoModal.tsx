@@ -65,7 +65,7 @@ export function InfoModal({
         </Button>
         {linkText && linkUrl && (
           <Anchor href={linkUrl} lineHeight={16} p="$spacing12" target="_blank" textDecorationLine="none">
-            <Text color="$neutral2" textAlign="center" variant="buttonLabel4">
+            <Text color="$neutral2" textAlign="center" variant="buttonLabel3">
               {linkText}
             </Text>
           </Anchor>

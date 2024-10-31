@@ -17,8 +17,8 @@ import {
   tokenProject,
   tokenProjectMarket,
   usdcTokenProject,
-} from 'wallet/src/test/fixtures'
-import { queryResolvers } from 'wallet/src/test/utils'
+} from 'uniswap/src/test/fixtures'
+import { queryResolvers } from 'uniswap/src/test/utils'
 
 const mockTokenProjectsQuery = (historyPrices: number[]) => (): TokenProjectType[] => {
   const history = historyPrices.map((value) => timestampedAmount({ value }))

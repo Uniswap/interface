@@ -6,6 +6,7 @@ import ERC721_ABI from 'uniswap/src/abis/erc721.json'
 import { Erc1155, Erc20, Erc721 } from 'uniswap/src/abis/types'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -18,14 +19,15 @@ import { useContractManager, useProvider } from 'wallet/src/features/wallet/cont
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function useSendTransactionRequest(derivedSendInfo: DerivedSendInfo): providers.TransactionRequest | undefined {
+  const { defaultChainId } = useEnabledChains()
   const account = useActiveAccountWithThrow()
   const chainId = toSupportedChainId(derivedSendInfo.chainId)
-  const provider = useProvider(chainId ?? UniverseChainId.Mainnet)
+  const provider = useProvider(chainId ?? defaultChainId)
   const contractManager = useContractManager()
 
   const transactionFetcher = useCallback(() => {
     if (!provider) {
-      return
+      return undefined
     }
 
     return getSendTransaction(provider, contractManager, account, derivedSendInfo)
@@ -34,6 +36,7 @@ export function useSendTransactionRequest(derivedSendInfo: DerivedSendInfo): pro
   return useAsyncData(transactionFetcher).data
 }
 
+// eslint-disable-next-line consistent-return
 async function getSendTransaction(
   provider: providers.Provider,
   contractManager: ContractManager,
@@ -42,7 +45,7 @@ async function getSendTransaction(
 ): Promise<providers.TransactionRequest | undefined> {
   const params = getSendParams(account, derivedSendInfo)
   if (!params) {
-    return
+    return undefined
   }
 
   const { type, tokenAddress, chainId } = params
@@ -58,6 +61,7 @@ async function getSendTransaction(
   }
 }
 
+// eslint-disable-next-line consistent-return
 function getSendParams(account: Account, derivedSendInfo: DerivedSendInfo): SendTokenParams | undefined {
   const { currencyAmounts, currencyTypes, chainId, recipient, currencyInInfo, nftIn } = derivedSendInfo
   const tokenAddress = currencyInInfo ? currencyAddress(currencyInInfo.currency) : nftIn?.nftContract?.address
@@ -65,19 +69,19 @@ function getSendParams(account: Account, derivedSendInfo: DerivedSendInfo): Send
   const assetType = currencyTypes[CurrencyField.INPUT]
 
   if (!chainId || !tokenAddress || !recipient || !assetType) {
-    return
+    return undefined
   }
 
   switch (assetType) {
     case AssetType.ERC1155:
     case AssetType.ERC721: {
       if (!nftIn) {
-        return
+        return undefined
       }
 
       return {
         account,
-        chainId,
+        chainId: chainId as UniverseChainId,
         toAddress: recipient,
         tokenAddress,
         type: assetType,
@@ -87,12 +91,12 @@ function getSendParams(account: Account, derivedSendInfo: DerivedSendInfo): Send
 
     case AssetType.Currency: {
       if (!currencyInInfo || amount === undefined) {
-        return
+        return undefined
       }
 
       return {
         account,
-        chainId,
+        chainId: chainId as UniverseChainId,
         toAddress: recipient,
         tokenAddress,
         type: AssetType.Currency,

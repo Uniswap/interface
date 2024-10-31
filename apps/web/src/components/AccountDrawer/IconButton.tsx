@@ -1,4 +1,4 @@
-import Row from 'components/Row'
+import Row from 'components/deprecated/Row'
 import styled, { DefaultTheme, css } from 'lib/styled-components'
 import React, { forwardRef, useCallback, useEffect, useRef, useState } from 'react'
 import { Icon } from 'react-feather'
@@ -168,10 +168,10 @@ export const IconWithConfirmTextButton = ({
   // keyboard action to cancel
   useEffect(() => {
     if (typeof window === 'undefined') {
-      return
+      return undefined
     }
     if (!showText || !frame) {
-      return
+      return undefined
     }
 
     const closeAndPrevent = (e: Event) => {

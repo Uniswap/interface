@@ -7,7 +7,7 @@ import {
   MOONPAY_SENDER_ADDRESSES,
   OrderTextTable,
 } from 'components/AccountDrawer/MiniPortfolio/constants'
-import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { gqlToCurrency, supportedChainIdFromGQLChain } from 'graphql/data/util'
@@ -17,6 +17,7 @@ import { parseRemote as parseRemoteSignature } from 'state/signatures/parseRemot
 import { OrderActivity, SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { TransactionType as LocalTransactionType } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   AssetActivityPartsFragment,
   Currency as GQLCurrency,
@@ -494,7 +495,7 @@ function parseUniswapXOrder(activity: OrderActivity): Activity | undefined {
 
   // If the order is open, do not render it.
   if (signature.status === UniswapXOrderStatus.OPEN) {
-    return
+    return undefined
   }
 
   const { inputToken, inputTokenQuantity, outputToken, outputTokenQuantity } = activity.details

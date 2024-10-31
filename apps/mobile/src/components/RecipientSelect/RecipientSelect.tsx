@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, TextInput } from 'react-native'
+import { TextInput } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { RecipientScanModal } from 'src/components/RecipientSelect/RecipientScanModal'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -8,7 +8,8 @@ import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { RecipientList } from 'wallet/src/components/RecipientSearch/RecipientList'
 import { RecipientSelectSpeedBumps } from 'wallet/src/components/RecipientSearch/RecipientSelectSpeedBumps'
 import { useFilteredRecipientSections } from 'wallet/src/components/RecipientSearch/hooks'
@@ -19,7 +20,7 @@ interface RecipientSelectProps {
   onHideRecipientSelector: () => void
   recipient?: string
   focusInput?: boolean
-  chainId?: WalletChainId
+  chainId?: UniverseChainId
   renderedInModal?: boolean
   hideBackButton?: boolean
 }
@@ -61,7 +62,7 @@ export function _RecipientSelect({
   }, [focusInput])
 
   const onPressQRScanner = useCallback(() => {
-    Keyboard.dismiss()
+    dismissNativeKeyboard()
     setShowQRScanner(true)
   }, [setShowQRScanner])
 
@@ -102,7 +103,6 @@ export function _RecipientSelect({
           value={pattern ?? ''}
           onBack={recipient ? onHideRecipientSelector : undefined}
           onChangeText={setPattern}
-          onDismiss={() => Keyboard.dismiss()}
         />
         {!sections.length ? (
           <Flex centered gap="$spacing12" mt="$spacing24" px="$spacing24">

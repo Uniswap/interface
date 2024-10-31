@@ -1,15 +1,14 @@
 import { InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { Token } from '@uniswap/sdk-core'
-import { ScrollBarStyles } from 'components/Common'
+import { ScrollBarStyles } from 'components/Common/styles'
 import { NavIcon } from 'components/NavBar/NavIcon'
 import { NAV_BREAKPOINT } from 'components/NavBar/ScreenSizes'
 import { SearchBarDropdown } from 'components/NavBar/SearchBar/SearchBarDropdown'
-import Row from 'components/Row'
+import Row from 'components/deprecated/Row'
 import { chainIdToBackendChain } from 'constants/chains'
-import { ZERO_ADDRESS } from 'constants/misc'
-import { SearchToken, useSearchTokens } from 'graphql/data/SearchTokens'
+import { GqlSearchToken, useSearchTokens } from 'graphql/data/SearchTokens'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
-import { useScreenSize } from 'hooks/screenSize'
+import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useAccount } from 'hooks/useAccount'
 import useDebounce from 'hooks/useDebounce'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
@@ -210,7 +209,7 @@ export const SearchBar = ({
   const { data: collections, loading: collectionsAreLoading } = useCollectionSearch(debouncedSearchValue)
 
   const account = useAccount()
-  const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, account.chainId ?? 1)
+  const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue)
 
   // TODO: check if we already store all pools' data in state, so can return a richer pool struct
   const smartPoolsLogs = useRegisteredPools()
@@ -227,24 +226,27 @@ export const SearchBar = ({
   })
 
   const smartPools: Token[] = useMemo(() => {
-    const mockToken = new Token(1, ZERO_ADDRESS, 0, '', '')
-    if (!uniquePools || !account.chainId) {
-      return [mockToken]
-    }
-    return uniquePools.map((p) => {
+    //const mockToken = new Token(1, ZERO_ADDRESS, 0, '', '')
+    //if (!uniquePools || !account.chainId) {
+    //  return [mockToken]
+    //}
+    // TODO: smart pools can have decimals != 18, but we probably do not use decimals from here
+    return uniquePools?.map((p) => {
       const { name, symbol, pool: address } = p
       //if (!name || !symbol || !address) return
-      return new Token(account.chainId ?? 1, address ?? undefined, 18, symbol ?? 'NAN', name ?? '')
+      return new Token(account.chainId ?? UniverseChainId.Mainnet, address ?? undefined, 18, symbol ?? 'NAN', name ?? '')
     })
   }, [account.chainId, uniquePools])
+
+  // TODO: check if we can remove getTokenFilter module
   const filteredPools: Token[] = useMemo(() => {
     return Object.values(smartPools).filter(getTokenFilter(debouncedSearchValue))
   }, [smartPools, debouncedSearchValue])
   const chain = chainIdToBackendChain({ chainId: account.chainId })
   // TODO: check using a different struct for pools
-  const searchPools: SearchToken[] | undefined = useMemo(() => {
+  const searchPools: GqlSearchToken[] | undefined = useMemo(() => {
     if (!chain) {
-      return
+      return undefined
     }
     return filteredPools.map((p) => {
       const { name, symbol, address } = p

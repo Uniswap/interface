@@ -6,20 +6,21 @@ import {
   AVERAGE_L1_BLOCK_TIME,
   BACKEND_SUPPORTED_CHAINS,
   CHAIN_NAME_TO_CHAIN_ID,
-  GQL_MAINNET_CHAINS,
   InterfaceGqlChain,
-  SupportedInterfaceChainId,
   UX_SUPPORTED_GQL_CHAINS,
   chainIdToBackendChain,
+  getChainFromChainUrlParam,
   isSupportedChainId,
 } from 'constants/chains'
-import { NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'constants/tokens'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { DefaultTheme } from 'lib/styled-components'
 import ms from 'ms'
 import { ExploreTab } from 'pages/Explore'
 import { useEffect } from 'react'
+import { TokenStat } from 'state/explore/types'
 import { ThemeColors } from 'theme/colors'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { GQL_MAINNET_CHAINS, UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   Chain,
   ContractInput,
@@ -55,13 +56,14 @@ export function usePollQueryWhileMounted<T, K extends OperationVariables>(
 }
 
 export enum TimePeriod {
-  HOUR,
-  DAY,
-  WEEK,
-  MONTH,
-  YEAR,
+  HOUR = 'H',
+  DAY = 'D',
+  WEEK = 'W',
+  MONTH = 'M',
+  YEAR = 'Y',
 }
 
+// eslint-disable-next-line consistent-return
 export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
   switch (timePeriod) {
     case TimePeriod.HOUR:
@@ -83,23 +85,20 @@ export function isPricePoint(p: PricePoint | undefined): p is PricePoint {
   return p !== undefined
 }
 
-/** Used for making graphql queries to all chains supported by the graphql backend. Must be mutable for some apollo typechecking. */
-export const GQL_MAINNET_CHAINS_MUTABLE = GQL_MAINNET_CHAINS.map((c) => c)
-
-export function isGqlSupportedChain(chainId?: SupportedInterfaceChainId) {
+export function isGqlSupportedChain(chainId?: UniverseChainId) {
   return !!chainId && GQL_MAINNET_CHAINS.includes(UNIVERSE_CHAIN_INFO[chainId].backendChain.chain)
 }
 
 export function toContractInput(currency: Currency): ContractInput {
-  const chain = chainIdToBackendChain({ chainId: currency.chainId as SupportedInterfaceChainId })
+  const chain = chainIdToBackendChain({ chainId: currency.chainId as UniverseChainId })
   return { chain, address: currency.isToken ? currency.address : getNativeTokenDBAddress(chain) }
 }
 
-export function gqlToCurrency(token: DeepPartial<GqlToken>): Currency | undefined {
+export function gqlToCurrency(token: DeepPartial<GqlToken | TokenStat>): Currency | undefined {
   if (!token.chain) {
     return undefined
   }
-  const chainId = supportedChainIdFromGQLChain(token.chain)
+  const chainId = getChainFromChainUrlParam(token.chain.toLowerCase())?.id
   if (!chainId) {
     return undefined
   }
@@ -111,16 +110,16 @@ export function gqlToCurrency(token: DeepPartial<GqlToken>): Currency | undefine
       token.address,
       token.decimals ?? 18,
       token.symbol ?? undefined,
-      token.project?.name ?? token.name ?? undefined,
+      token.name ?? token.project?.name ?? undefined,
     )
   }
 }
 
 export function fiatOnRampToCurrency(forCurrency: FORSupportedToken): Currency | undefined {
   if (!isSupportedChainId(Number(forCurrency.chainId))) {
-    return
+    return undefined
   }
-  const supportedChainId = Number(forCurrency.chainId) as SupportedInterfaceChainId
+  const supportedChainId = Number(forCurrency.chainId) as UniverseChainId
 
   if (!forCurrency.address) {
     return nativeOnChain(supportedChainId)
@@ -132,12 +131,12 @@ export function fiatOnRampToCurrency(forCurrency: FORSupportedToken): Currency |
 
 export function getSupportedGraphQlChain(
   chain: UniverseChainInfo | undefined,
-  options?: undefined,
-): UniverseChainInfo | undefined
-export function getSupportedGraphQlChain(
-  chain: UniverseChainInfo | undefined,
   options: { fallbackToEthereum: true },
 ): UniverseChainInfo
+export function getSupportedGraphQlChain(
+  chain: UniverseChainInfo | undefined,
+  options?: { fallbackToEthereum?: boolean },
+): UniverseChainInfo | undefined
 export function getSupportedGraphQlChain(
   chain: UniverseChainInfo | undefined,
   options?: { fallbackToEthereum?: boolean },
@@ -151,9 +150,9 @@ export function isSupportedGQLChain(chain: Chain): chain is InterfaceGqlChain {
   return chains.includes(chain)
 }
 
-export function supportedChainIdFromGQLChain(chain: InterfaceGqlChain): SupportedInterfaceChainId
-export function supportedChainIdFromGQLChain(chain: Chain): SupportedInterfaceChainId | undefined
-export function supportedChainIdFromGQLChain(chain: Chain): SupportedInterfaceChainId | undefined {
+export function supportedChainIdFromGQLChain(chain: InterfaceGqlChain): UniverseChainId
+export function supportedChainIdFromGQLChain(chain: Chain): UniverseChainId | undefined
+export function supportedChainIdFromGQLChain(chain: Chain): UniverseChainId | undefined {
   return isSupportedGQLChain(chain) ? CHAIN_NAME_TO_CHAIN_ID[chain] : undefined
 }
 
@@ -161,9 +160,9 @@ export function isBackendSupportedChain(chain: Chain): chain is InterfaceGqlChai
   return (BACKEND_SUPPORTED_CHAINS as ReadonlyArray<Chain>).includes(chain)
 }
 
-export function getTokenExploreURL({ tab, chain }: { tab: ExploreTab; chain: Chain }) {
-  const chainName = chain.toLowerCase()
-  return `/explore/${tab}/${chainName}`
+export function getTokenExploreURL({ tab, chain }: { tab: ExploreTab; chain?: Chain }) {
+  const chainName = chain?.toLowerCase()
+  return `/explore/${tab}${chain ? `/${chainName}` : ''}`
 }
 
 export function getTokenDetailsURL({
@@ -219,10 +218,23 @@ export function unwrapToken<
   }
 }
 
-type ProtocolMeta = { name: string; color: keyof ThemeColors }
+type ProtocolMeta = { name: string; color: keyof ThemeColors; gradient: { start: string; end: string } }
 const PROTOCOL_META: { [source in PriceSource]: ProtocolMeta } = {
-  [PriceSource.SubgraphV2]: { name: 'v2', color: 'accent3' },
-  [PriceSource.SubgraphV3]: { name: 'v3', color: 'accent1' },
+  [PriceSource.SubgraphV2]: {
+    name: 'v2',
+    color: 'accent3',
+    gradient: { start: 'rgba(96, 123, 238, 0.20)', end: 'rgba(55, 70, 136, 0.00)' },
+  },
+  [PriceSource.SubgraphV3]: {
+    name: 'v3',
+    color: 'accent1',
+    gradient: { start: 'rgba(252, 116, 254, 0.20)', end: 'rgba(252, 116, 254, 0.00)' },
+  },
+  [PriceSource.SubgraphV4]: {
+    name: 'v4',
+    color: 'accent1', // TODO(WEB-4618): update the colors when they are available
+    gradient: { start: 'rgba(252, 116, 254, 0.20)', end: 'rgba(252, 116, 254, 0.00)' },
+  },
   /* [PriceSource.UniswapX]: { name: 'UniswapX', color: purple } */
 }
 
@@ -232,6 +244,9 @@ export function getProtocolColor(priceSource: PriceSource, theme: DefaultTheme):
 
 export function getProtocolName(priceSource: PriceSource): string {
   return PROTOCOL_META[priceSource].name
+}
+export function getProtocolGradient(priceSource: PriceSource): { start: string; end: string } {
+  return PROTOCOL_META[priceSource].gradient
 }
 
 export enum OrderDirection {

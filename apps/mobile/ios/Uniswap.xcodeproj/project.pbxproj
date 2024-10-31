@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0013F5F72C93399400D6EF09 /* ProtectionInfo.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0013F5F62C93399400D6EF09 /* ProtectionInfo.graphql.swift */; };
+		00265F792C933CE300A5DA57 /* ProtectionResult.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00265F772C933CE300A5DA57 /* ProtectionResult.graphql.swift */; };
+		00265F7A2C933CE300A5DA57 /* ProtectionAttackType.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00265F782C933CE300A5DA57 /* ProtectionAttackType.graphql.swift */; };
 		005446EF1B67FC63C0A7383A /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1868582E97BBB7469EA4C78 /* libPods-OneSignalNotificationServiceExtension.a */; };
 		00E356F31AD99517003FC87E /* UniswapTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* UniswapTests.m */; };
 		037C5AAA2C04970B00B1D808 /* CopyIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037C5AA92C04970B00B1D808 /* CopyIcon.swift */; };
@@ -28,8 +31,6 @@
 		074086FA2A703B76006E3053 /* FormatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074086F92A703B76006E3053 /* FormatTests.swift */; };
 		0741433E2A588CCC00A157D3 /* TokenPriceWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 072F6C292A44A32E00DA720A /* TokenPriceWidget.intentdefinition */; };
 		074143402A588F5800A157D3 /* Structs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0741433F2A588F5800A157D3 /* Structs.swift */; };
-		0743218C2A82C6C000F8518D /* Basel-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0743218B2A82C6C000F8518D /* Basel-Book.otf */; };
-		0743218D2A82C6C000F8518D /* Basel-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0743218B2A82C6C000F8518D /* Basel-Book.otf */; };
 		074321EB2A83E3CA00F8518D /* TokenDetailsScreenQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321902A83E3C900F8518D /* TokenDetailsScreenQuery.graphql.swift */; };
 		074321ED2A83E3CA00F8518D /* ExploreTokensTabQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321922A83E3C900F8518D /* ExploreTokensTabQuery.graphql.swift */; };
 		074321EE2A83E3CA00F8518D /* NftsTabQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321932A83E3C900F8518D /* NftsTabQuery.graphql.swift */; };
@@ -111,14 +112,6 @@
 		0743223D2A83E3CA00F8518D /* IAmount.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321E92A83E3C900F8518D /* IAmount.graphql.swift */; };
 		0743223E2A83E3CA00F8518D /* IContract.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 074321EA2A83E3C900F8518D /* IContract.graphql.swift */; };
 		074322402A841BBD00F8518D /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0743223F2A841BBD00F8518D /* Constants.swift */; };
-		0767E02F2A61BBDC0042ADA2 /* Basel-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0767E02B2A61BBDB0042ADA2 /* Basel-Regular.otf */; };
-		0767E0302A61BBDC0042ADA2 /* Basel-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0767E02B2A61BBDB0042ADA2 /* Basel-Regular.otf */; };
-		0767E0312A61BBDC0042ADA2 /* Basel-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0767E02C2A61BBDB0042ADA2 /* Basel-Semibold.otf */; };
-		0767E0322A61BBDC0042ADA2 /* Basel-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0767E02C2A61BBDB0042ADA2 /* Basel-Semibold.otf */; };
-		0767E0332A61BBDC0042ADA2 /* Basel-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0767E02D2A61BBDB0042ADA2 /* Basel-Medium.otf */; };
-		0767E0342A61BBDC0042ADA2 /* Basel-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0767E02D2A61BBDB0042ADA2 /* Basel-Medium.otf */; };
-		0767E0352A61BBDC0042ADA2 /* Basel-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0767E02E2A61BBDC0042ADA2 /* Basel-Bold.otf */; };
-		0767E0362A61BBDC0042ADA2 /* Basel-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0767E02E2A61BBDC0042ADA2 /* Basel-Bold.otf */; };
 		0767E0382A65C8330042ADA2 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0767E0372A65C8330042ADA2 /* Colors.swift */; };
 		0767E03B2A65D2550042ADA2 /* Styling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0767E03A2A65D2550042ADA2 /* Styling.swift */; };
 		077E60392A85587800ABC4B9 /* TokensQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077E60382A85587800ABC4B9 /* TokensQuery.graphql.swift */; };
@@ -189,14 +182,15 @@
 		9FCEBF042A95A99C0079EDDB /* RCTThemeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FCEBF032A95A99B0079EDDB /* RCTThemeModule.m */; };
 		9FEC9B8B2A858CF1003CD019 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FEC9B8A2A858CF1003CD019 /* AppDelegate.m */; };
 		A32F9FBD272343C9002CFCDB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A32F9FBC272343C8002CFCDB /* GoogleService-Info.plist */; };
+		A3551F2CAC134AD49D40927F /* Basel-Grotesk-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6F33E8069B7B40AFB313B8B0 /* Basel-Grotesk-Book.otf */; };
 		A3F0A5B1272B1DFA00895B25 /* KeychainSwiftDistrib.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F0A5B0272B1DFA00895B25 /* KeychainSwiftDistrib.swift */; };
 		A70E4DD42C25DA0A002D6D86 /* NetworkFee.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70E4DD32C25DA0A002D6D86 /* NetworkFee.graphql.swift */; };
 		A70E4DD72C260416002D6D86 /* SwapOrderType.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70E4DD52C260416002D6D86 /* SwapOrderType.graphql.swift */; };
 		A70E4DD82C260416002D6D86 /* SwapOrderStatus.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70E4DD62C260416002D6D86 /* SwapOrderStatus.graphql.swift */; };
 		A7B8EFCB2BF68F0D00CA4A1C /* FeeData.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B8EFCA2BF68F0D00CA4A1C /* FeeData.graphql.swift */; };
 		AC0EE0982BD826E700BCCF07 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AC0EE0972BD826E700BCCF07 /* PrivacyInfo.xcprivacy */; };
-		AEE498F72A85AD86000DDF8E /* Basel-Book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AEE498F52A85AD86000DDF8E /* Basel-Book.ttf */; };
-		AEE498F82A85AD86000DDF8E /* Basel-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AEE498F62A85AD86000DDF8E /* Basel-Medium.ttf */; };
+		AC2EF4032C914B1600EEEFDB /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = AC2EF4022C914B1600EEEFDB /* fonts */; };
+		B193AD315CF844A3BDC3D11D /* Basel-Grotesk-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3C606D2C81014A0A8898F38E /* Basel-Grotesk-Medium.otf */; };
 		D3B63ACA9B0C42F68080B080 /* InputMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1834199AFFB04D91B05FFB64 /* InputMono-Regular.ttf */; };
 		F35AFD3E27EE49990011A725 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35AFD3D27EE49990011A725 /* NotificationService.swift */; };
 		F35AFD4227EE49990011A725 /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F35AFD3B27EE49990011A725 /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -300,6 +294,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0013F5F62C93399400D6EF09 /* ProtectionInfo.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtectionInfo.graphql.swift; path = MobileSchema/Schema/Objects/ProtectionInfo.graphql.swift; sourceTree = "<group>"; };
+		00265F772C933CE300A5DA57 /* ProtectionResult.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtectionResult.graphql.swift; path = MobileSchema/Schema/Enums/ProtectionResult.graphql.swift; sourceTree = "<group>"; };
+		00265F782C933CE300A5DA57 /* ProtectionAttackType.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtectionAttackType.graphql.swift; path = MobileSchema/Schema/Enums/ProtectionAttackType.graphql.swift; sourceTree = "<group>"; };
 		00E356EE1AD99517003FC87E /* UniswapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UniswapTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* UniswapTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UniswapTests.m; sourceTree = "<group>"; };
@@ -326,7 +323,6 @@
 		072F6C372A44BECC00DA720A /* Logging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
 		074086F92A703B76006E3053 /* FormatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormatTests.swift; sourceTree = "<group>"; };
 		0741433F2A588F5800A157D3 /* Structs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Structs.swift; sourceTree = "<group>"; };
-		0743218B2A82C6C000F8518D /* Basel-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Basel-Book.otf"; sourceTree = "<group>"; };
 		074321902A83E3C900F8518D /* TokenDetailsScreenQuery.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenDetailsScreenQuery.graphql.swift; sourceTree = "<group>"; };
 		074321922A83E3C900F8518D /* ExploreTokensTabQuery.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExploreTokensTabQuery.graphql.swift; sourceTree = "<group>"; };
 		074321932A83E3C900F8518D /* NftsTabQuery.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NftsTabQuery.graphql.swift; sourceTree = "<group>"; };
@@ -408,10 +404,6 @@
 		074321E92A83E3C900F8518D /* IAmount.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IAmount.graphql.swift; sourceTree = "<group>"; };
 		074321EA2A83E3C900F8518D /* IContract.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IContract.graphql.swift; sourceTree = "<group>"; };
 		0743223F2A841BBD00F8518D /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		0767E02B2A61BBDB0042ADA2 /* Basel-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Basel-Regular.otf"; sourceTree = "<group>"; };
-		0767E02C2A61BBDB0042ADA2 /* Basel-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Basel-Semibold.otf"; sourceTree = "<group>"; };
-		0767E02D2A61BBDB0042ADA2 /* Basel-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Basel-Medium.otf"; sourceTree = "<group>"; };
-		0767E02E2A61BBDC0042ADA2 /* Basel-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Basel-Bold.otf"; sourceTree = "<group>"; };
 		0767E0372A65C8330042ADA2 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		0767E03A2A65D2550042ADA2 /* Styling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Styling.swift; sourceTree = "<group>"; };
 		077E60382A85587800ABC4B9 /* TokensQuery.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokensQuery.graphql.swift; sourceTree = "<group>"; };
@@ -448,6 +440,7 @@
 		1CC6ADAADCA38FDAEB181E86 /* Pods-WidgetIntentExtension.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetIntentExtension.dev.xcconfig"; path = "Target Support Files/Pods-WidgetIntentExtension/Pods-WidgetIntentExtension.dev.xcconfig"; sourceTree = "<group>"; };
 		3A2186B1FF7FB85663D96EA9 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		3BAE0E417A0F99C84523EF04 /* libPods-Uniswap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Uniswap.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C606D2C81014A0A8898F38E /* Basel-Grotesk-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Basel-Grotesk-Medium.otf"; path = "../src/assets/fonts/Basel-Grotesk-Medium.otf"; sourceTree = "<group>"; };
 		3D8FCE4CD401350CA74DCC89 /* Pods-WidgetsCoreTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCoreTests.debug.xcconfig"; path = "Target Support Files/Pods-WidgetsCoreTests/Pods-WidgetsCoreTests.debug.xcconfig"; sourceTree = "<group>"; };
 		3E279F675B02CBC50D3B57D5 /* Pods-WidgetsCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCore.release.xcconfig"; path = "Target Support Files/Pods-WidgetsCore/Pods-WidgetsCore.release.xcconfig"; sourceTree = "<group>"; };
 		4781CD4CDD95B5792B793F75 /* Pods-Uniswap-UniswapTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap-UniswapTests.beta.xcconfig"; path = "Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests.beta.xcconfig"; sourceTree = "<group>"; };
@@ -466,6 +459,7 @@
 		6CA91BDE2A95226200C4063E /* RNCloudStorageBackupsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNCloudStorageBackupsManager.m; sourceTree = "<group>"; };
 		6CA91BDF2A95226200C4063E /* EncryptionHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EncryptionHelper.swift; sourceTree = "<group>"; };
 		6CA91BE02A95226200C4063E /* RNCloudStorageBackupsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RNCloudStorageBackupsManager.swift; sourceTree = "<group>"; };
+		6F33E8069B7B40AFB313B8B0 /* Basel-Grotesk-Book.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Basel-Grotesk-Book.otf"; path = "../src/assets/fonts/Basel-Grotesk-Book.otf"; sourceTree = "<group>"; };
 		6F3DC921A65D749C0852B10C /* Pods-Uniswap-UniswapTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap-UniswapTests.debug.xcconfig"; path = "Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests.debug.xcconfig"; sourceTree = "<group>"; };
 		6F7814C6D40D9C348EA1F1C7 /* Pods-OneSignalNotificationServiceExtension.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.dev.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.dev.xcconfig"; sourceTree = "<group>"; };
 		71A42CE7FF1299C666E6FC79 /* libPods-WidgetIntentExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WidgetIntentExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -512,8 +506,7 @@
 		A7C9F415D0E128A43003E071 /* Pods-Uniswap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.debug.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.debug.xcconfig"; sourceTree = "<group>"; };
 		AC0EE0972BD826E700BCCF07 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = Uniswap/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		AC2794442C51541E00F9AF68 /* sourcemaps-datadog.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "sourcemaps-datadog.sh"; sourceTree = "<group>"; };
-		AEE498F52A85AD86000DDF8E /* Basel-Book.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Basel-Book.ttf"; path = "../src/assets/fonts/Basel-Book.ttf"; sourceTree = "<group>"; };
-		AEE498F62A85AD86000DDF8E /* Basel-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Basel-Medium.ttf"; path = "../src/assets/fonts/Basel-Medium.ttf"; sourceTree = "<group>"; };
+		AC2EF4022C914B1600EEEFDB /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fonts; path = ../src/assets/fonts; sourceTree = "<group>"; };
 		B0DA4D39B1A6D74A1D05B99F /* Pods-WidgetsCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCore.debug.xcconfig"; path = "Target Support Files/Pods-WidgetsCore/Pods-WidgetsCore.debug.xcconfig"; sourceTree = "<group>"; };
 		B2176D5449C2B3B68A17466B /* libPods-WidgetsCoreTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WidgetsCoreTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCB2A43E5FB0D7B69CA02312 /* Pods-WidgetsCore.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCore.dev.xcconfig"; path = "Target Support Files/Pods-WidgetsCore/Pods-WidgetsCore.dev.xcconfig"; sourceTree = "<group>"; };
@@ -658,6 +651,9 @@
 		072E23872A44D5BD006AD6C9 /* WidgetsCore */ = {
 			isa = PBXGroup;
 			children = (
+				00265F782C933CE300A5DA57 /* ProtectionAttackType.graphql.swift */,
+				00265F772C933CE300A5DA57 /* ProtectionResult.graphql.swift */,
+				0013F5F62C93399400D6EF09 /* ProtectionInfo.graphql.swift */,
 				A70E4DD32C25DA0A002D6D86 /* NetworkFee.graphql.swift */,
 				A70E4DD62C260416002D6D86 /* SwapOrderStatus.graphql.swift */,
 				A70E4DD52C260416002D6D86 /* SwapOrderType.graphql.swift */,
@@ -701,18 +697,6 @@
 				074321A62A83E3C900F8518D /* Schema */,
 			);
 			path = MobileSchema;
-			sourceTree = "<group>";
-		};
-		074321872A82BA2700F8518D /* Fonts */ = {
-			isa = PBXGroup;
-			children = (
-				0743218B2A82C6C000F8518D /* Basel-Book.otf */,
-				0767E02C2A61BBDB0042ADA2 /* Basel-Semibold.otf */,
-				0767E02B2A61BBDB0042ADA2 /* Basel-Regular.otf */,
-				0767E02D2A61BBDB0042ADA2 /* Basel-Medium.otf */,
-				0767E02E2A61BBDC0042ADA2 /* Basel-Bold.otf */,
-			);
-			path = Fonts;
 			sourceTree = "<group>";
 		};
 		0743218E2A83E3C900F8518D /* Operations */ = {
@@ -1037,8 +1021,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				AC2EF4022C914B1600EEEFDB /* fonts */,
 				AC2794442C51541E00F9AF68 /* sourcemaps-datadog.sh */,
-				074321872A82BA2700F8518D /* Fonts */,
 				FD54D51C296C79A4007A37E9 /* GoogleServiceInfo */,
 				13B07FAE1A68108700A75B9A /* Uniswap */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -1130,9 +1114,9 @@
 		C2C18ECBEF5A4489BF3A314C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				AEE498F52A85AD86000DDF8E /* Basel-Book.ttf */,
-				AEE498F62A85AD86000DDF8E /* Basel-Medium.ttf */,
 				1834199AFFB04D91B05FFB64 /* InputMono-Regular.ttf */,
+				6F33E8069B7B40AFB313B8B0 /* Basel-Grotesk-Book.otf */,
+				3C606D2C81014A0A8898F38E /* Basel-Grotesk-Medium.otf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1431,11 +1415,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0743218D2A82C6C000F8518D /* Basel-Book.otf in Resources */,
-				0767E0342A61BBDC0042ADA2 /* Basel-Medium.otf in Resources */,
-				0767E0302A61BBDC0042ADA2 /* Basel-Regular.otf in Resources */,
-				0767E0362A61BBDC0042ADA2 /* Basel-Bold.otf in Resources */,
-				0767E0322A61BBDC0042ADA2 /* Basel-Semibold.otf in Resources */,
 				072F6C2B2A44A32F00DA720A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1452,18 +1431,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				FD7304CE28A364FC0085BDEA /* Colors.xcassets in Resources */,
-				AEE498F82A85AD86000DDF8E /* Basel-Medium.ttf in Resources */,
 				A32F9FBD272343C9002CFCDB /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				77CF6065C8A24FE48204A2C1 /* SplashScreen.storyboard in Resources */,
 				AC0EE0982BD826E700BCCF07 /* PrivacyInfo.xcprivacy in Resources */,
-				AEE498F72A85AD86000DDF8E /* Basel-Book.ttf in Resources */,
-				0767E02F2A61BBDC0042ADA2 /* Basel-Regular.otf in Resources */,
-				0767E0352A61BBDC0042ADA2 /* Basel-Bold.otf in Resources */,
-				0743218C2A82C6C000F8518D /* Basel-Book.otf in Resources */,
-				0767E0312A61BBDC0042ADA2 /* Basel-Semibold.otf in Resources */,
-				0767E0332A61BBDC0042ADA2 /* Basel-Medium.otf in Resources */,
 				D3B63ACA9B0C42F68080B080 /* InputMono-Regular.ttf in Resources */,
+				AC2EF4032C914B1600EEEFDB /* fonts in Resources */,
+				A3551F2CAC134AD49D40927F /* Basel-Grotesk-Book.otf in Resources */,
+				B193AD315CF844A3BDC3D11D /* Basel-Grotesk-Medium.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1881,6 +1856,7 @@
 				074322362A83E3CA00F8518D /* NftCollectionsFilterInput.graphql.swift in Sources */,
 				0743223B2A83E3CA00F8518D /* NftAssetsFilterInput.graphql.swift in Sources */,
 				0DC6ADF02B1E2C100092909C /* PortfolioValueModifier.graphql.swift in Sources */,
+				0013F5F72C93399400D6EF09 /* ProtectionInfo.graphql.swift in Sources */,
 				074322282A83E3CA00F8518D /* TokenProjectMarket.graphql.swift in Sources */,
 				A7B8EFCB2BF68F0D00CA4A1C /* FeeData.graphql.swift in Sources */,
 				0743220F2A83E3CA00F8518D /* NftApproveForAll.graphql.swift in Sources */,
@@ -1941,12 +1917,14 @@
 				8EE7C0582AFD7B2100E0D9CD /* DescriptionTranslations.graphql.swift in Sources */,
 				074322172A83E3CA00F8518D /* NftTransfer.graphql.swift in Sources */,
 				074322202A83E3CA00F8518D /* NftAssetEdge.graphql.swift in Sources */,
+				00265F792C933CE300A5DA57 /* ProtectionResult.graphql.swift in Sources */,
 				077E60392A85587800ABC4B9 /* TokensQuery.graphql.swift in Sources */,
 				0743223D2A83E3CA00F8518D /* IAmount.graphql.swift in Sources */,
 				074321F32A83E3CA00F8518D /* FavoriteTokenCardQuery.graphql.swift in Sources */,
 				074322262A83E3CA00F8518D /* NftAsset.graphql.swift in Sources */,
 				074322012A83E3CA00F8518D /* HistoryDuration.graphql.swift in Sources */,
 				074322182A83E3CA00F8518D /* TokenApproval.graphql.swift in Sources */,
+				00265F7A2C933CE300A5DA57 /* ProtectionAttackType.graphql.swift in Sources */,
 				07F5CF712A6AD97D00C648A5 /* Chart.swift in Sources */,
 				074321F42A83E3CA00F8518D /* NFTItemScreenQuery.graphql.swift in Sources */,
 				0743222D2A83E3CA00F8518D /* NftProfile.graphql.swift in Sources */,
@@ -2189,7 +2167,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -2242,7 +2220,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCore;
@@ -2295,7 +2273,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCore;
@@ -2348,7 +2326,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCore;
@@ -2386,7 +2364,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -2422,7 +2400,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCoreTests;
@@ -2457,7 +2435,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCoreTests;
@@ -2492,7 +2470,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCoreTests;
@@ -2539,7 +2517,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -2585,7 +2563,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.widgets;
@@ -2631,12 +2609,12 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.widgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile.dev.widgets";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile.dev.widgets 1727888879";
 				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -2677,7 +2655,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.widgets;
@@ -2719,7 +2697,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -2762,7 +2740,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.WidgetIntentExtension;
@@ -2805,12 +2783,12 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.WidgetIntentExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile.dev.WidgetIntentExtension";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile.dev.WidgetIntentExtension 1727888886";
 				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -2848,7 +2826,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.WidgetIntentExtension;
@@ -2884,7 +2862,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2922,7 +2900,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -3100,7 +3078,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3144,7 +3122,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.OneSignalNotificationServiceExtension;
@@ -3244,7 +3222,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -3315,7 +3293,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.OneSignalNotificationServiceExtension;
@@ -3415,7 +3393,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -3486,12 +3464,12 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.34;
+				MARKETING_VERSION = 1.37;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile.dev.OneSignalNotificationServiceExtension";
+				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile.dev.OneSignalNotificationServiceExtension 1727888864";
 				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;

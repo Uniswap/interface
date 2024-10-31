@@ -1,11 +1,11 @@
-import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
 import { DetailBubble, SmallDetailBubble } from 'components/Pools/PoolDetails/shared'
-import Row from 'components/Row'
 import Tooltip, { TooltipSize } from 'components/Tooltip'
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
+import Row from 'components/deprecated/Row'
+import { chainIdToBackendChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import useCopyClipboard from 'hooks/useCopyClipboard'
@@ -18,8 +18,8 @@ import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/c
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans, t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { isAddress, shortenAddress } from 'utilities/src/addresses'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const TokenName = styled(ThemedText.BodyPrimary)`
   display: none;
@@ -80,7 +80,7 @@ const ButtonsRow = styled(Row)`
 
 interface PoolDetailsLinkProps {
   address?: string
-  chainId?: SupportedInterfaceChainId
+  chainId?: UniverseChainId
   tokens: (Token | undefined)[]
   loading?: boolean
 }

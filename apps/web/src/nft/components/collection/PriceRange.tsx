@@ -1,8 +1,8 @@
 import 'rc-slider/assets/index.css'
 
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
+import { Box } from 'components/deprecated/Box'
 import styled, { useTheme } from 'lib/styled-components'
-import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/PriceRange.css'
 import { TraitsHeader } from 'nft/components/collection/TraitsHeader'

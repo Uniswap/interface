@@ -1,11 +1,16 @@
 import { getPriceBounds } from 'components/Charts/PriceChart/utils'
 import LineChart from 'components/Charts/SparklineChart/LineChart'
 import { LoadingBubble } from 'components/Tokens/loading'
+import { getChainFromChainUrlParam } from 'constants/chains'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { curveCardinal, scaleLinear } from 'd3'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { PricePoint } from 'graphql/data/util'
 import styled, { useTheme } from 'lib/styled-components'
 import { memo } from 'react'
+import { TokenStat } from 'state/explore/types'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
 const LoadingContainer = styled.div`
   height: 100%;
@@ -25,7 +30,7 @@ const SparkLineLoadingBubble = styled(LongLoadingBubble)`
 interface SparklineChartProps {
   width: number
   height: number
-  tokenData: TopToken
+  tokenData: TopToken | TokenStat
   pricePercentChange?: number | null
   sparklineMap: SparklineMap
 }
@@ -33,7 +38,12 @@ interface SparklineChartProps {
 function _SparklineChart({ width, height, tokenData, pricePercentChange, sparklineMap }: SparklineChartProps) {
   const theme = useTheme()
   // for sparkline
-  const pricePoints = tokenData?.address ? sparklineMap[tokenData.address] : null
+  const chainId = getChainFromChainUrlParam(tokenData?.chain.toLowerCase())?.id
+  const chainInfo = chainId && UNIVERSE_CHAIN_INFO[chainId]
+  const isNative = addressesAreEquivalent(tokenData?.address, chainInfo?.wrappedNativeCurrency.address)
+  const pricePoints = tokenData?.address
+    ? sparklineMap[isNative ? NATIVE_CHAIN_ID : tokenData.address.toLowerCase()]
+    : null
 
   // Don't display if there's one or less pricepoints
   if (!pricePoints || pricePoints.length <= 1) {

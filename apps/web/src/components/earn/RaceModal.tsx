@@ -4,19 +4,20 @@ import { ReactNode, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'lib/styled-components'
 import { ThemedText } from 'theme/components/text'
+import { GRG } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { logger } from 'utilities/src/logger/logger'
 
 import { MODAL_TRANSITION_DURATION } from 'components/Modal'
-import { GRG } from 'constants/tokens'
 import { useRaceCallback } from 'state/stake/hooks'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
-import { ButtonPrimary } from 'components/Button'
-import { AutoColumn } from 'components/Column'
+import { ButtonPrimary } from 'components/Button/buttons'
+import { AutoColumn } from 'components/deprecated/Column'
+import { RowBetween } from 'components/deprecated/Row'
 import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
-import { RowBetween } from 'components/Row'
 import { useAccount } from 'hooks/useAccount'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -53,7 +54,7 @@ interface RaceModalProps {
 export default function RaceModal({ isOpen, poolAddress, poolName, onDismiss, title }: RaceModalProps) {
   const { chainId } = useAccount()
 
-  const [currencyValue] = useState<Token>(GRG[chainId ?? 1])
+  const [currencyValue] = useState<Token | undefined>(GRG[chainId ?? UniverseChainId.Mainnet])
   const raceCallback = useRaceCallback()
 
   // monitor call to help UI loading state
@@ -78,7 +79,7 @@ export default function RaceModal({ isOpen, poolAddress, poolName, onDismiss, ti
 
   async function onRace() {
     // if callback not returned properly ignore
-    if (!raceCallback || !poolAddress || !poolName || !currencyValue.isToken) {
+    if (!raceCallback || !poolAddress || !poolName || !currencyValue?.isToken) {
       return
     }
     setAttempting(true)

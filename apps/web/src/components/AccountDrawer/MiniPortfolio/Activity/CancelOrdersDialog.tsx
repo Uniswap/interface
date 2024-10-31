@@ -1,23 +1,23 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { ConfirmedIcon, LogoContainer, SubmittedIcon } from 'components/AccountDrawer/MiniPortfolio/Activity/Logos'
 import { useCancelOrdersGasEstimate } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
-import Column from 'components/Column'
 import { Container, Dialog, DialogButtonType, DialogProps } from 'components/Dialog/Dialog'
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import Modal from 'components/Modal'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
-import Row from 'components/Row'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
-import { nativeOnChain } from 'constants/tokens'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import styled, { useTheme } from 'lib/styled-components'
 import { Slash } from 'react-feather'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { ExternalLink, ThemedText } from 'theme/components'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { Plural, Trans, t } from 'uniswap/src/i18n'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const GasEstimateContainer = styled(Row)`
   border-top: 1px solid ${({ theme }) => theme.surface3};
@@ -162,7 +162,7 @@ export function CancelOrdersDialog(
   }
 }
 
-function GasEstimateDisplay({ gasEstimateValue, chainId }: { gasEstimateValue?: string; chainId: InterfaceChainId }) {
+function GasEstimateDisplay({ gasEstimateValue, chainId }: { gasEstimateValue?: string; chainId: UniverseChainId }) {
   const gasFeeCurrencyAmount = CurrencyAmount.fromRawAmount(nativeOnChain(chainId), gasEstimateValue ?? '0')
   const gasFeeUSD = useStablecoinValue(gasFeeCurrencyAmount)
   const { formatCurrencyAmount } = useFormatter()

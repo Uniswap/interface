@@ -3,14 +3,13 @@ import { formatEther } from '@ethersproject/units'
 import { InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import Column from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import Row from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import { CurrencySearchFilters } from 'components/SearchModal/DeprecatedCurrencySearch'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import { useIsSupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getURAddress, useNftUniversalRouterAddress } from 'graphql/data/nft/NftUniversalRouterAddress'
@@ -177,10 +176,6 @@ const Helper = ({ children, color }: PropsWithChildren<HelperTextProps>) => {
       {children}
     </HelperText>
   )
-}
-
-const BAG_FOOTER_CURRENCY_SEARCH_FILTERS: CurrencySearchFilters = {
-  onlyShowCurrenciesWithBalance: true,
 }
 
 const InputCurrencyValue = ({
@@ -561,7 +556,6 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
           }
         }}
         selectedCurrency={activeCurrency ?? undefined}
-        currencySearchFilters={BAG_FOOTER_CURRENCY_SEARCH_FILTERS}
       />
     </FooterContainer>
   )

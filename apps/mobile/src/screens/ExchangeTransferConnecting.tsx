@@ -2,11 +2,13 @@ import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Screen } from 'src/components/layout/Screen'
+import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { Flex, useIsDarkMode } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FiatOnRampConnectingView } from 'uniswap/src/features/fiatOnRamp/FiatOnRampConnectingView'
 import { useFiatOnRampAggregatorTransferWidgetQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
+import { useFiatOnRampTransactionCreator } from 'uniswap/src/features/fiatOnRamp/hooks'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { getServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { InstitutionTransferEventName } from 'uniswap/src/features/telemetry/constants'
@@ -15,7 +17,6 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 import { openUri } from 'uniswap/src/utils/linking'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
-import { useFiatOnRampTransactionCreator } from 'wallet/src/features/fiatOnRamp/hooks'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -35,6 +36,7 @@ export function ExchangeTransferConnecting({
   const dispatch = useDispatch()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
   const [timeoutElapsed, setTimeoutElapsed] = useState(false)
+  const { isOffRamp } = useFiatOnRampContext()
 
   const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator(
     activeAccountAddress,
@@ -103,6 +105,7 @@ export function ExchangeTransferConnecting({
   return (
     <Screen>
       <FiatOnRampConnectingView
+        isOffRamp={isOffRamp}
         serviceProviderLogo={
           <Flex
             alignItems="center"

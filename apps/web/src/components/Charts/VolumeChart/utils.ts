@@ -8,7 +8,11 @@ export function isStackedHistogramData(data: CustomHistogramData): data is Stack
 
 // Get summed value of each bar of data
 export function getCumulativeSum(data: CustomHistogramData): number {
-  return isStackedHistogramData(data) ? Object.values(data.values).reduce((sum, curr) => (sum += curr), 0) : data.value
+  return isStackedHistogramData(data)
+    ? Object.values(data.values)
+        .filter((value: number | undefined): value is number => value !== undefined)
+        .reduce((sum, curr) => (sum += curr), 0)
+    : data.value
 }
 
 // Get summed value of all bars of data
@@ -201,7 +205,7 @@ export function calculateColumnPositionsInPlace(
   if (common.spacing > 0 && minColumnWidth < alignToMinimalWidthLimit) {
     ;(items as ColumnPositionItem[]).forEach((item: ColumnPositionItem, index: number) => {
       if (!item.column || index < startIndex || index > endIndex) {
-        return
+        return undefined
       }
       const width = item.column.right - item.column.left + 1
       if (width <= minColumnWidth) {

@@ -1,15 +1,16 @@
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
-import { LDO, NATIVE_CHAIN_ID, UNI, USDC_BASE } from 'constants/tokens'
+import { chainIdToBackendChain } from 'constants/chains'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
-import { useScreenSize } from 'hooks/screenSize'
+import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { Computer } from 'pages/Landing/components/Icons'
 import { PillButton } from 'pages/Landing/components/cards/PillButton'
 import ValuePropCard from 'pages/Landing/components/cards/ValuePropCard'
 import { useNavigate } from 'react-router-dom'
 import { Flex, Text } from 'ui/src'
+import { LDO, UNI, USDC_BASE } from 'uniswap/src/constants/tokens'
 import { useTokenPromoQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -17,7 +18,7 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const primary = '#2ABDFF'
 
-const tokens: { chainId: SupportedInterfaceChainId; address: string }[] = [
+const tokens: { chainId: UniverseChainId; address: string }[] = [
   {
     chainId: UniverseChainId.Mainnet,
     address: 'ETH',
@@ -36,7 +37,7 @@ const tokens: { chainId: SupportedInterfaceChainId; address: string }[] = [
   },
 ]
 
-function Token({ chainId, address }: { chainId: SupportedInterfaceChainId; address: string }) {
+function Token({ chainId, address }: { chainId: UniverseChainId; address: string }) {
   const screenIsSmall = useScreenSize()['sm']
   const navigate = useNavigate()
   const { formatFiatPrice, formatDelta } = useFormatter()

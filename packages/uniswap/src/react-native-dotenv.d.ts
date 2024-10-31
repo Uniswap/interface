@@ -24,7 +24,10 @@ declare module 'react-native-dotenv' {
   export const QUICKNODE_POLYGON_RPC_URL: string
   export const QUICKNODE_ZORA_RPC_URL: string
   export const QUICKNODE_ZKSYNC_RPC_URL: string
+  export const QUICKNODE_WORLDCHAIN_RPC_URL: string
+  export const QUICKNODE_ASTROCHAIN_SEPOLIA_RPC_URL: string
   export const QUICKNODE_MAINNET_RPC_URL: string
+  export const QUICKNODE_SEPOLIA_RPC_URL: string
   export const TRADING_API_KEY: string
   export const FIREBASE_APP_CHECK_DEBUG_TOKEN: string
 }

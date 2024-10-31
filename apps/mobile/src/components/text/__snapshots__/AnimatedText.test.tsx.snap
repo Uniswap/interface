@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AnimatedText renders without error 1`] = `
+<TextInput
+  allowFontScaling={true}
+  collapsable={false}
+  editable={false}
+  jestAnimatedStyle={
+    {
+      "value": {},
+    }
+  }
+  maxFontSizeMultiplier={1.4}
+  style={
+    {
+      "fontFamily": "Basel Grotesk",
+      "fontSize": 17,
+      "fontWeight": "400",
+      "lineHeight": 24,
+      "padding": 0,
+    }
+  }
+  text="Rendered"
+  underlineColorAndroid="transparent"
+  value="Rendered"
+/>
+`;

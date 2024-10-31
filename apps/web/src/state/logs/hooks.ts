@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { addListener, removeListener } from 'state/logs/slice'
 import { Log, filterToKey, isHistoricalLog } from 'state/logs/utils'
 
+// TODO: try deprecate logs if we still have issues retrieving them on altchains
 enum LogsState {
   // The filter is invalid
   INVALID,
@@ -38,7 +39,7 @@ export function useLogs(filter: Filter | undefined): UseLogsResult {
 
   useEffect(() => {
     if (!filter || !chainId) {
-      return
+      return undefined
     }
 
     dispatch(addListener({ chainId, filter }))

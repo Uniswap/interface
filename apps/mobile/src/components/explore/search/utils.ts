@@ -2,6 +2,7 @@ import { SEARCH_RESULT_HEADER_KEY } from 'src/components/explore/search/constant
 import { SearchResultOrHeader } from 'src/components/explore/search/types'
 import { Chain, ExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 import {
   NFTCollectionSearchResult,
   SearchResultType,
@@ -19,7 +20,7 @@ export function formatTokenSearchResults(
   searchQuery: string,
 ): TokenSearchResult[] | undefined {
   if (!data) {
-    return
+    return undefined
   }
 
   // Prevent showing "duplicate" token search results for tokens that are on multiple chains
@@ -30,14 +31,14 @@ export function formatTokenSearchResults(
       return tokensMap
     }
 
-    const { chain, address, symbol, project, market } = token
+    const { name, chain, address, symbol, project, market, protectionInfo } = token
     const chainId = fromGraphQLChain(chain)
 
     if (!chainId || !project) {
       return tokensMap
     }
 
-    const { name, safetyLevel, logoUrl } = project
+    const { safetyLevel, logoUrl } = project
 
     const tokenResult: TokenSearchResult & { volume1D: number } = {
       type: SearchResultType.Token,
@@ -48,6 +49,7 @@ export function formatTokenSearchResults(
       safetyLevel: safetyLevel ?? null,
       logoUrl: logoUrl ?? null,
       volume1D: market?.volume?.value ?? 0,
+      safetyInfo: getCurrencySafetyInfo(safetyLevel, protectionInfo),
     }
 
     // For token results that share the same TokenProject id, use the token with highest volume
@@ -85,7 +87,7 @@ export function formatNFTCollectionSearchResults(
   data: ExploreSearchResult['nftCollections'],
 ): NFTCollectionSearchResult[] | undefined {
   if (!data) {
-    return
+    return undefined
   }
 
   return data.edges.reduce<NFTCollectionSearchResult[]>((accum, { node }) => {

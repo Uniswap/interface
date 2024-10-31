@@ -47,14 +47,17 @@ export function HeaderScrollScreen({
   const scrollY = useSharedValue(0)
 
   // On scroll, centerElement and the bottom border fade in
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      scrollY.value = event.contentOffset.y
+  const scrollHandler = useAnimatedScrollHandler(
+    {
+      onScroll: (event) => {
+        scrollY.value = event.contentOffset.y
+      },
+      onEndDrag: (event) => {
+        scrollY.value = withTiming(event.contentOffset.y > 0 ? SHOW_HEADER_SCROLL_Y_DISTANCE : 0)
+      },
     },
-    onEndDrag: (event) => {
-      scrollY.value = withTiming(event.contentOffset.y > 0 ? SHOW_HEADER_SCROLL_Y_DISTANCE : 0)
-    },
-  })
+    [scrollY],
+  )
 
   return (
     <Screen backgroundColor={backgroundColor} edges={['top', 'left', 'right']} noInsets={fullScreen}>

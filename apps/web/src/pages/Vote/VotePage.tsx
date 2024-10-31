@@ -2,10 +2,10 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { NEVER_RELOAD } from '@uniswap/redux-multicall'
 import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
-import { ButtonPrimary } from 'components/Button'
-import { GrayCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
-import { RowBetween, RowFixed } from 'components/Row'
+import { ButtonPrimary } from 'components/Button/buttons'
+import { GrayCard } from 'components/Card/cards'
+import { AutoColumn } from 'components/deprecated/Column'
+import { RowBetween, RowFixed } from 'components/deprecated/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { CardSection, DataCard } from 'components/earn/styled'
 import DelegateModal from 'components/vote/DelegateModal'
@@ -17,8 +17,6 @@ import {
   COMMON_CONTRACT_NAMES,
   DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS,
 } from 'constants/governance'
-import { ZERO_ADDRESS } from 'constants/misc'
-import { GRG } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
@@ -45,16 +43,16 @@ import {
   ProposalState,
   useProposalData,
   useQuorum,
-  useUserDelegatee,
   useUserVotes,
 } from 'state/governance/hooks'
 import { VoteOption } from 'state/governance/types'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
 import { Flex } from 'ui/src'
+import { GRG } from 'uniswap/src/constants/tokens'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { isAddress } from 'utilities/src/addresses'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const PageWrapper = styled(AutoColumn)`
   padding-top: 68px;
@@ -256,11 +254,10 @@ export default function VotePage() {
     account.address,
     account.chainId ? GRG[account.chainId] : undefined,
   )
-  const userDelegatee: string | undefined = useUserDelegatee()
 
   // in blurb link to home page if they are able to unlock
   const showLinkForUnlock = Boolean(
-    grgBalance && JSBI.notEqual(grgBalance.quotient, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS,
+    grgBalance && JSBI.notEqual(grgBalance.quotient, JSBI.BigInt(0)),
   )
 
   // show links in propsoal details if content is an address

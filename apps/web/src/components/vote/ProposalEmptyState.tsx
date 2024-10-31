@@ -40,7 +40,7 @@ export default function ProposalEmptyState() {
   const { chainId } = useAccount()
   if (
     (chainId === UniverseChainId.Mainnet ||
-      chainId === UniverseChainId.Goerli ||
+      chainId === UniverseChainId.Sepolia ||
       chainId === UniverseChainId.ArbitrumOne ||
       chainId === UniverseChainId.Optimism ||
       chainId === UniverseChainId.Polygon ||

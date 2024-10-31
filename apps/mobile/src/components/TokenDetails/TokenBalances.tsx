@@ -8,12 +8,13 @@ import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { InlineNetworkPill } from 'uniswap/src/components/network/NetworkPill'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useActiveAccount, useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 /**
@@ -101,7 +102,10 @@ export function CurrentChainBalance({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
+  const { isTestnetModeEnabled } = useEnabledChains()
 
+  const fiatBalance = convertFiatAmountFormatted(balance.balanceUSD, NumberType.FiatTokenDetails)
+  const tokenBalance = `${formatNumberOrString({ value: balance.quantity, type: NumberType.TokenNonTx })} ${getSymbolDisplayText(balance.currencyInfo.currency.symbol)}`
   return (
     <Flex row>
       <Flex fill gap="$spacing8">
@@ -109,10 +113,9 @@ export function CurrentChainBalance({
           {isReadonly ? t('token.balances.viewOnly', { ownerAddress: displayName }) : t('token.balances.main')}
         </Text>
         <Flex fill gap="$spacing4">
-          <Text variant="heading3">{convertFiatAmountFormatted(balance.balanceUSD, NumberType.FiatTokenDetails)}</Text>
+          <Text variant="heading3">{isTestnetModeEnabled ? tokenBalance : fiatBalance}</Text>
           <Text color="$neutral2" variant="body2">
-            {formatNumberOrString({ value: balance.quantity, type: NumberType.TokenNonTx })}{' '}
-            {getSymbolDisplayText(balance.currencyInfo.currency.symbol)}
+            {!isTestnetModeEnabled && tokenBalance}
           </Text>
         </Flex>
       </Flex>
@@ -151,7 +154,7 @@ function OtherChainBalance({
               <InlineNetworkPill
                 chainId={balance.currencyInfo.currency.chainId}
                 showBackgroundColor={false}
-                textVariant="buttonLabel4"
+                textVariant="buttonLabel2"
               />
             </Flex>
           </Flex>

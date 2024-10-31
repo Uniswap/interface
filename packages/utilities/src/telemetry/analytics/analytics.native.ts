@@ -14,6 +14,7 @@ import { generateAnalyticsLoggers } from 'utilities/src/telemetry/analytics/logg
 const loggers = generateAnalyticsLoggers('telemetry/analytics.native')
 
 let allowAnalytics: Maybe<boolean>
+let testnetMode: Maybe<boolean>
 let userId: Maybe<string>
 
 export async function getAnalyticsAtomDirect(_forceRead?: boolean): Promise<boolean> {
@@ -67,8 +68,14 @@ export const analytics: Analytics = {
       setDeviceId(ANONYMOUS_DEVICE_ID)
     }
   },
+  setTestnetMode(enabled: boolean): void {
+    testnetMode = enabled
+  },
   sendEvent(eventName: string, eventProperties?: Record<string, unknown>): void {
     if (!allowAnalytics && !ANONYMOUS_EVENT_NAMES.includes(eventName)) {
+      return
+    }
+    if (testnetMode) {
       return
     }
     loggers.sendEvent(eventName, eventProperties)

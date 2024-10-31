@@ -1,4 +1,4 @@
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
+import { chainIdToBackendChain } from 'constants/chains'
 import { useCallback, useMemo, useRef } from 'react'
 import {
   Chain,
@@ -7,6 +7,7 @@ import {
   useV2TokenTransactionsQuery,
   useV3TokenTransactionsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export enum TokenTransactionType {
   BUY = 'Buy',
@@ -17,7 +18,7 @@ const TokenTransactionDefaultQuerySize = 25
 
 export function useTokenTransactions(
   address: string,
-  chainId: SupportedInterfaceChainId,
+  chainId: UniverseChainId,
   filter: TokenTransactionType[] = [TokenTransactionType.BUY, TokenTransactionType.SELL],
 ) {
   const {

@@ -3,6 +3,8 @@ import { createApiClient } from 'uniswap/src/data/apiClients/createApiClient'
 import {
   UnitagAddressRequest,
   UnitagAddressResponse,
+  UnitagClaimEligibilityRequest,
+  UnitagClaimEligibilityResponse,
   UnitagUsernameRequest,
   UnitagUsernameResponse,
 } from 'uniswap/src/features/unitags/types'
@@ -19,4 +21,10 @@ export async function fetchUsername(params: UnitagUsernameRequest): Promise<Unit
 
 export async function fetchAddress(params: UnitagAddressRequest): Promise<UnitagAddressResponse> {
   return await UnitagsApiClient.get<UnitagAddressResponse>('/address', { params })
+}
+
+export async function fetchClaimEligibility(
+  params: UnitagClaimEligibilityRequest,
+): Promise<UnitagClaimEligibilityResponse> {
+  return await UnitagsApiClient.get<UnitagClaimEligibilityResponse>('/claim/eligibility', { params })
 }

@@ -1,17 +1,15 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { ButtonDropdownLight } from 'components/Button'
-import { BlueCard, LightCard } from 'components/Card'
-import { AutoColumn, ColumnCenter } from 'components/Column'
+import { ButtonDropdownLight } from 'components/Button/buttons'
+import { BlueCard, LightCard } from 'components/Card/cards'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { FindPoolTabs } from 'components/NavigationTabs'
 import { MinimalPositionCard } from 'components/PositionCard'
-import Row from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import { CurrencySearchFilters } from 'components/SearchModal/DeprecatedCurrencySearch'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { V2Unsupported } from 'components/V2Unsupported'
-import { nativeOnChain } from 'constants/tokens'
+import { AutoColumn, ColumnCenter } from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { PairState, useV2Pair } from 'hooks/useV2Pairs'
@@ -25,6 +23,7 @@ import { Text } from 'rebass'
 import { useTokenBalance } from 'state/connection/hooks'
 import { usePairAdder } from 'state/user/hooks'
 import { StyledInternalLink, ThemedText } from 'theme/components'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans } from 'uniswap/src/i18n'
 import { currencyId } from 'utils/currencyId'
@@ -36,10 +35,6 @@ enum Fields {
 
 function useQuery() {
   return new URLSearchParams(useLocation().search)
-}
-
-const POOLFINDER_CURRENCY_SEARCH_FILTERS: CurrencySearchFilters = {
-  showCommonBases: true,
 }
 
 export default function PoolFinder() {
@@ -232,7 +227,6 @@ export default function PoolFinder() {
             onCurrencySelect={handleCurrencySelect}
             onDismiss={handleSearchDismiss}
             selectedCurrency={(activeField === Fields.TOKEN0 ? currency1 : currency0) ?? undefined}
-            currencySearchFilters={POOLFINDER_CURRENCY_SEARCH_FILTERS}
           />
         </AppBody>
         <SwitchLocaleLink />

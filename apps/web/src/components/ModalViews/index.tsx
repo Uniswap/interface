@@ -1,12 +1,12 @@
 import Circle from 'assets/images/blue-loader.svg'
-import { AutoColumn, ColumnCenter } from 'components/Column'
-import { RowBetween } from 'components/Row'
+import { AutoColumn, ColumnCenter } from 'components/deprecated/Column'
+import { RowBetween } from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
 import styled, { useTheme } from 'lib/styled-components'
 import { ArrowUpCircle, CheckCircle } from 'react-feather'
 import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
 import { Trans } from 'uniswap/src/i18n'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 const ConfirmOrLoadingWrapper = styled.div`
   width: 100%;

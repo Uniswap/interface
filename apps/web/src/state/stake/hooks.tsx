@@ -5,7 +5,6 @@ import StakingRewardsJSON from '@uniswap/liquidity-staker/build/StakingRewards.j
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { POP_ADDRESSES } from 'constants/addresses'
-import { DAI, GRG, UNI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useContract } from 'hooks/useContract'
@@ -23,6 +22,7 @@ import { StakeStatus, useStakingContract, useStakingProxyContract } from 'state/
 import { usePoolExtendedContract } from 'state/pool/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
+import { DAI, GRG, UNI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import POP_ABI from 'uniswap/src/abis/pop.json'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -108,7 +108,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     [account.chainId, pairToFilterBy],
   )
 
-  const uni = account.chainId ? UNI[account.chainId] : undefined
+  const uni = account.chainId ? (UNI as { [chainId: number]: Token })[account.chainId] : undefined
 
   const rewardsAddresses = useMemo(() => info.map(({ stakingRewardAddress }) => stakingRewardAddress), [info])
 

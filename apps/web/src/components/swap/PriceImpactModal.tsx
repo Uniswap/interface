@@ -2,7 +2,7 @@ import { Percent } from '@uniswap/sdk-core'
 import Modal from 'components/Modal'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { Button, Flex, Text } from 'ui/src'
-import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 
@@ -22,7 +22,7 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
         <GetHelpHeader closeModal={onDismiss} />
         <Flex rowGap="$spacing16" alignItems="center">
           <Flex width="min-content" p="$spacing12" borderRadius="$rounded12" backgroundColor="$statusCritical2">
-            <AlertTriangle color="$statusCritical" size="$icon.28" />
+            <AlertTriangleFilled color="$statusCritical" size="$icon.28" />
           </Flex>
           <Flex alignItems="center" rowGap="$spacing8">
             <Text variant="heading3">
@@ -59,7 +59,7 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
               backgroundColor: '$surface3',
             }}
           >
-            <Text variant="buttonLabel3">
+            <Text variant="buttonLabel2">
               <Trans i18nKey="common.button.cancel" />
             </Text>
           </Button>
@@ -73,7 +73,7 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
             hoverStyle={{ opacity: 0.9, backgroundColor: '$statusCritical' }}
             pressStyle={{ opacity: 0.7, backgroundColor: '$statusCritical' }}
           >
-            <Text variant="buttonLabel3">
+            <Text variant="buttonLabel2">
               <Trans i18nKey="common.button.continue" />
             </Text>
           </Button>

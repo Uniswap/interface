@@ -1,8 +1,10 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ElementAfterText } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { useENS } from 'uniswap/src/features/ens/useENS'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   ReceiveTokenTransactionInfo,
@@ -13,14 +15,12 @@ import {
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
-import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
+import { TransactionSummaryLayout } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
-import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 
 export function TransferTokenSummaryItem({
   transactionType,
@@ -91,26 +91,32 @@ export function TransferTokenSummaryItem({
     ? (currencyAmount ?? '') + (getSymbolDisplayText(currencyInfo?.currency?.symbol) ?? '')
     : transaction.typeInfo.nftSummaryInfo?.name
 
-  let caption = ''
+  let captionText = ''
   if (transactionType === TransactionType.Send) {
-    caption = t('transaction.summary.received', {
+    captionText = t('transaction.summary.received', {
       recipientAddress: personDisplayName,
       tokenAmountWithSymbol,
     })
   } else {
-    caption = t('transaction.summary.sent', {
+    captionText = t('transaction.summary.sent', {
       senderAddress: personDisplayName,
       tokenAmountWithSymbol,
     })
   }
 
-  return (
-    <TransactionSummaryLayout
-      caption={caption}
-      icon={icon}
-      index={index}
-      postCaptionElement={unitag?.username ? <Unitag size="$icon.24" /> : undefined}
-      transaction={transaction}
-    />
+  const caption = useMemo(
+    () => (
+      <ElementAfterText
+        wrapperProps={{
+          grow: true,
+          shrink: true,
+        }}
+        element={unitag?.username ? <Unitag size="$icon.24" /> : undefined}
+        text={captionText}
+      />
+    ),
+    [captionText, unitag?.username],
   )
+
+  return <TransactionSummaryLayout caption={caption} icon={icon} index={index} transaction={transaction} />
 }

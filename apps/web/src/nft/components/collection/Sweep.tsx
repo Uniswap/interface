@@ -467,6 +467,7 @@ function useSweepFetcherParams(
 
   const isMarketFiltered = !!markets.length
 
+  // eslint-disable-next-line consistent-return
   return useMemo(() => {
     if (isMarketFiltered) {
       if (market === 'others') {

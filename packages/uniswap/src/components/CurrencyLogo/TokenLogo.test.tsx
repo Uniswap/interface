@@ -6,6 +6,10 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 // we silence the error logs to keep the test output clean.
 jest.mock('utilities/src/logger/logger')
 
+jest.mock('ui/src/components/UniversalImage/internal/PlainImage', () => ({
+  ...jest.requireActual('ui/src/components/UniversalImage/internal/PlainImage.web'),
+}))
+
 describe('TokenLogo', () => {
   it('renders without error', () => {
     const tree = render(<TokenLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" url="https://example.com" />)
@@ -46,12 +50,16 @@ describe('TokenLogo', () => {
       expect(fallbackText).toBeTruthy()
     })
 
-    it('renders fallback text when url is invalid', () => {
-      const { queryByText } = render(<TokenLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" url="invalid-url" />)
+    it('renders image for an absolute path (local file)', () => {
+      const { queryByTestId } = render(
+        <TokenLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" url="invalid-url" />,
+      )
 
-      const fallbackText = queryByText('DAI')
+      const tokenRemoteSvg = queryByTestId('svg-token-image')
+      const tokenImage = queryByTestId('img-token-image')
 
-      expect(fallbackText).toBeTruthy()
+      expect(tokenRemoteSvg).toBeFalsy()
+      expect(tokenImage).toBeTruthy()
     })
 
     it('does not render fallback text when url is valid', () => {

@@ -138,6 +138,14 @@ export const networkColors = {
     light: '#222222',
     dark: '#FCFF52',
   },
+  worldchain: {
+    light: '#222222',
+    dark: '#FFFFFF',
+  },
+  astrochain: {
+    light: '#fc0fa4',
+    dark: '#fc0fa4',
+  },
   zora: {
     light: '#222222',
     dark: '#FFFFFF',
@@ -154,32 +162,36 @@ const sporeLight = {
   scrim: colors.scrim,
 
   neutral1: '#222222',
+  neutral1Hovered: '#131313',
   neutral2: '#7D7D7D',
-  neutral3: '#CECECE',
+  neutral2Hovered: '#6B6B6B',
+  neutral3: '#BFBFBF',
+  neutral3Hovered: '#ADADAD',
 
   surface1: colors.white,
-  surface1Hovered: '#F5F5F5',
+  surface1Hovered: '#F9F9F9',
   surface2: '#F9F9F9',
-  surface2Hovered: '#F2F2F2',
+  surface2Hovered: '#F5F5F5',
   surface3: 'rgba(34,34,34,0.05)',
   surface3Hovered: 'rgba(34,34,34,0.09)',
   surface4: 'rgba(255,255,255,0.64)',
   surface5: 'rgba(0,0,0,0.04)',
 
-  accent1: '#FC72FF',
-  accent1Hovered: '#FA5BEC',
+  accent1: '#feb239',
+  accent1Hovered: '#ffa81f',
   accent2: '#FEF4FF',
-  accent2Hovered: '#FFE6FA',
-  accent3: colors.black,
-  accent3Hovered: '#131313',
+  accent2Hovered: '#FEEBFC',
+  accent3: '#222222',
+  accent3Hovered: colors.black,
 
-  DEP_accentSoft: '#FC72FF33', //33 = 20%
+  DEP_accentSoft: '#feb23933', //33 = 20%
+  DEP_blue400: '#4C82FB',
 
   statusSuccess: '#21C95E',
   statusSuccessHovered: '#15863C',
   statusSuccess2: '#EEFBF1',
-  statusWarning: '#FFBF17',
-  statusWarningHovered: '#FFDD0D',
+  statusWarning: '#996F01',
+  statusWarningHovered: '#7A5801',
   statusWarning2: '#FFFBEB',
   statusWarning2Hovered: '#FFFBD7',
   statusCritical: '#FF5F52',
@@ -196,8 +208,11 @@ const sporeDark = {
   scrim: colors.scrim,
 
   neutral1: colors.white,
+  neutral1Hovered: '#F9F9F9',
   neutral2: '#9B9B9B',
+  neutral2Hovered: '#ADADAD',
   neutral3: '#5E5E5E',
+  neutral3Hovered: '#6B6B6B',
 
   surface1: '#131313',
   surface1Hovered: 'rgba(24,24,24,1.00)',
@@ -208,14 +223,15 @@ const sporeDark = {
   surface4: 'rgba(255,255,255,0.20)',
   surface5: 'rgba(0,0,0,0.04)',
 
-  accent1: '#FC72FF',
-  accent1Hovered: '#FD3CFE',
-  accent2: '#311C31',
+  accent1: '#feb239',
+  accent1Hovered: '#ffa81f',
+  accent2: '#361A37',
   accent2Hovered: '#510D43',
   accent3: colors.white,
   accent3Hovered: '#F5F5F5',
 
-  DEP_accentSoft: '#FC72FF33', //33 = 20%
+  DEP_accentSoft: '#feb23933', //33 = 20%
+  DEP_blue400: '#4C82FB',
 
   statusSuccess: '#21C95E',
   statusSuccessHovered: '#15863C',
@@ -239,14 +255,18 @@ export const colorsLight = {
   scrim: sporeLight.scrim,
 
   neutral1: sporeLight.neutral1,
+  neutral1Hovered: sporeLight.neutral1Hovered,
   neutral2: sporeLight.neutral2,
+  neutral2Hovered: sporeLight.neutral2Hovered,
   neutral3: sporeLight.neutral3,
+  neutral3Hovered: sporeLight.neutral3Hovered,
 
   surface1: sporeLight.surface1,
   surface1Hovered: sporeLight.surface1Hovered,
   surface2: sporeLight.surface2,
   surface2Hovered: sporeLight.surface2Hovered,
   surface3: sporeLight.surface3,
+  surface3Hovered: sporeLight.surface3Hovered,
   surface4: sporeLight.surface4,
   surface5: sporeLight.surface5,
 
@@ -254,8 +274,11 @@ export const colorsLight = {
   accent1Hovered: sporeLight.accent1Hovered,
   accent2: sporeLight.accent2,
   accent2Hovered: sporeLight.accent2Hovered,
+  accent3: sporeLight.accent3,
+  accent3Hovered: sporeLight.accent3Hovered,
 
   DEP_accentSoft: sporeLight.DEP_accentSoft,
+  DEP_blue400: sporeLight.DEP_blue400,
 
   statusSuccess: sporeLight.statusSuccess,
   statusSuccess2: sporeLight.statusSuccess2,
@@ -263,6 +286,7 @@ export const colorsLight = {
   statusCriticalHovered: sporeLight.statusCriticalHovered,
   statusCritical2: sporeLight.statusCritical2,
   statusCritical2Hovered: sporeLight.statusCritical2Hovered,
+  statusWarning: sporeLight.statusWarning,
 
   DEP_backgroundBranded: '#FCF7FF',
   DEP_backgroundOverlay: opacifyRaw(60, colors.white),
@@ -281,7 +305,7 @@ export const colorsLight = {
 
   DEP_fiatBanner: colors.fiatOnRampBanner,
 
-  chain_1: networkColors.ethereum.light,
+  chain_1: sporeLight.neutral1,
   chain_10: networkColors.optimism.light,
   chain_137: networkColors.polygon.light,
   chain_42161: networkColors.arbitrum.light,
@@ -293,11 +317,11 @@ export const colorsLight = {
   chain_42220: networkColors.celo.light,
   chain_43114: networkColors.avalanche.light,
   chain_324: networkColors.zksync.light,
+  chain_480: networkColors.worldchain.light,
 
   // Testnets
-  chain_3: colors.yellowVibrant,
-  chain_4: colors.pinkVibrant,
-  chain_5: colors.greenVibrant,
+  chain_11155111: networkColors.ethereum.light,
+  chain_1301: networkColors.astrochain.light,
 }
 
 export type ColorKeys = keyof typeof colorsLight
@@ -313,21 +337,28 @@ export const colorsDark = {
   surface2: sporeDark.surface2,
   surface2Hovered: sporeDark.surface2Hovered,
   surface3: sporeDark.surface3,
+  surface3Hovered: sporeDark.surface3Hovered,
   surface4: sporeDark.surface4,
   surface5: sporeDark.surface5,
 
   scrim: sporeDark.scrim,
 
   neutral1: sporeDark.neutral1,
+  neutral1Hovered: sporeDark.neutral1Hovered,
   neutral2: sporeDark.neutral2,
+  neutral2Hovered: sporeDark.neutral2Hovered,
   neutral3: sporeDark.neutral3,
+  neutral3Hovered: sporeDark.neutral3Hovered,
 
   accent1: sporeDark.accent1,
   accent1Hovered: sporeDark.accent1Hovered,
   accent2: sporeDark.accent2,
   accent2Hovered: sporeDark.accent2Hovered,
+  accent3: sporeDark.accent3,
+  accent3Hovered: sporeDark.accent3Hovered,
 
   DEP_accentSoft: sporeDark.DEP_accentSoft,
+  DEP_blue400: sporeDark.DEP_blue400,
 
   statusSuccess: sporeDark.statusSuccess,
   statusSuccess2: sporeDark.statusSuccess2,
@@ -335,6 +366,7 @@ export const colorsDark = {
   statusCriticalHovered: sporeDark.statusCriticalHovered,
   statusCritical2: sporeDark.statusCritical2,
   statusCritical2Hovered: sporeDark.statusCritical2Hovered,
+  statusWarning: sporeDark.statusWarning,
 
   DEP_backgroundBranded: '#100D1C',
   DEP_backgroundOverlay: opacifyRaw(10, colors.white),
@@ -354,7 +386,7 @@ export const colorsDark = {
 
   DEP_fiatBanner: colors.fiatOnRampBanner,
 
-  chain_1: networkColors.ethereum.dark,
+  chain_1: sporeDark.neutral1,
   chain_10: networkColors.optimism.dark,
   chain_137: networkColors.polygon.dark,
   chain_42161: networkColors.arbitrum.dark,
@@ -366,9 +398,9 @@ export const colorsDark = {
   chain_42220: networkColors.celo.dark,
   chain_43114: networkColors.avalanche.dark,
   chain_324: networkColors.zksync.dark,
+  chain_480: networkColors.worldchain.dark,
 
   // Testnets
-  chain_3: colors.yellowVibrant,
-  chain_4: colors.pinkVibrant,
-  chain_5: colors.greenVibrant,
+  chain_11155111: networkColors.ethereum.dark,
+  chain_1301: networkColors.astrochain.dark,
 }

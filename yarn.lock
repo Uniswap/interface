@@ -8157,6 +8157,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@openzeppelin/contracts@npm:5.0.2":
+  version: 5.0.2
+  resolution: "@openzeppelin/contracts@npm:5.0.2"
+  checksum: 0cce6fc284bd1d89e2a447027832a62f1356b44ee31088899453e10349a63a62df2f07da63d76e4c41aad9c86b96b650b2b6fc85439ef276850dda1170a047fd
+  languageName: node
+  linkType: hard
+
 "@parcel/watcher-android-arm64@npm:2.4.0":
   version: 2.4.0
   resolution: "@parcel/watcher-android-arm64@npm:2.4.0"
@@ -13553,6 +13560,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ts-morph/common@npm:~0.24.0":
+  version: 0.24.0
+  resolution: "@ts-morph/common@npm:0.24.0"
+  dependencies:
+    fast-glob: ^3.3.2
+    minimatch: ^9.0.4
+    mkdirp: ^3.0.1
+    path-browserify: ^1.0.1
+  checksum: 793bc8a47c93ab55c6c036f94480d3b0e948661aef4bb7dbc29279b1dda2fc4fce809a88e221537867a313541842e12d1ecbd32b4769688abe1303807ec09db6
+  languageName: node
+  linkType: hard
+
 "@tsconfig/node10@npm:^1.0.7":
   version: 1.0.9
   resolution: "@tsconfig/node10@npm:1.0.9"
@@ -14602,6 +14621,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/qrcode@npm:1.5.5":
+  version: 1.5.5
+  resolution: "@types/qrcode@npm:1.5.5"
+  dependencies:
+    "@types/node": "*"
+  checksum: d92c1d3e77406bf13a03ec521b2ffb1ac99b2e6ea3a17cad670f2610f62e1293554c57e4074bb2fd4e9369f475f863b69e0ae8c543cb049c4a3c1b0c2d92522a
+  languageName: node
+  linkType: hard
+
 "@types/qs@npm:*, @types/qs@npm:^6.9.5":
   version: 6.9.11
   resolution: "@types/qs@npm:6.9.11"
@@ -15430,10 +15458,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/analytics-events@npm:2.36.0":
-  version: 2.36.0
-  resolution: "@uniswap/analytics-events@npm:2.36.0"
-  checksum: 26cbec530092a5660eec633ef9381d321f089e644b9954ecb635345433483f1a6ab5883a1561edf158159c9137e7308e4069d29d73ecd36643ca2a7f80f8be46
+"@uniswap/analytics-events@npm:2.37.0":
+  version: 2.37.0
+  resolution: "@uniswap/analytics-events@npm:2.37.0"
+  checksum: 5cdf2ba599c31e15588effcf0f311a82afc674545f770f4fe7761a08baae0c7433830d855cb64cb9c6e36ff5e9c5ef063bea40c7bee0e5a497ed6582fd4cb933
   languageName: node
   linkType: hard
 
@@ -15448,10 +15476,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/client-explore@npm:0.0.7":
-  version: 0.0.7
-  resolution: "@uniswap/client-explore@npm:0.0.7"
-  checksum: a8b60f3fa0053f1da622b91f6ddb0ccebf6bf119e6605e38be6ab74655be913a69216cbdf3117cff5eb24dab8db16bb1e15e8a814282edc124db4c648aca7595
+"@uniswap/client-explore@npm:0.0.9":
+  version: 0.0.9
+  resolution: "@uniswap/client-explore@npm:0.0.9"
+  checksum: 206d3c42e724d9261fc9be21cc1ce9ef1fb4ab29f4fda510be5e14d2c1bc0e4aab6779303923bee11941d49c8e3ccffe541cca1dec482abed952ab9dcc804fcc
+  languageName: node
+  linkType: hard
+
+"@uniswap/client-pools@npm:0.0.5":
+  version: 0.0.5
+  resolution: "@uniswap/client-pools@npm:0.0.5"
+  checksum: 91e270352963fb9d0f851fa0c715b01fb7824708c864e505f8f76d85bc5560cbf8454e92793f51e60c330375d246100fdd9f99a87a110f80a4e4f5a39c8e009e
   languageName: node
   linkType: hard
 
@@ -15480,6 +15515,7 @@ __metadata:
     eslint-config-prettier: ^8.5.0
     eslint-config-turbo: latest
     eslint-import-resolver-typescript: ^3.5.2
+    eslint-plugin-check-file: 2.8.0
     eslint-plugin-cypress: ^2.12.1
     eslint-plugin-detox: 1.0.0
     eslint-plugin-import: 2.27.5
@@ -15532,10 +15568,12 @@ __metadata:
     "@types/redux-persist-webextension-storage": 1.0.3
     "@types/ua-parser-js": 0.7.31
     "@types/uuid": 9.0.1
-    "@uniswap/analytics-events": 2.36.0
+    "@uniswap/analytics-events": 2.37.0
     "@uniswap/eslint-config": "workspace:^"
-    "@uniswap/universal-router-sdk": 2.2.0
-    "@uniswap/v3-sdk": 3.13.0
+    "@uniswap/uniswapx-sdk": ^2.1.0-beta.14
+    "@uniswap/universal-router-sdk": 4.2.0
+    "@uniswap/v3-sdk": 3.17.0
+    "@uniswap/v4-sdk": 1.10.0
     "@welldone-software/why-did-you-render": 8.0.1
     clean-webpack-plugin: ^4.0.0
     concurrently: ^8.0.1
@@ -15556,7 +15594,7 @@ __metadata:
     react-dom: 18.2.0
     react-i18next: 14.1.0
     react-native: 0.73.6
-    react-native-gesture-handler: 2.15.0
+    react-native-gesture-handler: 2.19.0
     react-native-reanimated: 3.15.0
     react-native-svg: 15.1.0
     react-native-web: 0.19.10
@@ -15588,13 +15626,6 @@ __metadata:
     zod: 3.22.4
   languageName: unknown
   linkType: soft
-
-"@uniswap/governance@npm:1.0.2":
-  version: 1.0.2
-  resolution: "@uniswap/governance@npm:1.0.2"
-  checksum: 84e4f246e9031983ddcd5b44b77b0b19fcee2228e0d7df743bd79827c476ffc273e51cd37d0a6278183461a14de6517ead0fefed520e8c4e9c46e7529451ccf0
-  languageName: node
-  linkType: hard
 
 "@uniswap/interface@workspace:apps/web":
   version: 0.0.0-use.local
@@ -15664,26 +15695,28 @@ __metadata:
     "@types/wcag-contrast": 3.0.0
     "@types/xml2js": 0.4.14
     "@uniswap/analytics": 1.7.0
-    "@uniswap/analytics-events": 2.36.0
+    "@uniswap/analytics-events": 2.37.0
+    "@uniswap/client-explore": 0.0.9
+    "@uniswap/client-pools": 0.0.5
     "@uniswap/default-token-list": 11.19.0
     "@uniswap/eslint-config": "workspace:^"
-    "@uniswap/governance": 1.0.2
     "@uniswap/liquidity-staker": 1.0.2
     "@uniswap/merkle-distributor": 1.0.1
     "@uniswap/permit2-sdk": 1.3.0
     "@uniswap/redux-multicall": 1.1.8
-    "@uniswap/router-sdk": 1.9.2
-    "@uniswap/sdk-core": 5.3.0
+    "@uniswap/router-sdk": 1.14.2
+    "@uniswap/sdk-core": 5.8.0
     "@uniswap/smart-order-router": 3.17.3
     "@uniswap/token-lists": 1.0.0-beta.33
-    "@uniswap/uniswapx-sdk": ^2.1.0-beta.8
-    "@uniswap/universal-router-sdk": 2.2.0
+    "@uniswap/uniswapx-sdk": ^2.1.0-beta.14
+    "@uniswap/universal-router-sdk": 4.2.0
     "@uniswap/v2-core": 1.0.1
     "@uniswap/v2-periphery": 1.1.0-beta.0
-    "@uniswap/v2-sdk": 4.3.2
+    "@uniswap/v2-sdk": 4.6.0
     "@uniswap/v3-core": 1.0.1
     "@uniswap/v3-periphery": 1.4.4
-    "@uniswap/v3-sdk": 3.13.0
+    "@uniswap/v3-sdk": 3.17.0
+    "@uniswap/v4-sdk": 1.10.0
     "@vanilla-extract/css": 1.14.0
     "@vanilla-extract/dynamic": 2.1.0
     "@vanilla-extract/jest-transform": 1.1.1
@@ -15761,7 +15794,7 @@ __metadata:
     react-infinite-scroll-component: 6.1.0
     react-is: 18.2.0
     react-markdown: 4.3.1
-    react-native-gesture-handler: 2.15.0
+    react-native-gesture-handler: 2.19.0
     react-popper: 2.3.0
     react-redux: 8.0.5
     react-router-dom: 6.10.0
@@ -15776,6 +15809,7 @@ __metadata:
     rebass: 4.0.7
     redux: 4.2.1
     redux-persist: 6.0.0
+    redux-saga: 1.2.2
     resize-observer-polyfill: 1.5.1
     serve: ^14.2.0
     source-map-explorer: 2.5.3
@@ -15789,6 +15823,7 @@ __metadata:
     tiny-invariant: 1.3.1
     ts-jest: ^29.1.1
     tsafe: 1.6.4
+    typed-redux-saga: 1.5.0
     typescript: 5.3.3
     ui: "workspace:^"
     uniswap: "workspace:^"
@@ -15889,11 +15924,10 @@ __metadata:
     "@testing-library/react-native": 11.5.0
     "@types/redux-mock-store": 1.0.6
     "@uniswap/analytics": 1.7.0
-    "@uniswap/analytics-events": 2.36.0
+    "@uniswap/analytics-events": 2.37.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/ethers-rs-mobile": 0.0.5
-    "@uniswap/sdk-core": 5.3.0
-    "@uniswap/v3-sdk": 3.13.0
+    "@uniswap/sdk-core": 5.8.0
     "@walletconnect/core": 2.11.2
     "@walletconnect/react-native-compat": 2.11.2
     "@walletconnect/types": 2.11.2
@@ -15951,7 +15985,7 @@ __metadata:
     react-native-dotenv: 3.2.0
     react-native-fast-image: 8.6.3
     react-native-flipper: 0.212.0
-    react-native-gesture-handler: 2.15.0
+    react-native-gesture-handler: 2.19.0
     react-native-get-random-values: 1.8.0
     react-native-image-colors: 1.5.2
     react-native-image-picker: 7.0.1
@@ -16015,22 +16049,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/router-sdk@npm:1.9.2":
-  version: 1.9.2
-  resolution: "@uniswap/router-sdk@npm:1.9.2"
+"@uniswap/router-sdk@npm:1.14.2":
+  version: 1.14.2
+  resolution: "@uniswap/router-sdk@npm:1.14.2"
   dependencies:
     "@ethersproject/abi": ^5.5.0
-    "@uniswap/sdk-core": ^5.0.0
+    "@uniswap/sdk-core": ^5.8.0
     "@uniswap/swap-router-contracts": ^1.3.0
-    "@uniswap/v2-sdk": ^4.3.2
-    "@uniswap/v3-sdk": ^3.11.2
-  checksum: e2f3fcd04efd7249bf21edb5be5923c7f59442d10959981f33b0c0acc4c4cfa6db8b94c8815d9c9a0969fd558a290a719c5e9daeb81ac316d8af61ccc8ccc3bc
+    "@uniswap/v2-sdk": ^4.6.0
+    "@uniswap/v3-sdk": ^3.17.0
+    "@uniswap/v4-sdk": ^1.9.0
+  checksum: 2e4ff16421c02c40462c2082df2eb293724258b31dc9c8b4164880fc80f77de2357c1a38a2241f4c50f8d1fc6de36a244067d444f2507806d266818f82f93215
   languageName: node
   linkType: hard
 
-"@uniswap/sdk-core@npm:5.3.0":
-  version: 5.3.0
-  resolution: "@uniswap/sdk-core@npm:5.3.0"
+"@uniswap/sdk-core@npm:5.8.0":
+  version: 5.8.0
+  resolution: "@uniswap/sdk-core@npm:5.8.0"
   dependencies:
     "@ethersproject/address": ^5.0.2
     "@ethersproject/bytes": ^5.7.0
@@ -16041,7 +16076,7 @@ __metadata:
     jsbi: ^3.1.4
     tiny-invariant: ^1.1.0
     toformat: ^2.0.0
-  checksum: 82570af027937c998208f8ea0bb8c44bd8a2e541023f3b6a5115d9298c95c5f37b20b892ccedf6cc6582ab01f5683f4a8c078cccac43565a5da3362b7363cee7
+  checksum: bba467147d544041cb68cc26243d430beb66a24cfde2c8297d94f56a49e204052d9c709d95e9ec28ef208fa0a38a86e9df5ea5d8ed8dc359284b87734f8d3efc
   languageName: node
   linkType: hard
 
@@ -16098,32 +16133,36 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/uniswapx-sdk@npm:^2.1.0-beta.8":
-  version: 2.1.0-beta.13
-  resolution: "@uniswap/uniswapx-sdk@npm:2.1.0-beta.13"
+"@uniswap/uniswapx-sdk@npm:^2.1.0-beta.14":
+  version: 2.1.0-beta.14
+  resolution: "@uniswap/uniswapx-sdk@npm:2.1.0-beta.14"
   dependencies:
     "@ethersproject/bytes": ^5.7.0
     "@ethersproject/providers": ^5.7.0
     "@uniswap/permit2-sdk": ^1.2.1
     "@uniswap/sdk-core": ^5.0.0
     ethers: ^5.7.0
-  checksum: c5254a72dad61d1377249e16c4af36687105257add6436ac5974e3e5e3c987b8f5ea8ee9a9cc6f20a7fbb663019594e227cdf366e1ec72eccd6dd7ce0014d52c
+  checksum: 1e608a9958c4e95cde3a507e4808e76750fe4161ccae1a9d449bb7647ec613290b27fa09365913e44463337d22f374602391597c75aa4a9d6ec3a4ccab07f94d
   languageName: node
   linkType: hard
 
-"@uniswap/universal-router-sdk@npm:2.2.0":
-  version: 2.2.0
-  resolution: "@uniswap/universal-router-sdk@npm:2.2.0"
+"@uniswap/universal-router-sdk@npm:4.2.0":
+  version: 4.2.0
+  resolution: "@uniswap/universal-router-sdk@npm:4.2.0"
   dependencies:
+    "@openzeppelin/contracts": 4.7.0
     "@uniswap/permit2-sdk": ^1.3.0
-    "@uniswap/router-sdk": ^1.9.2
-    "@uniswap/sdk-core": ^5.3.0
-    "@uniswap/universal-router": 1.6.0
-    "@uniswap/v2-sdk": ^4.3.2
-    "@uniswap/v3-sdk": ^3.13.0
+    "@uniswap/router-sdk": ^1.14.0
+    "@uniswap/sdk-core": ^5.8.0
+    "@uniswap/universal-router": 2.0.0-beta.1
+    "@uniswap/v2-core": ^1.0.1
+    "@uniswap/v2-sdk": ^4.6.0
+    "@uniswap/v3-core": 1.0.0
+    "@uniswap/v3-sdk": ^3.17.0
+    "@uniswap/v4-sdk": ^1.10.0
     bignumber.js: ^9.0.2
     ethers: ^5.7.0
-  checksum: 8b2863ff867913606ee660610a9e7489d58c07531de6b9062b623a5290a0364ffac15997e2fcd613e7b4b280297b1d667496a2ae41bc3c1f5bbc0ab83944d471
+  checksum: fae718b1ec206e5fbcab76da1232c3c50ae4b161fb3c3e7847cdbe2178750d46ba38abe5b7f10cc756fb68328e584a002ece9d7b155cb7536ce3155326ea7e5f
   languageName: node
   linkType: hard
 
@@ -16154,6 +16193,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@uniswap/universal-router@npm:2.0.0-beta.1":
+  version: 2.0.0-beta.1
+  resolution: "@uniswap/universal-router@npm:2.0.0-beta.1"
+  dependencies:
+    "@openzeppelin/contracts": 5.0.2
+    "@uniswap/v2-core": 1.0.1
+    "@uniswap/v3-core": 1.0.0
+  checksum: 69a4a294df166f36d07b33f7eb5d519f66574840336d19657c60b42f352d891151258fdb61a6a3266af5fdeafb40f26494a7231605793f526d63f1d5a492f9bb
+  languageName: node
+  linkType: hard
+
 "@uniswap/v2-core@npm:1.0.0":
   version: 1.0.0
   resolution: "@uniswap/v2-core@npm:1.0.0"
@@ -16178,16 +16228,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/v2-sdk@npm:4.3.2":
-  version: 4.3.2
-  resolution: "@uniswap/v2-sdk@npm:4.3.2"
+"@uniswap/v2-sdk@npm:4.6.0":
+  version: 4.6.0
+  resolution: "@uniswap/v2-sdk@npm:4.6.0"
   dependencies:
     "@ethersproject/address": ^5.0.2
     "@ethersproject/solidity": ^5.0.9
-    "@uniswap/sdk-core": ^5.0.0
+    "@uniswap/sdk-core": ^5.8.0
     tiny-invariant: ^1.1.0
     tiny-warning: ^1.0.3
-  checksum: aaf01f49a1ba5c8214ce4f4d54526fb289de7ecdc5df08f6be07c925ee7c110769adbf77e29b2dbbe7678c4ed21f384b522bbc9d7a82af55367bd66bfba8eb83
+  checksum: 7ec46ca0780892adaadbab546b05d628cb2aaaef7198f3f92021e10e3adbbf42566ae0f6d7ae1c55afa01f894164b4b8f450cc91f718059a19f5a333115a5f68
   languageName: node
   linkType: hard
 
@@ -16218,19 +16268,35 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/v3-sdk@npm:3.13.0":
-  version: 3.13.0
-  resolution: "@uniswap/v3-sdk@npm:3.13.0"
+"@uniswap/v3-sdk@npm:3.12.0":
+  version: 3.12.0
+  resolution: "@uniswap/v3-sdk@npm:3.12.0"
   dependencies:
     "@ethersproject/abi": ^5.5.0
     "@ethersproject/solidity": ^5.0.9
-    "@uniswap/sdk-core": ^5.3.0
+    "@uniswap/sdk-core": ^5.0.0
     "@uniswap/swap-router-contracts": ^1.3.0
     "@uniswap/v3-periphery": ^1.1.1
     "@uniswap/v3-staker": 1.0.0
     tiny-invariant: ^1.1.0
     tiny-warning: ^1.0.3
-  checksum: b1eebd0a0fd11ea6f71edb76a1c604f80bd0401461bbadb8164dd0cfbb24ec524a9194ae8dc6a7f3c1a38c71d23d3c35ff9a7c8a4aae1ed64e53a5098932fe0e
+  checksum: d8d507a8ed302c983217575bcead36700c4ee823db98ea9281cf8f9e5dfb9a5c49da111199f28f65f43ccb4c4dc2996d8a120128076b622b560fe780f8bb8db5
+  languageName: node
+  linkType: hard
+
+"@uniswap/v3-sdk@npm:3.17.0, @uniswap/v3-sdk@npm:^3.10.0, @uniswap/v3-sdk@npm:^3.11.0, @uniswap/v3-sdk@npm:^3.17.0":
+  version: 3.17.0
+  resolution: "@uniswap/v3-sdk@npm:3.17.0"
+  dependencies:
+    "@ethersproject/abi": ^5.5.0
+    "@ethersproject/solidity": ^5.0.9
+    "@uniswap/sdk-core": ^5.8.0
+    "@uniswap/swap-router-contracts": ^1.3.0
+    "@uniswap/v3-periphery": ^1.1.1
+    "@uniswap/v3-staker": 1.0.0
+    tiny-invariant: ^1.1.0
+    tiny-warning: ^1.0.3
+  checksum: ab434e9661f6fae99492af93412a9236379ba604635e31236adeddfc0b78beecdf4241a57fee60f3a2ab06c84c7e0c516ee032a819118c03935e49d8cf31cc27
   languageName: node
   linkType: hard
 
@@ -16242,6 +16308,19 @@ __metadata:
     "@uniswap/v3-core": 1.0.0
     "@uniswap/v3-periphery": ^1.0.1
   checksum: 5a68e59f33d4761956ad735c8ce5ea6e566076bd260ea0a0bb4b3a0db237719e39f21a22eb0a5a231141efdf0154bfe03f690612d632898f33192b4442c888b3
+  languageName: node
+  linkType: hard
+
+"@uniswap/v4-sdk@npm:1.10.0, @uniswap/v4-sdk@npm:^1.10.0, @uniswap/v4-sdk@npm:^1.9.0":
+  version: 1.10.0
+  resolution: "@uniswap/v4-sdk@npm:1.10.0"
+  dependencies:
+    "@ethersproject/solidity": ^5.0.9
+    "@uniswap/sdk-core": ^5.3.1
+    "@uniswap/v3-sdk": 3.12.0
+    tiny-invariant: ^1.1.0
+    tiny-warning: ^1.0.3
+  checksum: c1a55b0e52e2db986c463e75d9de337c48a76b90076705bc4a50da2a27de2f4c91a7c68f79bb04ac7fc7c7b3244fd8c955645e6dcac7e8b9af70354fd905e164
   languageName: node
   linkType: hard
 
@@ -20876,6 +20955,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"code-block-writer@npm:^13.0.1":
+  version: 13.0.2
+  resolution: "code-block-writer@npm:13.0.2"
+  checksum: 8052ae6f27ef73366bd5df04b6f9beced493261fcaef5cbd0f3853644b5e0aa5af18d099b96448be88ea3d000c7b180207d371044edd9fcf98fea22c9f8ba3a1
+  languageName: node
+  linkType: hard
+
 "code-point-at@npm:^1.0.0":
   version: 1.1.0
   resolution: "code-point-at@npm:1.1.0"
@@ -24985,6 +25071,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-check-file@npm:2.8.0":
+  version: 2.8.0
+  resolution: "eslint-plugin-check-file@npm:2.8.0"
+  dependencies:
+    is-glob: ^4.0.3
+    micromatch: ^4.0.5
+  peerDependencies:
+    eslint: ">=7.28.0"
+  checksum: 636e4374c5fedafc9772d840953ef33cd7250907b526f4115ac73c220da7de23b14efb23f36e7bbfbb5ce311dff574b082283b9de796ae35ff949fb36f9cab25
+  languageName: node
+  linkType: hard
+
 "eslint-plugin-cypress@npm:^2.12.1":
   version: 2.15.1
   resolution: "eslint-plugin-cypress@npm:2.15.1"
@@ -26274,6 +26372,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-screen-capture@patch:expo-screen-capture@npm%3A5.8.1#./.yarn/patches/expo-screen-capture-npm-5.8.1-78e5827fdf.patch::locator=universe%40workspace%3A.":
+  version: 5.8.1
+  resolution: "expo-screen-capture@patch:expo-screen-capture@npm%3A5.8.1#./.yarn/patches/expo-screen-capture-npm-5.8.1-78e5827fdf.patch::version=5.8.1&hash=0951ea&locator=universe%40workspace%3A."
+  peerDependencies:
+    expo: "*"
+  checksum: b62f7d8b1886a9a8b55038c476d2807d936e70b591099cdc92ecd62d3a48af406db8a4272e6f8fe93747daf9671a181842fcd7c053ab60903e236b7b6486f504
+  languageName: node
+  linkType: hard
+
 "expo-store-review@npm:6.8.3":
   version: 6.8.3
   resolution: "expo-store-review@npm:6.8.3"
@@ -26483,7 +26590,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.2.11, fast-glob@npm:^3.2.5, fast-glob@npm:^3.2.9, fast-glob@npm:^3.3.0":
+"fast-glob@npm:^3.2.11, fast-glob@npm:^3.2.5, fast-glob@npm:^3.2.9, fast-glob@npm:^3.3.0, fast-glob@npm:^3.3.2":
   version: 3.3.2
   resolution: "fast-glob@npm:3.3.2"
   dependencies:
@@ -34573,6 +34680,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minimatch@npm:^9.0.4":
+  version: 9.0.5
+  resolution: "minimatch@npm:9.0.5"
+  dependencies:
+    brace-expansion: ^2.0.1
+  checksum: 2c035575eda1e50623c731ec6c14f65a85296268f749b9337005210bb2b34e2705f8ef1a358b188f69892286ab99dc42c8fb98a57bde55c8d81b3023c19cea28
+  languageName: node
+  linkType: hard
+
 "minimist-options@npm:4.1.0":
   version: 4.1.0
   resolution: "minimist-options@npm:4.1.0"
@@ -34742,6 +34858,15 @@ __metadata:
   bin:
     mkdirp: bin/cmd.js
   checksum: a96865108c6c3b1b8e1d5e9f11843de1e077e57737602de1b82030815f311be11f96f09cce59bd5b903d0b29834733e5313f9301e3ed6d6f6fba2eae0df4298f
+  languageName: node
+  linkType: hard
+
+"mkdirp@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "mkdirp@npm:3.0.1"
+  bin:
+    mkdirp: dist/cjs/src/bin.js
+  checksum: 972deb188e8fb55547f1e58d66bd6b4a3623bf0c7137802582602d73e6480c1c2268dcbafbfb1be466e00cc7e56ac514d7fd9334b7cf33e3e2ab547c16f83a8d
   languageName: node
   linkType: hard
 
@@ -39214,19 +39339,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-gesture-handler@npm:2.15.0":
-  version: 2.15.0
-  resolution: "react-native-gesture-handler@npm:2.15.0"
+"react-native-gesture-handler@npm:2.19.0":
+  version: 2.19.0
+  resolution: "react-native-gesture-handler@npm:2.19.0"
   dependencies:
     "@egjs/hammerjs": ^2.0.17
     hoist-non-react-statics: ^3.3.0
     invariant: ^2.2.4
-    lodash: ^4.17.21
     prop-types: ^15.7.2
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 4db52e7b38b047bad677ed570a0ef4c2ddfc413bbbce5ed21f487c9d86c60588ee6b2c9f74bb842e5654284b0d1e6a8af81f68000e737d8a7f1e030b6d3fe6b6
+  checksum: ce9b9fc6537debf962e6b8d84f1c4cf18fe00f39bd86498e84a203ebb26bf3543c2642ed247d974537840407b7ddb602939fd8c817c00a3416e87bddc8f2088f
   languageName: node
   linkType: hard
 
@@ -44483,9 +44607,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ts-morph@npm:23.0.0":
+  version: 23.0.0
+  resolution: "ts-morph@npm:23.0.0"
+  dependencies:
+    "@ts-morph/common": ~0.24.0
+    code-block-writer: ^13.0.1
+  checksum: 3282eb0f8bd4577770874736c3259b97501da9a86137160b5d68f106b7848ea7b1fbccf9e198a3d930ec40c993e9951d4bfae31e2562dac8f3de0d7bb0e23615
+  languageName: node
+  linkType: hard
+
 "ts-node@npm:^10.7.0, ts-node@npm:^10.8.1":
-  version: 10.9.1
-  resolution: "ts-node@npm:10.9.1"
+  version: 10.9.2
+  resolution: "ts-node@npm:10.9.2"
   dependencies:
     "@cspotcode/source-map-support": ^0.8.0
     "@tsconfig/node10": ^1.0.7
@@ -44517,7 +44651,7 @@ __metadata:
     ts-node-script: dist/bin-script.js
     ts-node-transpile-only: dist/bin-transpile.js
     ts-script: dist/bin-script-deprecated.js
-  checksum: 090adff1302ab20bd3486e6b4799e90f97726ed39e02b39e566f8ab674fd5bd5f727f43615debbfc580d33c6d9d1c6b1b3ce7d8e3cca3e20530a145ffa232c35
+  checksum: fde256c9073969e234526e2cfead42591b9a2aec5222bac154b0de2fa9e4ceb30efcd717ee8bc785a56f3a119bdd5aa27b333d9dbec94ed254bd26f8944c67ac
   languageName: node
   linkType: hard
 
@@ -45102,6 +45236,8 @@ __metadata:
     "@tamagui/react-native-media-driver": 1.108.4
     "@tamagui/remove-scroll": 1.108.4
     "@tamagui/theme-base": 1.108.4
+    "@testing-library/react-hooks": 7.0.2
+    "@types/qrcode": 1.5.5
     "@uniswap/eslint-config": "workspace:^"
     camelcase: ^6.0.0
     cheerio: ^1.0.0-rc.5
@@ -45118,7 +45254,7 @@ __metadata:
     react: 18.2.0
     react-native: 0.73.6
     react-native-fast-image: 8.6.3
-    react-native-gesture-handler: 2.15.0
+    react-native-gesture-handler: 2.19.0
     react-native-image-colors: 1.5.2
     react-native-reanimated: 3.15.0
     react-native-safe-area-context: 4.9.0
@@ -45128,6 +45264,7 @@ __metadata:
     typescript: 5.3.3
     uppercamelcase: ^3.0.0
     utilities: "workspace:^"
+    uuid: 9.0.0
     wcag-contrast: 3.0.0
   languageName: unknown
   linkType: soft
@@ -45431,10 +45568,14 @@ __metadata:
     "@connectrpc/connect": 1.4.0
     "@connectrpc/connect-query": 1.4.1
     "@connectrpc/connect-web": 1.4.0
+    "@ethersproject/abstract-signer": 5.7.0
     "@ethersproject/address": 5.7.0
     "@ethersproject/bignumber": 5.7.0
+    "@ethersproject/hash": 5.7.0
+    "@ethersproject/properties": 5.7.0
     "@ethersproject/providers": 5.7.2
     "@ethersproject/units": 5.7.0
+    "@ethersproject/web": 5.7.1
     "@faker-js/faker": 7.6.0
     "@gorhom/bottom-sheet": 4.5.1
     "@graphql-codegen/cli": ^3.3.1
@@ -45443,7 +45584,12 @@ __metadata:
     "@graphql-codegen/typescript-operations": ^3.0.2
     "@graphql-codegen/typescript-react-apollo": ^3.3.7
     "@graphql-codegen/typescript-resolvers": ^3.2.1
+    "@graphql-tools/graphql-file-loader": 8.0.0
+    "@graphql-tools/load": 8.0.1
+    "@graphql-tools/merge": 9.0.1
+    "@graphql-tools/mock": 9.0.0
     "@react-native-async-storage/async-storage": 1.17.10
+    "@react-native-community/netinfo": 9.3.0
     "@reduxjs/toolkit": 1.9.3
     "@tanstack/query-async-storage-persister": 5.51.21
     "@tanstack/react-query": 5.51.16
@@ -45454,16 +45600,20 @@ __metadata:
     "@typechain/ethers-v5": 7.2.0
     "@types/chrome": 0.0.254
     "@types/react-window": 1.8.2
-    "@uniswap/analytics-events": 2.36.0
-    "@uniswap/client-explore": 0.0.7
+    "@uniswap/analytics-events": 2.37.0
+    "@uniswap/client-explore": 0.0.9
+    "@uniswap/client-pools": 0.0.5
     "@uniswap/eslint-config": "workspace:^"
-    "@uniswap/router-sdk": 1.9.2
-    "@uniswap/sdk-core": 5.3.0
-    "@uniswap/uniswapx-sdk": ^2.1.0-beta.8
-    "@uniswap/v2-sdk": 4.3.2
-    "@uniswap/v3-sdk": 3.13.0
+    "@uniswap/permit2-sdk": 1.3.0
+    "@uniswap/router-sdk": 1.14.2
+    "@uniswap/sdk-core": 5.8.0
+    "@uniswap/uniswapx-sdk": ^2.1.0-beta.14
+    "@uniswap/v2-sdk": 4.6.0
+    "@uniswap/v3-sdk": 3.17.0
+    "@uniswap/v4-sdk": 1.10.0
     apollo-link-rest: 0.9.0
     axios: 1.6.5
+    dayjs: 1.11.7
     depcheck: 1.4.7
     es-toolkit: 1.10.0
     eslint: 8.44.0
@@ -45473,12 +45623,16 @@ __metadata:
     expo-web-browser: 12.8.2
     fuse.js: 6.5.3
     get-graphql-schema: ^2.1.2
+    graphql: 16.6.0
+    graphql-scalars: 1.22.4
     i18next: 23.10.0
     i18next-resources-for-ts: 1.5.0
     i18next-resources-to-backend: ^1.2.0
     idb-keyval: 6.2.1
     jest: 29.7.0
+    jest-extended: 4.0.1
     jest-presets: "workspace:^"
+    jsbi: 3.2.5
     lodash: 4.17.21
     openapi-typescript-codegen: 0.27.0
     react: 18.2.0
@@ -45488,9 +45642,12 @@ __metadata:
     react-native-appsflyer: 6.13.1
     react-native-device-info: 10.0.2
     react-native-dotenv: 3.2.0
-    react-native-gesture-handler: 2.15.0
+    react-native-gesture-handler: 2.19.0
+    react-native-localize: 2.2.6
     react-native-mmkv: 2.10.1
     react-native-reanimated: 3.15.0
+    react-native-restart: 0.0.27
+    react-native-svg: 15.1.0
     react-redux: 8.0.5
     react-test-renderer: 18.2.0
     react-virtualized-auto-sizer: 1.0.20
@@ -45498,7 +45655,11 @@ __metadata:
     redux: 4.2.1
     statsig-react: 1.32.0
     statsig-react-native: 4.11.0
+    tiny-invariant: 1.3.1
+    ts-morph: 23.0.0
+    tsafe: 1.6.4
     typechain: 5.2.0
+    typed-redux-saga: 1.5.0
     typescript: 5.3.3
     ui: "workspace:^"
     utilities: "workspace:^"
@@ -45981,6 +46142,7 @@ __metadata:
     "@ethersproject/constants": 5.7.0
     "@ethersproject/contracts": 5.7.0
     "@ethersproject/providers": 5.7.2
+    "@react-native-community/netinfo": 9.3.0
     "@react-navigation/core": 6.2.2
     "@sentry/core": 7.80.0
     "@sentry/react": 7.80.0
@@ -45991,9 +46153,9 @@ __metadata:
     "@types/react": ^18.0.15
     "@types/uuid": 9.0.1
     "@uniswap/analytics": 1.7.0
-    "@uniswap/analytics-events": 2.36.0
+    "@uniswap/analytics-events": 2.37.0
     "@uniswap/eslint-config": "workspace:^"
-    "@uniswap/sdk-core": 5.3.0
+    "@uniswap/sdk-core": 5.8.0
     aws-appsync-auth-link: 3.0.7
     aws-appsync-subscription-link: 3.1.3
     dayjs: 1.11.7
@@ -46522,16 +46684,12 @@ __metadata:
   resolution: "wallet@workspace:packages/wallet"
   dependencies:
     "@apollo/client": 3.10.4
+    "@ethersproject/abstract-signer": 5.7.0
     "@ethersproject/constants": 5.7.0
     "@ethersproject/contracts": 5.7.0
     "@ethersproject/providers": 5.7.2
     "@faker-js/faker": 7.6.0
     "@gorhom/bottom-sheet": 4.5.1
-    "@graphql-tools/graphql-file-loader": 8.0.0
-    "@graphql-tools/load": 8.0.1
-    "@graphql-tools/merge": 9.0.1
-    "@graphql-tools/mock": 9.0.0
-    "@react-native-community/netinfo": 9.3.0
     "@react-native-firebase/app-check": 18.4.0
     "@react-navigation/core": 6.2.2
     "@redux-saga/core": 1.2.3
@@ -46539,19 +46697,17 @@ __metadata:
     "@scure/bip32": 1.3.2
     "@sentry/types": 7.80.0
     "@shopify/flash-list": 1.6.3
-    "@testing-library/react-hooks": 7.0.2
     "@testing-library/react-native": 11.5.0
     "@types/react": ^18.0.15
     "@types/zxcvbn": 4.4.2
-    "@uniswap/analytics-events": 2.36.0
+    "@uniswap/analytics-events": 2.37.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/permit2-sdk": 1.3.0
-    "@uniswap/router-sdk": 1.9.2
-    "@uniswap/sdk-core": 5.3.0
-    "@uniswap/uniswapx-sdk": ^2.1.0-beta.8
-    "@uniswap/universal-router-sdk": 2.2.0
-    "@uniswap/v3-sdk": 3.13.0
-    apollo-link-rest: 0.9.0
+    "@uniswap/router-sdk": 1.14.2
+    "@uniswap/sdk-core": 5.8.0
+    "@uniswap/uniswapx-sdk": ^2.1.0-beta.14
+    "@uniswap/universal-router-sdk": 4.2.0
+    "@uniswap/v3-sdk": 3.17.0
     apollo3-cache-persist: 0.14.1
     axios: 1.6.5
     dayjs: 1.11.7
@@ -46561,7 +46717,6 @@ __metadata:
     expo-web-browser: 12.8.2
     fuse.js: 6.5.3
     graphql: 16.6.0
-    graphql-scalars: 1.22.4
     i18next: 23.10.0
     jest: 29.7.0
     jest-extended: 4.0.1
@@ -46577,7 +46732,8 @@ __metadata:
     react-native-context-menu-view: 1.15.0
     react-native-device-info: 10.0.2
     react-native-fast-image: 8.6.3
-    react-native-gesture-handler: 2.15.0
+    react-native-gesture-handler: 2.19.0
+    react-native-image-picker: 7.0.1
     react-native-localize: 2.2.6
     react-native-mmkv: 2.10.1
     react-native-mmkv-flipper-plugin: 1.0.0
@@ -46596,7 +46752,6 @@ __metadata:
     ui: "workspace:^"
     uniswap: "workspace:^"
     utilities: "workspace:^"
-    uuid: 9.0.0
     zod: 3.22.4
     zxcvbn: 4.4.2
   languageName: unknown

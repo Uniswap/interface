@@ -1,14 +1,12 @@
-import { BlockExplorer } from 'ui/src/components/icons'
-import {
-  ArbiscanLogoDark,
-  ArbiscanLogoLight,
-  EtherscanLogoDark,
-  EtherscanLogoLight,
-  OpEtherscanLogoDark,
-  OpEtherscanLogoLight,
-  PolygonscanLogoDark,
-  PolygonscanLogoLight,
-} from 'ui/src/components/logos'
+import { BlockExplorer } from 'ui/src/components/icons/BlockExplorer'
+import { ArbiscanLogoDark } from 'ui/src/components/logos/ArbiscanLogoDark'
+import { ArbiscanLogoLight } from 'ui/src/components/logos/ArbiscanLogoLight'
+import { EtherscanLogoDark } from 'ui/src/components/logos/EtherscanLogoDark'
+import { EtherscanLogoLight } from 'ui/src/components/logos/EtherscanLogoLight'
+import { OpEtherscanLogoDark } from 'ui/src/components/logos/OpEtherscanLogoDark'
+import { OpEtherscanLogoLight } from 'ui/src/components/logos/OpEtherscanLogoLight'
+import { PolygonscanLogoDark } from 'ui/src/components/logos/PolygonscanLogoDark'
+import { PolygonscanLogoLight } from 'ui/src/components/logos/PolygonscanLogoLight'
 import { UniverseChainId, UniverseChainLogoInfo } from 'uniswap/src/types/chains'
 
 // Keeping this separate from UNIVERSE_CHAIN_INFO to avoid import issues on extension content script
@@ -25,19 +23,7 @@ export const UNIVERSE_CHAIN_LOGO = {
       logoDark: EtherscanLogoDark,
     },
   } as const satisfies UniverseChainLogoInfo,
-  [UniverseChainId.Goerli]: {
-    explorer: {
-      logoLight: EtherscanLogoLight,
-      logoDark: EtherscanLogoDark,
-    },
-  } as const satisfies UniverseChainLogoInfo,
   [UniverseChainId.ArbitrumOne]: {
-    explorer: {
-      logoLight: ArbiscanLogoLight,
-      logoDark: ArbiscanLogoDark,
-    },
-  } as const satisfies UniverseChainLogoInfo,
-  [UniverseChainId.ArbitrumGoerli]: {
     explorer: {
       logoLight: ArbiscanLogoLight,
       logoDark: ArbiscanLogoDark,
@@ -55,12 +41,6 @@ export const UNIVERSE_CHAIN_LOGO = {
       logoDark: EtherscanLogoDark,
     },
   } as const satisfies UniverseChainLogoInfo,
-  [UniverseChainId.OptimismGoerli]: {
-    explorer: {
-      logoLight: OpEtherscanLogoLight,
-      logoDark: OpEtherscanLogoDark,
-    },
-  } as const satisfies UniverseChainLogoInfo,
   [UniverseChainId.Bnb]: {
     explorer: {
       logoLight: EtherscanLogoLight,
@@ -68,12 +48,6 @@ export const UNIVERSE_CHAIN_LOGO = {
     },
   } as const satisfies UniverseChainLogoInfo,
   [UniverseChainId.Polygon]: {
-    explorer: {
-      logoLight: PolygonscanLogoLight,
-      logoDark: PolygonscanLogoDark,
-    },
-  } as const satisfies UniverseChainLogoInfo,
-  [UniverseChainId.PolygonMumbai]: {
     explorer: {
       logoLight: PolygonscanLogoLight,
       logoDark: PolygonscanLogoDark,
@@ -97,7 +71,7 @@ export const UNIVERSE_CHAIN_LOGO = {
       logoDark: BlockExplorer,
     },
   } as const satisfies UniverseChainLogoInfo,
-  [UniverseChainId.CeloAlfajores]: {
+  [UniverseChainId.WorldChain]: {
     explorer: {
       logoLight: BlockExplorer,
       logoDark: BlockExplorer,
@@ -110,6 +84,12 @@ export const UNIVERSE_CHAIN_LOGO = {
     },
   } as const satisfies UniverseChainLogoInfo,
   [UniverseChainId.Zksync]: {
+    explorer: {
+      logoLight: BlockExplorer,
+      logoDark: BlockExplorer,
+    },
+  } as const satisfies UniverseChainLogoInfo,
+  [UniverseChainId.AstrochainSepolia]: {
     explorer: {
       logoLight: BlockExplorer,
       logoDark: BlockExplorer,

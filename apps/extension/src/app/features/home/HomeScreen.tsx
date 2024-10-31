@@ -8,6 +8,7 @@ import { NftsTab } from 'src/app/components/tabs/NftsTab'
 import { PortfolioActionButtons } from 'src/app/features/home/PortfolioActionButtons'
 import { PortfolioHeader } from 'src/app/features/home/PortfolioHeader'
 import { TokenBalanceList } from 'src/app/features/home/TokenBalanceList'
+import { HomeIntroCardStack } from 'src/app/features/home/introCards/HomeIntroCardStack'
 import { PinReminder } from 'src/app/features/onboarding/PinReminder'
 import { selectAlertsState } from 'src/app/features/onboarding/alerts/selectors'
 import { AlertName, closeAlert } from 'src/app/features/onboarding/alerts/slice'
@@ -129,6 +130,8 @@ export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
 
             <PortfolioActionButtons />
 
+            <HomeIntroCardStack />
+
             <Flex flex={1} width="100%">
               <Flex row gap="$spacing16" px="$spacing4" py="$spacing8">
                 <TabButton isActive={selectedTab === HomeTabs.Tokens} onPress={() => setSelectedTab(HomeTabs.Tokens)}>
@@ -210,7 +213,7 @@ const TabButton = ({
       <Text color={isActive ? '$neutral1' : '$neutral2'} userSelect="none" variant="subheading2">
         {children}
       </Text>
-      {showPendingNotificationBadge && <PendingNotificationBadge />}
+      {showPendingNotificationBadge && !isActive && <PendingNotificationBadge />}
     </TouchableArea>
   )
 }

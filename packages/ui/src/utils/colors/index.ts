@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
+import { type ColorTokens } from 'ui/src/index'
 import { ColorKeys, colorsLight } from 'ui/src/theme'
 import { ExtractedColors, getExtractedColors } from 'ui/src/utils/colors/getExtractedColors'
 import { isSVGUri } from 'utilities/src/format/urls'
@@ -150,7 +151,7 @@ export function useExtractedTokenColor(
   const [tokenColor, setTokenColor] = useState(defaultColor)
   const [tokenColorLoading, setTokenColorLoading] = useState(true)
   const isDarkMode = useIsDarkMode()
-  const logolessColorScheme = useLogolessColorScheme(tokenName ?? '')
+  const { foreground } = useColorSchemeFromSeed(tokenName ?? '')
 
   useEffect(() => {
     if (!colorsLoading) {
@@ -175,7 +176,6 @@ export function useExtractedTokenColor(
   }
 
   if (!imageUrl) {
-    const { foreground } = isDarkMode ? logolessColorScheme.dark : logolessColorScheme.light
     return { tokenColor: foreground, tokenColorLoading: false }
   }
 
@@ -193,9 +193,18 @@ enum LOGOLESS_COLORS {
   PURPLE = 'PURPLE',
 }
 
+type TamaguiColor =
+  | ColorTokens
+  | 'transparent'
+  | `rgba(${string})`
+  | `rgb(${string})`
+  | `hsl(${string})`
+  | `hsla(${string})`
+  | `#${string}`
+
 type ColorScheme = {
-  light: { foreground: string; background: string }
-  dark: { foreground: string; background: string }
+  light: { foreground: TamaguiColor; background: TamaguiColor }
+  dark: { foreground: TamaguiColor; background: TamaguiColor }
 }
 
 type LogolessColorSchemes = {
@@ -250,11 +259,29 @@ function getLogolessColorIndex(tokenName: string, numOptions: number): number {
  * @param tokenName The name of the token
  * @returns a light and dark version of a color scheme with a foreground and background color
  */
-export function useLogolessColorScheme(tokenName: string): ColorScheme {
+function useLogolessColorScheme(tokenName: string): ColorScheme {
   return useMemo(() => {
     const index = getLogolessColorIndex(tokenName, Object.keys(LOGOLESS_COLORS).length)
     return logolessColorSchemes[LOGOLESS_COLORS[Object.keys(LOGOLESS_COLORS)[index] as keyof typeof LOGOLESS_COLORS]]
   }, [tokenName])
+}
+
+/**
+ * Wraps `useLogolessColorScheme`. This hook is used to generate a color scheme for any icon that doesn't have a logo,
+ * accounting for dark mode as well.
+ *
+ * @param seed a string used to generate the color scheme
+ * @returns the foreground and background colors for the color scheme
+ */
+export function useColorSchemeFromSeed(seed: string): {
+  foreground: TamaguiColor
+  background: TamaguiColor
+} {
+  const isDarkMode = useIsDarkMode()
+  const logolessColorScheme = useLogolessColorScheme(seed)
+  const { foreground, background } = isDarkMode ? logolessColorScheme.dark : logolessColorScheme.light
+
+  return { foreground, background }
 }
 
 export function passesContrast(color: string, backgroundColor: string, contrastThreshold: number): boolean {

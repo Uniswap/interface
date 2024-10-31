@@ -2,7 +2,7 @@ import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, TextInput } from 'react-native'
+import { TextInput } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { PasswordInput } from 'src/components/input/PasswordInput'
@@ -16,12 +16,15 @@ import {
 import { selectLockoutEndTime, selectPasswordAttempts } from 'src/features/CloudBackup/selectors'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
-import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { onRestoreComplete } from 'src/screens/Import/onRestoreComplete'
+import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { Cloud } from 'ui/src/components/icons'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { MINUTES_IN_HOUR, ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
@@ -77,6 +80,7 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
 
   const isRestoringMnemonic = params.importType === ImportType.RestoreMnemonic
 
+  const [isLoading, setIsLoading] = useState(false)
   const [enteredPassword, setEnteredPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
 
@@ -97,10 +101,11 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
 
         return () => clearTimeout(timer)
       }
+      return undefined
     }, [isLockedOut, lockoutMessage, remainingLockoutTime, dispatch]),
   )
 
-  useAddBackButton(navigation)
+  useNavigationHeader(navigation)
 
   const onPasswordSubmit = async (): Promise<void> => {
     if (isLockedOut || enteredPassword.length === 0) {
@@ -110,15 +115,15 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
     // Attempt to restore backup with encrypted mnemonic using password
     async function checkCorrectPassword(): Promise<void> {
       try {
+        setIsLoading(true)
         await restoreMnemonicFromCloudStorage(params.mnemonicId, enteredPassword)
         await generateImportedAccounts({ mnemonicId: params.mnemonicId, backupType: BackupType.Cloud })
 
         dispatch(resetPasswordAttempts())
-        // restore flow is handled in saga after `restoreMnemonicComplete` is dispatched
-        if (!isRestoringMnemonic) {
-          navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
-        }
+        setIsLoading(false)
+        onRestoreComplete({ isRestoringMnemonic, dispatch, params, navigation })
       } catch (error) {
+        setIsLoading(false)
         dispatch(incrementPasswordAttempts())
         const updatedLockoutEndTime = calculateLockoutEndTime(passwordAttemptCount + 1)
         if (updatedLockoutEndTime) {
@@ -132,7 +137,7 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
 
     await checkCorrectPassword()
     setEnteredPassword('')
-    Keyboard.dismiss()
+    dismissNativeKeyboard()
   }
 
   const navigateToEnterRecoveryPhrase = (): void => {
@@ -141,6 +146,7 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
 
   return (
     <OnboardingScreen
+      Icon={Cloud}
       subtitle={t('account.cloud.password.subtitle', { cloudProviderName: getCloudProviderName() })}
       title={t('account.cloud.password.title')}
     >
@@ -164,12 +170,16 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
       <Flex>
         {isRestoringMnemonic && (
           <TouchableArea onPress={navigateToEnterRecoveryPhrase}>
-            <Text color="$accent1" mb="$spacing12" textAlign="center" variant="buttonLabel3">
+            <Text color="$accent1" mb="$spacing12" textAlign="center" variant="buttonLabel2">
               {t('account.cloud.password.recoveryPhrase')}
             </Text>
           </TouchableArea>
         )}
-        <Button disabled={!enteredPassword || isLockedOut} testID={TestID.Continue} onPress={onPasswordSubmit}>
+        <Button
+          disabled={!enteredPassword || isLockedOut || isLoading}
+          testID={TestID.Continue}
+          onPress={onPasswordSubmit}
+        >
           {t('common.button.continue')}
         </Button>
       </Flex>

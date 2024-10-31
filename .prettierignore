@@ -2,9 +2,6 @@
 __generated__
 __mocks__
 .detoxrc.js
-.eslintrc
-.eslintrc.js
-.prettierrc
 .tamagui
 .turbo
 .turbo
@@ -16,7 +13,6 @@ __mocks__
 *.json
 *.md
 *.yml
-babel.config.js
 build
 craco.config.cjs
 cypress
@@ -26,7 +22,6 @@ jest.config.js
 jest.config.js
 metro.config.js
 node_modules
-tsconfig.json
 types
 
 # app/package specific
@@ -44,6 +39,6 @@ apps/extension/dev
 
 packages/uniswap/codegen.ts
 
-packages/eslint-config/react.js
+# eslint partials
+
 packages/eslint-config/restrictedImports.js
-packages/eslint-config/native.js

@@ -1,17 +1,32 @@
 import { Currency, Token } from '@uniswap/sdk-core'
-import Modal from 'components/Modal'
+import { CurrencyRow } from 'components/SearchModal//CurrencyList'
 import { CurrencySearch } from 'components/SearchModal/CurrencySearch'
-import { CurrencySearchFilters, DeprecatedCurrencySearch } from 'components/SearchModal/DeprecatedCurrencySearch'
 import TokenSafety from 'components/TokenSafety'
 import useLast from 'hooks/useLast'
+import styled from 'lib/styled-components'
 import { memo, useCallback, useEffect, useState } from 'react'
+import { useSelectActiveSmartPool } from 'state/application/hooks'
 import { useUserAddedTokens } from 'state/user/userAddedTokens'
-import { NAV_HEIGHT } from 'theme'
 import { AdaptiveWebModal } from 'ui/src'
 import { TOKEN_SELECTOR_WEB_MAX_WIDTH } from 'uniswap/src/components/TokenSelector/TokenSelector'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 import { CurrencyField } from 'uniswap/src/types/currency'
+
+const PoolListWrapper = styled.div`
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+`
+
+const PoolListContainer = styled.div`
+  width: 100%;
+  padding: 32px 25px;
+  display: flex;
+  flex-flow: column;
+  align-items: left;
+`
 
 interface CurrencySearchModalProps {
   isOpen: boolean
@@ -20,50 +35,51 @@ interface CurrencySearchModalProps {
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency | null
   showCurrencyAmount?: boolean
-  hideChainSwitch?: boolean
-  currencySearchFilters?: CurrencySearchFilters
   currencyField?: CurrencyField
   operatedPools?: Token[]
+  shouldDisplayPoolsOnly?: boolean
 }
 
 enum CurrencyModalView {
   search,
   importToken,
   tokenSafety,
+  poolsList,
 }
 
 export default memo(function CurrencySearchModal({
   isOpen,
   onDismiss,
   onCurrencySelect,
-  selectedCurrency,
-  otherSelectedCurrency,
-  showCurrencyAmount = true,
-  hideChainSwitch = false,
-  currencySearchFilters,
   currencyField = CurrencyField.INPUT,
   operatedPools,
+  shouldDisplayPoolsOnly,
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.search)
   const lastOpen = useLast(isOpen)
   const userAddedTokens = useUserAddedTokens()
-  const multichainFlagEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
 
   useEffect(() => {
     if (isOpen && !lastOpen) {
-      setModalView(CurrencyModalView.search)
+      if (!shouldDisplayPoolsOnly) {
+        setModalView(CurrencyModalView.search)
+      } else {
+        setModalView(CurrencyModalView.poolsList)
+      }
     }
-  }, [isOpen, lastOpen])
+  }, [isOpen, lastOpen, shouldDisplayPoolsOnly])
 
   const showTokenSafetySpeedbump = (token: Token) => {
-    setWarningToken(token)
-    setModalView(CurrencyModalView.tokenSafety)
+    if (token.symbol !== 'GRG') {
+      setWarningToken(token)
+      setModalView(CurrencyModalView.tokenSafety)
+    }
   }
 
   const handleCurrencySelect = useCallback(
     (currency: Currency, hasWarning?: boolean) => {
       if (
-        !currencySearchFilters?.onlyDisplaySmartPools &&
+        !shouldDisplayPoolsOnly &&
         hasWarning &&
         currency.isToken &&
         !userAddedTokens.find((token) => token.equals(currency))
@@ -74,34 +90,46 @@ export default memo(function CurrencySearchModal({
         onDismiss()
       }
     },
-    [onDismiss, onCurrencySelect, userAddedTokens, currencySearchFilters?.onlyDisplaySmartPools],
+    [onDismiss, onCurrencySelect, userAddedTokens, shouldDisplayPoolsOnly],
   )
   // used for token safety
   const [warningToken, setWarningToken] = useState<Token | undefined>()
+
+  const onPoolSelect = useSelectActiveSmartPool()
 
   let content = null
   switch (modalView) {
     // we use DeprecatedCurrencySearch without multichain flag and for pool select
     case CurrencyModalView.search:
-      content = multichainFlagEnabled && !currencySearchFilters?.onlyDisplaySmartPools ? (
+      content = (
         <CurrencySearch
           currencyField={currencyField}
-          hideChainSwitch={hideChainSwitch}
           onCurrencySelect={onCurrencySelect}
           onDismiss={onDismiss}
         />
-      ) : (
-        <DeprecatedCurrencySearch
-          isOpen={isOpen}
-          onDismiss={onDismiss}
-          onCurrencySelect={handleCurrencySelect}
-          selectedCurrency={selectedCurrency}
-          otherSelectedCurrency={otherSelectedCurrency}
-          showCurrencyAmount={showCurrencyAmount}
-          hideChainSwitch={hideChainSwitch}
-          filters={currencySearchFilters}
-          operatedPools={operatedPools}
-        />
+      )
+      break
+    case CurrencyModalView.poolsList:
+      content = (
+        <PoolListWrapper>
+          <PoolListContainer>
+            {operatedPools?.map((pool) => (
+              <CurrencyRow
+                key={pool.address}
+                currency={pool}
+                onSelect={() => {
+                  onPoolSelect(pool)
+                  onCurrencySelect(pool)
+                }}
+                isSelected={false} // Adjust as needed
+                balance={undefined}
+                isSmartPool={true}
+                eventProperties={{}}
+                otherSelected={false}
+              />
+            ))}
+          </PoolListContainer>
+        </PoolListWrapper>
       )
       break
     case CurrencyModalView.tokenSafety:
@@ -109,15 +137,15 @@ export default memo(function CurrencySearchModal({
         content = (
           <TokenSafety
             token0={warningToken}
-            onContinue={() => handleCurrencySelect(warningToken)}
-            onCancel={() => setModalView(CurrencyModalView.search)}
+            onAcknowledge={() => handleCurrencySelect(warningToken)}
+            closeModalOnly={() => setModalView(CurrencyModalView.search)}
             showCancel={true}
           />
         )
       }
       break
   }
-  return multichainFlagEnabled ? (
+  return (
     <AdaptiveWebModal
       isOpen={isOpen}
       onClose={onDismiss}
@@ -126,18 +154,9 @@ export default memo(function CurrencySearchModal({
       px={0}
       py={0}
       flex={1}
-      $sm={{ height: `calc(100dvh - ${NAV_HEIGHT}px)` }}
+      $sm={{ height: `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)` }}
     >
       {content}
     </AdaptiveWebModal>
-  ) : (
-    <Modal
-      isOpen={isOpen}
-      onDismiss={onDismiss}
-      height="90vh"
-      maxHeight={modalView === CurrencyModalView.tokenSafety ? 400 : 700}
-    >
-      {content}
-    </Modal>
   )
 })

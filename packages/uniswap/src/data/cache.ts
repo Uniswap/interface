@@ -1,45 +1,9 @@
-import { InMemoryCache, InMemoryCacheConfig } from '@apollo/client'
-import { Reference, relayStylePagination } from '@apollo/client/utilities'
-import { isTestEnv } from 'utilities/src/environment'
-
-const injectTimestampForRestQueries = (config: InMemoryCacheConfig = {}): InMemoryCacheConfig => {
-  if (config.typePolicies?.Query?.fields?.data && 'merge' in (config.typePolicies?.Query?.fields?.data ?? {})) {
-    throw new Error(
-      'Invalid cache config: `data` field already has a `merge` function that conflicts with the injected `merge` function',
-    )
-  }
-
-  return {
-    ...config,
-    typePolicies: {
-      ...config.typePolicies,
-      Query: {
-        ...config.typePolicies?.Query,
-        fields: {
-          ...config.typePolicies?.Query?.fields,
-          data: {
-            ...config.typePolicies?.Query?.fields?.data,
-            merge(_, incoming): unknown {
-              return {
-                ...incoming,
-                // add a timestamp because there is no cache-ttl in Apollo and in some cases (i.e. trading API quotes) we cannot show stale quotes
-                timestamp: Date.now(),
-              }
-            },
-          },
-        },
-      },
-    },
-  }
-}
-
-export function createNewInMemoryCache(config: InMemoryCacheConfig = {}): InMemoryCache {
-  // eslint-disable-next-line no-restricted-syntax
-  return new InMemoryCache(injectTimestampForRestQueries(config))
-}
+import { FieldFunctionOptions, InMemoryCache } from '@apollo/client'
+import { Reference, StoreObject, relayStylePagination } from '@apollo/client/utilities'
+import { isTestEnv } from 'utilities/src/environment/env'
 
 export function setupWalletCache(): InMemoryCache {
-  return createNewInMemoryCache({
+  return new InMemoryCache({
     typePolicies: {
       Query: {
         fields: {
@@ -99,6 +63,18 @@ export function setupWalletCache(): InMemoryCache {
               return address?.toLowerCase() ?? null
             },
           },
+          feeData: {
+            // TODO(API-482): remove this once the backend bug is fixed.
+            // There's a bug in our graphql backend where `feeData` can incorrectly be `null` for certain queries (`topTokens`).
+            // This field policy ensures that the cache doesn't get overwritten with `null` values triggering unnecessary re-renders.
+            merge: ignoreIncomingNullValue,
+          },
+          protectionInfo: {
+            // TODO(API-482): remove this once the backend bug is fixed.
+            // There's a bug in our graphql backend where `protectionInfo` can incorrectly be `null` for certain queries (`topTokens`).
+            // This field policy ensures that the cache doesn't get overwritten with `null` values triggering unnecessary re-renders.
+            merge: ignoreIncomingNullValue,
+          },
         },
       },
       // Disable normalizaton for these types.
@@ -109,4 +85,15 @@ export function setupWalletCache(): InMemoryCache {
       TimestampedAmount: { keyFields: false },
     },
   })
+}
+
+function ignoreIncomingNullValue(
+  existing: Reference | StoreObject,
+  incoming: Reference | StoreObject,
+  { mergeObjects }: FieldFunctionOptions<Record<string, unknown>, Record<string, unknown>>,
+): Reference | StoreObject {
+  if (existing && !incoming) {
+    return existing
+  }
+  return mergeObjects(existing, incoming)
 }

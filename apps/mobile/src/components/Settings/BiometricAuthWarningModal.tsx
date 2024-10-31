@@ -1,15 +1,15 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useBiometricName } from 'src/features/biometrics/hooks'
+import { WarningModal, WarningModalProps } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { isAndroid } from 'utilities/src/platform'
-import { WarningModal, WarningModalProps } from 'wallet/src/components/modals/WarningModal/WarningModal'
 
 type Props = {
   isOpen: boolean
   isTouchIdDevice: boolean
-  onConfirm: WarningModalProps['onConfirm']
+  onConfirm: WarningModalProps['onAcknowledge']
   onClose: WarningModalProps['onClose']
 }
 
@@ -23,14 +23,14 @@ export function BiometricAuthWarningModal({ isOpen, isTouchIdDevice, onConfirm, 
           ? t('settings.setting.biometrics.warning.message.android')
           : t('settings.setting.biometrics.warning.message.ios', { biometricsMethod })
       }
-      closeText={t('common.button.back')}
-      confirmText={t('common.button.skip')}
+      rejectText={t('common.button.back')}
+      acknowledgeText={t('common.button.skip')}
       isOpen={isOpen}
       modalName={ModalName.FaceIDWarning}
       severity={WarningSeverity.Low}
       title={t('settings.setting.biometrics.warning.title')}
       onClose={onClose}
-      onConfirm={onConfirm}
+      onAcknowledge={onConfirm}
     />
   )
 }

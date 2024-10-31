@@ -2,12 +2,12 @@ import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-eve
 import PortfolioDrawer from 'components/AccountDrawer'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonSecondary } from 'components/Button'
+import { ButtonSecondary } from 'components/Button/buttons'
 import Loader, { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import StatusIcon, { IconWrapper } from 'components/Identicon/StatusIcon'
-import { RowBetween } from 'components/Row'
 import { useAccountIdentifier } from 'components/Web3Status/useAccountIdentifier'
-import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
+import { RowBetween } from 'components/deprecated/Row'
+import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { navSearchInputVisibleSize } from 'hooks/screenSize/useScreenSize'
 import { useAccount } from 'hooks/useAccount'
 import { atom, useAtom } from 'jotai'
@@ -17,10 +17,13 @@ import { darken } from 'polished'
 import { RefObject, useCallback, useEffect, useRef } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { flexRowNoWrap } from 'theme/styles'
+import { Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
+import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
+import { useExperimentGroupNameWithLoading } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { isIFramed } from 'utils/isIFramed'
 
 // https://stackoverflow.com/a/31617326
@@ -106,7 +109,7 @@ const AddressAndChevronContainer = styled.div<{ $loading?: boolean }>`
   }
 `
 
-const Text = styled.span`
+const StyledText = styled.span`
   flex: 1 1 auto;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -129,6 +132,22 @@ const StyledConnectButton = styled.button`
   color: inherit;
 `
 
+function ExistingUserCTAButton() {
+  const { t } = useTranslation()
+
+  const { value: accountsCTAExperimentGroup } = useExperimentGroupNameWithLoading(Experiments.AccountCTAs)
+  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
+  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
+
+  return (
+    <StyledConnectButton tabIndex={-1} data-testid="navbar-connect-wallet">
+      <Text variant="buttonLabel3" color="theme.accent1" whiteSpace="nowrap">
+        {isSignIn ? t('nav.signIn.button') : isLogIn ? t('nav.logIn.button') : t('common.connect.button')}
+      </Text>
+    </StyledConnectButton>
+  )
+}
+
 export const Web3StatusRef = atom<RefObject<HTMLElement> | undefined>(undefined)
 
 function Web3StatusInner() {
@@ -145,21 +164,23 @@ function Web3StatusInner() {
   const accountDrawer = useAccountDrawer()
   const handleWalletDropdownClick = useCallback(() => {
     sendAnalyticsEvent(InterfaceEventName.ACCOUNT_DROPDOWN_BUTTON_CLICKED)
-    accountDrawer.open()
+    accountDrawer.toggle()
   }, [accountDrawer])
 
   const { hasPendingActivity, pendingActivityCount } = usePendingActivity()
   const { accountIdentifier, hasUnitag, hasRecent } = useAccountIdentifier()
 
+  const { isLoading: isExperimentGroupNameLoading } = useExperimentGroupNameWithLoading(Experiments.AccountCTAs)
+
   // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
-  if ((account.isConnecting || account.isReconnecting) && hasRecent && !isIFramed()) {
+  if (((account.isConnecting || account.isReconnecting) && hasRecent && !isIFramed()) || isExperimentGroupNameLoading) {
     return (
       <Web3StatusConnecting disabled={true} onClick={handleWalletDropdownClick} ref={ref}>
         <IconWrapper size={24}>
           <LoaderV3 size="24px" />
         </IconWrapper>
         <AddressAndChevronContainer $loading={true}>
-          <Text>{accountIdentifier}</Text>
+          <StyledText>{accountIdentifier}</StyledText>
           {hasUnitag && <Unitag size={18} />}
         </AddressAndChevronContainer>
       </Web3StatusConnecting>
@@ -179,14 +200,14 @@ function Web3StatusInner() {
           {!hasPendingActivity && <StatusIcon size={24} showMiniIcons={false} />}
           {hasPendingActivity ? (
             <RowBetween>
-              <Text>
+              <StyledText>
                 <Trans i18nKey="activity.pending" values={{ pendingActivityCount }} />
-              </Text>{' '}
+              </StyledText>{' '}
               <Loader stroke="white" />
             </RowBetween>
           ) : (
             <AddressAndChevronContainer>
-              <Text>{accountIdentifier}</Text>
+              <StyledText>{accountIdentifier}</StyledText>
               {hasUnitag && <Unitag size={18} />}
             </AddressAndChevronContainer>
           )}
@@ -206,9 +227,7 @@ function Web3StatusInner() {
           onClick={handleWalletDropdownClick}
           ref={ref}
         >
-          <StyledConnectButton tabIndex={-1} data-testid="navbar-connect-wallet">
-            <Trans i18nKey="common.connect.button" />
-          </StyledConnectButton>
+          <ExistingUserCTAButton />
         </Web3StatusConnectWrapper>
       </Trace>
     )

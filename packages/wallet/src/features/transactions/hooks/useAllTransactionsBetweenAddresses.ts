@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
+import { useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { useSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
 
 /**
  * Gets all transactions from a given sender and to a given recipient
@@ -14,7 +14,7 @@ export function useAllTransactionsBetweenAddresses(
   const txnsToSearch = useSelectAddressTransactions(sender)
   return useMemo(() => {
     if (!sender || !recipient || !txnsToSearch) {
-      return
+      return undefined
     }
     return txnsToSearch.filter(
       (tx: TransactionDetails) => tx.typeInfo.type === TransactionType.Send && tx.typeInfo.recipient === recipient,

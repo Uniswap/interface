@@ -3,14 +3,19 @@ import { waitFor } from '@testing-library/react-native'
 import { toIncludeSameMembers } from 'jest-extended'
 import { MobileState } from 'src/app/mobileReducer'
 import { renderHookWithProviders } from 'src/test/render'
+import { SearchableRecipient } from 'uniswap/src/features/address/types'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { sendTokenTransactionInfo, transactionDetails } from 'uniswap/src/test/fixtures'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import {
+  SAMPLE_SEED_ADDRESS_1,
+  SAMPLE_SEED_ADDRESS_2,
+  sendTokenTransactionInfo,
+  transactionDetails,
+} from 'uniswap/src/test/fixtures'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useRecipients } from 'wallet/src/components/RecipientSearch/hooks'
-import { SearchableRecipient } from 'wallet/src/features/address/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2, signerMnemonicAccount } from 'wallet/src/test/fixtures'
+import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 expect.extend({ toIncludeSameMembers })
 
@@ -214,9 +219,9 @@ describe(useRecipients, () => {
         preloadedState: getPreloadedState({
           transactions: {
             [activeAccount.address]: {
-              [UniverseChainId.Base as WalletChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
-              [UniverseChainId.Mainnet as WalletChainId]: [sendTxDetailsConfirmed, sendTxDetailsFailed],
-              [UniverseChainId.Bnb as WalletChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
+              [UniverseChainId.Base as UniverseChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
+              [UniverseChainId.Mainnet as UniverseChainId]: [sendTxDetailsConfirmed, sendTxDetailsFailed],
+              [UniverseChainId.Bnb as UniverseChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
             },
           },
         }),
@@ -266,9 +271,9 @@ describe(useRecipients, () => {
         preloadedState: getPreloadedState({
           transactions: {
             [activeAccount.address]: {
-              [UniverseChainId.Base as WalletChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
-              [UniverseChainId.Mainnet as WalletChainId]: [sendTxDetailsConfirmed, sendTxDetailsFailed],
-              [UniverseChainId.Bnb as WalletChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
+              [UniverseChainId.Base as UniverseChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
+              [UniverseChainId.Mainnet as UniverseChainId]: [sendTxDetailsConfirmed, sendTxDetailsFailed],
+              [UniverseChainId.Bnb as UniverseChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
             },
           },
         }),
@@ -358,9 +363,9 @@ describe(useRecipients, () => {
           hasInactiveAccounts: true,
           transactions: {
             [activeAccount.address]: {
-              [UniverseChainId.Base as WalletChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
-              [UniverseChainId.Mainnet as WalletChainId]: [sendTxDetailsConfirmed, sendTxDetailsFailed],
-              [UniverseChainId.Bnb as WalletChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
+              [UniverseChainId.Base as UniverseChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
+              [UniverseChainId.Mainnet as UniverseChainId]: [sendTxDetailsConfirmed, sendTxDetailsFailed],
+              [UniverseChainId.Bnb as UniverseChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
             },
           },
         }),
@@ -388,9 +393,9 @@ describe(useRecipients, () => {
           hasInactiveAccounts: true,
           transactions: {
             [activeAccount.address]: {
-              [UniverseChainId.Base as WalletChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
-              [UniverseChainId.Mainnet as WalletChainId]: [sendTxDetailsConfirmed, sendTxDetailsFailed],
-              [UniverseChainId.Bnb as WalletChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
+              [UniverseChainId.Base as UniverseChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
+              [UniverseChainId.Mainnet as UniverseChainId]: [sendTxDetailsConfirmed, sendTxDetailsFailed],
+              [UniverseChainId.Bnb as UniverseChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
             },
           },
         }),

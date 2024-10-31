@@ -2,22 +2,22 @@ import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-eve
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { ActionTile } from 'components/AccountDrawer/ActionTile'
 import IconButton, { IconHoverText, IconWithConfirmTextButton } from 'components/AccountDrawer/IconButton'
-import MiniPortfolio from 'components/AccountDrawer/MiniPortfolio'
 import { EmptyWallet } from 'components/AccountDrawer/MiniPortfolio/EmptyWallet'
 import { ExtensionDeeplinks } from 'components/AccountDrawer/MiniPortfolio/ExtensionDeeplinks'
+import MiniPortfolio from 'components/AccountDrawer/MiniPortfolio/MiniPortfolio'
 import { portfolioFadeInAnimation } from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Status } from 'components/AccountDrawer/Status'
-import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
-import Column from 'components/Column'
+import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
 import { CreditCardIcon } from 'components/Icons/CreditCard'
 import { ImagesIcon } from 'components/Icons/Images'
 import { Power } from 'components/Icons/Power'
 import { Settings } from 'components/Icons/Settings'
-import Row, { AutoRow } from 'components/Row'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
+import Column from 'components/deprecated/Column'
+import Row, { AutoRow } from 'components/deprecated/Row'
+import { useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useDisconnect } from 'hooks/useDisconnect'
 import useENSName from 'hooks/useENSName'
@@ -104,7 +104,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const { ENSName } = useENSName(account)
   const navigate = useNavigate()
   const closeModal = useCloseModal()
-  const openReceiveModal = useOpenModal(ApplicationModal.RECEIVE_CRYPTO)
+  const openReceiveModal = useOpenModal({ name: ApplicationModal.RECEIVE_CRYPTO })
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
@@ -130,7 +130,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     closeModal()
   }, [clearCollectionFilters, closeModal, navigate, resetSellAssets, setSellPageState, accountDrawer])
 
-  const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
+  const openFiatOnrampModal = useOpenModal({ name: ApplicationModal.FIAT_ONRAMP })
   const openFoRModalWithAnalytics = useCallback(() => {
     accountDrawer.close()
     sendAnalyticsEvent(InterfaceEventName.FIAT_ONRAMP_WIDGET_OPENED)

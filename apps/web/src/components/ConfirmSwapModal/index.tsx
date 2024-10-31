@@ -1,15 +1,14 @@
 import { SwapEventName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
-import { AutoColumn } from 'components/Column'
 import SwapError, { PendingModalError } from 'components/ConfirmSwapModal/Error'
 import { SwapHead } from 'components/ConfirmSwapModal/Head'
 import { SwapModal } from 'components/ConfirmSwapModal/Modal'
 import { Pending } from 'components/ConfirmSwapModal/Pending'
 import SwapProgressIndicator from 'components/ConfirmSwapModal/ProgressIndicator'
 import { MODAL_TRANSITION_DURATION } from 'components/Modal'
+import { AutoColumn } from 'components/deprecated/Column'
 import { SwapDetails } from 'components/swap/SwapDetails'
 import { SwapPreview } from 'components/swap/SwapPreview'
-import { Field } from 'components/swap/constants'
 import { useConfirmModalState } from 'hooks/useConfirmModalState'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult } from 'hooks/useSwapCallback'
@@ -26,6 +25,7 @@ import { FadePresence } from 'theme/components/FadePresence'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { SignatureExpiredError, UniswapXv2HardQuoteError } from 'utils/errors'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -77,7 +77,7 @@ export function ConfirmSwapModal({
   clearSwapState: () => void
   onAcceptChanges?: () => void
   onConfirm: () => void
-  onCurrencySelection: (field: Field, currency: Currency) => void
+  onCurrencySelection: (field: CurrencyField, currency: Currency) => void
   onDismiss: () => void
   onXV2RetryWithClassic?: () => void
 }) {
@@ -128,7 +128,7 @@ export function ConfirmSwapModal({
       return tokenError
     }
     if (swapError instanceof SignatureExpiredError) {
-      return
+      return undefined
     }
     if (swapError instanceof UniswapXv2HardQuoteError) {
       return PendingModalError.XV2_HARD_QUOTE_ERROR
@@ -136,7 +136,7 @@ export function ConfirmSwapModal({
     if (swapError && !didUserReject(swapError)) {
       return PendingModalError.CONFIRMATION_ERROR
     }
-    return
+    return undefined
   }, [approvalError, swapError, tokenError])
 
   // Determine which view to show based on confirm modal state and other conditions

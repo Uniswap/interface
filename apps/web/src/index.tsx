@@ -32,10 +32,11 @@ import { ThemeProvider, ThemedGlobalStyle } from 'theme'
 import RadialGradientByChainUpdater from 'theme/components/RadialGradientByChainUpdater'
 import { SystemThemeUpdater, ThemeColorMetaUpdater } from 'theme/components/ThemeToggle'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
+import { getEnvName } from 'tracing/env'
 import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
 import { DUMMY_STATSIG_SDK_KEY } from 'uniswap/src/features/gating/constants'
+import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
-import { getEnvName } from 'utilities/src/environment'
 import { isBrowserRouterEnabled } from 'utils/env'
 import { unregister as unregisterServiceWorker } from 'utils/serviceWorker'
 import { getCanonicalUrl } from 'utils/urlRoutes'
@@ -114,23 +115,25 @@ createRoot(container).render(
             <LanguageProvider>
               <Web3Provider>
                 <StatsigProvider>
-                  <GraphqlProviders>
-                    <BlockNumberProvider>
-                      <UnitagUpdaterContextProvider>
-                        <WebUniswapProvider>
-                          <Updaters />
-                          <ThemeProvider>
-                            <TamaguiProvider>
-                              <PortalProvider>
-                                <ThemedGlobalStyle />
-                                <App />
-                              </PortalProvider>
-                            </TamaguiProvider>
-                          </ThemeProvider>
-                        </WebUniswapProvider>
-                      </UnitagUpdaterContextProvider>
-                    </BlockNumberProvider>
-                  </GraphqlProviders>
+                  <WebUniswapProvider>
+                    <GraphqlProviders>
+                      <LocalizationContextProvider>
+                        <BlockNumberProvider>
+                          <UnitagUpdaterContextProvider>
+                            <Updaters />
+                            <ThemeProvider>
+                              <TamaguiProvider>
+                                <PortalProvider>
+                                  <ThemedGlobalStyle />
+                                  <App />
+                                </PortalProvider>
+                              </TamaguiProvider>
+                            </ThemeProvider>
+                          </UnitagUpdaterContextProvider>
+                        </BlockNumberProvider>
+                      </LocalizationContextProvider>
+                    </GraphqlProviders>
+                  </WebUniswapProvider>
                 </StatsigProvider>
               </Web3Provider>
             </LanguageProvider>

@@ -1,7 +1,7 @@
 import { Currency, Token, TradeType } from '@uniswap/sdk-core'
-import { nativeOnChain } from 'constants/tokens'
 import { GetQuoteArgs, PoolType, RouterPreference, TokenInRoute } from 'state/routing/types'
 import { computeRoutes } from 'state/routing/utils'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const USDC = new Token(1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', undefined, false)
@@ -43,6 +43,8 @@ function constructArgs(currencyIn: Currency, currencyOut: Currency, isXv2?: bool
     forceOpenOrders: false,
     deadlineBufferSecs: 30,
     arbitrumXV2SlippageTolerance: '0.5',
+    isPriorityOrder: false,
+    isUniswapXSupportedChain: true,
   }
 }
 

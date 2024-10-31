@@ -1,8 +1,10 @@
 import { IRoute, Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { Pool } from '@uniswap/v3-sdk'
+import { Pool as V3Pool } from '@uniswap/v3-sdk'
+import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { ClassicTrade } from 'state/routing/types'
+import { DEFAULT_NATIVE_ADDRESS, UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import {
   TokenAmountInput,
   TokenTradeRouteInput,
@@ -20,7 +22,7 @@ interface TradeTokenInputAmounts {
 }
 
 interface Swap {
-  route: IRoute<Currency, Currency, Pair | Pool>
+  route: IRoute<Currency, Currency, Pair | V3Pool | V4Pool>
   inputAmount: CurrencyAmount<Currency>
   outputAmount: CurrencyAmount<Currency>
 }
@@ -32,7 +34,7 @@ function buildTradeRouteInputAmounts(swapAmounts: SwapAmounts): TradeTokenInputA
       token: {
         address: swapAmounts.inputAmount.currency.isToken
           ? swapAmounts.inputAmount.currency.address
-          : '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+          : DEFAULT_NATIVE_ADDRESS,
         chainId: swapAmounts.inputAmount.currency.chainId,
         decimals: swapAmounts.inputAmount.currency.decimals,
         isNative: swapAmounts.inputAmount.currency.isNative,
@@ -43,7 +45,7 @@ function buildTradeRouteInputAmounts(swapAmounts: SwapAmounts): TradeTokenInputA
       token: {
         address: swapAmounts.outputAmount.currency.isToken
           ? swapAmounts.outputAmount.currency.address
-          : '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+          : DEFAULT_NATIVE_ADDRESS,
         chainId: swapAmounts.outputAmount.currency.chainId,
         decimals: swapAmounts.outputAmount.currency.decimals,
         isNative: swapAmounts.outputAmount.currency.isNative,
@@ -52,8 +54,12 @@ function buildTradeRouteInputAmounts(swapAmounts: SwapAmounts): TradeTokenInputA
   }
 }
 
-function buildPool(pool: Pair | Pool): TradePoolInput {
+function buildPool(pool: Pair | V3Pool | V4Pool): TradePoolInput {
   const isPool = 'fee' in pool
+  const chainIdInUniverseChainInfo = pool.chainId in UNIVERSE_CHAIN_INFO
+  const nativeCurrencyAddress = chainIdInUniverseChainInfo
+    ? UNIVERSE_CHAIN_INFO[pool.chainId as keyof typeof UNIVERSE_CHAIN_INFO].nativeCurrency.address
+    : DEFAULT_NATIVE_ADDRESS
 
   return {
     pair: !isPool
@@ -85,13 +91,13 @@ function buildPool(pool: Pair | Pool): TradePoolInput {
           sqrtRatioX96: pool.sqrtRatioX96.toString(),
           tickCurrent: pool.tickCurrent.toString(),
           tokenA: {
-            address: pool.token0.address,
+            address: 'address' in pool.token0 ? pool.token0.address : nativeCurrencyAddress,
             chainId: pool.token0.chainId,
             decimals: pool.token0.decimals,
             isNative: pool.token0.isNative,
           },
           tokenB: {
-            address: pool.token1.address,
+            address: 'address' in pool.token1 ? pool.token1.address : nativeCurrencyAddress,
             chainId: pool.token1.chainId,
             decimals: pool.token1.decimals,
             isNative: pool.token1.isNative,
@@ -101,7 +107,7 @@ function buildPool(pool: Pair | Pool): TradePoolInput {
   }
 }
 
-function buildPools(pools: (Pair | Pool)[]): TradePoolInput[] {
+function buildPools(pools: (Pair | V3Pool | V4Pool)[]): TradePoolInput[] {
   return pools.map((pool) => buildPool(pool))
 }
 

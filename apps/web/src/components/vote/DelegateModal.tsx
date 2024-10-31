@@ -1,13 +1,14 @@
 import { isAddress } from '@ethersproject/address'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import AddressInputPanel from 'components/AddressInputPanel'
-import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
-import { AutoColumn } from 'components/Column'
+import { ButtonConfirmed, ButtonPrimary } from 'components/Button/buttons'
+import { LightCard } from 'components/Card/cards'
+import { AutoColumn } from 'components/deprecated/Column'
+import { AutoRow, RowBetween } from 'components/deprecated/Row'
 import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
-import { AutoRow, RowBetween } from 'components/Row'
+import Slider from 'components/Slider'
 import { GRG_TRANSFER_PROXY_ADDRESSES } from 'constants/addresses'
-import { GRG } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import useENS from 'hooks/useENS'
 import JSBI from 'jsbi'
@@ -22,6 +23,7 @@ import {
   usePoolIdByAddress,
 } from 'state/governance/hooks'
 import { ThemedText } from 'theme/components'
+import { GRG } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
@@ -35,8 +37,7 @@ import { ResponsiveHeaderText, SmallMaxButton } from 'pages/RemoveLiquidity/styl
 // TODO: check if should write into state stake hooks
 import { useBurnV3ActionHandlers, useBurnV3State } from 'state/burn/v3/hooks'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
-import { LightCard } from 'components/Card'
-import Slider from 'components/Slider'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -67,7 +68,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
   const theme = useTheme()
 
   // state for delegate input
-  const [currencyValue] = useState<Currency>(GRG[account.chainId ?? 1])
+  const [currencyValue] = useState<Currency>(GRG[account.chainId ?? UniverseChainId.Mainnet])
   const [usingDelegate, setUsingDelegate] = useState(false)
   const [typed, setTyped] = useState('')
 
@@ -125,7 +126,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
 
   const stakeData = useMemo(() => {
     if (!poolId) {
-      return
+      return undefined
     }
     return {
       amount: parsedAmount?.quotient.toString(),
@@ -183,7 +184,7 @@ export default function DelegateModal({ isOpen, poolInfo, onDismiss, title }: Vo
   // usingDelegate equals isRbPool
   const [approval, approveCallback] = useApproveCallback(
     parsedAmount ?? undefined,
-    GRG_TRANSFER_PROXY_ADDRESSES[account.chainId ?? 1] ?? undefined,
+    GRG_TRANSFER_PROXY_ADDRESSES[account.chainId ?? UniverseChainId.Mainnet] ?? undefined,
     usingDelegate
   )
 

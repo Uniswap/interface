@@ -9,16 +9,18 @@ import {
 } from '@gorhom/bottom-sheet'
 import { BlurView } from 'expo-blur'
 import React, { ComponentProps, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { BackHandler, Keyboard, StyleProp, StyleSheet, ViewStyle } from 'react-native'
+import { BackHandler, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { Flex, useDeviceInsets, useIsDarkMode, useMedia, useSporeColors } from 'ui/src'
+import { Flex, useIsDarkMode, useMedia, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { borderRadii, spacing } from 'ui/src/theme'
 import { BottomSheetContextProvider } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { useKeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { isIOS } from 'utilities/src/platform'
 
 /**
@@ -38,6 +40,8 @@ function useModalBackHandler(modalRef: React.RefObject<BaseModal>, enabled: bool
 
       return subscription.remove
     }
+
+    return undefined
   }, [modalRef, enabled])
 }
 
@@ -91,7 +95,7 @@ function BottomSheetModalContents({
   hideScrim = false,
 }: ModalProps): JSX.Element {
   const dimensions = useDeviceDimensions()
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const media = useMedia()
   const keyboard = useKeyboardLayout()
   const colors = useSporeColors()
@@ -191,7 +195,7 @@ function BottomSheetModalContents({
         (hideKeyboardOnDismiss && toIndex === DISAPPEARS_ON_INDEX) ||
         (hideKeyboardOnSwipeDown && toIndex < fromIndex)
       ) {
-        Keyboard.dismiss()
+        dismissNativeKeyboard()
       }
 
       // When a sheet has too much content it can lag and take a while to begin opening, so we want to delay rendering some of the content until the sheet is ready.
@@ -286,7 +290,7 @@ export function BottomSheetDetachedModal({
   hideHandlebar,
   backgroundColor,
 }: ModalProps): JSX.Element {
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const dimensions = useDeviceDimensions()
   const modalRef = useRef<BaseModal>(null)
   const colors = useSporeColors()

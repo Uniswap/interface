@@ -1,49 +1,7 @@
 import { SerializedError } from '@reduxjs/toolkit'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
-
-export enum GasSpeed {
-  Normal = 'normal',
-  Fast = 'fast',
-  Urgent = 'urgent',
-}
-
-export enum FeeType {
-  Legacy = 'legacy',
-  Eip1559 = 'eip1559',
-}
-
-interface GasFeeResponseBase {
-  type: FeeType
-  gasLimit: string
-  gasFee: {
-    normal: string
-    fast: string
-    urgent: string
-  }
-}
-
-interface GasFeeResponseEip1559 extends GasFeeResponseBase {
-  type: FeeType.Eip1559
-  maxFeePerGas: {
-    normal: string
-    fast: string
-    urgent: string
-  }
-  maxPriorityFeePerGas: {
-    normal: string
-    fast: string
-    urgent: string
-  }
-}
-
-interface GasFeeResponseLegacy extends GasFeeResponseBase {
-  type: FeeType.Legacy
-  gasPrice: {
-    normal: string
-    fast: string
-    urgent: string
-  }
-}
+import { GasEstimate, GasStrategy } from 'uniswap/src/data/tradingApi/types'
+import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export type TransactionLegacyFeeParams = {
   gasPrice: string
@@ -56,12 +14,49 @@ export type TransactionEip1559FeeParams = {
   gasLimit: string
 }
 
+export function areEqualGasStrategies(a?: GasStrategy, b?: GasStrategy): boolean {
+  if (!a || !b) {
+    return false
+  }
+
+  return (
+    a.limitInflationFactor === b.limitInflationFactor &&
+    a.priceInflationFactor === b.priceInflationFactor &&
+    a.percentileThresholdFor1559Fee === b.percentileThresholdFor1559Fee &&
+    a.minPriorityFeeGwei === b.minPriorityFeeGwei &&
+    a.maxPriorityFeeGwei === b.maxPriorityFeeGwei
+  )
+}
+
+export function getGasPrice(estimate: GasEstimate): string {
+  return 'gasPrice' in estimate ? estimate.gasPrice : estimate.maxFeePerGas
+}
+
 // GasFeeResponse is the type that comes directly from the Gas Service API
-export type GasFeeResponse = GasFeeResponseEip1559 | GasFeeResponseLegacy
+export type GasFeeResponse = {
+  gasEstimates: GasEstimate[]
+}
 
 export type GasFeeResult = {
   value?: string
   isLoading: boolean
   error: SerializedError | FetchError | Error | null
   params?: TransactionLegacyFeeParams | TransactionEip1559FeeParams
+  gasEstimates?: GasFeeEstimates
+}
+
+export type ValidatedGasFeeResult = GasFeeResult & { value: string; error: null }
+export function validateGasFeeResult(gasFee: GasFeeResult): ValidatedGasFeeResult | undefined {
+  if (gasFee.value === undefined || gasFee.error) {
+    return undefined
+  }
+  return { ...gasFee, value: gasFee.value, error: null }
+}
+
+export type FormattedUniswapXGasFeeInfo = {
+  approvalFeeFormatted?: string
+  wrapFeeFormatted?: string
+  swapFeeFormatted: string
+  preSavingsGasFeeFormatted: string
+  inputTokenSymbol?: string
 }
