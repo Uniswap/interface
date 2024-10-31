@@ -2,7 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { useIsSupportedChainId } from 'constants/chains'
 import { Trans } from 'uniswap/src/i18n'
 import { darken } from 'polished'
-import { ReactNode, useCallback, useEffect, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'lib/styled-components'
 import { ThemedText } from 'theme/components/text'
@@ -12,7 +12,6 @@ import { logger } from 'utilities/src/logger/logger'
 
 import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
 import { MODAL_TRANSITION_DURATION } from 'components/Modal'
-//import { useTokenBalance } from '../../state/connection/hooks'
 import { useCreateCallback } from 'state/pool/hooks'
 import { useIsTransactionConfirmed, useTransaction } from 'state/transactions/hooks'
 import { ButtonGray, ButtonPrimary } from 'components/Button/buttons'
@@ -36,6 +35,7 @@ const ContentWrapper = styled(AutoColumn)`
   width: 100%;
   padding: 24px;
 `
+
 
 const CurrencySelect = styled(ButtonGray)<{
   visible: boolean
@@ -96,31 +96,34 @@ interface CreateModalProps {
 }
 
 export default function CreateModal({ isOpen, onDismiss, title }: CreateModalProps) {
-  const account = useAccount()
-
   // state for create input
   const [typedName, setTypedName] = useState('')
   const [typedSymbol, setTypedSymbol] = useState('')
-  const [modalOpen, setModalOpen] = useState(false)
+  //const [currencySearchModalOpen, setCurrencySearchModalOpen] = useState(false)
   const [currencyValue, setCurrencyValue] = useState<Currency>()
+  const [isSearchingCurrency, setIsSearchingCurrency] = useState<boolean>(false)
+  // monitor call to help UI loading state
+  const [hash, setHash] = useState<string | undefined>()
+  const [attempting, setAttempting] = useState(false)
 
+  // by memoizing native, new chain native currency is stored on switch chain
+  const account = useAccount()
+  const native = useMemo(() => nativeOnChain(account?.chainId ?? 1), [account?.chainId])
+
+  // TODO: as native is memoized now, we can simply set currency value, probably not needed to
   // update currency at initialization or on chain switch
   useEffect(() => {
-    if (account.chainId && currencyValue?.chainId !== account.chainId) {
-      const native = nativeOnChain(account.chainId)
+    if (!currencyValue?.chainId || currencyValue?.chainId !== account?.chainId) {
       setCurrencyValue(native)
     }
-  }, [account.chainId, currencyValue, setCurrencyValue])
-
-  const handleDismissSearch = useCallback(() => {
-    setModalOpen(false)
-  }, [setModalOpen])
+  }, [account.chainId, currencyValue?.chainId, native])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
       setCurrencyValue(currency)
+      setIsSearchingCurrency(false)
     },
-    [setCurrencyValue]
+    []
   )
 
   // wrapped onUserInput to clear signatures
@@ -134,15 +137,10 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
 
   const createCallback = useCreateCallback()
 
-  // monitor call to help UI loading state
-  const [hash, setHash] = useState<string | undefined>()
-  const [attempting, setAttempting] = useState(false)
-
   const transaction = useTransaction(hash)
   const confirmed = useIsTransactionConfirmed(hash)
   const transactionSuccess = transaction?.status === TransactionStatus.Confirmed
 
-  // wrapper to reset state on modal close
   function wrappedOnDismiss() {
     onDismiss()
     setTimeout(() => {
@@ -150,7 +148,7 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
       setAttempting(false)
       setTypedName('')
       setTypedSymbol('')
-      setCurrencyValue(undefined)
+      setCurrencyValue(native)
     }, MODAL_TRANSITION_DURATION)
   }
 
@@ -176,106 +174,110 @@ export default function CreateModal({ isOpen, onDismiss, title }: CreateModalPro
   const chainAllowed = useIsSupportedChainId(account.chainId)
 
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={600}>
-      {!attempting && !hash && (
-        <ContentWrapper gap="lg">
-          <AutoColumn gap="lg" justify="center">
-            <RowBetween>
-              <ThemedText.DeprecatedMediumHeader fontWeight={500}>{title}</ThemedText.DeprecatedMediumHeader>
-              <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
-            </RowBetween>
-            <ThemedText.DeprecatedBody>
-              <Trans>Choose a cool name, a symbol and the base token.</Trans>
-            </ThemedText.DeprecatedBody>
-            <NameInputPanel value={typedName} onChange={onNameInput} />
-            <NameInputPanel
-              value={typedSymbol}
-              onChange={onSymbolInput}
-              label="Pool Symbol"
-              placeholder="max 5 characters"
-            />
-            <CurrencySelect
-              disabled={!chainAllowed}
-              visible={true}
-              selected={true}
-              hideInput={false}
-              className="open-currency-select-button"
-              onClick={() => {
-                setModalOpen(true)
-              }}
-            >
-              <Aligner>
-                <RowFixed>
-                  {currencyValue ? (
-                    <CurrencyLogo style={{ marginRight: '0.5rem' }} currency={currencyValue} size={24} />
-                  ) : null}
-                  <StyledTokenName
-                    className="token-symbol-container"
-                    active={Boolean(currencyValue && currencyValue.symbol)}
-                  >
-                    {(currencyValue && currencyValue.symbol && currencyValue.symbol.length > 20
-                      ? currencyValue.symbol.slice(0, 4) +
-                        '...' +
-                        currencyValue.symbol.slice(currencyValue.symbol.length - 5, currencyValue.symbol.length)
-                      : currencyValue?.symbol) || <Trans>Select a token</Trans>}
-                  </StyledTokenName>
-                </RowFixed>
-                <StyledDropDown selected={!!currencyValue} />
-              </Aligner>
-            </CurrencySelect>
-            <ButtonPrimary
-              disabled={Boolean(
-                typedName === '' ||
-                  typedName.length < 4 ||
-                  typedName.length > 31 ||
-                  typedSymbol === '' ||
-                  typedSymbol.length < 3 ||
-                  typedSymbol.length > 5
-              )}
-              onClick={onCreate}
-            >
-              <ThemedText.DeprecatedMediumHeader color="white">
-                <Trans>Create New Pool</Trans>
-              </ThemedText.DeprecatedMediumHeader>
-            </ButtonPrimary>
-          </AutoColumn>
-          <CurrencySearchModal
-            isOpen={modalOpen}
-            onDismiss={handleDismissSearch}
-            onCurrencySelect={handleCurrencySelect}
-            selectedCurrency={currencyValue}
-            showCurrencyAmount={false}
-          />
-        </ContentWrapper>
+    <>
+      {isSearchingCurrency ? (
+        <CurrencySearchModal
+          isOpen={true}
+          onDismiss={() => setIsSearchingCurrency(false)}
+          onCurrencySelect={handleCurrencySelect}
+          selectedCurrency={currencyValue ?? null}
+          showCurrencyAmount={false}
+          shouldDisplayPoolsOnly={false}
+        />
+      ) : (
+        <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={600}>
+          {!attempting && !hash && (
+            <ContentWrapper gap="lg">
+              <AutoColumn gap="lg" justify="center">
+                <RowBetween>
+                  <ThemedText.DeprecatedMediumHeader fontWeight={500}>{title}</ThemedText.DeprecatedMediumHeader>
+                  <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
+                </RowBetween>
+                <ThemedText.DeprecatedBody>
+                  <Trans>Choose a cool name, a symbol and the base token.</Trans>
+                </ThemedText.DeprecatedBody>
+                <NameInputPanel value={typedName} onChange={onNameInput} />
+                <NameInputPanel
+                  value={typedSymbol}
+                  onChange={onSymbolInput}
+                  label="Pool Symbol"
+                  placeholder="max 5 characters"
+                />
+                <CurrencySelect
+                  disabled={!chainAllowed}
+                  visible={true}
+                  selected={true}
+                  hideInput={false}
+                  className="open-currency-select-button"
+                  onClick={() => setIsSearchingCurrency(true) }
+                >
+                  <Aligner>
+                    <RowFixed>
+                      {currencyValue ? (
+                        <CurrencyLogo style={{ marginRight: '0.5rem' }} currency={currencyValue} size={24} />
+                      ) : null}
+                      <StyledTokenName
+                        className="token-symbol-container"
+                        active={Boolean(currencyValue && currencyValue.symbol)}
+                      >
+                        {(currencyValue && currencyValue.symbol && currencyValue.symbol.length > 20
+                          ? currencyValue.symbol.slice(0, 4) +
+                            '...' +
+                            currencyValue.symbol.slice(currencyValue.symbol.length - 5, currencyValue.symbol.length)
+                          : currencyValue?.symbol) || <Trans>Select a token</Trans>}
+                      </StyledTokenName>
+                    </RowFixed>
+                    <StyledDropDown selected={!!currencyValue} />
+                  </Aligner>
+                </CurrencySelect>
+                <ButtonPrimary
+                  disabled={Boolean(
+                    typedName === '' ||
+                      typedName.length < 4 ||
+                      typedName.length > 31 ||
+                      typedSymbol === '' ||
+                      typedSymbol.length < 3 ||
+                      typedSymbol.length > 5
+                  )}
+                  onClick={onCreate}
+                >
+                  <ThemedText.DeprecatedMediumHeader color="white">
+                    <Trans>Create New Pool</Trans>
+                  </ThemedText.DeprecatedMediumHeader>
+                </ButtonPrimary>
+              </AutoColumn>
+            </ContentWrapper>
+          )}
+          {attempting && !hash && (
+            <LoadingView onDismiss={wrappedOnDismiss}>
+              <AutoColumn gap="12px" justify="center">
+                <ThemedText.DeprecatedLargeHeader>
+                  <Trans>Creating new Pool</Trans>
+                </ThemedText.DeprecatedLargeHeader>
+              </AutoColumn>
+            </LoadingView>
+          )}
+          {hash && (
+            <SubmittedView onDismiss={wrappedOnDismiss} hash={hash} transactionSuccess={transactionSuccess}>
+              <AutoColumn gap="12px" justify="center">
+                {!confirmed ? (
+                  <ThemedText.DeprecatedLargeHeader>
+                    <Trans>Transaction Submitted</Trans>
+                  </ThemedText.DeprecatedLargeHeader>
+                ) : transactionSuccess ? (
+                  <ThemedText.DeprecatedLargeHeader>
+                    <Trans>Transaction Success</Trans>
+                  </ThemedText.DeprecatedLargeHeader>
+                ) : (
+                  <ThemedText.DeprecatedLargeHeader>
+                    <Trans>Transaction Failed</Trans>
+                  </ThemedText.DeprecatedLargeHeader>
+                )}
+              </AutoColumn>
+            </SubmittedView>
+          )}
+        </Modal>
       )}
-      {attempting && !hash && (
-        <LoadingView onDismiss={wrappedOnDismiss}>
-          <AutoColumn gap="12px" justify="center">
-            <ThemedText.DeprecatedLargeHeader>
-              <Trans>Creating new Pool</Trans>
-            </ThemedText.DeprecatedLargeHeader>
-          </AutoColumn>
-        </LoadingView>
-      )}
-      {hash && (
-        <SubmittedView onDismiss={wrappedOnDismiss} hash={hash} transactionSuccess={transactionSuccess}>
-          <AutoColumn gap="12px" justify="center">
-            {!confirmed ? (
-              <ThemedText.DeprecatedLargeHeader>
-                <Trans>Transaction Submitted</Trans>
-              </ThemedText.DeprecatedLargeHeader>
-            ) : transactionSuccess ? (
-              <ThemedText.DeprecatedLargeHeader>
-                <Trans>Transaction Success</Trans>
-              </ThemedText.DeprecatedLargeHeader>
-            ) : (
-              <ThemedText.DeprecatedLargeHeader>
-                <Trans>Transaction Failed</Trans>
-              </ThemedText.DeprecatedLargeHeader>
-            )}
-          </AutoColumn>
-        </SubmittedView>
-      )}
-    </Modal>
+    </>
   )
 }

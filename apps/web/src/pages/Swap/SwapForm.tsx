@@ -8,7 +8,7 @@ import {
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 //import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@uniswap/universal-router-sdk'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonGray, ButtonError, ButtonLight, ButtonPrimary } from 'components/Button/buttons'
+import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button/buttons'
 import { GrayCard } from 'components/Card/cards'
 import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
@@ -18,7 +18,6 @@ import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperiment
 import Row from 'components/deprecated/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
-import { RowFixed } from 'components/deprecated/Row'
 import PriceImpactModal from 'components/swap/PriceImpactModal'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWithoutFee'
@@ -71,63 +70,7 @@ import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { largerPercentValue } from 'utils/percent'
 import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
 //import { PoolInitParams, PoolWithAddress } from '../../hooks/useSmartPools'
-import styled from 'lib/styled-components'
-
-const PoolSelect = styled(ButtonGray)<{
-  visible: boolean
-  selected: boolean
-  hideInput?: boolean
-  disabled?: boolean
-}>`
-  align-items: center;
-  background-color: ${({ selected, theme }) => (selected ? theme.surface1 : theme.accent1)};
-  opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
-  box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
-  box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
-  color: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.white)};
-  cursor: pointer;
-  border-radius: 16px;
-  outline: none;
-  user-select: none;
-  border: none;
-  font-size: 24px;
-  font-weight: 500;
-  height: ${({ hideInput }) => (hideInput ? '2.8rem' : '2.4rem')};
-  width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
-  padding: 0 8px;
-  justify-content: space-between;
-  margin-bottom: 16px;
-  margin-left: ${({ hideInput }) => (hideInput ? '0' : '12px')};
-  :focus,
-  :hover {
-    background-color: ${({ selected, theme }) => (selected ? theme.surface2 : theme.accent1)};
-  }
-  visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
-`
-
-const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
-  margin: 0 0.25rem 0 0.35rem;
-  height: 35%;
-
-  path {
-    stroke: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.white)};
-    stroke-width: 1.5px;
-  }
-`
-
-const StyledTokenName = styled.span<{ active?: boolean }>`
-  ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
-  font-size: 20px;
-`
-
-const Aligner = styled.span`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-`
 
 interface SwapFormProps {
   disableTokenInputs?: boolean
@@ -394,11 +337,14 @@ export function SwapForm({
   //  trade?.fillType,
   //)
   const allowance = { state: AllowanceState.ALLOWED, permitSignature: undefined }
+  const isSmartPool = true
 
+  // TODO: for some reason it is subtracting estimated gas fees ?!?
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
-    () => maxAmountSpend(currencyBalances[CurrencyField.INPUT]),
-    [currencyBalances],
+    () => maxAmountSpend(currencyBalances[CurrencyField.INPUT], isSmartPool),
+    [currencyBalances, isSmartPool],
   )
+
   const showMaxButton = Boolean(
     maxInputAmount?.greaterThan(0) && !parsedAmounts[CurrencyField.INPUT]?.equalTo(maxInputAmount),
   )
@@ -596,27 +542,6 @@ export function SwapForm({
         onToken1BlockAcknowledged={() => onCurrencySelection(CurrencyField.OUTPUT, undefined)}
         showCancel={true}
       />
-      <PoolSelect
-        disabled={false}
-        visible={true}
-        selected={true}
-        hideInput={false}
-        className="operated-pool-select-button"
-        onClick={() => {
-          setModalOpen(true)
-        }}
-      >
-        <Aligner>
-          <RowFixed>
-            {operatedPools && (
-              <StyledTokenName className="pool-name-container" active={true}>
-                {smartPoolName && smartPoolName.length > 3 ? smartPoolName : <Trans>Create your pool first</Trans>}
-              </StyledTokenName>
-            )}
-          </RowFixed>
-          <StyledDropDown selected={!!smartPoolAddress} />
-        </Aligner>
-      </PoolSelect>
       {trade && showConfirm && smartPool && (
         <ConfirmSwapModal
           trade={trade}

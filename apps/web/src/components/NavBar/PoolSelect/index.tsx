@@ -3,7 +3,6 @@ import { ButtonGray } from 'components/Button/buttons'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import styled from 'lib/styled-components'
 import React, { useState } from 'react';
-import { Trans } from 'uniswap/src/i18n'
 
 const PoolSelectButton = styled(ButtonGray)<{
     visible: boolean
@@ -57,28 +56,27 @@ const PoolSelect: React.FC<PoolSelectProps> = ({ operatedPools }) => {
 
   return (
     <>
-      <PoolSelectButton
-        disabled={false}
-        visible={true}
-        selected={true}
-        hideInput={false}
-        className="operated-pool-select-button"
-        onClick={() => setShowModal(true)}
-      >
-        {operatedPools?.length > 0 && (
+      {selectedPool && (
+        <PoolSelectButton
+          disabled={false}
+          visible={true}
+          selected={true}
+          hideInput={false}
+          className="operated-pool-select-button"
+          onClick={() => setShowModal(true)}
+        >
           <StyledTokenName className="pool-name-container" active={true}>
-            <Trans>
-              {selectedPool?.name && selectedPool.name.length > 3 && selectedPool.name}
-            </Trans>
+            {selectedPool.name}
           </StyledTokenName>
-        )}
-      </PoolSelectButton>
+        </PoolSelectButton>
+      )}
 
       <CurrencySearchModal
           isOpen={showModal}
           onDismiss={() => setShowModal(false)}
           onCurrencySelect={handleSelectPool}
           operatedPools={operatedPools as Token[]}
+          shouldDisplayPoolsOnly={true}
         />
     </>
   );

@@ -144,7 +144,11 @@ export function Swap({
   const screenSize = useScreenSize()
   const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
 
-  const universalSwapFlow = useFeatureFlag(FeatureFlags.UniversalSwap)
+  // TODO: universal flow uses SwapFlow from @uniswap: max, encoded calls, router need adjusting or revert
+  // TODO: instead of using old router with new flow, implement new universal adapter so we can support v4
+  //  and trading-api alltogether.
+  //const universalSwapFlow = useFeatureFlag(FeatureFlags.UniversalSwap)
+  const universalSwapFlow = false
   const { isTestnetModeEnabled } = useEnabledChains()
 
   const input = currencyToAsset(initialInputCurrency)
@@ -160,6 +164,7 @@ export function Swap({
     selectingCurrencyField: isSwapTokenSelectorOpen ? CurrencyField.OUTPUT : undefined,
   })
 
+  // TODO: use this flow when activating universal router
   if (universalSwapFlow || isTestnetModeEnabled) {
     return (
       <SwapAndLimitContextProvider

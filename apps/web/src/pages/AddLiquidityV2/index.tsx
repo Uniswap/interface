@@ -129,7 +129,7 @@ export default function AddLiquidity() {
     (accumulator, field) => {
       return {
         ...accumulator,
-        [field]: maxAmountSpend(currencyBalances[field]),
+        [field]: maxAmountSpend(currencyBalances[field], true),
       }
     },
     {},

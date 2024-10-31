@@ -74,7 +74,7 @@ export default function CreatePool() {
   const accountDrawer = useAccountDrawer()
 
   const open = useModalIsOpen(ApplicationModal.CREATE)
-  const closeModal = useCloseModal()
+  const closeModal = useCloseModal(ApplicationModal.CREATE)
   const toggleCreateModal = useToggleCreateModal()
   const { data: allPools, loading: loadingPools } = useAllPoolsData()
 
@@ -106,7 +106,7 @@ export default function CreatePool() {
 
         <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
           <DataRow style={{ alignItems: 'baseline' }}>
-            <CreateModal isOpen={open} onDismiss={closeModal} title={<Trans>Create Pool</Trans>} />
+            <CreateModal isOpen={open} onDismiss={() => closeModal()} title={<Trans>Create Pool</Trans>} />
             <WrapSmall>
               <ThemedText.DeprecatedMediumHeader style={{ marginTop: '0.5rem' }}>
                 <Trans>Pools</Trans>

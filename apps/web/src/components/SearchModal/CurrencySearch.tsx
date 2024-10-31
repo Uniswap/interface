@@ -22,11 +22,12 @@ interface CurrencySearchProps {
   onDismiss: () => void
 }
 
-// TODO: we moved filtering by operate pool to currency search modal, check if needed
 export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss }: CurrencySearchProps) {
   const account = useAccount()
+  // TODO: multichainUXEnabled is false, if enabled new SwapFlow from @uniswap would be used
   const { chainId, setSelectedChainId, isUserSelectedToken, setIsUserSelectedToken, currentTab, multichainUXEnabled } =
     useSwapAndLimitContext()
+
   const prevChainId = usePrevious(chainId)
   const showSwapNetworkNotification = useShowSwapNetworkNotification()
 
@@ -38,6 +39,7 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss }: C
     async (currency: Currency) => {
       if (!multichainUXEnabled) {
         const correctChain = await selectChain(currency.chainId)
+
         if (!correctChain) {
           return
         }

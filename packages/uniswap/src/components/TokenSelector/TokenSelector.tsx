@@ -65,7 +65,6 @@ export interface TokenSelectorProps {
   onSelectCurrency: (currency: Currency, currencyField: CurrencyField, isBridgePair: boolean) => void
 }
 
-// TODO: fix activeAccountAddress
 export function TokenSelectorContent({
   currencyField,
   flow,

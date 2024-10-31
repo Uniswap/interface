@@ -37,6 +37,7 @@ interface CurrencySearchModalProps {
   showCurrencyAmount?: boolean
   currencyField?: CurrencyField
   operatedPools?: Token[]
+  shouldDisplayPoolsOnly?: boolean
 }
 
 enum CurrencyModalView {
@@ -52,18 +53,21 @@ export default memo(function CurrencySearchModal({
   onCurrencySelect,
   currencyField = CurrencyField.INPUT,
   operatedPools,
+  shouldDisplayPoolsOnly,
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.search)
   const lastOpen = useLast(isOpen)
   const userAddedTokens = useUserAddedTokens()
 
   useEffect(() => {
-    if (isOpen && !lastOpen && operatedPools?.length === 0) {
-      setModalView(CurrencyModalView.search)
-    } else {
-      setModalView(CurrencyModalView.poolsList)
+    if (isOpen && !lastOpen) {
+      if (!shouldDisplayPoolsOnly) {
+        setModalView(CurrencyModalView.search)
+      } else {
+        setModalView(CurrencyModalView.poolsList)
+      }
     }
-  }, [isOpen, lastOpen, operatedPools?.length])
+  }, [isOpen, lastOpen, shouldDisplayPoolsOnly])
 
   const showTokenSafetySpeedbump = (token: Token) => {
     if (token.symbol !== 'GRG') {
@@ -75,7 +79,7 @@ export default memo(function CurrencySearchModal({
   const handleCurrencySelect = useCallback(
     (currency: Currency, hasWarning?: boolean) => {
       if (
-        operatedPools?.length === 0 &&
+        !shouldDisplayPoolsOnly &&
         hasWarning &&
         currency.isToken &&
         !userAddedTokens.find((token) => token.equals(currency))
@@ -86,14 +90,13 @@ export default memo(function CurrencySearchModal({
         onDismiss()
       }
     },
-    [onDismiss, onCurrencySelect, userAddedTokens, operatedPools],
+    [onDismiss, onCurrencySelect, userAddedTokens, shouldDisplayPoolsOnly],
   )
   // used for token safety
   const [warningToken, setWarningToken] = useState<Token | undefined>()
 
   const onPoolSelect = useSelectActiveSmartPool()
 
-  // TODO: update default pool in store
   let content = null
   switch (modalView) {
     // we use DeprecatedCurrencySearch without multichain flag and for pool select
