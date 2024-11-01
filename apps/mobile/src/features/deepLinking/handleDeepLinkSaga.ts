@@ -263,6 +263,26 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
       return
     }
 
+    if (screen && userAddress) {
+      const validUserAddress = yield* call(parseAndValidateUserAddress, userAddress)
+      yield* put(setAccountAsActive(validUserAddress))
+
+      switch (screen) {
+        case 'transaction':
+          if (fiatOnRamp) {
+            yield* call(handleOnRampReturnLink)
+          } else {
+            yield* call(handleTransactionLink)
+          }
+          break
+        case 'swap':
+          yield* call(handleSwapLink, url)
+          break
+        default:
+          throw new Error('Invalid or unsupported screen')
+      }
+    }
+
     // Skip handling any non-WalletConnect uniswap:// URL scheme deep links for now for security reasons
     // Currently only used on WalletConnect Universal Link web page fallback button (https://uniswap.org/app/wc)
     if (action.payload.url.startsWith(UNISWAP_URL_SCHEME)) {
@@ -293,26 +313,6 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
       const wcUri = decodeURIComponent(action.payload.url)
       yield* call(handleWalletConnectDeepLink, wcUri)
       return
-    }
-
-    if (screen && userAddress) {
-      const validUserAddress = yield* call(parseAndValidateUserAddress, userAddress)
-      yield* put(setAccountAsActive(validUserAddress))
-
-      switch (screen) {
-        case 'transaction':
-          if (fiatOnRamp) {
-            yield* call(handleOnRampReturnLink)
-          } else {
-            yield* call(handleTransactionLink)
-          }
-          break
-        case 'swap':
-          yield* call(handleSwapLink, url)
-          break
-        default:
-          throw new Error('Invalid or unsupported screen')
-      }
     }
 
     if (url.hostname === UNISWAP_WEB_HOSTNAME) {

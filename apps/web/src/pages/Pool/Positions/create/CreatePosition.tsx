@@ -3,6 +3,7 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { getProtocolVersionLabel, parseProtocolVersion } from 'components/Liquidity/utils'
 import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
+import { useAccount } from 'hooks/useAccount'
 import {
   CreatePositionContextProvider,
   CreateTxContextProvider,
@@ -18,25 +19,29 @@ import {
 } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { DepositStep } from 'pages/Pool/Positions/create/Deposit'
 import { EditRangeSelectionStep, EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
-import { SelectPriceRangeStep } from 'pages/Pool/Positions/create/RangeSelectionStep'
+import { SelectPriceRangeStep, SelectPriceRangeStepV2 } from 'pages/Pool/Positions/create/RangeSelectionStep'
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { useCallback, useMemo } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Navigate, useParams } from 'react-router-dom'
+import { PositionField } from 'types/position'
 import { Button, Flex, Text } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 import { Settings } from 'ui/src/components/icons/Settings'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { ActionSheetDropdown } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 function CreatePositionInner() {
   const {
     positionState: { protocolVersion },
+    derivedPositionInfo: { creatingPoolOrPair },
     step,
     setStep,
   } = useCreatePositionContext()
@@ -44,11 +49,15 @@ function CreatePositionInner() {
 
   const handleContinue = useCallback(() => {
     if (v2Selected) {
-      setStep(PositionFlowStep.DEPOSIT)
+      if (step === PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER && creatingPoolOrPair) {
+        setStep(PositionFlowStep.PRICE_RANGE)
+      } else {
+        setStep(PositionFlowStep.DEPOSIT)
+      }
     } else {
       setStep((prevStep) => prevStep + 1)
     }
-  }, [setStep, v2Selected])
+  }, [creatingPoolOrPair, setStep, step, v2Selected])
 
   return (
     <Flex gap="$spacing24">
@@ -57,7 +66,11 @@ function CreatePositionInner() {
       ) : step === PositionFlowStep.PRICE_RANGE ? (
         <>
           <EditSelectTokensStep />
-          <SelectPriceRangeStep onContinue={handleContinue} />
+          {v2Selected ? (
+            <SelectPriceRangeStepV2 onContinue={handleContinue} />
+          ) : (
+            <SelectPriceRangeStep onContinue={handleContinue} />
+          )}
         </>
       ) : (
         <>
@@ -74,11 +87,20 @@ const Sidebar = () => {
   const { t } = useTranslation()
   const {
     positionState: { protocolVersion },
+    derivedPositionInfo: { creatingPoolOrPair },
     step,
   } = useCreatePositionContext()
 
   const PoolProgressSteps = useMemo(() => {
     if (protocolVersion === ProtocolVersion.V2) {
+      if (creatingPoolOrPair) {
+        return [
+          { label: t(`position.step.select`), active: step === PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER },
+          { label: t(`position.step.price`), active: step === PositionFlowStep.PRICE_RANGE },
+          { label: t(`position.step.deposit`), active: step == PositionFlowStep.DEPOSIT },
+        ]
+      }
+
       return [
         { label: t(`position.step.select`), active: step === PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER },
         { label: t(`position.step.deposit`), active: step == PositionFlowStep.DEPOSIT },
@@ -90,7 +112,7 @@ const Sidebar = () => {
       { label: t(`position.step.range`), active: step === PositionFlowStep.PRICE_RANGE },
       { label: t(`position.step.deposit`), active: step == PositionFlowStep.DEPOSIT },
     ]
-  }, [protocolVersion, step, t])
+  }, [creatingPoolOrPair, protocolVersion, step, t])
 
   return (
     <Flex gap={32} width={360}>
@@ -110,20 +132,28 @@ const Sidebar = () => {
 }
 
 const Toolbar = () => {
-  const {
-    positionState: { protocolVersion },
-    setPositionState,
-    setStep,
-  } = useCreatePositionContext()
-  const { setPriceRangeState } = usePriceRangeContext()
-  const { setDepositState } = useDepositContext()
+  const { positionState, setPositionState, setStep } = useCreatePositionContext()
+  const { protocolVersion } = positionState
+  const { priceRangeState, setPriceRangeState } = usePriceRangeContext()
+  const { depositState, setDepositState } = useDepositContext()
+
+  const isFormUnchanged = useMemo(() => {
+    // Check if all form fields (except protocol version) are set to their default values
+    return (
+      positionState.currencyInputs === DEFAULT_POSITION_STATE.currencyInputs &&
+      positionState.fee === DEFAULT_POSITION_STATE.fee &&
+      positionState.hook === DEFAULT_POSITION_STATE.hook &&
+      priceRangeState === DEFAULT_PRICE_RANGE_STATE &&
+      depositState === DEFAULT_DEPOSIT_STATE
+    )
+  }, [positionState.currencyInputs, positionState.fee, positionState.hook, priceRangeState, depositState])
 
   const handleReset = useCallback(() => {
-    setPositionState(DEFAULT_POSITION_STATE)
+    setPositionState({ ...DEFAULT_POSITION_STATE, protocolVersion })
     setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
     setDepositState(DEFAULT_DEPOSIT_STATE)
     setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
-  }, [setDepositState, setPositionState, setPriceRangeState, setStep])
+  }, [protocolVersion, setDepositState, setPositionState, setPriceRangeState, setStep])
 
   const handleVersionChange = useCallback(
     (version: ProtocolVersion) => {
@@ -178,6 +208,7 @@ const Toolbar = () => {
         showArrow={false}
         closeOnSelect={true}
         styles={{
+          dropdownMinWidth: 200,
           buttonPaddingY: '$none',
         }}
       >
@@ -212,8 +243,9 @@ const Toolbar = () => {
         borderWidth="$spacing1"
         gap="$gap4"
         onPress={handleReset}
+        disabled={isFormUnchanged}
       >
-        <RotateLeft size={iconSizes.icon16} color="$neutral1" />
+        <RotateLeft size={iconSizes.icon16} />
         <Text variant="buttonLabel4">
           <Trans i18nKey="common.button.reset" />
         </Text>
@@ -225,6 +257,7 @@ const Toolbar = () => {
 export function CreatePosition() {
   const { value: v4Enabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Everywhere)
   const { protocolVersion } = useParams<{ protocolVersion: string }>()
+  const account = useAccount()
 
   if (!isLoading && !v4Enabled) {
     return <Navigate to="/pools" replace />
@@ -236,6 +269,9 @@ export function CreatePosition() {
   return (
     <CreatePositionContextProvider
       initialState={{
+        currencyInputs: {
+          [PositionField.TOKEN0]: nativeOnChain(account.chainId ?? UniverseChainId.Mainnet),
+        },
         protocolVersion: parseProtocolVersion(protocolVersion) ?? ProtocolVersion.V4,
       }}
     >

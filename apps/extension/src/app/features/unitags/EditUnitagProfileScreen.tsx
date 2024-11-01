@@ -1,7 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingStepsContext'
+import { UnitagClaimRoutes } from 'src/app/navigation/constants'
+import { navigate } from 'src/app/navigation/state'
+import { backgroundToSidePanelMessageChannel } from 'src/background/messagePassing/messageChannels'
+import { BackgroundToSidePanelRequestType } from 'src/background/messagePassing/types/requests'
 import { AnimatePresence, ContextMenu, Flex, MenuContentItem } from 'ui/src'
 import { Edit, Ellipsis, Trash } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
@@ -11,13 +15,19 @@ import { UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { ChangeUnitagModal } from 'wallet/src/features/unitags/ChangeUnitagModal'
 import { DeleteUnitagModal } from 'wallet/src/features/unitags/DeleteUnitagModal'
 import { EditUnitagProfileContent } from 'wallet/src/features/unitags/EditUnitagProfileContent'
-import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function EditUnitagProfileScreen({ enableBack = false }: { enableBack?: boolean }): JSX.Element {
   const { t } = useTranslation()
-  const address = useActiveAccountAddressWithThrow()
-  const { unitag: retrievedUnitag } = useUnitagByAddress(address)
+  const address = useAccountAddressFromUrlWithThrow()
+  const { unitag: retrievedUnitag, pending, fetching } = useUnitagByAddress(address)
   const unitag = retrievedUnitag?.username
+
+  useEffect(() => {
+    if (!pending && !fetching && !unitag) {
+      navigate(UnitagClaimRoutes.ClaimIntro)
+    }
+  }, [unitag, pending, fetching])
 
   const { goToPreviousStep } = useOnboardingSteps()
 
@@ -39,6 +49,12 @@ export function EditUnitagProfileScreen({ enableBack = false }: { enableBack?: b
       },
     ]
   }, [t, setShowChangeUnitagModal, setShowDeleteUnitagModal])
+
+  const refreshUnitags = async (): Promise<void> => {
+    await backgroundToSidePanelMessageChannel.sendMessage({
+      type: BackgroundToSidePanelRequestType.RefreshUnitags,
+    })
+  }
 
   return (
     <Trace logImpression screen={UnitagScreens.EditProfile}>
@@ -63,6 +79,7 @@ export function EditUnitagProfileScreen({ enableBack = false }: { enableBack?: b
                   <DeleteUnitagModal
                     address={address}
                     unitag={unitag}
+                    onSuccess={refreshUnitags}
                     onClose={(): void => setShowDeleteUnitagModal(false)}
                   />
                 )}
@@ -70,6 +87,7 @@ export function EditUnitagProfileScreen({ enableBack = false }: { enableBack?: b
                   <ChangeUnitagModal
                     address={address}
                     unitag={unitag}
+                    onSuccess={refreshUnitags}
                     onClose={(): void => setShowChangeUnitagModal(false)}
                   />
                 )}

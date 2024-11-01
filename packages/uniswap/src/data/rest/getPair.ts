@@ -11,5 +11,5 @@ export function useGetPair(
   input?: PartialMessage<GetPairRequest>,
   enabled = true,
 ): UseQueryResult<GetPairResponse, ConnectError> {
-  return useQuery(getPair, input, { transport: getPositionsTestTransport, enabled })
+  return useQuery(getPair, input, { transport: getPositionsTestTransport, enabled, retry: false })
 }

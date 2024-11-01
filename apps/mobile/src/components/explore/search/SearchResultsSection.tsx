@@ -14,7 +14,6 @@ import { SearchUnitagItem } from 'src/components/explore/search/items/SearchUnit
 import { SearchWalletByAddressItem } from 'src/components/explore/search/items/SearchWalletByAddressItem'
 import { SearchResultOrHeader } from 'src/components/explore/search/types'
 import {
-  filterSearchResultsByChainId,
   formatNFTCollectionSearchResults,
   formatTokenSearchResults,
   getSearchResultId,
@@ -93,13 +92,7 @@ export function SearchResultsSection({
       return undefined
     }
 
-    const formattedTokenSearchResults = formatTokenSearchResults(searchResultsData.searchTokens, searchQuery)
-
-    if (!selectedChain) {
-      return formattedTokenSearchResults
-    }
-
-    return filterSearchResultsByChainId(formattedTokenSearchResults, selectedChain)
+    return formatTokenSearchResults(searchResultsData.searchTokens, searchQuery, selectedChain)
   }, [selectedChain, searchQuery, searchResultsData])
 
   // Search for matching NFT collections
@@ -109,13 +102,7 @@ export function SearchResultsSection({
       return undefined
     }
 
-    const formattedNftCollectionSearchResults = formatNFTCollectionSearchResults(searchResultsData.nftCollections)
-
-    if (!selectedChain) {
-      return formattedNftCollectionSearchResults
-    }
-
-    return filterSearchResultsByChainId(formattedNftCollectionSearchResults, selectedChain)
+    return formatNFTCollectionSearchResults(searchResultsData.nftCollections, selectedChain)
   }, [searchResultsData, selectedChain])
 
   // Search for matching wallets
@@ -187,7 +174,7 @@ export function SearchResultsSection({
 
   // Don't wait for wallet search results if there are already token search results, do wait for token results
   if (searchResultsLoading) {
-    return <SearchResultsLoader />
+    return <SearchResultsLoader selectedChain={selectedChain} />
   }
 
   if (error) {
@@ -209,7 +196,7 @@ export function SearchResultsSection({
     <Flex grow gap="$spacing8" pb="$spacing36">
       <FlatList
         ListEmptyComponent={
-          <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing8" mx="$spacing8">
+          <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing8" mx="$spacing20">
             <Text color="$neutral2" variant="body1">
               <Trans
                 components={{ highlight: <Text color="$neutral1" variant="body1" /> }}

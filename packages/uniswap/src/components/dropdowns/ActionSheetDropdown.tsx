@@ -20,7 +20,7 @@ import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { Scrollbar } from 'uniswap/src/components/misc/Scrollbar'
 import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { isAndroid, isInterface, isTouchable } from 'utilities/src/platform'
+import { isAndroid, isInterface, isMobileApp, isTouchable } from 'utilities/src/platform'
 
 const DEFAULT_MIN_WIDTH = 225
 
@@ -42,6 +42,7 @@ export type ActionSheetDropdownStyleProps = {
   buttonPaddingX?: FlexProps['px']
   buttonPaddingY?: FlexProps['py']
   dropdownMaxHeight?: number
+  dropdownMinWidth?: number
   dropdownZIndex?: FlexProps['zIndex']
 }
 
@@ -177,11 +178,15 @@ const ActionSheetBackdropWithContent = memo(function ActionSheetBackdropWithCont
   closeOnSelect: boolean
 }): JSX.Element {
   /*
-    We need to add key to Portal, becuase of a bug in tamagui.
+    We need to add key to Portal on mobile, becuase of a bug in tamagui.
     Remove when https://linear.app/uniswap/issue/WALL-4817/tamaguis-portal-stops-reacting-to-re-renders is done
   */
+  const key = useMemo(
+    () => (isMobileApp ? Math.random() : undefined), // eslint-disable-next-line react-hooks/exhaustive-deps
+    [closeDropdown, styles, isOpen, toggleMeasurements, contentProps, closeOnSelect],
+  )
   return (
-    <Portal key={Math.random()} zIndex={styles?.dropdownZIndex || zIndices.popover}>
+    <Portal key={key} zIndex={styles?.dropdownZIndex || zIndices.popover}>
       <AnimatePresence custom={{ isOpen }}>
         {isOpen && toggleMeasurements && (
           <>
@@ -190,6 +195,7 @@ const ActionSheetBackdropWithContent = memo(function ActionSheetBackdropWithCont
               {...contentProps}
               alignment={styles?.alignment}
               dropdownMaxHeight={styles?.dropdownMaxHeight}
+              dropdownMinWidth={styles?.dropdownMinWidth}
               handleClose={closeDropdown}
               toggleMeasurements={toggleMeasurements}
               closeOnSelect={closeOnSelect}
@@ -205,6 +211,7 @@ type DropdownContentProps = FlexProps & {
   options: MenuItemProp[]
   alignment?: 'left' | 'right'
   dropdownMaxHeight?: number
+  dropdownMinWidth?: number
   toggleMeasurements: LayoutMeasurements & { sticky?: boolean }
   handleClose?: () => void
   closeOnSelect: boolean
@@ -232,6 +239,7 @@ function DropdownContent({
   options,
   alignment = 'left',
   dropdownMaxHeight,
+  dropdownMinWidth,
   toggleMeasurements,
   handleClose,
   closeOnSelect,
@@ -300,10 +308,10 @@ function DropdownContent({
     <TouchableWhenOpen
       animation="quicker"
       maxHeight={maxHeight}
-      minWidth={DEFAULT_MIN_WIDTH}
+      minWidth={dropdownMinWidth ?? DEFAULT_MIN_WIDTH}
       position="absolute"
       testID="dropdown-content"
-      top={toggleMeasurements.y + toggleMeasurements.height - windowScrollY}
+      top={toggleMeasurements.y + toggleMeasurements.height - windowScrollY + spacing.spacing8}
       {...containerProps}
     >
       <BaseCard.Shadow

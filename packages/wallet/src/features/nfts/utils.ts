@@ -17,6 +17,7 @@ export function formatNftItems(data: NftsTabQuery | undefined): NFTItem[] | unde
         contractAddress: item?.ownedAsset?.nftContract?.address ?? undefined,
         tokenId: item?.ownedAsset?.tokenId ?? undefined,
         imageUrl: item?.ownedAsset?.image?.url ?? undefined,
+        thumbnailUrl: item?.ownedAsset?.thumbnail?.url ?? undefined,
         collectionName: item?.ownedAsset?.collection?.name ?? undefined,
         isVerifiedCollection: item?.ownedAsset?.collection?.isVerified ?? undefined,
         floorPrice: item?.ownedAsset?.collection?.markets?.[0]?.floorPrice?.value ?? undefined,

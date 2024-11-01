@@ -16,14 +16,13 @@ export function NftView({ item, onPress }: NftViewProps): JSX.Element {
       onPress={onPress}
     >
       <NFTViewer
-        showSvgPreview
-        contractAddress={item.contractAddress}
+        svgRenderingDisabled
         imageDimensions={item.imageDimensions}
         limitGIFSize={ESTIMATED_NFT_LIST_ITEM_SIZE}
         placeholderContent={item.name || item.collectionName}
         squareGridView={true}
-        tokenId={item.tokenId}
         uri={item.imageUrl ?? ''}
+        thumbnailUrl={item.thumbnailUrl ?? ''}
       />
     </Flex>
   )

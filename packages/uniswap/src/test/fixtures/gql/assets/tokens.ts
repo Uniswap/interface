@@ -117,6 +117,7 @@ const tokenProjectBase = createFixture<TokenProject>()(() => {
     logoUrl,
     isSpam: faker.datatype.boolean(),
     logo: image({ url: logoUrl }),
+    spamCode: faker.datatype.number(),
   }
 })
 

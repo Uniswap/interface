@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
 import { DappRequestStoreItem } from 'src/app/features/dappRequests/slice'
+import { DappRequestType } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { Anchor, AnimatePresence, Button, Flex, Text, UniversalImage, UniversalImageResizeMode, styled } from 'ui/src'
 import { borderRadii, iconSizes } from 'ui/src/theme'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
@@ -184,7 +185,10 @@ export function DappRequestFooter({
   const shouldCloseSidebar = request.isSidebarClosed && totalRequestCount <= 1
 
   // Disable submission if no gas fee value
-  const isConfirmEnabled = transactionGasFeeResult?.value && hasSufficientGas
+  const isConfirmEnabled =
+    request.dappRequest.type === DappRequestType.SendTransaction
+      ? transactionGasFeeResult?.value && hasSufficientGas
+      : true
 
   const handleOnConfirm = useCallback(async () => {
     if (onConfirm) {

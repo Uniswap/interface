@@ -4,7 +4,6 @@ import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools
 import { CurrencySelect } from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { ReverseArrow } from 'components/Icons/ReverseArrow'
 import { SwapWrapperOuter } from 'components/swap/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
@@ -24,6 +23,7 @@ import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
 import { Z_INDEX } from 'theme/zIndex'
+import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -77,11 +77,6 @@ const PoolButton = styled.button<{ $open?: boolean; $hideOnMobile?: boolean; $fi
     display: ${({ $hideOnMobile }) => $hideOnMobile && 'none'};
     width: ${({ $fixedWidth }) => !$fixedWidth && '100%'};
   }
-`
-
-const SwapIcon = styled(ReverseArrow)`
-  fill: ${({ theme }) => theme.accent1};
-  rotate: 90deg;
 `
 
 const ButtonBubble = styled(LoadingBubble)`
@@ -259,7 +254,7 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
             </>
           ) : (
             <>
-              {screenSizeLargerThanTablet && <SwapIcon />}
+              {screenSizeLargerThanTablet && <ArrowUpDown color="$accent1" size="$icon.20" />}
               <ThemedText.BodyPrimary fontWeight={535} color="accentActive">
                 <Trans i18nKey="common.swap" />
               </ThemedText.BodyPrimary>

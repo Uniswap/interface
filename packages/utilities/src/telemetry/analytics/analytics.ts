@@ -4,6 +4,12 @@ import { ApplicationTransport } from 'utilities/src/telemetry/analytics/Applicat
 // matches amplitude supported values, not using amplitude's type to decouple from underlying library
 export type UserPropertyValue = number | string | boolean | Array<string | number>
 
+export interface TestnetModeConfig {
+  aggregateEventName: string
+  passthroughAllowlistEvents: string[]
+  allowlistEvents: string[]
+}
+
 export async function getAnalyticsAtomDirect(_forceRead?: boolean): Promise<boolean> {
   throw new PlatformSplitStubError('getAnalyticsAtomDirect')
 }
@@ -16,7 +22,7 @@ export interface Analytics {
     userIdGetter?: () => Promise<string>,
   ): Promise<void>
   setAllowAnalytics(allowed: boolean): Promise<void>
-  setTestnetMode(enabled: boolean): void
+  setTestnetMode(enabled: boolean, _config: TestnetModeConfig): void
   sendEvent(eventName: string, eventProperties: Record<string, unknown>): void
   flushEvents(): void
   setUserProperty(property: string, value: UserPropertyValue, insert?: boolean): void
@@ -34,7 +40,7 @@ export const analytics: Analytics = {
   setAllowAnalytics(_allowed: boolean): Promise<void> {
     throw new PlatformSplitStubError('flushAnalyticsEvents')
   },
-  setTestnetMode(_enabled: boolean): void {
+  setTestnetMode(_enabled: boolean, _config: TestnetModeConfig): void {
     throw new PlatformSplitStubError('setTestnetMode')
   },
   sendEvent(_eventName: string, ..._eventProperties: unknown[]): void {

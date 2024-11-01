@@ -107,6 +107,22 @@ describe(buildCurrency, () => {
     expect(token.name).toBe('Test Token')
   })
 
+  it('should return the same reference when the same parameters are provided', () => {
+    const args = {
+      chainId: UniverseChainId.Mainnet,
+      address: '0x0000000000000000000000000000000000000000',
+      decimals: 0,
+      symbol: 'TEST',
+      name: 'Test Token',
+    }
+
+    const tokenA = buildCurrency({ ...args }) as Token
+    const tokenB = buildCurrency({ ...args }) as Token
+
+    expect(tokenA).toBeInstanceOf(Token)
+    expect(tokenA).toBe(tokenB)
+  })
+
   it('should return a new NativeCurrency instance when address is not provided', () => {
     const nativeCurrency = buildCurrency({
       chainId: UniverseChainId.Mainnet,

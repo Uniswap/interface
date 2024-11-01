@@ -1,5 +1,5 @@
 import { Flex, Text } from 'ui/src'
-import { imageSizes, spacing } from 'ui/src/theme'
+import { imageSizes } from 'ui/src/theme'
 import { UnitagProfilePicture } from 'wallet/src/features/unitags/UnitagProfilePicture'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 
@@ -13,10 +13,12 @@ export const UnitagWithProfilePicture = ({
   profilePictureUri?: string
 }): JSX.Element => {
   return (
-    <Flex centered gap={-spacing.spacing24}>
+    <Flex centered pb="$spacing28">
       <UnitagProfilePicture address={address} size={imageSizes.image100} unitagAvatarUri={profilePictureUri} />
       <Flex
         row
+        position="absolute"
+        bottom={0}
         backgroundColor="$surface1"
         borderRadius="$rounded32"
         px="$spacing12"

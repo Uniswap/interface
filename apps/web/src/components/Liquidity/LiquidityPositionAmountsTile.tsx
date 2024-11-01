@@ -40,11 +40,9 @@ export function LiquidityPositionAmountsTile({
             </Text>
           )}
           {totalFiatValue?.greaterThan(0) && fiatValue0 && (
-            <Flex backgroundColor="$surface1" borderRadius="$rounded12" minWidth={40} minHeight={32} p="$padding8">
-              <Text variant="body1" color="$neutral1">
-                {formatPercent(new Percent(fiatValue0.quotient, totalFiatValue.quotient).toFixed(6))}
-              </Text>
-            </Flex>
+            <Text variant="body1" color="$neutral1">
+              {formatPercent(new Percent(fiatValue0.quotient, totalFiatValue.quotient).toFixed(6))}
+            </Text>
           )}
         </Flex>
       </Flex>
@@ -65,11 +63,9 @@ export function LiquidityPositionAmountsTile({
             </Text>
           )}
           {totalFiatValue?.greaterThan(0) && fiatValue1 && (
-            <Flex backgroundColor="$surface1" borderRadius="$rounded12" minWidth={40} minHeight={32} p="$padding8">
-              <Text variant="body1" color="$neutral1">
-                {formatPercent(new Percent(fiatValue1.quotient, totalFiatValue.quotient).toFixed(6))}
-              </Text>
-            </Flex>
+            <Text variant="body1" color="$neutral1">
+              {formatPercent(new Percent(fiatValue1.quotient, totalFiatValue.quotient).toFixed(6))}
+            </Text>
           )}
         </Flex>
       </Flex>

@@ -2,7 +2,7 @@ import { Extras } from '@sentry/types'
 import { logErrorToDatadog, logToDatadog, logWarningToDatadog } from 'utilities/src/logger/Datadog'
 import { Sentry } from 'utilities/src/logger/Sentry'
 import { LogLevel, LoggerErrorContext, OverridesSentryFingerprint } from 'utilities/src/logger/types'
-import { isInterface, isMobileApp, isWeb } from 'utilities/src/platform'
+import { isInterface, isWeb } from 'utilities/src/platform'
 
 // weird temp fix: the web app is complaining about __DEV__ being global
 // i tried declaring it in a variety of places:
@@ -18,6 +18,8 @@ declare global {
 }
 
 const SENTRY_CHAR_LIMIT = 8192
+
+let walletDatadogEnabled = false
 
 /**
  * Logs a message to console. Additionally sends log to Sentry and Datadog if using 'error', 'warn', or 'info'.
@@ -38,6 +40,9 @@ export const logger = {
   warn: (fileName: string, functionName: string, message: string, ...args: unknown[]): void =>
     logMessage('warn', fileName, functionName, message, ...args),
   error: (error: unknown, captureContext: LoggerErrorContext): void => logException(error, captureContext),
+  setWalletDatadogEnabled: (enabled: boolean): void => {
+    walletDatadogEnabled = enabled
+  },
 }
 
 function logMessage(
@@ -60,7 +65,7 @@ function logMessage(
 
   if (level === 'warn') {
     Sentry.captureMessage('warning', `${fileName}#${functionName}`, message, ...args)
-    if (isMobileApp) {
+    if (walletDatadogEnabled) {
       logWarningToDatadog(message, {
         level,
         args,
@@ -70,7 +75,7 @@ function logMessage(
     }
   } else if (level === 'info') {
     Sentry.captureMessage('info', `${fileName}#${functionName}`, message, ...args)
-    if (isMobileApp) {
+    if (walletDatadogEnabled) {
       logToDatadog(message, {
         level,
         args,
@@ -114,7 +119,7 @@ function logException(error: unknown, captureContext: LoggerErrorContext): void 
   }
 
   Sentry.captureException(error, updatedContext)
-  if (isInterface || isMobileApp) {
+  if (isInterface || walletDatadogEnabled) {
     logErrorToDatadog(error instanceof Error ? error : new Error(`${error}`), updatedContext)
   }
 }

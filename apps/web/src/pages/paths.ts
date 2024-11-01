@@ -42,7 +42,7 @@ export const paths = [
   '/remove/:tokenId',
   '/migrate/v2',
   '/migrate/v2/:address',
-  '/migrate/v3/:tokenId',
+  '/migrate/v3/:chainName/:tokenId',
   '/nfts',
   '/nfts/asset/:contractAddress/:tokenId',
   '/nfts/profile',

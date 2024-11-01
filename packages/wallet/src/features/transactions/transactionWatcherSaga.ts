@@ -71,8 +71,6 @@ export const SWAP_STATUS_TO_TX_STATUS: { [key in SwapStatus]: TransactionStatus 
 const FINALIZED_BRIDGE_SWAP_STATUS = [SwapStatus.SUCCESS, SwapStatus.FAILED, SwapStatus.EXPIRED]
 const MIN_BRIDGE_WAIT_TIME = ONE_SECOND_MS * 3
 
-const selectTransactionById = makeSelectTransaction()
-
 export function* transactionWatcher({ apolloClient }: { apolloClient: ApolloClient<NormalizedCacheObject> }) {
   logger.debug('transactionWatcherSaga', 'transactionWatcher', 'Starting tx watcher')
 
@@ -390,6 +388,7 @@ function* waitForBridgingStatus(transaction: TransactionDetails) {
     }
 
     // Check if the redux store has been updated with a new status
+    const selectTransactionById = yield* call(makeSelectTransaction)
     const updatedTransaction = yield* select(selectTransactionById, {
       address: transaction.from,
       chainId: transaction.chainId,

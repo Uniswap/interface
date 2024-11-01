@@ -185,13 +185,7 @@ export function computeRoutes(
       const v4Routes = route.filter((r): r is V4PoolInRoute => r.type === 'v4-pool')
 
       return {
-        routev4: isOnlyV4
-          ? new V4Route(
-              v4Routes.map((r) => parseV4PoolApi(r, parsedCurrencyIn, parsedCurrencyOut)),
-              parsedCurrencyIn,
-              parsedCurrencyOut,
-            )
-          : null,
+        routev4: isOnlyV4 ? new V4Route(v4Routes.map(parseV4PoolApi), parsedCurrencyIn, parsedCurrencyOut) : null,
         routev3: isOnlyV3 ? new V3Route(route.map(parseV3PoolApi), parsedCurrencyIn, parsedCurrencyOut) : null,
         routev2: isOnlyV2 ? new V2Route(route.map(parseV2PairApi), parsedCurrencyIn, parsedCurrencyOut) : null,
         mixedRoute:
@@ -224,14 +218,22 @@ function parseTokenApi(token: TradingApiTokenInRoute): Token {
   )
 }
 
-function parseV4PoolApi(
-  { fee, sqrtRatioX96, liquidity, tickCurrent, tickSpacing, hooks }: TradingApiV4PoolInRoute,
-  tokenIn: Currency,
-  tokenOut: Currency,
-): V4Pool {
+function parseV4PoolApi({
+  fee,
+  sqrtRatioX96,
+  liquidity,
+  tickCurrent,
+  tickSpacing,
+  hooks,
+  tokenIn,
+  tokenOut,
+}: TradingApiV4PoolInRoute): V4Pool {
+  const currencyIn = parseTokenApi(tokenIn)
+  const currencyOut = parseTokenApi(tokenOut)
+
   return new V4Pool(
-    tokenIn,
-    tokenOut,
+    currencyIn,
+    currencyOut,
     Number(fee),
     Number(tickSpacing),
     hooks,

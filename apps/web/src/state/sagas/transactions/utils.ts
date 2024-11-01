@@ -4,7 +4,7 @@ import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { clientToProvider } from 'hooks/useEthersProvider'
 import ms from 'ms'
 import { Action } from 'redux'
-import { addTransaction, finalizeTransaction } from 'state/transactions/reducer'
+import { addTransaction, finalizeTransaction, updateTransactionInfo } from 'state/transactions/reducer'
 import {
   ApproveTransactionInfo,
   BridgeTransactionInfo,
@@ -21,6 +21,7 @@ import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__g
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import {
+  ApprovalEditedInWalletError,
   HandledTransactionInterrupt,
   TransactionStepFailedError,
   UnexpectedTransactionStateError,
@@ -31,10 +32,12 @@ import {
   TokenApprovalTransactionStep,
   TokenRevocationTransactionStep,
   TransactionStep,
+  TransactionStepType,
 } from 'uniswap/src/features/transactions/swap/types/steps'
 import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { BridgeTrade, ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
 import { isSameAddress } from 'utilities/src/addresses'
 import { percentFromFloat } from 'utilities/src/format/percent'
@@ -88,7 +91,7 @@ export interface HandleOnChainStepParams<T extends OnChainTransactionStep = OnCh
   /** Controls whether the function should wait to return until after the transaction has confirmed. Defaults to `true`. */
   shouldWaitForConfirmation?: boolean
   /** Called when data returned from a submitted transaction differs from data originally sent to the wallet. */
-  onModification?: (response: TransactionResponse) => void
+  onModification?: (response: TransactionResponse) => void | Generator<unknown, void, unknown>
 }
 export function* handleOnChainStep<T extends OnChainTransactionStep>(params: HandleOnChainStepParams<T>) {
   const { account, step, setCurrentStep, info, allowDuplicativeTx, ignoreInterrupt, onModification } = params
@@ -126,8 +129,8 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
   // Add transaction to local state to start polling for status
   yield* put(addTransaction({ from: account.address, info, hash, nonce, chainId }))
 
-  if (step.txRequest.data !== data) {
-    onModification?.(response)
+  if (step.txRequest.data !== data && onModification) {
+    yield* call(onModification, response)
   }
 
   // If the transaction flow was interrupted while awaiting input, throw an error after input is received
@@ -168,7 +171,26 @@ interface HandleApprovalStepParams
 export function* handleApprovalTransactionStep(params: HandleApprovalStepParams) {
   const { step } = params
   const info = getApprovalTransactionInfo(step)
-  return yield* call(handleOnChainStep, { ...params, info })
+  return yield* call(handleOnChainStep, {
+    ...params,
+    info,
+    *onModification(response: TransactionResponse) {
+      const { isInsufficient, approvedAmount } = checkApprovalAmount(response, step)
+
+      // Update state to reflect hte actual approval amount submitted on-chain
+      yield* put(
+        updateTransactionInfo({
+          chainId: step.txRequest.chainId,
+          hash: response.hash,
+          info: { ...info, amount: approvedAmount },
+        }),
+      )
+
+      if (isInsufficient) {
+        throw new ApprovalEditedInWalletError({ step })
+      }
+    },
+  })
 }
 
 function getApprovalTransactionInfo(
@@ -180,6 +202,22 @@ function getApprovalTransactionInfo(
     spender: approvalStep.spender,
     amount: approvalStep.amount,
   }
+}
+
+function checkApprovalAmount(
+  response: TransactionResponse,
+  step: TokenApprovalTransactionStep | TokenRevocationTransactionStep,
+) {
+  const requiredAmount = BigInt(`0x${parseInt(step.amount, 10).toString(16)}`)
+  const submitted = parseERC20ApproveCalldata(response.data)
+  const approvedAmount = submitted.amount.toString(10)
+
+  // Special case: for revoke tx's, the approval is insufficient if anything other than an empty approval was submitted on chain.
+  if (step.type === TransactionStepType.TokenRevocationTransaction) {
+    return { isInsufficient: submitted.amount !== BigInt(0), approvedAmount }
+  }
+
+  return { isInsufficient: submitted.amount < requiredAmount, approvedAmount }
 }
 
 function isRecentTx(tx: TransactionDetails) {

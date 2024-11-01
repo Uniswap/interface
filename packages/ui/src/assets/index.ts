@@ -72,3 +72,20 @@ export const SECURITY_SCREEN_BACKGROUND_LIGHT = {
 }
 
 export const DEAD_LUNI = require('./graphics/dead-luni.png')
+
+export const UNITAGS_ADRIAN_LIGHT = require('./graphics/unitags/adrian-light.png')
+export const UNITAGS_ADRIAN_DARK = require('./graphics/unitags/adrian-dark.png')
+export const UNITAGS_ANDREW_LIGHT = require('./graphics/unitags/andrew-light.png')
+export const UNITAGS_ANDREW_DARK = require('./graphics/unitags/andrew-dark.png')
+export const UNITAGS_BRYAN_LIGHT = require('./graphics/unitags/bryan-light.png')
+export const UNITAGS_BRYAN_DARK = require('./graphics/unitags/bryan-dark.png')
+export const UNITAGS_CALLIL_LIGHT = require('./graphics/unitags/callil-light.png')
+export const UNITAGS_CALLIL_DARK = require('./graphics/unitags/callil-dark.png')
+export const UNITAGS_FRED_LIGHT = require('./graphics/unitags/fred-light.png')
+export const UNITAGS_FRED_DARK = require('./graphics/unitags/fred-dark.png')
+export const UNITAGS_MAGGIE_LIGHT = require('./graphics/unitags/maggie-light.png')
+export const UNITAGS_MAGGIE_DARK = require('./graphics/unitags/maggie-dark.png')
+export const UNITAGS_PHIL_LIGHT = require('./graphics/unitags/phil-light.png')
+export const UNITAGS_PHIL_DARK = require('./graphics/unitags/phil-dark.png')
+export const UNITAGS_SPENCER_LIGHT = require('./graphics/unitags/spencer-light.png')
+export const UNITAGS_SPENCER_DARK = require('./graphics/unitags/spencer-dark.png')

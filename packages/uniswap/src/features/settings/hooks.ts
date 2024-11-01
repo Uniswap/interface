@@ -14,8 +14,10 @@ import { WalletConnectConnector } from 'uniswap/src/features/web3/walletConnect'
 import { COMBINED_CHAIN_IDS, InterfaceGqlChain, UniverseChainId } from 'uniswap/src/types/chains'
 import { isTestEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
-import { isInterface } from 'utilities/src/platform'
+import { isInterface, isMobileApp } from 'utilities/src/platform'
 import { Connector } from 'wagmi'
+
+export const TESTNET_MODE_BANNER_HEIGHT = 44
 
 export function useHideSmallBalancesSetting(): boolean {
   const { isTestnetModeEnabled } = useEnabledChains()
@@ -24,9 +26,7 @@ export function useHideSmallBalancesSetting(): boolean {
 }
 
 export function useHideSpamTokensSetting(): boolean {
-  const { isTestnetModeEnabled } = useEnabledChains()
-
-  return useSelector(selectWalletHideSpamTokensSetting) && !isTestnetModeEnabled
+  return useSelector(selectWalletHideSpamTokensSetting)
 }
 
 // Note: only use this hook for useConnectedWalletSupportedChains
@@ -63,6 +63,12 @@ function useConnectedWalletSupportedChains(): UniverseChainId[] {
   }, [connector])
 }
 
+function useIsTestnetModeEnabled(): boolean {
+  const isTestnetModeFromState = useSelector(selectIsTestnetModeEnabled)
+  const isTestnetModeFromFlag = useFeatureFlag(FeatureFlags.TestnetMode)
+  return isTestnetModeFromState && isTestnetModeFromFlag
+}
+
 export function useEnabledChains(): {
   chains: UniverseChainId[]
   gqlChains: InterfaceGqlChain[]
@@ -71,12 +77,21 @@ export function useEnabledChains(): {
 } {
   const featureFlaggedChainIds = useFeatureFlaggedChainIds()
   const connectedWalletChainIds = useConnectedWalletSupportedChains()
-  const isTestnetModeFromState = useSelector(selectIsTestnetModeEnabled)
-  const isTestnetModeFromFlag = useFeatureFlag(FeatureFlags.TestnetMode)
-  const isTestnetModeEnabled = isTestnetModeFromState && isTestnetModeFromFlag
+  const isTestnetModeEnabled = useIsTestnetModeEnabled()
 
   return useMemo(
     () => getEnabledChains({ isTestnetModeEnabled, connectedWalletChainIds, featureFlaggedChainIds }),
     [isTestnetModeEnabled, connectedWalletChainIds, featureFlaggedChainIds],
   )
+}
+
+/**
+ * Use to account for an inset when `useAppInsets()` is not available
+ *
+ * @returns The height of the testnet mode banner if testnet mode is enabled, otherwise 0
+ */
+export function useTestnetModeBannerHeight(): number {
+  const isTestnetModeEnabled = useIsTestnetModeEnabled()
+
+  return isTestnetModeEnabled && isMobileApp ? TESTNET_MODE_BANNER_HEIGHT : 0
 }

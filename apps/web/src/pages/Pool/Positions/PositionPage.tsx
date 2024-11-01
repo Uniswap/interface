@@ -6,7 +6,8 @@ import { LiquidityPositionAmountsTile } from 'components/Liquidity/LiquidityPosi
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { LiquidityPositionPriceRangeTile } from 'components/Liquidity/LiquidityPositionPriceRangeTile'
 import { PositionNFT } from 'components/Liquidity/PositionNFT'
-import { parseRestPosition, useV3OrV4PositionDerivedInfo } from 'components/Liquidity/utils'
+import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
+import { parseRestPosition } from 'components/Liquidity/utils'
 import { LoadingFullscreen, LoadingRows } from 'components/Loader/styled'
 import { useChainFromUrlParam } from 'constants/chains'
 import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
@@ -86,7 +87,7 @@ export default function PositionPage() {
   )
   const position = data?.position
   const positionInfo = useMemo(() => parseRestPosition(position), [position])
-  const metadata = usePositionTokenURI(tokenId ? BigNumber.from(tokenId) : undefined)
+  const metadata = usePositionTokenURI(tokenId ? BigNumber.from(tokenId) : undefined, chainInfo?.id)
 
   useRefetchOnLpModalClose(refetch)
 
@@ -149,16 +150,18 @@ export default function PositionPage() {
           <LiquidityPositionInfo positionInfo={positionInfo} />
           {status !== PositionStatus.CLOSED && (
             <Flex row gap="$gap12" alignItems="center">
-              <HeaderButton
-                emphasis="secondary"
-                onPress={() => {
-                  navigate(`/migrate/v3/${tokenId}`)
-                }}
-              >
-                <Text variant="buttonLabel2" color="$neutral1">
-                  <Trans i18nKey="pool.migrateToV4" />
-                </Text>
-              </HeaderButton>
+              {positionInfo.version === ProtocolVersion.V3 && (
+                <HeaderButton
+                  emphasis="secondary"
+                  onPress={() => {
+                    navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenId}`)
+                  }}
+                >
+                  <Text variant="buttonLabel2" color="$neutral1">
+                    <Trans i18nKey="pool.migrateToV4" />
+                  </Text>
+                </HeaderButton>
+              )}
               <HeaderButton
                 emphasis="secondary"
                 onPress={() => {
@@ -216,7 +219,7 @@ export default function PositionPage() {
           <Flex p="$padding12" backgroundColor="$surface2" borderRadius="$rounded16">
             <Flex row width="100%" justifyContent="space-between" alignItems="center">
               <Text variant="subheading1">
-                <Trans i18nKey="pool.unclaimedFees" />
+                <Trans i18nKey="pool.uncollectedFees" />
               </Text>
               <HeaderButton
                 emphasis="primary"
@@ -225,7 +228,7 @@ export default function PositionPage() {
                 }}
               >
                 <Text variant="buttonLabel4" color="$surface1">
-                  <Trans i18nKey="pool.claimFees" />
+                  <Trans i18nKey="pool.collectFees" />
                 </Text>
               </HeaderButton>
             </Flex>
@@ -245,18 +248,20 @@ export default function PositionPage() {
                 fiatValue1={fiatFeeValue1}
               />
             )}
-            <Flex row width="100%" justifyContent="space-between" mt="$spacing16">
-              <Text variant="body1">
-                <Trans i18nKey="pool.collectAs" values={{ nativeWrappedSymbol: 'WETH' }} />
-              </Text>
-              <Switch
-                variant="default"
-                checked={collectAsWeth}
-                onCheckedChange={() => {
-                  setCollectAsWeth((prev) => !prev)
-                }}
-              />
-            </Flex>
+            {positionInfo.version !== ProtocolVersion.V4 && (
+              <Flex row width="100%" justifyContent="space-between" mt="$spacing16">
+                <Text variant="body1">
+                  <Trans i18nKey="pool.collectAs" values={{ nativeWrappedSymbol: 'WETH' }} />
+                </Text>
+                <Switch
+                  variant="default"
+                  checked={collectAsWeth}
+                  onCheckedChange={() => {
+                    setCollectAsWeth((prev) => !prev)
+                  }}
+                />
+              </Flex>
+            )}
           </Flex>
         </Flex>
       </Flex>
@@ -279,6 +284,7 @@ export default function PositionPage() {
         token1Fees={feeValue1}
         token0FeesUsd={fiatFeeValue0}
         token1FeesUsd={fiatFeeValue1}
+        collectAsWETH={collectAsWeth}
       />
     </BodyWrapper>
   )

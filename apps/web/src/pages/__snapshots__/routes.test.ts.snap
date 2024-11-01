@@ -180,7 +180,7 @@ Array [
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
-    "path": "/migrate/v3/:tokenId",
+    "path": "/migrate/v3/:chainName/:tokenId",
   },
   Object {
     "enabled": [Function],

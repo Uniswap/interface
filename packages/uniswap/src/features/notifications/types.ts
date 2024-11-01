@@ -150,6 +150,7 @@ export enum CopyNotificationType {
   TransactionId = 'transactionId',
   Image = 'image',
   TokenUrl = 'tokenUrl',
+  BlockExplorerUrl = 'blockExplorerUrl',
   NftUrl = 'nftUrl',
 }
 

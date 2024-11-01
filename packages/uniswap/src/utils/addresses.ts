@@ -27,7 +27,7 @@ export function getValidAddress(address: Maybe<string>, withChecksum = false, lo
     return null
   }
 
-  const addressWith0x = ensureLeading0x(address)
+  const addressWith0x = ensureLeading0x(address.trim())
 
   if (withChecksum) {
     try {
@@ -43,6 +43,7 @@ export function getValidAddress(address: Maybe<string>, withChecksum = false, lo
     }
   }
 
+  // TODO(WALL-5160): Note that we do not check for [0-9a-fA-F] due to possible performance
   if (addressWith0x.length !== 42) {
     if (log) {
       logger.warn('utils/addresses', 'getValidAddress', 'Address has an invalid format', {
@@ -115,6 +116,9 @@ export function areAddressesEqual(a1: Maybe<Address>, a2: Maybe<Address>): boole
   return validA1 !== null && validA2 !== null && validA1 === validA2
 }
 
+/**
+ * Prepend '0x' if the input address does not start with '0x'/'0X'
+ */
 export function ensureLeading0x(input: Address): Address {
-  return input.startsWith('0x') ? input : `0x${input}`
+  return input.startsWith('0x') || input.startsWith('0X') ? input : `0x${input}`
 }

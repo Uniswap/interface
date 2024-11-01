@@ -4,6 +4,7 @@ import { Flex, Text, useSporeColors } from 'ui/src'
 import { LinkHorizontalAlt } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { Pill } from 'uniswap/src/components/pill/Pill'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
@@ -32,6 +33,7 @@ export const UnitagInfoModal = ({
         unitagDomain: UNITAG_SUFFIX_NO_LEADING_DOT,
       })}
       rejectText={t('common.button.close')}
+      severity={WarningSeverity.None}
       icon={
         <Flex centered row gap="$spacing4">
           <Pill

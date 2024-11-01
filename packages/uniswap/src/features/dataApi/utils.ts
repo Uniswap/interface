@@ -70,7 +70,7 @@ export function tokenProjectToCurrencyInfos(
           return null
         }
 
-        const currencyInfo: CurrencyInfo = {
+        const currencyInfo = buildCurrencyInfo({
           currency,
           currencyId: currencyId(currency),
           logoUrl,
@@ -79,7 +79,7 @@ export function tokenProjectToCurrencyInfos(
             tokenList: getTokenListFromSafetyLevel(project?.safetyLevel),
             protectionResult: ProtectionResult.Unknown,
           },
-        }
+        })
 
         return currencyInfo
       }),
@@ -92,8 +92,10 @@ function isNonNativeAddress(chainId: UniverseChainId, address: Maybe<string>): a
   return !isNativeCurrencyAddress(chainId, address)
 }
 
+const CURRENCY_CACHE = new Map<string, Token | NativeCurrency>()
+
 /**
- * Creates a new instance of Token or NativeCurrency.
+ * Creates a new instance of Token or NativeCurrency, or returns an existing copy if one was already created.
  *
  * @param params The parameters for building the currency.
  * @param params.chainId The ID of the chain where the token resides. If not provided, the function will return undefined.
@@ -104,26 +106,51 @@ function isNonNativeAddress(chainId: UniverseChainId, address: Maybe<string>): a
  * @param params.bypassChecksum If true, bypasses the EIP-55 checksum on the token address. This parameter is optional and defaults to true.
  * @returns A new instance of Token or NativeCurrency if the parameters are valid, otherwise returns undefined.
  */
-export function buildCurrency({
-  chainId,
-  address,
-  decimals,
-  symbol,
-  name,
-  bypassChecksum = true,
-  buyFeeBps,
-  sellFeeBps,
-}: BuildCurrencyParams): Token | NativeCurrency | undefined {
+export function buildCurrency(args: BuildCurrencyParams): Token | NativeCurrency | undefined {
+  const { chainId, address, decimals, symbol, name, bypassChecksum = true, buyFeeBps, sellFeeBps } = args
+
   if (!chainId || decimals === undefined || decimals === null) {
     return undefined
+  }
+
+  const cacheKey = JSON.stringify(args, Object.keys(args).sort())
+
+  if (CURRENCY_CACHE.has(cacheKey)) {
+    // This allows us to better memoize components that use a `Currency` as a dependency.
+    return CURRENCY_CACHE.get(cacheKey)
   }
 
   const buyFee = buyFeeBps && BigNumber.from(buyFeeBps).gt(0) ? BigNumber.from(buyFeeBps) : undefined
   const sellFee = sellFeeBps && BigNumber.from(sellFeeBps).gt(0) ? BigNumber.from(sellFeeBps) : undefined
 
-  return isNonNativeAddress(chainId, address)
+  const result = isNonNativeAddress(chainId, address)
     ? new Token(chainId, address, decimals, symbol ?? undefined, name ?? undefined, bypassChecksum, buyFee, sellFee)
     : NativeCurrency.onChain(chainId)
+
+  CURRENCY_CACHE.set(cacheKey, result)
+  return result
+}
+
+const CURRENCY_INFO_CACHE = new Map<string, CurrencyInfo>()
+
+export function buildCurrencyInfo(args: CurrencyInfo): CurrencyInfo {
+  const sortedArgs = Object.fromEntries(
+    Object.keys(args)
+      .sort()
+      .map((key) => [key, args[key as keyof CurrencyInfo]]),
+  ) as CurrencyInfo
+
+  const cacheKey = JSON.stringify(sortedArgs)
+
+  const cachedCurrencyInfo = CURRENCY_INFO_CACHE.get(cacheKey)
+
+  if (cachedCurrencyInfo) {
+    // This allows us to better memoize components that use a `CurrencyInfo` as a dependency.
+    return cachedCurrencyInfo
+  }
+
+  CURRENCY_INFO_CACHE.set(cacheKey, args)
+  return args
 }
 
 function getTokenListFromSafetyLevel(safetyInfo?: SafetyLevel): TokenList {
@@ -181,7 +208,7 @@ export function gqlTokenToCurrencyInfo(token: NonNullable<NonNullable<TokenQuery
     return null
   }
 
-  const currencyInfo: CurrencyInfo = {
+  return buildCurrencyInfo({
     currency,
     currencyId: currencyId(currency),
     logoUrl: project?.logoUrl,
@@ -191,8 +218,7 @@ export function gqlTokenToCurrencyInfo(token: NonNullable<NonNullable<TokenQuery
     // defaulting to not spam. currently this flow triggers when a user is searching
     // for a token, in which case the user probably doesn't expect the token to be spam
     isSpam: project?.isSpam ?? false,
-  }
-  return currencyInfo
+  })
 }
 
 /*

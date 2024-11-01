@@ -8,6 +8,8 @@ import {
   DecreasePositionTransactionStep,
   IncreasePositionTransactionStep,
   IncreasePositionTransactionStepAsync,
+  MigratePositionTransactionStep,
+  MigratePositionTransactionStepAsync,
 } from 'uniswap/src/features/transactions/swap/types/steps'
 
 const LPIcon = (): JSX.Element => (
@@ -16,7 +18,12 @@ const LPIcon = (): JSX.Element => (
   </Flex>
 )
 
-type LPSteps = IncreasePositionTransactionStep | IncreasePositionTransactionStepAsync | DecreasePositionTransactionStep
+type LPSteps =
+  | IncreasePositionTransactionStep
+  | IncreasePositionTransactionStepAsync
+  | DecreasePositionTransactionStep
+  | MigratePositionTransactionStep
+  | MigratePositionTransactionStepAsync
 export function LPTransactionStepRow({ status }: StepRowProps<LPSteps>): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()

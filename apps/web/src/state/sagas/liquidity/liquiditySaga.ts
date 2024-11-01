@@ -5,7 +5,6 @@ import {
   handleOnChainStep,
   handleSignatureStep,
 } from 'state/sagas/transactions/utils'
-import { handleWrapStep } from 'state/sagas/transactions/wrapSaga'
 import {
   DecreaseLiquidityTransactionInfo,
   IncreaseLiquidityTransactionInfo,
@@ -19,9 +18,10 @@ import {
   DecreasePositionTransactionStep,
   IncreasePositionTransactionStep,
   IncreasePositionTransactionStepAsync,
+  MigratePositionTransactionStep,
+  MigratePositionTransactionStepAsync,
   TransactionStep,
   TransactionStepType,
-  WrapTransactionStep,
 } from 'uniswap/src/features/transactions/swap/types/steps'
 import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { generateTransactionSteps } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
@@ -45,13 +45,14 @@ function* getLiquidityTxRequest(
     | IncreasePositionTransactionStep
     | IncreasePositionTransactionStepAsync
     | DecreasePositionTransactionStep
-    | WrapTransactionStep,
+    | MigratePositionTransactionStep
+    | MigratePositionTransactionStepAsync,
   signature: string | undefined,
 ) {
   if (
     step.type === TransactionStepType.IncreasePositionTransaction ||
     step.type === TransactionStepType.DecreasePositionTransaction ||
-    step.type === TransactionStepType.WrapTransaction
+    step.type === TransactionStepType.MigratePositionTransactionStep
   ) {
     return step.txRequest
   }
@@ -75,7 +76,8 @@ interface HandlePositionStepParams extends Omit<HandleOnChainStepParams, 'step' 
     | IncreasePositionTransactionStep
     | IncreasePositionTransactionStepAsync
     | DecreasePositionTransactionStep
-    | WrapTransactionStep
+    | MigratePositionTransactionStep
+    | MigratePositionTransactionStepAsync
   signature?: string
   action: LiquidityAction
 }
@@ -114,12 +116,11 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
           signature = yield* call(handleSignatureStep, { account, step, setCurrentStep })
           break
         }
-        case TransactionStepType.WrapTransaction:
-          yield* call(handleWrapStep, { account, step, setCurrentStep, action })
-          break
         case TransactionStepType.IncreasePositionTransaction:
         case TransactionStepType.IncreasePositionTransactionAsync:
         case TransactionStepType.DecreasePositionTransaction:
+        case TransactionStepType.MigratePositionTransactionStep:
+        case TransactionStepType.MigratePositionTransactionStepAsync:
           yield* call(handlePositionTransactionStep, { account, step, setCurrentStep, action, signature })
           break
         default: {
@@ -146,7 +147,15 @@ function* liquidity(params: LiquidityParams) {
   const token0ChainId = liquidityTxContext.action.currency0Amount.currency.chainId
   const token1ChainId = liquidityTxContext.action.currency1Amount.currency.chainId
 
-  if (token0ChainId !== token1ChainId && token0ChainId !== startChainId) {
+  if (token0ChainId !== token1ChainId) {
+    logger.error('Tokens must be on the same chain', {
+      tags: { file: 'liquiditySaga', function: 'liquidity' },
+    })
+    onFailure()
+    return undefined
+  }
+
+  if (token0ChainId !== startChainId) {
     const chainSwitched = yield* call(selectChain, token0ChainId)
     if (!chainSwitched) {
       onFailure()

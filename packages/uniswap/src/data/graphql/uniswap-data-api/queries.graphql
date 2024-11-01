@@ -278,6 +278,10 @@ query NftsTab(
               height
             }
           }
+          thumbnail {
+            id
+            url
+          }
           name
           tokenId
           description
@@ -346,6 +350,7 @@ query PortfolioBalances(
           logoUrl
           name
           safetyLevel
+          spamCode
         }
         feeData {
           buyFeeBps

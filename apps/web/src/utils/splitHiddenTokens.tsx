@@ -1,16 +1,18 @@
 import { PortfolioBalance } from 'graphql/data/portfolios'
 import { TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { SpamCode } from 'uniswap/src/data/types'
 
 const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 
 export interface SplitOptions {
+  isTestnetModeEnabled: boolean
   hideSmallBalances?: boolean
   hideSpam?: boolean
 }
 
 export function splitHiddenTokens(
   tokenBalances: readonly (PortfolioBalance | undefined)[],
-  { hideSmallBalances = true, hideSpam = true }: SplitOptions = {},
+  { isTestnetModeEnabled, hideSmallBalances = true, hideSpam = true }: SplitOptions,
 ) {
   const visibleTokens: PortfolioBalance[] = []
   const hiddenTokens: PortfolioBalance[] = []
@@ -20,7 +22,9 @@ export function splitHiddenTokens(
       continue
     }
 
-    const isSpam = tokenBalance.token?.project?.isSpam
+    const isSpam = isTestnetModeEnabled
+      ? (tokenBalance.token?.project?.spamCode || SpamCode.LOW) >= SpamCode.HIGH
+      : tokenBalance.token?.project?.isSpam
     if ((hideSpam && isSpam) || (hideSmallBalances && isNegligibleBalance(tokenBalance))) {
       hiddenTokens.push(tokenBalance)
     } else {

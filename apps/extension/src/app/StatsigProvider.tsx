@@ -1,14 +1,16 @@
-import { getLocalUserId } from 'src/app/utils/storage'
+import { useEffect, useState } from 'react'
+import { initializeDatadog } from 'src/app/datadog'
 import { getStatsigEnvironmentTier } from 'src/app/version'
 import Statsig from 'statsig-js' // Use JS package for browser
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { DUMMY_STATSIG_SDK_KEY, StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
 import { StatsigOptions, StatsigProvider, StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
+import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { useAsyncData } from 'utilities/src/react/hooks'
 
 async function getStatsigUser(): Promise<StatsigUser> {
   return {
-    userID: await getLocalUserId(),
+    userID: await getUniqueId(),
     appVersion: process.env.VERSION,
     custom: {
       app: StatsigCustomAppValue.Extension,
@@ -16,16 +18,28 @@ async function getStatsigUser(): Promise<StatsigUser> {
   }
 }
 
-export function ExtensionStatsigProvider({ children }: { children: React.ReactNode }): JSX.Element {
-  const { data: user } = useAsyncData(getStatsigUser)
-
-  const nonNullUser: StatsigUser = user ?? {
+export function ExtensionStatsigProvider({
+  children,
+  appName,
+}: {
+  children: React.ReactNode
+  appName: string
+}): JSX.Element {
+  const { data: storedUser } = useAsyncData(getStatsigUser)
+  const [user, setUser] = useState<StatsigUser>({
     userID: undefined,
     custom: {
       app: StatsigCustomAppValue.Extension,
     },
     appVersion: process.env.VERSION,
-  }
+  })
+  const [initFinished, setInitFinished] = useState(false)
+
+  useEffect(() => {
+    if (storedUser && initFinished) {
+      setUser(storedUser)
+    }
+  }, [storedUser, initFinished])
 
   const options: StatsigOptions = {
     environment: {
@@ -34,10 +48,14 @@ export function ExtensionStatsigProvider({ children }: { children: React.ReactNo
     api: uniswapUrls.statsigProxyUrl,
     disableAutoMetricsLogging: true,
     disableErrorLogging: true,
+    initCompletionCallback: () => {
+      setInitFinished(true)
+      initializeDatadog(appName).catch(() => undefined)
+    },
   }
 
   return (
-    <StatsigProvider options={options} sdkKey={DUMMY_STATSIG_SDK_KEY} user={nonNullUser} waitForInitialization={false}>
+    <StatsigProvider options={options} sdkKey={DUMMY_STATSIG_SDK_KEY} user={user} waitForInitialization={false}>
       {children}
     </StatsigProvider>
   )

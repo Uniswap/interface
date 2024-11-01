@@ -83,7 +83,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
           sourceCurrencyCode: baseCurrencyInfo.code,
           walletAddress: activeAccountAddress,
           externalSessionId: externalTransactionId,
-          redirectUrl: `${uniswapUrls.redirectUrlBase}/?screen=transaction&fiatOnRamp=true&userAddress=${activeAccountAddress}`,
+          redirectUrl: `${uniswapUrls.redirectUrlBase}?screen=transaction&fiatOnRamp=true&userAddress=${activeAccountAddress}`,
         }
       : skipToken,
   )

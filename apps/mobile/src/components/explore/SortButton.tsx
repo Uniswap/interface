@@ -108,16 +108,10 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
   }, [MenuItem, dispatch, menuActions])
 
   return (
-    <ActionSheetDropdown
-      options={options}
-      showArrow={false}
-      styles={{
-        alignment: 'right',
-      }}
-      testID="chain-selector"
-    >
+    <ActionSheetDropdown options={options} showArrow={false} styles={{ alignment: 'right' }}>
       <Flex
         row
+        centered
         backgroundColor="$surface3"
         borderRadius="$rounded20"
         gap="$spacing4"
@@ -125,7 +119,7 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
         pr="$spacing8"
         py="$spacing8"
       >
-        <Text ellipse color="$neutral1" flexShrink={1} numberOfLines={1} variant="buttonLabel2">
+        <Text ellipse color="$neutral1" flexShrink={1} numberOfLines={1} variant="buttonLabel3">
           {getTokensOrderBySelectedLabel(orderBy, t)}
         </Text>
         <RotatableChevron color="$neutral2" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />

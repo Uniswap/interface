@@ -35,6 +35,9 @@ export function CopiedNotification({
     case CopyNotificationType.Unitag:
       title = t('notification.copied.unitag')
       break
+    case CopyNotificationType.BlockExplorerUrl:
+      title = t('notification.copied.blockExplorerUrl')
+      break
   }
 
   return <SuccessNotification notification={{ title, hideDelay }} />

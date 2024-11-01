@@ -182,9 +182,8 @@ export function SettingsScreen(): JSX.Element {
             />
             <SettingsToggleRow
               Icon={ShieldQuestion}
-              checked={hideSpamTokens && !isTestnetModeEnabled}
+              checked={hideSpamTokens}
               title={t('settings.setting.unknownTokens.title')}
-              disabled={isTestnetModeEnabled}
               onCheckedChange={handleSpamTokensToggle}
             />
             <SettingsItem

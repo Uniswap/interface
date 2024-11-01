@@ -1,5 +1,5 @@
+import { ScrollBarStyles } from 'components/Common/styles'
 import { CurrencyRow } from 'components/SearchModal/CurrencyList'
-import { scrollbarStyle } from 'components/SearchModal/CurrencyList/index.css'
 import { HeaderContent } from 'pages/Swap/Buy/CountryListModal'
 import { ContentWrapper } from 'pages/Swap/Buy/shared'
 import { CSSProperties } from 'react'
@@ -51,13 +51,13 @@ export function FiatOnRampCurrencyModal({
             {({ height }: { height: number }) => (
               <div data-testid="for-currency-list-wrapper">
                 <FixedSizeList
-                  className={scrollbarStyle}
                   height={height}
                   width="100%"
                   itemData={currencies}
                   itemCount={currencies.length}
                   itemSize={ROW_ITEM_SIZE}
                   itemKey={(index: number, data: typeof currencies) => data[index]?.meldCurrencyCode ?? index}
+                  {...ScrollBarStyles}
                 >
                   {({ style, data, index }: { data: FiatOnRampCurrency[]; index: number; style: CSSProperties }) => {
                     const currencyInfo = data[index].currencyInfo

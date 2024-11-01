@@ -26,6 +26,7 @@ export type TabsItem = MenuItem & {
 export const useTabsContent = (props?: { includeNftsLink?: boolean }): TabsSection[] => {
   const { t } = useTranslation()
   const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
+  const isV4EverywhereEnabled = useFeatureFlag(FeatureFlags.V4Everywhere)
   const { pathname } = useLocation()
   const theme = useTheme()
   const areTabsVisible = useTabsVisible()
@@ -87,11 +88,16 @@ export const useTabsContent = (props?: { includeNftsLink?: boolean }): TabsSecti
       href: '/pool',
       isActive: pathname.startsWith('/pool'),
       items: [
-        { label: t('nav.tabs.viewPosition'), quickKey: 'V', href: '/pool', internal: true },
+        {
+          label: t('nav.tabs.viewPosition'),
+          quickKey: 'V',
+          href: isV4EverywhereEnabled ? '/positions' : '/pool',
+          internal: true,
+        },
         {
           label: t('nav.tabs.createPosition'),
           quickKey: 'V',
-          href: '/add',
+          href: isV4EverywhereEnabled ? '/positions/create' : '/add',
           internal: true,
         },
       ],

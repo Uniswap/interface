@@ -3,7 +3,7 @@ import { useUSDTokenUpdater } from 'hooks/useUSDTokenUpdater'
 import { useFiatOnRampSupportedTokens, useMeldFiatCurrencyInfo } from 'pages/Swap/Buy/hooks'
 import { formatFiatOnRampFiatAmount } from 'pages/Swap/Buy/shared'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
-import { buildCurrencyInfo } from 'uniswap/src/constants/routing'
+import { buildPartialCurrencyInfo } from 'uniswap/src/constants/routing'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   useFiatOnRampAggregatorCountryListQuery,
@@ -59,7 +59,7 @@ type BuyFormContextType = {
   derivedBuyFormInfo: BuyInfo
 }
 
-export const ethCurrencyInfo = buildCurrencyInfo(nativeOnChain(UniverseChainId.Mainnet))
+export const ethCurrencyInfo = buildPartialCurrencyInfo(nativeOnChain(UniverseChainId.Mainnet))
 const DEFAULT_BUY_FORM_STATE: BuyFormState = {
   inputAmount: '',
   quoteCurrency: {

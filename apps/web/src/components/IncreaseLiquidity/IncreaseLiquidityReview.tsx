@@ -1,9 +1,8 @@
 // eslint-disable-next-line no-restricted-imports
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { useIncreaseLiquidityContext } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
 import { useIncreaseLiquidityTxContext } from 'components/IncreaseLiquidity/IncreaseLiquidityTxContext'
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
-import { useGetPoolTokenPercentage } from 'components/Liquidity/utils'
+import { useGetPoolTokenPercentage, usePositionCurrentPrice } from 'components/Liquidity/hooks'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
@@ -45,18 +44,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
 
   const { currency0Amount, currency1Amount } = increaseLiquidityState.position
 
-  const currentPrice = useMemo(() => {
-    if (increaseLiquidityState.position?.version === ProtocolVersion.V2) {
-      return increaseLiquidityState.position.pair?.token1Price
-    }
-
-    if (increaseLiquidityState.position?.version === ProtocolVersion.V3) {
-      return increaseLiquidityState.position.pool?.token1Price
-    }
-
-    return undefined
-  }, [increaseLiquidityState.position])
-
+  const currentPrice = usePositionCurrentPrice(increaseLiquidityState.position)
   const poolTokenPercentage = useGetPoolTokenPercentage(increaseLiquidityState.position)
 
   const newToken0Amount = useMemo(() => {

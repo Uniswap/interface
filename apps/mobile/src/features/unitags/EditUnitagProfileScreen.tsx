@@ -93,14 +93,14 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
         <EditUnitagProfileContent address={address} unitag={unitag} entryPoint={entryPoint} onNavigate={onNavigate} />
       </KeyboardAvoidingView>
       {showDeleteUnitagModal && (
-        <DeleteUnitagModal address={address} unitag={unitag} goBack={onBack} onClose={onClose} />
+        <DeleteUnitagModal address={address} unitag={unitag} onSuccess={onBack} onClose={onClose} />
       )}
       {showChangeUnitagModal && (
         <ChangeUnitagModal
           address={address}
           unitag={unitag}
           keyboardHeight={keyboardHeight}
-          goBack={onBack}
+          onSuccess={onBack}
           onClose={onClose}
         />
       )}

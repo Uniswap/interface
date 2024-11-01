@@ -35,7 +35,7 @@ function _SuggestedToken({
       onPress={onPress}
     >
       <Pill
-        borderColor="$surface3"
+        borderColor="$surface3Solid"
         borderRadius="$roundedFull"
         borderWidth={1}
         foregroundColor={colors.neutral1.val}

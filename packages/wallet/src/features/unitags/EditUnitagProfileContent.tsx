@@ -254,6 +254,7 @@ export function EditUnitagProfileContent({
     placeholderTextColor: '$neutral3',
     returnKeyType: 'done',
     textAlign: 'left',
+    borderRadius: isExtension ? 0 : undefined,
   }
 
   return (

@@ -12,12 +12,8 @@ import { Button, Flex, FlexProps, Text } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 
 export const DepositStep = ({ ...rest }: FlexProps) => {
-  const {
-    derivedPositionInfo: { sortedTokens },
-  } = useCreatePositionContext()
-  const {
-    derivedPriceRangeInfo: { deposit0Disabled, deposit1Disabled },
-  } = usePriceRangeContext()
+  const { derivedPositionInfo } = useCreatePositionContext()
+  const { derivedPriceRangeInfo } = usePriceRangeContext()
   const {
     setDepositState,
     derivedDepositInfo: { formattedAmounts, currencyAmounts, currencyAmountsUSDValue, currencyBalances, error },
@@ -44,11 +40,13 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
     setIsReviewModalOpen(true)
   }, [])
 
-  const [token0, token1] = sortedTokens ?? [undefined, undefined]
+  const [token0, token1] = derivedPositionInfo.currencies
 
   if (!token0 || !token1) {
     return null
   }
+
+  const { deposit0Disabled, deposit1Disabled } = derivedPriceRangeInfo
 
   return (
     <>
@@ -78,7 +76,9 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
           deposit1Disabled={deposit1Disabled}
         />
         <Button flex={1} py="$spacing16" px="$spacing20" onPress={handleReview} disabled={!!error}>
-          <Text variant="buttonLabel1">{error ? error : <Trans i18nKey="swap.button.review" />}</Text>
+          <Text variant="buttonLabel1" color="$neutralContrast">
+            {error ? error : <Trans i18nKey="swap.button.review" />}
+          </Text>
         </Button>
       </Container>
       <CreatePositionModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />

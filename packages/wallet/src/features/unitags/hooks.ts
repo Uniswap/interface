@@ -1,8 +1,8 @@
 import { TFunction } from 'i18next'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { getUniqueId } from 'react-native-device-info'
 import { useDispatch } from 'react-redux'
+import { useUnitagsAddressesQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useUnitagsClaimEligibilityQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsClaimEligibilityQuery'
 import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
 import { useENS } from 'uniswap/src/features/ens/useENS'
@@ -20,6 +20,7 @@ import {
   UnitagGetAvatarUploadUrlResponse,
 } from 'uniswap/src/features/unitags/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -31,16 +32,20 @@ import { AVATAR_UPLOAD_CREDS_EXPIRY_SECONDS, UNITAG_VALID_REGEX } from 'wallet/s
 import { parseUnitagErrorCode } from 'wallet/src/features/unitags/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
-import { useAccounts, useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useAccounts, useActiveAccountAddressWithThrow, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 
 const MIN_UNITAG_LENGTH = 3
 const MAX_UNITAG_LENGTH = 20
 
-export const useCanActiveAddressClaimUnitag = (): {
+export const useCanActiveAddressClaimUnitag = (
+  address?: Address,
+): {
   canClaimUnitag: boolean
 } => {
   const activeAddress = useActiveAccountAddressWithThrow()
+  const targetAddress = address ?? activeAddress
+
   const { data: deviceId } = useAsyncData(getUniqueId)
   const { refetchUnitagsCounter } = useUnitagUpdater()
   const skip = !deviceId
@@ -49,7 +54,7 @@ export const useCanActiveAddressClaimUnitag = (): {
     params: skip
       ? undefined
       : {
-          address: activeAddress,
+          address: targetAddress,
           deviceId,
         },
   })
@@ -118,8 +123,6 @@ export const getUnitagFormatError = (unitag: string, t: TFunction): string | und
     return t('unitags.username.error.max', {
       number: MAX_UNITAG_LENGTH,
     })
-  } else if (unitag !== unitag.toLowerCase()) {
-    return t('unitags.username.error.uppercase')
   } else if (!UNITAG_VALID_REGEX.test(unitag)) {
     return t('unitags.username.error.chars')
   }
@@ -170,6 +173,10 @@ export const useClaimUnitag = (): ((
   const onboardingAccount = getOnboardingAccount()
 
   return async (claim: UnitagClaim, context: UnitagClaimContext, account?: Account) => {
+    if (!claim.address) {
+      return { claimError: t('unitags.claim.error.default') }
+    }
+
     const claimAccount = account || onboardingAccount || accounts[claim.address]
 
     if (!claimAccount || !deviceId) {
@@ -286,4 +293,13 @@ export const useAvatarUploadCredsWithRefresh = ({
   }, [unitag, account, signerManager])
 
   return { avatarUploadUrlLoading, avatarUploadUrlResponse }
+}
+
+export function useHasAnyAccountsWithUnitag(): boolean {
+  const accounts = useSignerAccounts()
+  const addresses = accounts.map((account) => account.address)
+
+  const response = useUnitagsAddressesQuery({ params: { addresses } })
+
+  return !!response.data?.usernames.length
 }

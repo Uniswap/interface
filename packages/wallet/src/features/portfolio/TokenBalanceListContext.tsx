@@ -1,5 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
-import { isEqual } from 'lodash'
+import isEqual from 'lodash/isEqual'
 import {
   Dispatch,
   PropsWithChildren,

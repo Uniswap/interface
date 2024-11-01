@@ -195,8 +195,7 @@ export function SettingsScreen(): JSX.Element {
           {
             text: t('settings.setting.unknownTokens.title'),
             icon: <ShieldQuestion {...iconProps} />,
-            isToggleEnabled: hideSpamTokens && !isTestnetModeEnabled,
-            disabled: isTestnetModeEnabled,
+            isToggleEnabled: hideSpamTokens,
             onToggle: onToggleHideSpamTokens,
           },
           {

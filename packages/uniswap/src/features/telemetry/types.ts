@@ -254,12 +254,18 @@ export enum DappRequestAction {
   Reject = 'Reject',
 }
 
+export type CardLoggingName = OnboardingCardLoggingName | DappRequestCardLoggingName
+
 export enum OnboardingCardLoggingName {
   WelcomeWallet = 'welcome_wallet',
   FundWallet = 'fund_wallet',
   RecoveryBackup = 'recovery_backup',
   ClaimUnitag = 'claim_unitag',
   BridgingBanner = 'bridging_banner',
+}
+
+export enum DappRequestCardLoggingName {
+  BridgingBanner = 'dapp_request_bridging_banner',
 }
 
 export type FORAmountEnteredProperties = ITraceContext & {
@@ -283,6 +289,10 @@ export type FORWidgetOpenedProperties = ITraceContext & {
   fiatCurrency: string
   preselectedServiceProvider?: string
   serviceProvider: string
+}
+
+type DappRequestCardEventProperties = ITraceContext & {
+  card_name: DappRequestCardLoggingName
 }
 
 type OnboardingCardEventProperties = ITraceContext & {
@@ -742,6 +752,16 @@ export type UniverseEventProperties = {
     twitter: boolean
   }
   [UnitagEventName.UnitagRemoved]: undefined
+  [WalletEventName.BackupMethodAdded]: {
+    backupMethodType: 'manual' | 'cloud'
+    newBackupCount: number
+  }
+  [WalletEventName.BackupMethodRemoved]: {
+    backupMethodType: 'manual' | 'cloud'
+    newBackupCount: number
+  }
+  [WalletEventName.DappRequestCardPressed]: DappRequestCardEventProperties
+  [WalletEventName.DappRequestCardClosed]: DappRequestCardEventProperties
   [WalletEventName.ExternalLinkOpened]: {
     url: string
   }
@@ -754,6 +774,7 @@ export type UniverseEventProperties = {
   [WalletEventName.ExploreSearchCancel]: {
     query: string
   }
+  [WalletEventName.ModalClosed]: ITraceContext & Record<string, unknown>
   [WalletEventName.NetworkFilterSelected]: ITraceContext & {
     chain: UniverseChainId | 'All'
   }
@@ -800,6 +821,9 @@ export type UniverseEventProperties = {
   [WalletEventName.TestnetModeToggled]: {
     enabled: boolean
   }
+  [WalletEventName.TestnetEvent]: {
+    originalEventName: string
+  } & Record<string, unknown>
   [WalletEventName.ViewRecoveryPhrase]: undefined
   // Please sort new values by EventName type!
 }

@@ -172,14 +172,13 @@ export function NFTCollectionScreen({
           >
             <NFTViewer
               autoplay
-              showSvgPreview
+              svgRenderingDisabled
               squareGridView
-              contractAddress={item.contractAddress}
               imageDimensions={item.imageDimensions}
               limitGIFSize={ESTIMATED_ITEM_SIZE}
               placeholderContent={item.name || item.collectionName}
-              tokenId={item.tokenId}
               uri={item.imageUrl}
+              thumbnailUrl={item.thumbnailUrl}
             />
             {item.listPrice && (
               <ListPriceBadge

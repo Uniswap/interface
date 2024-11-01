@@ -4,6 +4,8 @@ import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useTotalBalancesUsdPerChain } from 'uniswap/src/data/balances/utils'
 import { usePortfolioBalancesQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+// eslint-disable-next-line no-restricted-imports
+import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances'
 import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { MobileAppsFlyerEvents, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
@@ -49,10 +51,11 @@ export function useLastBalancesReporter(): void {
   })
 
   const { gqlChains } = useEnabledChains()
+  const valueModifiers = usePortfolioValueModifiers(account?.address)
 
   const portfolioBalancesQuery = usePortfolioBalancesQuery({
     fetchPolicy: 'cache-only',
-    variables: account?.address ? { ownerAddress: account.address, chains: gqlChains } : undefined,
+    variables: account?.address ? { ownerAddress: account.address, chains: gqlChains, valueModifiers } : undefined,
   })
   const totalBalancesUsdPerChain = useTotalBalancesUsdPerChain(portfolioBalancesQuery)
 

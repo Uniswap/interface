@@ -51,7 +51,7 @@ type V2PairInfo = BasePositionInfo & {
   v4hook: undefined
 }
 
-type V3PositionInfo = BasePositionInfo & {
+export type V3PositionInfo = BasePositionInfo & {
   version: ProtocolVersion.V3
   tokenId: string
   pool?: V3Pool

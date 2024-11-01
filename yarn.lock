@@ -3560,7 +3560,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@datadog/browser-logs@npm:^5.20.0":
+"@datadog/browser-core@npm:5.23.3":
+  version: 5.23.3
+  resolution: "@datadog/browser-core@npm:5.23.3"
+  checksum: 0d3b2af985b332a584d4ff6f3b5b688bb6da8153df34804a44e31815875949cd902695e1d13e4b5bcf964a857b0a31f0947c8b8cda9b948749b15c20ab0b76da
+  languageName: node
+  linkType: hard
+
+"@datadog/browser-logs@npm:5.20.0":
   version: 5.20.0
   resolution: "@datadog/browser-logs@npm:5.20.0"
   dependencies:
@@ -3571,6 +3578,30 @@ __metadata:
     "@datadog/browser-rum":
       optional: true
   checksum: d3ead69bb892e7d4015c58bdf180a318e0e2efcb572e503334852a458c31014b26b9948b1aec759b6b5a2fc743045b071be6a58685b191249b3bc4235b407fca
+  languageName: node
+  linkType: hard
+
+"@datadog/browser-rum-core@npm:5.23.3":
+  version: 5.23.3
+  resolution: "@datadog/browser-rum-core@npm:5.23.3"
+  dependencies:
+    "@datadog/browser-core": 5.23.3
+  checksum: d72be8d7ddcecd64a2ad7191379b738fed5077156cd63d1c1e889956d912759c9f68729962bd04b6ae257d016be40eaeaa365a4a98574ed7fefc3db32eb85b14
+  languageName: node
+  linkType: hard
+
+"@datadog/browser-rum@npm:5.23.3":
+  version: 5.23.3
+  resolution: "@datadog/browser-rum@npm:5.23.3"
+  dependencies:
+    "@datadog/browser-core": 5.23.3
+    "@datadog/browser-rum-core": 5.23.3
+  peerDependencies:
+    "@datadog/browser-logs": 5.23.3
+  peerDependenciesMeta:
+    "@datadog/browser-logs":
+      optional: true
+  checksum: f0b8705a4667e4842981a2c4c3d2014b2d32946579088d3bfacfc80f4e95f5826e19dda186021d3af315cf8e7765267f8c90a98a3e65479a26f154c9d9654b11
   languageName: node
   linkType: hard
 
@@ -15235,10 +15266,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/client-pools@npm:0.0.5":
-  version: 0.0.5
-  resolution: "@uniswap/client-pools@npm:0.0.5"
-  checksum: 91e270352963fb9d0f851fa0c715b01fb7824708c864e505f8f76d85bc5560cbf8454e92793f51e60c330375d246100fdd9f99a87a110f80a4e4f5a39c8e009e
+"@uniswap/client-pools@npm:0.0.8":
+  version: 0.0.8
+  resolution: "@uniswap/client-pools@npm:0.0.8"
+  checksum: 689091a9fff366b75ee6b2b06194827699e94ea7acdf7742b68f97edd865f45b9bae28a5a10b469b8608cb73e92de63e815cbbe326a687e640433b3a0f61780c
   languageName: node
   linkType: hard
 
@@ -15301,6 +15332,7 @@ __metadata:
   resolution: "@uniswap/extension@workspace:apps/extension"
   dependencies:
     "@apollo/client": 3.10.4
+    "@datadog/browser-rum": 5.23.3
     "@ethersproject/providers": 5.7.2
     "@metamask/rpc-errors": 6.2.1
     "@pmmmwh/react-refresh-webpack-plugin": ^0.5.10
@@ -15323,9 +15355,9 @@ __metadata:
     "@uniswap/analytics-events": 2.38.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/uniswapx-sdk": ^2.1.0-beta.14
-    "@uniswap/universal-router-sdk": 4.2.0
-    "@uniswap/v3-sdk": 3.17.0
-    "@uniswap/v4-sdk": 1.10.0
+    "@uniswap/universal-router-sdk": 4.5.2
+    "@uniswap/v3-sdk": 3.18.1
+    "@uniswap/v4-sdk": 1.10.3
     "@welldone-software/why-did-you-render": 8.0.1
     clean-webpack-plugin: ^4.0.0
     concurrently: ^8.0.1
@@ -15449,26 +15481,26 @@ __metadata:
     "@uniswap/analytics": 1.7.0
     "@uniswap/analytics-events": 2.38.0
     "@uniswap/client-explore": 0.0.10
-    "@uniswap/client-pools": 0.0.5
+    "@uniswap/client-pools": 0.0.8
     "@uniswap/default-token-list": 11.19.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/liquidity-staker": 1.0.2
     "@uniswap/merkle-distributor": 1.0.1
     "@uniswap/permit2-sdk": 1.3.0
     "@uniswap/redux-multicall": 1.1.8
-    "@uniswap/router-sdk": 1.14.2
+    "@uniswap/router-sdk": 1.14.3
     "@uniswap/sdk-core": 5.8.4
     "@uniswap/smart-order-router": 3.17.3
     "@uniswap/token-lists": 1.0.0-beta.33
     "@uniswap/uniswapx-sdk": ^2.1.0-beta.14
-    "@uniswap/universal-router-sdk": 4.2.0
+    "@uniswap/universal-router-sdk": 4.5.2
     "@uniswap/v2-core": 1.0.1
     "@uniswap/v2-periphery": 1.1.0-beta.0
-    "@uniswap/v2-sdk": 4.6.0
+    "@uniswap/v2-sdk": 4.6.1
     "@uniswap/v3-core": 1.0.1
     "@uniswap/v3-periphery": 1.4.4
-    "@uniswap/v3-sdk": 3.17.0
-    "@uniswap/v4-sdk": 1.10.0
+    "@uniswap/v3-sdk": 3.18.1
+    "@uniswap/v4-sdk": 1.10.3
     "@vanilla-extract/css": 1.14.0
     "@vanilla-extract/dynamic": 2.1.0
     "@vanilla-extract/jest-transform": 1.1.1
@@ -15803,17 +15835,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/router-sdk@npm:1.14.2":
-  version: 1.14.2
-  resolution: "@uniswap/router-sdk@npm:1.14.2"
+"@uniswap/router-sdk@npm:1.14.3":
+  version: 1.14.3
+  resolution: "@uniswap/router-sdk@npm:1.14.3"
   dependencies:
     "@ethersproject/abi": ^5.5.0
     "@uniswap/sdk-core": ^5.8.0
     "@uniswap/swap-router-contracts": ^1.3.0
     "@uniswap/v2-sdk": ^4.6.0
     "@uniswap/v3-sdk": ^3.17.0
-    "@uniswap/v4-sdk": ^1.9.0
-  checksum: 2e4ff16421c02c40462c2082df2eb293724258b31dc9c8b4164880fc80f77de2357c1a38a2241f4c50f8d1fc6de36a244067d444f2507806d266818f82f93215
+    "@uniswap/v4-sdk": ^1.10.3
+  checksum: ba7e0800d493c0d5f71c050bb21b475f762e56f81de13be96f29bb792351ef9846929271d8befdab93eae0e2800d64516f93d86eecb0ae894da708f806a1010d
   languageName: node
   linkType: hard
 
@@ -15900,23 +15932,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/universal-router-sdk@npm:4.2.0":
-  version: 4.2.0
-  resolution: "@uniswap/universal-router-sdk@npm:4.2.0"
+"@uniswap/universal-router-sdk@npm:4.5.2":
+  version: 4.5.2
+  resolution: "@uniswap/universal-router-sdk@npm:4.5.2"
   dependencies:
     "@openzeppelin/contracts": 4.7.0
     "@uniswap/permit2-sdk": ^1.3.0
-    "@uniswap/router-sdk": ^1.14.0
-    "@uniswap/sdk-core": ^5.8.0
+    "@uniswap/router-sdk": ^1.14.2
+    "@uniswap/sdk-core": ^5.8.2
     "@uniswap/universal-router": 2.0.0-beta.1
     "@uniswap/v2-core": ^1.0.1
     "@uniswap/v2-sdk": ^4.6.0
     "@uniswap/v3-core": 1.0.0
-    "@uniswap/v3-sdk": ^3.17.0
+    "@uniswap/v3-sdk": ^3.18.1
     "@uniswap/v4-sdk": ^1.10.0
     bignumber.js: ^9.0.2
     ethers: ^5.7.0
-  checksum: fae718b1ec206e5fbcab76da1232c3c50ae4b161fb3c3e7847cdbe2178750d46ba38abe5b7f10cc756fb68328e584a002ece9d7b155cb7536ce3155326ea7e5f
+  checksum: eed25c1a759be80a58c2c6479b4f69ddb687de8c8002aa79f462473a1d882f794032125652e8eba4624859c4c3f9428f5942088fd437eb354b3d1e4635ee57f0
   languageName: node
   linkType: hard
 
@@ -15982,16 +16014,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/v2-sdk@npm:4.6.0":
-  version: 4.6.0
-  resolution: "@uniswap/v2-sdk@npm:4.6.0"
+"@uniswap/v2-sdk@npm:4.6.1":
+  version: 4.6.1
+  resolution: "@uniswap/v2-sdk@npm:4.6.1"
   dependencies:
     "@ethersproject/address": ^5.0.2
     "@ethersproject/solidity": ^5.0.9
-    "@uniswap/sdk-core": ^5.8.0
+    "@uniswap/sdk-core": ^5.8.1
     tiny-invariant: ^1.1.0
     tiny-warning: ^1.0.3
-  checksum: 7ec46ca0780892adaadbab546b05d628cb2aaaef7198f3f92021e10e3adbbf42566ae0f6d7ae1c55afa01f894164b4b8f450cc91f718059a19f5a333115a5f68
+  checksum: 0d4c1e58feef7d65c143a776447dbe4e0c06c2f2b6877d57b2db3056a4f8c441c503449f5bfa150ac9e02516ef1c6f5fce5bc89a55d637311bc3e5c8e01ef163
   languageName: node
   linkType: hard
 
@@ -16038,19 +16070,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/v3-sdk@npm:3.17.0, @uniswap/v3-sdk@npm:^3.10.0, @uniswap/v3-sdk@npm:^3.11.0, @uniswap/v3-sdk@npm:^3.17.0":
-  version: 3.17.0
-  resolution: "@uniswap/v3-sdk@npm:3.17.0"
+"@uniswap/v3-sdk@npm:3.18.1, @uniswap/v3-sdk@npm:^3.10.0, @uniswap/v3-sdk@npm:^3.11.0, @uniswap/v3-sdk@npm:^3.17.0, @uniswap/v3-sdk@npm:^3.18.1":
+  version: 3.18.1
+  resolution: "@uniswap/v3-sdk@npm:3.18.1"
   dependencies:
     "@ethersproject/abi": ^5.5.0
     "@ethersproject/solidity": ^5.0.9
-    "@uniswap/sdk-core": ^5.8.0
+    "@uniswap/sdk-core": ^5.8.1
     "@uniswap/swap-router-contracts": ^1.3.0
     "@uniswap/v3-periphery": ^1.1.1
     "@uniswap/v3-staker": 1.0.0
     tiny-invariant: ^1.1.0
     tiny-warning: ^1.0.3
-  checksum: ab434e9661f6fae99492af93412a9236379ba604635e31236adeddfc0b78beecdf4241a57fee60f3a2ab06c84c7e0c516ee032a819118c03935e49d8cf31cc27
+  checksum: ab86fb564f3970b9ea8361781e026d539a1b7216d4d248280b619cac7ea9ab859431be38b464582ca1312f37f5ed05a1dc685af63eba4adf4e0148be473cbf21
   languageName: node
   linkType: hard
 
@@ -16065,16 +16097,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/v4-sdk@npm:1.10.0, @uniswap/v4-sdk@npm:^1.10.0, @uniswap/v4-sdk@npm:^1.9.0":
-  version: 1.10.0
-  resolution: "@uniswap/v4-sdk@npm:1.10.0"
+"@uniswap/v4-sdk@npm:1.10.3, @uniswap/v4-sdk@npm:^1.10.0, @uniswap/v4-sdk@npm:^1.10.3":
+  version: 1.10.3
+  resolution: "@uniswap/v4-sdk@npm:1.10.3"
   dependencies:
     "@ethersproject/solidity": ^5.0.9
     "@uniswap/sdk-core": ^5.3.1
     "@uniswap/v3-sdk": 3.12.0
     tiny-invariant: ^1.1.0
     tiny-warning: ^1.0.3
-  checksum: c1a55b0e52e2db986c463e75d9de337c48a76b90076705bc4a50da2a27de2f4c91a7c68f79bb04ac7fc7c7b3244fd8c955645e6dcac7e8b9af70354fd905e164
+  checksum: ca0565f4e87c2b306dc642ca13b7e2605a994cf5e9cb661503a60a3cc8dd86727f73328ebd529f9a42cedf6751dde91735b4ff7e3468deef37fa254d47e3ee9b
   languageName: node
   linkType: hard
 
@@ -45134,15 +45166,15 @@ __metadata:
     "@types/react-window": 1.8.2
     "@uniswap/analytics-events": 2.38.0
     "@uniswap/client-explore": 0.0.10
-    "@uniswap/client-pools": 0.0.5
+    "@uniswap/client-pools": 0.0.8
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/permit2-sdk": 1.3.0
-    "@uniswap/router-sdk": 1.14.2
+    "@uniswap/router-sdk": 1.14.3
     "@uniswap/sdk-core": 5.8.4
     "@uniswap/uniswapx-sdk": ^2.1.0-beta.14
-    "@uniswap/v2-sdk": 4.6.0
-    "@uniswap/v3-sdk": 3.17.0
-    "@uniswap/v4-sdk": 1.10.0
+    "@uniswap/v2-sdk": 4.6.1
+    "@uniswap/v3-sdk": 3.18.1
+    "@uniswap/v4-sdk": 1.10.3
     apollo-link-rest: 0.9.0
     axios: 1.6.5
     dayjs: 1.11.7
@@ -45674,7 +45706,8 @@ __metadata:
     "@amplitude/analytics-react-native": 1.4.0
     "@amplitude/analytics-types": 0.13.0
     "@apollo/client": 3.10.4
-    "@datadog/browser-logs": ^5.20.0
+    "@datadog/browser-logs": 5.20.0
+    "@datadog/browser-rum": 5.23.3
     "@datadog/mobile-react-native": 2.4.1
     "@datadog/mobile-react-native-apollo-client": 2.4.3
     "@ethersproject/abstract-signer": 5.7.0
@@ -46244,11 +46277,11 @@ __metadata:
     "@uniswap/analytics-events": 2.38.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/permit2-sdk": 1.3.0
-    "@uniswap/router-sdk": 1.14.2
+    "@uniswap/router-sdk": 1.14.3
     "@uniswap/sdk-core": 5.8.4
     "@uniswap/uniswapx-sdk": ^2.1.0-beta.14
-    "@uniswap/universal-router-sdk": 4.2.0
-    "@uniswap/v3-sdk": 3.17.0
+    "@uniswap/universal-router-sdk": 4.5.2
+    "@uniswap/v3-sdk": 3.18.1
     apollo3-cache-persist: 0.14.1
     axios: 1.6.5
     dayjs: 1.11.7
@@ -46271,7 +46304,6 @@ __metadata:
     react-native: 0.73.6
     react-native-apollo-devtools-client: 1.0.4
     react-native-context-menu-view: 1.15.0
-    react-native-device-info: 10.0.2
     react-native-fast-image: 8.6.3
     react-native-gesture-handler: 2.19.0
     react-native-image-picker: 7.0.1

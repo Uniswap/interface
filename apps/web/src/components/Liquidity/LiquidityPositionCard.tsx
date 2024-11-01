@@ -1,8 +1,8 @@
 // eslint-disable-next-line no-restricted-imports
 import { LiquidityPositionFeeStats } from 'components/Liquidity/LiquidityPositionFeeStats'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
+import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
 import { PositionInfo } from 'components/Liquidity/types'
-import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/utils'
 import { Flex, FlexProps } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'

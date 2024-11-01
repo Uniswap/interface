@@ -2,7 +2,7 @@
 import { PositionStatus } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Price } from '@uniswap/sdk-core'
 import { LiquidityPositionStatusIndicator } from 'components/Liquidity/LiquidityPositionStatusIndicator'
-import { useGetRangeDisplay } from 'components/Liquidity/utils'
+import { useGetRangeDisplay } from 'components/Liquidity/hooks'
 import { PriceOrdering } from 'components/PositionListItem'
 import { useMemo, useState } from 'react'
 import { Flex, SegmentedControl, SegmentedControlOption, Text, styled } from 'ui/src'

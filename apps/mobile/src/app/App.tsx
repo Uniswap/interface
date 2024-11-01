@@ -14,7 +14,7 @@ import { PropsWithChildren, default as React, StrictMode, useCallback, useEffect
 import { I18nextProvider } from 'react-i18next'
 import { LogBox, NativeModules, StatusBar } from 'react-native'
 import appsFlyer from 'react-native-appsflyer'
-import { getUniqueId } from 'react-native-device-info'
+import DeviceInfo from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MMKV } from 'react-native-mmkv'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -72,8 +72,9 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n/i18n'
 import { CurrencyId } from 'uniswap/src/types/currency'
+import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { isDetoxBuild, isJestRun } from 'utilities/src/environment/constants'
-import { attachUnhandledRejectionHandler } from 'utilities/src/logger/Datadog'
+import { attachUnhandledRejectionHandler, setAttributesToDatadog } from 'utilities/src/logger/Datadog'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -170,6 +171,7 @@ function App(): JSX.Element | null {
       // Hence we always initiliase and later close it if Datadog is enabled.
       Sentry.close().catch(() => undefined)
       attachUnhandledRejectionHandler()
+      setAttributesToDatadog({ buildNumber: DeviceInfo.getBuildNumber() }).catch(() => undefined)
     }
   }, [isDatadogEnabled])
 
@@ -246,6 +248,7 @@ function App(): JSX.Element | null {
 
 function DatadogProviderWrapper({ children }: PropsWithChildren): JSX.Element {
   const datadogEnabled = useFeatureFlagWithExposureLoggingDisabled(FeatureFlags.Datadog)
+  logger.setWalletDatadogEnabled(datadogEnabled)
 
   if (isDetoxBuild || isJestRun || !datadogEnabled) {
     return <>{children}</>

@@ -13,7 +13,6 @@ import { TraceUserProperties } from 'src/app/components/Trace/TraceUserPropertie
 import { DappContextProvider } from 'src/app/features/dapp/DappContext'
 import { SentryAppNameTag, initializeSentry, sentryCreateHashRouter } from 'src/app/sentry'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
-import { getLocalUserId } from 'src/app/utils/storage'
 import { getReduxPersistor, getReduxStore } from 'src/store/store'
 import { Button, Flex, Image, Text } from 'ui/src'
 import { CHROME_LOGO, UNISWAP_LOGO } from 'ui/src/assets'
@@ -25,18 +24,19 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n/i18n'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
+import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { logger } from 'utilities/src/logger/logger'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
-getLocalUserId()
+getUniqueId()
   .then((userId) => {
     initializeSentry(SentryAppNameTag.Popup, userId)
   })
   .catch((error) => {
     logger.error(error, {
-      tags: { file: 'PopupApp.tsx', function: 'getLocalUserId' },
+      tags: { file: 'PopupApp.tsx', function: 'getUniqueId' },
     })
   })
 
@@ -127,7 +127,7 @@ export default function PopupApp(): JSX.Element {
   return (
     <Trace>
       <PersistGate persistor={getReduxPersistor()}>
-        <ExtensionStatsigProvider>
+        <ExtensionStatsigProvider appName={SentryAppNameTag.Popup}>
           <I18nextProvider i18n={i18n}>
             <SharedWalletProvider reduxStore={getReduxStore()}>
               <ErrorBoundary>

@@ -79,6 +79,7 @@ function TokenWarningModalContent({
   return (
     <Flex>
       <WarningModalContent
+        modalName={ModalName.TokenWarningModal}
         rejectButtonTheme="tertiary"
         captionComponent={
           <Flex centered gap="$spacing12">

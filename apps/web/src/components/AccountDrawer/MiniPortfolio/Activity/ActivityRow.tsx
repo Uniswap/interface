@@ -27,6 +27,7 @@ const ActivityRowDescriptor = styled(ThemedText.BodySmall)`
 
 const StyledTimestamp = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.neutral2};
+  line-height: 24px;
   font-variant: small;
   font-feature-settings:
     'tnum' on,
@@ -104,14 +105,16 @@ export function ActivityRow({ activity }: { activity: Activity }) {
           </Column>
         }
         title={
-          <Row gap="4px">
-            {prefixIconSrc && <img height="14px" width="14px" src={prefixIconSrc} alt="" />}
-            <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
-            {suffixIconSrc && <img height="14px" width="14px" src={suffixIconSrc} alt="" />}
+          <Row align="space-between" justify-content="center">
+            <Row gap="4px">
+              {prefixIconSrc && <img height="14px" width="14px" src={prefixIconSrc} alt="" />}
+              <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
+              {suffixIconSrc && <img height="14px" width="14px" src={suffixIconSrc} alt="" />}
+            </Row>
+            <StatusIndicator activity={activity} />
           </Row>
         }
         descriptor={<ActivityRowDescriptor color="neutral2">{descriptor}</ActivityRowDescriptor>}
-        right={<StatusIndicator activity={activity} />}
         onClick={onClick}
       />
     </Trace>

@@ -183,7 +183,7 @@ class SeedPhraseInputViewModel: ObservableObject {
       error = nil
     }
     
-    let canSubmit = error == nil && mnemonic != "" && firstInvalidWord == ""
+    let canSubmit = error == nil && mnemonic != "" && firstInvalidWord == "" && isValidLength
     onInputValidated(["canSubmit": canSubmit])
   }
 }

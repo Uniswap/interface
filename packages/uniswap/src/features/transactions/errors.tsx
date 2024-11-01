@@ -1,12 +1,19 @@
 import { AppTFunction } from 'ui/src/i18n/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
-import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
+import {
+  TokenApprovalTransactionStep,
+  TokenRevocationTransactionStep,
+  TransactionStep,
+  TransactionStepType,
+} from 'uniswap/src/features/transactions/swap/types/steps'
 import { Sentry } from 'utilities/src/logger/Sentry'
 import { OverridesSentryFingerprint } from 'utilities/src/logger/types'
 
 /** Superclass used to differentiate categorized/known transaction errors from generic/unknown errors. */
-export abstract class TransactionError extends Error {}
+export abstract class TransactionError extends Error {
+  logToSentry = true
+}
 
 /** Thrown in code paths that should be unreachable, serving both typechecking and critical alarm purposes. */
 export class UnexpectedTransactionStateError extends TransactionError {
@@ -85,6 +92,14 @@ export class TransactionStepFailedError extends TransactionError implements Over
   }
 }
 
+export class ApprovalEditedInWalletError extends TransactionStepFailedError {
+  logToSentry = false
+
+  constructor({ step }: { step: TokenApprovalTransactionStep | TokenRevocationTransactionStep }) {
+    super({ message: 'Approval decreased to insufficient amount in wallet', step })
+  }
+}
+
 /** Thrown when a transaction flow is interrupted by a known circumstance; should be handled gracefully in UI */
 export class HandledTransactionInterrupt extends TransactionError {
   constructor(message: string) {
@@ -154,6 +169,13 @@ function getStepSpecificErrorContent(
         supportArticleURL: uniswapUrls.helpArticleUrls.approvalsExplainer,
       }
     case TransactionStepType.TokenApprovalTransaction:
+      if (error instanceof ApprovalEditedInWalletError) {
+        return {
+          title: t('error.tokenApprovalEdited'),
+          message: t('error.tokenApprovalEdited.message'),
+          supportArticleURL: uniswapUrls.helpArticleUrls.approvalsExplainer,
+        }
+      }
       return {
         title: t('error.tokenApproval'),
         message: t('error.access.expiry'),

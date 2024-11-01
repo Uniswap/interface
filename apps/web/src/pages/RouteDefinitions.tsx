@@ -240,7 +240,7 @@ export const routes: RouteDefinition[] = [
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
-    path: '/migrate/v3/:tokenId',
+    path: '/migrate/v3/:chainName/:tokenId',
     getElement: () => <MigrateV3 />,
     getTitle: () => StaticTitlesAndDescriptions.MigrateTitleV3,
     getDescription: () => StaticTitlesAndDescriptions.MigrateDescriptionV4,

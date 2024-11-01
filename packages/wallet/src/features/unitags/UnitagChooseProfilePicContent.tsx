@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
-import { Button, Flex, Text, isWeb, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import { Pen } from 'ui/src/components/icons'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { useENSName } from 'uniswap/src/features/ens/api'
@@ -108,7 +108,7 @@ export function UnitagChooseProfilePicContent({
   return (
     <>
       <Flex centered gap="$spacing20" mt="$spacing24">
-        <Flex onPress={avatarSelectionHandler}>
+        <TouchableArea onPress={avatarSelectionHandler}>
           <Flex px="$spacing4">
             <ProfilePicture address={address} imageUri={imageUri} />
           </Flex>
@@ -125,10 +125,8 @@ export function UnitagChooseProfilePicContent({
               <Pen color={isDarkMode ? '$neutral1' : '$surface1'} size={iconSizes.icon16} />
             </Flex>
           </Flex>
-        </Flex>
-        <Flex row>
-          <UnitagName fontSize={unitagFontSize} name={unitag} displayIconInline={isWeb} />
-        </Flex>
+        </TouchableArea>
+        <Flex row>{isMobileApp && <UnitagName fontSize={unitagFontSize} name={unitag} />}</Flex>
         {!!claimError && (
           <Text color="$statusCritical" variant="body2">
             {claimError}

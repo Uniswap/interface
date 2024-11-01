@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SelectionSetNode } from 'graphql'
-import { cloneDeepWith } from 'lodash'
+import cloneDeepWith from 'lodash/cloneDeepWith'
 import {
   QueryResolvers,
   Resolver,

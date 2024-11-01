@@ -9,12 +9,12 @@ import {
 } from 'src/app/features/dappRequests/saga'
 import { DappRequestStoreItem } from 'src/app/features/dappRequests/slice'
 import { DappResponseType } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { extractBaseUrl } from 'src/app/features/dappRequests/utils'
 import { ExtensionState } from 'src/store/extensionReducer'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { DappRequestAction } from 'uniswap/src/features/telemetry/types'
 import { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { extractBaseUrl } from 'utilities/src/format/urls'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 

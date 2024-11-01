@@ -2,9 +2,9 @@ import '@tamagui/core/reset.css'
 import 'src/app/Global.css'
 import 'symbol-observable' // Needed by `reduxed-chrome-storage` as polyfill, order matters
 
-import { getLocalUserId } from 'src/app/utils/storage'
 import { EXTENSION_ORIGIN_APPLICATION } from 'src/app/version'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
 // eslint-disable-next-line no-restricted-imports
 import { analytics, getAnalyticsAtomDirect } from 'utilities/src/telemetry/analytics/analytics'
@@ -18,6 +18,6 @@ export async function initExtensionAnalytics(): Promise<void> {
     }),
     analyticsAllowed,
     undefined,
-    getLocalUserId,
+    getUniqueId,
   )
 }

@@ -1,6 +1,13 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/utils/uriToHttp.test.ts
 
-import { formatDappURL, isGifUri, isSVGUri, uriToHttpUrls } from 'utilities/src/format/urls'
+import {
+  extractBaseUrl,
+  extractUrlHost,
+  formatDappURL,
+  isGifUri,
+  isSVGUri,
+  uriToHttpUrls,
+} from 'utilities/src/format/urls'
 
 describe(uriToHttpUrls, () => {
   it('returns .eth.link for ens names', () => {
@@ -148,22 +155,49 @@ describe(isGifUri, () => {
 })
 
 describe(formatDappURL, () => {
-  it('removes query params from url', () => {
-    expect(formatDappURL('example.com?test=true')).toEqual('example.com')
-    expect(formatDappURL('example.com?test=true&test2=false')).toEqual('example.com')
+  it.each`
+    input                                          | expected
+    ${'http://example.com'}                        | ${'http://example.com'}
+    ${'http://example.com/'}                       | ${'http://example.com'}
+    ${'https://example.com'}                       | ${'example.com'}
+    ${'https://example.com/'}                      | ${'example.com'}
+    ${'https://www.example.com/'}                  | ${'www.example.com'}
+    ${'https://example.com?test=true&test2=false'} | ${'example.com'}
+    ${undefined}                                   | ${''}
+    ${'not a url'}                                 | ${''}
+    ${false}                                       | ${''}
+    ${true}                                        | ${''}
+  `('input=$input should be expected=$expected', async ({ input, expected }) => {
+    expect(formatDappURL(input)).toEqual(expected)
   })
+})
 
-  it('removes prefix from url', () => {
-    expect(formatDappURL('https://example.com')).toEqual('example.com')
-    expect(formatDappURL('https://www.example.com')).toEqual('example.com')
-    expect(formatDappURL('www.example.com')).toEqual('example.com')
+describe(extractUrlHost, () => {
+  it.each`
+    input                                          | expected
+    ${'http://example.com'}                        | ${'example.com'}
+    ${'http://example.com/'}                       | ${'example.com'}
+    ${'https://example.com'}                       | ${'example.com'}
+    ${'https://example.com/'}                      | ${'example.com'}
+    ${'https://www.example.com/'}                  | ${'www.example.com'}
+    ${'https://example.com?test=true&test2=false'} | ${'example.com'}
+    ${undefined}                                   | ${undefined}
+    ${'not a url'}                                 | ${undefined}
+  `('input=$input should be expected=$expected', async ({ input, expected }) => {
+    expect(extractUrlHost(input)).toEqual(expected)
   })
+})
 
-  it('removes trailing slash from url', () => {
-    expect(formatDappURL('example.com/')).toEqual('example.com')
-  })
-
-  it('does not remove http from url', () => {
-    expect(formatDappURL('http://example.com')).toEqual('http://example.com')
+describe(extractBaseUrl, () => {
+  it.each`
+    input                                          | expected
+    ${'http://example.com'}                        | ${'http://example.com'}
+    ${'https://example.com'}                       | ${'https://example.com'}
+    ${'https://www.example.com/woof'}              | ${'https://www.example.com'}
+    ${'https://example.com?test=true&test2=false'} | ${'https://example.com'}
+    ${undefined}                                   | ${undefined}
+    ${'not a url'}                                 | ${undefined}
+  `('input=$input should be expected=$expected', async ({ input, expected }) => {
+    expect(extractBaseUrl(input)).toEqual(expected)
   })
 })

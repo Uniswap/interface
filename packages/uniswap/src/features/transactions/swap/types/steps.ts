@@ -15,6 +15,8 @@ export enum TransactionStepType {
   IncreasePositionTransaction = 'IncreasePositionTransaction',
   IncreasePositionTransactionAsync = 'IncreasePositionTransactionAsync',
   DecreasePositionTransaction = 'DecreasePositionTransaction',
+  MigratePositionTransactionStep = 'MigratePositionTransaction',
+  MigratePositionTransactionStepAsync = 'MigratePositionTransactionAsync',
 }
 
 export type UniswapXSwapSteps =
@@ -31,7 +33,6 @@ export type ClassicSwapSteps =
   | SwapTransactionStepAsync
 
 export type IncreasePositionSteps =
-  | WrapTransactionStep
   | TokenApprovalTransactionStep
   | Permit2SignatureStep
   | IncreasePositionTransactionStep
@@ -39,8 +40,10 @@ export type IncreasePositionSteps =
 
 export type DecreasePositionSteps = TokenApprovalTransactionStep | DecreasePositionTransactionStep
 
+export type MigratePositionSteps = Permit2SignatureStep | MigratePositionTransactionStep | MigratePositionTransactionStepAsync
+
 // TODO: add v4 lp flow
-export type TransactionStep = ClassicSwapSteps | UniswapXSwapSteps | IncreasePositionSteps | DecreasePositionSteps
+export type TransactionStep = ClassicSwapSteps | UniswapXSwapSteps | IncreasePositionSteps | DecreasePositionSteps | MigratePositionSteps
 export type OnChainTransactionStep = TransactionStep & OnChainTransactionFields
 export type SignatureTransactionStep = TransactionStep & SignTypedDataStepFields
 
@@ -103,6 +106,17 @@ export interface DecreasePositionTransactionStep extends OnChainTransactionField
   type: TransactionStepType.DecreasePositionTransaction
 }
 
+export interface MigratePositionTransactionStep extends OnChainTransactionFields {
+  // Doesn't require permit
+  type: TransactionStepType.MigratePositionTransactionStep
+}
+
+export interface MigratePositionTransactionStepAsync {
+  // Requires permit
+  type: TransactionStepType.MigratePositionTransactionStepAsync
+  getTxRequest(signature: string): Promise<ValidatedTransactionRequest | undefined> // fetches tx request from trading api with signature
+}
+
 export type ClassicSwapFlow =
   | {
       revocation?: TokenRevocationTransactionStep
@@ -134,6 +148,10 @@ export type IncreasePositionFlow =
       permit: Permit2SignatureStep
       increasePosition: IncreasePositionTransactionStepAsync
     }
+
+export type MigratePositionFlow = 
+  | { permit: undefined, migrate: MigratePositionTransactionStep} 
+  | { permit: Permit2SignatureStep, migrate: MigratePositionTransactionStepAsync }
 
 export type DecreasePositionFlow = {
   approvalPositionToken?: TokenApprovalTransactionStep

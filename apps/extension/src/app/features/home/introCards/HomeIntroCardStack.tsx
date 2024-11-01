@@ -1,4 +1,5 @@
 import { useCallback } from 'react'
+import { UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { focusOrCreateUnitagTab } from 'src/app/navigation/utils'
 import { Flex } from 'ui/src'
 import { PollingInterval } from 'uniswap/src/constants/misc'
@@ -18,8 +19,8 @@ export function HomeIntroCardStack(): JSX.Element | null {
   })
 
   const navigateToUnitagClaim = useCallback(async () => {
-    await focusOrCreateUnitagTab()
-  }, [])
+    await focusOrCreateUnitagTab(activeAccount.address, UnitagClaimRoutes.ClaimIntro)
+  }, [activeAccount.address])
 
   const { cards } = useSharedIntroCards({
     navigateToUnitagClaim,

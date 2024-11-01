@@ -24,10 +24,11 @@ import {
 import { ENS_LOGO } from 'ui/src/assets'
 import { SendAction, XTwitter } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { DEP_accentColors, iconSizes, imageSizes, validColor } from 'ui/src/theme'
+import { DEP_accentColors, iconSizes, imageSizes, spacing, validColor } from 'ui/src/theme'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { useENSDescription, useENSName, useENSTwitterUsername } from 'uniswap/src/features/ens/api'
 import { selectWatchedAddressSet } from 'uniswap/src/features/favorites/selectors'
+import { useTestnetModeBannerHeight } from 'uniswap/src/features/settings/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -40,6 +41,8 @@ import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 const HEADER_GRADIENT_HEIGHT = 144
 const HEADER_ICON_SIZE = 72
+// prevents buttons from touching banner
+const TESTNET_BANNER_MULTIPLIER = 1.1
 
 interface ProfileHeaderProps {
   address: Address
@@ -119,14 +122,16 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
 
   const { t } = useTranslation()
 
+  const testnetBannerHeight = useTestnetModeBannerHeight() * TESTNET_BANNER_MULTIPLIER
+
   return (
-    <Flex backgroundColor="$surface1" gap="$spacing16" pt="$spacing60">
+    <Flex backgroundColor="$surface1" gap="$spacing16" pt={spacing.spacing60 + testnetBannerHeight}>
       <StatusBar translucent backgroundColor="transparent" barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       {/* fixed gradient at 0.2 opacity overlaid on surface1 */}
       <AnimatedFlex
         bottom={0}
         entering={FadeIn}
-        height={HEADER_GRADIENT_HEIGHT}
+        height={HEADER_GRADIENT_HEIGHT + testnetBannerHeight}
         left={0}
         position="absolute"
         right={0}

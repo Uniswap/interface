@@ -166,6 +166,13 @@ export async function changeUnitag({
   })
 }
 
+/**
+ * TODO WALL-5159 Remove this function and replace with UnitagsApiClient.ts/fetchAddresses
+ *
+ * @deprecated
+ * @param addresses
+ * @returns
+ */
 export async function fetchUnitagByAddresses(addresses: Address[]): Promise<{
   data?: {
     [address: Address]: UnitagAddressResponse

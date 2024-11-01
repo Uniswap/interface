@@ -10,6 +10,8 @@ import {
   useDepositContext,
   usePriceRangeContext,
 } from 'pages/Pool/Positions/create/CreatePositionContext'
+import { formatPrices } from 'pages/Pool/Positions/create/shared'
+import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
@@ -31,9 +33,11 @@ import { useAccount } from 'wagmi'
 export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const {
     positionState: { protocolVersion },
+    derivedPositionInfo,
   } = useCreatePositionContext()
   const {
-    derivedPriceRangeInfo: { baseAndQuoteTokens, prices, ticksAtLimit, isSorted },
+    derivedPriceRangeInfo,
+    priceRangeState: { priceInverted },
   } = usePriceRangeContext()
   const {
     derivedDepositInfo: { formattedAmounts, currencyAmounts, currencyAmountsUSDValue },
@@ -43,18 +47,11 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
   const token1CurrencyInfo = useCurrencyInfo(currencyAmounts?.TOKEN1?.currency)
 
   const { formatNumberOrString, formatCurrencyAmount } = useLocalizationContext()
-  const [baseCurrency, quoteCurrency] = baseAndQuoteTokens ?? [undefined, undefined]
+  const [baseCurrency, quoteCurrency] = getInvertedTuple(derivedPositionInfo.currencies, priceInverted)
 
   const formattedPrices = useMemo(() => {
-    const lowerPriceFormatted = ticksAtLimit[isSorted ? 0 : 1]
-      ? '0'
-      : formatNumberOrString({ value: prices?.[0]?.toSignificant(), type: NumberType.TokenTx })
-    const upperPriceFormatted = ticksAtLimit[isSorted ? 1 : 0]
-      ? '∞'
-      : formatNumberOrString({ value: prices?.[1]?.toSignificant(), type: NumberType.TokenTx })
-
-    return [lowerPriceFormatted, upperPriceFormatted]
-  }, [formatNumberOrString, isSorted, prices, ticksAtLimit])
+    return formatPrices(derivedPriceRangeInfo, formatNumberOrString)
+  }, [formatNumberOrString, derivedPriceRangeInfo])
 
   const [steps, setSteps] = useState<TransactionStep[]>([])
   const [currentStep, setCurrentStep] = useState<{ step: TransactionStep; accepted: boolean } | undefined>()
@@ -79,6 +76,7 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
     if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
       return
     }
+
     dispatch(
       liquiditySaga.actions.trigger({
         selectChain,

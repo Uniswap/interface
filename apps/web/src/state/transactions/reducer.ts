@@ -112,6 +112,25 @@ const localTransactionSlice = createSlice({
       }
       tx.info.depositConfirmed = true
     },
+    updateTransactionInfo(
+      transactions,
+      {
+        payload: { chainId, hash, info },
+      }: {
+        payload: {
+          chainId: UniverseChainId
+          hash: string
+          info: TransactionInfo
+        }
+      },
+    ) {
+      const tx = transactions[chainId]?.[hash]
+      if (!tx || tx.info.type !== info.type) {
+        return
+      }
+
+      tx.info = info
+    },
     cancelTransaction(
       transactions,
       {
@@ -134,6 +153,7 @@ const localTransactionSlice = createSlice({
 
 export const {
   addTransaction,
+  updateTransactionInfo,
   clearAllTransactions,
   checkedTransaction,
   finalizeTransaction,

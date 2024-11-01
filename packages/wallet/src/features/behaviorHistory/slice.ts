@@ -13,6 +13,9 @@ export interface BehaviorHistoryState {
   backupReminderLastSeenTs?: number
   hasViewedOffRampTooltip: boolean
   hasDismissedBridgingWarning?: boolean
+  hasViewedDappRequestBridgingBanner?: {
+    [dappUrl: string]: boolean
+  }
 }
 
 export const initialBehaviorHistoryState: BehaviorHistoryState = {
@@ -23,8 +26,8 @@ export const initialBehaviorHistoryState: BehaviorHistoryState = {
   hasUsedExplore: false,
   backupReminderLastSeenTs: undefined,
   hasViewedOffRampTooltip: false,
+  hasViewedDappRequestBridgingBanner: {},
 }
-
 const slice = createSlice({
   name: 'behaviorHistory',
   initialState: initialBehaviorHistoryState,
@@ -50,6 +53,10 @@ const slice = createSlice({
     setHasViewedOffRampTooltip: (state, action: PayloadAction<boolean>) => {
       state.hasViewedOffRampTooltip = action.payload
     },
+    setHasViewedDappRequestBridgingBanner: (state, action: PayloadAction<{ dappUrl: string; hasViewed: boolean }>) => {
+      state.hasViewedDappRequestBridgingBanner ??= {}
+      state.hasViewedDappRequestBridgingBanner[action.payload.dappUrl] = action.payload.hasViewed
+    },
 
     // Should only be used for testing
     resetWalletBehaviorHistory: (state, _action: PayloadAction) => {
@@ -71,6 +78,7 @@ export const {
   setHasUsedExplore,
   setBackupReminderLastSeenTs,
   setHasViewedOffRampTooltip,
+  setHasViewedDappRequestBridgingBanner,
   resetWalletBehaviorHistory,
 } = slice.actions
 

@@ -2,7 +2,8 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useIncreaseLiquidityContext } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
-import { getProtocolItems, useModalLiquidityPositionInfo } from 'components/Liquidity/utils'
+import { useModalLiquidityPositionInfo } from 'components/Liquidity/hooks'
+import { getProtocolItems } from 'components/Liquidity/utils'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { PropsWithChildren, createContext, useContext, useMemo } from 'react'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
@@ -27,7 +28,10 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
 
   const { currencyAmounts } = derivedIncreaseLiquidityInfo
 
-  const pool = positionInfo?.version === ProtocolVersion.V3 ? positionInfo.pool : undefined
+  const pool =
+    positionInfo?.version === ProtocolVersion.V3 || positionInfo?.version === ProtocolVersion.V4
+      ? positionInfo.pool
+      : undefined
 
   const account = useAccount()
 
@@ -77,9 +81,10 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     gasFeePositionTokenApproval,
   )
 
-  const approvalsNeeded = Boolean(permitData || token0Approval || token1Approval || positionTokenApproval)
+  const approvalsNeeded =
+    !approvalLoading && Boolean(permitData || token0Approval || token1Approval || positionTokenApproval)
 
-  const increaseCalldataQueryParams: IncreaseLPPositionRequest | undefined = useMemo(() => {
+  const increaseCalldataQueryParams = useMemo((): IncreaseLPPositionRequest | undefined => {
     const apiProtocolItems = getProtocolItems(positionInfo?.version)
     const amount0 = currencyAmounts?.TOKEN0?.quotient.toString()
     const amount1 = currencyAmounts?.TOKEN1?.quotient.toString()
@@ -159,7 +164,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       approvePositionTokenRequest,
       revocationTxRequest: undefined, // TODO: add support for revokes
       permit,
-      increasePositionRequestArgs: increaseCalldataQueryParams,
+      increasePositionRequestArgs: { ...increaseCalldataQueryParams, batchPermitData: permitData ?? undefined },
       txRequest,
       unsigned,
     }

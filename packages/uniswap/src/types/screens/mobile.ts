@@ -101,7 +101,8 @@ export enum FiatOnRampScreens {
   Connecting = 'FiatOnRampConnecting',
 }
 
-export type MobileAppScreen = MobileScreens | OnboardingScreens | UnitagScreens | FiatOnRampScreens
+export type MobileNavScreen = MobileScreens | OnboardingScreens | UnitagScreens | FiatOnRampScreens
+export type MobileAppScreen = MobileNavScreen | ManualPageViewScreen
 
 /**
  * Views not within the navigation stack that we still want to

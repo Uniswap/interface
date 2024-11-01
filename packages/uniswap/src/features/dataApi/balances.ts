@@ -1,4 +1,6 @@
+/* eslint-disable max-lines */
 import { NetworkStatus, Reference, useApolloClient, WatchQueryFetchPolicy } from '@apollo/client'
+import isEqual from 'lodash/isEqual'
 import { useCallback, useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
@@ -9,11 +11,12 @@ import {
   PortfolioValueModifier,
   usePortfolioBalancesQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GqlResult } from 'uniswap/src/data/types'
+import { GqlResult, SpamCode } from 'uniswap/src/data/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import {
   buildCurrency,
+  buildCurrencyInfo,
   currencyIdToContractInput,
   sortByName,
   usePersistedError,
@@ -110,7 +113,7 @@ export function usePortfolioBalances({
         isHidden,
       } = balance || {}
       const { name, address: tokenAddress, chain, decimals, symbol, project } = token || {}
-      const { logoUrl, isSpam, safetyLevel } = project || {}
+      const { logoUrl, isSpam, safetyLevel, spamCode } = project || {}
       const chainId = fromGraphQLChain(chain)
 
       // require all of these fields to be defined
@@ -132,22 +135,23 @@ export function usePortfolioBalances({
 
       const id = currencyId(currency)
 
-      const currencyInfo: CurrencyInfo = {
+      const currencyInfo = buildCurrencyInfo({
         currency,
         currencyId: currencyId(currency),
         logoUrl,
         isSpam,
         safetyLevel,
-      }
+        spamCode,
+      })
 
-      const portfolioBalance: PortfolioBalance = {
+      const portfolioBalance = buildPortfolioBalance({
         cacheId: `${tokenBalanceType}:${tokenBalanceId}`,
         quantity,
         balanceUSD: denominatedValue?.value,
         currencyInfo,
         relativeChange24: tokenProjectMarket?.relativeChange24?.value,
         isHidden,
-      }
+      })
 
       byId[id] = portfolioBalance
     })
@@ -167,6 +171,20 @@ export function usePortfolioBalances({
     refetch: retry,
     error: persistedError,
   }
+}
+
+const PORTFOLIO_BALANCE_CACHE = new Map<string, PortfolioBalance>()
+
+function buildPortfolioBalance(args: PortfolioBalance): PortfolioBalance {
+  const cachedPortfolioBalance = PORTFOLIO_BALANCE_CACHE.get(args.cacheId)
+
+  if (cachedPortfolioBalance && isEqual(cachedPortfolioBalance, args)) {
+    // This allows us to better memoize components that use a `portfolioBalance` as a dependency.
+    return cachedPortfolioBalance
+  }
+
+  PORTFOLIO_BALANCE_CACHE.set(args.cacheId, args)
+  return args
 }
 
 export function usePortfolioTotalValue({
@@ -309,6 +327,8 @@ export function useTokenBalancesGroupedByVisibility({
   shownTokens: PortfolioBalance[] | undefined
   hiddenTokens: PortfolioBalance[] | undefined
 } {
+  const { isTestnetModeEnabled } = useEnabledChains()
+
   return useMemo(() => {
     if (!balancesById) {
       return { shownTokens: undefined, hiddenTokens: undefined }
@@ -319,7 +339,11 @@ export function useTokenBalancesGroupedByVisibility({
       hidden: PortfolioBalance[]
     }>(
       (acc, balance) => {
-        if (balance.isHidden) {
+        const isTokenHidden = isTestnetModeEnabled
+          ? (balance.currencyInfo.spamCode || SpamCode.LOW) >= SpamCode.HIGH
+          : balance.isHidden
+
+        if (isTokenHidden) {
           acc.hidden.push(balance)
         } else {
           acc.shown.push(balance)
@@ -332,7 +356,7 @@ export function useTokenBalancesGroupedByVisibility({
       shownTokens: shown.length ? shown : undefined,
       hiddenTokens: hidden.length ? hidden : undefined,
     }
-  }, [balancesById])
+  }, [balancesById, isTestnetModeEnabled])
 }
 
 /**

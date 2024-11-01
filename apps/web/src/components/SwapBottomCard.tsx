@@ -37,7 +37,7 @@ export function SwapBottomCard() {
 
   const hasViewedBridgingBanner = useSelector(selectHasViewedBridgingBanner)
   const bridgingEnabled = useFeatureFlag(FeatureFlags.Bridging)
-  const isBridgingSupportedChain = useIsBridgingChain(chainId ?? UniverseChainId.Mainnet)
+  const isBridgingSupported = useIsBridgingChain(chainId ?? UniverseChainId.Mainnet)
   const numBridgingChains = useNumBridgingChains()
   const handleBridgingDismiss = useCallback(
     (shouldNavigate: boolean) => {
@@ -61,8 +61,7 @@ export function SwapBottomCard() {
     return null
   }
 
-  const isBridgingBannerChain = chainId === null || chainId === UniverseChainId.Mainnet || isBridgingSupportedChain
-  const shouldShowBridgingBanner = bridgingEnabled && !hasViewedBridgingBanner && isBridgingBannerChain
+  const shouldShowBridgingBanner = bridgingEnabled && !hasViewedBridgingBanner && isBridgingSupported
 
   const shouldShowLegacyTreatment = !bridgingEnabled
 
@@ -85,7 +84,7 @@ export function SwapBottomCard() {
         />
       </TouchableArea>
     )
-  } else if (shouldShowLegacyTreatment || !isBridgingSupportedChain) {
+  } else if (shouldShowLegacyTreatment || !isBridgingSupported) {
     return <NetworkAlert chainId={chainId} />
   } else {
     return null

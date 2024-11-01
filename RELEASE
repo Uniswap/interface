@@ -1,24 +1,21 @@
-IPFS hash of the deployment:
-- CIDv0: `QmYjBEq2Z9Ya4rgSfzw4kyr2m3ihsk87Mnr7fKyBbHXsFN`
-- CIDv1: `bafybeie2livmn2qvua4kx42aaenzc7ukda3dnsjm3n5ovk7n256gajg5xe`
+### Lots of new updates! 
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+ ### Bridging
+ 
+ You can now swap your ETH, USDC, and more across 8+ networks! Try it by pressing the banner on your homepage.  
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+### Claim usernames
 
-IPFS gateways:
-- https://bafybeie2livmn2qvua4kx42aaenzc7ukda3dnsjm3n5ovk7n256gajg5xe.ipfs.dweb.link/
-- https://bafybeie2livmn2qvua4kx42aaenzc7ukda3dnsjm3n5ovk7n256gajg5xe.ipfs.cf-ipfs.com/
-- [ipfs://QmYjBEq2Z9Ya4rgSfzw4kyr2m3ihsk87Mnr7fKyBbHXsFN/](ipfs://QmYjBEq2Z9Ya4rgSfzw4kyr2m3ihsk87Mnr7fKyBbHXsFN/)
+You can now claim a free uni.eth for your wallet address, a readable username that makess it easy to identify your wallet and receive crypto. 
 
-## 5.54.0 (2024-10-23)
+### Multichain Explore
 
+Users can now see all 12 chains we support on the Explore page, and can also filter by a specific chain. 
 
-### Features
+### Worldchain
 
-* **web:** add mainnet to bridge banner - prod (#13298) 7d8d807
+Users now have access to all ur regular features for this new chain.
 
+### Other changes: 
 
+- Various bug fixes and performance improvements

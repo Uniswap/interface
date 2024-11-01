@@ -1,8 +1,7 @@
 /* eslint-disable complexity */
 import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
-import { getUniqueId } from 'react-native-device-info'
 import { useDispatch } from 'react-redux'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled, Person } from 'ui/src/components/icons'
@@ -16,10 +15,12 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { UnitagErrorCodes } from 'uniswap/src/features/unitags/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { logger } from 'utilities/src/logger/logger'
-import { isExtension } from 'utilities/src/platform'
+import { isExtension, isMobileApp } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
+import { ModalBackButton } from 'wallet/src/components/modals/ModalBackButton'
 import { UnitagName } from 'wallet/src/features/unitags/UnitagName'
 import { changeUnitag } from 'wallet/src/features/unitags/api'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
@@ -33,13 +34,13 @@ export function ChangeUnitagModal({
   address,
   keyboardHeight = 0,
   onClose,
-  goBack,
+  onSuccess,
 }: {
   unitag: string
   address: Address
   keyboardHeight?: number
   onClose: () => void
-  goBack?: () => void
+  onSuccess?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -133,7 +134,7 @@ export function ChangeUnitagModal({
             title: t('unitags.notification.username.title'),
           }),
         )
-        goBack?.()
+        onSuccess?.()
         onClose()
       }
     } catch (e) {
@@ -170,12 +171,13 @@ export function ChangeUnitagModal({
         <ChangeUnitagConfirmModal unitag={newUnitag} onChangeSubmit={onChangeSubmit} onClose={onCloseConfirmModal} />
       )}
       <Modal isDismissible name={ModalName.UnitagsChange} onClose={onClose}>
+        {isExtension && <ModalBackButton onBack={onClose} />}
         <Flex
           centered
           gap="$spacing12"
           // Since BottomSheetTextInput doesnt work, dynamically set bottom padding based on keyboard height to get a keyboard avoiding view
           pb={keyboardHeight > 0 ? keyboardHeight - spacing.spacing20 : '$spacing12'}
-          pt="$spacing12"
+          pt={isExtension ? '$spacing24' : '$spacing12'}
           px={isExtension ? undefined : '$spacing24'}
         >
           <Flex
@@ -239,7 +241,10 @@ export function ChangeUnitagModal({
           ) : (
             <Flex backgroundColor="$surface2" borderRadius="$rounded16" px="$spacing16" py="$spacing12" width="100%">
               <Text color="$neutral2" variant="body3">
-                {t('unitags.editUsername.warning.default')}
+                <Trans
+                  components={{ highlight: <Text color="$statusCritical" variant="body3" /> }}
+                  i18nKey="unitags.editUsername.warning.default"
+                />
               </Text>
             </Flex>
           )}
@@ -285,7 +290,8 @@ function ChangeUnitagConfirmModal({
   const { t } = useTranslation()
   return (
     <Modal isDismissible name={ModalName.UnitagsChangeConfirm} onClose={onClose}>
-      <Flex centered gap="$spacing12" pb="$spacing12" pt="$spacing12" px="$spacing24">
+      {isExtension && <ModalBackButton onBack={onClose} />}
+      <Flex centered gap="$spacing12" pb="$spacing12" pt={isExtension ? '$spacing24' : '$spacing12'} px="$spacing24">
         <Flex
           centered
           backgroundColor="$DEP_accentCriticalSoft"
@@ -306,9 +312,11 @@ function ChangeUnitagConfirmModal({
           <UnitagName name={unitag} fontSize={fonts.heading3.fontSize} />
         </Flex>
         <Flex centered row gap="$spacing12" width="100%">
-          <Button fill testID={TestID.Remove} theme="secondary" onPress={onClose}>
-            {t('common.button.back')}
-          </Button>
+          {isMobileApp && (
+            <Button fill testID={TestID.Remove} theme="secondary" onPress={onClose}>
+              {t('common.button.back')}
+            </Button>
+          )}
           <Button fill testID={TestID.Remove} theme="detrimental" onPress={onChangeSubmit}>
             {t('common.button.confirm')}
           </Button>

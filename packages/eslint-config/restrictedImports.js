@@ -43,6 +43,15 @@ exports.shared = {
       importNames: ['useDeviceInsets'],
       message: 'Use `useAppInsets` instead.'
     },
+    {
+      name: 'react-native-device-info',
+      importNames: ['getUniqueId'],
+      message: 'Not supported for web/extension, use `getUniqueId` from `utilities/src/device/getUniqueId` instead.'
+    },
+    {
+      name: 'lodash',
+      message: 'Use specific imports (e.g. `import isEqual from \'lodash/isEqual\'`) to avoid pulling in all of lodash to web to keep bundle size down!',
+    }
   ],
   patterns: [
     {

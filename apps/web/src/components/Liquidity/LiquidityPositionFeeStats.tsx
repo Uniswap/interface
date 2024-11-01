@@ -1,10 +1,11 @@
-import { useGetRangeDisplay } from 'components/Liquidity/utils'
+import { useGetRangeDisplay } from 'components/Liquidity/hooks'
 import { PriceOrdering } from 'components/PositionListItem'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { useState } from 'react'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { Flex, Text, styled } from 'ui/src'
-import { ReverseArrows } from 'ui/src/components/icons/ReverseArrows'
-import { Trans } from 'uniswap/src/i18n'
+import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
 
 interface LiquidityPositionFeeStatsProps {
   formattedUsdValue?: string
@@ -31,14 +32,13 @@ const SecondaryText = styled(Text, {
 export function LiquidityPositionFeeStats({
   formattedUsdValue,
   formattedUsdFees,
-  totalApr,
-  feeApr,
   priceOrdering,
   tickLower,
   tickUpper,
   feeTier,
   showReverseButton = true,
 }: LiquidityPositionFeeStatsProps) {
+  const { t } = useTranslation()
   const [pricesInverted, setPricesInverted] = useState(false)
 
   const { maxPrice, minPrice, tokenASymbol, tokenBSymbol } = useGetRangeDisplay({
@@ -50,60 +50,65 @@ export function LiquidityPositionFeeStats({
   })
 
   return (
-    <Flex row alignItems="center" gap="$gap20">
-      {formattedUsdValue && (
-        <Flex gap="$gap4">
+    <Flex row alignItems="center" gap="$gap20" justifyContent="space-between">
+      <Flex gap="$gap4">
+        {formattedUsdValue ? (
           <PrimaryText>{formattedUsdValue}</PrimaryText>
-          {formattedUsdFees && <SecondaryText>+{formattedUsdFees} fees</SecondaryText>}
-        </Flex>
-      )}
-      {totalApr && (
-        <Flex gap="$gap4">
-          <PrimaryText>{totalApr}</PrimaryText>
-          <SecondaryText>
-            <Trans i18nKey="position.stats.totalApr" />
-          </SecondaryText>
-        </Flex>
-      )}
-      {feeApr && (
-        <Flex gap="$gap4">
-          <PrimaryText>{feeApr}</PrimaryText>
-          <SecondaryText>
-            <Trans i18nKey="position.stats.feeApr" />
-          </SecondaryText>
-        </Flex>
-      )}
-      {priceOrdering.priceLower && priceOrdering.priceUpper && (
-        <>
-          <Flex gap="$gap4">
-            <Flex row gap="$gap12" alignItems="center">
-              <SecondaryText>
-                <Trans i18nKey="chart.price.label.low" />
-              </SecondaryText>
-              <PrimaryText>
-                {minPrice} {tokenASymbol} / {tokenBSymbol}
-              </PrimaryText>
+        ) : (
+          <MouseoverTooltip text={<Trans i18nKey="position.valueUnavailable" />} placement="top">
+            <PrimaryText>-</PrimaryText>
+          </MouseoverTooltip>
+        )}
+        <SecondaryText variant="body3" color="$neutral2">
+          {t('pool.position')}
+        </SecondaryText>
+      </Flex>
+      <Flex gap="$gap4">
+        <PrimaryText>{formattedUsdFees || t('common.unavailable')}</PrimaryText>
+        <SecondaryText variant="body3" color="$neutral2">
+          {t('common.fees')}
+        </SecondaryText>
+      </Flex>
+      {/* TODO: add APR once its been calculated. */}
+      <Flex minWidth={224} alignSelf="flex-start">
+        {priceOrdering.priceLower && priceOrdering.priceUpper ? (
+          <>
+            <Flex gap="$gap4">
+              <Flex row gap="$gap12" alignItems="center">
+                <SecondaryText>
+                  <Trans i18nKey="common.min" />
+                </SecondaryText>
+                <PrimaryText>
+                  {minPrice} {tokenASymbol} / {tokenBSymbol}
+                </PrimaryText>
+              </Flex>
+              <Flex row gap="$gap12" alignItems="center">
+                <SecondaryText>
+                  <Trans i18nKey="common.max" />
+                </SecondaryText>
+                <PrimaryText>
+                  {maxPrice} {tokenASymbol} / {tokenBSymbol}
+                </PrimaryText>
+              </Flex>
             </Flex>
-            <Flex row gap="$gap12" alignItems="center">
-              <SecondaryText>
-                <Trans i18nKey="chart.price.label.high" />
-              </SecondaryText>
-              <PrimaryText>
-                {maxPrice} {tokenASymbol} / {tokenBSymbol}
-              </PrimaryText>
-            </Flex>
+            {showReverseButton && (
+              <Flex
+                height="100%"
+                justifyContent="flex-end"
+                onPress={() => setPricesInverted((prevInverted) => !prevInverted)}
+              >
+                <ArrowUpDown {...ClickableTamaguiStyle} color="$neutral2" size="$icon.16" rotate="90deg" />
+              </Flex>
+            )}
+          </>
+        ) : (
+          <Flex grow>
+            <Text variant="body3" color="$neutral2">
+              {t('common.fullRange')}
+            </Text>
           </Flex>
-          {showReverseButton && (
-            <Flex
-              height="100%"
-              justifyContent="flex-end"
-              onPress={() => setPricesInverted((prevInverted) => !prevInverted)}
-            >
-              <ReverseArrows {...ClickableTamaguiStyle} color="$neutral2" size={16} />
-            </Flex>
-          )}
-        </>
-      )}
+        )}
+      </Flex>
     </Flex>
   )
 }

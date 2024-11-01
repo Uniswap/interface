@@ -2,7 +2,7 @@
 import { Identify, flush, getUserId, identify, init, setDeviceId, track } from '@amplitude/analytics-react-native'
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
-import { Analytics, UserPropertyValue } from 'utilities/src/telemetry/analytics/analytics'
+import { Analytics, TestnetModeConfig, UserPropertyValue } from 'utilities/src/telemetry/analytics/analytics'
 import {
   AMPLITUDE_NATIVE_TRACKING_OPTIONS,
   AMPLITUDE_SHARED_TRACKING_OPTIONS,
@@ -10,11 +10,13 @@ import {
   DUMMY_KEY,
 } from 'utilities/src/telemetry/analytics/constants'
 import { generateAnalyticsLoggers } from 'utilities/src/telemetry/analytics/logging'
+import { getProcessedEvent } from 'utilities/src/telemetry/analytics/utils'
 
 const loggers = generateAnalyticsLoggers('telemetry/analytics.native')
 
 let allowAnalytics: Maybe<boolean>
 let testnetMode: Maybe<boolean>
+let testnetModeConfig: Maybe<TestnetModeConfig>
 let userId: Maybe<string>
 
 export async function getAnalyticsAtomDirect(_forceRead?: boolean): Promise<boolean> {
@@ -68,18 +70,27 @@ export const analytics: Analytics = {
       setDeviceId(ANONYMOUS_DEVICE_ID)
     }
   },
-  setTestnetMode(enabled: boolean): void {
+  setTestnetMode(enabled: boolean, config: TestnetModeConfig): void {
     testnetMode = enabled
+    testnetModeConfig = config
   },
   sendEvent(eventName: string, eventProperties?: Record<string, unknown>): void {
     if (!allowAnalytics && !ANONYMOUS_EVENT_NAMES.includes(eventName)) {
       return
     }
-    if (testnetMode) {
-      return
+
+    const processedTestnetEvent = getProcessedEvent({
+      eventName,
+      eventProperties: eventProperties || {},
+      testnetModeConfig,
+      isTestnetMode: testnetMode,
+    })
+
+    if (processedTestnetEvent) {
+      const { eventName: processedEventName, eventProperties: processedEventProperties } = processedTestnetEvent
+      loggers.sendEvent(processedEventName, processedEventProperties)
+      track(processedEventName, processedEventProperties)
     }
-    loggers.sendEvent(eventName, eventProperties)
-    track(eventName, eventProperties)
   },
   flushEvents(): void {
     loggers.flushEvents()

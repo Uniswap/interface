@@ -99,7 +99,7 @@ const tokens: TokenBalance[] = [
 describe('sorting', () => {
   describe('getSortedPortfolioTokens', () => {
     it('should return an empty array if portfolioTokenBalances is undefined', () => {
-      const result = getSortedPortfolioTokens(undefined, {}, UniverseChainId.Mainnet)
+      const result = getSortedPortfolioTokens(undefined, {}, UniverseChainId.Mainnet, { isTestnetModeEnabled: false })
       expect(result).toEqual([])
     })
     it('should return only visible tokens, sorted by balances', () => {
@@ -111,6 +111,7 @@ describe('sorting', () => {
           [USDT.address]: { usdValue: 100, balance: 100 },
         },
         UniverseChainId.Mainnet,
+        { isTestnetModeEnabled: false },
       )
 
       expect(result).toEqual([nativeOnChain(UniverseChainId.Mainnet), USDT, WBTC])
