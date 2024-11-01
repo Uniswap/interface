@@ -191,8 +191,9 @@ export const ProposalCard: React.FC<IProps> = ({ proposalEvent, clickable, showI
     timeText: undefined,
   })
   const latestBlockNumber = useBlockNumber()
+  const isNewContract = proposalEvent.blockNumber > 25_000_000
   const romulusContract = useRomulusDelegateContract()
-  const { proposal, proposalState } = useProposal(proposalEvent.args.id)
+  const { proposal, proposalState } = useProposal(proposalEvent.args.id, isNewContract)
   const { votingPower, releaseVotingPower } = useVotingTokens(proposalEvent.args.startBlock)
   const voteCasts = useVoteCasts()
   const vote = voteCasts?.[proposalEvent.args.id.toString()]
@@ -388,15 +389,13 @@ export const ProposalCard: React.FC<IProps> = ({ proposalEvent, clickable, showI
     return <div>Invalid romulus address</div>
   }
 
+  const idToShow = isNewContract ? proposalEvent.args.id.add(15).toString() : proposalEvent.args.id.toString()
+
   return (
     <ClickableCard clickable={clickable} outline={outline}>
       <InformationWrapper fontWeight={400} gap={6} style={{ alignItems: 'center' }}>
         <Text fontWeight={600} fontSize={16}>
-          {showId
-            ? proposalEvent.args.id.toString().length === 1
-              ? `Proposal 00${proposalEvent.args.id.toString()}`
-              : `Proposal 0${proposalEvent.args.id.toString()}`
-            : ''}
+          {showId ? (idToShow.length === 1 ? `Proposal 00${idToShow}` : `Proposal 0${idToShow}`) : ''}
         </Text>
         <ProposalStatusContainer stateColor={proposalContent.stateColor}>
           {statusSymbol.current}

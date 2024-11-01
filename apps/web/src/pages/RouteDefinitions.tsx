@@ -35,6 +35,7 @@ const RemoveLiquidityV3 = lazy(() => import('pages/RemoveLiquidity/V3'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
 const Vote = lazy(() => import('pages/Vote'))
 const Stake = lazy(() => import('pages/Stake'))
+const AddProposal = lazy(() => import('pages/Stake/AddProposal'))
 const FarmManage = lazy(() => import('pages/Farm/Manage'))
 const FarmManageSingle = lazy(() => import('pages/Farm/ManageSingle'))
 const ClaimNewUbe = lazy(() => import('pages/ClaimNewUbe'))
@@ -326,6 +327,11 @@ export const routes: RouteDefinition[] = [
     path: '/stake',
     getElement: () => <Stake />,
     getTitle: () => t`Stake UBE`,
+  }),
+  createRouteDefinition({
+    path: '/add-proposal',
+    getElement: () => <AddProposal />,
+    getTitle: () => t`Add new Proposal`,
   }),
   createRouteDefinition({
     path: '/farm/:currencyIdA/:currencyIdB/:stakingAddress',

@@ -11,7 +11,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { AlertTriangle, ArrowLeft, CheckCircle, Copy, Icon, X } from 'react-feather'
+import { AlertTriangle, ArrowLeft, CheckCircle, Copy, Icon, Trash2, X } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css, keyframes } from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
@@ -67,6 +67,22 @@ export const CloseIcon = styled(X)<{ onClick: () => void }>`
   color: ${({ theme }) => theme.neutral1};
   cursor: pointer;
   ${ClickableStyle}
+`
+
+export const TrashIcon = styled(Trash2)`
+  height: 16px;
+  width: 18px;
+  margin-left: 10px;
+  stroke: ${({ theme }) => theme.text3};
+
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+
+  :hover {
+    opacity: 0.7;
+  }
 `
 
 const LinkStyle = css`

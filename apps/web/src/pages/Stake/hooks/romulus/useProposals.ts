@@ -2,6 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { useRomulusDelegateContract } from 'hooks/useContract'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { TypedEvent } from 'uniswap/src/abis/types/common'
+import fetchEvents from 'utils/fetchEvents'
 import { cachedProposalEvents } from './cachedStakeEvents'
 
 type Proposal = [BigNumber, string, string[], BigNumber[], string[], string[], BigNumber, BigNumber, string] & {
@@ -23,9 +24,16 @@ export const useProposals = (): Array<TypedEvent<Proposal>> | undefined => {
 
   const call = useCallback(async () => {
     if (!romulusContract || !mountRef.current) return
-    // const filter = romulusContract.filters.ProposalCreated(null, null, null, null, null, null, null, null, null)
-    // const proposalEvents = await fetchEvents<TypedEvent<Proposal>>(romulusContract, filter)
-    setProposals(cachedProposalEvents as unknown as TypedEvent<Proposal>[])
+    const filter = romulusContract.filters.ProposalCreated(null, null, null, null, null, null, null, null, null)
+    const proposalEvents1 = await fetchEvents<TypedEvent<Proposal>>(romulusContract, filter, -18000, -12000)
+    const proposalEvents2 = await fetchEvents<TypedEvent<Proposal>>(romulusContract, filter, -12000, -6000)
+    const proposalEvents3 = await fetchEvents<TypedEvent<Proposal>>(romulusContract, filter, -6000, -1)
+    setProposals(
+      proposalEvents1
+        .concat(proposalEvents2)
+        .concat(proposalEvents3)
+        .concat(cachedProposalEvents as unknown as TypedEvent<Proposal>[])
+    )
   }, [romulusContract])
 
   useEffect(() => {

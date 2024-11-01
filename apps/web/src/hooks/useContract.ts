@@ -10,6 +10,7 @@ import {
   OLD_UBE_ROMULUS_ADDRESSES,
   UBE_ADDRESSES,
   UBE_CONVERT_ADDRESSES,
+  UBE_ROMULUS_ADDRESSES,
   V2_ROUTER_ADDRESSES,
   V3_MIGRATOR_ADDRESSES,
 } from '@ubeswap/sdk-core'
@@ -210,6 +211,10 @@ export function useUbeTokenContract() {
 }
 
 export function useRomulusDelegateContract() {
+  return useContract<RomulusDelegate>(UBE_ROMULUS_ADDRESSES, UBE_ROMULUS_ABI, true)
+}
+
+export function useOldRomulusDelegateContract() {
   return useContract<RomulusDelegate>(OLD_UBE_ROMULUS_ADDRESSES, UBE_ROMULUS_ABI, true)
 }
 

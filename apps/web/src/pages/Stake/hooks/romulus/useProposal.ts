@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { useRomulusDelegateContract } from 'hooks/useContract'
+import { useOldRomulusDelegateContract, useRomulusDelegateContract } from 'hooks/useContract'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 export enum Support {
@@ -43,9 +43,11 @@ type Proposal = [
   executed: boolean
 }
 
-export const useProposal = (proposalId: BigNumber) => {
+export const useProposal = (proposalId: BigNumber, isNewContract: boolean) => {
   const mountRef = useRef(true)
-  const romulusContract = useRomulusDelegateContract()
+  const newRomulusContract = useRomulusDelegateContract()
+  const oldRomulusContract = useOldRomulusDelegateContract()
+  const romulusContract = isNewContract ? newRomulusContract : oldRomulusContract
   const [proposal, setProposal] = useState<Proposal | undefined>(undefined)
   const [proposalState, setproposalState] = useState<ProposalState>(ProposalState.CANCELED)
   const call = useCallback(async () => {

@@ -137,8 +137,8 @@ export const NewStake: React.FC = () => {
   const { votingPower, releaseVotingPower } = useVotingTokens(latestBlockNumber || 0)
   const totalVotingPower = votingPower && releaseVotingPower ? votingPower.add(releaseVotingPower) : undefined
 
-  // const disablePropose = !totalVotingPower || !proposalThreshold || totalVotingPower?.lessThan(proposalThreshold?.raw)
-  const disablePropose = true
+  const disablePropose =
+    !totalVotingPower || !proposalThreshold || totalVotingPower?.lessThan(proposalThreshold?.quotient)
 
   const onStakeClick = useCallback(async () => {
     if (!signer || !tokenAmount) {
