@@ -67,7 +67,7 @@ To account for screen size references, components take in props to adapt custom 
 </Flex>
 ```
 
-When components cannot take in these props or a value needs to be resued multiple times, the `useMedia` hook allows these same breakpoint values to be defined programmatically.
+When components cannot take in these props or a value needs to be reused multiple times, the `useMedia` hook allows these same breakpoint values to be defined programmatically.
 
 ### Other notable usage
 
@@ -119,7 +119,7 @@ When possible, usage of `styled` should be limited to use within the `ui` packag
 
 The `ui` package should be where we put all low level interface components that are shared between apps (or will likely be shared). It should *not* contain components that are specific to any one app, or which touch app-level data in any way.
 
-A good rule of thumb is: if it deals with app-specific state (eg anything thats stored in redux) or has a very complex interface, then:
+A good rule of thumb is: if it deals with app-specific state (eg anything that's stored in redux) or has a very complex interface, then:
 
 - If it's specific to just one app, put it in that app.
 - Else if it's shared between multiple apps, put it in a shared package above the UI package, e.g `packages/{package}`.
