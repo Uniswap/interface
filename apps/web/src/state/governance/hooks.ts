@@ -14,7 +14,6 @@ import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useContract } from 'hooks/useContract'
 import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
-import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useCallback, useMemo } from 'react'
 import { VoteOption } from 'state/governance/types'
 import { useLogs } from 'state/logs/hooks'
@@ -256,7 +255,6 @@ function countToIndices(count: number | undefined, skip = 0) {
 // get data for all past and active proposals
 export function useAllProposalData(): { data: ProposalData[]; loading: boolean } {
   const { chainId } = useAccount()
-  const blockNumber = useBlockNumber()
   const gov = useGovernanceProxyContract()
 
   const proposalCount = useProposalCount(gov)

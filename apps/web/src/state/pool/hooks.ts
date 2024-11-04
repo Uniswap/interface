@@ -19,10 +19,8 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useActiveSmartPool, useSelectActiveSmartPool } from 'state/application/hooks'
 import { useStakingContract } from 'state/governance/hooks'
-import { useAppSelector } from 'state/hooks'
 import { usePoolsFromUrl } from 'state/lists/poolsList/hooks'
 import { useLogs } from 'state/logs/hooks'
-import { filterToKey } from 'state/logs/utils'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import POOL_EXTENDED_ABI from 'uniswap/src/abis/pool-extended.json'
@@ -112,14 +110,14 @@ function useFormattedPoolCreatedLogs(contract: Contract | null, fromBlock: numbe
     }
   }, [contract, fromBlock, toBlock])
 
-  const useLogsResult = useLogs(filter)
+  const logsResult = useLogs(filter)
 
   // TODO: define Result type
   // TODO: since we use our rpc endpoints as backup, which return multichain pools,
   //  we should check whether to filter by chain, or display chain on ui (but not clickable pool)
   //  and handle rpc call on non-existing pools on a chain, as that will return empty data.
   return useMemo(() => {
-    return useLogsResult?.logs
+    return logsResult?.logs
       ?.map((log: any) => {
         const parsed = RegistryInterface.parseLog(log).args
         return parsed
@@ -134,7 +132,7 @@ function useFormattedPoolCreatedLogs(contract: Contract | null, fromBlock: numbe
         return { group, pool, name, symbol, id }
       })
       .reverse()
-  }, [useLogsResult])
+  }, [logsResult])
 }
 
 export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolean } {
@@ -251,14 +249,10 @@ export function useRegisteredPools(): PoolRegisteredLog[] | undefined {
       toBlock
     }
   }, [registry, fromBlock, toBlock])
-  const logs = useAppSelector((state) => state.logs)
-  if (!account.chainId || !filter) {
-    return []
-  }
-  const state = logs[account.chainId]?.[filterToKey(filter)]
-  const result = state?.results
 
-  return result?.logs
+  const logsResult = useLogs(filter)
+
+  return logsResult?.logs
     ?.map((log) => {
       const parsed = RegistryInterface.parseLog(log).args
       return parsed
@@ -508,10 +502,6 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
 }
 
 export function useOperatedPools() {
-  // TODO: the following is expensive as overwrites all pools data, however it is called just once. It is useful when
-  //  switching chain in the swap page s otherwise the state is cleared when page is reloaded.
-  //  We sould try and update state only if poolsLogs is undefined
-  //const poolsLogs = useRegisteredPools()
   const { data: poolsLogs } = useAllPoolsData()
   const poolAddresses: (string | undefined)[] = useMemo(() => {
     if (!poolsLogs) {
@@ -557,6 +547,7 @@ export function useOperatedPools() {
     //.filter((p) => account.address === owner)
   }, [account.address, account.chainId, poolAddresses, results])
 
+  // TODO: default pools should change on chain switch
   const defaultPool = useMemo(() => {
     if (!operatedPools) {
       return undefined

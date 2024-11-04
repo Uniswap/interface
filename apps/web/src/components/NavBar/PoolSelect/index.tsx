@@ -29,17 +29,38 @@ const PoolSelectButton = styled(ButtonGray)<{
     justify-content: space-between;
     margin-bottom: 16px;
     margin-left: ${({ hideInput }) => (hideInput ? '0' : '12px')};
+    visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
+    display: flex;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    @media (max-width: 910px) { 
+      white-space: normal;
+      word-wrap: break-word;
+      height: auto;
+      min-height: 3rem;
+    }
+
     :focus,
     :hover {
       background-color: ${({ selected, theme }) => (selected ? theme.surface2 : theme.accent1)};
     }
-    visibility: ${({ visible }) => (visible ? 'visible' : 'hidden')};
-  `
+`;
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
   font-size: 20px;
-`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  white-space: nowrap;
+
+  @media (max-width: 910px) {
+    white-space: normal;
+    word-wrap: break-word;
+  }
+`;
 
 interface PoolSelectProps {
   operatedPools: Currency[];
