@@ -56,11 +56,11 @@ fs.readFile('./public/tokens-sitemap.xml', 'utf8', async (err, data) => {
     }
 
     for (const chainName of chains) {
-      const tokensResponse = await fetch('https://api.rigoblock.com/v1/graphql', {
+      const tokensResponse = await fetch('https://api.uniswap.org/v1/graphql', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Origin: 'https://app.rigoblock.com',
+          Origin: 'https://app.uniswap.org',
         },
         body: JSON.stringify({ query: getTopTokensQuery(chainName) }),
       })
@@ -114,11 +114,11 @@ fs.readFile('./public/nfts-sitemap.xml', 'utf8', async (err, data) => {
       })
     }
 
-    const nftResponse = await fetch('https://interface.gateway.rigoblock.com/v1/graphql', {
+    const nftResponse = await fetch('https://interface.gateway.uniswap.org/v1/graphql', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Origin: 'https://app.rigoblock.com',
+        Origin: 'https://app.uniswap.org',
       },
       body: JSON.stringify({ query: nftTopCollectionsQuery }),
     })
@@ -171,11 +171,11 @@ fs.readFile('./public/pools-sitemap.xml', 'utf8', async (err, data) => {
     }
 
     for (const chainName of chains) {
-      const poolsResponse = await fetch('https://api.rigoblock.com/v1/graphql', {
+      const poolsResponse = await fetch('https://api.uniswap.org/v1/graphql', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Origin: 'https://app.rigoblock.com',
+          Origin: 'https://app.uniswap.org',
         },
         body: JSON.stringify({ query: getTopPoolsQuery(chainName) }),
       })
