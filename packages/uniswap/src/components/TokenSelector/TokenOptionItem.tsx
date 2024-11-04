@@ -74,26 +74,21 @@ function _TokenOptionItem({
 }: OptionProps): JSX.Element {
   const { currencyInfo, isUnsupported } = option
   const { currency } = currencyInfo
-  let { safetyLevel } = currencyInfo
   const [showWarningModal, setShowWarningModal] = useState(false)
   const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
 
   const { severity, isBlocked, isNonDefaultList, isWarningSevere } = getTokenWarningDetails(currencyInfo)
+  const isGRG = currency.isToken && currency.address.toLowerCase() === GRG[currency.chainId]?.address.toLowerCase()
   const warningIconColor = getWarningIconColorOverride(severity)
   const shouldShowWarningModalOnPress = !tokenProtectionEnabled
-    ? isBlocked || (isNonDefaultList && !tokenWarningDismissed)
-    : isWarningSevere && !tokenWarningDismissed
+    ? isBlocked || (isNonDefaultList && !tokenWarningDismissed && !isGRG)
+    : isWarningSevere && !tokenWarningDismissed && !isGRG
 
   const handleShowWarningModal = useCallback((): void => {
     dismissNativeKeyboard()
     setShowWarningModal(true)
   }, [setShowWarningModal])
 
-  if (currency.isToken && currency.address.toLowerCase() === GRG[currency.chainId]?.address.toLowerCase()) {
-    safetyLevel = SafetyLevel.Verified
-  }
-
-  // TODO: do not display warning for GRG[chainId]
   const onPressTokenOption = useCallback(() => {
     if (showWarnings && shouldShowWarningModalOnPress) {
       // On mobile web we need to wait for the keyboard to hide

@@ -69,8 +69,8 @@ export const uniswapUrls = {
 
   // Core API Urls
   apiOrigin: 'https://api.rigoblock.com',
-  apiBaseUrl: getCloudflareApiBaseUrl(),
-  apiBaseUrlV2: `${getCloudflareApiBaseUrl()}/v2`,
+  apiBaseUrl: getRbCloudflareApiBaseUrl(),
+  apiBaseUrlV2: `${getRbCloudflareApiBaseUrl()}/v2`,
   graphQLUrl: `${getRbCloudflareApiBaseUrl(TrafficFlows.GraphQL)}/v1/graphql`,
 
   // Proxies

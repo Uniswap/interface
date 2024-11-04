@@ -132,6 +132,7 @@ function _TokenSelectorList({
 
   const renderItem = useCallback(
     ({ item, section, index }: { item: TokenOption | TokenOption[]; section: TokenSection; index: number }) => {
+      // TODO: should not render smart pools here
       if (isHorizontalListTokenItem(item)) {
         return <HorizontalTokenList tokens={item} section={section} index={index} onSelectCurrency={onSelectCurrency} />
       }

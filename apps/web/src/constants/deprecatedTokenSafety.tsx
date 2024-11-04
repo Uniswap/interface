@@ -93,7 +93,7 @@ export function useTokenWarning(tokenAddress?: string, chainId?: UniverseChainId
   const currencyInfo = useCurrencyInfo(tokenAddress, chainId)
 
   // early return if GRG (bridged GRG may result in warning)
-  if (chainId && GRG[chainId].address === tokenAddress ) {
+  if (chainId && GRG[chainId].address.toLowerCase() === tokenAddress?.toLowerCase() ) {
     return undefined
   }
 
