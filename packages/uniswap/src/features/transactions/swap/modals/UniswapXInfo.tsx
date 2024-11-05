@@ -4,9 +4,9 @@ import { UniswapXText, isWeb } from 'ui/src'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
 import { colors, opacify } from 'ui/src/theme'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
-import { WarningTooltipProps } from 'uniswap/src/components/modals/WarningModal/WarningTooltipProps'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
+import { InfoTooltipProps } from 'uniswap/src/components/tooltip/InfoTooltipProps'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
@@ -15,8 +15,8 @@ export function UniswapXInfo({
   tooltipTrigger,
   placement = 'top',
 }: PropsWithChildren<{
-  tooltipTrigger?: WarningTooltipProps['trigger']
-  placement?: WarningTooltipProps['placement']
+  tooltipTrigger?: InfoTooltipProps['trigger']
+  placement?: InfoTooltipProps['placement']
 }>): JSX.Element {
   const { t } = useTranslation()
 

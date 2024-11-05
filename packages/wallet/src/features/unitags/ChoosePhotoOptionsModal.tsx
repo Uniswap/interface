@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, useSporeColors } from 'ui/src'
-import { Camera, PhotoStacked, Trash } from 'ui/src/components/icons'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Camera, PhotoStacked, Share, Trash } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { isExtension } from 'utilities/src/platform'
 import { selectPhotoFromLibrary } from 'wallet/src/features/unitags/AvatarSelection'
 import { ChooseNftModal, ChooseNftModalProps } from 'wallet/src/features/unitags/ChooseNftModal'
 
@@ -87,9 +88,9 @@ export const ChoosePhotoOptionsModal = ({
         <Flex centered gap="$spacing24" pt="$spacing8" px="$spacing24">
           <Flex gap="$spacing12" width="100%">
             {options.map((option) => (
-              <Flex key={option.key} onPress={option.onPress}>
+              <TouchableArea key={option.key} onPress={option.onPress}>
                 {option.item}
-              </Flex>
+              </TouchableArea>
             ))}
           </Flex>
         </Flex>
@@ -119,7 +120,12 @@ const ChoosePhotoOption = ({ type }: { type: PhotoAction }): JSX.Element => {
       justifyContent="flex-start"
       p="$spacing24"
     >
-      {type === PhotoAction.BrowseCameraRoll && <Camera color="$neutral1" size={iconSizes.icon24} />}
+      {type === PhotoAction.BrowseCameraRoll &&
+        (isExtension ? (
+          <Share color="$neutral1" size={iconSizes.icon24} />
+        ) : (
+          <Camera color="$neutral1" size={iconSizes.icon24} />
+        ))}
       {type === PhotoAction.BrowseNftsList && <PhotoStacked color="$neutral1" size={iconSizes.icon24} />}
       {type === PhotoAction.RemovePhoto && <Trash color="$statusCritical" size={iconSizes.icon24} />}
       <Flex shrink alignItems="flex-start">
@@ -128,7 +134,8 @@ const ChoosePhotoOption = ({ type }: { type: PhotoAction }): JSX.Element => {
           numberOfLines={1}
           variant="buttonLabel1"
         >
-          {type === PhotoAction.BrowseCameraRoll && t('unitags.choosePhoto.option.cameraRoll')}
+          {type === PhotoAction.BrowseCameraRoll &&
+            (isExtension ? t('unitags.choosePhoto.option.computer') : t('unitags.choosePhoto.option.cameraRoll'))}
           {type === PhotoAction.BrowseNftsList && t('unitags.choosePhoto.option.nft')}
           {type === PhotoAction.RemovePhoto && t('unitags.choosePhoto.option.remove')}
         </Text>

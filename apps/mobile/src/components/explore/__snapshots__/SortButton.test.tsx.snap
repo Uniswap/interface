@@ -39,21 +39,23 @@ exports[`SortButton renders without error 1`] = `
           "paddingTop": 8,
         }
       }
-      testID="chain-selector"
+      testID="dropdown-toggle"
     >
       <View
         style={
           {
-            "backgroundColor": "#FFFFFF",
+            "alignItems": "center",
+            "backgroundColor": "rgba(34,34,34,0.05)",
             "borderBottomLeftRadius": 20,
             "borderBottomRightRadius": 20,
             "borderTopLeftRadius": 20,
             "borderTopRightRadius": 20,
             "flexDirection": "row",
             "gap": 4,
+            "justifyContent": "center",
             "paddingBottom": 8,
-            "paddingLeft": 16,
-            "paddingRight": 16,
+            "paddingLeft": 12,
+            "paddingRight": 8,
             "paddingTop": 8,
           }
         }
@@ -65,12 +67,12 @@ exports[`SortButton renders without error 1`] = `
           numberOfLines={1}
           style={
             {
-              "color": "#7D7D7D",
+              "color": "#222222",
               "flexShrink": 1,
               "fontFamily": "Basel Grotesk",
-              "fontSize": 17,
+              "fontSize": 15,
               "fontWeight": "500",
-              "lineHeight": 19.549999999999997,
+              "lineHeight": 17.25,
             }
           }
           suppressHighlighting={true}

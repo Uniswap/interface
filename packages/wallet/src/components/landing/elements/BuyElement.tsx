@@ -1,23 +1,20 @@
 import { Flex, useIsDarkMode } from 'ui/src'
 import { Buy } from 'ui/src/components/icons'
-import { colors, opacify } from 'ui/src/theme'
+import { colors, opacify, validColor } from 'ui/src/theme'
 
 export const BuyElement = (): JSX.Element => {
   const isDarkMode = useIsDarkMode()
-  const mainColor = isDarkMode ? '$orangeVibrant' : '$orangeBase'
 
   return (
     <Flex
       centered
       row
-      backgroundColor={opacify(isDarkMode ? 10 : 20, colors.orangeBase)}
-      borderRadius="$roundedFull"
+      backgroundColor={isDarkMode ? opacify(10, colors.orangeBase) : validColor(colors.orangeLight)}
+      borderRadius="$rounded12"
       gap="$spacing4"
-      px="$spacing12"
-      py="$spacing8"
-      transform={[{ rotateZ: '-1deg' }]}
+      p="$spacing12"
     >
-      <Buy color={mainColor} size="$icon.20" />
+      <Buy color={validColor('$orangeBase')} size="$icon.20" />
     </Flex>
   )
 }

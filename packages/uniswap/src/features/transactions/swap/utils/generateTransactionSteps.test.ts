@@ -1,14 +1,12 @@
 import { USDC, WBTC } from 'uniswap/src/constants/tokens'
 import { Routing, TradeType } from 'uniswap/src/data/tradingApi/__generated__'
+import { TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
 import {
   SwapTxAndGasInfo,
   UniswapXSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
-import {
-  TransactionStepType,
-  generateTransactionSteps,
-} from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
+import { generateTransactionSteps } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'
 import {
   createMockCurrencyAmount,
@@ -34,6 +32,15 @@ const mockTxRequest = {
   from: '0x123',
   to: '0x456',
   value: '0x00',
+}
+
+const mockApproveRequest = {
+  ...mockTxRequest,
+  data: '0x095ea7b3000000000000000000000000000000000022d473030f116ddee9f6b43ac78ba3ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+}
+const mockRevokeRequest = {
+  ...mockTxRequest,
+  data: '0x095ea7b3000000000000000000000000000000000022d473030f116ddee9f6b43ac78ba30000000000000000000000000000000000000000000000000000000000000000',
 }
 
 const baseSwapTxContext: SwapTxAndGasInfo = {
@@ -70,21 +77,21 @@ describe('generateTransactionSteps', () => {
     it('should return steps for classic trade with revocation and approval required', () => {
       const swapTxContext = {
         ...baseSwapTxContext,
-        approveTxRequest: mockTxRequest,
-        revocationTxRequest: mockTxRequest,
+        approveTxRequest: mockApproveRequest,
+        revocationTxRequest: mockRevokeRequest,
       }
 
       expect(generateTransactionSteps(swapTxContext)).toEqual([
         {
           amount: '0',
-          spender: '0x000000000022D473030F116dDEE9F6B43aC78BA3',
+          spender: '0x000000000022d473030f116ddee9f6b43ac78ba3',
           txRequest: swapTxContext.revocationTxRequest,
           token: USDC,
           type: TransactionStepType.TokenRevocationTransaction,
         },
         {
-          amount: '1000000000000000000',
-          spender: '0x000000000022D473030F116dDEE9F6B43aC78BA3',
+          amount: mockTrade.trade?.inputAmount.quotient.toString(),
+          spender: '0x000000000022d473030f116ddee9f6b43ac78ba3',
           txRequest: swapTxContext.approveTxRequest,
           token: USDC,
           type: TransactionStepType.TokenApprovalTransaction,
@@ -99,13 +106,13 @@ describe('generateTransactionSteps', () => {
     it('should return steps for classic trade with approval required', () => {
       const swapTxContext = {
         ...baseSwapTxContext,
-        approveTxRequest: mockTxRequest,
+        approveTxRequest: mockApproveRequest,
       }
 
       expect(generateTransactionSteps(swapTxContext)).toEqual([
         {
-          amount: '1000000000000000000',
-          spender: '0x000000000022D473030F116dDEE9F6B43aC78BA3',
+          amount: mockTrade.trade?.inputAmount.quotient.toString(),
+          spender: '0x000000000022d473030f116ddee9f6b43ac78ba3',
           txRequest: swapTxContext.approveTxRequest,
           token: USDC,
           type: TransactionStepType.TokenApprovalTransaction,
@@ -123,15 +130,15 @@ describe('generateTransactionSteps', () => {
 
       const swapTxContext = {
         ...baseSwapTxContext,
-        approveTxRequest: mockTxRequest,
+        approveTxRequest: mockApproveRequest,
         unsigned: true,
         permit: mockPermit,
       }
 
       expect(generateTransactionSteps(swapTxContext)).toEqual([
         {
-          amount: '1000000000000000000',
-          spender: '0x000000000022D473030F116dDEE9F6B43aC78BA3',
+          amount: mockTrade.trade?.inputAmount.quotient.toString(),
+          spender: '0x000000000022d473030f116ddee9f6b43ac78ba3',
           txRequest: swapTxContext.approveTxRequest,
           token: USDC,
           type: TransactionStepType.TokenApprovalTransaction,
@@ -185,8 +192,8 @@ describe('generateTransactionSteps', () => {
         ...baseSwapTxContext,
         trade: mockUniswapXTrade,
         routing: Routing.DUTCH_V2,
-        approveTxRequest: mockTxRequest,
-        revocationTxRequest: mockTxRequest,
+        approveTxRequest: mockApproveRequest,
+        revocationTxRequest: mockRevokeRequest,
         wrapTxRequest: mockTxRequest,
         gasFeeBreakdown: {
           approvalCost: '1000000000000000000',
@@ -205,14 +212,14 @@ describe('generateTransactionSteps', () => {
         },
         {
           amount: '0',
-          spender: '0x000000000022D473030F116dDEE9F6B43aC78BA3',
+          spender: '0x000000000022d473030f116ddee9f6b43ac78ba3',
           txRequest: swapTxContext.revocationTxRequest,
           token: USDC,
           type: TransactionStepType.TokenRevocationTransaction,
         },
         {
-          amount: '44000',
-          spender: '0x000000000022D473030F116dDEE9F6B43aC78BA3',
+          amount: mockUniswapXTrade.inputAmount.quotient.toString(),
+          spender: '0x000000000022d473030f116ddee9f6b43ac78ba3',
           txRequest: swapTxContext.approveTxRequest,
           token: USDC,
           type: TransactionStepType.TokenApprovalTransaction,
@@ -231,7 +238,7 @@ describe('generateTransactionSteps', () => {
         ...baseSwapTxContext,
         trade: mockUniswapXTrade,
         routing: Routing.DUTCH_V2,
-        approveTxRequest: mockTxRequest,
+        approveTxRequest: mockApproveRequest,
         wrapTxRequest: mockTxRequest,
         gasFeeBreakdown: {
           approvalCost: '1000000000000000000',
@@ -249,8 +256,8 @@ describe('generateTransactionSteps', () => {
           amount: mockUniswapXTrade.inputAmount,
         },
         {
-          amount: '44000',
-          spender: '0x000000000022D473030F116dDEE9F6B43aC78BA3',
+          amount: mockUniswapXTrade.inputAmount.quotient.toString(),
+          spender: '0x000000000022d473030f116ddee9f6b43ac78ba3',
           txRequest: swapTxContext.approveTxRequest,
           token: USDC,
           type: TransactionStepType.TokenApprovalTransaction,

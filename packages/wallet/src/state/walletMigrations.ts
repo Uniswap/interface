@@ -9,6 +9,7 @@ import { CurrencyId } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { RankingType } from 'wallet/src/features/wallet/types'
 
 // Mobile: 63
 // Extension: 0
@@ -308,4 +309,19 @@ export function moveCurrencySetting(state: any): any {
   delete newState.fiatCurrencySettings
 
   return newState
+}
+
+export function updateExploreOrderByType(state: any): any {
+  const newState = { ...state }
+
+  return {
+    ...newState,
+    wallet: {
+      ...newState.wallet,
+      settings: {
+        ...newState.wallet?.settings,
+        tokensOrderBy: RankingType.Volume,
+      },
+    },
+  }
 }

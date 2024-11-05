@@ -10,9 +10,10 @@ import {
   useDepositContext,
   usePriceRangeContext,
 } from 'pages/Pool/Positions/create/CreatePositionContext'
+import { formatPrices } from 'pages/Pool/Positions/create/shared'
+import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { Button, Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -24,7 +25,7 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
-import { TransactionStep } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
+import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { Trans } from 'uniswap/src/i18n'
 import { NumberType } from 'utilities/src/format/types'
 import { useAccount } from 'wagmi'
@@ -32,33 +33,25 @@ import { useAccount } from 'wagmi'
 export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const {
     positionState: { protocolVersion },
-    derivedPositionInfo: { currencies },
+    derivedPositionInfo,
   } = useCreatePositionContext()
   const {
-    derivedPriceRangeInfo: { baseAndQuoteTokens, prices, ticksAtLimit, isSorted },
+    derivedPriceRangeInfo,
+    priceRangeState: { priceInverted },
   } = usePriceRangeContext()
   const {
     derivedDepositInfo: { formattedAmounts, currencyAmounts, currencyAmountsUSDValue },
   } = useDepositContext()
 
-  const { TOKEN0: token0, TOKEN1: token1 } = currencies
-
-  const token0CurrencyInfo = useCurrencyInfo(token0)
-  const token1CurrencyInfo = useCurrencyInfo(token1)
+  const token0CurrencyInfo = useCurrencyInfo(currencyAmounts?.TOKEN0?.currency)
+  const token1CurrencyInfo = useCurrencyInfo(currencyAmounts?.TOKEN1?.currency)
 
   const { formatNumberOrString, formatCurrencyAmount } = useLocalizationContext()
-  const [baseCurrency, quoteCurrency] = baseAndQuoteTokens ?? [undefined, undefined]
+  const [baseCurrency, quoteCurrency] = getInvertedTuple(derivedPositionInfo.currencies, priceInverted)
 
   const formattedPrices = useMemo(() => {
-    const lowerPriceFormatted = ticksAtLimit[isSorted ? 0 : 1]
-      ? '0'
-      : formatNumberOrString({ value: prices?.[0]?.toSignificant(), type: NumberType.TokenTx })
-    const upperPriceFormatted = ticksAtLimit[isSorted ? 1 : 0]
-      ? '∞'
-      : formatNumberOrString({ value: prices?.[1]?.toSignificant(), type: NumberType.TokenTx })
-
-    return [lowerPriceFormatted, upperPriceFormatted]
-  }, [formatNumberOrString, isSorted, prices, ticksAtLimit])
+    return formatPrices(derivedPriceRangeInfo, formatNumberOrString)
+  }, [formatNumberOrString, derivedPriceRangeInfo])
 
   const [steps, setSteps] = useState<TransactionStep[]>([])
   const [currentStep, setCurrentStep] = useState<{ step: TransactionStep; accepted: boolean } | undefined>()
@@ -66,7 +59,6 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
   const createTxContext = useCreateTxContext()
   const account = useAccountMeta()
   const selectChain = useSelectChain()
-  const navigate = useNavigate()
   const startChainId = useAccount().chainId
 
   const onFailure = () => {
@@ -77,14 +69,14 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
     setSteps([])
     setCurrentStep(undefined)
     onClose()
-    navigate('/positions')
-  }, [navigate, onClose])
+  }, [onClose])
 
   const handleCreate = useCallback(() => {
     const isValidTx = isValidLiquidityTxContext(createTxContext)
     if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
       return
     }
+
     dispatch(
       liquiditySaga.actions.trigger({
         selectChain,
@@ -114,11 +106,14 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
           <Flex py="$spacing12" gap="$spacing12">
             <Flex row justifyContent="space-between">
               <Flex row gap="$gap8">
-                <Text variant="heading3">{token0?.symbol}</Text>
+                <Text variant="heading3">{currencyAmounts?.TOKEN0?.currency?.symbol}</Text>
                 <Text variant="heading3">/</Text>
-                <Text variant="heading3">{token1?.symbol}</Text>
+                <Text variant="heading3">{currencyAmounts?.TOKEN1?.currency?.symbol}</Text>
               </Flex>
-              <DoubleCurrencyLogo currencies={[token0, token1]} size={iconSizes.icon36} />
+              <DoubleCurrencyLogo
+                currencies={[currencyAmounts?.TOKEN0?.currency, currencyAmounts?.TOKEN1?.currency]}
+                size={iconSizes.icon36}
+              />
             </Flex>
             {(protocolVersion === ProtocolVersion.V3 || protocolVersion === ProtocolVersion.V4) && (
               <Flex row>
@@ -153,9 +148,9 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
               </Flex>
               <TokenLogo
                 size={iconSizes.icon36}
-                chainId={token0?.chainId}
-                name={token0?.name}
-                symbol={token0?.symbol}
+                chainId={currencyAmounts?.TOKEN0?.currency?.chainId}
+                name={currencyAmounts?.TOKEN0?.currency?.name}
+                symbol={currencyAmounts?.TOKEN0?.currency?.symbol}
                 url={token0CurrencyInfo?.logoUrl}
               />
             </Flex>
@@ -171,9 +166,9 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
               </Flex>
               <TokenLogo
                 size={iconSizes.icon36}
-                chainId={token1?.chainId}
-                name={token1?.name}
-                symbol={token1?.symbol}
+                chainId={currencyAmounts?.TOKEN1?.currency?.chainId}
+                name={currencyAmounts?.TOKEN1?.currency?.name}
+                symbol={currencyAmounts?.TOKEN1?.currency?.symbol}
                 url={token1CurrencyInfo?.logoUrl}
               />
             </Flex>

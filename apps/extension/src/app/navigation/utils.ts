@@ -1,5 +1,5 @@
 import { To, matchPath, useLocation } from 'react-router-dom'
-import { TopLevelRoutes } from 'src/app/navigation/constants'
+import { TopLevelRoutes, UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { onboardingMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { OnboardingMessageType } from 'src/background/messagePassing/types/ExtensionMessages'
@@ -68,13 +68,13 @@ export async function focusOrCreateOnboardingTab(page?: string): Promise<void> {
   })
 }
 
-export async function focusOrCreateUnitagClaimTab(): Promise<void> {
+export async function focusOrCreateUnitagTab(address: Address, page: UnitagClaimRoutes): Promise<void> {
   const extension = await chrome.management.getSelf()
 
   const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/unitagClaim.html*` })
   const tab = tabs[0]
 
-  const url = 'unitagClaim.html#/'
+  const url = `unitagClaim.html#/${page}?address=${address}`
 
   if (!tab?.id) {
     await chrome.tabs.create({ url })
@@ -204,4 +204,23 @@ export async function getCurrentTabAndWindowId(): Promise<{ tabId: number; windo
     throw new Error('No active tab found or missing tab/window ID')
   }
   return { tabId: tabs[0].id, windowId: tabs[0].windowId }
+}
+
+export async function closeCurrentTab(): Promise<void> {
+  try {
+    const tab = await chrome.tabs.getCurrent()
+
+    if (tab?.id) {
+      await chrome.tabs.remove(tab.id)
+    } else {
+      throw new Error('chrome.tabs.getCurrent did not return a tab with an id')
+    }
+  } catch (e) {
+    logger.error(e, {
+      tags: {
+        file: 'utils.ts',
+        function: 'closeCurrentTab',
+      },
+    })
+  }
 }

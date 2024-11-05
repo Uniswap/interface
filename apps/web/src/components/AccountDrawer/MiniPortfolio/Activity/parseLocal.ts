@@ -3,6 +3,7 @@ import { queryOptions, useQuery } from '@tanstack/react-query'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import { getCurrency } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
+import { getBridgeDescriptor } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
 import { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import {
   CancelledTransactionTitleTable,
@@ -17,10 +18,13 @@ import {
   AddLiquidityV2PoolTransactionInfo,
   AddLiquidityV3PoolTransactionInfo,
   ApproveTransactionInfo,
+  BridgeTransactionInfo,
   CollectFeesTransactionInfo,
   CreateV3PoolTransactionInfo,
+  DecreaseLiquidityTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  IncreaseLiquidityTransactionInfo,
   MigrateV2LiquidityToV3TransactionInfo,
   RemoveLiquidityV3TransactionInfo,
   SendTransactionInfo,
@@ -31,6 +35,7 @@ import {
 import { isConfirmedTx } from 'state/transactions/utils'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress } from 'utilities/src/addresses'
@@ -97,6 +102,37 @@ async function parseSwap(
   }
 }
 
+async function parseBridge(
+  bridge: BridgeTransactionInfo,
+  inputChainId: UniverseChainId,
+  outputChainId: UniverseChainId,
+  formatNumber: FormatNumberFunctionType,
+): Promise<Partial<Activity>> {
+  const [tokenIn, tokenOut] = await Promise.all([
+    getCurrency(bridge.inputCurrencyId, inputChainId),
+    getCurrency(bridge.outputCurrencyId, outputChainId),
+  ])
+  const inputAmount = tokenIn
+    ? formatNumber({
+        input: parseFloat(CurrencyAmount.fromRawAmount(tokenIn, bridge.inputCurrencyAmountRaw).toSignificant()),
+        type: NumberType.TokenNonTx,
+      })
+    : t('common.unknown')
+  const outputAmount = tokenOut
+    ? formatNumber({
+        input: parseFloat(CurrencyAmount.fromRawAmount(tokenOut, bridge.outputCurrencyAmountRaw).toSignificant()),
+        type: NumberType.TokenNonTx,
+      })
+    : t('common.unknown')
+  return {
+    descriptor: getBridgeDescriptor({ tokenIn, tokenOut, inputAmount, outputAmount }),
+    chainId: inputChainId,
+    outputChainId,
+    currencies: [tokenIn, tokenOut],
+    prefixIconSrc: undefined,
+  }
+}
+
 function parseWrap(
   wrap: WrapTransactionInfo,
   chainId: UniverseChainId,
@@ -139,12 +175,12 @@ async function parseApproval(
   }
 }
 
-type GenericLPInfo = Omit<
+type GenericLegacyLPInfo = Omit<
   AddLiquidityV3PoolTransactionInfo | RemoveLiquidityV3TransactionInfo | AddLiquidityV2PoolTransactionInfo,
   'type'
 >
-async function parseLP(
-  lp: GenericLPInfo,
+async function parseLegacyLP(
+  lp: GenericLegacyLPInfo,
   chainId: UniverseChainId,
   formatNumber: FormatNumberFunctionType,
 ): Promise<Partial<Activity>> {
@@ -156,6 +192,22 @@ async function parseLP(
   const descriptor = buildCurrencyDescriptor(baseCurrency, baseRaw, quoteCurrency, quoteRaw, formatNumber)
 
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
+}
+
+type GenericLiquidityInfo = Omit<IncreaseLiquidityTransactionInfo | DecreaseLiquidityTransactionInfo, 'type'>
+async function parseLiquidity(
+  lp: GenericLiquidityInfo,
+  chainId: UniverseChainId,
+  formatNumber: FormatNumberFunctionType,
+): Promise<Partial<Activity>> {
+  const [token0Currency, token1Currency] = await Promise.all([
+    getCurrency(lp.token0CurrencyId, chainId),
+    getCurrency(lp.token1CurrencyId, chainId),
+  ])
+  const [token0Raw, token1Raw] = [lp.token0CurrencyAmountRaw, lp.token1CurrencyAmountRaw]
+  const descriptor = buildCurrencyDescriptor(token0Currency, token0Raw, token1Currency, token1Raw, formatNumber)
+
+  return { descriptor, currencies: [token0Currency, token1Currency] }
 }
 
 async function parseCollectFees(
@@ -170,7 +222,7 @@ async function parseCollectFees(
     expectedCurrencyOwed0: expectedAmountBaseRaw,
     expectedCurrencyOwed1: expectedAmountQuoteRaw,
   } = collect
-  return parseLP(
+  return parseLegacyLP(
     { baseCurrencyId, quoteCurrencyId, expectedAmountBaseRaw, expectedAmountQuoteRaw },
     chainId,
     formatNumber,
@@ -244,6 +296,8 @@ export async function transactionToActivity(
     const info = details.info
     if (info.type === TransactionType.SWAP) {
       additionalFields = await parseSwap(info, chainId, formatNumber)
+    } else if (info.type === TransactionType.BRIDGE) {
+      additionalFields = await parseBridge(info, chainId, info.outputChainId ?? chainId, formatNumber)
     } else if (info.type === TransactionType.APPROVAL) {
       additionalFields = await parseApproval(info, chainId, details.status)
     } else if (info.type === TransactionType.WRAP) {
@@ -253,7 +307,9 @@ export async function transactionToActivity(
       info.type === TransactionType.REMOVE_LIQUIDITY_V3 ||
       info.type === TransactionType.ADD_LIQUIDITY_V2_POOL
     ) {
-      additionalFields = await parseLP(info, chainId, formatNumber)
+      additionalFields = await parseLegacyLP(info, chainId, formatNumber)
+    } else if (info.type === TransactionType.INCREASE_LIQUIDITY || info.type === TransactionType.DECREASE_LIQUIDITY) {
+      additionalFields = await parseLiquidity(info, chainId, formatNumber)
     } else if (info.type === TransactionType.COLLECT_FEES) {
       additionalFields = await parseCollectFees(info, chainId, formatNumber)
     } else if (info.type === TransactionType.MIGRATE_LIQUIDITY_V3 || info.type === TransactionType.CREATE_V3_POOL) {
@@ -351,12 +407,14 @@ export function useLocalActivities(account: string): ActivityMap {
   const allTransactions = useMultichainTransactions()
   const allSignatures = useAllSignatures()
   const { formatNumber } = useFormatter()
+  const { chains } = useEnabledChains()
 
   const { data } = useQuery({
-    queryKey: ['localActivities', account],
+    queryKey: ['localActivities', account, allTransactions, allSignatures],
     queryFn: async () => {
       const transactions = Object.values(allTransactions)
         .filter(([transaction]) => transaction.from === account)
+        .filter(([, chainId]) => chains.includes(chainId))
         .map(([transaction, chainId]) => transactionToActivity(transaction, chainId, formatNumber))
       const signatures = Object.values(allSignatures)
         .filter((signature) => signature.offerer === account)

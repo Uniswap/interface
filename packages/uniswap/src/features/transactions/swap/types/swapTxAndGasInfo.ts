@@ -87,7 +87,7 @@ export type ValidatedClassicSwapTxAndGasInfo = Required<ClassicSwapTxAndGasInfo>
   txRequest: ValidatedTransactionRequest
 })
 
-type ValidatedBridgeSwapTxAndGasInfo = Required<BridgeSwapTxAndGasInfo> & BaseRequiredSwapTxContextFields & ({
+export type ValidatedBridgeSwapTxAndGasInfo = Required<BridgeSwapTxAndGasInfo> & BaseRequiredSwapTxContextFields & ({
   unsigned: true
   permit: ValidatedPermit
   txRequest: undefined

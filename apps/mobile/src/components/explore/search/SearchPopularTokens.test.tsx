@@ -3,6 +3,7 @@ import { SearchPopularTokens } from 'src/components/explore/search/SearchPopular
 import { render, screen } from 'src/test/test-utils'
 import { ethToken, usdcToken, wethToken } from 'uniswap/src/test/fixtures'
 import { queryResolvers } from 'uniswap/src/test/utils'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 const { resolvers } = queryResolvers({
@@ -14,7 +15,7 @@ describe(SearchPopularTokens, () => {
   // TODO(MOB-3146): this test is flaky
   jest.retryTimes(3)
   it.skip('renders without error', async () => {
-    const tree = render(<SearchPopularTokens />, { resolvers })
+    const tree = render(<SearchPopularTokens selectedChain={UniverseChainId.Mainnet} />, { resolvers })
 
     // Loading should show Token loader
     expect(screen.getAllByText('Token Full Name')).toBeDefined()

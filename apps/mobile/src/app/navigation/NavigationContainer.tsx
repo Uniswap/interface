@@ -17,7 +17,7 @@ import { processWidgetEvents } from 'src/features/widgets/widgets'
 import { useSporeColors } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { MobileAppScreen } from 'uniswap/src/types/screens/mobile'
+import { MobileNavScreen } from 'uniswap/src/types/screens/mobile'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { sleep } from 'utilities/src/time/timing'
 
@@ -30,7 +30,7 @@ export const navigationRef = createNavigationContainerRef()
 /** Wrapped `NavigationContainer` with telemetry tracing. */
 export const NavigationContainer: FC<PropsWithChildren<Props>> = ({ children, onReady }: PropsWithChildren<Props>) => {
   const colors = useSporeColors()
-  const [routeName, setRouteName] = useState<MobileAppScreen>()
+  const [routeName, setRouteName] = useState<MobileNavScreen>()
   const [routeParams, setRouteParams] = useState<Record<string, unknown> | undefined>()
   const [logImpression, setLogImpression] = useState<boolean>(false)
 
@@ -51,7 +51,7 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({ children, on
         processWidgetEvents().catch(() => undefined)
 
         // setting initial route name for telemetry
-        const initialRoute = navigationRef.getCurrentRoute()?.name as MobileAppScreen
+        const initialRoute = navigationRef.getCurrentRoute()?.name as MobileNavScreen
         setRouteName(initialRoute)
 
         if (!__DEV__) {
@@ -60,7 +60,7 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({ children, on
       }}
       onStateChange={(): void => {
         const previousRouteName = routeName
-        const currentRouteName: MobileAppScreen = navigationRef.getCurrentRoute()?.name as MobileAppScreen
+        const currentRouteName: MobileNavScreen = navigationRef.getCurrentRoute()?.name as MobileNavScreen
 
         if (
           currentRouteName &&
@@ -69,7 +69,7 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({ children, on
         ) {
           const currentRouteParams = getEventParams(
             currentRouteName,
-            navigationRef.getCurrentRoute()?.params as RootParamList[MobileAppScreen],
+            navigationRef.getCurrentRoute()?.params as RootParamList[MobileNavScreen],
           )
           setLogImpression(true)
           setRouteName(currentRouteName)

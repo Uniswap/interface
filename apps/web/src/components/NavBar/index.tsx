@@ -7,6 +7,7 @@ import { PreferenceMenu } from 'components/NavBar/PreferencesMenu'
 import { useTabsVisible } from 'components/NavBar/ScreenSizes'
 import { SearchBar } from 'components/NavBar/SearchBar'
 import { Tabs } from 'components/NavBar/Tabs/Tabs'
+import TestnetModeTooltip from 'components/NavBar/TestnetMode/TestnetModeTooltip'
 import { useIsAccountCTAExperimentControl } from 'components/NavBar/accountCTAsExperimentUtils'
 import Web3Status from 'components/Web3Status'
 import Row from 'components/deprecated/Row'
@@ -26,6 +27,7 @@ import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 
 const Nav = styled.nav`
@@ -120,6 +122,8 @@ export default function Navbar() {
 
   const hideChainSelector = useShouldHideChainSelector()
 
+  const { isTestnetModeEnabled } = useEnabledChains()
+
   const { isControl: isSignInExperimentControl, isLoading: isSignInExperimentControlLoading } =
     useIsAccountCTAExperimentControl()
 
@@ -151,6 +155,7 @@ export default function Navbar() {
           )}
           {!account.isConnected && !account.isConnecting && <PreferenceMenu />}
           {!hideChainSelector && <ChainSelector />}
+          {isTestnetModeEnabled && <TestnetModeTooltip />}
           <Web3Status />
           {shouldDisplayCreateAccountButton && !isSignInExperimentControl && !isSignInExperimentControlLoading && !account.address && !isMediumScreen && (
             <NewUserCTAButton />

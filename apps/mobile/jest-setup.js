@@ -24,6 +24,8 @@ jest.mock('@sentry/react-native', () => ({
   ReactNativeTracing: jest.fn(),
 }))
 
+jest.mock('@uniswap/client-explore/dist/uniswap/explore/v1/service-ExploreStatsService_connectquery', () => {})
+
 // Disables animated driver warning
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
 

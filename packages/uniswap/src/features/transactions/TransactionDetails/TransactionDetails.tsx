@@ -15,6 +15,7 @@ import {
   FeeOnTransferFeeGroup,
   FeeOnTransferFeeGroupProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/FeeOnTransferFee'
+import { FeeOnTransferWarningCard } from 'uniswap/src/features/transactions/TransactionDetails/FeeOnTransferWarningCard'
 import { SwapFee } from 'uniswap/src/features/transactions/TransactionDetails/SwapFee'
 import { EstimatedTime } from 'uniswap/src/features/transactions/swap/review/EstimatedTime'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
@@ -35,6 +36,8 @@ interface TransactionDetailsProps {
   showSeparatorToggle?: boolean
   warning?: Warning
   feeOnTransferProps?: FeeOnTransferFeeGroupProps
+  feeOnTransferWarningChecked?: boolean
+  setFeeOnTransferWarningChecked?: (checked: boolean) => void
   outputCurrency?: Currency
   onShowWarning?: () => void
   indicative?: boolean
@@ -62,6 +65,8 @@ export function TransactionDetails({
   showWarning,
   warning,
   feeOnTransferProps,
+  feeOnTransferWarningChecked,
+  setFeeOnTransferWarningChecked,
   onShowWarning,
   indicative = false,
   isSwap,
@@ -73,6 +78,8 @@ export function TransactionDetails({
   RateInfo,
 }: PropsWithChildren<TransactionDetailsProps>): JSX.Element {
   const { t } = useTranslation()
+  const showFeeOnTransferWarningCard =
+    !!feeOnTransferProps && !feeOnTransferWarningChecked && !!setFeeOnTransferWarningChecked
 
   const [showChildren, setShowChildren] = useState(showExpandedChildren)
 
@@ -95,29 +102,38 @@ export function TransactionDetails({
           onPress={onPressToggleShowChildren}
         />
       ) : null}
-      <Flex gap="$spacing8" pb="$spacing8" px="$spacing8">
-        {RateInfo}
-        {feeOnTransferProps && <FeeOnTransferFeeGroup {...feeOnTransferProps} />}
-        {isSwap && isBridgeTrade && <EstimatedTime visibleIfLong={true} timeMs={estimatedBridgingTime} />}
-        {isSwap && outputCurrency && (
-          <SwapFee currency={outputCurrency} loading={indicative} swapFee={swapFee} swapFeeUsd={swapFeeUsd} />
+      <Flex gap="$spacing16" pb="$spacing8">
+        <Flex gap="$spacing8" px="$spacing8">
+          {RateInfo}
+          {feeOnTransferProps && <FeeOnTransferFeeGroup {...feeOnTransferProps} />}
+          {isSwap && isBridgeTrade && <EstimatedTime visibleIfLong={true} timeMs={estimatedBridgingTime} />}
+          {isSwap && outputCurrency && (
+            <SwapFee currency={outputCurrency} loading={indicative} swapFee={swapFee} swapFeeUsd={swapFeeUsd} />
+          )}
+          <NetworkFee
+            chainId={chainId}
+            gasFee={gasFee}
+            indicative={indicative}
+            transactionUSDValue={transactionUSDValue}
+            uniswapXGasBreakdown={uniswapXGasBreakdown}
+          />
+          {isSwap && RoutingInfo}
+          {AccountDetails}
+          {showChildren ? (
+            <AnimatePresence>
+              <Flex animation="fast" exitStyle={{ opacity: 0 }} enterStyle={{ opacity: 0 }} gap="$spacing8">
+                {children}
+              </Flex>
+            </AnimatePresence>
+          ) : null}
+        </Flex>
+        {showFeeOnTransferWarningCard && (
+          <FeeOnTransferWarningCard
+            checked={!!feeOnTransferWarningChecked}
+            setChecked={setFeeOnTransferWarningChecked}
+            {...feeOnTransferProps}
+          />
         )}
-        <NetworkFee
-          chainId={chainId}
-          gasFee={gasFee}
-          indicative={indicative}
-          transactionUSDValue={transactionUSDValue}
-          uniswapXGasBreakdown={uniswapXGasBreakdown}
-        />
-        {isSwap && RoutingInfo}
-        {AccountDetails}
-        {showChildren ? (
-          <AnimatePresence>
-            <Flex animation="fast" exitStyle={{ opacity: 0 }} enterStyle={{ opacity: 0 }} gap="$spacing8">
-              {children}
-            </Flex>
-          </AnimatePresence>
-        ) : null}
       </Flex>
       {showWarning && warning && onShowWarning && (
         <TransactionWarning warning={warning} onShowWarning={onShowWarning} />

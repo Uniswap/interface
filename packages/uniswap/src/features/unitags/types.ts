@@ -1,7 +1,7 @@
 // Internal types
 
 export type UnitagClaim = {
-  address: string
+  address?: string
   username: string
   avatarUri?: string
 }
@@ -37,6 +37,10 @@ export type UnitagAddressResponse = {
   username?: string
   address?: Address
   metadata?: ProfileMetadata
+}
+
+export type UnitagAddressesRequest = {
+  addresses: Address[]
 }
 
 export type UnitagAddressesResponse = {

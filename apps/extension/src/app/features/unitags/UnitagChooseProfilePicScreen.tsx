@@ -3,25 +3,30 @@ import { useCallback, useEffect } from 'react'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingStepsContext'
 import { useUnitagClaimContext } from 'src/app/features/unitags/UnitagClaimContext'
+import { backgroundToSidePanelMessageChannel } from 'src/background/messagePassing/messageChannels'
+import { BackgroundToSidePanelRequestType } from 'src/background/messagePassing/types/requests'
 import { Flex, Square } from 'ui/src'
 import { Person } from 'ui/src/components/icons'
-import { fonts, iconSizes, spacing } from 'ui/src/theme'
+import { fonts, iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionUnitagClaimScreens } from 'uniswap/src/types/screens/extension'
 import { logger } from 'utilities/src/logger/logger'
+import { extensionNftModalProps } from 'wallet/src/features/unitags/ChooseNftModal'
 import { UnitagChooseProfilePicContent } from 'wallet/src/features/unitags/UnitagChooseProfilePicContent'
-import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-
-const NFT_MODAL_MAX_WIDTH = 610
+import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function UnitagChooseProfilePicScreen(): JSX.Element {
   const { goToNextStep, goToPreviousStep } = useOnboardingSteps()
   const { unitag, entryPoint, setProfilePicUri } = useUnitagClaimContext()
-  const address = useActiveAccountAddressWithThrow()
+  const address = useAccountAddressFromUrlWithThrow()
 
   const onNavigateContinue = useCallback(
-    (imageUri: string | undefined) => {
+    async (imageUri: string | undefined) => {
       setProfilePicUri(imageUri)
+      // TODO WALL-5067 move claim logic out of UnitagChooseProfilePicContent and integrate message sending
+      await backgroundToSidePanelMessageChannel.sendMessage({
+        type: BackgroundToSidePanelRequestType.RefreshUnitags,
+      })
       goToNextStep()
     },
     [setProfilePicUri, goToNextStep],
@@ -46,24 +51,18 @@ export function UnitagChooseProfilePicScreen(): JSX.Element {
             <Person color="$neutral1" size={iconSizes.icon24} />
           </Square>
         }
-        title={t('unitags.onboarding.claim.title.choose')}
-        subtitle={t('unitags.onboarding.claim.subtitle')}
+        title={t('unitags.onboarding.profile.title')}
+        subtitle={t('unitags.onboarding.profile.subtitle')}
         onBack={goToPreviousStep}
       >
         <Flex gap="$spacing24" pt="$spacing24" width="100%">
           <UnitagChooseProfilePicContent
+            shouldHandleClaim
             entryPoint={entryPoint}
             address={address}
             unitag={unitag ?? ''}
-            shouldHandleClaim={false}
             unitagFontSize={fonts.heading3.fontSize}
-            nftModalProps={{
-              includeContextMenu: false,
-              itemMargin: '$spacing6',
-              containerProps: { m: -spacing.spacing6 }, // Cancels out the margin on each NFT item
-              modalMaxWidth: NFT_MODAL_MAX_WIDTH,
-              numColumns: 4,
-            }}
+            nftModalProps={extensionNftModalProps}
             onContinue={onNavigateContinue}
           />
         </Flex>

@@ -21,21 +21,21 @@ import {
   UniswapOpenSidebarResponse,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { HexadecimalNumberSchema } from 'src/app/features/dappRequests/types/utilityTypes'
-import { extractBaseUrl } from 'src/app/features/dappRequests/utils'
 import { isWalletUnlocked } from 'src/app/hooks/useIsWalletUnlocked'
 import { AppRoutes, HomeQueryParams } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { call, put, select, take } from 'typed-redux-saga'
 import { hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import {
   TransactionOriginType,
   TransactionType,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { extractBaseUrl } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { SendTransactionParams, sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'

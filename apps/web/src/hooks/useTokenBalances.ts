@@ -3,11 +3,11 @@ import { PortfolioBalance } from 'graphql/data/portfolios'
 import { useAccount } from 'hooks/useAccount'
 import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
 import { useMemo } from 'react'
-import { GQL_MAINNET_CHAINS_MUTABLE } from 'uniswap/src/constants/chains'
 import {
   QuickTokenBalancePartsFragment,
   useQuickTokenBalancesWebQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { currencyKeyFromGraphQL } from 'utils/currencyKey'
 
 /**
@@ -19,12 +19,13 @@ export function useTokenBalances({ cacheOnly }: { cacheOnly?: boolean } = {}): {
   loading: boolean
 } {
   const account = useAccount()
+  const { gqlChains } = useEnabledChains()
 
   // Quick result is always available at pageload, but never refetched when stale
   const quickQueryResult = useQuickTokenBalancesWebQuery({
     variables: {
       ownerAddress: account.address ?? '',
-      chains: GQL_MAINNET_CHAINS_MUTABLE,
+      chains: gqlChains,
     },
     skip: !account.address,
     fetchPolicy: 'cache-first',

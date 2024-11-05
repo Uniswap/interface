@@ -19,3 +19,6 @@ export const selectHasUsedExplore = (state: WalletState): boolean => state.behav
 
 export const selectHasViewedOffRampTooltip = (state: WalletState): boolean =>
   state.behaviorHistory.hasViewedOffRampTooltip
+
+export const selectHasViewedDappRequestBridgingBanner = (state: WalletState, dappUrl: string): boolean =>
+  state.behaviorHistory.hasViewedDappRequestBridgingBanner?.[dappUrl] ?? false

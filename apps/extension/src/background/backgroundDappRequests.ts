@@ -10,7 +10,6 @@ import {
   DappResponseType,
   RevokePermissionsRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { extractBaseUrl } from 'src/app/features/dappRequests/utils'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import {
   DappBackgroundPortChannel,
@@ -30,6 +29,7 @@ import { hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants/extension'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WindowEthereumRequestProperties } from 'uniswap/src/features/telemetry/types'
+import { extractBaseUrl } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { walletContextValue } from 'wallet/src/features/wallet/context'

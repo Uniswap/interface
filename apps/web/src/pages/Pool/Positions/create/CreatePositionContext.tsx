@@ -19,9 +19,11 @@ export const CreatePositionContext = React.createContext<CreatePositionContextTy
   setPositionState: () => undefined,
   feeTierSearchModalOpen: false,
   setFeeTierSearchModalOpen: () => undefined,
+  createPoolInfoDismissed: false,
+  setCreatePoolInfoDismissed: () => undefined,
   derivedPositionInfo: {
-    protocolVersion: ProtocolVersion.UNSPECIFIED,
-    currencies: {},
+    protocolVersion: ProtocolVersion.V4,
+    currencies: [undefined, undefined],
   },
 })
 
@@ -31,19 +33,31 @@ export const useCreatePositionContext = () => {
 
 export const DEFAULT_PRICE_RANGE_STATE: PriceRangeState = {
   priceInverted: false,
-  fullRange: true,
-  minPrice: '',
-  maxPrice: '',
+  fullRange: false,
+  minPrice: undefined,
+  maxPrice: undefined,
+  initialPrice: '',
+  initialPriceInverted: false,
 }
 
 export const PriceRangeContext = React.createContext<PriceRangeContextType>({
   priceRangeState: DEFAULT_PRICE_RANGE_STATE,
   setPriceRangeState: () => undefined,
   derivedPriceRangeInfo: {
+    protocolVersion: ProtocolVersion.V4,
     isSorted: false,
-    ticksAtLimit: [true, true],
+    ticksAtLimit: [false, false],
     invertPrice: false,
     tickSpaceLimits: [0, 0],
+    deposit0Disabled: false,
+    deposit1Disabled: false,
+    ticks: [0, 0],
+    invalidPrice: false,
+    invalidRange: false,
+    outOfRange: false,
+    prices: [undefined, undefined],
+    pricesAtLimit: [undefined, undefined],
+    pricesAtTicks: [undefined, undefined],
   },
 })
 

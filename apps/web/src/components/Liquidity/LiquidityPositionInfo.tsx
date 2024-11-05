@@ -1,22 +1,17 @@
-// eslint-disable-next-line no-restricted-imports
-import { Position } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BadgeData, LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { LiquidityPositionStatusIndicator } from 'components/Liquidity/LiquidityPositionStatusIndicator'
-import { getProtocolVersionLabel, parseRestPosition } from 'components/Liquidity/utils'
+import { PositionInfo } from 'components/Liquidity/types'
+import { getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
-import { useMemo } from 'react'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { Flex, Text } from 'ui/src'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
 
 interface LiquidityPositionInfoProps {
-  position: Position
+  positionInfo: PositionInfo
 }
 
-export function LiquidityPositionInfo({ position }: LiquidityPositionInfoProps) {
-  const positionInfo = useMemo(() => parseRestPosition(position), [position])
-  if (!positionInfo) {
-    return null
-  }
+export function LiquidityPositionInfo({ positionInfo }: LiquidityPositionInfoProps) {
   const { currency0Amount, currency1Amount, status, feeTier, v4hook, version } = positionInfo
   const versionLabel = getProtocolVersionLabel(version)
   return (
@@ -37,7 +32,7 @@ export function LiquidityPositionInfo({ position }: LiquidityPositionInfoProps) 
               badges={
                 [
                   versionLabel ? { label: versionLabel } : undefined,
-                  v4hook
+                  v4hook && v4hook !== ZERO_ADDRESS
                     ? { label: v4hook, copyable: true, icon: <DocumentList color="$neutral2" size={16} /> }
                     : undefined,
                   feeTier ? { label: `${Number(feeTier) / 10000}%` } : undefined,

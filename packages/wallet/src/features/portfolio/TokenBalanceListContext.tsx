@@ -1,5 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
-import { isEqual } from 'lodash'
+import isEqual from 'lodash/isEqual'
 import {
   Dispatch,
   PropsWithChildren,
@@ -11,8 +11,13 @@ import {
   useState,
 } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { usePortfolioBalances, useTokenBalancesGroupedByVisibility } from 'uniswap/src/features/dataApi/balances'
+import {
+  sortPortfolioBalances,
+  usePortfolioBalances,
+  useTokenBalancesGroupedByVisibility,
+} from 'uniswap/src/features/dataApi/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
 
 type CurrencyId = string
@@ -53,6 +58,7 @@ export function TokenBalanceListContextProvider({
     fetchPolicy: 'cache-and-network',
   })
 
+  const { isTestnetModeEnabled } = useEnabledChains()
   // re-order token balances to visible and hidden
   const { shownTokens, hiddenTokens } = useTokenBalancesGroupedByVisibility({
     balancesById,
@@ -65,8 +71,13 @@ export function TokenBalanceListContextProvider({
   const rowsRef = useRef<TokenBalanceListRow[]>()
 
   const rows = useMemo<TokenBalanceListRow[]>(() => {
+    const shownTokensArray = shownTokens ?? []
     const newRowIds = [
-      ...(shownTokens ?? []),
+      // already sorted when testnet mode is disabled;
+      // api uses usd value, which is available for prod tokens
+      ...(isTestnetModeEnabled
+        ? sortPortfolioBalances({ balances: shownTokensArray, isTestnetModeEnabled })
+        : shownTokensArray),
       ...(hiddenTokens?.length ? [HIDDEN_TOKEN_BALANCES_ROW] : []),
       ...(hiddenTokensExpanded && hiddenTokens ? hiddenTokens : []),
     ].map((token) => {
@@ -83,7 +94,7 @@ export function TokenBalanceListContextProvider({
     }
 
     return rowsRef.current
-  }, [hiddenTokens, hiddenTokensExpanded, shownTokens])
+  }, [hiddenTokens, hiddenTokensExpanded, shownTokens, isTestnetModeEnabled])
 
   const isWarmLoading = !!balancesById && isWarmLoadingStatus(networkStatus) && !isExternalProfile
 

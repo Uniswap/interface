@@ -89,7 +89,8 @@ export const slice = createSlice({
       state,
       { payload: { nftKey, isSpam } }: PayloadAction<{ nftKey: string; isSpam?: boolean }>,
     ) => {
-      const isVisible = state.nftsVisibility[nftKey]?.isVisible ?? isSpam === false
+      const isVisible = state.nftsVisibility[nftKey]?.isVisible ?? !isSpam
+
       state.nftsVisibility[nftKey] = { isVisible: !isVisible }
     },
   },

@@ -15,7 +15,7 @@ import { CardType, IntroCardGraphicType, IntroCardProps } from 'wallet/src/compo
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { selectHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/selectors'
 import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'wallet/src/features/unitags/constants'
-import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
+import { useCanActiveAddressClaimUnitag, useHasAnyAccountsWithUnitag } from 'wallet/src/features/unitags/hooks'
 import { useUnitagClaimHandler } from 'wallet/src/features/unitags/useUnitagClaimHandler'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -50,7 +50,9 @@ export function useSharedIntroCards({
     navigateToClaim: navigateToUnitagClaim,
     navigateToIntro: navigateToUnitagIntro,
   })
-  const shouldPromptUnitag = isSignerAccount && !hasSkippedUnitagPrompt && canClaimUnitag
+
+  const hasAnyUnitags = useHasAnyAccountsWithUnitag()
+  const shouldPromptUnitag = isSignerAccount && !hasSkippedUnitagPrompt && canClaimUnitag && !hasAnyUnitags
 
   const hasViewedBridgingBanner = useSelector(selectHasViewedBridgingBanner)
   const bridgingEnabled = useFeatureFlag(FeatureFlags.Bridging)

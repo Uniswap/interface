@@ -156,7 +156,7 @@ Array [
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
-    "path": "/positions/v2/:pairAddress",
+    "path": "/positions/v2/:chainName/:pairAddress",
   },
   Object {
     "enabled": [Function],
@@ -164,7 +164,7 @@ Array [
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
-    "path": "/positions/v3/:tokenId",
+    "path": "/positions/v3/:chainName/:tokenId",
   },
   Object {
     "enabled": [Function],
@@ -172,7 +172,7 @@ Array [
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
-    "path": "/positions/v4/:tokenId",
+    "path": "/positions/v4/:chainName/:tokenId",
   },
   Object {
     "enabled": [Function],
@@ -180,7 +180,7 @@ Array [
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
-    "path": "/migrate/v3/:tokenId",
+    "path": "/migrate/v3/:chainName/:tokenId",
   },
   Object {
     "enabled": [Function],

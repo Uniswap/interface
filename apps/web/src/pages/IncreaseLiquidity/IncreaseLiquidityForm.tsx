@@ -27,7 +27,7 @@ export function IncreaseLiquidityForm() {
     throw new Error('AddLiquidityModal must have an initial state when opening')
   }
 
-  const { restPosition, currency0Amount, currency1Amount } = position
+  const { currency0Amount, currency1Amount } = position
   const token0 = currency0Amount.currency
   const token1 = currency1Amount.currency
 
@@ -65,7 +65,7 @@ export function IncreaseLiquidityForm() {
   return (
     <>
       <Flex px="$padding16">
-        <LiquidityPositionInfo position={restPosition} />
+        <LiquidityPositionInfo positionInfo={position} />
         <DepositInputForm
           token0={token0}
           token1={token1}

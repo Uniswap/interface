@@ -56,6 +56,7 @@ function* syncNotificationsWithFirebase() {
     const addresses = Object.keys(accounts)
 
     for (const address of addresses) {
+      const selectAccountNotificationSetting = yield* call(makeSelectAccountNotificationSetting)
       const notificationsEnabled = yield* select(selectAccountNotificationSetting, address)
 
       if (notificationsEnabled) {
@@ -165,8 +166,6 @@ export function* removeAccountFromFirebase(address: Address, notificationsEnable
   }
 }
 
-const selectAccountNotificationSetting = makeSelectAccountNotificationSetting()
-
 export function* renameAccountInFirebase(address: Address | undefined, newName: string) {
   if (!address) {
     throw new Error('Address is required for renameAccountInFirebase')
@@ -242,6 +241,7 @@ function* maybeUpdateFirebaseMetadata(address: Address | undefined, metadata: Ac
     return
   }
 
+  const selectAccountNotificationSetting = yield* call(makeSelectAccountNotificationSetting)
   const notificationsEnabled = yield* select(selectAccountNotificationSetting, address)
 
   if (!notificationsEnabled) {

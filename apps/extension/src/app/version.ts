@@ -24,6 +24,22 @@ export function getSentryEnvironment(): SentryEnvironment {
   return SentryEnvironment.PROD
 }
 
+export function getDatadogEnvironment(): DatadogEnvironment {
+  if (isDevEnv()) {
+    return DatadogEnvironment.DEV
+  }
+  if (isBetaEnv()) {
+    return DatadogEnvironment.BETA
+  }
+  return DatadogEnvironment.PROD
+}
+
+enum DatadogEnvironment {
+  DEV = 'dev',
+  BETA = 'beta',
+  PROD = 'prod',
+}
+
 enum SentryEnvironment {
   DEV = 'development',
   BETA = 'beta',

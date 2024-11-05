@@ -1,8 +1,10 @@
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useIncreaseLiquidityContext } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
-import { getProtocolItems, useModalLiquidityPositionInfo } from 'components/Liquidity/utils'
+import { useModalLiquidityPositionInfo } from 'components/Liquidity/hooks'
+import { getProtocolItems } from 'components/Liquidity/utils'
 import { ZERO_ADDRESS } from 'constants/misc'
-import { usePool } from 'pages/Pool/Positions/create/hooks'
 import { PropsWithChildren, createContext, useContext, useMemo } from 'react'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useIncreaseLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useIncreaseLpPositionCalldataQuery'
@@ -10,7 +12,6 @@ import { CheckApprovalLPRequest, IncreaseLPPositionRequest } from 'uniswap/src/d
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { IncreasePositionTxAndGasInfo } from 'uniswap/src/features/transactions/liquidity/types'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useAccount } from 'wagmi'
 
@@ -27,13 +28,10 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
 
   const { currencyAmounts } = derivedIncreaseLiquidityInfo
 
-  const pool = usePool(
-    positionInfo?.currency0Amount.currency,
-    positionInfo?.currency1Amount.currency,
-    positionInfo?.feeTier ? Number(positionInfo.feeTier) : undefined,
-    positionInfo?.currency0Amount.currency.chainId ?? UniverseChainId.Mainnet,
-    positionInfo?.version,
-  )
+  const pool =
+    positionInfo?.version === ProtocolVersion.V3 || positionInfo?.version === ProtocolVersion.V4
+      ? positionInfo.pool
+      : undefined
 
   const account = useAccount()
 
@@ -83,9 +81,10 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     gasFeePositionTokenApproval,
   )
 
-  const approvalsNeeded = Boolean(permitData || token0Approval || token1Approval || positionTokenApproval)
+  const approvalsNeeded =
+    !approvalLoading && Boolean(permitData || token0Approval || token1Approval || positionTokenApproval)
 
-  const increaseCalldataQueryParams: IncreaseLPPositionRequest | undefined = useMemo(() => {
+  const increaseCalldataQueryParams = useMemo((): IncreaseLPPositionRequest | undefined => {
     const apiProtocolItems = getProtocolItems(positionInfo?.version)
     const amount0 = currencyAmounts?.TOKEN0?.quotient.toString()
     const amount1 = currencyAmounts?.TOKEN1?.quotient.toString()
@@ -100,9 +99,9 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       chainId: positionInfo.currency0Amount.currency.chainId,
       amount0,
       amount1,
-      poolLiquidity: pool?.liquidity,
-      currentTick: pool?.tick,
-      sqrtRatioX96: pool?.sqrtPriceX96,
+      poolLiquidity: pool?.liquidity.toString(),
+      currentTick: pool?.tickCurrent,
+      sqrtRatioX96: pool?.sqrtRatioX96.toString(),
       position: {
         tickLower: positionInfo.tickLower ? Number(positionInfo.tickLower) : undefined,
         tickUpper: positionInfo.tickUpper ? Number(positionInfo.tickUpper) : undefined,
@@ -165,7 +164,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       approvePositionTokenRequest,
       revocationTxRequest: undefined, // TODO: add support for revokes
       permit,
-      increasePositionRequestArgs: increaseCalldataQueryParams,
+      increasePositionRequestArgs: { ...increaseCalldataQueryParams, batchPermitData: permitData ?? undefined },
       txRequest,
       unsigned,
     }

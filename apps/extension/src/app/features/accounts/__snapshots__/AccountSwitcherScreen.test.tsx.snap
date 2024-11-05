@@ -99,7 +99,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                         <circle
                           cx="28"
                           cy="28"
-                          fill="#4300B01F"
+                          fill="#FFBF171F"
                           r="28"
                         />
                         <g
@@ -107,8 +107,14 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                         >
                           <path
                             clip-rule="evenodd"
-                            d="M13.2 6C9.22355 6 6 9.22355 6 13.2V34.8C6 38.7765 9.22355 42 13.2 42H34.8C38.7765 42 42 38.7765 42 34.8V13.2C42 9.22355 38.7765 6 34.8 6H13.2ZM26.1213 14.1213C24.9497 12.9497 23.0503 12.9497 21.8787 14.1213L14.1213 21.8787C12.9497 23.0503 12.9497 24.9497 14.1213 26.1213L21.8787 33.8787C23.0503 35.0503 24.9497 35.0503 26.1213 33.8787L33.8787 26.1213C35.0503 24.9497 35.0503 23.0503 33.8787 21.8787L26.1213 14.1213Z"
-                            fill="#4300B0"
+                            d="M43.858 25.3653C45.0968 24.7606 45.0968 22.8141 43.858 22.2094C35.8073 18.2791 29.2954 11.7672 25.3651 3.71643C24.7603 2.47766 22.8139 2.47766 22.2091 3.71643C18.2789 11.7672 11.7669 18.2791 3.71619 22.2094C2.47742 22.8141 2.47742 24.7606 3.71618 25.3653C11.7669 29.2956 18.2789 35.8076 22.2091 43.8583C22.8139 45.097 24.7603 45.097 25.3651 43.8583C29.2954 35.8076 35.8073 29.2956 43.858 25.3653ZM31.6468 24.8374C32.2267 24.2575 32.2267 23.3172 31.6468 22.7373L24.8371 15.9276C24.2572 15.3477 23.317 15.3477 22.7371 15.9276L15.9274 22.7373C15.3475 23.3172 15.3475 24.2575 15.9274 24.8374L22.7371 31.6471C23.317 32.227 24.2572 32.227 24.8371 31.6471L31.6468 24.8374Z"
+                            fill="#FFBF17"
+                            fill-rule="evenodd"
+                          />
+                          <path
+                            clip-rule="evenodd"
+                            d="M26.9998 24.0001C26.9998 25.6569 25.6567 27.0001 23.9998 27.0001C22.343 27.0001 20.9998 25.6569 20.9998 24.0001C20.9998 22.3432 22.343 21.0001 23.9998 21.0001C25.6567 21.0001 26.9998 22.3432 26.9998 24.0001Z"
+                            fill="#FFBF17"
                             fill-rule="evenodd"
                           />
                         </g>
@@ -127,9 +133,9 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                         <span
                           class="font_heading _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _wordWrap-break-word _fontFamily-299667014 _fontSize-18px _lineHeight-24px _fontWeight-233016202 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _flexShrink-1"
                           data-disable-theme="true"
-                          data-testid="address-display/name/Jacob Haley"
+                          data-testid="address-display/name/Colin Schowalter Jr."
                         >
-                          Jacob Haley
+                          Colin Schowalter Jr.
                         </span>
                       </div>
                     </div>
@@ -144,7 +150,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                           class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202"
                           data-disable-theme="true"
                         >
-                          0x​0fc6...be59
+                          0x​9eb6...a2ca
                         </span>
                         <svg
                           fill="none"
@@ -325,7 +331,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                       <circle
                         cx="28"
                         cy="28"
-                        fill="#4300B01F"
+                        fill="#FFBF171F"
                         r="28"
                       />
                       <g
@@ -333,8 +339,14 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                       >
                         <path
                           clip-rule="evenodd"
-                          d="M13.2 6C9.22355 6 6 9.22355 6 13.2V34.8C6 38.7765 9.22355 42 13.2 42H34.8C38.7765 42 42 38.7765 42 34.8V13.2C42 9.22355 38.7765 6 34.8 6H13.2ZM26.1213 14.1213C24.9497 12.9497 23.0503 12.9497 21.8787 14.1213L14.1213 21.8787C12.9497 23.0503 12.9497 24.9497 14.1213 26.1213L21.8787 33.8787C23.0503 35.0503 24.9497 35.0503 26.1213 33.8787L33.8787 26.1213C35.0503 24.9497 35.0503 23.0503 33.8787 21.8787L26.1213 14.1213Z"
-                          fill="#4300B0"
+                          d="M43.858 25.3653C45.0968 24.7606 45.0968 22.8141 43.858 22.2094C35.8073 18.2791 29.2954 11.7672 25.3651 3.71643C24.7603 2.47766 22.8139 2.47766 22.2091 3.71643C18.2789 11.7672 11.7669 18.2791 3.71619 22.2094C2.47742 22.8141 2.47742 24.7606 3.71618 25.3653C11.7669 29.2956 18.2789 35.8076 22.2091 43.8583C22.8139 45.097 24.7603 45.097 25.3651 43.8583C29.2954 35.8076 35.8073 29.2956 43.858 25.3653ZM31.6468 24.8374C32.2267 24.2575 32.2267 23.3172 31.6468 22.7373L24.8371 15.9276C24.2572 15.3477 23.317 15.3477 22.7371 15.9276L15.9274 22.7373C15.3475 23.3172 15.3475 24.2575 15.9274 24.8374L22.7371 31.6471C23.317 32.227 24.2572 32.227 24.8371 31.6471L31.6468 24.8374Z"
+                          fill="#FFBF17"
+                          fill-rule="evenodd"
+                        />
+                        <path
+                          clip-rule="evenodd"
+                          d="M26.9998 24.0001C26.9998 25.6569 25.6567 27.0001 23.9998 27.0001C22.343 27.0001 20.9998 25.6569 20.9998 24.0001C20.9998 22.3432 22.343 21.0001 23.9998 21.0001C25.6567 21.0001 26.9998 22.3432 26.9998 24.0001Z"
+                          fill="#FFBF17"
                           fill-rule="evenodd"
                         />
                       </g>
@@ -353,9 +365,9 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                       <span
                         class="font_heading _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _wordWrap-break-word _fontFamily-299667014 _fontSize-18px _lineHeight-24px _fontWeight-233016202 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _flexShrink-1"
                         data-disable-theme="true"
-                        data-testid="address-display/name/Jacob Haley"
+                        data-testid="address-display/name/Colin Schowalter Jr."
                       >
-                        Jacob Haley
+                        Colin Schowalter Jr.
                       </span>
                     </div>
                   </div>
@@ -370,7 +382,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                         class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202"
                         data-disable-theme="true"
                       >
-                        0x​0fc6...be59
+                        0x​9eb6...a2ca
                       </span>
                       <svg
                         fill="none"

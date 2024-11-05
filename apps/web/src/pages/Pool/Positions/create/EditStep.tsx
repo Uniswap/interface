@@ -1,14 +1,15 @@
+// eslint-disable-next-line no-restricted-imports
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
-import { Container } from 'pages/Pool/Positions/create/shared'
+import { Container, formatPrices } from 'pages/Pool/Positions/create/shared'
 import { PositionFlowStep } from 'pages/Pool/Positions/create/types'
+import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useMemo } from 'react'
 import { Button, Flex, FlexProps, Text } from 'ui/src'
 import { Edit } from 'ui/src/components/icons/Edit'
 import { iconSizes } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Trans } from 'uniswap/src/i18n'
-import { NumberType } from 'utilities/src/format/types'
 
 const EditStep = ({ children, onClick, ...rest }: { children: JSX.Element; onClick: () => void } & FlexProps) => {
   return (
@@ -29,7 +30,7 @@ export const EditSelectTokensStep = (props?: FlexProps) => {
     setStep,
     derivedPositionInfo: { currencies },
   } = useCreatePositionContext()
-  const { TOKEN0: token0, TOKEN1: token1 } = currencies
+  const [token0, token1] = currencies
 
   const handleEdit = useCallback(() => {
     setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
@@ -50,28 +51,25 @@ export const EditSelectTokensStep = (props?: FlexProps) => {
 }
 
 export const EditRangeSelectionStep = (props?: FlexProps) => {
-  const { setStep } = useCreatePositionContext()
   const {
-    derivedPriceRangeInfo: { baseAndQuoteTokens, prices, ticksAtLimit, isSorted },
+    setStep,
+    derivedPositionInfo: { currencies },
+  } = useCreatePositionContext()
+  const {
+    priceRangeState: { priceInverted },
+    derivedPriceRangeInfo,
   } = usePriceRangeContext()
 
   const { formatNumberOrString } = useLocalizationContext()
-  const [baseCurrency, quoteCurrency] = baseAndQuoteTokens ?? [undefined, undefined]
+  const [baseCurrency, quoteCurrency] = getInvertedTuple(currencies, priceInverted)
 
   const handleEdit = useCallback(() => {
     setStep(PositionFlowStep.PRICE_RANGE)
   }, [setStep])
 
   const formattedPrices = useMemo(() => {
-    const lowerPriceFormatted = ticksAtLimit[isSorted ? 0 : 1]
-      ? '0'
-      : formatNumberOrString({ value: prices?.[0]?.toSignificant(), type: NumberType.TokenTx })
-    const upperPriceFormatted = ticksAtLimit[isSorted ? 1 : 0]
-      ? '∞'
-      : formatNumberOrString({ value: prices?.[1]?.toSignificant(), type: NumberType.TokenTx })
-
-    return [lowerPriceFormatted, upperPriceFormatted]
-  }, [formatNumberOrString, isSorted, prices, ticksAtLimit])
+    return formatPrices(derivedPriceRangeInfo, formatNumberOrString)
+  }, [formatNumberOrString, derivedPriceRangeInfo])
 
   return (
     <EditStep onClick={handleEdit} {...props}>

@@ -8,7 +8,10 @@ import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { useIsSmartContractAddress } from 'wallet/src/features/transactions/send/hooks/useIsSmartContractAddress'
 
 // eslint-disable-next-line complexity
-export function useWalletSearchResults(query: string): {
+export function useWalletSearchResults(
+  query: string,
+  selectedChain: UniverseChainId | null,
+): {
   wallets: WalletSearchResult[]
   loading: boolean
   exactENSMatch: boolean
@@ -42,7 +45,7 @@ export function useWalletSearchResults(query: string): {
   // Search for matching EOA wallet address
   const { isSmartContractAddress, loading: loadingIsSmartContractAddress } = useIsSmartContractAddress(
     validAddress,
-    defaultChainId,
+    selectedChain ?? defaultChainId,
   )
 
   const hasENSResult = dotEthName && dotEthAddress

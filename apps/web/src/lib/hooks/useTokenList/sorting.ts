@@ -43,7 +43,7 @@ export function getSortedPortfolioTokens(
   portfolioTokenBalances: readonly (PortfolioBalance | undefined)[] | undefined,
   balances: TokenBalances,
   chainId: UniverseChainId | undefined,
-  splitOptions?: SplitOptions,
+  splitOptions: SplitOptions,
 ): Token[] {
   const validVisiblePortfolioTokens = splitHiddenTokens(portfolioTokenBalances ?? [], splitOptions)
     .visibleTokens.map((tokenBalance) => {

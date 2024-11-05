@@ -40,6 +40,8 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -51,8 +53,6 @@ import { isAndroid, isIOS } from 'utilities/src/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { useNFTContextMenu } from 'wallet/src/features/nfts/useNftContextMenu'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const MAX_NFT_IMAGE_HEIGHT = 375
@@ -170,6 +170,10 @@ function NFTItemScreenContents({
     return { ...baseProps, isMissingData: true }
   }, [address, asset?.collection?.name, fallbackData, owner, tokenId])
 
+  const { collectionName } = traceProperties
+
+  const displayCollectionName = name || collectionName
+
   const { colorLight, colorDark } = useNearestThemeColorFromImageUri(imageUrl)
   // check if colorLight passes contrast against card bg color, if not use fallback
   const accentTextColor = useMemo(() => {
@@ -225,11 +229,11 @@ function NFTItemScreenContents({
                   >
                     <NFTViewer autoplay imageDimensions={imageDimensions} uri={imageUrl} />
                   </Flex>
-                ) : (
+                ) : displayCollectionName ? (
                   <Text color="$neutral1" numberOfLines={1} variant="body1">
-                    {name}
+                    {displayCollectionName}
                   </Text>
-                )
+                ) : undefined
               }
               renderedInModal={inModal}
               rightElement={rightElement}
@@ -259,15 +263,22 @@ function NFTItemScreenContents({
                         />
                       </TouchableArea>
                     ) : (
-                      <Flex aspectRatio={1} style={{ backgroundColor: colorsDark.surface2 }} width="100%">
-                        <BaseCard.ErrorState
-                          retryButtonLabel={t('common.button.retry')}
-                          title={t('tokens.nfts.details.error.load.title')}
-                          onRetry={(): Promise<ApolloQueryResult<NftItemScreenQuery>> => refetch?.()}
-                        />
+                      <Flex centered aspectRatio={1} style={{ backgroundColor: colorsDark.surface2 }} width="100%">
+                        {displayCollectionName ? (
+                          <Text color="$neutral2" textAlign="center" variant="body2">
+                            {displayCollectionName}
+                          </Text>
+                        ) : (
+                          <BaseCard.ErrorState
+                            retryButtonLabel={t('common.button.retry')}
+                            title={t('tokens.nfts.details.error.load.title')}
+                            onRetry={(): Promise<ApolloQueryResult<NftItemScreenQuery>> => refetch?.()}
+                          />
+                        )}
                       </Flex>
                     )}
                   </Flex>
+
                   {nftLoading ? (
                     <Text
                       color="$neutral1"
@@ -276,9 +287,9 @@ function NFTItemScreenContents({
                       mt="$spacing4"
                       variant="subheading1"
                     />
-                  ) : name ? (
+                  ) : displayCollectionName ? (
                     <Text color="$neutral1" mt="$spacing4" numberOfLines={2} variant="subheading1">
-                      {name}
+                      {displayCollectionName}
                     </Text>
                   ) : null}
                   <CollectionPreviewCard

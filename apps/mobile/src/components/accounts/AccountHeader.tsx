@@ -2,13 +2,15 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useEffect } from 'react'
 import { Gesture, GestureDetector, State } from 'react-native-gesture-handler'
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useHapticFeedback } from 'ui/src'
 import { CopyAlt, Settings } from 'ui/src/components/icons'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
@@ -20,10 +22,7 @@ import { isDevEnv } from 'utilities/src/environment/env'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AnimatedUnitagDisplayName } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { useDisplayName } from 'wallet/src/features/wallet/hooks'
-import { selectActiveAccount, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
+import { useActiveAccount, useActiveAccountAddress, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }): JSX.Element => {
@@ -68,8 +67,8 @@ const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }):
 }
 
 export function AccountHeader(): JSX.Element {
-  const activeAddress = useSelector(selectActiveAccountAddress)
-  const account = useSelector(selectActiveAccount)
+  const activeAddress = useActiveAccountAddress()
+  const account = useActiveAccount()
   const dispatch = useDispatch()
   const { hapticFeedback } = useHapticFeedback()
 

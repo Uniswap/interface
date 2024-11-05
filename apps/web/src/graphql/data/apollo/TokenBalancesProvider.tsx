@@ -5,7 +5,6 @@ import { useAccount } from 'hooks/useAccount'
 import { PropsWithChildren, useCallback, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useActiveSmartPool } from 'state/application/hooks'
-import { GQL_MAINNET_CHAINS_MUTABLE } from 'uniswap/src/constants/chains'
 import {
   OnAssetActivitySubscription,
   SwapOrderStatus,
@@ -13,7 +12,11 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
+import {
+  useEnabledChains,
+  useHideSmallBalancesSetting,
+  useHideSpamTokensSetting,
+} from 'uniswap/src/features/settings/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { SUBSCRIPTION_CHAINIDS } from 'utilities/src/apollo/constants'
 import { usePrevious } from 'utilities/src/react/hooks'
@@ -58,15 +61,32 @@ function useHasAccountUpdate() {
   const { pathname: page } = useLocation()
   const prevPage = usePrevious(page)
 
+  const { isTestnetModeEnabled } = useEnabledChains()
+  const prevIsTestnetModeEnabled = usePrevious(isTestnetModeEnabled)
+
   return useMemo(() => {
     const hasPolledTxUpdate = !isRealtime && hasLocalStateUpdate
     const hasSubscriptionTxUpdate = data !== prevData && mayAffectTokenBalances(data)
     const accountChanged = Boolean(prevAccount !== account.address && account.address)
+    const hasTestnetModeChanged = prevIsTestnetModeEnabled !== isTestnetModeEnabled
     const smartPoolChanged = Boolean(prevSmartPool !== smartPool && smartPool)
     const sendPageChanged = page !== prevPage && !!smartPool && (page === '/send' || prevPage === '/send')
 
-    return hasPolledTxUpdate || hasSubscriptionTxUpdate || accountChanged || smartPoolChanged || sendPageChanged
-  }, [account.address, data, smartPool, hasLocalStateUpdate, isRealtime, prevAccount, prevData, prevSmartPool, page, prevPage])
+    return hasPolledTxUpdate || hasSubscriptionTxUpdate || accountChanged || hasTestnetModeChanged || smartPoolChanged || sendPageChanged
+  }, [
+    account.address,
+    data,
+    smartPool,
+    page,
+    hasLocalStateUpdate,
+    isRealtime,
+    prevAccount,
+    prevData,
+    prevSmartPool,
+    prevPage,
+    prevIsTestnetModeEnabled,
+    isTestnetModeEnabled,
+  ])
 }
 
 function usePortfolioValueModifiers(): {
@@ -90,6 +110,7 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
   const hasAccountUpdate = useHasAccountUpdate()
   const valueModifiers = usePortfolioValueModifiers()
   const prevValueModifiers = usePrevious(valueModifiers)
+  const { gqlChains } = useEnabledChains()
   // TODO: query default pool with hook and either conditionally set, or just use pool
   const { address: smartPoolAddress } = useActiveSmartPool()
 
@@ -106,7 +127,7 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
     lazyFetch({
       variables: {
         ownerAddress: shouldQueryPoolBalances ? smartPoolAddress : account.address,
-        chains: GQL_MAINNET_CHAINS_MUTABLE,
+        chains: gqlChains,
         valueModifiers: [
           {
             ownerAddress: account.address,
@@ -118,7 +139,7 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
         ],
       },
     })
-  }, [account.address, lazyFetch, smartPoolAddress, shouldQueryPoolBalances, valueModifiers])
+  }, [account.address, lazyFetch, smartPoolAddress, shouldQueryPoolBalances, valueModifiers, gqlChains])
 
   return (
     <AdaptiveTokenBalancesProvider

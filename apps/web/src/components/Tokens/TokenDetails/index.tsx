@@ -16,7 +16,6 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
-import { useAccount } from 'hooks/useAccount'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { ScrollDirection, useScroll } from 'hooks/useScroll'
 import deprecatedStyled from 'lib/styled-components'
@@ -81,7 +80,6 @@ function useSwapInitialInputCurrency() {
 
 function TDPSwapComponent() {
   const { address, currency, currencyChainId, warning } = useTDPContext()
-  const account = useAccount()
   const navigate = useNavigate()
 
   const handleCurrencyChange = useCallback(
@@ -134,7 +132,6 @@ function TDPSwapComponent() {
         initialInputCurrency={initialInputCurrency}
         initialOutputCurrency={currency}
         onCurrencyChange={handleCurrencyChange}
-        disableTokenInputs={account.isConnected && currency.chainId !== account.chainId}
         compact
       />
       {warning && <TokenSafetyMessage tokenAddress={address} warning={warning} />}

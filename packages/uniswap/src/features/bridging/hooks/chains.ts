@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useTradingApiSwappableTokensQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
 import { ChainId } from 'uniswap/src/data/tradingApi/__generated__'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import {
   NATIVE_ADDRESS_FOR_TRADING_API,
   toTradingApiSupportedChainId,
@@ -35,4 +36,24 @@ export function useIsBridgingChain(chainId: UniverseChainId): boolean {
 
   const chainIdForTradingApi = toTradingApiSupportedChainId(chainId)
   return chainIdForTradingApi !== undefined && chainSet.has(chainIdForTradingApi)
+}
+
+export function useBridgingSupportedChainIds(): UniverseChainId[] {
+  const { data: bridgingTokens } = useTradingApiSwappableTokensQuery({
+    params: {
+      tokenIn: NATIVE_ADDRESS_FOR_TRADING_API,
+      tokenInChainId: ChainId._1,
+    },
+  })
+
+  const chainSet = useMemo(
+    () =>
+      new Set(
+        bridgingTokens?.tokens
+          .map((t) => toSupportedChainId(t.chainId))
+          .filter((chainId): chainId is UniverseChainId => chainId !== null),
+      ),
+    [bridgingTokens],
+  )
+  return Array.from(chainSet)
 }
