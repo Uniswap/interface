@@ -93,54 +93,10 @@ function useStartBlock(chainId?: number): {fromBlock: number, toBlock?: number }
   return { fromBlock: registryStartBlock, toBlock }
 }
 
-/**
- * Need pool events to get list of pools by owner.
- */
-function useFormattedPoolCreatedLogs(contract: Contract | null, fromBlock: number, toBlock: number | undefined): PoolRegisteredLog[] | undefined {
-  // create filters for Registered events
-  const filter = useMemo(() => {
-    const logFilter = contract?.filters?.Registered()
-    if (!logFilter) {
-      return undefined
-    }
-    return {
-      ...logFilter,
-      fromBlock,
-      toBlock
-    }
-  }, [contract, fromBlock, toBlock])
-
-  const logsResult = useLogs(filter)
-
-  // TODO: define Result type
-  // TODO: since we use our rpc endpoints as backup, which return multichain pools,
-  //  we should check whether to filter by chain, or display chain on ui (but not clickable pool)
-  //  and handle rpc call on non-existing pools on a chain, as that will return empty data.
-  return useMemo(() => {
-    return logsResult?.logs
-      ?.map((log: any) => {
-        const parsed = RegistryInterface.parseLog(log).args
-        return parsed
-      })
-      ?.map((parsed: any) => {
-        const group = parsed.group
-        const pool = parsed.pool
-        const name = parseBytes32String(parsed.name)
-        const symbol = parseBytes32String(parsed.symbol)
-        const id = parsed.id //.toString()
-
-        return { group, pool, name, symbol, id }
-      })
-      .reverse()
-  }, [logsResult])
-}
-
-export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolean } {
+export function useAllPoolsData(): { data: PoolRegisteredLog[]; loading: boolean } {
   const account = useAccount()
   const registry = useRegistryContract()
-  const { fromBlock, toBlock } = useStartBlock(account.chainId)
-
-  const formattedLogsV1: PoolRegisteredLog[] | undefined = useFormattedPoolCreatedLogs(registry, fromBlock, toBlock)
+  const formattedLogsV1: PoolRegisteredLog[] | undefined = useRegisteredPools()
 
   const poolsFromList = usePoolsFromList(registry, account.chainId)
 
@@ -232,7 +188,7 @@ export function useCreateCallback(): (
   )
 }
 
-export function useRegisteredPools(): PoolRegisteredLog[] | undefined {
+function useRegisteredPools(): PoolRegisteredLog[] | undefined {
   const account = useAccount()
   const registry = useRegistryContract()
   const { fromBlock, toBlock } = useStartBlock(account.chainId)

@@ -1,3 +1,4 @@
+import { Currency } from '@uniswap/sdk-core'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback, useMemo } from 'react'
 import {

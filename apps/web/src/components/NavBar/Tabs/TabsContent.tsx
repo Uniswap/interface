@@ -25,7 +25,7 @@ export type TabsItem = MenuItem & {
 
 export const useTabsContent = (props?: { includeNftsLink?: boolean; userIsOperator: boolean }): TabsSection[] => {
   const { t } = useTranslation()
-  const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
+  //const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
   const isV4EverywhereEnabled = useFeatureFlag(FeatureFlags.V4Everywhere)
   const { pathname } = useLocation()
   const theme = useTheme()

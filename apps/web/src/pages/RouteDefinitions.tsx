@@ -213,11 +213,11 @@ export const routes: RouteDefinition[] = [
   //  getElement: () => <Swap />,
   //  getTitle: () => t('title.placeLimit'),
   //}),
-  createRouteDefinition({
-    path: '/buy',
-    getElement: () => <Swap />,
-    getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
-  }),
+  //createRouteDefinition({
+  //  path: '/buy',
+  //  getElement: () => <Swap />,
+  //  getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
+  //}),
   createRouteDefinition({
     path: '/swap',
     getElement: () => <Swap />,

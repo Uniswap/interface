@@ -10,11 +10,11 @@ import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import Row from 'components/deprecated/Row'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { PortfolioBalance, PortfolioToken } from 'graphql/data/portfolios'
-import { /*getTokenDetailsURL,*/ gqlToCurrency } from 'graphql/data/util'
+import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import styled from 'lib/styled-components'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
-import { /*useCallback,*/ useMemo, useState } from 'react'
-//import { useNavigate } from 'react-router-dom'
+import { useCallback, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { Text, Tooltip } from 'ui/src'
 import {
@@ -90,17 +90,20 @@ function TokenRow({
   const { isTestnetModeEnabled } = useEnabledChains()
   const percentChange = tokenProjectMarket?.relativeChange24?.value ?? 0
 
-  //const navigate = useNavigate()
-  //const accountDrawer = useAccountDrawer()
+  const navigate = useNavigate()
+  const accountDrawer = useAccountDrawer()
 
-  //const navigateToTokenDetails = useCallback(async () => {
-  //  if (isTestnetModeEnabled) {
-  //    return
-  //  }
-  //
-  //  navigate(getTokenDetailsURL({ ...token }))
-  //  accountDrawer.close()
-  //}, [navigate, token, accountDrawer, isTestnetModeEnabled])
+  // TODO: remove when exposing '/explore' route.
+  const isExploreRouteActive = false
+
+  const navigateToTokenDetails = useCallback(async () => {
+    if (isTestnetModeEnabled || !isExploreRouteActive) {
+      return
+    }
+  
+    navigate(getTokenDetailsURL({ ...token }))
+    accountDrawer.close()
+  }, [navigate, token, accountDrawer, isTestnetModeEnabled, isExploreRouteActive])
   const { formatNumber } = useFormatter()
 
   const currency = gqlToCurrency(token)

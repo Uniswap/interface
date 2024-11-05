@@ -20,8 +20,8 @@ import { IncreaseLiquidityModal } from 'pages/IncreaseLiquidity/IncreaseLiquidit
 import { RemoveLiquidityModal } from 'pages/RemoveLiquidity/RemoveLiquidityModal'
 import { useCloseModal, useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+//import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+//import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
@@ -39,7 +39,7 @@ export default function TopLevelModals() {
   useAccountRiskCheck(account.address)
   const accountBlocked = Boolean(blockedAccountModalOpen && account.isConnected)
   const shouldShowDevFlags = isDevEnv() || isBetaEnv()
-  const showUnichainLaunchModal = useFeatureFlag(FeatureFlags.AstroChainLaunchModal)
+  const showUnichainLaunchModal = false //useFeatureFlag(FeatureFlags.AstroChainLaunchModal)
 
   return (
     <>

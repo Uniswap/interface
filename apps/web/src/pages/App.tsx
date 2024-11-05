@@ -31,6 +31,7 @@ export default function App() {
     } else if (searchParams.get('disableNFTs') === 'false') {
       setShouldDisableNFTRoutes(false)
     }
+
   }, [searchParams, setShouldDisableNFTRoutes])
 
   useFeatureFlagUrlOverrides()
