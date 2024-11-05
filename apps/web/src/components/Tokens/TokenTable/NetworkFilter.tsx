@@ -86,7 +86,7 @@ export default function TableNetworkFilter() {
                 const chainId = supportedChainIdFromGQLChain(network)
                 const isSupportedChain = isSupportedChainCallback(chainId)
                 const chainInfo = isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId] : undefined
-                return (
+                return chainInfo ? (
                   <TableNetworkItem
                     key={network}
                     display={network}
@@ -94,7 +94,7 @@ export default function TableNetworkFilter() {
                     toggleMenu={toggleMenu}
                     tab={tab}
                   />
-                )
+                ) : null
               })}
               {BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.map((network) => {
                 const isSupportedChain = isSupportedChainCallback(network)

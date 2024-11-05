@@ -22,6 +22,7 @@ export function useSwapNetworkNotification({
 
   useEffect(() => {
     const { inputChainId: lastInputChainId, outputChainId: lastOutputChainId } = lastNetworkNotification.current
+    const prevChainId = lastInputChainId ?? lastOutputChainId
 
     // Set initial values but don't fire notification for first network selection
     if (!lastInputChainId && !lastOutputChainId) {
@@ -40,9 +41,14 @@ export function useSwapNetworkNotification({
 
     // Determine notification type and trigger
     if (inputChainId && outputChainId && inputChainId !== outputChainId) {
-      onSwapChainsChanged(inputChainId, outputChainId) // Bridging notification
-    } else if (inputChainId && (hasInputChanged || (hasOutputChanged && inputChainId === outputChainId))) {
-      onSwapChainsChanged(inputChainId) // Non-bridging notification
+      onSwapChainsChanged({ chainId: inputChainId, outputChainId }) // Bridging notification
+    } else if (inputChainId || (outputChainId && prevChainId)) {
+      const chainId = inputChainId ?? outputChainId
+      // User is swapping on the same chain, don't show notification
+      if (!chainId || chainId === prevChainId) {
+        return
+      }
+      onSwapChainsChanged({ chainId, prevChainId }) // Non-bridging notification
     }
 
     // Update last notification state

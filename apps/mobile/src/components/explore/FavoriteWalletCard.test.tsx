@@ -49,6 +49,8 @@ describe('FavoriteWalletCard', () => {
       jest.spyOn(unitagHooks, 'useUnitagByAddress').mockReturnValue({
         unitag: { username: 'unitagname' },
         loading: false,
+        fetching: false,
+        pending: false,
       })
 
       const { queryByText } = render(<FavoriteWalletCard {...defaultProps} />)

@@ -34,7 +34,7 @@ import { ScanToOnboard } from 'src/app/features/onboarding/scan/ScanToOnboard'
 import { ScantasticContextProvider } from 'src/app/features/onboarding/scan/ScantasticContextProvider'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { setRouter, setRouterState } from 'src/app/navigation/state'
-import { sentryCreateHashRouter } from 'src/app/sentry'
+import { SentryAppNameTag, sentryCreateHashRouter } from 'src/app/sentry'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { checksIfSupportsSidePanel } from 'src/app/utils/chrome'
 import { PrimaryAppInstanceDebuggerLazy } from 'src/store/PrimaryAppInstanceDebuggerLazy'
@@ -56,14 +56,6 @@ const unsupportedRoute: RouteObject = {
   element: <UnsupportedBrowserScreen />,
 }
 
-const createSteps = {
-  [CreateOnboardingSteps.Password]: <PasswordCreate />,
-  [CreateOnboardingSteps.ViewMnemonic]: <ViewMnemonic />,
-  [CreateOnboardingSteps.TestMnemonic]: <TestMnemonic />,
-  [CreateOnboardingSteps.Naming]: <NameWallet />,
-  [CreateOnboardingSteps.Complete]: <Complete flow={ExtensionOnboardingFlow.New} />,
-}
-
 const allRoutes = [
   {
     path: '',
@@ -75,7 +67,18 @@ const allRoutes = [
   },
   {
     path: OnboardingRoutes.Create,
-    element: <OnboardingStepsProvider key={OnboardingRoutes.Create} steps={createSteps} />,
+    element: (
+      <OnboardingStepsProvider
+        key={OnboardingRoutes.Create}
+        steps={{
+          [CreateOnboardingSteps.Password]: <PasswordCreate />,
+          [CreateOnboardingSteps.ViewMnemonic]: <ViewMnemonic />,
+          [CreateOnboardingSteps.TestMnemonic]: <TestMnemonic />,
+          [CreateOnboardingSteps.Naming]: <NameWallet />,
+          [CreateOnboardingSteps.Complete]: <Complete flow={ExtensionOnboardingFlow.New} />,
+        }}
+      />
+    ),
   },
   {
     path: OnboardingRoutes.Claim,
@@ -84,7 +87,10 @@ const allRoutes = [
         key={OnboardingRoutes.Claim}
         steps={{
           [CreateOnboardingSteps.ClaimUnitag]: <ClaimUnitagScreen />,
-          ...createSteps,
+          [CreateOnboardingSteps.Password]: <PasswordCreate />,
+          [CreateOnboardingSteps.ViewMnemonic]: <ViewMnemonic />,
+          [CreateOnboardingSteps.TestMnemonic]: <TestMnemonic />,
+          [CreateOnboardingSteps.Complete]: <Complete tryToClaimUnitag flow={ExtensionOnboardingFlow.New} />,
         }}
       />
     ),
@@ -181,7 +187,7 @@ export default function OnboardingApp(): JSX.Element {
   return (
     <Trace>
       <PersistGate persistor={getReduxPersistor()}>
-        <ExtensionStatsigProvider>
+        <ExtensionStatsigProvider appName={SentryAppNameTag.Onboarding}>
           <I18nextProvider i18n={i18n}>
             <SharedWalletProvider reduxStore={getReduxStore()}>
               <ErrorBoundary>

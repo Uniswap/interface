@@ -15,15 +15,35 @@ import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
 import { logger } from 'utilities/src/logger/logger'
-import { useFinishOnboarding } from 'wallet/src/features/onboarding/OnboardingContext'
+import { useFinishOnboarding, useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 
-export function Complete({ flow }: { flow?: ExtensionOnboardingFlow }): JSX.Element {
+export function Complete({
+  flow,
+  tryToClaimUnitag,
+}: {
+  flow?: ExtensionOnboardingFlow
+  tryToClaimUnitag?: boolean
+}): JSX.Element {
   const { t } = useTranslation()
-
+  const { getOnboardingAccountAddress, addUnitagClaim, getUnitagClaim } = useOnboardingContext()
+  const address = getOnboardingAccountAddress()
+  const existingClaim = getUnitagClaim()
+  const [unitagClaimAttempted, setUnitagClaimAttempted] = useState(false)
   const [openedSideBar, setOpenedSideBar] = useState(false)
 
+  useEffect(() => {
+    if (!tryToClaimUnitag || !address || unitagClaimAttempted) {
+      return
+    }
+
+    setUnitagClaimAttempted(true)
+    if (existingClaim?.username) {
+      addUnitagClaim({ address, username: existingClaim.username })
+    }
+  }, [existingClaim, address, tryToClaimUnitag, unitagClaimAttempted, addUnitagClaim])
+
   // Activates onboarding accounts on component mount
-  useFinishOnboarding(terminateStoreSynchronization, flow)
+  useFinishOnboarding(terminateStoreSynchronization, flow, tryToClaimUnitag && !unitagClaimAttempted)
 
   useEffect(() => {
     const onSidebarOpenedListener = onboardingMessageChannel.addMessageListener(

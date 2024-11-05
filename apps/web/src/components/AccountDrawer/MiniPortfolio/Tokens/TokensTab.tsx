@@ -16,8 +16,14 @@ import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletConten
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { EllipsisStyle, ThemedText } from 'theme/components'
-import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
+import { Text, Tooltip } from 'ui/src'
+import {
+  useEnabledChains,
+  useHideSmallBalancesSetting,
+  useHideSpamTokensSetting,
+} from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useTranslation } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { splitHiddenTokens } from 'utils/splitHiddenTokens'
@@ -28,13 +34,15 @@ export default function Tokens() {
   const hideSpam = useHideSpamTokensSetting()
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
+  const { isTestnetModeEnabled } = useEnabledChains()
+
   const { data } = useTokenBalancesQuery({ cacheOnly: !accountDrawer.isOpen })
 
   const tokenBalances = data?.portfolios?.[0]?.tokenBalances
 
   const { visibleTokens, hiddenTokens } = useMemo(
-    () => splitHiddenTokens(tokenBalances ?? [], { hideSmallBalances, hideSpam }),
-    [hideSmallBalances, tokenBalances, hideSpam],
+    () => splitHiddenTokens(tokenBalances ?? [], { hideSmallBalances, hideSpam, isTestnetModeEnabled }),
+    [hideSmallBalances, tokenBalances, hideSpam, isTestnetModeEnabled],
   )
 
   if (!data) {
@@ -77,16 +85,22 @@ function TokenRow({
   denominatedValue,
   tokenProjectMarket,
 }: PortfolioBalance & { token: PortfolioToken }) {
+  const { t } = useTranslation()
   const { formatDelta } = useFormatter()
+  const { isTestnetModeEnabled } = useEnabledChains()
   const percentChange = tokenProjectMarket?.relativeChange24?.value ?? 0
 
   const navigate = useNavigate()
   const accountDrawer = useAccountDrawer()
 
   const navigateToTokenDetails = useCallback(async () => {
+    if (isTestnetModeEnabled) {
+      return
+    }
+
     navigate(getTokenDetailsURL({ ...token }))
     accountDrawer.close()
-  }, [navigate, token, accountDrawer])
+  }, [navigate, token, accountDrawer, isTestnetModeEnabled])
   const { formatNumber } = useFormatter()
 
   const currency = gqlToCurrency(token)
@@ -100,6 +114,40 @@ function TokenRow({
     })
     return null
   }
+
+  const portfolioRow = (
+    <PortfolioRow
+      left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size={40} />}
+      title={<TokenNameText>{token?.name ?? token?.project?.name}</TokenNameText>}
+      descriptor={
+        <TokenBalanceText>
+          {formatNumber({
+            input: quantity,
+            type: NumberType.TokenNonTx,
+          })}{' '}
+          {token?.symbol}
+        </TokenBalanceText>
+      }
+      onClick={navigateToTokenDetails}
+      right={
+        denominatedValue && (
+          <>
+            <ThemedText.SubHeader>
+              {formatNumber({
+                input: denominatedValue?.value,
+                type: NumberType.PortfolioBalance,
+              })}
+            </ThemedText.SubHeader>
+            <Row justify="flex-end">
+              <DeltaArrow delta={percentChange} />
+              <ThemedText.BodySecondary>{formatDelta(percentChange)}</ThemedText.BodySecondary>
+            </Row>
+          </>
+        )
+      }
+    />
+  )
+
   return (
     <Trace
       logPress
@@ -110,36 +158,17 @@ function TokenRow({
         address: token?.address,
       }}
     >
-      <PortfolioRow
-        left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size={40} />}
-        title={<TokenNameText>{token?.name ?? token?.project?.name}</TokenNameText>}
-        descriptor={
-          <TokenBalanceText>
-            {formatNumber({
-              input: quantity,
-              type: NumberType.TokenNonTx,
-            })}{' '}
-            {token?.symbol}
-          </TokenBalanceText>
-        }
-        onClick={navigateToTokenDetails}
-        right={
-          denominatedValue && (
-            <>
-              <ThemedText.SubHeader>
-                {formatNumber({
-                  input: denominatedValue?.value,
-                  type: NumberType.PortfolioBalance,
-                })}
-              </ThemedText.SubHeader>
-              <Row justify="flex-end">
-                <DeltaArrow delta={percentChange} />
-                <ThemedText.BodySecondary>{formatDelta(percentChange)}</ThemedText.BodySecondary>
-              </Row>
-            </>
-          )
-        }
-      />
+      {isTestnetModeEnabled ? (
+        <Tooltip placement="right" delay={{ open: 2000 }}>
+          <Tooltip.Content>
+            <Text variant="body4">{t('token.details.testnet.unsupported')}</Text>
+            <Tooltip.Arrow />
+          </Tooltip.Content>
+          <Tooltip.Trigger>{portfolioRow}</Tooltip.Trigger>
+        </Tooltip>
+      ) : (
+        portfolioRow
+      )}
     </Trace>
   )
 }

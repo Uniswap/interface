@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useRef } from 'react'
+import { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimateTransition, Flex, Loader, Skeleton, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
@@ -119,7 +119,7 @@ function _TokenSelectorList({
 }: TokenSelectorListProps): JSX.Element {
   const { t } = useTranslation()
   const sectionListRef = useRef<TokenSectionBaseListRef>()
-
+  const [expandedItems, setExpandedItems] = useState<string[]>([])
   useEffect(() => {
     if (sections?.length) {
       sectionListRef.current?.scrollToLocation({
@@ -130,10 +130,34 @@ function _TokenSelectorList({
     }
   }, [chainFilter, sections?.length])
 
+  const handleExpand = useCallback(
+    (item: TokenOption | TokenOption[]) => {
+      setExpandedItems((prev) => [...prev, key(item)])
+    },
+    [setExpandedItems],
+  )
+
+  const isExpandedItem = useCallback(
+    (item: TokenOption[]) => {
+      return expandedItems.includes(key(item))
+    },
+    [expandedItems],
+  )
+
+  // Note: the typing for this comes from the web TokenSectionBaseList.tsx's renderItem
   const renderItem = useCallback(
     ({ item, section, index }: { item: TokenOption | TokenOption[]; section: TokenSection; index: number }) => {
       if (isHorizontalListTokenItem(item)) {
-        return <HorizontalTokenList tokens={item} section={section} index={index} onSelectCurrency={onSelectCurrency} />
+        return (
+          <HorizontalTokenList
+            tokens={item}
+            section={section}
+            index={index}
+            expanded={isExpandedItem(item)}
+            onSelectCurrency={onSelectCurrency}
+            onExpand={() => handleExpand(item)}
+          />
+        )
       }
       return (
         <TokenOptionItemWrapper
@@ -147,7 +171,7 @@ function _TokenSelectorList({
         />
       )
     },
-    [onSelectCurrency, showTokenAddress, showTokenWarnings, isKeyboardOpen],
+    [onSelectCurrency, showTokenAddress, showTokenWarnings, isKeyboardOpen, handleExpand, isExpandedItem],
   )
 
   const renderSectionHeader = useCallback(
@@ -199,6 +223,7 @@ function _TokenSelectorList({
         renderSectionHeader={renderSectionHeader}
         sectionListRef={sectionListRef}
         sections={sections ?? []}
+        expandedItems={expandedItems}
       />
     </AnimateTransition>
   )

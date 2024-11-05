@@ -57,6 +57,7 @@ export const portfolioBalance = createFixture<PortfolioBalance, PortfolioBalance
       logoUrl: balance.token.project?.logoUrl,
       isSpam: balance.token.project?.isSpam,
       safetyLevel: balance.token.project?.safetyLevel,
+      spamCode: balance.token.project?.spamCode,
     },
   }
 })

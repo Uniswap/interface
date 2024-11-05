@@ -31,9 +31,9 @@ import { MainContent, WebNavigation } from 'src/app/navigation/navigation'
 import { setRouter, setRouterState } from 'src/app/navigation/state'
 import { SentryAppNameTag, initializeSentry, sentryCreateHashRouter } from 'src/app/sentry'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
-import { getLocalUserId } from 'src/app/utils/storage'
 import {
   DappBackgroundPortChannel,
+  backgroundToSidePanelMessageChannel,
   createBackgroundToSidePanelMessagePort,
 } from 'src/background/messagePassing/messageChannels'
 import { BackgroundToSidePanelRequestType } from 'src/background/messagePassing/types/requests'
@@ -44,8 +44,9 @@ import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
+import { UnitagUpdaterContextProvider, useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n/i18n'
+import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -54,13 +55,13 @@ import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
-getLocalUserId()
+getUniqueId()
   .then((userId) => {
     initializeSentry(SentryAppNameTag.Sidebar, userId)
   })
   .catch((error) => {
     logger.error(error, {
-      tags: { file: 'SidebarApp.tsx', function: 'getLocalUserId' },
+      tags: { file: 'SidebarApp.tsx', function: 'getUniqueId' },
     })
   })
 
@@ -205,9 +206,20 @@ function SidebarWrapper(): JSX.Element {
   useDappRequestPortListener()
   useTestnetModeForLoggingAndAnalytics()
 
+  const { triggerRefetchUnitags } = useUnitagUpdater()
+
   useEffect(() => {
     dispatch(syncAppWithDeviceLanguage())
   }, [dispatch])
+
+  useEffect(() => {
+    return backgroundToSidePanelMessageChannel.addMessageListener(
+      BackgroundToSidePanelRequestType.RefreshUnitags,
+      () => {
+        triggerRefetchUnitags()
+      },
+    )
+  }, [triggerRefetchUnitags])
 
   return (
     <>
@@ -245,7 +257,7 @@ export default function SidebarApp(): JSX.Element {
   return (
     <Trace>
       <PersistGate persistor={getReduxPersistor()}>
-        <ExtensionStatsigProvider>
+        <ExtensionStatsigProvider appName={SentryAppNameTag.Sidebar}>
           <I18nextProvider i18n={i18n}>
             <SharedWalletProvider reduxStore={getReduxStore()}>
               <ErrorBoundary>

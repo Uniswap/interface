@@ -7,6 +7,7 @@ import styled from 'lib/styled-components'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
@@ -21,10 +22,7 @@ const BalancesCard = styled.div`
   height: fit-content;
   width: 100%;
 
-  // 768 hardcoded to match NFT-redesign navbar breakpoints
-  // src/nft/css/sprinkles.css.ts
-  // change to match theme breakpoints when this navbar is updated
-  @media screen and (min-width: 768px) {
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
     display: flex;
   }
 `

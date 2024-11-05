@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useIsDarkMode } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { getWarningIconColorOverride } from 'uniswap/src/components/warnings/utils'
@@ -17,7 +17,6 @@ import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 
 type SearchTokenItemProps = {
@@ -26,7 +25,6 @@ type SearchTokenItemProps = {
 }
 
 export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps): JSX.Element {
-  const isDarkMode = useIsDarkMode()
   const dispatch = useDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
@@ -99,13 +97,6 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
               <Text color="$neutral2" numberOfLines={1} variant="subheading2">
                 {symbol}
               </Text>
-              {address && (
-                <Flex shrink>
-                  <Text color={isDarkMode ? '$neutral3' : '$neutral2'} numberOfLines={1} variant="subheading2">
-                    {shortenAddress(address)}
-                  </Text>
-                </Flex>
-              )}
             </Flex>
           </Flex>
         </Flex>

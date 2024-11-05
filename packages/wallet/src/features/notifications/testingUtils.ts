@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export const exampleDisconnectedNotification = {

@@ -1,8 +1,13 @@
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingStepsContext'
 import { Terms } from 'src/app/features/onboarding/Terms'
+import { UnitagClaimRoutes } from 'src/app/navigation/constants'
+import { navigate } from 'src/app/navigation/state'
 import { Button, Flex, GeneratedIcon, Text } from 'ui/src'
 import { Bolt, Coupon, UserSquare } from 'ui/src/components/icons'
+import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const CONTAINER_WIDTH = 531
 const TERMS_WIDTH = 300
@@ -10,6 +15,15 @@ const TERMS_WIDTH = 300
 export function UnitagIntroScreen(): JSX.Element {
   const { t } = useTranslation()
   const { goToNextStep } = useOnboardingSteps()
+
+  const address = useAccountAddressFromUrlWithThrow()
+  const { unitag } = useUnitagByAddress(address)
+
+  useEffect(() => {
+    if (unitag?.address) {
+      navigate(UnitagClaimRoutes.EditProfile)
+    }
+  }, [unitag])
 
   return (
     <Flex centered height="100%" width="100%">

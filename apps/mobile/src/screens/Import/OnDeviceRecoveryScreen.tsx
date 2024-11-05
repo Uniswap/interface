@@ -28,6 +28,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { useTimeout } from 'utilities/src/time/timing'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
@@ -84,7 +85,7 @@ export function OnDeviceRecoveryScreen({
     const storedAddresses = await Keyring.getAddressesForStoredPrivateKeys()
     await Promise.all(
       storedAddresses.map((address) => {
-        if (!selectedRecoveryWalletInfos.find((walletInfo) => walletInfo.address === address)) {
+        if (!selectedRecoveryWalletInfos.find((walletInfo) => areAddressesEqual(walletInfo.address, address))) {
           return Keyring.removePrivateKey(address)
         }
         return Promise.resolve()

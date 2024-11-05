@@ -17,6 +17,8 @@ export function OnboardingScreenFrame({
   subtitle,
   title,
   warningSubtitle,
+  endAdornment,
+  noTopPadding,
 }: Partial<OnboardingScreenProps>): JSX.Element {
   const { t } = useTranslation()
 
@@ -26,7 +28,7 @@ export function OnboardingScreenFrame({
 
   return (
     <>
-      <Flex alignItems="center" gap="$spacing16" pt="$spacing24">
+      <Flex alignItems="center" gap="$spacing16" pt={noTopPadding || '$spacing24'}>
         {onBack && (
           <TouchableArea
             hoverable
@@ -54,6 +56,11 @@ export function OnboardingScreenFrame({
             <Text color="$neutral2" variant="buttonLabel2">
               {t('common.button.skip')}
             </Text>
+          </TouchableArea>
+        )}
+        {endAdornment && (
+          <TouchableArea position="absolute" right="$none" top="$none">
+            {endAdornment}
           </TouchableArea>
         )}
         {Icon}

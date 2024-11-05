@@ -1,4 +1,4 @@
-import { Currency, Price, Token } from '@uniswap/sdk-core'
+import { Currency, Price } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { AutoColumn, ColumnCenter } from 'components/deprecated/Column'
 import Loader from 'components/Icons/LoadingSpinner'
@@ -80,8 +80,8 @@ export default function LiquidityChartRangeInput({
   feeAmount?: FeeAmount
   ticksAtLimit: { [bound in Bound]?: boolean | undefined }
   price?: number
-  priceLower?: Price<Token, Token>
-  priceUpper?: Price<Token, Token>
+  priceLower?: Price<Currency, Currency>
+  priceUpper?: Price<Currency, Currency>
   onLeftRangeInput: (typedValue: string) => void
   onRightRangeInput: (typedValue: string) => void
   interactive: boolean

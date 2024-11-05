@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ElementAfterText, Flex, Text } from 'ui/src'
 import { Clock } from 'ui/src/components/icons/Clock'
@@ -15,7 +16,12 @@ export type TokenSectionHeaderProps = {
   name?: string
 }
 
-export function SectionHeader({ sectionKey, rightElement, name }: TokenSectionHeaderProps): JSX.Element | null {
+export const SectionHeader = memo(function _SectionHeader({
+  sectionKey,
+  rightElement,
+  endElement,
+  name,
+}: TokenSectionHeaderProps): JSX.Element | null {
   const title = useTokenOptionsSectionTitle(sectionKey)
   const icon = getTokenOptionsSectionIcon(sectionKey)
   if (sectionKey === TokenOptionSection.SuggestedTokens) {
@@ -26,12 +32,18 @@ export function SectionHeader({ sectionKey, rightElement, name }: TokenSectionHe
       <Text color="$neutral2" variant="subheading2">
         <Flex row alignItems="center" gap="$spacing8" width="100%">
           {icon}
-          <ElementAfterText text={name ?? title} textProps={{ color: '$neutral2' }} element={rightElement} />
+          <ElementAfterText
+            text={name ?? title}
+            textProps={{ color: '$neutral2' }}
+            wrapperProps={{ flex: 1 }}
+            element={rightElement}
+          />
+          {endElement && <Flex ml="auto">{endElement}</Flex>}
         </Flex>
       </Text>
     </Flex>
   )
-}
+})
 
 export function useTokenOptionsSectionTitle(section: TokenOptionSection): string {
   const { t } = useTranslation()

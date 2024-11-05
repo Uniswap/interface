@@ -18,6 +18,7 @@ import { useOrder } from 'state/signatures/hooks'
 import { useTransaction } from 'state/transactions/hooks'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { Flex, useSporeColors } from 'ui/src'
+import { BridgeIcon } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
@@ -109,6 +110,7 @@ function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupConte
   const showPortfolioLogo = success || pending || !!activity.offchainOrderDetails
   const colors = useSporeColors()
 
+  const isBridgeActivity = activity.outputChainId && activity.chainId && activity.chainId !== activity.outputChainId
   return (
     <PopupContainer>
       <PortfolioRow
@@ -120,6 +122,7 @@ function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupConte
                 currencies={activity.currencies}
                 images={activity.logos}
                 accountAddress={activity.otherAccount}
+                customIcon={isBridgeActivity ? BridgeIcon : undefined}
               />
             </Column>
           ) : (
@@ -161,7 +164,7 @@ export function TransactionPopupContent({
   const onClick = () =>
     window.open(getExplorerLink(activity.chainId, activity.hash, ExplorerDataType.TRANSACTION), '_blank')
 
-  return <ActivityPopupContent activity={activity} onClose={onClose} onClick={onClick} />
+  return <ActivityPopupContent activity={activity} onClick={onClick} onClose={onClose} />
 }
 
 export function UniswapXOrderPopupContent({ orderHash, onClose }: { orderHash: string; onClose: () => void }) {

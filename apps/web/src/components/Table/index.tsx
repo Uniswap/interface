@@ -148,7 +148,7 @@ export function Table<Data extends RowData>({
   })
   const { distanceFromTop, distanceToBottom } = useDebounce(scrollPosition, 125)
   const tableBodyRef = useRef<HTMLDivElement>(null)
-  const lastLoadedLengthRef = useRef(data?.length ?? 0)
+  const lastLoadedLengthRef = useRef(0)
   const canLoadMore = useRef(true)
 
   useEffect(() => {

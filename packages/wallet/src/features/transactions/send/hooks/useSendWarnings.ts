@@ -1,5 +1,5 @@
 import { TFunction } from 'i18next'
-import _ from 'lodash'
+import isEqual from 'lodash/isEqual'
 import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
@@ -61,7 +61,7 @@ export function getSendWarnings(t: TFunction, derivedSendInfo: DerivedSendInfo, 
 export function useSendWarnings(t: TFunction, derivedSendInfo: DerivedSendInfo): Warning[] {
   const offline = useIsOffline()
 
-  return useMemoCompare(() => getSendWarnings(t, derivedSendInfo, offline), _.isEqual)
+  return useMemoCompare(() => getSendWarnings(t, derivedSendInfo, offline), isEqual)
 }
 
 const checkIsMissingRequiredParams = (

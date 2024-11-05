@@ -5,21 +5,21 @@ import React from 'react'
 import { createRoot } from 'react-dom/client'
 import OnboardingApp from 'src/app/OnboardingApp'
 import { initializeSentry, SentryAppNameTag } from 'src/app/sentry'
-import { getLocalUserId } from 'src/app/utils/storage'
 import { initializeReduxStore } from 'src/store/store'
 import { ExtensionAppLocation, StoreSynchronization } from 'src/store/storeSynchronization'
+import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { logger } from 'utilities/src/logger/logger'
 ;(globalThis as any).regeneratorRuntime = undefined // eslint-disable-line @typescript-eslint/no-explicit-any
 // The globalThis.regeneratorRuntime = undefined addresses a potentially unsafe-eval problem
 // see https://github.com/facebook/regenerator/issues/378#issuecomment-802628326
 
-getLocalUserId()
+getUniqueId()
   .then((userId) => {
     initializeSentry(SentryAppNameTag.Onboarding, userId)
   })
   .catch((error) => {
     logger.error(error, {
-      tags: { file: 'SidebarApp.tsx', function: 'getLocalUserId' },
+      tags: { file: 'SidebarApp.tsx', function: 'getUniqueId' },
     })
   })
 async function initOnboarding(): Promise<void> {

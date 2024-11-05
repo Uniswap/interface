@@ -1,6 +1,9 @@
 import { Currency } from '@uniswap/sdk-core'
 import { UniswapXOrderDetails } from 'state/signatures/types'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import {
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 /**
@@ -10,12 +13,13 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 export type Activity = {
   hash: string
   chainId: UniverseChainId
+  outputChainId?: UniverseChainId
   status: TransactionStatus
   offchainOrderDetails?: UniswapXOrderDetails
   statusMessage?: string
   timestamp: number
   title: string
-  descriptor?: string
+  descriptor?: string | JSX.Element
   logos?: Array<string | undefined>
   // TODO(WEB-3839): replace Currency with CurrencyInfo
   currencies?: Array<Currency | undefined>
@@ -26,6 +30,7 @@ export type Activity = {
   suffixIconSrc?: string
   cancelled?: boolean
   isSpam?: boolean
+  type?: TransactionType
 }
 
 export type ActivityMap = { [id: string]: Activity | undefined }

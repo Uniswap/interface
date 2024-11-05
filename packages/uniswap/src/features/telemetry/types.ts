@@ -120,6 +120,9 @@ export type SwapTradeBaseProperties = {
   price_impact_basis_points?: string | number
   estimated_network_fee_usd?: string
   chain_id?: number
+  // `chain_id_in` and `chain_id_out` was added when bridging was introduced.
+  chain_id_in?: number
+  chain_id_out?: number
   token_in_amount?: string | number
   token_out_amount?: string | number
   token_in_amount_usd?: number
@@ -152,6 +155,8 @@ type BaseSwapTransactionResultProperties = {
   time_to_swap_since_first_input?: number
   address?: string
   chain_id: number
+  chain_id_in?: number
+  chain_id_out?: number
   hash: string
   added_time?: number
   confirmed_time?: number
@@ -249,12 +254,18 @@ export enum DappRequestAction {
   Reject = 'Reject',
 }
 
+export type CardLoggingName = OnboardingCardLoggingName | DappRequestCardLoggingName
+
 export enum OnboardingCardLoggingName {
   WelcomeWallet = 'welcome_wallet',
   FundWallet = 'fund_wallet',
   RecoveryBackup = 'recovery_backup',
   ClaimUnitag = 'claim_unitag',
   BridgingBanner = 'bridging_banner',
+}
+
+export enum DappRequestCardLoggingName {
+  BridgingBanner = 'dapp_request_bridging_banner',
 }
 
 export type FORAmountEnteredProperties = ITraceContext & {
@@ -278,6 +289,10 @@ export type FORWidgetOpenedProperties = ITraceContext & {
   fiatCurrency: string
   preselectedServiceProvider?: string
   serviceProvider: string
+}
+
+type DappRequestCardEventProperties = ITraceContext & {
+  card_name: DappRequestCardLoggingName
 }
 
 type OnboardingCardEventProperties = ITraceContext & {
@@ -508,6 +523,12 @@ export type UniverseEventProperties = {
   [MobileEventName.ExploreFilterSelected]: {
     filter_type: string
   }
+  [MobileEventName.ExploreNetworkSelected]: {
+    networkChainId: number | 'all'
+  }
+  [MobileEventName.ExploreSearchNetworkSelected]: {
+    networkChainId: number | 'all'
+  }
   [MobileEventName.ExploreSearchResultClicked]: SearchResultContextProperties &
     AssetDetailsBaseProperties & {
       type: 'collection' | 'token' | 'address'
@@ -731,6 +752,16 @@ export type UniverseEventProperties = {
     twitter: boolean
   }
   [UnitagEventName.UnitagRemoved]: undefined
+  [WalletEventName.BackupMethodAdded]: {
+    backupMethodType: 'manual' | 'cloud'
+    newBackupCount: number
+  }
+  [WalletEventName.BackupMethodRemoved]: {
+    backupMethodType: 'manual' | 'cloud'
+    newBackupCount: number
+  }
+  [WalletEventName.DappRequestCardPressed]: DappRequestCardEventProperties
+  [WalletEventName.DappRequestCardClosed]: DappRequestCardEventProperties
   [WalletEventName.ExternalLinkOpened]: {
     url: string
   }
@@ -743,6 +774,7 @@ export type UniverseEventProperties = {
   [WalletEventName.ExploreSearchCancel]: {
     query: string
   }
+  [WalletEventName.ModalClosed]: ITraceContext & Record<string, unknown>
   [WalletEventName.NetworkFilterSelected]: ITraceContext & {
     chain: UniverseChainId | 'All'
   }
@@ -789,6 +821,9 @@ export type UniverseEventProperties = {
   [WalletEventName.TestnetModeToggled]: {
     enabled: boolean
   }
+  [WalletEventName.TestnetEvent]: {
+    originalEventName: string
+  } & Record<string, unknown>
   [WalletEventName.ViewRecoveryPhrase]: undefined
   // Please sort new values by EventName type!
 }

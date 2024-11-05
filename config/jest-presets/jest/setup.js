@@ -9,16 +9,16 @@ const mockRNDeviceInfo = require('react-native-device-info/jest/react-native-dev
 require('cross-fetch/polyfill')
 
 global.chrome = {
-    storage: {
+  storage: {
     ...storage, // mem-storage-area is a reimplementation of chrome.storage in memory
     session: {
       set: jest.fn(),
-      get: jest.fn()
-    }
+      get: jest.fn(),
+    },
   },
   runtime: {
-    getURL: (path) => `chrome/path/to/${path}`
-  }
+    getURL: (path) => `chrome/path/to/${path}`,
+  },
 }
 
 // Setup Async Storage mocking: https://react-native-async-storage.github.io/async-storage/docs/advanced/jest/
@@ -42,7 +42,11 @@ jest.mock('expo-clipboard', () => ({
 }))
 jest.mock('expo-blur', () => ({ BlurView: {} }))
 jest.mock('expo-barcode-scanner', () => ({}))
-jest.mock('expo-haptics', () => ({ impactAsync: jest.fn(), notificationAsync: jest.fn(), ImpactFeedbackStyle: jest.fn() }))
+jest.mock('expo-haptics', () => ({
+  impactAsync: jest.fn(),
+  notificationAsync: jest.fn(),
+  ImpactFeedbackStyle: jest.fn(),
+}))
 jest.mock('expo-linear-gradient', () => ({ LinearGradient: () => 'ExpoLinearGradient' }))
 jest.mock('expo-screen-capture', () => ({ addScreenshotListener: jest.fn() }))
 
@@ -62,8 +66,8 @@ jest.mock('react-native-device-info', () => mockRNDeviceInfo)
 jest.mock('wallet/src/features/providers/saga')
 
 // Mock WalletConnect v2 packages
-jest.mock('@walletconnect/web3wallet', () => ({
-  Web3Wallet: {
+jest.mock('@reown/walletkit', () => ({
+  WalletKit: {
     init: () => ({
       on: jest.fn(),
       getActiveSessions: () => [],

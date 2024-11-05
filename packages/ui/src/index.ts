@@ -38,6 +38,7 @@ export type {
   ColorTokens,
   GetProps,
   GetRef,
+  ImageProps,
   InputProps,
   PopperProps,
   SpaceTokens,

@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { saveDappConnection } from 'src/app/features/dapp/actions'
 import { useDappContext } from 'src/app/features/dapp/DappContext'
-import { extractUrlHost } from 'src/app/features/dappRequests/utils'
+import { saveDappConnection } from 'src/app/features/dapp/actions'
 import { Anchor, Button, Flex, Popover, Separator, Text, TouchableArea } from 'ui/src'
 import { X } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { extractUrlHost } from 'utilities/src/format/urls'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function ConnectPopupContent({

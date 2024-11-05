@@ -11,26 +11,6 @@ const SimpleHashApiClient = createApiClient({
   },
 })
 
-export type SimpleHashNftsRequest = {
-  contractAddress: string
-  tokenId: string
-}
-
-export type SimpleHashNftsResponse = {
-  previews: {
-    image_small_url: string | null
-    image_medium_url: string | null
-    image_large_url: string | null
-    image_opengraph_url: string | null
-    blurhash: string | null
-    predominant_color: string | null
-  } | null
-}
-
-export async function fetchNft({ contractAddress, tokenId }: SimpleHashNftsRequest): Promise<SimpleHashNftsResponse> {
-  return await SimpleHashApiClient.get<SimpleHashNftsResponse>(`/nfts/ethereum/${contractAddress}/${tokenId}`)
-}
-
 export type SimpleHashResponse = {
   message: string
   success: boolean

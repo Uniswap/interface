@@ -13,6 +13,7 @@ export interface ItemRowInfo {
   item: TokenOption | TokenOption[]
   section: TokenSection
   index: number
+  expanded?: boolean
 }
 
 export interface TokenSectionBaseListProps {
@@ -23,6 +24,7 @@ export interface TokenSectionBaseListProps {
   renderItem: (info: ItemRowInfo) => JSX.Element | null
   renderSectionHeader?: (info: SectionRowInfo) => JSX.Element
   sections: TokenSection[]
+  expandedItems?: string[]
 }
 
 export function TokenSectionBaseList(_props: TokenSectionBaseListProps): JSX.Element {

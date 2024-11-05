@@ -1,8 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
+import { useEthersProvider } from 'hooks/useEthersProvider'
 import JSBI from 'jsbi'
-import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
+import { NEVER_RELOAD } from 'lib/hooks/multicall'
+import multicall from 'lib/state/multicall'
 import { useMemo } from 'react'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 type TokenId = number | JSBI | BigNumber
 
@@ -27,16 +30,27 @@ type UsePositionTokenURIResult =
       loading: true
     }
 
-export function usePositionTokenURI(tokenId: TokenId | undefined): UsePositionTokenURIResult {
-  const contract = useV3NFTPositionManagerContract()
+export function usePositionTokenURI(
+  tokenId: TokenId | undefined,
+  chainId?: UniverseChainId,
+): UsePositionTokenURIResult {
+  const contract = useV3NFTPositionManagerContract(false, chainId)
   const inputs = useMemo(
     () => [tokenId instanceof BigNumber ? tokenId.toHexString() : tokenId?.toString(16)],
     [tokenId],
   )
-  const { result, error, loading, valid } = useSingleCallResult(contract, 'tokenURI', inputs, {
-    ...NEVER_RELOAD,
-    gasRequired: 3_000_000,
-  })
+  const latestBlock = useEthersProvider({ chainId })?.blockNumber
+  const { result, error, loading, valid } = multicall.hooks.useSingleCallResult(
+    chainId,
+    latestBlock,
+    contract,
+    'tokenURI',
+    inputs,
+    {
+      ...NEVER_RELOAD,
+      gasRequired: 3_000_000,
+    },
+  )
 
   return useMemo(() => {
     if (error || !valid || !tokenId) {

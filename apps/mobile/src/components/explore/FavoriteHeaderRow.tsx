@@ -10,10 +10,12 @@ export function FavoriteHeaderRow({
   editingTitle,
   isEditing,
   onPress,
+  disabled,
 }: {
   title: string
   editingTitle: string
   isEditing: boolean
+  disabled?: boolean
   onPress: () => void
 }): JSX.Element {
   const { t } = useTranslation()
@@ -23,7 +25,7 @@ export function FavoriteHeaderRow({
         {isEditing ? editingTitle : title}
       </Text>
       {!isEditing ? (
-        <TouchableArea hapticFeedback hitSlop={16} testID={TestID.Edit} onPress={onPress}>
+        <TouchableArea hapticFeedback hitSlop={16} testID={TestID.Edit} disabled={disabled} onPress={onPress}>
           <Ellipsis color="$neutral2" size={iconSizes.icon20} strokeLinecap="round" strokeWidth={1} />
         </TouchableArea>
       ) : (

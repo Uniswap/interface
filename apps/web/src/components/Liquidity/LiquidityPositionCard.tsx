@@ -1,48 +1,40 @@
 // eslint-disable-next-line no-restricted-imports
-import { Position, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { LiquidityPositionFeeStats } from 'components/Liquidity/LiquidityPositionFeeStats'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
-import { parseRestPosition, useV2PositionDerivedInfo, useV3PositionDerivedInfo } from 'components/Liquidity/utils'
-import { useMemo } from 'react'
+import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
+import { PositionInfo } from 'components/Liquidity/types'
 import { Flex, FlexProps } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { NumberType } from 'utilities/src/format/types'
 
-export function LiquidityPositionCard({ liquidityPosition, ...rest }: { liquidityPosition: Position } & FlexProps) {
-  const positionInfo = useMemo(() => parseRestPosition(liquidityPosition), [liquidityPosition])
+export function LiquidityPositionCard({ liquidityPosition, ...rest }: { liquidityPosition: PositionInfo } & FlexProps) {
   const { formatCurrencyAmount } = useLocalizationContext()
-  const {
-    fiatFeeValue0,
-    fiatFeeValue1,
-    fiatValue0,
-    fiatValue1,
-    priceOrdering: { priceLower, priceUpper },
-  } = useV3PositionDerivedInfo(positionInfo)
-  const { token0USDValue, token1USDValue } = useV2PositionDerivedInfo(positionInfo)
+  const { fiatFeeValue0, fiatFeeValue1, fiatValue0, fiatValue1, priceOrdering } =
+    useV3OrV4PositionDerivedInfo(liquidityPosition)
 
-  const v3FormattedUsdValue =
+  const token0USDValue = useUSDCValue(liquidityPosition.currency0Amount)
+  const token1USDValue = useUSDCValue(liquidityPosition.currency1Amount)
+
+  const v3OrV4FormattedUsdValue =
     fiatValue0 && fiatValue1
       ? formatCurrencyAmount({
           value: fiatValue0.add(fiatValue1),
           type: NumberType.FiatTokenPrice,
         })
-      : '-'
+      : undefined
   const v2FormattedUsdValue =
     token0USDValue && token1USDValue
       ? formatCurrencyAmount({ value: token0USDValue.add(token1USDValue), type: NumberType.FiatStandard })
-      : '-'
+      : undefined
 
-  const v3FormattedFeesValue =
+  const v3OrV4FormattedFeesValue =
     fiatFeeValue0 && fiatFeeValue1
       ? formatCurrencyAmount({
           value: fiatFeeValue0.add(fiatFeeValue1),
           type: NumberType.FiatTokenPrice,
         })
-      : '-'
-
-  if (!liquidityPosition || !positionInfo) {
-    return null
-  }
+      : undefined
 
   return (
     <Flex
@@ -56,14 +48,17 @@ export function LiquidityPositionCard({ liquidityPosition, ...rest }: { liquidit
       {...rest}
     >
       <Flex row alignItems="center" justifyContent="space-between">
-        <LiquidityPositionInfo position={liquidityPosition} />
+        <LiquidityPositionInfo positionInfo={liquidityPosition} />
         {/* TODO (WEB-4920): add the range chart */}
       </Flex>
       <LiquidityPositionFeeStats
-        formattedUsdValue={v3FormattedUsdValue ?? v2FormattedUsdValue}
-        formattedUsdFees={positionInfo.version === ProtocolVersion.V3 ? v3FormattedFeesValue : undefined}
-        lowPrice={priceLower}
-        highPrice={priceUpper}
+        showReverseButton={false}
+        formattedUsdValue={v3OrV4FormattedUsdValue ?? v2FormattedUsdValue}
+        formattedUsdFees={v3OrV4FormattedFeesValue}
+        priceOrdering={priceOrdering}
+        feeTier={liquidityPosition.feeTier?.toString()}
+        tickLower={liquidityPosition.tickLower}
+        tickUpper={liquidityPosition.tickUpper}
         // TODO (WEB-4920): add total APR and fee APR
       />
     </Flex>

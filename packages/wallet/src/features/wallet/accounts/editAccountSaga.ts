@@ -1,5 +1,7 @@
 import { all, call, put, select } from 'typed-redux-saga'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { unique } from 'utilities/src/primitives/array'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
@@ -152,6 +154,11 @@ function* addBackupMethod(params: AddBackupMethodParams, account: Account) {
     }),
   )
 
+  sendAnalyticsEvent(WalletEventName.BackupMethodAdded, {
+    backupMethodType: backupMethod,
+    newBackupCount: updatedBackups.length,
+  })
+
   logger.debug(
     'editAccountSaga',
     'addBackupMethod',
@@ -188,6 +195,11 @@ function* removeBackupMethod(params: RemoveBackupMethodParams, account: Account)
       )
     }),
   )
+
+  sendAnalyticsEvent(WalletEventName.BackupMethodRemoved, {
+    backupMethodType: backupMethod,
+    newBackupCount: updatedBackups?.length ?? 0,
+  })
 
   logger.debug(
     'editAccountSaga',

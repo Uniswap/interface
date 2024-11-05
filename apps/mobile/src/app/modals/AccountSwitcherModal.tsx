@@ -20,6 +20,7 @@ import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { isAndroid } from 'utilities/src/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { PlusCircle } from 'wallet/src/components/icons/PlusCircle'
@@ -245,7 +246,8 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
 
   const accountsWithoutActive = accounts.filter((a) => a.address !== activeAccountAddress)
 
-  const isViewOnly = accounts.find((a) => a.address === activeAccountAddress)?.type === AccountType.Readonly
+  const isViewOnly =
+    accounts.find((a) => areAddressesEqual(a.address, activeAccountAddress))?.type === AccountType.Readonly
 
   if (!activeAccountAddress) {
     return null

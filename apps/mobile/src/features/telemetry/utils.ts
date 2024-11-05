@@ -1,5 +1,5 @@
 import { RootParamList } from 'src/app/navigation/types'
-import { MobileAppScreen, MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { MobileNavScreen, MobileScreens } from 'uniswap/src/types/screens/mobile'
 
 export enum AuthMethod {
   FaceId = 'FaceId',
@@ -27,8 +27,8 @@ export function getAuthMethod(
 }
 
 export function getEventParams(
-  screen: MobileAppScreen,
-  params: RootParamList[MobileAppScreen],
+  screen: MobileNavScreen,
+  params: RootParamList[MobileNavScreen],
 ): Record<string, unknown> | undefined {
   switch (screen) {
     case MobileScreens.SettingsWallet:

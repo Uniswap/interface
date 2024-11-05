@@ -21,6 +21,7 @@ import {
   V2PoolInRoute as TradingApiV2PoolInRoute,
   V3PoolInRoute as TradingApiV3PoolInRoute,
   V4PoolInRoute as TradingApiV4PoolInRoute,
+  Urgency,
   V4PoolInRoute,
 } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
@@ -42,8 +43,10 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
+import { isInterface } from 'utilities/src/platform'
 
 export const NATIVE_ADDRESS_FOR_TRADING_API = '0x0000000000000000000000000000000000000000'
+export const SWAP_GAS_URGENCY_OVERRIDE = isInterface ? Urgency.NORMAL : undefined // on Interface, use a normal urgency, else use TradingAPI default
 
 interface TradingApiResponseToTradeArgs {
   currencyIn: Currency
@@ -182,13 +185,7 @@ export function computeRoutes(
       const v4Routes = route.filter((r): r is V4PoolInRoute => r.type === 'v4-pool')
 
       return {
-        routev4: isOnlyV4
-          ? new V4Route(
-              v4Routes.map((r) => parseV4PoolApi(r, parsedCurrencyIn, parsedCurrencyOut)),
-              parsedCurrencyIn,
-              parsedCurrencyOut,
-            )
-          : null,
+        routev4: isOnlyV4 ? new V4Route(v4Routes.map(parseV4PoolApi), parsedCurrencyIn, parsedCurrencyOut) : null,
         routev3: isOnlyV3 ? new V3Route(route.map(parseV3PoolApi), parsedCurrencyIn, parsedCurrencyOut) : null,
         routev2: isOnlyV2 ? new V2Route(route.map(parseV2PairApi), parsedCurrencyIn, parsedCurrencyOut) : null,
         mixedRoute:
@@ -221,14 +218,22 @@ function parseTokenApi(token: TradingApiTokenInRoute): Token {
   )
 }
 
-function parseV4PoolApi(
-  { fee, sqrtRatioX96, liquidity, tickCurrent, tickSpacing, hooks }: TradingApiV4PoolInRoute,
-  tokenIn: Currency,
-  tokenOut: Currency,
-): V4Pool {
+function parseV4PoolApi({
+  fee,
+  sqrtRatioX96,
+  liquidity,
+  tickCurrent,
+  tickSpacing,
+  hooks,
+  tokenIn,
+  tokenOut,
+}: TradingApiV4PoolInRoute): V4Pool {
+  const currencyIn = parseTokenApi(tokenIn)
+  const currencyOut = parseTokenApi(tokenOut)
+
   return new V4Pool(
-    tokenIn,
-    tokenOut,
+    currencyIn,
+    currencyOut,
     Number(fee),
     Number(tickSpacing),
     hooks,
@@ -364,19 +369,10 @@ export function validateTrade({
   const inputsMatch = areAddressesEqual(currencyIn.wrapped.address, trade?.inputAmount.currency.wrapped.address)
   const outputsMatch = areAddressesEqual(currencyOut.wrapped.address, trade.outputAmount.currency.wrapped.address)
 
-  // TODO(MOB-3028): check if this logic needs any adjustments once we add UniswapX support.
-  // Verify the amount specified in the quote response matches the exact amount from input state
-  const exactAmountFromQuote = isClassicQuote(trade.quote?.quote)
-    ? exactCurrencyField === CurrencyField.INPUT
-      ? trade.quote.quote.input?.amount
-      : trade.quote.quote.output?.amount
-    : undefined
-
   const tokenAddressesMatch = inputsMatch && outputsMatch
-  const exactAmountsMatch = exactAmount?.toExact() !== exactAmountFromQuote
-
-  if (!(tokenAddressesMatch && exactAmountsMatch)) {
-    logger.error(new Error(`Mismatched ${!tokenAddressesMatch ? 'address' : 'exact amount'} in swap trade`), {
+  // TODO(WEB-5132): Add validation checking that exact amount from response matches exact amount from user input
+  if (!tokenAddressesMatch) {
+    logger.error(new Error(`Mismatched address in swap trade`), {
       tags: { file: 'tradingApi/utils', function: 'validateTrade' },
       extra: {
         formState: {

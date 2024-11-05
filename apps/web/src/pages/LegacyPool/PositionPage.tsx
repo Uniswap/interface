@@ -380,10 +380,10 @@ function PositionPageContent() {
 
   // handle manual inversion
   const { priceLower, priceUpper, base } = useInverter({
-    priceLower: pricesFromPosition.priceLower,
-    priceUpper: pricesFromPosition.priceUpper,
-    quote: pricesFromPosition.quote,
-    base: pricesFromPosition.base,
+    priceLower: pricesFromPosition.priceLower as Price<Token, Token>,
+    priceUpper: pricesFromPosition.priceUpper as Price<Token, Token>,
+    quote: pricesFromPosition.quote as Token,
+    base: pricesFromPosition.base as Token,
     invert: manuallyInverted,
   })
 
@@ -629,7 +629,7 @@ function PositionPageContent() {
             hash={collectMigrationHash ?? ''}
             reviewContent={() => (
               <ConfirmationModalContent
-                title={<Trans i18nKey="pool.claimFees" />}
+                title={<Trans i18nKey="pool.collectFees" />}
                 onDismiss={() => setShowConfirm(false)}
                 topContent={modalHeader}
               />
@@ -802,7 +802,7 @@ function PositionPageContent() {
                       <RowBetween style={{ alignItems: 'flex-start' }}>
                         <AutoColumn gap="md">
                           <Label>
-                            <Trans i18nKey="pool.unclaimedFees" />
+                            <Trans i18nKey="pool.uncollectedFees" />
                           </Label>
                           {fiatValueOfFees?.greaterThan(new Fraction(1, 100)) ? (
                             <ThemedText.DeprecatedLargeHeader color={theme.success} fontSize="36px" fontWeight={535}>
@@ -839,7 +839,7 @@ function PositionPageContent() {
                             ) : (
                               <>
                                 <ThemedText.DeprecatedMain color={theme.white}>
-                                  <Trans i18nKey="pool.collectingFees" />
+                                  <Trans i18nKey="pool.collectFees" />
                                 </ThemedText.DeprecatedMain>
                               </>
                             )}

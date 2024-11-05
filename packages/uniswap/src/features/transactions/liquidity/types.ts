@@ -1,7 +1,11 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { IncreaseLPPositionRequest } from 'uniswap/src/data/tradingApi/__generated__'
+import {
+  CreateLPPositionRequest,
+  IncreaseLPPositionRequest,
+  MigrateLPPositionRequest,
+} from 'uniswap/src/data/tradingApi/__generated__'
 import { ValidatedPermit, ValidatedTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 
 export interface LiquidityAction {
@@ -14,10 +18,12 @@ export type LiquidityTxAndGasInfo =
   | IncreasePositionTxAndGasInfo
   | DecreasePositionTxAndGasInfo
   | CreatePositionTxAndGasInfo
+  | MigrateV3PositionTxAndGasInfo
 export type ValidatedLiquidityTxContext =
   | ValidatedIncreasePositionTxAndGasInfo
   | ValidatedDecreasePositionTxAndGasInfo
   | ValidatedCreatePositionTxAndGasInfo
+  | ValidatedMigrateV3PositionTxAndGasInfo
 
 export function isValidLiquidityTxContext(
   liquidityTxContext: LiquidityTxAndGasInfo | unknown,
@@ -50,7 +56,12 @@ export interface DecreasePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo 
 export interface CreatePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   type: 'create'
   unsigned: boolean
-  createPositionRequestArgs: IncreaseLPPositionRequest | undefined
+  createPositionRequestArgs: CreateLPPositionRequest | undefined
+}
+
+export interface MigrateV3PositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
+  type: 'migrate'
+  migratePositionRequestArgs: MigrateLPPositionRequest | undefined
 }
 
 export type ValidatedIncreasePositionTxAndGasInfo = Required<IncreasePositionTxAndGasInfo> &
@@ -72,6 +83,20 @@ export type ValidatedDecreasePositionTxAndGasInfo = Required<DecreasePositionTxA
 }
 
 export type ValidatedCreatePositionTxAndGasInfo = Required<CreatePositionTxAndGasInfo> &
+  (
+    | {
+        unsigned: true
+        permit: ValidatedPermit
+        txRequest: undefined
+      }
+    | {
+        unsigned: false
+        permit: undefined
+        txRequest: ValidatedTransactionRequest
+      }
+  )
+
+export type ValidatedMigrateV3PositionTxAndGasInfo = Required<MigrateV3PositionTxAndGasInfo> &
   (
     | {
         unsigned: true

@@ -9,8 +9,9 @@ import {
   TokenSearchResult,
 } from 'uniswap/src/features/search/SearchResult'
 import { searchResultId } from 'uniswap/src/features/search/searchHistorySlice'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
-const MAX_TOKEN_RESULTS_COUNT = 4
+const MAX_TOKEN_RESULTS_COUNT = 8
 
 type ExploreSearchResult = NonNullable<ExploreSearchQuery>
 
@@ -18,6 +19,7 @@ type ExploreSearchResult = NonNullable<ExploreSearchQuery>
 export function formatTokenSearchResults(
   data: ExploreSearchResult['searchTokens'],
   searchQuery: string,
+  selectedChain: UniverseChainId | null,
 ): TokenSearchResult[] | undefined {
   if (!data) {
     return undefined
@@ -34,7 +36,10 @@ export function formatTokenSearchResults(
     const { name, chain, address, symbol, project, market, protectionInfo } = token
     const chainId = fromGraphQLChain(chain)
 
-    if (!chainId || !project) {
+    const shoulderFilterByChain = !!selectedChain
+    const chainMismatch = shoulderFilterByChain && selectedChain !== chainId
+
+    if (!chainId || !project || chainMismatch) {
       return tokensMap
     }
 
@@ -85,6 +90,7 @@ function isExactTokenSearchResultMatch(searchResult: TokenSearchResult, query: s
 
 export function formatNFTCollectionSearchResults(
   data: ExploreSearchResult['nftCollections'],
+  selectedChain: UniverseChainId | null,
 ): NFTCollectionSearchResult[] | undefined {
   if (!data) {
     return undefined
@@ -92,7 +98,10 @@ export function formatNFTCollectionSearchResults(
 
   return data.edges.reduce<NFTCollectionSearchResult[]>((accum, { node }) => {
     const formatted = gqlNFTToNFTCollectionSearchResult(node)
-    if (formatted) {
+
+    const chainMismatch = selectedChain && formatted && formatted.chainId !== selectedChain
+
+    if (formatted && !chainMismatch) {
       accum.push(formatted)
     }
     return accum

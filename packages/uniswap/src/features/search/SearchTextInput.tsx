@@ -16,12 +16,10 @@ import {
   SpaceTokens,
   Text,
   TouchableArea,
-  isWeb,
   useComposedRefs,
 } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { Search } from 'ui/src/components/icons/Search'
-import { X } from 'ui/src/components/icons/X'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { SHADOW_OFFSET_SMALL } from 'uniswap/src/components/BaseCard/BaseCard'
@@ -33,6 +31,7 @@ import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { isAndroid, isIOS } from 'utilities/src/platform'
 
 const DEFAULT_MIN_HEIGHT = 48
+const CANCEL_CHEVRON_X_OFFSET = -6
 
 export const springConfig = {
   stiffness: 1000,
@@ -43,17 +42,21 @@ export const springConfig = {
   restSpeedThreshold: 0.01,
 }
 
+export enum CancelBehaviorType {
+  CancelButton = 'CancelButton',
+  BackChevron = 'BackChevron',
+}
+
 export type SearchTextInputProps = InputProps & {
   onCancel?: () => void
   onClose?: () => void
-  clearIcon?: JSX.Element
-  disableClearable?: boolean
   endAdornment?: JSX.Element | null
   showShadow?: boolean
   py?: SpaceTokens
   px?: SpaceTokens
   hideIcon?: boolean
   minHeight?: number
+  cancelBehaviorType?: CancelBehaviorType
 }
 
 export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>(
@@ -64,8 +67,6 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     const {
       autoFocus,
       backgroundColor = '$surface2',
-      clearIcon,
-      disableClearable = isWeb,
       endAdornment,
       onCancel,
       onClose,
@@ -78,34 +79,31 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       value,
       hideIcon,
       minHeight = DEFAULT_MIN_HEIGHT,
+      cancelBehaviorType = CancelBehaviorType.CancelButton,
     } = props
 
     const inputRef = useRef<Input>(null)
     const combinedRef = useComposedRefs<Input>(inputRef, ref)
-    const showCancelButton = !!onCancel
     const showCloseButton = !!onClose
     const [isFocus, setIsFocus] = useState(false)
-    const [cancelButtonWidth, setCancelButtonWidth] = useState(showCancelButton ? 40 : 0)
-    const [showClearButton, setShowClearButton] = useState(value && value.length > 0 && !disableClearable)
 
-    const onPressCancel = (): void => {
-      inputRef.current?.clear()
-      setIsFocus(false)
-      setShowClearButton(false)
-      dismissNativeKeyboard()
-      sendAnalyticsEvent(WalletEventName.ExploreSearchCancel, { query: value || '' })
-      onChangeText?.('')
-      onCancel?.()
-    }
+    const showCancelButton = !!onCancel && cancelBehaviorType === CancelBehaviorType.CancelButton
+    const [cancelButtonWidth, setCancelButtonWidth] = useState(showCancelButton ? 40 : 0)
+
+    const showBackChevron = !!onCancel && cancelBehaviorType === CancelBehaviorType.BackChevron
+    const cancelChevronWidth = showBackChevron ? iconSizes.icon20 + CANCEL_CHEVRON_X_OFFSET : 0
 
     const onCancelButtonLayout = useCallback((event: LayoutChangeEvent) => {
       setCancelButtonWidth(event.nativeEvent.layout.width)
     }, [])
 
-    const onClear = (): void => {
+    const onPressCancel = (): void => {
       inputRef.current?.clear()
+      setIsFocus(false)
+      dismissNativeKeyboard()
+      sendAnalyticsEvent(WalletEventName.ExploreSearchCancel, { query: value || '' })
       onChangeText?.('')
-      setShowClearButton(false)
+      onCancel?.()
     }
 
     const onTextInputFocus = (e: NativeSyntheticEvent<TextInputFocusEventData>): void => {
@@ -116,24 +114,41 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     const onChangeTextInput = useCallback(
       (text: string) => {
         onChangeText?.(text)
-        setShowClearButton(text.length > 0 && !disableClearable)
       },
-      [disableClearable, onChangeText],
+      [onChangeText],
     )
+
+    const animationDirection = cancelBehaviorType === CancelBehaviorType.BackChevron ? 'marginLeft' : 'marginRight'
 
     return (
       <Flex row shrink alignItems="center">
+        {showBackChevron && (
+          <Flex
+            animation="200ms"
+            left={0}
+            opacity={isFocus ? 1 : 0}
+            pointerEvents={isFocus ? 'auto' : 'none'}
+            position="absolute"
+            scale={isFocus ? 1 : 0}
+            x={CANCEL_CHEVRON_X_OFFSET}
+          >
+            <TouchableArea hitSlop={16} onPress={onPressCancel}>
+              <RotatableChevron color="$neutral1" direction="left" height={iconSizes.icon20} width={iconSizes.icon20} />
+            </TouchableArea>
+          </Flex>
+        )}
         <Flex
           fill
           grow
           row
           alignItems="center"
-          animateOnly={['marginRight']}
+          animateOnly={[animationDirection]}
           animation="quick"
           backgroundColor={backgroundColor}
           borderRadius="$roundedFull"
           gap="$spacing8"
           minHeight={minHeight}
+          ml={showBackChevron && isFocus ? cancelChevronWidth + spacing.spacing8 + spacing.spacing2 : 0}
           mr={showCancelButton && isFocus ? cancelButtonWidth + spacing.spacing12 : 0}
           px={px}
           py={py}
@@ -198,31 +213,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             </ViewGestureHandler>
           </Flex>
 
-          <AnimatePresence>
-            {showClearButton ? (
-              <Button
-                // TODO(MOB-3059): tamagui should fix this internally and then we can remove animateOnly
-                animateOnly={['transform', 'opacity']}
-                animation="quick"
-                backgroundColor="$surface3"
-                borderRadius="$roundedFull"
-                enterStyle={{ opacity: 0, scale: 0 }}
-                exitStyle={{ opacity: 0, scale: 0 }}
-                icon={clearIcon ?? <X color="$neutral3" size="$icon.16" />}
-                p="$spacing4"
-                theme="secondary"
-                onPress={onClear}
-              />
-            ) : endAdornment ? (
-              <Flex
-                animation="quick"
-                opacity={isFocus && showClearButton ? 0 : 1}
-                scale={isFocus && showClearButton ? 0 : 1}
-              >
-                {endAdornment}
-              </Flex>
-            ) : null}
-          </AnimatePresence>
+          <AnimatePresence>{endAdornment ? <Flex animation="quick">{endAdornment}</Flex> : null}</AnimatePresence>
           <AnimatePresence>
             {showCloseButton && (
               <Button
@@ -245,7 +236,6 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             )}
           </AnimatePresence>
         </Flex>
-
         {showCancelButton && (
           <Flex
             animation="200ms"

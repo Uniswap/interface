@@ -35,8 +35,8 @@ exports[`NetworkFilter renders a NetworkFilter 1`] = `
           "flexDirection": "row",
           "gap": 8,
           "justifyContent": "center",
-          "paddingBottom": 8,
-          "paddingTop": 8,
+          "paddingBottom": 0,
+          "paddingTop": 0,
         }
       }
       testID="chain-selector"
@@ -44,7 +44,14 @@ exports[`NetworkFilter renders a NetworkFilter 1`] = `
       <View
         style={
           {
+            "borderColor": "#131313",
+            "borderRadius": 6,
+            "borderStyle": "solid",
+            "borderWidth": 0,
             "flexDirection": "column",
+            "height": 20,
+            "overflow": "hidden",
+            "width": 20,
           }
         }
         testID="network-logo"
@@ -54,18 +61,6 @@ exports[`NetworkFilter renders a NetworkFilter 1`] = `
           dir={null}
           style={
             {
-              "borderBottomColor": "rgba(19,19,19,1.00)",
-              "borderBottomLeftRadius": "6px",
-              "borderBottomRightRadius": "6px",
-              "borderBottomWidth": "0px",
-              "borderLeftColor": "rgba(19,19,19,1.00)",
-              "borderLeftWidth": "0px",
-              "borderRightColor": "rgba(19,19,19,1.00)",
-              "borderRightWidth": "0px",
-              "borderTopColor": "rgba(19,19,19,1.00)",
-              "borderTopLeftRadius": "6px",
-              "borderTopRightRadius": "6px",
-              "borderTopWidth": "0px",
               "height": "20px",
               "width": "20px",
             }

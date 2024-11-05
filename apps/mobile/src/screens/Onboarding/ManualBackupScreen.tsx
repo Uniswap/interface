@@ -17,7 +17,8 @@ import { EyeSlash, FileListLock, GraduationCap, Key, PapersText, Pen } from 'ui/
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
@@ -188,13 +189,15 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
                 onConfirmComplete={(): void => setConfirmContinueButtonEnabled(true)}
               />
             </Flex>
-            <Button
-              disabled={!confirmContinueButtonEnabled}
-              testID={TestID.Continue}
-              onPress={() => (onboardingExperimentEnabled ? setShowSpeedBumpModal(true) : onValidationSuccessful())}
-            >
-              {t('common.button.continue')}
-            </Button>
+            <Trace logPress element={ElementName.Continue} screen={ManualPageViewScreen.ConfirmRecoveryPhrase}>
+              <Button
+                disabled={!confirmContinueButtonEnabled}
+                testID={TestID.Continue}
+                onPress={() => (onboardingExperimentEnabled ? setShowSpeedBumpModal(true) : onValidationSuccessful())}
+              >
+                {t('common.button.continue')}
+              </Button>
+            </Trace>
           </Flex>
 
           {showSpeedBumpModal && (
@@ -297,12 +300,16 @@ function ManualBackWarningModal({ onBack, onContinue }: ManualBackWarningModalPr
         </Flex>
 
         <Flex row gap="$spacing8">
-          <Button fill size="medium" theme="secondary" onPress={() => onBack()}>
-            {t('common.button.back')}
-          </Button>
-          <Button fill size="medium" theme="primary" onPress={() => onContinue()}>
-            {t('common.button.continue')}
-          </Button>
+          <Trace logPress element={ElementName.BackButton} modal={ModalName.SeedPhraseWarningModal}>
+            <Button fill size="medium" theme="secondary" onPress={() => onBack()}>
+              {t('common.button.back')}
+            </Button>
+          </Trace>
+          <Trace logPress element={ElementName.Continue} modal={ModalName.SeedPhraseWarningModal}>
+            <Button fill size="medium" theme="primary" onPress={() => onContinue()}>
+              {t('common.button.continue')}
+            </Button>
+          </Trace>
         </Flex>
       </Flex>
     </Modal>

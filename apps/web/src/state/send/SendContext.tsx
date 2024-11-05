@@ -11,6 +11,7 @@ import {
 } from 'react'
 import { RecipientData, SendInfo, useDerivedSendInfo } from 'state/send/hooks'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 
 export type SendState = {
   readonly exactAmountToken?: string
@@ -47,6 +48,15 @@ const DEFAULT_SEND_STATE: SendState = {
   validatedRecipientData: undefined,
 }
 
+const DEFAULT_TESTNET_SEND_STATE: SendState = {
+  exactAmountToken: '',
+  exactAmountFiat: undefined,
+  recipient: '',
+  inputCurrency: undefined,
+  inputInFiat: false,
+  validatedRecipientData: undefined,
+}
+
 // exported for testing
 export const SendContext = createContext<SendContextType>({
   sendState: DEFAULT_SEND_STATE,
@@ -73,11 +83,16 @@ export function SendContextProvider({ children }: PropsWithChildren) {
     setCurrencyState,
   } = useSwapAndLimitContext()
 
+  const { isTestnetModeEnabled } = useEnabledChains()
+
   const initialCurrency = useMemo(() => {
     return inputCurrency ?? outputCurrency
   }, [inputCurrency, outputCurrency])
 
-  const [sendState, setSendState] = useState<SendState>({ ...DEFAULT_SEND_STATE, inputCurrency: initialCurrency })
+  const [sendState, setSendState] = useState<SendState>({
+    ...(isTestnetModeEnabled ? DEFAULT_TESTNET_SEND_STATE : DEFAULT_SEND_STATE),
+    inputCurrency: initialCurrency,
+  })
   const derivedSendInfo = useDerivedSendInfo(sendState)
 
   useEffect(() => {

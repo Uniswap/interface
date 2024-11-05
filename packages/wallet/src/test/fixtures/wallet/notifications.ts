@@ -1,16 +1,5 @@
 import { AssetType } from 'uniswap/src/entities/assets'
 import {
-  FinalizedTransactionStatus,
-  TransactionStatus,
-  TransactionType,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
-import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { currencyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
-import { faker } from 'uniswap/src/test/shared'
-import { createFixture, randomChoice, randomEnumValue } from 'uniswap/src/test/utils'
-import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
-import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
-import {
   AppErrorNotification,
   AppNotificationBase,
   AppNotificationDefault,
@@ -35,7 +24,18 @@ import {
   TransferNFTNotificationBase,
   WalletConnectNotification,
   WrapTxNotification,
-} from 'wallet/src/features/notifications/types'
+} from 'uniswap/src/features/notifications/types'
+import {
+  FinalizedTransactionStatus,
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
+import { currencyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
+import { faker } from 'uniswap/src/test/shared'
+import { createFixture, randomChoice, randomEnumValue } from 'uniswap/src/test/utils'
+import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
+import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 
 export const FINALIZED_TRANSACTION_STATUSES: FinalizedTransactionStatus[] = [
   TransactionStatus.Success,

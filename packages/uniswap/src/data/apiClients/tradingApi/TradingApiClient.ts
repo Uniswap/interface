@@ -26,6 +26,8 @@ import {
   IncreaseLPPositionResponse,
   IndicativeQuoteRequest,
   IndicativeQuoteResponse,
+  MigrateLPPositionRequest,
+  MigrateLPPositionResponse,
   OrderRequest,
   OrderResponse,
   PriorityQuote,
@@ -154,11 +156,15 @@ export async function increaseLpPosition(params: IncreaseLPPositionRequest): Pro
     }),
   })
 }
-export async function checkLpApproval(params: CheckApprovalLPRequest): Promise<CheckApprovalLPResponse> {
+export async function checkLpApproval(
+  params: CheckApprovalLPRequest,
+  headers?: Record<string, string>,
+): Promise<CheckApprovalLPResponse> {
   return await TradingApiClient.post<CheckApprovalLPResponse>(uniswapUrls.tradingApiPaths.lpApproval, {
     body: JSON.stringify({
       ...params,
     }),
+    headers,
   })
 }
 
@@ -176,5 +182,13 @@ export async function fetchSwaps(params: { txHashes: TransactionHash[]; chainId:
       txHashes: params.txHashes.join(','),
       chainId: params.chainId,
     },
+  })
+}
+
+export async function migrateLpPosition(params: MigrateLPPositionRequest): Promise<MigrateLPPositionResponse> {
+  return await TradingApiClient.post<MigrateLPPositionResponse>(uniswapUrls.tradingApiPaths.migrate, {
+    body: JSON.stringify({
+      ...params,
+    }),
   })
 }

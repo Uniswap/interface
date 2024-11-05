@@ -1,4 +1,4 @@
-import { scrollbarStyle } from 'components/SearchModal/CurrencyList/index.css'
+import { ScrollBarStyles } from 'components/Common/styles'
 import { SearchInput } from 'components/SearchModal/styled'
 import { CountryListRow } from 'pages/Swap/Buy/CountryListRow'
 import { ContentWrapper } from 'pages/Swap/Buy/shared'
@@ -90,7 +90,6 @@ export function CountryListModal({
             {({ height }: { height: number }) => (
               <div data-testid="country-list-wrapper">
                 <FixedSizeList
-                  className={scrollbarStyle}
                   height={height}
                   ref={fixedList as any}
                   width="100%"
@@ -98,6 +97,7 @@ export function CountryListModal({
                   itemCount={filteredData.length}
                   itemSize={ROW_ITEM_SIZE}
                   itemKey={(index: number, data: typeof countryList) => data[index]?.countryCode}
+                  {...ScrollBarStyles}
                 >
                   {({ style, data, index }) => (
                     <CountryListRow

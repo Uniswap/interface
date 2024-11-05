@@ -10,7 +10,7 @@ import {
   SwapTransactionStepAsync,
   TransactionStepType,
   UniswapXSignatureStep,
-} from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
+} from 'uniswap/src/features/transactions/swap/types/steps'
 import noop from 'utilities/src/react/noop'
 
 const SwapIcon = (): JSX.Element => (

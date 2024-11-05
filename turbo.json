@@ -130,6 +130,26 @@
         "^prepare"
       ]
     },
+    "test:set1": {
+      "dependsOn": [
+        "^prepare"
+      ]
+    },
+    "test:set2": {
+      "dependsOn": [
+        "^prepare"
+      ]
+    },
+    "test:set3": {
+      "dependsOn": [
+        "^prepare"
+      ]
+    },
+    "test:set4": {
+      "dependsOn": [
+        "^prepare"
+      ]
+    },
     "start": {
       "cache": false,
       "persistent": true,

@@ -16,6 +16,8 @@ import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/const
 import { useFiatOnRampTransactionCreator } from 'uniswap/src/features/fiatOnRamp/hooks'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { FiatOffRampEventName, FiatOnRampEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { forceFetchFiatOnRampTransactions } from 'uniswap/src/features/transactions/slice'
@@ -25,8 +27,6 @@ import { openUri } from 'uniswap/src/utils/linking'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 // Design decision
@@ -83,7 +83,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
           sourceCurrencyCode: baseCurrencyInfo.code,
           walletAddress: activeAccountAddress,
           externalSessionId: externalTransactionId,
-          redirectUrl: `${uniswapUrls.redirectUrlBase}/?screen=transaction&fiatOnRamp=true&userAddress=${activeAccountAddress}`,
+          redirectUrl: `${uniswapUrls.redirectUrlBase}?screen=transaction&fiatOnRamp=true&userAddress=${activeAccountAddress}`,
         }
       : skipToken,
   )

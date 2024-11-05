@@ -1,49 +1,70 @@
 import '@tamagui/core/reset.css'
 import 'src/app/Global.css'
 
-import { useEffect } from 'react'
+import { PropsWithChildren, useEffect } from 'react'
 import { I18nextProvider } from 'react-i18next'
-import { Outlet, RouterProvider } from 'react-router-dom'
+import { Outlet, RouterProvider, useSearchParams } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ExtensionStatsigProvider } from 'src/app/StatsigProvider'
 import { GraphqlProvider } from 'src/app/apollo'
 import { ErrorElement } from 'src/app/components/ErrorElement'
 import { TraceUserProperties } from 'src/app/components/Trace/TraceUserProperties'
-import { ClaimUnitagSteps, OnboardingStepsProvider } from 'src/app/features/onboarding/OnboardingSteps'
+import {
+  ClaimUnitagSteps,
+  OnboardingStepsProvider,
+  useOnboardingSteps,
+} from 'src/app/features/onboarding/OnboardingSteps'
+import { EditUnitagProfileScreen } from 'src/app/features/unitags/EditUnitagProfileScreen'
 import { UnitagChooseProfilePicScreen } from 'src/app/features/unitags/UnitagChooseProfilePicScreen'
+import { UnitagClaimBackground } from 'src/app/features/unitags/UnitagClaimBackground'
 import { UnitagClaimContextProvider } from 'src/app/features/unitags/UnitagClaimContext'
+import { UnitagConfirmationScreen } from 'src/app/features/unitags/UnitagConfirmationScreen'
 import { UnitagCreateUsernameScreen } from 'src/app/features/unitags/UnitagCreateUsernameScreen'
 import { UnitagIntroScreen } from 'src/app/features/unitags/UnitagIntroScreen'
+import { UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { setRouter, setRouterState } from 'src/app/navigation/state'
 import { SentryAppNameTag, initializeSentry, sentryCreateHashRouter } from 'src/app/sentry'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
-import { getLocalUserId } from 'src/app/utils/storage'
 import { getReduxPersistor, getReduxStore } from 'src/store/store'
 import { Flex } from 'ui/src'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n/i18n'
+import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { logger } from 'utilities/src/logger/logger'
+import { usePrevious } from 'utilities/src/react/hooks'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
+import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/hooks'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
-getLocalUserId()
+getUniqueId()
   .then((userId) => {
     initializeSentry(SentryAppNameTag.UnitagClaim, userId)
   })
   .catch((error) => {
     logger.error(error, {
-      tags: { file: 'UnitagClaimApp.tsx', function: 'getLocalUserId' },
+      tags: { file: 'UnitagClaimApp.tsx', function: 'getUniqueId' },
     })
   })
 
 const router = sentryCreateHashRouter([
   {
     path: '',
-    element: <UnitagClaimAppInner />,
-    errorElement: <ErrorElement />,
+    element: <UnitagAppInner />,
+    children: [
+      {
+        path: UnitagClaimRoutes.ClaimIntro,
+        element: <UnitagClaimFlow />,
+        errorElement: <ErrorElement />,
+      },
+      {
+        path: UnitagClaimRoutes.EditProfile,
+        element: <UnitagEditProfileFlow />,
+        errorElement: <ErrorElement />,
+      },
+    ],
   },
 ])
 
@@ -58,18 +79,72 @@ router.subscribe((state) => {
 
 setRouter(router)
 
-function UnitagClaimAppInner(): JSX.Element {
+function UnitagAppInner(): JSX.Element {
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const address = useAccountAddressFromUrlWithThrow()
+  const prevAddress = usePrevious(address)
+
+  // Ensures that address in url search params is consistent with hook
+  useEffect(() => {
+    if (searchParams.get('address') !== address) {
+      setSearchParams({ address })
+    }
+  }, [searchParams, address, setSearchParams])
+
+  useEffect(() => {
+    if (prevAddress && address !== prevAddress) {
+      // needed to reload on address param change for hash router
+      router
+        .navigate(0)
+        .catch((e) => logger.error(e, { tags: { file: 'UnitagClaimApp.tsx', function: 'UnitagClaimAppInner' } }))
+    }
+  }, [address, prevAddress])
+
   useTestnetModeForLoggingAndAnalytics()
+
+  return <Outlet />
+}
+
+function UnitagClaimFlow(): JSX.Element {
   return (
-    <Flex alignItems="center" justifyContent="center" minHeight="100vh" width="100%">
+    <Flex centered height="100%" width="100%">
       <OnboardingStepsProvider
         disableRedirect
         steps={{
           [ClaimUnitagSteps.Intro]: <UnitagIntroScreen />,
           [ClaimUnitagSteps.CreateUsername]: <UnitagCreateUsernameScreen />,
           [ClaimUnitagSteps.ChooseProfilePic]: <UnitagChooseProfilePicScreen />,
+          [ClaimUnitagSteps.Confirmation]: <UnitagConfirmationScreen />,
+          [ClaimUnitagSteps.EditProfile]: <EditUnitagProfileScreen enableBack />,
         }}
-        ContainerComponent={UnitagClaimContextProvider}
+        ContainerComponent={UnitagClaimAppWrapper}
+      />
+      <Outlet />
+    </Flex>
+  )
+}
+
+function UnitagClaimAppWrapper({ children }: PropsWithChildren): JSX.Element {
+  const { step } = useOnboardingSteps()
+  const blurAllBackground = step !== ClaimUnitagSteps.Intro
+
+  return (
+    <UnitagClaimContextProvider>
+      <UnitagClaimBackground blurAll={blurAllBackground}>{children}</UnitagClaimBackground>
+    </UnitagClaimContextProvider>
+  )
+}
+
+function UnitagEditProfileFlow(): JSX.Element {
+  return (
+    <Flex centered height="100%" width="100%">
+      <OnboardingStepsProvider
+        disableRedirect
+        steps={{
+          [ClaimUnitagSteps.EditProfile]: <EditUnitagProfileScreen />,
+        }}
+        ContainerComponent={UnitagClaimAppWrapper}
       />
       <Outlet />
     </Flex>
@@ -86,7 +161,7 @@ export default function UnitagClaimApp(): JSX.Element {
   return (
     <Trace>
       <PersistGate persistor={getReduxPersistor()}>
-        <ExtensionStatsigProvider>
+        <ExtensionStatsigProvider appName={SentryAppNameTag.UnitagClaim}>
           <I18nextProvider i18n={i18n}>
             <SharedWalletProvider reduxStore={getReduxStore()}>
               <ErrorBoundary>

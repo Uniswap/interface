@@ -108,6 +108,7 @@ function getCurrenciesWithExpectedUpdates(transaction: TransactionDetails): Set<
 
   switch (transaction.typeInfo.type) {
     case TransactionType.Swap:
+    case TransactionType.Bridge:
       currenciesWithBalToUpdate.add(transaction.typeInfo.inputCurrencyId.toLowerCase())
       currenciesWithBalToUpdate.add(transaction.typeInfo.outputCurrencyId.toLowerCase())
       break
@@ -143,7 +144,7 @@ function readBalancesFromCache({
     {},
   )
 
-  const chains = isTestnetMode ? GQL_MAINNET_CHAINS_MUTABLE : GQL_TESTNET_CHAINS_MUTABLE
+  const chains = isTestnetMode ? GQL_TESTNET_CHAINS_MUTABLE : GQL_MAINNET_CHAINS_MUTABLE
 
   const cachedBalancesData = apolloClient.readQuery<PortfolioBalancesQuery>({
     query: PortfolioBalancesDocument,

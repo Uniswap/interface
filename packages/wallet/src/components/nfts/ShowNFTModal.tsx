@@ -2,12 +2,12 @@ import { t } from 'i18next'
 import { useState } from 'react'
 import { Flex } from 'ui/src'
 import { ShieldCheck } from 'ui/src/components/icons'
+import { InfoLinkModal } from 'uniswap/src/components/modals/InfoLinkModal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isExtension } from 'utilities/src/platform'
 import { InformationBanner } from 'wallet/src/components/banners/InformationBanner'
-import { InfoLinkModal } from 'wallet/src/components/modals/InfoLinkModal'
 
 export function ShowNFTModal(): JSX.Element {
   const [isModalVisible, setModalVisible] = useState(false)

@@ -261,15 +261,18 @@ export function useMergeLocalAndRemoteTransactions(
       }
 
       // If the tx isn't successful, then prefer local data
-      if (remoteTx.status !== TransactionStatus.Success) {
-        deDupedTxs.push(localTx)
-        continue
-      }
-
+      const isSuccessful = remoteTx.status === TransactionStatus.Success
       // If the local tx is canceled and the remote tx is successful, the transaction is a cancellation,
       // and we have better data about the user's intent locally
-      if (localTx.status === TransactionStatus.Canceled && remoteTx.status === TransactionStatus.Success) {
-        deDupedTxs.push(localTx)
+      const isCancellation =
+        localTx.status === TransactionStatus.Canceled && remoteTx.status === TransactionStatus.Success
+
+      if (!isSuccessful || isCancellation) {
+        const mergedTx = {
+          ...localTx,
+          networkFee: remoteTx.networkFee,
+        }
+        deDupedTxs.push(mergedTx)
         continue
       }
 

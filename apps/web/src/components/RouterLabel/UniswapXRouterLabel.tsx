@@ -1,7 +1,6 @@
-import { BoxProps } from 'components/deprecated/Box'
-import Row from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { useRef } from 'react'
+import { Flex, FlexProps } from 'ui/src'
 import { v4 as uuid } from 'uuid'
 
 // Gradient with a fallback to solid color.
@@ -47,7 +46,7 @@ export const UniswapXRouterIcon = ({ testId }: { testId?: string }) => {
   )
 }
 
-export type UnswapXRouterLabelProps = BoxProps & {
+export type UnswapXRouterLabelProps = FlexProps & {
   disableTextGradient?: boolean
   testId?: string
 }
@@ -59,9 +58,9 @@ export default function UniswapXRouterLabel({
   ...rest
 }: UnswapXRouterLabelProps) {
   return (
-    <Row gap="xs" width="auto" {...rest} style={{ display: 'inline-flex', ...rest.style }}>
+    <Flex row gap="$gap4" alignItems="center" width="auto" display="inline-flex" {...rest}>
       <UniswapXRouterIcon testId={testId} />
       {disableTextGradient ? children : <Gradient>{children}</Gradient>}
-    </Row>
+    </Flex>
   )
 }

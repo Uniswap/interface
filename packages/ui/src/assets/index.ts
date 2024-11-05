@@ -37,6 +37,7 @@ export const ETH_LOGO = require('./logos/png/eth-logo.png')
 export const OPENSEA_LOGO = require('./logos/png/opensea-logo.png')
 export const ENS_LOGO = require('./logos/png/ens-logo.png')
 export const FROGGY = require('./graphics/froggy.png')
+export const UNICHAIN_LOGO = require('./logos/png/unichain-logo.png')
 
 export const CEX_TRANSFER_MODAL_BG_LIGHT = require('./graphics/cex-transfer-modal-bg-light.png')
 export const CEX_TRANSFER_MODAL_BG_DARK = require('./graphics/cex-transfer-modal-bg-dark.png')
@@ -71,3 +72,20 @@ export const SECURITY_SCREEN_BACKGROUND_LIGHT = {
 }
 
 export const DEAD_LUNI = require('./graphics/dead-luni.png')
+
+export const UNITAGS_ADRIAN_LIGHT = require('./graphics/unitags/adrian-light.png')
+export const UNITAGS_ADRIAN_DARK = require('./graphics/unitags/adrian-dark.png')
+export const UNITAGS_ANDREW_LIGHT = require('./graphics/unitags/andrew-light.png')
+export const UNITAGS_ANDREW_DARK = require('./graphics/unitags/andrew-dark.png')
+export const UNITAGS_BRYAN_LIGHT = require('./graphics/unitags/bryan-light.png')
+export const UNITAGS_BRYAN_DARK = require('./graphics/unitags/bryan-dark.png')
+export const UNITAGS_CALLIL_LIGHT = require('./graphics/unitags/callil-light.png')
+export const UNITAGS_CALLIL_DARK = require('./graphics/unitags/callil-dark.png')
+export const UNITAGS_FRED_LIGHT = require('./graphics/unitags/fred-light.png')
+export const UNITAGS_FRED_DARK = require('./graphics/unitags/fred-dark.png')
+export const UNITAGS_MAGGIE_LIGHT = require('./graphics/unitags/maggie-light.png')
+export const UNITAGS_MAGGIE_DARK = require('./graphics/unitags/maggie-dark.png')
+export const UNITAGS_PHIL_LIGHT = require('./graphics/unitags/phil-light.png')
+export const UNITAGS_PHIL_DARK = require('./graphics/unitags/phil-dark.png')
+export const UNITAGS_SPENCER_LIGHT = require('./graphics/unitags/spencer-light.png')
+export const UNITAGS_SPENCER_DARK = require('./graphics/unitags/spencer-dark.png')

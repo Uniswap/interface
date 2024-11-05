@@ -7,7 +7,11 @@ import { getFullAppVersion } from 'src/utils/version'
 import { useIsDarkMode } from 'ui/src'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
-import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
+import {
+  useEnabledChains,
+  useHideSmallBalancesSetting,
+  useHideSpamTokensSetting,
+} from 'uniswap/src/features/settings/hooks'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { isAndroid } from 'utilities/src/platform'
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
@@ -36,6 +40,7 @@ export function TraceUserProperties(): null {
   const currentFiatCurrency = useAppFiatCurrency()
   const hideSpamTokens = useHideSpamTokensSetting()
   const hideSmallBalances = useHideSmallBalancesSetting()
+  const { isTestnetModeEnabled } = useEnabledChains()
 
   // Effects must check this and ensure they are setting properties for when analytics is reenabled
   const allowAnalytics = useSelector(selectAllowAnalytics)
@@ -110,6 +115,10 @@ export function TraceUserProperties(): null {
   useEffect(() => {
     setUserProperty(MobileUserPropertyName.Currency, currentFiatCurrency)
   }, [allowAnalytics, currentFiatCurrency])
+
+  useEffect(() => {
+    setUserProperty(MobileUserPropertyName.TestnetModeEnabled, isTestnetModeEnabled)
+  }, [allowAnalytics, isTestnetModeEnabled])
 
   return null
 }

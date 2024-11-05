@@ -15,10 +15,10 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { getTradeAmounts } from 'uniswap/src/features/transactions/swap/hooks/getTradeAmounts'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useNetworkColors } from 'uniswap/src/utils/colors'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
@@ -44,26 +44,11 @@ export function TransactionAmountsReview({
   const {
     exactCurrencyField,
     trade: { trade, indicativeTrade },
-    wrapType,
-    currencyAmounts,
   } = acceptedDerivedSwapInfo
   const displayTrade = trade ?? indicativeTrade
-
-  const isWrap = wrapType !== WrapType.NotApplicable
   const isBridgeTrade = (isBridgingEnabled && trade && isBridge(trade)) ?? false
 
-  // For wraps, we need to detect if WETH is input or output, because we have logic in `useDerivedSwapInfo` that
-  // sets both currencAmounts to native currency, which would result in native ETH as both tokens for this UI.
-  const wrapInputCurrencyAmount =
-    wrapType === WrapType.Wrap ? currencyAmounts[CurrencyField.INPUT] : currencyAmounts[CurrencyField.INPUT]?.wrapped
-  const wrapOutputCurrencyAmount =
-    wrapType === WrapType.Wrap ? currencyAmounts[CurrencyField.OUTPUT]?.wrapped : currencyAmounts[CurrencyField.OUTPUT]
-
-  // Token amounts
-  // On review screen, always show values directly from trade object, to match exactly what is submitted on chain
-  // For wraps, we have no trade object so use values from form state
-  const inputCurrencyAmount = isWrap ? wrapInputCurrencyAmount : displayTrade?.inputAmount
-  const outputCurrencyAmount = isWrap ? wrapOutputCurrencyAmount : displayTrade?.outputAmount
+  const { inputCurrencyAmount, outputCurrencyAmount } = getTradeAmounts(acceptedDerivedSwapInfo)
 
   // This should never happen. It's just to keep TS happy.
   if (!inputCurrencyAmount || !outputCurrencyAmount) {

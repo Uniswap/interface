@@ -6,16 +6,18 @@ import { CheckApprovalLPRequest, CheckApprovalLPResponse } from 'uniswap/src/dat
 
 export function useCheckLpApprovalQuery({
   params,
+  headers,
   ...rest
-}: UseQueryApiHelperHookArgs<
-  CheckApprovalLPRequest,
-  CheckApprovalLPResponse
->): UseQueryResult<CheckApprovalLPResponse> {
+}: UseQueryApiHelperHookArgs<CheckApprovalLPRequest, CheckApprovalLPResponse> & {
+  headers?: Record<string, string>
+}): UseQueryResult<CheckApprovalLPResponse> {
   const queryKey = [TRADING_API_CACHE_KEY, uniswapUrls.tradingApiPaths.lpApproval, params]
 
   return useQuery<CheckApprovalLPResponse>({
     queryKey,
-    queryFn: params ? async (): ReturnType<typeof checkLpApproval> => await checkLpApproval(params) : skipToken,
+    queryFn: params
+      ? async (): ReturnType<typeof checkLpApproval> => await checkLpApproval(params, headers)
+      : skipToken,
     ...rest,
   })
 }
