@@ -37,7 +37,7 @@ export function EditLabelModal({ isOpen, address, onClose }: EditLabelModalProps
   const [inputText, setInputText] = useState<string>(defaultText)
   const [isfocused, setIsFocused] = useState(false)
 
-  const { canClaimUnitag } = useCanActiveAddressClaimUnitag(address)
+  const { canClaimUnitag } = useCanActiveAddressClaimUnitag()
   const unitagsClaimEnabled = useFeatureFlag(FeatureFlags.ExtensionClaimUnitag)
 
   const onConfirm = useCallback(async () => {

@@ -20,7 +20,7 @@ import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { Scrollbar } from 'uniswap/src/components/misc/Scrollbar'
 import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { isAndroid, isInterface, isMobileApp, isTouchable } from 'utilities/src/platform'
+import { isAndroid, isInterface, isTouchable } from 'utilities/src/platform'
 
 const DEFAULT_MIN_WIDTH = 225
 
@@ -178,15 +178,11 @@ const ActionSheetBackdropWithContent = memo(function ActionSheetBackdropWithCont
   closeOnSelect: boolean
 }): JSX.Element {
   /*
-    We need to add key to Portal on mobile, becuase of a bug in tamagui.
+    We need to add key to Portal, becuase of a bug in tamagui.
     Remove when https://linear.app/uniswap/issue/WALL-4817/tamaguis-portal-stops-reacting-to-re-renders is done
   */
-  const key = useMemo(
-    () => (isMobileApp ? Math.random() : undefined), // eslint-disable-next-line react-hooks/exhaustive-deps
-    [closeDropdown, styles, isOpen, toggleMeasurements, contentProps, closeOnSelect],
-  )
   return (
-    <Portal key={key} zIndex={styles?.dropdownZIndex || zIndices.popover}>
+    <Portal key={Math.random()} zIndex={styles?.dropdownZIndex || zIndices.popover}>
       <AnimatePresence custom={{ isOpen }}>
         {isOpen && toggleMeasurements && (
           <>

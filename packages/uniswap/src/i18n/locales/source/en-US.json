@@ -2216,6 +2216,7 @@
   "unitags.username.error.chars": "Usernames can only contain letters and numbers",
   "unitags.username.error.max": "Usernames cannot be more than {{number}} characters",
   "unitags.username.error.min": "Usernames must be at least {{number}} characters",
+  "unitags.username.error.uppercase": "Usernames can only contain lowercase letters and numbers",
   "uwulink.error.insufficientTokens": "Not enough {{tokenSymbol}} on {{chain}}",
   "v2.notAvailable": "Uniswap V2 is not available on this network.",
   "v2.switchTo": "Switch to v2",

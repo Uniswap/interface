@@ -83,7 +83,7 @@ export const DecimalPadInput = memo(
     useEffect(() => {
       updateDisabledKeys(valueRef.current)
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [valueRef, selectionRef])
+    }, [valueRef, selectionRef, maxDecimals])
 
     useImperativeHandle(ref, () => ({
       updateDisabledKeys(): void {

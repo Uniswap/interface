@@ -50,7 +50,7 @@ export function ClaimUnitagScreen(): JSX.Element {
         onBack={handleBack}
         onSkip={goToNextStep}
       >
-        <Flex gap="$spacing16" pt="$spacing24" width="100%">
+        <Flex gap="$spacing16" py="$spacing24" width="100%">
           <ClaimUnitagContent
             animateY={false}
             entryPoint={ExtensionOnboardingFlow.New}

@@ -4,6 +4,7 @@ import { getStatsigEnvironmentTier } from 'src/app/version'
 import Statsig from 'statsig-js' // Use JS package for browser
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { DUMMY_STATSIG_SDK_KEY, StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
+import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { StatsigOptions, StatsigProvider, StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -50,7 +51,10 @@ export function ExtensionStatsigProvider({
     disableErrorLogging: true,
     initCompletionCallback: () => {
       setInitFinished(true)
-      initializeDatadog(appName).catch(() => undefined)
+      const datadogEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.Datadog))
+      if (datadogEnabled) {
+        initializeDatadog(appName).catch(() => undefined)
+      }
     },
   }
 

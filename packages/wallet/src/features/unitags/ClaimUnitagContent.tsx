@@ -145,7 +145,7 @@ export function ClaimUnitagContent({
         onSetFontSize(text + UNITAG_SUFFIX_CHARS_ONLY)
       }
 
-      setUnitagInputValue(text?.trim().toLocaleLowerCase())
+      setUnitagInputValue(text?.trim())
     },
     [inputPlaceholder, onSetFontSize],
   )
@@ -327,29 +327,26 @@ export function ClaimUnitagContent({
             )}
           </AnimatePresence>
         </AnimatedFlex>
-        {unitagAddress && (
-          <AnimatedFlex
-            row
-            alignItems="center"
-            gap="$spacing8"
-            style={addressViewAnimatedStyle}
-            onPress={onPressAddressTooltip}
+        <AnimatedFlex
+          row
+          alignItems="center"
+          gap="$spacing8"
+          style={addressViewAnimatedStyle}
+          onPress={onPressAddressTooltip}
+        >
+          <Text color="$neutral2" variant="subheading2">
+            {shortenAddress(unitagAddress ?? ADDRESS_ZERO)}
+          </Text>
+          <TouchableArea
+            onPress={(): void => {
+              dismissNativeKeyboard()
+              setShowInfoModal(true)
+            }}
           >
-            <Text color="$neutral2" variant="subheading2">
-              {shortenAddress(unitagAddress ?? ADDRESS_ZERO)}
-            </Text>
-            <TouchableArea
-              onPress={(): void => {
-                dismissNativeKeyboard()
-                setShowInfoModal(true)
-              }}
-            >
-              <InfoCircleFilled color={colors.neutral3.get()} size="$icon.20" />
-            </TouchableArea>
-          </AnimatedFlex>
-        )}
-
-        <Flex row gap="$spacing8" minHeight={fonts.body2.lineHeight} mt={unitagAddress ? undefined : '$spacing24'}>
+            <InfoCircleFilled color={colors.neutral3.get()} size="$icon.20" />
+          </TouchableArea>
+        </AnimatedFlex>
+        <Flex row gap="$spacing8" minHeight={fonts.body2.lineHeight}>
           <Text color="$statusCritical" textAlign="center" variant="body2">
             {canClaimUnitagNameError}
           </Text>

@@ -385,7 +385,6 @@ const ReanimatedNumber = ({
           <Text
             allowFontScaling={false}
             style={[AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT, fontFamily: fonts.buttonLabel1.family }]}
-            opacity={0}
           >
             {loadingPlaceholderText}
           </Text>

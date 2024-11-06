@@ -38,14 +38,10 @@ import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 const MIN_UNITAG_LENGTH = 3
 const MAX_UNITAG_LENGTH = 20
 
-export const useCanActiveAddressClaimUnitag = (
-  address?: Address,
-): {
+export const useCanActiveAddressClaimUnitag = (): {
   canClaimUnitag: boolean
 } => {
   const activeAddress = useActiveAccountAddressWithThrow()
-  const targetAddress = address ?? activeAddress
-
   const { data: deviceId } = useAsyncData(getUniqueId)
   const { refetchUnitagsCounter } = useUnitagUpdater()
   const skip = !deviceId
@@ -54,7 +50,7 @@ export const useCanActiveAddressClaimUnitag = (
     params: skip
       ? undefined
       : {
-          address: targetAddress,
+          address: activeAddress,
           deviceId,
         },
   })
@@ -123,6 +119,8 @@ export const getUnitagFormatError = (unitag: string, t: TFunction): string | und
     return t('unitags.username.error.max', {
       number: MAX_UNITAG_LENGTH,
     })
+  } else if (unitag !== unitag.toLowerCase()) {
+    return t('unitags.username.error.uppercase')
   } else if (!UNITAG_VALID_REGEX.test(unitag)) {
     return t('unitags.username.error.chars')
   }
