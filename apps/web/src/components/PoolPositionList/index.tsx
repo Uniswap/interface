@@ -231,7 +231,7 @@ export default function PoolPositionList({ positions, filterByOperator }: PoolPo
             <Trans>Could not retrieve pools. Try again by connecting your wallet.</Trans>
           </MobileHeader>
         </>
-      ) : account.isConnected ? (
+      ) : filterByOperator && account.isConnected ? (
         <>
           <DesktopHeader>
             <div>

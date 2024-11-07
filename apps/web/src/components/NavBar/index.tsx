@@ -2,7 +2,7 @@ import { Bag } from 'components/NavBar/Bag'
 import { ChainSelector } from 'components/NavBar/ChainSelector'
 import { CompanyMenu } from 'components/NavBar/CompanyMenu'
 import { NewUserCTAButton } from 'components/NavBar/DownloadApp/NewUserCTAButton'
-import PoolSelect from 'components/NavBar//PoolSelect'
+import PoolSelect from 'components/NavBar/PoolSelect'
 import { PreferenceMenu } from 'components/NavBar/PreferencesMenu'
 import { useTabsVisible } from 'components/NavBar/ScreenSizes'
 import { SearchBar } from 'components/NavBar/SearchBar'
@@ -131,7 +131,6 @@ export default function Navbar() {
   const operatedPools = useOperatedPools()
   const userIsOperator: boolean = operatedPools ? operatedPools?.length > 0 : false
 
-  // TODO: display pool and swap only if user has operated pools
   return (
     <Nav>
       <NavContents>

@@ -2,7 +2,8 @@ import { Currency, Token } from '@uniswap/sdk-core';
 import { ButtonGray } from 'components/Button/buttons'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import styled from 'lib/styled-components'
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useActiveSmartPool, useSelectActiveSmartPool } from 'state/application/hooks';
 
 const PoolSelectButton = styled(ButtonGray)<{
     visible: boolean
@@ -63,21 +64,32 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 `;
 
 interface PoolSelectProps {
-  operatedPools: Currency[];
+  operatedPools: Token[];
 }
 
 const PoolSelect: React.FC<PoolSelectProps> = ({ operatedPools }) => {
-  const [selectedPool, setSelectedPool] = useState<Currency>(operatedPools[0]);
   const [showModal, setShowModal] = useState(false);
+  const activeSmartPool = useActiveSmartPool();
+  const onPoolSelect = useSelectActiveSmartPool();
 
-  const handleSelectPool = (pool: Currency) => {
-    setSelectedPool(pool);
+  // on chain switch revert to default pool if selected does not exist on new chain
+  const activePoolExistsOnChain = operatedPools?.some(pool => pool.address === activeSmartPool?.address);
+
+  // initialize selected pool
+  useEffect(() => {
+    if (!activeSmartPool?.name || !activePoolExistsOnChain) {
+      onPoolSelect(operatedPools[0]);
+    }
+  }, [activePoolExistsOnChain, activeSmartPool?.name, operatedPools, onPoolSelect])
+
+  const handleSelectPool = useCallback((pool: Currency) => {
+    onPoolSelect(pool);
     setShowModal(false);
-  };
+  }, [onPoolSelect]);
 
   return (
     <>
-      {selectedPool && (
+      {activeSmartPool && (
         <PoolSelectButton
           disabled={false}
           visible={true}
@@ -87,7 +99,7 @@ const PoolSelect: React.FC<PoolSelectProps> = ({ operatedPools }) => {
           onClick={() => setShowModal(true)}
         >
           <StyledTokenName className="pool-name-container" active={true}>
-            {selectedPool.name}
+            {activeSmartPool.name}
           </StyledTokenName>
         </PoolSelectButton>
       )}

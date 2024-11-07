@@ -16,7 +16,6 @@ import Column, { AutoColumn } from 'components/deprecated/Column'
 import ErrorIcon from 'components/Icons/Error'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import Row from 'components/deprecated/Row'
-import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import PriceImpactModal from 'components/swap/PriceImpactModal'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
@@ -42,9 +41,8 @@ import { OutputTaxTooltipBody } from 'pages/Swap/TaxTooltipBody'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
-import { useActiveSmartPool, useSelectActiveSmartPool } from 'state/application/hooks'
+import { useActiveSmartPool } from 'state/application/hooks'
 import { useAppSelector } from 'state/hooks'
-import { useOperatedPools } from 'state/pool/hooks'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
 import { serializeSwapStateToURLParameters, useSwapActionHandlers } from 'state/swap/hooks'
@@ -97,15 +95,10 @@ export function SwapForm({
   const prefilledOutputCurrencyInfo = useCurrencyInfo(prefilledState.outputCurrency)
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const [showPriceImpactModal, setShowPriceImpactModal] = useState<boolean>(false)
-  const [modalOpen, setModalOpen] = useState<boolean>(false)
 
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
   }, [])
-
-  const handleDismissSearch = useCallback(() => {
-    setModalOpen(false)
-  }, [setModalOpen])
 
   // dismiss warning if all imported tokens are in active lists
   const urlTokensNotInDefault = useMemo(() => {
@@ -123,9 +116,7 @@ export function SwapForm({
   // toggle wallet when disconnected
   const accountDrawer = useAccountDrawer()
 
-  const operatedPools = useOperatedPools()
-
-  const { address: smartPoolAddress, name: smartPoolName } = useActiveSmartPool()
+  const { address: smartPoolAddress } = useActiveSmartPool()
   const smartPool = useCurrency(smartPoolAddress ?? undefined)
   const {
     trade: { state: tradeState, trade, swapQuoteLatency },
@@ -218,7 +209,6 @@ export function SwapForm({
   )
 
   const { onSwitchTokens, onCurrencySelection, onUserInput } = useSwapActionHandlers()
-  const onPoolSelect = useSelectActiveSmartPool()
   const dependentField: CurrencyField =
     independentField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
 
@@ -568,16 +558,6 @@ export function SwapForm({
           }}
           fiatValueInput={fiatValueTradeInput}
           fiatValueOutput={fiatValueTradeOutput}
-        />
-      )}
-      {operatedPools && smartPoolName && smartPool && (
-        <CurrencySearchModal
-          isOpen={modalOpen}
-          onDismiss={handleDismissSearch}
-          onCurrencySelect={onPoolSelect}
-          selectedCurrency={smartPool}
-          operatedPools={operatedPools}
-          showCurrencyAmount={false}
         />
       )}
       {showPriceImpactModal && showPriceImpactWarning && (

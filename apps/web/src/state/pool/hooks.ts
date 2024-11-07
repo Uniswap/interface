@@ -17,7 +17,7 @@ import { CallStateResult, useMultipleContractSingleData, useSingleContractMultip
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { useActiveSmartPool, useSelectActiveSmartPool } from 'state/application/hooks'
+import { useSelectActiveSmartPool } from 'state/application/hooks'
 import { useStakingContract } from 'state/governance/hooks'
 import { usePoolsFromUrl } from 'state/lists/poolsList/hooks'
 import { useLogs } from 'state/logs/hooks'
@@ -125,7 +125,7 @@ export function usePoolsFromList(
 ): PoolRegisteredLog[] | undefined {
   const poolsFromList = usePoolsFromUrl(POOLS_LIST)
   const pools = useMemo(
-    () => poolsFromList?.filter((n) => n.chainId === chainId ?? UniverseChainId.Mainnet),
+    () => poolsFromList?.filter((n) => n?.chainId === chainId),
     [chainId, poolsFromList]
   )
   const poolAddresses = useMemo(() => pools?.map((p) => [p.address]), [pools])
@@ -457,6 +457,7 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
   }
 }
 
+// TODO: our rpc endpoint returns multichain pools, we can render by chainId, i.e. on chain switch should update.
 export function useOperatedPools() {
   const { data: poolsLogs } = useAllPoolsData()
   const poolAddresses: (string | undefined)[] = useMemo(() => {
@@ -503,28 +504,17 @@ export function useOperatedPools() {
     //.filter((p) => account.address === owner)
   }, [account.address, account.chainId, poolAddresses, results])
 
-  // TODO: default pools should change on chain switch
-  const defaultPool = useMemo(() => {
-    if (!operatedPools) {
-      return undefined
-    }
-    return operatedPools[0]
-  }, [operatedPools])
-
-  const activeSmartPool = useActiveSmartPool()
-
+  const defaultPool = useMemo(() => operatedPools?.[0], [operatedPools])
   const onPoolSelect = useSelectActiveSmartPool()
 
   useEffect(() => {
-    // Initialize default pool
-    if (defaultPool && (!activeSmartPool?.address || activeSmartPool.address === null)) {
-      onPoolSelect(defaultPool)
-    } else if (!defaultPool && activeSmartPool?.address) {
-      onPoolSelect()
-    } else if (accountChanged) {
-      onPoolSelect(defaultPool)
+    const emptyPool = { isToken: false } as Currency
+
+    // TODO: this is probably unnecessary as state is reloaded on account change
+    if (accountChanged) {
+      onPoolSelect(defaultPool ?? emptyPool)
     }
-  }, [defaultPool, activeSmartPool.address, onPoolSelect, accountChanged])
+  }, [accountChanged, defaultPool, onPoolSelect])
 
   return operatedPools
 }

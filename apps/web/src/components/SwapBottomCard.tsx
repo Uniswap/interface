@@ -36,7 +36,9 @@ export function SwapBottomCard() {
   const isSupportedChain = useIsSupportedChainId(chainId)
 
   const hasViewedBridgingBanner = useSelector(selectHasViewedBridgingBanner)
-  const bridgingEnabled = useFeatureFlag(FeatureFlags.Bridging)
+  // TODO: remove when enabling bridging
+  const shouldDisplayBridging = false
+  const bridgingEnabled = useFeatureFlag(FeatureFlags.Bridging) && shouldDisplayBridging
   const isBridgingSupported = useIsBridgingChain(chainId ?? UniverseChainId.Mainnet)
   const numBridgingChains = useNumBridgingChains()
   const handleBridgingDismiss = useCallback(

@@ -10,7 +10,6 @@ import { useEffect, useLayoutEffect } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Navigate, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
-import { useOperatedPools } from 'state/pool/hooks'
 import DarkModeQueryParamReader from 'theme/components/DarkModeQueryParamReader'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isPathBlocked } from 'utils/blockedPaths'
@@ -35,9 +34,6 @@ export default function App() {
   }, [searchParams, setShouldDisableNFTRoutes])
 
   useFeatureFlagUrlOverrides()
-
-  // load operated pools and store default pool, update on chain switch
-  useOperatedPools()
 
   const metaTags = useDynamicMetatags()
   const staticTitle = findRouteByPath(pathname)?.getTitle(pathname) ?? 'Rigoblock Interface'
