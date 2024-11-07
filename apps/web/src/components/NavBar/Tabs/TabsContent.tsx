@@ -23,7 +23,7 @@ export type TabsItem = MenuItem & {
   quickKey: string
 }
 
-export const useTabsContent = (props?: { includeNftsLink?: boolean; userIsOperator: boolean }): TabsSection[] => {
+export const useTabsContent = (props?: { includeNftsLink?: boolean; userIsOperator?: boolean }): TabsSection[] => {
   const { t } = useTranslation()
   //const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
   const isV4EverywhereEnabled = useFeatureFlag(FeatureFlags.V4Everywhere)

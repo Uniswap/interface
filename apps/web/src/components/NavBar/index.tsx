@@ -39,14 +39,7 @@ const Nav = styled.nav`
   align-items: center;
   justify-content: center;
 `
-const NavContents = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  flex: 1 auto 1;
-`
+
 const NavItems = css`
   gap: 12px;
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
@@ -83,6 +76,15 @@ const SelectedPoolContainer = styled.div`
   align-items: flex-start;
   height: 42px;
   margin-right: 64px;
+`
+
+const NavContents = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex: 1 auto 1;
 `
 
 function useShouldHideChainSelector() {
@@ -129,7 +131,7 @@ export default function Navbar() {
 
   const shouldDisplayCreateAccountButton = false
   const operatedPools = useOperatedPools()
-  const userIsOperator: boolean = operatedPools ? operatedPools?.length > 0 : false
+  const userIsOperator = operatedPools && operatedPools?.length > 0
 
   return (
     <Nav>
@@ -139,10 +141,10 @@ export default function Navbar() {
           {areTabsVisible && <Tabs userIsOperator={userIsOperator} />}
         </Left>
 
-        <SelectedPoolContainer>
-          {operatedPools && operatedPools.length > 0 && <PoolSelect operatedPools={operatedPools} />}
-        </SelectedPoolContainer>
         <SearchContainer>
+          <SelectedPoolContainer>
+            {operatedPools && operatedPools.length > 0 && <PoolSelect operatedPools={operatedPools} />}
+          </SelectedPoolContainer>
           {!collapseSearchBar && <SearchBar maxHeight={NAV_SEARCH_MAX_HEIGHT} fullScreen={isSmallScreen} />}
         </SearchContainer>
 
