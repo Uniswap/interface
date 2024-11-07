@@ -10,6 +10,7 @@ jest.mock('components/Liquidity/utils')
 describe('LiquidityPositionInfo', () => {
   it('should render in range', () => {
     const positionInfo: PositionInfo = {
+      chainId: TEST_TOKEN_1.chainId,
       currency0Amount: toCurrencyAmount(TEST_TOKEN_1, 1),
       currency1Amount: toCurrencyAmount(TEST_TOKEN_2, 1),
       status: PositionStatus.IN_RANGE,
@@ -23,6 +24,7 @@ describe('LiquidityPositionInfo', () => {
 
   it('should render out of range', () => {
     const positionInfo: PositionInfo = {
+      chainId: TEST_TOKEN_1.chainId,
       currency0Amount: toCurrencyAmount(TEST_TOKEN_1, 1),
       currency1Amount: toCurrencyAmount(TEST_TOKEN_2, 1),
       status: PositionStatus.OUT_OF_RANGE,
@@ -36,6 +38,7 @@ describe('LiquidityPositionInfo', () => {
 
   it('should render closed', () => {
     const positionInfo: PositionInfo = {
+      chainId: TEST_TOKEN_1.chainId,
       currency0Amount: toCurrencyAmount(TEST_TOKEN_1, 1),
       currency1Amount: toCurrencyAmount(TEST_TOKEN_2, 1),
       status: PositionStatus.CLOSED,

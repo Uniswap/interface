@@ -18,7 +18,6 @@ import TransactionConfirmationModal, { ConfirmationModalContent } from 'componen
 import { AutoColumn } from 'components/deprecated/Column'
 import { RowBetween, RowFixed } from 'components/deprecated/Row'
 import { Dots } from 'components/swap/styled'
-import { chainIdToBackendChain, useIsSupportedChainId, useSupportedChainId } from 'constants/chains'
 import { getPoolDetailsURL, getTokenDetailsURL, isGqlSupportedChain } from 'graphql/data/util'
 import { useToken } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
@@ -42,10 +41,12 @@ import { useIsTransactionPending, useTransactionAdder } from 'state/transactions
 import { TransactionType } from 'state/transactions/types'
 import { ClickableStyle, ExternalLink, HideExtraSmall, HideSmall, StyledRouterLink, ThemedText } from 'theme/components'
 import { Switch, Text } from 'ui/src'
+import { useEnabledChains, useIsSupportedChainId, useSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans, t } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -204,7 +205,7 @@ const TokenLink = ({
   chainId,
   address,
 }: PropsWithChildren<{ chainId: UniverseChainId; address: string }>) => {
-  const tokenLink = getTokenDetailsURL({ address, chain: chainIdToBackendChain({ chainId }) })
+  const tokenLink = getTokenDetailsURL({ address, chain: toGraphQLChain(chainId) })
   return <StyledRouterLink to={tokenLink}>{children}</StyledRouterLink>
 }
 
@@ -332,6 +333,8 @@ function PositionPageContent() {
   const signer = useEthersSigner()
   const theme = useTheme()
   const { formatCurrencyAmount, formatDelta, formatTickPrice } = useFormatter()
+
+  const { defaultChainId } = useEnabledChains()
 
   const parsedTokenId = parseTokenId(tokenIdFromUrl)
   const { loading, position: positionDetails } = useV3PositionFromTokenId(parsedTokenId)
@@ -653,10 +656,7 @@ function PositionPageContent() {
                   <StyledPoolLink
                     to={
                       poolAddress
-                        ? getPoolDetailsURL(
-                            poolAddress,
-                            chainIdToBackendChain({ chainId: supportedChain, withFallback: true }),
-                          )
+                        ? getPoolDetailsURL(poolAddress, toGraphQLChain(supportedChain ?? defaultChainId))
                         : ''
                     }
                   >

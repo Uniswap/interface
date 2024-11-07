@@ -10,8 +10,6 @@ import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { fonts, iconSizes, opacify } from 'ui/src/theme'
 import { useENSAvatar } from 'uniswap/src/features/ens/api'
-import { Experiments, OnboardingRedesignRecoveryBackupProperties } from 'uniswap/src/features/gating/experiments'
-import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -51,14 +49,8 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
   const { data: avatar } = useENSAvatar(onboardingAccountAddress)
 
   const onPressNext = (): void => {
-    const onboardingExperimentEnabled = getExperimentValue(
-      Experiments.OnboardingRedesignRecoveryBackup,
-      OnboardingRedesignRecoveryBackupProperties.Enabled,
-      false,
-    )
-
     navigation.navigate({
-      name: onboardingExperimentEnabled ? OnboardingScreens.Notifications : OnboardingScreens.Backup,
+      name: OnboardingScreens.Notifications,
       merge: true,
       params,
     })

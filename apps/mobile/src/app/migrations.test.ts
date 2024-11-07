@@ -82,6 +82,7 @@ import {
   v78Schema,
   v79Schema,
   v7Schema,
+  v80Schema,
   v8Schema,
   v9Schema,
 } from 'src/app/schema'
@@ -94,6 +95,7 @@ import { initialTweaksState } from 'src/features/tweaks/slice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { initialUniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { initialFavoritesState } from 'uniswap/src/features/favorites/slice'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { initialNotificationsState } from 'uniswap/src/features/notifications/slice'
@@ -104,7 +106,6 @@ import { initialTokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { transactionDetails } from 'uniswap/src/test/fixtures'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
@@ -122,6 +123,7 @@ import {
   testMovedLanguageSetting,
   testMovedTokenWarnings,
   testMovedUserSettings,
+  testRemoveCreatedOnboardingRedesignAccount,
   testRemoveHoldToSwap,
   testUpdateExploreOrderByType,
 } from 'wallet/src/state/walletMigrationsTests'
@@ -1585,5 +1587,9 @@ describe('Redux state migrations', () => {
 
   it('migrates from v79 to v80', async () => {
     testUpdateExploreOrderByType(migrations[80], v79Schema)
+  })
+
+  it('migrates from v80 to v81', async () => {
+    testRemoveCreatedOnboardingRedesignAccount(migrations[81], v80Schema)
   })
 })

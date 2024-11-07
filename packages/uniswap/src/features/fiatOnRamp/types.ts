@@ -26,6 +26,10 @@ export type FORGetCountryResponse = FORCountry
 
 // /supported-countries
 
+export type FORSupportedCountriesRequest = {
+  rampDirection?: RampDirection
+}
+
 export type FORSupportedCountriesResponse = {
   supportedCountries: FORCountry[]
 }
@@ -39,6 +43,7 @@ export type FORQuoteRequest = {
   sourceCurrencyCode: string
   walletAddress?: string
   state?: string
+  rampDirection?: RampDirection
 }
 
 export type FORQuote = {
@@ -83,6 +88,7 @@ export type FORServiceProvidersResponse = {
 export type FORSupportedTokensRequest = {
   fiatCurrency: string
   countryCode: string
+  rampDirection?: RampDirection
 }
 
 export type FORSupportedToken = {
@@ -102,6 +108,7 @@ export type FORSupportedTokensResponse = {
 
 export type FORSupportedFiatCurrenciesRequest = {
   countryCode: string
+  rampDirection?: RampDirection
 }
 
 export type FORSupportedFiatCurrency = {
@@ -114,7 +121,7 @@ export type FORSupportedFiatCurrenciesResponse = {
   fiatCurrencies: FORSupportedFiatCurrency[]
 }
 
-// /widget-url
+// /widget-url and /offramp-widget-url
 
 export type FORWidgetUrlRequest = {
   sourceAmount: number
@@ -132,6 +139,21 @@ export type FORWidgetUrlResponse = {
   widgetUrl: string
 }
 
+export type OffRampWidgetUrlRequest = {
+  sourceAmount: number
+  baseCurrencyCode: string
+  refundWalletAddress: string
+  countryCode: string
+  quoteCurrencyCode: string
+  serviceProvider: string
+  externalSessionId: string
+  lockAmount?: string
+  requestSource?: string
+  externalTransactionId?: string
+  externalCustomerId?: string
+  redirectUrl?: string
+}
+
 // /transfer-widget-url
 
 export type FORTransferWidgetUrlRequest = {
@@ -139,6 +161,43 @@ export type FORTransferWidgetUrlRequest = {
   walletAddress: string
   externalSessionId: string
   redirectUrl: string
+}
+
+// /offramp-transfer-details
+
+export type OffRampTransferDetailsRequest = {
+  requestSource?: string
+  transferProviderDetails:
+    | {
+        value: MoonpayOffRampTransferDetailsRequest
+        case: 'moonpayDetails'
+      }
+    | {
+        value: MeldOffRampTransferDetailsRequest
+        case: 'meldDetails'
+      }
+    | {
+        case: undefined
+        value?: undefined
+      }
+}
+
+type MoonpayOffRampTransferDetailsRequest = {
+  baseCurrencyCode: string
+  baseCurrencyAmount: number
+  depositWalletAddress: string
+  depositWalletAddressTag?: string
+}
+
+type MeldOffRampTransferDetailsRequest = {
+  sessionId: string
+}
+
+export type OffRampTransferDetailsResponse = {
+  baseCurrencyCode: string
+  baseCurrencyAmount: number
+  depositWalletAddress: string
+  depositWalletAddressTag?: string
 }
 
 // /transactions
@@ -198,4 +257,9 @@ export type FORCurrencyOrBalance = FiatOnRampCurrency | PortfolioBalance
 export enum RampToggle {
   BUY = 'BUY',
   SELL = 'SELL',
+}
+
+export enum RampDirection {
+  ONRAMP = 0,
+  OFFRAMP = 1,
 }

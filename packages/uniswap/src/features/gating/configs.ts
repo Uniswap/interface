@@ -6,6 +6,7 @@ import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
  */
 export enum DynamicConfigs {
   // Wallet
+  HomeScreenExploreTokens = 'home_screen_explore_tokens',
   MobileForceUpgrade = 'force_upgrade',
   OnDeviceRecovery = 'on_device_recovery',
   UwuLink = 'uwulink_config',
@@ -22,6 +23,11 @@ export enum DynamicConfigs {
 // Wallet
 export enum ForceUpgradeConfigKey {
   Status = 'status',
+}
+
+export enum HomeScreenExploreTokensConfigKey {
+  EthChainId = 'ethChainId',
+  Tokens = 'tokens',
 }
 
 export enum OnDeviceRecoveryConfigKey {
@@ -84,6 +90,7 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.Swap]: SwapConfigKey
 
   // Wallet
+  [DynamicConfigs.HomeScreenExploreTokens]: HomeScreenExploreTokensConfigKey
   [DynamicConfigs.MobileForceUpgrade]: ForceUpgradeConfigKey
   [DynamicConfigs.OnDeviceRecovery]: OnDeviceRecoveryConfigKey
   [DynamicConfigs.UwuLink]: UwuLinkConfigKey

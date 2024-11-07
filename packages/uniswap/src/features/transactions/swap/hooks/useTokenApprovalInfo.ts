@@ -3,16 +3,17 @@ import { useMemo } from 'react'
 import { useCheckApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckApprovalQuery'
 import { ApprovalRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useActiveGasStrategy, useShadowGasStrategies } from 'uniswap/src/features/gas/hooks'
 import { areEqualGasStrategies } from 'uniswap/src/features/gas/types'
 import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   getTokenAddressForApi,
   toTradingApiSupportedChainId,
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 
@@ -39,8 +40,9 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): TokenAppr
   const isWrap = wrapType !== WrapType.NotApplicable
 
   const address = account?.address
+  const inputWillBeWrapped = routing && isUniswapX({ routing })
   // Off-chain orders must have wrapped currencies approved, rather than natives.
-  const currencyIn = routing === Routing.DUTCH_V2 ? currencyInAmount?.currency.wrapped : currencyInAmount?.currency
+  const currencyIn = inputWillBeWrapped ? currencyInAmount?.currency.wrapped : currencyInAmount?.currency
   const amount = currencyInAmount?.quotient.toString()
 
   const tokenInAddress = getTokenAddressForApi(currencyIn)

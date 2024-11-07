@@ -2,6 +2,7 @@ import { Contract } from '@ethersproject/contracts'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
+  CHAIN_TO_ADDRESSES_MAP,
   ENS_REGISTRAR_ADDRESSES,
   MULTICALL_ADDRESSES,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
@@ -37,8 +38,8 @@ import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/s
 import { V3Migrator } from 'uniswap/src/abis/types/v3/V3Migrator'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -195,6 +196,39 @@ export function useV3NFTPositionManagerContract(
         source: 'useV3NFTPositionManagerContract',
         contract: {
           name: 'V3NonfungiblePositionManager',
+          address: contract.address,
+          withSignerIfPossible,
+          chainId: chainIdToUse,
+        },
+      })
+    }
+  }, [account.isConnected, chainIdToUse, contract, withSignerIfPossible])
+  return contract
+}
+
+/**
+ * NOTE: the return type of this contract and the ABI used are just a generic ERC721,
+ * so you can only use this to call tokenURI or other Position NFT related functions.
+ */
+export function useV4NFTPositionManagerContract(
+  withSignerIfPossible?: boolean,
+  chainId?: UniverseChainId,
+): Erc721 | null {
+  const account = useAccount()
+  const chainIdToUse = chainId ?? account.chainId
+
+  const contract = useContract<Erc721>(
+    chainIdToUse ? CHAIN_TO_ADDRESSES_MAP[chainIdToUse].v4PositionManagerAddress : undefined,
+    NFTPositionManagerABI,
+    withSignerIfPossible,
+    chainIdToUse,
+  )
+  useEffect(() => {
+    if (contract && account.isConnected) {
+      sendAnalyticsEvent(InterfaceEventName.WALLET_PROVIDER_USED, {
+        source: 'useV4NFTPositionManagerContract',
+        contract: {
+          name: 'V4NonfungiblePositionManager',
           address: contract.address,
           withSignerIfPossible,
           chainId: chainIdToUse,

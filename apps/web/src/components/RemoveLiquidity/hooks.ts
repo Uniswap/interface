@@ -2,7 +2,7 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
 import { getProtocolItems } from 'components/Liquidity/utils'
-import { useLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
+import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { RemoveLiquidityTxInfo } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
 import { ZERO_ADDRESS } from 'constants/misc'
 import JSBI from 'jsbi'
@@ -18,7 +18,7 @@ import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }): RemoveLiquidityTxInfo {
-  const { positionInfo, percent, percentInvalid } = useLiquidityModalContext()
+  const { positionInfo, percent, percentInvalid } = useRemoveLiquidityModalContext()
 
   const pool =
     positionInfo?.version === ProtocolVersion.V3 || positionInfo?.version === ProtocolVersion.V4

@@ -1,5 +1,5 @@
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const POL_MAINNET_ADDRESS = '0x455e53cbb86018ac2b8092fdcd39d8444affc3f6'
 const MATIC_MAINNET_ADDRESS = '0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0'
@@ -24,9 +24,9 @@ export const BRIDGED_BASE_ADDRESSES = [
 ]
 
 export function getNativeAddress(chainId: UniverseChainId): string {
-  return UNIVERSE_CHAIN_INFO[chainId].nativeCurrency.address
+  return getChainInfo(chainId).nativeCurrency.address
 }
 
 export function getWrappedNativeAddress(chainId: UniverseChainId): string {
-  return UNIVERSE_CHAIN_INFO[chainId].wrappedNativeCurrency.address
+  return getChainInfo(chainId).wrappedNativeCurrency.address
 }

@@ -12,16 +12,8 @@ import { EllipsisText } from 'components/Tokens/TokenTable'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { chainIdToBackendChain, useChainFromUrlParam } from 'constants/chains'
-import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
-import { PoolSortFields, TablePool, useTopPools } from 'graphql/data/pools/useTopPools'
-import {
-  OrderDirection,
-  getSupportedGraphQlChain,
-  gqlToCurrency,
-  supportedChainIdFromGQLChain,
-  unwrapToken,
-} from 'graphql/data/util'
+import { PoolSortFields, TablePool } from 'graphql/data/pools/useTopPools'
+import { OrderDirection, gqlToCurrency, supportedChainIdFromGQLChain, unwrapToken } from 'graphql/data/util'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import useSimplePagination from 'hooks/useSimplePagination'
 import { useAtom } from 'jotai'
@@ -33,10 +25,10 @@ import { PoolStat } from 'state/explore/types'
 import { Flex, Text, styled } from 'ui/src'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { Chain, ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const HEADER_DESCRIPTIONS: Record<PoolSortFields, ReactNode | undefined> = {
@@ -52,13 +44,23 @@ const TableWrapper = styled(Flex, {
   maxWidth: MAX_WIDTH_MEDIA_BREAKPOINT,
 })
 
-const Badge = styled(Text, {
+export const PoolDetailsBadge = styled(Text, {
   py: 2,
   px: 6,
   backgroundColor: '$surface2',
-  borderRadius: '$rounded6',
-  variant: 'body4',
   color: '$neutral2',
+  variants: {
+    $position: {
+      right: {
+        borderTopRightRadius: 4,
+        borderBottomRightRadius: 4,
+      },
+      left: {
+        borderTopLeftRadius: 4,
+        borderBottomLeftRadius: 4,
+      },
+    },
+  },
 })
 
 interface PoolTableValues {
@@ -93,24 +95,31 @@ function PoolDescription({
   chainId: UniverseChainId
   protocolVersion?: ProtocolVersion | string
 }) {
-  const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
+  const isRestPool = token0 && !('id' in token0)
   const currencies = [token0 ? gqlToCurrency(token0) : undefined, token1 ? gqlToCurrency(token1) : undefined]
-  // skip is isRestExploreEnabled
   const currencyLogos = [
-    useCurrencyInfo(currencies?.[0], chainId, isRestExploreEnabled)?.logoUrl,
-    useCurrencyInfo(currencies?.[1], chainId, isRestExploreEnabled)?.logoUrl,
+    useCurrencyInfo(currencies?.[0], chainId, isRestPool)?.logoUrl,
+    useCurrencyInfo(currencies?.[1], chainId, isRestPool)?.logoUrl,
   ]
-  const images = isRestExploreEnabled
-    ? [getRestTokenLogo(token0, currencyLogos[0]), getRestTokenLogo(token1, currencyLogos[1])]
-    : undefined
+  const images = [getRestTokenLogo(token0, currencyLogos[0]), getRestTokenLogo(token1, currencyLogos[1])]
+
   return (
     <Flex row gap="$gap8" alignItems="center">
       <PortfolioLogo currencies={currencies} chainId={chainId} images={images} size={28} />
       <EllipsisText>
         {token0?.symbol}/{token1?.symbol}
       </EllipsisText>
-      {protocolVersion === ProtocolVersion.V2 && <Badge>{protocolVersion.toLowerCase()}</Badge>}
-      {feeTier && <Badge>{feeTier / BIPS_BASE}%</Badge>}
+      <Flex row gap="$gap4" alignItems="center">
+        <PoolDetailsBadge variant="body4" $position="left">
+          {protocolVersion.toLowerCase()}
+        </PoolDetailsBadge>
+        {/* TODO(WEB-5364): add hook badge when data available, it should have a hover state and link out to the explorer */}
+        {feeTier && (
+          <PoolDetailsBadge variant="body4" $position="right">
+            {feeTier / BIPS_BASE}%
+          </PoolDetailsBadge>
+        )}
+      </Flex>
     </Flex>
   )
 }
@@ -168,7 +177,6 @@ function PoolTableHeader({
 }
 
 export const TopPoolTable = memo(function TopPoolTable() {
-  const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
   const sortMethod = useAtomValue(sortMethodAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
 
@@ -179,38 +187,22 @@ export const TopPoolTable = memo(function TopPoolTable() {
     resetSortAscending()
   }, [resetSortAscending, resetSortMethod])
 
-  const {
-    topPools: gqlTopPools,
-    loading: gqlLoading,
-    errorV3,
-    errorV2,
-  } = useTopPools(
-    { sortBy: sortMethod, sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc },
-    chain.id,
-  )
-  const combinedError =
-    errorV2 && errorV3
-      ? new ApolloError({ errorMessage: `Could not retrieve V2 and V3 Top Pools on chain: ${chain.id}` })
-      : undefined
-  const allDataStillLoading = gqlLoading && !gqlTopPools.length
-  useUpdateManualOutage({ chainId: chain.id, errorV3, errorV2 })
-
-  const {
-    topPools: restTopPools,
-    isLoading: restIsLoading,
-    isError: restIsError,
-  } = useRestTopPools({ sortBy: sortMethod, sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc })
+  const { topPools, isLoading, isError } = useRestTopPools({
+    sortBy: sortMethod,
+    sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc,
+  })
 
   const { page, loadMore } = useSimplePagination()
 
-  const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
-  const { topPools, loading, error } = isRestExploreEnabled
-    ? { topPools: restTopPools?.slice(0, page * TABLE_PAGE_SIZE), loading: restIsLoading, error: restIsError }
-    : { topPools: gqlTopPools, loading: allDataStillLoading, error: combinedError }
-
   return (
     <TableWrapper data-testid="top-pools-explore-table">
-      <PoolsTable pools={topPools} loading={loading} error={error} loadMore={loadMore} maxWidth={1200} />
+      <PoolsTable
+        pools={topPools?.slice(0, page * TABLE_PAGE_SIZE)}
+        loading={isLoading}
+        error={isError}
+        loadMore={loadMore}
+        maxWidth={1200}
+      />
     </TableWrapper>
   )
 })
@@ -237,13 +229,14 @@ export function PoolsTable({
   const orderDirection = sortAscending ? OrderDirection.Asc : OrderDirection.Desc
   const sortMethod = useAtomValue(sortMethodAtom)
   const filterString = useAtomValue(exploreSearchStringAtom)
+  const { defaultChainId } = useEnabledChains()
 
   const poolTableValues: PoolTableValues[] | undefined = useMemo(
     () =>
       pools?.map((pool, index) => {
         const poolSortRank = index + 1
         const isGqlPool = 'hash' in pool
-        const chainId = supportedChainIdFromGQLChain(pool.token0?.chain as Chain) ?? UniverseChainId.Mainnet
+        const chainId = supportedChainIdFromGQLChain(pool.token0?.chain as Chain) ?? defaultChainId
         return {
           index: poolSortRank,
           poolDescription: (
@@ -260,7 +253,7 @@ export function PoolsTable({
           volumeWeek: isGqlPool ? pool.volumeWeek : giveExploreStatDefaultValue(pool.volume1Week?.value),
           volOverTvl: pool.volOverTvl,
           apr: pool.apr,
-          link: `/explore/pools/${chainIdToBackendChain({ chainId, withFallback: true }).toLowerCase()}/${isGqlPool ? pool.hash : pool.id}`,
+          link: `/explore/pools/${toGraphQLChain(chainId ?? defaultChainId).toLowerCase()}/${isGqlPool ? pool.hash : pool.id}`,
           analytics: {
             elementName: InterfaceElementName.POOLS_TABLE_ROW,
             properties: {
@@ -278,7 +271,7 @@ export function PoolsTable({
           },
         }
       }) ?? [],
-    [filterString, pools],
+    [defaultChainId, filterString, pools],
   )
 
   const showLoadingSkeleton = loading || !!error

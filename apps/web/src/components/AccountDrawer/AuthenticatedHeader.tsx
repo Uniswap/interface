@@ -30,7 +30,7 @@ import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/ho
 import { ThemedText } from 'theme/components'
 import { ArrowDownCircleFilled } from 'ui/src/components/icons/ArrowDownCircleFilled'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'

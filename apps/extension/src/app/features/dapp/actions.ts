@@ -6,8 +6,8 @@ import {
   ExtensionToDappRequestType,
   UpdateConnectionRequest,
 } from 'src/background/messagePassing/types/requests'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { getProviderSync } from 'wallet/src/features/wallet/context'
 

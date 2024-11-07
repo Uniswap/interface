@@ -9,13 +9,13 @@ import { Check, Power } from 'ui/src/components/icons'
 import { usePreventOverflowBelowFold } from 'ui/src/hooks/usePreventOverflowBelowFold'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { extractUrlHost } from 'utilities/src/format/urls'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -89,7 +89,7 @@ export function SwitchNetworksModal(): JSX.Element {
                   <Flex grow row alignItems="center" gap="$spacing8">
                     <NetworkLogo chainId={chain} size={iconSizes.icon20} />
                     <Text color="$neutral1" variant="subheading2">
-                      {UNIVERSE_CHAIN_INFO[chain]?.label}
+                      {getChainLabel(chain)}
                     </Text>
                   </Flex>
                   {activeChain === chain ? (

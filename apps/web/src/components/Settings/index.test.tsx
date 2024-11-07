@@ -1,13 +1,18 @@
 import { Percent } from '@uniswap/sdk-core'
 import SettingsTab from 'components/Settings/index'
-import { useIsSupportedChainId, useIsUniswapXSupportedChain } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
+import { useIsUniswapXSupportedChain } from 'hooks/useIsUniswapXSupportedChain'
 import { mocked } from 'test-utils/mocked'
 import { fireEvent, render, screen, waitFor } from 'test-utils/render'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useEnabledChains, useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const slippage = new Percent(75, 10_000)
-jest.mock('constants/chains')
+jest.mock('hooks/useIsUniswapXSupportedChain')
+jest.mock('uniswap/src/features/chains/hooks', () => ({
+  useEnabledChains: jest.fn(),
+  useIsSupportedChainId: jest.fn(),
+}))
 jest.mock('hooks/useAccount')
 
 describe('Settings Tab', () => {
@@ -16,6 +21,12 @@ describe('Settings Tab', () => {
       mocked(useAccount).mockReturnValue({
         chainId: UniverseChainId.Mainnet,
       } as unknown as ReturnType<typeof useAccount>)
+      mocked(useEnabledChains).mockReturnValue({
+        isTestnetModeEnabled: false,
+        chains: [],
+        gqlChains: [],
+        defaultChainId: UniverseChainId.Mainnet,
+      })
       mocked(useIsSupportedChainId).mockReturnValue(true)
     })
 

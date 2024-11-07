@@ -1,20 +1,22 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Percent } from '@uniswap/sdk-core'
-import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
+import { FeeAmount } from '@uniswap/v3-sdk'
+import { LoaderButton } from 'components/Button/LoaderButton'
 import { PositionInfoBadge } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { useAllFeeTierPoolData } from 'components/Liquidity/hooks'
+import { getDefaultFeeTiersWithData, isDynamicFeeTier } from 'components/Liquidity/utils'
 import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { AddHook } from 'pages/Pool/Positions/create/AddHook'
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
-import { AdvancedButton, Container, CreatingPoolInfo } from 'pages/Pool/Positions/create/shared'
+import { AdvancedButton, Container } from 'pages/Pool/Positions/create/shared'
 import { FeeData } from 'pages/Pool/Positions/create/types'
-import { useCallback, useReducer, useState } from 'react'
+import { useCallback, useEffect, useReducer, useState } from 'react'
 import { TamaguiClickableStyle } from 'theme/components'
 import { PositionField } from 'types/position'
-import { Button, Flex, FlexProps, Text, styled } from 'ui/src'
+import { Button, Flex, FlexProps, HeightAnimator, Text, styled } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { Dollar } from 'ui/src/components/icons/Dollar'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -103,7 +105,7 @@ const FeeTier = ({
         {selected && <CheckCircleFilled size={iconSizes.icon20} />}
       </Flex>
       <Text variant="body4">{feeTier.title}</Text>
-      {feeTier.selectionPercent && (
+      {feeTier.selectionPercent && feeTier.selectionPercent.greaterThan(0) && (
         <Text variant="body4" color="$neutral2">
           {formatPercent(feeTier.selectionPercent)} select
         </Text>
@@ -172,6 +174,8 @@ export function SelectTokensStep({
       switch (currencySearchInputState) {
         case PositionField.TOKEN0:
         case PositionField.TOKEN1:
+          // If the tokens change, we want to reset the default fee tier in the useEffect below.
+          setDefaultFeeTierSelected(false)
           setPositionState((prevState) => ({
             ...prevState,
             currencyInputs: { ...prevState.currencyInputs, [currencySearchInputState]: currency },
@@ -191,34 +195,26 @@ export function SelectTokensStep({
     [setPositionState],
   )
 
-  const feeTierData = useAllFeeTierPoolData({
+  const { feeTierData, hasExistingFeeTiers } = useAllFeeTierPoolData({
     chainId: token0?.chainId,
     protocolVersion,
     currencies: derivedPositionInfo.currencies,
   })
 
-  const feeTiers: FeeTier[] = [
-    {
-      value: { feeAmount: FeeAmount.LOWEST, tickSpacing: TICK_SPACINGS[FeeAmount.LOWEST] },
-      title: t(`fee.bestForVeryStable`),
-      selectionPercent: feeTierData[FeeAmount.LOWEST]?.percentage,
-    },
-    {
-      value: { feeAmount: FeeAmount.LOW, tickSpacing: TICK_SPACINGS[FeeAmount.LOW] },
-      title: t(`fee.bestForStablePairs`),
-      selectionPercent: feeTierData[FeeAmount.LOW]?.percentage,
-    },
-    {
-      value: { feeAmount: FeeAmount.MEDIUM, tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM] },
-      title: t(`fee.bestForMost`),
-      selectionPercent: feeTierData[FeeAmount.MEDIUM]?.percentage,
-    },
-    {
-      value: { feeAmount: FeeAmount.HIGH, tickSpacing: TICK_SPACINGS[FeeAmount.HIGH] },
-      title: t(`fee.bestForExotic`),
-      selectionPercent: feeTierData[FeeAmount.HIGH]?.percentage,
-    },
-  ]
+  const feeTiers = getDefaultFeeTiersWithData({ chainId: token0?.chainId, feeTierData, t })
+  const [defaultFeeTierSelected, setDefaultFeeTierSelected] = useState(false)
+  useEffect(() => {
+    if (hasExistingFeeTiers && feeTierData && Object.keys(feeTierData).length > 0 && !defaultFeeTierSelected) {
+      const mostUsedFeeTier = Object.values(feeTierData).reduce((highest, current) => {
+        return current.percentage.greaterThan(highest.percentage) ? current : highest
+      })
+      setDefaultFeeTierSelected(true)
+      setPositionState((prevState) => ({
+        ...prevState,
+        fee: mostUsedFeeTier.fee,
+      }))
+    }
+  }, [defaultFeeTierSelected, feeTierData, hasExistingFeeTiers, setPositionState])
 
   return (
     <>
@@ -274,10 +270,14 @@ export function SelectTokensStep({
               <Flex gap="$gap4">
                 <Flex row gap="$gap8">
                   <Text variant="subheading2" color="$neutral1">
-                    <Trans
-                      i18nKey="fee.tierExact"
-                      values={{ fee: formatPercent(new Percent(fee.feeAmount, 1000000)) }}
-                    />
+                    {isDynamicFeeTier(fee) ? (
+                      <Trans i18nKey="fee.tier.dynamic" />
+                    ) : (
+                      <Trans
+                        i18nKey="fee.tierExact"
+                        values={{ fee: formatPercent(new Percent(fee.feeAmount, 1000000)) }}
+                      />
+                    )}
                   </Text>
                   {fee.feeAmount === FeeAmount.MEDIUM ? (
                     <PositionInfoBadge placement="only" size="small">
@@ -294,6 +294,7 @@ export function SelectTokensStep({
                 </Text>
               </Flex>
               <Button
+                disabled={!currencyInputs.TOKEN0 || !currencyInputs.TOKEN1}
                 py="$spacing8"
                 px="$spacing12"
                 gap="$gap4"
@@ -309,31 +310,43 @@ export function SelectTokensStep({
                 />
               </Button>
             </Flex>
-            {isShowMoreFeeTiersEnabled && (
-              <Flex row gap={10}>
-                {feeTiers.map((feeTier) => (
-                  <FeeTier
-                    key={feeTier.value.feeAmount}
-                    feeTier={feeTier}
-                    selected={feeTier.value.feeAmount === fee.feeAmount}
-                    onSelect={handleFeeTierSelect}
+            <HeightAnimator open={isShowMoreFeeTiersEnabled}>
+              <Flex flexDirection="column" display="flex" gap="$gap12">
+                <Flex
+                  display="flex"
+                  $platform-web={{
+                    display: 'grid',
+                  }}
+                  gridTemplateColumns="repeat(4, 1fr)"
+                  $md={{
+                    gridTemplateColumns: 'repeat(2, 1fr)',
+                  }}
+                  gap={10}
+                >
+                  {feeTiers.map((feeTier) => (
+                    <FeeTier
+                      key={feeTier.value.feeAmount}
+                      feeTier={feeTier}
+                      selected={feeTier.value.feeAmount === fee.feeAmount}
+                      onSelect={handleFeeTierSelect}
+                    />
+                  ))}
+                </Flex>
+                {protocolVersion === ProtocolVersion.V4 && (
+                  <AdvancedButton
+                    title={t('fee.tier.search')}
+                    Icon={Dollar}
+                    onPress={() => {
+                      setFeeTierSearchModalOpen(true)
+                    }}
                   />
-                ))}
+                )}
               </Flex>
-            )}
-            {protocolVersion === ProtocolVersion.V4 && (
-              <AdvancedButton
-                title={t('fee.tier.search')}
-                Icon={Dollar}
-                onPress={() => {
-                  setFeeTierSearchModalOpen(true)
-                }}
-              />
-            )}
+            </HeightAnimator>
           </Flex>
         )}
-        <CreatingPoolInfo />
-        <Button
+        <LoaderButton
+          buttonKey="SelectTokensStep-continue"
           flex={1}
           py="$spacing16"
           px="$spacing20"
@@ -346,12 +359,14 @@ export function SelectTokensStep({
             backgroundColor: undefined,
           }}
           onPress={onContinue}
+          loading={Boolean(!continueButtonEnabled && token0 && token1)}
+          loaderColor="$surface1"
           disabled={!continueButtonEnabled}
         >
           <Text variant="buttonLabel1" color="$surface1">
             <Trans i18nKey="common.button.continue" />
           </Text>
-        </Button>
+        </LoaderButton>
       </Container>
 
       <CurrencySearchModal

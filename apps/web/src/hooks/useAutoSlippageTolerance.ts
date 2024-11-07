@@ -2,7 +2,6 @@ import { MixedRoute, partitionMixedRouteByProtocol, Protocol, Trade } from '@uni
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool } from '@uniswap/v3-sdk'
-import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import useGasPrice from 'hooks/useGasPrice'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useStablecoinPrice'
@@ -11,7 +10,7 @@ import JSBI from 'jsbi'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
 import { ClassicTrade } from 'state/routing/types'
-import { isL2ChainId } from 'uniswap/src/features/chains/utils'
+import { chainSupportsGasEstimates, isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { logger } from 'utilities/src/logger/logger'
 
 const DEFAULT_AUTO_SLIPPAGE = new Percent(5, 1000) // 0.5%
@@ -81,7 +80,7 @@ export default function useClassicAutoSlippageTolerance(trade?: ClassicTrade): P
   const outputDollarValue = useStablecoinAmountFromFiatValue(outputUSD.data)
 
   // Prefer the USD estimate, if it is supported.
-  const supportsGasEstimate = useMemo(() => chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId), [chainId])
+  const supportsGasEstimate = useMemo(() => chainId && chainSupportsGasEstimates(chainId), [chainId])
   const gasEstimateUSD =
     useStablecoinAmountFromFiatValue(supportsGasEstimate ? trade?.gasUseEstimateUSD : undefined) ?? null
 
@@ -108,9 +107,7 @@ export default function useClassicAutoSlippageTolerance(trade?: ClassicTrade): P
     // NOTE - dont use gas estimate for L2s yet - need to verify accuracy
     // if not, use local heuristic
     const dollarCostToUse =
-      chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId) && gasEstimateUSD
-        ? gasEstimateUSD
-        : gasCostStablecoinAmount
+      chainId && chainSupportsGasEstimates(chainId) && gasEstimateUSD ? gasEstimateUSD : gasCostStablecoinAmount
 
     if (outputDollarValue && dollarCostToUse) {
       // optimize for highest possible slippage without getting MEV'd

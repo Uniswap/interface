@@ -1,14 +1,14 @@
 import { Networkish } from '@ethersproject/networks'
 import { StaticJsonRpcProvider } from '@ethersproject/providers'
-import { AVERAGE_L1_BLOCK_TIME } from 'constants/chains'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
 
 export default class ConfiguredJsonRpcProvider extends StaticJsonRpcProvider {
   constructor(
     url: string | undefined,
     // Including networkish allows ethers to skip the initial detectNetwork call.
     networkish: Networkish & { chainId: UniverseChainId },
-    pollingInterval = AVERAGE_L1_BLOCK_TIME,
+    pollingInterval = AVERAGE_L1_BLOCK_TIME_MS,
   ) {
     super(url, networkish)
 

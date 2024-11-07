@@ -17,11 +17,8 @@ import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { Text, Tooltip } from 'ui/src'
-import {
-  useEnabledChains,
-  useHideSmallBalancesSetting,
-  useHideSpamTokensSetting,
-} from 'uniswap/src/features/settings/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useTranslation } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'

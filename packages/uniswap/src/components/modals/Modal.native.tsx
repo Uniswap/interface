@@ -13,7 +13,7 @@ import { BackHandler, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { Flex, useIsDarkMode, useMedia, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { borderRadii, spacing } from 'ui/src/theme'
+import { borderRadii, spacing, zIndices } from 'ui/src/theme'
 import { BottomSheetContextProvider } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
@@ -93,6 +93,7 @@ function BottomSheetModalContents({
   // probably it requires usage of <BottomSheetTextInput>
   extendOnKeyboardVisible = false,
   hideScrim = false,
+  isBehindFixedBanners = false,
 }: ModalProps): JSX.Element {
   const dimensions = useDeviceDimensions()
   const insets = useAppInsets()
@@ -132,13 +133,14 @@ function BottomSheetModalContents({
     (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop
         {...props}
+        style={[props.style, !isBehindFixedBanners && { zIndex: zIndices.modalBackdrop }]}
         appearsOnIndex={BACKDROP_APPEARS_ON_INDEX}
         disappearsOnIndex={DISAPPEARS_ON_INDEX}
         opacity={hideScrim ? 0 : blurredBackground ? 0.2 : 0.4}
         pressBehavior={isDismissible ? 'close' : 'none'}
       />
     ),
-    [blurredBackground, hideScrim, isDismissible],
+    [blurredBackground, hideScrim, isDismissible, isBehindFixedBanners],
   )
 
   const renderHandleBar = useCallback(
@@ -251,6 +253,7 @@ function BottomSheetModalContents({
       {...background}
       {...backdrop}
       ref={modalRef}
+      containerStyle={[!isBehindFixedBanners && { zIndex: zIndices.modal }]}
       animatedPosition={animatedPosition}
       backgroundStyle={backgroundStyle}
       containerComponent={containerComponent}

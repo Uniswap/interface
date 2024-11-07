@@ -5,11 +5,11 @@ import { useSelector } from 'react-redux'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { SearchableRecipient } from 'uniswap/src/features/address/types'
 import { uniqueAddressesOnly } from 'uniswap/src/features/address/utils'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { selectWatchedAddressSet } from 'uniswap/src/features/favorites/selectors'
 import { selectRecipientsByRecency } from 'uniswap/src/features/transactions/selectors'
 import { useUnitagByName } from 'uniswap/src/features/unitags/hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 import { useDebounce } from 'utilities/src/time/timing'
@@ -229,12 +229,16 @@ export function useRecipients(
   )
 }
 
-export function useFilteredRecipientSections(searchPattern: string, debounceDelayMs?: number): RecipientSection[] {
+export function useFilteredRecipientSections(
+  searchPattern: string,
+  debounceDelayMs?: number,
+): { sections: RecipientSection[]; loading: boolean } {
   const sectionsRef = useRef<RecipientSection[]>([])
   const { sections, searchableRecipientOptions, loading, debouncedPattern } = useRecipients(
     searchPattern,
     debounceDelayMs,
   )
+  const isDebouncingOrLoading = loading || searchPattern !== debouncedPattern
 
   const getFilteredSections = useCallback(() => {
     const filteredAddresses = filterRecipientByNameAndAddress(debouncedPattern, searchableRecipientOptions).map(
@@ -259,5 +263,5 @@ export function useFilteredRecipientSections(searchPattern: string, debounceDela
     }
   }
 
-  return sectionsRef.current
+  return { sections: sectionsRef.current, loading: isDebouncingOrLoading }
 }

@@ -1,12 +1,10 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
-import { CHAIN_IDS_TO_NAMES, useSupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCurrency, useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
-import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -19,14 +17,16 @@ import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routi
 import { CurrencyState, SerializedCurrencyState, SwapInfo, SwapState } from 'state/swap/types'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
+import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains, useSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { isAddress } from 'utilities/src/addresses'
-import { ParsedChainIdKey, getParsedChainId } from 'utils/chains'
+import { getParsedChainId } from 'utils/chainParams'
 
 export function useSwapActionHandlers(): {
   onCurrencySelection: (field: CurrencyField, currency?: Currency) => void
@@ -337,10 +337,15 @@ export function serializeSwapStateToURLParameters(
   const { inputCurrency, outputCurrency, typedValue, independentField, chainId } = state
   const params = new URLSearchParams()
 
-  params.set('chain', CHAIN_IDS_TO_NAMES[chainId])
+  params.set('chain', getChainInfo(chainId).interfaceName)
 
-  if (outputCurrency && inputCurrency && outputCurrency.chainId !== inputCurrency.chainId) {
-    params.set('outputChain', CHAIN_IDS_TO_NAMES[outputCurrency.chainId as UniverseChainId])
+  if (
+    outputCurrency &&
+    inputCurrency &&
+    outputCurrency.chainId !== inputCurrency.chainId &&
+    isUniverseChainId(outputCurrency.chainId)
+  ) {
+    params.set('outputChain', getChainInfo(outputCurrency.chainId).interfaceName)
   }
 
   if (inputCurrency) {
@@ -365,7 +370,7 @@ export function serializeSwapStateToURLParameters(
 
 export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCurrencyState {
   const chainId = getParsedChainId(parsedQs)
-  const outputChainId = getParsedChainId(parsedQs, ParsedChainIdKey.OUTPUT)
+  const outputChainId = getParsedChainId(parsedQs, CurrencyField.OUTPUT)
   const inputCurrencyId = parseCurrencyFromURLParameter(parsedQs.inputCurrency ?? parsedQs.inputcurrency)
   const parsedOutputCurrencyId = parseCurrencyFromURLParameter(parsedQs.outputCurrency ?? parsedQs.outputcurrency)
   const outputCurrencyId =
@@ -401,6 +406,7 @@ export function useInitialCurrencyState(): {
   const { chainId, setIsUserSelectedToken } = useSwapAndLimitContext()
   const { defaultChainId } = useEnabledChains()
 
+  const { useParsedQueryString } = useUrlContext()
   const parsedQs = useParsedQueryString()
   const parsedCurrencyState = useMemo(() => {
     return queryParametersToCurrencyState(parsedQs)

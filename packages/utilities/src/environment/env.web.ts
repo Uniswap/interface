@@ -18,7 +18,7 @@ export function isDevEnv(): boolean {
   } else if (isTestEnv()) {
     return false
   } else {
-    throw createAndLogError('isProdEnv')
+    throw createAndLogError('isDevEnv')
   }
 }
 

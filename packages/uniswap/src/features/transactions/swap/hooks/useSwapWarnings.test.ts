@@ -1,6 +1,7 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Locale } from 'uniswap/src/features/language/constants'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { getSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
@@ -10,7 +11,6 @@ import i18n from 'uniswap/src/i18n/i18n'
 import { daiCurrencyInfo, ethCurrencyInfo } from 'uniswap/src/test/fixtures'
 import { createGasFeeEstimates } from 'uniswap/src/test/fixtures/tradingApi'
 import { mockLocalizedFormatter } from 'uniswap/src/test/mocks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 const ETH = NativeCurrency.onChain(UniverseChainId.Mainnet)

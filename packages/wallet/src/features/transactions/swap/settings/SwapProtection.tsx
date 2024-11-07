@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Switch, Text } from 'ui/src'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
@@ -17,7 +17,7 @@ export const SwapProtection: SwapSettingConfig = {
     const { t } = useTranslation()
     const chainId = useSwapFormContext().derivedSwapInfo.chainId
     const privateRpcSupportedOnChain = isPrivateRpcSupportedOnChain(chainId)
-    const chainName = UNIVERSE_CHAIN_INFO[chainId].label
+    const chainName = getChainLabel(chainId)
     return (
       <Text color="$neutral2" variant="body3">
         {privateRpcSupportedOnChain

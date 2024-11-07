@@ -26,8 +26,9 @@ export function LiquidityPositionStatusIndicator({ status }: { status: PositionS
   if (!config) {
     return null
   }
+
   return (
-    <Flex row gap="$gap8" alignItems="center">
+    <Flex row gap="$spacing6" alignItems="center">
       <StatusIndicatorCircle color={config.color} />
       <Text variant="body3" color={config.color}>
         <Trans i18nKey={config.i18nKey} />

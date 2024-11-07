@@ -4,7 +4,7 @@ import { Currency, Price } from '@uniswap/sdk-core'
 import { calculateInvertedPrice } from 'components/Liquidity/utils'
 import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
-import { Container, CreatingPoolInfo } from 'pages/Pool/Positions/create/shared'
+import { Container } from 'pages/Pool/Positions/create/shared'
 import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
@@ -169,11 +169,13 @@ function RangeInput({
   input,
   decrement,
   increment,
+  showIncrementButtons = true,
 }: {
   value: string
   input: RangeSelectionInput
   decrement: () => string
   increment: () => string
+  showIncrementButtons?: boolean
 }) {
   const colors = useSporeColors()
   const { t } = useTranslation()
@@ -257,14 +259,22 @@ function RangeInput({
           />
         </Text>
       </Flex>
-      <Flex gap={10}>
-        <Button theme="secondary" p="$spacing8" borderRadius="$roundedFull" onPress={handleIncrement}>
-          <Plus size="16px" color={colors.neutral1.val} />
-        </Button>
-        <Button theme="secondary" p="$spacing8" borderRadius="$roundedFull" color="$neutral1" onPress={handleDecrement}>
-          <Minus size="16px" color={colors.neutral1.val} />
-        </Button>
-      </Flex>
+      {showIncrementButtons && (
+        <Flex gap={10}>
+          <Button theme="secondary" p="$spacing8" borderRadius="$roundedFull" onPress={handleIncrement}>
+            <Plus size="16px" color={colors.neutral1.val} />
+          </Button>
+          <Button
+            theme="secondary"
+            p="$spacing8"
+            borderRadius="$roundedFull"
+            color="$neutral1"
+            onPress={handleDecrement}
+          >
+            <Minus size="16px" color={colors.neutral1.val} />
+          </Button>
+        </Flex>
+      )}
     </Flex>
   )
 }
@@ -273,7 +283,6 @@ export const SelectPriceRangeStepV2 = ({ onContinue, ...rest }: { onContinue: ()
   return (
     <Container {...rest}>
       <InitialPriceInput />
-      <CreatingPoolInfo />
       <Button
         flex={1}
         py="$spacing16"
@@ -400,13 +409,16 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
     [setPriceRangeState],
   )
 
-  const invalidState = invalidPrice || invalidRange
+  const invalidState =
+    invalidPrice ||
+    invalidRange ||
+    (derivedPositionInfo.creatingPoolOrPair &&
+      (!priceRangeState.initialPrice || priceRangeState.initialPrice.length === 0))
 
   if (derivedPositionInfo.protocolVersion === ProtocolVersion.V2) {
     return (
       <Container {...rest}>
         <InitialPriceInput />
-        <CreatingPoolInfo />
         <Button
           flex={1}
           py="$spacing16"
@@ -487,17 +499,18 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
               decrement={isSorted ? getDecrementLower : getIncrementUpper}
               increment={isSorted ? getIncrementLower : getDecrementUpper}
               value={rangeSelectionInputValues[0]}
+              showIncrementButtons={!!pool}
             />
             <RangeInput
               input={RangeSelectionInput.MAX}
               decrement={isSorted ? getDecrementUpper : getIncrementLower}
               increment={isSorted ? getIncrementUpper : getDecrementLower}
               value={rangeSelectionInputValues[1]}
+              showIncrementButtons={!!pool}
             />
           </Flex>
         </Flex>
       </Flex>
-      <CreatingPoolInfo />
       <Button
         flex={1}
         py="$spacing16"

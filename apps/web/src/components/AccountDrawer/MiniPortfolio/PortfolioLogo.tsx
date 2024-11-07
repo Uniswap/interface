@@ -11,11 +11,10 @@ import {
   L2LogoContainer,
   SingleLogoContainer,
 } from 'components/Logo/DoubleLogo'
-import { TESTNET_CHAIN_IDS } from 'constants/chains'
 import styled from 'lib/styled-components'
 import React, { memo } from 'react'
 import { Flex, SpinningLoader, styled as TamaguiStyled } from 'ui/src'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { SUPPORTED_TESTNET_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const UnknownContract = styled(UnknownStatus)`
   color: ${({ theme }) => theme.neutral2};
@@ -67,7 +66,7 @@ const AbsoluteCenteredElement = TamaguiStyled(Flex, {
  * Renders an image by prioritizing a list of sources, and then eventually a fallback contract icon
  */
 export const PortfolioLogo = memo(function PortfolioLogo(props: PortfolioLogoProps) {
-  if (TESTNET_CHAIN_IDS.includes(props.chainId)) {
+  if (SUPPORTED_TESTNET_CHAIN_IDS.includes(props.chainId)) {
     return <CurrencyLogo currency={props.currencies?.[0]} size={props.size} />
   }
 

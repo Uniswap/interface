@@ -8,7 +8,6 @@ import { AutoColumn } from 'components/deprecated/Column'
 import { AutoRow, RowBetween, RowFixed } from 'components/deprecated/Row'
 import { CardNoise } from 'components/earn/styled'
 import { Dots } from 'components/swap/styled'
-import { chainIdToBackendChain } from 'constants/chains'
 import { BIG_INT_ZERO } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import { useColor } from 'hooks/useColor'
@@ -22,6 +21,8 @@ import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useTokenBalance } from 'state/connection/hooks'
 import { StyledInternalLink, ThemedText } from 'theme/components'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { Trans } from 'uniswap/src/i18n'
 import { currencyId } from 'utils/currencyId'
 import { unwrappedToken } from 'utils/unwrappedToken'
@@ -156,6 +157,8 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
 
 export default function FullPositionCard({ pair, border, stakedBalance }: PositionCardProps) {
   const account = useAccount()
+
+  const { defaultChainId } = useEnabledChains()
 
   const currency0 = unwrappedToken(pair.token0)
   const currency1 = unwrappedToken(pair.token1)
@@ -293,7 +296,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             <ButtonSecondary padding="8px" $borderRadius="8px">
               <StyledInternalLink
                 style={{ width: '100%', textAlign: 'center' }}
-                to={`/explore/pools/${chainIdToBackendChain({ chainId: pair.chainId, withFallback: true }).toLowerCase()}/${Pair.getAddress(pair.token0, pair.token1)}`}
+                to={`/explore/pools/${toGraphQLChain(pair.chainId ?? defaultChainId).toLowerCase()}/${Pair.getAddress(pair.token0, pair.token1)}`}
               >
                 <Trans i18nKey="pool.accruedFees" />
                 <span style={{ fontSize: '11px' }}>↗</span>

@@ -22,9 +22,9 @@ import {
   useActivityWebLazyQuery,
   useOnAssetActivitySubscription,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { logger } from 'utilities/src/logger/logger'
 import { useInterval } from 'utilities/src/time/timing'
 import { v4 as uuidV4 } from 'uuid'

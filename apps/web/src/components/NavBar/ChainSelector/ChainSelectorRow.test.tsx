@@ -1,6 +1,6 @@
 import ChainSelectorRow from 'components/NavBar/ChainSelector/ChainSelectorRow'
 import { render } from 'test-utils/render'
-import { SUPPORTED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/types/chains'
+import { SUPPORTED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
 
 describe('ChainSelectorRow', () => {
   SUPPORTED_CHAIN_IDS.forEach((chainId) => {

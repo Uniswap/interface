@@ -2,7 +2,7 @@
 import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
-import { Flex, Text, TouchableArea, useIsShortMobileDevice, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
 import { AlertCircle } from 'ui/src/components/icons'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
@@ -16,6 +16,7 @@ import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import {
   DecimalPadCalculateSpace,
+  DecimalPadCalculatedSpaceId,
   DecimalPadInput,
   DecimalPadInputRef,
 } from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPadInput'
@@ -42,7 +43,6 @@ const TRANSFER_DIRECTION_BUTTON_BORDER_WIDTH = spacing.spacing4
 export function SendTokenForm(): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const isShortMobileDevice = useIsShortMobileDevice()
   const { fullHeight } = useDeviceDimensions()
 
   const { walletNeedsRestore, openWalletRestoreModal } = useTransactionModalContext()
@@ -220,8 +220,6 @@ export function SendTokenForm(): JSX.Element {
         maxDecimals,
       })
 
-      console.log('truncatedValue in decimal set value', truncatedValue)
-
       if (isFiatInput) {
         exactAmountFiatRef.current = truncatedValue
       } else {
@@ -382,9 +380,11 @@ export function SendTokenForm(): JSX.Element {
             ) : null}
           </Flex>
         </Flex>
+
         {!nftIn && (
           <>
-            <DecimalPadCalculateSpace decimalPadRef={decimalPadRef} isShortMobileDevice={isShortMobileDevice} />
+            <DecimalPadCalculateSpace id={DecimalPadCalculatedSpaceId.Send} decimalPadRef={decimalPadRef} />
+
             <Flex
               animation="quick"
               bottom={0}

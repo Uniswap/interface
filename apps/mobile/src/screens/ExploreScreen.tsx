@@ -3,25 +3,23 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView, TextInput } from 'react-native'
-import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { FlatList } from 'react-native-gesture-handler'
 import { useSelector } from 'react-redux'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { ExploreSections } from 'src/components/explore/ExploreSections'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
 import { SearchResultsSection } from 'src/components/explore/search/SearchResultsSection'
 import { Screen } from 'src/components/layout/Screen'
-import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { Flex, flexStyles } from 'ui/src'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CancelBehaviorType, SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { MobileEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { useDebounce } from 'utilities/src/time/timing'
@@ -85,7 +83,7 @@ export function ExploreScreen(): JSX.Element {
           cancelBehaviorType={CancelBehaviorType.BackChevron}
           endAdornment={
             isSearchMode ? (
-              <Flex row alignItems="center">
+              <Flex row alignItems="center" animateEnterExit="fadeInDownOutUp">
                 <NetworkFilter
                   includeAllNetworks
                   chainIds={chains}
@@ -113,18 +111,25 @@ export function ExploreScreen(): JSX.Element {
       </Flex>
       {isSearchMode ? (
         <KeyboardAvoidingView behavior="height" style={flexStyles.fill}>
-          <Flex grow>
-            <VirtualizedList onScroll={onScroll}>
-              <Flex p="$spacing4" />
-              {debouncedSearchQuery.length === 0 ? (
-                <SearchEmptySection selectedChain={selectedChain} />
-              ) : (
-                <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
-                  <SearchResultsSection searchQuery={debouncedSearchQuery} selectedChain={selectedChain} />
-                </AnimatedFlex>
-              )}
-            </VirtualizedList>
-          </Flex>
+          <Flex p="$spacing4" />
+          {debouncedSearchQuery.length === 0 ? (
+            // Mimic ScrollView behavior with FlatList
+            // Needs to be from gesture handler to work on android within BottomSheelModal
+            <FlatList
+              sentry-label="VirtualizedList"
+              ListHeaderComponent={<SearchEmptySection selectedChain={selectedChain} />}
+              data={[]}
+              keyExtractor={(): string => 'search-empty-section-container'}
+              keyboardShouldPersistTaps="always"
+              renderItem={null}
+              scrollEventThrottle={16}
+              showsHorizontalScrollIndicator={false}
+              showsVerticalScrollIndicator={false}
+              onScroll={onScroll}
+            />
+          ) : (
+            <SearchResultsSection searchQuery={debouncedSearchQuery} selectedChain={selectedChain} />
+          )}
         </KeyboardAvoidingView>
       ) : (
         isSheetReady && <ExploreSections listRef={listRef} />

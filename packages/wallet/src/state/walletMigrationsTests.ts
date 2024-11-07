@@ -2,9 +2,9 @@
 /* eslint-disable max-lines */
 import { USDC } from 'uniswap/src/constants/tokens'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { RankingType } from 'wallet/src/features/wallet/types'
@@ -543,6 +543,12 @@ export function testAddCreatedOnboardingRedesignAccount(migration: (state: any) 
   const result = migration(prevSchema)
 
   expect(result.behaviorHistory.createdOnboardingRedesignAccount).toBe(false)
+}
+
+export function testRemoveCreatedOnboardingRedesignAccount(migration: (state: any) => any, prevSchema: any): void {
+  const result = migration(prevSchema)
+
+  expect(result.behaviorHistory.createdOnboardingRedesignAccount).toBe(undefined)
 }
 
 export function testMovedTokenWarnings(migration: (state: any) => any, prevSchema: any): void {

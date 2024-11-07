@@ -1,4 +1,5 @@
 import { BigNumber, providers } from 'ethers'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isBridge, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   FinalizedTransactionStatus,
@@ -7,7 +8,6 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export function getSerializableTransactionRequest(
   request: providers.TransactionRequest,

@@ -28,6 +28,8 @@ export type ModalProps = PropsWithChildren<{
   extendOnKeyboardVisible?: boolean
   // defaults to `true`
   isModalOpen?: boolean
+  // created to allow testnet mode banner to be displayed on mobile
+  isBehindFixedBanners?: boolean
 
   // TODO MOB-2526 refactor Modal to more platform-agnostic
   alignment?: 'center' | 'top'

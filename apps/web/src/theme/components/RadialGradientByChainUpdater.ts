@@ -3,7 +3,7 @@ import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useEffect } from 'react'
 import { darkTheme, lightTheme } from 'theme/colors'
 import { useDarkModeManager } from 'theme/components/ThemeToggle'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const initialStyles = {
   width: '200vw',

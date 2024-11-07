@@ -150,6 +150,7 @@ function createWrapTransactionStep(
 function createApprovalTransactionStep(
   txRequest: ValidatedTransactionRequest | undefined,
   amountIn?: CurrencyAmount<Currency>,
+  pair?: [Currency, Currency],
 ): TokenApprovalTransactionStep | undefined {
   if (!txRequest?.data || !amountIn) {
     return undefined
@@ -160,7 +161,7 @@ function createApprovalTransactionStep(
   const { spender } = parseERC20ApproveCalldata(txRequest.data.toString())
   const amount = amountIn.quotient.toString()
 
-  return { type, txRequest, token, spender, amount }
+  return { type, txRequest, token, spender, amount, pair }
 }
 
 function createRevocationTransactionStep(
@@ -322,6 +323,7 @@ export function generateTransactionSteps(
     const approvalPositionToken = createApprovalTransactionStep(
       approvePositionTokenRequest,
       action.liquidityToken ? CurrencyAmount.fromRawAmount(action.liquidityToken, 1) : undefined,
+      [action.currency0Amount.currency, action.currency1Amount.currency],
     )
 
     switch (txContext.type) {

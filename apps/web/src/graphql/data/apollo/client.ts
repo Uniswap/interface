@@ -1,5 +1,5 @@
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
-import { Reference, relayStylePagination } from '@apollo/client/utilities'
+import { ApolloClient, FieldFunctionOptions, HttpLink, InMemoryCache } from '@apollo/client'
+import { Reference, StoreObject, relayStylePagination } from '@apollo/client/utilities'
 import { createSubscriptionLink } from 'utilities/src/apollo/SubscriptionLink'
 import { splitSubscription } from 'utilities/src/apollo/splitSubscription'
 
@@ -47,6 +47,18 @@ export const apolloClient = new ApolloClient({
               return address?.toLowerCase() ?? null
             },
           },
+          feeData: {
+            // TODO(API-482): remove this once the backend bug is fixed.
+            // There's a bug in our graphql backend where `feeData` can incorrectly be `null` for certain queries (`topTokens`).
+            // This field policy ensures that the cache doesn't get overwritten with `null` values triggering unnecessary re-renders.
+            merge: ignoreIncomingNullValue,
+          },
+          protectionInfo: {
+            // TODO(API-482): remove this once the backend bug is fixed.
+            // There's a bug in our graphql backend where `protectionInfo` can incorrectly be `null` for certain queries (`topTokens`).
+            // This field policy ensures that the cache doesn't get overwritten with `null` values triggering unnecessary re-renders.
+            merge: ignoreIncomingNullValue,
+          },
         },
       },
       TokenProject: {
@@ -85,3 +97,14 @@ export const apolloClient = new ApolloClient({
 // This is done after creating the client so that client may be passed to `createSubscriptionLink`.
 const subscriptionLink = createSubscriptionLink({ uri: REALTIME_URL, token: REALTIME_TOKEN }, apolloClient)
 apolloClient.setLink(splitSubscription(subscriptionLink, httpLink))
+
+function ignoreIncomingNullValue(
+  existing: Reference | StoreObject,
+  incoming: Reference | StoreObject,
+  { mergeObjects }: FieldFunctionOptions<Record<string, unknown>, Record<string, unknown>>,
+): Reference | StoreObject {
+  if (existing && !incoming) {
+    return existing
+  }
+  return mergeObjects(existing, incoming)
+}

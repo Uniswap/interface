@@ -2,7 +2,7 @@ import { useMainnetBlockNumber } from 'lib/hooks/useBlockNumber'
 import { useCallContext } from 'lib/hooks/useCallContext'
 import multicall from 'lib/state/multicall'
 import { SkipFirst } from 'types/tuple'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export { NEVER_RELOAD } from '@uniswap/redux-multicall' // re-export for convenience
 export type { CallStateResult } from '@uniswap/redux-multicall' // re-export for convenience

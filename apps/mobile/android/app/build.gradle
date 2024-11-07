@@ -71,7 +71,6 @@ if (isCI && sentryPropertiesAvailable && !isDetox) {
     logLevel: "info",
   ]
 
-  apply from: "../../../../node_modules/@sentry/react-native/sentry.gradle"
   apply plugin: "io.sentry.android.gradle"
 
   sentry {
@@ -90,9 +89,9 @@ if (isCI && datadogPropertiesAvailable && !isDetox) {
   apply from: "../../../../node_modules/@datadog/mobile-react-native/datadog-sourcemaps.gradle"
 }
 
-def devVersionName = "1.38"
-def betaVersionName = "1.38"
-def prodVersionName = "1.38"
+def devVersionName = "1.40"
+def betaVersionName = "1.40"
+def prodVersionName = "1.40"
 
 android {
     ndkVersion rootProject.ext.ndkVersion

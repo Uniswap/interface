@@ -1,16 +1,16 @@
-import { isSupportedChainId } from 'constants/chains'
-import { fiatOnRampToCurrency, gqlToCurrency } from 'graphql/data/util'
+import { PricePoint, fiatOnRampToCurrency, gqlToCurrency } from 'graphql/data/util'
 import { COMMON_BASES, buildPartialCurrencyInfo } from 'uniswap/src/constants/routing'
 import { USDC_OPTIMISM } from 'uniswap/src/constants/tokens'
 import {
   Token as GqlToken,
   ProtectionResult,
   SafetyLevel,
+  TopTokens100Query,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyInfo, getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isSameAddress } from 'utilities/src/addresses'
 import { currencyId } from 'utils/currencyId'
 
@@ -40,7 +40,7 @@ export function gqlTokenToCurrencyInfo(token?: GqlToken): CurrencyInfo | undefin
 }
 
 export function meldSupportedCurrencyToCurrencyInfo(forCurrency: FORSupportedToken): CurrencyInfo | undefined {
-  if (!isSupportedChainId(Number(forCurrency.chainId))) {
+  if (!isUniverseChainId(Number(forCurrency.chainId))) {
     return undefined
   }
 
@@ -82,3 +82,6 @@ export function meldSupportedCurrencyToCurrencyInfo(forCurrency: FORSupportedTok
     isSpam: false,
   })
 }
+
+export type SparklineMap = { [key: string]: PricePoint[] | undefined }
+export type TopToken = NonNullable<NonNullable<TopTokens100Query>['topTokens']>[number]

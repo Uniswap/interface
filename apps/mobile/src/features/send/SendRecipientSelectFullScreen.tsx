@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
 import { SEND_CONTENT_RENDER_DELAY_MS } from 'src/features/send/constants'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 
 // We add a short hardcoded delay to allow the sheet to animate quickly both on first render and when going back from Review -> Form.

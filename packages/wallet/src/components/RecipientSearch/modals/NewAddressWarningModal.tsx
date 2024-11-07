@@ -1,12 +1,13 @@
+import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text } from 'ui/src'
+import { Button, Flex, GetProps, ScrollView, Text } from 'ui/src'
 import { UserSquare } from 'ui/src/components/icons'
 import { fonts, iconSizes, imageSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useENSAvatar, useENSName } from 'uniswap/src/features/ens/api'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { shortenAddress } from 'utilities/src/addresses'
+import { isMobileApp } from 'utilities/src/platform'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -18,6 +19,32 @@ type NewAddressWarningModalProps = {
   onClose: () => void
 }
 
+/**
+ * Helper component to render a left label column and a right child. The label + text
+ * will wrap if the content is too long.
+ *
+ * @param leftText Label text on left
+ * @param rightChild Dynamic child on the right side
+ */
+const LeftRightText = ({ leftText, rightChild }: { leftText: string; rightChild: ReactNode }): JSX.Element => {
+  return (
+    <Flex row flexGrow={1} alignItems="center" justifyContent="space-between" flexWrap="wrap" px="$spacing16">
+      <Text color="$neutral2" fontWeight="bold" variant="body3" pr="$spacing8">
+        {leftText}
+      </Text>
+      <Flex flexShrink={1}>{rightChild}</Flex>
+    </Flex>
+  )
+}
+
+/**
+ * Modal shown when trying to do a transaction with a that the user has not done a transaction
+ * with before. The user can then confirm that they want to proceed or cancel the transaction.
+ *
+ * @param address Target address the user has not transacted with
+ * @param onAcknowledge Callback when the user has confirmed they want to proceed
+ * @param onConfirm Callback when the user does not want to proceed with the transaction for new address
+ */
 export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewAddressWarningModalProps): JSX.Element {
   const { t } = useTranslation()
 
@@ -28,7 +55,7 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
 
   return (
     <Modal name={ModalName.NewAddressWarning} onClose={onClose}>
-      <Flex px="$spacing24" py="$spacing12">
+      <Flex px={isMobileApp && '$spacing24'} py="$spacing12">
         <Flex centered gap="$spacing16" pb="$spacing16">
           <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
             <UserSquare color="$neutral2" size={iconSizes.icon24} />
@@ -41,46 +68,53 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
           </Text>
         </Flex>
 
-        <Flex borderColor="$surface3" borderRadius="$rounded16" borderWidth={1} gap="$spacing8" p="$spacing16">
+        <ScrollView
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.scrollViewContent}
+          borderColor="$surface3"
+          borderRadius="$rounded16"
+          borderWidth={1}
+          flexDirection="column"
+        >
           {displayName?.type === DisplayNameType.Unitag && (
-            <Flex row justifyContent="space-between">
-              <Text color="$neutral2" fontWeight="bold" variant="body3">
-                {t('send.warning.newAddress.details.username')}
-              </Text>
-              <AddressDisplay
-                hideAddressInSubtitle
-                includeUnitagSuffix
-                address={address}
-                lineHeight={fonts.body3.lineHeight}
-                size={16}
-                variant="body3"
-              />
-            </Flex>
+            <LeftRightText
+              leftText={t('send.warning.newAddress.details.username')}
+              rightChild={
+                <AddressDisplay
+                  hideAddressInSubtitle
+                  includeUnitagSuffix
+                  horizontalGap="$spacing4"
+                  address={address}
+                  lineHeight={fonts.body3.lineHeight}
+                  size={16}
+                  variant="body3"
+                />
+              }
+            />
           )}
-
           {ensDisplayName.data && (
-            <Flex row justifyContent="space-between">
-              <Text color="$neutral2" fontWeight="bold" variant="body3">
-                {t('send.warning.newAddress.details.ENS')}
-              </Text>
-              <Flex row alignItems="center" gap="$spacing4">
-                <AccountIcon address={address} avatarUri={ensAvatar} size={imageSizes.image16} />
-                <Text flexShrink={1} loading={ensDisplayName.isLoading} numberOfLines={1} variant="body3">
-                  {ensDisplayName.data}
-                </Text>
-              </Flex>
-            </Flex>
+            <LeftRightText
+              leftText={t('send.warning.newAddress.details.ENS')}
+              rightChild={
+                <Flex row alignItems="center" gap="$spacing4">
+                  <AccountIcon address={address} avatarUri={ensAvatar} size={imageSizes.image16} />
+                  <Text numberOfLines={0} loading={ensDisplayName.isLoading} variant="body3">
+                    {ensDisplayName.data}
+                  </Text>
+                </Flex>
+              }
+            />
           )}
-
-          <Flex row alignItems="center" gap="$spacing16" justifyContent="space-between">
-            <Text color="$neutral2" fontWeight="bold" variant="body3">
-              {t('send.warning.newAddress.details.walletAddress')}
-            </Text>
-            <Text flexShrink={1} numberOfLines={1} variant="body3">
-              {shortenAddress(address, 8, 8)}
-            </Text>
-          </Flex>
-        </Flex>
+          <LeftRightText
+            leftText={t('send.warning.newAddress.details.walletAddress')}
+            rightChild={
+              <Text numberOfLines={0} variant="body3">
+                {address}
+              </Text>
+            }
+          />
+        </ScrollView>
 
         <Flex row gap="$spacing12" pt="$spacing24">
           <Button flex={1} flexBasis={1} theme="secondary" onPress={onClose}>
@@ -93,4 +127,13 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
       </Flex>
     </Modal>
   )
+}
+
+const styles = {
+  scrollViewContent: {
+    flexDirection: 'column',
+    flexWrap: 'wrap',
+    py: '$spacing16',
+    flexGrow: 1,
+  } satisfies GetProps<typeof ScrollView>['contentContainerStyle'],
 }

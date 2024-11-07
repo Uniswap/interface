@@ -78,6 +78,7 @@ export function TransactionModal({
       hideKeyboardOnDismiss
       overrideInnerContainer
       renderBehindTopInset
+      isBehindFixedBanners
       animatedPosition={animatedPosition}
       backgroundColor={colors.surface1.val}
       fullScreen={fullscreen}

@@ -7,9 +7,8 @@ import { PoolDetailsStatsButtons } from 'components/Pools/PoolDetails/PoolDetail
 import { PoolDetailsTableTab } from 'components/Pools/PoolDetails/PoolDetailsTable'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { useChainFromUrlParam } from 'constants/chains'
 import { PoolData, usePoolData } from 'graphql/data/pools/usePoolData'
-import { getSupportedGraphQlChain, gqlToCurrency, unwrapToken } from 'graphql/data/util'
+import { gqlToCurrency, unwrapToken } from 'graphql/data/util'
 import { useColor } from 'hooks/useColor'
 import styled, { useTheme } from 'lib/styled-components'
 import NotFound from 'pages/NotFound'
@@ -20,9 +19,11 @@ import { Helmet } from 'react-helmet-async/lib/index'
 import { useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { BREAKPOINTS, ThemeProvider } from 'theme'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans } from 'uniswap/src/i18n'
 import { isAddress } from 'utilities/src/addresses'
+import { useChainIdFromUrlParam } from 'utils/chainParams'
 
 const PageWrapper = styled(Row)`
   padding: 0 16px 52px;
@@ -110,7 +111,8 @@ function getUnwrappedPoolToken(poolData?: PoolData, chainId?: number) {
 
 export default function PoolDetailsPage() {
   const { poolAddress } = useParams<{ poolAddress: string }>()
-  const chainInfo = getSupportedGraphQlChain(useChainFromUrlParam())
+  const urlChain = useChainIdFromUrlParam()
+  const chainInfo = urlChain ? getChainInfo(urlChain) : undefined
   const { data: poolData, loading } = usePoolData(poolAddress?.toLowerCase() ?? '', chainInfo?.id)
   const [isReversed, toggleReversed] = useReducer((x) => !x, false)
   const unwrappedTokens = getUnwrappedPoolToken(poolData, chainInfo?.id)

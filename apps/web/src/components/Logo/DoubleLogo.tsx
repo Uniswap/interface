@@ -5,7 +5,7 @@ import { useCurrencyInfo } from 'hooks/Tokens'
 import styled, { css } from 'lib/styled-components'
 import { memo, useState } from 'react'
 import { useColorSchemeFromSeed } from 'ui/src'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const MissingImageLogo = styled.div<{ $size?: string; $textColor: string; $backgroundColor: string }>`
   --size: ${({ $size }) => $size};

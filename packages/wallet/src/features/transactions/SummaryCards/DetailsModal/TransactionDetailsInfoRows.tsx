@@ -1,7 +1,5 @@
 /* eslint-disable complexity */
-import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
 import {
   Flex,
   Loader,
@@ -12,13 +10,10 @@ import {
   UniversalImageResizeMode,
   useIsDarkMode,
 } from 'ui/src'
-import { CopyAlt, ExternalLink, UniswapX, Unitag } from 'ui/src/components/icons'
+import { ExternalLink, UniswapX } from 'ui/src/components/icons'
 import { borderRadii, fonts, iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { useENS } from 'uniswap/src/features/ens/useENS'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -27,14 +22,11 @@ import {
   TransactionDetails,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
-import { isMobileApp } from 'utilities/src/platform'
-import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import { InfoRow } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/InfoRow'
+import { TransactionParticipantRow } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionParticipantRow'
 import { useNetworkFee } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/hooks'
 import { SwapTypeTransactionInfo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
 import {
@@ -42,9 +34,7 @@ import {
   hasInterfaceFees,
   shortenHash,
 } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
-import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
-import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 import { openTransactionLink } from 'wallet/src/utils/linking'
 
 const UNISWAP_FEE = 0.0025
@@ -253,21 +243,6 @@ function TransactionHashRow({ transactionDetails }: { transactionDetails: Transa
   )
 }
 
-function InfoRow({
-  label,
-  children,
-}: PropsWithChildren & {
-  label: string
-}): JSX.Element {
-  return (
-    <ContentRow label={label} variant="body3">
-      <Flex centered row gap="$spacing4">
-        {children}
-      </Flex>
-    </ContentRow>
-  )
-}
-
 function DappInfoRow({ label, name, iconUrl }: { label: string; name: string; iconUrl?: string | null }): JSX.Element {
   return (
     <InfoRow label={label}>
@@ -287,56 +262,6 @@ function DappInfoRow({ label, name, iconUrl }: { label: string; name: string; ic
         />
       )}
       <Text variant="body3">{name}</Text>
-    </InfoRow>
-  )
-}
-
-function TransactionParticipantRow({
-  onClose,
-  address,
-  isSend = false,
-}: {
-  onClose: () => void
-  address: string
-  isSend?: boolean
-}): JSX.Element {
-  const { t } = useTranslation()
-  const dispatch = useDispatch()
-  const { navigateToExternalProfile } = useWalletNavigation()
-  const { name: ensName } = useENS(UniverseChainId.Mainnet, address, true)
-  const { unitag } = useUnitagByAddress(address)
-  const personDisplayName = unitag?.username ?? ensName ?? shortenAddress(address)
-
-  const onPressParticipant = async (): Promise<void> => {
-    if (isMobileApp) {
-      // On mobile we navigate to external profile screen
-      navigateToExternalProfile({ address })
-      onClose()
-    } else {
-      // On extension we copy to clipboard either the address or the unitag (including the ".uni.eth" part)
-      await setClipboard(unitag?.username ? unitag.username + UNITAG_SUFFIX : address)
-      dispatch(
-        pushNotification({
-          type: AppNotificationType.Copied,
-          copyType: unitag?.username ? CopyNotificationType.Unitag : CopyNotificationType.Address,
-        }),
-      )
-    }
-  }
-
-  return (
-    <InfoRow label={isSend ? t('common.text.recipient') : t('common.text.sender')}>
-      <TouchableArea
-        alignItems="center"
-        flexDirection="row"
-        gap="$spacing4"
-        justifyContent="center"
-        onPress={onPressParticipant}
-      >
-        <Text variant="body3">{personDisplayName}</Text>
-        {unitag?.username && <Unitag size="$icon.16" />}
-        {!isMobileApp && <CopyAlt color="$neutral3" size="$icon.16" />}
-      </TouchableArea>
     </InfoRow>
   )
 }

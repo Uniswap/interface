@@ -43,7 +43,7 @@ export function SearchWalletItemBase({
         name: walletName,
         address,
         type: 'address',
-        domain: walletName ? extractDomain(walletName, type) : undefined,
+        domain: walletName && type !== SearchResultType.WalletByAddress ? extractDomain(walletName, type) : undefined,
         suggestion_count: searchContext.suggestionCount,
         position: searchContext.position,
         isHistory: searchContext.isHistory,

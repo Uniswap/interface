@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import { Currency, NativeCurrency, Token, UNI_ADDRESSES, WETH9 } from '@uniswap/sdk-core'
 import invariant from 'tiny-invariant'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export const USDC_SEPOLIA = new Token(
   UniverseChainId.Sepolia,

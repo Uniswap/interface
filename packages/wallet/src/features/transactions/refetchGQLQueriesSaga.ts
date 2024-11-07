@@ -1,15 +1,13 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { call, delay, select } from 'typed-redux-saga'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { GQL_MAINNET_CHAINS_MUTABLE, GQL_TESTNET_CHAINS_MUTABLE } from 'uniswap/src/constants/chains'
 import {
   PortfolioBalancesDocument,
   PortfolioBalancesQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { GQL_MAINNET_CHAINS, GQL_TESTNET_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 // eslint-disable-next-line no-restricted-imports
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
@@ -34,9 +32,7 @@ export function* refetchGQLQueries({
   apolloClient: ApolloClient<NormalizedCacheObject>
 }) {
   const owner = transaction.from
-  const isTestnetFlagEnabled = getFeatureFlag(FeatureFlags.TestnetMode)
-  const isTestnetModeEnabled = yield* select(selectIsTestnetModeEnabled)
-  const isTestnetMode = isTestnetFlagEnabled && isTestnetModeEnabled
+  const isTestnetMode = yield* select(selectIsTestnetModeEnabled)
 
   const currenciesWithBalToUpdate = getCurrenciesWithExpectedUpdates(transaction)
   const currencyIdToStartingBalance = readBalancesFromCache({
@@ -118,6 +114,12 @@ function getCurrenciesWithExpectedUpdates(transaction: TransactionDetails): Set<
     case TransactionType.Wrap:
       currenciesWithBalToUpdate.add(buildWrappedNativeCurrencyId(txChainId))
       break
+    case TransactionType.OnRampPurchase:
+    case TransactionType.OnRampTransfer:
+      currenciesWithBalToUpdate.add(
+        buildCurrencyId(txChainId, transaction.typeInfo.destinationTokenAddress).toLowerCase(),
+      )
+      break
   }
 
   return currenciesWithBalToUpdate
@@ -144,7 +146,7 @@ function readBalancesFromCache({
     {},
   )
 
-  const chains = isTestnetMode ? GQL_TESTNET_CHAINS_MUTABLE : GQL_MAINNET_CHAINS_MUTABLE
+  const chains = isTestnetMode ? GQL_TESTNET_CHAINS : GQL_MAINNET_CHAINS
 
   const cachedBalancesData = apolloClient.readQuery<PortfolioBalancesQuery>({
     query: PortfolioBalancesDocument,

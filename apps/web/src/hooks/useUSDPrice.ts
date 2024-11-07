@@ -1,6 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
 import { Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
-import { chainIdToBackendChain, useIsSupportedChainId, useSupportedChainId } from 'constants/chains'
 import { PollingInterval } from 'graphql/data/util'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
@@ -9,7 +8,9 @@ import { ClassicTrade, INTERNAL_ROUTER_PREFERENCE_PRICE, TradeState } from 'stat
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { Chain, useTokenSpotPriceQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useEnabledChains, useIsSupportedChainId, useSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 // ETH amounts used when calculating spot price for a given currency.
@@ -71,7 +72,8 @@ export function useUSDPrice(
 } {
   const currency = currencyAmount?.currency ?? prefetchCurrency
   const chainId = useSupportedChainId(currency?.chainId)
-  const chain = chainIdToBackendChain({ chainId })
+  const { defaultChainId } = useEnabledChains()
+  const chain = toGraphQLChain(chainId ?? defaultChainId)
 
   // skip all pricing requests if the window is not focused
   const isWindowVisible = useIsWindowVisible()

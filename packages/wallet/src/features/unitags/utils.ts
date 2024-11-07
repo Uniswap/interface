@@ -1,6 +1,6 @@
 import { TFunction } from 'i18next'
+import { UNITAG_VALID_REGEX } from 'uniswap/src/features/unitags/constants'
 import { UnitagErrorCodes } from 'uniswap/src/features/unitags/types'
-import { UNITAG_VALID_REGEX } from 'wallet/src/features/unitags/constants'
 
 export function parseUnitagErrorCode(t: TFunction, unitag: string, errorCode: UnitagErrorCodes): string {
   switch (errorCode) {

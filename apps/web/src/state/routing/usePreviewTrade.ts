@@ -8,9 +8,9 @@ import { useMemo } from 'react'
 import { useGetQuickRouteQuery, useGetQuickRouteQueryState } from 'state/routing/quickRouteSlice'
 import { GetQuickQuoteArgs, PreviewTrade, QuoteState, TradeState } from 'state/routing/types'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined } as const
 const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined } as const

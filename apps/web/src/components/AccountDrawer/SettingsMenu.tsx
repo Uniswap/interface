@@ -6,16 +6,13 @@ import { SpamToggle } from 'components/AccountDrawer/SpamToggle'
 import { TestnetsToggle } from 'components/AccountDrawer/TestnetsToggle'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
-import { useActiveLanguage } from 'hooks/useActiveLocale'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import ThemeToggle from 'theme/components/ThemeToggle'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useLanguageInfo } from 'uniswap/src/features/language/hooks'
+import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useCurrentLanguage, useLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { Trans } from 'uniswap/src/i18n'
 
 const Container = styled(Column)`
@@ -72,10 +69,9 @@ export default function SettingsMenu({
   openLanguageSettings: () => void
   openLocalCurrencySettings: () => void
 }) {
-  const activeLanguage = useActiveLanguage()
-  const activeLocalCurrency = useActiveLocalCurrency()
+  const activeLanguage = useCurrentLanguage()
+  const activeLocalCurrency = useAppFiatCurrency()
   const languageInfo = useLanguageInfo(activeLanguage)
-  const isTestnetFeatureFlagOn = useFeatureFlag(FeatureFlags.TestnetMode)
 
   return (
     <SlideOutMenu title={<Trans i18nKey="common.settings" />} onClose={onClose}>
@@ -86,7 +82,7 @@ export default function SettingsMenu({
             <SmallBalanceToggle />
             <SpamToggle />
             <AnalyticsToggle />
-            {isTestnetFeatureFlagOn && <TestnetsToggle />}
+            <TestnetsToggle />
           </ToggleWrapper>
 
           <Column>

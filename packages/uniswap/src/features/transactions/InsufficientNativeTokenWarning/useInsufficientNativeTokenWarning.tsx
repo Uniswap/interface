@@ -3,11 +3,10 @@ import { ComponentProps, useMemo } from 'react'
 import { Trans } from 'react-i18next'
 import { Text } from 'ui/src'
 import { Warning, WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { getChainLabel, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -66,7 +65,7 @@ export function useInsufficientNativeTokenWarning({
     throw new Error(`Unsupported chain ID: ${nativeCurrency?.chainId}`)
   }
 
-  const networkName = UNIVERSE_CHAIN_INFO[supportedChainId].label
+  const networkName = getChainLabel(supportedChainId)
 
   const modalOrTooltipMainMessage = (
     <Trans

@@ -10,8 +10,8 @@ export type TransactionModalProps = PropsWithChildren<{
   onClose: () => void
   openWalletRestoreModal?: TransactionModalContextState['openWalletRestoreModal']
   swapRedirectCallback?: TransactionModalContextState['swapRedirectCallback']
+  renderBiometricsIcon?: TransactionModalContextState['renderBiometricsIcon']
   walletNeedsRestore?: TransactionModalContextState['walletNeedsRestore']
-  BiometricsIcon?: TransactionModalContextState['BiometricsIcon']
   authTrigger?: TransactionModalContextState['authTrigger']
 }>
 

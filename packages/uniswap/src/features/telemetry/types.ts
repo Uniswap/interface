@@ -23,7 +23,9 @@ import {
   WalletConnectionResult,
 } from '@uniswap/analytics-events'
 import { Protocol } from '@uniswap/router-sdk'
+import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
 import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import {
   ExtensionEventName,
@@ -40,7 +42,6 @@ import {
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { UnitagClaimContext } from 'uniswap/src/features/unitags/types'
 import { RenderPassReport } from 'uniswap/src/types/RenderPassReport'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { ImportType } from 'uniswap/src/types/onboarding'
@@ -732,6 +733,7 @@ export type UniverseEventProperties = {
         AssetDetailsBaseProperties &
         SearchResultContextProperties & {
           field: CurrencyField
+          tokenSection: TokenOptionSection
         })
     | InterfaceTokenSelectedProperties
   [UnitagEventName.UnitagBannerActionTaken]: {

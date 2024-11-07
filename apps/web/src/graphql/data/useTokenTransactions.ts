@@ -1,4 +1,3 @@
-import { chainIdToBackendChain } from 'constants/chains'
 import { useCallback, useMemo, useRef } from 'react'
 import {
   Chain,
@@ -7,7 +6,9 @@ import {
   useV2TokenTransactionsQuery,
   useV3TokenTransactionsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 
 export enum TokenTransactionType {
   BUY = 'Buy',
@@ -21,6 +22,7 @@ export function useTokenTransactions(
   chainId: UniverseChainId,
   filter: TokenTransactionType[] = [TokenTransactionType.BUY, TokenTransactionType.SELL],
 ) {
+  const { defaultChainId } = useEnabledChains()
   const {
     data: dataV3,
     loading: loadingV3,
@@ -29,7 +31,7 @@ export function useTokenTransactions(
   } = useV3TokenTransactionsQuery({
     variables: {
       address: address.toLowerCase(),
-      chain: chainIdToBackendChain({ chainId, withFallback: true }),
+      chain: toGraphQLChain(chainId ?? defaultChainId),
       first: TokenTransactionDefaultQuerySize,
     },
   })
@@ -42,7 +44,7 @@ export function useTokenTransactions(
     variables: {
       address: address.toLowerCase(),
       first: TokenTransactionDefaultQuerySize,
-      chain: chainIdToBackendChain({ chainId }),
+      chain: toGraphQLChain(chainId),
     },
   })
   const loadingMoreV3 = useRef(false)

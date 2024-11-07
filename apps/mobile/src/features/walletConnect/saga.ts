@@ -25,11 +25,11 @@ import {
 } from 'src/features/walletConnect/walletConnectSlice'
 import { call, fork, put, select, take } from 'typed-redux-saga'
 import { config } from 'uniswap/src/config'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { ALL_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import i18n from 'uniswap/src/i18n/i18n'
-import { COMBINED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/types/chains'
 import { EthEvent, EthMethod, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -171,13 +171,13 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
   const firstNamespace = Object.keys(namespaceCheck)[0]
 
   if (firstNamespace && firstNamespace !== 'eip155') {
-    const chainLabels = COMBINED_CHAIN_IDS.map((chainId) => UNIVERSE_CHAIN_INFO[chainId].label).join(', ')
+    const chainLabels = ALL_CHAIN_IDS.map(getChainLabel).join(', ')
     yield* cancelErrorSession(dapp.name, chainLabels, proposal.id)
     return
   }
 
   try {
-    const supportedEip155Chains = COMBINED_CHAIN_IDS.map((chainId) => `eip155:${chainId}`)
+    const supportedEip155Chains = ALL_CHAIN_IDS.map((chainId) => `eip155:${chainId}`)
     const accounts = supportedEip155Chains.map((chain) => `${chain}:${activeAccountAddress}`)
 
     const namespaces = buildApprovedNamespaces({
@@ -223,7 +223,7 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
       }),
     )
   } catch (e) {
-    const chainLabels = COMBINED_CHAIN_IDS.map((chainId) => UNIVERSE_CHAIN_INFO[chainId].label).join(', ')
+    const chainLabels = ALL_CHAIN_IDS.map(getChainLabel).join(', ')
 
     yield* cancelErrorSession(dapp.name, chainLabels, proposal.id)
 

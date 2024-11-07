@@ -11,6 +11,7 @@ import {
   v13Schema,
   v14Schema,
   v15Schema,
+  v16Schema,
   v1Schema,
   v2Schema,
   v3Schema,
@@ -22,6 +23,7 @@ import {
   v9Schema,
 } from 'src/store/schema'
 import { initialUniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { initialFavoritesState } from 'uniswap/src/features/favorites/slice'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { initialNotificationsState } from 'uniswap/src/features/notifications/slice'
@@ -30,7 +32,6 @@ import { initialUserSettingsState } from 'uniswap/src/features/settings/slice'
 import { initialTokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
 import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
 import { initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
@@ -45,6 +46,7 @@ import {
   testMovedLanguageSetting,
   testMovedTokenWarnings,
   testMovedUserSettings,
+  testRemoveCreatedOnboardingRedesignAccount,
   testRemoveHoldToSwap,
   testUpdateExploreOrderByType,
 } from 'wallet/src/state/walletMigrationsTests'
@@ -267,5 +269,9 @@ describe('Redux state migrations', () => {
 
   it('migrates from v15 to v16', async () => {
     testUpdateExploreOrderByType(migrations[16], v15Schema)
+  })
+
+  it('migrates from v16 to v17', async () => {
+    testRemoveCreatedOnboardingRedesignAccount(migrations[17], v16Schema)
   })
 })

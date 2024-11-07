@@ -9444,18 +9444,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry-internal/tracing@npm:7.52.0":
-  version: 7.52.0
-  resolution: "@sentry-internal/tracing@npm:7.52.0"
-  dependencies:
-    "@sentry/core": 7.52.0
-    "@sentry/types": 7.52.0
-    "@sentry/utils": 7.52.0
-    tslib: ^1.9.3
-  checksum: 5c3834a6e7be839f1d4f5196c32e31cba06dfcdd25c7c43635273fb8dbf2c4f924aacdfb4ab6a21c281743a1dcfca565cb62956224c16ebaee9b23a69a408293
-  languageName: node
-  linkType: hard
-
 "@sentry-internal/tracing@npm:7.80.0":
   version: 7.80.0
   resolution: "@sentry-internal/tracing@npm:7.80.0"
@@ -9464,20 +9452,6 @@ __metadata:
     "@sentry/types": 7.80.0
     "@sentry/utils": 7.80.0
   checksum: a2f341e1072fc08c7017e1120abea84b58b27926d4d621a0f74c5ac62a013199d80154ca381904556b279854226a0e13ef0e39b7117c6696eefe6ea0aca83c80
-  languageName: node
-  linkType: hard
-
-"@sentry/browser@npm:7.52.0":
-  version: 7.52.0
-  resolution: "@sentry/browser@npm:7.52.0"
-  dependencies:
-    "@sentry-internal/tracing": 7.52.0
-    "@sentry/core": 7.52.0
-    "@sentry/replay": 7.52.0
-    "@sentry/types": 7.52.0
-    "@sentry/utils": 7.52.0
-    tslib: ^1.9.3
-  checksum: 6b8189a86f84278d5572f4599b3deaa9c0ea2f0dae6e15361c2dfb24b6af4891e26ffa07b80cdcec7ced24d96f9abcdb63c72718169b385236d5c81d7af2085a
   languageName: node
   linkType: hard
 
@@ -9559,21 +9533,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/cli@npm:2.17.5":
-  version: 2.17.5
-  resolution: "@sentry/cli@npm:2.17.5"
-  dependencies:
-    https-proxy-agent: ^5.0.0
-    node-fetch: ^2.6.7
-    progress: ^2.0.3
-    proxy-from-env: ^1.1.0
-    which: ^2.0.2
-  bin:
-    sentry-cli: bin/sentry-cli
-  checksum: b98bf1521cbbe9f1334196df3fdb4c11cfed874298830bc4d66edc2d086cb04f984830628677f2019fd468da13a458cb0bb8d6abbaa26f65a602e7b10b88db7b
-  languageName: node
-  linkType: hard
-
 "@sentry/cli@npm:^2.22.3":
   version: 2.26.0
   resolution: "@sentry/cli@npm:2.26.0"
@@ -9622,17 +9581,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/core@npm:7.52.0":
-  version: 7.52.0
-  resolution: "@sentry/core@npm:7.52.0"
-  dependencies:
-    "@sentry/types": 7.52.0
-    "@sentry/utils": 7.52.0
-    tslib: ^1.9.3
-  checksum: 3afcc2b137c14b405a35833d997d72f943f7195cd607ec172b910a09e624d099228cc9f7d61b393efbc235e0a50fe7e37286b60e92dba1c5d608522098a01099
-  languageName: node
-  linkType: hard
-
 "@sentry/core@npm:7.80.0":
   version: 7.80.0
   resolution: "@sentry/core@npm:7.80.0"
@@ -9640,30 +9588,6 @@ __metadata:
     "@sentry/types": 7.80.0
     "@sentry/utils": 7.80.0
   checksum: 5b47929febbc517c4f9727abc73dd0d9fa0b21de3185eb21486a07409f27b84af9a58919d1341acda804e117f57aa9946187b35215edb8ac50745f9274edd5ae
-  languageName: node
-  linkType: hard
-
-"@sentry/hub@npm:7.52.0":
-  version: 7.52.0
-  resolution: "@sentry/hub@npm:7.52.0"
-  dependencies:
-    "@sentry/core": 7.52.0
-    "@sentry/types": 7.52.0
-    "@sentry/utils": 7.52.0
-    tslib: ^1.9.3
-  checksum: 55a6b7cf10b47b141e68ab3cebbec86bbae1905cd249e98ab62b1ff0b3a4d176f4fadd878caee2d981a4ec2d999e706933d80770b73d758683d4eb89927e00c4
-  languageName: node
-  linkType: hard
-
-"@sentry/integrations@npm:7.52.0":
-  version: 7.52.0
-  resolution: "@sentry/integrations@npm:7.52.0"
-  dependencies:
-    "@sentry/types": 7.52.0
-    "@sentry/utils": 7.52.0
-    localforage: ^1.8.1
-    tslib: ^1.9.3
-  checksum: 8018b6cfeb4faee97c482bccb21ecea276a9be3d46dd42f8ace40b34b81955b8af650dba02ca29f649ba94a347023a6d0ed32ddace0138ea195bc08bbe6f983b
   languageName: node
   linkType: hard
 
@@ -9683,40 +9607,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/react-native@npm:5.5.0":
-  version: 5.5.0
-  resolution: "@sentry/react-native@npm:5.5.0"
-  dependencies:
-    "@sentry/browser": 7.52.0
-    "@sentry/cli": 2.17.5
-    "@sentry/core": 7.52.0
-    "@sentry/hub": 7.52.0
-    "@sentry/integrations": 7.52.0
-    "@sentry/react": 7.52.0
-    "@sentry/types": 7.52.0
-    "@sentry/utils": 7.52.0
-  peerDependencies:
-    react: ">=17.0.0"
-    react-native: ">=0.65.0"
-  checksum: 6f790193b14e9e57e40d2b38e3b6addf2fcd35d3a9bdbe09e1d7c552a0b4971e00f6adbbb58010223ac59f012279234b6fe22db2189b155f42da637fea59795f
-  languageName: node
-  linkType: hard
-
-"@sentry/react@npm:7.52.0":
-  version: 7.52.0
-  resolution: "@sentry/react@npm:7.52.0"
-  dependencies:
-    "@sentry/browser": 7.52.0
-    "@sentry/types": 7.52.0
-    "@sentry/utils": 7.52.0
-    hoist-non-react-statics: ^3.3.2
-    tslib: ^1.9.3
-  peerDependencies:
-    react: 15.x || 16.x || 17.x || 18.x
-  checksum: 559188dae39f8deb242705a6aff8daa7de5d6398080a7e1e5ca469dd92b3aef55d364998ee62b123dd3c801588dd8851b9eb37d5adddbef482f7e33f53dd8f85
-  languageName: node
-  linkType: hard
-
 "@sentry/react@npm:7.80.0":
   version: 7.80.0
   resolution: "@sentry/react@npm:7.80.0"
@@ -9728,17 +9618,6 @@ __metadata:
   peerDependencies:
     react: 15.x || 16.x || 17.x || 18.x
   checksum: efa86456252ff6da4a2d143936857c626ba1e501d482fb1aeecac545dc5747623dce46b5ccff80adf7191628a061c3f496d80fdaf720d9eded05347a3faa29a7
-  languageName: node
-  linkType: hard
-
-"@sentry/replay@npm:7.52.0":
-  version: 7.52.0
-  resolution: "@sentry/replay@npm:7.52.0"
-  dependencies:
-    "@sentry/core": 7.52.0
-    "@sentry/types": 7.52.0
-    "@sentry/utils": 7.52.0
-  checksum: e4c2a5fa4e520a598eab0ccc3a4afb2286239e8b3216368d4e167cfcc9fa21341e1cfc2ceeaff4ea9b98099f4f2e20d46aedd5f9a64bc9975f4195ed8a154ef0
   languageName: node
   linkType: hard
 
@@ -9768,16 +9647,6 @@ __metadata:
     "@sentry/types": 7.45.0
     tslib: ^1.9.3
   checksum: 5d4d2ab4fe85d7231a35859cbeecc3d0c95368c818f15d8d6332f8c57604a67c0e12d5a81c23e5dcb1c53b4e44faf753028592792eb98e4af1440ee375b2292e
-  languageName: node
-  linkType: hard
-
-"@sentry/utils@npm:7.52.0":
-  version: 7.52.0
-  resolution: "@sentry/utils@npm:7.52.0"
-  dependencies:
-    "@sentry/types": 7.52.0
-    tslib: ^1.9.3
-  checksum: 25b245c2125822aca80cba0796997f7d2abcfa702f97d8d485a5b24566cb9cf5b73f96a17f587108fb81f793bb915f73d49dc9ac35e996d5b9d4d8755a676db6
   languageName: node
   linkType: hard
 
@@ -15354,7 +15223,7 @@ __metadata:
     "@types/uuid": 9.0.1
     "@uniswap/analytics-events": 2.38.0
     "@uniswap/eslint-config": "workspace:^"
-    "@uniswap/uniswapx-sdk": ^2.1.0-beta.14
+    "@uniswap/uniswapx-sdk": 2.1.0-beta.18
     "@uniswap/universal-router-sdk": 4.5.2
     "@uniswap/v3-sdk": 3.18.1
     "@uniswap/v4-sdk": 1.10.3
@@ -15489,10 +15358,10 @@ __metadata:
     "@uniswap/permit2-sdk": 1.3.0
     "@uniswap/redux-multicall": 1.1.8
     "@uniswap/router-sdk": 1.14.3
-    "@uniswap/sdk-core": 5.8.4
+    "@uniswap/sdk-core": 5.9.0
     "@uniswap/smart-order-router": 3.17.3
     "@uniswap/token-lists": 1.0.0-beta.33
-    "@uniswap/uniswapx-sdk": ^2.1.0-beta.14
+    "@uniswap/uniswapx-sdk": 2.1.0-beta.18
     "@uniswap/universal-router-sdk": 4.5.2
     "@uniswap/v2-core": 1.0.1
     "@uniswap/v2-periphery": 1.1.0-beta.0
@@ -15569,7 +15438,7 @@ __metadata:
     polyfill-object.fromentries: 1.0.1
     postinstall-postinstall: 2.1.0
     process: 0.11.10
-    qs: 6.9.4
+    qs: 6.11.0
     query-string: 7.1.3
     rc-slider: 10.4.0
     react: 18.2.0
@@ -15698,8 +15567,6 @@ __metadata:
     "@react-navigation/stack": 6.2.2
     "@reduxjs/toolkit": 1.9.3
     "@reown/walletkit": 1.1.1
-    "@sentry/react": 7.80.0
-    "@sentry/react-native": 5.5.0
     "@shopify/flash-list": 1.6.3
     "@shopify/react-native-performance": 4.1.2
     "@shopify/react-native-performance-navigation": 3.0.0
@@ -15714,7 +15581,7 @@ __metadata:
     "@uniswap/client-explore": 0.0.10
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/ethers-rs-mobile": 0.0.5
-    "@uniswap/sdk-core": 5.8.4
+    "@uniswap/sdk-core": 5.9.0
     "@walletconnect/core": 2.17.1
     "@walletconnect/react-native-compat": 2.17.1
     "@walletconnect/types": 2.17.1
@@ -15849,9 +15716,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/sdk-core@npm:5.8.4":
-  version: 5.8.4
-  resolution: "@uniswap/sdk-core@npm:5.8.4"
+"@uniswap/sdk-core@npm:5.9.0":
+  version: 5.9.0
+  resolution: "@uniswap/sdk-core@npm:5.9.0"
   dependencies:
     "@ethersproject/address": ^5.0.2
     "@ethersproject/bytes": ^5.7.0
@@ -15862,7 +15729,7 @@ __metadata:
     jsbi: ^3.1.4
     tiny-invariant: ^1.1.0
     toformat: ^2.0.0
-  checksum: 4979c9b568cb80c89f08bb06dda1f71705a588e101e175f5f1ec303caa7c25b66e607883644afea5cba5678d14e6cf1314157de1846c3ca6b1689b33fa7c7aa2
+  checksum: 2bb52a473053f50da68254a9521f907fd34c3eb1c67cda9c0cbe1302da245fe5378a31afdad281a20618ec7f4b9be934c3badf8704a9ab2ae5296f90ae4725a8
   languageName: node
   linkType: hard
 
@@ -15919,16 +15786,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/uniswapx-sdk@npm:^2.1.0-beta.14":
-  version: 2.1.0-beta.14
-  resolution: "@uniswap/uniswapx-sdk@npm:2.1.0-beta.14"
+"@uniswap/uniswapx-sdk@npm:2.1.0-beta.18":
+  version: 2.1.0-beta.18
+  resolution: "@uniswap/uniswapx-sdk@npm:2.1.0-beta.18"
   dependencies:
     "@ethersproject/bytes": ^5.7.0
     "@ethersproject/providers": ^5.7.0
     "@uniswap/permit2-sdk": ^1.2.1
     "@uniswap/sdk-core": ^5.0.0
     ethers: ^5.7.0
-  checksum: 1e608a9958c4e95cde3a507e4808e76750fe4161ccae1a9d449bb7647ec613290b27fa09365913e44463337d22f374602391597c75aa4a9d6ec3a4ccab07f94d
+  checksum: e29dac0f0f3201b3961aff5f946da9989736972995efcc8fab577002a250863a4cb623b02059294662837314501a16df0d9f8400d918a3165a2296caf078f550
   languageName: node
   linkType: hard
 
@@ -32940,7 +32807,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"localforage@npm:1.10.0, localforage@npm:^1.8.1":
+"localforage@npm:1.10.0":
   version: 1.10.0
   resolution: "localforage@npm:1.10.0"
   dependencies:
@@ -38273,12 +38140,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"qs@npm:6.10.4":
+  version: 6.10.4
+  resolution: "qs@npm:6.10.4"
+  dependencies:
+    side-channel: ^1.0.4
+  checksum: 31e4fedd759d01eae52dde6692abab175f9af3e639993c5caaa513a2a3607b34d8058d3ae52ceeccf37c3025f22ed5e90e9ddd6c2537e19c0562ddd10dc5b1eb
+  languageName: node
+  linkType: hard
+
 "qs@npm:6.11.0":
   version: 6.11.0
   resolution: "qs@npm:6.11.0"
   dependencies:
     side-channel: ^1.0.4
   checksum: 6e1f29dd5385f7488ec74ac7b6c92f4d09a90408882d0c208414a34dd33badc1a621019d4c799a3df15ab9b1d0292f97c1dd71dc7c045e69f81a8064e5af7297
+  languageName: node
+  linkType: hard
+
+"qs@npm:^6.10.0, qs@npm:^6.7.0":
+  version: 6.13.0
+  resolution: "qs@npm:6.13.0"
+  dependencies:
+    side-channel: ^1.0.6
+  checksum: e9404dc0fc2849245107108ce9ec2766cde3be1b271de0bf1021d049dc5b98d1a2901e67b431ac5509f865420a7ed80b7acb3980099fe1c118a1c5d2e1432ad8
   languageName: node
   linkType: hard
 
@@ -45170,8 +45055,8 @@ __metadata:
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/permit2-sdk": 1.3.0
     "@uniswap/router-sdk": 1.14.3
-    "@uniswap/sdk-core": 5.8.4
-    "@uniswap/uniswapx-sdk": ^2.1.0-beta.14
+    "@uniswap/sdk-core": 5.9.0
+    "@uniswap/uniswapx-sdk": 2.1.0-beta.18
     "@uniswap/v2-sdk": 4.6.1
     "@uniswap/v3-sdk": 3.18.1
     "@uniswap/v4-sdk": 1.10.3
@@ -45199,6 +45084,7 @@ __metadata:
     jsbi: 3.2.5
     lodash: 4.17.21
     openapi-typescript-codegen: 0.27.0
+    qs: 6.11.0
     react: 18.2.0
     react-dom: 18.2.0
     react-i18next: 14.1.0
@@ -45213,6 +45099,7 @@ __metadata:
     react-native-restart: 0.0.27
     react-native-svg: 15.1.0
     react-redux: 8.0.5
+    react-router-dom: 6.10.0
     react-test-renderer: 18.2.0
     react-virtualized-auto-sizer: 1.0.20
     react-window: 1.8.9
@@ -45719,7 +45606,6 @@ __metadata:
     "@react-navigation/core": 6.2.2
     "@sentry/core": 7.80.0
     "@sentry/react": 7.80.0
-    "@sentry/react-native": 5.5.0
     "@sentry/types": 7.80.0
     "@testing-library/react-hooks": 7.0.2
     "@types/chrome": 0.0.254
@@ -45728,7 +45614,7 @@ __metadata:
     "@uniswap/analytics": 1.7.0
     "@uniswap/analytics-events": 2.38.0
     "@uniswap/eslint-config": "workspace:^"
-    "@uniswap/sdk-core": 5.8.4
+    "@uniswap/sdk-core": 5.9.0
     aws-appsync-auth-link: 3.0.7
     aws-appsync-subscription-link: 3.1.3
     dayjs: 1.11.7
@@ -46278,8 +46164,8 @@ __metadata:
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/permit2-sdk": 1.3.0
     "@uniswap/router-sdk": 1.14.3
-    "@uniswap/sdk-core": 5.8.4
-    "@uniswap/uniswapx-sdk": ^2.1.0-beta.14
+    "@uniswap/sdk-core": 5.9.0
+    "@uniswap/uniswapx-sdk": 2.1.0-beta.18
     "@uniswap/universal-router-sdk": 4.5.2
     "@uniswap/v3-sdk": 3.18.1
     apollo3-cache-persist: 0.14.1

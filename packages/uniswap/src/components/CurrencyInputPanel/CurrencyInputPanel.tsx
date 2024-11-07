@@ -26,12 +26,12 @@ import { MaxAmountButton } from 'uniswap/src/components/CurrencyInputPanel/MaxAm
 import { SelectTokenButton } from 'uniswap/src/components/CurrencyInputPanel/SelectTokenButton'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useTokenAndFiatDisplayAmounts } from 'uniswap/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -296,7 +296,7 @@ export const CurrencyInputPanel = memo(
                       autoFocus={autoFocus ?? focus}
                       backgroundColor="$transparent"
                       borderWidth={0}
-                      color={color}
+                      color={showInsufficientBalanceWarning ? '$statusCritical' : color}
                       disabled={disabled || !currencyInfo}
                       flex={1}
                       focusable={!disabled && Boolean(currencyInfo)}
@@ -313,6 +313,7 @@ export const CurrencyInputPanel = memo(
                       overflow="visible"
                       placeholder="0"
                       placeholderTextColor={colors.neutral3.val}
+                      borderRadius={0}
                       px="$none"
                       py="$none"
                       returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
@@ -326,7 +327,7 @@ export const CurrencyInputPanel = memo(
                   </Flex>
                 ) : (
                   <TouchableArea hapticFeedback onPress={onShowTokenSelector}>
-                    <Text color="$neutral3" fontSize={fontSize} variant="heading2">
+                    <Text color="$neutral3" fontSize={fontSize} variant="heading2" style={{ lineHeight: fontSize }}>
                       0
                     </Text>
                   </TouchableArea>

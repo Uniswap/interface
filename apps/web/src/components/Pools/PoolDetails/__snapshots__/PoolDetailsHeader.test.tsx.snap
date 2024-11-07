@@ -284,7 +284,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   min-width: 0;
 }
 
-.c12 {
+.c10 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -311,7 +311,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   gap: 12px;
 }
 
-.c13 {
+.c11 {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
@@ -331,21 +331,13 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   gap: 8px;
 }
 
-.c14 {
+.c12 {
   display: inline-block;
   height: inherit;
 }
 
 .c7 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c10 {
-  color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
@@ -409,12 +401,6 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   animation: iAjNNh 125ms ease-in;
   -webkit-animation-duration: 250ms;
   animation-duration: 250ms;
-}
-
-.c11 {
-  background: #F9F9F9;
-  padding: 2px 6px;
-  border-radius: 4px;
 }
 
 .c6 {
@@ -523,9 +509,18 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
                 </div>
               </div>
               <div
-                class="c10 c11 css-1m65e73"
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331199 _alignItems-center"
               >
-                0.05%
+                <span
+                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _pt-2px _pb-2px _pr-6px _pl-6px _backgroundColor-568007293 _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202 _borderTopLeftRadius-4px _borderBottomLeftRadius-4px"
+                  data-disable-theme="true"
+                />
+                <span
+                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _pt-2px _pb-2px _pr-6px _pl-6px _backgroundColor-568007293 _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202 _borderTopRightRadius-4px _borderBottomRightRadius-4px"
+                  data-disable-theme="true"
+                >
+                  0.05%
+                </span>
               </div>
               <div
                 class="_opacity-0hover-0d0t846 _opacity-0active-0d0t7546 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
@@ -548,7 +543,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
             </div>
           </div>
           <div
-            class="c12 c13"
+            class="c10 c11"
             width="max-content"
           >
             <div
@@ -560,7 +555,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
                 id="Dropdown"
               >
                 <div
-                  class="c14"
+                  class="c12"
                   style="width: 100%;"
                 >
                   <div>
@@ -605,7 +600,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
                 id="Dropdown"
               >
                 <div
-                  class="c14"
+                  class="c12"
                   style="width: 100%;"
                 >
                   <div>

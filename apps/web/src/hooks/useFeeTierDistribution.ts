@@ -1,6 +1,5 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { chainIdToBackendChain } from 'constants/chains'
 import { PoolState, usePool } from 'hooks/usePools'
 import ms from 'ms'
 import { useMemo } from 'react'
@@ -8,6 +7,8 @@ import {
   useFeeTierDistributionQuery,
   useIsV3SubgraphStaleQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { logger } from 'utilities/src/logger/logger'
 
 interface FeeTierDistribution {
@@ -97,7 +98,8 @@ export function useFeeTierDistribution(
 }
 
 function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
-  const chain = chainIdToBackendChain({ chainId: token0?.chainId, withFallback: true })
+  const { defaultChainId } = useEnabledChains()
+  const chain = toGraphQLChain(token0?.chainId ?? defaultChainId)
   const { loading, error, data } = useFeeTierDistributionQuery({
     variables: {
       chain,

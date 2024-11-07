@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 import { useUnitagsAddressesQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useUnitagsClaimEligibilityQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsClaimEligibilityQuery'
 import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -12,6 +13,7 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { AVATAR_UPLOAD_CREDS_EXPIRY_SECONDS, UNITAG_VALID_REGEX } from 'uniswap/src/features/unitags/constants'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import {
   UnitagClaim,
@@ -19,7 +21,6 @@ import {
   UnitagErrorCodes,
   UnitagGetAvatarUploadUrlResponse,
 } from 'uniswap/src/features/unitags/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -28,7 +29,6 @@ import { getFirebaseAppCheckToken } from 'wallet/src/features/appCheck/appCheck'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { claimUnitag, getUnitagAvatarUploadUrl } from 'wallet/src/features/unitags/api'
 import { isLocalFileUri, uploadAndUpdateAvatarAfterClaim } from 'wallet/src/features/unitags/avatars'
-import { AVATAR_UPLOAD_CREDS_EXPIRY_SECONDS, UNITAG_VALID_REGEX } from 'wallet/src/features/unitags/constants'
 import { parseUnitagErrorCode } from 'wallet/src/features/unitags/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
@@ -38,10 +38,14 @@ import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 const MIN_UNITAG_LENGTH = 3
 const MAX_UNITAG_LENGTH = 20
 
-export const useCanActiveAddressClaimUnitag = (): {
+export const useCanActiveAddressClaimUnitag = (
+  address?: Address,
+): {
   canClaimUnitag: boolean
 } => {
   const activeAddress = useActiveAccountAddressWithThrow()
+  const targetAddress = address ?? activeAddress
+
   const { data: deviceId } = useAsyncData(getUniqueId)
   const { refetchUnitagsCounter } = useUnitagUpdater()
   const skip = !deviceId
@@ -50,7 +54,7 @@ export const useCanActiveAddressClaimUnitag = (): {
     params: skip
       ? undefined
       : {
-          address: activeAddress,
+          address: targetAddress,
           deviceId,
         },
   })

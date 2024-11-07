@@ -2,21 +2,20 @@
 import { ApolloError } from '@apollo/client'
 import { toIncludeSameMembers } from 'jest-extended'
 import { PreloadedState } from 'redux'
-import {
-  useAllCommonBaseCurrencies,
-  useCommonTokensOptionsWithFallback,
-  useCurrencyInfosToTokenOptions,
-  useFavoriteCurrencies,
-  useFavoriteTokensOptions,
-  useFilterCallbacks,
-  usePopularTokensOptions,
-  usePortfolioBalancesForAddressById,
-  usePortfolioTokenOptions,
-} from 'uniswap/src/components/TokenSelector/hooks'
+import { useAllCommonBaseCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useAllCommonBaseCurrencies'
+import { useCommonTokensOptionsWithFallback } from 'uniswap/src/components/TokenSelector/hooks/useCommonTokensOptionsWithFallback'
+import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
+import { useFavoriteCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useFavoriteCurrencies'
+import { useFavoriteTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useFavoriteTokensOptions'
+import { useFilterCallbacks } from 'uniswap/src/components/TokenSelector/hooks/useFilterCallbacks'
+import { usePopularTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/usePopularTokensOptions'
+import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
+import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { createEmptyBalanceOption } from 'uniswap/src/components/TokenSelector/utils'
 import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Chain, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { tokenProjectToCurrencyInfos } from 'uniswap/src/features/dataApi/utils'
 import { UniswapState } from 'uniswap/src/state/uniswapReducer'
@@ -39,7 +38,6 @@ import {
 } from 'uniswap/src/test/fixtures'
 import { act, renderHook, waitFor } from 'uniswap/src/test/test-utils'
 import { createArray, queryResolvers } from 'uniswap/src/test/utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { portfolioBalancesById } from 'uniswap/src/utils/balances'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
@@ -49,12 +47,12 @@ jest.mock('uniswap/src/features/telemetry/send')
 
 const eth = ethToken()
 const dai = daiToken()
-const usdc = usdcBaseToken()
+const usdc_base = usdcBaseToken()
 const ethBalance = tokenBalance({ token: eth })
 const daiBalance = tokenBalance({ token: dai })
-const usdcBalance = tokenBalance({ token: usdc })
-const favoriteTokens = [eth, dai, usdc]
-const favoriteTokenBalances = [ethBalance, daiBalance, usdcBalance]
+const usdcBaseBalance = tokenBalance({ token: usdc_base })
+const favoriteTokens = [eth, dai, usdc_base]
+const favoriteTokenBalances = [ethBalance, daiBalance, usdcBaseBalance]
 
 const favoriteCurrencyIds = favoriteTokens.map((t) =>
   buildCurrencyId(fromGraphQLChain(t.chain) ?? UniverseChainId.Mainnet, t.address),
@@ -139,11 +137,12 @@ describe(useAllCommonBaseCurrencies, () => {
 describe(useFavoriteCurrencies, () => {
   const project = tokenProject({
     // Add some more tokens to check if favorite tokens are filtered properly
-    tokens: [usdcArbitrumToken(), usdcBaseToken(), ...favoriteTokens, usdcToken()],
+    tokens: [usdcArbitrumToken(), usdcToken(), ...favoriteTokens],
+    safetyLevel: SafetyLevel.Verified,
   })
   const projectWithFavoritesOnly = tokenProject({
-    ...project,
     tokens: favoriteTokens,
+    safetyLevel: SafetyLevel.Verified,
   })
 
   const cases = [
@@ -616,8 +615,8 @@ describe(usePopularTokensOptions, () => {
 })
 
 describe(useCommonTokensOptionsWithFallback, () => {
-  const tokens = [eth, dai, usdc]
-  const tokenBalances = [ethBalance, daiBalance, usdcBalance]
+  const tokens = [eth, dai, usdc_base]
+  const tokenBalances = [ethBalance, daiBalance, usdcBaseBalance]
 
   const cases = [
     {

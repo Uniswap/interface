@@ -9,7 +9,7 @@ import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo, useState } from 'react'
 import { DAI, UNI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export enum PermitType {
   AMOUNT = 1,

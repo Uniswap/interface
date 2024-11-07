@@ -1,4 +1,3 @@
-import { chainIdToBackendChain } from 'constants/chains'
 import { V2_BIPS } from 'graphql/data/pools/useTopPools'
 import ms from 'ms'
 import { useMemo } from 'react'
@@ -8,7 +7,9 @@ import {
   useV2PairQuery,
   useV3PoolQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 
 export interface PoolData {
   // basic pool info
@@ -74,12 +75,14 @@ export function usePoolData(
   error: boolean
   data?: PoolData
 } {
+  const { defaultChainId } = useEnabledChains()
+  const variables = { chain: toGraphQLChain(chainId ?? defaultChainId), address: poolAddress }
   const {
     loading: loadingV3,
     error: errorV3,
     data: dataV3,
   } = useV3PoolQuery({
-    variables: { chain: chainIdToBackendChain({ chainId, withFallback: true }), address: poolAddress },
+    variables,
     errorPolicy: 'all',
   })
   const {
@@ -87,7 +90,7 @@ export function usePoolData(
     error: errorV2,
     data: dataV2,
   } = useV2PairQuery({
-    variables: { chain: chainIdToBackendChain({ chainId, withFallback: true }), address: poolAddress },
+    variables,
     skip: !chainId,
     errorPolicy: 'all',
   })

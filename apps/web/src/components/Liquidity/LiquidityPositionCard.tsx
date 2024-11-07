@@ -1,4 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
+import { PositionStatus } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { LiquidityPositionFeeStats } from 'components/Liquidity/LiquidityPositionFeeStats'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
@@ -20,7 +21,7 @@ export function LiquidityPositionCard({ liquidityPosition, ...rest }: { liquidit
     fiatValue0 && fiatValue1
       ? formatCurrencyAmount({
           value: fiatValue0.add(fiatValue1),
-          type: NumberType.FiatTokenPrice,
+          type: NumberType.FiatStandard,
         })
       : undefined
   const v2FormattedUsdValue =
@@ -32,7 +33,8 @@ export function LiquidityPositionCard({ liquidityPosition, ...rest }: { liquidit
     fiatFeeValue0 && fiatFeeValue1
       ? formatCurrencyAmount({
           value: fiatFeeValue0.add(fiatFeeValue1),
-          type: NumberType.FiatTokenPrice,
+          type:
+            liquidityPosition.status === PositionStatus.CLOSED ? NumberType.FiatStandard : NumberType.FiatTokenPrice,
         })
       : undefined
 
@@ -59,6 +61,7 @@ export function LiquidityPositionCard({ liquidityPosition, ...rest }: { liquidit
         feeTier={liquidityPosition.feeTier?.toString()}
         tickLower={liquidityPosition.tickLower}
         tickUpper={liquidityPosition.tickUpper}
+        version={liquidityPosition.version}
         // TODO (WEB-4920): add total APR and fee APR
       />
     </Flex>

@@ -6,6 +6,7 @@ import {
   Chain,
   PortfolioBalancesDocument,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ALL_CHAIN_IDS } from 'uniswap/src/features/chains/types'
 import { filterChainIdsByFeatureFlag, getEnabledChains } from 'uniswap/src/features/chains/utils'
 import {
   sortPortfolioBalances,
@@ -40,7 +41,6 @@ import {
 } from 'uniswap/src/test/fixtures'
 import { createArray } from 'uniswap/src/test/utils'
 import { queryResolvers } from 'uniswap/src/test/utils/resolvers'
-import { COMBINED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/types/chains'
 import { initialWalletState } from 'wallet/src/features/wallet/slice'
 import { ACCOUNT, ACCOUNT2 } from 'wallet/src/test/fixtures'
 import { act, renderHook, waitFor } from 'wallet/src/test/test-utils'
@@ -539,6 +539,7 @@ describe(sortPortfolioBalances, () => {
   ]
   const tokenBalances: ArrayOfLength<2, PortfolioBalance> = [
     {
+      id: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       cacheId: '1-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       quantity: 100,
       balanceUSD: null,
@@ -560,6 +561,7 @@ describe(sortPortfolioBalances, () => {
       },
     },
     {
+      id: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       cacheId: '1-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       quantity: 100,
       balanceUSD: null,
@@ -664,10 +666,8 @@ describe(usePortfolioCacheUpdater, () => {
 
     const enabledChains = getEnabledChains({
       isTestnetModeEnabled: false,
-      connectedWalletChainIds: COMBINED_CHAIN_IDS,
-      featureFlaggedChainIds: filterChainIdsByFeatureFlag({
-        [UniverseChainId.WorldChain]: false,
-      }),
+      connectedWalletChainIds: ALL_CHAIN_IDS,
+      featureFlaggedChainIds: filterChainIdsByFeatureFlag({}),
     })
 
     cache.writeQuery({

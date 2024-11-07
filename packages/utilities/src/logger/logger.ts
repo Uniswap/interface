@@ -2,7 +2,7 @@ import { Extras } from '@sentry/types'
 import { logErrorToDatadog, logToDatadog, logWarningToDatadog } from 'utilities/src/logger/Datadog'
 import { Sentry } from 'utilities/src/logger/Sentry'
 import { LogLevel, LoggerErrorContext, OverridesSentryFingerprint } from 'utilities/src/logger/types'
-import { isInterface, isWeb } from 'utilities/src/platform'
+import { isInterface, isMobileApp, isWeb } from 'utilities/src/platform'
 
 // weird temp fix: the web app is complaining about __DEV__ being global
 // i tried declaring it in a variety of places:
@@ -58,13 +58,15 @@ function logMessage(
     console[level](...formatMessage(level, fileName, functionName, message), ...args)
   }
 
-  // Skip sentry logs for dev builds
+  // Skip sending logs for dev builds
   if (__DEV__) {
     return
   }
 
   if (level === 'warn') {
-    Sentry.captureMessage('warning', `${fileName}#${functionName}`, message, ...args)
+    if (!isMobileApp) {
+      Sentry.captureMessage('warning', `${fileName}#${functionName}`, message, ...args)
+    }
     if (walletDatadogEnabled) {
       logWarningToDatadog(message, {
         level,
@@ -74,7 +76,9 @@ function logMessage(
       })
     }
   } else if (level === 'info') {
-    Sentry.captureMessage('info', `${fileName}#${functionName}`, message, ...args)
+    if (!isMobileApp) {
+      Sentry.captureMessage('info', `${fileName}#${functionName}`, message, ...args)
+    }
     if (walletDatadogEnabled) {
       logToDatadog(message, {
         level,
@@ -118,7 +122,9 @@ function logException(error: unknown, captureContext: LoggerErrorContext): void 
     }
   }
 
-  Sentry.captureException(error, updatedContext)
+  if (!isMobileApp) {
+    Sentry.captureException(error, updatedContext)
+  }
   if (isInterface || walletDatadogEnabled) {
     logErrorToDatadog(error instanceof Error ? error : new Error(`${error}`), updatedContext)
   }

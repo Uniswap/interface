@@ -4,6 +4,7 @@ import { toIncludeSameMembers } from 'jest-extended'
 import { MobileState } from 'src/app/mobileReducer'
 import { renderHookWithProviders } from 'src/test/render'
 import { SearchableRecipient } from 'uniswap/src/features/address/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
@@ -12,7 +13,6 @@ import {
   sendTokenTransactionInfo,
   transactionDetails,
 } from 'uniswap/src/test/fixtures'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useRecipients } from 'wallet/src/components/RecipientSearch/hooks'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'

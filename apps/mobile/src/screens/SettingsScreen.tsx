@@ -42,15 +42,10 @@ import {
 } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
-import {
-  useEnabledChains,
-  useHideSmallBalancesSetting,
-  useHideSpamTokensSetting,
-} from 'uniswap/src/features/settings/hooks'
+import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { setHideSmallBalances, setHideSpamTokens, setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -107,7 +102,6 @@ export function SettingsScreen(): JSX.Element {
     }, AVOID_RENDER_DURING_ANIMATION_MS)
   }, [dispatch, hapticsUserEnabled])
 
-  const isTestnetModeFlagEnabled = useFeatureFlag(FeatureFlags.TestnetMode)
   const [isTestnetModalOpen, setIsTestnetModalOpen] = useState(false)
   const { isTestnetModeEnabled } = useEnabledChains()
   const handleTestnetModeToggle = useCallback((): void => {
@@ -209,16 +203,12 @@ export function SettingsScreen(): JSX.Element {
             text: t('settings.setting.privacy.title'),
             icon: <LineChartDots {...iconProps} />,
           },
-          ...(isTestnetModeFlagEnabled
-            ? [
-                {
-                  text: t('settings.setting.wallet.testnetMode.title'),
-                  icon: <Wrench {...iconProps} />,
-                  isToggleEnabled: isTestnetModeEnabled,
-                  onToggle: handleTestnetModeToggle,
-                },
-              ]
-            : []),
+          {
+            text: t('settings.setting.wallet.testnetMode.title'),
+            icon: <Wrench {...iconProps} />,
+            isToggleEnabled: isTestnetModeEnabled,
+            onToggle: handleTestnetModeToggle,
+          },
         ],
       },
       {
@@ -345,7 +335,6 @@ export function SettingsScreen(): JSX.Element {
     signerAccount?.address,
     walletNeedsRestore,
     hasCloudBackup,
-    isTestnetModeFlagEnabled,
     isTestnetModeEnabled,
     handleTestnetModeToggle,
   ])

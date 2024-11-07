@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { LongText } from 'src/components/text/LongText'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { ChartBar, ChartPie, Language as LanguageIcon, TrendDown, TrendUp } from 'ui/src/components/icons'
+import { ChartBar, ChartPie, ChartPyramid, Language as LanguageIcon, TrendDown, TrendUp } from 'ui/src/components/icons'
 import { DEP_accentColors, iconSizes, validColor } from 'ui/src/theme'
 import { TokenDetailsScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -70,7 +70,7 @@ export function TokenDetailsMarketData({
       </StatsRow>
       <StatsRow
         label={t('token.stats.fullyDilutedValuation')}
-        statsIcon={<ChartPie color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
+        statsIcon={<ChartPyramid color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
       >
         <Text loading={isLoading} textAlign="right" variant="body2">
           {convertFiatAmountFormatted(fullyDilutedValuation, NumberType.FiatTokenStats)}

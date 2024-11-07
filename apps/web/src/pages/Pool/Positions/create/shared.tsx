@@ -1,14 +1,12 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { PriceRangeInfo } from 'pages/Pool/Positions/create/types'
-import { Flex, GeneratedIcon, Text, TouchableArea, styled } from 'ui/src'
+import { Flex, GeneratedIcon, Text, styled } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { X } from 'ui/src/components/icons/X'
 import { iconSizes } from 'ui/src/theme'
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { useTranslation } from 'uniswap/src/i18n'
 import { NumberType } from 'utilities/src/format/types'
 
 export const Container = styled(Flex, {
@@ -57,31 +55,6 @@ export function AdvancedButton({
         </MouseoverTooltip>
       )}
     </Flex>
-  )
-}
-
-export function CreatingPoolInfo() {
-  const { derivedPositionInfo, createPoolInfoDismissed, setCreatePoolInfoDismissed } = useCreatePositionContext()
-
-  if (!derivedPositionInfo.creatingPoolOrPair || createPoolInfoDismissed) {
-    return null
-  }
-
-  return (
-    <Container row gap="$spacing12">
-      <InfoCircleFilled flexShrink={0} size={iconSizes.icon20} color="$neutral2" />
-      <Flex flexWrap="wrap" flexShrink={1}>
-        <Text variant="subheading1">
-          <Trans i18nKey="pool.create" />
-        </Text>
-        <Text variant="body3" color="$neutral2">
-          <Trans i18nKey="pool.create.info" />
-        </Text>
-      </Flex>
-      <TouchableArea onPress={() => setCreatePoolInfoDismissed(true)}>
-        <X flexShrink={0} size={iconSizes.icon20} color="$neutral2" />
-      </TouchableArea>
-    </Container>
   )
 }
 

@@ -16,7 +16,7 @@ export function SendReviewScreen(): JSX.Element {
 }
 
 function SendReviewScreenContent({ hideContent }: { hideContent: boolean }): JSX.Element {
-  const { bottomSheetViewStyles, BiometricsIcon, onClose, authTrigger } = useTransactionModalContext()
+  const { bottomSheetViewStyles, renderBiometricsIcon, onClose, authTrigger } = useTransactionModalContext()
 
   // Same logic we apply in `SwapReviewScreen`
   // We forcefully hide the content via `hideContent` to allow the bottom sheet to animate faster while still allowing all API requests to trigger ASAP.
@@ -27,7 +27,11 @@ function SendReviewScreenContent({ hideContent }: { hideContent: boolean }): JSX
 
   return (
     <TransactionModalInnerContainer bottomSheetViewStyles={bottomSheetViewStyles} fullscreen={false}>
-      <SendReviewDetails ButtonAuthIcon={BiometricsIcon} authTrigger={authTrigger} onCloseModal={onClose} />
+      <SendReviewDetails
+        ButtonAuthIcon={renderBiometricsIcon?.({ color: 'white' })}
+        authTrigger={authTrigger}
+        onCloseModal={onClose}
+      />
     </TransactionModalInnerContainer>
   )
 }

@@ -4,6 +4,7 @@ import lightImage from 'assets/images/404-page-light.png'
 import { SmallButtonPrimary } from 'components/Button/buttons'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import styled from 'lib/styled-components'
+import { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
@@ -37,7 +38,13 @@ const PageWrapper = styled(Container)`
   }
 `
 
-export default function NotFound() {
+interface NotFoundProps {
+  title?: ReactNode
+  subtitle?: ReactNode
+  actionButton?: ReactNode
+}
+
+export default function NotFound({ title, subtitle, actionButton }: NotFoundProps) {
   const isDarkMode = useIsDarkMode()
   const isMobile = useIsMobile()
 
@@ -49,16 +56,20 @@ export default function NotFound() {
       <Trace logImpression page={InterfacePageName.NOT_FOUND}>
         <Header>
           <Container>
-            <Title>404</Title>
-            <Paragraph color="neutral2">
-              <Trans i18nKey="common.pageNotFound" />
-            </Paragraph>
+            {title ?? <Title>404</Title>}
+            {subtitle ?? (
+              <Paragraph color="neutral2">
+                <Trans i18nKey="common.pageNotFound" />
+              </Paragraph>
+            )}
           </Container>
           <Image src={isDarkMode ? darkImage : lightImage} alt="Liluni" />
         </Header>
-        <SmallButtonPrimary as={Link} to="/">
-          <Trans i18nKey="notFound.oops" />
-        </SmallButtonPrimary>
+        {actionButton ?? (
+          <SmallButtonPrimary as={Link} to="/">
+            <Trans i18nKey="notFound.oops" />
+          </SmallButtonPrimary>
+        )}
       </Trace>
     </PageWrapper>
   )

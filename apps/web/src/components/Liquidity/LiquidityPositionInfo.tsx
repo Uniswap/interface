@@ -1,11 +1,9 @@
-import { BadgeData, LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
+import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { LiquidityPositionStatusIndicator } from 'components/Liquidity/LiquidityPositionStatusIndicator'
 import { PositionInfo } from 'components/Liquidity/types'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
-import { ZERO_ADDRESS } from 'constants/misc'
 import { Flex, Text } from 'ui/src'
-import { DocumentList } from 'ui/src/components/icons/DocumentList'
 
 interface LiquidityPositionInfoProps {
   positionInfo: PositionInfo
@@ -23,22 +21,11 @@ export function LiquidityPositionInfo({ positionInfo }: LiquidityPositionInfoPro
       />
       <Flex grow>
         <Flex row gap="$gap16">
-          <Text variant="heading3">
+          <Text variant="subheading1">
             {currency0Amount?.currency.symbol} / {currency1Amount?.currency.symbol}
           </Text>
           <Flex row gap={2} alignItems="center">
-            <LiquidityPositionInfoBadges
-              size="small"
-              badges={
-                [
-                  versionLabel ? { label: versionLabel } : undefined,
-                  v4hook && v4hook !== ZERO_ADDRESS
-                    ? { label: v4hook, copyable: true, icon: <DocumentList color="$neutral2" size={16} /> }
-                    : undefined,
-                  feeTier ? { label: `${Number(feeTier) / 10000}%` } : undefined,
-                ].filter(Boolean) as BadgeData[]
-              }
-            />
+            <LiquidityPositionInfoBadges size="small" versionLabel={versionLabel} v4hook={v4hook} feeTier={feeTier} />
           </Flex>
         </Flex>
         <LiquidityPositionStatusIndicator status={status} />

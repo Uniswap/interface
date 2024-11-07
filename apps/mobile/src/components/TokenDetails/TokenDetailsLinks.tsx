@@ -6,9 +6,9 @@ import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
 import { Flex, Text } from 'ui/src'
 import GlobeIcon from 'ui/src/assets/icons/globe-filled.svg'
 import TwitterIcon from 'ui/src/assets/icons/x-twitter.svg'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { TokenDetailsScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
@@ -29,7 +29,7 @@ export function TokenDetailsLinks({
   const chainId = currencyIdToChain(currencyId) ?? defaultChainId
   const address = currencyIdToAddress(currencyId)
   const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
-  const explorerName = UNIVERSE_CHAIN_INFO[chainId].explorer.name
+  const explorerName = getChainInfo(chainId).explorer.name
 
   return (
     <View style={{ marginHorizontal: -14 }}>

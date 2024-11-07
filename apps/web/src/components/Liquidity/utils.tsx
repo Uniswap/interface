@@ -9,15 +9,23 @@ import {
   Position as RestPosition,
   Token as RestToken,
 } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, Position as V4Position } from '@uniswap/v4-sdk'
-import { PositionInfo } from 'components/Liquidity/types'
+import { defaultFeeTiers } from 'components/Liquidity/constants'
+import { FeeTierData, PositionInfo } from 'components/Liquidity/types'
 import { ZERO_ADDRESS } from 'constants/misc'
+import { DYNAMIC_FEE_DATA, DynamicFeeData, FeeData } from 'pages/Pool/Positions/create/types'
+import { GeneratedIcon } from 'ui/src'
+import { Flag } from 'ui/src/components/icons/Flag'
+import { Pools } from 'ui/src/components/icons/Pools'
+import { SwapCoin } from 'ui/src/components/icons/SwapCoin'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export function getProtocolVersionLabel(version: ProtocolVersion): string | undefined {
   switch (version) {
@@ -66,6 +74,16 @@ export function parseProtocolVersion(version: string | undefined): ProtocolVersi
     default:
       return undefined
   }
+}
+
+export function getPositionUrl(position: PositionInfo): string {
+  const chainInfo = getChainInfo(position.chainId)
+  if (position.version === ProtocolVersion.V2) {
+    return `/positions/v2/${chainInfo.urlParam}/${position.liquidityToken.address}`
+  } else if (position.version === ProtocolVersion.V3) {
+    return `/positions/v3/${chainInfo.urlParam}/${position.tokenId}`
+  }
+  return `/positions/v4/${chainInfo.urlParam}/${position.tokenId}`
 }
 
 export function parseV3FeeTier(feeTier: string | undefined): FeeAmount | undefined {
@@ -223,6 +241,7 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       version: ProtocolVersion.V2,
       pair,
       liquidityToken,
+      chainId: token0.chainId,
       currency0Amount: CurrencyAmount.fromRawAmount(token0, v2PairPosition.liquidity0),
       currency1Amount: CurrencyAmount.fromRawAmount(token1, v2PairPosition.liquidity1),
       totalSupply: CurrencyAmount.fromRawAmount(liquidityToken, v2PairPosition.totalSupply),
@@ -253,7 +272,9 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       status: position.status,
       feeTier: parseV3FeeTier(v3Position.feeTier),
       version: ProtocolVersion.V3,
+      chainId: token0.chainId,
       pool,
+      poolId: position.position.value.poolId,
       position: sdkPosition,
       tickLower: v3Position.tickLower,
       tickUpper: v3Position.tickUpper,
@@ -285,19 +306,22 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
           tickUpper: Number(v4Position.tickUpper),
         })
       : undefined
+    const poolId = V4Pool.getPoolId(token0, token1, Number(v4Position.feeTier), Number(v4Position.tickSpacing), hook)
     return {
       status: position.status,
-      feeTier: v4Position?.feeTier,
+      feeTier: v4Position.feeTier,
       version: ProtocolVersion.V4,
       position: sdkPosition,
+      chainId: token0.chainId,
       pool,
+      poolId,
       v4hook: hook,
       tokenId: v4Position.tokenId,
-      tickLower: v4Position?.tickLower,
-      tickUpper: v4Position?.tickUpper,
-      tickSpacing: Number(v4Position?.tickSpacing),
-      currency0Amount: CurrencyAmount.fromRawAmount(token0, v4Position?.amount0 ?? 0),
-      currency1Amount: CurrencyAmount.fromRawAmount(token1, v4Position?.amount1 ?? 0),
+      tickLower: v4Position.tickLower,
+      tickUpper: v4Position.tickUpper,
+      tickSpacing: Number(v4Position.tickSpacing),
+      currency0Amount: CurrencyAmount.fromRawAmount(token0, v4Position.amount0 ?? 0),
+      currency1Amount: CurrencyAmount.fromRawAmount(token1, v4Position.amount1 ?? 0),
       token0UncollectedFees: v4Position.token0UncollectedFees,
       token1UncollectedFees: v4Position.token1UncollectedFees,
       liquidity: v4Position.liquidity,
@@ -351,4 +375,221 @@ export function calculateInvertedPrice({ price, invert }: { price?: Price<Curren
     quote: currentPrice?.quoteCurrency,
     base: currentPrice?.baseCurrency,
   }
+}
+
+export enum HookFlag {
+  BeforeAddLiquidity = 'before-add-liquidity',
+  AfterAddLiquidity = 'after-add-liquidity',
+  BeforeRemoveLiquidity = 'before-remove-liquidity',
+  AfterRemoveLiquidity = 'after-remove-liquidity',
+  BeforeSwap = 'before-swap',
+  AfterSwap = 'after-swap',
+  BeforeDonate = 'before-donate',
+  AfterDonate = 'after-donate',
+  BeforeSwapReturnsDelta = 'before-swap-returns-delta',
+  AfterSwapReturnsDelta = 'after-swap-returns-delta',
+  AfterAddLiquidityReturnsDelta = 'after-add-liquidity-returns-delta',
+  AfterRemoveLiquidityReturnsDelta = 'after-remove-liquidity-returns-delta',
+}
+
+// The flags are ordered with the dangerous ones on top so they are rendered first
+const FLAGS: { [key in HookFlag]: number } = {
+  [HookFlag.BeforeRemoveLiquidity]: 1 << 9,
+  [HookFlag.AfterRemoveLiquidity]: 1 << 8,
+  [HookFlag.BeforeAddLiquidity]: 1 << 11,
+  [HookFlag.AfterAddLiquidity]: 1 << 10,
+  [HookFlag.BeforeSwap]: 1 << 7,
+  [HookFlag.AfterSwap]: 1 << 6,
+  [HookFlag.BeforeDonate]: 1 << 5,
+  [HookFlag.AfterDonate]: 1 << 4,
+  [HookFlag.BeforeSwapReturnsDelta]: 1 << 3,
+  [HookFlag.AfterSwapReturnsDelta]: 1 << 2,
+  [HookFlag.AfterAddLiquidityReturnsDelta]: 1 << 1,
+  [HookFlag.AfterRemoveLiquidityReturnsDelta]: 1 << 0,
+}
+
+export function getFlagsFromContractAddress(contractAddress: Address): HookFlag[] {
+  // Extract the last 4 hexadecimal digits from the address
+  const last4Hex = contractAddress.slice(-4)
+
+  // Convert the hex string to a binary string
+  const binaryStr = parseInt(last4Hex, 16).toString(2)
+
+  // Parse the last 12 bits of the binary string
+  const relevantBits = binaryStr.slice(-12)
+
+  // Determine which flags are active
+  const activeFlags = Object.entries(FLAGS)
+    .filter(([, bitPosition]) => (parseInt(relevantBits, 2) & bitPosition) !== 0)
+    .map(([flag]) => flag as HookFlag)
+
+  return activeFlags
+}
+
+export interface FlagWarning {
+  Icon: GeneratedIcon
+  name: string
+  info: string
+  dangerous: boolean
+}
+
+export function getFlagWarning(flag: HookFlag, t: AppTFunction): FlagWarning | undefined {
+  switch (flag) {
+    case HookFlag.BeforeSwap:
+    case HookFlag.BeforeSwapReturnsDelta:
+      return {
+        Icon: SwapCoin,
+        name: t('common.swap'),
+        info: t('position.hook.swapWarning'),
+        dangerous: false,
+      }
+    case HookFlag.BeforeAddLiquidity:
+    case HookFlag.AfterAddLiquidity:
+      return {
+        Icon: Pools,
+        name: t('common.addLiquidity'),
+        info: t('position.hook.liquidityWarning'),
+        dangerous: false,
+      }
+    case HookFlag.BeforeRemoveLiquidity:
+    case HookFlag.AfterRemoveLiquidity:
+      return {
+        Icon: Flag,
+        name: t('common.flag'),
+        info: t('position.hook.removeWarning'),
+        dangerous: true,
+      }
+    default:
+      return undefined
+  }
+}
+
+export function mergeFeeTiers(
+  feeTiers: Record<number, FeeTierData>,
+  feeData: FeeData[],
+  formatPercent: (percent: Percent | undefined) => string,
+  formattedDynamicFeeTier: string,
+): Record<number, FeeTierData> {
+  const result: Record<number, FeeTierData> = {}
+  for (const feeTier of feeData) {
+    result[feeTier.feeAmount] = {
+      fee: feeTier,
+      formattedFee: isDynamicFeeTier(feeTier)
+        ? formattedDynamicFeeTier
+        : formatPercent(new Percent(feeTier.feeAmount, 1000000)),
+      totalLiquidityUsd: 0,
+      percentage: new Percent(0, 100),
+      created: false,
+    } satisfies FeeTierData
+  }
+
+  return { ...result, ...feeTiers }
+}
+
+function getDefaultFeeTiersForChain(
+  chainId?: UniverseChainId,
+): Record<FeeAmount, { feeAmount: FeeAmount; tickSpacing: number }> {
+  const feeData = Object.values(defaultFeeTiers)
+    .filter((feeTier) => !feeTier.supportedChainIds || (chainId && feeTier.supportedChainIds.includes(chainId)))
+    .map((feeTier) => feeTier.feeData)
+
+  return feeData.reduce(
+    (acc, fee) => {
+      acc[fee.feeAmount] = fee
+      return acc
+    },
+    {} as Record<FeeAmount, { feeAmount: FeeAmount; tickSpacing: number }>,
+  )
+}
+
+export function getDefaultFeeTiersForChainWithDynamicFeeTier({
+  chainId,
+  dynamicFeeTierEnabled,
+}: {
+  chainId?: UniverseChainId
+  dynamicFeeTierEnabled: boolean
+}) {
+  if (!dynamicFeeTierEnabled) {
+    return getDefaultFeeTiersForChain(chainId)
+  }
+
+  return { ...getDefaultFeeTiersForChain(chainId), [DYNAMIC_FEE_DATA.feeAmount]: DYNAMIC_FEE_DATA }
+}
+
+export function getDefaultFeeTiersWithData({
+  chainId,
+  feeTierData,
+  t,
+}: {
+  chainId?: UniverseChainId
+  feeTierData: Record<number, FeeTierData>
+  t: AppTFunction
+}) {
+  const defaultFeeTiersForChain = getDefaultFeeTiersForChain(chainId)
+
+  const feeTiers = [
+    {
+      tier: FeeAmount.LOWEST,
+      value: defaultFeeTiersForChain[FeeAmount.LOWEST],
+      title: t(`fee.bestForVeryStable`),
+      selectionPercent: feeTierData[FeeAmount.LOWEST]?.percentage,
+    },
+    {
+      tier: FeeAmount.LOW_200,
+      value: defaultFeeTiersForChain[FeeAmount.LOW_200],
+      title: '',
+      selectionPercent: feeTierData[FeeAmount.LOW_200]?.percentage,
+    },
+    {
+      tier: FeeAmount.LOW_300,
+      value: defaultFeeTiersForChain[FeeAmount.LOW_300],
+      title: '',
+      selectionPercent: feeTierData[FeeAmount.LOW_300]?.percentage,
+    },
+    {
+      tier: FeeAmount.LOW_400,
+      value: defaultFeeTiersForChain[FeeAmount.LOW_400],
+      title: '',
+      selectionPercent: feeTierData[FeeAmount.LOW_400]?.percentage,
+    },
+    {
+      tier: FeeAmount.LOW,
+      value: defaultFeeTiersForChain[FeeAmount.LOW],
+      title: t(`fee.bestForStablePairs`),
+      selectionPercent: feeTierData[FeeAmount.LOW]?.percentage,
+    },
+    {
+      tier: FeeAmount.MEDIUM,
+      value: defaultFeeTiersForChain[FeeAmount.MEDIUM],
+      title: t(`fee.bestForMost`),
+      selectionPercent: feeTierData[FeeAmount.MEDIUM]?.percentage,
+    },
+    {
+      tier: FeeAmount.HIGH,
+      value: defaultFeeTiersForChain[FeeAmount.HIGH],
+      title: t(`fee.bestForExotic`),
+      selectionPercent: feeTierData[FeeAmount.HIGH]?.percentage,
+    },
+  ] as const
+
+  return feeTiers.filter((feeTier) => Object.keys(feeTierData).includes(feeTier.tier.toString()))
+}
+
+export function isDynamicFeeTier(feeData: FeeData): feeData is DynamicFeeData {
+  return feeData.feeAmount === DYNAMIC_FEE_DATA.feeAmount
+}
+
+export function isDynamicFeeTierAmount(
+  feeAmount: string | number | undefined,
+): feeAmount is DynamicFeeData['feeAmount'] {
+  if (!feeAmount) {
+    return false
+  }
+
+  const feeAmountNumber = Number(feeAmount)
+  if (isNaN(feeAmountNumber)) {
+    return false
+  }
+
+  return feeAmountNumber === DYNAMIC_FEE_DATA.feeAmount
 }

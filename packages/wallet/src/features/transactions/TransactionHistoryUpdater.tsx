@@ -11,6 +11,7 @@ import {
   useTransactionListLazyQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { selectLastTxNotificationUpdate } from 'uniswap/src/features/notifications/selectors'
 import {
   pushNotification,
@@ -18,7 +19,7 @@ import {
   setNotificationStatus,
 } from 'uniswap/src/features/notifications/slice'
 import { ReceiveCurrencyTxNotification, ReceiveNFTNotification } from 'uniswap/src/features/notifications/types'
-import { useEnabledChains, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
+import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'

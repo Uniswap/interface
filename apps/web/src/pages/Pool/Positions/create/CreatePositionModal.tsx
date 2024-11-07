@@ -1,5 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
+import { getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { useCurrencyInfo } from 'hooks/Tokens'
@@ -14,6 +16,7 @@ import { formatPrices } from 'pages/Pool/Positions/create/shared'
 import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { Button, Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -32,8 +35,8 @@ import { useAccount } from 'wagmi'
 
 export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const {
-    positionState: { protocolVersion },
-    derivedPositionInfo,
+    positionState: { fee, hook },
+    derivedPositionInfo: { currencies, protocolVersion },
   } = useCreatePositionContext()
   const {
     derivedPriceRangeInfo,
@@ -47,11 +50,13 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
   const token1CurrencyInfo = useCurrencyInfo(currencyAmounts?.TOKEN1?.currency)
 
   const { formatNumberOrString, formatCurrencyAmount } = useLocalizationContext()
-  const [baseCurrency, quoteCurrency] = getInvertedTuple(derivedPositionInfo.currencies, priceInverted)
+  const [baseCurrency, quoteCurrency] = getInvertedTuple(currencies, priceInverted)
 
   const formattedPrices = useMemo(() => {
     return formatPrices(derivedPriceRangeInfo, formatNumberOrString)
   }, [formatNumberOrString, derivedPriceRangeInfo])
+
+  const versionLabel = getProtocolVersionLabel(protocolVersion)
 
   const [steps, setSteps] = useState<TransactionStep[]>([])
   const [currentStep, setCurrentStep] = useState<{ step: TransactionStep; accepted: boolean } | undefined>()
@@ -60,6 +65,7 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
   const account = useAccountMeta()
   const selectChain = useSelectChain()
   const startChainId = useAccount().chainId
+  const navigate = useNavigate()
 
   const onFailure = () => {
     setCurrentStep(undefined)
@@ -69,7 +75,8 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
     setSteps([])
     setCurrentStep(undefined)
     onClose()
-  }, [onClose])
+    navigate('/positions')
+  }, [onClose, navigate])
 
   const handleCreate = useCallback(() => {
     const isValidTx = isValidLiquidityTxContext(createTxContext)
@@ -104,11 +111,21 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
             closeModal={() => onClose()}
           />
           <Flex py="$spacing12" gap="$spacing12">
-            <Flex row justifyContent="space-between">
-              <Flex row gap="$gap8">
-                <Text variant="heading3">{currencyAmounts?.TOKEN0?.currency?.symbol}</Text>
-                <Text variant="heading3">/</Text>
-                <Text variant="heading3">{currencyAmounts?.TOKEN1?.currency?.symbol}</Text>
+            <Flex row alignItems="center" justifyContent="space-between">
+              <Flex>
+                <Flex row gap="$gap8">
+                  <Text variant="heading3">{currencyAmounts?.TOKEN0?.currency?.symbol}</Text>
+                  <Text variant="heading3">/</Text>
+                  <Text variant="heading3">{currencyAmounts?.TOKEN1?.currency?.symbol}</Text>
+                </Flex>
+                <Flex row gap={2} alignItems="center">
+                  <LiquidityPositionInfoBadges
+                    size="small"
+                    versionLabel={versionLabel}
+                    v4hook={hook}
+                    feeTier={fee.feeAmount}
+                  />
+                </Flex>
               </Flex>
               <DoubleCurrencyLogo
                 currencies={[currencyAmounts?.TOKEN0?.currency, currencyAmounts?.TOKEN1?.currency]}
@@ -177,8 +194,8 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
         {currentStep ? (
           <ProgressIndicator steps={steps} currentStep={currentStep} />
         ) : (
-          <Button flex={1} py="$spacing16" px="$spacing20" onPress={handleCreate}>
-            <Text variant="buttonLabel1">
+          <Button flex={1} py="$spacing16" px="$spacing20" onPress={handleCreate} disabled={!createTxContext?.action}>
+            <Text variant="buttonLabel1" color="$neutralContrast">
               <Trans i18nKey="common.button.create" />
             </Text>
           </Button>

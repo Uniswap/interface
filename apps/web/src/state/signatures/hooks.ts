@@ -11,7 +11,7 @@ import {
   UniswapXOrderDetails,
 } from 'state/signatures/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export function useAllSignatures(): { [id: string]: SignatureDetails } {
   const account = useAccount()

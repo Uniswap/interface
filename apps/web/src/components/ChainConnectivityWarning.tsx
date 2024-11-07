@@ -1,4 +1,3 @@
-import { AVERAGE_L1_BLOCK_TIME, getChain } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useIsLandingPage } from 'hooks/useIsLandingPage'
@@ -8,9 +7,11 @@ import styled from 'lib/styled-components'
 import { useMemo } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { ExternalLink } from 'theme/components'
-import { DEFAULT_MS_BEFORE_WARNING, UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { DEFAULT_MS_BEFORE_WARNING, getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
 import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const BodyRow = styled.div`
   color: ${({ theme }) => theme.neutral1};
@@ -53,22 +54,22 @@ const Wrapper = styled.div`
 
 export function ChainConnectivityWarning() {
   const { chainId } = useAccount()
-  const info = getChain({ chainId, withFallback: true })
+  const { defaultChainId } = useEnabledChains()
+  const info = getChainInfo(chainId ?? defaultChainId)
   const label = info.label
 
   const isNftPage = useIsNftPage()
   const isLandingPage = useIsLandingPage()
 
   const waitMsBeforeWarning = useMemo(
-    () => (chainId ? UNIVERSE_CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : undefined) ?? DEFAULT_MS_BEFORE_WARNING,
+    () => (chainId ? getChainInfo(chainId)?.blockWaitMsBeforeWarning : undefined) ?? DEFAULT_MS_BEFORE_WARNING,
     [chainId],
   )
-  const machineTime = useMachineTimeMs(AVERAGE_L1_BLOCK_TIME)
+  const machineTime = useMachineTimeMs(AVERAGE_L1_BLOCK_TIME_MS)
   const blockTime = useCurrentBlockTimestamp(
     useMemo(
       () => ({
-        blocksPerFetch:
-          /* 5m / 12s = */ 25 * (chainId ? UNIVERSE_CHAIN_INFO[chainId].blockPerMainnetEpochForChainId : 1),
+        blocksPerFetch: /* 5m / 12s = */ 25 * (chainId ? getChainInfo(chainId).blockPerMainnetEpochForChainId : 1),
       }),
       [chainId],
     ),

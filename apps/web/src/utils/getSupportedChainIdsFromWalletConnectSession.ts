@@ -1,5 +1,5 @@
 import type { SessionTypes } from '@walletconnect/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 // Helper function to extract chainId from string in format 'eip155:{chainId}'
 function getChainIdFromFormattedString(item: string): number | null {

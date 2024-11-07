@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
+import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { useRemoveLiquidityTxAndGasInfo } from 'components/RemoveLiquidity/hooks'
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo } from 'react'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
@@ -23,7 +23,7 @@ const RemoveLiquidityTxContext = createContext<RemoveLiquidityTxInfo | undefined
 
 export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren): JSX.Element {
   const account = useAccountMeta()
-  const { positionInfo, percent } = useLiquidityModalContext()
+  const { positionInfo, percent } = useRemoveLiquidityModalContext()
 
   const removeLiquidityTxInfo = useRemoveLiquidityTxAndGasInfo({ account: account?.address })
   const { approvalLoading, decreaseCalldataLoading, decreaseCalldata } = removeLiquidityTxInfo
@@ -55,6 +55,7 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
       action: {
         currency0Amount: currency0AmountToRemove,
         currency1Amount: currency1AmountToRemove,
+        liquidityToken: positionInfo.liquidityToken,
       },
       approvePositionTokenRequest,
       txRequest,

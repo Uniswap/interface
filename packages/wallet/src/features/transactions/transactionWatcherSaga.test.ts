@@ -3,6 +3,7 @@ import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { call, delay } from 'redux-saga/effects'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
   addTransaction,
@@ -20,7 +21,6 @@ import {
   transactionDetails,
 } from 'uniswap/src/test/fixtures'
 import { mockApolloClient } from 'uniswap/src/test/mocks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { sleep } from 'utilities/src/time/timing'
 import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'

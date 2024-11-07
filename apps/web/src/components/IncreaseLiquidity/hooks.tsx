@@ -1,12 +1,14 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { IncreaseLiquidityState } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
-import { DepositInfo } from 'components/Liquidity/types'
+import {
+  IncreaseLiquidityDerivedInfo,
+  IncreaseLiquidityState,
+} from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
 import { useAccount } from 'hooks/useAccount'
 import { UseDepositInfoProps, useDepositInfo } from 'pages/Pool/Positions/create/hooks'
 import { useMemo } from 'react'
 
-export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): DepositInfo {
+export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): IncreaseLiquidityDerivedInfo {
   const account = useAccount()
   const { position: positionInfo, exactAmount, exactField } = state
 
@@ -29,12 +31,17 @@ export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): 
         token1,
         exactField,
         exactAmount,
+        deposit0Disabled: false,
+        deposit1Disabled: false,
       }
     }
 
     const { tickLower: tickLowerStr, tickUpper: tickUpperStr } = positionInfo
     const tickLower = tickLowerStr ? parseInt(tickLowerStr) : undefined
     const tickUpper = tickUpperStr ? parseInt(tickUpperStr) : undefined
+
+    const deposit0Disabled = Boolean(tickUpper && positionInfo.pool && positionInfo.pool.tickCurrent >= tickUpper)
+    const deposit1Disabled = Boolean(tickLower && positionInfo.pool && positionInfo.pool.tickCurrent <= tickLower)
 
     if (positionInfo.version === ProtocolVersion.V3) {
       return {
@@ -47,6 +54,8 @@ export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): 
         token1,
         exactField,
         exactAmount,
+        deposit0Disabled,
+        deposit1Disabled,
       }
     }
 
@@ -61,6 +70,8 @@ export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): 
         token1: currency1,
         exactField,
         exactAmount,
+        deposit0Disabled,
+        deposit1Disabled,
       }
     }
 
@@ -70,5 +81,14 @@ export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): 
     }
   }, [account.address, exactAmount, exactField, positionInfo, currency0, currency1, token0, token1])
 
-  return useDepositInfo(depositInfoProps)
+  const depositInfo = useDepositInfo(depositInfoProps)
+
+  return useMemo(
+    () => ({
+      ...depositInfo,
+      deposit0Disabled: depositInfoProps.deposit0Disabled,
+      deposit1Disabled: depositInfoProps.deposit1Disabled,
+    }),
+    [depositInfo, depositInfoProps.deposit0Disabled, depositInfoProps.deposit1Disabled],
+  )
 }

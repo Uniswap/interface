@@ -1,14 +1,18 @@
-import { memo } from 'react'
+import { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, ImpactFeedbackStyle, Shine, Text, TouchableArea, isWeb } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
+import {
+  useTokenBalanceMainPartsFragment,
+  useTokenBalanceQuantityPartsFragment,
+} from 'wallet/src/features/portfolio/fragments'
 import { disableOnPress } from 'wallet/src/utils/disableOnPress'
 
 /**
@@ -16,35 +20,32 @@ import { disableOnPress } from 'wallet/src/utils/disableOnPress'
  */
 
 interface TokenBalanceItemProps {
-  portfolioBalance: PortfolioBalance
+  portfolioBalanceId: string
+  currencyInfo: CurrencyInfo
   onPressToken?: (currencyId: CurrencyId) => void
   isLoading?: boolean
   padded?: boolean
-  index?: number
 }
 
+/**
+ * If you add any props to this component, make sure you use the react-devtools profiler to confirm that this doesn't break the memoization.
+ * This component needs to be as fast as possible and shouldn't re-render often or else it causes performance issues.
+ */
 export const TokenBalanceItem = memo(function _TokenBalanceItem({
-  portfolioBalance,
+  portfolioBalanceId,
+  currencyInfo,
   onPressToken,
   isLoading,
-  index,
   padded,
 }: TokenBalanceItemProps) {
-  const { quantity, currencyInfo, relativeChange24 } = portfolioBalance
   const { currency } = currencyInfo
-  const { t } = useTranslation()
-  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
-  const { isTestnetModeEnabled } = useEnabledChains()
-
-  const onPress = (): void => {
+  const onPress = useCallback((): void => {
     onPressToken?.(currencyInfo.currencyId)
-  }
+  }, [currencyInfo.currencyId, onPressToken])
 
   const shortenedSymbol = getSymbolDisplayText(currency.symbol)
-  const balance = convertFiatAmountFormatted(portfolioBalance.balanceUSD, NumberType.FiatTokenQuantity)
 
-  const isTestnetModeWithNoBalance = isTestnetModeEnabled && !portfolioBalance.balanceUSD
   return (
     <TouchableArea
       hapticFeedback
@@ -57,7 +58,6 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
       justifyContent="space-between"
       px={padded ? '$spacing24' : '$spacing8'}
       py="$spacing8"
-      testID={`token-list-item-${index ?? 0}`}
       onLongPress={disableOnPress}
       onPress={onPress}
     >
@@ -73,36 +73,81 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
             {currency.name ?? shortenedSymbol}
           </Text>
           <Flex row alignItems="center" gap="$spacing8" minHeight={20}>
-            <Text color="$neutral2" numberOfLines={1} variant={isWeb ? 'body3' : 'body2'}>
-              {`${formatNumberOrString({ value: quantity })}`} {shortenedSymbol}
-            </Text>
+            <TokenBalanceQuantity portfolioBalanceId={portfolioBalanceId} shortenedSymbol={shortenedSymbol} />
           </Flex>
         </Flex>
       </Flex>
-      {!isTestnetModeWithNoBalance && (
-        <Flex justifyContent="space-between" position="relative">
-          <Shine disabled={!isLoading}>
-            {!portfolioBalance.balanceUSD ? (
-              <Flex centered fill>
-                <Text color="$neutral2">{t('common.text.notAvailable')}</Text>
-              </Flex>
-            ) : (
-              <Flex alignItems="flex-end" pl="$spacing8">
-                <Text color="$neutral1" numberOfLines={1} variant={isWeb ? 'body2' : 'body1'}>
-                  {balance}
-                </Text>
-                <RelativeChange
-                  alignRight
-                  change={relativeChange24 ?? undefined}
-                  negativeChangeColor="$statusCritical"
-                  positiveChangeColor="$statusSuccess"
-                  variant={isWeb ? 'body3' : 'body2'}
-                />
-              </Flex>
-            )}
-          </Shine>
-        </Flex>
-      )}
+
+      <TokenBalanceRightSideColumn portfolioBalanceId={portfolioBalanceId} isLoading={isLoading} />
     </TouchableArea>
   )
 })
+
+function TokenBalanceQuantity({
+  portfolioBalanceId,
+  shortenedSymbol,
+}: {
+  portfolioBalanceId: string
+  shortenedSymbol: Maybe<string>
+}): JSX.Element {
+  const { formatNumberOrString } = useLocalizationContext()
+
+  // By relying on this cached fragment instead of a query with many fields, we can avoid re-renders unless these specific fields change.
+  const { data: tokenBalance } = useTokenBalanceQuantityPartsFragment({ id: portfolioBalanceId })
+
+  return (
+    <Text color="$neutral2" numberOfLines={1} variant={isWeb ? 'body3' : 'body2'}>
+      {`${formatNumberOrString({ value: tokenBalance.quantity })}`} {shortenedSymbol}
+    </Text>
+  )
+}
+
+function TokenBalanceRightSideColumn({
+  portfolioBalanceId,
+  isLoading,
+}: {
+  portfolioBalanceId: string
+  isLoading?: boolean
+}): JSX.Element {
+  const { t } = useTranslation()
+  const { isTestnetModeEnabled } = useEnabledChains()
+  const { convertFiatAmountFormatted } = useLocalizationContext()
+
+  // By relying on this cached fragment instead of a query with many fields, we can avoid re-renders unless these specific fields change.
+  const { data: tokenBalance } = useTokenBalanceMainPartsFragment({ id: portfolioBalanceId })
+
+  const balanceUSD = tokenBalance?.denominatedValue?.value
+  const relativeChange24 = tokenBalance?.tokenProjectMarket?.relativeChange24?.value
+
+  const balance = convertFiatAmountFormatted(balanceUSD, NumberType.FiatTokenQuantity)
+
+  const isTestnetModeWithNoBalance = isTestnetModeEnabled && !balanceUSD
+
+  return isTestnetModeWithNoBalance ? (
+    <></>
+  ) : (
+    <Flex justifyContent="space-between" position="relative">
+      <Shine disabled={!isLoading}>
+        {!balanceUSD ? (
+          <Flex centered fill>
+            <Text color="$neutral2">{t('common.text.notAvailable')}</Text>
+          </Flex>
+        ) : (
+          <Flex alignItems="flex-end" pl="$spacing8">
+            <Text color="$neutral1" numberOfLines={1} variant={isWeb ? 'body2' : 'body1'}>
+              {balance}
+            </Text>
+
+            <RelativeChange
+              alignRight
+              change={relativeChange24}
+              negativeChangeColor="$statusCritical"
+              positiveChangeColor="$statusSuccess"
+              variant={isWeb ? 'body3' : 'body2'}
+            />
+          </Flex>
+        )}
+      </Shine>
+    </Flex>
+  )
+}

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { BiometricsIcon } from 'src/components/icons/BiometricsIcon'
+import { BiometricsIconProps, useBiometricsIcon } from 'src/components/icons/useBiometricsIcon'
 import { useBiometricAppSettings, useBiometricPrompt, useOsBiometricAuthEnabled } from 'src/features/biometrics/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
@@ -29,10 +29,11 @@ export function SwapModal(): JSX.Element {
 
   const { requiredForTransactions: requiresBiometrics } = useBiometricAppSettings()
   const { trigger: biometricsTrigger } = useBiometricPrompt()
+  const renderBiometricsIcon = useSwapBiometricsIcon()
 
   return (
     <WalletSwapFlow
-      BiometricsIcon={<SwapBiometricsIcon />}
+      renderBiometricsIcon={renderBiometricsIcon}
       authTrigger={requiresBiometrics ? biometricsTrigger : undefined}
       openWalletRestoreModal={openWalletRestoreModal}
       prefilledState={swapPrefilledState}
@@ -42,9 +43,14 @@ export function SwapModal(): JSX.Element {
   )
 }
 
-function SwapBiometricsIcon(): JSX.Element | null {
+function useSwapBiometricsIcon(): (({ color }: BiometricsIconProps) => JSX.Element) | null {
   const isBiometricAuthEnabled = useOsBiometricAuthEnabled()
   const { requiredForTransactions } = useBiometricAppSettings()
+  const renderBiometricsIcon = useBiometricsIcon()
 
-  return isBiometricAuthEnabled && requiredForTransactions ? <BiometricsIcon /> : null
+  if (isBiometricAuthEnabled && requiredForTransactions && renderBiometricsIcon) {
+    return renderBiometricsIcon
+  }
+
+  return null
 }

@@ -1,7 +1,6 @@
 import { WETH9 } from '@uniswap/sdk-core'
 import { getDefaultCurrencyCode, parsePathParts } from 'components/FiatOnrampModal/utils'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import {
   MATIC_MAINNET,
   USDC_ARBITRUM,
@@ -13,7 +12,7 @@ import {
   WETH_POLYGON,
 } from 'uniswap/src/constants/tokens'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 describe('getDefaultCurrencyCode', () => {
   it('NATIVE/arbitrum should return the correct currency code', () => {
@@ -66,15 +65,15 @@ describe('getDefaultCurrencyCode', () => {
 describe('parseLocation', () => {
   it('should parse the URL correctly', () => {
     expect(parsePathParts('/tokens/ethereum/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599')).toEqual({
-      chain: UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet],
+      chainId: UniverseChainId.Mainnet,
       tokenAddress: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
     })
     expect(parsePathParts('tokens/ethereum/0x2260fac5e5542a773aa44fbcfedf7c193bc2c599')).toEqual({
-      chain: UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet],
+      chainId: UniverseChainId.Mainnet,
       tokenAddress: '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
     })
     expect(parsePathParts('/swap')).toEqual({
-      chain: undefined,
+      chainId: undefined,
       tokenAddress: undefined,
     })
   })

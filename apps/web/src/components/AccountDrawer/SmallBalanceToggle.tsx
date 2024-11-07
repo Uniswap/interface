@@ -1,6 +1,7 @@
 import { SettingsToggle } from 'components/AccountDrawer/SettingsToggle'
 import { useDispatch } from 'react-redux'
-import { useEnabledChains, useHideSmallBalancesSetting } from 'uniswap/src/features/settings/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useHideSmallBalancesSetting } from 'uniswap/src/features/settings/hooks'
 import { setHideSmallBalances } from 'uniswap/src/features/settings/slice'
 import { t } from 'uniswap/src/i18n'
 

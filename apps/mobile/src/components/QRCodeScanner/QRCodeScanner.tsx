@@ -5,6 +5,7 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, LayoutChangeEvent, LayoutRectangle, StyleSheet } from 'react-native'
 import { launchImageLibrary } from 'react-native-image-picker'
+
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Defs, LinearGradient, Path, Rect, Stop, Svg } from 'react-native-svg'
 import { Button, Flex, SpinningLoader, Text, useSporeColors } from 'ui/src'
@@ -14,7 +15,6 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
 import PasteButton from 'uniswap/src/components/buttons/PasteButton'
-import { Sentry } from 'utilities/src/logger/Sentry'
 import { DevelopmentOnly } from 'wallet/src/components/DevelopmentOnly/DevelopmentOnly'
 import { openSettings } from 'wallet/src/utils/linking'
 
@@ -96,28 +96,22 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   }, [handleBarCodeScanned, isReadingImageFile, t])
 
   useEffect(() => {
-    Sentry.addBreadCrumb({
-      level: 'info',
-      category: 'camera',
-      message: 'QRCodeScannera camera permission status',
-      data: {
-        permissionStatus,
-      },
-    })
+    const handlePermissionStatus = async (): Promise<void> => {
+      const cameraState = await requestPermissionResponse()
+      const latestPermissionStatus = cameraState.status
 
-    if (permissionStatus === PermissionStatus.UNDETERMINED) {
-      requestPermissionResponse().catch(() => {})
+      if ([PermissionStatus.UNDETERMINED, PermissionStatus.DENIED].includes(latestPermissionStatus)) {
+        Alert.alert(t('qrScanner.error.camera.title'), t('qrScanner.error.camera.message'), [
+          { text: t('common.navigation.systemSettings'), onPress: openSettings },
+          {
+            text: t('common.button.notNow'),
+          },
+        ])
+      }
     }
 
-    if (permissionStatus === PermissionStatus.DENIED) {
-      Alert.alert(t('qrScanner.error.camera.title'), t('qrScanner.error.camera.message'), [
-        { text: t('common.navigation.systemSettings'), onPress: openSettings },
-        {
-          text: t('common.button.notNow'),
-        },
-      ])
-    }
-  }, [permissionStatus, requestPermissionResponse, t])
+    handlePermissionStatus().catch(() => {})
+  }, [requestPermissionResponse, t])
 
   const overlayWidth = (overlayLayout?.height ?? 0) / CAMERA_ASPECT_RATIO
   const cameraWidth = dimensions.fullWidth

@@ -7,7 +7,7 @@ import { PoolState, usePool } from 'hooks/usePools'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 jest.mock('components/Logo/DoubleLogo')
 jest.mock('hooks/Tokens')

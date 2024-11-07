@@ -4,8 +4,8 @@ import { Flex, Text, useSporeColors } from 'ui/src'
 import { CheckmarkCircle } from 'ui/src/components/icons/CheckmarkCircle'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const NETWORK_OPTION_ICON_SIZE = iconSizes.icon24
 
@@ -18,7 +18,7 @@ export function NetworkOption({
 }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const info = chainId && UNIVERSE_CHAIN_INFO[chainId]
+  const info = chainId && getChainInfo(chainId)
 
   let content: ReactNode = null
 

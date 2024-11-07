@@ -77,7 +77,6 @@ const mapLocaleToSupportedDayjsLocale: Record<Locale, string> = {
   [Locale.SpanishUnitedStates]: 'es-us',
   [Locale.SwahiliTanzania]: 'sw',
   [Locale.SwedishSweden]: 'sv',
-  [Locale.ThaiThailand]: 'th',
   [Locale.TurkishTurkey]: 'tr',
   [Locale.UkrainianUkraine]: 'uk',
   [Locale.UrduPakistan]: 'ur',

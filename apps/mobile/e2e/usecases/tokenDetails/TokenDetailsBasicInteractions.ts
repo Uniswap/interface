@@ -1,7 +1,7 @@
 import { by, element, expect } from 'detox'
 import { TestWatchedWallet } from 'e2e/utils/fixtures'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export async function TokenDetailsBasicInteractions(): Promise<void> {
   // Opens "explore" modal

@@ -2,7 +2,8 @@ import { Currency } from '@uniswap/sdk-core'
 import { BigNumberish } from 'ethers'
 import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { makeSelectTransaction, useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
@@ -16,7 +17,6 @@ import {
   isFinalizedTx,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ensureLeading0x } from 'uniswap/src/utils/addresses'
 import { areCurrencyIdsEqual, buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import {
@@ -254,7 +254,7 @@ export function useMergeLocalAndRemoteTransactions(
       // If the local tx is not finalized and remote is, then finalize local state so confirmation toast is sent
       // TODO(MOB-1573): This should be done further upstream when parsing data not in a display hook
       if (!isFinalizedTx(localTx)) {
-        const mergedTx = { ...localTx, status: remoteTx.status }
+        const mergedTx = { ...localTx, status: remoteTx.status, networkFee: remoteTx.networkFee }
         if (isFinalizedTx(mergedTx)) {
           dispatch(finalizeTransaction(mergedTx))
         }

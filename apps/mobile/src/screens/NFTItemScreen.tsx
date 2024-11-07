@@ -31,20 +31,19 @@ import ShareIcon from 'ui/src/assets/icons/share.svg'
 import { colorsDark, fonts, iconSizes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
   NftActivityType,
   NftItemScreenQuery,
   useNftItemScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { fromGraphQLChain, getChainLabel } from 'uniswap/src/features/chains/utils'
 import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { setClipboardImage } from 'uniswap/src/utils/clipboard'
@@ -335,7 +334,7 @@ function NFTItemScreenContents({
                       valueComponent={
                         <Flex row alignItems="center" gap="$spacing8">
                           <Text color="$neutral1" variant="buttonLabel2">
-                            {UNIVERSE_CHAIN_INFO[chainId].label}
+                            {getChainLabel(chainId)}
                           </Text>
                           <NetworkLogo chainId={chainId} shape="square" size={iconSizes.icon20} />
                         </Flex>

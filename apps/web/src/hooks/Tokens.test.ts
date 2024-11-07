@@ -3,11 +3,11 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { TEST_TOKEN_1 } from 'test-utils/constants'
 import { renderHook } from 'test-utils/render'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { DAI } from 'uniswap/src/constants/tokens'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { useCurrencyInfo as useUniswapCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 jest.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
   useCurrencyInfo: jest.fn(),
@@ -50,7 +50,7 @@ describe('useCurrencyInfo', () => {
       renderHook(() => useCurrencyInfo('ETH', UniverseChainId.Mainnet))
 
       expect(useUniswapCurrencyInfo).toHaveBeenCalledWith(
-        `${UniverseChainId.Mainnet}-${UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet].nativeCurrency.address}`,
+        `${UniverseChainId.Mainnet}-${getChainInfo(UniverseChainId.Mainnet).nativeCurrency.address}`,
         { skip: undefined },
       )
     })
@@ -59,7 +59,7 @@ describe('useCurrencyInfo', () => {
       renderHook(() => useCurrencyInfo(undefined, UniverseChainId.Mainnet))
 
       expect(useUniswapCurrencyInfo).toHaveBeenCalledWith(
-        `${UniverseChainId.Mainnet}-${UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet].nativeCurrency.address}`,
+        `${UniverseChainId.Mainnet}-${getChainInfo(UniverseChainId.Mainnet).nativeCurrency.address}`,
         { skip: undefined },
       )
     })
@@ -69,7 +69,7 @@ describe('useCurrencyInfo', () => {
       renderHook(() => useCurrencyInfo(currency))
 
       expect(useUniswapCurrencyInfo).toHaveBeenCalledWith(
-        `${UniverseChainId.Mainnet}-${UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet].nativeCurrency.address}`,
+        `${UniverseChainId.Mainnet}-${getChainInfo(UniverseChainId.Mainnet).nativeCurrency.address}`,
         { skip: undefined },
       )
     })

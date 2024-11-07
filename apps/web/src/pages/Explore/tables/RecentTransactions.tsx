@@ -11,20 +11,22 @@ import {
   TimestampCell,
   TokenLinkCell,
 } from 'components/Table/styled'
-import { useChainFromUrlParam } from 'constants/chains'
 import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { BETypeToTransactionType, TransactionType, useAllTransactions } from 'graphql/data/useAllTransactions'
-import { OrderDirection, getSupportedGraphQlChain } from 'graphql/data/util'
-import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
+import { OrderDirection } from 'graphql/data/util'
 import { memo, useMemo, useReducer, useRef, useState } from 'react'
 import { Flex, Text, styled } from 'ui/src'
 import {
   PoolTransaction,
   PoolTransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
+import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { useFormatter } from 'utils/formatNumbers'
 
 const TableRow = styled(Flex, {
@@ -34,7 +36,7 @@ const TableRow = styled(Flex, {
 })
 
 const RecentTransactions = memo(function RecentTransactions() {
-  const activeLocalCurrency = useActiveLocalCurrency()
+  const activeLocalCurrency = useAppFiatCurrency()
   const { formatNumber, formatFiatPrice } = useFormatter()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
   const filterAnchorRef = useRef<HTMLDivElement>(null)
@@ -43,16 +45,16 @@ const RecentTransactions = memo(function RecentTransactions() {
     TransactionType.REMOVE,
     TransactionType.ADD,
   ])
-  const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
+  const chainInfo = getChainInfo(useChainIdFromUrlParam() ?? UniverseChainId.Mainnet)
 
-  const { transactions, loading, loadMore, errorV2, errorV3 } = useAllTransactions(chain.backendChain.chain, filter)
+  const { transactions, loading, loadMore, errorV2, errorV3 } = useAllTransactions(chainInfo.backendChain.chain, filter)
   const combinedError =
     errorV2 && errorV3
-      ? new ApolloError({ errorMessage: `Could not retrieve V2 and V3 Transactions for chain: ${chain.id}` })
+      ? new ApolloError({ errorMessage: `Could not retrieve V2 and V3 Transactions for chain: ${chainInfo.id}` })
       : undefined
   const allDataStillLoading = loading && !transactions.length
   const showLoadingSkeleton = allDataStillLoading || !!combinedError
-  useUpdateManualOutage({ chainId: chain.id, errorV3, errorV2 })
+  useUpdateManualOutage({ chainId: chainInfo.id, errorV3, errorV2 })
   // TODO(WEB-3236): once GQL BE Transaction query is supported add usd, token0 amount, and token1 amount sort support
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<PoolTransaction>()
@@ -73,7 +75,7 @@ const RecentTransactions = memo(function RecentTransactions() {
           <Cell loading={showLoadingSkeleton} minWidth={120} justifyContent="flex-start" grow>
             <TimestampCell
               timestamp={Number(transaction.getValue?.().timestamp)}
-              link={getExplorerLink(chain.id, transaction.getValue?.().hash, ExplorerDataType.TRANSACTION)}
+              link={getExplorerLink(chainInfo.id, transaction.getValue?.().hash, ExplorerDataType.TRANSACTION)}
             />
           </Cell>
         ),
@@ -205,14 +207,16 @@ const RecentTransactions = memo(function RecentTransactions() {
         ),
         cell: (makerAddress) => (
           <Cell loading={showLoadingSkeleton} minWidth={150}>
-            <StyledExternalLink href={getExplorerLink(chain.id, makerAddress.getValue?.(), ExplorerDataType.ADDRESS)}>
+            <StyledExternalLink
+              href={getExplorerLink(chainInfo.id, makerAddress.getValue?.(), ExplorerDataType.ADDRESS)}
+            >
               {shortenAddress(makerAddress.getValue?.())}
             </StyledExternalLink>
           </Cell>
         ),
       }),
     ]
-  }, [activeLocalCurrency, chain.id, filter, filterModalIsOpen, formatFiatPrice, formatNumber, showLoadingSkeleton])
+  }, [activeLocalCurrency, chainInfo.id, filter, filterModalIsOpen, formatFiatPrice, formatNumber, showLoadingSkeleton])
 
   return (
     <Table

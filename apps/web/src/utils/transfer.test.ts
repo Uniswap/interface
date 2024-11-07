@@ -2,7 +2,7 @@ import { ExternalProvider, JsonRpcProvider, JsonRpcSigner, Web3Provider } from '
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { act, renderHook } from 'test-utils/render'
 import { DAI, nativeOnChain } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useCreateTransferTransaction } from 'utils/transfer'
 
 type Mutable<T> = { -readonly [P in keyof T]: T[P] }

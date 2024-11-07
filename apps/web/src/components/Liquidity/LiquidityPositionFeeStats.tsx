@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { useGetRangeDisplay } from 'components/Liquidity/hooks'
 import { PriceOrdering } from 'components/PositionListItem'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -17,11 +19,12 @@ interface LiquidityPositionFeeStatsProps {
   tickLower?: string
   tickUpper?: string
   showReverseButton?: boolean
+  version: ProtocolVersion
 }
 
 const PrimaryText = styled(Text, {
   color: '$neutral1',
-  variant: 'body1',
+  variant: 'body2',
 })
 
 const SecondaryText = styled(Text, {
@@ -36,6 +39,7 @@ export function LiquidityPositionFeeStats({
   tickLower,
   tickUpper,
   feeTier,
+  version,
   showReverseButton = true,
 }: LiquidityPositionFeeStatsProps) {
   const { t } = useTranslation()
@@ -50,7 +54,7 @@ export function LiquidityPositionFeeStats({
   })
 
   return (
-    <Flex row alignItems="center" gap="$gap20" justifyContent="space-between">
+    <Flex row justifyContent="space-between">
       <Flex gap="$gap4">
         {formattedUsdValue ? (
           <PrimaryText>{formattedUsdValue}</PrimaryText>
@@ -59,16 +63,16 @@ export function LiquidityPositionFeeStats({
             <PrimaryText>-</PrimaryText>
           </MouseoverTooltip>
         )}
-        <SecondaryText variant="body3" color="$neutral2">
-          {t('pool.position')}
-        </SecondaryText>
+        <SecondaryText>{t('pool.position')}</SecondaryText>
       </Flex>
-      <Flex gap="$gap4">
-        <PrimaryText>{formattedUsdFees || t('common.unavailable')}</PrimaryText>
-        <SecondaryText variant="body3" color="$neutral2">
-          {t('common.fees')}
-        </SecondaryText>
-      </Flex>
+      {version !== ProtocolVersion.V2 && (
+        <Flex gap="$gap4">
+          <PrimaryText>{formattedUsdFees || t('common.unavailable')}</PrimaryText>
+          <SecondaryText variant="body3" color="$neutral2">
+            {t('common.fees')}
+          </SecondaryText>
+        </Flex>
+      )}
       {/* TODO: add APR once its been calculated. */}
       <Flex minWidth={224} alignSelf="flex-start">
         {priceOrdering.priceLower && priceOrdering.priceUpper ? (
@@ -78,17 +82,17 @@ export function LiquidityPositionFeeStats({
                 <SecondaryText>
                   <Trans i18nKey="common.min" />
                 </SecondaryText>
-                <PrimaryText>
+                <SecondaryText color="$neutral1">
                   {minPrice} {tokenASymbol} / {tokenBSymbol}
-                </PrimaryText>
+                </SecondaryText>
               </Flex>
               <Flex row gap="$gap12" alignItems="center">
                 <SecondaryText>
                   <Trans i18nKey="common.max" />
                 </SecondaryText>
-                <PrimaryText>
+                <SecondaryText color="$neutral1">
                   {maxPrice} {tokenASymbol} / {tokenBSymbol}
-                </PrimaryText>
+                </SecondaryText>
               </Flex>
             </Flex>
             {showReverseButton && (
@@ -103,9 +107,7 @@ export function LiquidityPositionFeeStats({
           </>
         ) : (
           <Flex grow>
-            <Text variant="body3" color="$neutral2">
-              {t('common.fullRange')}
-            </Text>
+            <SecondaryText>{t('common.fullRange')}</SecondaryText>
           </Flex>
         )}
       </Flex>

@@ -2,7 +2,6 @@ import { Currency, Token, WETH9 } from '@uniswap/sdk-core'
 // eslint-disable-next-line no-restricted-imports
 import type { ImageSourcePropType } from 'react-native'
 import { CELO_LOGO, ETH_LOGO } from 'ui/src/assets'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import {
   ARB,
   BTC_BSC,
@@ -49,9 +48,10 @@ import {
   nativeOnChain,
 } from 'uniswap/src/constants/tokens'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isSameAddress } from 'utilities/src/addresses'
 
 type ChainCurrencyList = {
@@ -176,11 +176,11 @@ function getNativeLogoURI(chainId: UniverseChainId = UniverseChainId.Mainnet): I
     return ETH_LOGO as ImageSourcePropType
   }
 
-  return UNIVERSE_CHAIN_INFO[chainId].nativeCurrency.logo ?? (ETH_LOGO as ImageSourcePropType)
+  return getChainInfo(chainId).nativeCurrency.logo ?? (ETH_LOGO as ImageSourcePropType)
 }
 
 function getTokenLogoURI(chainId: UniverseChainId, address: string): ImageSourcePropType | string | undefined {
-  const chainInfo = UNIVERSE_CHAIN_INFO[chainId]
+  const chainInfo = getChainInfo(chainId)
   const networkName = chainInfo?.assetRepoNetworkName
 
   if (isCelo(chainId) && isSameAddress(address, nativeOnChain(chainId).wrapped.address)) {

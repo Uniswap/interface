@@ -57,7 +57,6 @@ function cumulativeBuildUp(data: StackedHistogramData): number[] {
 
 export interface CustomHistogramProps {
   colors: string[]
-  isMultichainExploreEnabled?: boolean
   background?: string
 }
 
@@ -65,12 +64,10 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
   _data: PaneRendererCustomData<Time, TData> | null = null
   _options: CustomHistogramSeriesOptions | null = null
   _colors: string[]
-  _isMultichainExploreEnabled?: boolean
   _background?: string
 
   constructor(props: CustomHistogramProps) {
     this._colors = props.colors
-    this._isMultichainExploreEnabled = props.isMultichainExploreEnabled
     this._background = props.background
   }
 
@@ -134,18 +131,11 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
       const totalBox = positionsBox(zeroY, stack.ys[stack.ys.length - 1], renderingScope.verticalPixelRatio)
       ctx.beginPath()
 
-      const isMultichainExploreEnabled = this._isMultichainExploreEnabled
       if (this._background) {
         ctx.fillStyle = this._background
       }
 
-      ctx.roundRect(
-        column.left + margin,
-        totalBox.position,
-        width - margin,
-        totalBox.length,
-        isMultichainExploreEnabled ? 4 : 8,
-      )
+      ctx.roundRect(column.left + margin, totalBox.position, width - margin, totalBox.length, 4)
       ctx.fill()
 
       // Modification: draw the stack's boxes atop the total volume bar, resulting in the top and bottom boxes being rounded
@@ -157,9 +147,9 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
         const color = this._colors[this._colors.length - 1 - index] // color v2, then v3
         const stackBoxPositions = positionsBox(previousY, y, renderingScope.verticalPixelRatio)
         ctx.fillStyle = color
-        ctx.globalAlpha = isStackedHistogram && !isHovered && isMultichainExploreEnabled ? 0.24 : 1
+        ctx.globalAlpha = isStackedHistogram && !isHovered ? 0.24 : 1
         ctx.fillRect(column.left + margin, stackBoxPositions.position, width - margin, stackBoxPositions.length)
-        if (isStackedHistogram && isMultichainExploreEnabled && !isHovered) {
+        if (isStackedHistogram && !isHovered) {
           ctx.globalAlpha = 1
           ctx.fillStyle = color
           ctx.fillRect(column.left + margin, stackBoxPositions.position, width - margin, 2)

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, ContextMenu, Flex, Separator, Text, TouchableArea, isWeb } from 'ui/src'
+import { Button, Flex, Separator, Text, TouchableArea, isWeb } from 'ui/src'
 import { AnglesDownUp, Ellipsis, SortVertical, UniswapX } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
@@ -15,6 +15,7 @@ import {
   TransactionType,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { ContextMenu } from 'wallet/src/components/menu/ContextMenu'
 import { ApproveTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/ApproveTransactionDetails'
 import { BridgeTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/BridgeTransactionDetails'
 import { HeaderLogo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/HeaderLogo'

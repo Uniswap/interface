@@ -2,9 +2,9 @@ import { QueryClient } from '@tanstack/react-query'
 import { injectedWithFallback } from 'components/Web3Provider/injectedWithFallback'
 import { WC_PARAMS, uniswapWalletConnect } from 'components/Web3Provider/walletConnect'
 import { UNISWAP_LOGO } from 'ui/src/assets'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
-import { COMBINED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/types/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { ALL_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { createClient } from 'viem'
 import { createConfig, http } from 'wagmi'
 import { connect } from 'wagmi/actions'
@@ -17,10 +17,7 @@ declare module 'wagmi' {
 }
 
 export const wagmiConfig = createConfig({
-  chains: [
-    UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet],
-    ...COMBINED_CHAIN_IDS.map((chainId) => UNIVERSE_CHAIN_INFO[chainId]),
-  ],
+  chains: [getChainInfo(UniverseChainId.Mainnet), ...ALL_CHAIN_IDS.map(getChainInfo)],
   connectors: [
     injectedWithFallback(),
     walletConnect(WC_PARAMS),
@@ -40,7 +37,7 @@ export const wagmiConfig = createConfig({
       chain,
       batch: { multicall: true },
       pollingInterval: 12_000,
-      transport: http(chain.rpcUrls.appOnly.http[0]),
+      transport: http(chain.rpcUrls.interface.http[0]),
     })
   },
 })

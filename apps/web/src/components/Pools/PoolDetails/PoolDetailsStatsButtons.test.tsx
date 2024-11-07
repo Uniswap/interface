@@ -10,8 +10,8 @@ import { mocked } from 'test-utils/mocked'
 import { useMultiChainPositionsReturnValue, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { act, render, screen } from 'test-utils/render'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 jest.mock('components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions')
 

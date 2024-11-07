@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { BiometricsIcon } from 'src/components/icons/BiometricsIcon'
+import { useBiometricsIcon } from 'src/components/icons/useBiometricsIcon'
 import { useBiometricAppSettings, useBiometricPrompt, useOsBiometricAuthEnabled } from 'src/features/biometrics/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
@@ -30,11 +30,13 @@ export function SendFlow(): JSX.Element {
   const isBiometricAuthEnabled = useOsBiometricAuthEnabled()
   const { requiredForTransactions } = useBiometricAppSettings()
   const { trigger: biometricsTrigger } = useBiometricPrompt()
-  const SendBiometricsIcon = isBiometricAuthEnabled && requiredForTransactions ? <BiometricsIcon /> : null
+  const useBiometricIcon = useBiometricsIcon()
+  const renderBiometricsIcon =
+    isBiometricAuthEnabled && requiredForTransactions && useBiometricIcon ? useBiometricIcon : null
 
   return (
     <TransactionModal
-      BiometricsIcon={SendBiometricsIcon}
+      renderBiometricsIcon={renderBiometricsIcon}
       authTrigger={requiredForTransactions ? biometricsTrigger : undefined}
       modalName={ModalName.Send}
       openWalletRestoreModal={openWalletRestoreModal}

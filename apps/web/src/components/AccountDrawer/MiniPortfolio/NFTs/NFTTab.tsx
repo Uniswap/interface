@@ -13,9 +13,9 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { useNavigate } from 'react-router-dom'
 import { Gallery } from 'ui/src/components/icons/Gallery'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { t } from 'uniswap/src/i18n'
 
 const StyledTabButton = styled(TabButton)`

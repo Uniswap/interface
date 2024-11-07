@@ -1,4 +1,4 @@
-import { RetryOptions } from 'uniswap/src/types/chains'
+import { RetryOptions } from 'uniswap/src/features/chains/types'
 
 function wait(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))

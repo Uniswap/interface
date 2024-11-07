@@ -12,6 +12,7 @@ import { fonts, imageSizes, spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import {
   OnboardingScreens,
@@ -26,7 +27,6 @@ import { isExtension, isMobileApp } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { UnitagInfoModal } from 'wallet/src/features/unitags/UnitagInfoModal'
 import { UnitagName } from 'wallet/src/features/unitags/UnitagName'
-import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 import { useCanClaimUnitagName } from 'wallet/src/features/unitags/hooks'
 import { getYourNameString } from 'wallet/src/features/unitags/utils'
 
@@ -327,26 +327,29 @@ export function ClaimUnitagContent({
             )}
           </AnimatePresence>
         </AnimatedFlex>
-        <AnimatedFlex
-          row
-          alignItems="center"
-          gap="$spacing8"
-          style={addressViewAnimatedStyle}
-          onPress={onPressAddressTooltip}
-        >
-          <Text color="$neutral2" variant="subheading2">
-            {shortenAddress(unitagAddress ?? ADDRESS_ZERO)}
-          </Text>
-          <TouchableArea
-            onPress={(): void => {
-              dismissNativeKeyboard()
-              setShowInfoModal(true)
-            }}
+        {unitagAddress && (
+          <AnimatedFlex
+            row
+            alignItems="center"
+            gap="$spacing8"
+            style={addressViewAnimatedStyle}
+            onPress={onPressAddressTooltip}
           >
-            <InfoCircleFilled color={colors.neutral3.get()} size="$icon.20" />
-          </TouchableArea>
-        </AnimatedFlex>
-        <Flex row gap="$spacing8" minHeight={fonts.body2.lineHeight}>
+            <Text color="$neutral2" variant="subheading2">
+              {shortenAddress(unitagAddress ?? ADDRESS_ZERO)}
+            </Text>
+            <TouchableArea
+              onPress={(): void => {
+                dismissNativeKeyboard()
+                setShowInfoModal(true)
+              }}
+            >
+              <InfoCircleFilled color={colors.neutral3.get()} size="$icon.20" />
+            </TouchableArea>
+          </AnimatedFlex>
+        )}
+
+        <Flex row gap="$spacing8" minHeight={fonts.body2.lineHeight} mt={unitagAddress ? undefined : '$spacing24'}>
           <Text color="$statusCritical" textAlign="center" variant="body2">
             {canClaimUnitagNameError}
           </Text>

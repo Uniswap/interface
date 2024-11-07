@@ -5,10 +5,10 @@ import Check from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { ActionSheetModal } from 'uniswap/src/components/modals/ActionSheetModal'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 type Props = {
   selectedChainId: UniverseChainId
@@ -24,7 +24,6 @@ export const PendingConnectionSwitchNetworkModal = ({ selectedChainId, onPressCh
   const options = useMemo(
     () =>
       enabledChains.map((chainId) => {
-        const info = UNIVERSE_CHAIN_INFO[chainId]
         return {
           key: `${ElementName.NetworkButton}-${chainId}`,
           onPress: () => onPressChain(chainId),
@@ -34,7 +33,7 @@ export const PendingConnectionSwitchNetworkModal = ({ selectedChainId, onPressCh
               <Flex row alignItems="center" justifyContent="space-between" px="$spacing24" py="$spacing16">
                 <NetworkLogo chainId={chainId} size={iconSizes.icon24} />
                 <Text color="$neutral1" variant="body1">
-                  {info.label}
+                  {getChainLabel(chainId)}
                 </Text>
                 <Flex height={iconSizes.icon24} width={iconSizes.icon24}>
                   {chainId === selectedChainId && (

@@ -33,6 +33,29 @@ async function getLinesAddedByFile(files: string[], { exclude = [] }: { exclude?
   )
 }
 
+function checkGeneralizedHookFiles() {
+  const touchedFiles = danger.git.modified_files.concat(danger.git.created_files)
+
+  touchedFiles.forEach((file) => {
+    const isGeneralHookFile = file.endsWith('hooks.ts') || file.endsWith('hooks.tsx')
+    const isNonSpecificHookFile = file.includes('/hooks/') && !file.includes('/use')
+
+    const sharedWarningExampleExplanation = `e.g. \`hooks/useXXX.ts{x}\`. This helps in development for discovery and navigation purposes.`
+
+    if (isGeneralHookFile) {
+      warn(
+        `\`${file}\` should be split out into a \`hooks/*\` folder with a hook per file, ${sharedWarningExampleExplanation}`,
+      )
+    }
+
+    if (isNonSpecificHookFile) {
+      warn(
+        `\`${file}\` should only have one exported hook per file and be named accordingly, ${sharedWarningExampleExplanation}`,
+      )
+    }
+  })
+}
+
 // Put any files here that we explicitly want to ignore!
 const IGNORED_SPLIT_RULE_FILES: string[] = []
 
@@ -239,6 +262,9 @@ if (envChanged) {
 
 // Check native and web file splits
 checkSplitFiles()
+
+// Check hook file pattern
+checkGeneralizedHookFiles()
 
 // Run checks on added changes
 processAddChanges()

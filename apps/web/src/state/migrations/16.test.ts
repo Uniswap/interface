@@ -16,7 +16,7 @@ import { migration7 } from 'state/migrations/7'
 import { migration8 } from 'state/migrations/8'
 import { migration9 } from 'state/migrations/9'
 import { DAI_ARBITRUM_ONE, USDC } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { serializeToken } from 'uniswap/src/utils/currency'
 
 const tokenMap = {

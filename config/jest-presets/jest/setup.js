@@ -89,14 +89,6 @@ jest.mock('@walletconnect/utils', () => ({
   buildApprovedNamespaces: jest.fn(),
 }))
 
-// Mock Sentry crash reporting
-jest.mock('@sentry/react-native', () => ({
-  init: () => jest.fn(),
-  wrap: (val) => val,
-  ReactNavigationInstrumentation: jest.fn(),
-  ReactNativeTracing: jest.fn(),
-}))
-
 jest.mock('react-native-appsflyer', () => {
   return {
     initSdk: jest.fn(),

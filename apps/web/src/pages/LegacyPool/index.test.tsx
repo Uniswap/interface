@@ -1,15 +1,31 @@
-import { useIsSupportedChainId } from 'constants/chains'
 import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { useV3Positions } from 'hooks/useV3Positions'
 import Pool from 'pages/LegacyPool'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
+import { useEnabledChains, useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
-jest.mock('constants/chains')
+jest.mock('uniswap/src/features/chains/hooks', () => ({
+  useEnabledChains: jest.fn(),
+  useSupportedChainId: jest.fn(),
+  useSupportedChainIdWithConnector: jest.fn(),
+  useIsSupportedChainId: jest.fn(),
+}))
 jest.mock('hooks/useV3Positions')
 jest.mock('hooks/useFilterPossiblyMaliciousPositions')
 
 describe('networks', () => {
+  beforeEach(() => {
+    mocked(useEnabledChains).mockReturnValue({
+      isTestnetModeEnabled: false,
+      chains: [],
+      gqlChains: [],
+      defaultChainId: UniverseChainId.Mainnet,
+    })
+    mocked(useIsSupportedChainId).mockReturnValue(true)
+  })
+
   it('renders error card when unsupported chain is selected', async () => {
     mocked(useIsSupportedChainId).mockReturnValue(false)
     mocked(useV3Positions).mockReturnValue({ loading: false, positions: undefined })

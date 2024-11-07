@@ -3,7 +3,6 @@ import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonLight, ButtonPrimary } from 'components/Button/buttons'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import Column from 'components/deprecated/Column'
-import { useIsSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import useSelectChain from 'hooks/useSelectChain'
@@ -17,7 +16,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { SendContextProvider, useSendContext } from 'state/send/SendContext'
 import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { Trans } from 'uniswap/src/i18n'
@@ -205,7 +205,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
           <ButtonPrimary $borderRadius="16px" onClick={async () => await selectChain(initialChainId)}>
             <Trans
               i18nKey="common.connectToChain.button"
-              values={{ chainName: isSupportedChain ? UNIVERSE_CHAIN_INFO[initialChainId].label : undefined }}
+              values={{ chainName: isSupportedChain ? getChainLabel(initialChainId) : undefined }}
             />
           </ButtonPrimary>
         ) : (

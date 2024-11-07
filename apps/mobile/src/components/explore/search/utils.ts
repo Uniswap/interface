@@ -1,6 +1,7 @@
 import { SEARCH_RESULT_HEADER_KEY } from 'src/components/explore/search/constants'
 import { SearchResultOrHeader } from 'src/components/explore/search/types'
 import { Chain, ExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 import {
@@ -9,7 +10,6 @@ import {
   TokenSearchResult,
 } from 'uniswap/src/features/search/SearchResult'
 import { searchResultId } from 'uniswap/src/features/search/searchHistorySlice'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const MAX_TOKEN_RESULTS_COUNT = 8
 
@@ -33,7 +33,7 @@ export function formatTokenSearchResults(
       return tokensMap
     }
 
-    const { name, chain, address, symbol, project, market, protectionInfo } = token
+    const { name, chain, address, symbol, project, market, protectionInfo, feeData } = token
     const chainId = fromGraphQLChain(chain)
 
     const shoulderFilterByChain = !!selectedChain
@@ -55,6 +55,7 @@ export function formatTokenSearchResults(
       logoUrl: logoUrl ?? null,
       volume1D: market?.volume?.value ?? 0,
       safetyInfo: getCurrencySafetyInfo(safetyLevel, protectionInfo),
+      feeData: feeData ?? null,
     }
 
     // For token results that share the same TokenProject id, use the token with highest volume

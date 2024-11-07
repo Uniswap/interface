@@ -44,24 +44,17 @@ export function getStatsigEnvironmentTier(): StatsigEnvironmentTier {
   return StatsigEnvironmentTier.PROD
 }
 
-export function getSentryEnvironment(): SentryEnvironment {
+export function getDatadogEnvironment(): DatadogEnvironment {
   if (isDevEnv()) {
-    return SentryEnvironment.DEV
+    return DatadogEnvironment.DEV
   }
   if (isBetaEnv()) {
-    return SentryEnvironment.BETA
+    return DatadogEnvironment.BETA
   }
-  return SentryEnvironment.PROD
+  return DatadogEnvironment.PROD
 }
 
-export function getSentryTracesSamplingRate(): number {
-  if (isDevEnv() || isBetaEnv()) {
-    return 1
-  }
-  return 0.2
-}
-
-enum SentryEnvironment {
+enum DatadogEnvironment {
   DEV = 'development',
   BETA = 'beta',
   PROD = 'production',

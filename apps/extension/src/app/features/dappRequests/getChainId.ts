@@ -7,8 +7,8 @@ import {
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { call } from 'typed-redux-saga'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function* getChainId(request: GetChainIdRequest, { id }: SenderTabInfo, dappInfo: DappInfo) {

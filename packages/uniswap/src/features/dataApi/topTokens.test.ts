@@ -1,9 +1,9 @@
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePopularTokens } from 'uniswap/src/features/dataApi/topTokens'
 import { gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
 import { token } from 'uniswap/src/test/fixtures'
 import { act, renderHook, waitFor } from 'uniswap/src/test/test-utils'
 import { createArray, queryResolvers } from 'uniswap/src/test/utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 describe(usePopularTokens, () => {
   it('returns loading true when data is being fetched', async () => {

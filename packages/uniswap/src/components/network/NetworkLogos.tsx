@@ -16,10 +16,10 @@ import { X } from 'ui/src/components/icons/X'
 import { borderRadii, iconSizes, zIndices } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isInterface } from 'utilities/src/platform'
 
 export type NetworkLogosProps = {
@@ -38,7 +38,7 @@ export function NetworkLogos({ chains }: NetworkLogosProps): JSX.Element {
     () => (
       <Flex row flexWrap="wrap" justifyContent="center" gap="$gap12">
         {chains.map((chain) => {
-          const { label, logo } = UNIVERSE_CHAIN_INFO[chain]
+          const { label, logo } = getChainInfo(chain)
           return (
             <Flex
               key={chain}

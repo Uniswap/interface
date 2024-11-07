@@ -9,18 +9,21 @@ import { AnglesMinimize } from 'ui/src/components/icons/AnglesMinimize'
 import { NetworkFee } from 'uniswap/src/components/gas/NetworkFee'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import {
-  FeeOnTransferFeeGroup,
-  FeeOnTransferFeeGroupProps,
-} from 'uniswap/src/features/transactions/TransactionDetails/FeeOnTransferFee'
-import { FeeOnTransferWarningCard } from 'uniswap/src/features/transactions/TransactionDetails/FeeOnTransferWarningCard'
+import { FeeOnTransferFeeGroup } from 'uniswap/src/features/transactions/TransactionDetails/FeeOnTransferFee'
 import { SwapFee } from 'uniswap/src/features/transactions/TransactionDetails/SwapFee'
+import { SwapReviewTokenWarningCard } from 'uniswap/src/features/transactions/TransactionDetails/SwapReviewTokenWarningCard'
+import {
+  FeeOnTransferFeeGroupProps,
+  TokenWarningProps,
+} from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { EstimatedTime } from 'uniswap/src/features/transactions/swap/review/EstimatedTime'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { SwapFee as SwapFeeType } from 'uniswap/src/features/transactions/swap/types/trade'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { openUri } from 'uniswap/src/utils/linking'
 
 interface TransactionDetailsProps {
@@ -36,8 +39,9 @@ interface TransactionDetailsProps {
   showSeparatorToggle?: boolean
   warning?: Warning
   feeOnTransferProps?: FeeOnTransferFeeGroupProps
-  feeOnTransferWarningChecked?: boolean
-  setFeeOnTransferWarningChecked?: (checked: boolean) => void
+  tokenWarningProps?: TokenWarningProps
+  tokenWarningChecked?: boolean
+  setTokenWarningChecked?: (checked: boolean) => void
   outputCurrency?: Currency
   onShowWarning?: () => void
   indicative?: boolean
@@ -65,8 +69,9 @@ export function TransactionDetails({
   showWarning,
   warning,
   feeOnTransferProps,
-  feeOnTransferWarningChecked,
-  setFeeOnTransferWarningChecked,
+  tokenWarningProps,
+  tokenWarningChecked,
+  setTokenWarningChecked,
   onShowWarning,
   indicative = false,
   isSwap,
@@ -78,9 +83,7 @@ export function TransactionDetails({
   RateInfo,
 }: PropsWithChildren<TransactionDetailsProps>): JSX.Element {
   const { t } = useTranslation()
-  const showFeeOnTransferWarningCard =
-    !!feeOnTransferProps && !feeOnTransferWarningChecked && !!setFeeOnTransferWarningChecked
-
+  const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
   const [showChildren, setShowChildren] = useState(showExpandedChildren)
 
   const onPressToggleShowChildren = (): void => {
@@ -127,11 +130,12 @@ export function TransactionDetails({
             </AnimatePresence>
           ) : null}
         </Flex>
-        {showFeeOnTransferWarningCard && (
-          <FeeOnTransferWarningCard
-            checked={!!feeOnTransferWarningChecked}
-            setChecked={setFeeOnTransferWarningChecked}
-            {...feeOnTransferProps}
+        {tokenProtectionEnabled && setTokenWarningChecked && tokenWarningProps && (
+          <SwapReviewTokenWarningCard
+            checked={!!tokenWarningChecked}
+            setChecked={setTokenWarningChecked}
+            feeOnTransferProps={feeOnTransferProps}
+            tokenWarningProps={tokenWarningProps}
           />
         )}
       </Flex>

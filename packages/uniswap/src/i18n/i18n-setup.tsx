@@ -12,7 +12,6 @@ import msMY from 'uniswap/src/i18n/locales/translations/ms-MY.json'
 import nlNL from 'uniswap/src/i18n/locales/translations/nl-NL.json'
 import ptPT from 'uniswap/src/i18n/locales/translations/pt-PT.json'
 import ruRU from 'uniswap/src/i18n/locales/translations/ru-RU.json'
-import thTH from 'uniswap/src/i18n/locales/translations/th-TH.json'
 import trTR from 'uniswap/src/i18n/locales/translations/tr-TR.json'
 import ukUA from 'uniswap/src/i18n/locales/translations/uk-UA.json'
 import urPK from 'uniswap/src/i18n/locales/translations/ur-PK.json'
@@ -37,7 +36,6 @@ const resources = {
   'es-ES': { translation: esES },
   'es-US': { translation: esES },
   'es-419': { translation: esES },
-  'th-TH': { translation: thTH },
   'tr-TR': { translation: trTR },
   'uk-UA': { translation: ukUA },
   'ur-PK': { translation: urPK },

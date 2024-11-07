@@ -5,7 +5,6 @@ import { FeeAmount, Pool as V3Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, Route as V4Route } from '@uniswap/v4-sdk'
 import { BigNumber } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { DiscriminatedQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import {
@@ -24,6 +23,8 @@ import {
   Urgency,
   V4PoolInRoute,
 } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import {
@@ -38,7 +39,6 @@ import {
   FrontendSupportedProtocol,
   useProtocolsForChain,
 } from 'uniswap/src/features/transactions/swap/utils/protocols'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -293,7 +293,7 @@ function isV4OnlyRouteApi(route: ClassicPoolInRoute[]): boolean {
 
 export function getTokenAddressFromChainForTradingApi(address: Address, chainId: UniverseChainId): string {
   // For native currencies, we need to map to 0x0000000000000000000000000000000000000000
-  if (address === UNIVERSE_CHAIN_INFO[chainId].nativeCurrency.address) {
+  if (address === getChainInfo(chainId).nativeCurrency.address) {
     return NATIVE_ADDRESS_FOR_TRADING_API
   }
   return address

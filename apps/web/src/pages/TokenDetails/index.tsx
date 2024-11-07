@@ -2,11 +2,10 @@ import TokenDetails from 'components/Tokens/TokenDetails'
 import { useCreateTDPChartState } from 'components/Tokens/TokenDetails/ChartSection'
 import InvalidTokenDetails from 'components/Tokens/TokenDetails/InvalidTokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
-import { useChainFromUrlParam } from 'constants/chains'
 import { useTokenWarning } from 'constants/deprecatedTokenSafety'
 import { NATIVE_CHAIN_ID, UNKNOWN_TOKEN_SYMBOL } from 'constants/tokens'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
-import { getSupportedGraphQlChain, gqlToCurrency } from 'graphql/data/util'
+import { gqlToCurrency } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useSrcColor } from 'hooks/useColor'
@@ -21,8 +20,10 @@ import { formatTokenMetatagTitleName } from 'shared-cloud/metatags'
 import { ThemeProvider } from 'theme'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isAddress } from 'utilities/src/addresses'
+import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 function useOnChainToken(address: string | undefined, chainId: UniverseChainId, skip: boolean) {
@@ -93,7 +94,8 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
   if (!tokenAddress) {
     throw new Error('Invalid token details route: token address URL param is undefined')
   }
-  const currencyChainInfo = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
+
+  const currencyChainInfo = getChainInfo(useChainIdFromUrlParam() ?? UniverseChainId.Mainnet)
 
   const isNative = tokenAddress === NATIVE_CHAIN_ID
 

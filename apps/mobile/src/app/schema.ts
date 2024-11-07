@@ -627,6 +627,16 @@ export const v80Schema = {
   },
 }
 
+const v81SchemaIntermediate = {
+  ...v80Schema,
+  behaviorHistory: {
+    ...v80Schema.behaviorHistory,
+    createdOnboardingRedesignAccount: undefined,
+  },
+}
+delete v81SchemaIntermediate.behaviorHistory.createdOnboardingRedesignAccount
+export const v81Schema = v81SchemaIntermediate
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v80Schema => v80Schema
+export const getSchema = (): typeof v81Schema => v81Schema

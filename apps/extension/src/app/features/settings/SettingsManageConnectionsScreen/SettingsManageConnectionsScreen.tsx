@@ -2,10 +2,9 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
-import { removeDappConnection } from 'src/app/features/dapp/actions'
+import { removeAllDappConnectionsForAccount, removeDappConnection } from 'src/app/features/dapp/actions'
 import { useAllDappConnectionsForActiveAccount } from 'src/app/features/dapp/hooks'
 import { dappStore } from 'src/app/features/dapp/store'
-import { EllipsisDropdown } from 'src/app/features/settings/SettingsManageConnectionsScreen/internal/EllipsisDropdown'
 import { NoDappConnections } from 'src/app/features/settings/SettingsManageConnectionsScreen/internal/NoDappConnections'
 import { Flex, Text, TouchableArea, UniversalImage, useSporeColors } from 'ui/src'
 import { MinusCircle } from 'ui/src/components/icons'
@@ -19,6 +18,7 @@ import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
 import { extractUrlHost } from 'utilities/src/format/urls'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
+import { DappEllipsisDropdown } from 'wallet/src/components/settings/DappEllipsisDropdown/DappEllipsisDropdown'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const MIN_SCREEN_WIDTH = breakpoints.xxs
@@ -112,7 +112,11 @@ export function SettingsManageConnectionsScreen(): JSX.Element {
   return (
     <Trace logImpression screen={ExtensionScreens.ManageDappConnectionsScreen}>
       <ScreenHeader
-        rightColumn={hasConnections ? <EllipsisDropdown /> : undefined}
+        rightColumn={
+          hasConnections ? (
+            <DappEllipsisDropdown removeAllDappConnections={removeAllDappConnectionsForAccount} />
+          ) : undefined
+        }
         title={t('settings.setting.wallet.connections.title')}
       />
       <Flex row flexWrap="wrap" gap="$gap12">

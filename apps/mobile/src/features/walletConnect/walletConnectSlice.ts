@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ProposalTypes, SessionTypes } from '@walletconnect/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DappInfo, EthMethod, EthSignMethod, EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
 
 export type WalletConnectPendingSession = {

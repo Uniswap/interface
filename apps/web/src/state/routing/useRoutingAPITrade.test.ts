@@ -1,7 +1,6 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { renderHook } from '@testing-library/react'
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { AVERAGE_L1_BLOCK_TIME } from 'constants/chains'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import ms from 'ms'
 import { useGetQuoteQuery, useGetQuoteQueryState } from 'state/routing/slice'
@@ -13,6 +12,7 @@ import { ETH_MAINNET } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { useExperimentValue } from 'uniswap/src/features/gating/hooks'
+import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
 
 const USDCAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '10000')
 
@@ -94,7 +94,7 @@ describe('#useRoutingAPITrade ExactIn', () => {
     )
 
     expect(useGetQuoteQuery).toHaveBeenCalledWith(skipToken, {
-      pollingInterval: AVERAGE_L1_BLOCK_TIME,
+      pollingInterval: AVERAGE_L1_BLOCK_TIME_MS,
       refetchOnMountOrArgChange: 2 * 60,
     })
     expect(result.current?.trade).toEqual(undefined)
@@ -106,7 +106,7 @@ describe('#useRoutingAPITrade ExactIn', () => {
     renderHook(() => useRoutingAPITrade(false, TradeType.EXACT_INPUT, USDCAmount, ETH_MAINNET, RouterPreference.API))
 
     expect(useGetQuoteQuery).toHaveBeenCalledWith(MOCK_ARGS, {
-      pollingInterval: AVERAGE_L1_BLOCK_TIME,
+      pollingInterval: AVERAGE_L1_BLOCK_TIME_MS,
       refetchOnMountOrArgChange: 2 * 60,
     })
   })

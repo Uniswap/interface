@@ -8,8 +8,6 @@ import { isWeb } from 'ui/src'
 import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
-import { FetchError, isRateLimitFetchError } from 'uniswap/src/data/apiClients/FetchError'
-import { Err404 } from 'uniswap/src/data/tradingApi/__generated__'
 import { selectHasDismissedBridgingWarning } from 'uniswap/src/features/behaviorHistory/selectors'
 import { useTransactionGasWarning } from 'uniswap/src/features/gas/hooks'
 import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -19,7 +17,7 @@ import {
 } from 'uniswap/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
-import { NoRoutesError, SWAP_QUOTE_ERROR } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
+import { getSwapWarningDetails } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarningUtils'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { ParsedWarnings } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -67,48 +65,8 @@ export function getSwapWarnings(
     })
   }
 
-  const { error } = trade
-
-  // low liquidity and other swap errors
-  if (error) {
-    if (
-      error instanceof NoRoutesError ||
-      (error instanceof FetchError && error?.data?.errorCode === SWAP_QUOTE_ERROR)
-    ) {
-      warnings.push({
-        type: WarningLabel.LowLiquidity,
-        severity: WarningSeverity.Medium,
-        action: WarningAction.DisableReview,
-        title: t('swap.warning.lowLiquidity.title'),
-        message: t('swap.warning.lowLiquidity.message'),
-      })
-    } else if (isRateLimitFetchError(error)) {
-      warnings.push({
-        type: WarningLabel.RateLimit,
-        severity: WarningSeverity.Medium,
-        action: WarningAction.DisableReview,
-        title: t('swap.warning.rateLimit.title'),
-        message: t('swap.warning.rateLimit.message'),
-      })
-    } else if (error instanceof FetchError && error?.data?.errorCode === Err404.errorCode.QUOTE_AMOUNT_TOO_LOW_ERROR) {
-      warnings.push({
-        type: WarningLabel.EnterLargerAmount,
-        severity: WarningSeverity.Low,
-        action: WarningAction.DisableReview,
-        title: t('swap.warning.enterLargerAmount.title'),
-        message: '',
-      })
-    } else {
-      // catch all other router errors in a generic swap router error message
-      warnings.push({
-        type: WarningLabel.SwapRouterError,
-        severity: WarningSeverity.Medium,
-        action: WarningAction.DisableReview,
-        title: t('swap.warning.router.title'),
-        message: t('swap.warning.router.message'),
-      })
-    }
-  }
+  const swapWarnings = getSwapWarningDetails(trade, t)
+  warnings.push(...swapWarnings)
 
   // swap form is missing input, output fields
   if (formIncomplete(derivedSwapInfo)) {

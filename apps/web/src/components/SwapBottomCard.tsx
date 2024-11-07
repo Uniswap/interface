@@ -1,5 +1,4 @@
 import { getChainUI } from 'components/Logo/ChainLogo'
-import { getChain, useIsSupportedChainId } from 'constants/chains'
 import { useIsSendPage } from 'hooks/useIsSendPage'
 import { useIsSwapPage } from 'hooks/useIsSwapPage'
 import { useCallback } from 'react'
@@ -19,10 +18,10 @@ import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { selectHasViewedBridgingBanner } from 'uniswap/src/features/behaviorHistory/selectors'
 import { setHasViewedBridgingBanner } from 'uniswap/src/features/behaviorHistory/slice'
 import { useIsBridgingChain, useNumBridgingChains } from 'uniswap/src/features/bridging/hooks/chains'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTranslation } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function SwapBottomCard() {
@@ -36,8 +35,7 @@ export function SwapBottomCard() {
   const isSupportedChain = useIsSupportedChainId(chainId)
 
   const hasViewedBridgingBanner = useSelector(selectHasViewedBridgingBanner)
-  const bridgingEnabled = useFeatureFlag(FeatureFlags.Bridging)
-  const isBridgingSupported = useIsBridgingChain(chainId ?? UniverseChainId.Mainnet)
+  const isBridgingSupportedChain = useIsBridgingChain(chainId ?? UniverseChainId.Mainnet)
   const numBridgingChains = useNumBridgingChains()
   const handleBridgingDismiss = useCallback(
     (shouldNavigate: boolean) => {
@@ -61,9 +59,8 @@ export function SwapBottomCard() {
     return null
   }
 
-  const shouldShowBridgingBanner = bridgingEnabled && !hasViewedBridgingBanner && isBridgingSupported
-
-  const shouldShowLegacyTreatment = !bridgingEnabled
+  const isBridgingBannerChain = chainId === null || chainId === UniverseChainId.Mainnet || isBridgingSupportedChain
+  const shouldShowBridgingBanner = !hasViewedBridgingBanner && isBridgingBannerChain
 
   if (shouldShowBridgingBanner) {
     return (
@@ -84,7 +81,7 @@ export function SwapBottomCard() {
         />
       </TouchableArea>
     )
-  } else if (shouldShowLegacyTreatment || !isBridgingSupported) {
+  } else if (!isBridgingSupportedChain) {
     return <NetworkAlert chainId={chainId} />
   } else {
     return null
@@ -96,7 +93,7 @@ function NetworkAlert({ chainId }: { chainId: UniverseChainId }) {
   const { t } = useTranslation()
 
   const { symbol, bgColor, textColor } = getChainUI(chainId, darkMode)
-  const chainInfo = getChain({ chainId })
+  const chainInfo = getChainInfo(chainId)
 
   return chainInfo.bridge ? (
     <ExternalLink href={chainInfo.bridge}>

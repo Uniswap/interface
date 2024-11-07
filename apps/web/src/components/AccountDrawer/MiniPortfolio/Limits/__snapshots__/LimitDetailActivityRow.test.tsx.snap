@@ -205,8 +205,7 @@ exports[`LimitDetailActivityRow should render with valid details 1`] = `
           </div>
         </div>
         <div
-          class="css-view-175oi2r"
-          style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; align-items: center; justify-content: center; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; border-top-color: rgba(0,0,0,0.00); border-right-color: rgba(0,0,0,0.00); border-bottom-color: rgba(0,0,0,0.00); border-left-color: rgba(0,0,0,0.00); border-top-left-radius: 6px; border-top-right-radius: 6px; border-bottom-right-radius: 6px; border-bottom-left-radius: 6px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; height: 23px; width: 23px;"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-1307609936 _borderTopRightRadius-1307609936 _borderBottomRightRadius-1307609936 _borderBottomLeftRadius-1307609936 _borderTopWidth-1481558369 _borderRightWidth-1481558369 _borderBottomWidth-1481558369 _borderLeftWidth-1481558369 _height-23px _justifyContent-center _width-23px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
         >
           <div
             aria-checked="false"

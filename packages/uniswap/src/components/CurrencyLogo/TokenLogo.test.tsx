@@ -1,6 +1,6 @@
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { render } from 'uniswap/src/test/test-utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 // This test expects the invalid image URLs to fail to load, so
 // we silence the error logs to keep the test output clean.

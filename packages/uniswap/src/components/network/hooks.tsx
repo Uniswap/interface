@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { NetworkOption } from 'uniswap/src/components/network/NetworkOption'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export function useNetworkOptions({
   onPress,

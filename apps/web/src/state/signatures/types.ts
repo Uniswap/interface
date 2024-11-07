@@ -5,7 +5,7 @@ import {
   AssetActivityPartsFragment,
   SwapOrderDetailsPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Prettify } from 'viem/chains'
 
 export type OrderActivity = AssetActivityPartsFragment & { details: SwapOrderDetailsPartsFragment }

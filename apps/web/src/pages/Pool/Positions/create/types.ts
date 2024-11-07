@@ -12,6 +12,17 @@ export type FeeData = {
   tickSpacing: number
 }
 
+const DYNAMIC_FEE_AMOUNT = 8388608
+
+export type DynamicFeeData = FeeData & {
+  feeAmount: typeof DYNAMIC_FEE_AMOUNT
+}
+
+export const DYNAMIC_FEE_DATA = {
+  feeAmount: DYNAMIC_FEE_AMOUNT,
+  tickSpacing: 60,
+} as const satisfies DynamicFeeData
+
 export enum PositionFlowStep {
   SELECT_TOKENS_AND_FEE_TIER,
   PRICE_RANGE,
@@ -37,6 +48,7 @@ type BaseCreatePositionInfo = {
   protocolVersion: ProtocolVersion
   currencies: [OptionalCurrency, OptionalCurrency]
   creatingPoolOrPair?: boolean
+  poolOrPairLoading?: boolean
 }
 
 export type CreateV4PositionInfo = BaseCreatePositionInfo & {
@@ -64,8 +76,6 @@ export type CreatePositionContextType = {
   derivedPositionInfo: CreatePositionInfo
   feeTierSearchModalOpen: boolean
   setFeeTierSearchModalOpen: Dispatch<SetStateAction<boolean>>
-  createPoolInfoDismissed: boolean
-  setCreatePoolInfoDismissed: Dispatch<SetStateAction<boolean>>
 }
 
 export interface PriceRangeState {

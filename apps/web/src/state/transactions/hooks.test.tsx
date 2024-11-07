@@ -15,7 +15,7 @@ import { mocked } from 'test-utils/mocked'
 import { act, renderHook } from 'test-utils/render'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const PERMIT2_ADDRESS_MAINNET = permit2Address(UniverseChainId.Mainnet)
 

@@ -1,6 +1,6 @@
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { RPCType, UniverseChainId } from 'uniswap/src/types/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export function isPrivateRpcSupportedOnChain(chainId: UniverseChainId): boolean {
-  return Boolean(UNIVERSE_CHAIN_INFO[chainId]?.rpcUrls?.[RPCType.Private])
+  return Boolean(getChainInfo(chainId).rpcUrls?.[RPCType.Private])
 }

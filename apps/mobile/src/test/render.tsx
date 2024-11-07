@@ -14,6 +14,7 @@ import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationPr
 import type { MobileState } from 'src/app/mobileReducer'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import { store as appStore, persistedReducer } from 'src/app/store'
+import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
@@ -55,13 +56,15 @@ export function renderWithProviders(
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
       <AutoMockedApolloProvider resolvers={resolvers}>
-        <SharedWalletProvider reduxStore={store}>
-          <UnitagUpdaterContextProvider>
-            <NavigationContainer ref={navigationRef}>
-              <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
-            </NavigationContainer>
-          </UnitagUpdaterContextProvider>
-        </SharedWalletProvider>
+        <BlankUrlProvider>
+          <SharedWalletProvider reduxStore={store}>
+            <UnitagUpdaterContextProvider>
+              <NavigationContainer ref={navigationRef}>
+                <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
+              </NavigationContainer>
+            </UnitagUpdaterContextProvider>
+          </SharedWalletProvider>
+        </BlankUrlProvider>
       </AutoMockedApolloProvider>
     )
   }
@@ -121,13 +124,15 @@ export function renderHookWithProviders<P, R>(
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
       <AutoMockedApolloProvider resolvers={resolvers}>
-        <NavigationContainer ref={navigationRef}>
-          <SharedWalletProvider reduxStore={store}>
-            <UnitagUpdaterContextProvider>
-              <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
-            </UnitagUpdaterContextProvider>
-          </SharedWalletProvider>
-        </NavigationContainer>
+        <BlankUrlProvider>
+          <NavigationContainer ref={navigationRef}>
+            <SharedWalletProvider reduxStore={store}>
+              <UnitagUpdaterContextProvider>
+                <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
+              </UnitagUpdaterContextProvider>
+            </SharedWalletProvider>
+          </NavigationContainer>
+        </BlankUrlProvider>
       </AutoMockedApolloProvider>
     )
   }

@@ -1,11 +1,15 @@
+import { LoaderButton } from 'components/Button/LoaderButton'
 import { LiquidityModalDetailRows } from 'components/Liquidity/LiquidityModalDetailRows'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { StyledPercentInput } from 'components/PercentInput'
-import { DecreaseLiquidityStep, useLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
+import {
+  DecreaseLiquidityStep,
+  useRemoveLiquidityModalContext,
+} from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { useRemoveLiquidityTxContext } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
 import { ClickablePill } from 'pages/Swap/Buy/PredefinedAmount'
 import { NumericalInputMimic, NumericalInputSymbolContainer, NumericalInputWrapper } from 'pages/Swap/common/shared'
-import { Button, Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 import useResizeObserver from 'use-resize-observer'
 
@@ -14,7 +18,7 @@ export function RemoveLiquidityForm() {
   const { t } = useTranslation()
   const colors = useSporeColors()
 
-  const { percent, positionInfo, setPercent, setStep, percentInvalid } = useLiquidityModalContext()
+  const { percent, positionInfo, setPercent, setStep, percentInvalid } = useRemoveLiquidityModalContext()
   const removeLiquidityTxContext = useRemoveLiquidityTxContext()
 
   const { gasFeeEstimateUSD, txContext } = removeLiquidityTxContext
@@ -80,17 +84,18 @@ export function RemoveLiquidityForm() {
         currency1Amount={currency1Amount}
         networkCost={gasFeeEstimateUSD}
       />
-      <Button
-        size="large"
+      <LoaderButton
         disabled={percentInvalid || !txContext?.txRequest}
         onPress={() => setStep(DecreaseLiquidityStep.Review)}
+        loading={!percentInvalid && !txContext?.txRequest}
+        buttonKey="RemoveLiquidity-continue"
       >
         <Flex row alignItems="center" gap="$spacing8">
           <Text variant="buttonLabel1" color="$white" animation="fastHeavy">
             {t('common.button.remove')}
           </Text>
         </Flex>
-      </Button>
+      </LoaderButton>
     </>
   )
 }

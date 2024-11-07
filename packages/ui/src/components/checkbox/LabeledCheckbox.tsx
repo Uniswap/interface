@@ -1,6 +1,6 @@
 import { ColorTokens, SpaceTokens } from 'tamagui'
 import { Checkbox, CheckboxSizeTokens } from 'ui/src/components/checkbox/Checkbox'
-import { Flex } from 'ui/src/components/layout'
+import { Flex, FlexProps } from 'ui/src/components/layout'
 import { Text } from 'ui/src/components/text'
 import { TouchableArea } from 'ui/src/components/touchable'
 import { SporeComponentVariant } from 'ui/src/components/types'
@@ -15,6 +15,8 @@ export type LabeledCheckboxProps = {
   variant?: SporeComponentVariant
   gap?: SpaceTokens
   px?: SpaceTokens
+  py?: SpaceTokens
+  hoverStyle?: FlexProps
 }
 
 export function LabeledCheckbox({
@@ -25,6 +27,8 @@ export function LabeledCheckbox({
   size = '$icon.20',
   gap = '$spacing12',
   px = '$spacing4',
+  py,
+  hoverStyle,
   onCheckPressed,
 }: LabeledCheckboxProps): JSX.Element {
   const onPress = (): void => {
@@ -41,8 +45,8 @@ export function LabeledCheckbox({
     )
 
   return (
-    <TouchableArea onPress={onPress}>
-      <Flex row alignItems="center" gap={gap} px={px}>
+    <TouchableArea hoverable hoverStyle={hoverStyle} onPress={onPress}>
+      <Flex row alignItems="center" gap={gap} px={px} py={py}>
         {checkboxPosition === 'start' && <Checkbox checked={checked} size={size} variant={variant} onPress={onPress} />}
         {text && (
           <Flex grow shrink>

@@ -72,29 +72,28 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
       }
     })
     const zeroY = priceToCoordinate(0) ?? 0
+    const colorsCount = options.colors.length
+    const isV4EverywhereEnabled = options.colors.length === 3
     const { linesMeshed, hoverInfo } = this._createLinePaths(
       bars,
       this._data.visibleRange,
       renderingScope,
       zeroY * renderingScope.verticalPixelRatio,
       options.hoveredLogicalIndex,
+      isV4EverywhereEnabled,
     )
 
-    const fullLinesMeshed = linesMeshed.slice(0, 3)
-    const highlightLinesMeshed = options.hoveredLogicalIndex ? linesMeshed.slice(3) : []
+    const fullLinesMeshed = linesMeshed.slice(0, colorsCount + 1)
+    const highlightLinesMeshed = options.hoveredLogicalIndex ? linesMeshed.slice(colorsCount + 1) : []
 
     const areaPaths = this._createAreas(fullLinesMeshed)
 
-    const colorsCount = options.colors.length
     const isHovered = options.hoveredLogicalIndex && options.hoveredLogicalIndex !== -1
-    const isMultichainExploreEnabled = !!options.gradients
     areaPaths.forEach((areaPath, index) => {
       // Modification: determine area fill opacity based on number of lines and hover state
 
       if (areaPaths.length === 1) {
         ctx.globalAlpha = 0.12 // single-line charts have low opacity fill
-      } else if (!isMultichainExploreEnabled) {
-        ctx.globalAlpha = isHovered ? 0.24 : 1
       }
 
       const gradient = options.gradients
@@ -109,51 +108,47 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
       ctx.fill(areaPath)
     })
 
-    ctx.lineWidth = options.lineWidth * (isMultichainExploreEnabled ? 1 : renderingScope.verticalPixelRatio)
+    ctx.lineWidth = options.lineWidth
     ctx.lineJoin = 'round'
 
     fullLinesMeshed.toReversed().forEach((linePath, index) => {
-      const unreversedIndex = fullLinesMeshed.length - index
-      const color = options.colors[unreversedIndex % colorsCount]
+      const color = options.colors[colorsCount - (index + 1)]
       ctx.strokeStyle = color
       ctx.fillStyle = color
-      ctx.globalAlpha = isHovered && isMultichainExploreEnabled ? 0.24 : 1
+      ctx.globalAlpha = isHovered ? 0.24 : 1
 
       // Bottom line is just the x-axis, which should not be drawn
       if (index !== fullLinesMeshed.length - 1) {
         // Line rendering:
         ctx.beginPath()
-        ctx.strokeStyle = color
         ctx.stroke(linePath.path)
+        // Modification: Draws a glyph where lines intersect with the crosshair
+        const hoverY = hoverInfo.points.toReversed()[index]
+        // Reset the global alpha to 1 after filling in the area under the graph and before drawing the glyph
+        ctx.globalAlpha = 1
+
+        // Glyph rendering:
+        ctx.globalCompositeOperation = 'destination-out' // This mode allows removing a portion of the drawn line from the canvas
+        ctx.beginPath()
+        ctx.arc(hoverInfo.x, hoverY, 5 * renderingScope.verticalPixelRatio, 0, 2 * Math.PI)
+        ctx.fill() // Cuts a hole out of the line where part of the glyph should be rendered
+
+        ctx.globalCompositeOperation = 'source-over' // Resets to default mode
+        ctx.beginPath()
+
+        ctx.arc(hoverInfo.x, hoverY, 3 * renderingScope.verticalPixelRatio, 0, 2 * Math.PI)
+        ctx.fill() // Draws innermost portion of glyph
+
+        ctx.globalAlpha = 0.2
+        ctx.beginPath()
+        ctx.arc(hoverInfo.x, hoverY, 8 * renderingScope.verticalPixelRatio, 0, 2 * Math.PI)
+        ctx.fill() // Draws middle portion of glyph
+
+        ctx.globalAlpha = 0.3
+        ctx.beginPath()
+        ctx.arc(hoverInfo.x, hoverY, 12 * renderingScope.verticalPixelRatio, 0, 2 * Math.PI)
+        ctx.fill() // Draws outer portion of glyph
       }
-
-      // Modification: Draws a glyph where lines intersect with the crosshair
-      const hoverY = hoverInfo.points[index - 1]
-      // Reset the global alpha to 1 after filling in the area under the graph and before drawing the glyph
-      ctx.globalAlpha = 1
-
-      // Glyph rendering:
-      ctx.globalCompositeOperation = 'destination-out' // This mode allows removing a portion of the drawn line from the canvas
-      ctx.beginPath()
-      ctx.arc(hoverInfo.x, hoverY, 5 * renderingScope.verticalPixelRatio, 0, 2 * Math.PI)
-      ctx.fill() // Cuts a hole out of the line where part of the glyph should be rendered
-
-      ctx.globalCompositeOperation = 'source-over' // Resets to default mode
-
-      ctx.beginPath()
-
-      ctx.arc(hoverInfo.x, hoverY, 3 * renderingScope.verticalPixelRatio, 0, 2 * Math.PI)
-      ctx.fill() // Draws innermost portion of glyph
-
-      ctx.globalAlpha = 0.2
-      ctx.beginPath()
-      ctx.arc(hoverInfo.x, hoverY, 8 * renderingScope.verticalPixelRatio, 0, 2 * Math.PI)
-      ctx.fill() // Draws middle portion of glyph
-
-      ctx.globalAlpha = 0.3
-      ctx.beginPath()
-      ctx.arc(hoverInfo.x, hoverY, 12 * renderingScope.verticalPixelRatio, 0, 2 * Math.PI)
-      ctx.fill() // Draws outer portion of glyph
 
       ctx.globalAlpha = 1
     })
@@ -163,19 +158,14 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
         ctx.globalAlpha = 1
         return
       }
-      const unreversedIndex = fullLinesMeshed.length - index
-      const color = options.colors[unreversedIndex % colorsCount]
+      const color = options.colors[colorsCount - (index + 1)]
       ctx.strokeStyle = color
       ctx.fillStyle = color
       ctx.globalAlpha = 1
 
-      // Bottom line is just the x-axis, which should not be drawn
-      if (index !== fullLinesMeshed.length - 1) {
-        // Line rendering:
-        ctx.beginPath()
-        ctx.strokeStyle = color
-        ctx.stroke(linePath.path)
-      }
+      // Line rendering:
+      ctx.beginPath()
+      ctx.stroke(linePath.path)
     })
   }
 
@@ -186,17 +176,22 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
     renderingScope: BitmapCoordinatesRenderingScope,
     zeroY: number,
     hoveredIndex?: number | null,
+    isV4EverywhereEnabled?: boolean,
   ) {
     const { horizontalPixelRatio, verticalPixelRatio } = renderingScope
-    const oddLines: LinePathData[] = []
-    const evenLines: LinePathData[] = []
-    const oddHighlightLines: LinePathData[] = []
-    const evenHighlightLines: LinePathData[] = []
+    const v2Lines: LinePathData[] = []
+    const v3Lines: LinePathData[] = []
+    const v4Lines: LinePathData[] = []
+    const v2HighlightLines: LinePathData[] = []
+    const v3HighlightLines: LinePathData[] = []
+    const v4HighlightLines: LinePathData[] = []
+
     let firstBar = true
 
     // Modification: tracks and returns coordinates of where a glyph should be rendered for each line when a crosshair is drawn
     const hoverInfo = { points: new Array<number>(), x: 0 }
 
+    const numLines = isV4EverywhereEnabled ? 3 : 2
     // Modification: updated loop to include one point above and below the visible range to ensure the line is drawn to edges of chart
     for (let i = visibleRange.from - 1; i < visibleRange.to + 1; i++) {
       if (i >= bars.length || i < 0) {
@@ -206,8 +201,8 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
       const stack = bars[i]
       let lineIndex = 0
       stack.ys.forEach((yMedia, index) => {
-        if (index % 2 !== 0) {
-          return // only doing odd at the moment
+        if (index % numLines !== 0) {
+          return
         }
 
         const x = stack.x * horizontalPixelRatio
@@ -219,28 +214,28 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
         }
 
         if (firstBar) {
-          oddLines[lineIndex] = {
+          v2Lines[lineIndex] = {
             path: new Path2D(),
             first: { x, y },
             last: { x, y },
           }
-          oddLines[lineIndex].path.moveTo(x, y)
+          v2Lines[lineIndex].path.moveTo(x, y)
         } else {
-          oddLines[lineIndex].path.lineTo(x, y)
-          oddLines[lineIndex].last.x = x
-          oddLines[lineIndex].last.y = y
+          v2Lines[lineIndex].path.lineTo(x, y)
+          v2Lines[lineIndex].last.x = x
+          v2Lines[lineIndex].last.y = y
         }
         if (firstBar && hoveredIndex && i <= hoveredIndex) {
-          oddHighlightLines[lineIndex] = {
+          v2HighlightLines[lineIndex] = {
             path: new Path2D(),
             first: { x, y },
             last: { x, y },
           }
-          oddHighlightLines[lineIndex].path.moveTo(x, y)
+          v2HighlightLines[lineIndex].path.moveTo(x, y)
         } else if (hoveredIndex && i <= hoveredIndex) {
-          oddHighlightLines[lineIndex].path.lineTo(x, y)
-          oddHighlightLines[lineIndex].last.x = x
-          oddHighlightLines[lineIndex].last.y = y
+          v2HighlightLines[lineIndex].path.lineTo(x, y)
+          v2HighlightLines[lineIndex].last.x = x
+          v2HighlightLines[lineIndex].last.y = y
         }
         lineIndex += 1
       })
@@ -255,8 +250,8 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
       const stack = bars[i]
       let lineIndex = 0
       stack.ys.forEach((yMedia, index) => {
-        if (index % 2 === 0) {
-          return // only doing even at the moment
+        if (index % numLines !== 1) {
+          return
         }
 
         const x = stack.x * horizontalPixelRatio
@@ -268,29 +263,81 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
         }
 
         if (firstBar) {
-          evenLines[lineIndex] = {
+          v3Lines[lineIndex] = {
             path: new Path2D(),
             first: { x, y },
             last: { x, y },
           }
-          evenLines[lineIndex].path.moveTo(x, y)
+          v3Lines[lineIndex].path.moveTo(x, y)
         } else {
-          evenLines[lineIndex].path.lineTo(x, y)
-          evenLines[lineIndex].last.x = x
-          evenLines[lineIndex].last.y = y
+          v3Lines[lineIndex].path.lineTo(x, y)
+          v3Lines[lineIndex].last.x = x
+          v3Lines[lineIndex].last.y = y
         }
 
-        if (evenHighlightLines.length <= lineIndex && hoveredIndex && i <= hoveredIndex) {
-          evenHighlightLines[lineIndex] = {
+        if (v3HighlightLines.length <= lineIndex && hoveredIndex && i <= hoveredIndex) {
+          v3HighlightLines[lineIndex] = {
             path: new Path2D(),
             first: { x, y },
             last: { x, y },
           }
-          evenHighlightLines[lineIndex].path.moveTo(x, y)
+          v3HighlightLines[lineIndex].path.moveTo(x, y)
         } else if (hoveredIndex && i <= hoveredIndex) {
-          evenHighlightLines[lineIndex].path.lineTo(x, y)
-          evenHighlightLines[lineIndex].last.x = x
-          evenHighlightLines[lineIndex].last.y = y
+          v3HighlightLines[lineIndex].path.lineTo(x, y)
+          v3HighlightLines[lineIndex].last.x = x
+          v3HighlightLines[lineIndex].last.y = y
+        }
+
+        lineIndex += 1
+      })
+      firstBar = false
+    }
+    firstBar = true
+
+    // Modification: updated loop to include one point above and below the visible range to ensure the line is drawn to edges of chart
+    for (let i = visibleRange.to + 1; i >= visibleRange.from - 1; i--) {
+      if (i >= bars.length || i < 0) {
+        continue
+      }
+      const stack = bars[i]
+      let lineIndex = 0
+      stack.ys.forEach((yMedia, index) => {
+        if (index % numLines !== 2 || !isV4EverywhereEnabled) {
+          return
+        }
+
+        const x = stack.x * horizontalPixelRatio
+        const y = yMedia * verticalPixelRatio
+
+        if (i === hoveredIndex) {
+          hoverInfo.points[index] = y
+          hoverInfo.x = x
+        }
+
+        if (firstBar) {
+          v4Lines[lineIndex] = {
+            path: new Path2D(),
+            first: { x, y },
+            last: { x, y },
+          }
+          v4Lines[lineIndex].path.moveTo(x, y)
+        } else {
+          v4Lines[lineIndex].path.lineTo(x, y)
+          v4Lines[lineIndex].last.x = x
+          v4Lines[lineIndex].last.y = y
+        }
+
+        if (v4HighlightLines.length <= lineIndex && hoveredIndex && i <= hoveredIndex) {
+          v4HighlightLines[lineIndex] = {
+            path: new Path2D(),
+            first: { x, y },
+            last: { x, y },
+          }
+          v4HighlightLines[lineIndex].path.moveTo(x, y)
+        } else if (hoveredIndex && i <= hoveredIndex) {
+          v4HighlightLines[lineIndex].path.lineTo(x, y)
+          v4HighlightLines[lineIndex].last.x = x
+          v4HighlightLines[lineIndex].last.y = y
         }
 
         lineIndex += 1
@@ -300,20 +347,24 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
 
     const baseLine = {
       path: new Path2D(),
-      first: { x: oddLines[0].last.x, y: zeroY },
-      last: { x: oddLines[0].first.x, y: zeroY },
+      first: { x: v2Lines[0].last.x, y: zeroY },
+      last: { x: v2Lines[0].first.x, y: zeroY },
     }
-    baseLine.path.moveTo(oddLines[0].last.x, zeroY)
-    baseLine.path.lineTo(oddLines[0].first.x, zeroY)
+    baseLine.path.moveTo(v2Lines[0].last.x, zeroY)
+    baseLine.path.lineTo(v2Lines[0].first.x, zeroY)
     const linesMeshed: LinePathData[] = [baseLine]
-    for (let i = 0; i < oddLines.length; i++) {
-      linesMeshed.push(oddLines[i])
-      if (i < evenLines.length) {
-        linesMeshed.push(evenLines[i])
+    for (let i = 0; i < v2Lines.length; i++) {
+      linesMeshed.push(v2Lines[i])
+      if (i < v3Lines.length) {
+        linesMeshed.push(v3Lines[i])
+      }
+      if (i < v4Lines.length && isV4EverywhereEnabled) {
+        linesMeshed.push(v4Lines[i])
       }
       if (hoveredIndex) {
-        linesMeshed.push(oddHighlightLines[i])
-        linesMeshed.push(evenHighlightLines[i])
+        linesMeshed.push(v2HighlightLines[i])
+        linesMeshed.push(v3HighlightLines[i])
+        isV4EverywhereEnabled && linesMeshed.push(v4HighlightLines[i])
       }
     }
 
@@ -324,10 +375,13 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
   _createAreas(linesMeshed: LinePathData[]): Path2D[] {
     const areas: Path2D[] = []
     for (let i = 1; i < linesMeshed.length; i++) {
-      const areaPath = new Path2D(linesMeshed[i - 1].path)
+      // The first area must reference the base line, aka index 0
+      // All other areas need to reference the first area to fully fill the bottom of the graph
+      const baseReferenceIndex = Math.min(i - 1, 1)
+      const areaPath = new Path2D(linesMeshed[baseReferenceIndex].path)
       areaPath.lineTo(linesMeshed[i].first.x, linesMeshed[i].first.y)
       areaPath.addPath(linesMeshed[i].path)
-      areaPath.lineTo(linesMeshed[i - 1].first.x, linesMeshed[i - 1].first.y)
+      areaPath.lineTo(linesMeshed[baseReferenceIndex].first.x, linesMeshed[baseReferenceIndex].first.y)
       areaPath.closePath()
       areas.push(areaPath)
     }

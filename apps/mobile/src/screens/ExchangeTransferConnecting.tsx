@@ -5,8 +5,9 @@ import { Screen } from 'src/components/layout/Screen'
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { Flex, useIsDarkMode } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampConnectingView } from 'uniswap/src/features/fiatOnRamp/FiatOnRampConnectingView'
-import { useFiatOnRampAggregatorTransferWidgetQuery } from 'uniswap/src/features/fiatOnRamp/api'
+import { getFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { useFiatOnRampTransactionCreator } from 'uniswap/src/features/fiatOnRamp/hooks'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
@@ -15,7 +16,6 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { InstitutionTransferEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { openUri } from 'uniswap/src/utils/linking'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
@@ -58,6 +58,7 @@ export function ExchangeTransferConnecting({
     setTimeoutElapsed(true)
   }, CONNECTING_TIMEOUT)
 
+  const { useFiatOnRampAggregatorTransferWidgetQuery } = getFiatOnRampAggregatorApi()
   const {
     data: widgetData,
     isLoading: widgetLoading,

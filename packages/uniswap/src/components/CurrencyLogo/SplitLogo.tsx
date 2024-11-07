@@ -4,8 +4,8 @@ import { Shuffle } from 'ui/src/components/icons/Shuffle'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo, STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 interface Props {
   inputCurrencyInfo: Maybe<CurrencyInfo>

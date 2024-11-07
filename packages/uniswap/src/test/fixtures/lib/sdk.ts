@@ -1,7 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
 import { getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
-import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/constants/chains'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export const ETH = new Token(UniverseChainId.Mainnet, DEFAULT_NATIVE_ADDRESS, 18, 'ETH', 'Ethereum')
 

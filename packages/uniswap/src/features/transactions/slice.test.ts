@@ -1,5 +1,6 @@
 import { createStore, Store } from '@reduxjs/toolkit'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   addTransaction,
   cancelTransaction,
@@ -19,7 +20,6 @@ import {
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { finalizedTransactionAction } from 'uniswap/src/test/fixtures'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const finalizedTxAction = finalizedTransactionAction()
 

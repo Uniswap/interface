@@ -1,4 +1,3 @@
-import { getChain, useIsSupportedChainId } from 'constants/chains'
 import { CSSProperties } from 'react'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import {
@@ -16,7 +15,9 @@ import {
   ZKSYNC_LOGO,
   ZORA_LOGO,
 } from 'ui/src/assets'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 type ChainUI = { symbol: string; bgColor: string; textColor: string }
 
@@ -162,7 +163,7 @@ export function ChainLogo({
   if (!isSupportedChain) {
     return null
   }
-  const { label } = getChain({ chainId })
+  const { label } = getChainInfo(chainId)
 
   const { symbol } = getChainUI(chainId, darkMode)
   const iconSize = fillContainer ? '100%' : size + 'px'

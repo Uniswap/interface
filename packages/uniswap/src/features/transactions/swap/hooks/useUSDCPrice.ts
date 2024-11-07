@@ -17,9 +17,9 @@ import {
   USDC_ZORA,
   USDT_BNB,
 } from 'uniswap/src/constants/tokens'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 
 // Stablecoin amounts used when calculating spot price for a given currency.

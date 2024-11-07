@@ -1,5 +1,4 @@
 import { Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
-import { isStablecoin } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import JSBI from 'jsbi'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
@@ -13,6 +12,8 @@ import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { getUSDCostPerGas, isClassicTrade } from 'state/routing/utils'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { isUniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -24,6 +25,14 @@ export type LimitInfo = {
   limitOrderTrade?: LimitOrderTrade
   marketPrice?: Price<Currency, Currency>
   fee?: SwapFeeInfo
+}
+
+function isStablecoin(currency?: Currency): boolean {
+  return (
+    currency !== undefined &&
+    isUniverseChainId(currency.chainId) &&
+    getChainInfo(currency.chainId).stablecoins.some((stablecoin) => stablecoin.equals(currency))
+  )
 }
 
 // By default, inputCurrency is base currency and outputCurrency is quote currency

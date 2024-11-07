@@ -6,9 +6,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { GeneratedIcon, isWeb, useIsDarkMode } from 'ui/src'
 import { Eye, EyeOff, Trash } from 'ui/src/components/icons'
 import { UNIVERSE_CHAIN_LOGO } from 'uniswap/src/assets/chainLogos'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { reportNftSpamToSimpleHash } from 'uniswap/src/data/apiClients/simpleHashApi/SimpleHashApiClient'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { selectNftsVisibility } from 'uniswap/src/features/favorites/selectors'
 import { toggleNftVisibility } from 'uniswap/src/features/favorites/slice'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -17,7 +18,6 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
@@ -63,7 +63,7 @@ export function useNFTContextMenu({
   const nftVisibility = useSelector(selectNftsVisibility)
   const nftKey = contractAddress && tokenId ? getNFTAssetKey(contractAddress, tokenId) : undefined
   const hidden = getIsNftHidden({ contractAddress, tokenId, isSpam, nftVisibility })
-  const networkName = chainId && UNIVERSE_CHAIN_INFO[chainId].label
+  const networkName = chainId && getChainLabel(chainId)
 
   const onPressShare = useCallback(async (): Promise<void> => {
     if (!contractAddress || !tokenId) {

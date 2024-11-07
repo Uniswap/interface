@@ -26,7 +26,7 @@ import { ManualPageViewScreen, MobileScreens, OnboardingScreens } from 'uniswap/
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
-import { useSignerAccountIfExists } from 'wallet/src/features/wallet/hooks'
+import { useSignerAccount } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupManual>
 
@@ -42,7 +42,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
 
   const { getOnboardingOrImportedAccount, addBackupMethod } = useOnboardingContext()
   const onboardingContextAccount = getOnboardingOrImportedAccount()
-  const activeAccount = useSignerAccountIfExists(params.address)
+  const activeAccount = useSignerAccount(params.address)
 
   const { entryPoint, fromCloudBackup } = params
   const onboardingExperimentEnabled = entryPoint === OnboardingEntryPoint.BackupCard

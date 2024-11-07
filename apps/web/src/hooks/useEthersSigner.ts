@@ -1,6 +1,6 @@
 import { Web3Provider } from '@ethersproject/providers'
 import { useMemo } from 'react'
-import { UniverseChainInfo } from 'uniswap/src/types/chains'
+import { UniverseChainInfo } from 'uniswap/src/features/chains/types'
 import type { Account, Client, Transport } from 'viem'
 import { useConnectorClient } from 'wagmi'
 

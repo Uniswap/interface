@@ -1,8 +1,8 @@
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { ExplorerAbiFetcher, Parser, ProxyAbiFetcher, Transaction, TransactionDescription } from 'no-yolo-signatures'
 import { useEffect, useMemo, useState } from 'react'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { RPCType, UniverseChainId } from 'uniswap/src/types/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthTransaction } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -19,12 +19,11 @@ export function useNoYoloParser(
       return new Parser({ abiFetchers: [] })
     }
 
-    const rpcUrls = UNIVERSE_CHAIN_INFO[chainId].rpcUrls
-    const apiURL = UNIVERSE_CHAIN_INFO[chainId].explorer.apiURL || ''
+    const rpcUrls = getChainInfo(chainId).rpcUrls
+    const apiURL = getChainInfo(chainId).explorer.apiURL || ''
 
     const explorerAbiFetcher = new ExplorerAbiFetcher(apiURL)
 
-    // TODO: revisit this once quicknode RPCs are added and then prioritize rpcUrls?.appOnly?.http[0]
     const rpcUrl =
       rpcUrls?.default?.http[0] || rpcUrls?.[RPCType.Public]?.http[0] || rpcUrls?.[RPCType.PublicAlt]?.http[0]
     const provider = new JsonRpcProvider(rpcUrl)

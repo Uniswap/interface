@@ -1,6 +1,5 @@
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
-import { chainIdToBackendChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
@@ -12,8 +11,9 @@ import { useNavigate } from 'react-router-dom'
 import { Flex, Text } from 'ui/src'
 import { LDO, UNI, USDC_BASE } from 'uniswap/src/constants/tokens'
 import { useTokenPromoQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { t } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const primary = '#2ABDFF'
@@ -45,7 +45,7 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
   const tokenPromoQuery = useTokenPromoQuery({
     variables: {
       address: currency?.wrapped.address,
-      chain: chainIdToBackendChain({ chainId }),
+      chain: toGraphQLChain(chainId),
     },
   })
   const price = tokenPromoQuery.data?.token?.market?.price?.value ?? 0
@@ -68,7 +68,7 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
         navigate(
           getTokenDetailsURL({
             address: address === 'ETH' ? NATIVE_CHAIN_ID : address,
-            chain: chainIdToBackendChain({ chainId }),
+            chain: toGraphQLChain(chainId),
           }),
         )
       }}

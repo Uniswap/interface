@@ -9,20 +9,20 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { ASSISTANT_ID, openai } from 'src/features/openai/assistant'
 import { FunctionName, PossibleFunctionArgs } from 'src/features/openai/functions'
 import { WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { DEFAULT_NATIVE_ADDRESS, UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import {
   SearchTokensDocument,
   TokenDetailsScreenDocument,
   TopTokensDocument,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AssetType, CurrencyAsset } from 'uniswap/src/entities/assets'
-import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getChainLabel, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { usePortfolioBalances, useTokenBalancesGroupedByVisibility } from 'uniswap/src/features/dataApi/balances'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
@@ -192,7 +192,7 @@ function _OpenAIContextProvider({ children }: { children: React.ReactNode }): JS
           const chainId = toSupportedChainId(balance.currencyInfo.currency.chainId)
           return {
             ...balance.currencyInfo.currency,
-            chainName: chainId ? UNIVERSE_CHAIN_INFO[chainId].label : 'unknown',
+            chainName: chainId ? getChainLabel(chainId) : 'unknown',
           }
         })
 
@@ -397,7 +397,10 @@ function _OpenAIContextProvider({ children }: { children: React.ReactNode }): JS
       const listener = Linking.addEventListener('url', (event) => {
         if (event.url.startsWith('uniswap://openai')) {
           const capturedPhrase = decodeURI(event.url.split('uniswap://openai?capturedPhrase=')[1] ?? '')
-          capturedPhrase && sendMessage(capturedPhrase).catch(console.error)
+          capturedPhrase &&
+            sendMessage(capturedPhrase).catch((e) =>
+              logger.error(e, { tags: { file: 'OpenAIContext', function: 'siriListener' } }),
+            )
         }
       })
       return listener.remove

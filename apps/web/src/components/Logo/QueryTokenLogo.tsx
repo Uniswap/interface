@@ -1,23 +1,22 @@
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { AssetLogoBaseProps } from 'components/Logo/AssetLogo'
-import { getChainFromChainUrlParam } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { GqlSearchToken } from 'graphql/data/SearchTokens'
 import { TokenQueryData } from 'graphql/data/Token'
-import { TopToken } from 'graphql/data/TopTokens'
+import { TopToken } from 'graphql/data/types'
 import { gqlToCurrency } from 'graphql/data/util'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
 import { TokenStat } from 'state/explore/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getChainIdFromChainUrlParam } from 'utils/chainParams'
 
 export default function QueryTokenLogo(
   props: AssetLogoBaseProps & {
     token?: TopToken | TokenQueryData | GqlSearchToken | TokenStat
   },
 ) {
-  const chain = getChainFromChainUrlParam(props.token?.chain.toLowerCase())
-  const chainId = chain?.id ?? UniverseChainId.Mainnet
+  const chainId = getChainIdFromChainUrlParam(props.token?.chain.toLowerCase()) ?? UniverseChainId.Mainnet
   const isNative = props.token?.address === NATIVE_CHAIN_ID
   const isTokenStat = !!props.token && 'volume' in props.token
 

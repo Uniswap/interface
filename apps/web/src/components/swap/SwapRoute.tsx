@@ -2,20 +2,20 @@ import RouterLabel from 'components/RouterLabel'
 import Column from 'components/deprecated/Column'
 import { RowBetween } from 'components/deprecated/Row'
 import { UniswapXDescription } from 'components/swap/GasBreakdownTooltip'
-import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { ClassicTrade, SubmittableTrade } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
 import { Separator, ThemedText } from 'theme/components'
 import RoutingDiagram from 'uniswap/src/components/RoutingDiagram/RoutingDiagram'
+import { chainSupportsGasEstimates } from 'uniswap/src/features/chains/utils'
 import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 
 // TODO(WEB-2022)
-// Can `trade.gasUseEstimateUSD` be defined when `chainId` is not in `SUPPORTED_GAS_ESTIMATE_CHAIN_IDS`?
+// Can `trade.gasUseEstimateUSD` be defined when `chainId` doesn't support gas estimates?
 function useGasPrice({ gasUseEstimateUSD, inputAmount }: ClassicTrade) {
   const { formatNumber } = useFormatter()
-  if (!gasUseEstimateUSD || !SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(inputAmount.currency.chainId)) {
+  if (!gasUseEstimateUSD || !chainSupportsGasEstimates(inputAmount.currency.chainId)) {
     return undefined
   }
 

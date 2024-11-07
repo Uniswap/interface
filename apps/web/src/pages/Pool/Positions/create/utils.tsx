@@ -48,6 +48,7 @@ import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
 import { getTickToPrice, getV4TickToPrice } from 'utils/getTickToPrice'
 
 type OptionalToken = Token | undefined
+export function getSortedCurrenciesTuple(a: Token, b: Token): [Token, Token]
 export function getSortedCurrenciesTuple(a: OptionalToken, b: OptionalToken): [OptionalToken, OptionalToken]
 export function getSortedCurrenciesTuple(a: OptionalCurrency, b: OptionalCurrency): [OptionalCurrency, OptionalCurrency]
 export function getSortedCurrenciesTuple(
@@ -63,6 +64,14 @@ export function getSortedCurrenciesTuple(
   }
 
   return a.sortsBefore(b) ? [a, b] : [b, a]
+}
+
+export function getSortedCurrenciesTupleWithWrap(
+  a: OptionalCurrency,
+  b: OptionalCurrency,
+  protocolVersion: ProtocolVersion,
+): [OptionalCurrency, OptionalCurrency] {
+  return getSortedCurrenciesTuple(getCurrencyWithWrap(a, protocolVersion), getCurrencyWithWrap(b, protocolVersion))
 }
 
 export function getCurrencyWithWrap(currency: Currency, protocolVersion: ProtocolVersion.V2 | ProtocolVersion.V3): Token
@@ -107,9 +116,9 @@ export function getCurrencyAddressWithWrap(
   return currency?.wrapped.address
 }
 
-function getCurrencyAddressForTradingApi(currency: Currency): string
-function getCurrencyAddressForTradingApi(currency: OptionalCurrency): string | undefined
-function getCurrencyAddressForTradingApi(currency: OptionalCurrency): string | undefined {
+export function getCurrencyAddressForTradingApi(currency: Currency): string
+export function getCurrencyAddressForTradingApi(currency: OptionalCurrency): string
+export function getCurrencyAddressForTradingApi(currency: OptionalCurrency): string {
   return currency?.isToken ? currency.address : ZERO_ADDRESS
 }
 
@@ -127,6 +136,10 @@ export function protocolShouldCalculateTaxes(protocolVersion: ProtocolVersion): 
   return protocolVersion === ProtocolVersion.V3
 }
 
+export function validateCurrencyInput(currencies: [OptionalToken, OptionalToken]): currencies is [Token, Token]
+export function validateCurrencyInput(
+  currencies: [OptionalCurrency, OptionalCurrency],
+): currencies is [Currency, Currency]
 export function validateCurrencyInput(
   currencies: [OptionalCurrency, OptionalCurrency],
 ): currencies is [Currency, Currency] {
@@ -317,8 +330,8 @@ function createMockV3Pool({
   const wrappedPrice = new Price(
     price.baseCurrency.wrapped,
     price.quoteCurrency.wrapped,
-    price.numerator.toString(),
-    price.denominator.toString(),
+    price.denominator,
+    price.numerator,
   )
 
   const invertedPrice = wrappedPrice.baseCurrency.sortsBefore(wrappedPrice.quoteCurrency)
@@ -335,12 +348,14 @@ function createMockV4Pool({
   baseToken,
   quoteToken,
   fee,
+  hook,
   price,
   invalidPrice,
 }: {
   baseToken?: Currency
   quoteToken?: Currency
   fee: FeeData
+  hook?: string
   price?: Price<Currency, Currency>
   invalidPrice?: boolean
 }): V4Pool | undefined {
@@ -355,7 +370,7 @@ function createMockV4Pool({
     quoteToken,
     fee.feeAmount,
     fee.tickSpacing,
-    ZERO_ADDRESS,
+    hook ?? ZERO_ADDRESS,
     currentSqrt,
     JSBI.BigInt(0),
     currentTick,
@@ -377,8 +392,8 @@ function createMockPair({
 
   if (baseToken && quoteToken && price) {
     return new Pair(
-      CurrencyAmount.fromRawAmount(baseToken, price.denominator),
-      CurrencyAmount.fromRawAmount(quoteToken, price.numerator),
+      CurrencyAmount.fromRawAmount(baseToken, price.numerator),
+      CurrencyAmount.fromRawAmount(quoteToken, price.denominator),
     )
   } else {
     return undefined
@@ -533,13 +548,14 @@ export function getV3PriceRangeInfo({
     getCurrencyWithWrap(baseCurrency, protocolVersion),
     getCurrencyWithWrap(quoteCurrency, protocolVersion),
   ]
-  const baseInitialPriceCurrency = state.initialPriceInverted
-    ? getCurrencyWithWrap(currencies[0], protocolVersion)
-    : getCurrencyWithWrap(currencies[1], protocolVersion)
+  const initialPriceTokens = getInvertedTuple(
+    [getCurrencyWithWrap(currencies[0], protocolVersion), getCurrencyWithWrap(currencies[1], protocolVersion)],
+    state.initialPriceInverted,
+  )
 
   const price = derivedPositionInfo.creatingPoolOrPair
     ? getInitialPrice({
-        baseCurrency: baseInitialPriceCurrency,
+        baseCurrency: initialPriceTokens[0],
         sortedCurrencies: sortedTokens,
         initialPrice: state.initialPrice,
       })
@@ -690,7 +706,7 @@ export function getV4PriceRangeInfo({
   positionState: PositionState
   derivedPositionInfo: CreateV4PositionInfo
 }): V4PriceRangeInfo {
-  const { fee } = positionState
+  const { fee, hook } = positionState
   const { protocolVersion, currencies, pool } = derivedPositionInfo
 
   const sortedCurrencies = getSortedCurrenciesTuple(currencies[0], currencies[1])
@@ -714,6 +730,7 @@ export function getV4PriceRangeInfo({
     baseToken: baseCurrency,
     quoteToken: quoteCurrency,
     fee,
+    hook,
     price,
     invalidPrice,
   })

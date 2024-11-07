@@ -6,9 +6,8 @@ import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import VolumeTimeFrameSelector from 'components/Tokens/TokenTable/VolumeTimeFrameSelector'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { useChainFromUrlParam } from 'constants/chains'
 import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
-import { getTokenExploreURL, isBackendSupportedChain } from 'graphql/data/util'
+import { getTokenExploreURL } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useResetAtom } from 'jotai/utils'
 import { ExploreChartsSection } from 'pages/Explore/charts/ExploreChartsSection'
@@ -18,13 +17,15 @@ import { NamedExoticComponent, useCallback, useEffect, useMemo, useRef, useState
 import { useNavigate } from 'react-router-dom'
 import { ExploreContextProvider } from 'state/explore'
 import { TamaguiClickableStyle } from 'theme/components'
-import { Flex, Text, styled as tamaguiStyled } from 'ui/src'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { Button, Flex, Text, styled as tamaguiStyled } from 'ui/src'
+import { Plus } from 'ui/src/components/icons/Plus'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { isBackendSupportedChain } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { Trans, t } from 'uniswap/src/i18n'
+import { useChainIdFromUrlParam } from 'utils/chainParams'
 
 export enum ExploreTab {
   Tokens = 'tokens',
@@ -62,8 +63,7 @@ const Pages: Array<Page> = [
 
 const HeaderTab = tamaguiStyled(Text, {
   ...TamaguiClickableStyle,
-  fontSize: 28,
-  fontWeight: '$book',
+  variant: 'heading3',
   userSelect: 'none',
   color: '$neutral2',
   variants: {
@@ -93,7 +93,7 @@ const HeaderTab = tamaguiStyled(Text, {
 const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const tabNavRef = useRef<HTMLDivElement>(null)
   const resetManualOutage = useResetAtom(manualChainOutageAtom)
-  const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
+  const v4EverywhereEnabled = useFeatureFlag(FeatureFlags.V4Everywhere)
 
   const initialKey: number = useMemo(() => {
     const key = initialTab && Pages.findIndex((page) => page.key === initialTab)
@@ -109,9 +109,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
       const offsetTop = tabNavRef.current.getBoundingClientRect().top + window.scrollY
       window.scrollTo({ top: offsetTop - 90, behavior: 'smooth' })
     }
-    // scroll to tab navbar on initial page mount only
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [initialTab])
 
   const [currentTab, setCurrentTab] = useState(initialKey)
 
@@ -119,12 +117,10 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const { tab: tabName } = useExploreParams()
   const tab = tabName ?? ExploreTab.Tokens
 
-  const chainWithoutFallback = useChainFromUrlParam()
-  const chain = useMemo(() => {
-    return isMultichainExploreEnabled
-      ? chainWithoutFallback
-      : chainWithoutFallback ?? UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet]
-  }, [chainWithoutFallback, isMultichainExploreEnabled])
+  const urlChainId = useChainIdFromUrlParam()
+  const chainInfo = useMemo(() => {
+    return urlChainId ? getChainInfo(urlChainId) : undefined
+  }, [urlChainId])
   useEffect(() => {
     const tabIndex = Pages.findIndex((page) => page.key === tab)
     if (tabIndex !== -1) {
@@ -149,8 +145,12 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   )
 
   return (
-    <Trace logImpression page={InterfacePageName.EXPLORE_PAGE} properties={{ chainName: chain?.backendChain.chain }}>
-      <ExploreContextProvider chainId={chain?.id}>
+    <Trace
+      logImpression
+      page={InterfacePageName.EXPLORE_PAGE}
+      properties={{ chainName: chainInfo?.backendChain.chain }}
+    >
+      <ExploreContextProvider chainId={chainInfo?.id}>
         <Flex width="100%" minWidth={320} pt="$spacing48" px="$spacing40" $md={{ p: '$spacing16', pb: 0 }}>
           <ExploreChartsSection />
           <Flex
@@ -181,8 +181,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
             >
               {Pages.map(({ title, loggingElementName, key }, index) => {
                 // disable Transactions tab if no chain is selected
-                const disabled = isMultichainExploreEnabled && key === ExploreTab.Transactions && !chain
-                const url = getTokenExploreURL({ tab: key, chain: chain?.backendChain.chain })
+                const disabled = key === ExploreTab.Transactions && !chainInfo
                 return (
                   <Trace
                     logPress
@@ -198,7 +197,10 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                       disabled={!disabled}
                     >
                       <HeaderTab
-                        onPress={() => !disabled && navigate(url)}
+                        onPress={() => {
+                          // Update tab and only replace url when navigating from the header nav
+                          !disabled && setCurrentTab(index)
+                        }}
                         active={currentTab === index}
                         disabled={disabled}
                         key={key}
@@ -211,6 +213,22 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
               })}
             </Flex>
             <Flex row gap="$spacing8" height="$spacing40" justifyContent="flex-start">
+              {currentKey === ExploreTab.Pools && v4EverywhereEnabled && (
+                <Button
+                  size="small"
+                  backgroundColor="$accent3"
+                  hoverStyle={{ backgroundColor: '$accent3', opacity: 0.6 }}
+                  pressStyle={{ backgroundColor: '$accent3', opacity: 0.8 }}
+                  onPress={() => navigate('/positions/create')}
+                >
+                  <Flex row gap="$gap8" alignItems="center">
+                    <Plus size={20} />
+                    <Text variant="buttonLabel3" lineHeight={20} color="$surface1">
+                      {t('common.addLiquidity')}
+                    </Text>
+                  </Flex>
+                </Button>
+              )}
               <TableNetworkFilter />
               {currentKey === ExploreTab.Tokens && <VolumeTimeFrameSelector />}
               {currentKey !== ExploreTab.Transactions && <SearchBar tab={currentKey} />}

@@ -1,7 +1,6 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { AVERAGE_L1_BLOCK_TIME } from 'constants/chains'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import ms from 'ms'
@@ -16,6 +15,7 @@ import {
   SubmittableTrade,
   TradeState,
 } from 'state/routing/types'
+import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
 
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined, currentData: undefined } as const
 const TRADE_LOADING = { state: TradeState.LOADING, trade: undefined, currentData: undefined } as const
@@ -98,7 +98,7 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   const { isError, data: tradeResult, error, currentData } = useGetQuoteQueryState(queryArgs)
   useGetQuoteQuery(skipFetch || !isWindowVisible ? skipToken : queryArgs, {
     // Price-fetching is informational and costly, so it's done less frequently.
-    pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms(`1m`) : AVERAGE_L1_BLOCK_TIME,
+    pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms(`1m`) : AVERAGE_L1_BLOCK_TIME_MS,
     // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
     refetchOnMountOrArgChange: 2 * 60,
   })

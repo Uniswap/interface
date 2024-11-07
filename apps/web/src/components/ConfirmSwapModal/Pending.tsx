@@ -24,8 +24,8 @@ import { ThemedText } from 'theme/components/text'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Trans, t } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 const Container = styled(ColumnCenter)`

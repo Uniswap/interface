@@ -18,10 +18,9 @@ import {
   useSetSortMethod,
 } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { chainIdToBackendChain, getChainFromChainUrlParam, useChainFromUrlParam } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { SparklineMap, TopToken, useTopTokens } from 'graphql/data/TopTokens'
-import { OrderDirection, getSupportedGraphQlChain, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
+import { SparklineMap, TopToken } from 'graphql/data/types'
+import { OrderDirection, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
 import useSimplePagination from 'hooks/useSimplePagination'
 import { useAtomValue } from 'jotai/utils'
 import { ReactElement, ReactNode, memo, useMemo } from 'react'
@@ -29,9 +28,10 @@ import { TABLE_PAGE_SIZE, giveExploreStatDefaultValue } from 'state/explore'
 import { useTopTokens as useRestTopTokens } from 'state/explore/topTokens'
 import { TokenStat } from 'state/explore/types'
 import { Flex, Text, styled } from 'ui/src'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { Trans } from 'uniswap/src/i18n'
+import { getChainIdFromChainUrlParam } from 'utils/chainParams'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const TableWrapper = styled(Flex, {
@@ -89,65 +89,19 @@ function TokenDescription({ token }: { token: TopToken | TokenStat }) {
 }
 
 export const TopTokensTable = memo(function TopTokensTable() {
-  const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
-  const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
-  const {
-    tokens: gqlTokens,
-    tokenSortRank: gqlTokenSortRank,
-    loadingTokens: gqlLoadingTokens,
-    sparklines: gqlSparklines,
-    error: gqlError,
-  } = useTopTokens(chain.backendChain.chain, isRestExploreEnabled /* skip */)
-  const {
-    topTokens: restTopTokens,
-    tokenSortRank: restTokenSortRank,
-    isLoading: restIsLoading,
-    sparklines: restSparklines,
-    isError: restError,
-  } = useRestTopTokens()
+  const { topTokens, tokenSortRank, isLoading, sparklines, isError } = useRestTopTokens()
 
   const { page, loadMore } = useSimplePagination()
-
-  const { tokens, tokenSortRank, sparklines, loading, error } = useMemo(() => {
-    return isRestExploreEnabled
-      ? {
-          tokens: restTopTokens?.slice(0, page * TABLE_PAGE_SIZE),
-          tokenSortRank: restTokenSortRank,
-          loading: restIsLoading,
-          sparklines: restSparklines,
-          error: restError,
-        }
-      : {
-          tokens: gqlTokens,
-          tokenSortRank: gqlTokenSortRank,
-          loading: gqlLoadingTokens,
-          sparklines: gqlSparklines,
-          error: gqlError,
-        }
-  }, [
-    isRestExploreEnabled,
-    restTopTokens,
-    page,
-    restTokenSortRank,
-    restIsLoading,
-    restSparklines,
-    restError,
-    gqlTokens,
-    gqlTokenSortRank,
-    gqlLoadingTokens,
-    gqlSparklines,
-    gqlError,
-  ])
 
   return (
     <TableWrapper data-testid="top-tokens-explore-table">
       <TokenTable
-        tokens={tokens}
+        tokens={topTokens?.slice(0, page * TABLE_PAGE_SIZE)}
         tokenSortRank={tokenSortRank}
         sparklines={sparklines}
-        loading={loading}
+        loading={isLoading}
         loadMore={loadMore}
-        error={error}
+        error={isError}
       />
     </TableWrapper>
   )
@@ -206,6 +160,7 @@ function TokenTable({
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
 }) {
   const { formatFiatPrice, formatNumber, formatDelta } = useFormatter()
+  const { defaultChainId } = useEnabledChains()
   const sortAscending = useAtomValue(sortAscendingAtom)
   const orderDirection = sortAscending ? OrderDirection.Asc : OrderDirection.Desc
   const sortMethod = useAtomValue(sortMethodAtom)
@@ -221,14 +176,14 @@ function TokenTable({
           : token?.pricePercentChange1Hour?.value
         const delta1d = isGqlToken ? token?.market?.pricePercentChange1Day?.value : token?.pricePercentChange1Day?.value
         const tokenSortIndex = tokenSortRank[token?.address ?? NATIVE_CHAIN_ID]
-        const chainId = getChainFromChainUrlParam(token?.chain.toLowerCase())?.id
+        const chainId = getChainIdFromChainUrlParam(token?.chain.toLowerCase())
         const unwrappedToken = chainId ? unwrapToken(chainId, token) : token
 
         return {
           index: tokenSortIndex,
           tokenDescription: <TokenDescription token={unwrappedToken} />,
           price: isGqlToken ? token?.market?.price?.value ?? 0 : giveExploreStatDefaultValue(token?.price?.value),
-          testId: `token-table-row-${token?.address}`,
+          testId: `token-table-row-${unwrappedToken?.address ?? NATIVE_CHAIN_ID}`,
           percentChange1hr: (
             <>
               <DeltaArrow delta={delta1hr} />
@@ -266,7 +221,7 @@ function TokenTable({
           ),
           link: getTokenDetailsURL({
             address: unwrappedToken?.address,
-            chain: chainIdToBackendChain({ chainId, withFallback: true }),
+            chain: toGraphQLChain(chainId ?? defaultChainId),
           }),
           analytics: {
             elementName: InterfaceElementName.TOKENS_TABLE_ROW,
@@ -284,7 +239,7 @@ function TokenTable({
           linkState: { preloadedLogoSrc: isGqlToken ? token?.project?.logoUrl : token?.logo },
         }
       }) ?? [],
-    [filterString, formatDelta, sparklines, timePeriod, tokenSortRank, tokens],
+    [defaultChainId, filterString, formatDelta, sparklines, timePeriod, tokenSortRank, tokens],
   )
 
   const showLoadingSkeleton = loading || !!error

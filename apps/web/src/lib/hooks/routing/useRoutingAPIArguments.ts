@@ -1,10 +1,11 @@
 import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { useIsUniswapXSupportedChain } from 'constants/chains'
+import { useIsUniswapXSupportedChain } from 'hooks/useIsUniswapXSupportedChain'
 import { useMemo } from 'react'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   ArbitrumXV2ExperimentGroup,
   ArbitrumXV2OpenOrderProperties,
@@ -12,7 +13,6 @@ import {
 } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useExperimentGroupName, useExperimentValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 /**
  * Returns query arguments for the Routing API query or undefined if the

@@ -1,6 +1,5 @@
 import { Currency, Price, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, TICK_SPACINGS, tickToPrice } from '@uniswap/v3-sdk'
-import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { TickData, Ticks } from 'graphql/data/AllV3TicksQuery'
 import { useAccount } from 'hooks/useAccount'
 import { PoolState, usePoolMultichain } from 'hooks/usePools'
@@ -8,7 +7,9 @@ import JSBI from 'jsbi'
 import ms from 'ms'
 import { useEffect, useMemo, useState } from 'react'
 import { useAllV3TicksQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useEnabledChains, useSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { logger } from 'utilities/src/logger/logger'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 
@@ -27,13 +28,15 @@ const getActiveTick = (tickCurrent: number | undefined, feeAmount: FeeAmount | u
   tickCurrent && feeAmount ? Math.floor(tickCurrent / TICK_SPACINGS[feeAmount]) * TICK_SPACINGS[feeAmount] : undefined
 
 const MAX_TICK_FETCH_VALUE = 1000
-function useTicksFromSubgraph(
+function usePaginatedTickQuery(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
   feeAmount: FeeAmount | undefined,
   skip = 0,
   chainId: UniverseChainId,
 ) {
+  const { defaultChainId } = useEnabledChains()
+
   const poolAddress =
     currencyA && currencyB && feeAmount
       ? Pool.getAddress(
@@ -49,7 +52,7 @@ function useTicksFromSubgraph(
   return useAllV3TicksQuery({
     variables: {
       address: poolAddress?.toLowerCase() ?? '',
-      chain: chainIdToBackendChain({ chainId: supportedChainId, withFallback: true }),
+      chain: toGraphQLChain(supportedChainId ?? defaultChainId),
       skip,
       first: MAX_TICK_FETCH_VALUE,
     },
@@ -70,13 +73,17 @@ function useAllV3Ticks(
   ticks?: TickData[]
 } {
   const [skipNumber, setSkipNumber] = useState(0)
-  const [subgraphTickData, setSubgraphTickData] = useState<Ticks>([])
-  const { data, error, loading: isLoading } = useTicksFromSubgraph(currencyA, currencyB, feeAmount, skipNumber, chainId)
+  const [tickData, setTickData] = useState<Ticks>([])
+  const {
+    data,
+    error,
+    loading: isLoading,
+  } = usePaginatedTickQuery(currencyA, currencyB, feeAmount, skipNumber, chainId)
   const ticks: Ticks = data?.v3Pool?.ticks as Ticks
 
   useEffect(() => {
     if (ticks?.length) {
-      setSubgraphTickData((tickData) => [...tickData, ...ticks])
+      setTickData((tickData) => [...tickData, ...ticks])
       if (ticks?.length === MAX_TICK_FETCH_VALUE) {
         setSkipNumber((skipNumber) => skipNumber + MAX_TICK_FETCH_VALUE)
       }
@@ -86,7 +93,7 @@ function useAllV3Ticks(
   return {
     isLoading: isLoading || ticks?.length === MAX_TICK_FETCH_VALUE,
     error,
-    ticks: subgraphTickData,
+    ticks: tickData,
   }
 }
 

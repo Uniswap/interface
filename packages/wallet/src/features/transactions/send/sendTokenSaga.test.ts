@@ -5,13 +5,13 @@ import * as matchers from 'redux-saga-test-plan/matchers'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   SendTokenTransactionInfo,
   TransactionOriginType,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getTxFixtures } from 'uniswap/src/test/fixtures'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { noOpFunction } from 'utilities/src/test/utils'
 import { sendToken } from 'wallet/src/features/transactions/send/sendTokenSaga'
 import { SendCurrencyParams, SendNFTParams } from 'wallet/src/features/transactions/send/types'

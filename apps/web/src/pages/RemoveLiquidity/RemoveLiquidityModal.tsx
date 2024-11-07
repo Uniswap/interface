@@ -3,7 +3,7 @@ import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
 import {
   DecreaseLiquidityStep,
   RemoveLiquidityModalContextProvider,
-  useLiquidityModalContext,
+  useRemoveLiquidityModalContext,
 } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { RemoveLiquidityReview } from 'components/RemoveLiquidity/RemoveLiquidityReview'
 import { RemoveLiquidityTxContextProvider } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
@@ -17,7 +17,7 @@ import { useTranslation } from 'uniswap/src/i18n'
 function RemoveLiquidityModalInner() {
   const closeModal = useCloseModal(ModalName.RemoveLiquidity)
   const { t } = useTranslation()
-  const { step, setStep } = useLiquidityModalContext()
+  const { step, setStep } = useRemoveLiquidityModalContext()
 
   let modalContent
   switch (step) {

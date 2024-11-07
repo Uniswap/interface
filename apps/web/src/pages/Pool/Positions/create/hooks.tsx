@@ -44,9 +44,9 @@ import { useMemo } from 'react'
 import { PositionField } from 'types/position'
 import { useGetPair } from 'uniswap/src/data/rest/getPair'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 /**
  * @param state user-defined state for a position being created or migrated
@@ -67,7 +67,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
   const sortedCurrencies = getSortedCurrenciesTuple(TOKEN0, TOKEN1)
   const validCurrencyInput = validateCurrencyInput(sortedCurrencies)
   const poolsQueryEnabled = poolEnabledProtocolVersion(protocolVersion) && validCurrencyInput
-  const { data: poolData } = useGetPoolsByTokens(
+  const { data: poolData, isLoading: poolIsLoading } = useGetPoolsByTokens(
     {
       fee: state.fee.feeAmount,
       chainId,
@@ -80,18 +80,40 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
 
   const pool = poolData?.pools && poolData.pools.length > 0 ? poolData.pools[0] : undefined
 
-  const pairsQueryEnabled = pairEnabledProtocolVersion(protocolVersion) && validCurrencyInput
-  const pairAddress = useMemo(() => {
-    return pairsQueryEnabled && validCurrencyInput
-      ? computePairAddress({
-          factoryAddress: V2_FACTORY_ADDRESSES[sortedCurrencies[0].chainId],
-          tokenA: getCurrencyWithWrap(sortedCurrencies[0], protocolVersion),
-          tokenB: getCurrencyWithWrap(sortedCurrencies[1], protocolVersion),
-        })
-      : undefined
-  }, [pairsQueryEnabled, protocolVersion, sortedCurrencies, validCurrencyInput])
+  const { pairsQueryEnabled, pairAddress, sortedTokens } = useMemo(() => {
+    if (!pairEnabledProtocolVersion(protocolVersion)) {
+      return {
+        pairsQueryEnabled: false,
+      } as const
+    }
 
-  const { data: pairData, isFetched: pairIsFetched } = useGetPair(
+    const sortedTokens = getSortedCurrenciesTuple(
+      getCurrencyWithWrap(sortedCurrencies[0], protocolVersion),
+      getCurrencyWithWrap(sortedCurrencies[1], protocolVersion),
+    )
+
+    if (!validateCurrencyInput(sortedTokens)) {
+      return {
+        pairsQueryEnabled: false,
+      } as const
+    }
+
+    return {
+      pairsQueryEnabled: true,
+      pairAddress: computePairAddress({
+        factoryAddress: V2_FACTORY_ADDRESSES[sortedTokens[0].chainId],
+        tokenA: sortedTokens[0],
+        tokenB: sortedTokens[1],
+      }),
+      sortedTokens,
+    } as const
+  }, [protocolVersion, sortedCurrencies])
+
+  const {
+    data: pairData,
+    isFetched: pairIsFetched,
+    isLoading: pairIsLoading,
+  } = useGetPair(
     {
       chainId: chainId ?? (UniverseChainId.Mainnet as number),
       pairAddress,
@@ -102,8 +124,8 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
   const pair = pairsQueryEnabled
     ? getPairFromRest({
         pair: pairData?.pair,
-        token0: getCurrencyWithWrap(sortedCurrencies[0], protocolVersion),
-        token1: getCurrencyWithWrap(sortedCurrencies[1], protocolVersion),
+        token0: sortedTokens[0],
+        token1: sortedTokens[1],
       })
     : undefined
 
@@ -138,6 +160,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
         protocolVersion,
         pair,
         creatingPoolOrPair,
+        poolOrPairLoading: pairIsLoading,
       } satisfies CreateV2PositionInfo
     }
 
@@ -152,6 +175,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
           protocolVersion,
         }),
         creatingPoolOrPair,
+        poolOrPairLoading: poolIsLoading,
       } satisfies CreateV3PositionInfo
     }
 
@@ -166,8 +190,20 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
         hooks: pool?.hooks?.address || '',
       }),
       creatingPoolOrPair,
+      poolOrPairLoading: poolIsLoading,
     } satisfies CreateV4PositionInfo
-  }, [TOKEN0, TOKEN1, protocolVersion, pool, sortedCurrencies, creatingPoolOrPair, pair, poolData?.pools])
+  }, [
+    TOKEN0,
+    TOKEN1,
+    protocolVersion,
+    pool,
+    sortedCurrencies,
+    creatingPoolOrPair,
+    poolIsLoading,
+    pair,
+    pairIsLoading,
+    poolData?.pools,
+  ])
 }
 
 export function useDerivedPriceRangeInfo(state: PriceRangeState): PriceRangeInfo {
@@ -368,7 +404,14 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
       return t('common.noAmount.error')
     }
 
-    if (currency0Amount && token0Balance?.lessThan(currency0Amount)) {
+    const insufficientToken0Balance = currency0Amount && token0Balance?.lessThan(currency0Amount)
+    const insufficientToken1Balance = currency1Amount && token1Balance?.lessThan(currency1Amount)
+
+    if (insufficientToken0Balance && insufficientToken1Balance) {
+      return <Trans i18nKey="common.insufficientBalance.error" />
+    }
+
+    if (insufficientToken0Balance) {
       return (
         <Trans
           i18nKey="common.insufficientTokenBalance.error"
@@ -379,7 +422,7 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
       )
     }
 
-    if (currency1Amount && token1Balance?.lessThan(currency1Amount)) {
+    if (insufficientToken1Balance) {
       return (
         <Trans
           i18nKey="common.insufficientTokenBalance.error"

@@ -1,6 +1,6 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { getTestSelector, setupHardhat } from '../../utils'
 import { stubNonPriceQuoteWith, stubSwapTxReceipt } from '../../utils/uniswapx-swap'

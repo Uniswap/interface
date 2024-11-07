@@ -8,8 +8,6 @@ import { EllipsisTamaguiStyle } from 'theme/components'
 import { ThemedText } from 'theme/components/text'
 import { Flex, Text, styled } from 'ui/src'
 import { PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export type ChartHeaderProtocolInfo = { protocol: PriceSource; value?: number }
@@ -22,7 +20,7 @@ const ProtocolLegendWrapper = styled(Flex, {
   gap: '$gap12',
   pointerEvents: 'none',
   variants: {
-    isMultichainExploreEnabled: {
+    hover: {
       true: {
         right: 'unset',
         p: '$spacing8',
@@ -41,49 +39,28 @@ const ProtocolLegendWrapper = styled(Flex, {
 function ProtocolLegend({ protocolData }: { protocolData?: ChartHeaderProtocolInfo[] }) {
   const { formatFiatPrice } = useFormatter()
   const theme = useTheme()
-  const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
 
   return (
-    <ProtocolLegendWrapper
-      id={isMultichainExploreEnabled ? PROTOCOL_LEGEND_ELEMENT_ID : undefined}
-      isMultichainExploreEnabled={isMultichainExploreEnabled}
-    >
+    <ProtocolLegendWrapper id={PROTOCOL_LEGEND_ELEMENT_ID} hover={true}>
       {protocolData
         ?.map(({ value, protocol }) => {
-          const display = value
-            ? formatFiatPrice({ price: value, type: NumberType.ChartFiatValue })
-            : isMultichainExploreEnabled
-              ? null
-              : getProtocolName(protocol)
+          const display = value ? formatFiatPrice({ price: value, type: NumberType.ChartFiatValue }) : null
           return (
             !!display && (
-              <Flex
-                row
-                gap={isMultichainExploreEnabled ? 8 : 6}
-                justifyContent="flex-end"
-                key={protocol + '_blip'}
-                width={isMultichainExploreEnabled ? 'max-content' : undefined}
-              >
-                {isMultichainExploreEnabled ? (
-                  <Text variant="body4" textAlign="right" color="$neutral2" lineHeight={12}>
-                    {getProtocolName(protocol)}
-                  </Text>
-                ) : (
-                  <Text variant="body4" width={80} textAlign="right" lineHeight={12} {...EllipsisTamaguiStyle}>
-                    {display}
-                  </Text>
-                )}
+              <Flex row gap={8} justifyContent="flex-end" key={protocol + '_blip'} width="max-content">
+                <Text variant="body4" textAlign="right" color="$neutral2" lineHeight={12}>
+                  {getProtocolName(protocol)}
+                </Text>
+
                 <Flex
                   borderRadius="$rounded4"
                   width={12}
                   height={12}
                   backgroundColor={getProtocolColor(protocol, theme)}
                 />
-                {isMultichainExploreEnabled && (
-                  <Text variant="body4" textAlign="right" lineHeight={12} {...EllipsisTamaguiStyle}>
-                    {display}
-                  </Text>
-                )}
+                <Text variant="body4" textAlign="right" lineHeight={12} {...EllipsisTamaguiStyle}>
+                  {display}
+                </Text>
               </Flex>
             )
           )
@@ -141,7 +118,6 @@ export function ChartHeader({
   additionalFields,
 }: ChartHeaderProps) {
   const isHovered = !!time
-  const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
   return (
     <Flex
       row
@@ -160,7 +136,7 @@ export function ChartHeader({
           <HeaderTimeDisplay time={time} timePlaceholder={timePlaceholder} />
         </Flex>
       </Flex>
-      {((isHovered && protocolData) || !isMultichainExploreEnabled) && <ProtocolLegend protocolData={protocolData} />}
+      {isHovered && protocolData && <ProtocolLegend protocolData={protocolData} />}
     </Flex>
   )
 }

@@ -17,7 +17,6 @@ import { isExtension, isMobileApp } from 'utilities/src/platform'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
 import {
   setBackupReminderLastSeenTs,
-  setCreatedOnboardingRedesignAccount,
   setHasSkippedUnitagPrompt,
   setHasViewedWelcomeWalletCard,
 } from 'wallet/src/features/behaviorHistory/slice'
@@ -421,12 +420,10 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
     importType,
     accounts,
     extensionOnboardingFlow,
-    createdFromOnboardingRedesign = false,
   }: {
     importType: ImportType
     accounts?: SignerMnemonicAccount[]
     extensionOnboardingFlow?: ExtensionOnboardingFlow
-    createdFromOnboardingRedesign?: boolean
   }): Promise<void> => {
     const isWatchFlow = importType === ImportType.Watch
     const onboardingAccounts = isWatchFlow ? [] : accounts ?? getAllOnboardingAccounts()
@@ -489,10 +486,6 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
 
       // Reset the flag for having seen the welcome wallet card
       dispatch(setHasViewedWelcomeWalletCard(false))
-
-      if (createdFromOnboardingRedesign) {
-        dispatch(setCreatedOnboardingRedesignAccount(true))
-      }
     }
 
     const isExtensionNoAccounts = onboardingAddresses.length === 0 && isExtension

@@ -7,6 +7,7 @@ import { AnimatePresence, Button, Flex, Text } from 'ui/src'
 import { AnimateInOrder } from 'ui/src/animations'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
+import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import {
@@ -21,7 +22,6 @@ import {
   TextElement,
 } from 'wallet/src/components/landing/elements'
 import { UnitagWithProfilePicture } from 'wallet/src/features/unitags/UnitagWithProfilePicture'
-import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 
 export function UnitagConfirmationScreen({
   route,

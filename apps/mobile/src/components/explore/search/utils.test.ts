@@ -6,6 +6,7 @@ import {
 } from 'src/components/explore/search/utils'
 import { Chain, ExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
 import { amount, ethToken, nftCollection, nftContract, token, tokenMarket } from 'uniswap/src/test/fixtures'
 import { createArray } from 'uniswap/src/test/utils'
@@ -79,6 +80,10 @@ describe(formatTokenSearchResults, () => {
     expect(result?.[0]?.symbol).toEqual(searchToken.symbol)
     expect(result?.[0]?.logoUrl).toEqual(searchToken.project?.logoUrl)
     expect(result?.[0]?.safetyLevel).toEqual(searchToken.project?.safetyLevel)
+    expect(result?.[0]?.feeData).toEqual(searchToken.feeData)
+    expect(result?.[0]?.safetyInfo).toEqual(
+      getCurrencySafetyInfo(searchToken.project?.safetyLevel, searchToken.protectionInfo),
+    )
   })
 
   describe(gqlNFTToNFTCollectionSearchResult, () => {

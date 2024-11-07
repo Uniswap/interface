@@ -11,8 +11,8 @@ import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
 import { hideSplashScreen } from 'src/utils/splashScreen'
 import { Flex, Text, TouchableArea, useHapticFeedback } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { Experiments, OnboardingRedesignRecoveryBackupProperties } from 'uniswap/src/features/gating/experiments'
-import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -33,6 +33,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const { hapticFeedback } = useHapticFeedback()
+  const { isTestnetModeEnabled } = useEnabledChains()
 
   const actionButtonsOpacity = useSharedValue(0)
   const actionButtonsStyle = useAnimatedStyle(() => ({ opacity: actionButtonsOpacity.value }), [actionButtonsOpacity])
@@ -44,6 +45,13 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
     }
   }, [actionButtonsOpacity])
 
+  // Disables testnet mode on mount if enabled (eg upon removing a wallet)
+  useEffect(() => {
+    if (isTestnetModeEnabled) {
+      dispatch(setIsTestnetModeEnabled(false))
+    }
+  }, [dispatch, isTestnetModeEnabled])
+
   const { canClaimUnitag } = useCanAddressClaimUnitag()
   const { getOnboardingAccount, generateOnboardingAccount } = useOnboardingContext()
 
@@ -53,35 +61,21 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
         entryPoint: OnboardingScreens.Landing,
       })
     } else {
-      const onboardingExperimentEnabled = getExperimentValue(
-        Experiments.OnboardingRedesignRecoveryBackup,
-        OnboardingRedesignRecoveryBackupProperties.Enabled,
-        false,
-      )
-
-      if (onboardingExperimentEnabled) {
-        const onboardingAccount = getOnboardingAccount()
-        if (!onboardingAccount) {
-          try {
-            await generateOnboardingAccount()
-          } catch (e) {
-            logger.error(e, {
-              tags: { file: 'LandingScreen.tsx', function: 'onPressCreateWallet' },
-            })
-          }
+      const onboardingAccount = getOnboardingAccount()
+      if (!onboardingAccount) {
+        try {
+          await generateOnboardingAccount()
+        } catch (e) {
+          logger.error(e, {
+            tags: { file: 'LandingScreen.tsx', function: 'onPressCreateWallet' },
+          })
         }
-
-        navigation.navigate(OnboardingScreens.Notifications, {
-          importType: ImportType.CreateNew,
-          entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
-        })
-      } else {
-        // If can't claim, go direct to welcome screen
-        navigation.navigate(OnboardingScreens.WelcomeWallet, {
-          importType: ImportType.CreateNew,
-          entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
-        })
       }
+
+      navigation.navigate(OnboardingScreens.Notifications, {
+        importType: ImportType.CreateNew,
+        entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
+      })
     }
   }, [canClaimUnitag, generateOnboardingAccount, getOnboardingAccount, navigation])
 

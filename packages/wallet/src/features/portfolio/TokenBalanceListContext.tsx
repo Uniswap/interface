@@ -11,13 +11,13 @@ import {
   useState,
 } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import {
   sortPortfolioBalances,
   usePortfolioBalances,
   useTokenBalancesGroupedByVisibility,
 } from 'uniswap/src/features/dataApi/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
 
 type CurrencyId = string

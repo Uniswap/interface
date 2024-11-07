@@ -36,16 +36,11 @@ import {
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
 import { getFiatCurrencyName, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
-import {
-  useEnabledChains,
-  useHideSmallBalancesSetting,
-  useHideSpamTokensSetting,
-} from 'uniswap/src/features/settings/hooks'
+import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import {
   setCurrentFiatCurrency,
   setHideSmallBalances,
@@ -91,7 +86,6 @@ export function SettingsScreen(): JSX.Element {
     await dispatch(setHideSmallBalances(!hideSmallBalances))
   }
 
-  const isTestnetModeFlagEnabled = useFeatureFlag(FeatureFlags.TestnetMode)
   const { isTestnetModeEnabled } = useEnabledChains()
   const handleTestnetModeToggle = async (isChecked: boolean): Promise<void> => {
     const fireAnalytic = (): void => {
@@ -196,16 +190,12 @@ export function SettingsScreen(): JSX.Element {
               title={t('settings.setting.privacy.title')}
               onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.Privacy}`)}
             />
-            <>
-              {isTestnetModeFlagEnabled && (
-                <SettingsToggleRow
-                  Icon={ShieldQuestion}
-                  checked={isTestnetModeEnabled}
-                  title={t('settings.setting.wallet.testnetMode.title')}
-                  onCheckedChange={handleTestnetModeToggle}
-                />
-              )}
-            </>
+            <SettingsToggleRow
+              Icon={ShieldQuestion}
+              checked={isTestnetModeEnabled}
+              title={t('settings.setting.wallet.testnetMode.title')}
+              onCheckedChange={handleTestnetModeToggle}
+            />
           </SettingsSection>
           <SettingsSectionSeparator />
           <SettingsSection title={t('settings.section.security')}>

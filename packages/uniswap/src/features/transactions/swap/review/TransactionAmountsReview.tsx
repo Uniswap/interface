@@ -6,14 +6,11 @@ import { X } from 'ui/src/components/icons/X'
 import { iconSizes, validColor } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { getChainLabel, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { getTradeAmounts } from 'uniswap/src/features/transactions/swap/hooks/getTradeAmounts'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
@@ -39,14 +36,12 @@ export function TransactionAmountsReview({
   const colors = useSporeColors()
   const { convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()
 
-  const isBridgingEnabled = useFeatureFlag(FeatureFlags.Bridging)
-
   const {
     exactCurrencyField,
     trade: { trade, indicativeTrade },
   } = acceptedDerivedSwapInfo
   const displayTrade = trade ?? indicativeTrade
-  const isBridgeTrade = (isBridgingEnabled && trade && isBridge(trade)) ?? false
+  const isBridgeTrade = (trade && isBridge(trade)) ?? false
 
   const { inputCurrencyAmount, outputCurrencyAmount } = getTradeAmounts(acceptedDerivedSwapInfo)
 
@@ -174,7 +169,7 @@ function CurrencyValueWithIcon({
 
   const chainId = toSupportedChainId(currencyInfo.currency.chainId) ?? defaultChainId
   const networkColors = useNetworkColors(chainId)
-  const networkLabel = UNIVERSE_CHAIN_INFO[chainId].label
+  const networkLabel = getChainLabel(chainId)
   const networkColor = validColor(networkColors.foreground)
 
   return (

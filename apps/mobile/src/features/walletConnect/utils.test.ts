@@ -1,11 +1,11 @@
+import { utils } from 'ethers'
 import {
   decodeMessage,
   getAccountAddressFromEIP155String,
   getChainIdFromEIP155String,
   getSupportedWalletConnectChains,
-  isHexString,
 } from 'src/features/walletConnect/utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const EIP155_MAINNET = 'eip155:1'
 const EIP155_POLYGON = 'eip155:137'
@@ -62,17 +62,17 @@ describe(getChainIdFromEIP155String, () => {
 describe('isHexString', () => {
   test('should return true for valid hex string', () => {
     const validHex = '0x5468697320697320612074657374206d657373616765'
-    expect(isHexString(validHex)).toBe(true)
+    expect(utils.isHexString(validHex)).toBe(true)
   })
 
   test('should return false for invalid hex string', () => {
-    const invalidHex = '546869732069732G20612074657374206d657373616765'
-    expect(isHexString(invalidHex)).toBe(false)
+    const invalidHex = '546869732069732G20612074657374206d657373616765' // Invalid hex
+    expect(utils.isHexString(invalidHex)).toBe(false)
   })
 
   test('should return false for plain text', () => {
     const plainText = 'This is a plain text message'
-    expect(isHexString(plainText)).toBe(false)
+    expect(utils.isHexString(plainText)).toBe(false)
   })
 })
 
@@ -82,12 +82,6 @@ describe('decodeMessage', () => {
     const expectedMessage = 'This is a test message'
     const result = decodeMessage(hexMessage)
     expect(result).toBe(expectedMessage)
-  })
-
-  test('should return original hex string if decoding fails', () => {
-    const invalidHex = '0x12345'
-    const result = decodeMessage(invalidHex)
-    expect(result).toBe(invalidHex)
   })
 
   test('should return plain text message unchanged', () => {

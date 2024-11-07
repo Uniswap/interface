@@ -3,8 +3,8 @@ import { Flex, Text, UniversalImage, useColorSchemeFromSeed, useSporeColors } fr
 import { iconSizes, validColor } from 'ui/src/theme'
 import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 import { isMobileApp } from 'utilities/src/platform'
 
 interface TokenLogoProps {
@@ -34,7 +34,7 @@ export const TokenLogo = memo(function _TokenLogo({
   const colors = useSporeColors()
   const { foreground, background } = useColorSchemeFromSeed(name ?? symbol ?? '')
 
-  const isTestnetToken = UNIVERSE_CHAIN_INFO[chainId as UniverseChainId]?.testnet
+  const isTestnetToken = chainId && isTestnetChain(chainId)
   const borderWidth = isTestnetToken ? size / TESTNET_BORDER_DIVISOR : 0
 
   const showNetworkLogo = !hideNetworkLogo && chainId && chainId !== UniverseChainId.Mainnet

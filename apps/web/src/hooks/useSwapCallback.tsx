@@ -1,7 +1,6 @@
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { FlatFeeOptions } from '@uniswap/universal-router-sdk'
 import { FeeOptions } from '@uniswap/v3-sdk'
-import { useSupportedChainId } from 'constants/chains'
 import { BigNumber } from 'ethers/lib/ethers'
 import { useAccount } from 'hooks/useAccount'
 import { PermitSignature } from 'hooks/usePermitAllowance'
@@ -20,7 +19,8 @@ import {
   ExactOutputSwapTransactionInfo,
   TransactionType,
 } from 'state/transactions/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { currencyId } from 'utils/currencyId'
 
 export type SwapResult = Awaited<ReturnType<ReturnType<typeof useSwapCallback>>>

@@ -3,29 +3,22 @@ import Badge from 'components/Badge/Badge'
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { AllNetworksIcon } from 'components/Tokens/TokenTable/icons'
-import {
-  BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS,
-  BACKEND_SUPPORTED_CHAINS,
-  InterfaceGqlChain,
-  useChainFromUrlParam,
-  useIsSupportedChainIdCallback,
-} from 'constants/chains'
-import { getSupportedGraphQlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import deprecatedStyled, { useTheme } from 'lib/styled-components'
 import { ExploreTab } from 'pages/Explore'
 import { useExploreParams } from 'pages/Explore/redirects'
-import { Dispatch, SetStateAction, memo, useState } from 'react'
+import { Dispatch, SetStateAction, memo, useCallback, useState } from 'react'
 import { Check } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { EllipsisTamaguiStyle } from 'theme/components'
 import { Flex, FlexProps, ScrollView, Text, styled } from 'ui/src'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains, useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks'
+import { ALL_CHAIN_IDS, GqlChainId, UniverseChainId, UniverseChainInfo } from 'uniswap/src/features/chains/types'
+import { isBackendSupportedChainId, isTestnetChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useTranslation } from 'uniswap/src/i18n'
-import { UniverseChainId, UniverseChainInfo } from 'uniswap/src/types/chains'
+import { useChainIdFromUrlParam } from 'utils/chainParams'
 
 const NetworkLabel = styled(Flex, {
   flexDirection: 'row',
@@ -54,13 +47,32 @@ const StyledDropdown = {
 export default function TableNetworkFilter() {
   const [isMenuOpen, toggleMenu] = useState(false)
   const isSupportedChainCallback = useIsSupportedChainIdCallback()
-  const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
+  const { isTestnetModeEnabled } = useEnabledChains()
 
   const exploreParams = useExploreParams()
-  const currentChain = getSupportedGraphQlChain(useChainFromUrlParam(), {
-    fallbackToEthereum: !isMultichainExploreEnabled,
-  })
+  const currentChainId = useChainIdFromUrlParam()
   const tab = exploreParams.tab
+
+  const tableNetworkItemRenderer = useCallback(
+    (chainId: UniverseChainId) => {
+      if (!isSupportedChainCallback(chainId)) {
+        return null
+      }
+      const chainInfo = getChainInfo(chainId)
+      const supported = isBackendSupportedChainId(chainId)
+      return (
+        <TableNetworkItem
+          key={chainId}
+          display={toGraphQLChain(chainId)}
+          chainInfo={chainInfo}
+          toggleMenu={toggleMenu}
+          tab={tab}
+          unsupported={!supported}
+        />
+      )
+    },
+    [isSupportedChainCallback, tab],
+  )
 
   return (
     <div>
@@ -70,46 +82,28 @@ export default function TableNetworkFilter() {
           toggleOpen={toggleMenu}
           menuLabel={
             <NetworkLabel>
-              {!currentChain ? (
+              {!currentChainId ? (
                 <AllNetworksIcon />
               ) : (
-                <ChainLogo chainId={currentChain.id} size={20} testId="tokens-network-filter-selected" />
+                <ChainLogo chainId={currentChainId} size={20} testId="tokens-network-filter-selected" />
               )}
             </NetworkLabel>
           }
           internalMenuItems={
             <ScrollView px="$spacing8">
-              {isMultichainExploreEnabled && (
-                <TableNetworkItem display="All networks" toggleMenu={toggleMenu} tab={tab} />
+              <TableNetworkItem display="All networks" toggleMenu={toggleMenu} tab={tab} />
+              {/* non-testnet backend supported chains */}
+              {ALL_CHAIN_IDS.filter(isBackendSupportedChainId)
+                .filter((c) => !isTestnetChain(c))
+                .map(tableNetworkItemRenderer)}
+              {/* Testnet backend supported chains */}
+              {isTestnetModeEnabled
+                ? ALL_CHAIN_IDS.filter(isBackendSupportedChainId).filter(isTestnetChain).map(tableNetworkItemRenderer)
+                : null}
+              {/* Unsupported non-testnet backend supported chains */}
+              {ALL_CHAIN_IDS.filter((c) => !isBackendSupportedChainId(c) && !isTestnetChain(c)).map(
+                tableNetworkItemRenderer,
               )}
-              {BACKEND_SUPPORTED_CHAINS.map((network) => {
-                const chainId = supportedChainIdFromGQLChain(network)
-                const isSupportedChain = isSupportedChainCallback(chainId)
-                const chainInfo = isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId] : undefined
-                return chainInfo ? (
-                  <TableNetworkItem
-                    key={network}
-                    display={network}
-                    chainInfo={chainInfo}
-                    toggleMenu={toggleMenu}
-                    tab={tab}
-                  />
-                ) : null
-              })}
-              {BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.map((network) => {
-                const isSupportedChain = isSupportedChainCallback(network)
-                const chainInfo = isSupportedChain ? UNIVERSE_CHAIN_INFO[network] : undefined
-                return chainInfo ? (
-                  <TableNetworkItem
-                    key={network}
-                    display={chainInfo.backendChain.chain}
-                    chainInfo={chainInfo}
-                    toggleMenu={toggleMenu}
-                    tab={tab}
-                    unsupported
-                  />
-                ) : null
-              })}
             </ScrollView>
           }
           buttonStyle={{ height: 40 }}
@@ -127,7 +121,7 @@ const TableNetworkItem = memo(function TableNetworkItem({
   tab,
   unsupported,
 }: {
-  display: 'All networks' | InterfaceGqlChain
+  display: 'All networks' | GqlChainId
   chainInfo?: UniverseChainInfo
   toggleMenu: Dispatch<SetStateAction<boolean>>
   tab?: ExploreTab
@@ -136,17 +130,15 @@ const TableNetworkItem = memo(function TableNetworkItem({
   const navigate = useNavigate()
   const theme = useTheme()
   const { t } = useTranslation()
-  const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
   const chainId = chainInfo?.id
   const exploreParams = useExploreParams()
-  const currentChain = getSupportedGraphQlChain(
-    useChainFromUrlParam(),
-    isMultichainExploreEnabled ? undefined : { fallbackToEthereum: true },
-  )
-  const isAllNetworks = display === 'All networks' && isMultichainExploreEnabled
+  const urlChainId = useChainIdFromUrlParam()
+  const currentChainInfo = urlChainId ? getChainInfo(urlChainId) : undefined
+
+  const isAllNetworks = display === 'All networks'
   const isCurrentChain = isAllNetworks
-    ? !currentChain
-    : currentChain?.backendChain.chain === display && exploreParams.chainName
+    ? !currentChainInfo
+    : currentChainInfo?.backendChain.chain === display && exploreParams.chainName
   return (
     <Trace
       logPress

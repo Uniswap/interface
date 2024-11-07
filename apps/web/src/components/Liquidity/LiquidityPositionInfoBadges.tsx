@@ -1,5 +1,11 @@
+import { FeeAmount } from '@uniswap/v3-sdk'
+import { isDynamicFeeTierAmount } from 'components/Liquidity/utils'
+import { ZERO_ADDRESS } from 'constants/misc'
+import { useMemo } from 'react'
 import { CopyHelper } from 'theme/components'
 import { styled, Text } from 'ui/src'
+import { DocumentList } from 'ui/src/components/icons/DocumentList'
+import { useTranslation } from 'uniswap/src/i18n/useTranslation'
 import { isAddress, shortenAddress } from 'utilities/src/addresses'
 
 export const PositionInfoBadge = styled(Text, {
@@ -42,19 +48,39 @@ function getPlacement(index: number, length: number): 'start' | 'middle' | 'end'
   return length === 1 ? 'only' : index === 0 ? 'start' : index === length - 1 ? 'end' : 'middle'
 }
 
-export interface BadgeData {
+interface BadgeData {
   label: string
   copyable?: boolean
   icon?: JSX.Element
 }
 
 export function LiquidityPositionInfoBadges({
-  badges,
+  versionLabel,
+  v4hook,
+  feeTier,
   size = 'default',
 }: {
-  badges: BadgeData[]
+  versionLabel?: string
+  v4hook?: string
+  feeTier?: string | FeeAmount
   size: 'small' | 'default'
 }): JSX.Element {
+  const { t } = useTranslation()
+
+  const badges = useMemo(() => {
+    return [
+      versionLabel ? { label: versionLabel } : undefined,
+      v4hook && v4hook !== ZERO_ADDRESS
+        ? { label: v4hook, copyable: true, icon: <DocumentList color="$neutral2" size={16} /> }
+        : undefined,
+      feeTier
+        ? isDynamicFeeTierAmount(feeTier)
+          ? { label: t('common.dynamic') }
+          : { label: `${Number(feeTier) / 10000}%` }
+        : undefined,
+    ].filter(Boolean) as BadgeData[]
+  }, [versionLabel, v4hook, feeTier, t])
+
   return (
     <>
       {badges.map(({ label, copyable, icon }, index) => {

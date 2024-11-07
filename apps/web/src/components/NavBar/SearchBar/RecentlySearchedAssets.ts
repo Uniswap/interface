@@ -1,16 +1,16 @@
-import { chainIdToBackendChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { GqlSearchToken } from 'graphql/data/SearchTokens'
 import { GenieCollection } from 'nft/types'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { MAX_RECENT_SEARCH_RESULTS } from 'uniswap/src/components/TokenSelector/hooks'
+import { MAX_RECENT_SEARCH_RESULTS } from 'uniswap/src/components/TokenSelector/constants'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   Chain,
   NftCollection,
   useRecentlySearchedAssetsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import {
   SearchResult,
   isNFTCollectionSearchResult,
@@ -18,7 +18,6 @@ import {
 } from 'uniswap/src/features/search/SearchResult'
 import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
 import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
-import { logger } from 'utilities/src/logger/logger'
 
 export type InterfaceRemoteSearchHistoryItem = GqlSearchToken | GenieCollection
 
@@ -31,7 +30,7 @@ export function useRecentlySearchedAssets(): { data?: InterfaceRemoteSearchHisto
       collectionAddresses: shortenedHistory.filter(isNFTCollectionSearchResult).map((asset) => asset.address),
       contracts: shortenedHistory.filter(isTokenSearchResult).map((token) => ({
         address: token.address ?? undefined,
-        chain: chainIdToBackendChain({ chainId: token.chainId }),
+        chain: toGraphQLChain(token.chainId),
       })),
     },
     skip: shortenedHistory.length === 0,
@@ -101,17 +100,7 @@ function generateInterfaceHistoryItem(
   // Handle native assets
   if (isNativeCurrencyAddress(asset.chainId, asset.address)) {
     // Handles special case where wMATIC data needs to be used for MATIC
-    const chain = chainIdToBackendChain({ chainId: asset.chainId })
-    if (!chain) {
-      logger.error(new Error('Invalid chain retrieved from Search Token/Collection Query'), {
-        tags: {
-          file: 'RecentlySearchedAssets',
-          function: 'useRecentlySearchedAssets',
-        },
-        extra: { asset },
-      })
-      return undefined
-    }
+    const chain = toGraphQLChain(asset.chainId)
     const native = nativeOnChain(asset.chainId)
     const queryAddress = asset.address ?? getNativeQueryAddress(chain)
     const result = resultsMap[queryAddress]

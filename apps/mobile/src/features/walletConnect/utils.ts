@@ -3,8 +3,8 @@ import { PairingTypes, ProposalTypes, SessionTypes, SignClientTypes } from '@wal
 import { utils } from 'ethers'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { SignRequest, TransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { EthMethod, EthSignMethod } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -159,25 +159,12 @@ export const parseTransactionRequest = (
   }
 }
 
-export function isHexString(value: string): boolean {
-  // Check if it starts with '0x' and has an even length after the prefix
-  return /^0x[0-9a-fA-F]+$/.test(value)
-}
-
 export function decodeMessage(value: string): string {
-  if (isHexString(value)) {
-    try {
-      return utils.toUtf8String(value)
-    } catch (error) {
-      logger.error(error, {
-        tags: { file: 'walletConnect/util.ts', function: 'decodeMessage' },
-      })
-
-      return value
-    }
-  } else {
-    return value
+  if (utils.isHexString(value)) {
+    return utils.toUtf8String(value)
   }
+
+  return value
 }
 
 /**

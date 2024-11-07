@@ -1,6 +1,5 @@
 import { NEVER_RELOAD } from '@uniswap/redux-multicall'
 import { useWeb3React } from '@web3-react/core'
-import { getChain } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
@@ -14,9 +13,10 @@ import { checkedTransaction } from 'state/transactions/reducer'
 import { PendingTransactionDetails } from 'state/transactions/types'
 import { isPendingTx } from 'state/transactions/utils'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { RetryOptions, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { RetryOptions, UniverseChainId } from 'uniswap/src/types/chains'
 import { SUBSCRIPTION_CHAINIDS } from 'utilities/src/apollo/constants'
 
 interface Transaction {
@@ -93,8 +93,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
       if (!provider || !account.chainId) {
         throw new Error('No provider or chainId')
       }
-      const retryOptions =
-        getChain({ chainId: account.chainId })?.pendingTransactionsRetryOptions ?? DEFAULT_RETRY_OPTIONS
+      const retryOptions = getChainInfo(account.chainId)?.pendingTransactionsRetryOptions ?? DEFAULT_RETRY_OPTIONS
       return retry(
         () =>
           provider.getTransactionReceipt(tx.hash).then(async (receipt) => {

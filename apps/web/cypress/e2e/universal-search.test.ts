@@ -1,6 +1,6 @@
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { UNI } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getTestSelector } from '../utils'
 
 const UNI_ADDRESS = UNI[UniverseChainId.Mainnet].address.toLowerCase()

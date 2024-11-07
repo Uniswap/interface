@@ -2,7 +2,6 @@ import { Currency } from '@uniswap/sdk-core'
 import UniswapXRouterLabel, { UniswapXGradient } from 'components/RouterLabel/UniswapXRouterLabel'
 import { AutoColumn } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -10,6 +9,8 @@ import { isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
 import { Divider, ExternalLink, ThemedText } from 'theme/components'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useEnabledChains, useSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -84,7 +85,8 @@ export function GasBreakdownTooltip({ trade }: GasBreakdownTooltipProps) {
 
 function NetworkCostDescription({ native }: { native: Currency }) {
   const supportedChain = useSupportedChainId(native.chainId)
-  const chainName = chainIdToBackendChain({ chainId: supportedChain, withFallback: true })
+  const { defaultChainId } = useEnabledChains()
+  const chainName = toGraphQLChain(supportedChain ?? defaultChainId)
 
   return (
     <ThemedText.LabelMicro>

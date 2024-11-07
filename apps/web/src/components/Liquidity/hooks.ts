@@ -2,27 +2,26 @@ import { BigNumber } from '@ethersproject/bignumber'
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
-import { PositionInfo } from 'components/Liquidity/types'
-import { calculateInvertedValues, parseV3FeeTier } from 'components/Liquidity/utils'
+import { FeeTierData, PositionInfo } from 'components/Liquidity/types'
+import {
+  calculateInvertedValues,
+  getDefaultFeeTiersForChainWithDynamicFeeTier,
+  mergeFeeTiers,
+  parseV3FeeTier,
+} from 'components/Liquidity/utils'
 import { PriceOrdering, getPriceOrderingFromPositionForUI } from 'components/PositionListItem'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import JSBI from 'jsbi'
 import { OptionalCurrency } from 'pages/Pool/Positions/create/types'
-import { getCurrencyAddressWithWrap, getSortedCurrenciesTuple } from 'pages/Pool/Positions/create/utils'
+import { getCurrencyAddressForTradingApi, getSortedCurrenciesTupleWithWrap } from 'pages/Pool/Positions/create/utils'
 import { useMemo } from 'react'
+import { LiquidityModalInitialState } from 'state/application/reducer'
 import { useAppSelector } from 'state/hooks'
 import { Bound } from 'state/mint/v3/actions'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { useTranslation } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-type FeeTierData = {
-  id: string
-  fee: number
-  formattedFee: string
-  totalLiquidityUsd: number
-  percentage: Percent
-}
 
 /**
  * @returns map of fee tier (in hundredths of bips) to more data about the Pool
@@ -32,24 +31,27 @@ export function useAllFeeTierPoolData({
   chainId,
   protocolVersion,
   currencies,
+  withDynamicFeeTier = false,
 }: {
   chainId?: number
   protocolVersion: ProtocolVersion
   currencies: [OptionalCurrency, OptionalCurrency]
-}): Record<number, FeeTierData> {
+  withDynamicFeeTier?: boolean
+}): { feeTierData: Record<number, FeeTierData>; hasExistingFeeTiers: boolean } {
+  const { t } = useTranslation()
   const { formatPercent } = useFormatter()
-  const sortedCurrencies = getSortedCurrenciesTuple(currencies[0], currencies[1])
-  const token0Address = getCurrencyAddressWithWrap(sortedCurrencies[0], protocolVersion)
-  const token1Address = getCurrencyAddressWithWrap(sortedCurrencies[1], protocolVersion)
+  const sortedCurrencies = getSortedCurrenciesTupleWithWrap(currencies[0], currencies[1], protocolVersion)
+
   const { data: poolData } = useGetPoolsByTokens(
     {
       chainId,
       protocolVersions: [protocolVersion],
-      token0: token0Address,
-      token1: token1Address,
+      token0: getCurrencyAddressForTradingApi(sortedCurrencies[0]),
+      token1: getCurrencyAddressForTradingApi(sortedCurrencies[1]),
     },
     Boolean(chainId && sortedCurrencies?.[0] && sortedCurrencies?.[1]),
   )
+
   return useMemo(() => {
     const liquiditySum = poolData?.pools.reduce(
       (sum, pool) => BigNumber.from(pool.totalLiquidityUsd.split('.')?.[0] ?? '0').add(sum),
@@ -70,16 +72,31 @@ export function useAllFeeTierPoolData({
         } else {
           feeTierData[feeTier] = {
             id: pool.poolId,
-            fee: pool.fee,
+            fee: {
+              feeAmount: pool.fee,
+              tickSpacing: pool.tickSpacing,
+            },
             formattedFee: formatPercent(new Percent(pool.fee, 1000000)),
             totalLiquidityUsd: totalLiquidityUsdTruncated,
             percentage,
-          }
+            created: true,
+          } satisfies FeeTierData
         }
       }
     }
-    return feeTierData
-  }, [poolData, sortedCurrencies, formatPercent])
+
+    return {
+      feeTierData: mergeFeeTiers(
+        feeTierData,
+        Object.values(
+          getDefaultFeeTiersForChainWithDynamicFeeTier({ chainId, dynamicFeeTierEnabled: withDynamicFeeTier }),
+        ),
+        formatPercent,
+        t('fee.dynamic'),
+      ),
+      hasExistingFeeTiers: Object.values(feeTierData).length > 0,
+    }
+  }, [poolData, sortedCurrencies, chainId, withDynamicFeeTier, formatPercent, t])
 }
 
 /**
@@ -239,7 +256,7 @@ export function usePositionCurrentPrice(positionInfo?: PositionInfo) {
 /**
  * Parses the Positions API object from the modal state and returns the relevant information for the modals.
  */
-export function useModalLiquidityPositionInfo(): PositionInfo | undefined {
+export function useModalLiquidityInitialState(): LiquidityModalInitialState | undefined {
   const modalState = useAppSelector((state) => state.application.openModal)
   return modalState?.initialState
 }

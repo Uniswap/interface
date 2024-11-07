@@ -6,10 +6,10 @@ import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import { useProvider } from 'uniswap/src/contexts/UniswapContext'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useAsyncData } from 'utilities/src/react/hooks'
 
 export async function getWethContract(chainId: UniverseChainId, provider: providers.Provider): Promise<Weth> {

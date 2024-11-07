@@ -3,6 +3,7 @@ import { UNI, WBTC } from 'uniswap/src/constants/tokens'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { FeeType } from 'uniswap/src/data/tradingApi/types'
 import { AccountType, SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/hooks'
 import { useSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/hooks/useSwapTxAndGasInfo'
 import { useTokenApprovalInfo } from 'uniswap/src/features/transactions/swap/hooks/useTokenApprovalInfo'
@@ -14,7 +15,6 @@ import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/de
 import { ClassicSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { ApprovalAction } from 'uniswap/src/features/transactions/swap/types/trade'
 import { createMockDerivedSwapInfo } from 'uniswap/src/test/fixtures/transactions/swap'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 jest.mock('uniswap/src/features/transactions/swap/hooks/useTokenApprovalInfo')
 jest.mock('uniswap/src/features/transactions/swap/hooks/useTransactionRequestInfo')

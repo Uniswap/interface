@@ -1,5 +1,6 @@
 import { TransactionType as RemoteTransactionType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { FORTransaction, FiatOnRampTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
 import {
@@ -13,7 +14,6 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import parseGraphQLOnRampTransaction from 'wallet/src/features/transactions/history/conversion/parseOnRampTransaction'
 import { remoteTxStatusToLocalTxStatus } from 'wallet/src/features/transactions/history/utils'

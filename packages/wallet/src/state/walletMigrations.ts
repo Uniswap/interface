@@ -325,3 +325,18 @@ export function updateExploreOrderByType(state: any): any {
     },
   }
 }
+
+// Mobile: 81
+// Extension: 17
+export function removeCreatedOnboardingRedesignAccountBehaviorHistory(state: any): any {
+  const newState = {
+    ...state,
+    behaviorHistory: {
+      ...state.behaviorHistory,
+      createdOnboardingRedesignAccount: undefined,
+    },
+  }
+
+  delete newState.behaviorHistory.createdOnboardingRedesignAccount
+  return newState
+}

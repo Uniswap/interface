@@ -7,7 +7,7 @@ import { OpEtherscanLogoDark } from 'ui/src/components/logos/OpEtherscanLogoDark
 import { OpEtherscanLogoLight } from 'ui/src/components/logos/OpEtherscanLogoLight'
 import { PolygonscanLogoDark } from 'ui/src/components/logos/PolygonscanLogoDark'
 import { PolygonscanLogoLight } from 'ui/src/components/logos/PolygonscanLogoLight'
-import { UniverseChainId, UniverseChainLogoInfo } from 'uniswap/src/types/chains'
+import { UniverseChainId, UniverseChainLogoInfo } from 'uniswap/src/features/chains/types'
 
 // Keeping this separate from UNIVERSE_CHAIN_INFO to avoid import issues on extension content script
 export const UNIVERSE_CHAIN_LOGO = {

@@ -31,7 +31,7 @@ export function SubmitSwapButton({
   warning,
 }: SubmitSwapButtonProps): JSX.Element {
   const { t } = useTranslation()
-  const { BiometricsIcon } = useTransactionModalContext()
+  const { renderBiometricsIcon } = useTransactionModalContext()
 
   const { isSubmitting, derivedSwapInfo } = useSwapFormContext()
   const {
@@ -87,10 +87,10 @@ export function SubmitSwapButton({
       return (
         <Button
           fill
+          disabled
           animation="fast"
           backgroundColor="$surface2"
           color="$neutral2"
-          disabled={true}
           pressStyle={{ scale: 0.98 }}
           hoverStyle={{ opacity: 1 }}
           icon={<SpinningLoader color="$neutral2" size={isWeb ? iconSizes.icon20 : iconSizes.icon24} />}
@@ -112,7 +112,7 @@ export function SubmitSwapButton({
           pressStyle={{ scale: 0.98 }}
           hoverStyle={{ opacity: 1, backgroundColor: '$statusCritical' }}
           opacity={0.9}
-          icon={BiometricsIcon}
+          icon={renderBiometricsIcon?.({ color: 'white' })}
           size={size}
           testID={TestID.Swap}
           onPress={onSubmit}
@@ -126,6 +126,8 @@ export function SubmitSwapButton({
     default: {
       const backgroundColor = disabled ? '$surface2' : '$accent1'
       const textColor = disabled ? '$neutral2' : '$white'
+      const biometricIcon = renderBiometricsIcon?.({ color: disabled ? '$neutral2' : '$white' })
+
       return (
         <Button
           fill
@@ -135,7 +137,7 @@ export function SubmitSwapButton({
           pressStyle={{ scale: 0.98 }}
           hoverStyle={{ opacity: 1 }}
           opacity={0.9}
-          icon={BiometricsIcon}
+          icon={biometricIcon}
           size={size}
           testID={TestID.Swap}
           onPress={onSubmit}

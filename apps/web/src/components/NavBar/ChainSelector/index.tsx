@@ -1,4 +1,3 @@
-import { CHAIN_IDS_TO_NAMES, useIsSupportedChainIdCallback } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { useCallback, useRef } from 'react'
@@ -6,8 +5,9 @@ import { useSearchParams } from 'react-router-dom'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { Flex, Popover } from 'ui/src'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains, useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 type ChainSelectorProps = {
   hideArrow?: boolean
@@ -34,7 +34,7 @@ export const ChainSelector = ({ hideArrow }: ChainSelectorProps) => {
       searchParams.delete('outputCurrency')
       searchParams.delete('value')
       searchParams.delete('field')
-      targetChainId && searchParams.set('chain', CHAIN_IDS_TO_NAMES[targetChainId])
+      targetChainId && searchParams.set('chain', getChainInfo(targetChainId).interfaceName)
       setSearchParams(searchParams)
 
       popoverRef.current?.close()

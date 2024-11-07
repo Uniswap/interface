@@ -1,12 +1,9 @@
 import { useEffect } from 'react'
 import { useColorScheme } from 'react-native'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
-import {
-  useEnabledChains,
-  useHideSmallBalancesSetting,
-  useHideSpamTokensSetting,
-} from 'uniswap/src/features/settings/hooks'
+import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { ExtensionUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'

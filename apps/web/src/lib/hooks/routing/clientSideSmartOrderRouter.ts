@@ -2,13 +2,12 @@ import { BigintIsh, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 // This file is lazy-loaded, so the import of smart-order-router is intentional.
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { AlphaRouter, AlphaRouterConfig } from '@uniswap/smart-order-router'
-import { getChain, isSupportedChainId } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import JSBI from 'jsbi'
 import { GetQuoteArgs, QuoteResult, QuoteState, SwapRouterNativeAssets } from 'state/routing/types'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/types'
 import { transformSwapRouteToGetQuoteResult } from 'utils/transformSwapRouteToGetQuoteResult'
 
 const routers = new Map<UniverseChainId, AlphaRouter>()
@@ -18,9 +17,9 @@ export function getRouter(chainId: UniverseChainId): AlphaRouter {
     return router
   }
 
-  if (isSupportedChainId(chainId) && getChain({ chainId }).supportsClientSideRouting) {
+  if (isUniverseChainId(chainId) && getChainInfo(chainId).supportsInterfaceClientSideRouting) {
     const provider = RPC_PROVIDERS[chainId as UniverseChainId]
-    const router = new AlphaRouter({ chainId: UNIVERSE_CHAIN_INFO[chainId].sdkId, provider })
+    const router = new AlphaRouter({ chainId: getChainInfo(chainId).sdkId, provider })
     routers.set(chainId, router)
     return router
   }

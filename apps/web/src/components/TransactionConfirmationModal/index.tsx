@@ -9,7 +9,6 @@ import Modal from 'components/Modal'
 import AnimatedConfirmation from 'components/TransactionConfirmationModal/AnimatedConfirmation'
 import { AutoColumn, ColumnCenter } from 'components/deprecated/Column'
 import Row, { RowBetween, RowFixed } from 'components/deprecated/Row'
-import { useIsSupportedChainId } from 'constants/chains'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import styled, { useTheme } from 'lib/styled-components'
@@ -18,11 +17,12 @@ import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { useTransaction } from 'state/transactions/hooks'
 import { isConfirmedTx } from 'state/transactions/utils'
 import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 const Wrapper = styled.div`
@@ -236,7 +236,7 @@ function L2Content({
   const secondsToConfirm =
     confirmed && transaction.confirmedTime ? (transaction.confirmedTime - transaction.addedTime) / 1000 : undefined
 
-  const info = UNIVERSE_CHAIN_INFO[chainId]
+  const info = getChainInfo(chainId)
 
   return (
     <Wrapper>

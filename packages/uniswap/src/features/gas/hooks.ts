@@ -9,6 +9,8 @@ import { useAccountMeta, useProvider } from 'uniswap/src/contexts/UniswapContext
 import { useGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
 import { GasEstimate, GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   FormattedUniswapXGasFeeInfo,
   GasFeeResult,
@@ -21,7 +23,6 @@ import { DynamicConfigs, GasStrategies, GasStrategyType } from 'uniswap/src/feat
 import { Statsig, useConfig } from 'uniswap/src/features/gating/sdk/statsig'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
@@ -29,7 +30,6 @@ import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/swa
 import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'

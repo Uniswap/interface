@@ -5,7 +5,7 @@ import {
   TransactionDetailsPartsFragment,
   TransactionStatus,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export type TransactionActivity = AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment }
 

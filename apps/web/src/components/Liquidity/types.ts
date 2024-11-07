@@ -1,11 +1,13 @@
 // eslint-disable-next-line no-restricted-imports
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, Position as V4Position } from '@uniswap/v4-sdk'
+import { FeeData } from 'pages/Pool/Positions/create/types'
 import { Dispatch, ReactNode, SetStateAction } from 'react'
 import { PositionField } from 'types/position'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export interface DepositState {
   exactField: PositionField
@@ -31,6 +33,7 @@ interface BasePositionInfo {
   version: ProtocolVersion
   currency0Amount: CurrencyAmount<Currency>
   currency1Amount: CurrencyAmount<Currency>
+  chainId: UniverseChainId
   tokenId?: string
   tickLower?: string
   tickUpper?: string
@@ -55,6 +58,7 @@ export type V3PositionInfo = BasePositionInfo & {
   version: ProtocolVersion.V3
   tokenId: string
   pool?: V3Pool
+  poolId?: string
   feeTier?: FeeAmount
   position?: V3Position
   v4hook: undefined
@@ -64,9 +68,19 @@ type V4PositionInfo = BasePositionInfo & {
   version: ProtocolVersion.V4
   tokenId: string
   pool?: V4Pool
+  poolId?: string
   position?: V4Position
   feeTier?: string
   v4hook?: string
 }
 
 export type PositionInfo = V2PairInfo | V3PositionInfo | V4PositionInfo
+
+export type FeeTierData = {
+  id?: string
+  fee: FeeData
+  formattedFee: string
+  totalLiquidityUsd: number
+  percentage: Percent
+  created: boolean
+}

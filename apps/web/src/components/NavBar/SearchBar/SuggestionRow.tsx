@@ -7,7 +7,8 @@ import Column from 'components/deprecated/Column'
 import { useTokenWarning } from 'constants/deprecatedTokenSafety'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { GqlSearchToken } from 'graphql/data/SearchTokens'
-import { getTokenDetailsURL, supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
+import { getTokenDetailsURL } from 'graphql/data/util'
 import styled, { css } from 'lib/styled-components'
 import { searchGenieCollectionToTokenSearchResult, searchTokenToTokenSearchResult } from 'lib/utils/searchBar'
 import { GenieCollection } from 'nft/types'
@@ -17,12 +18,17 @@ import { Link, useNavigate } from 'react-router-dom'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { Flex } from 'ui/src'
 import { Verified } from 'ui/src/components/icons/Verified'
-import { TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
+import { Token, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { addToSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
+import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -105,17 +111,23 @@ export function SuggestionRow({
   const navigate = useNavigate()
   const { formatFiatPrice, formatDelta, formatNumberOrString } = useFormatter()
   const [brokenCollectionImage, setBrokenCollectionImage] = useState(false)
+  const { defaultChainId } = useEnabledChains()
+
+  const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
   const warning = useTokenWarning(
     isToken ? suggestion.address : undefined,
-    isToken ? supportedChainIdFromGQLChain(suggestion.chain) : UniverseChainId.Mainnet,
+    isToken ? fromGraphQLChain(suggestion.chain) ?? undefined : defaultChainId,
   )
+  const tokenWarningSeverity = isToken
+    ? getTokenWarningSeverity(gqlTokenToCurrencyInfo(suggestion as Token)) // casting GqlSearchToken to Token
+    : undefined
 
   const handleClick = useCallback(() => {
     const address =
       !suggestion.address && suggestion.standard === TokenStandard.Native ? NATIVE_CHAIN_ID : suggestion.address
 
     if (isToken && address) {
-      const chainId = supportedChainIdFromGQLChain(suggestion.chain)
+      const chainId = fromGraphQLChain(suggestion.chain)
       if (chainId) {
         const searchResult = searchTokenToTokenSearchResult({ ...suggestion, address, chainId })
         dispatch(addToSearchHistory({ searchResult }))
@@ -180,9 +192,23 @@ export function SuggestionRow({
           />
         )}
         <Flex alignItems="flex-start" justifyContent="flex-start" shrink grow>
-          <Flex row gap="$spacing4" shrink width="95%">
+          <Flex
+            row
+            gap="$spacing4"
+            shrink
+            width="95%"
+            {...(isToken && tokenProtectionEnabled && { alignItems: 'center' })}
+          >
             <PrimaryText lineHeight="24px">{suggestion.name}</PrimaryText>
-            {isToken ? <TokenSafetyIcon warning={warning} /> : suggestion.isVerified && <Verified size={14} />}
+            {isToken ? (
+              tokenProtectionEnabled ? (
+                <WarningIcon severity={tokenWarningSeverity} size="$icon.16" />
+              ) : (
+                <TokenSafetyIcon warning={warning} />
+              )
+            ) : (
+              suggestion.isVerified && <Verified size={14} />
+            )}
           </Flex>
           <Flex row gap="$spacing4">
             <ThemedText.SubHeaderSmall lineHeight="20px">

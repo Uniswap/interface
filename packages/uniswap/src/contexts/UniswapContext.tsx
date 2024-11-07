@@ -2,8 +2,8 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { Signer } from 'ethers/lib/ethers'
 import { createContext, PropsWithChildren, useContext, useMemo, useState } from 'react'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { Connector } from 'wagmi'
 
 /** Stores objects/utils that exist on all platforms, abstracting away app-level specifics for each, in order to allow usage in cross-platform code. */

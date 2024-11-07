@@ -3,9 +3,8 @@ import { ButtonLight } from 'components/Button/buttons'
 import { useAbbreviatedTimeString } from 'components/Table/utils'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { OrderDirection, getTokenDetailsURL, supportedChainIdFromGQLChain, unwrapToken } from 'graphql/data/util'
+import { OrderDirection, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
-import { useActiveLocale } from 'hooks/useActiveLocale'
 import deprecatedStyled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
 import { ArrowDown, CornerLeftUp, ExternalLink as ExternalLinkIcon } from 'react-feather'
@@ -14,8 +13,10 @@ import { ClickableStyle, ClickableTamaguiStyle, EllipsisTamaguiStyle, ThemedText
 import { Z_INDEX } from 'theme/zIndex'
 import { Anchor, Flex, Text, View, styled } from 'ui/src'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useTranslation } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export const SHOW_RETURN_TO_TOP_OFFSET = 500
 export const LOAD_MORE_BOTTOM_OFFSET = 50
@@ -260,7 +261,7 @@ const StyledExternalLinkIcon = deprecatedStyled(ExternalLinkIcon)`
  * @returns JSX.Element containing the formatted timestamp
  */
 export const TimestampCell = ({ timestamp, link }: { timestamp: number; link: string }) => {
-  const locale = useActiveLocale()
+  const locale = useCurrentLocale()
   const options: Intl.DateTimeFormatOptions = {
     year: '2-digit',
     month: '2-digit',
@@ -298,7 +299,8 @@ const TokenSymbolText = styled(Text, {
  */
 export const TokenLinkCell = ({ token }: { token: Token }) => {
   const { t } = useTranslation()
-  const chainId = supportedChainIdFromGQLChain(token.chain) ?? UniverseChainId.Mainnet
+  const { defaultChainId } = useEnabledChains()
+  const chainId = fromGraphQLChain(token.chain) ?? defaultChainId
   const unwrappedToken = unwrapToken(chainId, token)
   const isNative = unwrappedToken.address === NATIVE_CHAIN_ID
   const nativeCurrency = useCurrency(NATIVE_CHAIN_ID, chainId)

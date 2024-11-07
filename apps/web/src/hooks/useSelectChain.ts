@@ -2,7 +2,7 @@ import { useSwitchChain } from 'hooks/useSwitchChain'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { PopupType, addPopup, removePopup } from 'state/application/reducer'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { logger } from 'utilities/src/logger/logger'
 import { UserRejectedRequestError } from 'viem'
 

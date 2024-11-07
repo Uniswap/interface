@@ -1,9 +1,9 @@
 import { ApolloError } from '@apollo/client'
 import { atomWithReset, useResetAtom, useUpdateAtom } from 'jotai/utils'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export type ChainOutageData = {
   chainId: UniverseChainId

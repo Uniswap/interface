@@ -3,6 +3,7 @@ import {
   Currency,
   HistoryDuration,
   PriceSource,
+  ProtectionInfo,
   ProtectionResult,
   SafetyLevel,
   TimestampedAmount,
@@ -30,15 +31,26 @@ import {
 import { MAX_FIXTURE_TIMESTAMP, faker } from 'uniswap/src/test/shared'
 import { createFixture, randomChoice, randomEnumValue } from 'uniswap/src/test/utils'
 
+const benignProtectionInfo = {
+  result: ProtectionResult.Benign,
+  attackTypes: [],
+}
+
 /**
  * Base fixtures
  */
 
 type TokenOptions = {
   sdkToken: SDKToken | null
+  market: TokenMarket | undefined
+  protectionInfo: ProtectionInfo | undefined
 }
 
-export const token = createFixture<Token, TokenOptions>({ sdkToken: null })(({ sdkToken }) => ({
+export const token = createFixture<Token, TokenOptions>({
+  sdkToken: null,
+  market: undefined,
+  protectionInfo: benignProtectionInfo,
+})(({ sdkToken, market, protectionInfo }) => ({
   __typename: 'Token',
   id: faker.datatype.uuid(),
   name: sdkToken?.name ?? faker.lorem.word(),
@@ -47,16 +59,13 @@ export const token = createFixture<Token, TokenOptions>({ sdkToken: null })(({ s
   chain: (sdkToken ? toGraphQLChain(sdkToken.chainId) : null) ?? randomChoice(GQL_CHAINS),
   address: sdkToken?.address.toLocaleLowerCase() ?? faker.finance.ethereumAddress(),
   standard: sdkToken?.address ? TokenStandard.Erc20 : TokenStandard.Native,
-  market: undefined,
+  market,
   project: tokenProjectBase(),
   feeData: {
     buyFeeBps: '',
     sellFeeBps: '',
   },
-  protectionInfo: {
-    result: randomEnumValue(ProtectionResult),
-    attackTypes: [],
-  },
+  protectionInfo,
 }))
 
 export const tokenBalance = createFixture<TokenBalance>()(() => ({
@@ -112,7 +121,7 @@ const tokenProjectBase = createFixture<TokenProject>()(() => {
     id: faker.datatype.uuid(),
     name: faker.lorem.word(),
     tokens: [] as Token[],
-    safetyLevel: randomEnumValue(SafetyLevel),
+    safetyLevel: SafetyLevel.Verified,
     // @deprecated
     logoUrl,
     isSpam: faker.datatype.boolean(),
@@ -123,19 +132,23 @@ const tokenProjectBase = createFixture<TokenProject>()(() => {
 
 type TokenProjectOptions = {
   priceHistory: (TimestampedAmount | undefined)[]
+  safetyLevel: SafetyLevel | undefined
 }
 
 export const tokenProject = createFixture<TokenProject, TokenProjectOptions>(() => ({
   priceHistory: priceHistory({ duration: HistoryDuration.Week, size: 7 }),
-}))(({ priceHistory: history }) => ({
+  safetyLevel: SafetyLevel.Verified,
+}))(({ priceHistory: history, safetyLevel }) => ({
   ...tokenProjectBase({
     markets: [tokenProjectMarket({ priceHistory: history })],
+    safetyLevel,
   }),
 }))
 
 export const usdcTokenProject = createFixture<TokenProject, TokenProjectOptions>(() => ({
   priceHistory: priceHistory({ duration: HistoryDuration.Week, size: 7 }),
-}))(({ priceHistory: history }) =>
+  safetyLevel: SafetyLevel.Verified,
+}))(({ priceHistory: history, safetyLevel }) =>
   tokenProject({
     priceHistory: history,
     tokens: [
@@ -145,6 +158,7 @@ export const usdcTokenProject = createFixture<TokenProject, TokenProjectOptions>
       token({ sdkToken: USDBC_BASE, market: tokenMarket() }),
       token({ sdkToken: USDC_OPTIMISM }),
     ],
+    safetyLevel,
   }),
 )
 

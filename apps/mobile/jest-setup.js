@@ -7,22 +7,14 @@ import 'utilities/src/logger/mocks'
 
 import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js'
 import { localizeMock as mockRNLocalize } from 'react-native-localize/mock'
-import { TextDecoder, TextEncoder } from 'util'
-import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
+import { mockUIAssets } from 'ui/src/test/mocks/mockUIAssets'
 import { mockLocalizationContext } from 'uniswap/src/test/mocks/locale'
 import { mockSharedPersistQueryClientProvider } from 'uniswap/src/test/mocks/mockSharedPersistQueryClientProvider'
-import { mockUIAssets } from 'ui/src/test/mocks/mockUIAssets'
+import { TextDecoder, TextEncoder } from 'util'
+import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
 
 global.TextEncoder = TextEncoder
 global.TextDecoder = TextDecoder
-
-// Mock Sentry crash reporting
-jest.mock('@sentry/react-native', () => ({
-  init: () => jest.fn(),
-  wrap: (val) => val,
-  ReactNavigationInstrumentation: jest.fn(),
-  ReactNativeTracing: jest.fn(),
-}))
 
 jest.mock('@uniswap/client-explore/dist/uniswap/explore/v1/service-ExploreStatsService_connectquery', () => {})
 
@@ -85,6 +77,23 @@ jest.mock('@react-navigation/elements', () => ({
 }))
 
 require('react-native-reanimated').setUpTests()
+
+jest.mock('expo-localization', () => ({
+  getLocales: () => [
+    {
+      languageCode: 'en',
+      languageTag: 'en-US',
+      regionCode: null,
+      currencyCode: null,
+      currencySymbol: null,
+      decimalSeparator: null,
+      digitGroupingSeparator: null,
+      textDirection: null,
+      measurementSystem: null,
+      temperatureUnit: null,
+    },
+  ],
+}))
 
 jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
 

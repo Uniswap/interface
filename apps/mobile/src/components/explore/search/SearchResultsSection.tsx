@@ -1,10 +1,16 @@
 import React, { useCallback, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { FlatList, ListRenderItemInfo } from 'react-native'
+import { ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SearchResultsLoader } from 'src/components/explore/search/SearchResultsLoader'
 import { SectionHeaderText } from 'src/components/explore/search/SearchSectionHeader'
-import { SEARCH_RESULT_HEADER_KEY } from 'src/components/explore/search/constants'
+import {
+  EtherscanHeaderItem,
+  NFTHeaderItem,
+  SEARCH_RESULT_HEADER_KEY,
+  TokenHeaderItem,
+  WalletHeaderItem,
+} from 'src/components/explore/search/constants'
 import { useWalletSearchResults } from 'src/components/explore/search/hooks'
 import { SearchENSAddressItem } from 'src/components/explore/search/items/SearchENSAddressItem'
 import { SearchEtherscanItem } from 'src/components/explore/search/items/SearchEtherscanItem'
@@ -19,49 +25,24 @@ import {
   getSearchResultId,
 } from 'src/components/explore/search/utils'
 import { Flex, Text } from 'ui/src'
-import { Coin, Gallery, Person } from 'ui/src/components/icons'
+import { AnimatedBottomSheetFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { useExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import {
   NFTCollectionSearchResult,
   SearchResultType,
   TokenSearchResult,
 } from 'uniswap/src/features/search/SearchResult'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
-import i18n from 'uniswap/src/i18n/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 
-const ICON_SIZE = '$icon.24'
-const ICON_COLOR = '$neutral2'
-
-const WalletHeaderItem: SearchResultOrHeader = {
-  icon: <Person color={ICON_COLOR} size={ICON_SIZE} />,
-  type: SEARCH_RESULT_HEADER_KEY,
-  title: i18n.t('explore.search.section.wallets'),
-}
-const TokenHeaderItem: SearchResultOrHeader = {
-  icon: <Coin color={ICON_COLOR} size={ICON_SIZE} />,
-  type: SEARCH_RESULT_HEADER_KEY,
-  title: i18n.t('explore.search.section.tokens'),
-}
-const NFTHeaderItem: SearchResultOrHeader = {
-  icon: <Gallery color={ICON_COLOR} size={ICON_SIZE} />,
-  type: SEARCH_RESULT_HEADER_KEY,
-  title: i18n.t('explore.search.section.nft'),
-}
-const EtherscanHeaderItem: (chainId: UniverseChainId) => SearchResultOrHeader = (chainId: UniverseChainId) => ({
-  type: SEARCH_RESULT_HEADER_KEY,
-  title: i18n.t('explore.search.action.viewEtherscan', {
-    blockExplorerName: UNIVERSE_CHAIN_INFO[chainId].explorer.name,
-  }),
-})
-
 const IGNORED_ERRORS = ['Subgraph provider undefined not supported']
+
+const ESTIMATED_ITEM_SIZE = 70 // Slightly higher than average to account for spacing
 
 export function SearchResultsSection({
   searchQuery,
@@ -194,7 +175,8 @@ export function SearchResultsSection({
 
   return (
     <Flex grow gap="$spacing8" pb="$spacing36">
-      <FlatList
+      <AnimatedBottomSheetFlashList
+        estimatedItemSize={ESTIMATED_ITEM_SIZE}
         ListEmptyComponent={
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing8" mx="$spacing20">
             <Text color="$neutral2" variant="body1">

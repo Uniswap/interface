@@ -1,7 +1,7 @@
 import React, { memo, useCallback } from 'react'
 import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { FadeIn, SharedValue } from 'react-native-reanimated'
+import { SharedValue } from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
@@ -23,11 +23,11 @@ import { borderRadii, imageSizes, opacify } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useFavoriteTokenCardQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
 import { removeFavoriteToken } from 'uniswap/src/features/favorites/slice'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
@@ -125,7 +125,6 @@ function FavoriteTokenCard({
           borderColor={opacify(0.05, colors.surface3.val)}
           borderRadius="$rounded16"
           borderWidth={isDarkMode ? '$none' : '$spacing1'}
-          entering={FadeIn}
           hapticFeedback={!isEditing}
           hapticStyle={ImpactFeedbackStyle.Light}
           m="$spacing4"

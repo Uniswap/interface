@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Ether } from '@uniswap/sdk-core'
 import { WBTC } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyId as idFromCurrency } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
@@ -90,6 +90,7 @@ export const slice = createSlice({
       { payload: { nftKey, isSpam } }: PayloadAction<{ nftKey: string; isSpam?: boolean }>,
     ) => {
       const isVisible = state.nftsVisibility[nftKey]?.isVisible ?? !isSpam
+
       state.nftsVisibility[nftKey] = { isVisible: !isVisible }
     },
   },

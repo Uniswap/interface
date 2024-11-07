@@ -1,11 +1,11 @@
 import { AutoColumn } from 'components/deprecated/Column'
-import { useSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import styled, { css } from 'lib/styled-components'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const CTASection = styled.section`
   display: grid;
@@ -71,7 +71,7 @@ const ResponsiveColumn = styled(AutoColumn)`
 
 export default function CTACards() {
   const { chainId } = useAccount()
-  const chain = UNIVERSE_CHAIN_INFO[useSupportedChainId(chainId) ?? UniverseChainId.Mainnet]
+  const chain = getChainInfo(useSupportedChainId(chainId) ?? UniverseChainId.Mainnet)
 
   return (
     <CTASection>

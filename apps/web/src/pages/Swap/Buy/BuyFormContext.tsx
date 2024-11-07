@@ -5,6 +5,7 @@ import { formatFiatOnRampFiatAmount } from 'pages/Swap/Buy/shared'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
 import { buildPartialCurrencyInfo } from 'uniswap/src/constants/routing'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   useFiatOnRampAggregatorCountryListQuery,
   useFiatOnRampAggregatorCryptoQuoteQuery,
@@ -15,6 +16,7 @@ import {
   FORSupportedCountriesResponse,
   FiatCurrencyInfo,
   FiatOnRampCurrency,
+  RampDirection,
 } from 'uniswap/src/features/fiatOnRamp/types'
 import {
   InvalidRequestAmountTooLow,
@@ -23,7 +25,6 @@ import {
   isInvalidRequestAmountTooLow,
 } from 'uniswap/src/features/fiatOnRamp/utils'
 import { t } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useAccount } from 'wagmi'
 
 class BuyFormError extends Error {
@@ -102,7 +103,9 @@ function useDerivedBuyFormInfo(state: BuyFormState): BuyInfo {
 
   const { meldSupportedFiatCurrency, notAvailableInThisRegion } = useMeldFiatCurrencyInfo(state.selectedCountry)
 
-  const { data: countryOptionsResult } = useFiatOnRampAggregatorCountryListQuery()
+  const { data: countryOptionsResult } = useFiatOnRampAggregatorCountryListQuery({
+    rampDirection: RampDirection.ONRAMP,
+  })
   const supportedTokens = useFiatOnRampSupportedTokens(meldSupportedFiatCurrency, state.selectedCountry?.countryCode)
 
   const {

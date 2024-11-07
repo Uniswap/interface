@@ -26,7 +26,7 @@ import {
   nativeOnChain,
 } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useFormatter } from 'utils/formatNumbers'
 
 function mockSwapInfo(

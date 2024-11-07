@@ -9,7 +9,6 @@ import { SkeletonRow, SuggestionRow } from 'components/NavBar/SearchBar/Suggesti
 import QuestionHelper from 'components/QuestionHelper'
 import { SuspendConditionally } from 'components/Suspense/SuspendConditionally'
 import { SuspenseWithPreviousRenderAsFallback } from 'components/Suspense/SuspenseWithPreviousRenderAsFallback'
-import { BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { GqlSearchToken } from 'graphql/data/SearchTokens'
 import useTrendingTokens from 'graphql/data/TrendingTokens'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
@@ -23,15 +22,16 @@ import { Clock, TrendingUp } from 'react-feather'
 import { useLocation } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
 import { Flex, Text, useScrollbarStyles } from 'ui/src'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import {
   HistoryDuration,
   SafetyLevel,
   Token,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isBackendSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
 import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 interface SearchBarDropdownSectionProps {
@@ -122,8 +122,7 @@ interface SearchBarDropdownProps {
 export function SearchBarDropdown(props: SearchBarDropdownProps) {
   const { isLoading } = props
   const account = useAccount()
-  const showChainComingSoonBadge =
-    account.chainId && BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(account.chainId) && !isLoading
+  const showChainComingSoonBadge = account.chainId && !isBackendSupportedChainId(account.chainId) && !isLoading
   const scrollBarStyles = useScrollbarStyles()
 
   return (
@@ -366,8 +365,6 @@ function SearchBarDropdownContents({
 }
 
 function ComingSoonText({ chainId }: { chainId: UniverseChainId }) {
-  const chainName = UNIVERSE_CHAIN_INFO[chainId]?.name
-  return BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(chainId) ? (
-    <Trans i18nKey="search.chainComing" values={{ chainName }} />
-  ) : null
+  const chainName = getChainInfo(chainId).name
+  return !isBackendSupportedChainId(chainId) ? <Trans i18nKey="search.chainComing" values={{ chainName }} /> : null
 }

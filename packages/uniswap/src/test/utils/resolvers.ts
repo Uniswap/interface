@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { SelectionSetNode } from 'graphql'
 import cloneDeepWith from 'lodash/cloneDeepWith'
 import {
   QueryResolvers,
   Resolver,
   ResolverFn,
-  ResolverTypeWrapper,
   ResolverWithResolve,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
@@ -74,9 +72,12 @@ export function queryResolvers<T extends QueryResolvers>(
                 ? resolver(parent, args, context, info)
                 : null
 
-            const updatedValue = await filterObjectFields(info.fieldNodes[0]?.selectionSet, resolvedValue)
+            // TODO(WALL-5157): This was commented out because it breaks when using fragments.
+            //                  To fix it, we need to recursively filter nested fields when fragments are used.
+            // const updatedValue = await filterObjectFields(info.fieldNodes[0]?.selectionSet, resolvedValue)
+
             // cloneDeepWith returns any type so we need to cast it manually
-            const resultObj = cloneDeepWith(updatedValue, undefinedToNull) as ResolverReturnType<R>
+            const resultObj = cloneDeepWith(resolvedValue, undefinedToNull) as ResolverReturnType<R>
 
             // Resolve the corresponding promise
             if (promiseResolvers[key]) {
@@ -92,6 +93,9 @@ export function queryResolvers<T extends QueryResolvers>(
     },
   }
 }
+
+/*
+TODO(WALL-5157): see comment above. We commented this out because it breaks when using queries with fragments.
 
 type Scalar = number | string | boolean | bigint | symbol | undefined
 
@@ -137,5 +141,6 @@ async function filterObjectFields<T extends object | Scalar>(
 
   return result as T
 }
+*/
 
 const undefinedToNull = <T>(value: T): UndefinedToNull<T> => (value ?? null) as UndefinedToNull<T>

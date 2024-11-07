@@ -10,7 +10,7 @@ type InlineCardProps = {
   color: ColorTokens
   description: string | JSX.Element
   iconBackgroundColor?: ColorTokens
-  heading?: string
+  heading?: string | JSX.Element
   CtaButtonIcon?: GeneratedIcon | ((props: IconProps) => JSX.Element)
   onPressCtaButton?: () => void
 }
@@ -43,11 +43,14 @@ export function InlineCard({
       description
     )
 
-  const headingElement = heading ? (
-    <Text color={color} variant="body3">
-      {heading}
-    </Text>
-  ) : null
+  const headingElement =
+    typeof heading === 'string' ? (
+      <Text color={color} variant="body3">
+        {heading}
+      </Text>
+    ) : (
+      heading
+    )
 
   return (
     <Flex row backgroundColor="$surface3" borderRadius="$rounded16" gap="$spacing12" p="$spacing12">

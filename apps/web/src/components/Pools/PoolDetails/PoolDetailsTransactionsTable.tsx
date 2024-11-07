@@ -1,26 +1,27 @@
 import { createColumnHelper } from '@tanstack/react-table'
-import Row from 'components/deprecated/Row'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { Filter } from 'components/Table/Filter'
 import { FilterHeaderRow, HeaderArrow, HeaderSortText, TimestampCell } from 'components/Table/styled'
-import { useChainFromUrlParam } from 'constants/chains'
+import Row from 'components/deprecated/Row'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import {
   PoolTableTransaction,
   PoolTableTransactionType,
   usePoolTransactions,
 } from 'graphql/data/pools/usePoolTransactions'
-import { getSupportedGraphQlChain, OrderDirection, supportedChainIdFromGQLChain } from 'graphql/data/util'
-import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
+import { OrderDirection, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import styled from 'lib/styled-components'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
+import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const StyledExternalLink = styled(ExternalLink)`
@@ -69,8 +70,8 @@ export function PoolDetailsTransactionsTable({
   token1?: Token
   protocolVersion?: ProtocolVersion
 }) {
-  const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
-  const activeLocalCurrency = useActiveLocalCurrency()
+  const chainId = useChainIdFromUrlParam() ?? UniverseChainId.Mainnet
+  const activeLocalCurrency = useAppFiatCurrency()
   const { formatNumber, formatFiatPrice } = useFormatter()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
   const filterAnchorRef = useRef<HTMLDivElement>(null)
@@ -83,7 +84,7 @@ export function PoolDetailsTransactionsTable({
 
   const { transactions, loading, loadMore, error } = usePoolTransactions(
     poolAddress,
-    chain.id,
+    chainId,
     filter,
     token0,
     protocolVersion,
@@ -113,7 +114,7 @@ export function PoolDetailsTransactionsTable({
           >
             <TimestampCell
               timestamp={Number(row.getValue?.().timestamp)}
-              link={getExplorerLink(chain.id, row.getValue?.().transaction, ExplorerDataType.TRANSACTION)}
+              link={getExplorerLink(chainId, row.getValue?.().transaction, ExplorerDataType.TRANSACTION)}
             />
           </Cell>
         ),
@@ -266,7 +267,7 @@ export function PoolDetailsTransactionsTable({
             justifyContent="flex-end"
             grow
           >
-            <StyledExternalLink href={getExplorerLink(chain.id, makerAddress.getValue?.(), ExplorerDataType.ADDRESS)}>
+            <StyledExternalLink href={getExplorerLink(chainId, makerAddress.getValue?.(), ExplorerDataType.ADDRESS)}>
               <ThemedText.BodyPrimary>{shortenAddress(makerAddress.getValue?.(), 0)}</ThemedText.BodyPrimary>
             </StyledExternalLink>
           </Cell>
@@ -275,7 +276,7 @@ export function PoolDetailsTransactionsTable({
     ]
   }, [
     activeLocalCurrency,
-    chain.id,
+    chainId,
     filter,
     filterModalIsOpen,
     formatFiatPrice,

@@ -2,7 +2,6 @@ import { AddressDisplay } from 'components/AccountDetails/AddressDisplay'
 import { SecondaryIdentifiers } from 'components/AccountDrawer/Status'
 import Identicon from 'components/Identicon'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
-import { PRODUCTION_CHAIN_IDS } from 'constants/chains'
 import useENSName from 'hooks/useENSName'
 import { useCallback } from 'react'
 import { useModalIsOpen, useOpenModal, useToggleModal } from 'state/application/hooks'
@@ -11,6 +10,7 @@ import { ThemedText } from 'theme/components'
 import { AdaptiveWebModal, Flex, QRCodeDisplay, Text, useSporeColors } from 'ui/src'
 import { NetworkLogos } from 'uniswap/src/components/network/NetworkLogos'
 import { useAddressColorProps } from 'uniswap/src/features/address/color'
+import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { Trans } from 'uniswap/src/i18n'
 
@@ -72,10 +72,10 @@ export function AddressQRModal({ accountAddress }: { accountAddress: Address }) 
           <Text color="$neutral2" lineHeight={20} textAlign="center" variant="body3">
             <Trans
               i18nKey="qrScanner.wallet.title"
-              values={{ numOfNetworks: Object.keys(PRODUCTION_CHAIN_IDS).length }}
+              values={{ numOfNetworks: Object.keys(SUPPORTED_CHAIN_IDS).length }}
             />
           </Text>
-          <NetworkLogos chains={PRODUCTION_CHAIN_IDS} />
+          <NetworkLogos chains={SUPPORTED_CHAIN_IDS} />
         </Flex>
       </Flex>
     </AdaptiveWebModal>

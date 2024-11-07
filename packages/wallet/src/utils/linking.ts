@@ -1,11 +1,11 @@
 import * as WebBrowser from 'expo-web-browser'
 import { Linking } from 'react-native'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
 import { BACKEND_NATIVE_CHAIN_ADDRESS_STRING } from 'uniswap/src/features/search/utils'
 import { ServiceProviderInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyIdToChain, currencyIdToGraphQLAddress } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 
@@ -38,7 +38,7 @@ export async function openSettings(): Promise<void> {
  * @param chainId the ID of the chain for which to return the explorer name
  */
 export function getExplorerName(chainId: UniverseChainId): string {
-  return UNIVERSE_CHAIN_INFO[chainId].explorer.name
+  return getChainInfo(chainId).explorer.name
 }
 
 export function getNftCollectionUrl(contractAddress: Maybe<string>): string | undefined {

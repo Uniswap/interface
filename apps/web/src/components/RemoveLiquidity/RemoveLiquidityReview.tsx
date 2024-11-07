@@ -1,10 +1,12 @@
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
 import {
   useGetPoolTokenPercentage,
   usePositionCurrentPrice,
   useV3OrV4PositionDerivedInfo,
 } from 'components/Liquidity/hooks'
-import { useLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
+import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { useRemoveLiquidityTxContext } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
 import { useCurrencyInfo } from 'hooks/Tokens'
@@ -29,7 +31,7 @@ import { NumberType } from 'utilities/src/format/types'
 export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
   const [steps, setSteps] = useState<TransactionStep[]>([])
-  const { percent, positionInfo } = useLiquidityModalContext()
+  const { percent, positionInfo } = useRemoveLiquidityModalContext()
   const removeLiquidityTxContext = useRemoveLiquidityTxContext()
   const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
   const [currentStep, setCurrentStep] = useState<{ step: TransactionStep; accepted: boolean } | undefined>()
@@ -41,6 +43,12 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
   const dispatch = useDispatch()
 
   const { txContext, gasFeeEstimateUSD } = removeLiquidityTxContext
+
+  const onSuccess = () => {
+    setSteps([])
+    setCurrentStep(undefined)
+    onClose()
+  }
 
   const onFailure = () => {
     setCurrentStep(undefined)
@@ -59,7 +67,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
         liquidityTxContext: txContext,
         setCurrentStep,
         setSteps,
-        onSuccess: onClose,
+        onSuccess,
         onFailure,
       }),
     )
@@ -103,37 +111,39 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
           currencyAmount={currency1AmountToRemove}
           currencyUSDAmount={currency1FiatAmount?.multiply(percent).divide(100)}
         />
-        <Flex p="$spacing16" gap="$gap12" background="$surface2" borderRadius="$rounded12">
-          <Text variant="body4" color="$neutral2">
-            Includes accrued fees:
-          </Text>
+        {positionInfo.version !== ProtocolVersion.V2 && (
+          <Flex p="$spacing16" gap="$gap12" background="$surface2" borderRadius="$rounded12">
+            <Text variant="body4" color="$neutral2">
+              {t('fee.accrued')}
+            </Text>
 
-          <Flex row gap alignItems="center" justifyContent="space-between">
-            <Flex row gap="$gap8" alignItems="center">
-              <CurrencyLogo currencyInfo={currency0CurrencyInfo} size={24} />
-              <Text variant="body3">{currency0Amount.currency.symbol} fees</Text>
+            <Flex row gap alignItems="center" justifyContent="space-between">
+              <Flex row gap="$gap8" alignItems="center">
+                <CurrencyLogo currencyInfo={currency0CurrencyInfo} size={24} />
+                <Text variant="body3">{currency0Amount.currency.symbol} fees</Text>
+              </Flex>
+              <Flex row alignItems="center" gap="$spacing4">
+                <Text variant="body3">{formatCurrencyAmount({ value: feeValue0 })}</Text>{' '}
+                <Text variant="body3" color="$neutral2">
+                  ({formatCurrencyAmount({ value: fiatFeeValue0, type: NumberType.FiatTokenPrice })})
+                </Text>
+              </Flex>
             </Flex>
-            <Flex row alignItems="center" gap="$spacing4">
-              <Text variant="body3">{formatCurrencyAmount({ value: feeValue0 })}</Text>{' '}
-              <Text variant="body3" color="$neutral2">
-                ({formatCurrencyAmount({ value: fiatFeeValue0, type: NumberType.FiatTokenPrice })})
-              </Text>
+
+            <Flex row gap alignItems="center" justifyContent="space-between">
+              <Flex row gap="$gap8" alignItems="center">
+                <CurrencyLogo currencyInfo={currency1CurrencyInfo} size={24} />
+                <Text variant="body3">{currency1Amount.currency.symbol} fees</Text>
+              </Flex>
+              <Flex row alignItems="center" gap="$spacing4">
+                <Text variant="body3">{formatCurrencyAmount({ value: feeValue1 })}</Text>{' '}
+                <Text variant="body3" color="$neutral2">
+                  ({formatCurrencyAmount({ value: fiatFeeValue1, type: NumberType.FiatTokenPrice })})
+                </Text>
+              </Flex>
             </Flex>
           </Flex>
-
-          <Flex row gap alignItems="center" justifyContent="space-between">
-            <Flex row gap="$gap8" alignItems="center">
-              <CurrencyLogo currencyInfo={currency1CurrencyInfo} size={24} />
-              <Text variant="body3">{currency1Amount.currency.symbol} fees</Text>
-            </Flex>
-            <Flex row alignItems="center" gap="$spacing4">
-              <Text variant="body3">{formatCurrencyAmount({ value: feeValue1 })}</Text>{' '}
-              <Text variant="body3" color="$neutral2">
-                ({formatCurrencyAmount({ value: fiatFeeValue1, type: NumberType.FiatTokenPrice })})
-              </Text>
-            </Flex>
-          </Flex>
-        </Flex>
+        )}
       </Flex>
       {currentStep ? (
         <ProgressIndicator steps={steps} currentStep={currentStep} />

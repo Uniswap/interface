@@ -8,5 +8,9 @@ export function ClickableWithinGesture({ onPress, children }: ClickableWithinGes
     onPress?.()
   }
 
-  return <TouchableArea onPress={onCloseWithPropagationStop}>{children}</TouchableArea>
+  return (
+    <TouchableArea flex={1} flexGrow={1} onPress={onCloseWithPropagationStop}>
+      {children}
+    </TouchableArea>
+  )
 }

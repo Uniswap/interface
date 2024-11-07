@@ -903,6 +903,13 @@ exports[`should have a correct configuration for a React file 1`] = `
             "name": "lodash",
           },
           {
+            "importNames": [
+              "UNIVERSE_CHAIN_INFO",
+            ],
+            "message": "Use useChainInfo or helpers in packages/uniswap/src/features/chains/utils.ts when possible!",
+            "name": "uniswap/src/features/chains/chainInfo",
+          },
+          {
             "message": "Please import from '@ethersproject/module' directly to support tree-shaking.",
             "name": "ethers",
           },

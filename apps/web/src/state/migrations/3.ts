@@ -1,7 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
 import { PersistState } from 'redux-persist'
 import { PreV16UserState } from 'state/migrations/oldTypes'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { serializeToken } from 'uniswap/src/utils/currency'
 
 export type PersistAppStateV3 = {

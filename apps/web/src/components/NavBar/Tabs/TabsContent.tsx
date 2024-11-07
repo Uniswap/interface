@@ -25,7 +25,6 @@ export type TabsItem = MenuItem & {
 
 export const useTabsContent = (props?: { includeNftsLink?: boolean }): TabsSection[] => {
   const { t } = useTranslation()
-  const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
   const isV4EverywhereEnabled = useFeatureFlag(FeatureFlags.V4Everywhere)
   const { pathname } = useLocation()
   const theme = useTheme()
@@ -77,7 +76,7 @@ export const useTabsContent = (props?: { includeNftsLink?: boolean }): TabsSecti
         {
           label: t('common.transactions'),
           quickKey: 'X',
-          href: `/explore/transactions${isMultichainExploreEnabled ? '/ethereum' : ''}`,
+          href: '/explore/transactions/ethereum',
           internal: true,
         },
         { label: t('common.nfts'), quickKey: 'N', href: '/nfts', internal: true },
@@ -85,11 +84,11 @@ export const useTabsContent = (props?: { includeNftsLink?: boolean }): TabsSecti
     },
     {
       title: t('common.pool'),
-      href: '/pool',
+      href: isV4EverywhereEnabled ? '/positions' : '/pool',
       isActive: pathname.startsWith('/pool'),
       items: [
         {
-          label: t('nav.tabs.viewPosition'),
+          label: t('nav.tabs.viewPositions'),
           quickKey: 'V',
           href: isV4EverywhereEnabled ? '/positions' : '/pool',
           internal: true,

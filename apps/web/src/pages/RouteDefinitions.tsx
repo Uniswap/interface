@@ -15,7 +15,7 @@ const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
-const AddLiquidityWithTokenRedirects = lazy(() => import('pages/AddLiquidity/redirects'))
+const AddLiquidityV3WithTokenRedirects = lazy(() => import('pages/AddLiquidityV3/redirects'))
 const AddLiquidityV2WithTokenRedirects = lazy(() => import('pages/AddLiquidityV2/redirects'))
 const RedirectExplore = lazy(() => import('pages/Explore/redirects'))
 const MigrateV2 = lazy(() => import('pages/MigrateV2'))
@@ -23,14 +23,22 @@ const MigrateV2Pair = lazy(() => import('pages/MigrateV2/MigrateV2Pair'))
 const MigrateV3 = lazy(() => import('pages/MigrateV3'))
 const NotFound = lazy(() => import('pages/NotFound'))
 const Pool = lazy(() => import('pages/Pool'))
-const LegacyPool = lazy(() => import('pages/LegacyPool'))
-const LegacyPositionPage = lazy(() => import('pages/LegacyPool/PositionPage'))
+const LegacyPoolRedirects = lazy(() =>
+  import('pages/LegacyPool/redirects').then((module) => ({ default: module.LegacyPoolRedirects })),
+)
+const PoolFinderRedirects = lazy(() =>
+  import('pages/LegacyPool/redirects').then((module) => ({ default: module.PoolFinderRedirects })),
+)
+const LegacyPoolV2Redirects = lazy(() =>
+  import('pages/LegacyPool/redirects').then((module) => ({ default: module.LegacyPoolV2Redirects })),
+)
+const LegacyPositionPageRedirects = lazy(() =>
+  import('pages/LegacyPool/redirects').then((module) => ({ default: module.LegacyPositionPageRedirects })),
+)
 const PositionPage = lazy(() => import('pages/Pool/Positions/PositionPage'))
 const V2PositionPage = lazy(() => import('pages/Pool/Positions/V2PositionPage'))
-const LegacyPoolV2 = lazy(() => import('pages/LegacyPool/v2'))
 const PoolDetails = lazy(() => import('pages/PoolDetails'))
-const PoolFinder = lazy(() => import('pages/PoolFinder'))
-const RemoveLiquidity = lazy(() => import('pages/RemoveLiquidity'))
+const RemoveLiquidityV2 = lazy(() => import('pages/RemoveLiquidity/V2'))
 const RemoveLiquidityV3 = lazy(() => import('pages/RemoveLiquidity/V3'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
 
@@ -248,49 +256,49 @@ export const routes: RouteDefinition[] = [
   // Legacy pool routes
   createRouteDefinition({
     path: '/pool',
-    getElement: () => <LegacyPool />,
+    getElement: () => <LegacyPoolRedirects />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
     path: '/pool/v2/find',
-    getElement: () => <PoolFinder />,
-    getTitle: () => t('title.importLiquidityv2'),
-    getDescription: () => t('title.useImportTool'),
+    getElement: () => <PoolFinderRedirects />,
+    getTitle: getPositionPageDescription,
+    getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
     path: '/pool/v2',
-    getElement: () => <LegacyPoolV2 />,
+    getElement: () => <LegacyPoolV2Redirects />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
     path: '/pool/:tokenId',
-    getElement: () => <LegacyPositionPage />,
+    getElement: () => <LegacyPositionPageRedirects />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
     path: '/pools/v2/find',
-    getElement: () => <PoolFinder />,
-    getTitle: () => t('title.importLiquidityv2'),
-    getDescription: () => t('title.useImportTool'),
+    getElement: () => <PoolFinderRedirects />,
+    getTitle: getPositionPageTitle,
+    getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
     path: '/pools/v2',
-    getElement: () => <LegacyPoolV2 />,
+    getElement: () => <LegacyPoolV2Redirects />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
     path: '/pools',
-    getElement: () => <LegacyPool />,
+    getElement: () => <LegacyPoolRedirects />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
     path: '/pools/:tokenId',
-    getElement: () => <LegacyPositionPage />,
+    getElement: () => <LegacyPositionPageRedirects />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
@@ -309,13 +317,13 @@ export const routes: RouteDefinition[] = [
       ':currencyIdA/:currencyIdB/:feeAmount',
       ':currencyIdA/:currencyIdB/:feeAmount/:tokenId',
     ],
-    getElement: () => <AddLiquidityWithTokenRedirects />,
+    getElement: () => <AddLiquidityV3WithTokenRedirects />,
     getTitle: getAddLiquidityPageTitle,
     getDescription: () => StaticTitlesAndDescriptions.AddLiquidityDescription,
   }),
   createRouteDefinition({
     path: '/remove/v2/:currencyIdA/:currencyIdB',
-    getElement: () => <RemoveLiquidity />,
+    getElement: () => <RemoveLiquidityV2 />,
     getTitle: () => t('title.removeLiquidityv2'),
     getDescription: () => t('title.removeTokensv2'),
   }),

@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useState } from 'react'
 import { DappInfo, DappStoreEvent, dappStore } from 'src/app/features/dapp/store'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 

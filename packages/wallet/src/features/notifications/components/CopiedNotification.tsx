@@ -36,7 +36,7 @@ export function CopiedNotification({
       title = t('notification.copied.unitag')
       break
     case CopyNotificationType.BlockExplorerUrl:
-      title = t('notification.copied.blockExplorerUrl')
+      title = t('common.button.copied')
       break
   }
 

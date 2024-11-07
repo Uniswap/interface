@@ -1,12 +1,11 @@
 import { Currency, Token } from '@uniswap/sdk-core'
-import { useSupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useMemo } from 'react'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
-import { UniverseChainId } from 'uniswap/src/types/chains'
-
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useCurrencyInfo as useUniswapCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -32,17 +31,14 @@ export function useCurrencyInfo(
   const { chainId: connectedChainId } = useAccount()
   const chainIdWithFallback =
     (typeof addressOrCurrency === 'string' ? chainId : addressOrCurrency?.chainId) ?? connectedChainId
-  const nativeAddressWithFallback =
-    UNIVERSE_CHAIN_INFO[chainIdWithFallback as UniverseChainId]?.nativeCurrency.address ??
-    UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet]?.nativeCurrency.address
+  const supportedChainId = useSupportedChainId(chainIdWithFallback)
+  const nativeAddressWithFallback = getChainInfo(supportedChainId ?? UniverseChainId.Mainnet).nativeCurrency.address
 
   const isNative = useMemo(() => checkIsNative(addressOrCurrency), [addressOrCurrency])
   const address = useMemo(
     () => getAddress(isNative, nativeAddressWithFallback, addressOrCurrency),
     [isNative, nativeAddressWithFallback, addressOrCurrency],
   )
-
-  const supportedChainId = useSupportedChainId(chainIdWithFallback)
 
   const addressWithFallback = isNative || !address ? nativeAddressWithFallback : address
 
@@ -70,7 +66,7 @@ export function useCurrencyInfo(
   }, [addressOrCurrency, currencyInfo, chainIdWithFallback, isNative, address, skip])
 }
 
-const checkIsNative = (addressOrCurrency?: string | Currency): boolean => {
+export const checkIsNative = (addressOrCurrency?: string | Currency): boolean => {
   return typeof addressOrCurrency === 'string'
     ? [NATIVE_CHAIN_ID, 'native', 'eth'].includes(addressOrCurrency.toLowerCase())
     : addressOrCurrency?.isNative ?? false

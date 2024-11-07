@@ -1,12 +1,13 @@
 import { GqlSearchToken } from 'graphql/data/SearchTokens'
 import { GenieCollection } from 'nft/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 import {
   NFTCollectionSearchResult,
   SearchResultType,
   TokenSearchResult,
 } from 'uniswap/src/features/search/SearchResult'
 import { tokenAddressOrNativeAddress } from 'uniswap/src/features/search/utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 /**
  * Organizes the number of Token and NFT results to be shown to a user depending on if they're in the NFT or Token experience
@@ -38,6 +39,8 @@ export const searchTokenToTokenSearchResult = (
     name: searchToken.name ?? null,
     logoUrl: searchToken.project?.logoUrl ?? null,
     safetyLevel: searchToken.project?.safetyLevel ?? null,
+    safetyInfo: getCurrencySafetyInfo(searchToken.project?.safetyLevel, searchToken.protectionInfo),
+    feeData: searchToken.feeData ?? null,
   }
 }
 

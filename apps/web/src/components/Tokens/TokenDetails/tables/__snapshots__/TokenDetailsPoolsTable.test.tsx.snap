@@ -304,12 +304,22 @@ exports[`TDPPoolTable renders data filled state 1`] = `
                           >
                             USDC/ETH
                           </span>
-                          <span
-                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _pt-2px _pb-2px _pr-6px _pl-6px _backgroundColor-568007293 _borderTopLeftRadius-1307609936 _borderTopRightRadius-1307609936 _borderBottomRightRadius-1307609936 _borderBottomLeftRadius-1307609936 _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
-                            data-disable-theme="true"
+                          <div
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331199 _alignItems-center"
                           >
-                            1%
-                          </span>
+                            <span
+                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _pt-2px _pb-2px _pr-6px _pl-6px _backgroundColor-568007293 _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202 _borderTopLeftRadius-4px _borderBottomLeftRadius-4px"
+                              data-disable-theme="true"
+                            >
+                              v3
+                            </span>
+                            <span
+                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _pt-2px _pb-2px _pr-6px _pl-6px _backgroundColor-568007293 _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202 _borderTopRightRadius-4px _borderBottomRightRadius-4px"
+                              data-disable-theme="true"
+                            >
+                              1%
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>

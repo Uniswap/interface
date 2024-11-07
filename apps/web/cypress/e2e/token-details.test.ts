@@ -1,7 +1,6 @@
-import { WETH9 } from '@uniswap/sdk-core'
-import { ARB, UNI } from 'uniswap/src/constants/tokens'
+import { UNI, USDT, USDT_ARBITRUM_ONE } from 'uniswap/src/constants/tokens'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { shortenAddress } from 'utilities/src/addresses'
 import { getTestSelector } from '../utils'
 
@@ -105,18 +104,18 @@ describe('Token details', () => {
 
     it('should automatically navigate to the new TDP', () => {
       cy.get(`#swap-currency-output .open-currency-select-button`).click()
-      cy.get('[data-reach-dialog-content]').contains('WETH').click({ force: true })
-      cy.url().should('include', `${WETH9[1].address.toLowerCase()}`)
+      cy.get(getTestSelector('token-option-1-USDT')).click()
+      cy.url().should('include', `${USDT.address}`)
       cy.url().should('not.include', `${UNI_MAINNET.address}`)
     })
 
     it('should not share swap state with the main swap page', () => {
       cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'UNI')
       cy.get(`#swap-currency-input .open-currency-select-button`).click()
-      cy.get(getTestSelector('token-option-1-WETH')).click()
+      cy.get(getTestSelector('token-option-1-USDT')).click()
       cy.visit('/swap')
       cy.contains('UNI').should('not.exist')
-      cy.contains('WETH').should('not.exist')
+      cy.contains('USDT').should('not.exist')
     })
 
     it('can enter an amount into input', () => {
@@ -140,13 +139,12 @@ describe('Token details', () => {
     })
 
     it('should show a L2 token even if the user is connected to a different network', () => {
-      cy.visit('/explore/tokens')
+      cy.visit('/explore/tokens/ethereum')
       cy.get(getTestSelector('tokens-network-filter-selected')).click()
       cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).first().click()
       cy.get(getTestSelector('tokens-network-filter-selected')).invoke('attr', 'alt').should('eq', `Arbitrum logo`)
-      cy.get(getTestSelector(`token-table-row-${ARB.address.toLowerCase()}`)).click()
-      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'ARB')
-      cy.contains('Connect to Arbitrum').should('exist')
+      cy.get(getTestSelector(`token-table-row-${USDT_ARBITRUM_ONE.address}`)).click()
+      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'USDT')
     })
   })
 })

@@ -7,13 +7,13 @@ import { iconSizes } from 'ui/src/theme'
 import { UniswapXFee } from 'uniswap/src/components/gas/NetworkFee'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import {
   useFormattedUniswapXGasFeeInfo,
   useGasFeeFormattedAmounts,
   useGasFeeHighRelativeToValue,
 } from 'uniswap/src/features/gas/hooks'
 import { FormattedUniswapXGasFeeInfo, GasFeeResult } from 'uniswap/src/features/gas/types'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
 import { NetworkFeeWarning } from 'uniswap/src/features/transactions/swap/modals/NetworkFeeWarning'

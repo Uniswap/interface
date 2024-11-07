@@ -1,22 +1,75 @@
-### Lots of new updates! 
+IPFS hash of the deployment:
+- CIDv0: `QmXSmkbZBfMGwWiC7fzw8oDCxvmfGENb7ahoaZVWsstaTF`
+- CIDv1: `bafybeiehjkqxfubc7qylb2q67pnqzri4j5kqxcllryecaq7nuqntzzjrfy`
 
-### Bridging
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-You can now swap your ETH, USDC, and more across 8+ networks! Try it by pressing the banner on your homepage.  
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
 
-### Faster Onboarding
+IPFS gateways:
+- https://bafybeiehjkqxfubc7qylb2q67pnqzri4j5kqxcllryecaq7nuqntzzjrfy.ipfs.dweb.link/
+- https://bafybeiehjkqxfubc7qylb2q67pnqzri4j5kqxcllryecaq7nuqntzzjrfy.ipfs.cf-ipfs.com/
+- [ipfs://QmXSmkbZBfMGwWiC7fzw8oDCxvmfGENb7ahoaZVWsstaTF/](ipfs://QmXSmkbZBfMGwWiC7fzw8oDCxvmfGENb7ahoaZVWsstaTF/)
 
-New users can create a wallet lightning fast.
+## 5.57.0 (2024-11-07)
 
-### Multichain Explore
 
-Users can now see all 12 chains we support on the Explore page, and can also filter by a specific chain. 
+### Features
 
-### Worldchain
+* **web:** [v4] add v4 data to explore graphs (#13174) 3d2b961
+* **web:** add hook functionality and update the UI (#13415) 4dfcd67
+* **web:** Add liq button on pools explore page (#13400) d116542
+* **web:** add loading states to all LP actions buttons (#13408) 9aa091b
+* **web:** adding dynamic fee tier option to fee tier search modal (#13478) 7276ef7
+* **web:** animate fee tier dropdown (#13542) 13f32e2
+* **web:** design fixes on PosDP (#13543) 5f93dfc
+* **web:** handle one-sided liq input in increase modal (#13370) 4fa66d4
+* **web:** redirect to positions list after creating a position (#13444) 160adc6
+* **web:** refetch position queries when pending LP txs change (#13483) 70ae19d
+* **web:** remove thai from supported languages and translations (#13528) 36fe674
+* **web:** update explore table header styles (#13386) e272167
+* **web:** updating fee tiers search modal to include the default fee tiers (#13464) aa0bfcf
+* **web:** use the new rest endpoint on the mini portfolio pools tab (#13521) 555de82
 
-Users now have access to all ur regular features for this new chain.
 
-### Other changes
+### Bug Fixes
 
-- Better redirect handling on fiat onramp
-- Various bug fixes and performance improvements
+* **web:** Add error message for missing trade routes (#13327) 004265a
+* **web:** add insuffient balance error state for the button (#13447) eb4ea2d
+* **web:** allow testnets to be backend supported chains (#13424) b968f05
+* **web:** better default fee tier selection (#13526) 5976b4b
+* **web:** change view position to view positions (#13511) bcee0e3
+* **web:** cypress tests (#13402) f78f58b
+* **web:** fee tier fixes (#13240) 16ad294
+* **web:** filter to testnets when in testnet mode (#13356) b1a67be
+* **web:** fix token sorting for v2 positions (#13504) 7c460ff
+* **web:** fixing uniswap context provider for web (#13566) c7511a4
+* **web:** hide the collect button if there are no fees to collect (#13459) 9a98813
+* **web:** improve LiquidityChartRangeInput behavior when inverting tokens (#13550) 523eb00
+* **web:** landing page redirection when connected (#13425) 6b5993e
+* **web:** position cards text sizing (#13307) e406dd1
+* **web:** remove confusing subgraph naming from v3 tick query (#13436) f1d7d14
+* **web:** Remove default mainnet chain ID in NetworkFilter (#13272) 4993213
+* **web:** stop using multicall for Position NFT data fetching (#13414) 5d9db63
+* **web:** udpate scroll behavior on explore page (#12277) bb14b4d
+* **web:** update creating pool banner to be persistent (#13456) 94b7801
+* **web:** update loading/error states in LiquidityChartRangeInput (#13498) a5f6b0e
+* **web:** update url when switching protocol versions in create (#13422) f3edc84
+* **web:** use DropdownSelector for position filters (#13544) dc63bdd
+* **web:** use NATIVE in url to add liquidity (#13262) 48aa927
+* **web:** version dropdown ordering, clickable Sidebar in create flow (#13551) a86ee47
+
+
+### Continuous Integration
+
+* **web:** update sitemaps d3686aa
+
+
+### Tests
+
+* **web:** cron job run web e2e tests (#13482) 8eda2da
+
+

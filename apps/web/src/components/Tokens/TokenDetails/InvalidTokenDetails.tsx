@@ -1,14 +1,14 @@
 import { ReactComponent as EyeIcon } from 'assets/svg/eye.svg'
 import { ButtonPrimary } from 'components/Button/buttons'
-import { useIsSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import styled from 'lib/styled-components'
 import { useNavigate } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const InvalidDetailsContainer = styled.div`
   padding-top: 128px;
@@ -55,7 +55,7 @@ export default function InvalidTokenDetails({
   // if the token's address is valid and the chains match, it's a non-existant token
   const isNonExistentToken = !isInvalidAddress && pageChainId === chainId
 
-  const connectedChainLabel = isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId].label : undefined
+  const connectedChainLabel = isSupportedChain ? getChainLabel(chainId) : undefined
 
   return (
     <InvalidDetailsContainer>
@@ -82,7 +82,7 @@ export default function InvalidTokenDetails({
             <ThemedText.SubHeader>
               <Trans
                 i18nKey="tdp.invalidTokenPage.switchChainPrompt"
-                values={{ network: pageChainIsSupported ? UNIVERSE_CHAIN_INFO[pageChainId].label : '' }}
+                values={{ network: pageChainIsSupported ? getChainLabel(pageChainId) : '' }}
               />
             </ThemedText.SubHeader>
           </TokenExploreButton>

@@ -44,4 +44,4 @@ export const {
   wrappedSaga: authSaga,
   reducer: authReducer,
   actions: authActions,
-} = createMonitoredSaga(auth, 'auth', { showErrorNotification: false })
+} = createMonitoredSaga(auth, 'auth', { showErrorNotification: false, doNotLogErrors: [AuthSagaError.InvalidPassword] })

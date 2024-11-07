@@ -1,9 +1,9 @@
 import React from 'react'
 import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
 import { render, screen } from 'src/test/test-utils'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ethToken, usdcToken, wethToken } from 'uniswap/src/test/fixtures'
 import { queryResolvers } from 'uniswap/src/test/utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 const { resolvers } = queryResolvers({

@@ -1,6 +1,6 @@
+import { SUPPORTED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DynamicConfigs, QuickRouteChainsConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
-import { SUPPORTED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 
 export function useQuickRouteChains(): UniverseChainId[] {

@@ -16,9 +16,9 @@ import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperiment
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/styled'
-import { getChain, useIsSupportedChainId, useIsUniswapXSupportedChain } from 'constants/chains'
 import { ZERO_PERCENT } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
+import { useIsUniswapXSupportedChain } from 'hooks/useIsUniswapXSupportedChain'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
@@ -39,6 +39,8 @@ import { Anchor, Text, styled as tamaguiStyled } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
 import { Locale } from 'uniswap/src/features/language/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
@@ -206,7 +208,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
 
   useEffect(() => {
     if (!outputCurrency && isSupportedChain) {
-      const stablecoinCurrency = getChain({ chainId }).spotPriceStablecoinAmount.currency
+      const stablecoinCurrency = getChainInfo(chainId).spotPriceStablecoinAmount.currency
       onSelectCurrency(
         'outputCurrency',
         inputCurrency?.equals(stablecoinCurrency) ? nativeOnChain(chainId) : stablecoinCurrency,
@@ -220,7 +222,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         ? [inputCurrency, outputCurrency]
         : [outputCurrency, inputCurrency]
       if (nativeCurrency.wrapped.equals(nonNativeCurrency)) {
-        onSelectCurrency('outputCurrency', getChain({ chainId }).spotPriceStablecoinAmount.currency)
+        onSelectCurrency('outputCurrency', getChainInfo(chainId).spotPriceStablecoinAmount.currency)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

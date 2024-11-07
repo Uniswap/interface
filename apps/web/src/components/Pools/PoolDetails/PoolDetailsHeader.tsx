@@ -6,12 +6,12 @@ import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
 import { DetailBubble } from 'components/Pools/PoolDetails/shared'
+import { PoolDetailsBadge } from 'components/Pools/PoolTable/PoolTable'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
 import { ActionButtonStyle, ActionMenuFlyoutStyle } from 'components/Tokens/TokenDetails/shared'
 import { LoadingBubble } from 'components/Tokens/loading'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { chainIdToBackendChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
@@ -21,12 +21,14 @@ import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { ClickableStyle, ClickableTamaguiStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
-import { TouchableArea } from 'ui/src'
+import { Flex, TouchableArea } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { Trans, t } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
@@ -47,12 +49,6 @@ const HeaderContainer = styled.div`
   animation-duration: ${({ theme }) => theme.transition.duration.medium};
 `
 
-const Badge = styled(ThemedText.LabelMicro)`
-  background: ${({ theme }) => theme.surface2};
-  padding: 2px 6px;
-  border-radius: 4px;
-`
-
 const IconBubble = styled(LoadingBubble)`
   width: 32px;
   height: 32px;
@@ -68,7 +64,8 @@ interface PoolDetailsBreadcrumbProps {
 }
 
 export function PoolDetailsBreadcrumb({ chainId, poolAddress, token0, token1, loading }: PoolDetailsBreadcrumbProps) {
-  const chainName = chainIdToBackendChain({ chainId, withFallback: true })
+  const { defaultChainId } = useEnabledChains()
+  const chainName = toGraphQLChain(chainId ?? defaultChainId)
   const exploreOrigin = `/explore/${chainName.toLowerCase()}`
   const poolsOrigin = `/explore/pools/${chainName.toLowerCase()}`
 
@@ -122,6 +119,8 @@ const PoolDetailsTitle = ({
   toggleReversed: React.DispatchWithoutAction
 }) => {
   const { formatPercent } = useFormatter()
+  const { defaultChainId } = useEnabledChains()
+  const graphQLChain = toGraphQLChain(chainId ?? defaultChainId)
   const feePercent = feeTier && formatPercent(new Percent(feeTier, BIPS_BASE * 100))
   return (
     <StyledPoolDetailsTitle>
@@ -130,7 +129,7 @@ const PoolDetailsTitle = ({
           <StyledLink
             to={getTokenDetailsURL({
               address: token0?.address,
-              chain: chainIdToBackendChain({ chainId, withFallback: true }),
+              chain: graphQLChain,
             })}
           >
             {token0?.symbol}
@@ -139,15 +138,24 @@ const PoolDetailsTitle = ({
           <StyledLink
             to={getTokenDetailsURL({
               address: token1?.address,
-              chain: chainIdToBackendChain({ chainId, withFallback: true }),
+              chain: graphQLChain,
             })}
           >
             {token1?.symbol}
           </StyledLink>
         </PoolName>
       </div>
-      {protocolVersion === ProtocolVersion.V2 && <Badge>v2</Badge>}
-      {!!feePercent && <Badge>{feePercent}</Badge>}
+      <Flex row gap="$gap4" alignItems="center">
+        <PoolDetailsBadge variant="body3" $position="left">
+          {protocolVersion?.toLowerCase()}
+        </PoolDetailsBadge>
+        {/* TODO(WEB-5364): add hook badge when data available, it should have a hover state and link out to the explorer */}
+        {!!feePercent && (
+          <PoolDetailsBadge variant="body3" $position="right">
+            {feePercent}
+          </PoolDetailsBadge>
+        )}
+      </Flex>
       <TouchableArea hoverStyle={{ opacity: 0.8 }} onPress={toggleReversed}>
         <ArrowUpDown
           {...ClickableTamaguiStyle}

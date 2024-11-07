@@ -8,7 +8,6 @@ import { PositionInfo } from 'components/Liquidity/types'
 import { parseRestPosition } from 'components/Liquidity/utils'
 import { LoadingRows } from 'components/Loader/styled'
 import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
-import { useChainFromUrlParam } from 'constants/chains'
 import useSelectChain from 'hooks/useSelectChain'
 import { MigrateV3PositionTxContextProvider, useMigrateV3TxContext } from 'pages/MigrateV3/MigrateV3LiquidityTxContext'
 import {
@@ -16,11 +15,17 @@ import {
   DepositContextProvider,
   PriceRangeContextProvider,
 } from 'pages/Pool/Positions/create/ContextProviders'
-import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
+import {
+  DEFAULT_DEPOSIT_STATE,
+  DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS,
+  useCreatePositionContext,
+  useDepositContext,
+  usePriceRangeContext,
+} from 'pages/Pool/Positions/create/CreatePositionContext'
 import { EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
 import { SelectPriceRangeStep } from 'pages/Pool/Positions/create/RangeSelectionStep'
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
-import { PositionFlowStep } from 'pages/Pool/Positions/create/types'
+import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { LoadingRow } from 'pages/Pool/Positions/shared'
 import { useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
@@ -29,7 +34,7 @@ import { Navigate, useParams } from 'react-router-dom'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { PositionField } from 'types/position'
-import { Flex, Main, Text, styled } from 'ui/src'
+import { Flex, Main, Text, styled, useMedia } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
@@ -44,6 +49,7 @@ import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liq
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { useAccount } from 'wagmi'
 
 const BodyWrapper = styled(Main, {
@@ -59,10 +65,14 @@ const BodyWrapper = styled(Main, {
 })
 
 function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
-  const { positionId } = useParams<{ positionId: string }>()
+  const { chainName, tokenId } = useParams<{ tokenId: string; chainName: string }>()
+
   const { t } = useTranslation()
 
-  const { step, setStep } = useCreatePositionContext()
+  const { positionState, setPositionState, setStep, step } = useCreatePositionContext()
+  const { protocolVersion } = positionState
+  const { setPriceRangeState } = usePriceRangeContext()
+  const { setDepositState } = useDepositContext()
   const { value: v4Enabled, isLoading: isV4GateLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Everywhere)
 
   const [transactionSteps, setTransactionSteps] = useState<TransactionStep[]>([])
@@ -74,6 +84,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   const account = useAccountMeta()
   const dispatch = useDispatch()
   const { txInfo } = useMigrateV3TxContext()
+  const media = useMedia()
 
   const onClose = () => {
     setCurrentTransactionStep(undefined)
@@ -92,33 +103,20 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   }
 
   return (
-    <BodyWrapper>
-      <Flex maxWidth={360}>
-        {/* nav breadcrumbs */}
-        <Flex width="100%">
-          <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-            <BreadcrumbNavLink to="/positions">
-              <Trans i18nKey="pool.positions.title" /> <ChevronRight size={14} />
-            </BreadcrumbNavLink>
-            <BreadcrumbNavLink to={`/explore/position/${positionId}`}>
-              {currency0Amount.currency.symbol} / {currency1Amount.currency.symbol} <ChevronRight size={14} />
-            </BreadcrumbNavLink>
-          </BreadcrumbNavContainer>
-        </Flex>
-        <Text width="100%" variant="heading2" mt="$spacing20">
-          <Trans i18nKey="common.migrate.position" />
-        </Text>
-        <PoolProgressIndicator
-          mt="$spacing32"
-          steps={[
-            { label: t('migrate.selectFeeTier'), active: step === PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER },
-            { label: t('migrate.setRange'), active: step === PositionFlowStep.PRICE_RANGE },
-          ]}
-        />
-      </Flex>
-      <Flex flex={3} gap="$gap12">
-        <Flex mt={44} row justifyContent="flex-end">
-          {/* TODO: replace with Spore button once available */}
+    <>
+      <Flex mt="$spacing48" gap="$gap36">
+        <BreadcrumbNavContainer aria-label="breadcrumb-nav">
+          <BreadcrumbNavLink to="/positions">
+            <Trans i18nKey="pool.positions.title" /> <ChevronRight size={14} />
+          </BreadcrumbNavLink>
+          <BreadcrumbNavLink to={`/positions/v3/${chainName}/${tokenId}`}>
+            {currency0Amount.currency.symbol} / {currency1Amount.currency.symbol} <ChevronRight size={14} />
+          </BreadcrumbNavLink>
+        </BreadcrumbNavContainer>
+        <Flex row justifyContent="space-between" alignItems="center" gap="$gap20" width="100%">
+          <Text width="100%" variant="heading2">
+            <Trans i18nKey="common.migrate.position" />
+          </Text>
           <Flex
             row
             backgroundColor="$surface2"
@@ -130,6 +128,16 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
             px="$padding12"
             {...ClickableTamaguiStyle}
             onPress={() => {
+              setPositionState({
+                ...DEFAULT_POSITION_STATE,
+                protocolVersion,
+                currencyInputs: {
+                  [PositionField.TOKEN0]: currency0Amount.currency,
+                  [PositionField.TOKEN1]: currency1Amount.currency,
+                },
+              })
+              setPriceRangeState(DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS)
+              setDepositState(DEFAULT_DEPOSIT_STATE)
               setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
             }}
           >
@@ -139,50 +147,64 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
             </Text>
           </Flex>
         </Flex>
-        <LiquidityPositionCard liquidityPosition={positionInfo} mt="$spacing24" />
-        <Flex justifyContent="center" alignItems="center">
-          <Flex shrink backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12">
-            <ArrowDown size={20} color="$neutral1" />
+        <Flex row gap={32} width="100%">
+          {!media.xl && (
+            <Flex width={360}>
+              <PoolProgressIndicator
+                steps={[
+                  { label: t('migrate.selectFeeTier'), active: step === PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER },
+                  { label: t('migrate.setRange'), active: step === PositionFlowStep.PRICE_RANGE },
+                ]}
+              />
+            </Flex>
+          )}
+          <Flex gap="$gap16" maxWidth="calc(min(580px, 90vw))">
+            <LiquidityPositionCard liquidityPosition={positionInfo} />
+            <Flex justifyContent="center" alignItems="center">
+              <Flex shrink backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12">
+                <ArrowDown size={20} color="$neutral1" />
+              </Flex>
+            </Flex>
+            {step === PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER ? (
+              <SelectTokensStep
+                width="100%"
+                maxWidth="unset"
+                tokensLocked
+                onContinue={() => {
+                  setStep(PositionFlowStep.PRICE_RANGE)
+                }}
+              />
+            ) : (
+              <EditSelectTokensStep width="100%" maxWidth="unset" />
+            )}
+            {step === PositionFlowStep.PRICE_RANGE && (
+              <SelectPriceRangeStep
+                width="100%"
+                maxWidth="unset"
+                onContinue={() => {
+                  const isValidTx = isValidLiquidityTxContext(txInfo)
+                  if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
+                    return
+                  }
+                  dispatch(
+                    liquiditySaga.actions.trigger({
+                      selectChain,
+                      startChainId,
+                      account,
+                      liquidityTxContext: txInfo,
+                      setCurrentStep: setCurrentTransactionStep,
+                      setSteps: setTransactionSteps,
+                      onSuccess: onClose,
+                      onFailure: onClose,
+                    }),
+                  )
+                }}
+              />
+            )}
           </Flex>
         </Flex>
-
-        {step === PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER ? (
-          <SelectTokensStep
-            width="100%"
-            maxWidth="unset"
-            tokensLocked
-            onContinue={() => {
-              setStep(PositionFlowStep.PRICE_RANGE)
-            }}
-          />
-        ) : (
-          <EditSelectTokensStep width="100%" maxWidth="unset" />
-        )}
-        {step === PositionFlowStep.PRICE_RANGE && (
-          <SelectPriceRangeStep
-            width="100%"
-            maxWidth="unset"
-            onContinue={() => {
-              const isValidTx = isValidLiquidityTxContext(txInfo)
-              if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
-                return
-              }
-              dispatch(
-                liquiditySaga.actions.trigger({
-                  selectChain,
-                  startChainId,
-                  account,
-                  liquidityTxContext: txInfo,
-                  setCurrentStep: setCurrentTransactionStep,
-                  setSteps: setTransactionSteps,
-                  onSuccess: onClose,
-                  onFailure: onClose,
-                }),
-              )
-            }}
-          />
-        )}
       </Flex>
+
       <Modal
         name={ModalName.MigrateLiquidity}
         onClose={onClose}
@@ -199,7 +221,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
         </Flex>
         <ProgressIndicator steps={transactionSteps} currentStep={currentTransactionStep} />
       </Modal>
-    </BodyWrapper>
+    </>
   )
 }
 
@@ -208,7 +230,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
  */
 export default function MigrateV3() {
   const { tokenId } = useParams<{ tokenId: string }>()
-  const chainInfo = useChainFromUrlParam()
+  const chainId = useChainIdFromUrlParam()
   const account = useAccount()
   const { data, isLoading: positionLoading } = useGetPositionQuery(
     account.address
@@ -216,7 +238,7 @@ export default function MigrateV3() {
           owner: account.address,
           protocolVersion: ProtocolVersion.V3,
           tokenId,
-          chainId: chainInfo?.id ?? account.chainId,
+          chainId: chainId ?? account.chainId,
         }
       : undefined,
   )

@@ -15,7 +15,6 @@ import TransactionConfirmationModal, { ConfirmationModalContent } from 'componen
 import { AutoColumn } from 'components/deprecated/Column'
 import { AutoRow, RowBetween, RowFixed } from 'components/deprecated/Row'
 import { Break } from 'components/earn/styled'
-import { useIsSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
@@ -36,6 +35,10 @@ import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
 import { Switch, Text } from 'ui/src'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
+import { useEnabledChains, useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
@@ -50,6 +53,7 @@ const DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 // redirect invalid tokenIds
 export default function RemoveLiquidityV3() {
   const { chainId } = useAccount()
+  const { defaultChainId } = useEnabledChains()
   const isSupportedChain = useIsSupportedChainId(chainId)
   const { tokenId } = useParams<{ tokenId: string }>()
   const location = useLocation()
@@ -62,6 +66,11 @@ export default function RemoveLiquidityV3() {
   }, [tokenId])
 
   const { position, loading } = useV3PositionFromTokenId(parsedTokenId ?? undefined)
+  const isV4EverywhereEnabled = useFeatureFlag(FeatureFlags.V4Everywhere)
+  if (isV4EverywhereEnabled) {
+    const chainName = toGraphQLChain(chainId ?? defaultChainId).toLowerCase()
+    return <Navigate to={`/positions/v3/${chainName}/${tokenId}`} replace />
+  }
   if (parsedTokenId === null || parsedTokenId.eq(0)) {
     return <Navigate to={{ ...location, pathname: '/pools' }} replace />
   }

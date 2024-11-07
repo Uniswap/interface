@@ -9,9 +9,7 @@ import { getCumulativeSum, getCumulativeVolume, getVolumeProtocolInfo } from 'co
 import { ChartType } from 'components/Charts/utils'
 import { DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { chainIdToBackendChain, useChainFromUrlParam } from 'constants/chains'
-import { useDailyProtocolTVL, useHistoricalProtocolVolume } from 'graphql/data/protocolStats'
-import { TimePeriod, getProtocolColor, getProtocolGradient, getSupportedGraphQlChain } from 'graphql/data/util'
+import { TimePeriod, getProtocolColor, getProtocolGradient } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useAtomValue } from 'jotai/utils'
 import { useTheme } from 'lib/styled-components'
@@ -24,13 +22,13 @@ import { EllipsisTamaguiStyle } from 'theme/components'
 import { Flex, SegmentedControl, Text, styled } from 'ui/src'
 import { HistoryDuration, PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
+import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const EXPLORE_CHART_HEIGHT_PX = 368
-const EXPLORE_PRICE_SOURCES = [PriceSource.SubgraphV2, PriceSource.SubgraphV3]
+const EXPLORE_PRICE_SOURCES_V3 = [PriceSource.SubgraphV2, PriceSource.SubgraphV3]
+const EXPLORE_PRICE_SOURCES_V4 = [PriceSource.SubgraphV2, PriceSource.SubgraphV3, PriceSource.SubgraphV4]
 
 const TIME_SELECTOR_OPTIONS = [{ value: TimePeriod.DAY }, { value: TimePeriod.WEEK }, { value: TimePeriod.MONTH }]
 
@@ -70,14 +68,15 @@ const SectionTitle = styled(Text, {
   lineHeight: 24,
 })
 
-function VolumeChartSection({ chainId }: { chainId: UniverseChainId }) {
+function VolumeChartSection() {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
   const theme = useTheme()
   const isSmallScreen = !useScreenSize()['sm']
-  const { value: isMultichainExploreEnabledLoaded, isLoading: isMultichainExploreLoading } = useFeatureFlagWithLoading(
-    FeatureFlags.MultichainExplore,
+  const { value: isV4EverywhereEnabledLoaded, isLoading: isV4EverywhereLoading } = useFeatureFlagWithLoading(
+    FeatureFlags.V4Everywhere,
   )
-  const isMultichainExploreEnabled = isMultichainExploreEnabledLoaded || isMultichainExploreLoading
+  const isV4EverywhereEnabled = isV4EverywhereEnabledLoaded || isV4EverywhereLoading
+  const EXPLORE_PRICE_SOURCES = isV4EverywhereEnabled ? EXPLORE_PRICE_SOURCES_V4 : EXPLORE_PRICE_SOURCES_V3
   const refitChartContent = useAtomValue(refitChartContentAtom)
 
   function timeGranularityToHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
@@ -94,43 +93,36 @@ function VolumeChartSection({ chainId }: { chainId: UniverseChainId }) {
     }
   }
 
-  const {
-    entries: gqlEntries,
-    loading: gqlLoading,
-    dataQuality: gqlDataQuality,
-  } = useHistoricalProtocolVolume(
-    chainIdToBackendChain({ chainId, withFallback: true }),
+  const { entries, loading, dataQuality } = useRestHistoricalProtocolVolume(
     isSmallScreen ? HistoryDuration.Month : timeGranularityToHistoryDuration(timePeriod),
   )
-  const {
-    entries: restEntries,
-    loading: restLoading,
-    dataQuality: restDataQuality,
-  } = useRestHistoricalProtocolVolume(
-    isSmallScreen ? HistoryDuration.Month : timeGranularityToHistoryDuration(timePeriod),
+  const protocolColors = useMemo(
+    () =>
+      isV4EverywhereEnabled
+        ? [
+            getProtocolColor(PriceSource.SubgraphV4, theme),
+            getProtocolColor(PriceSource.SubgraphV3, theme),
+            getProtocolColor(PriceSource.SubgraphV2, theme),
+          ]
+        : [getProtocolColor(PriceSource.SubgraphV3, theme), getProtocolColor(PriceSource.SubgraphV2, theme)],
+    [isV4EverywhereEnabled, theme],
   )
-  const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
-  const { entries, loading, dataQuality } = isRestExploreEnabled
-    ? { entries: restEntries, loading: restLoading, dataQuality: restDataQuality }
-    : { entries: gqlEntries, loading: gqlLoading, dataQuality: gqlDataQuality }
   const params = useMemo<{
     data: StackedHistogramData[]
-    colors: [string, string]
+    colors: string[]
     useThinCrosshair: boolean
     headerHeight: number
-    isMultichainExploreEnabled: boolean
     background: string
   }>(
     () => ({
       data: entries,
-      colors: [theme.accent1, theme.accent3],
-      headerHeight: isMultichainExploreEnabled ? 0 : 80,
+      colors: protocolColors,
+      headerHeight: 0,
       stale: dataQuality === DataQuality.STALE,
-      useThinCrosshair: isMultichainExploreEnabled,
-      isMultichainExploreEnabled,
+      useThinCrosshair: true,
       background: theme.background,
     }),
-    [entries, theme.accent1, theme.accent3, theme.background, isMultichainExploreEnabled, dataQuality],
+    [entries, protocolColors, dataQuality, theme.background],
   )
 
   const cumulativeVolume = useMemo(() => getCumulativeVolume(entries), [entries])
@@ -194,30 +186,23 @@ function VolumeChartSection({ chainId }: { chainId: UniverseChainId }) {
   )
 }
 
-function TVLChartSection({ chainId }: { chainId: UniverseChainId }) {
+function TVLChartSection() {
   const theme = useTheme()
-  const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
-  const {
-    entries: gqlEntries,
-    loading: gqlLoading,
-    dataQuality: gqlDataQuality,
-  } = useDailyProtocolTVL(chainIdToBackendChain({ chainId }))
-  const { entries: restEntries, loading: restLoading, dataQuality: restDataQuality } = useRestDailyProtocolTVL()
-  const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
-  const { entries, loading, dataQuality } = isRestExploreEnabled
-    ? { entries: restEntries, loading: restLoading, dataQuality: restDataQuality }
-    : { entries: gqlEntries, loading: gqlLoading, dataQuality: gqlDataQuality }
+  const { value: isV4EverywhereEnabledLoaded, isLoading: isV4EverywhereLoading } = useFeatureFlagWithLoading(
+    FeatureFlags.V4Everywhere,
+  )
+  const isV4EverywhereEnabled = isV4EverywhereEnabledLoaded || isV4EverywhereLoading
+  const EXPLORE_PRICE_SOURCES = isV4EverywhereEnabled ? EXPLORE_PRICE_SOURCES_V4 : EXPLORE_PRICE_SOURCES_V3
+  const { entries, loading, dataQuality } = useRestDailyProtocolTVL()
 
   const lastEntry = entries[entries.length - 1]
   const params = useMemo(
     () => ({
       data: entries,
       colors: EXPLORE_PRICE_SOURCES?.map((source) => getProtocolColor(source, theme)) ?? [theme.accent1],
-      gradients: isMultichainExploreEnabled
-        ? EXPLORE_PRICE_SOURCES?.map((source) => getProtocolGradient(source))
-        : undefined,
+      gradients: EXPLORE_PRICE_SOURCES?.map((source) => getProtocolGradient(source)),
     }),
-    [entries, isMultichainExploreEnabled, theme],
+    [EXPLORE_PRICE_SOURCES, entries, theme],
   )
 
   const isSmallScreen = !useScreenSize()['sm']
@@ -273,12 +258,10 @@ function MinimalStatDisplay({ title, value, time }: { title: ReactNode; value: n
 }
 
 export function ExploreChartsSection() {
-  const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
-
   return (
     <ChartsContainer>
-      <TVLChartSection chainId={chain.id} />
-      <VolumeChartSection chainId={chain.id} />
+      <TVLChartSection />
+      <VolumeChartSection />
     </ChartsContainer>
   )
 }

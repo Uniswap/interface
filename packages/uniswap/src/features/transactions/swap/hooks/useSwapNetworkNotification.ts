@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 interface SwapChains {
   inputChainId?: UniverseChainId

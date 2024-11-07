@@ -10,8 +10,9 @@ import { useNavigate } from 'react-router-dom'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const BalancesCard = styled.div`
@@ -131,6 +132,7 @@ const OtherChainsBalanceSummary = ({
   hasPageChainBalance: boolean
 }) => {
   const navigate = useNavigate()
+  const { defaultChainId } = useEnabledChains()
 
   if (!otherChainBalances.length) {
     return null
@@ -148,7 +150,7 @@ const OtherChainsBalanceSummary = ({
       )}
       {otherChainBalances.map((balance) => {
         const currency = balance.token && gqlToCurrency(balance.token)
-        const chainId = (balance.token && supportedChainIdFromGQLChain(balance.token.chain)) ?? UniverseChainId.Mainnet
+        const chainId = (balance.token && supportedChainIdFromGQLChain(balance.token.chain)) ?? defaultChainId
         return (
           <Balance
             key={balance.id}

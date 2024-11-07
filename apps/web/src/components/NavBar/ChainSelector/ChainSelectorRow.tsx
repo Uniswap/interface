@@ -1,13 +1,14 @@
 import Loader from 'components/Icons/LoadingSpinner'
 import { ChainLogo } from 'components/Logo/ChainLogo'
-import { getChain, useSupportedChainId } from 'constants/chains'
 import styled, { useTheme } from 'lib/styled-components'
 import { Check } from 'react-feather'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const LOGO_SIZE = 20
 
@@ -63,10 +64,10 @@ interface ChainSelectorRowProps {
 export default function ChainSelectorRow({ disabled, targetChain, onSelectChain, isPending }: ChainSelectorRowProps) {
   const theme = useTheme()
   const { chainId } = useSwapAndLimitContext()
-  const supportedChain = useSupportedChainId(targetChain)
+  const supportedChainId = useSupportedChainId(targetChain)
   const active = chainId === targetChain
 
-  const chainInfo = getChain({ chainId: supportedChain })
+  const chainInfo = supportedChainId ? getChainInfo(supportedChainId) : undefined
   const label = chainInfo?.label
 
   return (

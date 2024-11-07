@@ -1,9 +1,9 @@
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { _TypedDataEncoder } from '@ethersproject/hash'
 import { Signer, UnsignedTransaction, providers, utils } from 'ethers'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { SignsTypedData } from 'uniswap/src/features/transactions/signing'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 

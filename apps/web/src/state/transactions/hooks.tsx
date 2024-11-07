@@ -3,7 +3,7 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { Token } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { SwapResult } from 'hooks/useSwapCallback'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { TradeFillType } from 'state/routing/types'
 import { addTransaction, cancelTransaction, removeTransaction } from 'state/transactions/reducer'
@@ -15,7 +15,7 @@ import {
 } from 'state/transactions/types'
 import { isConfirmedTx, isPendingTx } from 'state/transactions/utils'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { COMBINED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/types/chains'
+import { ALL_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
@@ -75,7 +75,7 @@ export function useMultichainTransactions(): [TransactionDetails, UniverseChainI
 
   return useMemo(
     () =>
-      COMBINED_CHAIN_IDS.flatMap((chainId) =>
+      ALL_CHAIN_IDS.flatMap((chainId) =>
         state[chainId]
           ? Object.values(state[chainId]).map((tx): [TransactionDetails, UniverseChainId] => [tx, chainId])
           : [],
@@ -178,4 +178,31 @@ export function usePendingTransactions(): PendingTransactionDetails[] {
       ),
     [account.address, allTransactions],
   )
+}
+
+function usePendingLPTransactions(): PendingTransactionDetails[] {
+  const allTransactions = useAllTransactions()
+  const account = useAccount()
+
+  return useMemo(
+    () =>
+      Object.values(allTransactions).filter(
+        (tx): tx is PendingTransactionDetails =>
+          tx.from === account.address &&
+          isPendingTx(tx) &&
+          [
+            TransactionType.INCREASE_LIQUIDITY,
+            TransactionType.DECREASE_LIQUIDITY,
+            TransactionType.COLLECT_FEES,
+          ].includes(tx.info.type),
+      ),
+    [account.address, allTransactions],
+  )
+}
+
+export function usePendingLPTransactionsChangeListener(callback: () => void) {
+  const pendingLPTransactions = usePendingLPTransactions()
+  useEffect(() => {
+    callback()
+  }, [pendingLPTransactions, callback])
 }

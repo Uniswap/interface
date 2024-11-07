@@ -7,7 +7,7 @@ import { TransactionListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { AssetType } from 'uniswap/src/entities/assets'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DappInfo } from 'uniswap/src/types/walletConnect'
 
 export type WarningWithStyle = {

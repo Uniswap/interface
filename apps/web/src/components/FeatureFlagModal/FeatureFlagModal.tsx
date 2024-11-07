@@ -9,11 +9,11 @@ import { X } from 'react-feather'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { BREAKPOINTS } from 'theme'
+import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
 import { DynamicConfigKeys, DynamicConfigs, QuickRouteChainsConfigKey } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
-import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 
 const Wrapper = styled(Column)`
   padding: 20px 16px;
@@ -219,13 +219,11 @@ export default function FeatureFlagModal() {
         <FlagsColumn>
           <FeatureFlagOption flag={FeatureFlags.V4Swap} label="Enable v4 in the shared swap flow" />
           <FeatureFlagOption flag={FeatureFlags.UniversalSwap} label="Enable swap flow from the Uniswap Package" />
-          <FeatureFlagOption flag={FeatureFlags.Bridging} label="Bridging" />
           <FeatureFlagOption flag={FeatureFlags.UniswapX} label="[Universal Swap Flow Only] Enable UniswapX" />
           <FeatureFlagOption
             flag={FeatureFlags.IndicativeSwapQuotes}
             label="[Universal Swap Flow Only] Enable Quick Routes"
           />
-          <FeatureFlagOption flag={FeatureFlags.TestnetMode} label="Testnet Mode" />
           <FeatureFlagOption
             flag={FeatureFlags.UniswapXPriorityOrders}
             label="UniswapX Priority Orders (on Base only)"
@@ -239,21 +237,15 @@ export default function FeatureFlagModal() {
             label="Enable EIP-6963: Multi Injected Provider Discovery"
           />
           <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
-          <FeatureFlagOption flag={FeatureFlags.V2Everywhere} label="Enable V2 Everywhere" />
           <FeatureFlagOption flag={FeatureFlags.V4Everywhere} label="Enable V4 Everywhere" />
           <FeatureFlagOption flag={FeatureFlags.Realtime} label="Realtime activity updates" />
-          <FeatureFlagOption flag={FeatureFlags.RestExplore} label="Explore Data from new REST backend" />
           <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
           <FeatureFlagOption flag={FeatureFlags.NavigationHotkeys} label="Navigation hotkeys" />
           <FeatureFlagOption flag={FeatureFlags.TokenProtection} label="Warning UX for scam/dangerous tokens" />
           <FeatureFlagGroup name="New Chains">
             <FeatureFlagOption flag={FeatureFlags.Zora} label="Enable Zora" />
-            <FeatureFlagOption flag={FeatureFlags.WorldChain} label="Enable World Chain" />
           </FeatureFlagGroup>
           <FeatureFlagOption flag={FeatureFlags.L2NFTs} label="L2 NFTs" />
-          <FeatureFlagGroup name="Multichain UX">
-            <FeatureFlagOption flag={FeatureFlags.MultichainExplore} label="Enable Multichain Explore Page" />
-          </FeatureFlagGroup>
           <FeatureFlagGroup name="Quick routes">
             <FeatureFlagOption flag={FeatureFlags.QuickRouteMainnet} label="Enable quick routes for Mainnet" />
             <DynamicConfigDropdown

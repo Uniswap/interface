@@ -5,24 +5,21 @@ import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getCountry } from 'react-native-localize'
 import { useDispatch } from 'react-redux'
-import { useCurrencies } from 'uniswap/src/components/TokenSelector/hooks'
+import { useCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useCurrencies'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrencyInfo, useFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import {
-  useFiatOnRampAggregatorCryptoQuoteQuery,
-  useFiatOnRampAggregatorGetCountryQuery,
-  useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
-  useFiatOnRampAggregatorSupportedTokensQuery,
-} from 'uniswap/src/features/fiatOnRamp/api'
+import { getFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import {
   FORQuote,
   FORSupportedFiatCurrency,
   FORSupportedToken,
   FiatCurrencyInfo,
   FiatOnRampCurrency,
+  RampDirection,
 } from 'uniswap/src/features/fiatOnRamp/types'
 import {
   createOnRampTransactionId,
@@ -39,7 +36,6 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getFormattedCurrencyAmount } from 'uniswap/src/utils/currency'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
@@ -100,6 +96,7 @@ export function useFiatOnRampTransactionCreator(
 export function useMeldFiatCurrencySupportInfo(
   countryCode: string,
   skip: boolean = false,
+  rampDirection?: RampDirection,
 ): {
   appFiatCurrencySupportedInMeld: boolean
   meldSupportedFiatCurrency: FiatCurrencyInfo
@@ -110,8 +107,9 @@ export function useMeldFiatCurrencySupportInfo(
   const fallbackCurrencyInfo = useFiatCurrencyInfo(FiatCurrency.UnitedStatesDollar)
   const appFiatCurrencyCode = appFiatCurrencyInfo.code.toLowerCase()
 
+  const { useFiatOnRampAggregatorSupportedFiatCurrenciesQuery } = getFiatOnRampAggregatorApi()
   const { data: supportedFiatCurrencies } = useFiatOnRampAggregatorSupportedFiatCurrenciesQuery(
-    { countryCode },
+    { countryCode, rampDirection },
     { skip },
   )
 
@@ -142,22 +140,28 @@ export function useFiatOnRampSupportedTokens({
   sourceCurrencyCode,
   countryCode,
   skip = false,
+  rampDirection,
 }: {
   sourceCurrencyCode: string
   countryCode: string
   skip?: boolean
+  rampDirection?: RampDirection
 }): {
   error: boolean
   list: FiatOnRampCurrency[] | undefined
   loading: boolean
   refetch: () => void
 } {
+  const { useFiatOnRampAggregatorSupportedTokensQuery } = getFiatOnRampAggregatorApi()
   const {
     data: supportedTokensResponse,
     isLoading: supportedTokensLoading,
     error: supportedTokensError,
     refetch: refetchSupportedTokens,
-  } = useFiatOnRampAggregatorSupportedTokensQuery({ fiatCurrency: sourceCurrencyCode, countryCode }, { skip })
+  } = useFiatOnRampAggregatorSupportedTokensQuery(
+    { fiatCurrency: sourceCurrencyCode, countryCode, rampDirection },
+    { skip },
+  )
 
   const supportedTokensById: Record<string, FORSupportedToken> = useMemo(
     () =>
@@ -212,12 +216,14 @@ export function useFiatOnRampQuotes({
   quoteCurrencyCode,
   countryCode,
   countryState,
+  rampDirection,
 }: {
   baseCurrencyAmount?: number
   baseCurrencyCode: string | undefined
   quoteCurrencyCode: string | undefined
   countryCode: string | undefined
   countryState: string | undefined
+  rampDirection: RampDirection
 }): {
   loading: boolean
   error?: FetchBaseQueryError | SerializedError
@@ -226,6 +232,7 @@ export function useFiatOnRampQuotes({
   const debouncedBaseCurrencyAmount = useDebounce(baseCurrencyAmount, SHORT_DELAY)
   const walletAddress = useAccountMeta()?.address
 
+  const { useFiatOnRampAggregatorCryptoQuoteQuery } = getFiatOnRampAggregatorApi()
   const {
     currentData: quotesResponse,
     isFetching: quotesFetching,
@@ -234,11 +241,12 @@ export function useFiatOnRampQuotes({
     baseCurrencyAmount && countryCode && quoteCurrencyCode && baseCurrencyCode
       ? {
           sourceAmount: baseCurrencyAmount,
-          sourceCurrencyCode: baseCurrencyCode,
-          destinationCurrencyCode: quoteCurrencyCode,
+          sourceCurrencyCode: rampDirection === RampDirection.OFFRAMP ? quoteCurrencyCode : baseCurrencyCode,
+          destinationCurrencyCode: rampDirection === RampDirection.OFFRAMP ? baseCurrencyCode : quoteCurrencyCode,
           countryCode,
           walletAddress: walletAddress ?? undefined,
           state: countryState,
+          rampDirection,
         }
       : skipToken,
     {
@@ -300,6 +308,7 @@ export function useIsSupportedFiatOnRampCurrency(
   skip: boolean = false,
 ): FiatOnRampCurrency | undefined {
   const fallbackCountryCode = getCountry()
+  const { useFiatOnRampAggregatorGetCountryQuery } = getFiatOnRampAggregatorApi()
   const { currentData: ipCountryData } = useFiatOnRampAggregatorGetCountryQuery(undefined, { skip })
   const { meldSupportedFiatCurrency } = useMeldFiatCurrencySupportInfo(
     ipCountryData?.countryCode ?? fallbackCountryCode,

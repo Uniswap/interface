@@ -25,8 +25,20 @@ export default function Landing() {
   const accountDrawer = useAccountDrawer()
   const prevAccount = usePrevious(account.address)
   const redirectOnConnect = useRef(false)
+
+  const isInitialRender = useRef(true)
+
   // Smoothly redirect to swap page if user connects while on landing page
   useEffect(() => {
+    // Skip logic on the first render because prevAccount will always be undefined on the first render
+    // and we don't want to redirect on the first render because that mean's we're possibly coming from
+    // another page in the app.
+    // We need to wait until future renders to check if the user connected while on the landing page.
+    if (isInitialRender.current) {
+      isInitialRender.current = false
+      return undefined
+    }
+
     if (accountDrawer.isOpen && account.address && !prevAccount) {
       redirectOnConnect.current = true
       setTransition(true)

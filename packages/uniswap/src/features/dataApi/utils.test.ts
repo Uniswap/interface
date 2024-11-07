@@ -5,6 +5,7 @@ import {
   Token as GQLToken,
   TokenProject,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import {
@@ -24,7 +25,6 @@ import {
   usdcTokenProject,
 } from 'uniswap/src/test/fixtures'
 import { renderHook } from 'uniswap/src/test/test-utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 describe(currencyIdToContractInput, () => {
   it('converts currencyId to ContractInput', () => {

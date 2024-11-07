@@ -1,67 +1,59 @@
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
-import { ChainId } from '@uniswap/sdk-core'
-import { useMemo } from 'react'
-import {
-  GQL_MAINNET_CHAINS_MUTABLE,
-  GQL_TESTNET_CHAINS_MUTABLE,
-  UNIVERSE_CHAIN_INFO,
-} from 'uniswap/src/constants/chains'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import {
-  COMBINED_CHAIN_IDS,
-  InterfaceGqlChain,
+  GQL_MAINNET_CHAINS,
+  GQL_TESTNET_CHAINS,
+  // eslint-disable-next-line no-restricted-imports
+  UNIVERSE_CHAIN_INFO,
+  getChainInfo,
+} from 'uniswap/src/features/chains/chainInfo'
+import {
+  ALL_CHAIN_IDS,
+  GqlChainId,
   NetworkLayer,
   SUPPORTED_CHAIN_IDS,
   SUPPORTED_TESTNET_CHAIN_IDS,
   UniverseChainId,
-} from 'uniswap/src/types/chains'
-
-export function toGraphQLChain(chainId: ChainId | number): Chain | undefined {
-  switch (chainId) {
-    case ChainId.MAINNET:
-      return Chain.Ethereum
-    case ChainId.SEPOLIA:
-      return Chain.EthereumSepolia
-    case ChainId.ARBITRUM_ONE:
-      return Chain.Arbitrum
-    case ChainId.OPTIMISM:
-      return Chain.Optimism
-    case ChainId.POLYGON:
-      return Chain.Polygon
-    case ChainId.BASE:
-      return Chain.Base
-    case ChainId.BNB:
-      return Chain.Bnb
-    case ChainId.AVALANCHE:
-      return Chain.Avalanche
-    case ChainId.CELO:
-      return Chain.Celo
-    case ChainId.BLAST:
-      return Chain.Blast
-    case ChainId.WORLDCHAIN:
-      return Chain.Worldchain
-    case ChainId.ZORA:
-      return Chain.Zora
-    case ChainId.ZKSYNC:
-      return Chain.Zksync
-    case ChainId.ASTROCHAIN_SEPOLIA:
-      return Chain.AstrochainSepolia
-  }
-  return undefined
-}
+} from 'uniswap/src/features/chains/types'
 
 // Some code from the web app uses chainId types as numbers
 // This validates them as coerces into SupportedChainId
 export function toSupportedChainId(chainId?: BigNumberish): UniverseChainId | null {
-  const ids = COMBINED_CHAIN_IDS
-
-  if (!chainId || !ids.map((c) => c.toString()).includes(chainId.toString())) {
+  if (!chainId || !ALL_CHAIN_IDS.map((c) => c.toString()).includes(chainId.toString())) {
     return null
   }
   return parseInt(chainId.toString(), 10) as UniverseChainId
+}
+
+export function chainSupportsGasEstimates(chainId: UniverseChainId): boolean {
+  return getChainInfo(chainId).supportsGasEstimates
+}
+
+export function getChainLabel(chainId: UniverseChainId): string {
+  return getChainInfo(chainId).label
+}
+
+export function isTestnetChain(chainId: UniverseChainId): boolean {
+  return Boolean(getChainInfo(chainId).testnet)
+}
+
+export function getChainIdByInfuraPrefix(prefix: string): UniverseChainId | undefined {
+  return Object.values(UNIVERSE_CHAIN_INFO).find((i) => i.infuraPrefix === prefix)?.id
+}
+
+export function isBackendSupportedChainId(chainId: UniverseChainId): boolean {
+  const info = getChainInfo(chainId)
+  return info.backendChain.backendSupported && !info.backendChain.isSecondaryChain
+}
+
+export function isBackendSupportedChain(chain: Chain): chain is GqlChainId {
+  const chainId = fromGraphQLChain(chain)
+  if (!chainId) {
+    return false
+  }
+
+  return chainId && isBackendSupportedChainId(chainId)
 }
 
 export function chainIdToHexadecimalString(chainId: UniverseChainId): string {
@@ -73,11 +65,15 @@ export function hexadecimalStringToInt(hex: string): number {
 }
 
 export function isL2ChainId(chainId?: UniverseChainId): boolean {
-  return chainId !== undefined && UNIVERSE_CHAIN_INFO[chainId].networkLayer === NetworkLayer.L2
+  return chainId !== undefined && getChainInfo(chainId).networkLayer === NetworkLayer.L2
 }
 
 export function isMainnetChainId(chainId?: UniverseChainId): boolean {
   return chainId === UniverseChainId.Mainnet || chainId === UniverseChainId.Sepolia
+}
+
+export function toGraphQLChain(chainId: UniverseChainId): GqlChainId {
+  return getChainInfo(chainId).backendChain.chain
 }
 
 export function fromGraphQLChain(chain: Chain | string | undefined): UniverseChainId | null {
@@ -189,31 +185,12 @@ export function toUniswapWebAppLink(chainId: UniverseChainId): string | null {
   }
 }
 
-type ActiveChainIdFeatureFlags = UniverseChainId.WorldChain
-
 export function filterChainIdsByFeatureFlag(featureFlaggedChainIds: {
-  [UniverseChainId.WorldChain]: boolean
+  [key in UniverseChainId]?: boolean
 }): UniverseChainId[] {
-  return COMBINED_CHAIN_IDS.filter((chainId) => {
-    return featureFlaggedChainIds[chainId as ActiveChainIdFeatureFlags] ?? true
+  return ALL_CHAIN_IDS.filter((chainId) => {
+    return featureFlaggedChainIds[chainId] ?? true
   })
-}
-
-// Used to feature flag chains. If a chain is not included in the object, it is considered enabled by default.
-export function useFeatureFlaggedChainIds(): UniverseChainId[] {
-  // You can use the useFeatureFlag hook here to enable/disable chains based on feature flags.
-  // Example: [ChainId.BLAST]: useFeatureFlag(FeatureFlags.BLAST)
-  // IMPORTANT: Don't forget to also update getEnabledChainIdsSaga
-
-  const worldChainEnabled = useFeatureFlag(FeatureFlags.WorldChain)
-
-  return useMemo(
-    () =>
-      filterChainIdsByFeatureFlag({
-        [UniverseChainId.WorldChain]: worldChainEnabled,
-      }),
-    [worldChainEnabled],
-  )
 }
 
 export function getEnabledChains({
@@ -226,7 +203,7 @@ export function getEnabledChains({
   connectedWalletChainIds?: UniverseChainId[]
 }): {
   chains: UniverseChainId[]
-  gqlChains: InterfaceGqlChain[]
+  gqlChains: GqlChainId[]
   defaultChainId: UniverseChainId
   isTestnetModeEnabled: boolean
 } {
@@ -239,7 +216,7 @@ export function getEnabledChains({
 
     return {
       chains: supportedTestnetChainIds,
-      gqlChains: GQL_TESTNET_CHAINS_MUTABLE,
+      gqlChains: GQL_TESTNET_CHAINS,
       defaultChainId: UniverseChainId.Sepolia as UniverseChainId,
       isTestnetModeEnabled,
     }
@@ -251,7 +228,7 @@ export function getEnabledChains({
       (connectedWalletChainIds ? connectedWalletChainIds.includes(chainId) : true),
   )
 
-  const supportedGqlChains = GQL_MAINNET_CHAINS_MUTABLE.filter((chain) => {
+  const supportedGqlChains = GQL_MAINNET_CHAINS.filter((chain) => {
     const chainId = fromGraphQLChain(chain)
     return chainId && supportedChainIds.includes(chainId)
   })

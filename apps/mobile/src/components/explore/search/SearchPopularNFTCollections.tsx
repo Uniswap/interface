@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
-import { FlatList, ListRenderItemInfo } from 'react-native'
+import { ListRenderItemInfo } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import { SearchNFTCollectionItem } from 'src/components/explore/search/items/SearchNFTCollectionItem'
 import { getSearchResultId, gqlNFTToNFTCollectionSearchResult } from 'src/components/explore/search/utils'
 import { Flex, Loader } from 'ui/src'

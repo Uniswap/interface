@@ -5,7 +5,7 @@ import {
   SearchPopularTokensQuery,
   useSearchPopularTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 
 export type TopToken = NonNullable<NonNullable<SearchPopularTokensQuery['topTokens']>[0]>

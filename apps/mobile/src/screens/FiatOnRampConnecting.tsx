@@ -10,8 +10,9 @@ import { closeModal } from 'src/features/modals/modalSlice'
 import { Flex, Text, useIsDarkMode } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampConnectingView } from 'uniswap/src/features/fiatOnRamp/FiatOnRampConnectingView'
-import { useFiatOnRampAggregatorWidgetQuery } from 'uniswap/src/features/fiatOnRamp/api'
+import { fiatOnRampAggregatorApiV2, getFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { useFiatOnRampTransactionCreator } from 'uniswap/src/features/fiatOnRamp/hooks'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
@@ -21,7 +22,6 @@ import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { FiatOffRampEventName, FiatOnRampEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { forceFetchFiatOnRampTransactions } from 'uniswap/src/features/transactions/slice'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
 import { openUri } from 'uniswap/src/utils/linking'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -69,12 +69,13 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     navigation.goBack()
   }, [dispatch, navigation, t])
 
+  const { useFiatOnRampAggregatorWidgetQuery } = getFiatOnRampAggregatorApi()
   const {
     data: widgetData,
     isLoading: widgetLoading,
     error: widgetError,
   } = useFiatOnRampAggregatorWidgetQuery(
-    serviceProvider && quoteCurrency.meldCurrencyCode && baseCurrencyInfo && amount
+    !isOffRamp && serviceProvider && quoteCurrency.meldCurrencyCode && baseCurrencyInfo && amount
       ? {
           serviceProvider: serviceProvider.serviceProvider,
           countryCode,
@@ -88,12 +89,32 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
       : skipToken,
   )
 
+  const { useFiatOnRampAggregatorOffRampWidgetQuery } = fiatOnRampAggregatorApiV2
+  const {
+    data: offRampWidgetData,
+    isLoading: offRampWidgetLoading,
+    error: offRampWidgetError,
+  } = useFiatOnRampAggregatorOffRampWidgetQuery(
+    isOffRamp && serviceProvider && quoteCurrency.meldCurrencyCode && baseCurrencyInfo && amount
+      ? {
+          serviceProvider: serviceProvider.serviceProvider,
+          countryCode,
+          baseCurrencyCode: quoteCurrency.meldCurrencyCode,
+          sourceAmount: amount,
+          quoteCurrencyCode: baseCurrencyInfo.code,
+          refundWalletAddress: activeAccountAddress,
+          externalCustomerId: activeAccountAddress,
+          externalSessionId: externalTransactionId,
+          redirectUrl: `${uniswapUrls.redirectUrlBase}?screen=transaction&fiatOffRamp=true&userAddress=${activeAccountAddress}`,
+        }
+      : skipToken,
+  )
   useTimeout(() => {
     setTimeoutElapsed(true)
   }, CONNECTING_TIMEOUT)
 
   useEffect(() => {
-    if (!baseCurrencyInfo || !serviceProvider || widgetError) {
+    if (!baseCurrencyInfo || !serviceProvider || widgetError || offRampWidgetError) {
       onError()
       return
     }
@@ -118,15 +139,22 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
       dispatch(forceFetchFiatOnRampTransactions())
     }
 
-    if (timeoutElapsed && !widgetLoading && widgetData) {
+    if (!isOffRamp && timeoutElapsed && !widgetLoading && widgetData) {
       navigateToWidget(widgetData.widgetUrl).catch(() => undefined)
+    }
+
+    if (isOffRamp && timeoutElapsed && !offRampWidgetLoading && offRampWidgetData) {
+      navigateToWidget(offRampWidgetData.widgetUrl).catch(() => undefined)
     }
   }, [
     navigation,
     timeoutElapsed,
     widgetData,
+    offRampWidgetData,
     widgetLoading,
+    offRampWidgetLoading,
     widgetError,
+    offRampWidgetError,
     onError,
     dispatchAddTransaction,
     baseCurrencyInfo,

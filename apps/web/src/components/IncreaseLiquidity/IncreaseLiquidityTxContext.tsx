@@ -2,7 +2,7 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useIncreaseLiquidityContext } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
-import { useModalLiquidityPositionInfo } from 'components/Liquidity/hooks'
+import { useModalLiquidityInitialState } from 'components/Liquidity/hooks'
 import { getProtocolItems } from 'components/Liquidity/utils'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { PropsWithChildren, createContext, useContext, useMemo } from 'react'
@@ -23,7 +23,7 @@ interface IncreasePositionContextType {
 const IncreaseLiquidityTxContext = createContext<IncreasePositionContextType | undefined>(undefined)
 
 export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildren): JSX.Element {
-  const positionInfo = useModalLiquidityPositionInfo()
+  const positionInfo = useModalLiquidityInitialState()
   const { derivedIncreaseLiquidityInfo } = useIncreaseLiquidityContext()
 
   const { currencyAmounts } = derivedIncreaseLiquidityInfo

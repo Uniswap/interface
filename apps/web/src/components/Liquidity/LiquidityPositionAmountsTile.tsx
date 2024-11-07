@@ -26,21 +26,21 @@ export function LiquidityPositionAmountsTile({
       <Flex row alignItems="center" justifyContent="space-between">
         <Flex row alignItems="center" gap="$gap16">
           <CurrencyLogo currencyInfo={currencyInfo0} size={20} />
-          <Text variant="body1" color="neutral1">
+          <Text variant="body2" color="neutral1">
             {currency0Amount.currency.symbol}
           </Text>
         </Flex>
         <Flex row alignItems="center" gap="$gap8">
-          <Text variant="body1" color="$neutral1">
+          <Text variant="body2" color="$neutral1">
             {formatCurrencyAmount({ value: currency0Amount })}
           </Text>
-          {fiatValue0 && (
-            <Text variant="body1" color="$neutral2">
+          {fiatValue0?.greaterThan(0) && (
+            <Text variant="body2" color="$neutral2">
               ({formatCurrencyAmount({ value: fiatValue0, type: NumberType.FiatTokenPrice })})
             </Text>
           )}
           {totalFiatValue?.greaterThan(0) && fiatValue0 && (
-            <Text variant="body1" color="$neutral1">
+            <Text variant="body2" color="$neutral1">
               {formatPercent(new Percent(fiatValue0.quotient, totalFiatValue.quotient).toFixed(6))}
             </Text>
           )}
@@ -49,21 +49,21 @@ export function LiquidityPositionAmountsTile({
       <Flex row alignItems="center" justifyContent="space-between">
         <Flex row alignItems="center" gap="$gap16">
           <CurrencyLogo currencyInfo={currencyInfo1} size={20} />
-          <Text variant="body1" color="$neutral1">
+          <Text variant="body2" color="$neutral1">
             {currency1Amount.currency.symbol}
           </Text>
         </Flex>
         <Flex row alignItems="center" gap="$gap8">
-          <Text variant="body1" color="neutral1">
+          <Text variant="body2" color="neutral1">
             {formatCurrencyAmount({ value: currency1Amount })}
           </Text>
-          {fiatValue1 && (
-            <Text variant="body1" color="$neutral2">
+          {fiatValue1?.greaterThan(0) && (
+            <Text variant="body2" color="$neutral2">
               ({formatCurrencyAmount({ value: fiatValue1, type: NumberType.FiatTokenPrice })})
             </Text>
           )}
           {totalFiatValue?.greaterThan(0) && fiatValue1 && (
-            <Text variant="body1" color="$neutral1">
+            <Text variant="body2" color="$neutral1">
               {formatPercent(new Percent(fiatValue1.quotient, totalFiatValue.quotient).toFixed(6))}
             </Text>
           )}

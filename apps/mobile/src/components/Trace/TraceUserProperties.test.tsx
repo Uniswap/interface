@@ -132,7 +132,6 @@ describe('TraceUserProperties', () => {
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.TransactionAuthMethod, AuthMethod.FaceId, undefined)
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.Language, 'English', undefined)
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.Currency, 'USD', undefined)
-    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.TestnetModeEnabled, false, undefined)
 
     expect(mocked).toHaveBeenCalledTimes(18)
   })
@@ -173,7 +172,6 @@ describe('TraceUserProperties', () => {
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.WalletSignerCount, 0, undefined)
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.AppOpenAuthMethod, AuthMethod.None, undefined)
     expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.TransactionAuthMethod, AuthMethod.None, undefined)
-    expect(mocked).toHaveBeenCalledWith(MobileUserPropertyName.TestnetModeEnabled, false, undefined)
 
     expect(mocked).toHaveBeenCalledTimes(12)
   })

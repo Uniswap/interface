@@ -2,6 +2,7 @@ import { TransactionRequest } from '@ethersproject/providers'
 import { TradeType } from '@uniswap/sdk-core'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   ApproveTransactionInfo,
@@ -32,7 +33,6 @@ import {
 import { dappInfoWC } from 'uniswap/src/test/fixtures/wallet/walletConnect'
 import { faker } from 'uniswap/src/test/shared'
 import { createFixture, randomChoice, randomEnumValue } from 'uniswap/src/test/utils'
-import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 
 export const transactionId = createFixture<TransactionId>()(() => ({
   id: faker.datatype.uuid(),

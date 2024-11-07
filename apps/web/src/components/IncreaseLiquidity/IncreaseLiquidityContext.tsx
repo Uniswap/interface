@@ -1,5 +1,5 @@
 import { useDerivedIncreaseLiquidityInfo } from 'components/IncreaseLiquidity/hooks'
-import { useModalLiquidityPositionInfo } from 'components/Liquidity/hooks'
+import { useModalLiquidityInitialState } from 'components/Liquidity/hooks'
 import { DepositInfo, PositionInfo } from 'components/Liquidity/types'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
 import { PositionField } from 'types/position'
@@ -19,11 +19,18 @@ const DEFAULT_INCREASE_LIQUIDITY_STATE = {
   exactField: PositionField.TOKEN0,
 }
 
+// This increase-specific context needs to recalculate deposit0Disabled and deposit1Disabled,
+// which are derived from price range inputs in the regular create flow.
+export type IncreaseLiquidityDerivedInfo = DepositInfo & {
+  deposit0Disabled?: boolean
+  deposit1Disabled?: boolean
+}
+
 interface IncreaseLiquidityContextType {
   step: IncreaseLiquidityStep
   setStep: Dispatch<SetStateAction<IncreaseLiquidityStep>>
   increaseLiquidityState: IncreaseLiquidityState
-  derivedIncreaseLiquidityInfo: DepositInfo
+  derivedIncreaseLiquidityInfo: IncreaseLiquidityDerivedInfo
   setIncreaseLiquidityState: Dispatch<SetStateAction<IncreaseLiquidityState>>
 }
 
@@ -40,7 +47,7 @@ export function useIncreaseLiquidityContext() {
 }
 
 export function IncreaseLiquidityContextProvider({ children }: PropsWithChildren) {
-  const positionInfo = useModalLiquidityPositionInfo()
+  const positionInfo = useModalLiquidityInitialState()
 
   const [step, setStep] = useState(IncreaseLiquidityStep.Input)
 

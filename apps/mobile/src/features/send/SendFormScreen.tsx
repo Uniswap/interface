@@ -15,13 +15,13 @@ import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import {
   TransactionModalFooterContainer,
   TransactionModalInnerContainer,
 } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'

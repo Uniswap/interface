@@ -1,9 +1,9 @@
 // adapted from https://github.com/Uniswap/interface/src/constants/tokens.ts
 import { Currency, NativeCurrency as NativeCurrencyClass, Token } from '@uniswap/sdk-core'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { wrappedNativeCurrency } from 'uniswap/src/utils/currency'
 
 export class NativeCurrency implements NativeCurrencyClass {
@@ -13,15 +13,12 @@ export class NativeCurrency implements NativeCurrencyClass {
       throw new Error(`Unsupported chain ID: ${chainId}`)
     }
 
-    const chainInfo = UNIVERSE_CHAIN_INFO[supportedChainId]
-    if (!chainInfo) {
-      throw new Error('Native currrency info not found')
-    }
+    const { nativeCurrency } = getChainInfo(supportedChainId)
 
     this.chainId = supportedChainId
-    this.decimals = chainInfo.nativeCurrency.decimals
-    this.name = chainInfo.nativeCurrency.name
-    this.symbol = chainInfo.nativeCurrency.symbol
+    this.decimals = nativeCurrency.decimals
+    this.name = nativeCurrency.name
+    this.symbol = nativeCurrency.symbol
     this.isNative = true
     this.isToken = false
     this.address = getNativeAddress(this.chainId)

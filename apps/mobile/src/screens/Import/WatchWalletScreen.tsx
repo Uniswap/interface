@@ -11,13 +11,14 @@ import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Button, Flex, Text } from 'ui/src'
 import { Eye, GraduationCap } from 'ui/src/components/icons'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
+import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'
 import { useENS } from 'uniswap/src/features/ens/useENS'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
@@ -162,7 +163,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           blurOnSubmit
           errorMessage={errorText}
           inputAlignment="flex-start"
-          inputSuffix={validAddress || hasSuffixIncluded ? undefined : '.eth'}
+          inputSuffix={validAddress || hasSuffixIncluded ? undefined : ENS_SUFFIX}
           liveCheck={showLiveCheck}
           placeholderLabel={t('account.wallet.watch.placeholder')}
           shouldUseMinHeight={false}

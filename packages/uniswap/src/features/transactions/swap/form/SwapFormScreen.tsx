@@ -26,6 +26,7 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import {
+  DecimalPadCalculatedSpaceId,
   DecimalPadCalculateSpace,
   DecimalPadInput,
   DecimalPadInputRef,
@@ -530,7 +531,7 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
   )
 
   // We *always* want to show the footer on native mobile because it's used to calculate the available space for the `DecimalPad`.
-  const showFooter = !hideFooter && (isMobileApp || (exactAmountToken && input && output))
+  const showFooter = Boolean(!hideFooter && (isMobileApp || (exactAmountToken && input && output)))
 
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
@@ -675,7 +676,8 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
 
       {!isWeb && (
         <>
-          <DecimalPadCalculateSpace decimalPadRef={decimalPadRef} isShortMobileDevice={isShortMobileDevice} />
+          <DecimalPadCalculateSpace id={DecimalPadCalculatedSpaceId.Swap} decimalPadRef={decimalPadRef} />
+
           <Flex
             $short={{ gap: '$none' }}
             animation="quick"

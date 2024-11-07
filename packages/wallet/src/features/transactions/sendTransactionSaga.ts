@@ -1,8 +1,9 @@
 import { providers } from 'ethers'
 import { call, put, select } from 'typed-redux-saga'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta, AccountType, SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
@@ -21,7 +22,6 @@ import {
   TransactionTypeInfo,
   isBridgeTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
@@ -58,7 +58,7 @@ export function* sendTransaction(params: SendTransactionParams) {
   const { chainId, account, options } = params
   let request = options.request
 
-  logger.debug('sendTransaction', '', `Sending tx on ${UNIVERSE_CHAIN_INFO[chainId].label} to ${request.to}`)
+  logger.debug('sendTransaction', '', `Sending tx on ${getChainLabel(chainId)} to ${request.to}`)
 
   if (account.type === AccountType.Readonly) {
     throw new Error('Account must support signing')

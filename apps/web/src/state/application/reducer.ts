@@ -1,8 +1,8 @@
 import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
 import { PositionInfo } from 'components/Liquidity/types'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
 export enum PopupType {
@@ -58,20 +58,28 @@ export enum ApplicationModal {
   GET_THE_APP,
 }
 
+export type LiquidityModalInitialState = PositionInfo & { collectAsWeth?: boolean }
+
 type AddLiquidityModalParams = {
   name: typeof ModalName.AddLiquidity
-  initialState: PositionInfo
+  initialState: LiquidityModalInitialState
 }
 
 type RemoveLiquidityModalParams = {
   name: typeof ModalName.RemoveLiquidity
-  initialState: PositionInfo
+  initialState: LiquidityModalInitialState
+}
+
+type ClaimFeeModalParams = {
+  name: typeof ModalName.ClaimFee
+  initialState: LiquidityModalInitialState
 }
 
 export type OpenModalParams =
   | { name: ModalNameType | ApplicationModal; initialState?: undefined }
   | AddLiquidityModalParams
   | RemoveLiquidityModalParams
+  | ClaimFeeModalParams
 
 export type CloseModalParams = ModalNameType | ApplicationModal
 

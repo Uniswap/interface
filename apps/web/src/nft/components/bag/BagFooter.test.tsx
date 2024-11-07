@@ -20,7 +20,7 @@ import { TEST_TOKEN_1, TEST_TRADE_EXACT_INPUT, USE_CONNECTED_ACCOUNT, toCurrency
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 jest.mock('hooks/useAccount', () => ({
   useAccount: jest.fn(),

@@ -1,4 +1,3 @@
-import { chainIdToBackendChain } from 'constants/chains'
 import {
   PoolTableSortState,
   TablePool,
@@ -12,7 +11,9 @@ import {
   useTopV2PairsQuery,
   useTopV3PoolsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 
 const DEFAULT_QUERY_SIZE = 20
 
@@ -21,6 +22,8 @@ export function usePoolsFromTokenAddress(
   sortState: PoolTableSortState,
   chainId?: UniverseChainId,
 ) {
+  const { defaultChainId } = useEnabledChains()
+  const chain = toGraphQLChain(chainId ?? defaultChainId)
   const {
     loading: loadingV3,
     error: errorV3,
@@ -30,7 +33,7 @@ export function usePoolsFromTokenAddress(
     variables: {
       first: DEFAULT_QUERY_SIZE,
       tokenAddress,
-      chain: chainIdToBackendChain({ chainId, withFallback: true }),
+      chain,
     },
   })
 
@@ -43,7 +46,7 @@ export function usePoolsFromTokenAddress(
     variables: {
       first: DEFAULT_QUERY_SIZE,
       tokenAddress,
-      chain: chainIdToBackendChain({ chainId, withFallback: true }),
+      chain,
     },
     skip: !chainId,
   })

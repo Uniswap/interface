@@ -16,7 +16,6 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import i18n from 'uniswap/src/i18n/i18n'
 import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { isIOS } from 'utilities/src/platform'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { openSettings } from 'wallet/src/utils/linking'
@@ -74,7 +73,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
       title={t('onboarding.notification.title')}
       onSkip={navigateToNextScreen}
     >
-      <Flex centered shrink py={isIOS ? '$spacing60' : '$spacing16'}>
+      <Flex centered shrink>
         <NotificationsBackgroundImage />
       </Flex>
       <Trace logPress element={ElementName.Enable}>

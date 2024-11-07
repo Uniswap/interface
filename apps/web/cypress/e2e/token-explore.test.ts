@@ -39,7 +39,7 @@ describe('Token explore', () => {
 
   it('should navigate to token detail page when row clicked', () => {
     cy.visit('/explore/tokens/ethereum')
-    cy.get(getTestSelector('token-table-row-NATIVE')).click()
+    cy.get(getTestSelector('token-table-row-NATIVE')).click({ force: true })
     cy.url().should('match', /\/explore\/tokens\/ethereum\/NATIVE/)
   })
 
@@ -50,9 +50,9 @@ describe('Token explore', () => {
 
     // note: cannot switch global chain via UI because we cannot approve the network switch
     // in metamask modal using plain cypress. this is a workaround.
-    cy.visit('/explore/tokens/polygon')
-    cy.get(getTestSelector('tokens-network-filter-selected')).invoke('attr', 'alt').should('eq', `Polygon logo`)
-    cy.get(getTestSelector('token-table-row-NATIVE')).find(getTestSelector('name-cell')).should('include.text', 'Matic')
+    cy.visit('/explore/tokens/optimism')
+    cy.get(getTestSelector('tokens-network-filter-selected')).invoke('attr', 'alt').should('eq', `Optimism logo`)
+    cy.get(getTestSelector('token-table-row-NATIVE')).find(getTestSelector('name-cell')).should('include.text', 'Ethereum')
   })
 
   it('should update when token explore table network changed', () => {

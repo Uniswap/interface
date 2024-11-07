@@ -89,7 +89,7 @@ export function Locked(): JSX.Element {
     // The standard onboarding open logic triggers but doesn't update the path because the generic one doesn't have a path specified.
     await openRecoveryTab()
 
-    await dispatch(
+    dispatch(
       editAccountActions.trigger({
         type: EditAccountAction.Remove,
         accounts: associatedAccounts,

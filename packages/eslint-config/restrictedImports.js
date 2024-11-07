@@ -51,7 +51,12 @@ exports.shared = {
     {
       name: 'lodash',
       message: 'Use specific imports (e.g. `import isEqual from \'lodash/isEqual\'`) to avoid pulling in all of lodash to web to keep bundle size down!',
-    }
+    },
+    {
+      name: 'uniswap/src/features/chains/chainInfo',
+      importNames: ['UNIVERSE_CHAIN_INFO'],
+      message: 'Use useChainInfo or helpers in packages/uniswap/src/features/chains/utils.ts when possible!',
+    },
   ],
   patterns: [
     {

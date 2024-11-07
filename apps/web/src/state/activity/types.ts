@@ -1,6 +1,6 @@
 import { FilledUniswapXOrderDetails, SignatureDetails, UnfilledUniswapXOrderDetails } from 'state/signatures/types'
 import { ConfirmedTransactionDetails, TransactionDetails } from 'state/transactions/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 interface BaseUpdate<T> {
   type: string

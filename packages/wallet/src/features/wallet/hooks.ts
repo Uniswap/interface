@@ -2,12 +2,12 @@ import { useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useENSName } from 'uniswap/src/features/ens/api'
+import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { getValidAddress, sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { trimToLength } from 'utilities/src/primitives/string'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import {
   makeSelectAccountNotificationSetting,
@@ -37,12 +37,7 @@ export function useAccount(address: Address): Account {
   return account
 }
 
-export function useAccountIfExists(address: Address): Account | undefined {
-  const account = useSelector(selectAccounts)[address]
-  return account
-}
-
-export function useSignerAccountIfExists(address: Address): SignerMnemonicAccount | undefined {
+export function useSignerAccount(address: Address): SignerMnemonicAccount | undefined {
   const signerAccounts = useSelector(selectSignerMnemonicAccounts)
   return signerAccounts.find((account) => account.address === address)
 }

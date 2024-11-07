@@ -9,10 +9,10 @@ import { ChevronDown } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
 import { Flex, Text } from 'ui/src'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SwapRedirectFn } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 interface HeroProps {
   scrollToRef: () => void

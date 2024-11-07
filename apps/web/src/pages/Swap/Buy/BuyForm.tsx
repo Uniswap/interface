@@ -1,6 +1,4 @@
 import { useAccount } from 'hooks/useAccount'
-import { useActiveLocalCurrencyComponents } from 'hooks/useActiveLocalCurrency'
-import useParsedQueryString from 'hooks/useParsedQueryString'
 import { BuyFormButton } from 'pages/Swap/Buy/BuyFormButton'
 import { BuyFormContextProvider, ethCurrencyInfo, useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
 import { ChooseProviderModal } from 'pages/Swap/Buy/ChooseProviderModal'
@@ -16,6 +14,9 @@ import {
 } from 'pages/Swap/common/shared'
 import { useEffect } from 'react'
 import { Flex, Text, styled } from 'ui/src'
+import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useAppFiatCurrency, useFiatCurrencyComponents } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import { SelectTokenButton } from 'uniswap/src/features/fiatOnRamp/SelectTokenButton'
 import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fiatOnRamp/api'
@@ -23,7 +24,6 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { FiatOnRampEventName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTranslation } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import useResizeObserver from 'use-resize-observer'
 import { useFormatter } from 'utils/formatNumbers'
 
@@ -56,7 +56,8 @@ function BuyFormInner({ disabled }: BuyFormProps) {
   const account = useAccount()
   const { t } = useTranslation()
   const { convertToFiatAmount } = useFormatter()
-  const { symbol: fiatSymbol } = useActiveLocalCurrencyComponents()
+  const fiatCurrency = useAppFiatCurrency()
+  const { symbol: fiatSymbol } = useFiatCurrencyComponents(fiatCurrency)
 
   const { buyFormState, setBuyFormState, derivedBuyFormInfo } = useBuyFormContext()
   const { inputAmount, selectedCountry, quoteCurrency, currencyModalOpen, countryModalOpen, providerModalOpen } =
@@ -82,6 +83,7 @@ function BuyFormInner({ disabled }: BuyFormProps) {
     }
   }, [buyFormState.selectedCountry, countryResult, selectedCountry, setBuyFormState])
 
+  const { useParsedQueryString } = useUrlContext()
   const parsedQs = useParsedQueryString()
   useEffect(() => {
     const quoteCurrencyCode = parsedQs.quoteCurrencyCode

@@ -194,4 +194,14 @@ export const v16Schema = {
   wallet: { ...v15Schema.wallet, settings: { ...v15Schema.wallet.settings, tokensOrderBy: RankingType.Volume } },
 }
 
-export const getSchema = (): typeof v16Schema => v16Schema
+const v17SchemaIntermediate = {
+  ...v16Schema,
+  behaviorHistory: {
+    ...v16Schema.behaviorHistory,
+    createdOnboardingRedesignAccount: undefined,
+  },
+}
+delete v17SchemaIntermediate.behaviorHistory.createdOnboardingRedesignAccount
+export const v17Schema = v17SchemaIntermediate
+
+export const getSchema = (): typeof v17Schema => v17Schema

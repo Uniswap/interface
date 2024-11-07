@@ -1,9 +1,9 @@
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { LoaderButton } from 'components/Button/LoaderButton'
 import { ButtonLight } from 'components/Button/buttons'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
-import { Button, Flex, SpinningLoader, Text, WidthAnimator } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
+import { Button, Text } from 'ui/src'
 import { useTranslation } from 'uniswap/src/i18n'
 import { useAccount } from 'wagmi'
 
@@ -46,25 +46,17 @@ export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
   }
 
   return (
-    <Button
-      key="BuyFormButton-animation"
-      size="large"
-      animation="fastHeavy"
+    <LoaderButton
+      buttonKey="BuyFormButton"
       disabled={Boolean(fetchingQuotes || !quotes || !quotes.quotes || quotes.quotes.length === 0 || error)}
       onPress={() => {
         setBuyFormState((prev) => ({ ...prev, providerModalOpen: true }))
       }}
+      loading={fetchingQuotes}
     >
-      <Flex row alignItems="center" gap="$spacing8">
-        <WidthAnimator open={fetchingQuotes} height={iconSizes.icon24}>
-          <Flex justifyContent="center" alignItems="center" width={iconSizes.icon24}>
-            <SpinningLoader color="$white" />
-          </Flex>
-        </WidthAnimator>
-        <Text variant="buttonLabel1" color="$white" animation="fastHeavy">
-          {t('common.button.continue')}
-        </Text>
-      </Flex>
-    </Button>
+      <Text variant="buttonLabel1" color="$white">
+        {t('common.button.continue')}
+      </Text>
+    </LoaderButton>
   )
 }

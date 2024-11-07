@@ -8,9 +8,7 @@ import { isInputGreaterThanDecimals } from 'components/NumericalInput'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import Column from 'components/deprecated/Column'
 import Row, { RowBetween } from 'components/deprecated/Row'
-import { getChain, useSupportedChainId } from 'constants/chains'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
-import { useActiveLocalCurrency, useActiveLocalCurrencyComponents } from 'hooks/useActiveLocalCurrency'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import styled, { css } from 'lib/styled-components'
 import {
@@ -28,10 +26,12 @@ import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains, useSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useAppFiatCurrency, useFiatCurrencyComponents } from 'uniswap/src/features/fiatCurrency/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
@@ -114,7 +114,7 @@ const AlternateCurrencyDisplayRow = styled(Row)<{ $disabled: boolean }>`
 
 const AlternateCurrencyDisplay = ({ disabled, onToggle }: { disabled: boolean; onToggle: () => void }) => {
   const { formatConvertedFiatNumberOrString, formatNumberOrString } = useFormatter()
-  const activeCurrency = useActiveLocalCurrency()
+  const activeCurrency = useAppFiatCurrency()
 
   const { sendState, derivedSendInfo } = useSendContext()
   const { inputCurrency, inputInFiat } = sendState
@@ -188,10 +188,12 @@ export default function SendCurrencyInputForm({
   onCurrencyChange?: (selected: CurrencyState) => void
 }) {
   const { chainId } = useSwapAndLimitContext()
-  const supportedChain = useSupportedChainId(chainId)
+  const { defaultChainId } = useEnabledChains()
+  const supportedChainId = useSupportedChainId(chainId)
   const { isTestnetModeEnabled } = useEnabledChains()
   const { formatCurrencyAmount } = useFormatter()
-  const { symbol: fiatSymbol } = useActiveLocalCurrencyComponents()
+  const appFiatCurrency = useAppFiatCurrency()
+  const { symbol: fiatSymbol } = useFiatCurrencyComponents(appFiatCurrency)
   const { formatNumber } = useFormatter()
 
   const { sendState, setSendState, derivedSendInfo } = useSendContext()
@@ -202,8 +204,8 @@ export default function SendCurrencyInputForm({
 
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
   const fiatCurrency = useMemo(
-    () => getChain({ chainId: supportedChain, withFallback: true }).spotPriceStablecoinAmount.currency,
-    [supportedChain],
+    () => getChainInfo(supportedChainId ?? defaultChainId).spotPriceStablecoinAmount.currency,
+    [defaultChainId, supportedChainId],
   )
   const fiatCurrencyEqualsTransferCurrency = !!inputCurrency && fiatCurrency.equals(inputCurrency)
 

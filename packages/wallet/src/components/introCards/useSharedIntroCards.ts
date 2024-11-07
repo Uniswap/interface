@@ -10,11 +10,11 @@ import { useNumBridgingChains } from 'uniswap/src/features/bridging/hooks/chains
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { OnboardingCardLoggingName } from 'uniswap/src/features/telemetry/types'
+import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'uniswap/src/features/unitags/constants'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { CardType, IntroCardGraphicType, IntroCardProps } from 'wallet/src/components/introCards/IntroCard'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { selectHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/selectors'
-import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'wallet/src/features/unitags/constants'
 import { useCanActiveAddressClaimUnitag, useHasAnyAccountsWithUnitag } from 'wallet/src/features/unitags/hooks'
 import { useUnitagClaimHandler } from 'wallet/src/features/unitags/useUnitagClaimHandler'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -27,7 +27,6 @@ type SharedIntroCardsProps = {
 
 type SharedIntroCardReturn = {
   cards: IntroCardProps[]
-  bridgingCard: IntroCardProps
   shouldPromptUnitag: boolean
   shouldShowBridgingBanner: boolean
 }
@@ -55,7 +54,6 @@ export function useSharedIntroCards({
   const shouldPromptUnitag = isSignerAccount && !hasSkippedUnitagPrompt && canClaimUnitag && !hasAnyUnitags
 
   const hasViewedBridgingBanner = useSelector(selectHasViewedBridgingBanner)
-  const bridgingEnabled = useFeatureFlag(FeatureFlags.Bridging)
   const { navigateToSwapFlow } = useWalletNavigation()
   const numBridgingChains = useNumBridgingChains()
   const handleBridgingDismiss = useCallback(
@@ -68,7 +66,7 @@ export function useSharedIntroCards({
     },
     [dispatch, navigateToSwapFlow],
   )
-  const shouldShowBridgingBanner = isSignerAccount && bridgingEnabled && !hasViewedBridgingBanner && hasTokens
+  const shouldShowBridgingBanner = isSignerAccount && !hasViewedBridgingBanner && hasTokens
 
   const bridgingCard = useMemo(() => {
     return {
@@ -112,7 +110,6 @@ export function useSharedIntroCards({
 
     return {
       cards: output,
-      bridgingCard,
       shouldShowBridgingBanner,
       shouldPromptUnitag,
     }

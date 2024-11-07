@@ -23,7 +23,6 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts } from 'ui/src/theme'
 import { useExtractedTokenColor } from 'ui/src/utils/colors'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
 import {
@@ -33,6 +32,9 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { useBridgingTokenWithHighestBalance } from 'uniswap/src/features/bridging/hooks/tokens'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
 import { useIsSupportedFiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/hooks'
@@ -41,7 +43,6 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Language } from 'uniswap/src/features/language/constants'
 import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
@@ -50,7 +51,6 @@ import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import {
@@ -168,7 +168,7 @@ function TokenDetails({
   const activeAddress = useActiveAccountAddressWithThrow()
   const { balance: nativeCurrencyBalance } = useOnChainNativeCurrencyBalance(currencyChainId, activeAddress)
   const hasZeroNativeBalance = nativeCurrencyBalance && nativeCurrencyBalance.equalTo('0')
-  const nativeCurrencyAddress = UNIVERSE_CHAIN_INFO[currencyChainId].nativeCurrency.address
+  const nativeCurrencyAddress = getChainInfo(currencyChainId).nativeCurrency.address
   const nativeFiatOnRampCurrency = useIsSupportedFiatOnRampCurrency(
     buildCurrencyId(currencyChainId, nativeCurrencyAddress),
     isNativeCurrency || !hasZeroNativeBalance,
@@ -200,7 +200,7 @@ function TokenDetails({
 
   const [showWarningModal, setShowWarningModal] = useState(false)
   const [showBuyNativeTokenModal, setShowBuyNativeTokenModal] = useState(false)
-  const { tokenWarningDismissed, onDismissTokenWarning } = useDismissedTokenWarnings(
+  const { tokenWarningDismissed } = useDismissedTokenWarnings(
     isNativeCurrency ? undefined : { chainId: currencyChainId, address: currencyAddress },
   )
 
@@ -294,12 +294,11 @@ function TokenDetails({
   ])
 
   const onAcceptWarning = useCallback(() => {
-    onDismissTokenWarning()
     setShowWarningModal(false)
     if (activeTransactionType !== undefined) {
       navigateToSwapFlow({ currencyField: activeTransactionType, currencyAddress, currencyChainId })
     }
-  }, [activeTransactionType, currencyAddress, currencyChainId, onDismissTokenWarning, navigateToSwapFlow])
+  }, [activeTransactionType, currencyAddress, currencyChainId, navigateToSwapFlow])
 
   const openTokenWarningModal = (): void => {
     setShowWarningModal(true)
@@ -345,9 +344,7 @@ function TokenDetails({
             </AnimatedFlex>
           ) : null}
           <Flex gap="$spacing16" mb="$spacing8" px="$spacing16">
-            {tokenProtectionEnabled && (
-              <TokenWarningCard currencyInfo={currencyInfo} onPressCtaButton={openTokenWarningModal} />
-            )}
+            {tokenProtectionEnabled && <TokenWarningCard currencyInfo={currencyInfo} onPress={openTokenWarningModal} />}
             {isChainEnabled && (
               <TokenBalances
                 currentChainBalance={currentChainBalance}

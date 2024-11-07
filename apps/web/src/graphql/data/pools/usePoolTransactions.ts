@@ -1,4 +1,3 @@
-import { chainIdToBackendChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCallback, useMemo, useRef } from 'react'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
@@ -11,7 +10,9 @@ import {
   useV2PairTransactionsQuery,
   useV3PoolTransactionsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 
 export enum PoolTableTransactionType {
   BUY = 'Buy',
@@ -56,13 +57,15 @@ export function usePoolTransactions(
   protocolVersion: ProtocolVersion = ProtocolVersion.V3,
   first = PoolTransactionDefaultQuerySize,
 ) {
+  const { defaultChainId } = useEnabledChains()
+  const variables = { first, chain: toGraphQLChain(chainId ?? defaultChainId), address }
   const {
     loading: loadingV3,
     error: errorV3,
     data: dataV3,
     fetchMore: fetchMoreV3,
   } = useV3PoolTransactionsQuery({
-    variables: { first, chain: chainIdToBackendChain({ chainId, withFallback: true }), address },
+    variables,
     skip: protocolVersion !== ProtocolVersion.V3,
   })
   const {
@@ -71,7 +74,7 @@ export function usePoolTransactions(
     data: dataV2,
     fetchMore: fetchMoreV2,
   } = useV2PairTransactionsQuery({
-    variables: { first, chain: chainIdToBackendChain({ chainId, withFallback: true }), address },
+    variables,
     skip: !chainId || protocolVersion !== ProtocolVersion.V2,
   })
   const loadingMore = useRef(false)

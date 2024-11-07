@@ -12,20 +12,18 @@ import {
   usePortfolioBalancesQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult, SpamCode } from 'uniswap/src/data/types'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import {
   buildCurrency,
   buildCurrencyInfo,
   currencyIdToContractInput,
+  getCurrencySafetyInfo,
   sortByName,
   usePersistedError,
 } from 'uniswap/src/features/dataApi/utils'
-import {
-  useEnabledChains,
-  useHideSmallBalancesSetting,
-  useHideSpamTokensSetting,
-} from 'uniswap/src/features/settings/hooks'
+import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -57,7 +55,6 @@ export type PortfolioCacheUpdater = (hidden: boolean, portfolioBalance?: Portfol
  *  we don't need to duplicate the polling interval when token selector is open
  * @param onCompleted
  * @param fetchPolicy
- * @returns
  */
 export function usePortfolioBalances({
   address,
@@ -103,6 +100,10 @@ export function usePortfolioBalances({
 
     const byId: Record<CurrencyId, PortfolioBalance> = {}
     balancesForAddress.forEach((balance) => {
+      if (!balance) {
+        return
+      }
+
       const {
         __typename: tokenBalanceType,
         id: tokenBalanceId,
@@ -111,15 +112,16 @@ export function usePortfolioBalances({
         tokenProjectMarket,
         quantity,
         isHidden,
-      } = balance || {}
-      const { name, address: tokenAddress, chain, decimals, symbol, project } = token || {}
-      const { logoUrl, isSpam, safetyLevel, spamCode } = project || {}
-      const chainId = fromGraphQLChain(chain)
+      } = balance
 
       // require all of these fields to be defined
-      if (!balance || !quantity || !token) {
+      if (!quantity || !token) {
         return
       }
+
+      const { name, address: tokenAddress, chain, decimals, symbol, project, feeData, protectionInfo } = token
+      const { logoUrl, isSpam, safetyLevel, spamCode } = project || {}
+      const chainId = fromGraphQLChain(chain)
 
       const currency = buildCurrency({
         chainId,
@@ -127,8 +129,9 @@ export function usePortfolioBalances({
         decimals,
         symbol,
         name,
+        buyFeeBps: feeData?.buyFeeBps,
+        sellFeeBps: feeData?.sellFeeBps,
       })
-
       if (!currency) {
         return
       }
@@ -137,14 +140,16 @@ export function usePortfolioBalances({
 
       const currencyInfo = buildCurrencyInfo({
         currency,
-        currencyId: currencyId(currency),
+        currencyId: id,
         logoUrl,
         isSpam,
         safetyLevel,
+        safetyInfo: getCurrencySafetyInfo(safetyLevel, protectionInfo),
         spamCode,
       })
 
       const portfolioBalance = buildPortfolioBalance({
+        id: tokenBalanceId,
         cacheId: `${tokenBalanceType}:${tokenBalanceId}`,
         quantity,
         balanceUSD: denominatedValue?.value,

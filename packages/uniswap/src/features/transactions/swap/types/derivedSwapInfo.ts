@@ -3,7 +3,7 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { BaseDerivedInfo } from 'uniswap/src/features/transactions/types/baseDerivedInfo'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { TradeWithStatus } from 'uniswap/src/features/transactions/swap/types/trade'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export type DerivedSwapInfo<

@@ -2,7 +2,7 @@ import { Flex, Text } from 'ui/src'
 import { Shuffle } from 'ui/src/components/icons/Shuffle'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { NetworkChangedBridgeNotification as NetworkChangedBridgeNotificationType } from 'uniswap/src/features/notifications/types'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
 
@@ -11,8 +11,8 @@ export function NetworkChangedBridgeNotification({
 }: {
   notification: NetworkChangedBridgeNotificationType
 }): JSX.Element {
-  const fromNetwork = UNIVERSE_CHAIN_INFO[notification.fromChainId]?.label
-  const toNetwork = UNIVERSE_CHAIN_INFO[notification.toChainId]?.label
+  const fromNetwork = getChainLabel(notification.fromChainId)
+  const toNetwork = getChainLabel(notification.toChainId)
 
   return (
     <NotificationToast

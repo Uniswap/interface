@@ -1,8 +1,9 @@
 import { useMemo } from 'react'
-import { useFiatOnRampAggregatorTransferServiceProvidersQuery } from 'uniswap/src/features/fiatOnRamp/api'
+import { getFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 
 export function useCexTransferProviders(params?: { isDisabled?: boolean }): FORServiceProvider[] {
+  const { useFiatOnRampAggregatorTransferServiceProvidersQuery } = getFiatOnRampAggregatorApi()
   const { data } = useFiatOnRampAggregatorTransferServiceProvidersQuery(undefined, {
     skip: params?.isDisabled,
   })

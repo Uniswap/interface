@@ -5,7 +5,6 @@ import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
 import { DetailBubble, SmallDetailBubble } from 'components/Pools/PoolDetails/shared'
 import Tooltip, { TooltipSize } from 'components/Tooltip'
 import Row from 'components/deprecated/Row'
-import { chainIdToBackendChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import useCopyClipboard from 'hooks/useCopyClipboard'
@@ -16,8 +15,10 @@ import { useNavigate } from 'react-router-dom'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { Trans, t } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { isAddress, shortenAddress } from 'utilities/src/addresses'
 
@@ -107,7 +108,8 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
     )
 
   const navigate = useNavigate()
-  const chainName = chainIdToBackendChain({ chainId, withFallback: true })
+  const { defaultChainId } = useEnabledChains()
+  const chainName = toGraphQLChain(chainId ?? defaultChainId)
   const handleTokenTextClick = useCallback(() => {
     if (!isPool) {
       navigate(getTokenDetailsURL({ address: tokens[0]?.address, chain: chainName }))

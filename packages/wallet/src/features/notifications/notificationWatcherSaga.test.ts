@@ -2,6 +2,7 @@ import { TradeType } from '@uniswap/sdk-core'
 import { expectSaga } from 'redux-saga-test-plan'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { NotificationState, pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
@@ -16,7 +17,6 @@ import {
   UnknownTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { finalizedTransactionAction } from 'uniswap/src/test/fixtures'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { pushTransactionNotification } from 'wallet/src/features/notifications/notificationWatcherSaga'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 

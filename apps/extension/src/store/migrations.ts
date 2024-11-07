@@ -15,6 +15,7 @@ import {
   moveDismissedTokenWarnings,
   moveLanguageSetting,
   moveUserSettings,
+  removeCreatedOnboardingRedesignAccountBehaviorHistory,
   removeUniconV2BehaviorState,
   removeWalletIsUnlockedState,
   updateExploreOrderByType,
@@ -40,6 +41,7 @@ export const migrations = {
   14: moveLanguageSetting,
   15: moveCurrencySetting,
   16: updateExploreOrderByType,
+  17: removeCreatedOnboardingRedesignAccountBehaviorHistory,
 }
 
-export const EXTENSION_STATE_VERSION = 16
+export const EXTENSION_STATE_VERSION = 17

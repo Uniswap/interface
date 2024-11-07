@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { Flex, Inset, Loader } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/TokenOptionItem'
+import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/items/TokenOptionItem'
 import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { FORCurrencyOrBalance, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
@@ -48,7 +48,7 @@ function TokenOptionItemWrapper({
     [currencyInfo, balanceUSD, quantity, isUnsupported],
   )
   const onPress = useCallback(() => onSelectCurrency?.(currency), [currency, onSelectCurrency])
-  const { tokenWarningDismissed, onDismissTokenWarning } = useDismissedTokenWarnings(currencyInfo?.currency)
+  const { tokenWarningDismissed } = useDismissedTokenWarnings(currencyInfo?.currency)
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
   if (!option) {
@@ -62,7 +62,6 @@ function TokenOptionItemWrapper({
   return (
     <TokenOptionItem
       balance={convertFiatAmountFormatted(option.balanceUSD, NumberType.FiatTokenPrice)}
-      dismissWarningCallback={onDismissTokenWarning}
       isSelected={isSelected}
       option={option}
       quantity={option.quantity}
@@ -146,6 +145,10 @@ function _TokenFiatOnRampList({
       renderItem={renderItem}
       renderSectionHeader={({ section }) => {
         if (section.title !== ListSection.UNSUPPORTED) {
+          return <></>
+        }
+
+        if (section.data.length === 0) {
           return <></>
         }
 

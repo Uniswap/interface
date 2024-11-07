@@ -7,14 +7,14 @@ import {
   sortAscendingAtom,
   sortMethodAtom,
 } from 'components/Tokens/state'
-import { getChainFromChainUrlParam } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { SparklineMap } from 'graphql/data/TopTokens'
+import { SparklineMap } from 'graphql/data/types'
 import { PricePoint, TimePeriod, unwrapToken } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { useContext, useMemo } from 'react'
 import { ExploreContext, giveExploreStatDefaultValue } from 'state/explore'
 import { TokenStat } from 'state/explore/types'
+import { getChainIdFromChainUrlParam } from 'utils/chainParams'
 
 const TokenSortMethods = {
   [TokenSortMethod.PRICE]: (a: TokenStat, b: TokenStat) =>
@@ -145,7 +145,7 @@ export function useTopTokens() {
   const filteredTokens = useFilteredTokens(sortedTokenStats)?.slice(0, MAX_TOP_TOKENS)
   const sparklines = useMemo(() => {
     const unwrappedTokens = filteredTokens?.map((tokenStat) => {
-      const chainId = getChainFromChainUrlParam(tokenStat?.chain.toLowerCase())?.id
+      const chainId = getChainIdFromChainUrlParam(tokenStat?.chain.toLowerCase())
       return chainId ? unwrapToken(chainId, tokenStat) : undefined
     })
     const map: SparklineMap = {}

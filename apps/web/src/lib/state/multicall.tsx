@@ -4,8 +4,8 @@ import { useInterfaceMulticall, useMainnetInterfaceMulticall } from 'hooks/useCo
 import { useAtomValue } from 'jotai/utils'
 import useBlockNumber, { multicallUpdaterSwapChainIdAtom, useMainnetBlockNumber } from 'lib/hooks/useBlockNumber'
 import { useMemo } from 'react'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const multicall = createMulticall()
 
@@ -20,7 +20,7 @@ export function MulticallUpdater() {
   const latestBlockNumber = useBlockNumber()
   const contract = useInterfaceMulticall(chainId)
   const listenerOptions: ListenerOptions = useMemo(
-    () => ({ blocksPerFetch: chainId ? UNIVERSE_CHAIN_INFO[chainId].blockPerMainnetEpochForChainId : 1 }),
+    () => ({ blocksPerFetch: chainId ? getChainInfo(chainId).blockPerMainnetEpochForChainId : 1 }),
     [chainId],
   )
 

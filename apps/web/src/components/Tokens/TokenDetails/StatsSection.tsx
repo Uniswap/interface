@@ -2,15 +2,15 @@ import { HEADER_DESCRIPTIONS } from 'components/Tokens/TokenTable'
 import { UNSUPPORTED_METADATA_CHAINS } from 'components/Tokens/constants'
 import { TokenSortMethod } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { useIsSupportedChainId } from 'constants/chains'
 import { TokenQueryData } from 'graphql/data/Token'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export const StatWrapper = styled.div`
@@ -92,9 +92,7 @@ type StatsSectionProps = {
 export default function StatsSection(props: StatsSectionProps) {
   const { chainId, address, tokenQueryData } = props
   const isSupportedChain = useIsSupportedChainId(chainId)
-  const { label, infoLink } = isSupportedChain
-    ? UNIVERSE_CHAIN_INFO[chainId]
-    : { label: undefined, infoLink: undefined }
+  const { label, infoLink } = isSupportedChain ? getChainInfo(chainId) : { label: undefined, infoLink: undefined }
 
   const tokenMarketInfo = tokenQueryData?.market
   const tokenProjectMarketInfo = tokenQueryData?.project?.markets?.[0] // aggregated market price from CoinGecko

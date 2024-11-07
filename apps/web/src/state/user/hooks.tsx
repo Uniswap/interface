@@ -1,6 +1,5 @@
 import { Percent, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { Pair, computePairAddress } from '@uniswap/v2-sdk'
-import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from 'constants/routing'
 import { gqlToCurrency } from 'graphql/data/util'
@@ -18,11 +17,11 @@ import {
 } from 'state/user/reducer'
 import { SerializedPair, SlippageTolerance } from 'state/user/types'
 import {
-  Chain,
   TokenSortableField,
   useTopTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { isL2ChainId } from 'uniswap/src/features/chains/utils'
+import { useEnabledChains, useSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { isL2ChainId, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { deserializeToken, serializeToken } from 'uniswap/src/utils/currency'
 
 export function useRouterPreference(): [RouterPreference, (routerPreference: RouterPreference) => void] {
@@ -173,12 +172,13 @@ export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
  */
 export function useTrackedTokenPairs(): [Token, Token][] {
   const { chainId } = useAccount()
+  const { defaultChainId } = useEnabledChains()
   const supportedChainId = useSupportedChainId(chainId)
 
   // TODO(WEB-4001): use an "all tokens" query for better LP detection
   const { data: popularTokens } = useTopTokensQuery({
     variables: {
-      chain: supportedChainId ? chainIdToBackendChain({ chainId: supportedChainId }) : Chain.Ethereum,
+      chain: toGraphQLChain(supportedChainId ?? defaultChainId),
       orderBy: TokenSortableField.Popularity,
       page: 1,
       pageSize: 100,

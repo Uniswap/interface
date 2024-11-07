@@ -1,14 +1,11 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useMemo, useState } from 'react'
-import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { FundWalletModal } from 'src/components/home/introCards/FundWalletModal'
-import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex } from 'ui/src'
 import { Buy, ShieldCheck, UniswapLogo } from 'ui/src/components/icons'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -29,14 +26,10 @@ import { setHasViewedWelcomeWalletCard } from 'wallet/src/features/behaviorHisto
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type OnboardingIntroCardStackProps = {
-  onboardingRedesignHomeEnabled: boolean
-  onboardingRedesignBackupEnabled: boolean
   isLoading?: boolean
   hasTokens: boolean
 }
 export function OnboardingIntroCardStack({
-  onboardingRedesignHomeEnabled,
-  onboardingRedesignBackupEnabled,
   hasTokens,
   isLoading = false,
 }: OnboardingIntroCardStackProps): JSX.Element | null {
@@ -69,12 +62,7 @@ export function OnboardingIntroCardStack({
     )
   }, [dispatch, address])
 
-  const {
-    cards: sharedCards,
-    shouldPromptUnitag,
-    shouldShowBridgingBanner,
-    bridgingCard,
-  } = useSharedIntroCards({
+  const { cards: sharedCards } = useSharedIntroCards({
     hasTokens,
     navigateToUnitagClaim,
     navigateToUnitagIntro,
@@ -90,36 +78,7 @@ export function OnboardingIntroCardStack({
       return output
     }
 
-    if (!onboardingRedesignHomeEnabled && !onboardingRedesignBackupEnabled) {
-      // Push this even if the experiment isn't enabled
-      // This is also added if the home experiment is enabled
-      if (shouldShowBridgingBanner) {
-        output.push(bridgingCard)
-      }
-      return output
-    }
-
-    if (!hasViewedWelcomeWalletCard) {
-      output.push({
-        loggingName: OnboardingCardLoggingName.WelcomeWallet,
-        graphic: {
-          type: IntroCardGraphicType.Icon,
-          Icon: UniswapLogo,
-          iconProps: {
-            color: '$accent1',
-          },
-          iconContainerProps: {
-            backgroundColor: '$accent2',
-            borderRadius: '$rounded12',
-          },
-        },
-        title: welcomeCardTitle,
-        description: t('onboarding.home.intro.welcome.description'),
-        cardType: CardType.Swipe,
-      })
-    }
-
-    if (onboardingRedesignHomeEnabled && !hasTokens) {
+    if (!hasTokens) {
       output.push({
         loggingName: OnboardingCardLoggingName.FundWallet,
         graphic: {
@@ -138,7 +97,7 @@ export function OnboardingIntroCardStack({
       })
     }
 
-    if (onboardingRedesignBackupEnabled && !hasBackups) {
+    if (!hasBackups) {
       output.push({
         loggingName: OnboardingCardLoggingName.RecoveryBackup,
         graphic: {
@@ -162,20 +121,28 @@ export function OnboardingIntroCardStack({
 
     output.push(...sharedCards)
 
+    if (output.length && !hasViewedWelcomeWalletCard) {
+      output.unshift({
+        loggingName: OnboardingCardLoggingName.WelcomeWallet,
+        graphic: {
+          type: IntroCardGraphicType.Icon,
+          Icon: UniswapLogo,
+          iconProps: {
+            color: '$accent1',
+          },
+          iconContainerProps: {
+            backgroundColor: '$accent2',
+            borderRadius: '$rounded12',
+          },
+        },
+        title: welcomeCardTitle,
+        description: t('onboarding.home.intro.welcome.description'),
+        cardType: CardType.Swipe,
+      })
+    }
+
     return output
-  }, [
-    bridgingCard,
-    hasBackups,
-    hasTokens,
-    hasViewedWelcomeWalletCard,
-    isSignerAccount,
-    onboardingRedesignBackupEnabled,
-    onboardingRedesignHomeEnabled,
-    sharedCards,
-    shouldShowBridgingBanner,
-    t,
-    welcomeCardTitle,
-  ])
+  }, [hasBackups, hasTokens, hasViewedWelcomeWalletCard, isSignerAccount, sharedCards, t, welcomeCardTitle])
 
   const handleSwiped = useCallback(
     (_card: IntroCardProps, index: number) => {
@@ -200,12 +167,6 @@ export function OnboardingIntroCardStack({
 
         {showFundModal && <FundWalletModal onClose={() => setShowFundModal(false)} />}
       </Flex>
-    )
-  } else if (shouldPromptUnitag) {
-    return (
-      <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
-        <UnitagBanner address={activeAccount.address} entryPoint={MobileScreens.Home} />
-      </AnimatedFlex>
     )
   }
 

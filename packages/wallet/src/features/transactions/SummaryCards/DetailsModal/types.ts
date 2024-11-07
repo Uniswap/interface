@@ -82,3 +82,9 @@ export function isWrapTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo i
 export function isUnknownTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is UnknownTransactionInfo {
   return typeInfo.type === TransactionType.Unknown
 }
+
+export type TransactionParticipantRowProps = {
+  onClose: () => void
+  address: string
+  isSend?: boolean
+}

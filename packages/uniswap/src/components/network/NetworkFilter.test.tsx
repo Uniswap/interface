@@ -2,7 +2,7 @@ import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { render } from 'uniswap/src/test/test-utils'
 
 import ReactDOM from 'react-dom'
-import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
+import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
 
 ReactDOM.createPortal = jest.fn((element) => {
   return element as React.ReactPortal

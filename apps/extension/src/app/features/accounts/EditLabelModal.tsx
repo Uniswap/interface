@@ -12,10 +12,10 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { OnboardingCardLoggingName } from 'uniswap/src/features/telemetry/types'
+import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'uniswap/src/features/unitags/constants'
 import { shortenAddress } from 'utilities/src/addresses'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { CardType, IntroCard, IntroCardGraphicType } from 'wallet/src/components/introCards/IntroCard'
-import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'wallet/src/features/unitags/constants'
 import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -37,7 +37,7 @@ export function EditLabelModal({ isOpen, address, onClose }: EditLabelModalProps
   const [inputText, setInputText] = useState<string>(defaultText)
   const [isfocused, setIsFocused] = useState(false)
 
-  const { canClaimUnitag } = useCanActiveAddressClaimUnitag()
+  const { canClaimUnitag } = useCanActiveAddressClaimUnitag(address)
   const unitagsClaimEnabled = useFeatureFlag(FeatureFlags.ExtensionClaimUnitag)
 
   const onConfirm = useCallback(async () => {

@@ -61,6 +61,12 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
     setCurrentStep(undefined)
   }
 
+  const onSuccess = () => {
+    setSteps([])
+    setCurrentStep(undefined)
+    onClose()
+  }
+
   const onIncreaseLiquidity = () => {
     const isValidTx = isValidLiquidityTxContext(txInfo)
     if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
@@ -75,7 +81,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
         liquidityTxContext: txInfo,
         setCurrentStep,
         setSteps,
-        onSuccess: onClose,
+        onSuccess,
         onFailure,
       }),
     )

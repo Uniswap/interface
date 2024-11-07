@@ -1,5 +1,5 @@
 import { CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { HARDHAT_TIMEOUT, getBalance, getTestSelector } from '../../utils'
 
 const WETH = WETH9[UniverseChainId.Mainnet]

@@ -4,12 +4,13 @@ import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { ClassicTrade } from 'state/routing/types'
-import { DEFAULT_NATIVE_ADDRESS, UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import {
   TokenAmountInput,
   TokenTradeRouteInput,
   TradePoolInput,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { DEFAULT_NATIVE_ADDRESS, getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { isUniverseChainId } from 'uniswap/src/features/chains/types'
 
 interface SwapAmounts {
   inputAmount: CurrencyAmount<Currency>
@@ -56,9 +57,9 @@ function buildTradeRouteInputAmounts(swapAmounts: SwapAmounts): TradeTokenInputA
 
 function buildPool(pool: Pair | V3Pool | V4Pool): TradePoolInput {
   const isPool = 'fee' in pool
-  const chainIdInUniverseChainInfo = pool.chainId in UNIVERSE_CHAIN_INFO
-  const nativeCurrencyAddress = chainIdInUniverseChainInfo
-    ? UNIVERSE_CHAIN_INFO[pool.chainId as keyof typeof UNIVERSE_CHAIN_INFO].nativeCurrency.address
+  const knownChainId = isUniverseChainId(pool.chainId)
+  const nativeCurrencyAddress = knownChainId
+    ? getChainInfo(pool.chainId).nativeCurrency.address
     : DEFAULT_NATIVE_ADDRESS
 
   return {

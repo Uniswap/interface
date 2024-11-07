@@ -13,10 +13,10 @@ import { useNavigate } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
 import { capitalize } from 'tsafe'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { GqlChainId } from 'uniswap/src/features/chains/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { t } from 'uniswap/src/i18n'
-import { InterfaceGqlChain } from 'uniswap/src/types/chains'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -59,9 +59,7 @@ export function NFT({
   const trace = useTrace()
 
   const enabled =
-    asset.chain && isTestnetModeEnabled
-      ? gqlChains.includes(asset.chain as InterfaceGqlChain)
-      : asset.chain === Chain.Ethereum
+    asset.chain && isTestnetModeEnabled ? gqlChains.includes(asset.chain as GqlChainId) : asset.chain === Chain.Ethereum
 
   const navigateToNFTDetails = () => {
     if (enabled) {

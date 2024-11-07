@@ -1,6 +1,5 @@
 import { WETH9 } from '@uniswap/sdk-core'
 import { MoonpaySupportedCurrencyCode } from 'components/FiatOnrampModal/constants'
-import { getChainFromChainUrlParam, getChainUrlParam, InterfaceGqlChain } from 'constants/chains'
 import {
   MATIC_MAINNET,
   USDC_ARBITRUM,
@@ -13,7 +12,8 @@ import {
   WETH_POLYGON,
 } from 'uniswap/src/constants/tokens'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getChainIdFromChainUrlParam } from 'utils/chainParams'
 
 type MoonpaySupportedChain = Chain.Ethereum | Chain.Polygon | Chain.Arbitrum | Chain.Optimism | Chain.Base
 const moonPaySupportedChains = [Chain.Ethereum, Chain.Polygon, Chain.Arbitrum, Chain.Optimism, Chain.Base]
@@ -53,7 +53,7 @@ const CURRENCY_CODES: {
   },
 }
 
-export function getDefaultCurrencyCode(address?: string, gqlChain?: InterfaceGqlChain): MoonpaySupportedCurrencyCode {
+export function getDefaultCurrencyCode(address?: string, gqlChain?: GqlChainId): MoonpaySupportedCurrencyCode {
   if (!gqlChain) {
     return 'eth'
   }
@@ -74,8 +74,8 @@ export function getDefaultCurrencyCode(address?: string, gqlChain?: InterfaceGql
 export function parsePathParts(pathname: string) {
   const pathParts = pathname.split('/')
   // Matches the /tokens/<network>/<tokenAddress> path.
-  const chainSlug = getChainUrlParam(pathParts.length > 2 ? pathParts[pathParts.length - 2] : undefined)
-  const chain = getChainFromChainUrlParam(chainSlug)
+  const chainSlug = pathParts.length > 2 ? pathParts[pathParts.length - 2] : undefined
+  const chainId = getChainIdFromChainUrlParam(chainSlug)
   const tokenAddress = pathParts.length > 2 ? pathParts[pathParts.length - 1] : undefined
-  return { chain, tokenAddress }
+  return { chainId, tokenAddress }
 }

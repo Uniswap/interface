@@ -1,10 +1,10 @@
-import { useIsSupportedChainIdCallback } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { endSwitchingChain, startSwitchingChain } from 'state/wallets/reducer'
 import { trace } from 'tracing/trace'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSwitchChain as useSwitchChainWagmi } from 'wagmi'
 
 export function useSwitchChain() {

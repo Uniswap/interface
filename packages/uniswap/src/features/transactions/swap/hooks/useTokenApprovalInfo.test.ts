@@ -5,6 +5,7 @@ import { useCheckApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/us
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { FeeType } from 'uniswap/src/data/tradingApi/types'
 import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/hooks'
 import {
   TokenApprovalInfoParams,
@@ -13,7 +14,6 @@ import {
 import { ApprovalAction } from 'uniswap/src/features/transactions/swap/types/trade'
 import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 
 jest.mock('uniswap/src/data/apiClients/tradingApi/useCheckApprovalQuery')

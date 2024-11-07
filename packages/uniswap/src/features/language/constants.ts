@@ -1,3 +1,5 @@
+import { isInterface } from 'utilities/src/platform'
+
 /**
  * List of supported languages in app, represented by ISO 639 language code.
  * If you add a new locale here, be sure to add polyfills for it in intl.js,
@@ -35,7 +37,6 @@ export enum Language {
   SpanishUnitedStates = 'es-US',
   Swahili = 'sw',
   Swedish = 'sv',
-  Thai = 'th',
   Turkish = 'tr',
   Ukrainian = 'uk',
   Urdu = 'ur',
@@ -85,12 +86,13 @@ export const WEB_SUPPORTED_LANGUAGES: Language[] = [
   Language.SpanishUnitedStates,
   Language.Swahili,
   Language.Swedish,
-  Language.Thai,
   Language.Turkish,
   Language.Ukrainian,
   Language.Urdu,
   Language.Vietnamese,
 ]
+
+export const PLATFORM_SUPPORTED_LANGUAGES = isInterface ? WEB_SUPPORTED_LANGUAGES : WALLET_SUPPORTED_LANGUAGES
 
 /**
  * External mapping to be used with system locale strings trying to resolve to specific language
@@ -158,7 +160,6 @@ export enum Locale {
   SpanishUnitedStates = 'es-US',
   SwahiliTanzania = 'sw-TZ',
   SwedishSweden = 'sv-SE',
-  ThaiThailand = 'th-TH',
   TurkishTurkey = 'tr-TR',
   UkrainianUkraine = 'uk-UA',
   UrduPakistan = 'ur-PK',
@@ -203,7 +204,6 @@ export const mapLanguageToLocale: Record<Language, Locale> = {
   [Language.Serbian]: Locale.Serbian,
   [Language.Swahili]: Locale.SwahiliTanzania,
   [Language.Swedish]: Locale.SwedishSweden,
-  [Language.Thai]: Locale.ThaiThailand,
   [Language.Turkish]: Locale.TurkishTurkey,
   [Language.Ukrainian]: Locale.UkrainianUkraine,
   [Language.Urdu]: Locale.UrduPakistan,
@@ -247,7 +247,6 @@ export const mapLocaleToLanguage: Record<Locale, Language> = {
   [Locale.SpanishUnitedStates]: Language.SpanishUnitedStates,
   [Locale.SwahiliTanzania]: Language.Swahili,
   [Locale.SwedishSweden]: Language.Swedish,
-  [Locale.ThaiThailand]: Language.Thai,
   [Locale.TurkishTurkey]: Language.Turkish,
   [Locale.UkrainianUkraine]: Language.Ukrainian,
   [Locale.UrduPakistan]: Language.Urdu,

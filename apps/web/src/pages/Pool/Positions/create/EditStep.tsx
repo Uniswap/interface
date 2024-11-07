@@ -1,6 +1,14 @@
 // eslint-disable-next-line no-restricted-imports
+import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
+import { getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
-import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
+import {
+  DEFAULT_DEPOSIT_STATE,
+  DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS,
+  useCreatePositionContext,
+  useDepositContext,
+  usePriceRangeContext,
+} from 'pages/Pool/Positions/create/CreatePositionContext'
 import { Container, formatPrices } from 'pages/Pool/Positions/create/shared'
 import { PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
@@ -26,15 +34,19 @@ const EditStep = ({ children, onClick, ...rest }: { children: JSX.Element; onCli
 }
 
 export const EditSelectTokensStep = (props?: FlexProps) => {
-  const {
-    setStep,
-    derivedPositionInfo: { currencies },
-  } = useCreatePositionContext()
+  const { setStep, derivedPositionInfo, positionState } = useCreatePositionContext()
+  const { setPriceRangeState } = usePriceRangeContext()
+  const { setDepositState } = useDepositContext()
+  const { currencies, protocolVersion } = derivedPositionInfo
+  const { fee, hook } = positionState
   const [token0, token1] = currencies
+  const versionLabel = getProtocolVersionLabel(protocolVersion)
 
   const handleEdit = useCallback(() => {
+    setPriceRangeState(DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS)
+    setDepositState(DEFAULT_DEPOSIT_STATE)
     setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
-  }, [setStep])
+  }, [setDepositState, setPriceRangeState, setStep])
 
   return (
     <EditStep onClick={handleEdit} {...props}>
@@ -44,6 +56,9 @@ export const EditSelectTokensStep = (props?: FlexProps) => {
           <Text variant="heading3">{token0?.symbol}</Text>
           <Text variant="heading3">/</Text>
           <Text variant="heading3">{token1?.symbol}</Text>
+        </Flex>
+        <Flex row gap={2} alignItems="center">
+          <LiquidityPositionInfoBadges size="small" versionLabel={versionLabel} v4hook={hook} feeTier={fee.feeAmount} />
         </Flex>
       </Flex>
     </EditStep>
@@ -59,13 +74,15 @@ export const EditRangeSelectionStep = (props?: FlexProps) => {
     priceRangeState: { priceInverted },
     derivedPriceRangeInfo,
   } = usePriceRangeContext()
+  const { setDepositState } = useDepositContext()
 
   const { formatNumberOrString } = useLocalizationContext()
   const [baseCurrency, quoteCurrency] = getInvertedTuple(currencies, priceInverted)
 
   const handleEdit = useCallback(() => {
+    setDepositState(DEFAULT_DEPOSIT_STATE)
     setStep(PositionFlowStep.PRICE_RANGE)
-  }, [setStep])
+  }, [setDepositState, setStep])
 
   const formattedPrices = useMemo(() => {
     return formatPrices(derivedPriceRangeInfo, formatNumberOrString)

@@ -18,7 +18,7 @@ import type { IconProps } from 'ui/src/components/factories/createIcon'
 import { HapticFeedbackStyle } from 'ui/src/utils/haptics/helpers'
 import { useHapticFeedback } from 'ui/src/utils/haptics/useHapticFeedback'
 
-type ButtonSize = 'small' | 'medium' | 'large'
+export type ButtonSize = 'small' | 'medium' | 'large'
 
 const ButtonNestingContext = createContext(false)
 

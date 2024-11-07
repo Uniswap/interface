@@ -3,20 +3,20 @@ import { useTranslation } from 'react-i18next'
 import { AnimateTransition, Flex, Loader, Skeleton, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { HorizontalTokenList } from 'uniswap/src/components/TokenSelector/HorizontalTokenList/HorizontalTokenList'
-import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/TokenOptionItem'
+import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/constants'
+import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/items/TokenOptionItem'
+import { SectionHeader, TokenSectionHeaderProps } from 'uniswap/src/components/TokenSelector/items/TokenSectionHeader'
+import { HorizontalTokenList } from 'uniswap/src/components/TokenSelector/lists/HorizontalTokenList/HorizontalTokenList'
 import {
   TokenSectionBaseList,
   TokenSectionBaseListRef,
-} from 'uniswap/src/components/TokenSelector/TokenSectionBaseList'
-import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/TokenSectionBaseList.web'
-import { SectionHeader, TokenSectionHeaderProps } from 'uniswap/src/components/TokenSelector/TokenSectionHeader'
+} from 'uniswap/src/components/TokenSelector/lists/TokenSectionBaseList/TokenSectionBaseList'
 import { OnSelectCurrency, TokenOption, TokenSection } from 'uniswap/src/components/TokenSelector/types'
 import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -49,9 +49,7 @@ const TokenOptionItemWrapper = memo(function _TokenOptionItemWrapper({
 
   const { isTestnetModeEnabled } = useEnabledChains()
 
-  const { tokenWarningDismissed, onDismissTokenWarning: dismissWarningCallback } = useDismissedTokenWarnings(
-    tokenOption.currencyInfo.currency,
-  )
+  const { tokenWarningDismissed } = useDismissedTokenWarnings(tokenOption.currencyInfo.currency)
 
   const tokenBalance = formatNumberOrString({
     value: tokenOption.quantity,
@@ -66,7 +64,6 @@ const TokenOptionItemWrapper = memo(function _TokenOptionItemWrapper({
   return (
     <TokenOptionItem
       balance={title}
-      dismissWarningCallback={dismissWarningCallback}
       isKeyboardOpen={isKeyboardOpen}
       option={tokenOption}
       quantity={tokenOption.quantity}

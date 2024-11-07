@@ -1,6 +1,5 @@
 import { permit2Address } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { AVERAGE_L1_BLOCK_TIME } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { PermitSignature, usePermitAllowance, useUpdatePermitAllowance } from 'hooks/usePermitAllowance'
 import { useRevokeTokenAllowance, useTokenAllowance, useUpdateTokenAllowance } from 'hooks/useTokenAllowance'
@@ -8,6 +7,7 @@ import useInterval from 'lib/hooks/useInterval'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { TradeFillType } from 'state/routing/types'
 import { useHasPendingApproval, useHasPendingRevocation, useTransactionAdder } from 'state/transactions/hooks'
+import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
 
 enum ApprovalState {
   PENDING,
@@ -91,10 +91,10 @@ export default function usePermit2Allowance(
 
   // Signature and PermitAllowance will expire, so they should be rechecked at an interval.
   // Calculate now such that the signature will still be valid for the submitting block.
-  const [now, setNow] = useState(Date.now() + AVERAGE_L1_BLOCK_TIME)
+  const [now, setNow] = useState(Date.now() + AVERAGE_L1_BLOCK_TIME_MS)
   useInterval(
-    useCallback(() => setNow((Date.now() + AVERAGE_L1_BLOCK_TIME) / 1000), []),
-    AVERAGE_L1_BLOCK_TIME,
+    useCallback(() => setNow((Date.now() + AVERAGE_L1_BLOCK_TIME_MS) / 1000), []),
+    AVERAGE_L1_BLOCK_TIME_MS,
   )
 
   const [signature, setSignature] = useState<PermitSignature>()

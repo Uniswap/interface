@@ -1,10 +1,11 @@
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
-import { getChain, useSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useRef } from 'react'
 import { ClassicTrade, INTERNAL_ROUTER_PREFERENCE_PRICE, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useSupportedChainId } from 'uniswap/src/features/chains/hooks'
 
 /**
  * Returns the price in USDC of the input currency
@@ -15,7 +16,7 @@ export default function useStablecoinPrice(currency?: Currency): {
   state: TradeState
 } {
   const chainId = useSupportedChainId(currency?.chainId)
-  const amountOut = chainId ? getChain({ chainId }).spotPriceStablecoinAmount : undefined
+  const amountOut = chainId ? getChainInfo(chainId).spotPriceStablecoinAmount : undefined
   const stablecoin = amountOut?.currency
 
   const { trade, state } = useRoutingAPITrade(
@@ -79,9 +80,7 @@ export function useStablecoinValue(currencyAmount: CurrencyAmount<Currency> | un
 export function useStablecoinAmountFromFiatValue(fiatValue: number | null | undefined) {
   const { chainId } = useAccount()
   const supportedChainId = useSupportedChainId(chainId)
-  const stablecoin = supportedChainId
-    ? getChain({ chainId: supportedChainId }).spotPriceStablecoinAmount.currency
-    : undefined
+  const stablecoin = supportedChainId ? getChainInfo(supportedChainId).spotPriceStablecoinAmount.currency : undefined
 
   return useMemo(() => {
     if (fiatValue === null || fiatValue === undefined || !chainId || !stablecoin) {

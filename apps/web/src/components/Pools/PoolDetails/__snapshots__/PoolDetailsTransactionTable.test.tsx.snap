@@ -2,31 +2,7 @@
 
 exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
 <DocumentFragment>
-  .c1 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c2 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c5 {
+  .c5 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -67,6 +43,30 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
 
 .c13:active {
   opacity: 0.4;
+}
+
+.c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
 }
 
 .c8 {
@@ -417,31 +417,7 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
 
 exports[`PoolDetailsTransactionsTable renders error state 1`] = `
 <DocumentFragment>
-  .c1 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c2 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c9 {
+  .c9 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -499,6 +475,30 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   border: 1px #22222212 solid;
   border-radius: 20px;
+}
+
+.c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
 }
 
 .c3 {
@@ -1285,7 +1285,15 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
 
 exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
 <DocumentFragment>
-  .c1 {
+  .c5 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c1 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -1307,14 +1315,6 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 4px;
-}
-
-.c5 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c3 {

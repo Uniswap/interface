@@ -2042,9 +2042,6 @@ PODS:
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
-  - RNSentry (5.5.0):
-    - React-Core
-    - Sentry/HybridSDK (= 8.7.1)
   - RNSVG (15.1.0):
     - React-Core
   - SDWebImage (5.15.8):
@@ -2053,9 +2050,6 @@ PODS:
   - SDWebImageWebPCoder (0.8.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
-  - Sentry/HybridSDK (8.7.1):
-    - SentryPrivate (= 8.7.1)
-  - SentryPrivate (8.7.1)
   - SocketRocket (0.6.1)
   - sparkfabrik-react-native-idfa-aaid (1.2.0):
     - React
@@ -2176,7 +2170,6 @@ DEPENDENCIES:
   - RNPermissions (from `../../../node_modules/react-native-permissions`)
   - RNReanimated (from `../../../node_modules/react-native-reanimated`)
   - RNScreens (from `../../../node_modules/react-native-screens`)
-  - "RNSentry (from `../../../node_modules/@sentry/react-native`)"
   - RNSVG (from `../../../node_modules/react-native-svg`)
   - "sparkfabrik-react-native-idfa-aaid (from `../../../node_modules/@sparkfabrik/react-native-idfa-aaid`)"
   - UIImageColors (= 2.1.0)
@@ -2221,8 +2214,6 @@ SPEC REPOS:
     - RecaptchaInterop
     - SDWebImage
     - SDWebImageWebPCoder
-    - Sentry
-    - SentryPrivate
     - SocketRocket
     - UIImageColors
     - ZXingObjC
@@ -2429,8 +2420,6 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../../../node_modules/react-native-screens"
-  RNSentry:
-    :path: "../../../node_modules/@sentry/react-native"
   RNSVG:
     :path: "../../../node_modules/react-native-svg"
   sparkfabrik-react-native-idfa-aaid:
@@ -2574,12 +2563,9 @@ SPEC CHECKSUMS:
   RNPermissions: de7b7c3fe1680d974ac7a85e3e97aa539c0e68ea
   RNReanimated: 7171bba9a3f9ecfe5bdccb04ea0063bcc6c4c12c
   RNScreens: b6b64d956af3715adbfe84808694ae82d3fec74f
-  RNSentry: 4fb2cd7d2d6cb94423c24884488206ef881da136
   RNSVG: 50cf2c7018e57cf5d3522d98d0a3a4dd6bf9d093
   SDWebImage: cb032eba469c54e0000e78bcb0a13cdde0a52798
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
-  Sentry: 11776f6a25a128808d793d0d41bb7ad873b5ae4f
-  SentryPrivate: b3c448eacdabe9eab7679a2e0af609c608f91572
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   sparkfabrik-react-native-idfa-aaid: 1b72a6264a2175473e309ffa6434db87c58af264
   UIImageColors: d2ef3b0877d203cbb06489eeb78ea8b7788caabe

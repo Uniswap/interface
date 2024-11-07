@@ -4,25 +4,28 @@ import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/Breadcrumb
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { useGetPoolTokenPercentage } from 'components/Liquidity/hooks'
 import { parseRestPosition } from 'components/Liquidity/utils'
-import { LoadingRows } from 'components/Loader/styled'
 import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
-import { useChainFromUrlParam } from 'constants/chains'
+import { ZERO_ADDRESS } from 'constants/misc'
+import { LoadingRows } from 'pages/LegacyPool/styled'
+import NotFound from 'pages/NotFound'
 import { HeaderButton } from 'pages/Pool/Positions/PositionPage'
-import { LoadingRow, useRefetchOnLpModalClose } from 'pages/Pool/Positions/shared'
+import { LoadingRow } from 'pages/Pool/Positions/shared'
 import { useMemo } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
-import { Flex, Main, Text, styled } from 'ui/src'
+import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
+import { Button, Flex, Main, Text, styled } from 'ui/src'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { NumberType } from 'utilities/src/format/types'
+import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { useAccount } from 'wagmi'
 
 const BodyWrapper = styled(Main, {
@@ -38,30 +41,27 @@ const BodyWrapper = styled(Main, {
 
 export default function V2PositionPage() {
   const { pairAddress } = useParams<{ pairAddress: string }>()
-  const chainInfo = useChainFromUrlParam()
+  const chainId = useChainIdFromUrlParam()
   const account = useAccount()
 
   const {
     data,
     isLoading: positionLoading,
     refetch,
-  } = useGetPositionQuery(
-    account.address
-      ? {
-          owner: account.address,
-          protocolVersion: ProtocolVersion.V2,
-          pairAddress,
-          chainId: chainInfo?.id ?? account.chainId,
-        }
-      : undefined,
-  )
+  } = useGetPositionQuery({
+    owner: account?.address ?? ZERO_ADDRESS,
+    protocolVersion: ProtocolVersion.V2,
+    pairAddress,
+    chainId: chainId ?? account.chainId,
+  })
   const position = data?.position
   const positionInfo = useMemo(() => parseRestPosition(position), [position])
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
+  const { t } = useTranslation()
 
-  useRefetchOnLpModalClose(refetch)
+  usePendingLPTransactionsChangeListener(refetch)
 
   const { value: v4Enabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Everywhere)
 
@@ -75,7 +75,7 @@ export default function V2PositionPage() {
     return <Navigate to="/pools" replace />
   }
 
-  if (positionLoading || !positionInfo || !liquidityAmount || !currency0Amount || !currency1Amount) {
+  if (positionLoading) {
     return (
       <BodyWrapper>
         <LoadingRows>
@@ -96,9 +96,25 @@ export default function V2PositionPage() {
     )
   }
 
+  if (!positionInfo || !liquidityAmount || !currency0Amount || !currency1Amount) {
+    return (
+      <NotFound
+        title={<Text variant="heading2">{t('position.notFound')}</Text>}
+        subtitle={
+          <Flex centered maxWidth="75%" mt="$spacing20">
+            <Text color="$neutral2" variant="heading3" textAlign="center">
+              {t('position.notFound.description')}
+            </Text>
+          </Flex>
+        }
+        actionButton={<Button onPress={() => navigate('/positions')}>{t('common.backToPositions')}</Button>}
+      />
+    )
+  }
+
   return (
     <BodyWrapper>
-      <Flex gap="$gap20" width={580}>
+      <Flex gap="$gap20" width="calc(min(580px, 90vw))">
         <Flex row width="100%" justifyContent="flex-start" alignItems="center">
           <BreadcrumbNavContainer aria-label="breadcrumb-nav">
             <BreadcrumbNavLink to="/positions">
@@ -109,7 +125,7 @@ export default function V2PositionPage() {
 
         <LiquidityPositionInfo positionInfo={positionInfo} />
         {status === PositionStatus.IN_RANGE && (
-          <Flex row gap="$gap12" alignItems="center">
+          <Flex row gap="$gap12" alignItems="center" maxWidth="100%" flexWrap="wrap">
             <HeaderButton
               emphasis="secondary"
               onPress={() => {

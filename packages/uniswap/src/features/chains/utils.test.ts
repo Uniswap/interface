@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { SUPPORTED_CHAIN_IDS, SUPPORTED_TESTNET_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   chainIdToHexadecimalString,
   fromGraphQLChain,
@@ -11,7 +12,6 @@ import {
   toSupportedChainId,
   toUniswapWebAppLink,
 } from 'uniswap/src/features/chains/utils'
-import { SUPPORTED_CHAIN_IDS, SUPPORTED_TESTNET_CHAIN_IDS, UniverseChainId } from 'uniswap/src/types/chains'
 
 describe(toSupportedChainId, () => {
   it('handles undefined input', () => {

@@ -1,11 +1,11 @@
 import { useCallback, useMemo } from 'react'
 import { useSearchTokensQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { gqlTokenToCurrencyInfo, usePersistedError } from 'uniswap/src/features/dataApi/utils'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export function useSearchTokens(
   searchQuery: string | null,
@@ -19,7 +19,7 @@ export function useSearchTokens(
       searchQuery: searchQuery ?? '',
       chains: gqlChainFilter ? [gqlChainFilter] : gqlChains,
     },
-    skip,
+    skip: skip || !searchQuery,
   })
 
   const persistedError = usePersistedError(loading, error)

@@ -9,7 +9,6 @@ import { GasBreakdownTooltip, UniswapXDescription } from 'components/swap/GasBre
 import GasEstimateTooltip from 'components/swap/GasEstimateTooltip'
 import { RoutingTooltip, SwapRoute } from 'components/swap/SwapRoute'
 import TradePrice from 'components/swap/TradePrice'
-import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import styled, { DefaultTheme } from 'lib/styled-components'
 import React, { ReactNode, useEffect, useState } from 'react'
@@ -19,6 +18,7 @@ import { isLimitTrade, isPreviewTrade, isUniswapXTrade, isUniswapXTradeType } fr
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import { ExternalLink, ThemedText } from 'theme/components'
+import { chainSupportsGasEstimates } from 'uniswap/src/features/chains/utils'
 import { Trans, t } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { getPriceImpactColor } from 'utils/prices'
@@ -157,7 +157,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
         tooltipSize: isUniswapX ? TooltipSize.Small : TooltipSize.Large,
       }
     case SwapLineItemType.NETWORK_COST:
-      if (!SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)) {
+      if (!chainSupportsGasEstimates(chainId)) {
         return undefined
       }
       return {

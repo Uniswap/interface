@@ -3,6 +3,8 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { objectToQueryString } from 'uniswap/src/data/utils'
 import { FOR_API_HEADERS } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORTransactionResponse, FiatOnRampTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
@@ -18,6 +20,7 @@ export async function fetchFiatOnRampTransaction(
   previousTransactionDetails: FiatOnRampTransactionDetails,
   forceFetch: boolean,
 ): Promise<FiatOnRampTransactionDetails | undefined> {
+  const isForMigrationEnabled = getFeatureFlag(FeatureFlags.ForMonorepoMigration)
   const isRecent = dayjs(previousTransactionDetails.addedTime).isAfter(
     dayjs().subtract(FIAT_ONRAMP_FORCE_FETCH_TX_TIMEOUT, 'ms'),
   )
@@ -26,9 +29,16 @@ export async function fetchFiatOnRampTransaction(
     // Force fetch if requested or for the first 3 minutes after the transaction was added
     forceFetch: forceFetch || isRecent,
   }
-  const res = await fetch(`${uniswapUrls.fiatOnRampApiUrl}/transaction?${objectToQueryString(requestParams)}`, {
-    headers: FOR_API_HEADERS,
-  })
+
+  const res = isForMigrationEnabled
+    ? await fetch(`${uniswapUrls.forApiUrl}/Transaction`, {
+        headers: FOR_API_HEADERS,
+        method: 'POST',
+        body: JSON.stringify(requestParams),
+      })
+    : await fetch(`${uniswapUrls.fiatOnRampApiUrl}/transaction?${objectToQueryString(requestParams)}`, {
+        headers: FOR_API_HEADERS,
+      })
   const { transaction }: FORTransactionResponse = await res.json()
   if (!transaction) {
     const isStale = dayjs(previousTransactionDetails.addedTime).isBefore(

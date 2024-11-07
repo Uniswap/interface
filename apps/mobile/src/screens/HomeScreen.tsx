@@ -57,14 +57,13 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
-import { Experiments, OnboardingRedesignHomeScreenProperties } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { getExperimentValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/hooks'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import {
   ElementName,
@@ -80,7 +79,6 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { useTimeout } from 'utilities/src/time/timing'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { selectCreatedOnboardingRedesignAccount } from 'wallet/src/features/behaviorHistory/selectors'
 import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
 import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
 import { useHeartbeatReporter, useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks'
@@ -116,24 +114,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const { data: balancesById, loading: areBalancesLoading } = usePortfolioBalances({
     address: activeAccount.address,
   })
-  const accountHasNoTokens = balancesById && !Object.entries(balancesById).length
-  const [showOnboardingHomeRedesign, setShowOnboardingHomeRedesign] = useState(false)
-  const isOnboardingRedesignAccount = useSelector(selectCreatedOnboardingRedesignAccount)
-  const showOnboardingIntroCards = showOnboardingHomeRedesign || isOnboardingRedesignAccount
-
-  useEffect(() => {
-    // Sets experiment value and exposes user only if they have no tokens
-    if (accountHasNoTokens) {
-      const experimentEnabled = getExperimentValue(
-        Experiments.OnboardingRedesignHomeScreen,
-        OnboardingRedesignHomeScreenProperties.Enabled,
-        false,
-      )
-      setShowOnboardingHomeRedesign(experimentEnabled)
-    } else {
-      setShowOnboardingHomeRedesign(false)
-    }
-  }, [accountHasNoTokens, balancesById, showOnboardingHomeRedesign])
+  const showEmptyTokenState = balancesById && !Object.entries(balancesById).length
 
   // opens the wallet restore modal if recovery phrase is missing after the app is opened
   useWalletRestore({ openModalImmediately: true })
@@ -144,7 +125,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
 
   const [routeTabIndex, setRouteTabIndex] = useState(props?.route?.params?.tab ?? HomeScreenTabIndex.Tokens)
   // Ensures that tabIndex has the proper value between the empty state and non-empty state
-  const tabIndex = showOnboardingHomeRedesign ? HomeScreenTabIndex.Tokens : routeTabIndex
+  const tabIndex = showEmptyTokenState ? HomeScreenTabIndex.Tokens : routeTabIndex
 
   // Necessary to declare these as direct dependencies due to race condition with initializing react-i18next and useMemo
   const tokensTitle = t('home.tokens.title')
@@ -154,7 +135,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const exploreTitle = t('home.explore.title')
 
   const routes = useMemo((): HomeRoute[] => {
-    if (showOnboardingHomeRedesign) {
+    if (showEmptyTokenState) {
       return [
         {
           key: SectionName.HomeExploreTab,
@@ -174,7 +155,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     }
 
     return tabs
-  }, [showOnboardingHomeRedesign, tokensTitle, nftsTitle, activityTitle, showFeedTab, exploreTitle, feedTitle])
+  }, [showEmptyTokenState, tokensTitle, nftsTitle, activityTitle, showFeedTab, exploreTitle, feedTitle])
 
   useEffect(
     function syncTabIndex() {
@@ -249,7 +230,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const exploreTabScrollRef = useAnimatedRef<FlatList<any>>()
 
   const currentScrollValue = useDerivedValue(() => {
-    if (showOnboardingHomeRedesign) {
+    if (showEmptyTokenState) {
       return exploreTabScrollValue.value
     } else if (tabIndex === HomeScreenTabIndex.Tokens) {
       return tokensTabScrollValue.value
@@ -262,7 +243,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   }, [
     activityTabScrollValue.value,
     exploreTabScrollValue.value,
-    showOnboardingHomeRedesign,
+    showEmptyTokenState,
     feedTabScrollValue.value,
     nftsTabScrollValue.value,
     tabIndex,
@@ -311,7 +292,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   useScrollToTop(
     useRef({
       scrollToTop: () => {
-        if (showOnboardingHomeRedesign) {
+        if (showEmptyTokenState) {
           exploreTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
         } else if (currentTabIndex.value === HomeScreenTabIndex.NFTs && isNftTabsAtTop.value) {
           setRouteTabIndex(HomeScreenTabIndex.Tokens)
@@ -453,12 +434,10 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     () => (
       <OnboardingIntroCardStack
         isLoading={areBalancesLoading && balancesById === undefined}
-        hasTokens={!accountHasNoTokens}
-        onboardingRedesignBackupEnabled={isOnboardingRedesignAccount}
-        onboardingRedesignHomeEnabled={showOnboardingHomeRedesign}
+        hasTokens={!showEmptyTokenState}
       />
     ),
-    [accountHasNoTokens, areBalancesLoading, balancesById, isOnboardingRedesignAccount, showOnboardingHomeRedesign],
+    [showEmptyTokenState, areBalancesLoading, balancesById],
   )
 
   const contentHeader = useMemo(() => {
@@ -466,7 +445,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       <Flex
         backgroundColor="$surface1"
         gap="$spacing8"
-        pb={showOnboardingIntroCards ? '$spacing8' : '$spacing16'}
+        pb={showEmptyTokenState ? '$spacing8' : '$spacing16'}
         px="$spacing12"
       >
         <TestnetModeModal
@@ -494,10 +473,10 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       </Flex>
     )
   }, [
-    handleTestnetWarningModalClose,
+    showEmptyTokenState,
     isTestnetWarningModalOpen,
     t,
-    showOnboardingIntroCards,
+    handleTestnetWarningModalClose,
     activeAccount.address,
     isSignerAccount,
     actions,
@@ -506,8 +485,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     promoBanner,
   ])
 
-  const paddingTop =
-    headerHeight + TAB_BAR_HEIGHT + (showOnboardingHomeRedesign ? 0 : TAB_STYLES.tabListInner.paddingTop)
+  const paddingTop = headerHeight + TAB_BAR_HEIGHT + (showEmptyTokenState ? 0 : TAB_STYLES.tabListInner.paddingTop)
   const paddingBottom = insets.bottom + SWAP_BUTTON_HEIGHT + TAB_STYLES.tabListInner.paddingBottom + spacing.spacing12
 
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(

@@ -1,19 +1,18 @@
 import { useMemo } from 'react'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import {
   TokenSortableField,
   useTopTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isTestnetChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { gqlTokenToCurrencyInfo, usePersistedError } from 'uniswap/src/features/dataApi/utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 
 export function usePopularTokens(chainFilter: UniverseChainId): GqlResult<CurrencyInfo[]> {
   const gqlChainFilter = toGraphQLChain(chainFilter)
-  const isTestnet = UNIVERSE_CHAIN_INFO[chainFilter].testnet
+  const isTestnet = isTestnetChain(chainFilter)
 
   const { data, loading, error, refetch } = useTopTokensQuery({
     variables: {

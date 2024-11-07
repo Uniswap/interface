@@ -83,7 +83,8 @@ export const uniswapUrls = {
   // Feature service URL's
   unitagsApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Unitags)}/v2/unitags`,
   scantasticApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Scantastic)}/v2/scantastic`,
-  fiatOnRampApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/fiat-on-ramp`,
+  fiatOnRampApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/fiat-on-ramp`, // TODO: WALL-5189 - remove this once we finish migrating away from original FOR endpoint service
+  forApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/FOR.v1.FORService`,
   tradingApiUrl: getCloudflareApiBaseUrl(TrafficFlows.TradingApi),
 
   // API Paths

@@ -2,8 +2,8 @@ import React from 'react'
 import { Flex, FlexProps, Image, useSporeColors } from 'ui/src'
 import { ALL_NETWORKS_LOGO } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export const SQUIRCLE_BORDER_RADIUS_RATIO = 0.3
 
@@ -49,7 +49,7 @@ function _NetworkLogo({
     )
   }
 
-  const logo = UNIVERSE_CHAIN_INFO[chainId].logo
+  const logo = getChainInfo(chainId).logo
   const imageSize = size - borderWidth * 2 // this prevents the border from cutting off the logo
 
   return logo ? (

@@ -11,7 +11,6 @@ import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import Column, { AutoColumn } from 'components/deprecated/Column'
 import { AutoRow } from 'components/deprecated/Row'
-import { useIsSupportedChainId } from 'constants/chains'
 import styled from 'lib/styled-components'
 import { X } from 'react-feather'
 import { useOrder } from 'state/signatures/hooks'
@@ -19,10 +18,11 @@ import { useTransaction } from 'state/transactions/hooks'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { Flex, useSporeColors } from 'ui/src'
 import { BridgeIcon } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { useFormatter } from 'utils/formatNumbers'
 
@@ -73,7 +73,7 @@ const PopupAlertTriangle = styled(AlertTriangleFilled)`
 
 export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: UniverseChainId; onClose: () => void }) {
   const isSupportedChain = useIsSupportedChainId(chainId)
-  const chainInfo = isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId] : undefined
+  const chainInfo = isSupportedChain ? getChainInfo(chainId) : undefined
 
   if (!chainInfo) {
     return null

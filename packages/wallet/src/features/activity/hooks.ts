@@ -7,10 +7,10 @@ import {
   useFeedTransactionListQuery,
   useTransactionListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { usePersistedError } from 'uniswap/src/features/dataApi/utils'
 import { selectNftsVisibility } from 'uniswap/src/features/favorites/selectors'
 import { useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'

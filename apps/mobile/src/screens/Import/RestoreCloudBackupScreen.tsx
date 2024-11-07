@@ -65,7 +65,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                       <Text adjustsFontSizeToFit variant="subheading1">
                         {sanitizeAddressText(shortenAddress(mnemonicId))}
                       </Text>
-                      <Text adjustsFontSizeToFit color="$neutral2" variant="buttonLabel2">
+                      <Text adjustsFontSizeToFit color="$neutral2" variant="body3">
                         {localizedDayjs.unix(createdAt).format(FORMAT_DATE_TIME_SHORT)}
                       </Text>
                     </Flex>

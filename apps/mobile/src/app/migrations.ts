@@ -5,6 +5,7 @@
 
 import dayjs from 'dayjs'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
@@ -15,7 +16,6 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -33,6 +33,7 @@ import {
   moveDismissedTokenWarnings,
   moveLanguageSetting,
   moveUserSettings,
+  removeCreatedOnboardingRedesignAccountBehaviorHistory,
   removeUniconV2BehaviorState,
   removeWalletIsUnlockedState,
   updateExploreOrderByType,
@@ -951,6 +952,8 @@ export const migrations = {
   79: moveCurrencySetting,
 
   80: updateExploreOrderByType,
+
+  81: removeCreatedOnboardingRedesignAccountBehaviorHistory,
 }
 
-export const MOBILE_STATE_VERSION = 80
+export const MOBILE_STATE_VERSION = 81

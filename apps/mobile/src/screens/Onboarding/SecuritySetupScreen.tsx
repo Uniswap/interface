@@ -1,5 +1,4 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { BlurView } from 'expo-blur'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Alert, Image, Platform, StyleSheet } from 'react-native'
@@ -18,10 +17,7 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { Button, Flex, useIsDarkMode, useSporeColors } from 'ui/src'
 import { SECURITY_SCREEN_BACKGROUND_DARK, SECURITY_SCREEN_BACKGROUND_LIGHT } from 'ui/src/assets'
-import FaceIcon from 'ui/src/assets/icons/faceid-thin.svg'
-import FingerprintIcon from 'ui/src/assets/icons/fingerprint.svg'
 import { Lock } from 'ui/src/components/icons'
-import { borderRadii, imageSizes, opacify } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType } from 'uniswap/src/types/onboarding'
@@ -35,7 +31,6 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const dispatch = useDispatch()
-  const isDarkMode = useIsDarkMode()
 
   const [isLoadingAccount, setIsLoadingAccount] = useState(false)
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -119,26 +114,9 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
         title={t('onboarding.security.title')}
         onSkip={onSkipPressed}
       >
-        <Flex centered shrink gap="$spacing16" my="$spacing12" position="relative" py="$spacing24">
-          <Flex pt="$spacing24">
+        <Flex centered shrink gap="$spacing16">
+          <Flex>
             <SecurityBackgroundImage />
-          </Flex>
-          <Flex
-            backgroundColor={opacify(35, colors.surface1.val)}
-            borderColor={opacify(15, colors.white.val)}
-            borderRadius="$rounded16"
-            borderWidth={1}
-            overflow="hidden"
-            p="$spacing36"
-            position="absolute"
-            top={0}
-          >
-            <BlurView intensity={isDarkMode ? (isIOS ? 20 : 80) : 40} style={styles.blurView} tint="dark" />
-            {isTouchIdDevice ? (
-              <FingerprintIcon color={colors.white.val} height={imageSizes.image48} width={imageSizes.image48} />
-            ) : (
-              <FaceIcon color={colors.white.val} height={imageSizes.image48} width={imageSizes.image48} />
-            )}
           </Flex>
         </Flex>
         <Trace logPress element={ElementName.Enable}>
@@ -169,10 +147,6 @@ const SecurityBackgroundImage = (): JSX.Element => {
 }
 
 const styles = StyleSheet.create({
-  blurView: {
-    ...StyleSheet.absoluteFillObject,
-    borderRadius: borderRadii.rounded16,
-  },
   image: {
     height: '100%',
   },

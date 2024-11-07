@@ -22,7 +22,7 @@ import { useAsyncData } from 'utilities/src/react/hooks'
 import { sleep } from 'utilities/src/time/timing'
 
 interface Props {
-  onReady: (navigationRef: NavigationContainerRefWithCurrent<ReactNavigation.RootParamList>) => void
+  onReady?: (navigationRef: NavigationContainerRefWithCurrent<ReactNavigation.RootParamList>) => void
 }
 
 export const navigationRef = createNavigationContainerRef()
@@ -45,7 +45,7 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({ children, on
         colors: { ...DefaultTheme.colors, background: colors.surface1.val },
       }}
       onReady={(): void => {
-        onReady(navigationRef)
+        onReady?.(navigationRef)
         sendAnalyticsEvent(SharedEventName.APP_LOADED)
         // Process widget events on app load
         processWidgetEvents().catch(() => undefined)

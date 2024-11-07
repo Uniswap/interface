@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItem, ListRenderItemInfo, StyleSheet } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
-import { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
+import { FadeIn, FadeOut, useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
 import { useSelector } from 'react-redux'
 import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
 import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
@@ -13,20 +13,20 @@ import { TokenItemData } from 'src/components/explore/TokenItemData'
 import { AnimatedBottomSheetFlatList } from 'src/components/layout/AnimatedFlatList'
 import { AutoScrollProps } from 'src/components/sortableGrid/types'
 import { getTokenMetadataDisplayType } from 'src/features/explore/utils'
-import { Flex, Loader, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedTouchableArea, Flex, Loader, Text, useSporeColors } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { NetworkPill } from 'uniswap/src/components/network/NetworkPill'
 import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
 import { useTokenRankingsQuery } from 'uniswap/src/data/rest/tokenRankings'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'uniswap/src/features/favorites/selectors'
-import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { selectTokensOrderBy } from 'wallet/src/features/wallet/selectors'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
@@ -125,6 +125,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
     // incorrect values when it was passed to the list itself
     <Flex
       fill
+      animation="100ms"
       onLayout={({
         nativeEvent: {
           layout: { height },
@@ -166,15 +167,11 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
         contentContainerStyle={{ paddingBottom: insets.bottom }}
         data={showFullScreenLoadingState ? undefined : topTokenItems}
         keyExtractor={tokenKey}
-        removeClippedSubviews={true}
+        removeClippedSubviews={false}
         renderItem={renderItem}
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        windowSize={5}
-        maxToRenderPerBatch={10}
-        updateCellsBatchingPeriod={50}
-        initialNumToRender={15}
         onScroll={scrollHandler}
       />
     </Flex>
@@ -194,7 +191,7 @@ function NetworkPillsRow({
   const renderItem: ListRenderItem<UniverseChainId> = useCallback(
     ({ item }: ListRenderItemInfo<UniverseChainId>) => {
       return (
-        <TouchableArea onPress={() => onSelectNetwork(item)}>
+        <AnimatedTouchableArea entering={FadeIn} exiting={FadeOut} onPress={() => onSelectNetwork(item)}>
           <NetworkPill
             key={item}
             showIcon
@@ -210,7 +207,7 @@ function NetworkPillsRow({
             showBackgroundColor={false}
             textVariant="buttonLabel3"
           />
-        </TouchableArea>
+        </AnimatedTouchableArea>
       )
     },
     [colors.neutral1.val, onSelectNetwork, selectedNetwork],
@@ -225,7 +222,7 @@ function NetworkPillsRow({
         }
         data={chains}
         keyExtractor={(chainId: UniverseChainId) => chainId.toString()}
-        contentContainerStyle={{ alignItems: 'center', gap: spacing.spacing8, paddingRight: spacing.spacing8 }}
+        contentContainerStyle={{ alignItems: 'center', gap: spacing.spacing8, paddingHorizontal: spacing.spacing8 }}
         renderItem={renderItem}
         showsHorizontalScrollIndicator={false}
       />

@@ -1,4 +1,4 @@
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { UNI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'
 import { SwapEventName } from '@uniswap/analytics-events'
@@ -62,19 +62,20 @@ describe('Swap', () => {
     })
 
     it('swaps ETH for USDC', () => {
-      cy.interceptGraphqlOperation('SearchTokens', 'search_token_usdc.json')
       cy.interceptGraphqlOperation('Activity', 'mini-portfolio/empty_activity.json')
       cy.visit('/swap')
       getBalance(USDC_MAINNET).then((initialBalance) => {
         cy.get(`#swap-currency-input .token-symbol-container`).should('contain.text', 'ETH')
-
+        
         // Select ETH
         cy.get('#swap-currency-input .open-currency-select-button').click()
+        cy.interceptGraphqlOperation('SearchTokens', 'search_token_eth.json')
         cy.get(getTestSelector('explore-search-input')).type('ETH')
         cy.get(getTestSelector('token-option-1-ETH')).click()
-
+        
         // Select USDC
         cy.get('#swap-currency-output .open-currency-select-button').click()
+        cy.interceptGraphqlOperation('SearchTokens', 'search_token_usdc.json')
         cy.get(getTestSelector('explore-search-input')).type(USDC_MAINNET.address)
         cy.get(getTestSelector('token-option-1-USDC')).click()
 

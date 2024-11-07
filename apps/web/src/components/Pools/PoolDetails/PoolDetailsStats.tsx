@@ -5,7 +5,6 @@ import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { chainIdToBackendChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { PoolData } from 'graphql/data/pools/usePoolData'
 import { getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
@@ -19,8 +18,10 @@ import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { Trans } from 'uniswap/src/i18n'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const HeaderText = styled(Text)`
@@ -133,6 +134,7 @@ const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chain
   const unwrappedToken = chainId ? unwrapToken(chainId, token) : token
   const isNative = unwrappedToken?.address === NATIVE_CHAIN_ID
   const currency = isNative && chainId ? nativeOnChain(chainId) : token.currency
+  const { defaultChainId } = useEnabledChains()
   return (
     <PoolBalanceTokenNamesContainer>
       {!screenIsNotLarge && <CurrencyLogo currency={currency} size={20} style={{ marginRight: '8px' }} />}
@@ -144,7 +146,7 @@ const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chain
       <StyledLink
         to={getTokenDetailsURL({
           address: unwrappedToken.address,
-          chain: chainIdToBackendChain({ chainId, withFallback: true }),
+          chain: toGraphQLChain(chainId ?? defaultChainId),
         })}
       >
         {screenIsNotLarge && (
