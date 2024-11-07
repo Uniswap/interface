@@ -15,6 +15,11 @@ export enum OnboardingRoutes {
   UnsupportedBrowser = 'unsupported-browser',
 }
 
+export enum UnitagClaimRoutes {
+  ClaimIntro = 'claim-intro',
+  EditProfile = 'edit-profile',
+}
+
 export enum AppRoutes {
   AccountSwitcher = 'account-switcher',
   Home = '',

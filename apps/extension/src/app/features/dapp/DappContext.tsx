@@ -4,11 +4,11 @@ import { updateDisplayNameFromTab } from 'src/app/features/dapp/actions'
 import { useDappConnectedAccounts, useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { dappStore } from 'src/app/features/dapp/store'
 import { isConnectedAccount } from 'src/app/features/dapp/utils'
-import { extractBaseUrl } from 'src/app/features/dappRequests/utils'
 import { closePopup, PopupName } from 'src/app/features/popups/slice'
 import { backgroundToSidePanelMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { BackgroundToSidePanelRequestType } from 'src/background/messagePassing/types/requests'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { extractBaseUrl } from 'utilities/src/format/urls'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 type DappContextState = {

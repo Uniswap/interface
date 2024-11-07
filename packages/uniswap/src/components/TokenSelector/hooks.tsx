@@ -21,7 +21,7 @@ import {
 import { BRIDGED_BASE_ADDRESSES, getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
-import { DAI, USDC, USDT, WBTC } from 'uniswap/src/constants/tokens'
+import { USDC, USDT, WBTC } from 'uniswap/src/constants/tokens'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
@@ -35,7 +35,12 @@ import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
 import { usePopularTokens as usePopularTokensGql } from 'uniswap/src/features/dataApi/topTokens'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { buildCurrency, gqlTokenToCurrencyInfo, usePersistedError } from 'uniswap/src/features/dataApi/utils'
+import {
+  buildCurrency,
+  buildCurrencyInfo,
+  gqlTokenToCurrencyInfo,
+  usePersistedError,
+} from 'uniswap/src/features/dataApi/utils'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -71,7 +76,6 @@ const baseCurrencyIds = [
   buildNativeCurrencyId(UniverseChainId.Bnb),
   buildNativeCurrencyId(UniverseChainId.Celo),
   buildNativeCurrencyId(UniverseChainId.Avalanche),
-  currencyId(DAI),
   currencyId(USDC),
   currencyId(USDT),
   currencyId(WBTC),
@@ -111,7 +115,7 @@ export function searchResultToCurrencyInfo({
     return null
   }
 
-  const currencyInfo: CurrencyInfo = {
+  return buildCurrencyInfo({
     currency,
     currencyId: currencyId(currency),
     logoUrl,
@@ -119,8 +123,7 @@ export function searchResultToCurrencyInfo({
     // defaulting to not spam, as user has searched and chosen this token before
     isSpam: false,
     safetyInfo,
-  }
-  return currencyInfo
+  })
 }
 
 export function useAllCommonBaseCurrencies(): GqlResult<CurrencyInfo[]> {
@@ -298,16 +301,16 @@ export function useTokenSectionsForEmptySearch(chainFilter: UniverseChainId | nu
     dispatch(clearSearchHistory())
   }, [dispatch])
 
-  const recentSection = useTokenOptionsSection(
-    TokenOptionSection.RecentTokens,
-    recentlySearchedTokenOptions,
-    undefined,
-    <ClearAll onPress={onPressClearSearchHistory} />,
-  )
-  const popularSection = useTokenOptionsSection(
-    TokenOptionSection.PopularTokens,
-    currencyInfosToTokenOptions(popularTokens?.map(gqlTokenToCurrencyInfo)),
-  )
+  const recentSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.RecentTokens,
+    tokenOptions: recentlySearchedTokenOptions,
+    endElement: <ClearAll onPress={onPressClearSearchHistory} />,
+  })
+
+  const popularSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.PopularTokens,
+    tokenOptions: currencyInfosToTokenOptions(popularTokens?.map(gqlTokenToCurrencyInfo)),
+  })
   const sections = useMemo(() => [...(recentSection ?? []), ...(popularSection ?? [])], [popularSection, recentSection])
 
   return useMemo(
@@ -455,12 +458,16 @@ export function usePortfolioTokenOptions(
   searchFilter?: string,
 ): GqlResult<TokenOption[] | undefined> {
   const { data: portfolioBalancesById, error, refetch, loading } = usePortfolioBalancesForAddressById(address)
+  const { isTestnetModeEnabled } = useEnabledChains()
 
   const { shownTokens } = useTokenBalancesGroupedByVisibility({
     balancesById: portfolioBalancesById,
   })
 
-  const portfolioBalances = useMemo(() => (shownTokens ? sortPortfolioBalances(shownTokens) : undefined), [shownTokens])
+  const portfolioBalances = useMemo(
+    () => (shownTokens ? sortPortfolioBalances({ balances: shownTokens, isTestnetModeEnabled }) : undefined),
+    [shownTokens, isTestnetModeEnabled],
+  )
 
   const filteredPortfolioBalances = useMemo(
     () => portfolioBalances && filter(portfolioBalances, chainFilter, searchFilter),
@@ -616,11 +623,11 @@ export function useTokenSectionsForSearchResults(
     (!isBalancesOnlySearch && searchTokensLoading) ||
     bridgingTokenOptionsLoading
 
-  const searchResultsSections = useTokenOptionsSection(
-    TokenOptionSection.SearchResults,
+  const searchResultsSections = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.SearchResults,
     // Use local search when only searching balances
-    isBalancesOnlySearch ? portfolioTokenOptions : searchResults,
-  )
+    tokenOptions: isBalancesOnlySearch ? portfolioTokenOptions : searchResults,
+  })
 
   // If there are bridging options, we need to extract them from the search results and then prepend them as a new section above.
   // The remaining non-bridging search results will be shown in a section with a different name

@@ -17,7 +17,11 @@ import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
 import { signWcRequestActions } from 'src/features/walletConnect/signWcRequestSaga'
-import { WalletConnectRequest, isTransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
+import {
+  WalletConnectRequest,
+  isTransactionRequest,
+  setDidOpenFromDeepLink,
+} from 'src/features/walletConnect/walletConnectSlice'
 import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -131,7 +135,8 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
 
     onClose()
     if (didOpenFromDeepLink) {
-      returnToPreviousApp()
+      await returnToPreviousApp()
+      setDidOpenFromDeepLink(false)
     }
   }
 
@@ -190,7 +195,8 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
 
     onClose()
     if (didOpenFromDeepLink) {
-      returnToPreviousApp()
+      await returnToPreviousApp()
+      setDidOpenFromDeepLink(false)
     }
   }
 

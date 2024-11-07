@@ -669,7 +669,7 @@ exports[`LimitPriceError renders the limit price error correctly, inverted true 
             <div
               class="c6 css-n8z49y"
             >
-              Buying USDC above market price.error
+              Buying USDC above market price
             </div>
             <div
               class="c7 css-142zc9n"
@@ -840,7 +840,7 @@ exports[`LimitPriceError renders the limit price error correctly, inverted true 
             <div
               class="c6 css-n8z49y"
             >
-              Buying USDC above market price.error
+              Buying USDC above market price
             </div>
             <div
               class="c7 css-142zc9n"

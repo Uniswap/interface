@@ -1,20 +1,26 @@
+import { TokenRankingsStat } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import React, { useMemo } from 'react'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { getSearchResultId } from 'src/components/explore/search/utils'
 import { Flex, Loader } from 'ui/src'
+import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
+import { useTokenRankingsQuery } from 'uniswap/src/data/rest/tokenRankings'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
-import { TopToken, usePopularTokens } from 'uniswap/src/features/tokens/hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { RankingType } from 'wallet/src/features/wallet/types'
 
-function gqlTokenToTokenSearchResult(token: Maybe<TopToken>): TokenSearchResult | null {
-  if (!token || !token.project) {
+const MAX_TOKEN_RESULTS_AMOUNT = 8
+
+function tokenStatsToTokenSearchResult(token: Maybe<TokenRankingsStat>): TokenSearchResult | null {
+  if (!token) {
     return null
   }
 
-  const { name, chain, address, symbol, project, protectionInfo } = token
+  const { chain, address, symbol, name, logo } = token
   const chainId = fromGraphQLChain(chain)
+
   if (!chainId || !symbol || !name) {
     return null
   }
@@ -25,20 +31,24 @@ function gqlTokenToTokenSearchResult(token: Maybe<TopToken>): TokenSearchResult 
     address: address ?? null,
     name,
     symbol,
-    logoUrl: project?.logoUrl ?? null,
-    safetyLevel: project?.safetyLevel ?? null,
-    safetyInfo: getCurrencySafetyInfo(project.safetyLevel, protectionInfo),
+    logoUrl: logo ?? null,
+    safetyLevel: null,
   }
 }
 
-export function SearchPopularTokens(): JSX.Element {
-  const { popularTokens, loading } = usePopularTokens()
-  const tokens = useMemo(
-    () => popularTokens?.map(gqlTokenToTokenSearchResult).filter((t): t is TokenSearchResult => Boolean(t)),
+export function SearchPopularTokens({ selectedChain }: { selectedChain: UniverseChainId | null }): JSX.Element {
+  const { data, isLoading } = useTokenRankingsQuery({
+    chainId: selectedChain?.toString() ?? ALL_NETWORKS_ARG,
+  })
+
+  const popularTokens = data?.tokenRankings?.[RankingType.Popularity]?.tokens.slice(0, MAX_TOKEN_RESULTS_AMOUNT)
+
+  const formattedTokens = useMemo(
+    () => popularTokens?.map(tokenStatsToTokenSearchResult).filter((t): t is TokenSearchResult => Boolean(t)),
     [popularTokens],
   )
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Flex px="$spacing24" py="$spacing8">
         <Loader.Token repeat={2} />
@@ -46,7 +56,7 @@ export function SearchPopularTokens(): JSX.Element {
     )
   }
 
-  return <FlatList data={tokens} keyExtractor={getSearchResultId} renderItem={renderTokenItem} />
+  return <FlatList data={formattedTokens} keyExtractor={getSearchResultId} renderItem={renderTokenItem} />
 }
 
 const renderTokenItem = ({ item }: ListRenderItemInfo<TokenSearchResult>): JSX.Element => (

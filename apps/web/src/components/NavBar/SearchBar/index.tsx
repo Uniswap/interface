@@ -21,7 +21,7 @@ import { organizeSearchResults } from 'lib/utils/searchBar'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Search, X } from 'react-feather'
 import { useLocation } from 'react-router-dom'
-import { PoolRegisteredLog, usePoolsFromList, useRegisteredPools, useRegistryContract } from 'state/pool/hooks'
+import { useAllPoolsData } from 'state/pool/hooks'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import { Input } from 'ui/src'
@@ -210,20 +210,7 @@ export const SearchBar = ({
 
   const account = useAccount()
   const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue)
-
-  // TODO: check if we already store all pools' data in state, so can return a richer pool struct
-  const smartPoolsLogs = useRegisteredPools()
-  const registry = useRegistryContract()
-  const poolsFromList = usePoolsFromList(registry, account.chainId)
-
-  // we append pools from url as fallback in case endpoint is down or slow.
-  const allPools: PoolRegisteredLog[] = useMemo(() => {
-    return [...(smartPoolsLogs ?? []), ...(poolsFromList ?? [])]
-  }, [smartPoolsLogs, poolsFromList])
-
-  const uniquePools = allPools.filter((obj, index) => {
-    return index === allPools.findIndex((o) => obj.pool === o.pool)
-  })
+  const allPools = useAllPoolsData().data
 
   const smartPools: Token[] = useMemo(() => {
     //const mockToken = new Token(1, ZERO_ADDRESS, 0, '', '')
@@ -231,12 +218,12 @@ export const SearchBar = ({
     //  return [mockToken]
     //}
     // TODO: smart pools can have decimals != 18, but we probably do not use decimals from here
-    return uniquePools?.map((p) => {
+    return allPools.map((p) => {
       const { name, symbol, pool: address } = p
       //if (!name || !symbol || !address) return
       return new Token(account.chainId ?? UniverseChainId.Mainnet, address ?? undefined, 18, symbol ?? 'NAN', name ?? '')
     })
-  }, [account.chainId, uniquePools])
+  }, [account.chainId, allPools])
 
   // TODO: check if we can remove getTokenFilter module
   const filteredPools: Token[] = useMemo(() => {

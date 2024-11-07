@@ -5,6 +5,7 @@ import {
   TransactionDetailsPartsFragment,
   TransactionStatus,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export type TransactionActivity = AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment }
 
@@ -45,6 +46,7 @@ export enum TransactionType {
   SET_VALUE,
   INCREASE_LIQUIDITY,
   DECREASE_LIQUIDITY,
+  BRIDGE,
   // Always add to the bottom of this enum
 }
 
@@ -90,6 +92,18 @@ interface BaseSwapTransactionInfo extends BaseTransactionInfo {
   inputCurrencyId: string
   outputCurrencyId: string
   isUniswapXOrder: boolean
+}
+
+export interface BridgeTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.BRIDGE
+  inputCurrencyId: string
+  inputChainId: UniverseChainId
+  inputCurrencyAmountRaw: string
+  outputCurrencyId: string
+  outputChainId: UniverseChainId
+  outputCurrencyAmountRaw: string
+  quoteId?: string
+  depositConfirmed: boolean
 }
 
 export interface ExactInputSwapTransactionInfo extends BaseSwapTransactionInfo {
@@ -252,6 +266,7 @@ export type TransactionInfo =
   | SetSmartPoolValuePoolTransactionInfo
   | IncreaseLiquidityTransactionInfo
   | DecreaseLiquidityTransactionInfo
+  | BridgeTransactionInfo
 
 interface BaseTransactionDetails {
   status: TransactionStatus

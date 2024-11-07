@@ -16,7 +16,12 @@ import { OnboardingCardLoggingName } from 'uniswap/src/features/telemetry/types'
 import { useTranslation } from 'uniswap/src/i18n'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
-import { CardType, IntroCardGraphicType, IntroCardProps } from 'wallet/src/components/introCards/IntroCard'
+import {
+  CardType,
+  IntroCardGraphicType,
+  IntroCardProps,
+  isOnboardingCardLoggingName,
+} from 'wallet/src/components/introCards/IntroCard'
 import { INTRO_CARD_MIN_HEIGHT, IntroCardStack } from 'wallet/src/components/introCards/IntroCardStack'
 import { useSharedIntroCards } from 'wallet/src/components/introCards/useSharedIntroCards'
 import { selectHasViewedWelcomeWalletCard } from 'wallet/src/features/behaviorHistory/selectors'
@@ -175,7 +180,7 @@ export function OnboardingIntroCardStack({
   const handleSwiped = useCallback(
     (_card: IntroCardProps, index: number) => {
       const loggingName = cards[index]?.loggingName
-      if (loggingName) {
+      if (loggingName && isOnboardingCardLoggingName(loggingName)) {
         sendAnalyticsEvent(WalletEventName.OnboardingIntroCardSwiped, {
           card_name: loggingName,
         })

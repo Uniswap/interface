@@ -27,15 +27,14 @@ export function NftView({ item, onPress, index }: NftViewProps): JSX.Element {
         >
           <NFTViewer
             autoplay
-            showSvgPreview
-            contractAddress={item.contractAddress}
+            svgRenderingDisabled
             imageDimensions={item.imageDimensions}
             limitGIFSize={ESTIMATED_NFT_LIST_ITEM_SIZE}
             maxHeight={MAX_NFT_IMAGE_SIZE}
             placeholderContent={item.name || item.collectionName}
             squareGridView={true}
-            tokenId={item.tokenId}
             uri={item.imageUrl}
+            thumbnailUrl={item.thumbnailUrl}
           />
         </Flex>
       </TouchableArea>

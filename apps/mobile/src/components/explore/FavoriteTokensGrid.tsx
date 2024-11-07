@@ -63,6 +63,7 @@ export function FavoriteTokensGrid({ showLoading, ...rest }: FavoriteTokensGridP
   return (
     <AnimatedFlex entering={FadeIn} style={animatedStyle}>
       <FavoriteHeaderRow
+        disabled={showLoading}
         editingTitle={t('explore.tokens.favorite.title.edit')}
         isEditing={isEditing}
         title={t('explore.tokens.favorite.title.default')}

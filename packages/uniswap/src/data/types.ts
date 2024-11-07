@@ -6,3 +6,9 @@ export type GqlResult<T> = Pick<QueryResult<T>, 'data' | 'loading'> &
     refetch?: () => void // TODO: [MOB-222] figure out the proper type for this from a QueryResult
     error?: ApolloError | Error
   }
+
+export enum SpamCode {
+  LOW = 0, // same as isSpam = false on TokenProject
+  MEDIUM = 1, // same as isSpam = true on TokenProject
+  HIGH = 2, // has a URL in token name
+}

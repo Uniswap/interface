@@ -10,6 +10,8 @@ import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__'
 import { FiatOnRampTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
 import { findGasStrategyName } from 'uniswap/src/features/gas/hooks'
 import { getGasPrice } from 'uniswap/src/features/gas/types'
+import { pushNotification, setNotificationStatus } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { MobileAppsFlyerEvents, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import {
@@ -31,11 +33,9 @@ import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactio
 import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import {
-  BaseSwapTransactionInfo,
   BridgeTransactionDetails,
   FinalizedTransactionDetails,
   QueuedOrderStatus,
-  SendTokenTransactionInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
@@ -43,11 +43,10 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
-import { pushNotification, setNotificationStatus } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import { OrderWatcher } from 'wallet/src/features/transactions/orderWatcherSaga'
 import { refetchGQLQueries } from 'wallet/src/features/transactions/refetchGQLQueriesSaga'
@@ -71,8 +70,6 @@ export const SWAP_STATUS_TO_TX_STATUS: { [key in SwapStatus]: TransactionStatus 
 
 const FINALIZED_BRIDGE_SWAP_STATUS = [SwapStatus.SUCCESS, SwapStatus.FAILED, SwapStatus.EXPIRED]
 const MIN_BRIDGE_WAIT_TIME = ONE_SECOND_MS * 3
-
-const selectTransactionById = makeSelectTransaction()
 
 export function* transactionWatcher({ apolloClient }: { apolloClient: ApolloClient<NormalizedCacheObject> }) {
   logger.debug('transactionWatcherSaga', 'transactionWatcher', 'Starting tx watcher')
@@ -337,9 +334,12 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
       if (!transaction.sendConfirmed) {
         const updatedTransaction: BridgeTransactionDetails = { ...transaction, sendConfirmed: true }
         yield* put(transactionActions.updateTransaction(updatedTransaction))
+        // Updating the transaction will trigger a new watch.
+        // Return undefined to break out of the current watcher.
+        return undefined
       }
 
-      // Poll for bridging status from BE
+      // Send part was successful, poll for bridging status from BE
       status = yield* call(waitForBridgingStatus, transaction)
     }
   }
@@ -388,6 +388,7 @@ function* waitForBridgingStatus(transaction: TransactionDetails) {
     }
 
     // Check if the redux store has been updated with a new status
+    const selectTransactionById = yield* call(makeSelectTransaction)
     const updatedTransaction = yield* select(selectTransactionById, {
       address: transaction.from,
       chainId: transaction.chainId,
@@ -495,18 +496,23 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
   const { type } = typeInfo
 
   // Send analytics event for swap success and failure
-  if (type === TransactionType.Swap) {
-    const {
-      slippageTolerance,
-      quoteId,
-      routeString,
-      gasUseEstimate,
-      inputCurrencyId,
-      outputCurrencyId,
-      tradeType,
-      protocol,
-      transactedUSDValue,
-    } = typeInfo as BaseSwapTransactionInfo
+  if (type === TransactionType.Swap || type === TransactionType.Bridge) {
+    const { quoteId, gasUseEstimate, inputCurrencyId, outputCurrencyId, transactedUSDValue } = typeInfo
+
+    const swapProperties =
+      type === TransactionType.Swap
+        ? {
+            tradeType: typeInfo.tradeType === TradeType.EXACT_INPUT ? 'EXACT_INPUT' : 'EXACT_OUTPUT',
+            slippageTolerance: typeInfo.slippageTolerance,
+            route: typeInfo.routeString,
+            protocol: typeInfo.protocol,
+          }
+        : undefined
+
+    const bridgeProperties = {
+      chain_id_in: chainId,
+      chain_id_out: (type === TransactionType.Bridge && currencyIdToChain(typeInfo.outputCurrencyId)) || chainId,
+    }
 
     const baseProperties = {
       routing: tradeRoutingToFillType({ routing: payload.routing, indicative: false }),
@@ -520,14 +526,12 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
       effective_gas_price: effectiveGasPrice,
       inputCurrencyId,
       outputCurrencyId,
-      tradeType: tradeType === TradeType.EXACT_INPUT ? 'EXACT_INPUT' : 'EXACT_OUTPUT',
-      slippageTolerance,
       gasUseEstimate,
-      route: routeString,
       quoteId,
       submitViaPrivateRpc: isUniswapX(payload) ? false : payload.options.submitViaPrivateRpc,
-      protocol,
       transactedUSDValue,
+      ...swapProperties,
+      ...bridgeProperties,
     }
 
     if (isUniswapX(payload)) {
@@ -573,7 +577,7 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
 
   // Log metrics for confirmed transfers
   if (type === TransactionType.Send) {
-    const { tokenAddress, recipient: toAddress, currencyAmountUSD } = typeInfo as SendTokenTransactionInfo
+    const { tokenAddress, recipient: toAddress, currencyAmountUSD } = typeInfo
 
     const amountUSD = currencyAmountUSD ? parseFloat(currencyAmountUSD?.toFixed(2)) : undefined
 

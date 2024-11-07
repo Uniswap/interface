@@ -14,6 +14,7 @@ import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { NetworkFeeWarning } from 'uniswap/src/features/transactions/swap/modals/NetworkFeeWarning'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { isInterface } from 'utilities/src/platform'
 
 export function NetworkFee({
   chainId,
@@ -39,6 +40,7 @@ export function NetworkFee({
   const uniswapXGasFeeInfo = useFormattedUniswapXGasFeeInfo(uniswapXGasBreakdown, chainId)
 
   const gasFeeHighRelativeToValue = useGasFeeHighRelativeToValue(gasFeeUSD, transactionUSDValue)
+  const showHighGasFeeUI = gasFeeHighRelativeToValue && !isInterface // Avoid high gas UI on interface
 
   return (
     <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
@@ -60,7 +62,7 @@ export function NetworkFee({
             <UniswapXFee gasFee={gasFeeFormatted} preSavingsGasFee={uniswapXGasFeeInfo?.preSavingsGasFeeFormatted} />
           ) : (
             <Text
-              color={gasFee.isLoading ? '$neutral3' : gasFeeHighRelativeToValue ? '$statusCritical' : '$neutral1'}
+              color={gasFee.isLoading ? '$neutral3' : showHighGasFeeUI ? '$statusCritical' : '$neutral1'}
               variant="body3"
             >
               {gasFeeFormatted}

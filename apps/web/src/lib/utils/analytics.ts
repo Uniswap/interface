@@ -6,6 +6,7 @@ import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
 import {
+  BridgeTrade,
   ClassicTrade,
   PriorityOrderTrade,
   UniswapXTrade,
@@ -65,12 +66,15 @@ function tradeRoutingToOffchainOrderType(routing: Routing): OffchainOrderType | 
 }
 
 export function formatCommonPropertiesForTrade(
-  trade: InterfaceTrade | ClassicTrade | UniswapXTrade,
+  trade: InterfaceTrade | ClassicTrade | UniswapXTrade | BridgeTrade,
   allowedSlippage: Percent,
   outputFeeFiatValue?: number,
 ): SwapTradeBaseProperties {
   const isUniversalSwapFlow =
-    trade instanceof ClassicTrade || trade instanceof UniswapXV2Trade || trade instanceof PriorityOrderTrade
+    trade instanceof ClassicTrade ||
+    trade instanceof UniswapXV2Trade ||
+    trade instanceof PriorityOrderTrade ||
+    trade instanceof BridgeTrade
 
   return {
     routing: isUniversalSwapFlow ? tradeRoutingToFillType(trade) : trade.fillType,
@@ -102,6 +106,8 @@ export function formatCommonPropertiesForTrade(
       trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
         ? trade.inputAmount.currency.chainId
         : undefined,
+    chain_id_in: trade.inputAmount.currency.chainId,
+    chain_id_out: trade.outputAmount.currency.chainId,
     estimated_network_fee_usd: isUniversalSwapFlow
       ? trade instanceof ClassicTrade
         ? trade.quote?.quote.gasFeeUSD
@@ -130,7 +136,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   timeToSignSinceRequestMs,
   portfolioBalanceUsd,
 }: {
-  trade: SubmittableTrade | ClassicTrade | UniswapXTrade
+  trade: SubmittableTrade | ClassicTrade | UniswapXTrade | BridgeTrade
   allowedSlippage: Percent
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }
   txHash?: string

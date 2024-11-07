@@ -29,6 +29,7 @@ import { Equals, assert } from 'tsafe'
 import { UniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
 import { FavoritesState } from 'uniswap/src/features/favorites/slice'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { NotificationState } from 'uniswap/src/features/notifications/slice'
 import { SearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
 import { UserSettingsState } from 'uniswap/src/features/settings/slice'
 import { TimingState } from 'uniswap/src/features/timing/slice'
@@ -78,6 +79,7 @@ type ExpectedAppState = CombinedState<{
   readonly [fiatOnRampAggregatorApi.reducerPath]: ReturnType<typeof fiatOnRampAggregatorApi.reducer>
   readonly uniswapBehaviorHistory: UniswapBehaviorHistoryState
   readonly favorites: FavoritesState
+  readonly notifications: NotificationState
   readonly searchHistory: Readonly<SearchHistoryState>
   readonly timing: TimingState
   readonly tokens: TokensState
@@ -130,7 +132,6 @@ assert<Equals<ListsState, ExpectedListsState>>()
 
 interface ExpectedApplicationState {
   readonly chainId: number | null
-  readonly fiatOnramp: { available: boolean; availabilityChecked: boolean }
   readonly openModal: OpenModalParams | null
   readonly smartPool: { address?: string | null; name: string | null }
   readonly popupList: PopupList

@@ -2,7 +2,11 @@ import { useEffect } from 'react'
 import { useColorScheme } from 'react-native'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
-import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
+import {
+  useEnabledChains,
+  useHideSmallBalancesSetting,
+  useHideSpamTokensSetting,
+} from 'uniswap/src/features/settings/hooks'
 import { ExtensionUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
@@ -19,6 +23,7 @@ export function TraceUserProperties(): null {
   const hideSpamTokens = useHideSpamTokensSetting()
   const currentLanguage = useCurrentLanguage()
   const appFiatCurrencyInfo = useAppFiatCurrencyInfo()
+  const { isTestnetModeEnabled } = useEnabledChains()
 
   useGatingUserPropertyUsernames()
 
@@ -62,6 +67,10 @@ export function TraceUserProperties(): null {
   useEffect(() => {
     setUserProperty(ExtensionUserPropertyName.Currency, appFiatCurrencyInfo.code)
   }, [appFiatCurrencyInfo])
+
+  useEffect(() => {
+    setUserProperty(ExtensionUserPropertyName.TestnetModeEnabled, isTestnetModeEnabled)
+  }, [isTestnetModeEnabled])
 
   return null
 }

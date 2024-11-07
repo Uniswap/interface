@@ -74,8 +74,8 @@ function FooterSection({ title, items }: { title: string; items: MenuItem[] }) {
 export function Footer() {
   const { t } = useTranslation()
   const togglePrivacyPolicy = useTogglePrivacyPolicy()
-  const userIsOperator = useActiveSmartPool().name !== undefined
-  const tabsContent = useTabsContent({ includeNftsLink: true, userIsOperator })
+  const { name } = useActiveSmartPool()
+  const tabsContent = useTabsContent({ includeNftsLink: true, userIsOperator: name !== undefined })
   const appSectionItems: MenuItem[] = useMemo(() => {
     return tabsContent.map((tab) => ({
       label: tab.title,

@@ -5,22 +5,7 @@ import { Flex, Text } from 'ui/src'
 import { isAddress, shortenAddress } from 'utilities/src/addresses'
 import { isGifUri, isSVGUri, uriToHttpUrls } from 'utilities/src/format/urls'
 import { ImageUri, ImageUriProps } from 'wallet/src/features/images/ImageUri'
-import { NFTPreviewImage } from 'wallet/src/features/images/NFTPreviewImage'
 import { WebSvgUri } from 'wallet/src/features/images/WebSvgUri'
-
-type PreviewProps =
-  // Don't show preview if showSvgPreview is not provided or is false
-  | {
-      showSvgPreview?: false
-    }
-  // Show preview if showSvgPreview is true and contractAddress and tokenId
-  // are provided (can be undefined if the backend does not return them in
-  // the response - the fallback will be shown in this case)
-  | {
-      showSvgPreview: true
-      contractAddress: string | undefined
-      tokenId: string | undefined
-    }
 
 type Props = {
   uri: string | undefined
@@ -30,23 +15,26 @@ type Props = {
   limitGIFSize?: number // for certain Opensea assets, reduce the GIF size to boost animation grid layout performance
   placeholderContent?: string
   imageDimensions?: { width: number; height: number } | undefined
-} & PreviewProps
+  svgRenderingDisabled?: boolean // Used for screens that should use PNG thumbnails instead of SVGs for perf
+  thumbnailUrl?: string | undefined
+}
 
-/**
- * Renders a remote NFT image or SVG and automatically expands to fill parent container
- */
 export function NFTViewer(props: Props): JSX.Element {
   const {
     uri,
+    thumbnailUrl,
     autoplay = false,
     squareGridView = false,
     maxHeight,
     limitGIFSize,
     placeholderContent,
     imageDimensions,
+    svgRenderingDisabled,
   } = props
   const { t } = useTranslation()
-  const imageHttpUri = uri ? uriToHttpUrls(uri)[0] : undefined
+
+  // if svgRenderingDisabled is true, use thumbnailUrl which is a PNG, otherwise use uri
+  const imageHttpUri = svgRenderingDisabled && thumbnailUrl ? thumbnailUrl : uri ? uriToHttpUrls(uri)[0] : undefined
 
   const fallback = useMemo(() => {
     const isPlaceholderAddress = isAddress(placeholderContent)
@@ -66,15 +54,7 @@ export function NFTViewer(props: Props): JSX.Element {
     return fallback
   }
 
-  /**
-   * This is a hack to reduce the image size for certain gifs to improve performance (based on URL schema that most
-   * animated NFTs on Opensea use).
-   *
-   * TODO: Ideally we need to find a way to get compressed images without having to change
-   * source in data response.
-   */
   const isGif = isGifUri(imageHttpUri)
-
   const formattedUri =
     isGif && limitGIFSize ? convertGIFUriToSmallImageFormat(imageHttpUri, limitGIFSize) : imageHttpUri
 
@@ -101,16 +81,11 @@ export function NFTViewer(props: Props): JSX.Element {
     return <ImageUri {...imageProps} />
   }
 
-  if (!props.showSvgPreview) {
-    return <WebSvgUri autoplay={autoplay} maxHeight={squareGridView ? undefined : maxHeight} uri={imageHttpUri} />
-  }
-
-  // Display fallback if preview data is not provided
-  if (!props.contractAddress || !props.tokenId) {
+  if (props.svgRenderingDisabled) {
     return fallback
   }
 
-  return <NFTPreviewImage contractAddress={props.contractAddress} imageProps={imageProps} tokenId={props.tokenId} />
+  return <WebSvgUri autoplay={autoplay} maxHeight={squareGridView ? undefined : maxHeight} uri={imageHttpUri} />
 }
 
 const style = StyleSheet.create({
@@ -120,8 +95,6 @@ const style = StyleSheet.create({
   },
 })
 
-// Query parameter used to set size of requested Opensea image source, 500 is the default size on
-// many animated Opensea asset source uris
 const OPENSEA_IMAGE_SIZE_QUERY_PARAM = 'w=500'
 
 function convertGIFUriToSmallImageFormat(uri: string, limitGIFSize: number): string {

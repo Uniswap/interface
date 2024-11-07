@@ -1,4 +1,4 @@
-import { maxBy } from 'lodash'
+import maxBy from 'lodash/maxBy'
 import { Dispatch, SetStateAction, useCallback, useMemo, useRef, useState } from 'react'
 import { SharedValue, useDerivedValue } from 'react-native-reanimated'
 import { TLineChartData } from 'react-native-wagmi-charts'

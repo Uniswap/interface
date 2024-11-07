@@ -9,14 +9,14 @@ import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionScreens, ExtensionUnitagClaimScreens } from 'uniswap/src/types/screens/extension'
 import { ClaimUnitagContent, ClaimUnitagContentProps } from 'wallet/src/features/unitags/ClaimUnitagContent'
-import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type onNavigateContinueType = Exclude<ClaimUnitagContentProps['onNavigateContinue'], undefined>
 
 export function UnitagCreateUsernameScreen(): JSX.Element {
   const { goToNextStep, goToPreviousStep } = useOnboardingSteps()
   const { setUnitag, setEntryPoint } = useUnitagClaimContext()
-  const address = useActiveAccountAddressWithThrow()
+  const address = useAccountAddressFromUrlWithThrow()
 
   const onNavigateContinue = useCallback(
     ({ unitag, entryPoint }: Parameters<onNavigateContinueType>[0]) => {

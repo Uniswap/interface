@@ -79,6 +79,7 @@ function TokenWarningModalContent({
   return (
     <Flex>
       <WarningModalContent
+        modalName={ModalName.TokenWarningModal}
         rejectButtonTheme="tertiary"
         captionComponent={
           <Flex centered gap="$spacing12">
@@ -105,7 +106,8 @@ function TokenWarningModalContent({
               : // otherwise, Acknowledge button should say "Continue"
                 t('common.button.continue')
         }
-        icon={<WarningIcon severity={severity} size="$icon.24" />}
+        icon={<WarningIcon heroIcon severity={severity} size="$icon.24" />}
+        backgroundIconColor={false}
         severity={severity}
         titleComponent={
           <Text color={titleTextColor} variant="subheading1">
@@ -294,7 +296,13 @@ function FeeRow({ feeType, feeBps }: { feeType: 'buy' | 'sell'; feeBps?: BigNumb
   )
 }
 
-function FeeDisplayTable({ buyFeeBps, sellFeeBps }: { buyFeeBps?: BigNumber; sellFeeBps?: BigNumber }): JSX.Element {
+export function FeeDisplayTable({
+  buyFeeBps,
+  sellFeeBps,
+}: {
+  buyFeeBps?: BigNumber
+  sellFeeBps?: BigNumber
+}): JSX.Element {
   return (
     <WarningModalInfoContainer>
       <FeeRow feeBps={buyFeeBps} feeType="buy" />

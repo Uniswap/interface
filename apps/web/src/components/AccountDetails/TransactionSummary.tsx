@@ -514,5 +514,8 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.SET_VALUE:
       return <SetSmartPoolValueSummary />
+
+    case TransactionType.BRIDGE:
+      return <></> // Bridging was launched after this code became deprecated
   }
 }

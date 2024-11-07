@@ -14,7 +14,7 @@ import { PropsWithChildren, default as React, StrictMode, useCallback, useEffect
 import { I18nextProvider } from 'react-i18next'
 import { LogBox, NativeModules, StatusBar } from 'react-native'
 import appsFlyer from 'react-native-appsflyer'
-import { getUniqueId } from 'react-native-device-info'
+import DeviceInfo from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MMKV } from 'react-native-mmkv'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -47,6 +47,7 @@ import {
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { getSentryEnvironment, getSentryTracesSamplingRate, getStatsigEnvironmentTier } from 'src/utils/version'
 import { flexStyles, useHapticFeedback, useIsDarkMode } from 'ui/src'
+import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
@@ -63,6 +64,7 @@ import { loadStatsigOverrides } from 'uniswap/src/features/gating/overrides/cust
 import { Statsig, StatsigOptions, StatsigProvider, StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
+import { clearNotificationQueue } from 'uniswap/src/features/notifications/slice'
 import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
@@ -70,14 +72,14 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n/i18n'
 import { CurrencyId } from 'uniswap/src/types/currency'
+import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { isDetoxBuild, isJestRun } from 'utilities/src/environment/constants'
-import { attachUnhandledRejectionHandler } from 'utilities/src/logger/Datadog'
+import { attachUnhandledRejectionHandler, setAttributesToDatadog } from 'utilities/src/logger/Datadog'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
-import { TestnetModeBanner } from 'wallet/src/components/banners/TestnetModeBanner'
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
 // eslint-disable-next-line no-restricted-imports
@@ -85,7 +87,6 @@ import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApo
 import { initFirebaseAppCheck } from 'wallet/src/features/appCheck/appCheck'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { selectHapticsEnabled } from 'wallet/src/features/appearance/slice'
-import { clearNotificationQueue } from 'wallet/src/features/notifications/slice'
 import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
@@ -170,6 +171,7 @@ function App(): JSX.Element | null {
       // Hence we always initiliase and later close it if Datadog is enabled.
       Sentry.close().catch(() => undefined)
       attachUnhandledRejectionHandler()
+      setAttributesToDatadog({ buildNumber: DeviceInfo.getBuildNumber() }).catch(() => undefined)
     }
   }, [isDatadogEnabled])
 
@@ -246,6 +248,7 @@ function App(): JSX.Element | null {
 
 function DatadogProviderWrapper({ children }: PropsWithChildren): JSX.Element {
   const datadogEnabled = useFeatureFlagWithExposureLoggingDisabled(FeatureFlags.Datadog)
+  logger.setWalletDatadogEnabled(datadogEnabled)
 
   if (isDetoxBuild || isJestRun || !datadogEnabled) {
     return <>{children}</>

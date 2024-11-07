@@ -1,6 +1,12 @@
+import { SwapEventName } from '@uniswap/analytics-events'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { PopupType, addPopup } from 'state/application/reducer'
-import { HandleSignatureStepParams, getSwapTransactionInfo, handleSignatureStep } from 'state/sagas/transactions/utils'
+import {
+  HandleSignatureStepParams,
+  addTransactionBreadcrumb,
+  getSwapTransactionInfo,
+  handleSignatureStep,
+} from 'state/sagas/transactions/utils'
 import { addSignature } from 'state/signatures/reducer'
 import { SignatureType, UnfilledUniswapXOrderDetails } from 'state/signatures/types'
 import { call, put } from 'typed-redux-saga'
@@ -11,8 +17,8 @@ import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constant
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { HandledTransactionInterrupt } from 'uniswap/src/features/transactions/errors'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
+import { UniswapXSignatureStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { UniswapXSignatureStep } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { percentFromFloat } from 'utilities/src/format/percent'
 
@@ -48,6 +54,21 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
   if (Date.now() / 1000 > step.deadline) {
     throw new HandledTransactionInterrupt('User signed after deadline')
   }
+
+  addTransactionBreadcrumb({ step, data: { routing, ...signatureDetails.swapInfo }, status: 'in progress' })
+  sendAnalyticsEvent(
+    SwapEventName.SWAP_SIGNED,
+    formatSwapSignedAnalyticsEventProperties({
+      trade,
+      allowedSlippage: percentFromFloat(trade.slippageTolerance),
+      fiatValues: {
+        amountIn: analytics.token_in_amount_usd,
+        amountOut: analytics.token_out_amount_usd,
+        feeUsd: analytics.fee_usd,
+      },
+      portfolioBalanceUsd: analytics.total_balances_usd,
+    }),
+  )
 
   try {
     yield* call(submitOrder, { signature, quote, routing })

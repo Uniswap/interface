@@ -13,16 +13,16 @@ import {
   GetAccountRequest,
   RequestAccountRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { extractBaseUrl } from 'src/app/features/dappRequests/utils'
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { call, put, select } from 'typed-redux-saga'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { extractBaseUrl } from 'utilities/src/format/urls'
 import { getProvider } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 
@@ -61,6 +61,7 @@ function sendAccountResponseAnalyticsEvent(
     connectedAddresses: accountResponse.connectedAddresses,
   })
 }
+
 /**
  * Gets the active account, and returns the account address, chainId, and providerUrl.
  * Chain id + provider url are from the last connected chain for the dApp and wallet. If this has not been set, it will be the default chain and provider.

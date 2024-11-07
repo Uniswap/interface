@@ -20,6 +20,7 @@ import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/te
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
@@ -43,7 +44,8 @@ export function RemoveWalletModal(): JSX.Element | null {
   // This happens when user wants to replace mnemonic with a new one
   const isReplacing = !address
 
-  const isRemovingMnemonic = Boolean(associatedAccounts.find((acc) => address === acc.address))
+  const isRemovingMnemonic = Boolean(associatedAccounts.find((acc) => areAddressesEqual(address, acc.address)))
+
   const isRemovingLastMnemonic = isRemovingMnemonic && associatedAccounts.length === 1
   const isRemovingRecoveryPhrase = isReplacing || isRemovingLastMnemonic
 

@@ -1,6 +1,7 @@
 import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
+import { WALLET_TESTNET_CONFIG } from 'uniswap/src/features/telemetry/constants'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 
@@ -41,7 +42,7 @@ const slice = createSlice({
      */
     setIsTestnetModeEnabled: (state, { payload }: PayloadAction<boolean>) => {
       state.isTestnetModeEnabled = payload
-      analytics.setTestnetMode(payload)
+      analytics.setTestnetMode(payload, WALLET_TESTNET_CONFIG)
     },
     resetSettings: () => initialUserSettingsState,
   },

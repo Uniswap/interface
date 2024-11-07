@@ -12,7 +12,11 @@ import styled from 'lib/styled-components'
 import { useCallback } from 'react'
 import { SignatureType } from 'state/signatures/types'
 import { EllipsisStyle, ThemedText } from 'theme/components'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { BridgeIcon } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
+import {
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
@@ -23,6 +27,7 @@ const ActivityRowDescriptor = styled(ThemedText.BodySmall)`
 
 const StyledTimestamp = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.neutral2};
+  line-height: 24px;
   font-variant: small;
   font-feature-settings:
     'tnum' on,
@@ -59,7 +64,11 @@ export function ActivityRow({ activity }: { activity: Activity }) {
     prefixIconSrc,
     suffixIconSrc,
     offchainOrderDetails,
+    type,
   } = activity
+
+  // TODO(WEB-5146): Create tamagui universal Activity component, remove one off bridge styling
+  const isBridge = type === TransactionType.Bridging
 
   const openOffchainActivityModal = useOpenOffchainActivityModal()
 
@@ -86,18 +95,26 @@ export function ActivityRow({ activity }: { activity: Activity }) {
       <PortfolioRow
         left={
           <Column>
-            <PortfolioLogo chainId={chainId} currencies={currencies} images={logos} accountAddress={otherAccount} />
+            <PortfolioLogo
+              chainId={chainId}
+              currencies={currencies}
+              images={logos}
+              accountAddress={otherAccount}
+              customIcon={isBridge ? BridgeIcon : undefined}
+            />
           </Column>
         }
         title={
-          <Row gap="4px">
-            {prefixIconSrc && <img height="14px" width="14px" src={prefixIconSrc} alt="" />}
-            <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
-            {suffixIconSrc && <img height="14px" width="14px" src={suffixIconSrc} alt="" />}
+          <Row align="space-between" justify-content="center">
+            <Row gap="4px">
+              {prefixIconSrc && <img height="14px" width="14px" src={prefixIconSrc} alt="" />}
+              <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
+              {suffixIconSrc && <img height="14px" width="14px" src={suffixIconSrc} alt="" />}
+            </Row>
+            <StatusIndicator activity={activity} />
           </Row>
         }
         descriptor={<ActivityRowDescriptor color="neutral2">{descriptor}</ActivityRowDescriptor>}
-        right={<StatusIndicator activity={activity} />}
         onClick={onClick}
       />
     </Trace>

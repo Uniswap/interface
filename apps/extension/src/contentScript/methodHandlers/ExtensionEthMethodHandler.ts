@@ -5,7 +5,6 @@ import {
   DappResponseType,
   SendTransactionRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { extractBaseUrl } from 'src/app/features/dappRequests/utils'
 import {
   contentScriptToBackgroundMessageChannel,
   dappResponseMessageChannel,
@@ -41,6 +40,7 @@ import { WindowEthereumRequest } from 'src/contentScript/types'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { extractBaseUrl } from 'utilities/src/format/urls'
 
 export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumRequest> {
   private readonly requestIdToSourceMap: Map<string, PendingResponseInfo> = new Map()

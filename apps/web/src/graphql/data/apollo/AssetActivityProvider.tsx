@@ -16,7 +16,6 @@ import {
 import { useLocation } from 'react-router-dom'
 import { useActiveSmartPool } from 'state/application/hooks'
 import { useFiatOnRampTransactions } from 'state/fiatOnRampTransactions/hooks'
-import { GQL_MAINNET_CHAINS_MUTABLE } from 'uniswap/src/constants/chains'
 import {
   ActivityWebQueryResult,
   AssetActivityPartsFragment,
@@ -27,6 +26,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { logger } from 'utilities/src/logger/logger'
 import { useInterval } from 'utilities/src/time/timing'
 import { v4 as uuidV4 } from 'uuid'
@@ -41,6 +41,8 @@ const SubscriptionContext = createContext<
 export function AssetActivityProvider({ children }: PropsWithChildren) {
   const account = useAccount()
   const previousAccount = usePrevious(account.address)
+  const { isTestnetModeEnabled, gqlChains } = useEnabledChains()
+  const previousIsTestnetModeEnabled = usePrevious(isTestnetModeEnabled)
   const activeSmartPool = useActiveSmartPool()
 
   const { pathname: page } = useLocation()
@@ -74,7 +76,9 @@ export function AssetActivityProvider({ children }: PropsWithChildren) {
       lazyFetch({
         variables: {
           account: contextAddress ?? '',
-          chains: GQL_MAINNET_CHAINS_MUTABLE,
+          chains: gqlChains,
+          // Backend will return off-chain activities even if gqlChains are all testnets.
+          includeOffChain: !isTestnetModeEnabled,
           // Include the externalsessionIDs of all fiat on-ramp transactions in the local store,
           // so that the backend can find the transactions without signature authentication.
           onRampTransactionIDs: Object.values(fiatOnRampTransactions).map(
@@ -82,7 +86,7 @@ export function AssetActivityProvider({ children }: PropsWithChildren) {
           ),
         },
       }),
-    [contextAddress, fiatOnRampTransactions, lazyFetch],
+    [lazyFetch, contextAddress, gqlChains, isTestnetModeEnabled, fiatOnRampTransactions],
   )
 
   useInterval(async () => {
@@ -97,7 +101,11 @@ export function AssetActivityProvider({ children }: PropsWithChildren) {
 
   return (
     <SubscriptionContext.Provider value={result}>
-      <AdaptiveAssetActivityProvider query={query} fetch={fetch} stale={account.address !== previousAccount}>
+      <AdaptiveAssetActivityProvider
+        query={query}
+        fetch={fetch}
+        stale={account.address !== previousAccount || isTestnetModeEnabled !== previousIsTestnetModeEnabled}
+      >
         {children}
       </AdaptiveAssetActivityProvider>
     </SubscriptionContext.Provider>

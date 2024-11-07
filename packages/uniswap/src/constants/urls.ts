@@ -17,6 +17,7 @@ export const UNISWAP_WEB_HOSTNAME = 'app.rigoblock.com'
 
 export const UNISWAP_WEB_URL = `https://${UNISWAP_WEB_HOSTNAME}`
 export const UNISWAP_APP_URL = 'https://uniswap.org/app'
+export const UNISWAP_MOBILE_REDIRECT_URL = 'https://uniswap.org/mobile-redirect'
 
 const helpUrl = 'https://support.uniswap.org/hc/en-us'
 const rigoblockDiscordUrl = 'https://discord.gg/invite/FXd8EU8'
@@ -45,7 +46,9 @@ export const uniswapUrls = {
     transferCryptoHelp: `${helpUrl}/articles/27103878635661-How-to-transfer-crypto-from-a-Robinhood-or-Coinbase-account-to-the-Uniswap-Wallet`,
     moonpayRegionalAvailability: `${helpUrl}/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-`,
     networkFeeInfo: `${helpUrl}/articles/8370337377805-What-is-a-network-fee-`,
+    positionsLearnMore: `${helpUrl}/sections/30998264709645`,
     priceImpact: `${helpUrl}/articles/8671539602317-What-is-Price-Impact`,
+    providingLiquidityInfo: `${helpUrl}/articles/30998269400333`,
     recoveryPhraseHowToImport: `${helpUrl}/articles/11380692567949-How-to-import-a-recovery-phrase-into-the-Uniswap-Wallet`,
     recoveryPhraseHowToFind: `${helpUrl}/articles/11306360177677-How-to-find-my-recovery-phrase-in-the-Uniswap-Wallet`,
     recoveryPhraseForgotten: `${helpUrl}/articles/11306367118349`,
@@ -60,7 +63,9 @@ export const uniswapUrls = {
     uniswapXFailure: `${helpUrl}/articles/17515489874189-Why-can-my-swap-not-be-filled-`,
     unitagClaimPeriod: `${helpUrl}/articles/24009960408589`,
     unsupportedTokenPolicy: `${helpUrl}/articles/18783694078989-Unsupported-Token-Policy`,
+    v4HooksInfo: `${helpUrl}/articles/30998263256717`,
     walletHelp: `${helpUrl}/categories/11301970439565-Uniswap-Wallet`,
+    walletSecurityMeasures: `${helpUrl}/articles/28278904584077-Uniswap-Wallet-Security-Measures`,
     wethExplainer: `${helpUrl}/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH`,
   },
   termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
@@ -100,11 +105,12 @@ export const uniswapUrls = {
     decreaseLp: '/v1/lp/decrease',
     claimLpFees: '/v1/lp/claim',
     lpApproval: '/v1/lp/approve',
+    migrate: '/v1/lp/migrate',
   },
 
   // App and Redirect URL's
   appBaseUrl: UNISWAP_APP_URL,
-  redirectUrlBase: isAndroid ? UNISWAP_WEB_URL : UNISWAP_APP_URL,
+  redirectUrlBase: UNISWAP_MOBILE_REDIRECT_URL,
   requestOriginUrl: UNISWAP_WEB_URL,
 
   // Web Interface Urls

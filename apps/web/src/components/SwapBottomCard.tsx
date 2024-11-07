@@ -7,7 +7,7 @@ import { ArrowUpRight } from 'react-feather'
 import { useSelector } from 'react-redux'
 import { useAppDispatch } from 'state/hooks'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
-import { ExternalLink, HideSmall } from 'theme/components'
+import { ClickableTamaguiStyle, ExternalLink, HideSmall } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { ElementAfterText, Flex, Text, TouchableArea, TouchableAreaEvent, useSporeColors } from 'ui/src'
 import { BRIDGING_BANNER } from 'ui/src/assets'
@@ -36,7 +36,9 @@ export function SwapBottomCard() {
   const isSupportedChain = useIsSupportedChainId(chainId)
 
   const hasViewedBridgingBanner = useSelector(selectHasViewedBridgingBanner)
-  const bridgingEnabled = useFeatureFlag(FeatureFlags.Bridging)
+  // TODO: remove when enabling bridging
+  const shouldDisplayBridging = false
+  const bridgingEnabled = useFeatureFlag(FeatureFlags.Bridging) && shouldDisplayBridging
   const isBridgingSupported = useIsBridgingChain(chainId ?? UniverseChainId.Mainnet)
   const numBridgingChains = useNumBridgingChains()
   const handleBridgingDismiss = useCallback(
@@ -67,7 +69,7 @@ export function SwapBottomCard() {
 
   if (shouldShowBridgingBanner) {
     return (
-      <TouchableArea onPress={() => handleBridgingDismiss(true)}>
+      <TouchableArea {...ClickableTamaguiStyle} onPress={() => handleBridgingDismiss(true)}>
         <CardInner
           isAbsoluteImage
           image={

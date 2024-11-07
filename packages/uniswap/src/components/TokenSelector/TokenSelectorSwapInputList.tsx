@@ -72,14 +72,28 @@ function useTokenSectionsForSwapInput({
 
   const isTestnet = chainFilter ? UNIVERSE_CHAIN_INFO[chainFilter].testnet : false
 
-  const suggestedSection = useTokenOptionsSection(TokenOptionSection.SuggestedTokens, [
-    (isTestnet ? commonTokenOptions : []) ?? [],
-  ])
-  const portfolioSection = useTokenOptionsSection(TokenOptionSection.YourTokens, portfolioTokenOptions)
-  const recentSection = useTokenOptionsSection(TokenOptionSection.RecentTokens, recentlySearchedTokenOptions)
-  const favoriteSection = useTokenOptionsSection(TokenOptionSection.FavoriteTokens, favoriteTokenOptions)
+  const suggestedSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.SuggestedTokens,
+    tokenOptions: [(isTestnet ? commonTokenOptions : []) ?? []],
+  })
+
+  const portfolioSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.YourTokens,
+    tokenOptions: portfolioTokenOptions,
+  })
+  const recentSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.RecentTokens,
+    tokenOptions: recentlySearchedTokenOptions,
+  })
+  const favoriteSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.FavoriteTokens,
+    tokenOptions: favoriteTokenOptions,
+  })
   const popularMinusPortfolioTokens = tokenOptionDifference(popularTokenOptions, portfolioTokenOptions)
-  const popularSection = useTokenOptionsSection(TokenOptionSection.PopularTokens, popularMinusPortfolioTokens)
+  const popularSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.PopularTokens,
+    tokenOptions: popularMinusPortfolioTokens,
+  })
 
   const sections = useMemo(() => {
     if (isSwapListLoading(loading, portfolioSection, popularSection)) {

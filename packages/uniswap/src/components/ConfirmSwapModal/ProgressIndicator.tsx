@@ -8,10 +8,7 @@ import { Permit2SignatureStepRow } from 'uniswap/src/components/ConfirmSwapModal
 import { SwapTransactionStepRow } from 'uniswap/src/components/ConfirmSwapModal/steps/Swap'
 import { WrapTransactionStepRow } from 'uniswap/src/components/ConfirmSwapModal/steps/Wrap'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
-import {
-  TransactionStep,
-  TransactionStepType,
-} from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
+import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
 
 interface ProgressIndicatorProps {
   steps: TransactionStep[]
@@ -80,6 +77,9 @@ function Step({ step, status }: { step: TransactionStep; status: StepStatus }): 
     case TransactionStepType.IncreasePositionTransaction:
     case TransactionStepType.IncreasePositionTransactionAsync:
     case TransactionStepType.DecreasePositionTransaction:
+      return <LPTransactionStepRow step={step} status={status} />
+    case TransactionStepType.MigratePositionTransactionStep:
+    case TransactionStepType.MigratePositionTransactionStepAsync:
       return <LPTransactionStepRow step={step} status={status} />
   }
 }

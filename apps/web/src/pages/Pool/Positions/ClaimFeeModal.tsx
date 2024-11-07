@@ -1,22 +1,30 @@
 /* eslint-disable-next-line no-restricted-imports */
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { PositionInfo, getProtocolItems } from 'components/Liquidity/utils'
+import { PositionInfo } from 'components/Liquidity/types'
+import { getProtocolItems } from 'components/Liquidity/utils'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useMemo } from 'react'
+import { PopupType, addPopup } from 'state/application/reducer'
+import { useAppDispatch } from 'state/hooks'
+import { useTransactionAdder } from 'state/transactions/hooks'
+import { TransactionType } from 'state/transactions/types'
 import { Button, Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useClaimLpFeesCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useClaimLpFeesCalldataQuery'
+import { ClaimLPFeesRequest } from 'uniswap/src/data/tradingApi/__generated__'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useTranslation } from 'uniswap/src/i18n'
 import { NumberType } from 'utilities/src/format/types'
+import { currencyId } from 'utils/currencyId'
 
 type ClaimFeeModalProps = {
   positionInfo: PositionInfo
@@ -26,6 +34,7 @@ type ClaimFeeModalProps = {
   token1Fees?: CurrencyAmount<Currency>
   token0FeesUsd?: CurrencyAmount<Currency>
   token1FeesUsd?: CurrencyAmount<Currency>
+  collectAsWETH: boolean
 }
 
 export function ClaimFeeModal({
@@ -36,42 +45,46 @@ export function ClaimFeeModal({
   token1Fees,
   token0FeesUsd,
   token1FeesUsd,
+  collectAsWETH,
 }: ClaimFeeModalProps) {
   const { t } = useTranslation()
   const { formatCurrencyAmount } = useLocalizationContext()
   const currencyInfo0 = useCurrencyInfo(token0Fees?.currency)
   const currencyInfo1 = useCurrencyInfo(token1Fees?.currency)
   const account = useAccount()
+  const dispatch = useAppDispatch()
+  const addTransaction = useTransactionAdder()
 
-  const claimLpFeesParams = useMemo(() => {
+  const claimLpFeesParams = useMemo((): ClaimLPFeesRequest => {
     return {
-      params: {
-        protocol: getProtocolItems(positionInfo.version),
-        tokenId: positionInfo.tokenId ? Number(positionInfo.tokenId) : undefined,
-        walletAddress: account.address,
-        chainId: positionInfo.currency0Amount.currency.chainId,
-        position: {
-          pool: {
-            token0: positionInfo.currency0Amount.currency.isNative
-              ? ZERO_ADDRESS
-              : positionInfo.currency0Amount.currency.address,
-            token1: positionInfo.currency1Amount.currency.isNative
-              ? ZERO_ADDRESS
-              : positionInfo.currency1Amount.currency.address,
-            fee: positionInfo.feeTier ? Number(positionInfo.feeTier) : undefined,
-            tickSpacing: positionInfo?.tickSpacing ? Number(positionInfo?.tickSpacing) : undefined,
-            hooks: positionInfo.v4hook,
-          },
-          tickLower: positionInfo.tickLower ? Number(positionInfo.tickLower) : undefined,
-          tickUpper: positionInfo.tickUpper ? Number(positionInfo.tickUpper) : undefined,
+      protocol: getProtocolItems(positionInfo.version),
+      tokenId: positionInfo.tokenId ? Number(positionInfo.tokenId) : undefined,
+      walletAddress: account.address,
+      chainId: positionInfo.currency0Amount.currency.chainId,
+      position: {
+        pool: {
+          token0: positionInfo.currency0Amount.currency.isNative
+            ? ZERO_ADDRESS
+            : positionInfo.currency0Amount.currency.address,
+          token1: positionInfo.currency1Amount.currency.isNative
+            ? ZERO_ADDRESS
+            : positionInfo.currency1Amount.currency.address,
+          fee: positionInfo.feeTier ? Number(positionInfo.feeTier) : undefined,
+          tickSpacing: positionInfo?.tickSpacing ? Number(positionInfo?.tickSpacing) : undefined,
+          hooks: positionInfo.v4hook,
         },
-        expectedTokenOwed0RawAmount: token0Fees?.quotient.toString(),
-        expectedTokenOwed1RawAmount: token1Fees?.quotient.toString(),
+        tickLower: positionInfo.tickLower ? Number(positionInfo.tickLower) : undefined,
+        tickUpper: positionInfo.tickUpper ? Number(positionInfo.tickUpper) : undefined,
       },
+      expectedTokenOwed0RawAmount:
+        positionInfo.version !== ProtocolVersion.V4 ? token0Fees?.quotient.toString() : undefined,
+      expectedTokenOwed1RawAmount:
+        positionInfo.version !== ProtocolVersion.V4 ? token1Fees?.quotient.toString() : undefined,
+      collectAsWETH: positionInfo.version !== ProtocolVersion.V4 ? collectAsWETH : undefined,
     }
-  }, [account.address, positionInfo, token0Fees, token1Fees])
+  }, [account.address, positionInfo, token0Fees, token1Fees, collectAsWETH])
 
-  const { data } = useClaimLpFeesCalldataQuery(claimLpFeesParams)
+  const { data } = useClaimLpFeesCalldataQuery({ params: claimLpFeesParams, enabled: isOpen })
 
   const signer = useEthersSigner()
 
@@ -80,7 +93,7 @@ export function ClaimFeeModal({
       <Flex gap="$gap16">
         <GetHelpHeader
           link={uniswapUrls.helpArticleUrls.lpCollectFees}
-          title={t('pool.claimFees')}
+          title={t('pool.collectFees')}
           closeModal={onClose}
           closeDataTestId="ClaimFeeModal-close-icon"
         />
@@ -125,13 +138,33 @@ export function ClaimFeeModal({
           </Flex>
         )}
         <Button
-          onPress={() => {
+          disabled={!data?.claim}
+          onPress={async () => {
             if (signer && data?.claim) {
-              signer.sendTransaction(data?.claim)
+              const response = await signer.sendTransaction(data?.claim)
+
+              addTransaction(response, {
+                type: TransactionType.COLLECT_FEES,
+                currencyId0: currencyId(token0Fees?.currency),
+                currencyId1: currencyId(token1Fees?.currency),
+                expectedCurrencyOwed0: token0Fees?.quotient.toString() || '',
+                expectedCurrencyOwed1: token1Fees?.quotient.toString() || '',
+              })
+
+              onClose()
+              dispatch(
+                addPopup({
+                  content: {
+                    type: PopupType.Transaction,
+                    hash: response.hash,
+                  },
+                  key: response.hash,
+                }),
+              )
             }
           }}
         >
-          <Text variant="buttonLabel2">{t('pool.claimFees.button.label')}</Text>
+          <Text variant="buttonLabel2">{t('common.collect.button')}</Text>
         </Button>
       </Flex>
     </Modal>

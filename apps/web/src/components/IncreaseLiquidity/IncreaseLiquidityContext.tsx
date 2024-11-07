@@ -1,6 +1,6 @@
 import { useDerivedIncreaseLiquidityInfo } from 'components/IncreaseLiquidity/hooks'
-import { DepositInfo } from 'components/Liquidity/types'
-import { PositionInfo, useModalLiquidityPositionInfo } from 'components/Liquidity/utils'
+import { useModalLiquidityPositionInfo } from 'components/Liquidity/hooks'
+import { DepositInfo, PositionInfo } from 'components/Liquidity/types'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
 import { PositionField } from 'types/position'
 

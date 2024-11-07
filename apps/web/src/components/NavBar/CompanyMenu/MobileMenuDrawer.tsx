@@ -76,8 +76,8 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
   )
   const onExitPreferencesMenu = useCallback(() => changeView(PreferencesView.SETTINGS), [changeView])
   const { t } = useTranslation()
-  const userIsOperator = useActiveSmartPool().name !== undefined
-  const tabsContent = useTabsContent({ includeNftsLink: true, userIsOperator })
+  const { name } = useActiveSmartPool()
+  const tabsContent = useTabsContent({ includeNftsLink: true, userIsOperator: name !== undefined })
   const menuContent = useMenuContent()
 
   // Collapse sections on close

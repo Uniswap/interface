@@ -1,3 +1,4 @@
+import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer'
 import AuthenticatedHeader from 'components/AccountDrawer/AuthenticatedHeader'
 import LanguageMenu from 'components/AccountDrawer/LanguageMenu'
 import LocalCurrencyMenu from 'components/AccountDrawer/LocalCurrencyMenu'
@@ -7,7 +8,7 @@ import SettingsMenu from 'components/AccountDrawer/SettingsMenu'
 import Column from 'components/deprecated/Column'
 import WalletModal from 'components/WalletModal'
 import { useAccount } from 'hooks/useAccount'
-import { atom, useAtom } from 'jotai'
+import { useAtom } from 'jotai'
 import styled from 'lib/styled-components'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
@@ -19,17 +20,6 @@ const DefaultMenuWrap = styled(Column)`
   width: 100%;
   height: 100%;
 `
-
-export enum MenuState {
-  DEFAULT = 'default',
-  SETTINGS = 'settings',
-  LANGUAGE_SETTINGS = 'language_settings',
-  LOCAL_CURRENCY_SETTINGS = 'local_currency_settings',
-  LIMITS = 'limits',
-  POOLS = 'pools',
-}
-
-export const miniPortfolioMenuStateAtom = atom(MenuState.DEFAULT)
 
 function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
   const account = useAccount()

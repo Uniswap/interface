@@ -63,7 +63,13 @@ const EtherscanHeaderItem: (chainId: UniverseChainId) => SearchResultOrHeader = 
 
 const IGNORED_ERRORS = ['Subgraph provider undefined not supported']
 
-export function SearchResultsSection({ searchQuery }: { searchQuery: string }): JSX.Element {
+export function SearchResultsSection({
+  searchQuery,
+  selectedChain,
+}: {
+  searchQuery: string
+  selectedChain: UniverseChainId | null
+}): JSX.Element {
   const { t } = useTranslation()
   const { defaultChainId } = useEnabledChains()
 
@@ -86,8 +92,8 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
       return undefined
     }
 
-    return formatTokenSearchResults(searchResultsData.searchTokens, searchQuery)
-  }, [searchQuery, searchResultsData])
+    return formatTokenSearchResults(searchResultsData.searchTokens, searchQuery, selectedChain)
+  }, [selectedChain, searchQuery, searchResultsData])
 
   // Search for matching NFT collections
 
@@ -96,12 +102,16 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
       return undefined
     }
 
-    return formatNFTCollectionSearchResults(searchResultsData.nftCollections)
-  }, [searchResultsData])
+    return formatNFTCollectionSearchResults(searchResultsData.nftCollections, selectedChain)
+  }, [searchResultsData, selectedChain])
 
   // Search for matching wallets
 
-  const { wallets: walletSearchResults, exactENSMatch, exactUnitagMatch } = useWalletSearchResults(searchQuery)
+  const {
+    wallets: walletSearchResults,
+    exactENSMatch,
+    exactUnitagMatch,
+  } = useWalletSearchResults(searchQuery, selectedChain)
 
   const validAddress: Address | undefined = useMemo(
     () => getValidAddress(searchQuery, true, false) ?? undefined,
@@ -139,8 +149,8 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
       // NFTs, then wallets, then tokens
       searchResultItems = [...nftsWithHeader, ...walletsWithHeader, ...tokensWithHeader]
     } else {
-      // Tokens, then NFTs, then wallets
-      searchResultItems = [...tokensWithHeader, ...nftsWithHeader, ...walletsWithHeader]
+      // Tokens, then wallets, then NFTs,
+      searchResultItems = [...tokensWithHeader, ...walletsWithHeader, ...nftsWithHeader]
     }
 
     // Add etherscan items at end
@@ -164,7 +174,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 
   // Don't wait for wallet search results if there are already token search results, do wait for token results
   if (searchResultsLoading) {
-    return <SearchResultsLoader />
+    return <SearchResultsLoader selectedChain={selectedChain} />
   }
 
   if (error) {
@@ -186,7 +196,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
     <Flex grow gap="$spacing8" pb="$spacing36">
       <FlatList
         ListEmptyComponent={
-          <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing8" mx="$spacing8">
+          <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing8" mx="$spacing20">
             <Text color="$neutral2" variant="body1">
               <Trans
                 components={{ highlight: <Text color="$neutral1" variant="body1" /> }}

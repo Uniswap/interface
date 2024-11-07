@@ -3,6 +3,8 @@ import { TradeType } from '@uniswap/sdk-core'
 import { testSaga } from 'redux-saga-test-plan'
 import { submitOrder } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { DutchOrderInfo, DutchQuoteV2, OrderRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
@@ -19,8 +21,6 @@ import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyId } from 'uniswap/src/utils/currencyId'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import {
   ORDER_STALENESS_THRESHOLD,
   SubmitUniswapXOrderParams,

@@ -54,13 +54,13 @@ import {
 import { setHideSmallBalances, setHideSpamTokens, setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { isAndroid } from 'utilities/src/platform'
-import { TestnetModeModal } from 'wallet/src/components/modals/TestnetModeModal'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { selectHapticsEnabled, setHapticsUserSettingEnabled } from 'wallet/src/features/appearance/slice'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
@@ -195,8 +195,7 @@ export function SettingsScreen(): JSX.Element {
           {
             text: t('settings.setting.unknownTokens.title'),
             icon: <ShieldQuestion {...iconProps} />,
-            isToggleEnabled: hideSpamTokens && !isTestnetModeEnabled,
-            disabled: isTestnetModeEnabled,
+            isToggleEnabled: hideSpamTokens,
             onToggle: onToggleHideSpamTokens,
           },
           {

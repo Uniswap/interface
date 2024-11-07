@@ -15,14 +15,14 @@ import {
   RevokePermissionsRequest,
   RevokePermissionsResponse,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { extractBaseUrl } from 'src/app/features/dappRequests/utils'
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { Permission } from 'src/contentScript/WindowEthereumRequestTypes'
 import { ExtensionEthMethods } from 'src/contentScript/methodHandlers/requestMethods'
 import { call, put } from 'typed-redux-saga'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { extractBaseUrl } from 'utilities/src/format/urls'
 
 export function getPermissions(dappUrl: string | undefined, connectedAddresses: Address[] | undefined): Permission[] {
   const permissions: Permission[] = []

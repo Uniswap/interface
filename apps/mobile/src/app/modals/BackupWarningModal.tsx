@@ -4,7 +4,8 @@ import { useDispatch } from 'react-redux'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { setBackupReminderLastSeenTs } from 'wallet/src/features/behaviorHistory/slice'
 
 export function BackupWarningModal(): JSX.Element {
@@ -17,10 +18,17 @@ export function BackupWarningModal(): JSX.Element {
   }
 
   const checkForSwipeToDismiss = (): void => {
-    if (!closedByButtonRef.current) {
+    const markReminderAsSeen = !closedByButtonRef.current
+    if (markReminderAsSeen) {
       // Modal was swiped to dismiss, should set backup reminder timestamp
       dispatch(setBackupReminderLastSeenTs(Date.now()))
     }
+
+    sendAnalyticsEvent(WalletEventName.ModalClosed, {
+      element: ElementName.BackButton,
+      modal: ModalName.BackupReminderWarning,
+      markReminderAsSeen,
+    })
 
     // Reset the ref and close the modal
     closedByButtonRef.current = false

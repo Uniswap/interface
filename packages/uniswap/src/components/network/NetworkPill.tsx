@@ -11,6 +11,7 @@ export type NetworkPillProps = {
   showBackgroundColor?: boolean
   showBorder?: boolean
   showIcon?: boolean
+  iconSize?: number
 } & ComponentProps<typeof Pill>
 
 export function NetworkPill({
@@ -18,6 +19,7 @@ export function NetworkPill({
   showBackgroundColor = true,
   showBorder,
   showIcon = false,
+  iconSize = iconSizes.icon16,
   ...rest
 }: NetworkPillProps): JSX.Element {
   const info = UNIVERSE_CHAIN_INFO[chainId]
@@ -28,7 +30,7 @@ export function NetworkPill({
       customBackgroundColor={showBackgroundColor ? colors?.background : undefined}
       customBorderColor={showBorder ? colors.foreground : 'transparent'}
       foregroundColor={colors.foreground}
-      icon={showIcon ? <NetworkLogo chainId={chainId} size={iconSizes.icon16} /> : null}
+      icon={showIcon ? <NetworkLogo chainId={chainId} size={iconSize} /> : null}
       label={info.label}
       {...rest}
     />

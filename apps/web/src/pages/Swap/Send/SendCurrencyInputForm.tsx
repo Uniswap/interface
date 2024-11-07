@@ -3,7 +3,6 @@ import { Currency } from '@uniswap/sdk-core'
 import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { ButtonLight } from 'components/Button/buttons'
-import { ReverseArrow } from 'components/Icons/ReverseArrow'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { isInputGreaterThanDecimals } from 'components/NumericalInput'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
@@ -28,6 +27,8 @@ import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
+import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -69,13 +70,6 @@ const InputLabelContainer = styled.div`
   position: absolute;
   top: 16px;
   left: 16px;
-`
-
-const StyledUpAndDownArrowIcon = styled(ReverseArrow)`
-  width: 16px;
-  height: 16px;
-  fill: ${({ theme }) => theme.neutral3};
-  transform: rotate(90deg);
 `
 
 const MaxButton = styled(ButtonLight)`
@@ -155,7 +149,7 @@ const AlternateCurrencyDisplay = ({ disabled, onToggle }: { disabled: boolean; o
         <ThemedText.BodySecondary fontSize="16px" lineHeight="24px" color="neutral3">
           {formattedAlternateCurrency}
         </ThemedText.BodySecondary>
-        <StyledUpAndDownArrowIcon />
+        <ArrowUpDown color="$neutral3" size="$icon.16" />
       </AlternateCurrencyDisplayRow>
     </LoadingOpacityContainer>
   )
@@ -195,6 +189,7 @@ export default function SendCurrencyInputForm({
 }) {
   const { chainId } = useSwapAndLimitContext()
   const supportedChain = useSupportedChainId(chainId)
+  const { isTestnetModeEnabled } = useEnabledChains()
   const { formatCurrencyAmount } = useFormatter()
   const { symbol: fiatSymbol } = useActiveLocalCurrencyComponents()
   const { formatNumber } = useFormatter()
@@ -314,12 +309,14 @@ export default function SendCurrencyInputForm({
           />
           <NumericalInputMimic ref={hiddenObserver.ref}>{displayValue}</NumericalInputMimic>
         </NumericalInputWrapper>
-        <Trace logPress element={InterfaceElementName.SEND_FIAT_TOGGLE}>
-          <AlternateCurrencyDisplay
-            disabled={fiatCurrencyEqualsTransferCurrency}
-            onToggle={toggleFiatInputAmountEnabled}
-          />
-        </Trace>
+        {isTestnetModeEnabled ? null : (
+          <Trace logPress element={InterfaceElementName.SEND_FIAT_TOGGLE}>
+            <AlternateCurrencyDisplay
+              disabled={fiatCurrencyEqualsTransferCurrency}
+              onToggle={toggleFiatInputAmountEnabled}
+            />
+          </Trace>
+        )}
         <InputError />
       </InputWrapper>
       <CurrencyInputWrapper>

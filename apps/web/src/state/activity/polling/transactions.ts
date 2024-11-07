@@ -58,7 +58,8 @@ function usePendingTransactions(chainId?: UniverseChainId) {
       return []
     }
     return multichainTransactions.flatMap(([tx, txChainId]) => {
-      if (isPendingTx(tx) && txChainId === chainId) {
+      // Avoid polling for already-deposited bridge transactions, as they will be finalized by the bridge updater.
+      if (isPendingTx(tx, /* skipDepositedBridgeTxs = */ true) && txChainId === chainId) {
         return tx
       } else {
         return []

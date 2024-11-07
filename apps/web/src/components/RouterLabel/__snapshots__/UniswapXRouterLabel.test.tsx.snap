@@ -3,36 +3,11 @@
 exports[`UniswapXRouterLabel matches snapshot 1`] = `
 <DocumentFragment>
   .c0 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-  width: auto;
-}
-
-.c1 {
-  width: auto;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c2 {
   color: #4673fa;
 }
 
 @supports (-webkit-background-clip:text) and (-webkit-text-fill-color:transparent) {
-  .c2 {
+  .c0 {
     background-image: linear-gradient(91.39deg,#4673fa -101.76%,#9646fa 101.76%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -50,9 +25,7 @@ exports[`UniswapXRouterLabel matches snapshot 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c0 c1"
-          style="display: inline-flex;"
-          width="auto"
+          class="_flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331199 _alignItems-center _width-auto _display-1685637459"
         >
           <svg
             fill="none"
@@ -85,7 +58,7 @@ exports[`UniswapXRouterLabel matches snapshot 1`] = `
             />
           </svg>
           <div
-            class="c2"
+            class="c0"
           >
             test router label
           </div>

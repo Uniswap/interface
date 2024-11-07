@@ -17,7 +17,7 @@ import { CallStateResult, useMultipleContractSingleData, useSingleContractMultip
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { useActiveSmartPool, useSelectActiveSmartPool } from 'state/application/hooks'
+import { useSelectActiveSmartPool } from 'state/application/hooks'
 import { useStakingContract } from 'state/governance/hooks'
 import { usePoolsFromUrl } from 'state/lists/poolsList/hooks'
 import { useLogs } from 'state/logs/hooks'
@@ -93,54 +93,10 @@ function useStartBlock(chainId?: number): {fromBlock: number, toBlock?: number }
   return { fromBlock: registryStartBlock, toBlock }
 }
 
-/**
- * Need pool events to get list of pools by owner.
- */
-function useFormattedPoolCreatedLogs(contract: Contract | null, fromBlock: number, toBlock: number | undefined): PoolRegisteredLog[] | undefined {
-  // create filters for Registered events
-  const filter = useMemo(() => {
-    const logFilter = contract?.filters?.Registered()
-    if (!logFilter) {
-      return undefined
-    }
-    return {
-      ...logFilter,
-      fromBlock,
-      toBlock
-    }
-  }, [contract, fromBlock, toBlock])
-
-  const logsResult = useLogs(filter)
-
-  // TODO: define Result type
-  // TODO: since we use our rpc endpoints as backup, which return multichain pools,
-  //  we should check whether to filter by chain, or display chain on ui (but not clickable pool)
-  //  and handle rpc call on non-existing pools on a chain, as that will return empty data.
-  return useMemo(() => {
-    return logsResult?.logs
-      ?.map((log: any) => {
-        const parsed = RegistryInterface.parseLog(log).args
-        return parsed
-      })
-      ?.map((parsed: any) => {
-        const group = parsed.group
-        const pool = parsed.pool
-        const name = parseBytes32String(parsed.name)
-        const symbol = parseBytes32String(parsed.symbol)
-        const id = parsed.id //.toString()
-
-        return { group, pool, name, symbol, id }
-      })
-      .reverse()
-  }, [logsResult])
-}
-
-export function useAllPoolsData(): { data?: PoolRegisteredLog[]; loading: boolean } {
+export function useAllPoolsData(): { data: PoolRegisteredLog[]; loading: boolean } {
   const account = useAccount()
   const registry = useRegistryContract()
-  const { fromBlock, toBlock } = useStartBlock(account.chainId)
-
-  const formattedLogsV1: PoolRegisteredLog[] | undefined = useFormattedPoolCreatedLogs(registry, fromBlock, toBlock)
+  const formattedLogsV1: PoolRegisteredLog[] | undefined = useRegisteredPools()
 
   const poolsFromList = usePoolsFromList(registry, account.chainId)
 
@@ -169,7 +125,7 @@ export function usePoolsFromList(
 ): PoolRegisteredLog[] | undefined {
   const poolsFromList = usePoolsFromUrl(POOLS_LIST)
   const pools = useMemo(
-    () => poolsFromList?.filter((n) => n.chainId === chainId ?? UniverseChainId.Mainnet),
+    () => poolsFromList?.filter((n) => n?.chainId === chainId),
     [chainId, poolsFromList]
   )
   const poolAddresses = useMemo(() => pools?.map((p) => [p.address]), [pools])
@@ -232,7 +188,7 @@ export function useCreateCallback(): (
   )
 }
 
-export function useRegisteredPools(): PoolRegisteredLog[] | undefined {
+function useRegisteredPools(): PoolRegisteredLog[] | undefined {
   const account = useAccount()
   const registry = useRegistryContract()
   const { fromBlock, toBlock } = useStartBlock(account.chainId)
@@ -501,6 +457,7 @@ export function useStakingPools(addresses: string[] | undefined, poolIds: string
   }
 }
 
+// TODO: our rpc endpoint returns multichain pools, we can render by chainId, i.e. on chain switch should update.
 export function useOperatedPools() {
   const { data: poolsLogs } = useAllPoolsData()
   const poolAddresses: (string | undefined)[] = useMemo(() => {
@@ -547,28 +504,17 @@ export function useOperatedPools() {
     //.filter((p) => account.address === owner)
   }, [account.address, account.chainId, poolAddresses, results])
 
-  // TODO: default pools should change on chain switch
-  const defaultPool = useMemo(() => {
-    if (!operatedPools) {
-      return undefined
-    }
-    return operatedPools[0]
-  }, [operatedPools])
-
-  const activeSmartPool = useActiveSmartPool()
-
+  const defaultPool = useMemo(() => operatedPools?.[0], [operatedPools])
   const onPoolSelect = useSelectActiveSmartPool()
 
   useEffect(() => {
-    // Initialize default pool
-    if (defaultPool && (!activeSmartPool?.address || activeSmartPool.address === null)) {
-      onPoolSelect(defaultPool)
-    } else if (!defaultPool && activeSmartPool?.address) {
-      onPoolSelect()
-    } else if (accountChanged) {
-      onPoolSelect(defaultPool)
+    const emptyPool = { isToken: false } as Currency
+
+    // TODO: this is probably unnecessary as state is reloaded on account change
+    if (accountChanged) {
+      onPoolSelect(defaultPool ?? emptyPool)
     }
-  }, [defaultPool, activeSmartPool.address, onPoolSelect, accountChanged])
+  }, [accountChanged, defaultPool, onPoolSelect])
 
   return operatedPools
 }

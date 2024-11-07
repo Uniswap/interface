@@ -8,11 +8,12 @@ import { listPositions } from '@uniswap/client-pools/dist/pools/v1/api-PoolsServ
 import { ListPositionsRequest, ListPositionsResponse } from '@uniswap/client-pools/dist/pools/v1/api_pb'
 
 export const getPositionsTestTransport = createConnectTransport({
-  baseUrl: '', // TODO: replace with the prod url and update in csp.json as well
+  baseUrl: 'https://9bxqhlmige.execute-api.us-east-2.amazonaws.com', // TODO: replace with the prod url and update in csp.json as well
 })
 
 export function useGetPositionsQuery(
   input?: PartialMessage<ListPositionsRequest>,
+  disabled?: boolean,
 ): UseQueryResult<ListPositionsResponse, ConnectError> {
-  return useQuery(listPositions, input, { transport: getPositionsTestTransport, enabled: !!input })
+  return useQuery(listPositions, input, { transport: getPositionsTestTransport, enabled: !!input && !disabled })
 }

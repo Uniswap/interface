@@ -1,14 +1,16 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Percent } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import { PositionInfoBadge } from 'components/Liquidity/LiquidityPositionInfoBadges'
+import { useAllFeeTierPoolData } from 'components/Liquidity/hooks'
 import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { AddHook } from 'pages/Pool/Positions/create/AddHook'
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
-import { AdvancedButton, Container } from 'pages/Pool/Positions/create/shared'
+import { AdvancedButton, Container, CreatingPoolInfo } from 'pages/Pool/Positions/create/shared'
+import { FeeData } from 'pages/Pool/Positions/create/types'
 import { useCallback, useReducer, useState } from 'react'
 import { TamaguiClickableStyle } from 'theme/components'
 import { PositionField } from 'types/position'
@@ -67,9 +69,9 @@ const CurrencySelector = ({ currency, onPress }: { currency?: Currency; onPress:
 }
 
 interface FeeTier {
-  value: number
+  value: FeeData
   title: string
-  selectionPercent: number
+  selectionPercent?: Percent
 }
 
 const FeeTierContainer = styled(Flex, {
@@ -77,7 +79,6 @@ const FeeTierContainer = styled(Flex, {
   width: '100%',
   p: '$spacing12',
   gap: '$spacing8',
-  justifyContent: 'space-between',
   borderRadius: '$rounded12',
   borderWidth: 1,
   borderColor: '$surface3',
@@ -91,20 +92,22 @@ const FeeTier = ({
 }: {
   feeTier: FeeTier
   selected: boolean
-  onSelect: (value: number) => void
+  onSelect: (value: FeeData) => void
 }) => {
   const { formatPercent } = useFormatter()
 
   return (
     <FeeTierContainer onPress={() => onSelect(feeTier.value)} background={selected ? '$surface3' : '$surface1'}>
       <Flex row gap={10} justifyContent="space-between" alignItems="center">
-        <Text variant="buttonLabel3">{formatPercent(new Percent(feeTier.value, 1000000))}</Text>
+        <Text variant="buttonLabel3">{formatPercent(new Percent(feeTier.value.feeAmount, 1000000))}</Text>
         {selected && <CheckCircleFilled size={iconSizes.icon20} />}
       </Flex>
       <Text variant="body4">{feeTier.title}</Text>
-      <Text variant="body4" color="$neutral2">
-        {feeTier.selectionPercent}% select
-      </Text>
+      {feeTier.selectionPercent && (
+        <Text variant="body4" color="$neutral2">
+          {formatPercent(feeTier.selectionPercent)} select
+        </Text>
+      )}
     </FeeTierContainer>
   )
 }
@@ -123,16 +126,16 @@ export function SelectTokensStep({
     derivedPositionInfo,
     setFeeTierSearchModalOpen,
   } = useCreatePositionContext()
-  const { TOKEN0: token0, TOKEN1: token1 } = derivedPositionInfo.currencies
 
+  const [token0, token1] = derivedPositionInfo.currencies
   const [currencySearchInputState, setCurrencySearchInputState] = useState<PositionField | undefined>(undefined)
   const [isShowMoreFeeTiersEnabled, toggleShowMoreFeeTiersEnabled] = useReducer((state) => !state, false)
   const continueButtonEnabled =
-    derivedPositionInfo.protocolVersion !== ProtocolVersion.UNSPECIFIED &&
-    ((derivedPositionInfo.protocolVersion === ProtocolVersion.V2 && derivedPositionInfo.pair) ||
-      ((derivedPositionInfo.protocolVersion === ProtocolVersion.V3 ||
-        derivedPositionInfo.protocolVersion === ProtocolVersion.V4) &&
-        derivedPositionInfo.pool))
+    derivedPositionInfo.creatingPoolOrPair ||
+    (derivedPositionInfo.protocolVersion === ProtocolVersion.V2 && derivedPositionInfo.pair) ||
+    ((derivedPositionInfo.protocolVersion === ProtocolVersion.V3 ||
+      derivedPositionInfo.protocolVersion === ProtocolVersion.V4) &&
+      derivedPositionInfo.pool)
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
@@ -158,6 +161,14 @@ export function SelectTokensStep({
         return
       }
 
+      if (otherCurrency && otherCurrency?.chainId !== currency.chainId) {
+        setPositionState((prevState) => ({
+          ...prevState,
+          currencyInputs: { [otherInputState]: undefined, [currencySearchInputState]: currency },
+        }))
+        return
+      }
+
       switch (currencySearchInputState) {
         case PositionField.TOKEN0:
         case PositionField.TOKEN1:
@@ -174,17 +185,39 @@ export function SelectTokensStep({
   )
 
   const handleFeeTierSelect = useCallback(
-    (feeTier: number) => {
-      setPositionState((prevState) => ({ ...prevState, fee: feeTier }))
+    (feeData: FeeData) => {
+      setPositionState((prevState) => ({ ...prevState, fee: feeData }))
     },
     [setPositionState],
   )
 
-  const feeTiers = [
-    { value: FeeAmount.LOWEST, title: t(`fee.bestForVeryStable`), selectionPercent: 0 },
-    { value: FeeAmount.LOW, title: t(`fee.bestForStablePairs`), selectionPercent: 0 },
-    { value: FeeAmount.MEDIUM, title: t(`fee.bestForMost`), selectionPercent: 96 },
-    { value: FeeAmount.HIGH, title: t(`fee.bestForExotic`), selectionPercent: 4 },
+  const feeTierData = useAllFeeTierPoolData({
+    chainId: token0?.chainId,
+    protocolVersion,
+    currencies: derivedPositionInfo.currencies,
+  })
+
+  const feeTiers: FeeTier[] = [
+    {
+      value: { feeAmount: FeeAmount.LOWEST, tickSpacing: TICK_SPACINGS[FeeAmount.LOWEST] },
+      title: t(`fee.bestForVeryStable`),
+      selectionPercent: feeTierData[FeeAmount.LOWEST]?.percentage,
+    },
+    {
+      value: { feeAmount: FeeAmount.LOW, tickSpacing: TICK_SPACINGS[FeeAmount.LOW] },
+      title: t(`fee.bestForStablePairs`),
+      selectionPercent: feeTierData[FeeAmount.LOW]?.percentage,
+    },
+    {
+      value: { feeAmount: FeeAmount.MEDIUM, tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM] },
+      title: t(`fee.bestForMost`),
+      selectionPercent: feeTierData[FeeAmount.MEDIUM]?.percentage,
+    },
+    {
+      value: { feeAmount: FeeAmount.HIGH, tickSpacing: TICK_SPACINGS[FeeAmount.HIGH] },
+      title: t(`fee.bestForExotic`),
+      selectionPercent: feeTierData[FeeAmount.HIGH]?.percentage,
+    },
   ]
 
   return (
@@ -241,13 +274,16 @@ export function SelectTokensStep({
               <Flex gap="$gap4">
                 <Flex row gap="$gap8">
                   <Text variant="subheading2" color="$neutral1">
-                    <Trans i18nKey="fee.tierExact" values={{ fee: formatPercent(new Percent(fee, 1000000)) }} />
+                    <Trans
+                      i18nKey="fee.tierExact"
+                      values={{ fee: formatPercent(new Percent(fee.feeAmount, 1000000)) }}
+                    />
                   </Text>
-                  {fee === FeeAmount.MEDIUM ? (
+                  {fee.feeAmount === FeeAmount.MEDIUM ? (
                     <PositionInfoBadge placement="only" size="small">
                       <Trans i18nKey="fee.tier.recommended" />
                     </PositionInfoBadge>
-                  ) : feeTiers.find((tier) => tier.value === fee) ? null : (
+                  ) : feeTiers.find((tier) => tier.value.feeAmount === fee.feeAmount) ? null : (
                     <PositionInfoBadge placement="only" size="small">
                       <Trans i18nKey="fee.tier.new" />
                     </PositionInfoBadge>
@@ -277,9 +313,9 @@ export function SelectTokensStep({
               <Flex row gap={10}>
                 {feeTiers.map((feeTier) => (
                   <FeeTier
-                    key={feeTier.value}
+                    key={feeTier.value.feeAmount}
                     feeTier={feeTier}
-                    selected={feeTier.value === fee}
+                    selected={feeTier.value.feeAmount === fee.feeAmount}
                     onSelect={handleFeeTierSelect}
                   />
                 ))}
@@ -296,6 +332,7 @@ export function SelectTokensStep({
             )}
           </Flex>
         )}
+        <CreatingPoolInfo />
         <Button
           flex={1}
           py="$spacing16"

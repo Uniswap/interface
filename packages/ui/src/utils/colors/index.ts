@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
-import { type ColorTokens } from 'ui/src/index'
-import { ColorKeys, colorsLight } from 'ui/src/theme'
+import { ThemeKeys, type ColorTokens } from 'ui/src/index'
+import { colorsLight } from 'ui/src/theme'
 import { ExtractedColors, getExtractedColors } from 'ui/src/utils/colors/getExtractedColors'
 import { isSVGUri } from 'utilities/src/format/urls'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -95,12 +95,13 @@ const blackAndWhiteSpecialCase: Set<string> = new Set([
 
 export function useExtractedColors(
   imageUrl: Maybe<string>,
-  fallback: ColorKeys = 'accent1',
+  fallback: ThemeKeys = 'accent1',
   cache = true,
 ): { colors?: ExtractedColors; colorsLoading: boolean } {
+  const sporeColors = useSporeColors()
   const getImageColors = useCallback(
-    async () => getExtractedColors(imageUrl, fallback, cache),
-    [imageUrl, fallback, cache],
+    async () => getExtractedColors(imageUrl, sporeColors[fallback].val, cache),
+    [imageUrl, fallback, cache, sporeColors],
   )
 
   const { data: colors, isLoading: colorsLoading } = useAsyncData(getImageColors)
@@ -316,7 +317,6 @@ function pickContrastPassingTokenColor(extractedColors: ExtractedColors, backgro
   // - bump color until it passes contrast: e.g. `import { lighten, desaturate } from 'polished'`
   // - locally cache the result with the image logo URL as a key
   // - move this logic to the backend
-
   for (const c of colorsInOrder) {
     if (!!c && passesContrast(c, backgroundHex, MIN_TOKEN_COLOR_CONTRAST_THRESHOLD)) {
       return c

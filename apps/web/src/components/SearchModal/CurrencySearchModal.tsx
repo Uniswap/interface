@@ -5,7 +5,6 @@ import TokenSafety from 'components/TokenSafety'
 import useLast from 'hooks/useLast'
 import styled from 'lib/styled-components'
 import { memo, useCallback, useEffect, useState } from 'react'
-import { useSelectActiveSmartPool } from 'state/application/hooks'
 import { useUserAddedTokens } from 'state/user/userAddedTokens'
 import { AdaptiveWebModal } from 'ui/src'
 import { TOKEN_SELECTOR_WEB_MAX_WIDTH } from 'uniswap/src/components/TokenSelector/TokenSelector'
@@ -95,8 +94,6 @@ export default memo(function CurrencySearchModal({
   // used for token safety
   const [warningToken, setWarningToken] = useState<Token | undefined>()
 
-  const onPoolSelect = useSelectActiveSmartPool()
-
   let content = null
   switch (modalView) {
     // we use DeprecatedCurrencySearch without multichain flag and for pool select
@@ -118,7 +115,6 @@ export default memo(function CurrencySearchModal({
                 key={pool.address}
                 currency={pool}
                 onSelect={() => {
-                  onPoolSelect(pool)
                   onCurrencySelect(pool)
                 }}
                 isSelected={false} // Adjust as needed

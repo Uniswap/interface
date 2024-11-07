@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AdaptiveWebModal } from 'ui/src'
+import { WebModalWithBottomAttachment } from 'ui/src/components/modal/AdaptiveWebModal'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
@@ -18,6 +19,7 @@ export function Modal({
   maxWidth,
   maxHeight,
   padding = '$spacing12',
+  bottomAttachment,
 }: ModalProps): JSX.Element {
   const [fullyClosed, setFullyClosed] = useState(false)
 
@@ -43,9 +45,12 @@ export function Modal({
   const isTopAligned = alignment === 'top'
   const justifyContent = isTopAligned ? 'flex-start' : undefined
 
+  const ModalComponent = bottomAttachment ? WebModalWithBottomAttachment : AdaptiveWebModal
+
   return (
     <Trace logImpression={isModalOpen} modal={name}>
-      <AdaptiveWebModal
+      <ModalComponent
+        bottomAttachment={bottomAttachment}
         shadowOpacity={isExtension ? 0 : undefined}
         borderWidth={isExtension ? 0 : undefined}
         adaptToSheet={isInterface}
@@ -76,7 +81,7 @@ export function Modal({
             It is critical for the modal to work this way or else it breaks existing assumptions throughout our codebase about when components are mounted / unmounted.
           */}
         {fullyClosed ? null : children}
-      </AdaptiveWebModal>
+      </ModalComponent>
     </Trace>
   )
 }

@@ -213,11 +213,11 @@ export const routes: RouteDefinition[] = [
   //  getElement: () => <Swap />,
   //  getTitle: () => t('title.placeLimit'),
   //}),
-  createRouteDefinition({
-    path: '/buy',
-    getElement: () => <Swap />,
-    getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
-  }),
+  //createRouteDefinition({
+  //  path: '/buy',
+  //  getElement: () => <Swap />,
+  //  getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
+  //}),
   createRouteDefinition({
     path: '/swap',
     getElement: () => <Swap />,
@@ -243,25 +243,25 @@ export const routes: RouteDefinition[] = [
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
-    path: '/positions/v2/:pairAddress',
+    path: '/positions/v2/:chainName/:pairAddress',
     getElement: () => <V2PositionPage />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
-    path: '/positions/v3/:tokenId',
+    path: '/positions/v3/:chainName/:tokenId',
     getElement: () => <PositionPage />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
-    path: '/positions/v4/:tokenId',
+    path: '/positions/v4/:chainName/:tokenId',
     getElement: () => <PositionPage />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
-    path: '/migrate/v3/:tokenId',
+    path: '/migrate/v3/:chainName/:tokenId',
     getElement: () => <MigrateV3 />,
     getTitle: () => StaticTitlesAndDescriptions.MigrateTitleV3,
     getDescription: () => StaticTitlesAndDescriptions.MigrateDescriptionV4,

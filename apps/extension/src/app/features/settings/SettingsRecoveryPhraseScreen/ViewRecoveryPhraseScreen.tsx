@@ -239,7 +239,9 @@ function SeedPhraseWord({
       <Text color="$neutral3" minWidth={indexMinWidth} variant="body2" onLayout={onIndexLayout}>
         {index}
       </Text>
-      <Text variant="body2">{word}</Text>
+      <Text variant="body2" className="notranslate">
+        {word}
+      </Text>
     </Flex>
   )
 }

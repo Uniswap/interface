@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
+import { CopyNotification, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { SuccessNotification } from 'wallet/src/features/notifications/components/SuccessNotification'
-import { CopyNotification, CopyNotificationType } from 'wallet/src/features/notifications/types'
 
 export function CopiedNotification({
   notification: { hideDelay = 2000, copyType },
@@ -34,6 +34,9 @@ export function CopiedNotification({
       break
     case CopyNotificationType.Unitag:
       title = t('notification.copied.unitag')
+      break
+    case CopyNotificationType.BlockExplorerUrl:
+      title = t('notification.copied.blockExplorerUrl')
       break
   }
 

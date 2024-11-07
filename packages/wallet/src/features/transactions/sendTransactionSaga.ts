@@ -200,9 +200,8 @@ export function* tryGetNonce(account: SignerMnemonicAccountMeta, chainId: Univer
   }
 }
 
-const selectAddressTransactions = makeSelectAddressTransactions()
-
 export function* getPendingPrivateTxCount(address: Address, chainId: number) {
+  const selectAddressTransactions = yield* call(makeSelectAddressTransactions)
   const pendingTransactions = yield* select(selectAddressTransactions, address)
   if (!pendingTransactions) {
     return 0

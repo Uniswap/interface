@@ -2,11 +2,12 @@ import { Bag } from 'components/NavBar/Bag'
 import { ChainSelector } from 'components/NavBar/ChainSelector'
 import { CompanyMenu } from 'components/NavBar/CompanyMenu'
 import { NewUserCTAButton } from 'components/NavBar/DownloadApp/NewUserCTAButton'
-import PoolSelect from 'components/NavBar//PoolSelect'
+import PoolSelect from 'components/NavBar/PoolSelect'
 import { PreferenceMenu } from 'components/NavBar/PreferencesMenu'
 import { useTabsVisible } from 'components/NavBar/ScreenSizes'
 import { SearchBar } from 'components/NavBar/SearchBar'
 import { Tabs } from 'components/NavBar/Tabs/Tabs'
+import TestnetModeTooltip from 'components/NavBar/TestnetMode/TestnetModeTooltip'
 import { useIsAccountCTAExperimentControl } from 'components/NavBar/accountCTAsExperimentUtils'
 import Web3Status from 'components/Web3Status'
 import Row from 'components/deprecated/Row'
@@ -26,6 +27,7 @@ import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 
 const Nav = styled.nav`
@@ -37,14 +39,7 @@ const Nav = styled.nav`
   align-items: center;
   justify-content: center;
 `
-const NavContents = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  flex: 1 auto 1;
-`
+
 const NavItems = css`
   gap: 12px;
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
@@ -81,6 +76,15 @@ const SelectedPoolContainer = styled.div`
   align-items: flex-start;
   height: 42px;
   margin-right: 64px;
+`
+
+const NavContents = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex: 1 auto 1;
 `
 
 function useShouldHideChainSelector() {
@@ -120,14 +124,15 @@ export default function Navbar() {
 
   const hideChainSelector = useShouldHideChainSelector()
 
+  const { isTestnetModeEnabled } = useEnabledChains()
+
   const { isControl: isSignInExperimentControl, isLoading: isSignInExperimentControlLoading } =
     useIsAccountCTAExperimentControl()
 
   const shouldDisplayCreateAccountButton = false
   const operatedPools = useOperatedPools()
-  const userIsOperator: boolean = operatedPools ? operatedPools?.length > 0 : false
+  const userIsOperator = operatedPools && operatedPools?.length > 0
 
-  // TODO: display pool and swap only if user has operated pools
   return (
     <Nav>
       <NavContents>
@@ -136,10 +141,10 @@ export default function Navbar() {
           {areTabsVisible && <Tabs userIsOperator={userIsOperator} />}
         </Left>
 
-        <SelectedPoolContainer>
-          {operatedPools && operatedPools.length > 0 && <PoolSelect operatedPools={operatedPools} />}
-        </SelectedPoolContainer>
         <SearchContainer>
+          <SelectedPoolContainer>
+            {operatedPools && operatedPools.length > 0 && <PoolSelect operatedPools={operatedPools} />}
+          </SelectedPoolContainer>
           {!collapseSearchBar && <SearchBar maxHeight={NAV_SEARCH_MAX_HEIGHT} fullScreen={isSmallScreen} />}
         </SearchContainer>
 
@@ -151,6 +156,7 @@ export default function Navbar() {
           )}
           {!account.isConnected && !account.isConnecting && <PreferenceMenu />}
           {!hideChainSelector && <ChainSelector />}
+          {isTestnetModeEnabled && <TestnetModeTooltip />}
           <Web3Status />
           {shouldDisplayCreateAccountButton && !isSignInExperimentControl && !isSignInExperimentControlLoading && !account.address && !isMediumScreen && (
             <NewUserCTAButton />

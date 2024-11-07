@@ -10,6 +10,7 @@ import { SwapRouting, SwapTradeBaseProperties } from 'uniswap/src/features/telem
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
 import { getSwapFeeUsd } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
@@ -92,7 +93,12 @@ export function getBaseTradeAnalyticsProperties({
     token_in_address: getCurrencyAddressForAnalytics(trade.inputAmount.currency),
     token_out_address: getCurrencyAddressForAnalytics(trade.outputAmount.currency),
     price_impact_basis_points: trade.priceImpact?.multiply(100).toSignificant(),
-    chain_id: trade.inputAmount.currency.chainId,
+    chain_id:
+      trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
+        ? trade.inputAmount.currency.chainId
+        : undefined,
+    chain_id_in: trade.inputAmount.currency.chainId,
+    chain_id_out: trade.outputAmount.currency.chainId,
     token_in_amount: trade.inputAmount.toExact(),
     token_out_amount: formatter.formatCurrencyAmount({
       value: finalOutputAmount,
@@ -177,6 +183,31 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
     fee_amount: portionAmount,
     transactionOriginType: TransactionOriginType.Internal,
   }
+}
+
+export function logSwapQuoteFetch({
+  chainId,
+  isUSDQuote = false,
+  isQuickRoute = false,
+}: {
+  chainId: number
+  isUSDQuote?: boolean
+  isQuickRoute?: boolean
+}): void {
+  let performanceMetrics = {}
+  if (!isUSDQuote) {
+    const hasSetSwapQuote = timestampTracker.hasTimestamp(SwapEventType.FirstQuoteFetchStarted)
+    const elapsedTime = timestampTracker.setElapsedTime(SwapEventType.FirstQuoteFetchStarted)
+
+    // We only log the time_to_first_quote_request metric for the first quote request of a session.
+    const time_to_first_quote_request = hasSetSwapQuote ? undefined : elapsedTime
+    const time_to_first_quote_request_since_first_input = hasSetSwapQuote
+      ? undefined
+      : timestampTracker.getElapsedTime(SwapEventType.FirstQuoteFetchStarted, SwapEventType.FirstSwapAction)
+
+    performanceMetrics = { time_to_first_quote_request, time_to_first_quote_request_since_first_input }
+  }
+  sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_FETCH, { chainId, isQuickRoute, ...performanceMetrics })
 }
 
 // eslint-disable-next-line consistent-return

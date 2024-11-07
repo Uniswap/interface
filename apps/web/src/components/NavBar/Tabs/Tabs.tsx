@@ -159,7 +159,7 @@ const Tab = ({
   )
 }
 
-export function Tabs({ userIsOperator }: { userIsOperator: boolean }) {
+export function Tabs({ userIsOperator }: { userIsOperator?: boolean }) {
   const tabsContent: TabsSection[] = useTabsContent({ userIsOperator })
   return (
     <>

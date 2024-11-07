@@ -5,10 +5,7 @@
   "scriptSrc": [
     "'self'",
     "data:",
-    "'wasm-unsafe-eval'",
-    "https://translate.googleapis.com/",
-    "https://www.google-analytics.com",
-    "https://www.googletagmanager.com"
+    "'wasm-unsafe-eval'"
   ],
   "styleSrc": [
     "'self'",
@@ -103,6 +100,7 @@
     "https://wallet.crypto.com",
     "https://web3.1inch.io",
     "https://mainnet.era.zksync.io/",
+    "https://9bxqhlmige.execute-api.us-east-2.amazonaws.com",
     "wss://*.rigoblock.com",
     "wss://*.uniswap.org",
     "wss://relay.walletconnect.com",

@@ -30,8 +30,6 @@ export async function getOrders(orderIds: string[]): Promise<GetOrdersResponse> 
   return await fetchOrders({ orderIds })
 }
 
-const selectUniswapXOrder = makeSelectUniswapXOrder()
-
 export class OrderWatcher {
   private static listeners: {
     [orderHash: string]: {
@@ -69,6 +67,7 @@ export class OrderWatcher {
 
       for (const localOrderHash of orderHashes) {
         const remoteOrder = remoteOrderMap.get(localOrderHash)
+        const selectUniswapXOrder = yield* call(makeSelectUniswapXOrder)
         const localOrder = yield* select(selectUniswapXOrder, { orderHash: localOrderHash })
 
         if (!localOrder?.orderHash) {

@@ -7,7 +7,8 @@ import { ThemeNames, opacify } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { SwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isWeb } from 'utilities/src/platform'
@@ -17,6 +18,7 @@ type WarningModalContentProps = {
   onReject?: () => void
   onAcknowledge?: () => void
   hideHandlebar?: boolean
+  modalName: ModalNameType
   title?: string
   titleComponent?: ReactNode
   caption?: string
@@ -37,13 +39,13 @@ type WarningModalContentProps = {
 export type WarningModalProps = {
   isOpen: boolean
   isDismissible?: boolean
-  modalName: ModalNameType
 } & WarningModalContentProps
 
 export function WarningModalContent({
   onClose,
   onReject,
   onAcknowledge,
+  modalName,
   title,
   titleComponent,
   caption,
@@ -105,25 +107,29 @@ export function WarningModalContent({
       {children}
       <Flex centered row gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'} width="100%">
         {rejectText && (
-          <Button
-            flex={1}
-            flexBasis={1}
-            theme={rejectButtonTheme ?? alertColor.buttonTheme}
-            onPress={onReject ?? onClose}
-          >
-            {rejectText}
-          </Button>
+          <Trace logPress element={ElementName.BackButton} modal={modalName}>
+            <Button
+              flex={1}
+              flexBasis={1}
+              theme={rejectButtonTheme ?? 'secondary_Button'}
+              onPress={onReject ?? onClose}
+            >
+              {rejectText}
+            </Button>
+          </Trace>
         )}
         {acknowledgeText && (
-          <Button
-            flex={1}
-            flexBasis={1}
-            testID={TestID.Confirm}
-            theme={acknowledgeButtonTheme ?? alertColor.buttonTheme}
-            onPress={onAcknowledge}
-          >
-            {acknowledgeText}
-          </Button>
+          <Trace logPress element={ElementName.Confirm} modal={modalName}>
+            <Button
+              flex={1}
+              flexBasis={1}
+              testID={TestID.Confirm}
+              theme={acknowledgeButtonTheme ?? alertColor.buttonTheme}
+              onPress={onAcknowledge}
+            >
+              {acknowledgeText}
+            </Button>
+          </Trace>
         )}
       </Flex>
     </Flex>

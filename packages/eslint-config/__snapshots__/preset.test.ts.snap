@@ -892,6 +892,17 @@ exports[`should have a correct configuration for a React file 1`] = `
             "name": "ui/src/hooks/useDeviceInsets",
           },
           {
+            "importNames": [
+              "getUniqueId",
+            ],
+            "message": "Not supported for web/extension, use \`getUniqueId\` from \`utilities/src/device/getUniqueId\` instead.",
+            "name": "react-native-device-info",
+          },
+          {
+            "message": "Use specific imports (e.g. \`import isEqual from 'lodash/isEqual'\`) to avoid pulling in all of lodash to web to keep bundle size down!",
+            "name": "lodash",
+          },
+          {
             "message": "Please import from '@ethersproject/module' directly to support tree-shaking.",
             "name": "ethers",
           },

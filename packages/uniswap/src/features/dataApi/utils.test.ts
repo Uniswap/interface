@@ -6,11 +6,12 @@ import {
   TokenProject,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import {
   buildCurrency,
   currencyIdToContractInput,
   gqlTokenToCurrencyInfo,
+  sortByName,
   tokenProjectToCurrencyInfos,
   usePersistedError,
 } from 'uniswap/src/features/dataApi/utils'
@@ -104,6 +105,22 @@ describe(buildCurrency, () => {
     expect(token.decimals).toBe(0)
     expect(token.symbol).toBe('TEST')
     expect(token.name).toBe('Test Token')
+  })
+
+  it('should return the same reference when the same parameters are provided', () => {
+    const args = {
+      chainId: UniverseChainId.Mainnet,
+      address: '0x0000000000000000000000000000000000000000',
+      decimals: 0,
+      symbol: 'TEST',
+      name: 'Test Token',
+    }
+
+    const tokenA = buildCurrency({ ...args }) as Token
+    const tokenB = buildCurrency({ ...args }) as Token
+
+    expect(tokenA).toBeInstanceOf(Token)
+    expect(tokenA).toBe(tokenB)
   })
 
   it('should return a new NativeCurrency instance when address is not provided', () => {
@@ -235,5 +252,67 @@ describe(usePersistedError, () => {
 
       expect(result.current).toBe(error2) // returns the new error because it is passed
     })
+  })
+})
+
+describe('sortByName', () => {
+  it('returns an empty array when input is undefined', () => {
+    expect(sortByName(undefined)).toEqual([])
+  })
+
+  it('returns an empty array when input is an empty array', () => {
+    expect(sortByName([])).toEqual([])
+  })
+
+  it('sorts balances by currency name', () => {
+    const unsortedBalances = [
+      { currencyInfo: { currency: { name: 'Bitcoin' } } },
+      { currencyInfo: { currency: { name: 'Ethereum' } } },
+      { currencyInfo: { currency: { name: 'Cardano' } } },
+    ] as PortfolioBalance[]
+
+    const sortedBalances = sortByName(unsortedBalances)
+
+    expect(sortedBalances).toEqual([
+      { currencyInfo: { currency: { name: 'Bitcoin' } } },
+      { currencyInfo: { currency: { name: 'Cardano' } } },
+      { currencyInfo: { currency: { name: 'Ethereum' } } },
+    ])
+  })
+
+  it('handles balances with missing or empty names', () => {
+    const unsortedBalances = [
+      { currencyInfo: { currency: { name: '' } } },
+      { currencyInfo: { currency: { name: 'Ethereum' } } },
+      { currencyInfo: { currency: { name: null } } },
+      { currencyInfo: { currency: { name: 'Bitcoin' } } },
+    ] as PortfolioBalance[]
+
+    const sortedBalances = sortByName(unsortedBalances)
+
+    expect(sortedBalances).toEqual([
+      { currencyInfo: { currency: { name: 'Bitcoin' } } },
+      { currencyInfo: { currency: { name: 'Ethereum' } } },
+      { currencyInfo: { currency: { name: '' } } },
+      { currencyInfo: { currency: { name: null } } },
+    ])
+  })
+
+  it('places balances with missing names at the end', () => {
+    const unsortedBalances = [
+      { currencyInfo: { currency: { name: 'Ethereum' } } },
+      { currencyInfo: { currency: { name: null } } },
+      { currencyInfo: { currency: { name: 'Bitcoin' } } },
+      { currencyInfo: { currency: { name: '' } } },
+    ] as PortfolioBalance[]
+
+    const sortedBalances = sortByName(unsortedBalances)
+
+    expect(sortedBalances).toEqual([
+      { currencyInfo: { currency: { name: 'Bitcoin' } } },
+      { currencyInfo: { currency: { name: 'Ethereum' } } },
+      { currencyInfo: { currency: { name: null } } },
+      { currencyInfo: { currency: { name: '' } } },
+    ])
   })
 })
