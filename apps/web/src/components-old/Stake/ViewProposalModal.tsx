@@ -38,6 +38,7 @@ const DetailsContainer = styled.div`
 
 interface ViewProposalModalProps {
   proposalId: string
+  isNewContract: boolean
   isOpen: boolean
   onDismiss: () => void
 }
@@ -46,13 +47,16 @@ export const ViewProposalModal: React.FC<ViewProposalModalProps> = ({
   isOpen,
   onDismiss,
   proposalId,
+  isNewContract,
 }: ViewProposalModalProps) => {
   const [proposal, setProposal] = useState<any>(undefined)
   const proposals = useProposals()
 
   useEffect(() => {
     if (proposals && proposals.length > 1) {
-      const foundProp = proposals.find((prop) => prop.args.id.toString() === proposalId)
+      const foundProp = proposals.find(
+        (prop) => prop.args.id.toString() === proposalId && prop.blockNumber > (isNewContract ? 25_000_000 : 0)
+      )
       setProposal(foundProp)
     }
   }, [proposalId, proposals])

@@ -28,11 +28,11 @@ export const useProposals = (): Array<TypedEvent<Proposal>> | undefined => {
     const proposalEvents1 = await fetchEvents<TypedEvent<Proposal>>(romulusContract, filter, -18000, -12000)
     const proposalEvents2 = await fetchEvents<TypedEvent<Proposal>>(romulusContract, filter, -12000, -6000)
     const proposalEvents3 = await fetchEvents<TypedEvent<Proposal>>(romulusContract, filter, -6000, -1)
+    console.log(proposalEvents1.concat(proposalEvents2).concat(proposalEvents3))
     setProposals(
-      proposalEvents1
-        .concat(proposalEvents2)
-        .concat(proposalEvents3)
-        .concat(cachedProposalEvents as unknown as TypedEvent<Proposal>[])
+      (cachedProposalEvents as unknown as TypedEvent<Proposal>[]).concat(
+        proposalEvents1.concat(proposalEvents2).concat(proposalEvents3)
+      )
     )
   }, [romulusContract])
 

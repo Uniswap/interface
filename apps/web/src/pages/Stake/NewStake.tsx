@@ -75,6 +75,7 @@ export const NewStake: React.FC = () => {
   const [showChangeDelegateModal, setShowChangeDelegateModal] = useState(false)
   const [showViewProposalModal, setShowViewProposalModal] = useState(false)
   const [selectedProposal, setSelectedProposal] = useState('')
+  const [isSelectedProposalNew, setIsSelectedProposalNew] = useState(false)
   const tokenAmount = tryParseCurrencyAmount(amount === '' ? '0' : amount, ube)
   const [approvalState, approve] = useApproveCallback(tokenAmount, VOTABLE_STAKING_REWARDS_ADDRESS)
   const [staking, setStaking] = useState(true)
@@ -134,7 +135,8 @@ export const NewStake: React.FC = () => {
 
   const { tokenDelegate, quorumVotes, proposalThreshold } = useRomulus()
   const latestBlockNumber = useBlockNumber()
-  const { votingPower, releaseVotingPower } = useVotingTokens(latestBlockNumber || 0)
+
+  const { votingPower, releaseVotingPower } = useVotingTokens(latestBlockNumber ? latestBlockNumber - 2 : 0)
   const totalVotingPower = votingPower && releaseVotingPower ? votingPower.add(releaseVotingPower) : undefined
 
   const disablePropose =
@@ -355,11 +357,11 @@ export const NewStake: React.FC = () => {
           </InformationWrapper>
           <InformationWrapper fontWeight={400}>
             <Text>{t('Token Balance')}</Text>
-            <Text>{ubeBalance ? `${ubeBalance?.toFixed(2, { groupSeparator: ',' })} UBE` : '-'} </Text>
+            <Text>{ubeBalance ? `${ubeBalance?.toFixed(0, { groupSeparator: ',' })} UBE` : '-'} </Text>
           </InformationWrapper>
           <InformationWrapper fontWeight={400}>
             <Text>{t('Voting Power')}</Text>
-            <Text>{totalVotingPower ? totalVotingPower?.toFixed(2, { groupSeparator: ',' }) : '-'}</Text>
+            <Text>{totalVotingPower ? totalVotingPower?.toFixed(0, { groupSeparator: ',' }) : '-'}</Text>
           </InformationWrapper>
           <InformationWrapper fontWeight={400}>
             <Text>{t('Token Delegate')}</Text>
@@ -386,11 +388,11 @@ export const NewStake: React.FC = () => {
           </InformationWrapper>
           <InformationWrapper fontWeight={400}>
             <Text>{t('Quorum')}</Text>
-            <Text>{quorumVotes ? `${quorumVotes?.toFixed(2, { groupSeparator: ',' })} UBE` : '-'}</Text>
+            <Text>{quorumVotes ? `${quorumVotes?.toFixed(0, { groupSeparator: ',' })} UBE` : '-'}</Text>
           </InformationWrapper>
           <InformationWrapper fontWeight={400}>
             <Text>{t('Proposal Threshold')}</Text>
-            <Text>{proposalThreshold ? `${proposalThreshold?.toFixed(2, { groupSeparator: ',' })} UBE` : '-'}</Text>
+            <Text>{proposalThreshold ? `${proposalThreshold?.toFixed(0, { groupSeparator: ',' })} UBE` : '-'}</Text>
           </InformationWrapper>
 
           {stakeBalance?.greaterThan('0') && (
@@ -414,8 +416,9 @@ export const NewStake: React.FC = () => {
           <Text fontWeight={500} fontSize={16} marginTop={12}>
             {t('Governance Proposals')}
             <Proposals
-              onClickProposal={(url: any) => {
+              onClickProposal={(url: any, isNewContract: boolean) => {
                 setSelectedProposal(url)
+                setIsSelectedProposalNew(isNewContract)
                 setShowViewProposalModal(true)
               }}
             />
@@ -467,6 +470,7 @@ export const NewStake: React.FC = () => {
       <ViewProposalModal
         isOpen={showViewProposalModal}
         proposalId={selectedProposal}
+        isNewContract={isSelectedProposalNew}
         onDismiss={() => setShowViewProposalModal(false)}
       />
     </>

@@ -322,11 +322,7 @@ export const ProposalCard: React.FC<IProps> = ({ proposalEvent, clickable, showI
       voteContent.current = undefined
     } else if (proposalEvent.args.startBlock.gt(latestBlockNumber)) {
       voteContent.current = <Text>Voting has not started yet.</Text>
-    } else if (
-      totalVotingPower &&
-      zeroAmount &&
-      JSBI.lessThanOrEqual(JSBI.BigInt(totalVotingPower.toExact()), JSBI.BigInt(zeroAmount.toExact()))
-    ) {
+    } else if (totalVotingPower && zeroAmount && JSBI.lessThanOrEqual(totalVotingPower.quotient, zeroAmount.quotient)) {
       voteContent.current = <Text>You have no voting power for this proposal.</Text>
     } else if (vote) {
       let supportText = <></>

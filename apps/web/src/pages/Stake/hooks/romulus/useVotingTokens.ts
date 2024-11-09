@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { CurrencyAmount, OLD_UBE_ROMULUS_ADDRESSES, Token } from '@ubeswap/sdk-core'
+import { CurrencyAmount, Token, UBE_ROMULUS_ADDRESSES } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { UBE } from 'constants/tokens'
 import { useUbeTokenContract } from 'hooks/useContract'
@@ -24,7 +24,7 @@ type VotingInfo = {
 
 export const useVotingTokens = (blockNumber: BigNumber | number): VotingInfo => {
   const { account, chainId } = useWeb3React()
-  const romulusAddress = chainId ? OLD_UBE_ROMULUS_ADDRESSES[chainId] : undefined
+  const romulusAddress = chainId ? UBE_ROMULUS_ADDRESSES[chainId] : undefined
   const ube = chainId ? UBE[chainId] : undefined
   // const { tokenAddress, releaseTokenAddress } = useRomulusInfo(romulusAddress)
   const ubeContract = useUbeTokenContract()
