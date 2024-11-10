@@ -478,4 +478,32 @@ export const cachedProposalEvents = [
     data: '0x',
     topics: ['0x7d84a6263ae0d98d3329bd7b46bb4e8d6f98cd35a7adb45c274c8b7fd5ebd5e0'],
   },
+  {
+    id: '0xd489d296bb58f2f7fe5987887328b38d064f2b1a73c4ed1ca8e0deb7cc857e36-29',
+    address: '0xD355A00220FbA16b69Cd8C4fbE16E02CA855f928',
+    blockNumber: 28696533,
+    transactionHash: '0xd489d296bb58f2f7fe5987887328b38d064f2b1a73c4ed1ca8e0deb7cc857e36',
+    transactionIndex: 13,
+    blockHash: '0x0e4682d8da76d2bbd4d1c90257ae05e374a513f82cfe955ec23564f8d804fbbc',
+    logIndex: 29,
+    removed: false,
+    eventSignature: '',
+    args: {
+      id: BN.from('1'),
+      proposer: '0x1b9c794a65b8B5b6bF4A28D5c018e57d3BCa755C',
+      targets: ['0x71e26d0E519D14591b9dE9a0fE9513A398101490'],
+      values: [BN.from('0')],
+      signatures: ['approve(address,uint256)'],
+      calldatas: [
+        '0x095ea7b300000000000000000000000071e26d0e519d14591b9de9a0fe9513a3981014900000000000000000000000000000000000000000000000000000000000000001',
+      ],
+      startBlock: BN.from('28697253'),
+      endBlock: BN.from('28783653'),
+      description:
+        'With the transition to new tokenomics on March 16th, the convert contract has been open for almost 8 months now. In the last few months, there has been very little conversions and the UBE amount on the convert contract has been stalled at around 32 million. Almost everyone involved with UBE has converted their tokens and there is no more utility for old UBE. \nWe suggest giving old-UBE holders around 1 month, until December 10th, to convert their tokens and then burning the remaining UBE tokens on the convert contract. This would decrease UBE supply significantly and benefit active UBE holders in the community. \nThe team can add to this burn and therefore do a bigger burn at a time of their choosing to boost the effectiveness of the burn.  \n',
+    },
+    event: 'ProposalCreated',
+    data: '0x',
+    topics: ['0x7d84a6263ae0d98d3329bd7b46bb4e8d6f98cd35a7adb45c274c8b7fd5ebd5e0'],
+  },
 ]

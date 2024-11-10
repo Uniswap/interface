@@ -1,5 +1,4 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatEther } from '@ethersproject/units'
 import { CurrencyAmount } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { BIG_INT_ZERO, KNOWN_ADDRESSES } from 'constants/misc'
@@ -16,6 +15,7 @@ import { CheckCircle, Loader, PlayCircle, XCircle } from 'react-feather'
 import { Box, Button, Card, Link, Text } from 'rebass'
 import styled from 'styled-components'
 import { TypedEvent } from 'uniswap/src/abis/types/common'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const StyledControlButton = styled.button`
   height: 24px;
@@ -43,10 +43,6 @@ const StyledControlButton = styled.button`
     margin-right: 0.1rem;
   `};
 `
-
-const humanFriendlyWei = (wei: string) => {
-  return Number(formatEther(wei)).toLocaleString()
-}
 
 export const formatDuration = (durationSeconds: number) => {
   const seconds = Math.floor(durationSeconds)
@@ -184,6 +180,7 @@ export const ProposalCard: React.FC<IProps> = ({ proposalEvent, clickable, showI
   const signer = provider?.getSigner()
   const ube = chainId ? UBE[chainId] : undefined
   const mountedRef = useRef(true)
+  const { formatEther } = useFormatter()
   const [proposalContent, setProposalContent] = useState<ProposalContent>({
     stateStr: '',
     stateColor: '#909090',
@@ -194,7 +191,7 @@ export const ProposalCard: React.FC<IProps> = ({ proposalEvent, clickable, showI
   const isNewContract = proposalEvent.blockNumber > 25_000_000
   const romulusContract = useRomulusDelegateContract()
   const { proposal, proposalState } = useProposal(proposalEvent.args.id, isNewContract)
-  const { votingPower, releaseVotingPower } = useVotingTokens(proposalEvent.args.startBlock)
+  const { votingPower, releaseVotingPower } = useVotingTokens(isNewContract ? proposalEvent.args.startBlock : 0)
   const voteCasts = useVoteCasts()
   const vote = voteCasts?.[proposalEvent.args.id.toString()]
   const zeroAmount = ube ? CurrencyAmount.fromRawAmount(ube, BIG_INT_ZERO) : null
@@ -347,7 +344,7 @@ export const ProposalCard: React.FC<IProps> = ({ proposalEvent, clickable, showI
       }
       voteContent.current = (
         <Text>
-          You made {humanFriendlyWei(vote.args.votes.toString())} {supportText}.
+          You made {formatEther({ input: vote.args.votes.toString(), type: NumberType.TokenTx })} {supportText}.
         </Text>
       )
     } else if (proposalEvent.args.endBlock.lt(latestBlockNumber)) {
@@ -379,6 +376,7 @@ export const ProposalCard: React.FC<IProps> = ({ proposalEvent, clickable, showI
     vote,
     votingPower,
     zeroAmount,
+    formatEther,
   ])
 
   if (!romulusContract) {
@@ -413,11 +411,13 @@ export const ProposalCard: React.FC<IProps> = ({ proposalEvent, clickable, showI
         <>
           <InformationWrapper fontWeight={400} gap={4}>
             <Text>For Votes</Text>
-            <Text>{humanFriendlyWei(proposal?.forVotes.toString()).split('.')[0]}</Text>
+            <Text>{formatEther({ input: proposal?.forVotes.toString(), type: NumberType.TokenTx }).split('.')[0]}</Text>
           </InformationWrapper>
           <InformationWrapper fontWeight={400} gap={4}>
             <Text>Against Votes </Text>
-            <Text>{humanFriendlyWei(proposal?.againstVotes.toString()).split('.')[0]}</Text>
+            <Text>
+              {formatEther({ input: proposal?.againstVotes.toString(), type: NumberType.TokenTx }).split('.')[0]}
+            </Text>
           </InformationWrapper>
         </>
       )}

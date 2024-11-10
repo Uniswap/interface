@@ -59,7 +59,7 @@ export const ViewProposalModal: React.FC<ViewProposalModalProps> = ({
       )
       setProposal(foundProp)
     }
-  }, [proposalId, proposals])
+  }, [proposalId, proposals, isNewContract])
 
   return (
     <Modal isOpen={isOpen} onDismiss={onDismiss} maxHeight={90}>
