@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { CurrencyAmount } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { ButtonOutlined } from 'components/Button'
 import { BIG_INT_ZERO, KNOWN_ADDRESSES } from 'constants/misc'
 import { UBE } from 'constants/tokens'
 import { getAddress } from 'ethers/lib/utils'
@@ -12,7 +13,7 @@ import { useVoteCasts } from 'pages/Stake/hooks/romulus/useVoteCasts'
 import { useVotingTokens } from 'pages/Stake/hooks/romulus/useVotingTokens'
 import React, { useEffect, useRef, useState } from 'react'
 import { CheckCircle, Loader, PlayCircle, XCircle } from 'react-feather'
-import { Box, Button, Card, Link, Text } from 'rebass'
+import { Box, Card, Link, Text } from 'rebass'
 import styled from 'styled-components'
 import { TypedEvent } from 'uniswap/src/abis/types/common'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -42,6 +43,15 @@ const StyledControlButton = styled.button`
     margin-left: 0.4rem;
     margin-right: 0.1rem;
   `};
+`
+
+const ButtonError = styled(ButtonOutlined)`
+  border-color: ${({ theme }) => theme.critical};
+  color: ${({ theme }) => theme.critical};
+`
+const ButtonSuccess = styled(ButtonOutlined)`
+  border-color: ${({ theme }) => theme.success};
+  color: ${({ theme }) => theme.success};
 `
 
 export const formatDuration = (durationSeconds: number) => {
@@ -197,7 +207,8 @@ export const ProposalCard: React.FC<IProps> = ({ proposalEvent, clickable, showI
   const zeroAmount = ube ? CurrencyAmount.fromRawAmount(ube, BIG_INT_ZERO) : null
   const totalVotingPower = zeroAmount ? votingPower?.add(releaseVotingPower ?? zeroAmount) : null
   const onCancelClick = React.useCallback(async () => {
-    if (!romulusContract || !mountedRef.current) {
+    //if (!romulusContract || !mountedRef.current) {
+    if (!romulusContract) {
       return
     }
     try {
@@ -206,11 +217,12 @@ export const ProposalCard: React.FC<IProps> = ({ proposalEvent, clickable, showI
       console.warn(e)
       alert(e)
     }
-  }, [romulusContract, proposalEvent.args.id, mountedRef])
+  }, [romulusContract, proposalEvent.args.id])
 
   const castVote = React.useCallback(
     async (support: Support) => {
-      if (!romulusContract || !mountedRef.current) {
+      // if (!romulusContract || !mountedRef.current) {
+      if (!romulusContract) {
         return
       }
       if (!signer) {
@@ -218,7 +230,7 @@ export const ProposalCard: React.FC<IProps> = ({ proposalEvent, clickable, showI
       }
       await romulusContract.castVote(proposalEvent.args.id, support)
     },
-    [signer, proposalEvent.args.id, romulusContract, mountedRef]
+    [signer, proposalEvent.args.id, romulusContract]
   )
 
   useEffect(() => {
@@ -322,28 +334,16 @@ export const ProposalCard: React.FC<IProps> = ({ proposalEvent, clickable, showI
     } else if (totalVotingPower && zeroAmount && JSBI.lessThanOrEqual(totalVotingPower.quotient, zeroAmount.quotient)) {
       voteContent.current = <Text>You have no voting power for this proposal.</Text>
     } else if (vote) {
-      let supportText = <></>
+      let supportText = ''
       if (vote.args.support === Support.FOR) {
-        supportText = (
-          <>
-            <Text>for</Text> votes
-          </>
-        )
+        supportText = ' for votes'
       } else if (vote.args.support === Support.ABSTAIN) {
-        supportText = (
-          <>
-            <Text>abstained</Text> votes
-          </>
-        )
+        supportText = ' absteined votes'
       } else if (vote.args.support === Support.AGAINST) {
-        supportText = (
-          <>
-            <Text>against</Text> votes
-          </>
-        )
+        supportText = ' against votes'
       }
       voteContent.current = (
-        <Text>
+        <Text display="flex">
           You made {formatEther({ input: vote.args.votes.toString(), type: NumberType.TokenTx })} {supportText}.
         </Text>
       )
@@ -353,17 +353,31 @@ export const ProposalCard: React.FC<IProps> = ({ proposalEvent, clickable, showI
       } else {
         voteContent.current = undefined
       }
-    } else {
+    } else if (clickable == false) {
       voteContent.current = (
         <>
-          <Button onClick={() => castVote(Support.FOR)} disabled={!(proposalState === ProposalState.ACTIVE)} mx={2}>
+          <ButtonSuccess
+            padding="6px"
+            $borderRadius="6px"
+            onClick={() => castVote(Support.FOR)}
+            disabled={!(proposalState === ProposalState.ACTIVE)}
+            mx={2}
+          >
             Vote For
-          </Button>
-          <Button onClick={() => castVote(Support.AGAINST)} disabled={!(proposalState === ProposalState.ACTIVE)} mx={2}>
+          </ButtonSuccess>
+          <ButtonError
+            padding="6px"
+            $borderRadius="6px"
+            onClick={() => castVote(Support.AGAINST)}
+            disabled={!(proposalState === ProposalState.ACTIVE)}
+            mx={2}
+          >
             Vote Against
-          </Button>
+          </ButtonError>
         </>
       )
+    } else {
+      voteContent.current = undefined
     }
   }, [
     castVote,
@@ -377,6 +391,7 @@ export const ProposalCard: React.FC<IProps> = ({ proposalEvent, clickable, showI
     votingPower,
     zeroAmount,
     formatEther,
+    clickable,
   ])
 
   if (!romulusContract) {
@@ -425,7 +440,7 @@ export const ProposalCard: React.FC<IProps> = ({ proposalEvent, clickable, showI
       {proposalContent.timeText && (
         <InformationWrapper gap={4}>
           <VotingTimeText votingTimeColor={proposalContent.votingTimeColor}>{proposalContent.timeText}</VotingTimeText>
-          {proposalState == ProposalState.ACTIVE && (
+          {proposalState == ProposalState.ACTIVE && clickable == false && (
             <StyledControlButton
               style={{ margin: 'unset' }}
               onClick={(e) => {

@@ -1,6 +1,6 @@
 import { BlockTag } from '@ethersproject/abstract-provider'
 import { BaseContract, Event, EventFilter } from '@ethersproject/contracts'
-import { JsonRpcProvider } from '@ethersproject/providers'
+import { BaseProvider, JsonRpcProvider } from '@ethersproject/providers'
 import { ChainId } from '@ubeswap/sdk-core'
 import makeConcurrencyLimited from 'utils/concurrencyLimiter'
 import pMemoize from 'utils/promiseMemoize'
@@ -16,9 +16,11 @@ async function eventFetcher<T>(
   fromBlockOrBlockhash?: BlockTag | undefined,
   toBlock?: BlockTag | undefined
 ): Promise<T[]> {
-  const chainId = (contract.provider as any)._network.chainId
+  const provider = contract.provider as BaseProvider
+  const network = await provider.getNetwork()
+  const chainId = network.chainId
 
-  const currentBlock = await contract.provider.getBlockNumber()
+  const currentBlock = await provider.getBlockNumber()
   const startBlock = typeof fromBlockOrBlockhash == 'number' ? fromBlockOrBlockhash : 0
   const endBlock = toBlock == 'latest' ? currentBlock : typeof toBlock == 'number' ? toBlock : currentBlock
   console.log({ startBlock, endBlock })

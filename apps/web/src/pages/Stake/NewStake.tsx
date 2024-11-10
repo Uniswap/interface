@@ -7,7 +7,6 @@ import { useContract } from 'hooks/useContract'
 import { t } from 'i18n'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
-import useBlockNumber from 'lib/hooks/useBlockNumber'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { BodyWrapper } from 'pages/AppBody'
 import React, { useCallback, useState } from 'react'
@@ -134,9 +133,8 @@ export const NewStake: React.FC = () => {
       : undefined
 
   const { tokenDelegate, quorumVotes, proposalThreshold } = useRomulus()
-  const latestBlockNumber = useBlockNumber()
 
-  const { votingPower, releaseVotingPower } = useVotingTokens(latestBlockNumber ? latestBlockNumber - 2 : 0)
+  const { votingPower, releaseVotingPower } = useVotingTokens(0)
   const totalVotingPower = votingPower && releaseVotingPower ? votingPower.add(releaseVotingPower) : undefined
 
   const disablePropose =

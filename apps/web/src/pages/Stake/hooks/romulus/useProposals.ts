@@ -24,16 +24,17 @@ export const useProposals = (): Array<TypedEvent<Proposal>> | undefined => {
 
   const call = useCallback(async () => {
     if (!romulusContract || !mountRef.current) return
-    const filter = romulusContract.filters.ProposalCreated(null, null, null, null, null, null, null, null, null)
-    const proposalEvents1 = await fetchEvents<TypedEvent<Proposal>>(romulusContract, filter, -18000, -12000)
-    const proposalEvents2 = await fetchEvents<TypedEvent<Proposal>>(romulusContract, filter, -12000, -6000)
-    const proposalEvents3 = await fetchEvents<TypedEvent<Proposal>>(romulusContract, filter, -6000, -1)
-    console.log(proposalEvents1.concat(proposalEvents2).concat(proposalEvents3))
-    setProposals(
-      (cachedProposalEvents as unknown as TypedEvent<Proposal>[]).concat(
-        proposalEvents1.concat(proposalEvents2).concat(proposalEvents3)
+    try {
+      const filter = romulusContract.filters.ProposalCreated(null, null, null, null, null, null, null, null, null)
+      const proposalEvents1 = await fetchEvents<TypedEvent<Proposal>>(romulusContract, filter, -18000, -9000)
+      const proposalEvents2 = await fetchEvents<TypedEvent<Proposal>>(romulusContract, filter, -9000, -1)
+      //const proposalEvents3 = await fetchEvents<TypedEvent<Proposal>>(romulusContract, filter, -6000, -1)
+      setProposals(
+        (cachedProposalEvents as unknown as TypedEvent<Proposal>[]).concat(proposalEvents1.concat(proposalEvents2))
       )
-    )
+    } catch (e) {
+      console.log(e)
+    }
   }, [romulusContract])
 
   useEffect(() => {

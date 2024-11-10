@@ -37,7 +37,10 @@ export const useVoteCasts = () => {
       return
     }
     const filter = romulusContract.filters.VoteCast(account, null, null, null, null)
-    const voteEvents = await fetchEvents<TypedEvent<VoteCast>>(romulusContract, filter)
+    const voteEvents1 = await fetchEvents<TypedEvent<VoteCast>>(romulusContract, filter, -27000, -18000)
+    const voteEvents2 = await fetchEvents<TypedEvent<VoteCast>>(romulusContract, filter, -18000, -9000)
+    const voteEvents3 = await fetchEvents<TypedEvent<VoteCast>>(romulusContract, filter, -9000, -1)
+    const voteEvents = voteEvents1.concat(voteEvents2).concat(voteEvents3)
     setVoteEvents(
       voteEvents.reduce((acc, event) => {
         acc[event.args.proposalId.toString()] = event
