@@ -1,10 +1,11 @@
+import { useInfiniteQuery } from '@tanstack/react-query'
 import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { AnimatedBox, Box } from 'nft/components/Box'
+import { Column, Row } from 'nft/components/Flex'
 import { LoadingAssets } from 'nft/components/collection/CollectionAssetLoading'
 import { assetList } from 'nft/components/collection/CollectionNfts.css'
 import { FilterButton } from 'nft/components/collection/FilterButton'
 import { ClearAllButton } from 'nft/components/collection/shared'
-import { Column, Row } from 'nft/components/Flex'
 import { CrossIcon } from 'nft/components/icons'
 import { FilterSidebar } from 'nft/components/profile/view/FilterSidebar'
 import { subhead } from 'nft/css/common.css'
@@ -21,7 +22,6 @@ import { OSCollectionsFetcher } from 'nft/queries/openSea'
 import { WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { useInfiniteQuery } from 'react-query'
 import { easings, useSpring } from 'react-spring'
 import styled from 'styled-components'
 
@@ -90,8 +90,11 @@ export const ProfilePage = () => {
     hasNextPage,
     isFetchingNextPage,
     isSuccess,
-  } = useInfiniteQuery(['ownerCollections', { address }], getOwnerCollections, {
+  } = useInfiniteQuery({
+    queryKey: ['ownerCollections', { address }],
+    queryFn: getOwnerCollections,
     getNextPageParam: (lastGroup) => (lastGroup.data.length === 0 ? undefined : lastGroup.nextPage),
+    initialPageParam: 0,
     refetchInterval: 15000,
     refetchIntervalInBackground: false,
     refetchOnWindowFocus: false,
