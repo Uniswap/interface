@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { useQuery } from '@tanstack/react-query'
 import { ChainId, CurrencyAmount, Fraction, Percent, Token } from '@ubeswap/sdk-core'
 import CID from 'cids'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
@@ -159,60 +160,47 @@ interface Metadata {
   dataFile: string
 }
 
+async function fetchMetadata(incentiveId: string, _ipfsHash: string): Promise<Metadata | undefined> {
+  if (!_ipfsHash) {
+    return
+  }
+  let data = {
+    platform: 'Ubeswap',
+    farmContract: '0xA6E9069CB055a425Eb41D185b740B22Ec8f51853',
+    chainId: 42220,
+    incentiveId,
+    timestamp: 0,
+    blocknumber: 0,
+    duration: 1,
+    distributedRewards: '0',
+    totalDistributedRewards: '0',
+    merkleRoot: '0x0000000000000000000000000000000000000000000000000000000000000000',
+    activeTvlNative: '0',
+    activeTokenCount: 0,
+    inactiveTvlNative: '0',
+    inactiveTokenCount: 0,
+    unstakedTokenCount: 0,
+    totalShares: '0',
+    dataFile: './data.json',
+  }
+  if (_ipfsHash != '0x0000000000000000000000000000000000000000000000000000000000000000') {
+    const ipfsHash = _ipfsHash.replace(/^0x/, '')
+    const cidV0 = new CID(toB58String(hexToUint8Array('1220' + ipfsHash)))
+    const cidV1Str = cidV0.toV1().toString()
+    const res = await fetch('https://scarlet-bored-roundworm-446.mypinata.cloud/ipfs/' + cidV1Str + '/metadata.json')
+    data = (await res.json()) as Metadata
+  }
+  return data
+}
+
 export function useV3IncentiveMetadata(incentiveId: string): Metadata | undefined {
   const incentiveInfo = useIncentiveContractInfo(incentiveId)
-  const [metadata, setMetadata] = useState<Metadata>()
-
-  useEffect(() => {
-    let active = true
-    if (incentiveInfo) {
-      ;(async () => {
-        try {
-          let data = {
-            platform: 'Ubeswap',
-            farmContract: '0xA6E9069CB055a425Eb41D185b740B22Ec8f51853',
-            chainId: 42220,
-            incentiveId,
-            timestamp: 0,
-            blocknumber: 0,
-            duration: 1,
-            distributedRewards: '0',
-            totalDistributedRewards: '0',
-            merkleRoot: '0x0000000000000000000000000000000000000000000000000000000000000000',
-            activeTvlNative: '0',
-            activeTokenCount: 0,
-            inactiveTvlNative: '0',
-            inactiveTokenCount: 0,
-            unstakedTokenCount: 0,
-            totalShares: '0',
-            dataFile: './data.json',
-          }
-          if (incentiveInfo.ipfsHash != '0x0000000000000000000000000000000000000000000000000000000000000000') {
-            const ipfsHash = incentiveInfo.ipfsHash.replace(/^0x/, '')
-            const cidV0 = new CID(toB58String(hexToUint8Array('1220' + ipfsHash)))
-            const cidV1Str = cidV0.toV1().toString()
-            const res = await fetch(
-              'https://scarlet-bored-roundworm-446.mypinata.cloud/ipfs/' + cidV1Str + '/metadata.json'
-            )
-            data = (await res.json()) as Metadata
-          }
-          if (active) {
-            console.log('##SET## metadata')
-            setMetadata(data)
-          }
-        } catch (e) {
-          console.error(e)
-        }
-      })()
-    } else {
-      console.log('##SET## metadata undefined')
-      setMetadata(undefined)
-    }
-    return () => {
-      console.log('metadata cancel')
-      active = false
-    }
-  }, [incentiveInfo, incentiveId])
+  const { data: metadata } = useQuery({
+    queryKey: ['farm-metadata', incentiveInfo?.ipfsHash || ''],
+    queryFn: () => fetchMetadata(incentiveId, incentiveInfo?.ipfsHash || ''),
+    enabled: !!incentiveInfo,
+    staleTime: 1000_0000,
+  })
 
   return metadata
 }
@@ -230,48 +218,39 @@ export interface IncentiveDataItem {
   isActive: boolean
 }
 
+async function fetchIncentiveFullData(
+  incentiveId: string,
+  _ipfsHash: string
+): Promise<IncentiveDataItem[] | undefined> {
+  if (!_ipfsHash) {
+    return
+  }
+  let result: IncentiveDataItem[] = []
+  if (_ipfsHash != '0x0000000000000000000000000000000000000000000000000000000000000000') {
+    const ipfsHash = _ipfsHash.replace(/^0x/, '')
+    const cidV0 = new CID(toB58String(hexToUint8Array('1220' + ipfsHash)))
+    const cidV1Str = cidV0.toV1().toString()
+    const res = await fetch('https://scarlet-bored-roundworm-446.mypinata.cloud/ipfs/' + cidV1Str + '/data.json')
+    const data = await res.json()
+    data.forEach((d: any) => {
+      d.tokenId = BigNumber.from(d.tokenId)
+      d.accumulatedRewards = BigNumber.from(d.accumulatedRewards)
+      d.tvlNative = BigNumber.from(d.tvlNative)
+      d.shares = BigNumber.from(d.shares)
+    })
+    result = data as IncentiveDataItem[]
+  }
+  return result
+}
+
 export function useV3IncentiveFullData(incentiveId: string): IncentiveDataItem[] | undefined {
   const incentiveInfo = useIncentiveContractInfo(incentiveId)
-  const [data, setData] = useState<IncentiveDataItem[]>()
-
-  useEffect(() => {
-    let active = true
-    if (incentiveInfo) {
-      ;(async () => {
-        try {
-          let result: IncentiveDataItem[] = []
-          if (incentiveInfo.ipfsHash != '0x0000000000000000000000000000000000000000000000000000000000000000') {
-            const ipfsHash = incentiveInfo.ipfsHash.replace(/^0x/, '')
-            const cidV0 = new CID(toB58String(hexToUint8Array('1220' + ipfsHash)))
-            const cidV1Str = cidV0.toV1().toString()
-            const res = await fetch(
-              'https://scarlet-bored-roundworm-446.mypinata.cloud/ipfs/' + cidV1Str + '/data.json'
-            )
-            const data = await res.json()
-            data.forEach((d: any) => {
-              d.tokenId = BigNumber.from(d.tokenId)
-              d.accumulatedRewards = BigNumber.from(d.accumulatedRewards)
-              d.tvlNative = BigNumber.from(d.tvlNative)
-              d.shares = BigNumber.from(d.shares)
-            })
-            result = data as IncentiveDataItem[]
-          }
-          if (active) {
-            console.log('##SET## data')
-            setData(result)
-          }
-        } catch (e) {
-          console.error(e)
-        }
-      })()
-    } else {
-      console.log('##SET## data undefined')
-      setData(undefined)
-    }
-    return () => {
-      active = false
-    }
-  }, [incentiveInfo, incentiveId])
+  const { data } = useQuery({
+    queryKey: ['farm-fulldata', incentiveInfo?.ipfsHash || ''],
+    queryFn: () => fetchIncentiveFullData(incentiveId, incentiveInfo?.ipfsHash || ''),
+    enabled: !!incentiveInfo,
+    staleTime: 1000_0000,
+  })
 
   return data
 }
