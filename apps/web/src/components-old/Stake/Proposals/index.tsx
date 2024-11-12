@@ -9,7 +9,7 @@ import Row from '../../Row'
 import { ProposalCard } from './ProposalCard'
 
 interface ProposalProps {
-  onClickProposal: (url: string) => void
+  onClickProposal: (url: string, isNewContract: boolean) => void
 }
 
 export const Proposals: React.FC<ProposalProps> = ({ onClickProposal }: ProposalProps) => {
@@ -25,8 +25,8 @@ export const Proposals: React.FC<ProposalProps> = ({ onClickProposal }: Proposal
     [proposals, showMore]
   )
 
-  const showProposal = (url: string) => {
-    onClickProposal(url)
+  const showProposal = (url: string, isNewContract: boolean) => {
+    onClickProposal(url, isNewContract)
   }
 
   return (
@@ -34,7 +34,11 @@ export const Proposals: React.FC<ProposalProps> = ({ onClickProposal }: Proposal
       {visibleProposals ? (
         <>
           {visibleProposals.map((proposalEvent, idx) => (
-            <Box my={2} key={idx} onClick={() => showProposal(proposalEvent.args.id.toString())}>
+            <Box
+              my={2}
+              key={idx}
+              onClick={() => showProposal(proposalEvent.args.id.toString(), proposalEvent.blockNumber > 25_000_000)}
+            >
               <ProposalCard proposalEvent={proposalEvent} clickable={true} showId={true} showAuthor={false} />
             </Box>
           ))}

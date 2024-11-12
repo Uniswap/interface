@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { useWeb3React } from '@web3-react/core'
 import { useUbeswapV3FarmingContract, useV3NFTPositionManagerContract } from 'hooks/useContract'
-import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
+import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useV3IncentiveFullData, type IncentiveDataItem } from 'pages/Earn/data/useFarms'
 import { type IncentiveKey } from 'pages/Earn/data/v3-incentive-list'
 import { useCallback, useMemo, useState } from 'react'
@@ -383,7 +383,7 @@ interface IncentiveContractInfo {
 
 export function useIncentiveContractInfo(incentiveId: string): IncentiveContractInfo | undefined {
   const farmContract = useUbeswapV3FarmingContract(FARM_ADDRESS)
-  const result = useSingleCallResult(farmContract, 'incentives', [incentiveId], NEVER_RELOAD)
+  const result = useSingleCallResult(farmContract, 'incentives', [incentiveId])
   return (result?.result as unknown as IncentiveContractInfo) || undefined
 }
 
