@@ -308,11 +308,19 @@ export async function transactionToActivity(
       info.type === TransactionType.ADD_LIQUIDITY_V2_POOL
     ) {
       additionalFields = await parseLegacyLP(info, chainId, formatNumber)
-    } else if (info.type === TransactionType.INCREASE_LIQUIDITY || info.type === TransactionType.DECREASE_LIQUIDITY) {
+    } else if (
+      info.type === TransactionType.INCREASE_LIQUIDITY ||
+      info.type === TransactionType.DECREASE_LIQUIDITY ||
+      info.type === TransactionType.CREATE_POSITION ||
+      info.type === TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4
+    ) {
       additionalFields = await parseLiquidity(info, chainId, formatNumber)
     } else if (info.type === TransactionType.COLLECT_FEES) {
       additionalFields = await parseCollectFees(info, chainId, formatNumber)
-    } else if (info.type === TransactionType.MIGRATE_LIQUIDITY_V3 || info.type === TransactionType.CREATE_V3_POOL) {
+    } else if (
+      info.type === TransactionType.MIGRATE_LIQUIDITY_V2_TO_V3 ||
+      info.type === TransactionType.CREATE_V3_POOL
+    ) {
       additionalFields = await parseMigrateCreateV3(info, chainId)
     } else if (info.type === TransactionType.SEND) {
       additionalFields = await parseSend(info, chainId, formatNumber)

@@ -1,12 +1,10 @@
 import { SearchBar } from 'components/NavBar/SearchBar'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
-import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNavSearchInputVisible } from 'nft/hooks/useIsNavSearchInputVisible'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 import { useTranslation } from 'uniswap/src/i18n'
 
-jest.mock('hooks/useDisableNFTRoutes')
 jest.mock('hooks/screenSize/useScreenSize')
 jest.mock('nft/hooks/useIsNavSearchInputVisible')
 
@@ -26,15 +24,7 @@ describe('disable nft on searchbar', () => {
     mocked(useIsNavSearchInputVisible).mockReturnValue(true)
   })
 
-  it('should render text with nfts', () => {
-    mocked(useDisableNFTRoutes).mockReturnValue(false)
-    const { container } = render(<SearchBar />)
-    expect(container).toMatchSnapshot()
-    const { t } = useTranslation()
-    expect(screen.queryByPlaceholderText(t('common.searchTokensNFT'))).toBeVisible()
-  })
   it('should render text without nfts', () => {
-    mocked(useDisableNFTRoutes).mockReturnValue(true)
     const { container } = render(<SearchBar />)
     expect(container).toMatchSnapshot()
     const { t } = useTranslation()

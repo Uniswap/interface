@@ -6,6 +6,8 @@ import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { Dispatch, SetStateAction } from 'react'
 import { PositionField } from 'types/position'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export type FeeData = {
   feeAmount: number
@@ -37,7 +39,9 @@ export interface PositionState {
 }
 
 export const DEFAULT_POSITION_STATE: PositionState = {
-  currencyInputs: {},
+  currencyInputs: {
+    [PositionField.TOKEN0]: nativeOnChain(UniverseChainId.Mainnet),
+  },
   fee: { feeAmount: FeeAmount.MEDIUM, tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM] },
   hook: undefined,
   protocolVersion: ProtocolVersion.V4,
@@ -49,6 +53,7 @@ type BaseCreatePositionInfo = {
   currencies: [OptionalCurrency, OptionalCurrency]
   creatingPoolOrPair?: boolean
   poolOrPairLoading?: boolean
+  isPoolOutOfSync: boolean
 }
 
 export type CreateV4PositionInfo = BaseCreatePositionInfo & {
@@ -68,6 +73,11 @@ export type CreateV2PositionInfo = BaseCreatePositionInfo & {
 
 export type CreatePositionInfo = CreateV4PositionInfo | CreateV3PositionInfo | CreateV2PositionInfo
 
+export interface DynamicFeeTierSpeedbumpData {
+  open: boolean
+  wishFeeData: FeeData
+}
+
 export type CreatePositionContextType = {
   step: PositionFlowStep
   setStep: Dispatch<SetStateAction<PositionFlowStep>>
@@ -76,6 +86,8 @@ export type CreatePositionContextType = {
   derivedPositionInfo: CreatePositionInfo
   feeTierSearchModalOpen: boolean
   setFeeTierSearchModalOpen: Dispatch<SetStateAction<boolean>>
+  dynamicFeeTierSpeedbumpData: DynamicFeeTierSpeedbumpData
+  setDynamicFeeTierSpeedbumpData: Dispatch<SetStateAction<DynamicFeeTierSpeedbumpData>>
 }
 
 export interface PriceRangeState {

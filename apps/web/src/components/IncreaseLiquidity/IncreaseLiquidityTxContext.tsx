@@ -10,7 +10,10 @@ import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/
 import { useIncreaseLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useIncreaseLpPositionCalldataQuery'
 import { CheckApprovalLPRequest, IncreaseLPPositionRequest } from 'uniswap/src/data/tradingApi/__generated__'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
-import { IncreasePositionTxAndGasInfo } from 'uniswap/src/features/transactions/liquidity/types'
+import {
+  IncreasePositionTxAndGasInfo,
+  LiquidityTransactionType,
+} from 'uniswap/src/features/transactions/liquidity/types'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useAccount } from 'wagmi'
@@ -152,9 +155,10 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     const txRequest = validateTransactionRequest(increase)
 
     return {
-      type: 'increase',
+      type: LiquidityTransactionType.Increase,
       protocolVersion: positionInfo?.version,
       action: {
+        type: LiquidityTransactionType.Increase,
         currency0Amount: currencyAmounts?.TOKEN0,
         currency1Amount: currencyAmounts?.TOKEN1,
         liquidityToken: positionInfo.liquidityToken,

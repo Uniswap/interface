@@ -5,8 +5,6 @@ import { useLockScreenContext } from 'src/features/authentication/lockScreenCont
 import { useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { TouchableArea } from 'ui/src'
 
-export const SPLASH_SCREEN = { uri: 'SplashScreen' }
-
 export function LockScreenModal(): JSX.Element | null {
   const { isLockScreenVisible, animationType, setIsLockScreenVisible } = useLockScreenContext()
   const { trigger } = useBiometricPrompt(() => setIsLockScreenVisible(false))

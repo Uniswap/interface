@@ -1,3 +1,32 @@
+query TopV4Pools($chain: Chain!, $first: Int!, $cursor: Float, $tokenAddress: String) {
+  topV4Pools(first: $first, chain: $chain, tokenFilter: $tokenAddress, tvlCursor: $cursor) {
+    id
+    protocolVersion
+    poolId
+    hook {
+      id
+      address
+    }
+    totalLiquidity {
+      value
+    }
+    feeTier
+    token0 {
+      ...SimpleTokenDetails
+    }
+    token1 {
+      ...SimpleTokenDetails
+    }
+    txCount
+    volume24h: cumulativeVolume(duration: DAY) {
+      value
+    }
+    volume30d: cumulativeVolume(duration: MONTH) {
+      value
+    }
+  }
+}
+
 query TopV3Pools($chain: Chain!, $first: Int!, $cursor: Float, $tokenAddress: String) {
   topV3Pools(first: $first, chain: $chain, tokenFilter: $tokenAddress, tvlCursor: $cursor) {
     id
@@ -17,7 +46,7 @@ query TopV3Pools($chain: Chain!, $first: Int!, $cursor: Float, $tokenAddress: St
     volume24h: cumulativeVolume(duration: DAY) {
       value
     }
-    volumeWeek: cumulativeVolume(duration: WEEK) {
+    volume30d: cumulativeVolume(duration: MONTH) {
       value
     }
   }
@@ -41,7 +70,7 @@ query TopV2Pairs($chain: Chain!, $first: Int!, $cursor: Float, $tokenAddress: St
     volume24h: cumulativeVolume(duration: DAY) {
       value
     }
-    volumeWeek: cumulativeVolume(duration: WEEK) {
+    volume30d: cumulativeVolume(duration: MONTH) {
       value
     }
   }

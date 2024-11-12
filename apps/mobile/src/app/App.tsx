@@ -9,6 +9,7 @@ import {
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
 import { MMKVWrapper } from 'apollo3-cache-persist'
+import * as SplashScreen from 'expo-splash-screen'
 import { PropsWithChildren, default as React, StrictMode, useCallback, useEffect } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { LogBox, NativeModules, StatusBar } from 'react-native'
@@ -95,6 +96,9 @@ enableFreeze(true)
 if (__DEV__) {
   registerConsoleOverrides()
 }
+
+// Keep the splash screen visible while we fetch resources until one of our landing pages loads
+SplashScreen.preventAutoHideAsync().catch(() => undefined)
 
 // Datadog
 const datadogConfig = new DatadogProviderConfiguration(

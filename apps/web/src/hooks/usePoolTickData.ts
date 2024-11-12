@@ -1,11 +1,11 @@
 import { Currency, Price, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, TICK_SPACINGS, tickToPrice } from '@uniswap/v3-sdk'
 import { TickData, Ticks } from 'graphql/data/AllV3TicksQuery'
-import { useAccount } from 'hooks/useAccount'
 import { PoolState, usePoolMultichain } from 'hooks/usePools'
 import JSBI from 'jsbi'
 import ms from 'ms'
 import { useEffect, useMemo, useState } from 'react'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { useAllV3TicksQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains, useSupportedChainId } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -111,8 +111,8 @@ export function usePoolActiveLiquidity(
   sqrtPriceX96?: JSBI
   data?: TickProcessed[]
 } {
-  const account = useAccount()
-  const defaultChainId = account.chainId ?? UniverseChainId.Mainnet
+  const multichainContext = useMultichainContext()
+  const defaultChainId = multichainContext.chainId ?? UniverseChainId.Mainnet
   const pool = usePoolMultichain(currencyA?.wrapped, currencyB?.wrapped, feeAmount, chainId ?? defaultChainId)
   const liquidity = pool[1]?.liquidity
   const sqrtPriceX96 = pool[1]?.sqrtRatioX96

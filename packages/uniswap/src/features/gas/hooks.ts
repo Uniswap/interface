@@ -97,10 +97,12 @@ export function useShadowGasStrategies(chainId: number | undefined, type: GasStr
 }
 
 // Function to find the name of a gas strategy based on the GasEstimate
-export function findGasStrategyName(gasEstimate: GasEstimate): string | undefined {
+export function findGasStrategyName(gasEstimate: GasEstimate, type: GasStrategyType): string | undefined {
   const gasStrategies = Statsig.getConfig(DynamicConfigs.GasStrategies).value as GasStrategies
 
-  const matchingStrategy = gasStrategies.strategies.find((s) => areEqualGasStrategies(s.strategy, gasEstimate.strategy))
+  const matchingStrategy = gasStrategies.strategies.find(
+    (s) => s.conditions.types === type && areEqualGasStrategies(s.strategy, gasEstimate.strategy),
+  )
 
   return matchingStrategy?.conditions.name
 }

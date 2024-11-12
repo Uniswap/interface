@@ -1,6 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { InterfacePageName, LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
+import { InterfacePageName, LiquidityEventName } from '@uniswap/analytics-events'
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge/Badge'
@@ -8,6 +10,7 @@ import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonConfirmed, ButtonGray, ButtonPrimary, SmallButtonPrimary } from 'components/Button/buttons'
 import { DarkCard, LightCard } from 'components/Card/cards'
 import { PositionNFT } from 'components/Liquidity/PositionNFT'
+import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { LoadingFullscreen } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
@@ -49,6 +52,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans, t } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { currencyId } from 'utils/currencyId'
 import { WrongChainError } from 'utils/errors'
@@ -327,6 +331,7 @@ function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
 }
 
 function PositionPageContent() {
+  const trace = useTrace()
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
   const account = useAccount()
   const supportedChain = useSupportedChainId(account.chainId)
@@ -496,10 +501,18 @@ function PositionPageContent() {
           setCollecting(false)
 
           sendAnalyticsEvent(LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED, {
-            source: LiquiditySource.V3,
-            label: [currency0ForFeeCollectionPurposes.symbol, currency1ForFeeCollectionPurposes.symbol].join('/'),
-            type: LiquiditySource.V3,
-            fee_tier: feeAmount,
+            transaction_hash: response.hash,
+            ...getLPBaseAnalyticsProperties({
+              trace,
+              fee: feeAmount,
+              currency0: currency0ForFeeCollectionPurposes,
+              currency1: currency1ForFeeCollectionPurposes,
+              version: ProtocolVersion.V3,
+              poolId: poolAddress,
+              chainId: account.chainId,
+              currency0AmountUsd: feeValue0 ?? CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0),
+              currency1AmountUsd: feeValue1 ?? CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0),
+            }),
           })
 
           addTransaction(response, {
@@ -535,7 +548,9 @@ function PositionPageContent() {
     signer,
     feeValue0,
     feeValue1,
+    trace,
     feeAmount,
+    poolAddress,
     addTransaction,
   ])
 

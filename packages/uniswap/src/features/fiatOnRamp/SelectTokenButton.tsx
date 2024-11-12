@@ -4,12 +4,13 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { Trans } from 'uniswap/src/i18n'
 import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 interface SelectTokenButtonProps {
   onPress: () => void
-  selectedCurrencyInfo: CurrencyInfo
+  selectedCurrencyInfo: Maybe<CurrencyInfo>
   formattedAmount: string
   amountReady?: boolean
   disabled?: boolean
@@ -36,17 +37,29 @@ export function SelectTokenButton({
   return (
     <TouchableArea hapticFeedback borderRadius="$roundedFull" disabled={disabled} testID={testID} onPress={onPress}>
       <Flex centered row flexDirection="row" gap="$none" pr="$spacing4">
-        {loading ? (
-          <SpinningLoader />
+        {selectedCurrencyInfo ? (
+          <>
+            {loading ? (
+              <SpinningLoader />
+            ) : (
+              <CurrencyLogo
+                currencyInfo={selectedCurrencyInfo}
+                networkLogoBorderWidth={spacing.spacing1}
+                size={iconSize}
+              />
+            )}
+            <Text color={textColor} pl="$spacing8" variant="body1">
+              {formattedAmount}
+            </Text>
+            <Text color={textColor} pl="$spacing4" variant="body1">
+              {getSymbolDisplayText(selectedCurrencyInfo.currency.symbol)}
+            </Text>
+          </>
         ) : (
-          <CurrencyLogo currencyInfo={selectedCurrencyInfo} networkLogoBorderWidth={spacing.spacing1} size={iconSize} />
+          <Text color={textColor} pl="$spacing4" variant="body1">
+            <Trans i18nKey="common.selectToken.label" />
+          </Text>
         )}
-        <Text color={textColor} pl="$spacing8" variant="body1">
-          {formattedAmount}
-        </Text>
-        <Text color={textColor} pl="$spacing4" variant="body1">
-          {getSymbolDisplayText(selectedCurrencyInfo.currency.symbol)}
-        </Text>
         <RotatableChevron color={textColor} direction={chevronDirection} height={iconSizes.icon16} />
       </Flex>
     </TouchableArea>

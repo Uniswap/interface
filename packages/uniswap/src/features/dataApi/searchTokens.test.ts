@@ -1,5 +1,4 @@
 import { waitFor } from '@testing-library/react-native'
-import { TokenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
 import { gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
@@ -31,21 +30,10 @@ describe(useTokenProjects, () => {
     })
 
     await waitFor(async () => {
-      const expectedData = (await resolved.searchTokens)
-        .map(removeIsSpam)
-        .map(gqlTokenToCurrencyInfo)
-        .map(removeSafetyInfo)
+      const expectedData = (await resolved.searchTokens).map(gqlTokenToCurrencyInfo).map(removeSafetyInfo)
       const actualData = result.current.data?.map(removeSafetyInfo)
 
       expect(actualData).toEqual(expectedData)
     })
   })
 })
-
-// TODO(WALL-5157): remove once `queryResolvers` is fixed.
-function removeIsSpam(
-  searchToken: NonNullable<NonNullable<TokenQuery['token']>>,
-): NonNullable<NonNullable<TokenQuery['token']>> {
-  delete searchToken.project?.isSpam
-  return searchToken
-}

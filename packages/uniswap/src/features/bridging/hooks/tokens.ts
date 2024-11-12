@@ -51,6 +51,7 @@ export function useBridgingTokenWithHighestBalance({
     address,
     currencyId,
     crossChainTokens,
+    fetchPolicy: 'cache-first',
   })
 
   const { data: bridgingTokens } = useTradingApiSwappableTokensQuery({

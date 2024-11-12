@@ -1,4 +1,4 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
+import { ApolloClient, NormalizedCacheObject, ObservableQuery } from '@apollo/client'
 import { call, delay, select } from 'typed-redux-saga'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import {
@@ -14,6 +14,7 @@ import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyId } from 'uniswap/src/types/currency'
+import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
@@ -59,16 +60,17 @@ export function* refetchGQLQueries({
   }
 
   let freshnessLag = REFETCH_INTERVAL
-
+  let i = 0
+  let lastUpdatedBalances: CurrencyIdToBalance | undefined
   // We poll every `REFETCH_INTERVAL` until we see updated balances for the relevant currencies.
-  for (let i = 0; i < MAX_REFETCH_ATTEMPTS; i += 1) {
+  while (i < MAX_REFETCH_ATTEMPTS) {
     const currencyIdToUpdatedBalance = readBalancesFromCache({
       owner,
       currencyIds: currenciesWithBalToUpdate,
       apolloClient,
       isTestnetMode,
     })
-
+    lastUpdatedBalances = currencyIdToUpdatedBalance
     if (checkIfBalancesUpdated(currencyIdToStartingBalance, currencyIdToUpdatedBalance)) {
       break
     }
@@ -83,9 +85,31 @@ export function* refetchGQLQueries({
     }
 
     // We only want to refetch `PortfolioBalances`, as this is the only query needed to check the updated balances.
-    yield* call([apolloClient, apolloClient.refetchQueries], { include: [GQLQueries.PortfolioBalances] })
+    yield* call([apolloClient, apolloClient.refetchQueries], {
+      include: [GQLQueries.PortfolioBalances],
+      onQueryUpdated: (observableQuery: ObservableQuery<PortfolioBalancesQuery>) => {
+        logger.info('refetchGQLQueriesSaga', 'refetchGQLQueries', 'PortfolioBalances refetch', {
+          iteration: i,
+          queryName: observableQuery.queryName,
+          networkStatus: observableQuery.getCurrentResult().networkStatus,
+          error: observableQuery.getCurrentResult().error,
+        })
+        return true
+      },
+    })
 
     freshnessLag += REFETCH_INTERVAL
+    i += 1
+  }
+
+  // Log how many iterations it took to get the balances, and the currencyIds that were being compared
+  if (i >= 10) {
+    logger.info('refetchGQLQueriesSaga', 'refetchGQLQueries', 'Large balance freshness lag', {
+      iterations: i,
+      startingBalances: currencyIdToStartingBalance,
+      lastUpdatedBalances,
+      currencyIds: currenciesWithBalToUpdate,
+    })
   }
 
   sendAnalyticsEvent(WalletEventName.PortfolioBalanceFreshnessLag, {
@@ -152,6 +176,12 @@ function readBalancesFromCache({
     query: PortfolioBalancesDocument,
     variables: { ownerAddress: owner, chains },
   })
+
+  if (!cachedBalancesData) {
+    logger.info('refetchGQLQueriesSaga', 'readBalancesFromCache', 'No cached balances data', {
+      currencyIds: currencyIdsToUpdate,
+    })
+  }
 
   for (const tokenData of cachedBalancesData?.portfolios?.[0]?.tokenBalances ?? []) {
     const chainId = fromGraphQLChain(tokenData?.token?.chain)

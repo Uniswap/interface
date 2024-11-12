@@ -108,7 +108,7 @@ function usePDPChartState(
   const isV3 = protocolVersion === ProtocolVersion.V3
   const isV4 = protocolVersion === ProtocolVersion.V4
   const variables = {
-    addressOrId: poolData?.address ?? '',
+    addressOrId: poolData?.idOrAddress ?? '',
     chain,
     duration: toHistoryDuration(timePeriod),
     isV4,
@@ -116,7 +116,7 @@ function usePDPChartState(
     isV2,
   }
 
-  const priceQuery = usePDPPriceChartData(variables, poolData, tokenA, tokenB, isReversed)
+  const priceQuery = usePDPPriceChartData(variables, poolData, tokenA, tokenB, isReversed, protocolVersion)
   const volumeQuery = usePDPVolumeChartData(variables)
 
   return useMemo(() => {

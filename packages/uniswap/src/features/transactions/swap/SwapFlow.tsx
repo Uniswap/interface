@@ -77,6 +77,7 @@ function CurrentScreen({
               We only render `SwapReviewScreen` once the user is truly on that step though.
             */}
         <Modal
+          height="auto"
           alignment={isInterface ? 'center' : 'top'}
           isModalOpen={screen === TransactionScreen.Review}
           name={ModalName.SwapReview}
@@ -109,12 +110,16 @@ function CurrentScreen({
   }
 }
 
+// Please verify this on both an Android and iOS physical device before changing these values.
+const SWAP_FORM_SCREEN_TRANSITION_DELAY = isWeb ? 0 : 25
+const SWAP_REVIEW_SCREEN_TRANSITION_DELAY = isWeb ? 0 : 450
+
 // We add a short hardcoded delay to allow the sheet to animate quickly both on first render and when going back from Review -> Form.
 function SwapFormScreenDelayedRender({ customSettings }: { customSettings: SwapSettingConfig[] }): JSX.Element {
-  const [hideContent, setHideContent] = useState(true)
+  const [hideContent, setHideContent] = useState(SWAP_FORM_SCREEN_TRANSITION_DELAY > 0)
 
   useEffect(() => {
-    setTimeout(() => setHideContent(false), 25)
+    setTimeout(() => setHideContent(false), SWAP_FORM_SCREEN_TRANSITION_DELAY)
   }, [])
 
   return <SwapFormScreen customSettings={customSettings} hideContent={hideContent} />
@@ -128,10 +133,10 @@ function SwapReviewScreenDelayedRender({
   swapCallback: SwapCallback
   wrapCallback: WrapCallback
 }): JSX.Element {
-  const [hideContent, setHideContent] = useState(true)
+  const [hideContent, setHideContent] = useState(SWAP_REVIEW_SCREEN_TRANSITION_DELAY > 0)
 
   useEffect(() => {
-    setTimeout(() => setHideContent(false), 25)
+    setTimeout(() => setHideContent(false), SWAP_REVIEW_SCREEN_TRANSITION_DELAY)
   }, [])
 
   return <SwapReviewScreen hideContent={hideContent} swapCallback={swapCallback} wrapCallback={wrapCallback} />

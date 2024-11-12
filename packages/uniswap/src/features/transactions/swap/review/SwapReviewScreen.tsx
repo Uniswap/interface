@@ -1,10 +1,8 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FadeIn } from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
 import { Button, Flex, SpinningLoader, isWeb, useHapticFeedback, useIsShortMobileDevice } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
@@ -280,15 +278,16 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
     setShowWarningModal(false)
   }, [])
 
-  if (hideContent || !acceptedDerivedSwapInfo || (!isWrap && !indicativeTrade && (!acceptedTrade || !trade))) {
-    // We forcefully hide the content via `hideContent` to allow the bottom sheet to animate faster while still allowing all API requests to trigger ASAP.
+  if (!acceptedDerivedSwapInfo || (!isWrap && !indicativeTrade && (!acceptedTrade || !trade))) {
     // A missing `acceptedTrade` or `trade` can happen when the user leaves the app and comes back to the review screen after 1 minute when the TTL for the quote has expired.
     // When that happens, we remove the quote from the cache before refetching, so there's no `trade`.
     return (
-      // The value of `height + mb` must be equal to the height of the fully rendered component to avoid any jumps.
-      <Flex centered height={377} mb="$spacing28">
-        {!hideContent && <SpinningLoader size={iconSizes.icon40} />}
-      </Flex>
+      <TransactionModalInnerContainer bottomSheetViewStyles={bottomSheetViewStyles} fullscreen={false}>
+        {/* The value of `height + mb` must be equal to the height of the fully rendered component to avoid any jumps. */}
+        <Flex centered height={377} mb="$spacing28">
+          <SpinningLoader size={iconSizes.icon40} />
+        </Flex>
+      </TransactionModalInnerContainer>
     )
   }
 
@@ -336,44 +335,44 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
           />
         )}
 
-        <>
-          <AnimatedFlex entering={FadeIn} gap="$spacing16" pt={isWeb ? '$spacing8' : undefined}>
-            <TransactionAmountsReview
-              acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
-              newTradeRequiresAcceptance={newTradeRequiresAcceptance}
-              onClose={onPrev}
-            />
+        {/* We hide the content via `hideContent` to allow the bottom sheet to animate properly while still rendering the components to allow the sheet to calculate its height. */}
+        <Flex animation="quick" opacity={hideContent ? 0 : 1} gap="$spacing16" pt={isWeb ? '$spacing8' : undefined}>
+          <TransactionAmountsReview
+            acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
+            newTradeRequiresAcceptance={newTradeRequiresAcceptance}
+            onClose={onPrev}
+          />
 
-            {showInterfaceReviewSteps ? (
-              <ProgressIndicator currentStep={currentStep} steps={steps} />
-            ) : isWrap ? (
-              <TransactionDetails
-                chainId={chainId}
-                gasFee={gasFee}
-                warning={reviewScreenWarning?.warning}
-                onShowWarning={onShowWarning}
-              />
-            ) : (
-              <SwapDetails
-                acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
-                autoSlippageTolerance={autoSlippageTolerance}
-                customSlippageTolerance={customSlippageTolerance}
-                derivedSwapInfo={derivedSwapInfo}
-                feeOnTransferProps={feeOnTransferProps}
-                tokenWarningProps={tokenWarningProps}
-                tokenWarningChecked={tokenWarningChecked}
-                setTokenWarningChecked={setTokenWarningChecked}
-                gasFee={gasFee}
-                newTradeRequiresAcceptance={newTradeRequiresAcceptance}
-                uniswapXGasBreakdown={uniswapXGasBreakdown}
-                warning={reviewScreenWarning?.warning}
-                onAcceptTrade={onAcceptTrade}
-                onShowWarning={onShowWarning}
-              />
-            )}
-          </AnimatedFlex>
-        </>
+          {showInterfaceReviewSteps ? (
+            <ProgressIndicator currentStep={currentStep} steps={steps} />
+          ) : isWrap ? (
+            <TransactionDetails
+              chainId={chainId}
+              gasFee={gasFee}
+              warning={reviewScreenWarning?.warning}
+              onShowWarning={onShowWarning}
+            />
+          ) : (
+            <SwapDetails
+              acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
+              autoSlippageTolerance={autoSlippageTolerance}
+              customSlippageTolerance={customSlippageTolerance}
+              derivedSwapInfo={derivedSwapInfo}
+              feeOnTransferProps={feeOnTransferProps}
+              tokenWarningProps={tokenWarningProps}
+              tokenWarningChecked={tokenWarningChecked}
+              setTokenWarningChecked={setTokenWarningChecked}
+              gasFee={gasFee}
+              newTradeRequiresAcceptance={newTradeRequiresAcceptance}
+              uniswapXGasBreakdown={uniswapXGasBreakdown}
+              warning={reviewScreenWarning?.warning}
+              onAcceptTrade={onAcceptTrade}
+              onShowWarning={onShowWarning}
+            />
+          )}
+        </Flex>
       </TransactionModalInnerContainer>
+
       {!showInterfaceReviewSteps && (
         <TransactionModalFooterContainer>
           <Flex row gap="$spacing8">

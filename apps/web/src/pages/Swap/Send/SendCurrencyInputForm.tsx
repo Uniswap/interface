@@ -19,10 +19,10 @@ import {
   useWidthAdjustedDisplayValue,
 } from 'pages/Swap/common/shared'
 import { useCallback, useMemo, useState } from 'react'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { useSendContext } from 'state/send/SendContext'
 import { SendInputError } from 'state/send/hooks'
 import { CurrencyState } from 'state/swap/types'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
@@ -187,7 +187,7 @@ export default function SendCurrencyInputForm({
   disabled?: boolean
   onCurrencyChange?: (selected: CurrencyState) => void
 }) {
-  const { chainId } = useSwapAndLimitContext()
+  const { chainId } = useMultichainContext()
   const { defaultChainId } = useEnabledChains()
   const supportedChainId = useSupportedChainId(chainId)
   const { isTestnetModeEnabled } = useEnabledChains()

@@ -34,6 +34,7 @@ interface BasePositionInfo {
   currency0Amount: CurrencyAmount<Currency>
   currency1Amount: CurrencyAmount<Currency>
   chainId: UniverseChainId
+  poolId: string // Refers to pool contract address for v2 & v3, and poolId for v4
   tokenId?: string
   tickLower?: string
   tickUpper?: string
@@ -44,6 +45,7 @@ interface BasePositionInfo {
   liquidityAmount?: CurrencyAmount<Currency>
   token0UncollectedFees?: string
   token1UncollectedFees?: string
+  apr?: number
 }
 
 type V2PairInfo = BasePositionInfo & {
@@ -58,7 +60,6 @@ export type V3PositionInfo = BasePositionInfo & {
   version: ProtocolVersion.V3
   tokenId: string
   pool?: V3Pool
-  poolId?: string
   feeTier?: FeeAmount
   position?: V3Position
   v4hook: undefined
@@ -68,7 +69,6 @@ type V4PositionInfo = BasePositionInfo & {
   version: ProtocolVersion.V4
   tokenId: string
   pool?: V4Pool
-  poolId?: string
   position?: V4Position
   feeTier?: string
   v4hook?: string

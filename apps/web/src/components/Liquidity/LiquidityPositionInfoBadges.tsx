@@ -8,7 +8,7 @@ import { DocumentList } from 'ui/src/components/icons/DocumentList'
 import { useTranslation } from 'uniswap/src/i18n/useTranslation'
 import { isAddress, shortenAddress } from 'utilities/src/addresses'
 
-export const PositionInfoBadge = styled(Text, {
+const PositionInfoBadge = styled(Text, {
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',

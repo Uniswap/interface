@@ -1,6 +1,5 @@
 import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
 import { DepositState } from 'components/Liquidity/types'
-import { useAccount } from 'hooks/useAccount'
 import {
   CreatePositionContext,
   CreateTxContext,
@@ -13,6 +12,7 @@ import {
   useDepositContext,
   usePriceRangeContext,
 } from 'pages/Pool/Positions/create/CreatePositionContext'
+import { DynamicFeeTierSpeedbump } from 'pages/Pool/Positions/create/DynamicFeeTierSpeedbump'
 import {
   useDerivedDepositInfo,
   useDerivedPositionInfo,
@@ -20,6 +20,7 @@ import {
 } from 'pages/Pool/Positions/create/hooks'
 import {
   DEFAULT_POSITION_STATE,
+  DynamicFeeTierSpeedbumpData,
   PositionFlowStep,
   PositionState,
   PriceRangeState,
@@ -30,13 +31,9 @@ import {
   generateCreatePositionTxRequest,
 } from 'pages/Pool/Positions/create/utils'
 import { useEffect, useMemo, useState } from 'react'
-import { PositionField } from 'types/position'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { usePrevious } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function CreatePositionContextProvider({
@@ -50,20 +47,10 @@ export function CreatePositionContextProvider({
   const [step, setStep] = useState<PositionFlowStep>(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
   const derivedPositionInfo = useDerivedPositionInfo(positionState)
   const [feeTierSearchModalOpen, setFeeTierSearchModalOpen] = useState(false)
-
-  const account = useAccount()
-  const prevChainId = usePrevious(account.chainId)
-  useEffect(() => {
-    if (prevChainId && prevChainId !== account.chainId) {
-      setPositionState((prevState) => ({
-        ...prevState,
-        currencyInputs: {
-          [PositionField.TOKEN0]: nativeOnChain(account.chainId ?? UniverseChainId.Mainnet),
-        },
-      }))
-      setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
-    }
-  }, [account.chainId, prevChainId])
+  const [dynamicFeeTierSpeedbumpData, setDynamicFeeTierSpeedbumpData] = useState<DynamicFeeTierSpeedbumpData>({
+    open: false,
+    wishFeeData: DEFAULT_POSITION_STATE.fee,
+  })
 
   return (
     <CreatePositionContext.Provider
@@ -75,10 +62,13 @@ export function CreatePositionContextProvider({
         derivedPositionInfo,
         feeTierSearchModalOpen,
         setFeeTierSearchModalOpen,
+        dynamicFeeTierSpeedbumpData,
+        setDynamicFeeTierSpeedbumpData,
       }}
     >
       {children}
       <FeeTierSearchModal />
+      <DynamicFeeTierSpeedbump />
     </CreatePositionContext.Provider>
   )
 }

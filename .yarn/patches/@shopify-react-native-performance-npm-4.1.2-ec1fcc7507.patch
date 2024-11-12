@@ -1,0 +1,11 @@
+diff --git a/ios/ReactNativePerformance/ReactNativePerformance.m b/ios/ReactNativePerformance/ReactNativePerformance.m
+index 485211356fc14de4205e6d0c7e06eb5116992e0b..dbb4bb5637656b7f62fc88249b4ed5402c22290d 100644
+--- a/ios/ReactNativePerformance/ReactNativePerformance.m
++++ b/ios/ReactNativePerformance/ReactNativePerformance.m
+@@ -1,5 +1,5 @@
+ #import "ReactNativePerformance.h"
+-#import "ReactNativePerformance-Swift.h"
++#import <ReactNativePerformance/ReactNativePerformance-Swift.h>
+ 
+ static NSTimeInterval startupTimestamp = -1.0;
+ 

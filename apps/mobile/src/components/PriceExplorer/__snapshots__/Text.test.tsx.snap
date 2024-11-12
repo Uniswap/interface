@@ -217,115 +217,71 @@ exports[`RelativeChangeText renders loading state 1`] = `
 <View
   style={
     {
-      "flexDirection": "column",
+      "alignItems": "flex-end",
+      "flexDirection": "row",
+      "gap": 2,
       "marginTop": 2,
     }
   }
+  testID="relative-price-change"
 >
   <View
-    onLayout={[Function]}
     style={
       {
-        "flexDirection": "column",
-        "opacity": 0,
+        "alignItems": "center",
+        "flexDirection": "row",
       }
     }
-    testID="shimmer-placeholder"
+    testID="text-placeholder"
   >
     <View
       style={
         {
           "alignItems": "center",
           "flexDirection": "row",
+          "position": "relative",
         }
       }
-      testID="text-placeholder"
     >
+      <View
+        accessibilityElementsHidden={true}
+        importantForAccessibility="no-hide-descendants"
+      >
+        <Text
+          allowFontScaling={true}
+          maxFontSizeMultiplier={1.4}
+          style={
+            {
+              "color": "transparent",
+              "fontFamily": "Basel Grotesk",
+              "fontSize": 19,
+              "fontWeight": "400",
+              "lineHeight": 24,
+              "opacity": 0,
+            }
+          }
+          suppressHighlighting={true}
+        >
+          00.00%
+        </Text>
+      </View>
       <View
         style={
           {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "position": "relative",
+            "backgroundColor": "#F9F9F9",
+            "borderBottomLeftRadius": 999999,
+            "borderBottomRightRadius": 999999,
+            "borderTopLeftRadius": 999999,
+            "borderTopRightRadius": 999999,
+            "bottom": "5%",
+            "flexDirection": "column",
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": "5%",
           }
         }
-      >
-        <View
-          accessibilityElementsHidden={true}
-          importantForAccessibility="no-hide-descendants"
-        >
-          <View
-            style={
-              {
-                "flexDirection": "row",
-              }
-            }
-          >
-            <TextInput
-              allowFontScaling={true}
-              collapsable={false}
-              editable={false}
-              jestAnimatedStyle={
-                {
-                  "value": {},
-                }
-              }
-              maxFontSizeMultiplier={1.4}
-              style={
-                {
-                  "fontFamily": "Basel Grotesk",
-                  "fontSize": 19,
-                  "fontWeight": "400",
-                  "lineHeight": 24,
-                  "marginHorizontal": 0,
-                  "opacity": 0,
-                  "padding": 0,
-                  "paddingHorizontal": 0,
-                  "width": 0,
-                }
-              }
-              underlineColorAndroid="transparent"
-            />
-            <Text
-              collapsable={false}
-              jestAnimatedStyle={
-                {
-                  "value": {},
-                }
-              }
-              style={
-                {
-                  "fontFamily": "Basel Grotesk",
-                  "fontSize": 19,
-                  "fontWeight": "400",
-                  "lineHeight": 24,
-                  "opacity": 0,
-                  "padding": 0,
-                }
-              }
-            >
-              00.00%
-            </Text>
-          </View>
-        </View>
-        <View
-          style={
-            {
-              "backgroundColor": "#F9F9F9",
-              "borderBottomLeftRadius": 999999,
-              "borderBottomRightRadius": 999999,
-              "borderTopLeftRadius": 999999,
-              "borderTopRightRadius": 999999,
-              "bottom": "5%",
-              "flexDirection": "column",
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": "5%",
-            }
-          }
-        />
-      </View>
+      />
     </View>
   </View>
 </View>

@@ -22,26 +22,22 @@ import { BREAKPOINTS, ThemeProvider } from 'theme'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans } from 'uniswap/src/i18n'
-import { isAddress } from 'utilities/src/addresses'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 
 const PageWrapper = styled(Row)`
-  padding: 0 16px 52px;
+  padding: 0 20px 52px;
   justify-content: center;
   width: 100%;
-  gap: 40px;
+  gap: 80px;
   align-items: flex-start;
 
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
-    padding: 48px 20px;
+    padding: 48px 40px;
   }
   @media screen and (max-width: ${({ theme }) => theme.breakpoint.lg}px) {
     flex-direction: column;
     align-items: center;
     gap: 0px;
-  }
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.xl}px) {
-    gap: 60px;
   }
 `
 
@@ -50,9 +46,9 @@ const LeftColumn = styled(Column)`
   max-width: 780px;
   overflow: hidden;
   justify-content: flex-start;
+  width: 100%;
 
   @media (max-width: ${BREAKPOINTS.lg}px) {
-    width: 100%;
     max-width: unset;
   }
 `
@@ -128,7 +124,7 @@ export default function PoolDetailsPage() {
     darkMode,
   })
 
-  const isInvalidPool = !poolAddress || !chainInfo || !isAddress(poolAddress)
+  const isInvalidPool = !poolAddress || !chainInfo
   const poolNotFound = (!loading && !poolData) || isInvalidPool
 
   const metatagProperties = useMemo(() => {
@@ -187,6 +183,7 @@ export default function PoolDetailsPage() {
                   token0={token0}
                   token1={token1}
                   feeTier={poolData?.feeTier}
+                  hookAddress={poolData?.hookAddress}
                   protocolVersion={poolData?.protocolVersion}
                   toggleReversed={toggleReversed}
                   loading={loading}

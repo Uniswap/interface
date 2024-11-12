@@ -132,6 +132,7 @@ export function usePortfolioBalances({
         buyFeeBps: feeData?.buyFeeBps,
         sellFeeBps: feeData?.sellFeeBps,
       })
+
       if (!currency) {
         return
       }

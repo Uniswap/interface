@@ -3,50 +3,28 @@
 exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
 <DocumentFragment>
   .c5 {
+  --size: 16px;
+  border-radius: 100px;
+  color: #FC74FE;
+  background-color: #FEF4FF;
+  font-size: calc(var(--size) / 3);
+  font-weight: 535;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  width: 16px;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c5 img {
-  width: 7px;
-  height: 16px;
-  object-fit: cover;
-}
-
-.c5 img:first-child {
-  border-radius: 8px 0 0 8px;
-  object-position: 0 0;
-}
-
-.c5 img:last-child {
-  border-radius: 0 8px 8px 0;
-  object-position: 100% 0;
-}
-
-.c6 {
-  width: 8px;
-  height: 16px;
-  border-radius: 50%;
-}
-
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 }
 
 .c3 {
@@ -73,7 +51,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
   gap: 8px;
 }
 
-.c10 {
+.c9 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -90,7 +68,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
   justify-content: flex-start;
 }
 
-.c7 {
+.c6 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -98,7 +76,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c8 {
+.c7 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -106,11 +84,25 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c12 {
+.c11 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .c1 {
@@ -140,12 +132,12 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
   opacity: 0.4;
 }
 
-.c9 {
+.c8 {
   padding: 4px 6px;
   background: #F9F9F9;
 }
 
-.c11 {
+.c10 {
   gap: 8px;
   width: -webkit-max-content;
   width: -moz-max-content;
@@ -155,11 +147,11 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
   color: #7D7D7D;
 }
 
-.c13 {
+.c12 {
   gap: 10px;
 }
 
-.c14 {
+.c13 {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
@@ -167,7 +159,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
 }
 
 @media screen and (max-width:640px) {
-  .c13 {
+  .c12 {
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
@@ -180,7 +172,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
 }
 
 @media screen and (max-width:640px) {
-  .c15 {
+  .c14 {
     display: none;
   }
 }
@@ -206,34 +198,22 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
             >
               <div
                 class="c5"
-                size="16"
+              />
+              <div
+                class="c6 css-n8z49y"
               >
-                <img
-                  class="c6"
-                  size="16"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                />
-                <img
-                  class="c6"
-                  size="16"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                />
+                /
               </div>
               <div
-                class="c7 css-n8z49y"
+                class="c7 c8 css-1m65e73"
               >
-                WETH/USDC
+                0%
               </div>
               <div
-                class="c8 c9 css-1m65e73"
-              >
-                0.5%
-              </div>
-              <div
-                class="c3 c10 c11"
+                class="c3 c9 c10"
               >
                 <div
-                  class="c12 css-obwv3p"
+                  class="c11 css-obwv3p"
                 >
                   Closed
                 </div>
@@ -275,16 +255,16 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
               </div>
             </div>
             <div
-              class="c3 c10 c13"
+              class="c3 c9 c12"
             >
               <div
-                class="c7 c14 css-obwv3p"
-                data-testid="position-min-0"
+                class="c6 c13 css-obwv3p"
+                data-testid="position-min--"
               >
-                Min: 0 WETH per USDC
+                Min: - undefined per 
               </div>
               <svg
-                class="c15"
+                class="c14"
                 fill="none"
                 height="9"
                 viewBox="0 0 14 9"
@@ -297,10 +277,10 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
                 />
               </svg>
               <div
-                class="c7 c14 css-obwv3p"
-                data-testid="position-max-1"
+                class="c6 c13 css-obwv3p"
+                data-testid="position-max--"
               >
-                Max: 1.00 WETH per USDC
+                Max: - undefined per 
               </div>
             </div>
           </div>
@@ -314,50 +294,28 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
 exports[`PoolDetailsPositionsTable renders with PositionStatus In Range 1`] = `
 <DocumentFragment>
   .c5 {
+  --size: 16px;
+  border-radius: 100px;
+  color: #FC74FE;
+  background-color: #FEF4FF;
+  font-size: calc(var(--size) / 3);
+  font-weight: 535;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  width: 16px;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c5 img {
-  width: 7px;
-  height: 16px;
-  object-fit: cover;
-}
-
-.c5 img:first-child {
-  border-radius: 8px 0 0 8px;
-  object-position: 0 0;
-}
-
-.c5 img:last-child {
-  border-radius: 0 8px 8px 0;
-  object-position: 100% 0;
-}
-
-.c6 {
-  width: 8px;
-  height: 16px;
-  border-radius: 50%;
-}
-
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 }
 
 .c3 {
@@ -384,7 +342,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus In Range 1`] = `
   gap: 8px;
 }
 
-.c10 {
+.c9 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -401,7 +359,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus In Range 1`] = `
   justify-content: flex-start;
 }
 
-.c7 {
+.c6 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -409,7 +367,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus In Range 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c8 {
+.c7 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -417,11 +375,25 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus In Range 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c12 {
+.c11 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .c1 {
@@ -451,12 +423,12 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus In Range 1`] = `
   opacity: 0.4;
 }
 
-.c9 {
+.c8 {
   padding: 4px 6px;
   background: #F9F9F9;
 }
 
-.c11 {
+.c10 {
   gap: 8px;
   width: -webkit-max-content;
   width: -moz-max-content;
@@ -466,301 +438,22 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus In Range 1`] = `
   color: #40B66B;
 }
 
-.c14 {
+.c13 {
   gap: 10px;
 }
 
-.c15 {
+.c14 {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
   white-space: nowrap;
 }
 
-.c13 {
+.c12 {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background-color: #40B66B;
-}
-
-@media screen and (max-width:640px) {
-  .c14 {
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    gap: 4px;
-    -webkit-align-items: flex-start;
-    -webkit-box-align: flex-start;
-    -ms-flex-align: flex-start;
-    align-items: flex-start;
-  }
-}
-
-@media screen and (max-width:640px) {
-  .c16 {
-    display: none;
-  }
-}
-
-<span
-    class=""
-    style="display: contents;"
-  >
-    <span
-      class=" _dsp_contents"
-    >
-      <span
-        class=" t_light _dsp_contents is_Theme"
-      >
-        <div
-          class="c0 c1"
-        >
-          <div
-            class="c0 c2"
-          >
-            <div
-              class="c3 c4"
-            >
-              <div
-                class="c5"
-                size="16"
-              >
-                <img
-                  class="c6"
-                  size="16"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                />
-                <img
-                  class="c6"
-                  size="16"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                />
-              </div>
-              <div
-                class="c7 css-n8z49y"
-              >
-                WETH/USDC
-              </div>
-              <div
-                class="c8 c9 css-1m65e73"
-              >
-                0.5%
-              </div>
-              <div
-                class="c3 c10 c11"
-              >
-                <div
-                  class="c12 css-obwv3p"
-                >
-                  In range
-                </div>
-                <div
-                  class="c13"
-                />
-              </div>
-            </div>
-            <div
-              class="c3 c10 c14"
-            >
-              <div
-                class="c7 c15 css-obwv3p"
-                data-testid="position-min-0"
-              >
-                Min: 0 WETH per USDC
-              </div>
-              <svg
-                class="c16"
-                fill="none"
-                height="9"
-                viewBox="0 0 14 9"
-                width="14"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M4.00284 8.5L0.184659 4.68182L4.00284 0.863636L4.65909 1.51136L1.95739 4.21307H12.1335L9.43182 1.51136L10.0881 0.863636L13.9062 4.68182L10.0881 8.5L9.43182 7.84375L12.1335 5.15057H1.95739L4.65909 7.84375L4.00284 8.5Z"
-                  fill="#5E5E5E"
-                />
-              </svg>
-              <div
-                class="c7 c15 css-obwv3p"
-                data-testid="position-max-1"
-              >
-                Max: 1.00 WETH per USDC
-              </div>
-            </div>
-          </div>
-        </div>
-      </span>
-    </span>
-  </span>
-</DocumentFragment>
-`;
-
-exports[`PoolDetailsPositionsTable renders with PositionStatus Out Of Range 1`] = `
-<DocumentFragment>
-  .c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c5 img {
-  width: 7px;
-  height: 16px;
-  object-fit: cover;
-}
-
-.c5 img:first-child {
-  border-radius: 8px 0 0 8px;
-  object-position: 0 0;
-}
-
-.c5 img:last-child {
-  border-radius: 0 8px 8px 0;
-  object-position: 100% 0;
-}
-
-.c6 {
-  width: 8px;
-  height: 16px;
-  border-radius: 50%;
-}
-
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c3 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c4 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
-.c10 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c7 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c8 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c12 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c1 {
-  gap: 24px;
-  margin-top: 24px;
-  width: 100%;
-}
-
-.c2 {
-  gap: 4px;
-  background: #F9F9F9;
-  border-radius: 12px;
-  width: 100%;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  padding: 16px;
-}
-
-.c2:hover {
-  opacity: 0.6;
-}
-
-.c2:active {
-  opacity: 0.4;
-}
-
-.c9 {
-  padding: 4px 6px;
-  background: #F9F9F9;
-}
-
-.c11 {
-  gap: 8px;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-  margin-right: 0;
-  margin-left: auto;
-  color: #EEB317;
-}
-
-.c13 {
-  gap: 10px;
-}
-
-.c14 {
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-  white-space: nowrap;
 }
 
 @media screen and (max-width:640px) {
@@ -803,34 +496,281 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Out Of Range 1`] 
             >
               <div
                 class="c5"
-                size="16"
+              />
+              <div
+                class="c6 css-n8z49y"
               >
-                <img
-                  class="c6"
-                  size="16"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                />
-                <img
-                  class="c6"
-                  size="16"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                />
+                /
               </div>
               <div
-                class="c7 css-n8z49y"
+                class="c7 c8 css-1m65e73"
               >
-                WETH/USDC
+                0%
               </div>
               <div
-                class="c8 c9 css-1m65e73"
-              >
-                0.5%
-              </div>
-              <div
-                class="c3 c10 c11"
+                class="c3 c9 c10"
               >
                 <div
-                  class="c12 css-obwv3p"
+                  class="c11 css-obwv3p"
+                >
+                  In range
+                </div>
+                <div
+                  class="c12"
+                />
+              </div>
+            </div>
+            <div
+              class="c3 c9 c13"
+            >
+              <div
+                class="c6 c14 css-obwv3p"
+                data-testid="position-min--"
+              >
+                Min: - undefined per 
+              </div>
+              <svg
+                class="c15"
+                fill="none"
+                height="9"
+                viewBox="0 0 14 9"
+                width="14"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M4.00284 8.5L0.184659 4.68182L4.00284 0.863636L4.65909 1.51136L1.95739 4.21307H12.1335L9.43182 1.51136L10.0881 0.863636L13.9062 4.68182L10.0881 8.5L9.43182 7.84375L12.1335 5.15057H1.95739L4.65909 7.84375L4.00284 8.5Z"
+                  fill="#5E5E5E"
+                />
+              </svg>
+              <div
+                class="c6 c14 css-obwv3p"
+                data-testid="position-max--"
+              >
+                Max: - undefined per 
+              </div>
+            </div>
+          </div>
+        </div>
+      </span>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`PoolDetailsPositionsTable renders with PositionStatus Out Of Range 1`] = `
+<DocumentFragment>
+  .c5 {
+  --size: 16px;
+  border-radius: 100px;
+  color: #FC74FE;
+  background-color: #FEF4FF;
+  font-size: calc(var(--size) / 3);
+  font-weight: 535;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  width: 16px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c9 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c6 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c7 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c11 {
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c1 {
+  gap: 24px;
+  margin-top: 24px;
+  width: 100%;
+}
+
+.c2 {
+  gap: 4px;
+  background: #F9F9F9;
+  border-radius: 12px;
+  width: 100%;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  padding: 16px;
+}
+
+.c2:hover {
+  opacity: 0.6;
+}
+
+.c2:active {
+  opacity: 0.4;
+}
+
+.c8 {
+  padding: 4px 6px;
+  background: #F9F9F9;
+}
+
+.c10 {
+  gap: 8px;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  margin-right: 0;
+  margin-left: auto;
+  color: #EEB317;
+}
+
+.c12 {
+  gap: 10px;
+}
+
+.c13 {
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  white-space: nowrap;
+}
+
+@media screen and (max-width:640px) {
+  .c12 {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    gap: 4px;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@media screen and (max-width:640px) {
+  .c14 {
+    display: none;
+  }
+}
+
+<span
+    class=""
+    style="display: contents;"
+  >
+    <span
+      class=" _dsp_contents"
+    >
+      <span
+        class=" t_light _dsp_contents is_Theme"
+      >
+        <div
+          class="c0 c1"
+        >
+          <div
+            class="c0 c2"
+          >
+            <div
+              class="c3 c4"
+            >
+              <div
+                class="c5"
+              />
+              <div
+                class="c6 css-n8z49y"
+              >
+                /
+              </div>
+              <div
+                class="c7 c8 css-1m65e73"
+              >
+                0%
+              </div>
+              <div
+                class="c3 c9 c10"
+              >
+                <div
+                  class="c11 css-obwv3p"
                 >
                   Out of range
                 </div>
@@ -864,16 +804,16 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Out Of Range 1`] 
               </div>
             </div>
             <div
-              class="c3 c10 c13"
+              class="c3 c9 c12"
             >
               <div
-                class="c7 c14 css-obwv3p"
-                data-testid="position-min-0"
+                class="c6 c13 css-obwv3p"
+                data-testid="position-min--"
               >
-                Min: 0 WETH per USDC
+                Min: - undefined per 
               </div>
               <svg
-                class="c15"
+                class="c14"
                 fill="none"
                 height="9"
                 viewBox="0 0 14 9"
@@ -886,10 +826,10 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Out Of Range 1`] 
                 />
               </svg>
               <div
-                class="c7 c14 css-obwv3p"
-                data-testid="position-max-1"
+                class="c6 c13 css-obwv3p"
+                data-testid="position-max--"
               >
-                Max: 1.00 WETH per USDC
+                Max: - undefined per 
               </div>
             </div>
           </div>

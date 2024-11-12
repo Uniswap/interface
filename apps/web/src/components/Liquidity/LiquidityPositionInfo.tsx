@@ -7,17 +7,23 @@ import { Flex, Text } from 'ui/src'
 
 interface LiquidityPositionInfoProps {
   positionInfo: PositionInfo
+  currencyLogoSize?: number
+  hideStatusIndicator?: boolean
 }
 
-export function LiquidityPositionInfo({ positionInfo }: LiquidityPositionInfoProps) {
+export function LiquidityPositionInfo({
+  positionInfo,
+  currencyLogoSize = 44,
+  hideStatusIndicator = false,
+}: LiquidityPositionInfoProps) {
   const { currency0Amount, currency1Amount, status, feeTier, v4hook, version } = positionInfo
   const versionLabel = getProtocolVersionLabel(version)
   return (
-    <Flex row gap="$gap16" py="$spacing4">
+    <Flex row gap="$gap16">
       <DoubleCurrencyAndChainLogo
         chainId={currency0Amount?.currency.chainId}
         currencies={[currency0Amount?.currency, currency1Amount?.currency]}
-        size={44}
+        size={currencyLogoSize}
       />
       <Flex grow>
         <Flex row gap="$gap16">
@@ -28,7 +34,7 @@ export function LiquidityPositionInfo({ positionInfo }: LiquidityPositionInfoPro
             <LiquidityPositionInfoBadges size="small" versionLabel={versionLabel} v4hook={v4hook} feeTier={feeTier} />
           </Flex>
         </Flex>
-        <LiquidityPositionStatusIndicator status={status} />
+        {!hideStatusIndicator && <LiquidityPositionStatusIndicator status={status} />}
       </Flex>
     </Flex>
   )

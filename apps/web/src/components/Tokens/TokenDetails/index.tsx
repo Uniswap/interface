@@ -136,7 +136,7 @@ function TDPSwapComponent() {
   const closeWarningModal = useCallback(() => setShowWarningModal(false), [])
 
   return (
-    <>
+    <Flex gap="$gap12">
       <Swap
         syncTabToUrl={false}
         chainId={currency.chainId}
@@ -162,7 +162,7 @@ function TDPSwapComponent() {
       ) : (
         warning && <TokenSafetyMessage tokenAddress={address} warning={warning} />
       )}
-    </>
+    </Flex>
   )
 }
 

@@ -31,6 +31,7 @@ import { ArrowDown } from 'react-feather'
 import { LimitContextProvider, useLimitContext } from 'state/limit/LimitContext'
 import { getDefaultPriceInverted } from 'state/limit/hooks'
 import { LimitState } from 'state/limit/types'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { LimitOrderTrade, TradeFillType } from 'state/routing/types'
 import { useSwapActionHandlers } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
@@ -93,8 +94,8 @@ type LimitFormProps = {
 
 function LimitForm({ onCurrencyChange }: LimitFormProps) {
   const account = useAccount()
+  const { chainId } = useMultichainContext()
   const {
-    chainId,
     currencyState: { inputCurrency, outputCurrency },
     setCurrencyState,
   } = useSwapAndLimitContext()
@@ -466,7 +467,7 @@ function SubmitOrderButton({
 }) {
   const accountDrawer = useAccountDrawer()
   const account = useAccount()
-  const { chainId } = useSwapAndLimitContext()
+  const { chainId } = useMultichainContext()
 
   if (!useIsUniswapXSupportedChain(chainId)) {
     return (
@@ -506,7 +507,7 @@ function SubmitOrderButton({
         data-testid="submit-order-button"
         disabled={!trade || !!limitPriceError}
       >
-        <Text color="neutralContrast" fontSize={20}>
+        <Text color="$neutralContrast" fontSize={20}>
           <Trans i18nKey="common.confirm" />
         </Text>
       </ButtonError>

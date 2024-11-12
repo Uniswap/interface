@@ -12,6 +12,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
 import { SwapFormState, useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { getShouldResetExactAmountToken } from 'uniswap/src/features/transactions/swap/form/utils'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
@@ -99,6 +100,10 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
       }
 
       newState[field] = tradeableAsset
+
+      if (getShouldResetExactAmountToken(swapCtx, newState)) {
+        newState.exactAmountToken = ''
+      }
 
       onHideTokenSelector()
       updateSwapForm(newState)

@@ -4,7 +4,7 @@ import { useLineChartDatetime } from 'react-native-wagmi-charts'
 import { AnimatedDecimalNumber } from 'src/components/PriceExplorer/AnimatedDecimalNumber'
 import { useLineChartPrice, useLineChartRelativeChange } from 'src/components/PriceExplorer/usePrice'
 import { AnimatedText } from 'src/components/text/AnimatedText'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { AnimatedCaretChange } from 'ui/src/components/icons'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
@@ -52,14 +52,6 @@ export function RelativeChangeText({ loading }: { loading: boolean }): JSX.Eleme
     transform: [{ rotate: relativeChange.value.value > 0 ? '180deg' : '0deg' }],
   }))
 
-  if (loading) {
-    return (
-      <Flex mt={isAndroid ? '$none' : '$spacing2'}>
-        <AnimatedText loading loadingPlaceholderText="00.00%" variant="body1" />
-      </Flex>
-    )
-  }
-
   return (
     <Flex
       row
@@ -68,16 +60,25 @@ export function RelativeChangeText({ loading }: { loading: boolean }): JSX.Eleme
       mt={isAndroid ? '$none' : '$spacing2'}
       testID={TestID.RelativePriceChange}
     >
-      <AnimatedCaretChange
-        size="$icon.16"
-        strokeWidth={2}
-        style={[
-          caretStyle,
-          // fix vertical centering
-          { translateY: relativeChange.value.value > 0 ? -1 : 1 },
-        ]}
-      />
-      <AnimatedText style={styles} testID="relative-change-text" text={relativeChange.formatted} variant="body1" />
+      {loading ? (
+        // We use `no-shimmer` here to speed up the first render and so that this skeleton renders
+        // at the exact same time as the animated number skeleton.
+        // TODO(WALL-5215): we can remove `no-shimmer` once we have a better Skeleton component.
+        <Text loading="no-shimmer" loadingPlaceholderText="00.00%" variant="body1" />
+      ) : (
+        <>
+          <AnimatedCaretChange
+            size="$icon.16"
+            strokeWidth={2}
+            style={[
+              caretStyle,
+              // fix vertical centering
+              { translateY: relativeChange.value.value > 0 ? -1 : 1 },
+            ]}
+          />
+          <AnimatedText style={styles} testID="relative-change-text" text={relativeChange.formatted} variant="body1" />
+        </>
+      )}
     </Flex>
   )
 }

@@ -10,7 +10,7 @@ import { GqlSearchToken } from 'graphql/data/SearchTokens'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import styled, { css } from 'lib/styled-components'
-import { searchGenieCollectionToTokenSearchResult, searchTokenToTokenSearchResult } from 'lib/utils/searchBar'
+import { searchTokenToTokenSearchResult } from 'lib/utils/searchBar'
 import { GenieCollection } from 'nft/types'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -132,9 +132,6 @@ export function SuggestionRow({
         const searchResult = searchTokenToTokenSearchResult({ ...suggestion, address, chainId })
         dispatch(addToSearchHistory({ searchResult }))
       }
-    } else {
-      const searchResult = searchGenieCollectionToTokenSearchResult(suggestion as GenieCollection)
-      dispatch(addToSearchHistory({ searchResult }))
     }
 
     toggleOpen()

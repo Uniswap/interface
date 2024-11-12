@@ -35,6 +35,7 @@ import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { isDetoxBuild } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { isInterface, isMobileApp } from 'utilities/src/platform'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export const UNKNOWN_SIM_ERROR = 'Unknown gas simulation error'
@@ -65,6 +66,7 @@ export function useTransactionRequestInfo({
   skip: boolean
 }): TransactionRequestInfo {
   const formatter = useLocalizationContext()
+  const trace = useTrace()
   const activeGasStrategy = useActiveGasStrategy(derivedSwapInfo.chainId, 'general')
   const shadowGasStrategies = useShadowGasStrategies(derivedSwapInfo.chainId, 'general')
   const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
@@ -227,20 +229,20 @@ export function useTransactionRequestInfo({
 
     if (gasEstimateError) {
       logger.warn('useTransactionRequestInfo', 'useTransactionRequestInfo', UNKNOWN_SIM_ERROR, {
-        ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter }),
+        ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter, trace }),
         error: gasEstimateError,
         txRequest: data?.swap,
       })
 
       if (!isMobileApp) {
         sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
-          ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter }),
+          ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter, trace }),
           error: gasEstimateError,
           txRequest: data?.swap,
         })
       }
     }
-  }, [data?.swap, derivedSwapInfo, formatter, gasEstimateError, swapRequestArgs, trade])
+  }, [data?.swap, derivedSwapInfo, formatter, gasEstimateError, swapRequestArgs, trade, trace])
 
   const gasEstimate: SwapGasFeeEstimation = useMemo(() => {
     const activeGasEstimate = data?.gasEstimates?.find((e) => areEqualGasStrategies(e.strategy, activeGasStrategy))

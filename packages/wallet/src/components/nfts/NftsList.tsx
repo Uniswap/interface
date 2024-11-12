@@ -195,11 +195,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
                   ? t('tokens.nfts.list.none.description.external')
                   : t('tokens.nfts.list.none.description.default')
               }
-              icon={
-                <Flex pb="$spacing12">
-                  <NoNfts color="$neutral3" size="$icon.70" />
-                </Flex>
-              }
+              icon={<NoNfts color="$neutral3" size="$icon.100" />}
               title={t('tokens.nfts.list.none.title')}
               onPress={onPressEmptyState}
             />

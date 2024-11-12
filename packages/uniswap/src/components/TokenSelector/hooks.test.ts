@@ -565,11 +565,12 @@ describe(usePortfolioTokenOptions, () => {
 describe(usePopularTokensOptions, () => {
   const topTokens = createArray(3, token)
   const tokenBalances = topTokens.map((t) => tokenBalance({ token: t }))
+  const portfolios = [portfolio({ tokenBalances })]
 
   const cases = [
     {
       test: 'returns undefined when there is no data',
-      input: { topTokens: null },
+      input: { topTokens: null, portfolios },
       output: { data: undefined },
     },
     {
@@ -581,12 +582,12 @@ describe(usePopularTokensOptions, () => {
     },
     {
       test: 'retruns error if topTokens query fails',
-      input: { topTokens: new Error('Test') },
+      input: { topTokens: new Error('Test'), portfolios },
       output: { error: new ApolloError({ errorMessage: 'Test' }) },
     },
     {
       test: 'returns popular token options when there is data',
-      input: { portfolios: [portfolio({ tokenBalances })], topTokens },
+      input: { portfolios, topTokens },
       output: {
         data: expect.toIncludeSameMembers(tokenBalances.map((t) => portfolioBalance({ fromBalance: t }))),
         error: undefined,
@@ -617,11 +618,12 @@ describe(usePopularTokensOptions, () => {
 describe(useCommonTokensOptionsWithFallback, () => {
   const tokens = [eth, dai, usdc_base]
   const tokenBalances = [ethBalance, daiBalance, usdcBaseBalance]
+  const portfolios = [portfolio({ tokenBalances })]
 
   const cases = [
     {
       test: 'returns undefined when there is no tokenProjects data',
-      input: { tokenProjects: null },
+      input: { portfolios, tokenProjects: null },
       output: {},
     },
     {
@@ -631,7 +633,7 @@ describe(useCommonTokensOptionsWithFallback, () => {
     },
     {
       test: 'retruns error and no data if tokenProjects query fails',
-      input: { tokenProjects: new Error('Test') },
+      input: { portfolios, tokenProjects: new Error('Test') },
       output: { error: new ApolloError({ errorMessage: 'Test' }) },
     },
     {
@@ -648,7 +650,7 @@ describe(useCommonTokensOptionsWithFallback, () => {
     {
       test: 'returns balances for tokens in the tokenProject filtered by chain',
       input: {
-        portfolios: [portfolio({ tokenBalances })],
+        portfolios,
         tokenProjects: [tokenProject({ tokens })],
         chainFilter: UniverseChainId.Mainnet as UniverseChainId,
       },
@@ -685,6 +687,7 @@ describe(useCommonTokensOptionsWithFallback, () => {
 
 describe(useFavoriteTokensOptions, () => {
   const tokenBalances = [...favoriteTokenBalances, ...createArray(3, tokenBalance)]
+  const portfolios = [portfolio({ tokenBalances })]
 
   const cases = [
     {
@@ -699,13 +702,13 @@ describe(useFavoriteTokensOptions, () => {
     },
     {
       test: 'retruns error and no data if tokenProjects query fails',
-      input: { tokenProjects: new Error('Test') },
+      input: { portfolios, tokenProjects: new Error('Test') },
       output: { error: new ApolloError({ errorMessage: 'Test' }) },
     },
     {
       test: 'returns balances for all favorite tokens in portfolios if no chain filter is specified',
       input: {
-        portfolios: [portfolio({ tokenBalances })],
+        portfolios,
         tokenProjects: [tokenProject({ tokens: favoriteTokens })],
       },
       output: {

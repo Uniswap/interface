@@ -19,10 +19,12 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 import { percentFromFloat } from 'utilities/src/format/percent'
 import { NumberType } from 'utilities/src/format/types'
+import { ITraceContext, useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 // hook-based analytics because this one is data-lifecycle dependent
 export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
   const formatter = useLocalizationContext()
+  const trace = useTrace()
   const {
     trade: { trade },
   } = derivedSwapInfo
@@ -49,6 +51,7 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
         currencyInAmountUSD: derivedSwapInfo.currencyAmountsUSDValue.input,
         currencyOutAmountUSD: derivedSwapInfo.currencyAmountsUSDValue.output,
         portfolioBalanceUsd: portfolioData?.balanceUSD,
+        trace,
       }),
     )
     // We only want to re-run this when we get a new `quoteId`.
@@ -64,12 +67,14 @@ export function getBaseTradeAnalyticsProperties({
   currencyInAmountUSD,
   currencyOutAmountUSD,
   portfolioBalanceUsd,
+  trace,
 }: {
   formatter: LocalizationContextState
   trade: Trade<Currency, Currency, TradeType>
   currencyInAmountUSD?: Maybe<CurrencyAmount<Currency>>
   currencyOutAmountUSD?: Maybe<CurrencyAmount<Currency>>
   portfolioBalanceUsd?: number
+  trace: ITraceContext
 }): SwapTradeBaseProperties {
   const portionAmount = getClassicQuoteFromResponse(trade?.quote)?.portionAmount
 
@@ -86,6 +91,7 @@ export function getBaseTradeAnalyticsProperties({
   const slippagePercent = percentFromFloat(trade.slippageTolerance ?? 0)
 
   return {
+    ...trace,
     routing: tradeRoutingToFillType(trade),
     total_balances_usd: portfolioBalanceUsd,
     token_in_symbol: trade.inputAmount.currency.symbol,
@@ -136,9 +142,11 @@ export function getBaseTradeAnalyticsProperties({
 export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
   derivedSwapInfo,
   formatter,
+  trace,
 }: {
   derivedSwapInfo: DerivedSwapInfo
   formatter: LocalizationContextState
+  trace: ITraceContext
 }): SwapTradeBaseProperties {
   const { chainId, currencyAmounts, currencyAmountsUSDValue } = derivedSwapInfo
   const inputCurrencyAmount = currencyAmounts[CurrencyField.INPUT]
@@ -165,6 +173,7 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
     outputCurrencyAmount && feeCurrencyAmount ? outputCurrencyAmount.subtract(feeCurrencyAmount) : outputCurrencyAmount
 
   return {
+    ...trace,
     token_in_symbol: inputCurrencyAmount?.currency.symbol,
     token_out_symbol: outputCurrencyAmount?.currency.symbol,
     token_in_address: inputCurrencyAmount ? getCurrencyAddressForAnalytics(inputCurrencyAmount?.currency) : '',

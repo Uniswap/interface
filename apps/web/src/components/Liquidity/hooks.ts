@@ -111,6 +111,7 @@ export function useV3OrV4PositionDerivedInfo(positionInfo?: PositionInfo) {
     liquidity,
     tickLower,
     tickUpper,
+    apr,
   } = positionInfo ?? {}
   const { price: price0 } = useUSDCPrice(currency0Amount?.currency)
   const { price: price1 } = useUSDCPrice(currency1Amount?.currency)
@@ -180,8 +181,9 @@ export function useV3OrV4PositionDerivedInfo(positionInfo?: PositionInfo) {
         positionInfo?.version === ProtocolVersion.V3 || positionInfo?.version === ProtocolVersion.V4
           ? positionInfo.pool?.token1Price
           : undefined,
+      apr,
     }),
-    [fiatFeeValue0, fiatFeeValue1, fiatValue0, fiatValue1, priceOrdering, feeValue0, feeValue1, positionInfo],
+    [fiatFeeValue0, fiatFeeValue1, fiatValue0, fiatValue1, priceOrdering, feeValue0, feeValue1, positionInfo, apr],
   )
 }
 
@@ -207,6 +209,7 @@ export function useGetRangeDisplay({
   maxPrice: string
   tokenASymbol?: string
   tokenBSymbol?: string
+  isFullRange?: boolean
 } {
   const { formatTickPrice } = useFormatter()
 
@@ -240,6 +243,7 @@ export function useGetRangeDisplay({
     maxPrice,
     tokenASymbol,
     tokenBSymbol,
+    isFullRange: isTickAtLimit[Bound.LOWER] && isTickAtLimit[Bound.UPPER],
   }
 }
 

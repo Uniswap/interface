@@ -25,8 +25,10 @@ import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { useAccount } from 'wagmi'
@@ -36,11 +38,15 @@ const BodyWrapper = styled(Main, {
   display: 'flex',
   flexDirection: 'column',
   gap: '$spacing32',
-  mx: 'auto',
   width: '100%',
-  maxWidth: 768,
+  maxWidth: 1200,
   zIndex: '$default',
-  p: '$spacing24',
+  py: '$spacing24',
+  px: '$spacing40',
+
+  $lg: {
+    px: '$padding20',
+  },
 })
 
 // TODO: replace with Spore button once available
@@ -170,155 +176,175 @@ export default function PositionPage() {
   // TODO (WEB-4920): hide action buttons if position owner is not connected wallet.
 
   return (
-    <BodyWrapper>
-      <Flex gap="$gap20">
-        <Flex row maxWidth={360} justifyContent="flex-start" alignItems="center">
-          <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-            <BreadcrumbNavLink to="/positions">
-              <Trans i18nKey="pool.positions.title" /> <ChevronRight size={14} />
-            </BreadcrumbNavLink>
-          </BreadcrumbNavContainer>
-        </Flex>
-        <Flex
-          row
-          $lg={{ row: false, alignItems: 'flex-start', gap: '$gap16' }}
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <LiquidityPositionInfo positionInfo={positionInfo} />
-          {status !== PositionStatus.CLOSED && (
-            <Flex row gap="$gap12" alignItems="center">
-              {positionInfo.version === ProtocolVersion.V3 && (
+    <Trace
+      logImpression
+      page={InterfacePageNameLocal.PositionDetails}
+      properties={{
+        pool_address: positionInfo.poolId,
+        label: [currency0Amount.currency.symbol, currency1Amount.currency.symbol].join('/'),
+        type: positionInfo.version,
+        fee_tier: typeof positionInfo.feeTier === 'string' ? parseInt(positionInfo.feeTier) : positionInfo.feeTier,
+        baseCurrencyId: currencyIdToAddress(currencyId(currency0Amount.currency)),
+        quoteCurrencyId: currencyIdToAddress(currencyId(currency1Amount.currency)),
+      }}
+    >
+      <BodyWrapper>
+        <Flex gap="$gap20">
+          <Flex row maxWidth={360} justifyContent="flex-start" alignItems="center">
+            <BreadcrumbNavContainer aria-label="breadcrumb-nav">
+              <BreadcrumbNavLink to="/positions">
+                <Trans i18nKey="pool.positions.title" /> <ChevronRight size={14} />
+              </BreadcrumbNavLink>
+            </BreadcrumbNavContainer>
+          </Flex>
+          <Flex
+            row
+            $lg={{ row: false, alignItems: 'flex-start', gap: '$gap16' }}
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <LiquidityPositionInfo positionInfo={positionInfo} />
+            {status !== PositionStatus.CLOSED && (
+              <Flex row gap="$gap12" alignItems="center">
+                {positionInfo.version === ProtocolVersion.V3 && (
+                  <HeaderButton
+                    emphasis="secondary"
+                    onPress={() => {
+                      navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenIdFromUrl}`)
+                    }}
+                  >
+                    <Text variant="buttonLabel2" color="$neutral1">
+                      <Trans i18nKey="pool.migrateToV4" />
+                    </Text>
+                  </HeaderButton>
+                )}
                 <HeaderButton
                   emphasis="secondary"
                   onPress={() => {
-                    navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenIdFromUrl}`)
+                    dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: positionInfo }))
                   }}
                 >
                   <Text variant="buttonLabel2" color="$neutral1">
-                    <Trans i18nKey="pool.migrateToV4" />
+                    <Trans i18nKey="common.addLiquidity" />
                   </Text>
                 </HeaderButton>
-              )}
-              <HeaderButton
-                emphasis="secondary"
-                onPress={() => {
-                  dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: positionInfo }))
-                }}
-              >
-                <Text variant="buttonLabel2" color="$neutral1">
-                  <Trans i18nKey="common.addLiquidity" />
-                </Text>
-              </HeaderButton>
-              <HeaderButton
-                emphasis="primary"
-                onPress={() => {
-                  dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: positionInfo }))
-                }}
-              >
-                <Text variant="buttonLabel2" color="$surface1">
-                  <Trans i18nKey="pool.removeLiquidity" />
-                </Text>
-              </HeaderButton>
-            </Flex>
-          )}
-        </Flex>
-      </Flex>
-      <Flex row $lg={{ row: false }} width="100%" gap="$gap16">
-        <Flex grow backgroundColor="$surface2" borderRadius="$rounded12" justifyContent="center" alignItems="center">
-          {'result' in metadata ? (
-            <PositionNFT image={metadata.result.image} height={400} />
-          ) : (
-            <LoadingFullscreen style={{ borderRadius: 12, backgroundColor: 'transparent' }} />
-          )}
-        </Flex>
-        <Flex grow gap="$gap12">
-          <Flex borderRadius="$rounded16" backgroundColor="$surface2" p="$padding12" gap="$gap16">
-            <Flex gap="$gap8">
-              <Text variant="subheading1">
-                <Trans i18nKey="common.liquidity" />
-              </Text>
-              <Text variant="heading2">
-                {fiatValue0 && fiatValue1
-                  ? formatCurrencyAmount({
-                      amount: fiatValue0.add(fiatValue1),
-                      type: NumberType.FiatTokenPrice,
-                    })
-                  : '-'}
-              </Text>
-            </Flex>
-            <LiquidityPositionAmountsTile
-              currency0Amount={currency0Amount}
-              currency1Amount={currency1Amount}
-              fiatValue0={fiatValue0}
-              fiatValue1={fiatValue1}
-            />
-          </Flex>
-          <Flex p="$padding12" backgroundColor="$surface2" borderRadius="$rounded16">
-            <Flex row width="100%" justifyContent="space-between" alignItems="center">
-              <Text variant="subheading1">
-                <Trans i18nKey="pool.uncollectedFees" />
-              </Text>
-              {hasFees && (
                 <HeaderButton
                   emphasis="primary"
                   onPress={() => {
-                    if (hasFees) {
-                      dispatch(
-                        setOpenModal({ name: ModalName.ClaimFee, initialState: { ...positionInfo, collectAsWeth } }),
-                      )
-                    }
+                    dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: positionInfo }))
                   }}
                 >
-                  <Text variant="buttonLabel4" color="$surface1">
-                    <Trans i18nKey="pool.collectFees" />
+                  <Text variant="buttonLabel2" color="$surface1">
+                    <Trans i18nKey="pool.removeLiquidity" />
                   </Text>
                 </HeaderButton>
-              )}
-            </Flex>
-            <Text variant="heading2" mt="$spacing8" mb="$spacing16">
-              {fiatFeeValue0 && fiatFeeValue1
-                ? formatCurrencyAmount({
-                    amount: fiatFeeValue0.add(fiatFeeValue1),
-                    type: NumberType.FiatTokenPrice,
-                  })
-                : '-'}
-            </Text>
-            {feeValue0 && feeValue1 && (
-              <LiquidityPositionAmountsTile
-                currency0Amount={feeValue0}
-                currency1Amount={feeValue1}
-                fiatValue0={fiatFeeValue0}
-                fiatValue1={fiatFeeValue1}
-              />
-            )}
-            {positionInfo.version !== ProtocolVersion.V4 && (
-              <Flex row width="100%" justifyContent="space-between" mt="$spacing16" alignItems="center">
-                <Text variant="body1">
-                  <Trans i18nKey="pool.collectAs" values={{ nativeWrappedSymbol: 'WETH' }} />
-                </Text>
-                <Switch
-                  variant="default"
-                  checked={collectAsWeth}
-                  onCheckedChange={() => {
-                    setCollectAsWeth((prev) => !prev)
-                  }}
-                />
               </Flex>
             )}
           </Flex>
         </Flex>
-      </Flex>
-      {priceOrdering && token0CurrentPrice && token1CurrentPrice && (
-        <LiquidityPositionPriceRangeTile
-          priceOrdering={priceOrdering}
-          feeTier={positionInfo.feeTier?.toString()}
-          tickLower={positionInfo.tickLower}
-          tickUpper={positionInfo.tickUpper}
-          token0CurrentPrice={token0CurrentPrice}
-          token1CurrentPrice={token1CurrentPrice}
-        />
-      )}
-    </BodyWrapper>
+        <Flex row $lg={{ row: false }} width="100%" gap="$gap16">
+          <Flex
+            grow
+            backgroundColor="$surface2"
+            borderRadius="$rounded12"
+            justifyContent="center"
+            alignItems="center"
+            flexBasis="50%"
+          >
+            {'result' in metadata ? (
+              <PositionNFT image={metadata.result.image} height={400} />
+            ) : (
+              <LoadingFullscreen style={{ borderRadius: 12, backgroundColor: 'transparent' }} />
+            )}
+          </Flex>
+          <Flex grow gap="$gap12" flexBasis="50%">
+            <Flex borderRadius="$rounded16" backgroundColor="$surface2" p="$padding12" gap="$gap16">
+              <Flex gap="$gap8">
+                <Text variant="subheading1">
+                  <Trans i18nKey="common.liquidity" />
+                </Text>
+                <Text variant="heading2">
+                  {fiatValue0 && fiatValue1
+                    ? formatCurrencyAmount({
+                        amount: fiatValue0.add(fiatValue1),
+                        type: NumberType.FiatTokenPrice,
+                      })
+                    : '-'}
+                </Text>
+              </Flex>
+              <LiquidityPositionAmountsTile
+                currency0Amount={currency0Amount}
+                currency1Amount={currency1Amount}
+                fiatValue0={fiatValue0}
+                fiatValue1={fiatValue1}
+              />
+            </Flex>
+            <Flex p="$padding12" backgroundColor="$surface2" borderRadius="$rounded16">
+              <Flex row width="100%" justifyContent="space-between" alignItems="center">
+                <Text variant="subheading1">
+                  <Trans i18nKey="pool.uncollectedFees" />
+                </Text>
+                {hasFees && (
+                  <HeaderButton
+                    emphasis="primary"
+                    onPress={() => {
+                      if (hasFees) {
+                        dispatch(
+                          setOpenModal({ name: ModalName.ClaimFee, initialState: { ...positionInfo, collectAsWeth } }),
+                        )
+                      }
+                    }}
+                  >
+                    <Text variant="buttonLabel4" color="$surface1">
+                      <Trans i18nKey="pool.collectFees" />
+                    </Text>
+                  </HeaderButton>
+                )}
+              </Flex>
+              <Text variant="heading2" mt="$spacing8" mb="$spacing16">
+                {fiatFeeValue0 && fiatFeeValue1
+                  ? formatCurrencyAmount({
+                      amount: fiatFeeValue0.add(fiatFeeValue1),
+                      type: NumberType.FiatTokenPrice,
+                    })
+                  : '-'}
+              </Text>
+              {feeValue0 && feeValue1 && (
+                <LiquidityPositionAmountsTile
+                  currency0Amount={feeValue0}
+                  currency1Amount={feeValue1}
+                  fiatValue0={fiatFeeValue0}
+                  fiatValue1={fiatFeeValue1}
+                />
+              )}
+              {positionInfo.version !== ProtocolVersion.V4 && (
+                <Flex row width="100%" justifyContent="space-between" mt="$spacing16" alignItems="center">
+                  <Text variant="body1">
+                    <Trans i18nKey="pool.collectAs" values={{ nativeWrappedSymbol: 'WETH' }} />
+                  </Text>
+                  <Switch
+                    variant="default"
+                    checked={collectAsWeth}
+                    onCheckedChange={() => {
+                      setCollectAsWeth((prev) => !prev)
+                    }}
+                  />
+                </Flex>
+              )}
+            </Flex>
+          </Flex>
+        </Flex>
+        {priceOrdering && token0CurrentPrice && token1CurrentPrice && (
+          <LiquidityPositionPriceRangeTile
+            priceOrdering={priceOrdering}
+            feeTier={positionInfo.feeTier?.toString()}
+            tickLower={positionInfo.tickLower}
+            tickUpper={positionInfo.tickUpper}
+            token0CurrentPrice={token0CurrentPrice}
+            token1CurrentPrice={token1CurrentPrice}
+          />
+        )}
+      </BodyWrapper>
+    </Trace>
   )
 }

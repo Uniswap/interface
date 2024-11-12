@@ -1,5 +1,6 @@
-import { NavigationContainerRefContext, NavigationContext } from '@react-navigation/core'
+import { NavigationContainerRefContext, NavigationContext, useFocusEffect } from '@react-navigation/core'
 import { useCallback, useContext } from 'react'
+import { BackHandler } from 'react-native'
 import { navigate as rootNavigate } from 'src/app/navigation/rootNavigation'
 import { useAppStackNavigation, useExploreStackNavigation } from 'src/app/navigation/types'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
@@ -107,4 +108,27 @@ export function useIsPartOfNavigationTree(): boolean {
   const navigation = useContext(NavigationContext)
 
   return navigation !== undefined || root !== undefined
+}
+
+/**
+ * Overrides android default back button behaviour to allow
+ * navigating back to Tokens Tab when other tab is picked
+ */
+export function useHomeScreenCustomAndroidBackButton(
+  routeTabIndex: HomeScreenTabIndex,
+  setRouteTabIndex: (value: React.SetStateAction<HomeScreenTabIndex>) => void,
+): void {
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = (): boolean => {
+        if (routeTabIndex !== HomeScreenTabIndex.Tokens) {
+          setRouteTabIndex(HomeScreenTabIndex.Tokens)
+          return true
+        }
+        return false
+      }
+      const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress)
+      return subscription.remove
+    }, [routeTabIndex, setRouteTabIndex]),
+  )
 }

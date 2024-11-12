@@ -1,8 +1,13 @@
-import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
+// eslint-disable-next-line no-restricted-imports
+import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { useGetRangeDisplay, useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
+import { PositionInfo } from 'components/Liquidity/types'
+import { getPositionUrl, getProtocolStatusLabel } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { ClosedCircle, DoubleArrow } from 'components/Pools/PoolDetails/icons'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
+import { V2_BIPS } from 'graphql/data/pools/useTopPools'
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useSwitchChain } from 'hooks/useSwitchChain'
@@ -10,12 +15,10 @@ import styled, { useTheme } from 'lib/styled-components'
 import { useCallback } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
-import { Bound } from 'state/mint/v3/actions'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
-import { useFormatter } from 'utils/formatNumbers'
 
 const PositionTableWrapper = styled(Column)`
   gap: 24px;
@@ -78,97 +81,86 @@ const StyledDot = styled.div`
   background-color: ${({ theme }) => theme.success};
 `
 
-enum PositionStatus {
-  IN_RANGE = 'In range',
-  OUT_OF_RANGE = 'Out of range',
-  CLOSED = 'Closed',
-}
-
 function PositionRow({ positionInfo }: { positionInfo: PositionInfo }) {
   const { t } = useTranslation()
+  const poolOrPair = positionInfo.version === ProtocolVersion.V2 ? positionInfo.pair : positionInfo.pool
   const tokens = [
-    useCurrency(positionInfo.details.token0, positionInfo.chainId),
-    useCurrency(positionInfo.details.token1, positionInfo.chainId),
+    useCurrency(poolOrPair?.token0.wrapped.address, positionInfo.chainId),
+    useCurrency(poolOrPair?.token1.wrapped.address, positionInfo.chainId),
   ]
   const account = useAccount()
   const navigate = useNavigate()
   const switchChain = useSwitchChain()
   const theme = useTheme()
-  const { formatTickPrice } = useFormatter()
 
   const onClick = useCallback(async () => {
     if (account.chainId !== positionInfo.chainId) {
       await switchChain(positionInfo.chainId)
     }
-    navigate('/pool/' + positionInfo.details.tokenId)
-  }, [navigate, positionInfo.chainId, positionInfo.details.tokenId, switchChain, account.chainId])
+    navigate(getPositionUrl(positionInfo))
+  }, [account.chainId, positionInfo, navigate, switchChain])
 
-  const status = positionInfo.inRange
-    ? PositionStatus.IN_RANGE
-    : positionInfo.closed
-      ? PositionStatus.CLOSED
-      : PositionStatus.OUT_OF_RANGE
+  const status = positionInfo.status
 
-  const priceUpper = positionInfo.position.token0PriceLower.invert()
-  const priceLower = positionInfo.position.token0PriceUpper.invert()
-
-  const ticksAtLimit = {
-    LOWER: parseFloat(priceLower.toFixed(0)) === 0,
-    UPPER: parseFloat(priceUpper.toFixed(0)) > Number.MAX_SAFE_INTEGER,
-  }
+  const fee =
+    positionInfo.version === ProtocolVersion.V2
+      ? V2_BIPS
+      : typeof positionInfo.feeTier === 'string'
+        ? parseFloat(positionInfo.feeTier)
+        : positionInfo.feeTier ?? 0
+  const { priceOrdering } = useV3OrV4PositionDerivedInfo(positionInfo)
+  const { maxPrice, minPrice, tokenASymbol, tokenBSymbol } = useGetRangeDisplay({
+    priceOrdering,
+    feeTier: fee.toString(),
+    tickLower: positionInfo.tickLower,
+    tickUpper: positionInfo.tickUpper,
+    pricesInverted: false,
+  })
 
   return (
     <PositionWrapper onClick={onClick}>
       <Row gap="8px">
         <DoubleCurrencyLogo currencies={tokens} size={16} />
         <ThemedText.SubHeader>
-          {positionInfo.pool.token0.symbol}/{positionInfo.pool.token1.symbol}
+          {poolOrPair?.token0.symbol}/{poolOrPair?.token1.symbol}
         </ThemedText.SubHeader>
-        <FeeTier>{positionInfo.pool.fee / BIPS_BASE}%</FeeTier>
+        <FeeTier>{fee / BIPS_BASE}%</FeeTier>
         <StatusWrapper status={status}>
-          <ThemedText.Caption color="inherit">{status}</ThemedText.Caption>
+          <ThemedText.Caption color="inherit">{getProtocolStatusLabel(status, t)}</ThemedText.Caption>
           {status === PositionStatus.IN_RANGE && <StyledDot />}
           {status === PositionStatus.OUT_OF_RANGE && <AlertTriangle size={12} color={theme.deprecated_accentWarning} />}
           {status === PositionStatus.CLOSED && <ClosedCircle />}
         </StatusWrapper>
       </Row>
-      <RangeWrapper>
-        <RangeText data-testid={`position-min-${priceLower.toFixed(0)}`}>
-          <Trans i18nKey="pool.min.label" />
-          &nbsp;
-          {t('liquidityPool.positions.price', {
-            amountWithSymbol: `${formatTickPrice({
-              price: priceLower,
-              atLimit: ticksAtLimit,
-              direction: Bound.LOWER,
-            })} ${positionInfo.pool.token0.symbol}`,
-            outputToken: positionInfo.pool.token1.symbol,
-          })}
-        </RangeText>
-        <StyledDoubleArrow />
-        <RangeText data-testid={`position-max-${priceUpper.toFixed(0)}`}>
-          <Trans i18nKey="pool.max.label" />
-          &nbsp;
-          {t('liquidityPool.positions.price', {
-            amountWithSymbol: `${formatTickPrice({
-              price: priceUpper,
-              atLimit: ticksAtLimit,
-              direction: Bound.UPPER,
-            })} ${positionInfo.pool.token0.symbol}`,
-            outputToken: positionInfo.pool.token1.symbol,
-          })}
-        </RangeText>
-      </RangeWrapper>
+      {positionInfo.version !== ProtocolVersion.V2 && (
+        <RangeWrapper>
+          <RangeText data-testid={`position-min-${minPrice}`}>
+            <Trans i18nKey="pool.min.label" />
+            &nbsp;
+            {t('liquidityPool.positions.price', {
+              amountWithSymbol: `${minPrice} ${tokenASymbol}`,
+              outputToken: tokenBSymbol,
+            })}
+          </RangeText>
+          <StyledDoubleArrow />
+          <RangeText data-testid={`position-max-${maxPrice}`}>
+            <Trans i18nKey="pool.max.label" />
+            &nbsp;
+            {t('liquidityPool.positions.price', {
+              amountWithSymbol: `${maxPrice} ${tokenASymbol}`,
+              outputToken: tokenBSymbol,
+            })}
+          </RangeText>
+        </RangeWrapper>
+      )}
     </PositionWrapper>
   )
 }
 
-export function PoolDetailsPositionsTable({ positions }: { positions: PositionInfo[] }) {
+export function PoolDetailsPositionsTable({ positions }: { positions?: PositionInfo[] }) {
   return (
     <PositionTableWrapper>
-      {positions.map((position, index) => (
-        <PositionRow positionInfo={position} key={`pool-position-${index}`} />
-      ))}
+      {positions?.map((position, index) => <PositionRow positionInfo={position} key={`pool-position-${index}`} />)}
     </PositionTableWrapper>
   )
 }

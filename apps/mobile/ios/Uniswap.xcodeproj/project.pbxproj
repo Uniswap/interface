@@ -10,7 +10,6 @@
 		0013F5F72C93399400D6EF09 /* ProtectionInfo.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0013F5F62C93399400D6EF09 /* ProtectionInfo.graphql.swift */; };
 		00265F792C933CE300A5DA57 /* ProtectionResult.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00265F772C933CE300A5DA57 /* ProtectionResult.graphql.swift */; };
 		00265F7A2C933CE300A5DA57 /* ProtectionAttackType.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00265F782C933CE300A5DA57 /* ProtectionAttackType.graphql.swift */; };
-		005446EF1B67FC63C0A7383A /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1868582E97BBB7469EA4C78 /* libPods-OneSignalNotificationServiceExtension.a */; };
 		00E356F31AD99517003FC87E /* UniswapTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* UniswapTests.m */; };
 		037C5AAA2C04970B00B1D808 /* CopyIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037C5AA92C04970B00B1D808 /* CopyIcon.swift */; };
 		03C788232C10E7390011E5DC /* ActionButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C788222C10E7390011E5DC /* ActionButtons.swift */; };
@@ -131,14 +130,11 @@
 		0DE251472C13B69D005F47F9 /* OnRampTransfer.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE251442C13B69D005F47F9 /* OnRampTransfer.graphql.swift */; };
 		0DE251482C13B69D005F47F9 /* OnRampServiceProvider.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE251452C13B69D005F47F9 /* OnRampServiceProvider.graphql.swift */; };
 		0DE251492C13B69D005F47F9 /* OnRampTransactionDetails.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE251462C13B69D005F47F9 /* OnRampTransactionDetails.graphql.swift */; };
-		1391D0BDA6D00CCFAE5BA24B /* libPods-WidgetsCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7201E4F4866FA5A80D1A150B /* libPods-WidgetsCore.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1440B371A1C9A42F3E91DAAE /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF5F26A06553EFDD4D99214 /* ExpoModulesProvider.swift */; };
-		1C2B436C7775639172200C1E /* libPods-Uniswap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BAE0E417A0F99C84523EF04 /* libPods-Uniswap.a */; };
-		2F50877AC4F0BB2556A74B60 /* libPods-Uniswap-UniswapTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 89A1B8962666C68EE8B75C18 /* libPods-Uniswap-UniswapTests.a */; };
+		463BA791004B1B7AC1773914 /* Pods_Uniswap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2226DF79BEAFECEE11A51347 /* Pods_Uniswap.framework */; };
 		5EFB78362B1E585000E77EAC /* ConvertQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EFB78352B1E585000E77EAC /* ConvertQuery.graphql.swift */; };
-		5FF6D300AEE2EB390A272D0E /* libPods-WidgetIntentExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71A42CE7FF1299C666E6FC79 /* libPods-WidgetIntentExtension.a */; };
 		6BC7D07E2B5FF02400617C95 /* ScantasticEncryption.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BC7D07B2B5FF02400617C95 /* ScantasticEncryption.m */; };
 		6BC7D07F2B5FF02400617C95 /* ScantasticEncryption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC7D07C2B5FF02400617C95 /* ScantasticEncryption.swift */; };
 		6BC7D0802B5FF02400617C95 /* EncryptionUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC7D07D2B5FF02400617C95 /* EncryptionUtils.swift */; };
@@ -148,7 +144,9 @@
 		6CA91BE12A95226200C4063E /* RNCloudStorageBackupsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CA91BDE2A95226200C4063E /* RNCloudStorageBackupsManager.m */; };
 		6CA91BE22A95226200C4063E /* EncryptionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA91BDF2A95226200C4063E /* EncryptionHelper.swift */; };
 		6CA91BE32A95226200C4063E /* RNCloudStorageBackupsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA91BE02A95226200C4063E /* RNCloudStorageBackupsManager.swift */; };
+		70EB8338CA39744B7DBD553E /* Pods_WidgetIntentExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1064E23E366D0C2C2B20C30E /* Pods_WidgetIntentExtension.framework */; };
 		77CF6065C8A24FE48204A2C1 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF9176E944C84910B1C0B057 /* SplashScreen.storyboard */; };
+		8273FC23FB1AE47B80C5E09F /* Pods_OneSignalNotificationServiceExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15092E550A1C78508ABA3280 /* Pods_OneSignalNotificationServiceExtension.framework */; };
 		8385A47D3C765B841F450090 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C26D739993D5C939C6FBB58A /* ExpoModulesProvider.swift */; };
 		8E89C3AE2AB8AAA400C84DE5 /* MnemonicConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E89C3A62AB8AAA400C84DE5 /* MnemonicConfirmationView.swift */; };
 		8E89C3AF2AB8AAA400C84DE5 /* MnemonicDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E89C3A72AB8AAA400C84DE5 /* MnemonicDisplayView.swift */; };
@@ -167,9 +165,21 @@
 		9127D1362CC2D3D00096F134 /* TokenBalanceMainParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9127D1342CC2D3D00096F134 /* TokenBalanceMainParts.graphql.swift */; };
 		9127D1372CC2D3D00096F134 /* TokenBalanceQuantityParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9127D1352CC2D3D00096F134 /* TokenBalanceQuantityParts.graphql.swift */; };
 		914CBAA274C1F15A53C35CB6 /* libPods-WidgetsCoreTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B2176D5449C2B3B68A17466B /* libPods-WidgetsCoreTests.a */; };
+		91D501702CDBEAE700B09B7F /* TokenMarketParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D501652CDBEAE700B09B7F /* TokenMarketParts.graphql.swift */; };
+		91D501712CDBEAE700B09B7F /* TokenBalanceMainParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D501662CDBEAE700B09B7F /* TokenBalanceMainParts.graphql.swift */; };
+		91D501722CDBEAE700B09B7F /* TokenProjectMarketsParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D501672CDBEAE700B09B7F /* TokenProjectMarketsParts.graphql.swift */; };
+		91D501732CDBEAE700B09B7F /* TokenBasicInfoParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D501682CDBEAE700B09B7F /* TokenBasicInfoParts.graphql.swift */; };
+		91D501742CDBEAE700B09B7F /* TokenBasicProjectParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D501692CDBEAE700B09B7F /* TokenBasicProjectParts.graphql.swift */; };
+		91D501752CDBEAE700B09B7F /* TokenBalanceQuantityParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D5016A2CDBEAE700B09B7F /* TokenBalanceQuantityParts.graphql.swift */; };
+		91D501762CDBEAE700B09B7F /* TokenProtectionInfoParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D5016B2CDBEAE700B09B7F /* TokenProtectionInfoParts.graphql.swift */; };
+		91D501772CDBEAE700B09B7F /* TokenParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D5016C2CDBEAE700B09B7F /* TokenParts.graphql.swift */; };
+		91D501782CDBEAE700B09B7F /* TokenProjectUrlsParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D5016D2CDBEAE700B09B7F /* TokenProjectUrlsParts.graphql.swift */; };
+		91D501792CDBEAE700B09B7F /* TopTokenParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D5016E2CDBEAE700B09B7F /* TopTokenParts.graphql.swift */; };
+		91D5017A2CDBEAE700B09B7F /* TokenFeeDataParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D5016F2CDBEAE700B09B7F /* TokenFeeDataParts.graphql.swift */; };
+		91D5017D2CDBEAF600B09B7F /* AITopTokenParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D5017B2CDBEAF600B09B7F /* AITopTokenParts.graphql.swift */; };
+		91D5017E2CDBEAF600B09B7F /* HomeScreenTokenParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D5017C2CDBEAF600B09B7F /* HomeScreenTokenParts.graphql.swift */; };
 		9F00A43A2B33894C0088A0D0 /* ApplicationContract.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F00A4392B33894C0088A0D0 /* ApplicationContract.graphql.swift */; };
 		9F29D4ED2B47126D004D003A /* NftBalanceAssetInput.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29D4EC2B47126D004D003A /* NftBalanceAssetInput.graphql.swift */; };
-		9F3500842A8AAAF50077BFC5 /* libreact-native-splash-screen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F3500832A8AAAF50077BFC5 /* libreact-native-splash-screen.a */; };
 		9F78980B2A819CC4004D5A98 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 072F6C222A44A32E00DA720A /* SwiftUI.framework */; };
 		9F78980E2A819D2B004D5A98 /* WidgetsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 072E23862A44D5BC006AD6C9 /* WidgetsCore.framework */; };
 		9F7898112A819D32004D5A98 /* WidgetsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 072E23862A44D5BC006AD6C9 /* WidgetsCore.framework */; };
@@ -193,13 +203,16 @@
 		AC0EE0982BD826E700BCCF07 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AC0EE0972BD826E700BCCF07 /* PrivacyInfo.xcprivacy */; };
 		AC2EF4032C914B1600EEEFDB /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = AC2EF4022C914B1600EEEFDB /* fonts */; };
 		B193AD315CF844A3BDC3D11D /* Basel-Grotesk-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3C606D2C81014A0A8898F38E /* Basel-Grotesk-Medium.otf */; };
+		BA8FC9627A40644259D9E2F9 /* Pods_WidgetsCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB29AC0C0907A833F23D2C30 /* Pods_WidgetsCore.framework */; };
 		D3B63ACA9B0C42F68080B080 /* InputMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1834199AFFB04D91B05FFB64 /* InputMono-Regular.ttf */; };
+		D7926D4A878B2237137B300F /* Pods_WidgetsCoreTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 021E59CE7ECBD4FE0F3BFCFD /* Pods_WidgetsCoreTests.framework */; };
+		DE2F24512E7204C2CA255C50 /* Pods_Widgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E8B7D36D2E14D9488F351EB /* Pods_Widgets.framework */; };
+		E4B3067A930D2E57558E5229 /* Pods_Uniswap_UniswapTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0929C0B4AE1570B8C0B45D4D /* Pods_Uniswap_UniswapTests.framework */; };
 		F35AFD3E27EE49990011A725 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35AFD3D27EE49990011A725 /* NotificationService.swift */; };
 		F35AFD4227EE49990011A725 /* OneSignalNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F35AFD3B27EE49990011A725 /* OneSignalNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		FD54D51D296C79A4007A37E9 /* GoogleServiceInfo in Resources */ = {isa = PBXBuildFile; fileRef = FD54D51C296C79A4007A37E9 /* GoogleServiceInfo */; };
 		FD7304CE28A364FC0085BDEA /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FD7304CD28A364FC0085BDEA /* Colors.xcassets */; };
 		FD7304D028A3650A0085BDEA /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD7304CF28A3650A0085BDEA /* Colors.swift */; };
-		FFDBE0D1428EB28E3168546E /* libPods-Widgets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FC58A30F02E8D8893D9BF8A1 /* libPods-Widgets.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -302,6 +315,7 @@
 		00E356EE1AD99517003FC87E /* UniswapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UniswapTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* UniswapTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UniswapTests.m; sourceTree = "<group>"; };
+		021E59CE7ECBD4FE0F3BFCFD /* Pods_WidgetsCoreTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WidgetsCoreTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		037C5AA92C04970B00B1D808 /* CopyIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyIcon.swift; sourceTree = "<group>"; };
 		03C788222C10E7390011E5DC /* ActionButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButtons.swift; sourceTree = "<group>"; };
 		03D2F3172C218D380030D987 /* RelativeOffsetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeOffsetView.swift; sourceTree = "<group>"; };
@@ -424,6 +438,7 @@
 		07F5CF742A7020FD00C648A5 /* Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Format.swift; sourceTree = "<group>"; };
 		08C60D53AB82A6D0D31D0F78 /* Pods-WidgetIntentExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetIntentExtension.release.xcconfig"; path = "Target Support Files/Pods-WidgetIntentExtension/Pods-WidgetIntentExtension.release.xcconfig"; sourceTree = "<group>"; };
 		08EBF075A4482F701892270B /* Pods-Widgets.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Widgets.dev.xcconfig"; path = "Target Support Files/Pods-Widgets/Pods-Widgets.dev.xcconfig"; sourceTree = "<group>"; };
+		0929C0B4AE1570B8C0B45D4D /* Pods_Uniswap_UniswapTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Uniswap_UniswapTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B7E5D62E11408EB5F0F5A80 /* Pods-WidgetsCore.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCore.beta.xcconfig"; path = "Target Support Files/Pods-WidgetsCore/Pods-WidgetsCore.beta.xcconfig"; sourceTree = "<group>"; };
 		0C19DE44A750FB17647FF2B6 /* Pods-Widgets.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Widgets.beta.xcconfig"; path = "Target Support Files/Pods-Widgets/Pods-Widgets.beta.xcconfig"; sourceTree = "<group>"; };
 		0DC6ADEF2B1E2C0F0092909C /* PortfolioValueModifier.graphql.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioValueModifier.graphql.swift; sourceTree = "<group>"; };
@@ -431,17 +446,20 @@
 		0DE251442C13B69D005F47F9 /* OnRampTransfer.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnRampTransfer.graphql.swift; sourceTree = "<group>"; };
 		0DE251452C13B69D005F47F9 /* OnRampServiceProvider.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnRampServiceProvider.graphql.swift; sourceTree = "<group>"; };
 		0DE251462C13B69D005F47F9 /* OnRampTransactionDetails.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnRampTransactionDetails.graphql.swift; sourceTree = "<group>"; };
+		1064E23E366D0C2C2B20C30E /* Pods_WidgetIntentExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WidgetIntentExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1193B3A845BC3BE8CAA00D01 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Uniswap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Uniswap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Uniswap/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Uniswap/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Uniswap/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Uniswap/main.m; sourceTree = "<group>"; };
+		15092E550A1C78508ABA3280 /* Pods_OneSignalNotificationServiceExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OneSignalNotificationServiceExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		178644A78AB62609EFDB66B3 /* Pods-Uniswap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.release.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.release.xcconfig"; sourceTree = "<group>"; };
 		1834199AFFB04D91B05FFB64 /* InputMono-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "InputMono-Regular.ttf"; path = "../src/assets/fonts/InputMono-Regular.ttf"; sourceTree = "<group>"; };
 		1CC6ADAADCA38FDAEB181E86 /* Pods-WidgetIntentExtension.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetIntentExtension.dev.xcconfig"; path = "Target Support Files/Pods-WidgetIntentExtension/Pods-WidgetIntentExtension.dev.xcconfig"; sourceTree = "<group>"; };
+		2226DF79BEAFECEE11A51347 /* Pods_Uniswap.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Uniswap.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E8B7D36D2E14D9488F351EB /* Pods_Widgets.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Widgets.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A2186B1FF7FB85663D96EA9 /* Pods-OneSignalNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
-		3BAE0E417A0F99C84523EF04 /* libPods-Uniswap.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Uniswap.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C606D2C81014A0A8898F38E /* Basel-Grotesk-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Basel-Grotesk-Medium.otf"; path = "../src/assets/fonts/Basel-Grotesk-Medium.otf"; sourceTree = "<group>"; };
 		3D8FCE4CD401350CA74DCC89 /* Pods-WidgetsCoreTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCoreTests.debug.xcconfig"; path = "Target Support Files/Pods-WidgetsCoreTests/Pods-WidgetsCoreTests.debug.xcconfig"; sourceTree = "<group>"; };
 		3E279F675B02CBC50D3B57D5 /* Pods-WidgetsCore.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCore.release.xcconfig"; path = "Target Support Files/Pods-WidgetsCore/Pods-WidgetsCore.release.xcconfig"; sourceTree = "<group>"; };
@@ -464,12 +482,9 @@
 		6F33E8069B7B40AFB313B8B0 /* Basel-Grotesk-Book.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Basel-Grotesk-Book.otf"; path = "../src/assets/fonts/Basel-Grotesk-Book.otf"; sourceTree = "<group>"; };
 		6F3DC921A65D749C0852B10C /* Pods-Uniswap-UniswapTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap-UniswapTests.debug.xcconfig"; path = "Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests.debug.xcconfig"; sourceTree = "<group>"; };
 		6F7814C6D40D9C348EA1F1C7 /* Pods-OneSignalNotificationServiceExtension.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.dev.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.dev.xcconfig"; sourceTree = "<group>"; };
-		71A42CE7FF1299C666E6FC79 /* libPods-WidgetIntentExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WidgetIntentExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		7201E4F4866FA5A80D1A150B /* libPods-WidgetsCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WidgetsCore.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A7637BBC9B3A68E0338D96E /* Pods-WidgetIntentExtension.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetIntentExtension.beta.xcconfig"; path = "Target Support Files/Pods-WidgetIntentExtension/Pods-WidgetIntentExtension.beta.xcconfig"; sourceTree = "<group>"; };
 		82C9871585F60F92D079FB95 /* Pods-Widgets.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Widgets.release.xcconfig"; path = "Target Support Files/Pods-Widgets/Pods-Widgets.release.xcconfig"; sourceTree = "<group>"; };
 		8719E5872CC41AB64503E903 /* Pods-WidgetIntentExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetIntentExtension.debug.xcconfig"; path = "Target Support Files/Pods-WidgetIntentExtension/Pods-WidgetIntentExtension.debug.xcconfig"; sourceTree = "<group>"; };
-		89A1B8962666C68EE8B75C18 /* libPods-Uniswap-UniswapTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Uniswap-UniswapTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E89C3A62AB8AAA400C84DE5 /* MnemonicConfirmationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MnemonicConfirmationView.swift; sourceTree = "<group>"; };
 		8E89C3A72AB8AAA400C84DE5 /* MnemonicDisplayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MnemonicDisplayView.swift; sourceTree = "<group>"; };
 		8E89C3A92AB8AAA400C84DE5 /* MnemonicConfirmationWordBankView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MnemonicConfirmationWordBankView.swift; sourceTree = "<group>"; };
@@ -487,10 +502,22 @@
 		8EE7C0572AFD7B2100E0D9CD /* DescriptionTranslations.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DescriptionTranslations.graphql.swift; sourceTree = "<group>"; };
 		9127D1342CC2D3D00096F134 /* TokenBalanceMainParts.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenBalanceMainParts.graphql.swift; sourceTree = "<group>"; };
 		9127D1352CC2D3D00096F134 /* TokenBalanceQuantityParts.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenBalanceQuantityParts.graphql.swift; sourceTree = "<group>"; };
+		91D501652CDBEAE700B09B7F /* TokenMarketParts.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenMarketParts.graphql.swift; sourceTree = "<group>"; };
+		91D501662CDBEAE700B09B7F /* TokenBalanceMainParts.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenBalanceMainParts.graphql.swift; sourceTree = "<group>"; };
+		91D501672CDBEAE700B09B7F /* TokenProjectMarketsParts.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenProjectMarketsParts.graphql.swift; sourceTree = "<group>"; };
+		91D501682CDBEAE700B09B7F /* TokenBasicInfoParts.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenBasicInfoParts.graphql.swift; sourceTree = "<group>"; };
+		91D501692CDBEAE700B09B7F /* TokenBasicProjectParts.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenBasicProjectParts.graphql.swift; sourceTree = "<group>"; };
+		91D5016A2CDBEAE700B09B7F /* TokenBalanceQuantityParts.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenBalanceQuantityParts.graphql.swift; sourceTree = "<group>"; };
+		91D5016B2CDBEAE700B09B7F /* TokenProtectionInfoParts.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenProtectionInfoParts.graphql.swift; sourceTree = "<group>"; };
+		91D5016C2CDBEAE700B09B7F /* TokenParts.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenParts.graphql.swift; sourceTree = "<group>"; };
+		91D5016D2CDBEAE700B09B7F /* TokenProjectUrlsParts.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenProjectUrlsParts.graphql.swift; sourceTree = "<group>"; };
+		91D5016E2CDBEAE700B09B7F /* TopTokenParts.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopTokenParts.graphql.swift; sourceTree = "<group>"; };
+		91D5016F2CDBEAE700B09B7F /* TokenFeeDataParts.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenFeeDataParts.graphql.swift; sourceTree = "<group>"; };
+		91D5017B2CDBEAF600B09B7F /* AITopTokenParts.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AITopTokenParts.graphql.swift; sourceTree = "<group>"; };
+		91D5017C2CDBEAF600B09B7F /* HomeScreenTokenParts.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeScreenTokenParts.graphql.swift; sourceTree = "<group>"; };
 		9F00A4392B33894C0088A0D0 /* ApplicationContract.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationContract.graphql.swift; sourceTree = "<group>"; };
 		9F29D4EC2B47126D004D003A /* NftBalanceAssetInput.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NftBalanceAssetInput.graphql.swift; sourceTree = "<group>"; };
 		9F3500812A8AA5890077BFC5 /* EXSplashScreen.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = EXSplashScreen.xcframework; path = "../../../node_modules/expo-splash-screen/ios/EXSplashScreen.xcframework"; sourceTree = "<group>"; };
-		9F3500832A8AAAF50077BFC5 /* libreact-native-splash-screen.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libreact-native-splash-screen.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F813E9D2AA8FB5700438D89 /* ActivityDetails.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActivityDetails.graphql.swift; sourceTree = "<group>"; };
 		9F813E9F2AA8FB7500438D89 /* TransactionDetails.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransactionDetails.graphql.swift; sourceTree = "<group>"; };
 		9F813EA12AA8FB8C00438D89 /* SwapOrderDetails.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwapOrderDetails.graphql.swift; sourceTree = "<group>"; };
@@ -512,14 +539,13 @@
 		AC2794442C51541E00F9AF68 /* sourcemaps-datadog.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "sourcemaps-datadog.sh"; sourceTree = "<group>"; };
 		AC2EF4022C914B1600EEEFDB /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fonts; path = ../src/assets/fonts; sourceTree = "<group>"; };
 		B0DA4D39B1A6D74A1D05B99F /* Pods-WidgetsCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCore.debug.xcconfig"; path = "Target Support Files/Pods-WidgetsCore/Pods-WidgetsCore.debug.xcconfig"; sourceTree = "<group>"; };
-		B2176D5449C2B3B68A17466B /* libPods-WidgetsCoreTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WidgetsCoreTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCB2A43E5FB0D7B69CA02312 /* Pods-WidgetsCore.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCore.dev.xcconfig"; path = "Target Support Files/Pods-WidgetsCore/Pods-WidgetsCore.dev.xcconfig"; sourceTree = "<group>"; };
 		BF9176E944C84910B1C0B057 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = Uniswap/SplashScreen.storyboard; sourceTree = "<group>"; };
 		C26D739993D5C939C6FBB58A /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Uniswap-UniswapTests/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		C89238E3ED9F3AC98876B573 /* Pods-WidgetsCoreTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCoreTests.release.xcconfig"; path = "Target Support Files/Pods-WidgetsCoreTests/Pods-WidgetsCoreTests.release.xcconfig"; sourceTree = "<group>"; };
+		CB29AC0C0907A833F23D2C30 /* Pods_WidgetsCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_WidgetsCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D79B717BEAEA7857469D770A /* Pods-Widgets.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Widgets.debug.xcconfig"; path = "Target Support Files/Pods-Widgets/Pods-Widgets.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F1868582E97BBB7469EA4C78 /* libPods-OneSignalNotificationServiceExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-OneSignalNotificationServiceExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1A3F4DDD7E40DA9E4BBAAD1 /* Pods-Uniswap-UniswapTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap-UniswapTests.release.xcconfig"; path = "Target Support Files/Pods-Uniswap-UniswapTests/Pods-Uniswap-UniswapTests.release.xcconfig"; sourceTree = "<group>"; };
 		F35AFD3627EE49230011A725 /* Uniswap.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Uniswap.entitlements; path = Uniswap/Uniswap.entitlements; sourceTree = "<group>"; };
 		F35AFD3B27EE49990011A725 /* OneSignalNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = OneSignalNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -527,7 +553,6 @@
 		F35AFD3F27EE49990011A725 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F35AFD4727EE4B400011A725 /* OneSignalNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OneSignalNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
 		F56CC08FBB20FAC0DF6B93DA /* Pods-OneSignalNotificationServiceExtension.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.beta.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.beta.xcconfig"; sourceTree = "<group>"; };
-		FC58A30F02E8D8893D9BF8A1 /* libPods-Widgets.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Widgets.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FD54D51C296C79A4007A37E9 /* GoogleServiceInfo */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GoogleServiceInfo; sourceTree = SOURCE_ROOT; };
 		FD7304CD28A364FC0085BDEA /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Colors.xcassets; path = Uniswap/Colors.xcassets; sourceTree = "<group>"; };
 		FD7304CF28A3650A0085BDEA /* Colors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Colors.swift; path = Uniswap/Colors.swift; sourceTree = "<group>"; };
@@ -538,7 +563,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2F50877AC4F0BB2556A74B60 /* libPods-Uniswap-UniswapTests.a in Frameworks */,
+				E4B3067A930D2E57558E5229 /* Pods_Uniswap_UniswapTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -546,7 +571,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1391D0BDA6D00CCFAE5BA24B /* libPods-WidgetsCore.a in Frameworks */,
+				BA8FC9627A40644259D9E2F9 /* Pods_WidgetsCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -555,7 +580,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				072E238E2A44D5BD006AD6C9 /* WidgetsCore.framework in Frameworks */,
-				914CBAA274C1F15A53C35CB6 /* libPods-WidgetsCoreTests.a in Frameworks */,
+				D7926D4A878B2237137B300F /* Pods_WidgetsCoreTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -566,7 +591,7 @@
 				9F78980B2A819CC4004D5A98 /* SwiftUI.framework in Frameworks */,
 				9F7898112A819D32004D5A98 /* WidgetsCore.framework in Frameworks */,
 				072F6C212A44A32E00DA720A /* WidgetKit.framework in Frameworks */,
-				FFDBE0D1428EB28E3168546E /* libPods-Widgets.a in Frameworks */,
+				DE2F24512E7204C2CA255C50 /* Pods_Widgets.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -576,7 +601,7 @@
 			files = (
 				078E79472A55EB3300F59CF2 /* Intents.framework in Frameworks */,
 				9F78980E2A819D2B004D5A98 /* WidgetsCore.framework in Frameworks */,
-				5FF6D300AEE2EB390A272D0E /* libPods-WidgetIntentExtension.a in Frameworks */,
+				70EB8338CA39744B7DBD553E /* Pods_WidgetIntentExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -584,9 +609,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9F3500842A8AAAF50077BFC5 /* libreact-native-splash-screen.a in Frameworks */,
 				9F7898142A819D62004D5A98 /* WidgetsCore.framework in Frameworks */,
-				1C2B436C7775639172200C1E /* libPods-Uniswap.a in Frameworks */,
+				463BA791004B1B7AC1773914 /* Pods_Uniswap.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -594,7 +618,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				005446EF1B67FC63C0A7383A /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */,
+				8273FC23FB1AE47B80C5E09F /* Pods_OneSignalNotificationServiceExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -742,6 +766,19 @@
 		074321A32A83E3C900F8518D /* Fragments */ = {
 			isa = PBXGroup;
 			children = (
+				91D5017B2CDBEAF600B09B7F /* AITopTokenParts.graphql.swift */,
+				91D5017C2CDBEAF600B09B7F /* HomeScreenTokenParts.graphql.swift */,
+				91D501662CDBEAE700B09B7F /* TokenBalanceMainParts.graphql.swift */,
+				91D5016A2CDBEAE700B09B7F /* TokenBalanceQuantityParts.graphql.swift */,
+				91D501682CDBEAE700B09B7F /* TokenBasicInfoParts.graphql.swift */,
+				91D501692CDBEAE700B09B7F /* TokenBasicProjectParts.graphql.swift */,
+				91D5016F2CDBEAE700B09B7F /* TokenFeeDataParts.graphql.swift */,
+				91D501652CDBEAE700B09B7F /* TokenMarketParts.graphql.swift */,
+				91D5016C2CDBEAE700B09B7F /* TokenParts.graphql.swift */,
+				91D501672CDBEAE700B09B7F /* TokenProjectMarketsParts.graphql.swift */,
+				91D5016D2CDBEAE700B09B7F /* TokenProjectUrlsParts.graphql.swift */,
+				91D5016B2CDBEAE700B09B7F /* TokenProtectionInfoParts.graphql.swift */,
+				91D5016E2CDBEAE700B09B7F /* TopTokenParts.graphql.swift */,
 				9127D1342CC2D3D00096F134 /* TokenBalanceMainParts.graphql.swift */,
 				9127D1352CC2D3D00096F134 /* TokenBalanceQuantityParts.graphql.swift */,
 				074321A42A83E3C900F8518D /* TopTokenParts.graphql.swift */,
@@ -928,19 +965,18 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9F3500832A8AAAF50077BFC5 /* libreact-native-splash-screen.a */,
 				9F3500812A8AA5890077BFC5 /* EXSplashScreen.xcframework */,
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				072F6C202A44A32E00DA720A /* WidgetKit.framework */,
 				072F6C222A44A32E00DA720A /* SwiftUI.framework */,
 				078E79462A55EB3300F59CF2 /* Intents.framework */,
-				F1868582E97BBB7469EA4C78 /* libPods-OneSignalNotificationServiceExtension.a */,
-				3BAE0E417A0F99C84523EF04 /* libPods-Uniswap.a */,
-				89A1B8962666C68EE8B75C18 /* libPods-Uniswap-UniswapTests.a */,
-				71A42CE7FF1299C666E6FC79 /* libPods-WidgetIntentExtension.a */,
-				FC58A30F02E8D8893D9BF8A1 /* libPods-Widgets.a */,
-				7201E4F4866FA5A80D1A150B /* libPods-WidgetsCore.a */,
-				B2176D5449C2B3B68A17466B /* libPods-WidgetsCoreTests.a */,
+				15092E550A1C78508ABA3280 /* Pods_OneSignalNotificationServiceExtension.framework */,
+				2226DF79BEAFECEE11A51347 /* Pods_Uniswap.framework */,
+				0929C0B4AE1570B8C0B45D4D /* Pods_Uniswap_UniswapTests.framework */,
+				1064E23E366D0C2C2B20C30E /* Pods_WidgetIntentExtension.framework */,
+				2E8B7D36D2E14D9488F351EB /* Pods_Widgets.framework */,
+				CB29AC0C0907A833F23D2C30 /* Pods_WidgetsCore.framework */,
+				021E59CE7ECBD4FE0F3BFCFD /* Pods_WidgetsCoreTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1704,7 +1740,7 @@
 			name = "[CP-User] [RNFB] Core Configuration";
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/usr/bin/env bash\n#\n# Copyright (c) 2016-present Invertase Limited & Contributors\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this library except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#   http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\nset -e\n\n_MAX_LOOKUPS=2;\n_SEARCH_RESULT=''\n_RN_ROOT_EXISTS=''\n_CURRENT_LOOKUPS=1\n_JSON_ROOT=\"'react-native'\"\n_JSON_FILE_NAME='firebase.json'\n_JSON_OUTPUT_BASE64='e30=' # { }\n_CURRENT_SEARCH_DIR=${PROJECT_DIR}\n_PLIST_BUDDY=/usr/libexec/PlistBuddy\n_TARGET_PLIST=\"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}\"\n_DSYM_PLIST=\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist\"\n\n# plist arrays\n_PLIST_ENTRY_KEYS=()\n_PLIST_ENTRY_TYPES=()\n_PLIST_ENTRY_VALUES=()\n\nfunction setPlistValue {\n  echo \"info:      setting plist entry '$1' of type '$2' in file '$4'\"\n  ${_PLIST_BUDDY} -c \"Add :$1 $2 '$3'\" $4 || echo \"info:      '$1' already exists\"\n}\n\nfunction getFirebaseJsonKeyValue () {\n  if [[ ${_RN_ROOT_EXISTS} ]]; then\n    ruby -Ku -e \"require 'rubygems';require 'json'; output=JSON.parse('$1'); puts output[$_JSON_ROOT]['$2']\"\n  else\n    echo \"\"\n  fi;\n}\n\nfunction jsonBoolToYesNo () {\n  if [[ $1 == \"false\" ]]; then\n    echo \"NO\"\n  elif [[ $1 == \"true\" ]]; then\n    echo \"YES\"\n  else echo \"NO\"\n  fi\n}\n\necho \"info: -> RNFB build script started\"\necho \"info: 1) Locating ${_JSON_FILE_NAME} file:\"\n\nif [[ -z ${_CURRENT_SEARCH_DIR} ]]; then\n  _CURRENT_SEARCH_DIR=$(pwd)\nfi;\n\nwhile true; do\n  _CURRENT_SEARCH_DIR=$(dirname \"$_CURRENT_SEARCH_DIR\")\n  if [[ \"$_CURRENT_SEARCH_DIR\" == \"/\" ]] || [[ ${_CURRENT_LOOKUPS} -gt ${_MAX_LOOKUPS} ]]; then break; fi;\n  echo \"info:      ($_CURRENT_LOOKUPS of $_MAX_LOOKUPS) Searching in '$_CURRENT_SEARCH_DIR' for a ${_JSON_FILE_NAME} file.\"\n  _SEARCH_RESULT=$(find \"$_CURRENT_SEARCH_DIR\" -maxdepth 2 -name ${_JSON_FILE_NAME} -print | /usr/bin/head -n 1)\n  if [[ ${_SEARCH_RESULT} ]]; then\n    echo \"info:      ${_JSON_FILE_NAME} found at $_SEARCH_RESULT\"\n    break;\n  fi;\n  _CURRENT_LOOKUPS=$((_CURRENT_LOOKUPS+1))\ndone\n\nif [[ ${_SEARCH_RESULT} ]]; then\n  _JSON_OUTPUT_RAW=$(cat \"${_SEARCH_RESULT}\")\n  _RN_ROOT_EXISTS=$(ruby -Ku -e \"require 'rubygems';require 'json'; output=JSON.parse('$_JSON_OUTPUT_RAW'); puts output[$_JSON_ROOT]\" || echo '')\n\n  if [[ ${_RN_ROOT_EXISTS} ]]; then\n    if ! python3 --version >/dev/null 2>&1; then echo \"python3 not found, firebase.json file processing error.\" && exit 1; fi\n    _JSON_OUTPUT_BASE64=$(python3 -c 'import json,sys,base64;print(base64.b64encode(bytes(json.dumps(json.loads(open('\"'${_SEARCH_RESULT}'\"', '\"'rb'\"').read())['${_JSON_ROOT}']), '\"'utf-8'\"')).decode())' || echo \"e30=\")\n  fi\n\n  _PLIST_ENTRY_KEYS+=(\"firebase_json_raw\")\n  _PLIST_ENTRY_TYPES+=(\"string\")\n  _PLIST_ENTRY_VALUES+=(\"$_JSON_OUTPUT_BASE64\")\n\n  # config.app_data_collection_default_enabled\n  _APP_DATA_COLLECTION_ENABLED=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"app_data_collection_default_enabled\")\n  if [[ $_APP_DATA_COLLECTION_ENABLED ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FirebaseDataCollectionDefaultEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_APP_DATA_COLLECTION_ENABLED\")\")\n  fi\n\n  # config.analytics_auto_collection_enabled\n  _ANALYTICS_AUTO_COLLECTION=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_auto_collection_enabled\")\n  if [[ $_ANALYTICS_AUTO_COLLECTION ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FIREBASE_ANALYTICS_COLLECTION_ENABLED\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_AUTO_COLLECTION\")\")\n  fi\n\n  # config.analytics_collection_deactivated\n  _ANALYTICS_DEACTIVATED=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_collection_deactivated\")\n  if [[ $_ANALYTICS_DEACTIVATED ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FIREBASE_ANALYTICS_COLLECTION_DEACTIVATED\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_DEACTIVATED\")\")\n  fi\n\n  # config.analytics_idfv_collection_enabled\n  _ANALYTICS_IDFV_COLLECTION=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_idfv_collection_enabled\")\n  if [[ $_ANALYTICS_IDFV_COLLECTION ]]; then\n    _PLIST_ENTRY_KEYS+=(\"GOOGLE_ANALYTICS_IDFV_COLLECTION_ENABLED\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_IDFV_COLLECTION\")\")\n  fi\n\n  # config.analytics_default_allow_ad_personalization_signals\n  _ANALYTICS_PERSONALIZATION=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_default_allow_ad_personalization_signals\")\n  if [[ $_ANALYTICS_PERSONALIZATION ]]; then\n    _PLIST_ENTRY_KEYS+=(\"GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_PERSONALIZATION_SIGNALS\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_PERSONALIZATION\")\")\n  fi\n\n  # config.analytics_registration_with_ad_network_enabled\n  _ANALYTICS_REGISTRATION_WITH_AD_NETWORK=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"google_analytics_registration_with_ad_network_enabled\")\n  if [[ $_ANALYTICS_REGISTRATION_WITH_AD_NETWORK ]]; then\n    _PLIST_ENTRY_KEYS+=(\"GOOGLE_ANALYTICS_REGISTRATION_WITH_AD_NETWORK_ENABLED\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_REGISTRATION_WITH_AD_NETWORK\")\")\n  fi\n\n  # config.google_analytics_automatic_screen_reporting_enabled\n  _ANALYTICS_AUTO_SCREEN_REPORTING=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"google_analytics_automatic_screen_reporting_enabled\")\n  if [[ $_ANALYTICS_AUTO_SCREEN_REPORTING ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FirebaseAutomaticScreenReportingEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_AUTO_SCREEN_REPORTING\")\")\n  fi\n\n  # config.perf_auto_collection_enabled\n  _PERF_AUTO_COLLECTION=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"perf_auto_collection_enabled\")\n  if [[ $_PERF_AUTO_COLLECTION ]]; then\n    _PLIST_ENTRY_KEYS+=(\"firebase_performance_collection_enabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_PERF_AUTO_COLLECTION\")\")\n  fi\n\n  # config.perf_collection_deactivated\n  _PERF_DEACTIVATED=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"perf_collection_deactivated\")\n  if [[ $_PERF_DEACTIVATED ]]; then\n    _PLIST_ENTRY_KEYS+=(\"firebase_performance_collection_deactivated\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_PERF_DEACTIVATED\")\")\n  fi\n\n  # config.messaging_auto_init_enabled\n  _MESSAGING_AUTO_INIT=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"messaging_auto_init_enabled\")\n  if [[ $_MESSAGING_AUTO_INIT ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FirebaseMessagingAutoInitEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_MESSAGING_AUTO_INIT\")\")\n  fi\n\n  # config.in_app_messaging_auto_colllection_enabled\n  _FIAM_AUTO_INIT=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"in_app_messaging_auto_collection_enabled\")\n  if [[ $_FIAM_AUTO_INIT ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FirebaseInAppMessagingAutomaticDataCollectionEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_FIAM_AUTO_INIT\")\")\n  fi\n\n  # config.app_check_token_auto_refresh\n  _APP_CHECK_TOKEN_AUTO_REFRESH=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"app_check_token_auto_refresh\")\n  if [[ $_APP_CHECK_TOKEN_AUTO_REFRESH ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FirebaseAppCheckTokenAutoRefreshEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_APP_CHECK_TOKEN_AUTO_REFRESH\")\")\n  fi\n\n  # config.crashlytics_disable_auto_disabler - undocumented for now - mainly for debugging, document if becomes useful\n  _CRASHLYTICS_AUTO_DISABLE_ENABLED=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"crashlytics_disable_auto_disabler\")\n  if [[ $_CRASHLYTICS_AUTO_DISABLE_ENABLED == \"true\" ]]; then\n    echo \"Disabled Crashlytics auto disabler.\" # do nothing\n  else\n    _PLIST_ENTRY_KEYS+=(\"FirebaseCrashlyticsCollectionEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"NO\")\n  fi\nelse\n  _PLIST_ENTRY_KEYS+=(\"firebase_json_raw\")\n  _PLIST_ENTRY_TYPES+=(\"string\")\n  _PLIST_ENTRY_VALUES+=(\"$_JSON_OUTPUT_BASE64\")\n  echo \"warning:   A firebase.json file was not found, whilst this file is optional it is recommended to include it to configure firebase services in React Native Firebase.\"\nfi;\n\necho \"info: 2) Injecting Info.plist entries: \"\n\n# Log out the keys we're adding\nfor i in \"${!_PLIST_ENTRY_KEYS[@]}\"; do\n  echo \"    ->  $i) ${_PLIST_ENTRY_KEYS[$i]}\" \"${_PLIST_ENTRY_TYPES[$i]}\" \"${_PLIST_ENTRY_VALUES[$i]}\"\ndone\n\nfor plist in \"${_TARGET_PLIST}\" \"${_DSYM_PLIST}\" ; do\n  if [[ -f \"${plist}\" ]]; then\n\n    # paths with spaces break the call to setPlistValue. temporarily modify\n    # the shell internal field separator variable (IFS), which normally\n    # includes spaces, to consist only of line breaks\n    oldifs=$IFS\n    IFS=\"\n\"\n\n    for i in \"${!_PLIST_ENTRY_KEYS[@]}\"; do\n      setPlistValue \"${_PLIST_ENTRY_KEYS[$i]}\" \"${_PLIST_ENTRY_TYPES[$i]}\" \"${_PLIST_ENTRY_VALUES[$i]}\" \"${plist}\"\n    done\n\n    # restore the original internal field separator value\n    IFS=$oldifs\n  else\n    echo \"warning:   A Info.plist build output file was not found (${plist})\"\n  fi\ndone\n\necho \"info: <- RNFB build script finished\"\n";
+			shellScript = "#!/usr/bin/env bash\n#\n# Copyright (c) 2016-present Invertase Limited & Contributors\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this library except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#   http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n#\n\n##########################################################################\n##########################################################################\n#\n#  NOTE THAT IF YOU CHANGE THIS FILE YOU MUST RUN pod install AFTERWARDS\n#\n#  This file is installed as an Xcode build script in the project file\n#  by cocoapods, and you will not see your changes until you pod install\n#\n##########################################################################\n##########################################################################\n\nset -e\n\n_MAX_LOOKUPS=2;\n_SEARCH_RESULT=''\n_RN_ROOT_EXISTS=''\n_CURRENT_LOOKUPS=1\n_JSON_ROOT=\"'react-native'\"\n_JSON_FILE_NAME='firebase.json'\n_JSON_OUTPUT_BASE64='e30=' # { }\n_CURRENT_SEARCH_DIR=${PROJECT_DIR}\n_PLIST_BUDDY=/usr/libexec/PlistBuddy\n_TARGET_PLIST=\"${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}\"\n_DSYM_PLIST=\"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist\"\n\n# plist arrays\n_PLIST_ENTRY_KEYS=()\n_PLIST_ENTRY_TYPES=()\n_PLIST_ENTRY_VALUES=()\n\nfunction setPlistValue {\n  echo \"info:      setting plist entry '$1' of type '$2' in file '$4'\"\n  ${_PLIST_BUDDY} -c \"Add :$1 $2 '$3'\" $4 || echo \"info:      '$1' already exists\"\n}\n\nfunction getFirebaseJsonKeyValue () {\n  if [[ ${_RN_ROOT_EXISTS} ]]; then\n    ruby -Ku -e \"require 'rubygems';require 'json'; output=JSON.parse('$1'); puts output[$_JSON_ROOT]['$2']\"\n  else\n    echo \"\"\n  fi;\n}\n\nfunction jsonBoolToYesNo () {\n  if [[ $1 == \"false\" ]]; then\n    echo \"NO\"\n  elif [[ $1 == \"true\" ]]; then\n    echo \"YES\"\n  else echo \"NO\"\n  fi\n}\n\necho \"info: -> RNFB build script started\"\necho \"info: 1) Locating ${_JSON_FILE_NAME} file:\"\n\nif [[ -z ${_CURRENT_SEARCH_DIR} ]]; then\n  _CURRENT_SEARCH_DIR=$(pwd)\nfi;\n\nwhile true; do\n  _CURRENT_SEARCH_DIR=$(dirname \"$_CURRENT_SEARCH_DIR\")\n  if [[ \"$_CURRENT_SEARCH_DIR\" == \"/\" ]] || [[ ${_CURRENT_LOOKUPS} -gt ${_MAX_LOOKUPS} ]]; then break; fi;\n  echo \"info:      ($_CURRENT_LOOKUPS of $_MAX_LOOKUPS) Searching in '$_CURRENT_SEARCH_DIR' for a ${_JSON_FILE_NAME} file.\"\n  _SEARCH_RESULT=$(find \"$_CURRENT_SEARCH_DIR\" -maxdepth 2 -name ${_JSON_FILE_NAME} -print | /usr/bin/head -n 1)\n  if [[ ${_SEARCH_RESULT} ]]; then\n    echo \"info:      ${_JSON_FILE_NAME} found at $_SEARCH_RESULT\"\n    break;\n  fi;\n  _CURRENT_LOOKUPS=$((_CURRENT_LOOKUPS+1))\ndone\n\nif [[ ${_SEARCH_RESULT} ]]; then\n  _JSON_OUTPUT_RAW=$(cat \"${_SEARCH_RESULT}\")\n  _RN_ROOT_EXISTS=$(ruby -Ku -e \"require 'rubygems';require 'json'; output=JSON.parse('$_JSON_OUTPUT_RAW'); puts output[$_JSON_ROOT]\" || echo '')\n\n  if [[ ${_RN_ROOT_EXISTS} ]]; then\n    if ! python3 --version >/dev/null 2>&1; then echo \"python3 not found, firebase.json file processing error.\" && exit 1; fi\n    _JSON_OUTPUT_BASE64=$(python3 -c 'import json,sys,base64;print(base64.b64encode(bytes(json.dumps(json.loads(open('\"'${_SEARCH_RESULT}'\"', '\"'rb'\"').read())['${_JSON_ROOT}']), '\"'utf-8'\"')).decode())' || echo \"e30=\")\n  fi\n\n  _PLIST_ENTRY_KEYS+=(\"firebase_json_raw\")\n  _PLIST_ENTRY_TYPES+=(\"string\")\n  _PLIST_ENTRY_VALUES+=(\"$_JSON_OUTPUT_BASE64\")\n\n  # config.app_data_collection_default_enabled\n  _APP_DATA_COLLECTION_ENABLED=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"app_data_collection_default_enabled\")\n  if [[ $_APP_DATA_COLLECTION_ENABLED ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FirebaseDataCollectionDefaultEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_APP_DATA_COLLECTION_ENABLED\")\")\n  fi\n\n  # config.analytics_auto_collection_enabled\n  _ANALYTICS_AUTO_COLLECTION=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_auto_collection_enabled\")\n  if [[ $_ANALYTICS_AUTO_COLLECTION ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FIREBASE_ANALYTICS_COLLECTION_ENABLED\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_AUTO_COLLECTION\")\")\n  fi\n\n  # config.analytics_collection_deactivated\n  _ANALYTICS_DEACTIVATED=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_collection_deactivated\")\n  if [[ $_ANALYTICS_DEACTIVATED ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FIREBASE_ANALYTICS_COLLECTION_DEACTIVATED\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_DEACTIVATED\")\")\n  fi\n\n  # config.analytics_idfv_collection_enabled\n  _ANALYTICS_IDFV_COLLECTION=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_idfv_collection_enabled\")\n  if [[ $_ANALYTICS_IDFV_COLLECTION ]]; then\n    _PLIST_ENTRY_KEYS+=(\"GOOGLE_ANALYTICS_IDFV_COLLECTION_ENABLED\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_IDFV_COLLECTION\")\")\n  fi\n\n  # config.analytics_default_allow_analytics_storage\n  _ANALYTICS_STORAGE=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_default_allow_analytics_storage\")\n  if [[ $_ANALYTICS_STORAGE ]]; then\n    _PLIST_ENTRY_KEYS+=(\"GOOGLE_ANALYTICS_DEFAULT_ALLOW_ANALYTICS_STORAGE\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_STORAGE\")\")\n  fi\n\n  # config.analytics_default_allow_ad_storage\n  _ANALYTICS_AD_STORAGE=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_default_allow_ad_storage\")\n  if [[ $_ANALYTICS_AD_STORAGE ]]; then\n    _PLIST_ENTRY_KEYS+=(\"GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_STORAGE\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_AD_STORAGE\")\")\n  fi\n\n  # config.analytics_default_allow_ad_user_data\n  _ANALYTICS_AD_USER_DATA=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_default_allow_ad_user_data\")\n  if [[ $_ANALYTICS_AD_USER_DATA ]]; then\n    _PLIST_ENTRY_KEYS+=(\"GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_USER_DATA\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_AD_USER_DATA\")\")\n  fi\n\n  # config.analytics_default_allow_ad_personalization_signals\n  _ANALYTICS_PERSONALIZATION=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"analytics_default_allow_ad_personalization_signals\")\n  if [[ $_ANALYTICS_PERSONALIZATION ]]; then\n    _PLIST_ENTRY_KEYS+=(\"GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_PERSONALIZATION_SIGNALS\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_PERSONALIZATION\")\")\n  fi\n\n  # config.analytics_registration_with_ad_network_enabled\n  _ANALYTICS_REGISTRATION_WITH_AD_NETWORK=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"google_analytics_registration_with_ad_network_enabled\")\n  if [[ $_ANALYTICS_REGISTRATION_WITH_AD_NETWORK ]]; then\n    _PLIST_ENTRY_KEYS+=(\"GOOGLE_ANALYTICS_REGISTRATION_WITH_AD_NETWORK_ENABLED\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_REGISTRATION_WITH_AD_NETWORK\")\")\n  fi\n\n  # config.google_analytics_automatic_screen_reporting_enabled\n  _ANALYTICS_AUTO_SCREEN_REPORTING=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"google_analytics_automatic_screen_reporting_enabled\")\n  if [[ $_ANALYTICS_AUTO_SCREEN_REPORTING ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FirebaseAutomaticScreenReportingEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_ANALYTICS_AUTO_SCREEN_REPORTING\")\")\n  fi\n\n  # config.perf_auto_collection_enabled\n  _PERF_AUTO_COLLECTION=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"perf_auto_collection_enabled\")\n  if [[ $_PERF_AUTO_COLLECTION ]]; then\n    _PLIST_ENTRY_KEYS+=(\"firebase_performance_collection_enabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_PERF_AUTO_COLLECTION\")\")\n  fi\n\n  # config.perf_collection_deactivated\n  _PERF_DEACTIVATED=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"perf_collection_deactivated\")\n  if [[ $_PERF_DEACTIVATED ]]; then\n    _PLIST_ENTRY_KEYS+=(\"firebase_performance_collection_deactivated\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_PERF_DEACTIVATED\")\")\n  fi\n\n  # config.messaging_auto_init_enabled\n  _MESSAGING_AUTO_INIT=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"messaging_auto_init_enabled\")\n  if [[ $_MESSAGING_AUTO_INIT ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FirebaseMessagingAutoInitEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_MESSAGING_AUTO_INIT\")\")\n  fi\n\n  # config.in_app_messaging_auto_colllection_enabled\n  _FIAM_AUTO_INIT=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"in_app_messaging_auto_collection_enabled\")\n  if [[ $_FIAM_AUTO_INIT ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FirebaseInAppMessagingAutomaticDataCollectionEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_FIAM_AUTO_INIT\")\")\n  fi\n\n  # config.app_check_token_auto_refresh\n  _APP_CHECK_TOKEN_AUTO_REFRESH=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"app_check_token_auto_refresh\")\n  if [[ $_APP_CHECK_TOKEN_AUTO_REFRESH ]]; then\n    _PLIST_ENTRY_KEYS+=(\"FirebaseAppCheckTokenAutoRefreshEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"$(jsonBoolToYesNo \"$_APP_CHECK_TOKEN_AUTO_REFRESH\")\")\n  fi\n\n  # config.crashlytics_disable_auto_disabler - undocumented for now - mainly for debugging, document if becomes useful\n  _CRASHLYTICS_AUTO_DISABLE_ENABLED=$(getFirebaseJsonKeyValue \"$_JSON_OUTPUT_RAW\" \"crashlytics_disable_auto_disabler\")\n  if [[ $_CRASHLYTICS_AUTO_DISABLE_ENABLED == \"true\" ]]; then\n    echo \"Disabled Crashlytics auto disabler.\" # do nothing\n  else\n    _PLIST_ENTRY_KEYS+=(\"FirebaseCrashlyticsCollectionEnabled\")\n    _PLIST_ENTRY_TYPES+=(\"bool\")\n    _PLIST_ENTRY_VALUES+=(\"NO\")\n  fi\nelse\n  _PLIST_ENTRY_KEYS+=(\"firebase_json_raw\")\n  _PLIST_ENTRY_TYPES+=(\"string\")\n  _PLIST_ENTRY_VALUES+=(\"$_JSON_OUTPUT_BASE64\")\n  echo \"warning:   A firebase.json file was not found, whilst this file is optional it is recommended to include it to configure firebase services in React Native Firebase.\"\nfi;\n\necho \"info: 2) Injecting Info.plist entries: \"\n\n# Log out the keys we're adding\nfor i in \"${!_PLIST_ENTRY_KEYS[@]}\"; do\n  echo \"    ->  $i) ${_PLIST_ENTRY_KEYS[$i]}\" \"${_PLIST_ENTRY_TYPES[$i]}\" \"${_PLIST_ENTRY_VALUES[$i]}\"\ndone\n\nfor plist in \"${_TARGET_PLIST}\" \"${_DSYM_PLIST}\" ; do\n  if [[ -f \"${plist}\" ]]; then\n\n    # paths with spaces break the call to setPlistValue. temporarily modify\n    # the shell internal field separator variable (IFS), which normally\n    # includes spaces, to consist only of line breaks\n    oldifs=$IFS\n    IFS=\"\n\"\n\n    for i in \"${!_PLIST_ENTRY_KEYS[@]}\"; do\n      setPlistValue \"${_PLIST_ENTRY_KEYS[$i]}\" \"${_PLIST_ENTRY_TYPES[$i]}\" \"${_PLIST_ENTRY_VALUES[$i]}\" \"${plist}\"\n    done\n\n    # restore the original internal field separator value\n    IFS=$oldifs\n  else\n    echo \"warning:   A Info.plist build output file was not found (${plist})\"\n  fi\ndone\n\necho \"info: <- RNFB build script finished\"\n";
 		};
 		AC2794462C51756600F9AF68 /* Bundle and upload JS source maps for Datadog */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1825,9 +1861,11 @@
 				074322342A83E3CA00F8518D /* SchemaConfiguration.swift in Sources */,
 				0743222A2A83E3CA00F8518D /* NftBalanceEdge.graphql.swift in Sources */,
 				0703EE032A5734A600AED1DA /* UserDefaults.swift in Sources */,
+				91D501702CDBEAE700B09B7F /* TokenMarketParts.graphql.swift in Sources */,
 				074322212A83E3CA00F8518D /* NftCollectionConnection.graphql.swift in Sources */,
 				0743220A2A83E3CA00F8518D /* SafetyLevel.graphql.swift in Sources */,
 				074322402A841BBD00F8518D /* Constants.swift in Sources */,
+				91D501762CDBEAE700B09B7F /* TokenProtectionInfoParts.graphql.swift in Sources */,
 				0703EE052A57351800AED1DA /* Logging.swift in Sources */,
 				074321EB2A83E3CA00F8518D /* TokenDetailsScreenQuery.graphql.swift in Sources */,
 				0767E03B2A65D2550042ADA2 /* Styling.swift in Sources */,
@@ -1835,15 +1873,19 @@
 				074322092A83E3CA00F8518D /* NftActivityType.graphql.swift in Sources */,
 				074322222A83E3CA00F8518D /* NftContract.graphql.swift in Sources */,
 				0743220E2A83E3CA00F8518D /* NftOrderEdge.graphql.swift in Sources */,
+				91D501782CDBEAE700B09B7F /* TokenProjectUrlsParts.graphql.swift in Sources */,
 				074321FB2A83E3CA00F8518D /* NftsQuery.graphql.swift in Sources */,
 				074322022A83E3CA00F8518D /* TokenStandard.graphql.swift in Sources */,
 				07F0C28F2A5F3E2E00D5353E /* Env.swift in Sources */,
 				074321F82A83E3CA00F8518D /* TokenProjectsQuery.graphql.swift in Sources */,
 				074322142A83E3CA00F8518D /* TimestampedAmount.graphql.swift in Sources */,
 				074322362A83E3CA00F8518D /* NftCollectionsFilterInput.graphql.swift in Sources */,
+				91D501732CDBEAE700B09B7F /* TokenBasicInfoParts.graphql.swift in Sources */,
 				0743223B2A83E3CA00F8518D /* NftAssetsFilterInput.graphql.swift in Sources */,
 				0DC6ADF02B1E2C100092909C /* PortfolioValueModifier.graphql.swift in Sources */,
 				0013F5F72C93399400D6EF09 /* ProtectionInfo.graphql.swift in Sources */,
+				91D501712CDBEAE700B09B7F /* TokenBalanceMainParts.graphql.swift in Sources */,
+				91D5017E2CDBEAF600B09B7F /* HomeScreenTokenParts.graphql.swift in Sources */,
 				9127D1362CC2D3D00096F134 /* TokenBalanceMainParts.graphql.swift in Sources */,
 				074322282A83E3CA00F8518D /* TokenProjectMarket.graphql.swift in Sources */,
 				A7B8EFCB2BF68F0D00CA4A1C /* FeeData.graphql.swift in Sources */,
@@ -1858,6 +1900,7 @@
 				074322132A83E3CA00F8518D /* NftCollection.graphql.swift in Sources */,
 				074321F72A83E3CA00F8518D /* ExploreSearchQuery.graphql.swift in Sources */,
 				074322052A83E3CA00F8518D /* Chain.graphql.swift in Sources */,
+				91D5017A2CDBEAE700B09B7F /* TokenFeeDataParts.graphql.swift in Sources */,
 				074322072A83E3CA00F8518D /* TransactionDirection.graphql.swift in Sources */,
 				0743221D2A83E3CA00F8518D /* NftOrder.graphql.swift in Sources */,
 				074322292A83E3CA00F8518D /* AmountChange.graphql.swift in Sources */,
@@ -1872,9 +1915,11 @@
 				0767E0382A65C8330042ADA2 /* Colors.swift in Sources */,
 				0743220C2A83E3CA00F8518D /* TransactionStatus.graphql.swift in Sources */,
 				074321EF2A83E3CA00F8518D /* TokenQuery.graphql.swift in Sources */,
+				91D501752CDBEAE700B09B7F /* TokenBalanceQuantityParts.graphql.swift in Sources */,
 				074322332A83E3CA00F8518D /* Token.graphql.swift in Sources */,
 				074322312A83E3CA00F8518D /* NftApproval.graphql.swift in Sources */,
 				074322062A83E3CA00F8518D /* TokenSortableField.graphql.swift in Sources */,
+				91D501792CDBEAE700B09B7F /* TopTokenParts.graphql.swift in Sources */,
 				074322272A83E3CA00F8518D /* Dimensions.graphql.swift in Sources */,
 				0DE251482C13B69D005F47F9 /* OnRampServiceProvider.graphql.swift in Sources */,
 				074322002A83E3CA00F8518D /* AssetChange.graphql.swift in Sources */,
@@ -1892,6 +1937,7 @@
 				A70E4DD82C260416002D6D86 /* SwapOrderStatus.graphql.swift in Sources */,
 				0743220D2A83E3CA00F8518D /* Image.graphql.swift in Sources */,
 				07F5CF752A7020FD00C648A5 /* Format.swift in Sources */,
+				91D501722CDBEAE700B09B7F /* TokenProjectMarketsParts.graphql.swift in Sources */,
 				0783F7B42A619E7C009ED617 /* UIComponents.swift in Sources */,
 				0743220B2A83E3CA00F8518D /* NftMarketplace.graphql.swift in Sources */,
 				A70E4DD72C260416002D6D86 /* SwapOrderType.graphql.swift in Sources */,
@@ -1904,6 +1950,7 @@
 				074321F52A83E3CA00F8518D /* NftCollectionScreenQuery.graphql.swift in Sources */,
 				074321F02A83E3CA00F8518D /* SearchPopularTokensQuery.graphql.swift in Sources */,
 				8EE7C0582AFD7B2100E0D9CD /* DescriptionTranslations.graphql.swift in Sources */,
+				91D5017D2CDBEAF600B09B7F /* AITopTokenParts.graphql.swift in Sources */,
 				074322172A83E3CA00F8518D /* NftTransfer.graphql.swift in Sources */,
 				074322202A83E3CA00F8518D /* NftAssetEdge.graphql.swift in Sources */,
 				00265F792C933CE300A5DA57 /* ProtectionResult.graphql.swift in Sources */,
@@ -1914,8 +1961,10 @@
 				074322012A83E3CA00F8518D /* HistoryDuration.graphql.swift in Sources */,
 				074322182A83E3CA00F8518D /* TokenApproval.graphql.swift in Sources */,
 				00265F7A2C933CE300A5DA57 /* ProtectionAttackType.graphql.swift in Sources */,
+				91D501742CDBEAE700B09B7F /* TokenBasicProjectParts.graphql.swift in Sources */,
 				07F5CF712A6AD97D00C648A5 /* Chart.swift in Sources */,
 				074321F42A83E3CA00F8518D /* NFTItemScreenQuery.graphql.swift in Sources */,
+				91D501772CDBEAE700B09B7F /* TokenParts.graphql.swift in Sources */,
 				0743222D2A83E3CA00F8518D /* NftProfile.graphql.swift in Sources */,
 				074322122A83E3CA00F8518D /* NftActivityEdge.graphql.swift in Sources */,
 				074143402A588F5800A157D3 /* Structs.swift in Sources */,
@@ -2955,6 +3004,17 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers/react/nativemodule/core",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers/platform/ios",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric/React_Fabric.framework/Headers/react/renderer/components/view/platform/cxx",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-NativeModulesApple/React_NativeModulesApple.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers/react/renderer/graphics/platform/ios",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
@@ -3019,6 +3079,17 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers/react/nativemodule/core",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers/platform/ios",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric/React_Fabric.framework/Headers/react/renderer/components/view/platform/cxx",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-NativeModulesApple/React_NativeModulesApple.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers/react/renderer/graphics/platform/ios",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
@@ -3169,6 +3240,17 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers/react/nativemodule/core",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers/platform/ios",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric/React_Fabric.framework/Headers/react/renderer/components/view/platform/cxx",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-NativeModulesApple/React_NativeModulesApple.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers/react/renderer/graphics/platform/ios",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,
@@ -3340,6 +3422,17 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers/react/nativemodule/core",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon-Samples/ReactCommon_Samples.framework/Headers/platform/ios",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric/React_Fabric.framework/Headers/react/renderer/components/view/platform/cxx",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-NativeModulesApple/React_NativeModulesApple.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers",
+					"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers/react/renderer/graphics/platform/ios",
+				);
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					/usr/lib/swift,

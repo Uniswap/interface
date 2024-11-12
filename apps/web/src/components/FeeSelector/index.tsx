@@ -116,6 +116,7 @@ export default function FeeSelector({
     (fee: FeeAmount) => {
       sendAnalyticsEvent(LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER, {
         action: FeePoolSelectAction.MANUAL,
+        fee_tier: fee,
         ...trace,
       })
       handleFeePoolSelect(fee)
@@ -137,6 +138,7 @@ export default function FeeSelector({
       recommended.current = true
       sendAnalyticsEvent(LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER, {
         action: FeePoolSelectAction.RECOMMENDED,
+        fee_tier: largestUsageFeeTier,
         ...trace,
       })
 

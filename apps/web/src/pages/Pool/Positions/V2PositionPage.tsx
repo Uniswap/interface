@@ -33,10 +33,15 @@ const BodyWrapper = styled(Main, {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  mx: 'auto',
   width: '100%',
+  maxWidth: 600, // intentionally less than the other LP screens
   zIndex: '$default',
-  p: '$spacing24',
+  py: '$spacing24',
+  px: '$spacing40',
+
+  $lg: {
+    px: '$padding20',
+  },
 })
 
 export default function V2PositionPage() {
@@ -114,7 +119,7 @@ export default function V2PositionPage() {
 
   return (
     <BodyWrapper>
-      <Flex gap="$gap20" width="calc(min(580px, 90vw))">
+      <Flex gap="$gap20" width="100%">
         <Flex row width="100%" justifyContent="flex-start" alignItems="center">
           <BreadcrumbNavContainer aria-label="breadcrumb-nav">
             <BreadcrumbNavLink to="/positions">
@@ -133,7 +138,7 @@ export default function V2PositionPage() {
               }}
             >
               <Text variant="buttonLabel2" color="$neutral1">
-                <Trans i18nKey="common.migrate" />
+                <Trans i18nKey="common.migrate.v3" />
               </Text>
             </HeaderButton>
             <HeaderButton

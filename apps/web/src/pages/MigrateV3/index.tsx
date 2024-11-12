@@ -1,9 +1,11 @@
 // eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
 import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
+import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { PositionInfo } from 'components/Liquidity/types'
 import { parseRestPosition } from 'components/Liquidity/utils'
 import { LoadingRows } from 'components/Loader/styled'
@@ -44,11 +46,14 @@ import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { useAccount } from 'wagmi'
 
@@ -66,7 +71,7 @@ const BodyWrapper = styled(Main, {
 
 function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   const { chainName, tokenId } = useParams<{ tokenId: string; chainName: string }>()
-
+  const trace = useTrace()
   const { t } = useTranslation()
 
   const { positionState, setPositionState, setStep, step } = useCreatePositionContext()
@@ -196,6 +201,20 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
                       setSteps: setTransactionSteps,
                       onSuccess: onClose,
                       onFailure: onClose,
+                      analytics: {
+                        ...getLPBaseAnalyticsProperties({
+                          trace,
+                          fee: positionInfo.feeTier,
+                          currency0: currency0Amount.currency,
+                          currency1: currency1Amount.currency,
+                          currency0AmountUsd: currency0FiatAmount,
+                          currency1AmountUsd: currency1FiatAmount,
+                          poolId: positionInfo.poolId,
+                          version: protocolVersion,
+                          chainId: startChainId,
+                        }),
+                        action: 'V3->V4',
+                      },
                     }),
                   )
                 }}
@@ -268,23 +287,36 @@ export default function MigrateV3() {
     )
   }
 
-  const { currency0Amount, currency1Amount } = positionInfo
+  const { currency0Amount, currency1Amount, feeTier } = positionInfo
   return (
-    <CreatePositionContextProvider
-      initialState={{
-        currencyInputs: {
-          [PositionField.TOKEN0]: currency0Amount.currency,
-          [PositionField.TOKEN1]: currency1Amount.currency,
-        },
+    <Trace
+      logImpression
+      page={InterfacePageNameLocal.MigrateV3}
+      properties={{
+        pool_address: positionInfo.poolId,
+        chain_id: chainId ?? account.chainId,
+        label: [currency0Amount.currency.symbol, currency1Amount.currency.symbol].join('/'),
+        fee_tier: feeTier,
+        token0Address: currencyIdToAddress(currencyId(currency0Amount.currency)),
+        token1Address: currencyIdToAddress(currencyId(currency1Amount.currency)),
       }}
     >
-      <PriceRangeContextProvider>
-        <DepositContextProvider>
-          <MigrateV3PositionTxContextProvider positionInfo={positionInfo}>
-            <MigrateV3Inner positionInfo={positionInfo} />
-          </MigrateV3PositionTxContextProvider>
-        </DepositContextProvider>
-      </PriceRangeContextProvider>
-    </CreatePositionContextProvider>
+      <CreatePositionContextProvider
+        initialState={{
+          currencyInputs: {
+            [PositionField.TOKEN0]: currency0Amount.currency,
+            [PositionField.TOKEN1]: currency1Amount.currency,
+          },
+        }}
+      >
+        <PriceRangeContextProvider>
+          <DepositContextProvider>
+            <MigrateV3PositionTxContextProvider positionInfo={positionInfo}>
+              <MigrateV3Inner positionInfo={positionInfo} />
+            </MigrateV3PositionTxContextProvider>
+          </DepositContextProvider>
+        </PriceRangeContextProvider>
+      </CreatePositionContextProvider>
+    </Trace>
   )
 }

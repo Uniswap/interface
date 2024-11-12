@@ -22,7 +22,13 @@ export const CreatePositionContext = React.createContext<CreatePositionContextTy
   derivedPositionInfo: {
     protocolVersion: ProtocolVersion.V4,
     currencies: [undefined, undefined],
+    isPoolOutOfSync: false,
   },
+  dynamicFeeTierSpeedbumpData: {
+    open: false,
+    wishFeeData: DEFAULT_POSITION_STATE.fee,
+  },
+  setDynamicFeeTierSpeedbumpData: () => undefined,
 })
 
 export const useCreatePositionContext = () => {

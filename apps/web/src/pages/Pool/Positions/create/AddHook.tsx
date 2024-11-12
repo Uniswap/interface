@@ -10,6 +10,7 @@ import { X } from 'ui/src/components/icons/X'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { fonts } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useTranslation } from 'uniswap/src/i18n'
 import { getValidAddress, shortenAddress } from 'uniswap/src/utils/addresses'
 import { useOnClickOutside } from 'utilities/src/react/hooks'
@@ -171,6 +172,7 @@ export function AddHook() {
               py="$spacing8"
               px="$spacing12"
               borderWidth={0}
+              borderRadius="$rounded12"
               onPress={() => {
                 setHookInputEnabled(false)
                 setHookValue('')
@@ -193,6 +195,7 @@ export function AddHook() {
       Icon={DocumentList}
       onPress={() => setHookInputEnabled(true)}
       tooltipText={t('position.addHook.tooltip')}
+      elementName={ElementName.AddHook}
     />
   )
 }

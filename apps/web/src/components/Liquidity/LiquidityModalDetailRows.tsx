@@ -17,7 +17,7 @@ export function LiquidityModalDetailRows({
   const { formatCurrencyAmount } = useLocalizationContext()
 
   return (
-    <Flex py="$padding12" px="$padding16" gap="$gap8">
+    <Flex px="$padding16" gap="$gap8">
       <DetailLineItem
         LineItem={{
           Label: () => (

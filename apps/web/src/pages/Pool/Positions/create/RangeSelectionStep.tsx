@@ -3,6 +3,7 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Price } from '@uniswap/sdk-core'
 import { calculateInvertedPrice } from 'components/Liquidity/utils'
 import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
+import { BaseQuoteFiatAmount } from 'pages/Pool/Positions/create/BaseQuoteFiatAmount'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { Container } from 'pages/Pool/Positions/create/shared'
 import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
@@ -10,12 +11,12 @@ import { useCallback, useMemo, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import { useRangeHopCallbacks } from 'state/mint/v3/hooks'
 import { Button, Flex, FlexProps, SegmentedControl, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { fonts } from 'ui/src/theme'
 import { AmountInput, numericInputRegex } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 enum RangeSelectionInput {
   MIN,
@@ -29,7 +30,6 @@ enum RangeSelection {
 
 function DisplayCurrentPrice({ price }: { price?: Price<Currency, Currency> }) {
   const [priceInverted, setPriceInverted] = useState(false)
-  const { formatPrice } = useFormatter()
   const { price: currentPrice, quote, base } = calculateInvertedPrice({ price, invert: priceInverted })
 
   const invertPrice = useCallback(() => {
@@ -41,16 +41,7 @@ function DisplayCurrentPrice({ price }: { price?: Price<Currency, Currency> }) {
       <Text variant="body3" color="$neutral2">
         <Trans i18nKey="common.currentPrice.label" />
       </Text>
-      <Text variant="body3" color="$neutral1">
-        <Trans
-          i18nKey="common.amountPerBase"
-          values={{
-            amount: formatPrice({ price: currentPrice, type: NumberType.TokenTx }),
-            symbolA: quote?.symbol,
-            symbolB: base?.symbol,
-          }}
-        />
-      </Text>
+      <BaseQuoteFiatAmount price={currentPrice} base={base} quote={quote} />
       <TouchableArea onPress={invertPrice}>
         <ArrowUpDown size="$icon.16" color="$neutral2" rotate="90deg" />
       </TouchableArea>
@@ -127,6 +118,7 @@ const InitialPriceInput = () => {
           fontFamily="$heading"
           fontSize={fonts.heading3.fontSize}
           fontWeight={fonts.heading3.fontWeight}
+          lineHeight={fonts.heading3.lineHeight}
           overflow="visible"
           placeholder="0"
           placeholderTextColor={colors.neutral3.val}
@@ -170,12 +162,14 @@ function RangeInput({
   decrement,
   increment,
   showIncrementButtons = true,
+  isInvalid = false,
 }: {
   value: string
   input: RangeSelectionInput
   decrement: () => string
   increment: () => string
   showIncrementButtons?: boolean
+  isInvalid?: boolean
 }) {
   const colors = useSporeColors()
   const { t } = useTranslation()
@@ -234,7 +228,7 @@ function RangeInput({
           backgroundColor="$transparent"
           borderWidth={0}
           borderRadius="$none"
-          color="$neutral1"
+          color={isInvalid ? '$statusCritical' : '$neutral1'}
           fontFamily="$heading"
           fontSize={fonts.heading3.fontSize}
           fontWeight={fonts.heading3.fontWeight}
@@ -500,6 +494,7 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
               increment={isSorted ? getIncrementLower : getDecrementUpper}
               value={rangeSelectionInputValues[0]}
               showIncrementButtons={!!pool}
+              isInvalid={invalidRange}
             />
             <RangeInput
               input={RangeSelectionInput.MAX}
@@ -507,9 +502,18 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
               increment={isSorted ? getIncrementUpper : getDecrementLower}
               value={rangeSelectionInputValues[1]}
               showIncrementButtons={!!pool}
+              isInvalid={invalidRange}
             />
           </Flex>
         </Flex>
+        {invalidState && (
+          <Flex row alignItems="center" px="$padding16" gap="$gap4">
+            <AlertTriangleFilled size="$icon.16" color="$statusCritical" />
+            <Text color="$statusCritical" variant="body3">
+              {invalidRange ? t('position.create.invalidRange') : t('position.create.invalidPrice')}
+            </Text>
+          </Flex>
+        )}
       </Flex>
       <Button
         flex={1}
@@ -527,7 +531,7 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
         disabled={invalidState}
       >
         <Text variant="buttonLabel1" color="$surface1">
-          {invalidState ? t(`mint.v3.input.invalidPrice.error`) : t(`common.button.continue`)}
+          {t(`common.button.continue`)}
         </Text>
       </Button>
     </Container>

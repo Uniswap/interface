@@ -216,12 +216,7 @@ export const routes: RouteDefinition[] = [
     getElement: () => <CreatePosition />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
-  }),
-  createRouteDefinition({
-    path: '/positions/create/:protocolVersion',
-    getElement: () => <CreatePosition />,
-    getTitle: getPositionPageTitle,
-    getDescription: getPositionPageDescription,
+    nestedPaths: [':protocolVersion'],
   }),
   createRouteDefinition({
     path: '/positions',

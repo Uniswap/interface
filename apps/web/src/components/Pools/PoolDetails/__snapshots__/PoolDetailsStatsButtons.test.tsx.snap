@@ -1435,7 +1435,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                         id="swap-button"
                       >
                         <span
-                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-2084381207 _fontFamily-299667014 _wordWrap-break-word _fontSize-20px _lineHeight-222976542 _fontWeight-233016202"
+                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-675002279 _fontFamily-299667014 _wordWrap-break-word _fontSize-20px _lineHeight-222976542 _fontWeight-233016202"
                           data-disable-theme="true"
                         >
                           Connecting wallet...

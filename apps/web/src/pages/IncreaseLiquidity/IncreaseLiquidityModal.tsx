@@ -8,7 +8,7 @@ import { IncreaseLiquidityTxContextProvider } from 'components/IncreaseLiquidity
 import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
 import { IncreaseLiquidityForm } from 'pages/IncreaseLiquidity/IncreaseLiquidityForm'
 import { useCloseModal } from 'state/application/hooks'
-import { Flex, HeightAnimator } from 'ui/src'
+import { HeightAnimator } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useTranslation } from 'uniswap/src/i18n'
@@ -19,26 +19,34 @@ function IncreaseLiquidityModalInner() {
   const { step, setStep } = useIncreaseLiquidityContext()
   const onClose = useCloseModal(ModalName.AddLiquidity)
 
-  let modalContent
-  switch (step) {
-    case IncreaseLiquidityStep.Input:
-      modalContent = <IncreaseLiquidityForm />
-      break
-    case IncreaseLiquidityStep.Review:
-      modalContent = <IncreaseLiquidityReview onClose={onClose} />
-      break
+  if (step === IncreaseLiquidityStep.Input) {
+    return (
+      <Modal name={ModalName.AddLiquidity} onClose={onClose} isDismissible gap="$gap24" padding="$padding16">
+        <LiquidityModalHeader title={t('common.addLiquidity')} closeModal={onClose} />
+        <HeightAnimator animation="fast">
+          <IncreaseLiquidityForm />
+        </HeightAnimator>
+      </Modal>
+    )
   }
 
   return (
-    <Modal name={ModalName.AddLiquidity} onClose={onClose} isDismissible>
-      <Flex px="$padding16" mb="$spacing24">
-        <LiquidityModalHeader
-          title={t('common.addLiquidity')}
-          closeModal={onClose}
-          goBack={step === IncreaseLiquidityStep.Review ? () => setStep(IncreaseLiquidityStep.Input) : undefined}
-        />
-      </Flex>
-      <HeightAnimator animation="fast">{modalContent}</HeightAnimator>
+    <Modal
+      name={ModalName.AddLiquidity}
+      onClose={onClose}
+      isDismissible
+      gap="$gap12"
+      paddingX="$padding8"
+      paddingY="$padding12"
+    >
+      <LiquidityModalHeader
+        title={t('common.addLiquidity')}
+        closeModal={onClose}
+        goBack={() => setStep(IncreaseLiquidityStep.Input)}
+      />
+      <HeightAnimator animation="fast">
+        <IncreaseLiquidityReview onClose={onClose} />
+      </HeightAnimator>
     </Modal>
   )
 }

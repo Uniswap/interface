@@ -298,7 +298,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 style={{ width: '100%', textAlign: 'center' }}
                 to={`/explore/pools/${toGraphQLChain(pair.chainId ?? defaultChainId).toLowerCase()}/${Pair.getAddress(pair.token0, pair.token1)}`}
               >
-                <Trans i18nKey="pool.accruedFees" />
+                <Trans i18nKey="pool.viewUncollectedFees" />
                 <span style={{ fontSize: '11px' }}>↗</span>
               </StyledInternalLink>
             </ButtonSecondary>

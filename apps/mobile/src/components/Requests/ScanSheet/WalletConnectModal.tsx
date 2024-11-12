@@ -28,6 +28,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UwULinkRequest } from 'uniswap/src/types/walletConnect'
+import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { WalletQRCode } from 'wallet/src/components/QRCodeScanner/WalletQRCode'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
@@ -123,7 +124,14 @@ export function WalletConnectModal({
           logger.error(error, {
             tags: { file: 'WalletConnectModal', function: 'onScanCode' },
           })
-          Alert.alert(t('walletConnect.error.general.title'), t('walletConnect.error.general.message'), [
+
+          const title = t('walletConnect.error.general.title')
+          const message =
+            isDevEnv() || isBetaEnv()
+              ? error?.toString?.() || t('walletConnect.error.general.message')
+              : t('walletConnect.error.general.message')
+
+          Alert.alert(title, message, [
             {
               text: t('common.button.ok'),
               onPress: (): void => {

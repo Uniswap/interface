@@ -30,9 +30,9 @@ export function RemoveLiquidityForm() {
   const { currency0Amount, currency1Amount } = positionInfo
 
   return (
-    <>
+    <Flex gap="$gap24">
       {/* Position info */}
-      <Flex width="100%" row justifyContent="center">
+      <Flex width="100%" row justifyContent="flex-start">
         <LiquidityPositionInfo positionInfo={positionInfo} />
       </Flex>
       {/* Percent input panel */}
@@ -96,6 +96,6 @@ export function RemoveLiquidityForm() {
           </Text>
         </Flex>
       </LoaderButton>
-    </>
+    </Flex>
   )
 }

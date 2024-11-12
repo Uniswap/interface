@@ -266,7 +266,7 @@ export const CurrencyInputPanel = memo(
                   color={showInsufficientBalanceWarning ? '$statusCritical' : color}
                   fontSize={fontSize}
                   lineHeight={lineHeight}
-                  mr="$spacing4"
+                  mr={isWeb && '$spacing2'}
                 >
                   {fiatCurrencySymbol}
                 </Text>

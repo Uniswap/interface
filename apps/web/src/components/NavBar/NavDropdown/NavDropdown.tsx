@@ -65,9 +65,7 @@ export function NavDropdown({ children, width, dropdownRef, isOpen, dataTestId }
       </Popover.Content>
       <Popover.Adapt when="sm">
         <WebBottomSheet isOpen={isOpen} p={0}>
-          <Popover.Sheet.ScrollView>
-            <Popover.Adapt.Contents />
-          </Popover.Sheet.ScrollView>
+          <Popover.Adapt.Contents />
         </WebBottomSheet>
       </Popover.Adapt>
     </>

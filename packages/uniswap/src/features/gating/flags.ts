@@ -39,7 +39,6 @@ export enum FeatureFlags {
 
   // Web
   AATestWeb,
-  AstroChainLaunchModal,
   UniversalSwap,
   NavigationHotkeys,
   Eip6936Enabled,
@@ -84,7 +83,6 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.QuickRouteMainnet, 'enable_quick_route_mainnet'],
   [FeatureFlags.Realtime, 'realtime'],
   [FeatureFlags.TraceJsonRpc, 'traceJsonRpc'],
-  [FeatureFlags.AstroChainLaunchModal, 'astro_chain_launch_modal'],
   [FeatureFlags.UniswapXSyntheticQuote, 'uniswapx_synthetic_quote'],
   [FeatureFlags.UniswapXv2, 'uniswapx_v2'],
   [FeatureFlags.V4Everywhere, 'v4_everywhere'],

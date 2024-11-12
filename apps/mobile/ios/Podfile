@@ -2,14 +2,21 @@
 require File.join(File.dirname(`node --print "require.resolve('expo/package.json')"`), "scripts/autolinking")
 require_relative '../../../node_modules/react-native/scripts/react_native_pods'
 require_relative '../../../node_modules/@react-native-community/cli-platform-ios/native_modules'
+require_relative '../../../node_modules/react-native-permissions/scripts/setup'
 
 platform :ios, '15.0'
 prepare_react_native_project!
 
-$FirebaseSDKVersion = '10.15.0'
+setup_permissions([
+  'FaceID',
+  'Notifications',
+])
+
+$RNFirebaseAsStaticFramework = true
 $RNFirebaseAnalyticsWithoutAdIdSupport=true
 
 target 'Uniswap' do
+  use_frameworks! :linkage => :static
   use_expo_modules!
   post_integrate do |installer|
     begin
@@ -38,12 +45,6 @@ target 'Uniswap' do
   pod 'EthersRS', :path =>  '../../../node_modules/@uniswap/ethers-rs-mobile'
   pod 'Argon2Swift', '1.0.3'
 
-  permissions_path = '../../../node_modules/react-native-permissions/ios'
-  pod 'Permission-FaceID', :path => "#{permissions_path}/FaceID"
-  pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
-  pod 'FirebaseCore', $FirebaseSDKVersion, :modular_headers => true
-  pod 'GoogleUtilities', '7.11.5', :modular_headers => true
-
   post_install do |installer|
     react_native_post_install(installer, "../../../node_modules/react-native")
 
@@ -57,27 +58,30 @@ target 'Uniswap' do
 end
 
 target 'OneSignalNotificationServiceExtension' do
+  use_frameworks! :linkage => :static
   pod 'OneSignalXCFramework', '3.12.6'
 end
 
-def widget_pods
+def prepare_target_commons
+  use_frameworks! :linkage => :static
+
   pod 'Apollo', '1.2.1'
   pod 'UIImageColors', '2.1.0'
 end
 
 target 'Widgets' do
-  widget_pods
+  prepare_target_commons
   # Pods for widgets
 end
 target 'WidgetsCore' do
-  widget_pods
+  prepare_target_commons
   # Pods for widgets core
 end
 target 'WidgetsCoreTests' do
-  widget_pods
+  prepare_target_commons
   # Pods for widgets core test
 end
 target 'WidgetIntentExtension' do
-  widget_pods
+  prepare_target_commons
   # Pods for intent extension
 end

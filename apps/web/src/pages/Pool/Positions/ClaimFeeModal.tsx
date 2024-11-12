@@ -1,6 +1,8 @@
-/* eslint-disable-next-line no-restricted-imports */
+import { LiquidityEventName } from '@uniswap/analytics-events'
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { LoaderButton } from 'components/Button/LoaderButton'
+import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { useModalLiquidityInitialState, useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
 import { getProtocolItems } from 'components/Liquidity/utils'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
@@ -23,12 +25,16 @@ import { useClaimLpFeesCalldataQuery } from 'uniswap/src/data/apiClients/trading
 import { ClaimLPFeesRequest } from 'uniswap/src/data/tradingApi/__generated__'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTranslation } from 'uniswap/src/i18n'
 import { NumberType } from 'utilities/src/format/types'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { currencyId } from 'utils/currencyId'
 
+// eslint-disable-next-line import/no-unused-modules
 export function ClaimFeeModal() {
   const { t } = useTranslation()
+  const trace = useTrace()
   const { formatCurrencyAmount } = useLocalizationContext()
   const positionInfo = useModalLiquidityInitialState()
   const onClose = useCloseModal(ModalName.ClaimFee)
@@ -148,6 +154,23 @@ export function ClaimFeeModal() {
                 expectedCurrencyOwed0: token0Fees?.quotient.toString() || '',
                 expectedCurrencyOwed1: token1Fees?.quotient.toString() || '',
               })
+
+              if (positionInfo && token0Fees?.currency && token1Fees?.currency) {
+                // typecheck only
+                sendAnalyticsEvent(LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED, {
+                  ...getLPBaseAnalyticsProperties({
+                    trace,
+                    poolId: positionInfo.poolId,
+                    chainId: positionInfo.currency0Amount.currency.chainId,
+                    currency0: token0Fees?.currency,
+                    currency1: token1Fees?.currency,
+                    currency0AmountUsd: token0FeesUsd,
+                    currency1AmountUsd: token1FeesUsd,
+                    version: positionInfo?.version,
+                  }),
+                  transaction_hash: response.hash,
+                })
+              }
 
               onClose()
               dispatch(

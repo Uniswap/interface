@@ -44,7 +44,7 @@ const StyledDropdown = {
   },
 } satisfies FlexProps
 
-export default function TableNetworkFilter() {
+export default function TableNetworkFilter({ showMultichainOption = true }: { showMultichainOption?: boolean }) {
   const [isMenuOpen, toggleMenu] = useState(false)
   const isSupportedChainCallback = useIsSupportedChainIdCallback()
   const { isTestnetModeEnabled } = useEnabledChains()
@@ -82,16 +82,20 @@ export default function TableNetworkFilter() {
           toggleOpen={toggleMenu}
           menuLabel={
             <NetworkLabel>
-              {!currentChainId ? (
+              {!currentChainId && showMultichainOption ? (
                 <AllNetworksIcon />
               ) : (
-                <ChainLogo chainId={currentChainId} size={20} testId="tokens-network-filter-selected" />
+                <ChainLogo
+                  chainId={currentChainId ?? UniverseChainId.Mainnet}
+                  size={20}
+                  testId="tokens-network-filter-selected"
+                />
               )}
             </NetworkLabel>
           }
           internalMenuItems={
             <ScrollView px="$spacing8">
-              <TableNetworkItem display="All networks" toggleMenu={toggleMenu} tab={tab} />
+              {showMultichainOption && <TableNetworkItem display="All networks" toggleMenu={toggleMenu} tab={tab} />}
               {/* non-testnet backend supported chains */}
               {ALL_CHAIN_IDS.filter(isBackendSupportedChainId)
                 .filter((c) => !isTestnetChain(c))

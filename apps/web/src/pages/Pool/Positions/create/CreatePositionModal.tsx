@@ -1,19 +1,24 @@
 // eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ButtonError } from 'components/Button/buttons'
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
+import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import useSelectChain from 'hooks/useSelectChain'
+import { BaseQuoteFiatAmount } from 'pages/Pool/Positions/create/BaseQuoteFiatAmount'
 import {
   useCreatePositionContext,
   useCreateTxContext,
   useDepositContext,
   usePriceRangeContext,
 } from 'pages/Pool/Positions/create/CreatePositionContext'
+import { PoolOutOfSyncError } from 'pages/Pool/Positions/create/PoolOutOfSyncError'
 import { formatPrices } from 'pages/Pool/Positions/create/shared'
-import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
+import { getInvertedTuple, getPoolIdOrAddressFromCreatePositionInfo } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -31,20 +36,21 @@ import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liq
 import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { Trans } from 'uniswap/src/i18n'
 import { NumberType } from 'utilities/src/format/types'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useAccount } from 'wagmi'
 
 export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const {
     positionState: { fee, hook },
-    derivedPositionInfo: { currencies, protocolVersion },
+    derivedPositionInfo,
   } = useCreatePositionContext()
   const {
     derivedPriceRangeInfo,
     priceRangeState: { priceInverted },
   } = usePriceRangeContext()
-  const {
-    derivedDepositInfo: { formattedAmounts, currencyAmounts, currencyAmountsUSDValue },
-  } = useDepositContext()
+  const { derivedDepositInfo } = useDepositContext()
+  const { currencies, protocolVersion, isPoolOutOfSync, creatingPoolOrPair } = derivedPositionInfo
+  const { formattedAmounts, currencyAmounts, currencyAmountsUSDValue } = derivedDepositInfo
 
   const token0CurrencyInfo = useCurrencyInfo(currencyAmounts?.TOKEN0?.currency)
   const token1CurrencyInfo = useCurrencyInfo(currencyAmounts?.TOKEN1?.currency)
@@ -52,7 +58,7 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
   const { formatNumberOrString, formatCurrencyAmount } = useLocalizationContext()
   const [baseCurrency, quoteCurrency] = getInvertedTuple(currencies, priceInverted)
 
-  const formattedPrices = useMemo(() => {
+  const { formattedPrices } = useMemo(() => {
     return formatPrices(derivedPriceRangeInfo, formatNumberOrString)
   }, [formatNumberOrString, derivedPriceRangeInfo])
 
@@ -66,6 +72,7 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
   const selectChain = useSelectChain()
   const startChainId = useAccount().chainId
   const navigate = useNavigate()
+  const trace = useTrace()
 
   const onFailure = () => {
     setCurrentStep(undefined)
@@ -80,7 +87,13 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
 
   const handleCreate = useCallback(() => {
     const isValidTx = isValidLiquidityTxContext(createTxContext)
-    if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
+    if (
+      !account ||
+      account?.type !== AccountType.SignerMnemonic ||
+      !isValidTx ||
+      !currencyAmounts?.TOKEN0 ||
+      !currencyAmounts?.TOKEN1
+    ) {
       return
     }
 
@@ -94,9 +107,42 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
         setSteps,
         onSuccess,
         onFailure,
+        analytics: {
+          ...getLPBaseAnalyticsProperties({
+            trace,
+            version: protocolVersion,
+            fee: fee.feeAmount,
+            currency0: currencyAmounts.TOKEN0.currency,
+            currency1: currencyAmounts.TOKEN1.currency,
+            currency0AmountUsd: currencyAmountsUSDValue?.TOKEN0,
+            currency1AmountUsd: currencyAmountsUSDValue?.TOKEN1,
+            poolId: getPoolIdOrAddressFromCreatePositionInfo(derivedPositionInfo),
+            chainId: startChainId,
+          }),
+          expectedAmountBaseRaw: currencyAmounts.TOKEN0.quotient?.toString() ?? '0',
+          expectedAmountQuoteRaw: currencyAmounts.TOKEN1.quotient?.toString() ?? '0',
+          createPool: creatingPoolOrPair,
+          createPosition: true,
+        },
       }),
     )
-  }, [account, createTxContext, dispatch, selectChain, startChainId, onSuccess])
+  }, [
+    createTxContext,
+    account,
+    currencyAmounts?.TOKEN0,
+    currencyAmounts?.TOKEN1,
+    dispatch,
+    selectChain,
+    startChainId,
+    onSuccess,
+    trace,
+    protocolVersion,
+    fee.feeAmount,
+    currencyAmountsUSDValue?.TOKEN0,
+    currencyAmountsUSDValue?.TOKEN1,
+    derivedPositionInfo,
+    creatingPoolOrPair,
+  ])
 
   return (
     <Modal name={ModalName.CreatePosition} padding="$none" onClose={onClose} isDismissible isModalOpen={isOpen}>
@@ -149,6 +195,17 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
               </Flex>
             )}
           </Flex>
+          <Flex gap="$spacing12">
+            <Text variant="body3" color="$neutral2">
+              <Trans i18nKey="position.initialPrice" />
+            </Text>
+            <BaseQuoteFiatAmount
+              variant="body1"
+              price={derivedPriceRangeInfo?.price}
+              base={baseCurrency}
+              quote={quoteCurrency}
+            />
+          </Flex>
           <Flex gap="$spacing12" pb="$spacing8">
             <Text variant="body3" color="$neutral2">
               <Trans i18nKey="common.depositing" />
@@ -190,15 +247,20 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
               />
             </Flex>
           </Flex>
+          <PoolOutOfSyncError />
         </Flex>
         {currentStep ? (
           <ProgressIndicator steps={steps} currentStep={currentStep} />
-        ) : (
+        ) : !isPoolOutOfSync || !createTxContext?.action ? (
           <Button flex={1} py="$spacing16" px="$spacing20" onPress={handleCreate} disabled={!createTxContext?.action}>
             <Text variant="buttonLabel1" color="$neutralContrast">
               <Trans i18nKey="common.button.create" />
             </Text>
           </Button>
+        ) : (
+          <ButtonError error $borderRadius="20px" onClick={handleCreate}>
+            <Trans i18nKey="common.button.create" />
+          </ButtonError>
         )}
       </Flex>
     </Modal>

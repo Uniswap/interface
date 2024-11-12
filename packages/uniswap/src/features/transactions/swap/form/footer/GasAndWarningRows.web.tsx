@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { FadeIn } from 'react-native-reanimated'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
@@ -8,6 +8,7 @@ import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transaction
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { GasTradeRow, useDebouncedGasInfo } from 'uniswap/src/features/transactions/swap/form/footer/GasTradeRow'
+import { TradeWarningRow } from 'uniswap/src/features/transactions/swap/form/footer/TradeWarningRow'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
 import { SwapWarningModal } from 'uniswap/src/features/transactions/swap/modals/SwapWarningModal'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
@@ -76,7 +77,7 @@ export function GasAndWarningRows(): JSX.Element {
           />
 
           {showFormWarning && (
-            <TouchableArea onPress={onSwapWarningClick}>
+            <TradeWarningRow warning={formScreenWarning.warning} onPress={onSwapWarningClick}>
               <AnimatedFlex
                 centered
                 row
@@ -99,7 +100,7 @@ export function GasAndWarningRows(): JSX.Element {
                   </Text>
                 </Flex>
               </AnimatedFlex>
-            </TouchableArea>
+            </TradeWarningRow>
           )}
         </Flex>
 

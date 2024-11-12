@@ -5,7 +5,7 @@ import { useCallback } from 'react'
 import { ArrowUpRight } from 'react-feather'
 import { useSelector } from 'react-redux'
 import { useAppDispatch } from 'state/hooks'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { ClickableTamaguiStyle, ExternalLink, HideSmall } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { ElementAfterText, Flex, Text, TouchableArea, TouchableAreaEvent, useSporeColors } from 'ui/src'
@@ -28,7 +28,7 @@ export function SwapBottomCard() {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
-  const { chainId: oldFlowChainId } = useSwapAndLimitContext()
+  const { chainId: oldFlowChainId } = useMultichainContext()
   const { swapInputChainId: newFlowChainId, setIsSwapTokenSelectorOpen } = useUniswapContext()
   const chainId = newFlowChainId ?? oldFlowChainId
 

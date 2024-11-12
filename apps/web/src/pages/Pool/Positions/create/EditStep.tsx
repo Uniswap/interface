@@ -21,9 +21,17 @@ import { Trans } from 'uniswap/src/i18n'
 
 const EditStep = ({ children, onClick, ...rest }: { children: JSX.Element; onClick: () => void } & FlexProps) => {
   return (
-    <Container row justifyContent="space-between" alignItems="center" borderRadius="$rounded12" {...rest}>
+    <Container row justifyContent="space-between" alignItems="center" {...rest}>
       {children}
-      <Button theme="secondary" py="$spacing8" px="$spacing12" gap="$gap8" height={36} onPress={onClick}>
+      <Button
+        theme="secondary"
+        py="$spacing8"
+        px="$spacing12"
+        gap="$gap8"
+        height={36}
+        borderRadius="$rounded12"
+        onPress={onClick}
+      >
         <Edit size={iconSizes.icon20} color="$neutral1" />
         <Text variant="buttonLabel3">
           <Trans i18nKey="common.edit.button" />
@@ -50,7 +58,7 @@ export const EditSelectTokensStep = (props?: FlexProps) => {
 
   return (
     <EditStep onClick={handleEdit} {...props}>
-      <Flex row py="$spacing8" gap="$gap12">
+      <Flex row gap="$gap12">
         <DoubleCurrencyLogo currencies={[token0, token1]} size={iconSizes.icon32} />
         <Flex row gap="$gap8">
           <Text variant="heading3">{token0?.symbol}</Text>
@@ -84,7 +92,7 @@ export const EditRangeSelectionStep = (props?: FlexProps) => {
     setStep(PositionFlowStep.PRICE_RANGE)
   }, [setDepositState, setStep])
 
-  const formattedPrices = useMemo(() => {
+  const { formattedPrices, isFullRange } = useMemo(() => {
     return formatPrices(derivedPriceRangeInfo, formatNumberOrString)
   }, [formatNumberOrString, derivedPriceRangeInfo])
 
@@ -94,20 +102,26 @@ export const EditRangeSelectionStep = (props?: FlexProps) => {
         <Text variant="subheading1" width={80}>
           <Trans i18nKey="common.range" />
         </Text>
-        <Flex gap="$gap4">
-          <Flex row gap={10}>
-            <Text variant="body2" color="$neutral2">
-              <Trans i18nKey="chart.price.label.low" />
-            </Text>
-            <Text variant="body2">{`${formattedPrices[0]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
+        {!isFullRange ? (
+          <Flex gap="$gap4">
+            <Flex row gap={10}>
+              <Text variant="body2" color="$neutral2">
+                <Trans i18nKey="common.min" />
+              </Text>
+              <Text variant="body2">{`${formattedPrices[0]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
+            </Flex>
+            <Flex row gap={10}>
+              <Text variant="body2" color="$neutral2">
+                <Trans i18nKey="common.max" />
+              </Text>
+              <Text variant="body2">{`${formattedPrices[1]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
+            </Flex>
           </Flex>
-          <Flex row gap={10}>
-            <Text variant="body2" color="$neutral2">
-              <Trans i18nKey="chart.price.label.high" />
-            </Text>
-            <Text variant="body2">{`${formattedPrices[1]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
-          </Flex>
-        </Flex>
+        ) : (
+          <Text variant="body2" color="$neutral2">
+            <Trans i18nKey="common.fullRange" />
+          </Text>
+        )}
       </Flex>
     </EditStep>
   )

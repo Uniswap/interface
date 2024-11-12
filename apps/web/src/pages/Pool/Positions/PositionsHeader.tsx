@@ -83,7 +83,7 @@ export function PositionsHeader({
   const createOptions = useMemo(
     () =>
       [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4].map((version) => {
-        const protocolVersionLabel = getProtocolVersionLabel(version)?.toLowerCase()
+        const protocolVersionLabel = getProtocolVersionLabel(version)
         return (
           <Flex
             key={`PositionsHeader-create-${protocolVersionLabel}`}
@@ -136,11 +136,11 @@ export function PositionsHeader({
                   backgroundColor="$surface3"
                   justifyContent="center"
                   alignItems="center"
-                  px="$padding16"
-                  py="$spacing8"
+                  px="$padding12"
+                  py="$spacing12"
                   {...ClickableTamaguiStyle}
                 >
-                  <RotatableChevron direction="down" height={24} width={24} color="$neutral1" />
+                  <RotatableChevron direction="down" height={24} width={20} color="$neutral2" />
                 </Flex>
               }
               buttonStyle={{
@@ -172,7 +172,7 @@ export function PositionsHeader({
                     justifyContent="center"
                     alignItems="center"
                     px="$padding16"
-                    py="$spacing8"
+                    py="$spacing12"
                     testID="lp-version-selector"
                     {...ClickableTamaguiStyle}
                   >
@@ -195,7 +195,7 @@ export function PositionsHeader({
                 backgroundColor="$surface3"
                 borderRadius="$rounded16"
                 px="$padding12"
-                py="$spacing2"
+                py={6}
                 height="100%"
                 {...ClickableTamaguiStyle}
               >

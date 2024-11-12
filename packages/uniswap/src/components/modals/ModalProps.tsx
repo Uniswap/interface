@@ -28,14 +28,17 @@ export type ModalProps = PropsWithChildren<{
   extendOnKeyboardVisible?: boolean
   // defaults to `true`
   isModalOpen?: boolean
-  // created to allow testnet mode banner to be displayed on mobile
-  isBehindFixedBanners?: boolean
+  analyticsProperties?: Record<string, unknown>
 
   // TODO MOB-2526 refactor Modal to more platform-agnostic
   alignment?: 'center' | 'top'
   hideScrim?: boolean
   maxWidth?: number
   maxHeight?: ComponentProps<typeof View>['maxHeight']
+  height?: ComponentProps<typeof View>['height']
   padding?: SpaceTokens
+  paddingX?: SpaceTokens
+  paddingY?: SpaceTokens
   bottomAttachment?: ReactNode
+  gap?: ComponentProps<typeof View>['gap']
 }>

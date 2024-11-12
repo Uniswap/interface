@@ -18,8 +18,13 @@ export function Modal({
   alignment = 'center',
   maxWidth,
   maxHeight,
+  height,
   padding = '$spacing12',
   bottomAttachment,
+  gap,
+  paddingX,
+  paddingY,
+  analyticsProperties,
 }: ModalProps): JSX.Element {
   const [fullyClosed, setFullyClosed] = useState(false)
 
@@ -48,7 +53,7 @@ export function Modal({
   const ModalComponent = bottomAttachment ? WebModalWithBottomAttachment : AdaptiveWebModal
 
   return (
-    <Trace logImpression={isModalOpen} modal={name}>
+    <Trace logImpression={isModalOpen} modal={name} properties={analyticsProperties}>
       <ModalComponent
         bottomAttachment={bottomAttachment}
         shadowOpacity={isExtension ? 0 : undefined}
@@ -62,16 +67,19 @@ export function Modal({
         m="$none"
         maxWidth={maxWidth}
         maxHeight={maxHeight}
+        gap={gap}
         $sm={
           isInterface
             ? {
                 '$platform-web': {
-                  height: `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`,
+                  height: height ?? `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`,
                 },
               }
             : undefined
         }
         p={padding}
+        px={paddingX}
+        py={paddingY}
         position={isTopAligned ? 'absolute' : undefined}
         top={isTopAligned ? '$spacing16' : undefined}
         onClose={onClose}

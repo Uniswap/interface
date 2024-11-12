@@ -1,18 +1,17 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
-import {
-  InterfaceElementName,
-  InterfaceEventName,
-  LiquidityEventName,
-  LiquiditySource,
-} from '@uniswap/analytics-events'
+import { InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Percent, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { computePairAddress } from '@uniswap/v2-sdk'
+import { FeeAmount } from '@uniswap/v3-sdk'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from 'components/Button/buttons'
 import { BlueCard, LightCard } from 'components/Card/cards'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
+import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
@@ -337,16 +336,24 @@ function RemoveLiquidity() {
           setTxHash(response.hash)
 
           sendAnalyticsEvent(LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED, {
-            label: [currencyA.symbol, currencyB.symbol].join('/'),
-            source: LiquiditySource.V2,
-            ...trace,
-            type: LiquiditySource.V2,
-            transaction_hash: response.hash,
-            pool_address: computePairAddress({
-              factoryAddress: V2_FACTORY_ADDRESSES[currencyA.chainId],
-              tokenA: currencyA.wrapped,
-              tokenB: currencyB.wrapped,
+            ...getLPBaseAnalyticsProperties({
+              trace,
+              fee: FeeAmount.MEDIUM,
+              currency0: currencyA,
+              currency1: currencyB,
+              currency0AmountUsd: parsedAmounts[Field.CURRENCY_A],
+              currency1AmountUsd: parsedAmounts[Field.CURRENCY_B],
+              version: ProtocolVersion.V2,
+              poolId: computePairAddress({
+                factoryAddress: V2_FACTORY_ADDRESSES[currencyA.chainId],
+                tokenA: currencyA.wrapped,
+                tokenB: currencyB.wrapped,
+              }),
             }),
+            transaction_hash: response.hash,
+            expectedAmountBaseRaw: parsedAmounts[Field.CURRENCY_A]?.quotient.toString() ?? '0',
+            expectedAmountQuoteRaw: parsedAmounts[Field.CURRENCY_B]?.quotient.toString() ?? '0',
+            closePosition: formattedAmounts[Field.LIQUIDITY_PERCENT] === '100',
           })
         })
         .catch((error: Error) => {

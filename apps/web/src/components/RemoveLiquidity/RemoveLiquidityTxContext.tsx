@@ -6,7 +6,10 @@ import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { CheckApprovalLPResponse, DecreaseLPPositionResponse } from 'uniswap/src/data/tradingApi/__generated__'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { ValidatedDecreasePositionTxAndGasInfo } from 'uniswap/src/features/transactions/liquidity/types'
+import {
+  LiquidityTransactionType,
+  ValidatedDecreasePositionTxAndGasInfo,
+} from 'uniswap/src/features/transactions/liquidity/types'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { logContextUpdate } from 'utilities/src/logger/contextEnhancer'
 
@@ -50,9 +53,10 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
     const currency1AmountToRemove = currency1Amount.multiply(percent).divide(100)
 
     return {
-      type: 'decrease',
+      type: LiquidityTransactionType.Decrease,
       protocolVersion: positionInfo.version,
       action: {
+        type: LiquidityTransactionType.Decrease,
         currency0Amount: currency0AmountToRemove,
         currency1Amount: currency1AmountToRemove,
         liquidityToken: positionInfo.liquidityToken,

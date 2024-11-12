@@ -9,7 +9,6 @@ import { GetTheAppModal } from 'components/NavBar/DownloadApp/Modal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
 import { ReceiveCryptoModal } from 'components/ReceiveCryptoModal'
 import { UkDisclaimerModal } from 'components/TopLevelModals/UkDisclaimerModal'
-import { UnichainLaunchModal } from 'components/TopLevelModals/UnichainLaunchModal'
 import AddressClaimModal from 'components/claim/AddressClaimModal'
 import DevFlagsBox from 'dev/DevFlagsBox'
 import { useAccount } from 'hooks/useAccount'
@@ -21,8 +20,6 @@ import { ClaimFeeModal } from 'pages/Pool/Positions/ClaimFeeModal'
 import { RemoveLiquidityModal } from 'pages/RemoveLiquidity/RemoveLiquidityModal'
 import { useCloseModal, useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
@@ -41,7 +38,6 @@ export default function TopLevelModals() {
   useAccountRiskCheck(account.address)
   const accountBlocked = Boolean(blockedAccountModalOpen && account.isConnected)
   const shouldShowDevFlags = isDevEnv() || isBetaEnv()
-  const showUnichainLaunchModal = useFeatureFlag(FeatureFlags.AstroChainLaunchModal)
 
   return (
     <>
@@ -63,7 +59,6 @@ export default function TopLevelModals() {
       <PrivacyPolicyModal />
       <FeatureFlagModal />
       {shouldShowDevFlags && <DevFlagsBox />}
-      {showUnichainLaunchModal && <UnichainLaunchModal />}
 
       {isAddLiquidityModalOpen && <IncreaseLiquidityModal />}
       {isRemoveLiquidityModalOpen && <RemoveLiquidityModal />}

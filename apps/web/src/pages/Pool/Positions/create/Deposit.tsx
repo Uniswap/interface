@@ -1,4 +1,5 @@
 import { LoaderButton } from 'components/Button/LoaderButton'
+import { ButtonError } from 'components/Button/buttons'
 import { DepositInputForm } from 'components/Liquidity/DepositInputForm'
 import {
   useCreatePositionContext,
@@ -14,7 +15,9 @@ import { Flex, FlexProps, Text } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 
 export const DepositStep = ({ ...rest }: FlexProps) => {
-  const { derivedPositionInfo } = useCreatePositionContext()
+  const {
+    derivedPositionInfo: { currencies, isPoolOutOfSync },
+  } = useCreatePositionContext()
   const { derivedPriceRangeInfo } = usePriceRangeContext()
   const {
     setDepositState,
@@ -43,13 +46,15 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
     setIsReviewModalOpen(true)
   }, [])
 
-  const [token0, token1] = derivedPositionInfo.currencies
+  const [token0, token1] = currencies
 
   if (!token0 || !token1) {
     return null
   }
 
   const { deposit0Disabled, deposit1Disabled } = derivedPriceRangeInfo
+
+  const disabled = !!error || !txContext?.txRequest
 
   return (
     <>
@@ -78,19 +83,25 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
           deposit0Disabled={deposit0Disabled}
           deposit1Disabled={deposit1Disabled}
         />
-        <LoaderButton
-          flex={1}
-          py="$spacing16"
-          px="$spacing20"
-          onPress={handleReview}
-          disabled={!!error || !txContext?.txRequest}
-          buttonKey="Position-Create-DepositButton"
-          loading={Boolean(!txContext?.txRequest && currencyAmounts?.TOKEN0 && currencyAmounts.TOKEN1)}
-        >
-          <Text variant="buttonLabel1" color="$neutralContrast">
-            {error ? error : <Trans i18nKey="swap.button.review" />}
-          </Text>
-        </LoaderButton>
+        {!isPoolOutOfSync || disabled ? (
+          <LoaderButton
+            flex={1}
+            py="$spacing16"
+            px="$spacing20"
+            onPress={handleReview}
+            disabled={disabled}
+            buttonKey="Position-Create-DepositButton"
+            loading={Boolean(!txContext?.txRequest && currencyAmounts?.TOKEN0 && currencyAmounts.TOKEN1)}
+          >
+            <Text variant="buttonLabel1" color="$neutralContrast">
+              {error ? error : <Trans i18nKey="swap.button.review" />}
+            </Text>
+          </LoaderButton>
+        ) : (
+          <ButtonError error $borderRadius="20px" onClick={handleReview}>
+            <Trans i18nKey="swap.button.review" />
+          </ButtonError>
+        )}
       </Container>
       <CreatePositionModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
     </>

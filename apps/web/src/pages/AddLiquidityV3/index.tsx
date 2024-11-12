@@ -1,11 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import {
-  InterfaceElementName,
-  InterfaceEventName,
-  LiquidityEventName,
-  LiquiditySource,
-} from '@uniswap/analytics-events'
+import { InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import {
   Currency,
   CurrencyAmount,
@@ -20,6 +17,7 @@ import { BlueCard, OutlineCard, YellowCard } from 'components/Card/cards'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import FeeSelector from 'components/FeeSelector'
 import HoverInlineText from 'components/HoverInlineText'
+import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { AddRemoveTabs } from 'components/NavigationTabs'
@@ -268,6 +266,23 @@ function AddLiquidity() {
     outOfRange ? ZERO_PERCENT : DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE,
   )
 
+  const usdcValueCurrencyA = usdcValues[Field.CURRENCY_A]
+  const usdcValueCurrencyB = usdcValues[Field.CURRENCY_B]
+  const currencyAFiat = useMemo(
+    () => ({
+      data: usdcValueCurrencyA ? parseFloat(usdcValueCurrencyA.toSignificant()) : undefined,
+      isLoading: false,
+    }),
+    [usdcValueCurrencyA],
+  )
+  const currencyBFiat = useMemo(
+    () => ({
+      data: usdcValueCurrencyB ? parseFloat(usdcValueCurrencyB.toSignificant()) : undefined,
+      isLoading: false,
+    }),
+    [usdcValueCurrencyB],
+  )
+
   async function onAdd() {
     if (account.status !== 'connected' || !signer || !account.chainId) {
       return
@@ -355,23 +370,31 @@ function AddLiquidity() {
             }
             addTransaction(response, transactionInfo)
             setTxHash(response.hash)
+
             sendAnalyticsEvent(LiquidityEventName.ADD_LIQUIDITY_SUBMITTED, {
-              label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
-              ...trace,
               ...transactionInfo,
-              type: LiquiditySource.V3,
+              ...getLPBaseAnalyticsProperties({
+                trace,
+                fee: feeAmount,
+                version: ProtocolVersion.V3,
+                poolId:
+                  feeAmount && account.chainId
+                    ? PoolCache.getPoolAddress(
+                        V3_CORE_FACTORY_ADDRESSES[account.chainId],
+                        baseCurrency.wrapped,
+                        quoteCurrency.wrapped,
+                        feeAmount,
+                        account.chainId,
+                      )
+                    : undefined,
+                currency0: baseCurrency,
+                currency1: quoteCurrency,
+                currency0AmountUsd: currencyAFiat.data,
+                currency1AmountUsd: currencyBFiat.data,
+                chainId: account.chainId,
+              }),
+              createPosition: false,
               transaction_hash: response.hash,
-              fee_tier: feeAmount,
-              pool_address:
-                feeAmount && account.chainId
-                  ? PoolCache.getPoolAddress(
-                      V3_CORE_FACTORY_ADDRESSES[account.chainId],
-                      baseCurrency.wrapped,
-                      quoteCurrency.wrapped,
-                      feeAmount,
-                      account.chainId,
-                    )
-                  : undefined,
             })
           })
         })
@@ -623,29 +646,12 @@ function AddLiquidity() {
           }
           error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
         >
-          <Text fontWeight="$medium" color="neutralContrast">
+          <Text fontWeight="$medium" color="$neutralContrast">
             {errorMessage ? errorMessage : <Trans i18nKey="common.preview" />}
           </Text>
         </ButtonError>
       </AutoColumn>
     )
-
-  const usdcValueCurrencyA = usdcValues[Field.CURRENCY_A]
-  const usdcValueCurrencyB = usdcValues[Field.CURRENCY_B]
-  const currencyAFiat = useMemo(
-    () => ({
-      data: usdcValueCurrencyA ? parseFloat(usdcValueCurrencyA.toSignificant()) : undefined,
-      isLoading: false,
-    }),
-    [usdcValueCurrencyA],
-  )
-  const currencyBFiat = useMemo(
-    () => ({
-      data: usdcValueCurrencyB ? parseFloat(usdcValueCurrencyB.toSignificant()) : undefined,
-      isLoading: false,
-    }),
-    [usdcValueCurrencyB],
-  )
 
   const owner = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
   const ownsNFT =
@@ -701,7 +707,7 @@ function AddLiquidity() {
               )}
               bottomContent={() => (
                 <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onAdd}>
-                  <Text fontWeight="$medium" fontSize={20} color="neutralContrast">
+                  <Text fontWeight="$medium" fontSize={20} color="$neutralContrast">
                     <Trans i18nKey="common.add.label" />
                   </Text>
                 </ButtonPrimary>

@@ -8,11 +8,11 @@ import useSelectChain from 'hooks/useSelectChain'
 import { useUniswapXSwapCallback } from 'hooks/useUniswapXSwapCallback'
 import { useUniversalRouterSwapCallback } from 'hooks/useUniversalRouter'
 import { useCallback } from 'react'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { InterfaceTrade, OffchainOrderType, TradeFillType } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useAddOrder } from 'state/signatures/hooks'
 import { UniswapXOrderDetails } from 'state/signatures/types'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import {
   ExactInputSwapTransactionInfo,
@@ -54,7 +54,7 @@ export function useSwapCallback(
   const addOrder = useAddOrder()
   const account = useAccount()
   const supportedConnectedChainId = useSupportedChainId(account.chainId)
-  const { chainId: swapChainId } = useSwapAndLimitContext()
+  const { chainId: swapChainId } = useMultichainContext()
 
   const uniswapXSwapCallback = useUniswapXSwapCallback({
     trade: isUniswapXTrade(trade) ? trade : undefined,

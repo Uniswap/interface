@@ -12,10 +12,13 @@ import Web3Status from 'components/Web3Status'
 import Row from 'components/deprecated/Row'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useAccount } from 'hooks/useAccount'
+import { useIsBuyPage } from 'hooks/useIsBuyPage'
 import { useIsExplorePage } from 'hooks/useIsExplorePage'
 import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useIsLimitPage } from 'hooks/useIsLimitPage'
+import { useIsMigrateV3Page } from 'hooks/useIsMigrateV3Page'
 import { useIsNftPage } from 'hooks/useIsNftPage'
+import { useIsPositionsPage } from 'hooks/useIsPositionsPage'
 import { useIsSendPage } from 'hooks/useIsSendPage'
 import { useIsSwapPage } from 'hooks/useIsSwapPage'
 import styled, { css } from 'lib/styled-components'
@@ -76,10 +79,21 @@ function useShouldHideChainSelector() {
   const isSwapPage = useIsSwapPage()
   const isLimitPage = useIsLimitPage()
   const isExplorePage = useIsExplorePage()
+  const isPositionsPage = useIsPositionsPage()
+  const isMigrateV3Page = useIsMigrateV3Page()
+  const isBuyPage = useIsBuyPage()
 
   const baseHiddenPages = isNftPage
   const multichainHiddenPages =
-    isLandingPage || isSendPage || isSwapPage || isLimitPage || baseHiddenPages || isExplorePage
+    isLandingPage ||
+    isSendPage ||
+    isSwapPage ||
+    isLimitPage ||
+    baseHiddenPages ||
+    isExplorePage ||
+    isPositionsPage ||
+    isMigrateV3Page ||
+    isBuyPage
 
   return multichainHiddenPages
 }

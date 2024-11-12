@@ -81,8 +81,8 @@ export function IncreaseLiquidityForm() {
         : undefined
 
   return (
-    <>
-      <Flex px="$padding16">
+    <Flex gap="$gap24">
+      <Flex gap="$gap24">
         <LiquidityPositionInfo positionInfo={position} />
         <DepositInputForm
           token0={token0}
@@ -110,6 +110,6 @@ export function IncreaseLiquidityForm() {
       >
         {errorText || t('common.add.label')}
       </LoaderButton>
-    </>
+    </Flex>
   )
 }

@@ -30,11 +30,11 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 export function getProtocolVersionLabel(version: ProtocolVersion): string | undefined {
   switch (version) {
     case ProtocolVersion.V2:
-      return 'V2'
+      return 'v2'
     case ProtocolVersion.V3:
-      return 'V3'
+      return 'v3'
     case ProtocolVersion.V4:
-      return 'V4'
+      return 'v4'
   }
   return undefined
 }
@@ -242,10 +242,12 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       pair,
       liquidityToken,
       chainId: token0.chainId,
+      poolId: liquidityToken.address,
       currency0Amount: CurrencyAmount.fromRawAmount(token0, v2PairPosition.liquidity0),
       currency1Amount: CurrencyAmount.fromRawAmount(token1, v2PairPosition.liquidity1),
       totalSupply: CurrencyAmount.fromRawAmount(liquidityToken, v2PairPosition.totalSupply),
       liquidityAmount: CurrencyAmount.fromRawAmount(liquidityToken, v2PairPosition.liquidity),
+      apr: v2PairPosition.apr,
       v4hook: undefined,
       feeTier: undefined,
     }
@@ -285,6 +287,7 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       token1UncollectedFees: v3Position.token1UncollectedFees,
       currency0Amount: CurrencyAmount.fromRawAmount(token0, v3Position.amount0),
       currency1Amount: CurrencyAmount.fromRawAmount(token1, v3Position.amount1),
+      apr: v3Position.apr,
       v4hook: undefined,
     }
   } else if (position?.position.case === 'v4Position') {
@@ -325,6 +328,7 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       token0UncollectedFees: v4Position.token0UncollectedFees,
       token1UncollectedFees: v4Position.token1UncollectedFees,
       liquidity: v4Position.liquidity,
+      apr: v4Position.apr,
     }
   } else {
     return undefined
@@ -355,7 +359,7 @@ export function calculateInvertedValues({
   base?: Currency
 } {
   return {
-    currentPrice: invert ? token1CurrentPrice : token0CurrentPrice,
+    currentPrice: invert ? token0CurrentPrice : token1CurrentPrice,
     priceUpper: invert ? priceLower?.invert() : priceUpper,
     priceLower: invert ? priceUpper?.invert() : priceLower,
     quote: invert ? base : quote,

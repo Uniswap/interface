@@ -12,6 +12,7 @@ import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { useCurrencyBalance, useCurrencyBalances } from 'state/connection/hooks'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
 import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
 import { CurrencyState, SerializedCurrencyState, SwapInfo, SwapState } from 'state/swap/types'
@@ -135,7 +136,8 @@ export function useSwapActionHandlers(): {
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   const account = useAccount()
-  const { chainId, currencyState } = useSwapAndLimitContext()
+  const { chainId } = useMultichainContext()
+  const { currencyState } = useSwapAndLimitContext()
   const nativeCurrency = useNativeCurrency(chainId)
   const balance = useCurrencyBalance(account.address, nativeCurrency)
 
@@ -403,7 +405,7 @@ export function useInitialCurrencyState(): {
   initialChainId: UniverseChainId
   initialCurrencyLoading: boolean
 } {
-  const { chainId, setIsUserSelectedToken } = useSwapAndLimitContext()
+  const { chainId, setIsUserSelectedToken } = useMultichainContext()
   const { defaultChainId } = useEnabledChains()
 
   const { useParsedQueryString } = useUrlContext()

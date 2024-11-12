@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmXSmkbZBfMGwWiC7fzw8oDCxvmfGENb7ahoaZVWsstaTF`
-- CIDv1: `bafybeiehjkqxfubc7qylb2q67pnqzri4j5kqxcllryecaq7nuqntzzjrfy`
+- CIDv0: `QmRAsMChBURwebWNq1p91nAXfAbhZEoGqNQfQpivBqYTDt`
+- CIDv1: `bafybeibkcgfvpyahakei5eufru4vcmypgcp7jc4wmh7lacvph4ethbhnnm`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,66 +10,73 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiehjkqxfubc7qylb2q67pnqzri4j5kqxcllryecaq7nuqntzzjrfy.ipfs.dweb.link/
-- https://bafybeiehjkqxfubc7qylb2q67pnqzri4j5kqxcllryecaq7nuqntzzjrfy.ipfs.cf-ipfs.com/
-- [ipfs://QmXSmkbZBfMGwWiC7fzw8oDCxvmfGENb7ahoaZVWsstaTF/](ipfs://QmXSmkbZBfMGwWiC7fzw8oDCxvmfGENb7ahoaZVWsstaTF/)
+- https://bafybeibkcgfvpyahakei5eufru4vcmypgcp7jc4wmh7lacvph4ethbhnnm.ipfs.dweb.link/
+- https://bafybeibkcgfvpyahakei5eufru4vcmypgcp7jc4wmh7lacvph4ethbhnnm.ipfs.cf-ipfs.com/
+- [ipfs://QmRAsMChBURwebWNq1p91nAXfAbhZEoGqNQfQpivBqYTDt/](ipfs://QmRAsMChBURwebWNq1p91nAXfAbhZEoGqNQfQpivBqYTDt/)
 
-## 5.57.0 (2024-11-07)
+## 5.58.0 (2024-11-12)
 
 
 ### Features
 
-* **web:** [v4] add v4 data to explore graphs (#13174) 3d2b961
-* **web:** add hook functionality and update the UI (#13415) 4dfcd67
-* **web:** Add liq button on pools explore page (#13400) d116542
-* **web:** add loading states to all LP actions buttons (#13408) 9aa091b
-* **web:** adding dynamic fee tier option to fee tier search modal (#13478) 7276ef7
-* **web:** animate fee tier dropdown (#13542) 13f32e2
-* **web:** design fixes on PosDP (#13543) 5f93dfc
-* **web:** handle one-sided liq input in increase modal (#13370) 4fa66d4
-* **web:** redirect to positions list after creating a position (#13444) 160adc6
-* **web:** refetch position queries when pending LP txs change (#13483) 70ae19d
-* **web:** remove thai from supported languages and translations (#13528) 36fe674
-* **web:** update explore table header styles (#13386) e272167
-* **web:** updating fee tiers search modal to include the default fee tiers (#13464) aa0bfcf
-* **web:** use the new rest endpoint on the mini portfolio pools tab (#13521) 555de82
+* **web:** add a pool out of sync error to the create flow (#13687) 686db59
+* **web:** add dynamic fee tier speedbump (#13749) f24ca9d
+* **web:** add fiat amount to pool position price display (#13705) 5d96363
+* **web:** add hookAddress to PDP and explore table (#13522) 8f7f225
+* **web:** add multichain context (#13681) 0f911ed
+* **web:** add poolId to pair (#13280) 44c11ec
+* **web:** add tx parsing for v4 transactions in the mini portfolio and fix pending toasts for create + migrate (#13761) 1059b2d
+* **web:** add v4 analytics - add/remove/migrate (#13366) d9e94ea
+* **web:** Add v4 Pools to TDP (#13507) d1d724d
+* **web:** adding apr to positions cards (#13630) 58de358
+* **web:** adding position row button (#13519) 9900a9e
+* **web:** adding top pools table for empty positions (#13726) 369874f
+* **web:** animated crosshair on LP price chart (#13643) e6f0395
+* **web:** change 7d to 30d volume (#13739) 5f083b1
+* **web:** fix Add Liq button color on light mode (#13611) 6ac6738
+* **web:** mini price charts in LP position cards (mvp) (#13614) 631c32d
+* **web:** move swap fields to multichain provider (#13688) 6395ab3
+* **web:** remove multichainUXEnabled (#13690) 9dd774f
+* **web:** Remove NFTs from explore menu and search results (#13744) 9149460
+* **web:** top pools positions page (#13725) de77cf0
+* **web:** update mini portfolio cards (#13633) 203c2ce
+* **web:** update PDP to use getPositions query (#13534) 1df4fcc
+* **web:** use mainnet txs on multichain explore ux (#13748) af78802
+* **web:** v4 collect fees analytics (#13629) ecf0ee0
+* **web:** v4 page hook analytics (#13637) ebde907
+* **web:** v4 page viewed analytics (#13632) 2887504
+* **web:** v4 PDP support (#13401) bc6a1a9
+* **web:** v4 select fee tier analytics (#13706) ad618a0
 
 
 ### Bug Fixes
 
-* **web:** Add error message for missing trade routes (#13327) 004265a
-* **web:** add insuffient balance error state for the button (#13447) eb4ea2d
-* **web:** allow testnets to be backend supported chains (#13424) b968f05
-* **web:** better default fee tier selection (#13526) 5976b4b
-* **web:** change view position to view positions (#13511) bcee0e3
-* **web:** cypress tests (#13402) f78f58b
-* **web:** fee tier fixes (#13240) 16ad294
-* **web:** filter to testnets when in testnet mode (#13356) b1a67be
-* **web:** fix token sorting for v2 positions (#13504) 7c460ff
-* **web:** fixing uniswap context provider for web (#13566) c7511a4
-* **web:** hide the collect button if there are no fees to collect (#13459) 9a98813
-* **web:** improve LiquidityChartRangeInput behavior when inverting tokens (#13550) 523eb00
-* **web:** landing page redirection when connected (#13425) 6b5993e
-* **web:** position cards text sizing (#13307) e406dd1
-* **web:** remove confusing subgraph naming from v3 tick query (#13436) f1d7d14
-* **web:** Remove default mainnet chain ID in NetworkFilter (#13272) 4993213
-* **web:** stop using multicall for Position NFT data fetching (#13414) 5d9db63
-* **web:** udpate scroll behavior on explore page (#12277) bb14b4d
-* **web:** update creating pool banner to be persistent (#13456) 94b7801
-* **web:** update loading/error states in LiquidityChartRangeInput (#13498) a5f6b0e
-* **web:** update url when switching protocol versions in create (#13422) f3edc84
-* **web:** use DropdownSelector for position filters (#13544) dc63bdd
-* **web:** use NATIVE in url to add liquidity (#13262) 48aa927
-* **web:** version dropdown ordering, clickable Sidebar in create flow (#13551) a86ee47
+* **web:** add link to tdp and fix styling nit (#13607) 75a1e8a
+* **web:** align chevrons + show full range (#13639) dc8b232
+* **web:** align widths (#13584) cc1945f
+* **web:** bunch of ui nits (#13770) a551b09
+* **web:** clean up multichain buy flow (#13352) 1ed6784
+* **web:** crash on PosDP (#13664) d09692b
+* **web:** create page design nits (#13672) 357e42a
+* **web:** fix activity-history e2e test (#13661) 41b514c
+* **web:** fix token warning on nav (#13443) 3793aab
+* **web:** fix useEffect in usePendingLPTransactionsChangeListener (#13595) 1ff8cec
+* **web:** for unavailable text overflow (#13759) 56e0490
+* **web:** liquidity modal padding (#13686) d7af07b
+* **web:** lp flow design nits (#13741) 41f10e3
+* **web:** polish, use link instead of router nav (#13588) c5d2800
+* **web:** pool tab zindex was too damn high - staging (#13793) fbc78a4
+* **web:** remove extra breadcrumb arrow (#13704) 3202db9
+* **web:** remove network selector in nav on positions and migration (v3) (#13353) b93aec4
+* **web:** scrollable adaptive web modal (#13489) 2d32a7d
+* **web:** search icon color in light mode (#13694) a5a699f
+* **web:** send sorted tokens to the create endpoint of the trading API (#13710) 9b468bb
+* **web:** token protection polish (#13764) 9be51b7
+* **web:** update invalid price state (#13719) 6afcbb5
 
 
 ### Continuous Integration
 
-* **web:** update sitemaps d3686aa
-
-
-### Tests
-
-* **web:** cron job run web e2e tests (#13482) 8eda2da
+* **web:** update sitemaps a82abd3
 
 

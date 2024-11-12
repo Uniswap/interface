@@ -5,15 +5,11 @@ import { NAV_BREAKPOINT } from 'components/NavBar/ScreenSizes'
 import { SearchBarDropdown } from 'components/NavBar/SearchBar/SearchBarDropdown'
 import Row from 'components/deprecated/Row'
 import { useSearchTokens } from 'graphql/data/SearchTokens'
-import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import useDebounce from 'hooks/useDebounce'
-import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
-import { useIsNftPage } from 'hooks/useIsNftPage'
 import { KeyAction, useKeyPress } from 'hooks/useKeyPress'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import styled, { css, useTheme } from 'lib/styled-components'
-import { organizeSearchResults } from 'lib/utils/searchBar'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Search, X } from 'react-feather'
 import { useLocation } from 'react-router-dom'
@@ -173,7 +169,6 @@ export const SearchBar = ({
   const inputRef = useRef<any>(null)
   const { pathname } = useLocation()
   const isNavSearchInputVisible = useScreenSize()['lg']
-  const shouldDisableNFTRoutes = useDisableNFTRoutes()
   const theme = useTheme()
   const { t } = useTranslation() // subscribe to locale changes
 
@@ -200,11 +195,8 @@ export const SearchBar = ({
     disabled: !isOpen,
   })
 
-  const { data: collections, loading: collectionsAreLoading } = useCollectionSearch(debouncedSearchValue)
-
   const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue)
-  const isNFTPage = useIsNftPage()
-  const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], collections ?? [])
+  const reducedTokens = tokens?.slice(0, 8) ?? []
 
   // clear searchbar when changing pages
   useEffect(() => {
@@ -226,7 +218,7 @@ export const SearchBar = ({
     ...trace,
   }
 
-  const placeholderText = shouldDisableNFTRoutes ? t('tokens.selector.search.placeholder') : t('common.searchTokensNFT')
+  const placeholderText = t('tokens.selector.search.placeholder')
 
   return (
     <Trace section={InterfaceSectionName.NAVBAR_SEARCH}>
@@ -278,10 +270,9 @@ export const SearchBar = ({
               <SearchBarDropdown
                 toggleOpen={toggleOpen}
                 tokens={reducedTokens}
-                collections={reducedCollections}
                 queryText={debouncedSearchValue}
                 hasInput={debouncedSearchValue.length > 0}
-                isLoading={tokensAreLoading || collectionsAreLoading}
+                isLoading={tokensAreLoading}
               />
             </SearchBarDropdownContainer>
           )}

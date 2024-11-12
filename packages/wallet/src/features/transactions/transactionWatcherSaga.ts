@@ -633,7 +633,7 @@ function maybeLogGasEstimateAccuracy(transaction: TransactionDetails) {
       transaction_type: transaction.typeInfo.type,
       chain_id: transaction.chainId,
       final_status: transaction.status,
-      time_to_confirmed_ms: getDiff(transaction.receipt?.confirmedTime, transaction.addedTime),
+      time_to_confirmed_ms: getDiff(Date.now(), transaction.addedTime),
       blocks_to_confirmed: getDiff(transaction.receipt?.blockNumber, gasEstimates.blockSubmitted),
       gas_use_diff: gasUseDiff,
       gas_use_diff_percentage: getPercentageError(gasUseDiff, estimate.gasLimit),
@@ -645,7 +645,7 @@ function maybeLogGasEstimateAccuracy(transaction: TransactionDetails) {
       out_of_gas,
       private_rpc: isClassic(transaction) ? transaction.options.submitViaPrivateRpc ?? false : false,
       is_shadow: estimate !== gasEstimates.activeEstimate,
-      name: findGasStrategyName(estimate),
+      name: findGasStrategyName(estimate, transaction.typeInfo.type === TransactionType.Swap ? 'swap' : 'general'),
       timed_out,
     })
   }

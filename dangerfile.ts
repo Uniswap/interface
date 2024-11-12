@@ -33,6 +33,23 @@ async function getLinesAddedByFile(files: string[], { exclude = [] }: { exclude?
   )
 }
 
+async function checkLockedDependencies() {
+  const packageJSONFiles = danger.git.modified_files
+    .concat(danger.git.created_files)
+    .filter((file) => file.includes('package.json'))
+
+  const allLinesAdded = (await getLinesAddedByFile(packageJSONFiles)).flatMap((x) => x)
+
+  allLinesAdded.forEach((change) => {
+    const stringChange = change.content
+    if (stringChange.includes(': "^') || stringChange.includes(': "*') || stringChange.includes(': "~')) {
+      fail(
+        `Detected a non-locked dependency at \`${stringChange}\`. Please lock all dependency versions for security purposes!`,
+      )
+    }
+  })
+}
+
 function checkGeneralizedHookFiles() {
   const touchedFiles = danger.git.modified_files.concat(danger.git.created_files)
 
@@ -259,6 +276,9 @@ if (envChanged) {
     'Changes were made to .env.defaults. Confirm that no sensitive data is in the .env.defaults file. Sensitive data must go in .env (web) or .env.defaults.local (mobile) and then run `yarn upload-env-local` to store it in 1Password.',
   )
 }
+
+// Check locked dependencies
+checkLockedDependencies()
 
 // Check native and web file splits
 checkSplitFiles()

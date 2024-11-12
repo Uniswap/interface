@@ -12,6 +12,7 @@ import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactio
 import { SwapCallback, SwapCallbackParams } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { swapActions } from 'wallet/src/features/transactions/swap/swapSaga'
 import { toStringish } from 'wallet/src/utils/number'
 
@@ -20,6 +21,7 @@ export function useSwapCallback(): SwapCallback {
   const appDispatch = useDispatch()
   const formatter = useLocalizationContext()
   const swapStartTimestamp = useSelector(selectSwapStartTimestamp)
+  const trace = useTrace()
 
   const accountMeta = useAccountMeta()
 
@@ -54,6 +56,7 @@ export function useSwapCallback(): SwapCallback {
         currencyInAmountUSD,
         currencyOutAmountUSD,
         portfolioBalanceUsd: portfolioData?.balanceUSD,
+        trace,
       })
       appDispatch(swapActions.trigger({ swapTxContext, txId, account, analytics, onSuccess, onFailure }))
 
@@ -73,6 +76,6 @@ export function useSwapCallback(): SwapCallback {
       // Reset swap start timestamp now that the swap has been submitted
       appDispatch(updateSwapStartTimestamp({ timestamp: undefined }))
     },
-    [appDispatch, formatter, portfolioData?.balanceUSD, swapStartTimestamp],
+    [appDispatch, formatter, portfolioData?.balanceUSD, swapStartTimestamp, trace],
   )
 }

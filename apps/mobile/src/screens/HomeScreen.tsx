@@ -19,6 +19,7 @@ import { SvgProps } from 'react-native-svg'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
+import { useHomeScreenCustomAndroidBackButton } from 'src/app/navigation/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import TraceTabView from 'src/components/Trace/TraceTabView'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
@@ -126,6 +127,8 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const [routeTabIndex, setRouteTabIndex] = useState(props?.route?.params?.tab ?? HomeScreenTabIndex.Tokens)
   // Ensures that tabIndex has the proper value between the empty state and non-empty state
   const tabIndex = showEmptyTokenState ? HomeScreenTabIndex.Tokens : routeTabIndex
+
+  useHomeScreenCustomAndroidBackButton(routeTabIndex, setRouteTabIndex)
 
   // Necessary to declare these as direct dependencies due to race condition with initializing react-i18next and useMemo
   const tokensTitle = t('home.tokens.title')

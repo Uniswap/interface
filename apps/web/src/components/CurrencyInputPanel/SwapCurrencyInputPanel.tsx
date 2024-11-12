@@ -21,7 +21,7 @@ import { darken } from 'polished'
 import { ReactNode, forwardRef, useCallback, useEffect, useState } from 'react'
 import { Lock } from 'react-feather'
 import { useCurrencyBalance } from 'state/connection/hooks'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { AnimatePresence, Flex, Text } from 'ui/src'
@@ -271,7 +271,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
   ) => {
     const [modalOpen, setModalOpen] = useState(false)
     const account = useAccount()
-    const { chainId, isUserSelectedToken } = useSwapAndLimitContext()
+    const { chainId, isUserSelectedToken } = useMultichainContext()
     const chainAllowed = useIsSupportedChainId(chainId)
     const selectedCurrencyBalance = useCurrencyBalance(account.address, currency ?? undefined)
     const theme = useTheme()

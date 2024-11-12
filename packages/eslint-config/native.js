@@ -47,6 +47,7 @@ module.exports = {
     '@typescript-eslint',
     '@jambit/typed-redux-saga',
     'check-file',
+    'local-rules',
   ],
   rules: {
     ...complexityRules,
@@ -256,6 +257,7 @@ module.exports = {
     // https://github.com/facebook/react-native/blob/3cf0291008dfeed4d967ebb95bdccbe2d52c5b81/packages/eslint-config-react-native-community/index.js#L313
     'react-native/no-unused-styles': 'error',
     'react-native/sort-styles': 'error',
+    'local-rules/no-unwrapped-t': ['error', { blockedElements: ['Flex', 'AnimatedFlex', 'TouchableArea', 'Trace'] }],
     // Security Linting
     // Mozilla's No Unsanitized - https://github.com/mozilla/eslint-plugin-no-unsanitized
     'no-unsanitized/method': 'error',

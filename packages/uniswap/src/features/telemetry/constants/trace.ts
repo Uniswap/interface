@@ -116,6 +116,7 @@ export const ElementName = {
   AddManualBackup: 'add-manual-backup',
   AddViewOnlyWallet: 'add-view-only-wallet',
   AddCloudBackup: 'add-cloud-backup',
+  AddHook: 'add-hook',
   AlreadyHaveWalletSignIn: 'already-have-wallet-sign-in',
   BackButton: 'back-button',
   Buy: 'buy',
@@ -245,7 +246,9 @@ export const SectionName = {
   SendRecipientSelectFullScreen: 'send-recipient-select',
 
   ChainSelector: 'chain-selector',
-
+  CreatePositionDepositStep: 'create-position-deposit-step',
+  CreatePositionPriceRangeStep: 'create-position-price-range-step',
+  CreatePositionSelectTokensStep: 'create-position-select-tokens-step',
   // alphabetize additional values.
 } as const
 
@@ -255,6 +258,12 @@ export const InterfacePageNameLocal = {
   Send: 'send-page',
   Limit: 'limit-page',
   Buy: 'buy-page',
+  Positions: 'positions-page',
+  PositionDetails: 'position-details-page',
+  CreatePosition: 'create-position-page',
+  MigrateV2: 'migrate-v2-page',
+  MigrateV2Pair: 'migrate-v2-pair-page',
+  MigrateV3: 'migrate-v3-page',
 }
 
 export type InterfacePageNameType =

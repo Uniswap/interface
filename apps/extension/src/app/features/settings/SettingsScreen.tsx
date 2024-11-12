@@ -32,6 +32,7 @@ import {
   RotatableChevron,
   Settings,
   ShieldQuestion,
+  Wrench,
 } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -191,7 +192,7 @@ export function SettingsScreen(): JSX.Element {
               onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.Privacy}`)}
             />
             <SettingsToggleRow
-              Icon={ShieldQuestion}
+              Icon={Wrench}
               checked={isTestnetModeEnabled}
               title={t('settings.setting.wallet.testnetMode.title')}
               onCheckedChange={handleTestnetModeToggle}

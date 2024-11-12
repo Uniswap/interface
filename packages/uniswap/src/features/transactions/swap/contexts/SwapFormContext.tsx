@@ -138,7 +138,9 @@ export function SwapFormContextProvider({
 
       setSwapForm((prevState) => {
         const updatedState = { ...prevState, ...newState }
+
         logContextUpdate('SwapFormContext', updatedState, datadogEnabled)
+
         return updatedState
       })
     },

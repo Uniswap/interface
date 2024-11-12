@@ -70,13 +70,13 @@ exports[`CurrencyLogo renders a currency logo with network logo 1`] = `
       style={
         {
           "borderColor": "#131313",
-          "borderRadius": 6.8999999999999995,
+          "borderRadius": 6.3,
           "borderStyle": "solid",
           "borderWidth": 1.5,
           "flexDirection": "column",
-          "height": 23,
+          "height": 21,
           "overflow": "hidden",
-          "width": 23,
+          "width": 21,
         }
       }
       testID="network-logo"
@@ -86,8 +86,8 @@ exports[`CurrencyLogo renders a currency logo with network logo 1`] = `
         dir={null}
         style={
           {
-            "height": "20px",
-            "width": "20px",
+            "height": "18px",
+            "width": "18px",
           }
         }
       >

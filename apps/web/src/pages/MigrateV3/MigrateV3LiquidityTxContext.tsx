@@ -13,7 +13,10 @@ import {
   MigrateLPPositionRequest,
   ProtocolItems,
 } from 'uniswap/src/data/tradingApi/__generated__'
-import { MigrateV3PositionTxAndGasInfo } from 'uniswap/src/features/transactions/liquidity/types'
+import {
+  LiquidityTransactionType,
+  MigrateV3PositionTxAndGasInfo,
+} from 'uniswap/src/features/transactions/liquidity/types'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useAccount } from 'wagmi'
@@ -175,7 +178,7 @@ export function MigrateV3PositionTxContextProvider({
     }
 
     return {
-      type: 'migrate',
+      type: LiquidityTransactionType.Migrate,
       unsigned: Boolean(migrateTokenApprovals?.permitData),
       migratePositionRequestArgs,
       approveToken0Request: undefined,
@@ -186,6 +189,7 @@ export function MigrateV3PositionTxContextProvider({
       revocationTxRequest: undefined,
       txRequest,
       action: {
+        type: LiquidityTransactionType.Migrate,
         currency0Amount: positionInfo.currency0Amount,
         currency1Amount: positionInfo.currency1Amount,
       },
