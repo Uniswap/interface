@@ -471,8 +471,8 @@ function V2PairMigration({
                   <RowBetween>
                     <ThemedText.DeprecatedBody fontWeight={535} fontSize={14}>
                       <Trans>
-                        {{ name: { name: isNotUniswap ? 'SushiSwap' : 'V2' } }}{' '}
-                        {{ sym: invertPrice ? currency1.symbol : currency0.symbol }} Price:
+                        {isNotUniswap ? 'SushiSwap' : 'V2'}
+                        {invertPrice ? currency1.symbol : currency0.symbol} Price:
                       </Trans>{' '}
                       {invertPrice
                         ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
