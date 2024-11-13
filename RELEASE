@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmRAsMChBURwebWNq1p91nAXfAbhZEoGqNQfQpivBqYTDt`
-- CIDv1: `bafybeibkcgfvpyahakei5eufru4vcmypgcp7jc4wmh7lacvph4ethbhnnm`
+- CIDv0: `QmevZvvRwjXodt61tEJ2A5m8xG5QfwGPbewx7RhHrwPcKK`
+- CIDv1: `bafybeihwnnk2wz3dt7cychtk7meo5tbo7toj3m2ydjxb3z6kd74ndbcmqi`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,73 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeibkcgfvpyahakei5eufru4vcmypgcp7jc4wmh7lacvph4ethbhnnm.ipfs.dweb.link/
-- https://bafybeibkcgfvpyahakei5eufru4vcmypgcp7jc4wmh7lacvph4ethbhnnm.ipfs.cf-ipfs.com/
-- [ipfs://QmRAsMChBURwebWNq1p91nAXfAbhZEoGqNQfQpivBqYTDt/](ipfs://QmRAsMChBURwebWNq1p91nAXfAbhZEoGqNQfQpivBqYTDt/)
+- https://bafybeihwnnk2wz3dt7cychtk7meo5tbo7toj3m2ydjxb3z6kd74ndbcmqi.ipfs.dweb.link/
+- https://bafybeihwnnk2wz3dt7cychtk7meo5tbo7toj3m2ydjxb3z6kd74ndbcmqi.ipfs.cf-ipfs.com/
+- [ipfs://QmevZvvRwjXodt61tEJ2A5m8xG5QfwGPbewx7RhHrwPcKK/](ipfs://QmevZvvRwjXodt61tEJ2A5m8xG5QfwGPbewx7RhHrwPcKK/)
 
-## 5.58.0 (2024-11-12)
-
-
-### Features
-
-* **web:** add a pool out of sync error to the create flow (#13687) 686db59
-* **web:** add dynamic fee tier speedbump (#13749) f24ca9d
-* **web:** add fiat amount to pool position price display (#13705) 5d96363
-* **web:** add hookAddress to PDP and explore table (#13522) 8f7f225
-* **web:** add multichain context (#13681) 0f911ed
-* **web:** add poolId to pair (#13280) 44c11ec
-* **web:** add tx parsing for v4 transactions in the mini portfolio and fix pending toasts for create + migrate (#13761) 1059b2d
-* **web:** add v4 analytics - add/remove/migrate (#13366) d9e94ea
-* **web:** Add v4 Pools to TDP (#13507) d1d724d
-* **web:** adding apr to positions cards (#13630) 58de358
-* **web:** adding position row button (#13519) 9900a9e
-* **web:** adding top pools table for empty positions (#13726) 369874f
-* **web:** animated crosshair on LP price chart (#13643) e6f0395
-* **web:** change 7d to 30d volume (#13739) 5f083b1
-* **web:** fix Add Liq button color on light mode (#13611) 6ac6738
-* **web:** mini price charts in LP position cards (mvp) (#13614) 631c32d
-* **web:** move swap fields to multichain provider (#13688) 6395ab3
-* **web:** remove multichainUXEnabled (#13690) 9dd774f
-* **web:** Remove NFTs from explore menu and search results (#13744) 9149460
-* **web:** top pools positions page (#13725) de77cf0
-* **web:** update mini portfolio cards (#13633) 203c2ce
-* **web:** update PDP to use getPositions query (#13534) 1df4fcc
-* **web:** use mainnet txs on multichain explore ux (#13748) af78802
-* **web:** v4 collect fees analytics (#13629) ecf0ee0
-* **web:** v4 page hook analytics (#13637) ebde907
-* **web:** v4 page viewed analytics (#13632) 2887504
-* **web:** v4 PDP support (#13401) bc6a1a9
-* **web:** v4 select fee tier analytics (#13706) ad618a0
+### 5.58.1 (2024-11-13)
 
 
 ### Bug Fixes
 
-* **web:** add link to tdp and fix styling nit (#13607) 75a1e8a
-* **web:** align chevrons + show full range (#13639) dc8b232
-* **web:** align widths (#13584) cc1945f
-* **web:** bunch of ui nits (#13770) a551b09
-* **web:** clean up multichain buy flow (#13352) 1ed6784
-* **web:** crash on PosDP (#13664) d09692b
-* **web:** create page design nits (#13672) 357e42a
-* **web:** fix activity-history e2e test (#13661) 41b514c
-* **web:** fix token warning on nav (#13443) 3793aab
-* **web:** fix useEffect in usePendingLPTransactionsChangeListener (#13595) 1ff8cec
-* **web:** for unavailable text overflow (#13759) 56e0490
-* **web:** liquidity modal padding (#13686) d7af07b
-* **web:** lp flow design nits (#13741) 41f10e3
-* **web:** polish, use link instead of router nav (#13588) c5d2800
-* **web:** pool tab zindex was too damn high - staging (#13793) fbc78a4
-* **web:** remove extra breadcrumb arrow (#13704) 3202db9
-* **web:** remove network selector in nav on positions and migration (v3) (#13353) b93aec4
-* **web:** scrollable adaptive web modal (#13489) 2d32a7d
-* **web:** search icon color in light mode (#13694) a5a699f
-* **web:** send sorted tokens to the create endpoint of the trading API (#13710) 9b468bb
-* **web:** token protection polish (#13764) 9be51b7
-* **web:** update invalid price state (#13719) 6afcbb5
-
-
-### Continuous Integration
-
-* **web:** update sitemaps a82abd3
+* **web:** broken charts on PDP (#13810) 4d130d3
 
 

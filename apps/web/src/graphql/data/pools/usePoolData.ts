@@ -115,11 +115,12 @@ export function usePoolData(
 
     const pool = dataV4?.v4Pool ?? dataV3?.v3Pool ?? dataV2?.v2Pair ?? undefined
     const feeTier = dataV4?.v4Pool?.feeTier ?? dataV3?.v3Pool?.feeTier ?? V2_BIPS
+    const poolId = dataV4?.v4Pool?.id ?? dataV3?.v3Pool?.address ?? dataV2?.v2Pair?.address ?? poolIdOrAddress
 
     return {
       data: pool
         ? {
-            idOrAddress: pool.id,
+            idOrAddress: poolId,
             txCount: pool.txCount,
             protocolVersion: pool.protocolVersion,
             token0: pool.token0 as Token,
@@ -139,5 +140,16 @@ export function usePoolData(
       error: anyError,
       loading: anyLoading,
     }
-  }, [dataV2?.v2Pair, dataV3?.v3Pool, dataV4?.v4Pool, errorV2, errorV3, errorV4, loadingV2, loadingV3, loadingV4])
+  }, [
+    dataV2?.v2Pair,
+    dataV3?.v3Pool,
+    dataV4?.v4Pool,
+    errorV2,
+    errorV3,
+    errorV4,
+    loadingV2,
+    loadingV3,
+    loadingV4,
+    poolIdOrAddress,
+  ])
 }
