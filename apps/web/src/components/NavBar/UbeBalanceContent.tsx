@@ -150,7 +150,7 @@ export default function UbeBalanceContent({ setShowUbeBalanceModal }: { setShowU
               </ThemedText.DeprecatedWhite>
             </RowBetween>
             {ube && ube.chainId === ChainId.CELO ? (
-              <ExternalLink href={`https://info.ubeswap.org/token/${ube.address}`}>
+              <ExternalLink href={`https://info.ubeswap.org/#/celo/tokens/${ube.address}`}>
                 {t('View UBE Analytics')}
               </ExternalLink>
             ) : null}
