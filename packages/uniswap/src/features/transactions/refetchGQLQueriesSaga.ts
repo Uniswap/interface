@@ -139,7 +139,7 @@ function getCurrenciesWithExpectedUpdates(transaction: TransactionDetails): Set<
   // All txs besides FOR at least use gas so check for update of gas token
   currenciesWithBalToUpdate.add(buildNativeCurrencyId(txChainId))
 
-  switch (transaction.typeInfo.type) {
+  switch (transaction.typeInfo?.type) {
     case TransactionType.Swap:
     case TransactionType.Bridge:
       currenciesWithBalToUpdate.add(transaction.typeInfo.inputCurrencyId.toLowerCase())
@@ -156,6 +156,11 @@ function getCurrenciesWithExpectedUpdates(transaction: TransactionDetails): Set<
       currenciesWithBalToUpdate.add(
         buildCurrencyId(txChainId, transaction.typeInfo.destinationTokenAddress).toLowerCase(),
       )
+      break
+    default:
+      logger.info('refetchGQLQueriesSaga', 'getCurrenciesWithExpectedUpdates', 'Unhandled transaction type', {
+        transaction,
+      })
       break
   }
 
