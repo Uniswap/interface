@@ -46,6 +46,7 @@ export type ActionSheetDropdownStyleProps = {
   dropdownMinWidth?: number
   dropdownZIndex?: FlexProps['zIndex']
   dropdownGap?: FlexProps['gap']
+  width?: FlexProps['width']
 }
 
 type ActionSheetDropdownProps = PropsWithChildren<{
@@ -132,7 +133,12 @@ export function ActionSheetDropdown({
 
   return (
     <>
-      <TouchableArea hapticFeedback hapticStyle={ImpactFeedbackStyle.Light} onPress={openDropdown}>
+      <TouchableArea
+        hapticFeedback
+        hapticStyle={ImpactFeedbackStyle.Light}
+        width={styles?.width}
+        onPress={openDropdown}
+      >
         {/* collapsable property prevents removing view on Android. Without this property we were
         getting undefined in measureInWindow callback. (https://reactnative.dev/docs/view.html#collapsable-android) */}
         <Flex

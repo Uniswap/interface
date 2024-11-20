@@ -19,17 +19,18 @@ export function LiquidityPositionInfo({
   const { currency0Amount, currency1Amount, status, feeTier, v4hook, version } = positionInfo
   const versionLabel = getProtocolVersionLabel(version)
   return (
-    <Flex row gap="$gap16">
+    <Flex row gap="$gap16" $md={{ width: '100%' }}>
       <DoubleCurrencyAndChainLogo
         chainId={currency0Amount?.currency.chainId}
         currencies={[currency0Amount?.currency, currency1Amount?.currency]}
         size={currencyLogoSize}
       />
-      <Flex grow>
-        <Flex row gap="$gap16">
+      <Flex grow $md={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <Flex row gap="$gap16" $md={{ flexDirection: 'column', gap: '$gap4' }}>
           <Text variant="subheading1">
             {currency0Amount?.currency.symbol} / {currency1Amount?.currency.symbol}
           </Text>
+
           <Flex row gap={2} alignItems="center">
             <LiquidityPositionInfoBadges size="small" versionLabel={versionLabel} v4hook={v4hook} feeTier={feeTier} />
           </Flex>

@@ -8,29 +8,37 @@ import {
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { GQL_MAINNET_CHAINS, GQL_TESTNET_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-// eslint-disable-next-line no-restricted-imports
+import { DynamicConfigs, NetworkRequestsConfigKey } from 'uniswap/src/features/gating/configs'
+import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyId } from 'uniswap/src/types/currency'
+import { buildCurrencyId, buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
-import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
-import { buildCurrencyId, buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'wallet/src/utils/currencyId'
+
+export const GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE = [
+  GQLQueries.PortfolioBalances,
+  GQLQueries.TransactionList,
+  GQLQueries.NftsTab,
+]
 
 type CurrencyIdToBalance = Record<CurrencyId, number>
 
 const REFETCH_INTERVAL = ONE_SECOND_MS * 3
-const MAX_REFETCH_ATTEMPTS = 30
+const MAX_REFETCH_ATTEMPTS_FALLBACK = 30
 
 export function* refetchGQLQueries({
   transaction,
   apolloClient,
+  activeAddress,
 }: {
   transaction: TransactionDetails
   apolloClient: ApolloClient<NormalizedCacheObject>
+  activeAddress: string | null
 }) {
   const owner = transaction.from
   const isTestnetMode = yield* select(selectIsTestnetModeEnabled)
@@ -43,7 +51,12 @@ export function* refetchGQLQueries({
     isTestnetMode,
   })
 
-  const activeAddress = yield* select(selectActiveAccountAddress)
+  const maxRefetchAttempts = getDynamicConfigValue(
+    DynamicConfigs.NetworkRequests,
+    NetworkRequestsConfigKey.BalanceMaxRefetchAttempts,
+    MAX_REFETCH_ATTEMPTS_FALLBACK,
+  )
+
   if (owner !== activeAddress) {
     // We can ignore if the transaction does not belong to the active account.
     return
@@ -63,7 +76,7 @@ export function* refetchGQLQueries({
   let i = 0
   let lastUpdatedBalances: CurrencyIdToBalance | undefined
   // We poll every `REFETCH_INTERVAL` until we see updated balances for the relevant currencies.
-  while (i < MAX_REFETCH_ATTEMPTS) {
+  while (i < maxRefetchAttempts) {
     const currencyIdToUpdatedBalance = readBalancesFromCache({
       owner,
       currencyIds: currenciesWithBalToUpdate,
@@ -77,7 +90,7 @@ export function* refetchGQLQueries({
 
     yield* delay(REFETCH_INTERVAL)
 
-    const currentActiveAddress = yield* select(selectActiveAccountAddress)
+    const currentActiveAddress = activeAddress
     if (owner !== currentActiveAddress) {
       // We stop polling if the user has switched accounts.
       // A call to `refetchQueries` wouldn't be useful in this case because no query with the transaction's owner is currently being watched.

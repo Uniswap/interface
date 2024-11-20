@@ -506,7 +506,7 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
             />
           </Flex>
         </Flex>
-        {invalidState && (
+        {(invalidPrice || invalidRange) && (
           <Flex row alignItems="center" px="$padding16" gap="$gap4">
             <AlertTriangleFilled size="$icon.16" color="$statusCritical" />
             <Text color="$statusCritical" variant="body3">

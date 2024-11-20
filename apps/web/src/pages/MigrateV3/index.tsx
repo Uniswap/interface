@@ -32,7 +32,7 @@ import { LoadingRow } from 'pages/Pool/Positions/shared'
 import { useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { useDispatch } from 'react-redux'
-import { Navigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { PositionField } from 'types/position'
@@ -90,6 +90,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   const dispatch = useDispatch()
   const { txInfo } = useMigrateV3TxContext()
   const media = useMedia()
+  const navigate = useNavigate()
 
   const onClose = () => {
     setCurrentTransactionStep(undefined)
@@ -199,7 +200,10 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
                       liquidityTxContext: txInfo,
                       setCurrentStep: setCurrentTransactionStep,
                       setSteps: setTransactionSteps,
-                      onSuccess: onClose,
+                      onSuccess: () => {
+                        onClose()
+                        navigate('/positions')
+                      },
                       onFailure: onClose,
                       analytics: {
                         ...getLPBaseAnalyticsProperties({

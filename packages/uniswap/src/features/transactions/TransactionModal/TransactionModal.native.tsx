@@ -42,7 +42,10 @@ export function TransactionModal({
   const insets = useAppInsets()
   const dimensions = useDeviceDimensions()
 
-  const backgroundColorValue = colors.surface1.get()
+  // Note: we explicitly set this to 'transparent', otherwise we get a really annoying
+  // line as a visual artifact on mobile. For example, if a white background is rendered
+  // on a white background, a grey line sometimes appears as the bottom sheet resizes.
+  const backgroundColorValue = 'transparent'
 
   const handleBarHeight = fullscreen ? 0 : HANLDEBAR_HEIGHT
 

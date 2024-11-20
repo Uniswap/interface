@@ -17,7 +17,6 @@ import type { NativeSyntheticEvent, TextInput, TextInputProps, TextInputSelectio
 import { Easing, useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
 import { Flex, FlexProps, Text, TouchableArea, isWeb, useIsShortMobileDevice, useSporeColors } from 'ui/src'
 import { errorShakeAnimation } from 'ui/src/animations/errorShakeAnimation'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { fonts, spacing } from 'ui/src/theme'
@@ -356,9 +355,8 @@ export const CurrencyInputPanel = memo(
                   )}
                 </TouchableArea>
                 <Flex row centered gap="$spacing4" justifyContent="flex-end">
-                  {showInsufficientBalanceWarning && <AlertTriangleFilled color="$neutral2" size="$icon.16" />}
                   {!hideCurrencyBalance && (
-                    <Text color="$neutral2" variant="body3">
+                    <Text color={showInsufficientBalanceWarning ? '$statusCritical' : '$neutral2'} variant="body3">
                       {formatCurrencyAmount({
                         value: currencyBalance,
                         type: NumberType.TokenNonTx,

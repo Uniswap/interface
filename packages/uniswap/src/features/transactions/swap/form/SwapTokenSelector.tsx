@@ -11,6 +11,7 @@ import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
+import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { SwapFormState, useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { getShouldResetExactAmountToken } from 'uniswap/src/features/transactions/swap/form/utils'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
@@ -20,6 +21,7 @@ import { useValueAsRef } from 'utilities/src/react/useValueAsRef'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JSX.Element {
+  const { onCurrencyChange } = useTransactionModalContext()
   const swapContext = useSwapFormContext()
 
   const traceRef = useValueAsRef(useTrace())
@@ -59,6 +61,11 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
       const otherField = field === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
       const otherFieldTradeableAsset = field === CurrencyField.INPUT ? swapCtx.output : swapCtx.input
 
+      const otherFieldTokenProjects = otherField === CurrencyField.INPUT ? inputTokenProjects : outputTokenProjects
+      let otherCurrency = otherFieldTokenProjects?.data?.find(
+        (project) => project?.currency.chainId === currency.chainId,
+      )
+
       // swap order if tokens are the same
       if (otherFieldTradeableAsset && areCurrencyIdsEqual(currencyId(currency), currencyId(otherFieldTradeableAsset))) {
         const previouslySelectedTradableAsset = field === CurrencyField.INPUT ? swapCtx.input : swapCtx.output
@@ -69,10 +76,7 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
         newState[otherField] = previouslySelectedTradableAsset
       } else if (currency.chainId !== otherFieldTradeableAsset?.chainId && !isBridgePair) {
         // if new token chain changes, try to find the other token's match on the new chain
-        const otherFieldTokenProjects = otherField === CurrencyField.INPUT ? inputTokenProjects : outputTokenProjects
-        const otherCurrency = otherFieldTokenProjects?.data?.find(
-          (project) => project?.currency.chainId === currency.chainId,
-        )
+        otherCurrency = otherFieldTokenProjects?.data?.find((project) => project?.currency.chainId === currency.chainId)
         const otherTradeableAsset: TradeableAsset | undefined = otherCurrency && {
           address: currencyAddress(otherCurrency?.currency),
           chainId: otherCurrency.currency.chainId,
@@ -105,14 +109,28 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
         newState.exactAmountToken = ''
       }
 
+      const currencyState: { inputCurrency?: Currency; outputCurrency?: Currency } = {
+        inputCurrency: CurrencyField.INPUT === field ? currency : otherCurrency?.currency,
+        outputCurrency: CurrencyField.OUTPUT === field ? currency : otherCurrency?.currency,
+      }
+
       onHideTokenSelector()
       updateSwapForm(newState)
       maybeLogFirstSwapAction(traceRef.current)
+      onCurrencyChange?.(currencyState)
     },
     // We want to be very careful about how often this function is re-created because it causes the entire token selector list to re-render.
     // This is why we use `swapContextRef` so that we can access the latest swap context without causing a re-render.
     // Do not add new dependencies to this function unless you are sure this won't degrade perf.
-    [swapContextRef, onHideTokenSelector, updateSwapForm, traceRef, inputTokenProjects, outputTokenProjects],
+    [
+      swapContextRef,
+      onHideTokenSelector,
+      updateSwapForm,
+      onCurrencyChange,
+      traceRef,
+      inputTokenProjects,
+      outputTokenProjects,
+    ],
   )
 
   const getChainId = (): UniverseChainId | undefined => {

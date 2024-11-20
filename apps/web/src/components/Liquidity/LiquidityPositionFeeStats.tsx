@@ -3,6 +3,7 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { useGetRangeDisplay } from 'components/Liquidity/hooks'
 import { PriceOrdering } from 'components/PositionListItem'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useState } from 'react'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { Flex, Text, styled } from 'ui/src'
@@ -47,6 +48,7 @@ export function LiquidityPositionFeeStats({
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
   const [pricesInverted, setPricesInverted] = useState(false)
+  const screenSize = useScreenSize()
 
   const { maxPrice, minPrice, tokenASymbol, tokenBSymbol, isFullRange } = useGetRangeDisplay({
     priceOrdering,
@@ -57,8 +59,8 @@ export function LiquidityPositionFeeStats({
   })
 
   return (
-    <Flex row justifyContent="space-between">
-      <Flex gap="$gap4" flexBasis="20%">
+    <Flex row justifyContent="space-between" flexWrap="wrap" rowGap="$gap24">
+      <Flex gap="$gap4" flexBasis="20%" $md={{ flexBasis: '50%' }}>
         {formattedUsdValue ? (
           <PrimaryText>{formattedUsdValue}</PrimaryText>
         ) : (
@@ -68,7 +70,7 @@ export function LiquidityPositionFeeStats({
         )}
         <SecondaryText>{t('pool.position')}</SecondaryText>
       </Flex>
-      <Flex gap="$gap4" flexBasis="20%">
+      <Flex gap="$gap4" flexBasis="20%" $md={{ flexBasis: '50%' }}>
         {version === ProtocolVersion.V2 || !!formattedUsdFees ? (
           <>
             {version === ProtocolVersion.V2 ? (
@@ -91,7 +93,7 @@ export function LiquidityPositionFeeStats({
           </>
         ) : null}
       </Flex>
-      <Flex gap="$gap4" flexBasis="20%">
+      <Flex gap="$gap4" flexBasis="20%" $md={{ flexBasis: '50%' }}>
         {!!apr && (
           <>
             <PrimaryText>{formatPercent(apr)}</PrimaryText>
@@ -101,7 +103,13 @@ export function LiquidityPositionFeeStats({
           </>
         )}
       </Flex>
-      <Flex minWidth={224} alignSelf="flex-start">
+      <Flex
+        minWidth={224}
+        alignSelf="flex-start"
+        flexBasis="30%"
+        style={{ order: screenSize.sm ? 1 : -1 }}
+        $md={{ flexBasis: '100%' }}
+      >
         {priceOrdering.priceLower && priceOrdering.priceUpper && !isFullRange ? (
           <Flex gap="$gap4">
             <Flex row gap="$gap12" alignItems="center">

@@ -234,10 +234,10 @@ const Toolbar = () => {
   )
 
   return (
-    <Flex flexDirection="row-reverse" gap="$gap8" centered>
+    <Flex flexDirection="row-reverse" gap="$gap8" centered $md={{ justifyContent: 'flex-end' }}>
       <Button
         theme="tertiary"
-        py="$spacing8"
+        py="10px"
         px="$spacing12"
         backgroundColor="$surface1"
         borderRadius="$rounded12"
@@ -247,36 +247,38 @@ const Toolbar = () => {
       >
         <Settings size={iconSizes.icon16} color="$neutral1" />
       </Button>
-      <ActionSheetDropdown
-        options={versionOptions}
-        showArrow={false}
-        closeOnSelect={true}
-        styles={{
-          dropdownMinWidth: 200,
-          buttonPaddingY: '$none',
-        }}
-      >
-        <Button
-          theme="tertiary"
-          py="$spacing6"
-          pl="$spacing12"
-          pr="$spacing8"
-          alignItems="center"
-          backgroundColor="$surface1"
-          borderRadius="$rounded12"
-          borderColor="$surface3"
-          borderWidth="$spacing1"
-          gap="$gap4"
-        >
-          <Text variant="buttonLabel3">
-            <Trans i18nKey="position.protocol" values={{ protocol: getProtocolVersionLabel(protocolVersion) }} />
-          </Text>
-          <RotatableChevron direction="down" color="$neutral2" width={iconSizes.icon20} height={iconSizes.icon20} />
-        </Button>
-      </ActionSheetDropdown>
       <Button
         theme="tertiary"
         py="$spacing8"
+        pl="$spacing12"
+        pr="$spacing8"
+        alignItems="center"
+        backgroundColor="$surface1"
+        borderRadius="$rounded12"
+        borderColor="$surface3"
+        borderWidth="$spacing1"
+        gap="$gap4"
+        flex={1}
+      >
+        <ActionSheetDropdown
+          options={versionOptions}
+          showArrow={false}
+          closeOnSelect={true}
+          styles={{
+            dropdownMinWidth: 200,
+            buttonPaddingY: '$none',
+            width: '100%',
+          }}
+        >
+          <Text variant="buttonLabel3" lineHeight="16px">
+            <Trans i18nKey="position.protocol" values={{ protocol: getProtocolVersionLabel(protocolVersion) }} />
+          </Text>
+          <RotatableChevron direction="down" color="$neutral2" width={iconSizes.icon20} height={iconSizes.icon20} />
+        </ActionSheetDropdown>
+      </Button>
+      <Button
+        theme="tertiary"
+        py="10px"
         px="$spacing12"
         backgroundColor="$surface1"
         borderRadius="$rounded12"
@@ -285,9 +287,10 @@ const Toolbar = () => {
         gap="$gap4"
         onPress={handleReset}
         disabled={isFormUnchanged}
+        flex={1}
       >
         <RotateLeft size={iconSizes.icon16} color="$neutral1" />
-        <Text variant="buttonLabel3">
+        <Text variant="buttonLabel3" lineHeight="16px">
           <Trans i18nKey="common.button.reset" />
         </Text>
       </Button>
@@ -339,6 +342,7 @@ export function CreatePosition() {
                     mr="auto"
                     mb="$spacing32"
                     $xl={{ maxWidth: 600 }}
+                    $md={{ flexDirection: 'column' }}
                   >
                     <Text variant="heading2">
                       <Trans i18nKey="position.new" />

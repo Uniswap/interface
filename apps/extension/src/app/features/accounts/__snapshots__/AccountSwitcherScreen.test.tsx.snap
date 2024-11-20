@@ -150,7 +150,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                           class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202"
                           data-disable-theme="true"
                         >
-                          0x​9eb6...a2ca
+                          0x​9eb67f...d9a2ca
                         </span>
                         <svg
                           fill="none"
@@ -382,7 +382,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                         class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202"
                         data-disable-theme="true"
                       >
-                        0x​9eb6...a2ca
+                        0x​9eb67f...d9a2ca
                       </span>
                       <svg
                         fill="none"

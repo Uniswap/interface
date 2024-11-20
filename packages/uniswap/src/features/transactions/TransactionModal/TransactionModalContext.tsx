@@ -35,6 +35,7 @@ export type TransactionModalContextState = {
   openWalletRestoreModal?: () => void
   walletNeedsRestore?: boolean
   onClose: () => void
+  onCurrencyChange?: (selected: { inputCurrency?: Currency; outputCurrency?: Currency }) => void
   renderBiometricsIcon?: (({ color }: BiometricsIconProps) => JSX.Element) | null
   authTrigger?: AuthTrigger
   screen: TransactionScreen
@@ -50,6 +51,7 @@ export function TransactionModalContextProvider({
   authTrigger,
   bottomSheetViewStyles,
   onClose,
+  onCurrencyChange,
   openWalletRestoreModal,
   walletNeedsRestore,
   screen,
@@ -62,6 +64,7 @@ export function TransactionModalContextProvider({
       authTrigger,
       bottomSheetViewStyles,
       onClose,
+      onCurrencyChange,
       openWalletRestoreModal,
       screen,
       setScreen,
@@ -73,6 +76,7 @@ export function TransactionModalContextProvider({
       authTrigger,
       bottomSheetViewStyles,
       onClose,
+      onCurrencyChange,
       openWalletRestoreModal,
       screen,
       setScreen,

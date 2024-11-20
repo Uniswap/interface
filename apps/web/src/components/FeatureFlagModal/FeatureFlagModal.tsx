@@ -10,7 +10,12 @@ import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { BREAKPOINTS } from 'theme'
 import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
-import { DynamicConfigKeys, DynamicConfigs, QuickRouteChainsConfigKey } from 'uniswap/src/features/gating/configs'
+import {
+  DynamicConfigKeys,
+  DynamicConfigs,
+  NetworkRequestsConfigKey,
+  QuickRouteChainsConfigKey,
+} from 'uniswap/src/features/gating/configs'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
@@ -159,14 +164,14 @@ function DynamicConfigDropdown<
   Key extends DynamicConfigKeys[Conf],
 >({
   config,
-  key,
+  configKey,
   label,
   options,
   selected,
   parser,
 }: {
   config: Conf
-  key: Key
+  configKey: Key
   label: string
   options: any[]
   selected: any[]
@@ -174,7 +179,7 @@ function DynamicConfigDropdown<
 }) {
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValues = Array.from(e.target.selectedOptions, (opt) => parser(opt.value))
-    Statsig.overrideConfig(config, { [key]: selectedValues })
+    Statsig.overrideConfig(config, { [configKey]: selectedValues })
   }
   return (
     <CenteredRow key={config}>
@@ -253,8 +258,18 @@ export default function FeatureFlagModal() {
               options={SUPPORTED_CHAIN_IDS}
               parser={Number.parseInt}
               config={DynamicConfigs.QuickRouteChains}
-              key={QuickRouteChainsConfigKey.Chains}
+              configKey={QuickRouteChainsConfigKey.Chains}
               label="Enable quick routes for these chains"
+            />
+          </FeatureFlagGroup>
+          <FeatureFlagGroup name="Network Requests">
+            <DynamicConfigDropdown
+              selected={[30]}
+              options={[1, 10, 20, 30]}
+              parser={Number.parseInt}
+              config={DynamicConfigs.NetworkRequests}
+              configKey={NetworkRequestsConfigKey.BalanceMaxRefetchAttempts}
+              label="Max refetch attempts"
             />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="UniswapX Flags">

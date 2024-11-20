@@ -5,7 +5,7 @@ import { Flex } from 'ui/src/components/layout'
 import { zIndices } from 'ui/src/theme'
 import { useShadowPropsShort } from 'ui/src/theme/shadows'
 
-export function WebBottomSheet({ isOpen, onClose, children, ...rest }: ModalProps): JSX.Element {
+export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: ModalProps): JSX.Element {
   const isTouchDevice = useIsTouchDevice()
   const [isHandlePressed, setHandlePressed] = useState(false)
 
@@ -67,7 +67,7 @@ export function WebBottomSheet({ isOpen, onClose, children, ...rest }: ModalProp
           >
             <Flex backgroundColor="$surface3" height="$spacing4" width="$spacing32" />
           </Sheet.Handle>
-          <Flex overflow="scroll" {...sheetHeightStyles}>
+          <Flex gap={gap} overflow="scroll" {...sheetHeightStyles}>
             {children}
           </Flex>
         </Sheet.Frame>
@@ -138,7 +138,15 @@ export function AdaptiveWebModal({
       {adaptToSheet &&
         !isTopAligned && ( // Tamagui Sheets always animate in from the bottom, so we cannot use Sheets on top aligned modals
           <Adapt when="sm">
-            <WebBottomSheet isOpen={isOpen} style={style} onClose={onClose} {...filteredRest}>
+            <WebBottomSheet
+              isOpen={isOpen}
+              gap={gap ?? '$spacing4'}
+              px={px ?? p ?? '$spacing24'}
+              py={py ?? p ?? '$spacing16'}
+              style={style}
+              onClose={onClose}
+              {...filteredRest}
+            >
               <Adapt.Contents />
             </WebBottomSheet>
           </Adapt>

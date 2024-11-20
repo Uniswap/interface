@@ -40,8 +40,8 @@ function TopPoolCard({ pool }: { pool: PoolStat }) {
     >
       <Flex row gap="$gap16">
         <DoubleCurrencyAndChainLogo chainId={chainId} currencies={[token0, token1]} size={44} />
-        <Flex gap="$gap8">
-          <Text variant="subheading1">
+        <Flex gap="$gap4">
+          <Text variant="subheading2">
             {token0?.symbol} / {token1?.symbol}
           </Text>
           <Flex row gap={2} alignItems="center">

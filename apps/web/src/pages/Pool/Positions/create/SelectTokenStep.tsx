@@ -255,7 +255,7 @@ export function SelectTokensStep({
                 </Flex>
               </Flex>
             ) : (
-              <Flex row gap="$gap16">
+              <Flex row gap="$gap16" $md={{ flexDirection: 'column' }}>
                 <CurrencySelector currency={token0} onPress={() => setCurrencySearchInputState(PositionField.TOKEN0)} />
                 <CurrencySelector currency={token1} onPress={() => setCurrencySearchInputState(PositionField.TOKEN1)} />
               </Flex>
@@ -299,7 +299,13 @@ export function SelectTokensStep({
                       )}
                     </Text>
                     {fee.feeAmount === FeeAmount.MEDIUM ? (
-                      <Flex justifyContent="center" borderRadius="$rounded6" backgroundColor="$surface3" px={7}>
+                      <Flex
+                        justifyContent="center"
+                        borderRadius="$rounded6"
+                        backgroundColor="$surface3"
+                        px={7}
+                        $md={{ display: 'none' }}
+                      >
                         <Text variant="buttonLabel4">
                           <Trans i18nKey="fee.tier.recommended" />
                         </Text>
@@ -325,7 +331,9 @@ export function SelectTokensStep({
                   theme="secondary"
                   onPress={toggleShowMoreFeeTiersEnabled}
                 >
-                  <Text variant="buttonLabel4">{isShowMoreFeeTiersEnabled ? t('common.less') : t('common.more')}</Text>
+                  <Text variant="buttonLabel4" $md={{ display: 'none' }}>
+                    {isShowMoreFeeTiersEnabled ? t('common.less') : t('common.more')}
+                  </Text>
                   <RotatableChevron
                     direction={isShowMoreFeeTiersEnabled ? 'up' : 'down'}
                     color="$neutral2"

@@ -30,7 +30,14 @@ function RemoveLiquidityModalInner() {
   }
 
   return (
-    <Modal name={ModalName.RemoveLiquidity} onClose={closeModal} isDismissible gap="$gap24" padding="$padding16">
+    <Modal
+      name={ModalName.RemoveLiquidity}
+      onClose={closeModal}
+      isDismissible
+      gap="$gap24"
+      padding="$padding16"
+      height="max-content"
+    >
       <LiquidityModalHeader
         title={t('pool.removeLiquidity')}
         closeModal={closeModal}

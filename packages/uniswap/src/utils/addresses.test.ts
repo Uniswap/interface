@@ -1,5 +1,5 @@
 import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'uniswap/src/test/fixtures'
-import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
+import { areAddressesEqual, getValidAddress, shortenAddress } from 'uniswap/src/utils/addresses'
 
 const SAMPLE_SEED_ADDRESS_1_WITH_SPACE = SAMPLE_SEED_ADDRESS_1 + ' '
 const ADDRESS_NO_PREFIX = '71C7656EC7ab88b098defB751B7401B5f6d8976F'
@@ -39,5 +39,33 @@ describe(areAddressesEqual, () => {
     ${INSAMPLE_SEED_ADDRESS_1_BAD_PREFIX}  | ${INSAMPLE_SEED_ADDRESS_1_BAD_PREFIX}   | ${false}
   `(`areAddressesEqual should be $expected for $addressA <-> $addressB`, async ({ addressA, addressB, expected }) => {
     expect(areAddressesEqual(addressA, addressB)).toEqual(expected)
+  })
+})
+
+describe('shortenAddress', () => {
+  it('should throw an error if the address length is not 42', () => {
+    expect(() => shortenAddress('0x123')).toThrow("Invalid 'address' parameter '0x123'.")
+  })
+
+  it('should throw an error if chars is less than 1', () => {
+    expect(() => shortenAddress('0x1234567890123456789012345678901234567890', 0)).toThrow(
+      "Invalid 'chars' parameter '0'.",
+    )
+  })
+
+  it('should throw an error if chars is greater than 19', () => {
+    expect(() => shortenAddress('0x1234567890123456789012345678901234567890', 20)).toThrow(
+      "Invalid 'chars' parameter '20'.",
+    )
+  })
+
+  it('should correctly shorten the address with default chars', () => {
+    const address = '0x1234567890123456789012345678901234567890'
+    expect(shortenAddress(address)).toBe('0x1234...7890')
+  })
+
+  it('should correctly shorten the address with specified chars', () => {
+    const address = '0x1234567890123456789012345678901234567890'
+    expect(shortenAddress(address, 6)).toBe('0x123456...567890')
   })
 })

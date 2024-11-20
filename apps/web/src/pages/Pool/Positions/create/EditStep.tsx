@@ -2,6 +2,7 @@
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
+import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import {
   DEFAULT_DEPOSIT_STATE,
   DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS,
@@ -31,9 +32,10 @@ const EditStep = ({ children, onClick, ...rest }: { children: JSX.Element; onCli
         height={36}
         borderRadius="$rounded12"
         onPress={onClick}
+        $md={{ px: '$spacing8' }}
       >
         <Edit size={iconSizes.icon20} color="$neutral1" />
-        <Text variant="buttonLabel3">
+        <Text variant="buttonLabel3" $md={{ display: 'none' }}>
           <Trans i18nKey="common.edit.button" />
         </Text>
       </Button>
@@ -49,6 +51,7 @@ export const EditSelectTokensStep = (props?: FlexProps) => {
   const { fee, hook } = positionState
   const [token0, token1] = currencies
   const versionLabel = getProtocolVersionLabel(protocolVersion)
+  const screenSize = useScreenSize()
 
   const handleEdit = useCallback(() => {
     setPriceRangeState(DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS)
@@ -59,14 +62,21 @@ export const EditSelectTokensStep = (props?: FlexProps) => {
   return (
     <EditStep onClick={handleEdit} {...props}>
       <Flex row gap="$gap12">
-        <DoubleCurrencyLogo currencies={[token0, token1]} size={iconSizes.icon32} />
-        <Flex row gap="$gap8">
-          <Text variant="heading3">{token0?.symbol}</Text>
-          <Text variant="heading3">/</Text>
-          <Text variant="heading3">{token1?.symbol}</Text>
-        </Flex>
-        <Flex row gap={2} alignItems="center">
-          <LiquidityPositionInfoBadges size="small" versionLabel={versionLabel} v4hook={hook} feeTier={fee.feeAmount} />
+        <DoubleCurrencyLogo currencies={[token0, token1]} size={!screenSize.sm ? iconSizes.icon44 : iconSizes.icon32} />
+        <Flex row gap="$gap12" $md={{ flexDirection: 'column', gap: '$gap4' }}>
+          <Flex row gap="$gap8" alignItems="center">
+            <Text variant="subheading1">{token0?.symbol}</Text>
+            <Text variant="subheading1">/</Text>
+            <Text variant="subheading1">{token1?.symbol}</Text>
+          </Flex>
+          <Flex row gap={2} alignItems="center">
+            <LiquidityPositionInfoBadges
+              size="small"
+              versionLabel={versionLabel}
+              v4hook={hook}
+              feeTier={fee.feeAmount}
+            />
+          </Flex>
         </Flex>
       </Flex>
     </EditStep>

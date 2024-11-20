@@ -17,6 +17,7 @@ import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { MobileAppsFlyerEvents, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import { refetchGQLQueries } from 'uniswap/src/features/transactions/refetchGQLQueriesSaga'
 import {
   makeSelectTransaction,
   selectIncompleteTransactions,
@@ -51,7 +52,6 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import { OrderWatcher } from 'wallet/src/features/transactions/orderWatcherSaga'
-import { refetchGQLQueries } from 'wallet/src/features/transactions/refetchGQLQueriesSaga'
 import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
 import {
   getDiff,
@@ -61,6 +61,7 @@ import {
   receiptFromEthersReceipt,
 } from 'wallet/src/features/transactions/utils'
 import { getProvider } from 'wallet/src/features/wallet/context'
+import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 export const SWAP_STATUS_TO_TX_STATUS: { [key in SwapStatus]: TransactionStatus } = {
   [SwapStatus.PENDING]: TransactionStatus.Pending,
@@ -663,7 +664,12 @@ export function* finalizeTransaction({
   // Flip status to true so we can render Notification badge on home
   yield* put(setNotificationStatus({ address: transaction.from, hasNotifications: true }))
   // Refetch data when a local tx has confirmed
-  yield* refetchGQLQueries({ transaction, apolloClient })
+  const activeAddress = yield* select(selectActiveAccountAddress)
+  yield* refetchGQLQueries({
+    transaction,
+    apolloClient,
+    activeAddress,
+  })
 
   if (transaction.typeInfo.type === TransactionType.Swap || transaction.typeInfo.type === TransactionType.Bridge) {
     const hasDoneOneSwap = (yield* select(selectSwapTransactionsCount)) === 1

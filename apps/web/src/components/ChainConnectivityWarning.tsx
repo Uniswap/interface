@@ -4,9 +4,11 @@ import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import useMachineTimeMs from 'hooks/useMachineTime'
 import styled from 'lib/styled-components'
-import { useMemo } from 'react'
-import { AlertTriangle } from 'react-feather'
-import { ExternalLink } from 'theme/components'
+import { useMemo, useState } from 'react'
+import { AlertTriangle, X } from 'react-feather'
+import { ClickableTamaguiStyle, ExternalLink } from 'theme/components'
+import { Flex, styled as tamaguiStyled } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { DEFAULT_MS_BEFORE_WARNING, getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -30,7 +32,6 @@ const TitleRow = styled.div`
   align-items: center;
   display: flex;
   justify-content: flex-start;
-  margin-bottom: 8px;
 `
 const TitleText = styled.div`
   color: ${({ theme }) => theme.neutral1};
@@ -51,12 +52,17 @@ const Wrapper = styled.div`
   bottom: 16px;
   right: 16px;
 `
+const CloseButton = tamaguiStyled(X, {
+  ...ClickableTamaguiStyle,
+  size: iconSizes.icon20,
+})
 
 export function ChainConnectivityWarning() {
   const { chainId } = useAccount()
   const { defaultChainId } = useEnabledChains()
   const info = getChainInfo(chainId ?? defaultChainId)
   const label = info.label
+  const [hide, setHide] = useState(false)
 
   const isNftPage = useIsNftPage()
   const isLandingPage = useIsLandingPage()
@@ -76,18 +82,21 @@ export function ChainConnectivityWarning() {
   )
   const warning = Boolean(!!blockTime && machineTime - blockTime.mul(1000).toNumber() > waitMsBeforeWarning)
 
-  if (!warning || isNftPage || isLandingPage) {
+  if (!warning || isNftPage || isLandingPage || hide) {
     return null
   }
 
   return (
     <Wrapper>
-      <TitleRow>
-        <CautionTriangle />
-        <TitleText>
-          <Trans i18nKey="network.warning" />
-        </TitleText>
-      </TitleRow>
+      <Flex row justifyContent="space-between" alignItems="center" mb="$spacing8">
+        <TitleRow>
+          <CautionTriangle />
+          <TitleText>
+            <Trans i18nKey="network.warning" />
+          </TitleText>
+        </TitleRow>
+        <CloseButton onClick={() => setHide(true)} />
+      </Flex>
       <BodyRow>
         {chainId === UniverseChainId.Mainnet ? (
           <Trans i18nKey="network.lostConnection" />

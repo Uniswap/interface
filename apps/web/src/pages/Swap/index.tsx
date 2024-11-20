@@ -180,6 +180,7 @@ export function Swap({
                   initialInputCurrency={initialInputCurrency}
                   initialOutputCurrency={initialOutputCurrency}
                   swapRedirectCallback={swapRedirectCallback}
+                  onCurrencyChange={onCurrencyChange}
                   prefilledState={prefilledState}
                 />
               </Flex>
@@ -386,6 +387,7 @@ function UniversalSwapFlow({
               hideFooter={hideFooter}
               onClose={noop}
               swapRedirectCallback={swapRedirectCallback}
+              onCurrencyChange={onCurrencyChange}
               swapCallback={swapCallback}
               wrapCallback={wrapCallback}
               prefilledState={prefilledState}

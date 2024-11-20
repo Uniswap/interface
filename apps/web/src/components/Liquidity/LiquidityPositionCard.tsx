@@ -172,7 +172,7 @@ export function LiquidityPositionCard({
         row
         alignItems="center"
         justifyContent="space-between"
-        $md={{ row: false, alignItems: 'flex-start', gap: '$gap12' }}
+        $md={{ row: false, alignItems: 'flex-start', gap: '$gap20' }}
       >
         <LiquidityPositionInfo positionInfo={liquidityPosition} />
         <LiquidityPositionRangeChart positionInfo={liquidityPosition} />

@@ -230,7 +230,7 @@ const AddressSubtitle = ({
       py={showCopyWrapperButton ? '$spacing4' : '$none'}
     >
       <Text color={captionTextColor} variant={captionVariant}>
-        {sanitizeAddressText(shortenAddress(address))}
+        {sanitizeAddressText(shortenAddress(address, 6))}
       </Text>
       {showCopy && <CopySheets color={captionTextColor} size={captionSize} />}
     </Flex>

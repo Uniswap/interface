@@ -21,7 +21,14 @@ function IncreaseLiquidityModalInner() {
 
   if (step === IncreaseLiquidityStep.Input) {
     return (
-      <Modal name={ModalName.AddLiquidity} onClose={onClose} isDismissible gap="$gap24" padding="$padding16">
+      <Modal
+        name={ModalName.AddLiquidity}
+        onClose={onClose}
+        isDismissible
+        gap="$gap24"
+        padding="$padding16"
+        height="max-content"
+      >
         <LiquidityModalHeader title={t('common.addLiquidity')} closeModal={onClose} />
         <HeightAnimator animation="fast">
           <IncreaseLiquidityForm />
@@ -38,6 +45,7 @@ function IncreaseLiquidityModalInner() {
       gap="$gap12"
       paddingX="$padding8"
       paddingY="$padding12"
+      height="max-content"
     >
       <LiquidityModalHeader
         title={t('common.addLiquidity')}

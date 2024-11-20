@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmevZvvRwjXodt61tEJ2A5m8xG5QfwGPbewx7RhHrwPcKK`
-- CIDv1: `bafybeihwnnk2wz3dt7cychtk7meo5tbo7toj3m2ydjxb3z6kd74ndbcmqi`
+- CIDv0: `Qmckh3X76dS3aki3F24Hf4GZzDtSPyhMRBa1rV2soC6qJm`
+- CIDv1: `bafybeigwfqzd3hshqyg4h4gexgv2yuxodjpaxgkvteoqwjiznjcrukcq7y`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,42 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeihwnnk2wz3dt7cychtk7meo5tbo7toj3m2ydjxb3z6kd74ndbcmqi.ipfs.dweb.link/
-- https://bafybeihwnnk2wz3dt7cychtk7meo5tbo7toj3m2ydjxb3z6kd74ndbcmqi.ipfs.cf-ipfs.com/
-- [ipfs://QmevZvvRwjXodt61tEJ2A5m8xG5QfwGPbewx7RhHrwPcKK/](ipfs://QmevZvvRwjXodt61tEJ2A5m8xG5QfwGPbewx7RhHrwPcKK/)
+- https://bafybeigwfqzd3hshqyg4h4gexgv2yuxodjpaxgkvteoqwjiznjcrukcq7y.ipfs.dweb.link/
+- https://bafybeigwfqzd3hshqyg4h4gexgv2yuxodjpaxgkvteoqwjiznjcrukcq7y.ipfs.cf-ipfs.com/
+- [ipfs://Qmckh3X76dS3aki3F24Hf4GZzDtSPyhMRBa1rV2soC6qJm/](ipfs://Qmckh3X76dS3aki3F24Hf4GZzDtSPyhMRBa1rV2soC6qJm/)
 
-### 5.58.1 (2024-11-13)
+## 5.59.0 (2024-11-20)
+
+
+### Features
+
+* **web:** add hide button to chain connectivity warning (#13795) 48e7521
+* **web:** add max content to liq modals and propagate padding and gap to bottom sheet (#13806) 1991803
+* **web:** clear selected limit orders after cancellation (#13808) 084120b
+* **web:** mweb responsive liq position cards (#13825) 8757ff6
+* **web:** mweb support for pool creation page (#13823) 9c82fec
+* **web:** navigate to positions page after migrating liq (#13802) e60979a
+* **web:** tweaks to top pools cards (#13824) c2628e0
+* **web:** update shadow prop medium and light for interface (#13819) ad78fc4
+* **web:** watch swap, send, bridge, wrap txs (#13807) 523abbd
 
 
 ### Bug Fixes
 
-* **web:** broken charts on PDP (#13810) 4d130d3
+* **web:** [v4] wrap disconnected welcome text (#13791) dba8373
+* **web:** broken charts on PDP (#13809) 5ba405f
+* **web:** Fix buy crypto form e2e tests and nft tab nav test (#13790) 44b02ae
+* **web:** fix overflow in unconnected menu [staging] (#13938) 9e46347
+* **web:** Fix regression in TDP swap component navigation on web (#13779) 3f107e5
+* **web:** handle edit text on small screens (#13800) 8a796fa
+* **web:** only show warning on invalid price or range (#13805) 1c32c37
+* **web:** pool tab zindex was too damn high (#13792) 7d01a6a
+* **web:** set max height for advanced info icon (#13801) 4aea7f0
+* **web:** uniswapx tests - increase hardhat funding (#13820) 7a43cff
+
+
+### Continuous Integration
+
+* **web:** update sitemaps 2c6b2bc
 
 

@@ -24,6 +24,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { FiatOnRampEventName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTranslation } from 'uniswap/src/i18n'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import useResizeObserver from 'use-resize-observer'
 import { useFormatter } from 'utils/formatNumbers'
 
@@ -153,6 +154,7 @@ function BuyFormInner({ disabled }: BuyFormProps) {
               backgroundColor="$surface1"
               amountReady={Boolean(amountOut)}
               loading={amountOutLoading && inputAmount !== ''}
+              testID={TestID.ChooseInputToken}
             />
             <Flex row alignItems="center" gap="$spacing8" justifyContent="center" mt="$spacing8">
               {PREDEFINED_AMOUNTS.map((amount: number) => (

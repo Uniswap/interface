@@ -97,10 +97,13 @@ function TDPSwapComponent() {
     (tokens: CurrencyState) => {
       const inputCurrencyURLAddress = getCurrencyURLAddress(tokens.inputCurrency)
       const outputCurrencyURLAddress = getCurrencyURLAddress(tokens.outputCurrency)
-      if (
-        addressesAreEquivalent(inputCurrencyURLAddress, address) ||
-        addressesAreEquivalent(outputCurrencyURLAddress, address)
-      ) {
+
+      const inputEquivalent =
+        addressesAreEquivalent(inputCurrencyURLAddress, address) && tokens.inputCurrency?.chainId === currencyChainId
+      const outputEquivalent =
+        addressesAreEquivalent(outputCurrencyURLAddress, address) && tokens.outputCurrency?.chainId === currencyChainId
+
+      if (inputEquivalent || outputEquivalent) {
         return
       }
 

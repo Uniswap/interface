@@ -95,7 +95,7 @@ function EmptyPositionsView({ isConnected }: { isConnected: boolean }) {
         <Flex p="$padding8" borderRadius="$rounded12" backgroundColor="$accent2">
           <PoolIcon width={iconSizes.icon24} height={iconSizes.icon24} color={colors.accent1.val} />
         </Flex>
-        <Flex grow>
+        <Flex grow width="100%">
           <Text variant="subheading2">{isConnected ? t('pool.openPosition') : t('positions.welcome')}</Text>
           <Text variant="body2" color="$neutral2">
             {isConnected ? t('pool.openPosition.cta') : t('positions.welcome.connect')}

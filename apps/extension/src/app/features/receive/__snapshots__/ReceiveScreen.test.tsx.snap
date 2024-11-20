@@ -94,7 +94,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
                               data-disable-theme="true"
                             >
-                              0x​82D5...3Fa6
+                              0x​82D56A...373Fa6
                             </span>
                             <svg
                               fill="none"
@@ -6130,7 +6130,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                             class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
                             data-disable-theme="true"
                           >
-                            0x​82D5...3Fa6
+                            0x​82D56A...373Fa6
                           </span>
                           <svg
                             fill="none"

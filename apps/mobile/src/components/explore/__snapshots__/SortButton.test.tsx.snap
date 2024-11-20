@@ -67,7 +67,7 @@ exports[`SortButton renders without error 1`] = `
           numberOfLines={1}
           style={
             {
-              "color": "#222222",
+              "color": "#7D7D7D",
               "flexShrink": 1,
               "fontFamily": "Basel Grotesk",
               "fontSize": 15,
