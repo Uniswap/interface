@@ -22,15 +22,15 @@ import { TokenLogoImage } from "../DoubleLogo";
 import blankTokenUrl from "assets/svg/blank_token.svg";
 import { useV3Positions } from "../../hooks/useV3Positions";
 import { useAccount } from "../../hooks/useAccount";
-import { FeeAmount, Pool, Position } from "@taraswap/v3-sdk";
-import { Token } from "@taraswap/sdk-core";
-import { useCall, useChainId } from "wagmi";
+import { useChainId } from "wagmi";
 import { formatUnits } from "viem/utils";
 import { MouseoverTooltip } from "components/Tooltip";
 import styled from "styled-components";
 import { Info } from "react-feather";
 import { useV3StakerContract } from "../../hooks/useV3StakerContract";
 import useTotalPositions, { PositionsResponse } from "hooks/useTotalPositions";
+import { ZERO_ADDRESS } from "constants/misc";
+import { LightCard } from "components/Card";
 
 const LOGO_DEFAULT_SIZE = 30;
 
@@ -82,7 +82,7 @@ export default function Incentives() {
     []
   );
   const { positions, loading: positionsLoading } = useV3Positions(
-    account.address
+    account.address || ZERO_ADDRESS
   );
   const { getPositionsWithDepositsOfUser, isLoading: isLoadingDepositData } =
     useTotalPositions();
@@ -96,11 +96,13 @@ export default function Incentives() {
 
     const positions = await getPositionsWithDepositsOfUser(account.address);
     setUserPositionsGql(positions);
-  }, [getPositionsWithDepositsOfUser, account]);
+  }, [getPositionsWithDepositsOfUser, account.address]);
 
   useEffect(() => {
-    getUserPositionsGql();
-  }, []);
+    if (account.isConnected) {
+      getUserPositionsGql();
+    }
+  }, [account.isConnected]);
 
   const userPositions = useMemo(() => {
     if (
@@ -181,8 +183,10 @@ export default function Incentives() {
   }, [indexerTaraswap]);
 
   useEffect(() => {
-    fetchIncentivesData();
-  }, []);
+    if (account.isConnected) {
+      fetchIncentivesData();
+    }
+  }, [account.isConnected]);
 
   const processIncentives = useCallback(
     async (
@@ -196,6 +200,9 @@ export default function Incentives() {
         tickUpper: string;
       }[]
     ) => {
+      if (!account.isConnected) {
+        return [];
+      }
       setIsLoading(true);
 
       const poolInfo = await Promise.all(
@@ -303,11 +310,12 @@ export default function Incentives() {
       let filteredData = poolInfo.filter((pool) => pool !== null) as PoolInfo[];
       return filteredData;
     },
-    [rawIncentivesData, userPositionsGql, userPositions]
+    [rawIncentivesData, userPositionsGql, userPositions, account.isConnected]
   );
 
   useEffect(() => {
     if (
+      account.isConnected &&
       rawIncentivesData &&
       rawIncentivesData.length > 0 &&
       tokenList?.length > 0
@@ -318,11 +326,19 @@ export default function Incentives() {
         }
       });
     }
-  }, [rawIncentivesData, tokenList, userPositions, userPositionsGql]);
+  }, [
+    rawIncentivesData,
+    tokenList,
+    userPositions,
+    userPositionsGql,
+    account.isConnected,
+  ]);
 
   useEffect(() => {
-    fetchCoinDetails();
-  }, [fetchCoinDetails]);
+    if (account.isConnected) {
+      fetchCoinDetails();
+    }
+  }, [fetchCoinDetails, account.isConnected]);
 
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<PoolInfo>();
@@ -530,12 +546,24 @@ export default function Incentives() {
     ];
   }, [isLoading]);
 
-  return (
+  return account.isConnected ? (
     <Table
       columns={columns}
       data={poolTransactionTableValues}
       loading={isLoading}
       maxWidth={1200}
     />
+  ) : (
+    <StyledLightCard>
+      <ThemedText.BodySecondary>
+        Connect wallet to see real-time APY
+      </ThemedText.BodySecondary>
+    </StyledLightCard>
   );
 }
+const StyledLightCard = styled(LightCard)`
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+`;
