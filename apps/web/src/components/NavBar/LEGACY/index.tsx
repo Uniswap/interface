@@ -34,7 +34,7 @@ import { FeatureFlags } from "uniswap/src/features/gating/flags";
 import { useFeatureFlag } from "uniswap/src/features/gating/hooks";
 import Blur from "./Blur";
 import { More } from "./Menu";
-import { SearchBar } from "./SearchBar/SearchBar";
+// import { SearchBar } from "./SearchBar/SearchBar";
 import * as styles from "./style.css";
 
 const Nav = styled.nav`
@@ -174,7 +174,7 @@ const LegacyNavbar = ({ blur }: { blur: boolean }) => {
               display: "flex",
             })}
           >
-            <SearchBar />
+            {/* <SearchBar /> */}
           </Box>
           <Box className={styles.rightSideContainer}>
             <Row gap="12">
@@ -183,7 +183,7 @@ const LegacyNavbar = ({ blur }: { blur: boolean }) => {
                 position="relative"
                 display={isNavSearchInputVisible ? "none" : { sm: "flex" }}
               >
-                <SearchBar />
+                {/* <SearchBar /> */}
               </Box>
               {isNftPage && sellPageState !== ProfilePageStateType.LISTING && (
                 <Bag />

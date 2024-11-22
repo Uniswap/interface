@@ -1,6 +1,7 @@
 import {
   DEFAULT_INACTIVE_LIST_URLS,
-  TARAXA_TESTNET_LIST,
+  TARAXA_MAINNET_LIST,
+  // TARAXA_TESTNET_LIST,
 } from "constants/lists";
 import {
   TokenAddressMap,
@@ -85,6 +86,6 @@ export function useCombinedInactiveLists(): TokenAddressMap {
 }
 
 export function useTaraxaList(): TokenAddressMap {
-  const activeTokens = useCombinedTokenMapFromUrls([TARAXA_TESTNET_LIST]);
+  const activeTokens = useCombinedTokenMapFromUrls([TARAXA_MAINNET_LIST]);
   return activeTokens;
 }

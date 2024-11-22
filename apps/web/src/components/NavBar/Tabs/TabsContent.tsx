@@ -58,13 +58,13 @@ export const useTabsContent = (): TabsSection[] => {
               href: "/swap",
               internal: true,
             },
-            {
-              label: t("swap.limit"),
-              icon: <Limit fill={theme.neutral2} />,
-              quickKey: t`L`,
-              href: "/limit",
-              internal: true,
-            },
+            // {
+            //   label: t("swap.limit"),
+            //   icon: <Limit fill={theme.neutral2} />,
+            //   quickKey: t`L`,
+            //   href: "/limit",
+            //   internal: true,
+            // },
             {
               label: t("common.send.button"),
               icon: <Send fill={theme.neutral2} />,

@@ -1,5 +1,5 @@
 export enum SwapTab {
-  Swap = 'swap',
-  Limit = 'limit',
-  Send = 'send',
+  Swap = "swap",
+  Limit = "limit",
+  Send = "send",
 }
