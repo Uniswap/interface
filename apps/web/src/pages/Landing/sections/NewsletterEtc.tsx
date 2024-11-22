@@ -1,11 +1,11 @@
-import { motion } from 'framer-motion'
-import { t, Trans } from 'i18n'
-import styled, { useTheme } from 'styled-components'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
+import { motion } from "framer-motion";
+import { t, Trans } from "i18n";
+import styled, { useTheme } from "styled-components";
+import { useIsDarkMode } from "theme/components/ThemeToggle";
 
-import { PillButton } from '../components/cards/PillButton'
-import { Box, H2, H3 } from '../components/Generics'
-import { BookOpen, ChatBubbles, HelpCircle } from '../components/Icons'
+import { PillButton } from "../components/cards/PillButton";
+import { Box, H2, H3 } from "../components/Generics";
+import { BookOpen, ChatBubbles, HelpCircle } from "../components/Icons";
 
 const SectionLayout = styled.div`
   width: 100%;
@@ -20,7 +20,7 @@ const SectionLayout = styled.div`
   @media (max-width: 468px) {
     padding: 0 24px;
   }
-`
+`;
 const Layout = styled.div`
   width: 100%;
   max-width: 1280px;
@@ -33,7 +33,7 @@ const Layout = styled.div`
     grid-template-rows: repeat(2, 1fr);
     grid-template-columns: repeat(2, 1fr);
   }
-`
+`;
 const SectionCol = styled(Box)`
   flex-direction: column;
   max-width: 1328px;
@@ -41,9 +41,9 @@ const SectionCol = styled(Box)`
   @media (max-width: 768px) {
     gap: 24px;
   }
-`
+`;
 const Card = styled.a<{
-  backgroundColor?: string
+  backgroundColor?: string;
 }>`
   display: flex;
   flex-direction: column;
@@ -64,7 +64,7 @@ const Card = styled.a<{
     gap: 16px;
     padding: 24px;
   }
-`
+`;
 const SquareCard = motion(styled(Card)`
   grid-column: span 1 / span 1;
   grid-row: span 4 / span 4;
@@ -73,7 +73,7 @@ const SquareCard = motion(styled(Card)`
     grid-column: span 4 / span 4;
     grid-row: span 1 / span 1;
   }
-`)
+`);
 const HelpCenterCard = styled(SquareCard)`
   @media (max-width: 1024px) {
     grid-column: span 2 / span 2;
@@ -85,7 +85,7 @@ const HelpCenterCard = styled(SquareCard)`
     grid-column: span 4 / span 4;
     grid-row: span 1 / span 1;
   }
-`
+`;
 const BlogCard = styled(SquareCard)`
   @media (max-width: 1024px) {
     grid-column: span 2 / span 2;
@@ -97,7 +97,7 @@ const BlogCard = styled(SquareCard)`
     grid-column: span 4 / span 4;
     grid-row: span 1 / span 1;
   }
-`
+`;
 const RectCard = motion(styled(Card)`
   grid-column: span 2 / span 2;
   grid-row: span 4 / span 4;
@@ -108,14 +108,14 @@ const RectCard = motion(styled(Card)`
     grid-column: span 4 / span 4;
     grid-row: span 1 / span 1;
   }
-`)
+`);
 
-const helpPrimary = '#FF4D00'
-const blogPrimary = '#8E8767'
+const helpPrimary = "#FF4D00";
+const blogPrimary = "#8E8767";
 
 export function NewsletterEtc() {
-  const theme = useTheme()
-  const isDarkMode = useIsDarkMode()
+  const theme = useTheme();
+  const isDarkMode = useIsDarkMode();
   return (
     <SectionLayout>
       <Box direction="row" maxWidth="1328px" gap="24px" width="100%">
@@ -127,12 +127,18 @@ export function NewsletterEtc() {
             <HelpCenterCard
               initial="initial"
               whileHover="hover"
-              href="https://help.uniswap.org/"
+              href="https://t.me/+0no-0eSp4M9jYTE0"
               target="_blank"
               rel="noopener noreferrer"
-              backgroundColor={isDarkMode ? 'rgba(255, 77, 0, 0.08)' : 'rgba(255, 77, 0, 0.04)'}
+              backgroundColor={
+                isDarkMode ? "rgba(255, 77, 0, 0.08)" : "rgba(255, 77, 0, 0.04)"
+              }
             >
-              <PillButton icon={<HelpCircle fill={helpPrimary} />} color={helpPrimary} label={t('common.helpCenter')} />
+              <PillButton
+                icon={<HelpCircle fill={helpPrimary} />}
+                color={helpPrimary}
+                label={t("common.helpCenter")}
+              />
               <H3 color={helpPrimary}>
                 <Trans i18nKey="common.getSupport.button" />
               </H3>
@@ -140,12 +146,18 @@ export function NewsletterEtc() {
             <BlogCard
               initial="initial"
               whileHover="hover"
-              href="https://blog.uniswap.org/"
+              href="https://blog.taraswap.org/"
               target="_blank"
               rel="noopener noreferrer"
-              backgroundColor={isDarkMode ? 'rgba(98, 84, 50, 0.16)' : 'rgba(98, 84, 50, 0.04)'}
+              backgroundColor={
+                isDarkMode ? "rgba(98, 84, 50, 0.16)" : "rgba(98, 84, 50, 0.04)"
+              }
             >
-              <PillButton icon={<BookOpen fill={blogPrimary} />} color={blogPrimary} label={t('common.blog')} />
+              <PillButton
+                icon={<BookOpen fill={blogPrimary} />}
+                color={blogPrimary}
+                label={t("common.blog")}
+              />
               <H3 color={blogPrimary}>
                 <Trans i18nKey="landing.teamInsights" />
               </H3>
@@ -154,14 +166,14 @@ export function NewsletterEtc() {
               backgroundColor={theme.accent2}
               initial="initial"
               whileHover="hover"
-              href="https://twitter.com/Uniswap/"
+              href="https://x.com/Tara_Swap/"
               target="_blank"
               rel="noopener noreferrer"
             >
               <PillButton
                 icon={<ChatBubbles fill={theme.accent1} />}
                 color={theme.accent1}
-                label={t('common.stayConnected')}
+                label={t("common.stayConnected")}
               />
               <H3 color={theme.accent1}>
                 <Trans i18nKey="landing.followOnX" />
@@ -171,5 +183,5 @@ export function NewsletterEtc() {
         </SectionCol>
       </Box>
     </SectionLayout>
-  )
+  );
 }

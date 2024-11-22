@@ -1,11 +1,11 @@
-import { Alignment, Fit, Layout, useRive } from '@rive-app/react-canvas'
-import { useScreenSize } from 'hooks/screenSize'
-import { t } from 'i18n'
-import styled from 'styled-components'
+import { Alignment, Fit, Layout, useRive } from "@rive-app/react-canvas";
+import { useScreenSize } from "hooks/screenSize";
+import { t } from "i18n";
+import styled from "styled-components";
 
-import { CodeBrackets } from '../Icons'
-import { PillButton } from './PillButton'
-import ValuePropCard from './ValuePropCard'
+import { CodeBrackets } from "../Icons";
+import { PillButton } from "./PillButton";
+import ValuePropCard from "./ValuePropCard";
 
 const Contents = styled.div`
   width: 100%;
@@ -25,44 +25,51 @@ const Contents = styled.div`
   @media (max-width: 768px) {
     opacity: 0;
   }
-`
+`;
 
 type WebappCardProps = {
-  isDarkMode?: boolean
-  tagText?: string
-}
+  isDarkMode?: boolean;
+  tagText?: string;
+};
 
-const primary = '#00C3A0'
+const primary = "#00C3A0";
 
 export function DocumentationCard(props: WebappCardProps) {
   const { rive, RiveComponent } = useRive({
-    src: '/rive/landing-page.riv',
-    artboard: 'Dev',
-    stateMachines: 'Animation',
+    src: "/rive/landing-page.riv",
+    artboard: "Dev",
+    stateMachines: "Animation",
     layout: new Layout({ fit: Fit.Contain, alignment: Alignment.CenterRight }),
-  })
+  });
 
-  const isScreenSize = useScreenSize()
-  const screenIsLarge = isScreenSize['lg']
-  const screenIsXLarge = isScreenSize['xl']
+  const isScreenSize = useScreenSize();
+  const screenIsLarge = isScreenSize["lg"];
+  const screenIsXLarge = isScreenSize["xl"];
 
   return (
     <ValuePropCard
-      height={screenIsLarge ? '340px' : '240px'}
-      href="https://docs.uniswap.org/"
-      backgroundColor={{ dark: 'rgba(0, 195, 160, 0.08);', light: 'rgba(0, 195, 160, 0.06);' }}
+      height={screenIsLarge ? "340px" : "240px"}
+      href="https://docs.taraswap.org/"
+      backgroundColor={{
+        dark: "rgba(0, 195, 160, 0.08);",
+        light: "rgba(0, 195, 160, 0.06);",
+      }}
       isDarkMode={props.isDarkMode}
       textColor={primary}
       button={
-        <PillButton color={primary} label={t('landing.devDocs')} icon={<CodeBrackets size="24px" fill={primary} />} />
+        <PillButton
+          color={primary}
+          label={t("landing.devDocs")}
+          icon={<CodeBrackets size="24px" fill={primary} />}
+        />
       }
-      titleText={t('landing.buildNextGen')}
-      paddingRight={screenIsXLarge ? '16%' : '0%'}
+      titleText={t("landing.buildNextGen")}
+      paddingRight={screenIsXLarge ? "16%" : "0%"}
       alignTextToBottom
     >
       <Contents>
         <RiveComponent onMouseEnter={() => rive && rive.play()} />
       </Contents>
     </ValuePropCard>
-  )
+  );
 }

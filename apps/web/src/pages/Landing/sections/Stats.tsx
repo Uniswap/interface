@@ -194,7 +194,7 @@ export function Stats() {
           <H2>
             <Trans i18nKey="landing.trusted" />
           </H2>
-          <Cards inView={inView} />
+          {/* <Cards inView={inView} /> */}
           <Body1>
             <ProtocolDescription />
           </Body1>
