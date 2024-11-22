@@ -125,12 +125,12 @@ export function Footer() {
                 <StyledInternalLink to="/swap">
                   <Trans i18nKey="common.swap" />
                 </StyledInternalLink>
-                <StyledInternalLink to="/tokens/ethereum">
+                <StyledExternalLink href="https://info.taraswap.org/#/tokens">
                   <Trans i18nKey="common.tokens" />
-                </StyledInternalLink>
-                <StyledInternalLink to="/nfts">
+                </StyledExternalLink>
+                {/* <StyledInternalLink to="/nfts">
                   <Trans i18nKey="common.nfts" />
-                </StyledInternalLink>
+                </StyledInternalLink> */}
                 <StyledInternalLink to="/pool">
                   <Trans i18nKey="common.pool" />
                 </StyledInternalLink>
@@ -139,12 +139,12 @@ export function Footer() {
                 <Body1>
                   <Trans i18nKey="common.protocol" />
                 </Body1>
-                <StyledExternalLink href="https://uniswap.org/governance">
+                {/* <StyledExternalLink href="">
                   <Trans i18nKey="common.governance" />
                 </StyledExternalLink>
-                <StyledExternalLink href="https://uniswap.org/developers">
+                <StyledExternalLink href="">
                   <Trans i18nKey="common.developers" />
-                </StyledExternalLink>
+                </StyledExternalLink> */}
               </Box>
             </Box>
             <Box direction="row" gap="16px">
