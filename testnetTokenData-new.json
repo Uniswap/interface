@@ -1,72 +1,71 @@
 {
-  "tokens": [
-    {
-      "chainId": 842,
-      "address": "0xCd89dB7E3E32D8D273532814c9c94868db6A8642",
-      "name": "Wrapped TARA",
-      "symbol": "WTARA",
-      "decimals": 18,
-      "logoURI": "https://www.gitbook.com/cdn-cgi/image/width=36,dpr=2,height=36,fit=contain,format=auto/https%3A%2F%2F12145332-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-MJepYMaCjWn_0Y0r41o%252Ficon%252F7rN5klGlDZqon94iJduY%252F300x300%2520icon.png%3Falt%3Dmedia%26token%3De9c65cb1-cc4d-4a5e-b6e2-7ab2b2e59b43"
-    },
-    {
-      "chainId": 842,
-      "address": "0x30c708A962641B223b6b78237A402FAeD9860fc2",
-      "name": "USDT",
-      "symbol": "USDT",
-      "decimals": 6,
-      "logoURI": "https://www.creativefabrica.com/wp-content/uploads/2021/06/14/Cryptocurrency-Tether-Usdt-Logo-Graphics-13393983-1.jpg"
-    },
-    {
-      "chainId": 842,
-      "address": "0x705Ca5F051440EaC9956d9Aa89b07E5594d13Cb1",
-      "name": "T1",
-      "symbol": "T1",
-      "decimals": 18,
-      "logoURI": "https://example.com/path/to/logo.jpg"
-    },
-    {
-      "chainId": 842,
-      "address": "0xA024De1ca9dA426e4300e8e741c81ABf9E23eEB3",
-      "name": "T2",
-      "symbol": "T2",
-      "decimals": 18,
-      "logoURI": "https://example.com/path/to/logo.jpg"
-    },
-    {
-      "chainId": 842,
-      "address": "0x622622a6063A45B3DDEA4b3889d12B18E62cdfa6",
-      "name": "T3",
-      "symbol": "T3",
-      "decimals": 18,
-      "logoURI": "https://example.com/path/to/logo.jpg"
-    },
-    {
-      "chainId": 842,
-      "address": "0x5289040F08daD992FcE25fC3C3C6FC51B7E94932",
-      "name": "Tarapepe",
-      "symbol": "TPEPE",
-      "decimals": 18,
-      "logoURI": "https://m.media-amazon.com/images/I/41v09y9lP0L.jpg"
-    },
-    {
-      "chainId": 842,
-      "address": "0x1F15130f50b25De000182914E06b5839290eEaF9",
-      "name": "Lara Token",
-      "symbol": "LARA",
-      "decimals": 18,
-      "logoURI": "https://github.com/Lara-staking/visual-elements/blob/main/LARA_v4_1.jpg"
-    }
-  ],
   "taraxaTestnetTokenList": {
     "name": "Taraxa Testnet Token List",
-    "logoURI": "https://www.gitbook.com/cdn-cgi/image/width=36,dpr=2,height=36,fit=contain,format=auto/https%3A%2F%2F12145332-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-MJepYMaCjWn_0Y0r41o%252Ficon%252F7rN5klGlDZqon94iJduY%252F300x300%2520icon.png%3Falt%3Dmedia%26token%3De9c65cb1-cc4d-4a5e-b6e2-7ab2b2e59b43",
-    "keywords": ["BlockDAG", "layer1", "T-Graph", "AI", "infrastructure"],
-    "timestamp": "new Date().toISOString()",
-    "tokens": "chainData",
+    "logoURI": "https://github.com/taraswap/taraswap-interface/blob/main/packages/ui/src/assets/logos/png/taraxa-logo.png",
+    "keywords": ["BlockDAG", "layer1", "TGraph", "AI", "infrastructure"],
+    "timestamp": "2024-06-13T00:00:00.000Z",
+    "tokens": [
+      {
+        "chainId": 842,
+        "address": "0xCd89dB7E3E32D8D273532814c9c94868db6A8642",
+        "name": "Wrapped TARA",
+        "symbol": "WTARA",
+        "decimals": 18,
+        "logoURI": "https://www.gitbook.com/cdn-cgi/image/width=36,dpr=2,height=36,fit=contain,format=auto/https%3A%2F%2F12145332-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-MJepYMaCjWn_0Y0r41o%252Ficon%252F7rN5klGlDZqon94iJduY%252F300x300%2520icon.png%3Falt%3Dmedia%26token%3De9c65cb1-cc4d-4a5e-b6e2-7ab2b2e59b43"
+      },
+      {
+        "chainId": 842,
+        "address": "0x30c708A962641B223b6b78237A402FAeD9860fc2",
+        "name": "USDT",
+        "symbol": "USDT",
+        "decimals": 6,
+        "logoURI": "https://www.creativefabrica.com/wp-content/uploads/2021/06/14/Cryptocurrency-Tether-Usdt-Logo-Graphics-13393983-1.jpg"
+      },
+      {
+        "chainId": 842,
+        "address": "0x705Ca5F051440EaC9956d9Aa89b07E5594d13Cb1",
+        "name": "T1",
+        "symbol": "T1",
+        "decimals": 18,
+        "logoURI": "https://example.com/path/to/logo.jpg"
+      },
+      {
+        "chainId": 842,
+        "address": "0xA024De1ca9dA426e4300e8e741c81ABf9E23eEB3",
+        "name": "T2",
+        "symbol": "T2",
+        "decimals": 18,
+        "logoURI": "https://example.com/path/to/logo.jpg"
+      },
+      {
+        "chainId": 842,
+        "address": "0x622622a6063A45B3DDEA4b3889d12B18E62cdfa6",
+        "name": "T3",
+        "symbol": "T3",
+        "decimals": 18,
+        "logoURI": "https://example.com/path/to/logo.jpg"
+      },
+      {
+        "chainId": 842,
+        "address": "0x5289040F08daD992FcE25fC3C3C6FC51B7E94932",
+        "name": "Tarapepe",
+        "symbol": "TPEPE",
+        "decimals": 18,
+        "logoURI": "https://m.media-amazon.com/images/I/41v09y9lP0L.jpg"
+      },
+      {
+        "chainId": 842,
+        "address": "0x1F15130f50b25De000182914E06b5839290eEaF9",
+        "name": "Lara Token",
+        "symbol": "LARA",
+        "decimals": 18,
+        "logoURI": "https://github.com/Lara-staking/visual-elements/blob/main/LARA_v4_1.jpg"
+      }
+    ],
     "version": {
       "major": 1,
       "minor": 0,
-      "patch": 0
+      "patch": 1
     }
   }
 }
