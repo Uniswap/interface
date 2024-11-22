@@ -55,7 +55,9 @@ export default async function fetchTokenList(
     const url = urls[i];
     let response;
     try {
+      console.log("fetching url", url);
       response = await fetch(url, { credentials: "omit" });
+      console.log("list url response", response);
     } catch (error) {
       logger.debug(
         "fetchTokenList",

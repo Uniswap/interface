@@ -7,7 +7,7 @@ import { ExternalLink } from "theme/components";
 
 import Row from "components/Row";
 import { Body1, Box, H3 } from "../components/Generics";
-import { Discord, Github, Twitter } from "../components/Icons";
+import { Discord, Github, Telegram, Twitter } from "../components/Icons";
 import { Wiggle } from "../components/animations";
 
 const SocialIcon = styled(Wiggle)`
@@ -78,13 +78,18 @@ export function Socials({ iconSize }: { iconSize?: string }) {
         </StyledExternalLink>
       </SocialIcon>
       <SocialIcon $hoverColor="#20BAFF">
-        <StyledExternalLink href="https://twitter.com/Taraswap">
+        <StyledExternalLink href="https://x.com/Tara_swap">
           <Twitter size={iconSize} fill="inherit" />
         </StyledExternalLink>
       </SocialIcon>
       <SocialIcon $hoverColor="#5F51FF">
         <StyledExternalLink href="https://discord.com/invite/taraswap">
           <Discord size={iconSize} fill="inherit" />
+        </StyledExternalLink>
+      </SocialIcon>
+      <SocialIcon $hoverColor="#70BFFF">
+        <StyledExternalLink href="https://t.me/+0no-0eSp4M9jYTE0">
+          <Telegram size={iconSize} fill="inherit" />
         </StyledExternalLink>
       </SocialIcon>
     </Row>
@@ -150,10 +155,10 @@ export function Footer() {
                 {/* <StyledExternalLink href="https://boards.greenhouse.io/uniswaplabs">
                   <Trans i18nKey="common.careers" />
                 </StyledExternalLink> */}
-                <StyledExternalLink href="https://blog.uniswap.org/">
+                <StyledExternalLink href="https://blog.taraswap.org/">
                   <Trans i18nKey="common.blog" />
                 </StyledExternalLink>
-                <DownloadLink href="https://github.com/Uniswap/brand-assets/raw/main/Uniswap%20Brand%20Assets.zip">
+                <DownloadLink href="https://github.com/taraswap/brand-assets/raw/main/swap.zip">
                   <Trans i18nKey="common.brandAssets" />
                 </DownloadLink>
                 <ModalItem onClick={togglePrivacyPolicy}>
@@ -167,10 +172,10 @@ export function Footer() {
                 <Body1>
                   <Trans i18nKey="common.needHelp" />
                 </Body1>
-                <StyledExternalLink href="https://support.uniswap.org/hc/en-us/requests/new">
+                <StyledExternalLink href="https://t.me/+0no-0eSp4M9jYTE0">
                   <Trans i18nKey="common.contactUs.button" />
                 </StyledExternalLink>
-                <StyledExternalLink href="https://support.uniswap.org/hc/en-us">
+                <StyledExternalLink href="https://t.me/+0no-0eSp4M9jYTE0">
                   <Trans i18nKey="common.helpCenter" />
                 </StyledExternalLink>
               </Box>

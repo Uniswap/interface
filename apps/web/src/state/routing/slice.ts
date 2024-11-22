@@ -18,6 +18,7 @@ import {
   RouterPreference,
   RoutingConfig,
   TradeResult,
+  TradeState,
   URAQuoteResponse,
   URAQuoteType,
   UniswapXConfig,
@@ -183,9 +184,10 @@ export const routingApi = createApi({
                       url: `${baseURL}/quote`,
                       body: JSON.stringify(requestBody),
                       headers: {
-                        "x-request-source": "uniswap-web",
+                        "x-request-source": "taraswap-web",
                       },
                     });
+                    console.log("404 response:", response);
                     if (response.error) {
                       try {
                         // cast as any here because we do a runtime check on it being an object before indexing into .errorCode
@@ -225,7 +227,7 @@ export const routingApi = createApi({
                 );
               } else {
                 try {
-                  const taraxaRpcProvider = RPC_PROVIDERS[args.tokenInChainId];
+                  // const taraxaRpcProvider = RPC_PROVIDERS[args.tokenInChainId];
                   // console.log("taraxaRpcProvider", taraxaRpcProvider);
                   // const taraxaAlphaRouter = new AlphaRouter({
                   //   chainId: args.tokenInChainId,
@@ -271,9 +273,9 @@ export const routingApi = createApi({
 
                         return url;
                       };
-                      const taraxaurl = constructGetUrlForTaraxa(args);
-                      // console.log("Taraxa url: ", taraxaurl.toString());
-                      const returnData = await fetch(taraxaurl.toString());
+                      const taraxaUrl = constructGetUrlForTaraxa(args);
+                      const returnData = await fetch(taraxaUrl.toString());
+                      console.log("404 return data", returnData);
                       if (!returnData.error) {
                         const quoteResult: URAQuoteResponse = {
                           routing: URAQuoteType.CLASSIC,
@@ -285,10 +287,33 @@ export const routingApi = createApi({
                           quoteResult,
                           QuoteMethod.CLIENT_SIDE_FALLBACK
                         );
-                        // console.log("trade", trade);
                         return {
                           data: { ...trade, latencyMs: trace.now() },
                         };
+                      } else if (returnData.error.data) {
+                        const errorData = returnData.error.data as {
+                          errorCode?: string;
+                        };
+                        const errorCode: string = errorData.errorCode || "";
+                        if (errorCode === "NO_ROUTE") {
+                          clientTrace.setStatus("ok");
+                          trace.setStatus("ok");
+                          return {
+                            data: {
+                              state: QuoteState.NOT_FOUND,
+                              latencyMs: trace.now(),
+                            },
+                          };
+                        } else {
+                          clientTrace.setStatus("unknown_error");
+                          trace.setStatus("unknown_error");
+                          return {
+                            data: {
+                              ...(returnData as any),
+                              latencyMs: trace.now(),
+                            },
+                          };
+                        }
                       } else {
                         clientTrace.setStatus("unknown_error");
                         trace.setStatus("unknown_error");
