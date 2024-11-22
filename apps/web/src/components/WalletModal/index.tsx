@@ -1,19 +1,19 @@
-import IconButton from 'components/AccountDrawer/IconButton'
-import { useShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import Column from 'components/Column'
-import { Settings } from 'components/Icons/Settings'
-import Row, { AutoRow } from 'components/Row'
-import { useUniswapWalletOptions } from 'hooks/useUniswapWalletOptions'
-import { Trans } from 'i18n'
-import styled from 'styled-components'
-import { ThemedText } from 'theme/components'
-import { flexColumnNoWrap } from 'theme/styles'
-import { Text } from 'ui/src'
-import ConnectionErrorView from './ConnectionErrorView'
-import { Option } from './Option'
-import PrivacyPolicyNotice from './PrivacyPolicyNotice'
-import { UniswapWalletOptions } from './UniswapWalletOptions'
-import { useOrderedConnections } from './useOrderedConnections'
+import IconButton from "components/AccountDrawer/IconButton";
+import { useShowMoonpayText } from "components/AccountDrawer/MiniPortfolio/hooks";
+import Column from "components/Column";
+import { Settings } from "components/Icons/Settings";
+import Row, { AutoRow } from "components/Row";
+import { useUniswapWalletOptions } from "hooks/useUniswapWalletOptions";
+import { Trans } from "i18n";
+import styled from "styled-components";
+import { ThemedText } from "theme/components";
+import { flexColumnNoWrap } from "theme/styles";
+import { Text } from "ui/src";
+import ConnectionErrorView from "./ConnectionErrorView";
+import { Option } from "./Option";
+import PrivacyPolicyNotice from "./PrivacyPolicyNotice";
+import { UniswapWalletOptions } from "./UniswapWalletOptions";
+import { useOrderedConnections } from "./useOrderedConnections";
 
 const Wrapper = styled.div`
   ${flexColumnNoWrap};
@@ -22,7 +22,7 @@ const Wrapper = styled.div`
   padding: 14px 16px 16px;
   flex: 1;
   gap: 16px;
-`
+`;
 
 const OptionGrid = styled.div`
   display: grid;
@@ -33,30 +33,37 @@ const OptionGrid = styled.div`
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     grid-template-columns: 1fr;
   `};
-`
+`;
 
 const TextSectionWrapper = styled.div`
   padding: 0 4px;
-`
+`;
 
 const Line = styled.div`
   height: 1px;
   width: 100%;
   background: ${({ theme }) => theme.surface3};
-`
+`;
 
-export default function WalletModal({ openSettings }: { openSettings: () => void }) {
-  const showMoonpayText = useShowMoonpayText()
-  const showUniswapWalletOptions = useUniswapWalletOptions()
-  console.log("showUniswapWalletOptions", showUniswapWalletOptions);
-  const connectors = useOrderedConnections(showUniswapWalletOptions)
+export default function WalletModal({
+  openSettings,
+}: {
+  openSettings: () => void;
+}) {
+  const showMoonpayText = useShowMoonpayText();
+  const showUniswapWalletOptions = useUniswapWalletOptions();
+  const connectors = useOrderedConnections(showUniswapWalletOptions);
 
   return (
     <Wrapper data-testid="wallet-modal">
       <ConnectionErrorView />
       <AutoRow justify="space-between" width="100%">
         <ThemedText.SubHeader>Connect a wallet</ThemedText.SubHeader>
-        <IconButton Icon={Settings} onClick={openSettings} data-testid="wallet-settings" />
+        <IconButton
+          Icon={Settings}
+          onClick={openSettings}
+          data-testid="wallet-settings"
+        />
       </AutoRow>
       {showUniswapWalletOptions && (
         <>
@@ -95,5 +102,5 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
         </Column>
       </Column>
     </Wrapper>
-  )
+  );
 }

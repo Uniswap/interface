@@ -17,7 +17,7 @@ export const apolloClient = new ApolloClient({
   link: httpLink,
   headers: {
     "Content-Type": "application/json",
-    Origin: "https://app.taraswap.org",
+    Origin: "https://taraswap.org",
   },
   cache: new InMemoryCache({
     typePolicies: {

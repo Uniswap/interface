@@ -244,7 +244,7 @@ function Cards({ inView }: { inView: boolean }) {
         <StatCard
           title={t("stats.allTimeVolume")}
           value={formatNumber({
-            input: 2 * 10 ** 12,
+            input: 0,
             type: NumberType.FiatTokenStats,
           })}
           delay={0}
@@ -255,7 +255,7 @@ function Cards({ inView }: { inView: boolean }) {
         <StatCard
           title={t("stats.allTimeSwappers")}
           value={formatNumber({
-            input: 16.6 * 10 ** 6,
+            input: 0,
             type: NumberType.TokenQuantityStats,
           })}
           delay={0.2}
@@ -266,7 +266,7 @@ function Cards({ inView }: { inView: boolean }) {
         <StatCard
           title={t("stats.allTimeFees")}
           value={formatNumber({
-            input: 3.4 * 10 ** 9,
+            input: 0,
             type: NumberType.FiatTokenStats,
           })}
           delay={0.4}
@@ -277,7 +277,7 @@ function Cards({ inView }: { inView: boolean }) {
         <StatCard
           title={t("stats.24volume")}
           value={formatNumber({
-            input: totalVolume || 500000000,
+            input: 0,
             type: NumberType.FiatTokenStats,
           })}
           live

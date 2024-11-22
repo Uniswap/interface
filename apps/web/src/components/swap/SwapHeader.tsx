@@ -98,10 +98,10 @@ export default function SwapHeader({
             <Trans i18nKey="common.send.button" />
           </SwapHeaderTabButton>
         )}
-        <SwapBuyFiatButton
+        {/* <SwapBuyFiatButton
           triggerBuyFlow={triggerBuyFlow}
           setTriggerBuyFlow={setTriggerBuyFlow}
-        />
+        /> */}
       </HeaderButtonContainer>
       {currentTab === SwapTab.Swap && (
         <RowFixed>

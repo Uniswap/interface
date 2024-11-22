@@ -1,46 +1,71 @@
-import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { CurrencyAmount, Token } from '@taraswap/sdk-core'
-import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
-import Column from 'components/Column'
-import { CreditCardIcon } from 'components/Icons/CreditCard'
-import { ImagesIcon } from 'components/Icons/Images'
-import { Power } from 'components/Icons/Power'
-import { Settings } from 'components/Icons/Settings'
-import Row, { AutoRow } from 'components/Row'
-import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
-import { LoadingBubble } from 'components/Tokens/loading'
-import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
-import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
-import useENSName from 'hooks/useENSName'
-import { Trans, t } from 'i18n'
-import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
-import { ProfilePageStateType } from 'nft/types'
-import { useCallback, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
-import { ThemedText } from 'theme/components'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import { isPathBlocked } from 'utils/blockedPaths'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { useDisconnect } from 'wagmi'
-import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal } from '../../state/application/hooks'
-import { ApplicationModal } from '../../state/application/reducer'
-import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
-import { ActionTile } from './ActionTile'
-import IconButton, { IconHoverText, IconWithConfirmTextButton } from './IconButton'
-import MiniPortfolio from './MiniPortfolio'
-import { portfolioFadeInAnimation } from './MiniPortfolio/PortfolioRow'
-import { useAccountDrawer } from './MiniPortfolio/hooks'
-import { Status } from './Status'
+import {
+  InterfaceElementName,
+  InterfaceEventName,
+} from "@uniswap/analytics-events";
+import { CurrencyAmount, Token } from "@taraswap/sdk-core";
+import { ButtonEmphasis, ButtonSize, ThemeButton } from "components/Button";
+import Column from "components/Column";
+import { CreditCardIcon } from "components/Icons/CreditCard";
+import { ImagesIcon } from "components/Icons/Images";
+import { Power } from "components/Icons/Power";
+import { Settings } from "components/Icons/Settings";
+import Row, { AutoRow } from "components/Row";
+import { DeltaArrow } from "components/Tokens/TokenDetails/Delta";
+import { LoadingBubble } from "components/Tokens/loading";
+import { useTokenBalancesQuery } from "graphql/data/apollo/TokenBalancesProvider";
+import { useDisableNFTRoutes } from "hooks/useDisableNFTRoutes";
+import useENSName from "hooks/useENSName";
+import { Trans, t } from "i18n";
+import {
+  useProfilePageState,
+  useSellAsset,
+  useWalletCollections,
+} from "nft/hooks";
+import { ProfilePageStateType } from "nft/types";
+import { useCallback, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { ThemedText } from "theme/components";
+import Trace from "uniswap/src/features/telemetry/Trace";
+import { sendAnalyticsEvent } from "uniswap/src/features/telemetry/send";
+import { useUnitagByAddress } from "uniswap/src/features/unitags/hooks";
+import { isPathBlocked } from "utils/blockedPaths";
+import { NumberType, useFormatter } from "utils/formatNumbers";
+import { useAccount, useDisconnect } from "wagmi";
+import {
+  useCloseModal,
+  useFiatOnrampAvailability,
+  useOpenModal,
+  useToggleModal,
+} from "../../state/application/hooks";
+import { ApplicationModal } from "../../state/application/reducer";
+import {
+  useUserHasAvailableClaim,
+  useUserUnclaimedAmount,
+} from "../../state/claim/hooks";
+import { ActionTile } from "./ActionTile";
+import IconButton, {
+  IconHoverText,
+  IconWithConfirmTextButton,
+} from "./IconButton";
+import MiniPortfolio from "./MiniPortfolio";
+import PortfolioRow, {
+  portfolioFadeInAnimation,
+} from "./MiniPortfolio/PortfolioRow";
+import { useAccountDrawer } from "./MiniPortfolio/hooks";
+import { Status } from "./Status";
+import useGetPortfolio from "./MiniPortfolio/Tokens/useGetPortfolio";
+import { formatEther } from "viem";
+import { PortfolioLogo } from "./MiniPortfolio/PortfolioLogo";
+import { nativeOnChain } from "constants/tokens";
+import { TokenBalanceText, TokenNameText } from "./MiniPortfolio/Tokens";
 
 const AuthenticatedHeaderWrapper = styled.div`
   padding: 20px 16px;
   display: flex;
   flex-direction: column;
   flex: 1;
-`
+`;
 
 const WalletButton = styled(ThemeButton)`
   border-radius: 12px;
@@ -49,7 +74,7 @@ const WalletButton = styled(ThemeButton)`
   margin-top: 4px;
   color: white;
   border: none;
-`
+`;
 
 const UNIButton = styled(WalletButton)`
   border-radius: 12px;
@@ -59,7 +84,7 @@ const UNIButton = styled(WalletButton)`
   color: white;
   border: none;
   background: linear-gradient(to right, #9139b0 0%, #4261d6 100%);
-`
+`;
 
 const IconContainer = styled.div`
   display: flex;
@@ -76,91 +101,126 @@ const IconContainer = styled.div`
       left: 0px;
     }
   }
-`
+`;
 
 const HeaderWrapper = styled.div`
   margin-bottom: 20px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-`
+`;
 
 const FadeInColumn = styled(Column)`
   ${portfolioFadeInAnimation}
-`
+`;
 
 const PortfolioDrawerContainer = styled(Column)`
   flex: 1;
-`
+`;
 
-export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
-  const { disconnect } = useDisconnect()
-  const { ENSName } = useENSName(account)
-  const navigate = useNavigate()
-  const closeModal = useCloseModal()
-  const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
-  const resetSellAssets = useSellAsset((state) => state.reset)
-  const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
-  const shouldShowBuyFiatButton = !isPathBlocked('/buy')
-  const { formatNumber, formatDelta } = useFormatter()
+export default function AuthenticatedHeader({
+  account,
+  openSettings,
+}: {
+  account: string;
+  openSettings: () => void;
+}) {
+  const { disconnect } = useDisconnect();
+  const { ENSName } = useENSName(account);
+  const { chainId } = useAccount();
+  const navigate = useNavigate();
+  const closeModal = useCloseModal();
+  const setSellPageState = useProfilePageState(
+    (state) => state.setProfilePageState
+  );
+  const resetSellAssets = useSellAsset((state) => state.reset);
+  const clearCollectionFilters = useWalletCollections(
+    (state) => state.clearCollectionFilters
+  );
+  const shouldShowBuyFiatButton = !isPathBlocked("/buy") || chainId === 841;
+  const { formatNumber, formatDelta } = useFormatter();
 
-  const shouldDisableNFTRoutes = useDisableNFTRoutes()
+  const shouldDisableNFTRoutes = useDisableNFTRoutes();
 
-  const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
-  const isUnclaimed = useUserHasAvailableClaim(account)
-  const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
+  const unclaimedAmount: CurrencyAmount<Token> | undefined =
+    useUserUnclaimedAmount(account);
+  const isUnclaimed = useUserHasAvailableClaim(account);
+  const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM);
 
-  const accountDrawer = useAccountDrawer()
+  const accountDrawer = useAccountDrawer();
 
   const navigateToProfile = useCallback(() => {
-    accountDrawer.close()
-    resetSellAssets()
-    setSellPageState(ProfilePageStateType.VIEWING)
-    clearCollectionFilters()
-    navigate('/nfts/profile')
-    closeModal()
-  }, [clearCollectionFilters, closeModal, navigate, resetSellAssets, setSellPageState, accountDrawer])
+    accountDrawer.close();
+    resetSellAssets();
+    setSellPageState(ProfilePageStateType.VIEWING);
+    clearCollectionFilters();
+    navigate("/nfts/profile");
+    closeModal();
+  }, [
+    clearCollectionFilters,
+    closeModal,
+    navigate,
+    resetSellAssets,
+    setSellPageState,
+    accountDrawer,
+  ]);
 
-  const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
+  const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP);
   const openFoRModalWithAnalytics = useCallback(() => {
-    accountDrawer.close()
-    sendAnalyticsEvent(InterfaceEventName.FIAT_ONRAMP_WIDGET_OPENED)
-    openFiatOnrampModal()
-  }, [openFiatOnrampModal, accountDrawer])
+    accountDrawer.close();
+    sendAnalyticsEvent(InterfaceEventName.FIAT_ONRAMP_WIDGET_OPENED);
+    openFiatOnrampModal();
+  }, [openFiatOnrampModal, accountDrawer]);
 
-  const [shouldCheck, setShouldCheck] = useState(false)
+  const [shouldCheck, setShouldCheck] = useState(false);
   const {
     available: fiatOnrampAvailable,
     availabilityChecked: fiatOnrampAvailabilityChecked,
     error,
     loading: fiatOnrampAvailabilityLoading,
-  } = useFiatOnrampAvailability(shouldCheck, openFoRModalWithAnalytics)
+  } = useFiatOnrampAvailability(shouldCheck, openFoRModalWithAnalytics);
 
   const handleBuyCryptoClick = useCallback(() => {
     if (!fiatOnrampAvailabilityChecked) {
-      setShouldCheck(true)
+      setShouldCheck(true);
     } else if (fiatOnrampAvailable) {
-      openFoRModalWithAnalytics()
+      openFoRModalWithAnalytics();
     }
-  }, [fiatOnrampAvailabilityChecked, fiatOnrampAvailable, openFoRModalWithAnalytics])
+  }, [
+    fiatOnrampAvailabilityChecked,
+    fiatOnrampAvailable,
+    openFoRModalWithAnalytics,
+  ]);
   const disableBuyCryptoButton = Boolean(
-    error || (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) || fiatOnrampAvailabilityLoading
-  )
+    error ||
+      (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) ||
+      fiatOnrampAvailabilityLoading
+  );
 
-  const { data: portfolioBalances } = useTokenBalancesQuery({ cacheOnly: !accountDrawer.isOpen })
-  const portfolio = portfolioBalances?.portfolios?.[0]
-  const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
-  const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
-  const percentChange = portfolio?.tokensTotalDenominatedValueChange?.percentage?.value
-  const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false)
+  const { data: portfolioBalances } = useTokenBalancesQuery({
+    cacheOnly: !accountDrawer.isOpen,
+  });
+  const portfolio = portfolioBalances?.portfolios?.[0];
+  const totalBalance = portfolio?.tokensTotalDenominatedValue?.value;
+  const absoluteChange =
+    portfolio?.tokensTotalDenominatedValueChange?.absolute?.value;
+  const percentChange =
+    portfolio?.tokensTotalDenominatedValueChange?.percentage?.value;
+  const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false);
 
-  const { unitag } = useUnitagByAddress(account)
-  const amount = unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')
+  const { unitag } = useUnitagByAddress(account);
 
+  const { nativeBalance } = useGetPortfolio(undefined, account);
+  const amount = unclaimedAmount?.toFixed(0, { groupSeparator: "," } ?? "-");
+  const nativeCurrency = nativeOnChain(chainId ?? 841);
   return (
     <AuthenticatedHeaderWrapper>
       <HeaderWrapper>
-        <Status account={account} ensUsername={ENSName} uniswapUsername={unitag?.username} />
+        <Status
+          account={account}
+          ensUsername={ENSName}
+          uniswapUsername={unitag?.username}
+        />
         <IconContainer>
           <IconButton
             hideHorizontal={showDisconnectConfirm}
@@ -168,7 +228,10 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             onClick={openSettings}
             Icon={Settings}
           />
-          <Trace logPress element={InterfaceElementName.DISCONNECT_WALLET_BUTTON}>
+          <Trace
+            logPress
+            element={InterfaceElementName.DISCONNECT_WALLET_BUTTON}
+          >
             <IconWithConfirmTextButton
               data-testid="wallet-disconnect"
               onConfirm={disconnect}
@@ -181,27 +244,31 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
         </IconContainer>
       </HeaderWrapper>
       <PortfolioDrawerContainer>
-        {totalBalance !== undefined ? (
+        {nativeBalance.coin_balance !== undefined ? (
           <FadeInColumn gap="xs">
-            <ThemedText.HeadlineLarge fontWeight={535} data-testid="portfolio-total-balance">
-              {formatNumber({
-                input: totalBalance,
-                type: NumberType.PortfolioBalance,
-              })}
+            <ThemedText.HeadlineLarge
+              fontWeight={535}
+              data-testid="portfolio-total-balance"
+            >
+              <PortfolioRow
+                left={
+                  <PortfolioLogo
+                    chainId={nativeCurrency.chainId}
+                    currencies={[nativeCurrency]}
+                    size={40}
+                  />
+                }
+                title={<TokenNameText>{nativeCurrency.name}</TokenNameText>}
+                descriptor={
+                  <TokenBalanceText style={{ fontWeight: 535 }}>
+                    {Number(
+                      formatEther(BigInt(nativeBalance.coin_balance))
+                    ).toFixed(6)}{" "}
+                  </TokenBalanceText>
+                }
+                right={<></>}
+              />
             </ThemedText.HeadlineLarge>
-            <AutoRow marginBottom="20px">
-              {absoluteChange !== 0 && percentChange && (
-                <>
-                  <DeltaArrow delta={absoluteChange} />
-                  <ThemedText.BodySecondary>
-                    {`${formatNumber({
-                      input: Math.abs(absoluteChange as number),
-                      type: NumberType.PortfolioBalance,
-                    })} (${formatDelta(percentChange)})`}
-                  </ThemedText.BodySecondary>
-                </>
-              )}
-            </AutoRow>
           </FadeInColumn>
         ) : (
           <Column gap="xs">
@@ -209,36 +276,52 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             <LoadingBubble height="16px" width="100px" margin="4px 0 20px 0" />
           </Column>
         )}
-        <Row gap="8px" marginBottom={!fiatOnrampAvailable && fiatOnrampAvailabilityChecked ? '20px' : '0px'}>
+        {/* <Row
+          gap="8px"
+          marginBottom={
+            !fiatOnrampAvailable && fiatOnrampAvailabilityChecked
+              ? "20px"
+              : "0px"
+          }
+        >
           {shouldShowBuyFiatButton && (
             <ActionTile
               dataTestId="wallet-buy-crypto"
               Icon={<CreditCardIcon />}
-              name={t('common.buy.label')}
+              name={t("common.buy.label")}
               onClick={handleBuyCryptoClick}
               disabled={disableBuyCryptoButton}
               loading={fiatOnrampAvailabilityLoading}
-              error={Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked)}
-              errorMessage={t('common.restricted.region')}
-              errorTooltip={t('moonpay.restricted.region')}
+              error={Boolean(
+                !fiatOnrampAvailable && fiatOnrampAvailabilityChecked
+              )}
+              errorMessage={t("common.restricted.region")}
+              errorTooltip={t("moonpay.restricted.region")}
             />
           )}
           {!shouldDisableNFTRoutes && (
             <ActionTile
               dataTestId="nft-view-self-nfts"
               Icon={<ImagesIcon />}
-              name={t('nft.view')}
+              name={t("nft.view")}
               onClick={navigateToProfile}
             />
           )}
-        </Row>
+        </Row> */}
         <MiniPortfolio account={account} />
-        {isUnclaimed && (
-          <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
-            <Trans i18nKey="account.authHeader.claimReward" values={{ amount }} />
+        {/* {isUnclaimed && (
+          <UNIButton
+            onClick={openClaimModal}
+            size={ButtonSize.medium}
+            emphasis={ButtonEmphasis.medium}
+          >
+            <Trans
+              i18nKey="account.authHeader.claimReward"
+              values={{ amount }}
+            />
           </UNIButton>
-        )}
+        )} */}
       </PortfolioDrawerContainer>
     </AuthenticatedHeaderWrapper>
-  )
+  );
 }

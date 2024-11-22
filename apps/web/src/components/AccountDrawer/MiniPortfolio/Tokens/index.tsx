@@ -1,104 +1,143 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
-import { hideSpamAtom } from 'components/AccountDrawer/SpamToggle'
-import Row from 'components/Row'
-import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
-import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
-import { PortfolioToken } from 'graphql/data/portfolios'
-import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
-import { useAtomValue } from 'jotai/utils'
-import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
-import { useCallback, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
-import { EllipsisStyle, ThemedText } from 'theme/components'
-import { PortfolioTokenBalancePartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { logger } from 'utilities/src/logger/logger'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { splitHiddenTokens } from 'utils/splitHiddenTokens'
-import { hideSmallBalancesAtom } from '../../SmallBalanceToggle'
-import { ExpandoRow } from '../ExpandoRow'
-import { PortfolioLogo } from '../PortfolioLogo'
-import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
-import { useAccountDrawer } from '../hooks'
+import { InterfaceElementName } from "@uniswap/analytics-events";
+import { hideSpamAtom } from "components/AccountDrawer/SpamToggle";
+import Row from "components/Row";
+import { DeltaArrow } from "components/Tokens/TokenDetails/Delta";
+import { useTokenBalancesQuery } from "graphql/data/apollo/TokenBalancesProvider";
+import { PortfolioToken } from "graphql/data/portfolios";
+import { getTokenDetailsURL, gqlToCurrency } from "graphql/data/util";
+import { useAtomValue } from "jotai/utils";
+import { EmptyWalletModule } from "nft/components/profile/view/EmptyWalletContent";
+import { useCallback, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { EllipsisStyle, ThemedText } from "theme/components";
+import {
+  Chain,
+  PortfolioTokenBalancePartsFragment,
+} from "uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks";
+import Trace from "uniswap/src/features/telemetry/Trace";
+import { logger } from "utilities/src/logger/logger";
+import { NumberType, useFormatter } from "utils/formatNumbers";
+import { hideSmallBalancesAtom } from "../../SmallBalanceToggle";
+import { ExpandoRow } from "../ExpandoRow";
+import { PortfolioLogo } from "../PortfolioLogo";
+import PortfolioRow, {
+  PortfolioSkeleton,
+  PortfolioTabWrapper,
+} from "../PortfolioRow";
+import { useAccountDrawer } from "../hooks";
+import useGetPortfolio, {
+  addNativeTokenToArrayStart,
+  splitHiddenTokens,
+  TokenData,
+  tokenToCurrency,
+} from "./useGetPortfolio";
+import { useAccount } from "wagmi";
+import { formatEther } from "viem";
 
 export default function Tokens() {
-  const accountDrawer = useAccountDrawer()
-  const hideSmallBalances = useAtomValue(hideSmallBalancesAtom)
-  const hideSpam = useAtomValue(hideSpamAtom)
-  const [showHiddenTokens, setShowHiddenTokens] = useState(false)
+  const account = useAccount();
+  const accountDrawer = useAccountDrawer();
+  const hideSmallBalances = useAtomValue(hideSmallBalancesAtom);
+  const [showHiddenTokens, setShowHiddenTokens] = useState(false);
+  const { tokens, error } = useGetPortfolio(undefined, account.address);
 
-  const { data } = useTokenBalancesQuery({ cacheOnly: !accountDrawer.isOpen })
+  const { visibleTokens, hiddenTokens } = useMemo(() => {
+    return splitHiddenTokens(tokens, hideSmallBalances);
+  }, [hideSmallBalances, tokens]);
 
-  const tokenBalances = data?.portfolios?.[0]?.tokenBalances
-
-  const { visibleTokens, hiddenTokens } = useMemo(
-    () => splitHiddenTokens(tokenBalances ?? [], { hideSmallBalances, hideSpam }),
-    [hideSmallBalances, tokenBalances, hideSpam]
-  )
-
-  if (!data) {
-    return <PortfolioSkeleton />
+  if (!tokens || error) {
+    return <PortfolioSkeleton />;
   }
 
-  if (tokenBalances?.length === 0) {
+  if (tokens?.length === 0) {
     // TODO: consider launching moonpay here instead of just closing the drawer
-    return <EmptyWalletModule type="token" onNavigateClick={accountDrawer.close} />
+    return (
+      <EmptyWalletModule type="token" onNavigateClick={accountDrawer.close} />
+    );
   }
 
-  const toggleHiddenTokens = () => setShowHiddenTokens((showHiddenTokens) => !showHiddenTokens)
+  const toggleHiddenTokens = () =>
+    setShowHiddenTokens((showHiddenTokens) => !showHiddenTokens);
 
   return (
     <PortfolioTabWrapper>
       {visibleTokens.map(
         (tokenBalance) =>
-          tokenBalance.token && <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
+          tokenBalance.token && (
+            <TokenRow
+              key={tokenBalance.token.name}
+              {...tokenBalance}
+              token={tokenBalance}
+              inputAddress={account.address || ""}
+            />
+          )
       )}
-      <ExpandoRow isExpanded={showHiddenTokens} toggle={toggleHiddenTokens} numItems={hiddenTokens.length}>
+      <ExpandoRow
+        isExpanded={showHiddenTokens}
+        toggle={toggleHiddenTokens}
+        numItems={hiddenTokens.length}
+      >
         {hiddenTokens.map(
           (tokenBalance) =>
-            tokenBalance.token && <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
+            tokenBalance.token && (
+              <TokenRow
+                key={tokenBalance.token.name}
+                {...tokenBalance}
+                token={tokenBalance}
+                inputAddress={account.address || ""}
+              />
+            )
         )}
       </ExpandoRow>
     </PortfolioTabWrapper>
-  )
+  );
 }
 
-const TokenBalanceText = styled(ThemedText.BodySecondary)`
+export const TokenBalanceText = styled(ThemedText.BodySecondary)`
   ${EllipsisStyle}
-`
-const TokenNameText = styled(ThemedText.SubHeader)`
+`;
+export const TokenNameText = styled(ThemedText.SubHeader)`
   ${EllipsisStyle}
-`
+`;
 
 function TokenRow({
   token,
-  quantity,
-  denominatedValue,
-  tokenProjectMarket,
-}: PortfolioTokenBalancePartsFragment & { token: PortfolioToken }) {
-  const { formatDelta } = useFormatter()
-  const percentChange = tokenProjectMarket?.pricePercentChange?.value ?? 0
-
-  const navigate = useNavigate()
-  const accountDrawer = useAccountDrawer()
+  inputAddress,
+}: {
+  token: TokenData;
+  inputAddress: string;
+}) {
+  const navigate = useNavigate();
+  const accountDrawer = useAccountDrawer();
 
   const navigateToTokenDetails = useCallback(async () => {
-    navigate(getTokenDetailsURL({ ...token }))
-    accountDrawer.close()
-  }, [navigate, token, accountDrawer])
-  const { formatNumber } = useFormatter()
+    navigate(
+      getTokenDetailsURL({
+        address: token.token.address,
+        chain: Chain.Taraxa,
+        inputAddress,
+      })
+    );
+    accountDrawer.close();
+  }, [navigate, token, accountDrawer]);
 
-  const currency = gqlToCurrency(token)
+  const currency = tokenToCurrency(token);
+  console.log("currency", currency);
   if (!currency) {
-    logger.error(new Error('Token from unsupported chain received from Mini Portfolio Token Balance Query'), {
-      tags: {
-        file: 'RecentlySearchedAssets',
-        function: 'useRecentlySearchedAssets',
-      },
-      extra: { token },
-    })
-    return null
+    logger.error(
+      new Error(
+        "Token from unsupported chain received from Mini Portfolio Token Balance Query"
+      ),
+      {
+        tags: {
+          file: "RecentlySearchedAssets",
+          function: "useRecentlySearchedAssets",
+        },
+        extra: { token },
+      }
+    );
+    return null;
   }
   return (
     <Trace
@@ -106,40 +145,42 @@ function TokenRow({
       element={InterfaceElementName.MINI_PORTFOLIO_TOKEN_ROW}
       properties={{
         chain_id: currency.chainId,
-        token_name: token?.project?.name ?? token?.name,
-        address: token?.address,
+        token_name: token.token.name,
+        address: token.token.address,
       }}
     >
       <PortfolioRow
-        left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size={40} />}
-        title={<TokenNameText>{token?.project?.name ?? token?.name}</TokenNameText>}
+        left={
+          <PortfolioLogo
+            chainId={currency.chainId}
+            currencies={[currency]}
+            size={40}
+          />
+        }
+        title={<TokenNameText>{token.token.name}</TokenNameText>}
         descriptor={
           <TokenBalanceText>
-            {formatNumber({
-              input: quantity,
-              type: NumberType.TokenNonTx,
-            })}{' '}
-            {token?.symbol}
+            {Number(formatEther(BigInt(token.value))).toFixed(6)}{" "}
+            {token.token.symbol}
           </TokenBalanceText>
         }
         onClick={navigateToTokenDetails}
         right={
-          denominatedValue && (
+          token.value && (
             <>
               <ThemedText.SubHeader>
-                {formatNumber({
-                  input: denominatedValue?.value,
-                  type: NumberType.PortfolioBalance,
-                })}
+                {Number(formatEther(BigInt(token.value))).toFixed(6)}
               </ThemedText.SubHeader>
-              <Row justify="flex-end">
+              {/* <Row justify="flex-end">
                 <DeltaArrow delta={percentChange} />
-                <ThemedText.BodySecondary>{formatDelta(percentChange)}</ThemedText.BodySecondary>
-              </Row>
+                <ThemedText.BodySecondary>
+                  {formatDelta(percentChange)}
+                </ThemedText.BodySecondary>
+              </Row> */}
             </>
           )
         }
       />
     </Trace>
-  )
+  );
 }
