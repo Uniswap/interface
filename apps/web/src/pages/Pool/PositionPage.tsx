@@ -31,6 +31,7 @@ import { Dots } from "components/swap/styled";
 import {
   SupportedInterfaceChainId,
   chainIdToBackendChain,
+  useChainFromUrlParam,
   useIsSupportedChainId,
   useSupportedChainId,
 } from "constants/chains";
@@ -60,7 +61,7 @@ import {
   useState,
 } from "react";
 import { Helmet } from "react-helmet-async/lib/index";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { Bound } from "state/mint/v3/actions";
 import {
   useIsTransactionPending,
@@ -93,6 +94,10 @@ import { TransactionType } from "../../state/transactions/types";
 import { calculateGasMargin } from "../../utils/calculateGasMargin";
 import { ExplorerDataType, getExplorerLink } from "../../utils/getExplorerLink";
 import { LoadingRows } from "./styled";
+import { STAKER_ADDRESS, useV3StakerContract } from "hooks/useV3StakerContract";
+import usePosition from "hooks/usePosition";
+import useTokenPosition from "hooks/useTokenPosition";
+import { formatEther } from "ethers/lib/utils";
 
 const PositionPageButtonPrimary = styled(ButtonPrimary)`
   width: 228px;
@@ -227,67 +232,121 @@ const PairHeader = styled(ThemedText.H1Medium)`
   margin-right: 10px;
 `;
 
-function UserDetailsCard() {
+function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
   const account = useAccount();
-  console.log("🚀 ~ UserDetailsCard ~ account:", account);
   const [userDetails, setUserDetails] = useState({
-    totalDeposit: 0,
-    pendingRewards: 0,
+    hasDeposited: false,
+    hasStaked: false,
+    pendingRewards: BigNumber.from(0),
   });
 
-  const formatNumber = (number: number): string => {
-    return new Intl.NumberFormat(navigator.language, {
-      style: "decimal",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(number);
-  };
-  const formattedTotalDeposit = useMemo(
-    () => formatNumber(userDetails.totalDeposit),
-    [userDetails.totalDeposit]
-  );
+  const [isApproved, setIsApproved] = useState(false);
+  const [refetch, setRefetch] = useState(1);
+
   const formattedPendingRewards = useMemo(
-    () => formatNumber(userDetails.pendingRewards),
+    () => formatEther(userDetails.pendingRewards),
     [userDetails.pendingRewards]
   );
 
+  const {
+    incentive,
+    getRewardInfo,
+    approve,
+    transfer,
+    withdrawPosition,
+    stakePosition,
+    unstakePosition,
+    claim,
+    isDeposited,
+    isApprovedForTransfer,
+    isFetchingRewardInfo,
+    isApproving,
+    isTransferring,
+    isStaking,
+    isUnstaking,
+    isClaiming,
+    isWithdrawing,
+  } = usePosition(props.tokenId, props.incentiveId);
+
+  const { getDepositData, isLoading: isLoadingDepositData } = useTokenPosition(
+    props.tokenId
+  );
+
   const fetchDepositAndRewards = async () => {
-    const totalDeposit = 1123;
-    const pendingRewards = 54132;
-    return { totalDeposit, pendingRewards };
+    const depositData = await getDepositData();
+    const hasDeposited = await isDeposited();
+    const rewardInfo = await getRewardInfo();
+    console.log("~ rewardInfo: ", rewardInfo);
+    const pendingRewards = rewardInfo?.reward ?? BigNumber.from(0);
+    const hasStaked = (depositData?.numberOfStakes ?? 0) > 0;
+    console.log("$ pendingreward: ", pendingRewards, rewardInfo?.reward);
+    return { hasDeposited, pendingRewards, hasStaked };
   };
 
   useEffect(() => {
+    isApprovedForTransfer().then((isApproved) => {
+      setIsApproved(isApproved);
+    });
+  }, [isApprovedForTransfer]);
+
+  useEffect(() => {
     fetchDepositAndRewards().then((data) => {
-      console.log(data);
       if (data) {
+        console.log("~ data rewards: ", data);
         setUserDetails(data);
       }
     });
-  }, []);
+  }, [refetch, incentive]);
 
-  const deposit = () => {
-    console.log("deposit");
-  };
+  const approveAndTransfer = useCallback(async () => {
+    if (isApproved) {
+      transfer(() => {
+        setRefetch((prev) => prev + 1);
+      });
+    } else {
+      await approve(() => {
+        setIsApproved(true);
+        transfer(() => {
+          setRefetch((prev) => prev + 1);
+        });
+      });
+    }
+  }, [approve, transfer, refetch, isApproved]);
 
-  const stake = () => {
-    console.log("stake");
-  };
+  const withdraw = useCallback(async () => {
+    await withdrawPosition(() => {
+      setRefetch((prev) => prev + 1);
+    });
+  }, [withdrawPosition, refetch]);
 
-  const unstake = () => {
-    console.log("unstake");
-  };
+  const unstake = useCallback(async () => {
+    await unstakePosition(() => {
+      setRefetch((prev) => prev + 1);
+    });
+  }, [unstakePosition, refetch]);
 
-  return (
+  const claimReward = useCallback(async () => {
+    await claim(() => {
+      setRefetch((prev) => prev + 1);
+    });
+  }, [claim, refetch]);
+
+  const stake = useCallback(async () => {
+    await stakePosition(() => {
+      setRefetch((prev) => prev + 1);
+    });
+  }, [stakePosition, refetch]);
+
+  return props.incentiveId ? (
     <AutoColumn gap="md" justify="center">
       <RowBetween gap="md">
         <LightCard padding="12px" width="100%">
           <AutoColumn gap="md" justify="center">
             <ExtentsText>
-              <Trans i18nKey="common.incentives.total.deposits" />
+              <Trans i18nKey="common.incentives.hasDeposited" />
             </ExtentsText>
             <ThemedText.DeprecatedMediumHeader textAlign="center">
-              {formattedTotalDeposit}
+              {userDetails.hasDeposited ? "Yes" : "No"}
             </ThemedText.DeprecatedMediumHeader>
           </AutoColumn>
         </LightCard>
@@ -297,18 +356,178 @@ function UserDetailsCard() {
               <Trans i18nKey="common.incentives.pending.reward" />
             </ExtentsText>
             <ThemedText.DeprecatedMediumHeader textAlign="center">
-              {formattedPendingRewards}
+              {formattedPendingRewards} {incentive?.rewardToken.symbol}
             </ThemedText.DeprecatedMediumHeader>
           </AutoColumn>
         </LightCard>
       </RowBetween>
       <LightCard padding="12px" width="100%">
         <AutoColumn gap="md" justify="center">
-          <ButtonPrimary onClick={deposit}>Deposit</ButtonPrimary>
-          <ButtonPrimary onClick={stake}>Stake</ButtonPrimary>
+          <ExtentsText>
+            <Trans i18nKey="common.incentives.lp.deposit" />
+          </ExtentsText>
+          <ButtonPrimary
+            onClick={approveAndTransfer}
+            disabled={userDetails.hasDeposited}
+          >
+            {isApproving || isTransferring ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                viewBox="0 0 24 24"
+                style={{ marginRight: "8px" }}
+              >
+                <path
+                  fill="currentColor"
+                  d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+                >
+                  <animateTransform
+                    attributeName="transform"
+                    dur="0.75s"
+                    repeatCount="indefinite"
+                    type="rotate"
+                    values="0 12 12;360 12 12"
+                  />
+                </path>
+              </svg>
+            ) : (
+              "Approve and Deposit LP Token"
+            )}
+          </ButtonPrimary>
+          <ButtonPrimary
+            onClick={withdraw}
+            disabled={!userDetails.hasDeposited}
+          >
+            {isWithdrawing ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="1em"
+                height="1em"
+                viewBox="0 0 24 24"
+                style={{ marginRight: "8px" }}
+              >
+                <path
+                  fill="currentColor"
+                  d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+                >
+                  <animateTransform
+                    attributeName="transform"
+                    dur="0.75s"
+                    repeatCount="indefinite"
+                    type="rotate"
+                    values="0 12 12;360 12 12"
+                  />
+                </path>
+              </svg>
+            ) : (
+              "Withdraw LP Token"
+            )}
+          </ButtonPrimary>
+        </AutoColumn>
+      </LightCard>
+      <LightCard padding="12px" width="100%">
+        <AutoColumn gap="md" justify="center">
+          {userDetails.hasDeposited ? (
+            <>
+              <ExtentsText>
+                <Trans i18nKey="common.incentives.lp.stake" />
+              </ExtentsText>
+              <ButtonPrimary onClick={stake} disabled={userDetails.hasStaked}>
+                {isStaking ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 24 24"
+                    style={{ marginRight: "8px" }}
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+                    >
+                      <animateTransform
+                        attributeName="transform"
+                        dur="0.75s"
+                        repeatCount="indefinite"
+                        type="rotate"
+                        values="0 12 12;360 12 12"
+                      />
+                    </path>
+                  </svg>
+                ) : (
+                  "Stake"
+                )}
+              </ButtonPrimary>
+              <ButtonPrimary
+                onClick={claimReward}
+                disabled={!userDetails.hasStaked}
+              >
+                {isClaiming ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 24 24"
+                    style={{ marginRight: "8px" }}
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+                    >
+                      <animateTransform
+                        attributeName="transform"
+                        dur="0.75s"
+                        repeatCount="indefinite"
+                        type="rotate"
+                        values="0 12 12;360 12 12"
+                      />
+                    </path>
+                  </svg>
+                ) : (
+                  "Claim Reward"
+                )}
+              </ButtonPrimary>
+              <ButtonPrimary
+                onClick={unstake}
+                disabled={!userDetails.hasStaked}
+              >
+                {isUnstaking ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 24 24"
+                    style={{ marginRight: "8px" }}
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+                    >
+                      <animateTransform
+                        attributeName="transform"
+                        dur="0.75s"
+                        repeatCount="indefinite"
+                        type="rotate"
+                        values="0 12 12;360 12 12"
+                      />
+                    </path>
+                  </svg>
+                ) : (
+                  "Unstake"
+                )}
+              </ButtonPrimary>
+            </>
+          ) : (
+            <ExtentsText>
+              <Trans i18nKey="common.incentives.lp.depositFirst" />
+            </ExtentsText>
+          )}
         </AutoColumn>
       </LightCard>
     </AutoColumn>
+  ) : (
+    <></>
   );
 }
 
@@ -594,6 +813,10 @@ function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
 
 function PositionPageContent() {
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+
+  const incentiveId = queryParams.get("incentive");
   const account = useAccount();
   const supportedChain = useSupportedChainId(account.chainId);
   const signer = useEthersSigner();
@@ -634,8 +857,6 @@ function PositionPageContent() {
     token0 && token1 && feeAmount
       ? Pool.getAddress(token0, token1, feeAmount)
       : undefined;
-
-  console.log("pool address", poolAddress);
 
   // construct Position from details returned
   const [poolState, pool] = usePool(
@@ -1447,18 +1668,25 @@ function PositionPageContent() {
                 />
               </AutoColumn>
             </DarkCard>
-            <DarkCard>
-              <AutoColumn gap="md">
-                <RowBetween>
-                  <RowFixed>
-                    <Label display="flex" style={{ marginRight: "12px" }}>
-                      <Trans i18nKey="common.incentives" />
-                    </Label>
-                  </RowFixed>
-                </RowBetween>
-                <UserDetailsCard />
-              </AutoColumn>
-            </DarkCard>
+            {incentiveId ? (
+              <DarkCard>
+                <AutoColumn gap="md">
+                  <RowBetween>
+                    <RowFixed>
+                      <Label display="flex" style={{ marginRight: "12px" }}>
+                        <Trans i18nKey="common.incentives" />
+                      </Label>
+                    </RowFixed>
+                  </RowBetween>
+                  <UserDetailsCard
+                    tokenId={Number(tokenId?.toString() ?? 0)}
+                    incentiveId={incentiveId ?? ""}
+                  />
+                </AutoColumn>
+              </DarkCard>
+            ) : (
+              <></>
+            )}
           </AutoColumn>
         </PageWrapper>
         <SwitchLocaleLink />

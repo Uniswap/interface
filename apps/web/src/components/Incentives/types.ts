@@ -16,7 +16,9 @@ export type Incentive = {
   endTime: string;
   ended: boolean;
   id: string;
-  pool: string;
+  pool: {
+    id: string;
+  };
   reward: string;
   rewardToken: RewardToken;
   startTime: string;
@@ -74,13 +76,19 @@ export type PoolInfo = PoolResponse & {
   totalrewards: string;
   tokenreward: string;
   totalDeposit: string;
+  depositedToken0: number;
+  depositedToken1: number;
   positionId?: string;
   link: string;
   tickLower: string;
   tickUpper: string;
   displayedTotalDeposit: string;
   apy: number;
-  pendingRewards: number;
+  pendingRewards: string;
+  pool: {
+    token0: TokenInfoDetails | undefined;
+    token1: TokenInfoDetails | undefined;
+  };
 };
 
 export function findTokenByAddress(
@@ -96,7 +104,95 @@ export function findTokenByAddress(
 }
 
 export const indexerTaraswap = process.env.REACT_APP_INDEXER_SUBGRAPH_TARASWAP;
-export const indexerLara = process.env.REACT_APP_INDEXER_SUBGRAPH_LARA;
+
+export const POSITIONS_QUERY = `
+query positions{
+	positions(subgraphError: deny){
+    id
+    minter {
+      id
+    }
+    owner {
+      id
+    }
+    pool {
+      id
+      incentives {
+        id
+      }
+    }
+    liquidity
+    depositedToken0
+    token0{
+      symbol
+    }
+    depositedToken1
+    token1{
+      symbol
+    }
+    tickLower {
+      tickIdx
+    }
+    tickUpper {
+  		tickIdx
+    }
+  }
+}
+`;
+
+export const STAKED_POSITIONS_QUERY = `
+query positions{
+	positions(subgraphError: deny, where: {owner: "0x3611731bac2f6891dd222f6f47d9f6faf7d72e30"}){
+    id
+    minter {
+      id
+    }
+    owner {
+      id
+    }
+    pool {
+      id
+      incentives {
+        id
+      }
+    }
+    liquidity
+    depositedToken0
+    token0{
+      symbol
+    }
+    depositedToken1
+    token1{
+      symbol
+    }
+    tickLower {
+      tickIdx
+    }
+    tickUpper {
+  	  tickIdx
+    }
+  }
+}
+`;
+
+export const EXACT_INCENTIVE_QUERY = `
+query incentive($id: String!) {
+  incentive(subgraphError: deny, id : $id){
+    id
+    rewardToken {
+      id
+      symbol
+    }
+    pool{
+      id
+    }
+    startTime
+    endTime
+    vestingPeriod
+    refundee
+    }
+  }
+`;
 
 export const INCENTIVES_QUERY = `
   query incentives {
@@ -112,7 +208,9 @@ export const INCENTIVES_QUERY = `
         decimals
         symbol
       }
-      pool
+      pool{
+        id
+      }
     }
   }
 `;
@@ -142,13 +240,6 @@ export const POOL_QUERY = `
     }
   }
 `;
-
-export type PoolIncentivesTableValues = PoolInfo & {
-  pool: {
-    token0: TokenInfoDetails | undefined;
-    token1: TokenInfoDetails | undefined;
-  };
-};
 
 export const calculateApy = (
   incentive: Incentive,

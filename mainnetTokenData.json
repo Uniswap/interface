@@ -2,6 +2,46 @@
   "tokens": [
     {
       "chainId": 841,
+      "address": "0x81d87E0a53EAf3723Ecc5B57AB11cC04639c9dEa",
+      "name": "Tether USD",
+      "symbol": "USDT",
+      "decimals": 6,
+      "logoURI": "https://tse3.mm.bing.net/th?id=OIP.pEDUtRL00rm2PTq4gY_J4wHaHa&pid=Api"
+    },
+    {
+      "chainId": 841,
+      "address": "0xE6A69cD4FF127ad8E53C21a593F7BaC4c608945e",
+      "name": "Lara",
+      "symbol": "LARA",
+      "decimals": 18,
+      "logoURI": "https://laraprotocol.com/_next/image?url=%2FLARA_v4_1.png&w=256&q=75"
+    },
+    {
+      "chainId": 841,
+      "address": "0xF847ecc42565BFd2d6183d5429795549Ee89b2Ac",
+      "name": "TaraInu",
+      "symbol": "TARAINU",
+      "decimals": 18,
+      "logoURI": "https://www.tarainu.com/assets/images/logo/tarainu-medium-logo-1x.png"
+    },
+    {
+      "chainId": 841,
+      "address": "0xd6005F44C27130f303F72d24626D340Ffdc72bBD",
+      "name": "TaraxaPad",
+      "symbol": "TPAD",
+      "decimals": 18,
+      "logoURI": "https://taraxapad.com/assets/images/common/tpdslider.png"
+    },
+    {
+      "chainId": 841,
+      "address": "0x862a3230480b5bab682EaF01F765e6f2726bcd5f",
+      "name": "OneBot",
+      "symbol": "OB",
+      "decimals": 18,
+      "logoURI": "https://pbs.twimg.com/profile_images/1731797041150328832/xLdupln6_400x400.jpg"
+    },
+    {
+      "chainId": 841,
       "address": "0x5d0fa4c5668e5809c83c95a7cef3a9dd7c68d4fe",
       "name": "Wrapped TARA",
       "symbol": "WTARA",
