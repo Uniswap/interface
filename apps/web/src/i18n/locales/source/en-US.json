@@ -646,7 +646,7 @@
   "landing.protocolDescription": "Taraswap products are powered by the Uniswap V3 Protocol.",
   "landing.provideLiquidity.message": "Provide liquidity to pools on Taraswap(V3 Protocol), farm incentives and earn fees on swaps.",
   "landing.provideLiquidity": "Provide Liquidity",
-  "landing.swapSimple": "Swapping made simple. Access thousands of tokens on 8+ chains.",
+  "landing.swapSimple": "Swapping made simple. Access the latest tokens on Taraxa.",
   "landing.teamInsights": "Insights and news from the team",
   "landing.trusted": "Committed to the Taraxa ecosystem",
   "limit.form.limitExecutionTime.warning": "Limits may not execute exactly when tokens reach the specified price. {{learnMoreLink}}",
