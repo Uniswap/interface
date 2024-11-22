@@ -1,11 +1,11 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
-import { Trans } from 'i18n'
-import { Box, H2 } from '../components/Generics'
-import { DocumentationCard } from '../components/cards/DocumentationCard'
-import { DownloadWalletCard } from '../components/cards/DownloadWalletCard'
-import { LiquidityCard } from '../components/cards/LiquidityCard'
-import { WebappCard } from '../components/cards/WebappCard'
+import { Trans } from "i18n";
+import { Box, H2 } from "../components/Generics";
+import { DocumentationCard } from "../components/cards/DocumentationCard";
+import { DownloadWalletCard } from "../components/cards/DownloadWalletCard";
+import { LiquidityCard } from "../components/cards/LiquidityCard";
+import { WebappCard } from "../components/cards/WebappCard";
 
 const SectionLayout = styled.div`
   display: flex;
@@ -18,14 +18,14 @@ const SectionLayout = styled.div`
   @media (max-width: 468px) {
     padding: 0 24px;
   }
-`
+`;
 const RowToCol = styled(Box)`
   height: auto;
   flex-shrink: 1;
   @media (max-width: 768px) {
     flex-direction: column;
   }
-`
+`;
 const SectionCol = styled(Box)`
   flex-direction: column;
   max-width: 1280px;
@@ -33,7 +33,7 @@ const SectionCol = styled(Box)`
   @media (max-width: 768px) {
     gap: 24px;
   }
-`
+`;
 export function DirectToDefi() {
   return (
     <SectionLayout>
@@ -44,7 +44,7 @@ export function DirectToDefi() {
         <Box direction="column" gap="16px">
           <RowToCol direction="row" gap="16px">
             <WebappCard />
-            <DownloadWalletCard />
+            {/* <DownloadWalletCard /> */}
           </RowToCol>
           <RowToCol direction="row" gap="16px">
             <DocumentationCard />
@@ -53,5 +53,5 @@ export function DirectToDefi() {
         </Box>
       </SectionCol>
     </SectionLayout>
-  )
+  );
 }

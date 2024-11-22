@@ -15,7 +15,7 @@
     "https://buy.moonpay.com/",
     "https://verify.walletconnect.com/",
     "https://verify.walletconnect.org/",
-    "https://o4zelpt7qj.execute-api.eu-central-1.amazonaws.com/prod"
+    "https://k9wetv0ke9.execute-api.eu-central-1.amazonaws.com/prod"
   ],
   "connectSrc": [
     "'self'",
@@ -25,7 +25,7 @@
     "https://uniswap-proxy.netlify.app",
     "https://rpc.mainnet.taraxa.io/",
     "https://rpc.testnet.taraxa.io/",
-    "https://o4zelpt7qj.execute-api.eu-central-1.amazonaws.com/prod/",
+    "https://k9wetv0ke9.execute-api.eu-central-1.amazonaws.com/prod/",
     "https://*.alchemy.com",
     "https://*.arbitrum.io",
     "https://*.base.org/",
@@ -94,6 +94,9 @@
     "https://wallet.crypto.com",
     "https://web3.1inch.io",
     "https://mainnet.era.zksync.io/",
+    "https://indexer.lswap.app/subgraphs/name/taraswap/uni-v3-staker-mainnet",
+    "https://indexer.lswap.app/subgraphs/name/lara-staking/uniswap-v3/graphql",
+    "https://indexer.lswap.app/",
     "wss://*.uniswap.org",
     "wss://relay.walletconnect.com",
     "wss://relay.walletconnect.org",

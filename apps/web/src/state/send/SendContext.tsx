@@ -1,4 +1,4 @@
-import { Currency } from '@taraswap/sdk-core'
+import { Currency } from "@taraswap/sdk-core";
 import {
   createContext,
   Dispatch,
@@ -8,45 +8,45 @@ import {
   useEffect,
   useMemo,
   useState,
-} from 'react'
-import { RecipientData, SendInfo, useDerivedSendInfo } from 'state/send/hooks'
-import { useSwapAndLimitContext } from 'state/swap/hooks'
+} from "react";
+import { RecipientData, SendInfo, useDerivedSendInfo } from "state/send/hooks";
+import { useSwapAndLimitContext } from "state/swap/hooks";
 
 export type SendState =
   | {
-      readonly exactAmountToken?: string
-      readonly exactAmountFiat?: string
-      readonly recipient: string
-      readonly inputCurrency?: Currency
-      readonly inputInFiat: boolean
-      readonly validatedRecipientData?: RecipientData
+      readonly exactAmountToken?: string;
+      readonly exactAmountFiat?: string;
+      readonly recipient: string;
+      readonly inputCurrency?: Currency;
+      readonly inputInFiat: boolean;
+      readonly validatedRecipientData?: RecipientData;
     } & (
       | {
-          readonly exactAmountToken: string
-          readonly exactAmountFiat: undefined
-          readonly inputInFiat: false
+          readonly exactAmountToken: string;
+          readonly exactAmountFiat: undefined;
+          readonly inputInFiat: false;
         }
       | {
-          readonly exactAmountFiat: string
-          readonly exactAmountToken: undefined
-          readonly inputInFiat: true
+          readonly exactAmountFiat: string;
+          readonly exactAmountToken: undefined;
+          readonly inputInFiat: true;
         }
-    )
+    );
 
 export type SendContextType = {
-  sendState: SendState
-  derivedSendInfo: SendInfo
-  setSendState: Dispatch<SetStateAction<SendState>>
-}
+  sendState: SendState;
+  derivedSendInfo: SendInfo;
+  setSendState: Dispatch<SetStateAction<SendState>>;
+};
 
 const DEFAULT_SEND_STATE: SendState = {
   exactAmountToken: undefined,
-  exactAmountFiat: '',
-  recipient: '',
+  exactAmountFiat: "",
+  recipient: "",
   inputCurrency: undefined,
   inputInFiat: true,
   validatedRecipientData: undefined,
-}
+};
 
 // exported for testing
 export const SendContext = createContext<SendContextType>({
@@ -62,27 +62,32 @@ export const SendContext = createContext<SendContextType>({
     gasFee: undefined,
     inputError: undefined,
   },
-})
+});
 
 export function useSendContext() {
-  return useContext(SendContext)
+  return useContext(SendContext);
 }
 
 export function SendContextProvider({ children }: PropsWithChildren) {
   const {
     currencyState: { inputCurrency, outputCurrency },
-  } = useSwapAndLimitContext()
+  } = useSwapAndLimitContext();
 
   const initialCurrency = useMemo(() => {
-    return inputCurrency ?? outputCurrency
-  }, [inputCurrency, outputCurrency])
+    return inputCurrency ?? outputCurrency;
+  }, [inputCurrency, outputCurrency]);
 
-  const [sendState, setSendState] = useState<SendState>({ ...DEFAULT_SEND_STATE, inputCurrency: initialCurrency })
-  const derivedSendInfo = useDerivedSendInfo(sendState)
+  const [sendState, setSendState] = useState<SendState>({
+    ...DEFAULT_SEND_STATE,
+    inputCurrency: initialCurrency,
+  });
+  const derivedSendInfo = useDerivedSendInfo(sendState);
 
   useEffect(() => {
-    setSendState((prev) => ({ ...prev, inputCurrency: initialCurrency }))
-  }, [initialCurrency])
+    setSendState((prev) => {
+      return { ...prev, inputCurrency: initialCurrency };
+    });
+  }, [initialCurrency]);
 
   const value = useMemo(
     () => ({
@@ -91,7 +96,7 @@ export function SendContextProvider({ children }: PropsWithChildren) {
       derivedSendInfo,
     }),
     [derivedSendInfo, setSendState, sendState]
-  )
+  );
 
-  return <SendContext.Provider value={value}>{children}</SendContext.Provider>
+  return <SendContext.Provider value={value}>{children}</SendContext.Provider>;
 }

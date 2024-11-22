@@ -1,15 +1,14 @@
-import Column from 'components/Column'
-import { NavDropdown } from 'components/NavBar/NavDropdown'
-import { useTabsVisible } from 'components/NavBar/ScreenSizes'
-import { useTabsContent } from 'components/NavBar/Tabs/TabsContent'
-import { t } from 'i18next'
-import { Socials } from 'pages/Landing/sections/Footer'
-import { useMemo } from 'react'
-import { Link } from 'react-router-dom'
-import styled, { css } from 'styled-components'
-import { ExternalLink, Separator, ThemedText } from 'theme/components'
-import { MenuItem, MenuSection, useMenuContent } from './Content'
-import { DownloadApp } from './DownloadAppCTA'
+import Column from "components/Column";
+import { NavDropdown } from "components/NavBar/NavDropdown";
+import { useTabsVisible } from "components/NavBar/ScreenSizes";
+import { useTabsContent } from "components/NavBar/Tabs/TabsContent";
+import { t } from "i18next";
+import { Socials } from "pages/Landing/sections/Footer";
+import { useMemo } from "react";
+import { Link } from "react-router-dom";
+import styled, { css } from "styled-components";
+import { ExternalLink, Separator, ThemedText } from "theme/components";
+import { MenuItem, MenuSection, useMenuContent } from "./Content";
 
 const Container = styled.div`
   width: 295px;
@@ -19,7 +18,7 @@ const Container = styled.div`
   overflow: auto;
   height: unset;
   border-radius: 12px;
-`
+`;
 const LinkStyles = css`
   font-size: 16px;
   text-decoration: none;
@@ -29,15 +28,15 @@ const LinkStyles = css`
     color: ${({ theme }) => theme.accent1};
     opacity: 1;
   }
-`
+`;
 const StyledInternalLink = styled(Link)`
   ${LinkStyles}
   padding: 0;
-`
+`;
 const StyledExternalLink = styled(ExternalLink)`
   ${LinkStyles}
   padding: 0;
-`
+`;
 
 export function MenuLink({ label, href, internal, closeMenu }: MenuItem) {
   return internal ? (
@@ -48,7 +47,7 @@ export function MenuLink({ label, href, internal, closeMenu }: MenuItem) {
     <StyledExternalLink href={href} onClick={closeMenu}>
       {label}
     </StyledExternalLink>
-  )
+  );
 }
 function Section({ title, items, closeMenu }: MenuSection) {
   return (
@@ -65,12 +64,12 @@ function Section({ title, items, closeMenu }: MenuSection) {
         />
       ))}
     </Column>
-  )
+  );
 }
 export function MenuDropdown({ close }: { close?: () => void }) {
-  const menuContent = useMenuContent()
-  const areTabsVisible = useTabsVisible()
-  const tabs = useTabsContent()
+  const menuContent = useMenuContent();
+  const areTabsVisible = useTabsVisible();
+  const tabs = useTabsContent();
   const tabsMenuItems = useMemo(() => {
     return tabs.map((t) => {
       return {
@@ -78,15 +77,21 @@ export function MenuDropdown({ close }: { close?: () => void }) {
         href: t.href,
         internal: true,
         overflow: false,
-      }
-    })
-  }, [tabs])
+      };
+    });
+  }, [tabs]);
 
   return (
     <NavDropdown>
       <Container data-testid="nav-more-menu">
         <Column gap="20px">
-          {!areTabsVisible && <Section title={t('common.app')} items={tabsMenuItems} closeMenu={close} />}
+          {!areTabsVisible && (
+            <Section
+              title={t("common.app")}
+              items={tabsMenuItems}
+              closeMenu={close}
+            />
+          )}
           {menuContent.map((sectionContent, index) => (
             <Section
               key={`menu_section_${index}`}
@@ -96,10 +101,10 @@ export function MenuDropdown({ close }: { close?: () => void }) {
             />
           ))}
           <Separator />
-          <DownloadApp onClick={close} />
+          {/* <DownloadApp onClick={close} /> */}
           <Socials iconSize="25px" />
         </Column>
       </Container>
     </NavDropdown>
-  )
+  );
 }

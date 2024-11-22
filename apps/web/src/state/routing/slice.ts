@@ -30,7 +30,9 @@ import {
 } from "./utils";
 
 const UNISWAP_API_URL = process.env.REACT_APP_QUOTE_ENDPOINT;
-const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS;
+const UNISWAP_GATEWAY_DNS_URL =
+  process.env.REACT_APP_UNISWAP_GATEWAY_DNS ||
+  "https://interface.gateway.taraswap.org";
 if (UNISWAP_GATEWAY_DNS_URL === undefined) {
   throw new Error(
     `UNISWAP_API_URL and UNISWAP_GATEWAY_DNS_URL must be defined environment variables`

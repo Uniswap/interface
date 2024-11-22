@@ -1,32 +1,14 @@
-import { ChainId } from '@taraswap/sdk-core'
+import { ChainId } from "@taraswap/sdk-core";
 
 /* eslint-env node */
-require('dotenv').config()
-
-const forkingConfig = {
-  httpHeaders: {
-    Origin: 'localhost:3000', // infura allowlists requests by origin
-  },
-}
-
-const forks = {
-  [ChainId.MAINNET]: {
-    url: `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
-    ...forkingConfig,
-  },
-  [ChainId.POLYGON]: {
-    url: `https://polygon-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
-    ...forkingConfig,
-  },
-}
+require("dotenv").config();
 
 module.exports = {
   forks,
   networks: {
     hardhat: {
       loggingEnabled: !process.env.CI,
-      chainId: ChainId.MAINNET,
-      forking: forks[ChainId.MAINNET],
+      chainId: ChainId.TARAXA,
       accounts: {
         count: 2,
       },
@@ -36,4 +18,4 @@ module.exports = {
       },
     },
   },
-}
+};

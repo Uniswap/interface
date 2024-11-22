@@ -1,22 +1,31 @@
-import { ChainId } from '@taraswap/sdk-core'
-import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
-import { LDO, NATIVE_CHAIN_ID, UNI, USDC_BASE } from 'constants/tokens'
-import { getTokenDetailsURL } from 'graphql/data/util'
-import { useCurrency } from 'hooks/Tokens'
-import { useScreenSize } from 'hooks/screenSize'
-import { t } from 'i18n'
-import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
-import { useTokenPromoQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { ChainId } from "@taraswap/sdk-core";
+import { PortfolioLogo } from "components/AccountDrawer/MiniPortfolio/PortfolioLogo";
+import { DeltaArrow } from "components/Tokens/TokenDetails/Delta";
+import {
+  LARA_TARAXA,
+  LDO,
+  NATIVE_CHAIN_ID,
+  UNI,
+  USDT_TARAXA,
+} from "constants/tokens";
+import { getTokenDetailsURL } from "graphql/data/util";
+import { useCurrency } from "hooks/Tokens";
+import { useScreenSize } from "hooks/screenSize";
+import { t } from "i18n";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { useTokenPromoQuery } from "uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks";
+import { NumberType, useFormatter } from "utils/formatNumbers";
 
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
-import { useCallback } from 'react'
-import { Box } from '../Generics'
-import { Computer } from '../Icons'
-import { PillButton } from './PillButton'
-import ValuePropCard from './ValuePropCard'
+import {
+  SupportedInterfaceChainId,
+  chainIdToBackendChain,
+} from "constants/chains";
+import { useCallback } from "react";
+import { Box } from "../Generics";
+import { Computer } from "../Icons";
+import { PillButton } from "./PillButton";
+import ValuePropCard from "./ValuePropCard";
 
 const Contents = styled.div`
   display: flex;
@@ -36,7 +45,7 @@ const Contents = styled.div`
     padding: 16px;
     padding-bottom: 24px;
   }
-`
+`;
 
 const TokenRow = styled.div`
   width: 100%;
@@ -68,7 +77,7 @@ const TokenRow = styled.div`
     background-color: ${({ theme }) => theme.surface2};
     transform: scale(1.03);
   }
-`
+`;
 const TokenName = styled.h3`
   padding: 0;
   margin: 0;
@@ -92,7 +101,7 @@ const TokenName = styled.h3`
   @media (max-width: ${({ theme }) => theme.breakpoint.xs}px) {
     display: none;
   }
-`
+`;
 const TokenTicker = styled.h3`
   padding: 0;
   margin: 0;
@@ -113,7 +122,7 @@ const TokenTicker = styled.h3`
   @media (max-width: ${({ theme }) => theme.breakpoint.xs}px) {
     color: ${(props) => props.color || props.theme.neutral1};
   }
-`
+`;
 const TokenPrice = styled.h3`
   padding: 0;
   margin: 0;
@@ -132,7 +141,7 @@ const TokenPrice = styled.h3`
     font-size: 16px;
     line-height: 20px;
   }
-`
+`;
 const DeltaText = styled.h3`
   text-align: right;
   padding: 0;
@@ -143,7 +152,8 @@ const DeltaText = styled.h3`
   font-weight: 500;
   font-variant-numeric: tabular-nums;
   line-height: 32px;
-  color: ${(props) => (props.color === 'red' ? props.theme.critical : props.theme.success)};
+  color: ${(props) =>
+    props.color === "red" ? props.theme.critical : props.theme.success};
   @media (max-width: 1024px) {
     font-size: 18px;
     line-height: 24px;
@@ -154,7 +164,7 @@ const DeltaText = styled.h3`
     line-height: 20px;
     width: 50px;
   }
-`
+`;
 const DeltaContainer = styled(Box)`
   @media (min-width: 1030px) and (max-width: 1150px) {
     display: none;
@@ -162,62 +172,69 @@ const DeltaContainer = styled(Box)`
   @media (min-width: 767px) and (max-width: 915px) {
     display: none;
   }
-`
+`;
 
 type WebappCardProps = {
-  isDarkMode?: boolean
-  tagText?: string
-}
+  isDarkMode?: boolean;
+  tagText?: string;
+};
 
-const primary = '#2ABDFF'
+const primary = "#2ABDFF";
 
 const tokens: { chainId: SupportedInterfaceChainId; address: string }[] = [
   {
-    chainId: ChainId.MAINNET,
-    address: 'ETH',
+    chainId: ChainId.TARAXA,
+    address: "TARA",
   },
   {
-    chainId: ChainId.BASE,
-    address: USDC_BASE.address,
+    chainId: ChainId.TARAXA,
+    address: LARA_TARAXA.address,
   },
   {
-    chainId: ChainId.MAINNET,
-    address: UNI[ChainId.MAINNET].address,
+    chainId: ChainId.TARAXA,
+    address: USDT_TARAXA.address,
   },
-  {
-    chainId: ChainId.MAINNET,
-    address: LDO.address,
-  },
-]
+];
 
-function Token({ chainId, address }: { chainId: SupportedInterfaceChainId; address: string }) {
-  const screenIsSmall = useScreenSize()['sm']
-  const navigate = useNavigate()
-  const { formatFiatPrice, formatDelta } = useFormatter()
-  const currency = useCurrency(address, chainId)
+function Token({
+  chainId,
+  address,
+}: {
+  chainId: SupportedInterfaceChainId;
+  address: string;
+}) {
+  const screenIsSmall = useScreenSize()["sm"];
+  const navigate = useNavigate();
+  const { formatFiatPrice, formatDelta } = useFormatter();
+  const currency = useCurrency(address, chainId);
   const tokenPromoQuery = useTokenPromoQuery({
     variables: {
       address: currency?.wrapped.address,
       chain: chainIdToBackendChain({ chainId }),
     },
-  })
-  const price = tokenPromoQuery.data?.token?.market?.price?.value ?? 0
-  const pricePercentChange = tokenPromoQuery.data?.token?.market?.pricePercentChange?.value ?? 0
+  });
+  const price = tokenPromoQuery.data?.token?.market?.price?.value ?? 0;
+  const pricePercentChange =
+    tokenPromoQuery.data?.token?.market?.pricePercentChange?.value ?? 0;
   const handleClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      e.stopPropagation()
+      e.stopPropagation();
       navigate(
         getTokenDetailsURL({
-          address: address === 'ETH' ? NATIVE_CHAIN_ID : address,
+          address: address === "ETH" ? NATIVE_CHAIN_ID : address,
           chain: chainIdToBackendChain({ chainId }),
         })
-      )
+      );
     },
     [address, chainId, navigate]
-  )
+  );
   return (
     <TokenRow onClick={handleClick}>
-      <PortfolioLogo currencies={[currency]} chainId={chainId} size={screenIsSmall ? 32 : 24} />
+      <PortfolioLogo
+        currencies={[currency]}
+        chainId={chainId}
+        size={screenIsSmall ? 32 : 24}
+      />
       <Box justify="space-between" gap="16px">
         <Box width="auto" gap="8px" align="center" overflow="hidden">
           <TokenName>{currency?.name}</TokenName>
@@ -232,30 +249,45 @@ function Token({ chainId, address }: { chainId: SupportedInterfaceChainId; addre
           </TokenPrice>
           <DeltaContainer gap="4px" align="center" justify="flex-end">
             <DeltaArrow delta={pricePercentChange} />
-            <DeltaText color={pricePercentChange < 0 ? 'red' : 'green'}>{formatDelta(pricePercentChange)}</DeltaText>
+            <DeltaText color={pricePercentChange < 0 ? "red" : "green"}>
+              {formatDelta(pricePercentChange)}
+            </DeltaText>
           </DeltaContainer>
         </Box>
       </Box>
     </TokenRow>
-  )
+  );
 }
 
 export function WebappCard(props: WebappCardProps) {
   return (
     <ValuePropCard
-      to="/tokens/ethereum"
+      to={`${process.env.REACT_APP_INFO_ROOT}/#/tokens`}
       minHeight="450px"
       isDarkMode={props.isDarkMode}
       textColor={primary}
-      backgroundColor={{ dark: 'rgba(0, 102, 255, 0.12)', light: 'rgba(0, 102, 255, 0.04)' }}
-      button={<PillButton color={primary} label={t('common.webApp')} icon={<Computer size="24px" fill={primary} />} />}
-      titleText={t('landing.swapSimple')}
+      backgroundColor={{
+        dark: "rgba(0, 102, 255, 0.12)",
+        light: "rgba(0, 102, 255, 0.04)",
+      }}
+      button={
+        <PillButton
+          color={primary}
+          label={t("common.webApp")}
+          icon={<Computer size="24px" fill={primary} />}
+        />
+      }
+      titleText={t("landing.swapSimple")}
     >
       <Contents>
         {tokens.map((token) => (
-          <Token key={`tokenRow-${token.address}`} chainId={token.chainId} address={token.address} />
+          <Token
+            key={`tokenRow-${token.address}`}
+            chainId={token.chainId}
+            address={token.address}
+          />
         ))}
       </Contents>
     </ValuePropCard>
-  )
+  );
 }

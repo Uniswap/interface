@@ -1,74 +1,108 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import ms from 'ms'
-import { logSwapQuoteRequest } from 'tracing/swapFlowLoggers'
-import { trace } from 'tracing/trace'
-import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { GetQuickQuoteArgs, PreviewTradeResult, QuickRouteResponse, QuoteState, RouterPreference } from './types'
-import { isExactInput, transformQuickRouteToTrade } from './utils'
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import ms from "ms";
+import { logSwapQuoteRequest } from "tracing/swapFlowLoggers";
+import { trace } from "tracing/trace";
+import { InterfaceEventNameLocal } from "uniswap/src/features/telemetry/constants";
+import { sendAnalyticsEvent } from "uniswap/src/features/telemetry/send";
+import {
+  GetQuickQuoteArgs,
+  PreviewTradeResult,
+  QuickRouteResponse,
+  QuoteState,
+  RouterPreference,
+} from "./types";
+import { isExactInput, transformQuickRouteToTrade } from "./utils";
 
-const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
+const UNISWAP_GATEWAY_DNS_URL =
+  process.env.REACT_APP_UNISWAP_GATEWAY_DNS ||
+  "https://interface.gateway.taraswap.org";
 if (UNISWAP_GATEWAY_DNS_URL === undefined) {
-  throw new Error(`UNISWAP_GATEWAY_DNS_URL must be a defined environment variable`)
+  throw new Error(
+    `UNISWAP_GATEWAY_DNS_URL must be defined environment variables`
+  );
 }
 
 export const quickRouteApi = createApi({
-  reducerPath: 'quickRouteApi',
+  reducerPath: "quickRouteApi",
   baseQuery: fetchBaseQuery(),
   endpoints: (build) => ({
     getQuickRoute: build.query<PreviewTradeResult, GetQuickQuoteArgs>({
       queryFn(args, _api, _extraOptions, fetch) {
-        return trace({ name: 'QuickRoute', op: 'quote.quick_route' }, async (trace) => {
-          logSwapQuoteRequest(args.tokenInChainId, RouterPreference.API, true)
-          const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
-          const type = isExactInput(tradeType) ? 'EXACT_IN' : 'EXACT_OUT'
+        return trace(
+          { name: "QuickRoute", op: "quote.quick_route" },
+          async (trace) => {
+            logSwapQuoteRequest(
+              args.tokenInChainId,
+              RouterPreference.API,
+              true
+            );
+            const {
+              tokenInAddress,
+              tokenInChainId,
+              tokenOutAddress,
+              tokenOutChainId,
+              amount,
+              tradeType,
+            } = args;
+            const type = isExactInput(tradeType) ? "EXACT_IN" : "EXACT_OUT";
 
-          const requestBody = {
-            tokenInChainId,
-            tokenInAddress,
-            tokenOutChainId,
-            tokenOutAddress,
-            amount,
-            tradeType: type,
-          }
+            const requestBody = {
+              tokenInChainId,
+              tokenInAddress,
+              tokenOutChainId,
+              tokenOutAddress,
+              amount,
+              tradeType: type,
+            };
 
-          const response = await fetch({
-            method: 'GET',
-            url: `${UNISWAP_GATEWAY_DNS_URL}/quickroute`,
-            params: requestBody,
-          })
+            const response = await fetch({
+              method: "GET",
+              url: `${UNISWAP_GATEWAY_DNS_URL}/quickroute`,
+              params: requestBody,
+            });
 
-          if (response.error) {
-            // cast as any here because we do a runtime check on it being an object before indexing into .errorCode
-            const errorData = response.error.data as { errorCode?: string; detail?: string }
-            // NO_ROUTE should be treated as a valid response to prevent retries.
-            if (
-              typeof errorData === 'object' &&
-              (errorData?.errorCode === 'NO_ROUTE' || errorData?.detail === 'No quotes available')
-            ) {
-              sendAnalyticsEvent(InterfaceEventNameLocal.NoQuoteReceivedFromQuickrouteAPI, {
-                requestBody,
-                response,
-              })
-              return {
-                data: { state: QuoteState.NOT_FOUND, latencyMs: trace.now() },
+            if (response.error) {
+              // cast as any here because we do a runtime check on it being an object before indexing into .errorCode
+              const errorData = response.error.data as {
+                errorCode?: string;
+                detail?: string;
+              };
+              // NO_ROUTE should be treated as a valid response to prevent retries.
+              if (
+                typeof errorData === "object" &&
+                (errorData?.errorCode === "NO_ROUTE" ||
+                  errorData?.detail === "No quotes available")
+              ) {
+                sendAnalyticsEvent(
+                  InterfaceEventNameLocal.NoQuoteReceivedFromQuickrouteAPI,
+                  {
+                    requestBody,
+                    response,
+                  }
+                );
+                return {
+                  data: { state: QuoteState.NOT_FOUND, latencyMs: trace.now() },
+                };
+              } else {
+                trace.setError(response.error);
+                return { error: response.error };
               }
-            } else {
-              trace.setError(response.error)
-              return { error: response.error }
             }
-          }
 
-          const quickRouteResponse = response.data as QuickRouteResponse
-          const previewTrade = transformQuickRouteToTrade(args, quickRouteResponse)
-          return {
-            data: {
-              state: QuoteState.SUCCESS,
-              trade: previewTrade,
-              latencyMs: trace.now(),
-            },
+            const quickRouteResponse = response.data as QuickRouteResponse;
+            const previewTrade = transformQuickRouteToTrade(
+              args,
+              quickRouteResponse
+            );
+            return {
+              data: {
+                state: QuoteState.SUCCESS,
+                trade: previewTrade,
+                latencyMs: trace.now(),
+              },
+            };
           }
-        })
+        );
       },
       keepUnusedDataFor: ms(`10s`),
       extraOptions: {
@@ -76,7 +110,8 @@ export const quickRouteApi = createApi({
       },
     }),
   }),
-})
+});
 
-export const { useGetQuickRouteQuery } = quickRouteApi
-export const useGetQuickRouteQueryState = quickRouteApi.endpoints.getQuickRoute.useQueryState
+export const { useGetQuickRouteQuery } = quickRouteApi;
+export const useGetQuickRouteQueryState =
+  quickRouteApi.endpoints.getQuickRoute.useQueryState;

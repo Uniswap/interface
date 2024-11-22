@@ -3,45 +3,70 @@
   <head>
     <meta charset="utf-8" />
 
-    <title>Uniswap Interface</title>
+    <title>Taraswap</title>
 
     <!--
       %PUBLIC_URL% will be replaced with the URL of the `public` folder during build.
       Only files inside the `public` folder can be referenced from the HTML.
     -->
-    <link rel="shortcut icon" type="image/png" href="%PUBLIC_URL%/favicon.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="%PUBLIC_URL%/images/192x192_App_Icon.png" />
-    <link rel="apple-touch-icon" sizes="512x512" href="%PUBLIC_URL%/images/512x512_App_Icon.png" />
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="%PUBLIC_URL%/favicon.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="192x192"
+      href="%PUBLIC_URL%/images/192x192_App_Icon.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="512x512"
+      href="%PUBLIC_URL%/images/512x512_App_Icon.png"
+    />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <meta name="theme-color" content="#fff" />
 
     <!-- Skip the CSP in specified test environments -->
-    <% if (!process.env.REACT_APP_SKIP_CSP) { %>
-      <% let cspConfig = require('./csp.json'); %>
-      <!-- Allow vercel feedback in preview environments -->
-      <% if (process.env.REACT_APP_STAGING) { %>
-        <% const cspDevConfig = require('./vercel-csp.json'); %>
-        <% Object.entries(cspDevConfig).forEach(([key, value]) => cspConfig[key] = cspConfig[key].concat(value)) %>
-      <% } %>
-      <meta
-        http-equiv="Content-Security-Policy" 
-        content="default-src <%= cspConfig.defaultSrc.join(' ') %>; script-src <%= cspConfig.scriptSrc.join(' ') %>; style-src <%= cspConfig.styleSrc.join(' ') %>; img-src <%= cspConfig.imgSrc.join(' ') %>; frame-src <%= cspConfig.frameSrc.join(' ') %>; connect-src <%= cspConfig.connectSrc.join(' ') %>; worker-src <%= cspConfig.workerSrc.join(' ') %>;"
-      >
+    <% if (!process.env.REACT_APP_SKIP_CSP) { %> <% let cspConfig =
+    require('./csp.json'); %>
+    <!-- Allow vercel feedback in preview environments -->
+    <% if (process.env.REACT_APP_STAGING) { %> <% const cspDevConfig =
+    require('./vercel-csp.json'); %> <%
+    Object.entries(cspDevConfig).forEach(([key, value]) => cspConfig[key] =
+    cspConfig[key].concat(value)) %> <% } %>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src <%= cspConfig.defaultSrc.join(' ') %>; script-src <%= cspConfig.scriptSrc.join(' ') %>; style-src <%= cspConfig.styleSrc.join(' ') %>; img-src <%= cspConfig.imgSrc.join(' ') %>; frame-src <%= cspConfig.frameSrc.join(' ') %>; connect-src <%= cspConfig.connectSrc.join(' ') %>; worker-src <%= cspConfig.workerSrc.join(' ') %>;"
+    />
     <% } %>
-
-    <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin/>
-    <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
-
-    <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
+    <link
+      rel="preload"
+      href="%PUBLIC_URL%/fonts/Basel-Grotesk-Book.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="%PUBLIC_URL%/fonts/Basel-Grotesk-Medium.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
 
     <!-- Include <link rel="preload"> for js assets so that they are loaded with high priority. -->
-    <%= htmlWebpackPlugin.files.js.map((href) => `<link rel="preload" href="${href}" as="script" />`).join('\n    ') %>
-   
+    <%= htmlWebpackPlugin.files.js.map((href) => `
+    <link rel="preload" href="${href}" as="script" />
+    `).join('\n ') %>
+
     <style>
       * {
-        font-family: 'Basel', sans-serif;
+        font-family: "Basel", sans-serif;
         box-sizing: border-box;
       }
 
@@ -49,28 +74,27 @@
           Explicitly load Basel var from public/ so it does not block LCP's critical path.
         */
       @font-face {
-        font-family: 'Basel';
+        font-family: "Basel";
         font-weight: 535;
         font-style: normal;
         font-display: block;
-        src: 
-          url('%PUBLIC_URL%/fonts/Basel-Grotesk-Medium.woff2') format('woff2'),
-          url('%PUBLIC_URL%/fonts/Basel-Grotesk-Medium.woff') format('woff');
+        src: url("%PUBLIC_URL%/fonts/Basel-Grotesk-Medium.woff2")
+            format("woff2"),
+          url("%PUBLIC_URL%/fonts/Basel-Grotesk-Medium.woff") format("woff");
       }
 
       @font-face {
-        font-family: 'Basel';
+        font-family: "Basel";
         font-weight: 485;
         font-style: normal;
         font-display: block;
-        src: 
-          url('%PUBLIC_URL%/fonts/Basel-Grotesk-Book.woff2') format('woff2'),
-          url('%PUBLIC_URL%/fonts/Basel-Grotesk-Book.woff') format('woff');
+        src: url("%PUBLIC_URL%/fonts/Basel-Grotesk-Book.woff2") format("woff2"),
+          url("%PUBLIC_URL%/fonts/Basel-Grotesk-Book.woff") format("woff");
       }
 
       @supports (font-variation-settings: normal) {
         * {
-          font-family: 'Basel', sans-serif;
+          font-family: "Basel", sans-serif;
         }
       }
 
@@ -122,7 +146,12 @@
 
       @media (prefers-color-scheme: light) {
         html {
-          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0) 0%, rgba(255, 255, 255, 0) 100%), rgb(255, 255, 255);
+          background: radial-gradient(
+              100% 100% at 50% 0%,
+              rgba(255, 184, 226, 0) 0%,
+              rgba(255, 255, 255, 0) 100%
+            ),
+            rgb(255, 255, 255);
         }
       }
     </style>

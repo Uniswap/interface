@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for your interest in contributing to the Uniswap interface! 🦄
+Thank you for your interest in contributing to the Taraswap interface! 🦄
 
 # Development
 
@@ -68,7 +68,7 @@ yarn web cypress:run
 
 Adding many new dependencies would cause bloat, so we have a test to guard against this: `scripts/test-size.js`. This will run as part of CI with every PR.
 
-If you *need* to add a new dependency, and it causes the generated build to exceed its size quota, you'll need to increase the quota. Do so in `scripts/test-size.js`.
+If you _need_ to add a new dependency, and it causes the generated build to exceed its size quota, you'll need to increase the quota. Do so in `scripts/test-size.js`.
 
 You can also run the test on your last build using `yarn build && yarn test:size`. If you exceed the size quota, it will let you know what to do :).
 
