@@ -66,7 +66,7 @@ export default function Tokens() {
         (tokenBalance) =>
           tokenBalance.token && (
             <TokenRow
-              key={tokenBalance.token.name}
+              key={tokenBalance.token.address}
               {...tokenBalance}
               token={tokenBalance}
               inputAddress={account.address || ""}
@@ -82,7 +82,7 @@ export default function Tokens() {
           (tokenBalance) =>
             tokenBalance.token && (
               <TokenRow
-                key={tokenBalance.token.name}
+                key={tokenBalance.token.address}
                 {...tokenBalance}
                 token={tokenBalance}
                 inputAddress={account.address || ""}
@@ -123,7 +123,7 @@ function TokenRow({
   }, [navigate, token, accountDrawer]);
 
   const currency = tokenToCurrency(token);
-  console.log("currency", currency);
+
   if (!currency) {
     logger.error(
       new Error(
