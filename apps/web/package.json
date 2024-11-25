@@ -197,7 +197,7 @@
     "@types/react-window-infinite-loader": "1.0.6",
     "@ubeswap/analytics": "workspace:^",
     "@ubeswap/analytics-events": "workspace:^",
-    "@ubeswap/default-token-list": "4.1.64",
+    "@ubeswap/default-token-list": "4.1.69",
     "@ubeswap/sdk-core": "workspace:^",
     "@ubeswap/smart-order-router": "workspace:^",
     "@uniswap/governance": "1.0.2",

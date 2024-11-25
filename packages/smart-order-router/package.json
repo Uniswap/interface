@@ -17,7 +17,7 @@
     "typecheck": "tsc -b"
   },
   "dependencies": {
-    "@ubeswap/default-token-list": "4.1.64",
+    "@ubeswap/default-token-list": "4.1.69",
     "@ubeswap/sdk-core": "workspace:^",
     "@uniswap/permit2-sdk": "1.2.0",
     "@uniswap/router-sdk": "workspace:^",
