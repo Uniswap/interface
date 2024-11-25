@@ -9,9 +9,23 @@
     "https://www.googletagmanager.com",
     "https://www.taraswap.org"
   ],
-  "fontSrc": ["'self'", "https://www.taraswap.org"],
-  "styleSrc": ["'self'", "'unsafe-inline'", "https://www.taraswap.org"],
+  "fontSrc": [
+    "'self'",
+    "https://www.taraswap.org",
+    "https://www.taraswap.org/"
+  ],
+  "styleSrc": [
+    "'self'",
+    "'unsafe-inline'",
+    "https://www.taraswap.org",
+    "https://www.taraswap.org/"
+  ],
   "imgSrc": ["*", "blob:", "data:"],
+  "manifestSrc": [
+    "'self'",
+    "https://www.taraswap.org",
+    "https://www.taraswap.org/"
+  ],
   "frameSrc": [
     "'self'",
     "https://buy.moonpay.com/",
