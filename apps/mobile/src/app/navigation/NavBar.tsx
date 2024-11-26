@@ -15,12 +15,20 @@ import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import { useDispatch } from 'react-redux'
 import { pulseAnimation } from 'src/components/buttons/utils'
 import { openModal } from 'src/features/modals/modalSlice'
-import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
-import { Flex, FlexProps, LinearGradient, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
+import {
+  Flex,
+  FlexProps,
+  LinearGradient,
+  Text,
+  TouchableArea,
+  useHapticFeedback,
+  useIsDarkMode,
+  useSporeColors,
+} from 'ui/src'
 import { Search } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, fonts, opacify } from 'ui/src/theme'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/balances'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -126,8 +134,8 @@ type SwapTabBarButtonProps = {
 const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96, onSwapLayout }: SwapTabBarButtonProps) {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const { defaultChainId } = useEnabledChains()
   const { hapticFeedback } = useHapticFeedback()
+  const { defaultChainId } = useEnabledChains()
 
   const isDarkMode = useIsDarkMode()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
@@ -141,8 +149,8 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96, onSwapLayout }: Swa
       }),
     )
 
-    await hapticFeedback.light()
-  }, [dispatch, inputCurrencyId, defaultChainId, hapticFeedback])
+    await hapticFeedback.impact()
+  }, [dispatch, inputCurrencyId, hapticFeedback, defaultChainId])
 
   const scale = useSharedValue(1)
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }), [scale])
@@ -257,7 +265,11 @@ function ExploreTabBarButton({ activeScale = 0.98, onLayout, isNarrow }: Explore
   }
 
   return (
-    <TouchableArea activeOpacity={1} style={[styles.searchBar, { borderRadius: borderRadii.roundedFull }]}>
+    <TouchableArea
+      hapticFeedback
+      activeOpacity={1}
+      style={[styles.searchBar, { borderRadius: borderRadii.roundedFull }]}
+    >
       <TestnetModeModal unsupported isOpen={isTestnetWarningModalOpen} onClose={handleTestnetWarningModalClose} />
       <TapGestureHandler testID={TestID.SearchTokensAndWallets} onGestureEvent={onGestureEvent}>
         <AnimatedFlex

@@ -1,7 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
-import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import {
   useGetPoolTokenPercentage,
   usePositionCurrentPrice,
@@ -28,7 +27,6 @@ import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/st
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
@@ -43,18 +41,30 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
   const startChainId = useAccount().chainId
   const account = useAccountMeta()
   const dispatch = useDispatch()
-  const trace = useTrace()
 
   const { txContext, gasFeeEstimateUSD } = removeLiquidityTxContext
 
-  const onSuccess = () => {
-    setSteps([])
-    setCurrentStep(undefined)
-    onClose()
-  }
-
   const onFailure = () => {
     setCurrentStep(undefined)
+  }
+
+  const onDecreaseLiquidity = () => {
+    const isValidTx = isValidLiquidityTxContext(txContext)
+    if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
+      return
+    }
+    dispatch(
+      liquiditySaga.actions.trigger({
+        selectChain,
+        startChainId,
+        account,
+        liquidityTxContext: txContext,
+        setCurrentStep,
+        setSteps,
+        onSuccess: onClose,
+        onFailure,
+      }),
+    )
   }
 
   if (!positionInfo) {
@@ -69,8 +79,6 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
 
   const currency0AmountToRemove = currency0Amount.multiply(percent).divide(100)
   const currency1AmountToRemove = currency1Amount.multiply(percent).divide(100)
-  const currency0AmountToRemoveUSD = useUSDCValue(currency0AmountToRemove)
-  const currency1AmountToRemoveUSD = useUSDCValue(currency1AmountToRemove)
 
   const newCurrency0Amount = currency0Amount.subtract(currency0AmountToRemove)
   const newCurrency1Amount = currency1Amount.subtract(currency1AmountToRemove)
@@ -82,42 +90,6 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
 
   const currency0CurrencyInfo = useCurrencyInfo(currency0Amount.currency)
   const currency1CurrencyInfo = useCurrencyInfo(currency1Amount.currency)
-
-  const onDecreaseLiquidity = () => {
-    const isValidTx = isValidLiquidityTxContext(txContext)
-    if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx || !positionInfo) {
-      return
-    }
-    const { feeTier, version, poolId, currency0Amount, currency1Amount } = positionInfo
-    dispatch(
-      liquiditySaga.actions.trigger({
-        selectChain,
-        startChainId,
-        account,
-        liquidityTxContext: txContext,
-        setCurrentStep,
-        setSteps,
-        onSuccess,
-        onFailure,
-        analytics: {
-          ...getLPBaseAnalyticsProperties({
-            trace,
-            fee: feeTier,
-            poolId,
-            currency0: currency0Amount.currency,
-            currency1: currency1Amount.currency,
-            currency0AmountUsd: currency0AmountToRemoveUSD,
-            currency1AmountUsd: currency1AmountToRemoveUSD,
-            version,
-            chainId: startChainId,
-          }),
-          expectedAmountBaseRaw: currency0AmountToRemoveUSD?.quotient.toString() ?? '0',
-          expectedAmountQuoteRaw: currency1AmountToRemoveUSD?.quotient.toString() ?? '0',
-          closePosition: percent === '100',
-        },
-      }),
-    )
-  }
 
   return (
     <Flex gap="$gap16">
@@ -136,7 +108,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
         {positionInfo.version !== ProtocolVersion.V2 && (
           <Flex p="$spacing16" gap="$gap12" background="$surface2" borderRadius="$rounded12">
             <Text variant="body4" color="$neutral2">
-              {t('fee.uncollected')}
+              {t('fee.accrued')}
             </Text>
 
             <Flex row gap alignItems="center" justifyContent="space-between">

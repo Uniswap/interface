@@ -24,7 +24,6 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
-import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { useAccount } from 'wagmi'
@@ -34,15 +33,10 @@ const BodyWrapper = styled(Main, {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  mx: 'auto',
   width: '100%',
-  maxWidth: 600, // intentionally less than the other LP screens
   zIndex: '$default',
-  py: '$spacing24',
-  px: '$spacing40',
-
-  $lg: {
-    px: '$padding20',
-  },
+  p: '$spacing24',
 })
 
 export default function V2PositionPage() {
@@ -69,7 +63,7 @@ export default function V2PositionPage() {
 
   usePendingLPTransactionsChangeListener(refetch)
 
-  const { value: lpRedesignEnabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.LPRedesign)
+  const { value: v4Enabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Everywhere)
 
   const { currency0Amount, currency1Amount, status, liquidityAmount } = positionInfo ?? {}
 
@@ -77,7 +71,7 @@ export default function V2PositionPage() {
   const token1USDValue = useUSDCValue(currency1Amount)
   const poolTokenPercentage = useGetPoolTokenPercentage(positionInfo)
 
-  if (!isLoading && !lpRedesignEnabled) {
+  if (!isLoading && !v4Enabled) {
     return <Navigate to="/pools" replace />
   }
 
@@ -120,19 +114,18 @@ export default function V2PositionPage() {
 
   return (
     <BodyWrapper>
-      <Flex gap="$gap20" width="100%">
+      <Flex gap="$gap20" width="calc(min(580px, 90vw))">
         <Flex row width="100%" justifyContent="flex-start" alignItems="center">
           <BreadcrumbNavContainer aria-label="breadcrumb-nav">
             <BreadcrumbNavLink to="/positions">
               <Trans i18nKey="pool.positions.title" /> <ChevronRight size={14} />
             </BreadcrumbNavLink>
-            <Text variant="subheading2">{shortenAddress(positionInfo.poolId)}</Text>
           </BreadcrumbNavContainer>
         </Flex>
 
         <LiquidityPositionInfo positionInfo={positionInfo} />
         {status === PositionStatus.IN_RANGE && (
-          <Flex row gap="$gap12" alignItems="center" maxWidth="100%" flexWrap="wrap">
+          <Flex row gap="$gap12" alignItems="center">
             <HeaderButton
               emphasis="secondary"
               onPress={() => {
@@ -140,7 +133,7 @@ export default function V2PositionPage() {
               }}
             >
               <Text variant="buttonLabel2" color="$neutral1">
-                <Trans i18nKey="common.migrate.v3" />
+                <Trans i18nKey="common.migrate" />
               </Text>
             </HeaderButton>
             <HeaderButton

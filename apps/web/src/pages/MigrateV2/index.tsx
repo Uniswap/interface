@@ -18,13 +18,9 @@ import { useRpcTokenBalancesWithLoadingIndicator } from 'lib/hooks/useCurrencyBa
 import styled, { useTheme } from 'lib/styled-components'
 import { BodyWrapper } from 'pages/App/AppBody'
 import { ReactNode, useMemo } from 'react'
-import { useNavigate, useNavigationType } from 'react-router-dom'
 import { Text } from 'rebass'
 import { toV2LiquidityToken, useTrackedTokenPairs } from 'state/user/hooks'
-import { BackArrowIcon, StyledInternalLink, ThemedText } from 'theme/components'
-import { Button } from 'ui/src'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { BackArrowLink, StyledInternalLink, ThemedText } from 'theme/components'
 import { Trans } from 'uniswap/src/i18n'
 
 export const MigrateHeader = styled(ThemedText.H1Small)`
@@ -61,8 +57,6 @@ function toSushiLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
 export default function MigrateV2() {
   const theme = useTheme()
   const account = useAccount()
-  const navigate = useNavigate()
-  const navigationType = useNavigationType()
 
   const v2FactoryAddress = account.chainId ? V2_FACTORY_ADDRESSES[account.chainId] : undefined
 
@@ -131,24 +125,11 @@ export default function MigrateV2() {
   }
 
   return (
-    <Trace logImpression page={InterfacePageNameLocal.MigrateV2}>
+    <>
       <BodyWrapper style={{ padding: 24 }}>
         <AutoColumn gap="16px">
           <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
-            <Button
-              theme="secondary"
-              onPress={() => {
-                if (navigationType === 'POP') {
-                  navigate('/pools')
-                  return
-                }
-                navigate(-1)
-              }}
-              backgroundColor="$transparent"
-              size="small"
-            >
-              <BackArrowIcon />
-            </Button>
+            <BackArrowLink to="/pools" />
             <MigrateHeader>
               <Trans i18nKey="migrate.v2Title" />
             </MigrateHeader>
@@ -211,6 +192,6 @@ export default function MigrateV2() {
         </AutoColumn>
       </BodyWrapper>
       <SwitchLocaleLink />
-    </Trace>
+    </>
   )
 }

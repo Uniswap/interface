@@ -5,7 +5,7 @@ import { useCallback } from 'react'
 import { ArrowUpRight } from 'react-feather'
 import { useSelector } from 'react-redux'
 import { useAppDispatch } from 'state/hooks'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { ClickableTamaguiStyle, ExternalLink, HideSmall } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { ElementAfterText, Flex, Text, TouchableArea, TouchableAreaEvent, useSporeColors } from 'ui/src'
@@ -19,7 +19,7 @@ import { selectHasViewedBridgingBanner } from 'uniswap/src/features/behaviorHist
 import { setHasViewedBridgingBanner } from 'uniswap/src/features/behaviorHistory/slice'
 import { useIsBridgingChain, useNumBridgingChains } from 'uniswap/src/features/bridging/hooks/chains'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTranslation } from 'uniswap/src/i18n'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -28,7 +28,7 @@ export function SwapBottomCard() {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
-  const { chainId: oldFlowChainId } = useMultichainContext()
+  const { chainId: oldFlowChainId } = useSwapAndLimitContext()
   const { swapInputChainId: newFlowChainId, setIsSwapTokenSelectorOpen } = useUniswapContext()
   const chainId = newFlowChainId ?? oldFlowChainId
 

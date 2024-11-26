@@ -2,7 +2,7 @@
 
 set -e
 
-REQUIRED_XCODE_VERSION="16.1"
+REQUIRED_XCODE_VERSION="15.2"
 
 check_xcode_version() {
     local current_version=$(xcodebuild -version | grep "Xcode" | cut -d' ' -f2)

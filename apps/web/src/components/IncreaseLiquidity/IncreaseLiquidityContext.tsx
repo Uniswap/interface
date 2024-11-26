@@ -1,5 +1,5 @@
 import { useDerivedIncreaseLiquidityInfo } from 'components/IncreaseLiquidity/hooks'
-import { useModalLiquidityInitialState } from 'components/Liquidity/hooks'
+import { useModalLiquidityPositionInfo } from 'components/Liquidity/hooks'
 import { DepositInfo, PositionInfo } from 'components/Liquidity/types'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
 import { PositionField } from 'types/position'
@@ -47,7 +47,7 @@ export function useIncreaseLiquidityContext() {
 }
 
 export function IncreaseLiquidityContextProvider({ children }: PropsWithChildren) {
-  const positionInfo = useModalLiquidityInitialState()
+  const positionInfo = useModalLiquidityPositionInfo()
 
   const [step, setStep] = useState(IncreaseLiquidityStep.Input)
 

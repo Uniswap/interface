@@ -24,6 +24,7 @@ export function FiatOnRampCountryPicker({
   return (
     <Trace logPress element={ElementName.FiatOnRampCountryPicker}>
       <TouchableArea
+        hapticFeedback
         backgroundColor="$surface3"
         borderRadius="$roundedFull"
         hoverStyle={{

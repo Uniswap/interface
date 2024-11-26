@@ -7,8 +7,8 @@ import { WarningModal } from 'uniswap/src/components/modals/WarningModal/Warning
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { Pill } from 'uniswap/src/components/pill/Pill'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { UNITAG_SUFFIX, UNITAG_SUFFIX_NO_LEADING_DOT } from 'uniswap/src/features/unitags/constants'
-import { shortenAddress } from 'utilities/src/addresses'
+import { shortenAddress } from 'uniswap/src/utils/addresses'
+import { UNITAG_SUFFIX, UNITAG_SUFFIX_NO_LEADING_DOT } from 'wallet/src/features/unitags/constants'
 import { getYourNameString } from 'wallet/src/features/unitags/utils'
 
 const FIXED_INFO_PILL_WIDTH = 128

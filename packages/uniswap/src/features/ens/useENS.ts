@@ -2,7 +2,6 @@
 
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAddressFromEns, useENSName } from 'uniswap/src/features/ens/api'
-import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { useDebounce } from 'utilities/src/time/timing'
 
@@ -51,5 +50,5 @@ export function getCompletedENSName(name: string | null): string | null {
   }
 
   // Append the .eth if does not already exist
-  return name.endsWith(ENS_SUFFIX) ? name : name.concat(ENS_SUFFIX)
+  return name.endsWith('.eth') ? name : name.concat('.eth')
 }

@@ -13,9 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import android.content.Context
-import android.view.inputmethod.InputMethodManager
-import android.view.View
 
 class SeedPhraseInputViewModel(
   private val ethersRs: RnEthersRs,
@@ -65,17 +62,6 @@ class SeedPhraseInputViewModel(
     private set
   private var validateLastWordTimeout: Long = 1000
   private var validateLastWordJob: Job? = null
-
-  var isFocused by mutableStateOf(false)
-    private set
-
-  fun focus() {
-    isFocused = true
-  }
-
-  fun blur() {
-    isFocused = false
-  }
 
   fun handleInputChange(value: TextFieldValue) {
     input = value
@@ -168,5 +154,4 @@ class SeedPhraseInputViewModel(
     private const val MIN_LENGTH = 12
     private const val MAX_LENGTH = 24
   }
-  
 }

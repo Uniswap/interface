@@ -58,28 +58,20 @@ export enum ApplicationModal {
   GET_THE_APP,
 }
 
-export type LiquidityModalInitialState = PositionInfo & { collectAsWeth?: boolean }
-
 type AddLiquidityModalParams = {
   name: typeof ModalName.AddLiquidity
-  initialState: LiquidityModalInitialState
+  initialState: PositionInfo
 }
 
 type RemoveLiquidityModalParams = {
   name: typeof ModalName.RemoveLiquidity
-  initialState: LiquidityModalInitialState
-}
-
-type ClaimFeeModalParams = {
-  name: typeof ModalName.ClaimFee
-  initialState: LiquidityModalInitialState
+  initialState: PositionInfo
 }
 
 export type OpenModalParams =
   | { name: ModalNameType | ApplicationModal; initialState?: undefined }
   | AddLiquidityModalParams
   | RemoveLiquidityModalParams
-  | ClaimFeeModalParams
 
 export type CloseModalParams = ModalNameType | ApplicationModal
 

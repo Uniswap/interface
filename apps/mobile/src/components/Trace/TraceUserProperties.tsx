@@ -5,7 +5,7 @@ import { useBiometricAppSettings, useDeviceSupportsBiometricAuth } from 'src/fea
 import { getAuthMethod } from 'src/features/telemetry/utils'
 import { getFullAppVersion } from 'src/utils/version'
 import { useIsDarkMode } from 'ui/src'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'

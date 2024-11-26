@@ -3,27 +3,27 @@
   "version": "0.0.0",
   "dependencies": {
     "@actions/core": "1.10.1",
-    "@commitlint/cli": "17.5.0",
-    "@commitlint/config-conventional": "17.4.4",
+    "@commitlint/cli": "^17.4.2",
+    "@commitlint/config-conventional": "^17.4.2",
     "@crowdin/cli": "3.14.0",
     "@ethersproject/keccak256": "5.7.0",
-    "@manypkg/cli": "0.19.2",
+    "@manypkg/cli": "^0.19.2",
     "danger": "11.2.6",
     "depcheck": "1.4.7",
-    "dotenv-cli": "7.1.0",
-    "husky": "8.0.3",
+    "dotenv-cli": "^7.0.0",
+    "husky": "^8.0.3",
     "i18next": "23.10.0",
     "i18next-parser": "8.6.0",
     "js-yaml": "4.1.0",
     "moti": "0.29.0",
     "prettier": "3.3.2",
     "prettier-plugin-organize-imports": "3.2.4",
-    "syncpack": "8.5.14",
+    "syncpack": "^8.5.14",
     "turbo": "1.10.16",
-    "turbo-ignore": "1.11.3"
+    "turbo-ignore": "^1.11.3"
   },
   "engines": {
-    "node": "=18.16.0",
+    "node": "=18.12.1",
     "yarn": ">=3.2.3",
     "npm": "please-use-yarn"
   },
@@ -37,8 +37,7 @@
   "resolutionsComments": {
     "immer": "this fixes yarn typecheck in mobile app, see https://github.com/reduxjs/redux-toolkit/issues/1806",
     "react-native-wagmi-charts@2.5.1": "this fixes really bad performance issue when the pulse dot is enabled",
-    "@tanstack/react-query@5.51.16": "Fixes an issue with importing this package from packages/uniswap via apps/web. We can remove this once we move away from craco.",
-    "@gorhom/bottom-sheet@4.5.1": "Fixes bottom sheet dynamic snap point backdrop flickering."
+    "@tanstack/react-query@5.51.16": "Fixes an issue with importing this package from packages/uniswap via apps/web. We can remove this once we move away from craco."
   },
   "resolutions": {
     "elliptic": "6.5.7",
@@ -62,11 +61,12 @@
     "json5": "2.2.2",
     "expo/uuid": "3.4.0",
     "is-core-module": "2.13.0",
+    "qs": "6.11.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native-fast-image@8.6.3": "patch:react-native-fast-image@npm%3A8.6.3#./.yarn/patches/react-native-fast-image-npm-8.6.3-03ee2d23c0.patch",
     "react-native-svg": "15.1.0",
-    "react-refresh": "0.14.0",
+    "react-refresh": "^0.14.0",
     "resolve": "1.22.4",
     "semver": "7.5.2",
     "@sentry/node": "7.45.0",
@@ -89,9 +89,7 @@
     "react-native-context-menu-view@1.15.0": "patch:react-native-context-menu-view@npm%3A1.15.0#./.yarn/patches/react-native-context-menu-view-npm-1.15.0-c8a9d10d8c.patch",
     "detox@20.23.0": "patch:detox@npm%3A20.23.0#./.yarn/patches/detox-npm-20.23.0-6d61110e63.patch",
     "@tanstack/react-query@5.51.16": "patch:@tanstack/react-query@npm%3A5.51.16#./.yarn/patches/@tanstack-react-query-npm-5.51.16-8fa6414eca.patch",
-    "expo-screen-capture@5.8.1": "patch:expo-screen-capture@npm%3A5.8.1#./.yarn/patches/expo-screen-capture-npm-5.8.1-78e5827fdf.patch",
-    "@gorhom/bottom-sheet@4.5.1": "patch:@gorhom/bottom-sheet@npm%3A4.5.1#./.yarn/patches/@gorhom-bottom-sheet-npm-4.5.1-d8ef5d483d.patch",
-    "@shopify/react-native-performance@4.1.2": "patch:@shopify/react-native-performance@npm%3A4.1.2#./.yarn/patches/@shopify-react-native-performance-npm-4.1.2-ec1fcc7507.patch"
+    "expo-screen-capture@5.8.1": "patch:expo-screen-capture@npm%3A5.8.1#./.yarn/patches/expo-screen-capture-npm-5.8.1-78e5827fdf.patch"
   },
   "scripts": {
     "extension": "yarn workspace @uniswap/extension",

@@ -368,7 +368,7 @@ export const SpinnerSVG = styled.svg`
   ${SpinnerCss}
 `
 
-export const BackArrowIcon = styled(ArrowLeft)`
+const BackArrowIcon = styled(ArrowLeft)`
   color: ${({ theme }) => theme.neutral1};
 `
 

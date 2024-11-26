@@ -48,9 +48,7 @@ type BaseCreatePositionInfo = {
   protocolVersion: ProtocolVersion
   currencies: [OptionalCurrency, OptionalCurrency]
   creatingPoolOrPair?: boolean
-  poolId?: string
   poolOrPairLoading?: boolean
-  isPoolOutOfSync: boolean
 }
 
 export type CreateV4PositionInfo = BaseCreatePositionInfo & {
@@ -70,13 +68,7 @@ export type CreateV2PositionInfo = BaseCreatePositionInfo & {
 
 export type CreatePositionInfo = CreateV4PositionInfo | CreateV3PositionInfo | CreateV2PositionInfo
 
-export interface DynamicFeeTierSpeedbumpData {
-  open: boolean
-  wishFeeData: FeeData
-}
-
 export type CreatePositionContextType = {
-  reset: () => void
   step: PositionFlowStep
   setStep: Dispatch<SetStateAction<PositionFlowStep>>
   positionState: PositionState
@@ -84,8 +76,6 @@ export type CreatePositionContextType = {
   derivedPositionInfo: CreatePositionInfo
   feeTierSearchModalOpen: boolean
   setFeeTierSearchModalOpen: Dispatch<SetStateAction<boolean>>
-  dynamicFeeTierSpeedbumpData: DynamicFeeTierSpeedbumpData
-  setDynamicFeeTierSpeedbumpData: Dispatch<SetStateAction<DynamicFeeTierSpeedbumpData>>
 }
 
 export interface PriceRangeState {
@@ -142,7 +132,6 @@ export type V2PriceRangeInfo = BasePriceRangeInfo & {
 export type PriceRangeInfo = V4PriceRangeInfo | V3PriceRangeInfo | V2PriceRangeInfo
 
 export type PriceRangeContextType = {
-  reset: () => void
   priceRangeState: PriceRangeState
   setPriceRangeState: Dispatch<SetStateAction<PriceRangeState>>
   derivedPriceRangeInfo: PriceRangeInfo

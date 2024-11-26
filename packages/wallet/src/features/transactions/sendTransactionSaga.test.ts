@@ -6,12 +6,8 @@ import { call } from 'redux-saga/effects'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { addTransaction, finalizeTransaction, updateTransaction } from 'uniswap/src/features/transactions/slice'
-import {
-  TransactionDetails,
-  TransactionOriginType,
-  TransactionStatus,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { addTransaction } from 'uniswap/src/features/transactions/slice'
+import { TransactionOriginType, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getTxFixtures } from 'uniswap/src/test/fixtures'
 import { noOpFunction } from 'utilities/src/test/utils'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
@@ -90,21 +86,6 @@ describe(sendTransaction, () => {
           routing: Routing.CLASSIC,
           chainId: sendParams.chainId,
           id: '0',
-          typeInfo: txTypeInfo,
-          from: sendParams.account.address,
-          status: TransactionStatus.Pending,
-          addedTime: Date.now(),
-          transactionOriginType: TransactionOriginType.Internal,
-          options: {
-            request: txRequest,
-          },
-        }),
-      )
-      .put(
-        updateTransaction({
-          routing: Routing.CLASSIC,
-          chainId: sendParams.chainId,
-          id: '0',
           hash: txResponse.hash,
           typeInfo: txTypeInfo,
           from: sendParams.account.address,
@@ -130,38 +111,6 @@ describe(sendTransaction, () => {
         }),
       )
       .silentRun()
-  })
-
-  it('Stores and finalizes failed transactions', () => {
-    const transaction: TransactionDetails = {
-      routing: Routing.CLASSIC,
-      chainId: sendParams.chainId,
-      id: '0',
-      typeInfo: txTypeInfo,
-      from: sendParams.account.address,
-      status: TransactionStatus.Pending,
-      addedTime: Date.now(),
-      transactionOriginType: TransactionOriginType.Internal,
-      options: {
-        request: txRequest,
-      },
-    }
-
-    return expectSaga(sendTransaction, sendParams)
-      .withState({ transactions: {}, wallet: {} })
-      .provide([
-        [call(getProvider, sendParams.chainId), provider],
-        [call(getProviderManager), providerManager],
-        [call(getSignerManager), signerManager],
-        [
-          call(signAndSendTransaction, txRequest, account, provider as providers.Provider, signerManager),
-          throwError(new Error('Failed to send transaction')),
-        ],
-      ])
-      .put(addTransaction(transaction))
-      .put(finalizeTransaction({ ...transaction, status: TransactionStatus.Failed }))
-      .throws(new Error('Failed to send transaction'))
-      .run()
   })
 
   it('Fails for readonly accounts', () => {

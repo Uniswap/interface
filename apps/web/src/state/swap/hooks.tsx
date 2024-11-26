@@ -5,6 +5,7 @@ import { useCurrency, useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
+import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -12,16 +13,13 @@ import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { useCurrencyBalance, useCurrencyBalances } from 'state/connection/hooks'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
 import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
 import { CurrencyState, SerializedCurrencyState, SwapInfo, SwapState } from 'state/swap/types'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
-import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useEnabledChains, useSupportedChainId } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
 import { Trans } from 'uniswap/src/i18n'
@@ -137,8 +135,7 @@ export function useSwapActionHandlers(): {
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   const account = useAccount()
-  const { chainId } = useMultichainContext()
-  const { currencyState } = useSwapAndLimitContext()
+  const { chainId, currencyState } = useSwapAndLimitContext()
   const nativeCurrency = useNativeCurrency(chainId)
   const balance = useCurrencyBalance(account.address, nativeCurrency)
 
@@ -406,10 +403,9 @@ export function useInitialCurrencyState(): {
   initialChainId: UniverseChainId
   initialCurrencyLoading: boolean
 } {
-  const { chainId, setIsUserSelectedToken } = useMultichainContext()
+  const { chainId, setIsUserSelectedToken } = useSwapAndLimitContext()
   const { defaultChainId } = useEnabledChains()
 
-  const { useParsedQueryString } = useUrlContext()
   const parsedQs = useParsedQueryString()
   const parsedCurrencyState = useMemo(() => {
     return queryParametersToCurrencyState(parsedQs)

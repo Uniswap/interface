@@ -3,16 +3,16 @@ import { GqlSearchToken } from 'graphql/data/SearchTokens'
 import { GenieCollection } from 'nft/types'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { MAX_RECENT_SEARCH_RESULTS } from 'uniswap/src/components/TokenSelector/constants'
+import { MAX_RECENT_SEARCH_RESULTS } from 'uniswap/src/components/TokenSelector/hooks'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   Chain,
+  NftCollection,
   useRecentlySearchedAssetsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import {
   SearchResult,
-  SearchResultType,
   isNFTCollectionSearchResult,
   isTokenSearchResult,
 } from 'uniswap/src/features/search/SearchResult'
@@ -23,10 +23,7 @@ export type InterfaceRemoteSearchHistoryItem = GqlSearchToken | GenieCollection
 
 export function useRecentlySearchedAssets(): { data?: InterfaceRemoteSearchHistoryItem[]; loading: boolean } {
   const history = useSelector(selectSearchHistory)
-  const shortenedHistory = useMemo(
-    () => history.filter((item) => item.type !== SearchResultType.NFTCollection).slice(0, MAX_RECENT_SEARCH_RESULTS),
-    [history],
-  )
+  const shortenedHistory = useMemo(() => history.slice(0, MAX_RECENT_SEARCH_RESULTS), [history])
 
   const { data: queryData, loading } = useRecentlySearchedAssetsQuery({
     variables: {
@@ -45,8 +42,26 @@ export function useRecentlySearchedAssets(): { data?: InterfaceRemoteSearchHisto
     } else if (!queryData) {
       return undefined
     }
-    // Collects tokens in a map, so they can later be returned in original order
+    // Collects both tokens and collections in a map, so they can later be returned in original order
     const resultsMap: { [key: string]: InterfaceRemoteSearchHistoryItem } = {}
+
+    const queryCollections = queryData?.nftCollections?.edges.map((edge) => edge.node as NonNullable<NftCollection>)
+    const collections = queryCollections?.map(
+      (queryCollection): GenieCollection => {
+        return {
+          address: queryCollection.nftContracts?.[0]?.address ?? '',
+          isVerified: queryCollection?.isVerified,
+          name: queryCollection?.name,
+          stats: {
+            floor_price: queryCollection?.markets?.[0]?.floorPrice?.value,
+            total_supply: queryCollection?.numAssets,
+          },
+          imageUrl: queryCollection?.image?.url ?? '',
+        }
+      },
+      [queryCollections],
+    )
+    collections?.forEach((collection) => (resultsMap[collection.address] = collection))
     queryData.tokens?.filter(Boolean).forEach((token) => {
       if (token) {
         resultsMap[token.address ?? getNativeQueryAddress(token.chain)] = token
@@ -70,6 +85,10 @@ function generateInterfaceHistoryItem(
   asset: SearchResult,
   resultsMap: Record<string, InterfaceRemoteSearchHistoryItem>,
 ): InterfaceRemoteSearchHistoryItem | undefined {
+  if (isNFTCollectionSearchResult(asset)) {
+    return resultsMap[asset.address]
+  }
+
   if (!isTokenSearchResult(asset)) {
     return undefined
   }

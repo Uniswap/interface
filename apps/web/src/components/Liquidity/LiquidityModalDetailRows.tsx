@@ -17,7 +17,7 @@ export function LiquidityModalDetailRows({
   const { formatCurrencyAmount } = useLocalizationContext()
 
   return (
-    <Flex px="$padding16" gap="$gap8">
+    <Flex py="$padding12" px="$padding16" gap="$gap8">
       <DetailLineItem
         LineItem={{
           Label: () => (
@@ -48,22 +48,20 @@ export function LiquidityModalDetailRows({
           ),
         }}
       />
-      {Boolean(networkCost) && (
-        <DetailLineItem
-          LineItem={{
-            Label: () => (
-              <Text variant="body3" color="$neutral2">
-                <Trans i18nKey="common.networkCost" />
-              </Text>
-            ),
-            Value: () => (
-              <Text variant="body3" color="$neutral1">
-                {formatCurrencyAmount({ value: networkCost, type: NumberType.FiatGasPrice })}
-              </Text>
-            ),
-          }}
-        />
-      )}
+      <DetailLineItem
+        LineItem={{
+          Label: () => (
+            <Text variant="body3" color="$neutral2">
+              <Trans i18nKey="common.networkCost" />
+            </Text>
+          ),
+          Value: () => (
+            <Text variant="body3" color="$neutral1">
+              {formatCurrencyAmount({ value: networkCost, type: NumberType.FiatGasPrice })}
+            </Text>
+          ),
+        }}
+      />
     </Flex>
   )
 }

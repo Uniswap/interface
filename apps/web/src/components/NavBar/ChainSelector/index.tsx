@@ -2,12 +2,11 @@ import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { useCallback, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { Flex, Popover } from 'ui/src'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useEnabledChains, useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 type ChainSelectorProps = {
@@ -15,7 +14,7 @@ type ChainSelectorProps = {
 }
 export const ChainSelector = ({ hideArrow }: ChainSelectorProps) => {
   const account = useAccount()
-  const { chainId, setSelectedChainId } = useMultichainContext()
+  const { chainId, setSelectedChainId, multichainUXEnabled } = useSwapAndLimitContext()
 
   const popoverRef = useRef<Popover>(null)
   const isSupportedChain = useIsSupportedChainIdCallback()
@@ -26,7 +25,7 @@ export const ChainSelector = ({ hideArrow }: ChainSelectorProps) => {
 
   const onSelectChain = useCallback(
     async (targetChainId: UniverseChainId | null) => {
-      if (!targetChainId) {
+      if (multichainUXEnabled || !targetChainId) {
         setSelectedChainId(targetChainId)
       } else {
         await selectChain(targetChainId)
@@ -40,7 +39,7 @@ export const ChainSelector = ({ hideArrow }: ChainSelectorProps) => {
 
       popoverRef.current?.close()
     },
-    [setSelectedChainId, selectChain, searchParams, setSearchParams],
+    [multichainUXEnabled, setSelectedChainId, selectChain, searchParams, setSearchParams],
   )
 
   const isUnsupportedConnectedChain = account.isConnected && !isSupportedChain(account.chainId)

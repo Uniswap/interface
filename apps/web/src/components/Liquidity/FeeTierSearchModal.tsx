@@ -1,13 +1,12 @@
 // eslint-disable-next-line no-restricted-imports
-import { FeePoolSelectAction, LiquidityEventName } from '@uniswap/analytics-events'
 import { useAllFeeTierPoolData } from 'components/Liquidity/hooks'
-import { calculateTickSpacingFromFeeAmount, isDynamicFeeTier } from 'components/Liquidity/utils'
+import { calculateTickSpacingFromFeeAmount } from 'components/Liquidity/utils'
 import { StyledPercentInput } from 'components/PercentInput'
+import { useAccount } from 'hooks/useAccount'
 import ms from 'ms'
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { NumericalInputMimic, NumericalInputSymbolContainer } from 'pages/Swap/common/shared'
 import { useEffect, useState } from 'react'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import styled from 'styled-components'
 import { ClickableTamaguiStyle, CloseIcon } from 'theme/components'
@@ -20,11 +19,9 @@ import { AmountInput, numericInputRegex } from 'uniswap/src/components/CurrencyI
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTranslation } from 'uniswap/src/i18n'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType } from 'utilities/src/format/types'
-import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const FeeTierPercentInput = styled(StyledPercentInput)`
   flex-grow: 0;
@@ -33,14 +30,13 @@ const FeeTierPercentInput = styled(StyledPercentInput)`
 `
 
 export function FeeTierSearchModal() {
-  const { chainId } = useMultichainContext()
+  const { chainId } = useAccount()
   const {
     positionState: { fee: selectedFee, protocolVersion, hook },
     derivedPositionInfo,
     setPositionState,
     feeTierSearchModalOpen,
     setFeeTierSearchModalOpen,
-    setDynamicFeeTierSpeedbumpData,
   } = useCreatePositionContext()
   const onClose = () => {
     setCreateFeeValue('')
@@ -48,7 +44,6 @@ export function FeeTierSearchModal() {
     setFeeTierSearchModalOpen(false)
   }
   const { t } = useTranslation()
-  const trace = useTrace()
   const [searchValue, setSearchValue] = useState('')
   const [createFeeValue, setCreateFeeValue] = useState('')
   const [createModeEnabled, setCreateModeEnabled] = useState(false)
@@ -259,12 +254,6 @@ export function FeeTierSearchModal() {
                     tickSpacing: calculateTickSpacingFromFeeAmount(feeHundredthsOfBips),
                   },
                 }))
-                sendAnalyticsEvent(LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER, {
-                  action: FeePoolSelectAction.SEARCH,
-                  fee_tier: feeHundredthsOfBips,
-                  is_new_fee_tier: Boolean(feeTierData[feeHundredthsOfBips]),
-                  ...trace,
-                })
                 onClose()
               }}
             >
@@ -339,21 +328,13 @@ export function FeeTierSearchModal() {
                     justifyContent="space-between"
                     {...ClickableTamaguiStyle}
                     onPress={() => {
-                      if (isDynamicFeeTier(pool.fee)) {
-                        setDynamicFeeTierSpeedbumpData({
-                          open: true,
-                          wishFeeData: pool.fee,
-                        })
-                      } else {
-                        setPositionState((prevState) => ({
-                          ...prevState,
-                          fee: {
-                            feeAmount: pool.fee.feeAmount,
-                            tickSpacing: pool.fee.tickSpacing,
-                          },
-                        }))
-                      }
-
+                      setPositionState((prevState) => ({
+                        ...prevState,
+                        fee: {
+                          feeAmount: pool.fee.feeAmount,
+                          tickSpacing: pool.fee.tickSpacing,
+                        },
+                      }))
                       onClose()
                     }}
                   >

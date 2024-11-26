@@ -1,10 +1,12 @@
 import React from 'react'
 import { Image, StyleSheet } from 'react-native'
 import { Flex, useIsDarkMode } from 'ui/src'
-import { UNISWAP_MONO_LOGO_LARGE } from 'ui/src/assets'
+import { UNISWAP_LOGO_LARGE } from 'ui/src/assets'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { isAndroid } from 'utilities/src/platform'
+
+export const SPLASH_SCREEN = { uri: 'SplashScreen' }
 
 export function SplashScreen(): JSX.Element {
   const dimensions = useDeviceDimensions()
@@ -20,19 +22,29 @@ export function SplashScreen(): JSX.Element {
       style={{
         height: dimensions.fullHeight,
         width: dimensions.fullWidth,
-        paddingBottom: isAndroid ? insets.bottom : 0,
-        justifyContent: 'center',
-        alignContent: 'center',
+        paddingBottom: insets.bottom,
       }}
     >
-      <Image source={UNISWAP_MONO_LOGO_LARGE} style={fixedStyle.logoStyle} />
+      {/* Android has a different implementation, which is not set in stone yet, so skipping it for now */}
+      {isAndroid ? (
+        <Image source={UNISWAP_LOGO_LARGE} style={fixedStyle.logoStyle} />
+      ) : (
+        <Image
+          resizeMode="contain"
+          source={SPLASH_SCREEN}
+          style={{
+            width: dimensions.fullWidth,
+            height: dimensions.fullHeight,
+          }}
+        />
+      )}
     </Flex>
   )
 }
 
 const fixedStyle = StyleSheet.create({
   logoStyle: {
-    height: 150,
-    width: 150,
+    height: 180,
+    width: 165,
   },
 })

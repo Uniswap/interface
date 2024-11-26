@@ -32,7 +32,7 @@ import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import TextEditIcon from 'ui/src/assets/icons/textEdit.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -88,9 +88,8 @@ export function SettingsWallet({
     ),
   )
 
-  const onChangeNotificationSettings = async (enabled: boolean): Promise<void> => {
+  const onChangeNotificationSettings = (enabled: boolean): void => {
     sendAnalyticsEvent(MobileEventName.NotificationsToggled, { enabled })
-
     if (notificationOSPermission === NotificationPermission.Enabled) {
       dispatch(
         editAccountActions.trigger({
@@ -101,9 +100,7 @@ export function SettingsWallet({
       )
       setNotificationSwitchEnabled(enabled)
     } else {
-      const arePushNotificationsEnabled = await promptPushPermission()
-
-      if (arePushNotificationsEnabled) {
+      promptPushPermission(() => {
         dispatch(
           editAccountActions.trigger({
             type: EditAccountAction.TogglePushNotification,
@@ -112,9 +109,7 @@ export function SettingsWallet({
           }),
         )
         setNotificationSwitchEnabled(enabled)
-      } else {
-        showNotificationSettingsAlert()
-      }
+      }, showNotificationSettingsAlert)
     }
   }
 

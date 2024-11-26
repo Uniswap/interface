@@ -35,7 +35,7 @@ class BuyFormError extends Error {
 
 type BuyFormState = {
   readonly inputAmount: string
-  readonly quoteCurrency: Maybe<FiatOnRampCurrency>
+  readonly quoteCurrency: FiatOnRampCurrency
   readonly selectedCountry?: FORCountry
   readonly countryModalOpen: boolean
   readonly currencyModalOpen: boolean
@@ -63,7 +63,10 @@ type BuyFormContextType = {
 export const ethCurrencyInfo = buildPartialCurrencyInfo(nativeOnChain(UniverseChainId.Mainnet))
 const DEFAULT_BUY_FORM_STATE: BuyFormState = {
   inputAmount: '',
-  quoteCurrency: undefined,
+  quoteCurrency: {
+    currencyInfo: ethCurrencyInfo,
+    meldCurrencyCode: 'ETH',
+  },
   selectedCountry: undefined,
   countryModalOpen: false,
   currencyModalOpen: false,

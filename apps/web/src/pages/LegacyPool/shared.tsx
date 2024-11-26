@@ -43,7 +43,7 @@ const titles = {
 
 export function PoolVersionMenu({ protocolVersion }: { protocolVersion: ProtocolVersion }) {
   const [isOpen, setIsOpen] = useState(false)
-  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
+  const isV4Enabled = useFeatureFlag(FeatureFlags.V4Everywhere)
 
   return (
     <DropdownSelector
@@ -53,7 +53,7 @@ export function PoolVersionMenu({ protocolVersion }: { protocolVersion: Protocol
         <>
           {Object.entries(menuItems)
             .filter(([protocol, info]) => {
-              if (!isLPRedesignEnabled && protocol === ProtocolVersion.V4) {
+              if (!isV4Enabled && protocol === ProtocolVersion.V4) {
                 return false
               }
               return info.title !== menuItems[protocolVersion].title

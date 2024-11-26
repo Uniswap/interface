@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'

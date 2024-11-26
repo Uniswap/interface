@@ -20,16 +20,6 @@ const NavDropdownContent = styled(Flex, {
     overflowY: 'auto',
     overflowX: 'hidden',
   },
-  variants: {
-    padded: {
-      true: {
-        py: '12px',
-        pl: '16px',
-        pr: '4px', // Smaller right padding allows scrollbar to be closer to container edge
-      },
-      false: {},
-    },
-  },
 })
 
 interface NavDropdownProps {
@@ -38,10 +28,9 @@ interface NavDropdownProps {
   width?: number
   dropdownRef?: RefObject<HTMLDivElement>
   dataTestId?: string
-  padded?: boolean
 }
 
-export function NavDropdown({ children, width, dropdownRef, isOpen, padded, dataTestId }: NavDropdownProps) {
+export function NavDropdown({ children, width, dropdownRef, isOpen, dataTestId }: NavDropdownProps) {
   const shadowProps = useShadowPropsMedium()
   const scrollbarStyles = useScrollbarStyles()
 
@@ -68,7 +57,6 @@ export function NavDropdown({ children, width, dropdownRef, isOpen, padded, data
           data-testid={dataTestId}
           ref={dropdownRef}
           width={width}
-          padded={padded}
           {...shadowProps}
           style={scrollbarStyles}
         >
@@ -77,7 +65,9 @@ export function NavDropdown({ children, width, dropdownRef, isOpen, padded, data
       </Popover.Content>
       <Popover.Adapt when="sm">
         <WebBottomSheet isOpen={isOpen} p={0}>
-          <Popover.Adapt.Contents />
+          <Popover.Sheet.ScrollView>
+            <Popover.Adapt.Contents />
+          </Popover.Sheet.ScrollView>
         </WebBottomSheet>
       </Popover.Adapt>
     </>

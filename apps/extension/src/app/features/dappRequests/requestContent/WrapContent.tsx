@@ -4,7 +4,7 @@ import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { DappRequestStoreItem } from 'src/app/features/dappRequests/slice'
 import { SendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { Flex, Text } from 'ui/src'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { useGasFeeFormattedAmounts, useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import { useActiveAccountAddressWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
 

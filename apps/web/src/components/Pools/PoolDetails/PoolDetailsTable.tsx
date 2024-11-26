@@ -1,5 +1,5 @@
-import { PositionInfo } from 'components/Liquidity/types'
-import { parseRestPosition } from 'components/Liquidity/utils'
+import { Pool } from '@uniswap/v3-sdk'
+import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
 import { PoolDetailsPositionsTable } from 'components/Pools/PoolDetails/PoolDetailsPositionsTable'
 import { PoolDetailsTransactionsTable } from 'components/Pools/PoolDetails/PoolDetailsTransactionsTable'
 import Column from 'components/deprecated/Column'
@@ -9,7 +9,6 @@ import styled from 'lib/styled-components'
 import { useMemo, useState } from 'react'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
 import { Trans } from 'uniswap/src/i18n'
 
 enum PoolDetailsTableTabs {
@@ -36,13 +35,15 @@ export function PoolDetailsTableTab({
 }) {
   const [activeTable, setActiveTable] = useState<PoolDetailsTableTabs>(PoolDetailsTableTabs.TRANSACTIONS)
   const account = useAccount()
-  const { data } = useGetPositionsQuery({ address: account.address, poolId: poolAddress })
-  const positions = useMemo(
+  const { positions } = useMultiChainPositions(account.address ?? '')
+  const positionsInThisPool = useMemo(
     () =>
-      data?.positions
-        .map((position) => parseRestPosition(position))
-        .filter((position): position is PositionInfo => position !== undefined),
-    [data?.positions],
+      positions?.filter(
+        (position) =>
+          Pool.getAddress(position.pool.token0, position.pool.token1, position.pool.fee).toLowerCase() ===
+          poolAddress.toLowerCase(),
+      ) ?? [],
+    [poolAddress, positions],
   )
   return (
     <Column gap="lg">
@@ -50,17 +51,17 @@ export function PoolDetailsTableTab({
         <TableHeader
           active={activeTable === PoolDetailsTableTabs.TRANSACTIONS}
           onClick={() => setActiveTable(PoolDetailsTableTabs.TRANSACTIONS)}
-          disabled={!positions?.length}
+          disabled={!positionsInThisPool.length}
         >
           <Trans i18nKey="common.transactions" />
         </TableHeader>
-        {Boolean(positions?.length) && (
+        {Boolean(positionsInThisPool.length) && (
           <TableHeader
             active={activeTable === PoolDetailsTableTabs.POSITIONS}
             onClick={() => setActiveTable(PoolDetailsTableTabs.POSITIONS)}
           >
             <Trans i18nKey="pool.positions" />
-            {` (${positions?.length})`}
+            {` (${positionsInThisPool?.length})`}
           </TableHeader>
         )}
       </Row>
@@ -72,7 +73,7 @@ export function PoolDetailsTableTab({
           protocolVersion={protocolVersion}
         />
       ) : (
-        <PoolDetailsPositionsTable positions={positions} />
+        <PoolDetailsPositionsTable positions={positionsInThisPool} />
       )}
     </Column>
   )

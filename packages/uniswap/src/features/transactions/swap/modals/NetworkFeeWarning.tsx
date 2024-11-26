@@ -3,7 +3,6 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Separator, Text, UniswapXText, isWeb, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { Gas } from 'ui/src/components/icons/Gas'
-import { NATIVE_LINE_HEIGHT_SCALE, fonts } from 'ui/src/theme'
 import { UniswapXFee } from 'uniswap/src/components/gas/NetworkFee'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -76,19 +75,12 @@ function NetworkFeeText({
 }): JSX.Element {
   const { t } = useTranslation()
 
-  const variant: keyof typeof fonts = isWeb ? 'body4' : 'body2'
-  // we need to remove `NATIVE_LINE_HEIGHT_SCALE` if we switch to a button label font
-  const lineHeight = fonts[variant].lineHeight / (isWeb ? 1 : NATIVE_LINE_HEIGHT_SCALE)
-
   if (uniswapXGasFeeInfo) {
     return (
-      <Text color="$neutral2" textAlign="center" variant={variant}>
+      <Text color="$neutral2" textAlign="center" variant={isWeb ? 'body4' : 'body2'}>
         <Trans
           // TODO(WEB-4313): Remove need to manually adjust the height of the UniswapXText component for mobile.
-          // TODO(WALL-5311): Investigate Trans component vertical alignment on android
-          components={{
-            gradient: <UniswapXText height={lineHeight} variant={variant} />,
-          }}
+          components={{ gradient: <UniswapXText height={17} variant={isWeb ? 'body4' : 'body2'} /> }}
           i18nKey="swap.warning.networkFee.message.uniswapX"
         />
       </Text>
@@ -96,7 +88,7 @@ function NetworkFeeText({
   }
 
   return (
-    <Text color="$neutral2" textAlign="center" variant={variant}>
+    <Text color="$neutral2" textAlign="center" variant={isWeb ? 'body4' : 'body2'}>
       {showHighGasFeeUI ? t('swap.warning.networkFee.highRelativeToValue') : t('swap.warning.networkFee.message')}
     </Text>
   )

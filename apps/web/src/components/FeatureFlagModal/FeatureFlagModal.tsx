@@ -10,12 +10,7 @@ import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { BREAKPOINTS } from 'theme'
 import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
-import {
-  DynamicConfigKeys,
-  DynamicConfigs,
-  NetworkRequestsConfigKey,
-  QuickRouteChainsConfigKey,
-} from 'uniswap/src/features/gating/configs'
+import { DynamicConfigKeys, DynamicConfigs, QuickRouteChainsConfigKey } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
@@ -164,14 +159,14 @@ function DynamicConfigDropdown<
   Key extends DynamicConfigKeys[Conf],
 >({
   config,
-  configKey,
+  key,
   label,
   options,
   selected,
   parser,
 }: {
   config: Conf
-  configKey: Key
+  key: Key
   label: string
   options: any[]
   selected: any[]
@@ -179,7 +174,7 @@ function DynamicConfigDropdown<
 }) {
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValues = Array.from(e.target.selectedOptions, (opt) => parser(opt.value))
-    Statsig.overrideConfig(config, { [configKey]: selectedValues })
+    Statsig.overrideConfig(config, { [key]: selectedValues })
   }
   return (
     <CenteredRow key={config}>
@@ -242,16 +237,13 @@ export default function FeatureFlagModal() {
             label="Enable EIP-6963: Multi Injected Provider Discovery"
           />
           <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
-          <FeatureFlagOption flag={FeatureFlags.LPRedesign} label="Enable LP flow redesign" />
-          <FeatureFlagOption flag={FeatureFlags.V4Data} label="Enable v4 data" />
-          <FeatureFlagOption flag={FeatureFlags.PriceRangeInputV2} label="Enable Price Range Input V2" />
+          <FeatureFlagOption flag={FeatureFlags.V4Everywhere} label="Enable V4 Everywhere" />
           <FeatureFlagOption flag={FeatureFlags.Realtime} label="Realtime activity updates" />
           <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
           <FeatureFlagOption flag={FeatureFlags.NavigationHotkeys} label="Navigation hotkeys" />
           <FeatureFlagOption flag={FeatureFlags.TokenProtection} label="Warning UX for scam/dangerous tokens" />
           <FeatureFlagGroup name="New Chains">
             <FeatureFlagOption flag={FeatureFlags.Zora} label="Enable Zora" />
-            <FeatureFlagOption flag={FeatureFlags.UnichainPromo} label="Unichain In App Promotion" />
           </FeatureFlagGroup>
           <FeatureFlagOption flag={FeatureFlags.L2NFTs} label="L2 NFTs" />
           <FeatureFlagGroup name="Quick routes">
@@ -261,18 +253,8 @@ export default function FeatureFlagModal() {
               options={SUPPORTED_CHAIN_IDS}
               parser={Number.parseInt}
               config={DynamicConfigs.QuickRouteChains}
-              configKey={QuickRouteChainsConfigKey.Chains}
+              key={QuickRouteChainsConfigKey.Chains}
               label="Enable quick routes for these chains"
-            />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Network Requests">
-            <DynamicConfigDropdown
-              selected={[30]}
-              options={[1, 10, 20, 30]}
-              parser={Number.parseInt}
-              config={DynamicConfigs.NetworkRequests}
-              configKey={NetworkRequestsConfigKey.BalanceMaxRefetchAttempts}
-              label="Max refetch attempts"
             />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="UniswapX Flags">

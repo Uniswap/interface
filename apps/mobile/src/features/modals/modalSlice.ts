@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ExploreModalState } from 'src/app/modals/ExploreModalState'
-import { TokenWarningModalState } from 'src/app/modals/TokenWarningModalState'
 import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModalState'
 import { ExchangeTransferModalState } from 'src/features/fiatOnRamp/ExchangeTransferModalState'
 import { ModalsState } from 'src/features/modals/ModalsState'
@@ -96,11 +95,6 @@ type BackupWarningParams = {
   initialState?: undefined
 }
 
-type TokenWarningParams = {
-  name: typeof ModalName.TokenWarning
-  initialState?: TokenWarningModalState
-}
-
 export type OpenModalParams =
   | AccountSwitcherModalParams
   | BackupReminderParams
@@ -121,7 +115,6 @@ export type OpenModalParams =
   | RestoreWalletModalParams
   | UnitagsIntroParams
   | ViewOnlyExplainerParams
-  | TokenWarningParams
 
 export type CloseModalParams = { name: keyof ModalsState }
 

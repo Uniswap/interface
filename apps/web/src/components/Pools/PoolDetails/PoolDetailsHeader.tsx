@@ -19,20 +19,13 @@ import styled, { useTheme } from 'lib/styled-components'
 import React, { useMemo, useState } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Link } from 'react-router-dom'
-import {
-  ClickableStyle,
-  ClickableTamaguiStyle,
-  EllipsisStyle,
-  ExternalLink,
-  TamaguiClickableStyle,
-  ThemedText,
-} from 'theme/components'
+import { ClickableStyle, ClickableTamaguiStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { Flex, TouchableArea } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { Trans, t } from 'uniswap/src/i18n'
@@ -117,7 +110,6 @@ const PoolDetailsTitle = ({
   feeTier,
   protocolVersion,
   toggleReversed,
-  hookAddress,
 }: {
   token0?: Token
   token1?: Token
@@ -125,7 +117,6 @@ const PoolDetailsTitle = ({
   feeTier?: number
   protocolVersion?: ProtocolVersion
   toggleReversed: React.DispatchWithoutAction
-  hookAddress?: string
 }) => {
   const { formatPercent } = useFormatter()
   const { defaultChainId } = useEnabledChains()
@@ -158,13 +149,7 @@ const PoolDetailsTitle = ({
         <PoolDetailsBadge variant="body3" $position="left">
           {protocolVersion?.toLowerCase()}
         </PoolDetailsBadge>
-        {hookAddress && (
-          <ExternalLink href={getExplorerLink(chainId ?? defaultChainId, hookAddress, ExplorerDataType.ADDRESS)}>
-            <PoolDetailsBadge variant="body3" {...TamaguiClickableStyle}>
-              {shortenAddress(hookAddress, 0)}
-            </PoolDetailsBadge>
-          </ExternalLink>
-        )}
+        {/* TODO(WEB-5364): add hook badge when data available, it should have a hover state and link out to the explorer */}
         {!!feePercent && (
           <PoolDetailsBadge variant="body3" $position="right">
             {feePercent}
@@ -315,7 +300,6 @@ interface PoolDetailsHeaderProps {
   protocolVersion?: ProtocolVersion
   toggleReversed: React.DispatchWithoutAction
   loading?: boolean
-  hookAddress?: string
 }
 
 export function PoolDetailsHeader({
@@ -325,7 +309,6 @@ export function PoolDetailsHeader({
   token1,
   feeTier,
   protocolVersion,
-  hookAddress,
   toggleReversed,
   loading,
 }: PoolDetailsHeaderProps) {
@@ -392,7 +375,6 @@ export function PoolDetailsHeader({
               feeTier={feeTier}
               protocolVersion={protocolVersion}
               toggleReversed={toggleReversed}
-              hookAddress={hookAddress}
             />
           </Row>
           <PoolDetailsHeaderActions

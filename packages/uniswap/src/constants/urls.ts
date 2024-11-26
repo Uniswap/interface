@@ -44,7 +44,6 @@ export const uniswapUrls = {
     transferCryptoHelp: `${helpUrl}/articles/27103878635661-How-to-transfer-crypto-from-a-Robinhood-or-Coinbase-account-to-the-Uniswap-Wallet`,
     moonpayRegionalAvailability: `${helpUrl}/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-`,
     networkFeeInfo: `${helpUrl}/articles/8370337377805-What-is-a-network-fee-`,
-    poolOutOfSync: `${helpUrl}/articles/25845512413069`,
     positionsLearnMore: `${helpUrl}/sections/30998264709645`,
     priceImpact: `${helpUrl}/articles/8671539602317-What-is-Price-Impact`,
     providingLiquidityInfo: `${helpUrl}/articles/30998269400333`,

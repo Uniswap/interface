@@ -248,12 +248,12 @@ function NotificationContent({
                 text={title}
                 element={postCaptionElement}
               />
-              {subtitle && (
-                <Text adjustsFontSizeToFit color="$neutral2" numberOfLines={1} variant="body3">
-                  {subtitle}
-                </Text>
-              )}
             </Flex>
+            {subtitle && (
+              <Text adjustsFontSizeToFit color="$neutral2" numberOfLines={1} variant="body3">
+                {subtitle}
+              </Text>
+            )}
           </Flex>
           {actionButton && (
             <Flex shrink alignItems="flex-end" flexBasis="25%" gap="$spacing4">

@@ -9,6 +9,7 @@ import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import Column from 'components/deprecated/Column'
 import Row, { RowBetween } from 'components/deprecated/Row'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
+import { useActiveLocalCurrency, useActiveLocalCurrencyComponents } from 'hooks/useActiveLocalCurrency'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import styled, { css } from 'lib/styled-components'
 import {
@@ -19,18 +20,16 @@ import {
   useWidthAdjustedDisplayValue,
 } from 'pages/Swap/common/shared'
 import { useCallback, useMemo, useState } from 'react'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { useSendContext } from 'state/send/SendContext'
 import { SendInputError } from 'state/send/hooks'
 import { CurrencyState } from 'state/swap/types'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useEnabledChains, useSupportedChainId } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useAppFiatCurrency, useFiatCurrencyComponents } from 'uniswap/src/features/fiatCurrency/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans } from 'uniswap/src/i18n'
 import useResizeObserver from 'use-resize-observer'
@@ -115,7 +114,7 @@ const AlternateCurrencyDisplayRow = styled(Row)<{ $disabled: boolean }>`
 
 const AlternateCurrencyDisplay = ({ disabled, onToggle }: { disabled: boolean; onToggle: () => void }) => {
   const { formatConvertedFiatNumberOrString, formatNumberOrString } = useFormatter()
-  const activeCurrency = useAppFiatCurrency()
+  const activeCurrency = useActiveLocalCurrency()
 
   const { sendState, derivedSendInfo } = useSendContext()
   const { inputCurrency, inputInFiat } = sendState
@@ -188,13 +187,12 @@ export default function SendCurrencyInputForm({
   disabled?: boolean
   onCurrencyChange?: (selected: CurrencyState) => void
 }) {
-  const { chainId } = useMultichainContext()
+  const { chainId } = useSwapAndLimitContext()
   const { defaultChainId } = useEnabledChains()
   const supportedChainId = useSupportedChainId(chainId)
   const { isTestnetModeEnabled } = useEnabledChains()
   const { formatCurrencyAmount } = useFormatter()
-  const appFiatCurrency = useAppFiatCurrency()
-  const { symbol: fiatSymbol } = useFiatCurrencyComponents(appFiatCurrency)
+  const { symbol: fiatSymbol } = useActiveLocalCurrencyComponents()
   const { formatNumber } = useFormatter()
 
   const { sendState, setSendState, derivedSendInfo } = useSendContext()

@@ -1,10 +1,9 @@
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ElementAfterText, Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { CheckmarkCircle } from 'ui/src/components/icons/CheckmarkCircle'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { NewTag } from 'uniswap/src/components/pill/NewTag'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
@@ -13,11 +12,9 @@ const NETWORK_OPTION_ICON_SIZE = iconSizes.icon24
 export function NetworkOption({
   chainId,
   currentlySelected,
-  isNew,
 }: {
   chainId: UniverseChainId | null
   currentlySelected?: boolean
-  isNew: boolean
 }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -40,11 +37,9 @@ export function NetworkOption({
         {(chainId && <NetworkLogo chainId={chainId} size={NETWORK_OPTION_ICON_SIZE} />) || (
           <Flex width={NETWORK_OPTION_ICON_SIZE} />
         )}
-        <ElementAfterText
-          element={isNew ? <NewTag /> : undefined}
-          text={info.label}
-          textProps={{ color: '$neutral1', variant: 'body2' }}
-        />
+        <Text color="$neutral1" variant="body2">
+          {info.label}
+        </Text>
       </Flex>
     )
   }

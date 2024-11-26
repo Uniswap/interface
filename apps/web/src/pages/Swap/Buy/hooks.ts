@@ -1,10 +1,8 @@
 import { meldSupportedCurrencyToCurrencyInfo } from 'graphql/data/types'
+import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useMemo } from 'react'
-import {
-  getFiatCurrencyName,
-  useAppFiatCurrency,
-  useFiatCurrencyComponents,
-} from 'uniswap/src/features/fiatCurrency/hooks'
+import { getFiatCurrencyName } from 'uniswap/src/features/fiatCurrency/hooks'
 import {
   useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
   useFiatOnRampAggregatorSupportedTokensQuery,
@@ -36,8 +34,8 @@ export function useMeldFiatCurrencyInfo(selectedCountry?: FORCountry): FiatOnRam
     countryCode: selectedCountry?.countryCode ?? 'US',
   })
 
-  const activeLocalCurrency = useAppFiatCurrency()
-  const fiatCurrencyComponents = useFiatCurrencyComponents(activeLocalCurrency)
+  const activeLocale = useActiveLocale()
+  const activeLocalCurrency = useActiveLocalCurrency()
   const { t } = useTranslation()
 
   const appFiatCurrencySupported =
@@ -46,15 +44,16 @@ export function useMeldFiatCurrencyInfo(selectedCountry?: FORCountry): FiatOnRam
       (currency): boolean => activeLocalCurrency.toLowerCase() === currency.fiatCurrencyCode.toLowerCase(),
     )
   const meldSupportedFiatCurrency: FiatCurrencyInfo = useMemo(() => {
+    const activeLocalCurrencyComponents = getFiatCurrencyComponents(activeLocale, activeLocalCurrency)
     const { name, shortName } = getFiatCurrencyName(t, activeLocalCurrency)
     const activeLocalCurrencyFiatCurrencyInfo: FiatCurrencyInfo = {
-      ...fiatCurrencyComponents,
+      ...activeLocalCurrencyComponents,
       name,
       shortName,
       code: activeLocalCurrency,
     }
     return appFiatCurrencySupported ? activeLocalCurrencyFiatCurrencyInfo : fallbackCurrencyInfo
-  }, [activeLocalCurrency, appFiatCurrencySupported, fiatCurrencyComponents, t])
+  }, [activeLocalCurrency, activeLocale, appFiatCurrencySupported, t])
 
   return {
     meldSupportedFiatCurrency,

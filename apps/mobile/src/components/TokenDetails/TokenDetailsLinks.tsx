@@ -2,26 +2,32 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
 import { LinkButton, LinkButtonType } from 'src/components/TokenDetails/LinkButton'
-import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
 import { Flex, Text } from 'ui/src'
 import GlobeIcon from 'ui/src/assets/icons/globe-filled.svg'
 import TwitterIcon from 'ui/src/assets/icons/x-twitter.svg'
-import { useTokenProjectUrlsPartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
+import { TokenDetailsScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { isDefaultNativeAddress } from 'wallet/src/utils/currencyId'
+import { currencyIdToAddress, currencyIdToChain, isDefaultNativeAddress } from 'wallet/src/utils/currencyId'
 import { getTwitterLink } from 'wallet/src/utils/linking'
 
-export function TokenDetailsLinks(): JSX.Element {
+export function TokenDetailsLinks({
+  currencyId,
+  data,
+}: {
+  currencyId: string
+  data: TokenDetailsScreenQuery | undefined
+}): JSX.Element {
   const { t } = useTranslation()
+  const { defaultChainId } = useEnabledChains()
 
-  const { address, chainId, currencyId } = useTokenDetailsContext()
-
-  const { homepageUrl, twitterName } = useTokenProjectUrlsPartsFragment({ currencyId }).data.project ?? {}
-
+  const { homepageUrl, twitterName } = data?.token?.project ?? {}
+  const chainId = currencyIdToChain(currencyId) ?? defaultChainId
+  const address = currencyIdToAddress(currencyId)
   const explorerLink = getExplorerLink(chainId, address, ExplorerDataType.TOKEN)
   const explorerName = getChainInfo(chainId).explorer.name
 
@@ -31,7 +37,6 @@ export function TokenDetailsLinks(): JSX.Element {
         <Text color="$neutral2" mx="$spacing16" variant="subheading2">
           {t('token.links.title')}
         </Text>
-
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <Flex row gap="$spacing8" px="$spacing16">
             <LinkButton
@@ -42,7 +47,6 @@ export function TokenDetailsLinks(): JSX.Element {
               testID={TestID.TokenLinkEtherscan}
               value={explorerLink}
             />
-
             {homepageUrl && (
               <LinkButton
                 Icon={GlobeIcon}
@@ -53,7 +57,6 @@ export function TokenDetailsLinks(): JSX.Element {
                 value={homepageUrl}
               />
             )}
-
             {twitterName && (
               <LinkButton
                 Icon={TwitterIcon}
@@ -64,7 +67,6 @@ export function TokenDetailsLinks(): JSX.Element {
                 value={getTwitterLink(twitterName)}
               />
             )}
-
             {!isDefaultNativeAddress(address) && (
               <LinkButton
                 buttonType={LinkButtonType.Copy}

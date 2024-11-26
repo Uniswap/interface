@@ -39,7 +39,6 @@ import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { checksIfSupportsSidePanel } from 'src/app/utils/chrome'
 import { PrimaryAppInstanceDebuggerLazy } from 'src/store/PrimaryAppInstanceDebuggerLazy'
 import { getReduxPersistor, getReduxStore } from 'src/store/store'
-import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
@@ -193,14 +192,12 @@ export default function OnboardingApp(): JSX.Element {
             <SharedWalletProvider reduxStore={getReduxStore()}>
               <ErrorBoundary>
                 <GraphqlProvider>
-                  <BlankUrlProvider>
-                    <LocalizationContextProvider>
-                      <UnitagUpdaterContextProvider>
-                        <PrimaryAppInstanceDebuggerLazy />
-                        <RouterProvider router={router} />
-                      </UnitagUpdaterContextProvider>
-                    </LocalizationContextProvider>
-                  </BlankUrlProvider>
+                  <LocalizationContextProvider>
+                    <UnitagUpdaterContextProvider>
+                      <PrimaryAppInstanceDebuggerLazy />
+                      <RouterProvider router={router} />
+                    </UnitagUpdaterContextProvider>
+                  </LocalizationContextProvider>
                 </GraphqlProvider>
               </ErrorBoundary>
             </SharedWalletProvider>

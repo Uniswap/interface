@@ -2,7 +2,6 @@
 import { useIncreaseLiquidityContext } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
 import { useIncreaseLiquidityTxContext } from 'components/IncreaseLiquidity/IncreaseLiquidityTxContext'
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
-import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { useGetPoolTokenPercentage, usePositionCurrentPrice } from 'components/Liquidity/hooks'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
 import { useAccount } from 'hooks/useAccount'
@@ -21,7 +20,6 @@ import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/st
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
@@ -29,7 +27,6 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   const selectChain = useSelectChain()
   const startChainId = useAccount().chainId
   const account = useAccountMeta()
-  const trace = useTrace()
 
   const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
 
@@ -45,7 +42,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
     throw new Error('a position must be defined')
   }
 
-  const { currency0Amount, currency1Amount, feeTier } = increaseLiquidityState.position
+  const { currency0Amount, currency1Amount } = increaseLiquidityState.position
 
   const currentPrice = usePositionCurrentPrice(increaseLiquidityState.position)
   const poolTokenPercentage = useGetPoolTokenPercentage(increaseLiquidityState.position)
@@ -64,19 +61,12 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
     setCurrentStep(undefined)
   }
 
-  const onSuccess = () => {
-    setSteps([])
-    setCurrentStep(undefined)
-    onClose()
-  }
-
   const onIncreaseLiquidity = () => {
     const isValidTx = isValidLiquidityTxContext(txInfo)
-    if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx || !increaseLiquidityState.position) {
+    if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
       return
     }
 
-    const { version, poolId, currency0Amount, currency1Amount } = increaseLiquidityState.position
     dispatch(
       liquiditySaga.actions.trigger({
         selectChain,
@@ -85,31 +75,15 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
         liquidityTxContext: txInfo,
         setCurrentStep,
         setSteps,
-        onSuccess,
+        onSuccess: onClose,
         onFailure,
-        analytics: {
-          ...getLPBaseAnalyticsProperties({
-            trace,
-            fee: feeTier,
-            version,
-            poolId,
-            currency0: currency0Amount.currency,
-            currency1: currency1Amount.currency,
-            currency0AmountUsd: currencyAmountsUSDValue?.TOKEN0,
-            currency1AmountUsd: currencyAmountsUSDValue?.TOKEN1,
-            chainId: startChainId,
-          }),
-          expectedAmountBaseRaw: currency0Amount.quotient?.toString() ?? '0',
-          expectedAmountQuoteRaw: currency1Amount.quotient?.toString() ?? '0',
-          createPosition: false,
-        },
       }),
     )
   }
 
   return (
-    <Flex gap="$gap12">
-      <Flex gap="$gap16" px="$padding16" pt="$padding12">
+    <Flex gap="$gap16">
+      <Flex gap="$gap16" px="$padding16">
         <TokenInfo currencyAmount={currencyAmounts?.TOKEN0} currencyUSDAmount={currencyAmountsUSDValue?.TOKEN0} />
         <Text variant="body3" color="$neutral2">
           {t('common.and')}
@@ -121,7 +95,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
       ) : (
         <>
           <Separator mx="$padding16" />
-          <Flex gap="$gap8" px="$padding16" pb="$padding12">
+          <Flex gap="$gap8" px="$padding16">
             <DetailLineItem
               LineItem={{
                 Label: () => (

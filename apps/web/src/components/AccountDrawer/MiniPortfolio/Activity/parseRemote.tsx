@@ -1,10 +1,4 @@
-import {
-  CHAIN_TO_ADDRESSES_MAP,
-  Currency,
-  NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
-  TradeType,
-  UNI_ADDRESSES,
-} from '@uniswap/sdk-core'
+import { Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, TradeType, UNI_ADDRESSES } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
@@ -111,24 +105,12 @@ function isSpam(
   return NftTransfer.some((nft) => nft.asset.isSpam) || TokenTransfer.some((t) => t.asset.project?.isSpam)
 }
 
-function callsV3PositionManagerContract(assetActivity: TransactionActivity) {
+function callsPositionManagerContract(assetActivity: TransactionActivity) {
   const supportedChain = supportedChainIdFromGQLChain(assetActivity.chain)
   if (!supportedChain) {
     return false
   }
   return isSameAddress(assetActivity.details.to, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[supportedChain])
-}
-
-function callsV4PositionManagerContract(assetActivity: TransactionActivity) {
-  const supportedChain = supportedChainIdFromGQLChain(assetActivity.chain)
-  if (!supportedChain) {
-    return false
-  }
-
-  return isSameAddress(assetActivity.details.to, CHAIN_TO_ADDRESSES_MAP[supportedChain].v4PositionManagerAddress)
-}
-function callsPositionManagerContract(assetActivity: TransactionActivity) {
-  return callsV3PositionManagerContract(assetActivity) || callsV4PositionManagerContract(assetActivity)
 }
 
 // Gets counts for number of NFTs in each collection present
@@ -455,15 +437,8 @@ function parseSendReceive(
 ) {
   // TODO(cartcrom): remove edge cases after backend implements
   // Edge case: Receiving two token transfers in interaction w/ V3 manager === removing liquidity. These edge cases should potentially be moved to backend
-  if (
-    callsPositionManagerContract(assetActivity) &&
-    (changes.TokenTransfer.length === 1 || changes.TokenTransfer.length === 2)
-  ) {
-    if (assetActivity.details.type === TransactionType.Send) {
-      return { title: t('common.addedLiquidity'), ...parseLPTransfers(changes, formatNumberOrString) }
-    } else {
-      return { title: t('common.removedLiquidity'), ...parseLPTransfers(changes, formatNumberOrString) }
-    }
+  if (changes.TokenTransfer.length === 2 && callsPositionManagerContract(assetActivity)) {
+    return { title: t('common.removedLiquidity'), ...parseLPTransfers(changes, formatNumberOrString) }
   }
 
   let transfer: NftTransferPartsFragment | TokenTransferPartsFragment | undefined
@@ -533,17 +508,8 @@ function parseMint(
     const collectionName = Object.keys(collectionMap)[0]
 
     // Edge case: Minting a v3 positon represents adding liquidity
-    if (
-      callsPositionManagerContract(assetActivity) &&
-      (changes.TokenTransfer.length === 1 || changes.TokenTransfer.length === 2)
-    ) {
-      if (callsV3PositionManagerContract(assetActivity)) {
-        return { title: t('common.addedLiquidity'), ...parseLPTransfers(changes, formatNumberOrString) }
-      }
-
-      if (callsV4PositionManagerContract(assetActivity)) {
-        return { title: t('pool.createdPosition'), ...parseLPTransfers(changes, formatNumberOrString) }
-      }
+    if (changes.TokenTransfer.length === 2 && callsPositionManagerContract(assetActivity)) {
+      return { title: t('common.addedLiquidity'), ...parseLPTransfers(changes, formatNumberOrString) }
     }
     return { title: t('common.minted'), descriptor: `${collectionMap[collectionName]} ${collectionName}` }
   }

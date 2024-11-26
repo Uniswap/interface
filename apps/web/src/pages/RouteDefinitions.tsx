@@ -15,7 +15,7 @@ const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
-const AddLiquidityV3WithTokenRedirects = lazy(() => import('pages/AddLiquidityV3/redirects'))
+const AddLiquidityWithTokenRedirects = lazy(() => import('pages/AddLiquidity/redirects'))
 const AddLiquidityV2WithTokenRedirects = lazy(() => import('pages/AddLiquidityV2/redirects'))
 const RedirectExplore = lazy(() => import('pages/Explore/redirects'))
 const MigrateV2 = lazy(() => import('pages/MigrateV2'))
@@ -38,7 +38,7 @@ const LegacyPositionPageRedirects = lazy(() =>
 const PositionPage = lazy(() => import('pages/Pool/Positions/PositionPage'))
 const V2PositionPage = lazy(() => import('pages/Pool/Positions/V2PositionPage'))
 const PoolDetails = lazy(() => import('pages/PoolDetails'))
-const RemoveLiquidityV2 = lazy(() => import('pages/RemoveLiquidity/V2'))
+const RemoveLiquidity = lazy(() => import('pages/RemoveLiquidity'))
 const RemoveLiquidityV3 = lazy(() => import('pages/RemoveLiquidity/V3'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
 
@@ -216,7 +216,12 @@ export const routes: RouteDefinition[] = [
     getElement: () => <CreatePosition />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
-    nestedPaths: [':protocolVersion'],
+  }),
+  createRouteDefinition({
+    path: '/positions/create/:protocolVersion',
+    getElement: () => <CreatePosition />,
+    getTitle: getPositionPageTitle,
+    getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
     path: '/positions',
@@ -312,13 +317,13 @@ export const routes: RouteDefinition[] = [
       ':currencyIdA/:currencyIdB/:feeAmount',
       ':currencyIdA/:currencyIdB/:feeAmount/:tokenId',
     ],
-    getElement: () => <AddLiquidityV3WithTokenRedirects />,
+    getElement: () => <AddLiquidityWithTokenRedirects />,
     getTitle: getAddLiquidityPageTitle,
     getDescription: () => StaticTitlesAndDescriptions.AddLiquidityDescription,
   }),
   createRouteDefinition({
     path: '/remove/v2/:currencyIdA/:currencyIdB',
-    getElement: () => <RemoveLiquidityV2 />,
+    getElement: () => <RemoveLiquidity />,
     getTitle: () => t('title.removeLiquidityv2'),
     getDescription: () => t('title.removeTokensv2'),
   }),

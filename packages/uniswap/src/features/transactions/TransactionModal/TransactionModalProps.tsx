@@ -8,7 +8,6 @@ import { TransactionModalContextState } from 'uniswap/src/features/transactions/
 export type TransactionModalProps = PropsWithChildren<{
   modalName: ModalNameType
   onClose: () => void
-  onCurrencyChange?: TransactionModalContextState['onCurrencyChange']
   openWalletRestoreModal?: TransactionModalContextState['openWalletRestoreModal']
   swapRedirectCallback?: TransactionModalContextState['swapRedirectCallback']
   renderBiometricsIcon?: TransactionModalContextState['renderBiometricsIcon']

@@ -3,13 +3,13 @@ import { NumericalInputFontStyle } from 'pages/Swap/common/shared'
 import React, { forwardRef } from 'react'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import styled from 'styled-components'
-import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
+import { useFormatterLocales } from 'utils/formatNumbers'
 
 const inputRegex = RegExp(`^\\d*(\\.\\d{0,2})?$`)
 
 const PercentInput = forwardRef<HTMLInputElement, InputProps>(
   ({ value, onUserInput, placeholder, testId, ...rest }: InputProps, ref) => {
-    const locale = useCurrentLocale()
+    const { formatterLocale } = useFormatterLocales()
 
     const enforcer = (nextUserInput: string) => {
       const sanitizedInput = nextUserInput.replace(/,/g, '.') // Normalize the input
@@ -19,7 +19,7 @@ const PercentInput = forwardRef<HTMLInputElement, InputProps>(
     }
 
     const formatValueWithLocale = (value: string | number) => {
-      const [searchValue, replaceValue] = localeUsesComma(locale) ? [/\./g, ','] : [/,/g, '.']
+      const [searchValue, replaceValue] = localeUsesComma(formatterLocale) ? [/\./g, ','] : [/,/g, '.']
       return value.toString().replace(searchValue, replaceValue)
     }
 

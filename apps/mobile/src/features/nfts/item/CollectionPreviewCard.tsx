@@ -38,7 +38,7 @@ export function CollectionPreviewCard({
   const isViewableCollection = !shouldDisableLink && Boolean(collection || fallbackData?.contractAddress)
 
   return (
-    <TouchableArea disabled={!isViewableCollection} onPress={onPress}>
+    <TouchableArea hapticFeedback disabled={!isViewableCollection} onPress={onPress}>
       <Flex
         row
         alignItems="center"

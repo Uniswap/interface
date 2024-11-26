@@ -3,7 +3,7 @@ module.exports = {
     es6: true,
     node: true,
   },
-  plugins: ['import', 'unused-imports', 'check-file', 'local-rules'],
+  plugins: ['import', 'unused-imports', 'check-file'],
   extends: ['eslint:recommended'],
   parserOptions: {
     ecmaVersion: 2020,
@@ -15,7 +15,6 @@ module.exports = {
     'object-shorthand': ['error', 'always'],
     'unused-imports/no-unused-imports': 'error',
     'consistent-return': ['error', { treatUndefinedAsUnspecified: false }],
-    'local-rules/no-unwrapped-t': ['error', { blockedElements: ['Flex', 'AnimatedFlex', 'TouchableArea', 'Trace'] }],
   },
   overrides: [
     {

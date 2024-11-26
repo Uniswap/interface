@@ -40,7 +40,7 @@ import { OutputTaxTooltipBody } from 'pages/Swap/TaxTooltipBody'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
+import { useAppSelector } from 'state/hooks'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
 import { serializeSwapStateToURLParameters, useSwapActionHandlers } from 'state/swap/hooks'
@@ -49,8 +49,10 @@ import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContex
 import { ExternalLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useIsSupportedChainId, useSupportedChainId } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
@@ -81,8 +83,7 @@ export function SwapForm({
 
   const trace = useTrace()
 
-  const { chainId } = useMultichainContext()
-  const { prefilledState, currencyState } = useSwapAndLimitContext()
+  const { initialChainId, chainId, prefilledState, currencyState, multichainUXEnabled } = useSwapAndLimitContext()
   const supportedChainId = useSupportedChainId(chainId)
   const { swapState, setSwapState, derivedSwapInfo } = useSwapContext()
   const { typedValue, independentField } = swapState
@@ -263,6 +264,38 @@ export function SwapForm({
     swapError: undefined,
     swapResult: undefined,
   })
+  const previousConnectedChainId = usePrevious(connectedChainId)
+  const previousPrefilledState = usePrevious(prefilledState)
+  useEffect(() => {
+    if (multichainUXEnabled) {
+      return
+    }
+    const chainChanged = previousConnectedChainId && previousConnectedChainId !== connectedChainId
+    const prefilledInputChanged =
+      previousPrefilledState?.inputCurrency &&
+      !prefilledState.inputCurrency?.equals(previousPrefilledState.inputCurrency)
+    const prefilledOutputChanged =
+      previousPrefilledState?.outputCurrency &&
+      !prefilledState?.outputCurrency?.equals(previousPrefilledState.outputCurrency)
+
+    if (chainChanged || prefilledInputChanged || prefilledOutputChanged) {
+      // reset local state
+      setSwapFormState({
+        tradeToConfirm: undefined,
+        swapError: undefined,
+        showConfirm: false,
+        swapResult: undefined,
+      })
+    }
+  }, [
+    connectedChainId,
+    multichainUXEnabled,
+    prefilledState.inputCurrency,
+    prefilledState?.outputCurrency,
+    previousConnectedChainId,
+    previousPrefilledState,
+  ])
+
   const { formatCurrencyAmount } = useFormatter()
   const formattedAmounts = useMemo(
     () => ({
@@ -471,6 +504,9 @@ export function SwapForm({
 
   const inputCurrency = currencies[CurrencyField.INPUT] ?? undefined
 
+  const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
+  const targetChain = switchingChain ? switchingChain : undefined
+  const switchingChainIsSupported = useIsSupportedChainId(targetChain)
   // @ts-ignore
   const isUsingBlockedExtension = window.ethereum?.['isPocketUniverseZ']
 
@@ -630,7 +666,7 @@ export function SwapForm({
               fontWeight={535}
               data-testid="wrap-button"
             >
-              <Text variant="buttonLabel1" color="$neutralContrast">
+              <Text variant="buttonLabel1" color="neutralContrast">
                 <Trans i18nKey="common.getStarted" />
               </Text>
             </ButtonPrimary>
@@ -639,6 +675,15 @@ export function SwapForm({
               <ThemedText.DeprecatedMain mb="4px">
                 <Trans i18nKey="common.unsupportedAsset_one" />
               </ThemedText.DeprecatedMain>
+            </ButtonPrimary>
+          ) : !multichainUXEnabled && switchingChain ? (
+            <ButtonPrimary $borderRadius="16px" disabled={true}>
+              <Trans
+                i18nKey="common.connectingToChain"
+                values={{
+                  chainName: switchingChainIsSupported ? getChainInfo(targetChain)?.label : '',
+                }}
+              />
             </ButtonPrimary>
           ) : isDisconnected ? (
             <Trace
@@ -651,6 +696,13 @@ export function SwapForm({
                 <ConnectWalletButtonText />
               </ButtonLight>
             </Trace>
+          ) : !multichainUXEnabled && initialChainId && initialChainId !== connectedChainId ? (
+            <ButtonPrimary $borderRadius="16px" onClick={async () => await selectChain(initialChainId)}>
+              <Trans
+                i18nKey="common.connectToChain.button"
+                values={{ chainName: initialChainId ? getChainLabel(initialChainId) : '' }}
+              />
+            </ButtonPrimary>
           ) : showWrap ? (
             <ButtonPrimary
               $borderRadius="16px"
@@ -683,7 +735,7 @@ export function SwapForm({
                 data-testid="swap-button"
                 disabled={isUsingBlockedExtension || !getIsReviewableQuote(trade, tradeState, swapInputError)}
               >
-                <Text fontSize={20} color="$neutralContrast">
+                <Text fontSize={20} color="neutralContrast">
                   {swapInputError ?? <Trans i18nKey="common.swap" />}
                 </Text>
               </ButtonError>

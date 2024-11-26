@@ -2,7 +2,6 @@ ignores: [
     # Dependencies that depcheck thinks are unused but are actually used
     '@graphql-codegen/*',
     '@commitlint/*',
-    '@uniswap/eslint-config',
     'i18next',
     'moti',
     # Dependencies that depcheck thinks are missing but are actually present or never used

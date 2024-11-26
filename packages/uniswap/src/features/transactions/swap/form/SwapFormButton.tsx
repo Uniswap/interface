@@ -206,6 +206,7 @@ export function SwapFormButton({ wrapCallback }: { wrapCallback?: WrapCallback }
     <Flex alignItems="center" gap={isShortMobileDevice ? '$spacing8' : '$spacing16'}>
       <Trace logPress element={ElementName.SwapReview}>
         <Button
+          hapticFeedback
           animation="fast"
           // Custom styles are matched with our theme hover opacities - can remove this when we implement full theme support in Button
           pressStyle={{ backgroundColor: buttonProps.backgroundColor, scale: 0.98 }}

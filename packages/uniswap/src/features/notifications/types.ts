@@ -6,7 +6,6 @@ import { FinalizedTransactionStatus, TransactionType } from 'uniswap/src/feature
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 
-// Add new types to bottom so we can preserve the enumeration of the existing types
 export enum AppNotificationType {
   Default,
   Error,

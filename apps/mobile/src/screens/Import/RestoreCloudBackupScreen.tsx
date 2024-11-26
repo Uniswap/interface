@@ -12,9 +12,8 @@ import { DownloadAlt, RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { FORMAT_DATE_TIME_SHORT, useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
+import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
-import { shortenAddress } from 'utilities/src/addresses'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackup>
 

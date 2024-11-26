@@ -49,7 +49,7 @@ export function Chart({
     }
 
     return scales
-  }, [zoomLevels, current, innerWidth, series, innerHeight, zoom])
+  }, [current, zoomLevels.initialMin, zoomLevels.initialMax, innerWidth, series, innerHeight, zoom])
 
   useEffect(() => {
     // reset zoom as necessary

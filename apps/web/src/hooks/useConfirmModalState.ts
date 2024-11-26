@@ -12,9 +12,9 @@ import useWrapCallback from 'hooks/useWrapCallback'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { InterfaceTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import invariant from 'tiny-invariant'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -55,7 +55,7 @@ export function useConfirmModalState({
   const { formatCurrencyAmount } = useFormatter()
 
   const account = useAccount()
-  const { chainId } = useMultichainContext()
+  const { chainId } = useSwapAndLimitContext()
 
   // This is a function instead of a memoized value because we do _not_ want it to update as the allowance changes.
   // For example, if the user needs to complete 3 steps initially, we should always show 3 step indicators

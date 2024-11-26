@@ -4,7 +4,7 @@ import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
 import { useTokenContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { ApproveTransactionInfo, TransactionType } from 'state/transactions/types'
 import { trace } from 'tracing/trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -22,7 +22,7 @@ export function useTokenAllowance(
   tokenAllowance?: CurrencyAmount<Token>
   isSyncing: boolean
 } {
-  const { chainId } = useMultichainContext()
+  const { chainId } = useSwapAndLimitContext()
   const contract = useTokenContract(token?.address, false, chainId)
   const inputs = useMemo(() => [owner, spender], [owner, spender])
 

@@ -188,11 +188,7 @@ export function getCurrencySafetyInfo(
   }
 }
 
-export function gqlTokenToCurrencyInfo(
-  token: Omit<NonNullable<NonNullable<TokenQuery['token']>>, 'project'> & {
-    project?: Omit<NonNullable<NonNullable<TokenQuery['token']>['project']>, 'tokens'>
-  },
-): CurrencyInfo | null {
+export function gqlTokenToCurrencyInfo(token: NonNullable<NonNullable<TokenQuery['token']>>): CurrencyInfo | null {
   const { name, chain, address, decimals, symbol, project, feeData, protectionInfo } = token
   const chainId = fromGraphQLChain(chain)
 

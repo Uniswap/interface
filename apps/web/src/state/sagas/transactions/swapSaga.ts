@@ -61,7 +61,6 @@ import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/s
 import { createSaga } from 'uniswap/src/utils/saga'
 import { percentFromFloat } from 'utilities/src/format/percent'
 import { logger } from 'utilities/src/logger/logger'
-import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 interface HandleSwapStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
@@ -78,7 +77,6 @@ function* handleSwapTransactionStep(params: HandleSwapStepParams) {
 
   const onModification = (response: TransactionResponse) => {
     sendAnalyticsEvent(SwapEventName.SWAP_MODIFIED_IN_WALLET, {
-      ...analytics,
       txHash: response.hash,
       expected: txRequest.data?.toString() ?? '',
       actual: response.data,
@@ -109,7 +107,6 @@ function* handleSwapTransactionStep(params: HandleSwapStepParams) {
       },
       txHash: hash,
       portfolioBalanceUsd: analytics.total_balances_usd,
-      trace: analytics,
     }),
   )
 
@@ -310,7 +307,6 @@ export function useSwapCallback(): SwapCallback {
   const selectChain = useSelectChain()
   const startChainId = useAccount().chainId
   const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
-  const trace = useTrace()
 
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
 
@@ -336,7 +332,6 @@ export function useSwapCallback(): SwapCallback {
         currencyInAmountUSD,
         currencyOutAmountUSD,
         portfolioBalanceUsd,
-        trace,
       })
       const swapParams = {
         swapTxContext,
@@ -368,6 +363,6 @@ export function useSwapCallback(): SwapCallback {
       // Reset swap start timestamp now that the swap has been submitted
       appDispatch(updateSwapStartTimestamp({ timestamp: undefined }))
     },
-    [formatter, portfolioBalanceUsd, trace, selectChain, startChainId, v4Enabled, appDispatch, swapStartTimestamp],
+    [formatter, portfolioBalanceUsd, selectChain, startChainId, appDispatch, swapStartTimestamp, v4Enabled],
   )
 }

@@ -1,11 +1,11 @@
+import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
+import useParsedQueryString from 'hooks/useParsedQueryString'
 import { stringify } from 'qs'
 import { useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import type { To } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
-import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
-import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { setCurrentFiatCurrency } from 'uniswap/src/features/settings/slice'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -16,9 +16,8 @@ export function useLocalCurrencyLinkProps(localCurrency?: FiatCurrency): {
 } {
   const dispatch = useDispatch()
   const location = useLocation()
-  const { useParsedQueryString } = useUrlContext()
   const qs = useParsedQueryString()
-  const activeLocalCurrency = useAppFiatCurrency()
+  const activeLocalCurrency = useActiveLocalCurrency()
 
   return useMemo(
     () =>

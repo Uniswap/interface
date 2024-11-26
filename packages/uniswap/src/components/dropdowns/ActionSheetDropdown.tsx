@@ -1,8 +1,18 @@
 import { PropsWithChildren, memo, useEffect, useMemo, useRef, useState } from 'react'
 /* eslint-disable-next-line no-restricted-imports */
-import { GestureResponderEvent, type View } from 'react-native'
+import { type View } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
-import { AnimatePresence, Flex, FlexProps, Portal, TouchableArea, isWeb, styled, useIsDarkMode } from 'ui/src'
+import {
+  AnimatePresence,
+  Flex,
+  FlexProps,
+  ImpactFeedbackStyle,
+  Portal,
+  TouchableArea,
+  isWeb,
+  styled,
+  useIsDarkMode,
+} from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing, zIndices } from 'ui/src/theme'
@@ -35,8 +45,6 @@ export type ActionSheetDropdownStyleProps = {
   dropdownMaxHeight?: number
   dropdownMinWidth?: number
   dropdownZIndex?: FlexProps['zIndex']
-  dropdownGap?: FlexProps['gap']
-  width?: FlexProps['width']
 }
 
 type ActionSheetDropdownProps = PropsWithChildren<{
@@ -46,7 +54,6 @@ type ActionSheetDropdownProps = PropsWithChildren<{
   onDismiss?: () => void
   showArrow?: boolean
   closeOnSelect?: boolean
-  onPress?: FlexProps['onPress']
 }>
 
 export function ActionSheetDropdown({
@@ -56,7 +63,6 @@ export function ActionSheetDropdown({
   onDismiss,
   showArrow,
   closeOnSelect = true,
-  onPress,
   ...contentProps
 }: ActionSheetDropdownProps): JSX.Element {
   const insets = useAppInsets()
@@ -66,9 +72,8 @@ export function ActionSheetDropdown({
     toggleMeasurements: null,
   })
 
-  const openDropdown = (event: GestureResponderEvent): void => {
+  const openDropdown = (): void => {
     onDismiss?.()
-    onPress?.(event)
 
     const containerNode = containerRef?.current
 
@@ -115,15 +120,13 @@ export function ActionSheetDropdown({
     }
   }, [toggleMeasurements?.sticky, insets.top])
 
-  const closeDropdown = (event: GestureResponderEvent): void => {
+  const closeDropdown = (): void => {
     setState({ isOpen: false, toggleMeasurements: null })
-    event.preventDefault()
-    event.stopPropagation()
   }
 
   return (
     <>
-      <TouchableArea width={styles?.width} onPress={openDropdown}>
+      <TouchableArea hapticFeedback hapticStyle={ImpactFeedbackStyle.Light} onPress={openDropdown}>
         {/* collapsable property prevents removing view on Android. Without this property we were
         getting undefined in measureInWindow callback. (https://reactnative.dev/docs/view.html#collapsable-android) */}
         <Flex
@@ -168,7 +171,7 @@ const ActionSheetBackdropWithContent = memo(function ActionSheetBackdropWithCont
   contentProps,
   closeOnSelect,
 }: {
-  closeDropdown: FlexProps['onPress']
+  closeDropdown: () => void
   styles?: ActionSheetDropdownStyleProps & { backdropOpacity?: number }
   isOpen: boolean
   toggleMeasurements: DropdownState['toggleMeasurements']
@@ -199,7 +202,6 @@ const ActionSheetBackdropWithContent = memo(function ActionSheetBackdropWithCont
               alignment={styles?.alignment}
               dropdownMaxHeight={styles?.dropdownMaxHeight}
               dropdownMinWidth={styles?.dropdownMinWidth}
-              dropdownGap={styles?.dropdownGap}
               handleClose={closeDropdown}
               toggleMeasurements={toggleMeasurements}
               closeOnSelect={closeOnSelect}
@@ -216,9 +218,8 @@ type DropdownContentProps = FlexProps & {
   alignment?: 'left' | 'right'
   dropdownMaxHeight?: number
   dropdownMinWidth?: number
-  dropdownGap?: FlexProps['gap']
   toggleMeasurements: LayoutMeasurements & { sticky?: boolean }
-  handleClose?: FlexProps['onPress']
+  handleClose?: () => void
   closeOnSelect: boolean
 }
 
@@ -245,7 +246,6 @@ function DropdownContent({
   alignment = 'left',
   dropdownMaxHeight,
   dropdownMinWidth,
-  dropdownGap,
   toggleMeasurements,
   handleClose,
   closeOnSelect,
@@ -342,7 +342,6 @@ function DropdownContent({
             onScroll={scrollHandler}
           >
             <Flex
-              gap={dropdownGap}
               onLayout={({
                 nativeEvent: {
                   layout: { height },
@@ -354,12 +353,13 @@ function DropdownContent({
               {options.map(({ key, onPress, render }: MenuItemProp) => (
                 <TouchableArea
                   key={key}
+                  hapticFeedback
                   hoverable
                   borderRadius="$rounded8"
-                  onPress={(event) => {
+                  onPress={() => {
                     onPress()
                     if (closeOnSelect) {
-                      handleClose?.(event)
+                      handleClose?.()
                     }
                   }}
                 >
@@ -388,7 +388,7 @@ function DropdownContent({
 
 type BackdropProps = {
   opacity?: number
-  handleClose?: FlexProps['onPress']
+  handleClose?: () => void
 }
 
 function Backdrop({ handleClose, opacity: opacityProp }: BackdropProps): JSX.Element {

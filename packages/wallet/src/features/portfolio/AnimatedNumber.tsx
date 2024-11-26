@@ -19,7 +19,7 @@ import { usePrevious } from 'utilities/src/react/hooks'
 
 export const NUMBER_ARRAY = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 export const NUMBER_WIDTH_ARRAY = [29, 20, 29, 29, 29, 29, 29, 29, 29, 29] // width of digits in a font
-const SPACE_SIZE = isWeb ? 0 : 2
+export const SPACE_SIZE = 8
 export const DIGIT_HEIGHT = 44
 export const DIGIT_MAX_WIDTH = 29
 export const ADDITIONAL_WIDTH_FOR_ANIMATIONS = 8
@@ -363,25 +363,18 @@ const ReanimatedNumber = ({
   }, [colorIndicationDuration, colors.neutral2, colors.statusSuccess.val, prevBalance, balance, prevValue, value])
 
   const chars = useMemo(() => (value ? value.split('') : []), [value])
-  /**
-   * Since this component stitches together multiple characters in order to animate each
-   * character separately, we need to calculate the size and each character including the
-   * including the spacing between them.
-   */
   const charsSizes = useMemo(() => {
-    let lastSize = 0
-    return chars.map((char) => {
-      let currentSize = 0
-      const isDigit = char >= '0' && char <= '9'
-      const isAWhiteSpace = /\s/.test(char)
-      if (isDigit) {
-        const digitWidth = NUMBER_WIDTH_ARRAY_SCALED[Number(char)] || 0
-        currentSize = lastSize + digitWidth + SPACE_SIZE
-      } else if (isAWhiteSpace) {
-        currentSize = lastSize + SPACE_SIZE
-      }
-      lastSize = currentSize
-      return currentSize
+    const lastSizes: number[] = []
+    return chars.map((char, index) => {
+      lastSizes.push(
+        char >= '0' && char <= '9'
+          ? (lastSizes[index - 1] || 0) + (NUMBER_WIDTH_ARRAY_SCALED[Number(char)] || 0)
+          : Number(char) === 0
+            ? (lastSizes[index - 1] || 0) + SPACE_SIZE
+            : 0,
+      )
+
+      return lastSizes[index] || 0
     })
   }, [chars])
 

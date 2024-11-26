@@ -29,18 +29,21 @@ export const TokenDetailsLayout = styled(Flex, {
   row: true,
   justifyContent: 'center',
   width: '100%',
-  gap: 80,
+  gap: 40,
   py: '$spacing48',
-  px: '$spacing40',
+  px: '$padding20',
 
   $lg: {
     pt: 0,
-    px: '$padding20',
+    px: '$padding16',
     pb: 52,
   },
   $xl: {
     flexDirection: 'column',
     alignItems: 'center',
+  },
+  $xxl: {
+    gap: 60,
   },
 })
 

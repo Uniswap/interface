@@ -37,7 +37,7 @@ describe('UniswapX v1', () => {
     after(() => cy.hardhat({ automine: true }))
 
     setupHardhat(async (hardhat) => {
-      await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(nativeOnChain(UniverseChainId.Mainnet), 5e18))
+      await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(nativeOnChain(UniverseChainId.Mainnet), 2e18))
       await hardhat.mine()
     })
 

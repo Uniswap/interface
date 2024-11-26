@@ -6,7 +6,7 @@ module.exports = {
     browser: true,
     node: false,
   },
-  plugins: ['react', 'react-hooks', 'no-relative-import-paths', 'local-rules'],
+  plugins: ['react', 'react-hooks', 'no-relative-import-paths'],
   ignorePatterns: ['**/__generated__/'],
   parserOptions: {
     ecmaFeatures: {
@@ -17,7 +17,6 @@ module.exports = {
     curly: 'error',
     'react/react-in-jsx-scope': 'off',
     'react/jsx-curly-brace-presence': ['error', { props: 'never', children: 'never' }],
-    'local-rules/no-unwrapped-t': ['error', { blockedElements: ['Flex', 'AnimatedFlex', 'TouchableArea', 'Trace'] }],
   },
   settings: {
     react: {

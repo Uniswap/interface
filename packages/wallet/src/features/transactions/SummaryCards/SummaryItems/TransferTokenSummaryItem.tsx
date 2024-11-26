@@ -14,9 +14,9 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { shortenAddress } from 'utilities/src/addresses'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { TransactionSummaryLayout } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'

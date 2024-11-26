@@ -8,15 +8,7 @@ import {
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { ValidatedPermit, ValidatedTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 
-export enum LiquidityTransactionType {
-  Create = 'create',
-  Increase = 'increase',
-  Decrease = 'decrease',
-  Migrate = 'migrate',
-}
-
 export interface LiquidityAction {
-  type: LiquidityTransactionType
   currency0Amount: CurrencyAmount<Currency>
   currency1Amount: CurrencyAmount<Currency>
   liquidityToken?: Token
@@ -52,23 +44,23 @@ interface BaseLiquidityTxAndGasInfo {
 }
 
 export interface IncreasePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
-  type: LiquidityTransactionType.Increase
+  type: 'increase'
   unsigned: boolean
   increasePositionRequestArgs: IncreaseLPPositionRequest | undefined
 }
 
 export interface DecreasePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
-  type: LiquidityTransactionType.Decrease
+  type: 'decrease'
 }
 
 export interface CreatePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
-  type: LiquidityTransactionType.Create
+  type: 'create'
   unsigned: boolean
   createPositionRequestArgs: CreateLPPositionRequest | undefined
 }
 
 export interface MigrateV3PositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
-  type: LiquidityTransactionType.Migrate
+  type: 'migrate'
   migratePositionRequestArgs: MigrateLPPositionRequest | undefined
 }
 

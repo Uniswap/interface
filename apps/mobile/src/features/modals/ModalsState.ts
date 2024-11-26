@@ -1,5 +1,4 @@
 import { ExploreModalState } from 'src/app/modals/ExploreModalState'
-import { TokenWarningModalState } from 'src/app/modals/TokenWarningModalState'
 import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModalState'
 import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
 import { FiatOnRampModalState } from 'src/screens/FiatOnRampModalState'
@@ -14,7 +13,6 @@ export interface AppModalState<T> {
   isOpen: boolean
   initialState?: T
 }
-
 export interface ModalsState {
   [ModalName.AccountSwitcher]: AppModalState<undefined>
   [ModalName.BackupReminder]: AppModalState<undefined>
@@ -41,5 +39,4 @@ export interface ModalsState {
   }>
   [ModalName.ViewOnlyExplainer]: AppModalState<undefined>
   [ModalName.WalletConnectScan]: AppModalState<ScannerModalState>
-  [ModalName.TokenWarning]: AppModalState<TokenWarningModalState>
 }

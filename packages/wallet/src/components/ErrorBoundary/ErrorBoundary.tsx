@@ -5,14 +5,12 @@ import { useDispatch } from 'react-redux'
 import { Dispatch } from 'redux'
 import { Button, Flex, Text } from 'ui/src'
 import { DEAD_LUNI } from 'ui/src/assets'
-import { pushNotification, resetNotifications } from 'uniswap/src/features/notifications/slice'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { logger } from 'utilities/src/logger/logger'
 import { restartApp } from 'wallet/src/components/ErrorBoundary/restart'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
-
-const NOTIFICATION_ROUTER_COMPONENT_NAME = 'SharedNotificationToastRouter'
 
 interface ErrorBoundaryState {
   error: Error | null
@@ -61,11 +59,6 @@ class InternalErrorBoundary extends React.Component<
     })
 
     this.props.onError?.(error)
-
-    const isNotificationError = !!errorBoundaryError.stack?.includes?.(NOTIFICATION_ROUTER_COMPONENT_NAME)
-    if (isNotificationError) {
-      this.props.dispatch(resetNotifications())
-    }
 
     if (this.props.notificationText) {
       this.props.dispatch(

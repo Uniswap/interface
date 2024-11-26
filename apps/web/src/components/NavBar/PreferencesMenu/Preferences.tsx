@@ -1,11 +1,12 @@
 import { PreferencesHeader } from 'components/NavBar/PreferencesMenu/Header'
 import { PreferencesView } from 'components/NavBar/PreferencesMenu/shared'
+import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
+import { useActiveLanguage } from 'hooks/useActiveLocale'
 import styled, { useTheme } from 'lib/styled-components'
 import { ChevronRight } from 'react-feather'
 import { ThemeSelector } from 'theme/components/ThemeToggle'
 import { Text } from 'ui/src'
-import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
-import { useCurrentLanguage, useLanguageInfo } from 'uniswap/src/features/language/hooks'
+import { useLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { Trans, t } from 'uniswap/src/i18n'
 
 const Pref = styled.div`
@@ -57,8 +58,8 @@ export function PreferenceSettings({
   setSettingsView: (view: PreferencesView) => void
   showHeader?: boolean
 }) {
-  const activeLocalCurrency = useAppFiatCurrency()
-  const activeLanguage = useCurrentLanguage()
+  const activeLocalCurrency = useActiveLocalCurrency()
+  const activeLanguage = useActiveLanguage()
   const languageInfo = useLanguageInfo(activeLanguage)
 
   const items: SettingItem[] = [

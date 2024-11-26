@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useState } from 'react'
-import { KeyboardAvoidingView, ScrollView, ScrollViewProps, StyleSheet } from 'react-native'
+import { KeyboardAvoidingView, ScrollView, StyleSheet } from 'react-native'
 import { Screen, ScreenProps } from 'src/components/layout/Screen'
 import { Flex, flexStyles } from 'ui/src'
 import { spacing } from 'ui/src/theme'
@@ -10,7 +10,6 @@ type OnboardingScreenProps = ScreenProps & {
   header?: JSX.Element
   footer?: JSX.Element
   minHeightWhenKeyboardExpanded?: boolean
-  keyboardDismissMode?: ScrollViewProps['keyboardDismissMode']
 }
 
 export function SafeKeyboardScreen({
@@ -18,7 +17,6 @@ export function SafeKeyboardScreen({
   header,
   footer,
   minHeightWhenKeyboardExpanded = false,
-  keyboardDismissMode,
   ...screenProps
 }: PropsWithChildren<OnboardingScreenProps>): JSX.Element {
   const [footerHeight, setFooterHeight] = useState(0)
@@ -39,12 +37,7 @@ export function SafeKeyboardScreen({
         style={styles.base}
       >
         {header}
-        <ScrollView
-          keyboardDismissMode={keyboardDismissMode}
-          bounces={false}
-          contentContainerStyle={flexStyles.grow}
-          keyboardShouldPersistTaps="handled"
-        >
+        <ScrollView bounces={false} contentContainerStyle={flexStyles.grow} keyboardShouldPersistTaps="handled">
           <Flex minHeight={minHeight} px="$spacing16" style={[containerStyle, styles.container]}>
             {children}
           </Flex>

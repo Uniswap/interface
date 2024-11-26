@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, Price, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import {
   FeeAmount,
@@ -15,7 +15,6 @@ import { Pool as V4Pool, Position as V4Position, priceToClosestTick as priceToCl
 import { DepositInfo } from 'components/Liquidity/types'
 import { getProtocolItems } from 'components/Liquidity/utils'
 import { ZERO_ADDRESS } from 'constants/misc'
-import { PoolCache } from 'hooks/usePools'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import {
@@ -43,9 +42,7 @@ import {
   CreateLPPositionResponse,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
-import { CreatePositionTxAndGasInfo, LiquidityTransactionType } from 'uniswap/src/features/transactions/liquidity/types'
-import { getTradeSettingsDeadline } from 'uniswap/src/features/transactions/swap/form/utils'
-import { SwapSettingsState } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
+import { CreatePositionTxAndGasInfo } from 'uniswap/src/features/transactions/liquidity/types'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
 import { getTickToPrice, getV4TickToPrice } from 'utils/getTickToPrice'
@@ -67,24 +64,6 @@ export function getSortedCurrenciesTuple(
   }
 
   return a.sortsBefore(b) ? [a, b] : [b, a]
-}
-
-export function getSortedCurrenciesTupleWithWrap(
-  a: Currency,
-  b: Currency,
-  protocolVersion: ProtocolVersion,
-): [Currency, Currency]
-export function getSortedCurrenciesTupleWithWrap(
-  a: OptionalCurrency,
-  b: OptionalCurrency,
-  protocolVersion: ProtocolVersion,
-): [OptionalCurrency, OptionalCurrency]
-export function getSortedCurrenciesTupleWithWrap(
-  a: OptionalCurrency,
-  b: OptionalCurrency,
-  protocolVersion: ProtocolVersion,
-): [OptionalCurrency, OptionalCurrency] {
-  return getSortedCurrenciesTuple(getCurrencyWithWrap(a, protocolVersion), getCurrencyWithWrap(b, protocolVersion))
 }
 
 export function getCurrencyWithWrap(currency: Currency, protocolVersion: ProtocolVersion.V2 | ProtocolVersion.V3): Token
@@ -129,9 +108,9 @@ export function getCurrencyAddressWithWrap(
   return currency?.wrapped.address
 }
 
-export function getCurrencyAddressForTradingApi(currency: Currency): string
-export function getCurrencyAddressForTradingApi(currency: OptionalCurrency): string
-export function getCurrencyAddressForTradingApi(currency: OptionalCurrency): string {
+function getCurrencyAddressForTradingApi(currency: Currency): string
+function getCurrencyAddressForTradingApi(currency: OptionalCurrency): string | undefined
+function getCurrencyAddressForTradingApi(currency: OptionalCurrency): string | undefined {
   return currency?.isToken ? currency.address : ZERO_ADDRESS
 }
 
@@ -438,11 +417,7 @@ export function getDependentAmountFromV2Pair({
       ? pair.priceOf(token0Wrapped).quote(independentAmount.wrapped)
       : pair.priceOf(token1Wrapped).quote(independentAmount.wrapped)
 
-  return dependentToken
-    ? dependentToken?.isNative
-      ? CurrencyAmount.fromRawAmount(dependentToken, dependentTokenAmount.quotient)
-      : dependentTokenAmount
-    : undefined
+  return dependentToken ? CurrencyAmount.fromRawAmount(dependentToken, dependentTokenAmount.quotient) : undefined
 }
 
 export function getDependentAmountFromV3Position({
@@ -565,7 +540,6 @@ export function getV3PriceRangeInfo({
     getCurrencyWithWrap(baseCurrency, protocolVersion),
     getCurrencyWithWrap(quoteCurrency, protocolVersion),
   ]
-
   const initialPriceTokens = getInvertedTuple(
     [getCurrencyWithWrap(currencies[0], protocolVersion), getCurrencyWithWrap(currencies[1], protocolVersion)],
     state.initialPriceInverted,
@@ -601,7 +575,6 @@ export function getV3PriceRangeInfo({
   const [baseRangeInput, quoteRangeInput] = invertPrice
     ? [state.maxPrice, state.minPrice]
     : [state.minPrice, state.maxPrice]
-
   const lowerTick =
     baseRangeInput === ''
       ? tickSpaceLimits[0]
@@ -614,7 +587,6 @@ export function getV3PriceRangeInfo({
       : invertPrice
         ? tryParseTick(sortedToken1, sortedToken0, fee.feeAmount, state.minPrice)
         : tryParseTick(sortedToken0, sortedToken1, fee.feeAmount, state.maxPrice)
-
   const ticks: [OptionalNumber, OptionalNumber] = [lowerTick, upperTick]
   const invalidRange = Boolean(lowerTick && upperTick && lowerTick >= upperTick)
 
@@ -888,7 +860,6 @@ export function generateCreateCalldataQueryParams({
   priceRangeState,
   derivedPriceRangeInfo,
   derivedDepositInfo,
-  swapSettings,
 }: {
   account?: AccountMeta
   approvalCalldata?: CheckApprovalLPResponse
@@ -897,12 +868,10 @@ export function generateCreateCalldataQueryParams({
   priceRangeState: PriceRangeState
   derivedPriceRangeInfo: PriceRangeInfo
   derivedDepositInfo: DepositInfo
-  swapSettings: SwapSettingsState
 }): CreateLPPositionRequest | undefined {
   const apiProtocolItems = getProtocolItems(positionState.protocolVersion)
   const currencies = derivedPositionInfo.currencies
   const { currencyAmounts } = derivedDepositInfo
-  const { customDeadline } = swapSettings
 
   if (
     !account?.address ||
@@ -916,8 +885,6 @@ export function generateCreateCalldataQueryParams({
 
   const { token0Approval, token1Approval, positionTokenApproval, permitData } = approvalCalldata ?? {}
 
-  const deadline = getTradeSettingsDeadline(customDeadline)
-
   if (derivedPositionInfo.protocolVersion === ProtocolVersion.V2) {
     if (derivedPositionInfo.protocolVersion !== derivedPriceRangeInfo.protocolVersion) {
       return undefined
@@ -929,28 +896,17 @@ export function generateCreateCalldataQueryParams({
       return undefined
     }
 
-    // token0 and token1 from the sdk are automatically sorted and we need to ensure the values we send
-    // to the trading API are also sorted
-    const sortedToken0 = pair.token0
-    const sortedToken1 = pair.token1
-
-    const token0 = getCurrencyWithWrap(currencies[0], derivedPositionInfo.protocolVersion)
-    const token1 = getCurrencyWithWrap(currencies[1], derivedPositionInfo.protocolVersion)
-    const token0Index = sortedToken0.equals(token0) ? 'TOKEN0' : 'TOKEN1'
-    const token1Index = sortedToken1.equals(token1) ? 'TOKEN1' : 'TOKEN0'
-
     return {
       simulateTransaction: !(permitData || token0Approval || token1Approval || positionTokenApproval),
       protocol: apiProtocolItems,
       walletAddress: account.address,
       chainId: currencyAmounts.TOKEN0.currency.chainId,
-      amount0: currencyAmounts[token0Index]?.quotient.toString(),
-      amount1: currencyAmounts[token1Index]?.quotient.toString(),
-      deadline,
+      amount0: currencyAmounts.TOKEN0.quotient.toString(),
+      amount1: currencyAmounts.TOKEN1.quotient.toString(),
       position: {
         pool: {
-          token0: getCurrencyAddressForTradingApi(currencyAmounts[token0Index]?.currency),
-          token1: getCurrencyAddressForTradingApi(currencyAmounts[token1Index]?.currency),
+          token0: getCurrencyAddressForTradingApi(currencyAmounts.TOKEN0.currency),
+          token1: getCurrencyAddressForTradingApi(currencyAmounts.TOKEN1.currency),
         },
       },
     } satisfies CreateLPPositionRequest
@@ -984,35 +940,24 @@ export function generateCreateCalldataQueryParams({
   const sqrtRatioX96 = creatingPool ? undefined : pool.sqrtRatioX96.toString()
   const tickSpacing = pool.tickSpacing
 
-  // token0 and token1 from the sdk are automatically sorted and we need to ensure the values we send
-  // to the trading API are also sorted
-  const sortedToken0 = pool.token0
-  const sortedToken1 = pool.token1
-
-  const token0 = getCurrencyWithWrap(currencies[0], derivedPositionInfo.protocolVersion)
-  const token1 = getCurrencyWithWrap(currencies[1], derivedPositionInfo.protocolVersion)
-  const token0Index = token0 && sortedToken0.equals(token0) ? 'TOKEN0' : 'TOKEN1'
-  const token1Index = token1 && sortedToken1.equals(token1) ? 'TOKEN1' : 'TOKEN0'
-
   return {
     simulateTransaction: !(permitData || token0Approval || token1Approval || positionTokenApproval),
     protocol: apiProtocolItems,
     walletAddress: account.address,
     chainId: currencyAmounts.TOKEN0.currency.chainId,
-    amount0: currencyAmounts[token0Index]?.quotient.toString(),
-    amount1: currencyAmounts[token1Index]?.quotient.toString(),
+    amount0: currencyAmounts.TOKEN0?.quotient.toString(),
+    amount1: currencyAmounts.TOKEN1?.quotient.toString(),
     poolLiquidity,
     currentTick,
     sqrtRatioX96,
     initialPrice,
-    deadline,
     position: {
       tickLower,
       tickUpper,
       pool: {
         tickSpacing,
-        token0: getCurrencyAddressForTradingApi(currencyAmounts[token0Index]?.currency),
-        token1: getCurrencyAddressForTradingApi(currencyAmounts[token1Index]?.currency),
+        token0: getCurrencyAddressForTradingApi(currencies[0]),
+        token1: getCurrencyAddressForTradingApi(currencies[1]),
         fee: positionState.fee.feeAmount,
         hooks: positionState.hook,
       },
@@ -1065,12 +1010,11 @@ export function generateCreatePositionTxRequest({
       : createCalldataQueryParams
 
   return {
-    type: LiquidityTransactionType.Create,
+    type: 'create',
     unsigned: Boolean(approvalCalldata?.permitData),
     protocolVersion: derivedPositionInfo.protocolVersion,
     createPositionRequestArgs: queryParams,
     action: {
-      type: LiquidityTransactionType.Create,
       currency0Amount: currencyAmounts.TOKEN0,
       currency1Amount: currencyAmounts.TOKEN1,
       liquidityToken:
@@ -1085,24 +1029,4 @@ export function generateCreatePositionTxRequest({
     revocationTxRequest: undefined,
     permit: validatedPermitRequest,
   } satisfies CreatePositionTxAndGasInfo
-}
-
-export function getPoolIdOrAddressFromCreatePositionInfo(positionInfo: CreatePositionInfo): string | undefined {
-  switch (positionInfo.protocolVersion) {
-    case ProtocolVersion.V2:
-      return positionInfo.pair?.liquidityToken.address
-    case ProtocolVersion.V3:
-      return positionInfo.pool?.chainId && positionInfo.currencies[0] && positionInfo.currencies[1]
-        ? PoolCache.getPoolAddress(
-            V3_CORE_FACTORY_ADDRESSES[positionInfo.pool.chainId],
-            positionInfo.currencies[0].wrapped,
-            positionInfo.currencies[1].wrapped,
-            positionInfo.pool.fee,
-            positionInfo.pool.chainId,
-          )
-        : undefined
-    case ProtocolVersion.V4:
-    default:
-      return positionInfo.pool?.poolId
-  }
 }

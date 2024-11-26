@@ -5,7 +5,7 @@ import { useMemo, useRef } from 'react'
 import { ClassicTrade, INTERNAL_ROUTER_PREFERENCE_PRICE, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useSupportedChainId } from 'uniswap/src/features/chains/hooks'
 
 /**
  * Returns the price in USDC of the input currency

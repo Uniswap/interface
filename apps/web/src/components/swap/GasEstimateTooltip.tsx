@@ -6,9 +6,9 @@ import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import Row, { RowFixed } from 'components/deprecated/Row'
 import { GasBreakdownTooltip } from 'components/swap/GasBreakdownTooltip'
 import styled from 'lib/styled-components'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { SubmittableTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { ThemedText } from 'theme/components'
 import { chainSupportsGasEstimates } from 'uniswap/src/features/chains/utils'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -24,7 +24,7 @@ const StyledGasIcon = styled(Gas)`
 `
 
 export default function GasEstimateTooltip({ trade, loading }: { trade?: SubmittableTrade; loading: boolean }) {
-  const { chainId } = useMultichainContext()
+  const { chainId } = useSwapAndLimitContext()
   const { formatNumber } = useFormatter()
 
   if (!trade || !chainId || !chainSupportsGasEstimates(chainId)) {

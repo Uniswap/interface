@@ -1,6 +1,5 @@
 query AllV3Ticks ($chain: Chain!, $address: String!, $skip: Int, $first: Int){
   v3Pool(chain: $chain, address: $address) {
-    id
     ticks(skip: $skip, first: $first) {
       tick: tickIdx
       liquidityNet

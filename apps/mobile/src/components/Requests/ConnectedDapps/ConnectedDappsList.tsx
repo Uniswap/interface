@@ -1,4 +1,3 @@
-import { INTERNAL_ERRORS, getSdkError } from '@walletconnect/utils'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, StyleSheet } from 'react-native'
@@ -8,26 +7,14 @@ import { DappConnectedNetworkModal } from 'src/components/Requests/ConnectedDapp
 import { DappConnectionItem } from 'src/components/Requests/ConnectedDapps/DappConnectionItem'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { openModal } from 'src/features/modals/modalSlice'
-import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
-import {
-  WalletConnectSession,
-  removePendingSession,
-  removeSession,
-} from 'src/features/walletConnect/walletConnectSlice'
+import { WalletConnectSession, removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, TouchableArea } from 'ui/src'
-import { Scan } from 'ui/src/components/icons'
+import { Edit, Scan } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
-import { logger } from 'utilities/src/logger/logger'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { DappEllipsisDropdown } from 'wallet/src/components/settings/DappEllipsisDropdown/DappEllipsisDropdown'
-import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type ConnectedDappsProps = {
   sessions: WalletConnectSession[]
@@ -40,51 +27,12 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
   const { fullHeight } = useDeviceDimensions()
   const [isEditing, setIsEditing] = useState(false)
   const [selectedSession, setSelectedSession] = useState<WalletConnectSession>()
-  const { address } = useActiveAccountWithThrow()
 
   const onPressScan = useCallback(() => {
     // in case we received a pending session from a previous scan after closing modal
     dispatch(removePendingSession())
     dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr }))
   }, [dispatch])
-
-  const disconnectSession = useCallback(
-    async (session: WalletConnectSession, isNotification = true) => {
-      try {
-        dispatch(removeSession({ account: address, sessionId: session.id }))
-        try {
-          await wcWeb3Wallet.disconnectSession({
-            topic: session.id,
-            reason: getSdkError('USER_DISCONNECTED'),
-          })
-        } catch (error: unknown) {
-          const isAcceptableError =
-            error instanceof Error && error.message.startsWith(INTERNAL_ERRORS.NO_MATCHING_KEY.message)
-
-          if (!isAcceptableError) {
-            // caught by logging catch block
-            throw error
-          }
-        }
-
-        if (isNotification) {
-          dispatch(
-            pushNotification({
-              type: AppNotificationType.WalletConnect,
-              address,
-              dappName: session.dapp.name,
-              event: WalletConnectEvent.Disconnected,
-              imageUrl: session.dapp.icon,
-              hideDelay: 3 * ONE_SECOND_MS,
-            }),
-          )
-        }
-      } catch (error) {
-        logger.error(error, { tags: { file: 'DappConnectionItem', function: 'onDisconnect' } })
-      }
-    },
-    [address, dispatch],
-  )
 
   return (
     <>
@@ -100,29 +48,13 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
           </Flex>
           <Flex alignItems="flex-end" flexBasis="15%">
             {sessions.length > 0 ? (
-              <DappEllipsisDropdown
-                setIsEditing={setIsEditing}
-                isEditing={isEditing}
-                removeAllDappConnections={async () => {
-                  try {
-                    await Promise.all(
-                      sessions.map(async (session) => {
-                        await disconnectSession(session, false)
-                      }),
-                    )
-                  } catch (error) {
-                    logger.error(error, { tags: { file: 'ConnectedDappsList', function: 'removeAllDappConnections' } })
-                  }
-
-                  dispatch(
-                    pushNotification({
-                      type: AppNotificationType.Success,
-                      title: t('notification.walletConnect.disconnected'),
-                      hideDelay: 3 * ONE_SECOND_MS,
-                    }),
-                  )
+              <TouchableArea
+                onPress={(): void => {
+                  setIsEditing(!isEditing)
                 }}
-              />
+              >
+                {isEditing ? <Edit color="$accent1" size="$icon.20" /> : <Edit color="$neutral2" size="$icon.20" />}
+              </TouchableArea>
             ) : (
               <TouchableArea onPress={onPressScan}>
                 <Scan color="$neutral2" size="$icon.20" />
@@ -142,7 +74,11 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
             keyExtractor={(item): string => item.id}
             numColumns={2}
             renderItem={({ item }): JSX.Element => (
-              <DappConnectionItem handleDisconnect={disconnectSession} isEditing={isEditing} session={item} />
+              <DappConnectionItem
+                isEditing={isEditing}
+                session={item}
+                onPressChangeNetwork={(session): void => setSelectedSession(session)}
+              />
             )}
           />
         ) : (

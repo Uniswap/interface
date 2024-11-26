@@ -2,8 +2,8 @@ import { loadingOpacityMixin } from 'components/Loader/styled'
 import styled from 'lib/styled-components'
 import React, { forwardRef } from 'react'
 import { Locale } from 'uniswap/src/features/language/constants'
-import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { escapeRegExp } from 'utils/escapeRegExp'
+import { useFormatterLocales } from 'utils/formatNumbers'
 
 export const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string; disabled?: boolean }>`
   color: ${({ error, theme }) => (error ? theme.critical : theme.neutral1)};
@@ -68,7 +68,7 @@ export function isInputGreaterThanDecimals(value: string, maxDecimals?: number):
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ value, onUserInput, placeholder, prependSymbol, maxDecimals, testId, ...rest }: InputProps, ref) => {
-    const locale = useCurrentLocale()
+    const { formatterLocale } = useFormatterLocales()
 
     const enforcer = (nextUserInput: string) => {
       if (nextUserInput === '' || inputRegex.test(escapeRegExp(nextUserInput))) {
@@ -81,7 +81,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     }
 
     const formatValueWithLocale = (value: string | number) => {
-      const [searchValue, replaceValue] = localeUsesComma(locale) ? [/\./g, ','] : [/,/g, '.']
+      const [searchValue, replaceValue] = localeUsesComma(formatterLocale) ? [/\./g, ','] : [/,/g, '.']
       return value.toString().replace(searchValue, replaceValue)
     }
 

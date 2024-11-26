@@ -1,10 +1,10 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
-import { Button, Flex, Loader, useLayoutAnimationOnChange } from 'ui/src'
+import { Button, Flex, Loader } from 'ui/src'
 import { WalletFilled } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -34,8 +34,6 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
 
   const { selectedAddresses, toggleAddressSelection } = useSelectAccounts(importableAccounts)
 
-  useLayoutAnimationOnChange(isLoading)
-
   const onSubmit = useCallback(async () => {
     await selectImportedAccounts(selectedAddresses)
 
@@ -55,8 +53,6 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
   return (
     <>
       <OnboardingScreen
-        ignoreContainerPaddingX
-        ignoreTextContainerMarginBottom={!isLoading}
         Icon={WalletFilled}
         subtitle={!showError ? subtitle : undefined}
         title={!showError ? title : ''}
@@ -68,34 +64,31 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
             onRetry={refetchAccounts}
           />
         ) : isLoading ? (
-          <Flex grow justifyContent="space-between" px="$spacing16">
+          <Flex grow justifyContent="space-between">
             <Loader.Wallets repeat={5} />
           </Flex>
         ) : (
           <ScrollView>
-            <Flex height="$spacing12" />
             <Flex gap="$spacing12">
               {importableAccounts?.map((account, i) => {
                 const { address, balance } = account
                 return (
-                  <Flex key={address} px="$spacing16">
-                    <WalletPreviewCard
-                      key={address}
-                      address={address}
-                      balance={balance}
-                      hideSelectionCircle={isOnlyOneAccount}
-                      name={ElementName.WalletCard}
-                      selected={selectedAddresses.includes(address)}
-                      testID={`${TestID.WalletCard}-${i + 1}`}
-                      onSelect={toggleAddressSelection}
-                    />
-                  </Flex>
+                  <WalletPreviewCard
+                    key={address}
+                    address={address}
+                    balance={balance}
+                    hideSelectionCircle={isOnlyOneAccount}
+                    name={ElementName.WalletCard}
+                    selected={selectedAddresses.includes(address)}
+                    testID={`${TestID.WalletCard}-${i + 1}`}
+                    onSelect={toggleAddressSelection}
+                  />
                 )
               })}
             </Flex>
           </ScrollView>
         )}
-        <Flex opacity={showError ? 0 : 1} px="$spacing16">
+        <Flex opacity={showError ? 0 : 1}>
           <Button
             disabled={isLoading || !!showError || selectedAddresses.length === 0}
             testID={TestID.Next}

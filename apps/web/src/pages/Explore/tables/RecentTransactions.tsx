@@ -14,6 +14,7 @@ import {
 import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { BETypeToTransactionType, TransactionType, useAllTransactions } from 'graphql/data/useAllTransactions'
 import { OrderDirection } from 'graphql/data/util'
+import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { memo, useMemo, useReducer, useRef, useState } from 'react'
 import { Flex, Text, styled } from 'ui/src'
 import {
@@ -22,7 +23,6 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -36,7 +36,7 @@ const TableRow = styled(Flex, {
 })
 
 const RecentTransactions = memo(function RecentTransactions() {
-  const activeLocalCurrency = useAppFiatCurrency()
+  const activeLocalCurrency = useActiveLocalCurrency()
   const { formatNumber, formatFiatPrice } = useFormatter()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
   const filterAnchorRef = useRef<HTMLDivElement>(null)

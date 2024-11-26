@@ -1,5 +1,5 @@
 import { BarCodeScanner } from 'expo-barcode-scanner'
-import { AutoFocus, BarCodeScanningResult, Camera, CameraType } from 'expo-camera'
+import { BarCodeScanningResult, Camera, CameraType } from 'expo-camera'
 import { PermissionStatus } from 'expo-modules-core'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -8,7 +8,7 @@ import { launchImageLibrary } from 'react-native-image-picker'
 
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Defs, LinearGradient, Path, Rect, Stop, Svg } from 'react-native-svg'
-import { Button, Flex, SpinningLoader, Text, ThemeName, TouchableArea, useSporeColors } from 'ui/src'
+import { Button, Flex, SpinningLoader, Text, useSporeColors } from 'ui/src'
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
 import { Global, PhotoStacked } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
@@ -21,7 +21,6 @@ import { openSettings } from 'wallet/src/utils/linking'
 type QRCodeScannerProps = {
   onScanCode: (data: string) => void
   shouldFreezeCamera: boolean
-  theme?: ThemeName
 }
 interface WCScannerProps extends QRCodeScannerProps {
   numConnections: number
@@ -39,7 +38,7 @@ const SCAN_ICON_MASK_OFFSET_RATIO = 0.02 // used for mask to match spacing in Ca
 const LOADER_SIZE = iconSizes.icon40
 
 export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.Element {
-  const { onScanCode, shouldFreezeCamera, theme } = props
+  const { onScanCode, shouldFreezeCamera } = props
   const isWalletConnectModal = isWalletConnect(props)
 
   const { t } = useTranslation()
@@ -48,8 +47,6 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
 
   const [permissionResponse, requestPermissionResponse] = Camera.useCameraPermissions()
   const permissionStatus = permissionResponse?.status
-
-  const [autoFocus, setAutoFocus] = useState(AutoFocus.off)
 
   const [isReadingImageFile, setIsReadingImageFile] = useState(false)
   const [overlayLayout, setOverlayLayout] = useState<LayoutRectangle | null>()
@@ -121,29 +118,8 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   const cameraHeight = CAMERA_ASPECT_RATIO * cameraWidth
   const scannerSize = Math.min(overlayWidth, cameraWidth) * SCAN_ICON_WIDTH_RATIO
 
-  const photoSelectBackgroundColor = useSporeColors(theme).surface1
-
-  /**
-   * Resets the camera auto focus to force the camera to refocus by toggling
-   * the auto focus off and on. This allows us to manually let the user refocus
-   * the camera since the expo-camera package does not currently support this.
-   * The refocus is done by toggling expo-camera's Camera's autoFocus prop. Since
-   * RN state is batched, we need to debounce the toggle.
-   */
-  function resetCameraAutoFocus(): () => void {
-    const ARBITRARY_DELAY = 100
-    const abortController = new AbortController()
-    setAutoFocus(AutoFocus.off)
-    setTimeout(() => {
-      if (!abortController.signal.aborted) {
-        setAutoFocus(AutoFocus.on)
-      }
-    }, ARBITRARY_DELAY)
-    return () => abortController.abort()
-  }
-
   return (
-    <AnimatedFlex grow theme={theme} borderRadius="$rounded12" entering={FadeIn} exiting={FadeOut} overflow="hidden">
+    <AnimatedFlex grow borderRadius="$rounded12" entering={FadeIn} exiting={FadeOut} overflow="hidden">
       <Flex justifyContent="center" style={StyleSheet.absoluteFill}>
         <Flex height={cameraHeight} overflow="hidden" width={cameraWidth}>
           {permissionStatus === PermissionStatus.GRANTED && !isReadingImageFile && (
@@ -153,7 +129,6 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
               }}
               style={StyleSheet.absoluteFillObject}
               type={CameraType.back}
-              autoFocus={autoFocus}
               onBarCodeScanned={handleBarCodeScanned}
             />
           )}
@@ -189,10 +164,8 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             </Text>
           </Flex>
           {!shouldFreezeCamera ? (
-            <TouchableArea onPress={resetCameraAutoFocus}>
-              {/* camera isn't frozen (after seeing barcode) — show the camera scan icon (the four white corners) */}
-              <CameraScan color={colors.white.val} height={scannerSize} strokeWidth={5} width={scannerSize} />
-            </TouchableArea>
+            // camera isn't frozen (after seeing barcode) — show the camera scan icon (the four white corners)
+            <CameraScan color={colors.white.val} height={scannerSize} strokeWidth={5} width={scannerSize} />
           ) : (
             // camera has been frozen (has seen a barcode) — show the loading spinner and "Connecting..." or "Loading..."
             <Flex height={scannerSize} width={scannerSize}>
@@ -248,7 +221,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
           >
             <Flex
               centered
-              backgroundColor={photoSelectBackgroundColor.val}
+              backgroundColor={colors.surface1.val}
               borderRadius="$roundedFull"
               p="$spacing12"
               onPress={onPickImageFilePress}

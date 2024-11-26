@@ -8,10 +8,10 @@ import { UNITAGS_BANNER_VERTICAL_DARK, UNITAGS_BANNER_VERTICAL_LIGHT } from 'ui/
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes } from 'ui/src/theme'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'uniswap/src/features/unitags/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
+import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'wallet/src/features/unitags/constants'
 import { useUnitagClaimHandler } from 'wallet/src/features/unitags/useUnitagClaimHandler'
 
 const IMAGE_ASPECT_RATIO = 0.42

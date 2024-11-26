@@ -127,7 +127,7 @@ const TransactionTitleTable: { [key in TransactionType]: { [state in Transaction
     [TransactionStatus.Confirmed]: t('common.added.v2.liquidity'),
     [TransactionStatus.Failed]: t('common.add.v2.liquidity.failed'),
   },
-  [TransactionType.MIGRATE_LIQUIDITY_V2_TO_V3]: {
+  [TransactionType.MIGRATE_LIQUIDITY_V3]: {
     [TransactionStatus.Pending]: t('common.migrating.liquidity'),
     [TransactionStatus.Confirmed]: t('common.migrated.liquidity'),
     [TransactionStatus.Failed]: t('common.migrate.liquidity.failed'),
@@ -151,16 +151,6 @@ const TransactionTitleTable: { [key in TransactionType]: { [state in Transaction
     [TransactionStatus.Pending]: t('common.removing.liquidity'),
     [TransactionStatus.Confirmed]: t('common.liquidity.removed'),
     [TransactionStatus.Failed]: t('common.remove.liquidity.failed'),
-  },
-  [TransactionType.CREATE_POSITION]: {
-    [TransactionStatus.Pending]: t('position.create.modal.header'),
-    [TransactionStatus.Confirmed]: t('pool.createdPosition'),
-    [TransactionStatus.Failed]: t('pool.createdPosition.failed'),
-  },
-  [TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4]: {
-    [TransactionStatus.Pending]: t('common.migrating.liquidity'),
-    [TransactionStatus.Confirmed]: t('common.migrated.liquidity'),
-    [TransactionStatus.Failed]: t('common.migrate.liquidity.failed'),
   },
   [TransactionType.BRIDGE]: {
     [TransactionStatus.Pending]: t('common.swapping'),
@@ -194,13 +184,11 @@ export const CancelledTransactionTitleTable: { [key in TransactionType]: string 
   [TransactionType.DEPOSIT_LIQUIDITY_STAKING]: t('common.deposit.cancelled'),
   [TransactionType.WITHDRAW_LIQUIDITY_STAKING]: t('common.withdrawal.cancelled'),
   [TransactionType.ADD_LIQUIDITY_V2_POOL]: t('common.add.v2.liquidity.cancelled'),
-  [TransactionType.MIGRATE_LIQUIDITY_V2_TO_V3]: t('common.migrate.liquidity.cancelled'),
+  [TransactionType.MIGRATE_LIQUIDITY_V3]: t('common.migrate.liquidity.cancelled'),
   [TransactionType.SUBMIT_PROPOSAL]: t('common.submit.proposal.cancelled'),
   [TransactionType.LIMIT]: t('common.limit.cancelled'),
   [TransactionType.INCREASE_LIQUIDITY]: t('common.add.liquidity.cancelled'),
   [TransactionType.DECREASE_LIQUIDITY]: t('common.remove.liquidity.cancelled'),
-  [TransactionType.CREATE_POSITION]: t('pool.createdPosition.cancelled'),
-  [TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4]: t('common.migrate.liquidity.cancelled'),
   [TransactionType.BRIDGE]: t('common.swap.cancelled'),
 }
 

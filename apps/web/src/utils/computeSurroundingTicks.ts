@@ -1,18 +1,10 @@
-import { Price, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { tickToPrice } from '@uniswap/v3-sdk'
 import { Ticks } from 'graphql/data/AllV3TicksQuery'
+import { TickProcessed } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
 
 const PRICE_FIXED_DIGITS = 8
-
-// Tick with fields parsed to JSBIs, and active liquidity computed.
-export interface TickProcessed {
-  tick: number
-  liquidityActive: JSBI
-  liquidityNet: JSBI
-  price0: string
-  sdkPrice: Price<Token, Token>
-}
 
 // Computes the numSurroundingTicks above or below the active tick.
 export default function computeSurroundingTicks(

@@ -12,8 +12,10 @@ export function sortPools(pools: TablePool[], sortState: PoolTableSortState) {
           : a.volOverTvl - b.volOverTvl
       case PoolSortFields.Volume24h:
         return sortState.sortDirection === OrderDirection.Desc ? b.volume24h - a.volume24h : a.volume24h - b.volume24h
-      case PoolSortFields.Volume30D:
-        return sortState.sortDirection === OrderDirection.Desc ? b.volume30d - a.volume30d : a.volume30d - b.volume30d
+      case PoolSortFields.VolumeWeek:
+        return sortState.sortDirection === OrderDirection.Desc
+          ? b.volumeWeek - a.volumeWeek
+          : a.volumeWeek - b.volumeWeek
       case PoolSortFields.Apr:
         return sortState.sortDirection === OrderDirection.Desc
           ? b.apr.greaterThan(a.apr)
@@ -58,19 +60,19 @@ export interface TablePool {
   token1: Token
   tvl: number
   volume24h: number
-  volume30d: number
+  volumeWeek: number // TODO(WEB-4856): Update to 30 day when the data is available
   apr: Percent
   volOverTvl: number
   feeTier: number
   protocolVersion: ProtocolVersion
-  hookAddress?: string
+  // TODO(WEB-4612): add hook information
 }
 
 export enum PoolSortFields {
   TVL = 'TVL',
   Apr = 'APR',
   Volume24h = '1 day volume',
-  Volume30D = '30 day volume',
+  VolumeWeek = '7 day volume', // TODO(WEB-4856): Update to 30 day when the data is available
   VolOverTvl = '1 day volume/TVL',
 }
 

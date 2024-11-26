@@ -20,6 +20,7 @@ export function SwapArrowButton(props: SwapArrowButtonProps): JSX.Element {
   return useMemo(
     () => (
       <TouchableArea
+        hapticFeedback
         alignItems="center"
         alignSelf="center"
         backgroundColor={backgroundColor}

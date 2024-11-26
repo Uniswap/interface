@@ -122,15 +122,7 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
   override fun receiveCommand(root: ComposeView, commandId: String?, args: ReadableArray?) {
     super.receiveCommand(root, commandId, args)
     when (commandId) {
-      COMMAND_HANDLE_SUBMIT -> {
-        viewModel.handleSubmit()
-      }
-      COMMAND_FOCUS -> {
-        viewModel.focus()
-      }
-      COMMAND_BLUR -> {
-        viewModel.blur()
-      }
+      COMMAND_HANDLE_SUBMIT -> viewModel.handleSubmit()
       else -> Unit
     }
   }
@@ -158,8 +150,6 @@ class SeedPhraseInputViewManager : ViewGroupManager<ComposeView>() {
     private const val EVENT_MNEMONIC_STORED = "onMnemonicStored"
     private const val EVENT_HEIGHT_MEASURED = "onHeightMeasured"
     private const val COMMAND_HANDLE_SUBMIT = "handleSubmit"
-    private const val COMMAND_FOCUS = "focus"
-    private const val COMMAND_BLUR = "blur"
     private const val FIELD_MNEMONIC_ID = "mnemonicId"
     private const val FIELD_CAN_SUBMIT = "canSubmit"
     private const val FIELD_HEIGHT = "height"

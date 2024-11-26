@@ -12,7 +12,7 @@ import { ListPriceBadge } from 'src/features/nfts/collection/ListPriceCard'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
 import { NFTCollectionHeader, NFT_BANNER_HEIGHT } from 'src/features/nfts/collection/NFTCollectionHeader'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { AnimatedBottomSheetFlashList, AnimatedFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -162,7 +162,14 @@ export function NFTCollectionScreen({
         {typeof item === 'string' ? (
           <Loader.Box height="100%" width="100%" />
         ) : (
-          <TouchableArea activeOpacity={1} alignItems="center" flex={1} onPress={(): void => onPressItem(item)}>
+          <TouchableArea
+            hapticFeedback
+            activeOpacity={1}
+            alignItems="center"
+            flex={1}
+            hapticStyle={ImpactFeedbackStyle.Light}
+            onPress={(): void => onPressItem(item)}
+          >
             <NFTViewer
               autoplay
               svgRenderingDisabled

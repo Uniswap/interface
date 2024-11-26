@@ -94,7 +94,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
                               data-disable-theme="true"
                             >
-                              0x​82D56A...373Fa6
+                              0x​82D5...3Fa6
                             </span>
                             <svg
                               fill="none"
@@ -5801,7 +5801,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                           y="0"
                         >
                           <g
-                            transform="scale(1.1351351351351353)"
+                            transform="scale(1.3333333333333333)"
                           >
                             <path
                               d="M0 0H40V40H0V0Z"
@@ -5814,7 +5814,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                           y="0"
                         >
                           <g
-                            transform="scale(1.1351351351351353)"
+                            transform="scale(1.3333333333333333)"
                           >
                             <path
                               clip-rule="evenodd"
@@ -5833,7 +5833,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                           y="0"
                         >
                           <g
-                            transform="scale(1.1351351351351353)"
+                            transform="scale(1.3333333333333333)"
                           >
                             <path
                               clip-rule="evenodd"
@@ -5849,11 +5849,11 @@ exports[`ReceiveScreen renders without error 1`] = `
                         </svg>
                         <svg
                           x="0"
-                          y="97.29729729729729"
+                          y="186.66666666666666"
                         >
                           <g
-                            transform="translate(0, 97.29729729729729) scale(1.1351351351351353)"
-                            translate="0, 97.29729729729729"
+                            transform="translate(0, 186.66666666666666) scale(1.3333333333333333)"
+                            translate="0, 186.66666666666666"
                           >
                             <path
                               d="M0 0H40V40H0V0Z"
@@ -5863,11 +5863,11 @@ exports[`ReceiveScreen renders without error 1`] = `
                         </svg>
                         <svg
                           x="0"
-                          y="97.29729729729729"
+                          y="186.66666666666666"
                         >
                           <g
-                            transform="translate(0, 97.29729729729729) scale(1.1351351351351353)"
-                            translate="0, 97.29729729729729"
+                            transform="translate(0, 186.66666666666666) scale(1.3333333333333333)"
+                            translate="0, 186.66666666666666"
                           >
                             <path
                               clip-rule="evenodd"
@@ -5883,11 +5883,11 @@ exports[`ReceiveScreen renders without error 1`] = `
                         </svg>
                         <svg
                           x="0"
-                          y="97.29729729729729"
+                          y="186.66666666666666"
                         >
                           <g
-                            transform="translate(0, 97.29729729729729) scale(1.1351351351351353)"
-                            translate="0, 97.29729729729729"
+                            transform="translate(0, 186.66666666666666) scale(1.3333333333333333)"
+                            translate="0, 186.66666666666666"
                           >
                             <path
                               clip-rule="evenodd"
@@ -5902,12 +5902,12 @@ exports[`ReceiveScreen renders without error 1`] = `
                           </g>
                         </svg>
                         <svg
-                          x="97.29729729729729"
+                          x="186.66666666666666"
                           y="0"
                         >
                           <g
-                            transform="translate(97.29729729729729, 0) scale(1.1351351351351353)"
-                            translate="97.29729729729729, 0"
+                            transform="translate(186.66666666666666, 0) scale(1.3333333333333333)"
+                            translate="186.66666666666666, 0"
                           >
                             <path
                               d="M0 0H40V40H0V0Z"
@@ -5916,12 +5916,12 @@ exports[`ReceiveScreen renders without error 1`] = `
                           </g>
                         </svg>
                         <svg
-                          x="97.29729729729729"
+                          x="186.66666666666666"
                           y="0"
                         >
                           <g
-                            transform="translate(97.29729729729729, 0) scale(1.1351351351351353)"
-                            translate="97.29729729729729, 0"
+                            transform="translate(186.66666666666666, 0) scale(1.3333333333333333)"
+                            translate="186.66666666666666, 0"
                           >
                             <path
                               clip-rule="evenodd"
@@ -5936,12 +5936,12 @@ exports[`ReceiveScreen renders without error 1`] = `
                           </g>
                         </svg>
                         <svg
-                          x="97.29729729729729"
+                          x="186.66666666666666"
                           y="0"
                         >
                           <g
-                            transform="translate(97.29729729729729, 0) scale(1.1351351351351353)"
-                            translate="97.29729729729729, 0"
+                            transform="translate(186.66666666666666, 0) scale(1.3333333333333333)"
+                            translate="186.66666666666666, 0"
                           >
                             <path
                               clip-rule="evenodd"
@@ -6130,7 +6130,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                             class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
                             data-disable-theme="true"
                           >
-                            0x​82D56A...373Fa6
+                            0x​82D5...3Fa6
                           </span>
                           <svg
                             fill="none"
@@ -11837,7 +11837,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                         y="0"
                       >
                         <g
-                          transform="scale(1.1351351351351353)"
+                          transform="scale(1.3333333333333333)"
                         >
                           <path
                             d="M0 0H40V40H0V0Z"
@@ -11850,7 +11850,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                         y="0"
                       >
                         <g
-                          transform="scale(1.1351351351351353)"
+                          transform="scale(1.3333333333333333)"
                         >
                           <path
                             clip-rule="evenodd"
@@ -11869,7 +11869,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                         y="0"
                       >
                         <g
-                          transform="scale(1.1351351351351353)"
+                          transform="scale(1.3333333333333333)"
                         >
                           <path
                             clip-rule="evenodd"
@@ -11885,11 +11885,11 @@ exports[`ReceiveScreen renders without error 1`] = `
                       </svg>
                       <svg
                         x="0"
-                        y="97.29729729729729"
+                        y="186.66666666666666"
                       >
                         <g
-                          transform="translate(0, 97.29729729729729) scale(1.1351351351351353)"
-                          translate="0, 97.29729729729729"
+                          transform="translate(0, 186.66666666666666) scale(1.3333333333333333)"
+                          translate="0, 186.66666666666666"
                         >
                           <path
                             d="M0 0H40V40H0V0Z"
@@ -11899,11 +11899,11 @@ exports[`ReceiveScreen renders without error 1`] = `
                       </svg>
                       <svg
                         x="0"
-                        y="97.29729729729729"
+                        y="186.66666666666666"
                       >
                         <g
-                          transform="translate(0, 97.29729729729729) scale(1.1351351351351353)"
-                          translate="0, 97.29729729729729"
+                          transform="translate(0, 186.66666666666666) scale(1.3333333333333333)"
+                          translate="0, 186.66666666666666"
                         >
                           <path
                             clip-rule="evenodd"
@@ -11919,11 +11919,11 @@ exports[`ReceiveScreen renders without error 1`] = `
                       </svg>
                       <svg
                         x="0"
-                        y="97.29729729729729"
+                        y="186.66666666666666"
                       >
                         <g
-                          transform="translate(0, 97.29729729729729) scale(1.1351351351351353)"
-                          translate="0, 97.29729729729729"
+                          transform="translate(0, 186.66666666666666) scale(1.3333333333333333)"
+                          translate="0, 186.66666666666666"
                         >
                           <path
                             clip-rule="evenodd"
@@ -11938,12 +11938,12 @@ exports[`ReceiveScreen renders without error 1`] = `
                         </g>
                       </svg>
                       <svg
-                        x="97.29729729729729"
+                        x="186.66666666666666"
                         y="0"
                       >
                         <g
-                          transform="translate(97.29729729729729, 0) scale(1.1351351351351353)"
-                          translate="97.29729729729729, 0"
+                          transform="translate(186.66666666666666, 0) scale(1.3333333333333333)"
+                          translate="186.66666666666666, 0"
                         >
                           <path
                             d="M0 0H40V40H0V0Z"
@@ -11952,12 +11952,12 @@ exports[`ReceiveScreen renders without error 1`] = `
                         </g>
                       </svg>
                       <svg
-                        x="97.29729729729729"
+                        x="186.66666666666666"
                         y="0"
                       >
                         <g
-                          transform="translate(97.29729729729729, 0) scale(1.1351351351351353)"
-                          translate="97.29729729729729, 0"
+                          transform="translate(186.66666666666666, 0) scale(1.3333333333333333)"
+                          translate="186.66666666666666, 0"
                         >
                           <path
                             clip-rule="evenodd"
@@ -11972,12 +11972,12 @@ exports[`ReceiveScreen renders without error 1`] = `
                         </g>
                       </svg>
                       <svg
-                        x="97.29729729729729"
+                        x="186.66666666666666"
                         y="0"
                       >
                         <g
-                          transform="translate(97.29729729729729, 0) scale(1.1351351351351353)"
-                          translate="97.29729729729729, 0"
+                          transform="translate(186.66666666666666, 0) scale(1.3333333333333333)"
+                          translate="186.66666666666666, 0"
                         >
                           <path
                             clip-rule="evenodd"

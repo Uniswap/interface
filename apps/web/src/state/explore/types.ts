@@ -20,5 +20,4 @@ type PoolStatWithoutMethods = Omit<
 export interface PoolStat extends PoolStatWithoutMethods {
   apr: Percent
   volOverTvl?: number
-  hookAddress?: string
 }

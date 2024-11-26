@@ -34,7 +34,7 @@ import { OnDeviceRecoveryViewSeedPhraseScreen } from 'src/screens/Import/OnDevic
 import { RestoreCloudBackupLoadingScreen } from 'src/screens/Import/RestoreCloudBackupLoadingScreen'
 import { RestoreCloudBackupPasswordScreen } from 'src/screens/Import/RestoreCloudBackupPasswordScreen'
 import { RestoreCloudBackupScreen } from 'src/screens/Import/RestoreCloudBackupScreen'
-import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen/SeedPhraseInputScreen'
+import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen'
 import { SelectWalletScreen } from 'src/screens/Import/SelectWalletScreen'
 import { WatchWalletScreen } from 'src/screens/Import/WatchWalletScreen'
 import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'

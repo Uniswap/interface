@@ -29,7 +29,7 @@ import { EllipsisStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { SegmentedControl } from 'ui/src'
 import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { Trans, t } from 'uniswap/src/i18n'
@@ -108,7 +108,7 @@ function usePDPChartState(
   const isV3 = protocolVersion === ProtocolVersion.V3
   const isV4 = protocolVersion === ProtocolVersion.V4
   const variables = {
-    addressOrId: poolData?.idOrAddress ?? '',
+    addressOrId: poolData?.address ?? '',
     chain,
     duration: toHistoryDuration(timePeriod),
     isV4,
@@ -116,13 +116,7 @@ function usePDPChartState(
     isV2,
   }
 
-  const priceQuery = usePDPPriceChartData(
-    variables,
-    poolData,
-    isReversed ? tokenB : tokenA,
-    isReversed ? tokenA : tokenB,
-    protocolVersion,
-  )
+  const priceQuery = usePDPPriceChartData(variables, poolData, tokenA, tokenB, isReversed)
   const volumeQuery = usePDPVolumeChartData(variables)
 
   return useMemo(() => {

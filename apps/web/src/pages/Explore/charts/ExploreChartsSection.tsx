@@ -72,9 +72,11 @@ function VolumeChartSection() {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
   const theme = useTheme()
   const isSmallScreen = !useScreenSize()['sm']
-  const { value: isV4DataEnabledLoaded, isLoading: isV4DataLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Data)
-  const isV4DataEnabled = isV4DataEnabledLoaded || isV4DataLoading
-  const EXPLORE_PRICE_SOURCES = isV4DataEnabled ? EXPLORE_PRICE_SOURCES_V4 : EXPLORE_PRICE_SOURCES_V3
+  const { value: isV4EverywhereEnabledLoaded, isLoading: isV4EverywhereLoading } = useFeatureFlagWithLoading(
+    FeatureFlags.V4Everywhere,
+  )
+  const isV4EverywhereEnabled = isV4EverywhereEnabledLoaded || isV4EverywhereLoading
+  const EXPLORE_PRICE_SOURCES = isV4EverywhereEnabled ? EXPLORE_PRICE_SOURCES_V4 : EXPLORE_PRICE_SOURCES_V3
   const refitChartContent = useAtomValue(refitChartContentAtom)
 
   function timeGranularityToHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
@@ -96,14 +98,14 @@ function VolumeChartSection() {
   )
   const protocolColors = useMemo(
     () =>
-      isV4DataEnabled
+      isV4EverywhereEnabled
         ? [
             getProtocolColor(PriceSource.SubgraphV4, theme),
             getProtocolColor(PriceSource.SubgraphV3, theme),
             getProtocolColor(PriceSource.SubgraphV2, theme),
           ]
         : [getProtocolColor(PriceSource.SubgraphV3, theme), getProtocolColor(PriceSource.SubgraphV2, theme)],
-    [isV4DataEnabled, theme],
+    [isV4EverywhereEnabled, theme],
   )
   const params = useMemo<{
     data: StackedHistogramData[]
@@ -186,9 +188,11 @@ function VolumeChartSection() {
 
 function TVLChartSection() {
   const theme = useTheme()
-  const { value: isV4DataEnabledLoaded, isLoading: isV4DataLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Data)
-  const isV4DataEnabled = isV4DataEnabledLoaded || isV4DataLoading
-  const EXPLORE_PRICE_SOURCES = isV4DataEnabled ? EXPLORE_PRICE_SOURCES_V4 : EXPLORE_PRICE_SOURCES_V3
+  const { value: isV4EverywhereEnabledLoaded, isLoading: isV4EverywhereLoading } = useFeatureFlagWithLoading(
+    FeatureFlags.V4Everywhere,
+  )
+  const isV4EverywhereEnabled = isV4EverywhereEnabledLoaded || isV4EverywhereLoading
+  const EXPLORE_PRICE_SOURCES = isV4EverywhereEnabled ? EXPLORE_PRICE_SOURCES_V4 : EXPLORE_PRICE_SOURCES_V3
   const { entries, loading, dataQuality } = useRestDailyProtocolTVL()
 
   const lastEntry = entries[entries.length - 1]

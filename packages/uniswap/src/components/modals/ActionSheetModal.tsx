@@ -42,7 +42,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps): JS
           <ScrollView bounces={false} style={flexStyles.grow}>
             {options.map(({ key, onPress, render }) => {
               return (
-                <TouchableArea key={key} testID={key} onPress={onPress}>
+                <TouchableArea key={key} hapticFeedback testID={key} onPress={onPress}>
                   {render()}
                 </TouchableArea>
               )
@@ -51,7 +51,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps): JS
         </Flex>
       </Flex>
       <Flex backgroundColor="$surface2" borderRadius="$rounded12">
-        <TouchableArea onPress={onClose}>
+        <TouchableArea hapticFeedback onPress={onClose}>
           <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" py="$spacing16">
             <Text color="$neutral1" variant="buttonLabel2">
               {closeButtonLabel}

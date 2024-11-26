@@ -24,13 +24,12 @@ const ChartErrorContainer = styled(Row)`
   padding: 12px 20px 12px 12px;
   gap: 12px;
   ${textFadeIn};
-  z-index: 1;
 `
 const ErrorTextColumn = styled(Column)`
   white-space: normal;
 `
 
-export function ChartErrorView({ children }: PropsWithChildren) {
+function ChartErrorView({ children }: PropsWithChildren) {
   return (
     <ChartErrorContainer data-cy="chart-error-view">
       <div>

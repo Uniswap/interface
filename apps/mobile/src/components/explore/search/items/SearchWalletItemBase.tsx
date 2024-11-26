@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { TouchableArea } from 'ui/src'
+import { ImpactFeedbackStyle, TouchableArea } from 'ui/src'
 import { selectWatchedAddressSet } from 'uniswap/src/features/favorites/selectors'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import { SearchResultType, WalletSearchResult, extractDomain } from 'uniswap/src/features/search/SearchResult'
@@ -43,7 +43,7 @@ export function SearchWalletItemBase({
         name: walletName,
         address,
         type: 'address',
-        domain: walletName && type !== SearchResultType.WalletByAddress ? extractDomain(walletName, type) : undefined,
+        domain: walletName ? extractDomain(walletName, type) : undefined,
         suggestion_count: searchContext.suggestionCount,
         position: searchContext.position,
         isHistory: searchContext.isHistory,
@@ -79,6 +79,8 @@ export function SearchWalletItemBase({
   return (
     <ContextMenu actions={menuActions} onPress={toggleFavoriteWallet}>
       <TouchableArea
+        hapticFeedback
+        hapticStyle={ImpactFeedbackStyle.Light}
         testID={`wallet-item-${type}-${address}`}
         onLongPress={disableOnPress}
         onPress={onPress}

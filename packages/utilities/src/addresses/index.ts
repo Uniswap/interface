@@ -18,23 +18,13 @@ export function isSameAddress(a?: string, b?: string): boolean {
   return a === b || a?.toLowerCase() === b?.toLowerCase() // Lazy-lowercases the addresses
 }
 
-/**
- * Shortens an Ethereum address. If the address is not valid, it returns an empty string.
- *
- * @param address - The address to shorten
- * @param chars - The number of characters to show at the beginning after the 0x and end.
- * @param charsEnd - (Optional) The number of characters to show at the end if different from chars.
- */
-export function shortenAddress(address = '', chars = 4, charsEnd?: number): string {
+// Shortens an Ethereum address
+export function shortenAddress(address = '', charsStart = 4, charsEnd = 4): string {
   const parsed = isAddress(address)
   if (!parsed) {
     return ''
   }
-  if (charsEnd === undefined) {
-    charsEnd = chars
-  }
-
-  return ellipseAddressAdd0x(parsed, chars, charsEnd)
+  return ellipseAddressAdd0x(parsed, charsStart, charsEnd)
 }
 
 /**
@@ -47,10 +37,6 @@ export function shortenAddress(address = '', chars = 4, charsEnd?: number): stri
 function ellipseAddressAdd0x(targetAddress: string, charsStart = 4, charsEnd = 4): string {
   const hasPrefix = targetAddress.startsWith('0x')
   const prefix = hasPrefix ? '' : '0x'
-  const wholeAddress = prefix + targetAddress
-  if (charsStart + charsEnd >= wholeAddress.length) {
-    return wholeAddress
-  }
   return ellipseMiddle(prefix + targetAddress, charsStart + 2, charsEnd)
 }
 

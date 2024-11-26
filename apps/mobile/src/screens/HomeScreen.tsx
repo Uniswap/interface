@@ -19,7 +19,6 @@ import { SvgProps } from 'react-native-svg'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
-import { useHomeScreenCustomAndroidBackButton } from 'src/app/navigation/hooks'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import TraceTabView from 'src/components/Trace/TraceTabView'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
@@ -47,10 +46,9 @@ import { AIAssistantOverlay } from 'src/features/openai/AIAssistantOverlay'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
-import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { hideSplashScreen } from 'src/utils/splashScreen'
 import { useOpenBackupReminderModal } from 'src/utils/useOpenBackupReminderModal'
-import { Flex, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useHapticFeedback, useMedia, useSporeColors } from 'ui/src'
 import ReceiveIcon from 'ui/src/assets/icons/arrow-down-circle.svg'
 import BuyIcon from 'ui/src/assets/icons/buy.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-home.svg'
@@ -59,7 +57,7 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -109,6 +107,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const isFocused = useIsFocused()
   const isModalOpen = useSelector(selectSomeModalOpen)
   const isHomeScreenBlur = !isFocused || isModalOpen
+  const { hapticFeedback } = useHapticFeedback()
 
   const showFeedTab = useFeatureFlag(FeatureFlags.FeedTab)
 
@@ -127,8 +126,6 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const [routeTabIndex, setRouteTabIndex] = useState(props?.route?.params?.tab ?? HomeScreenTabIndex.Tokens)
   // Ensures that tabIndex has the proper value between the empty state and non-empty state
   const tabIndex = showEmptyTokenState ? HomeScreenTabIndex.Tokens : routeTabIndex
-
-  useHomeScreenCustomAndroidBackButton(routeTabIndex, setRouteTabIndex)
 
   // Necessary to declare these as direct dependencies due to race condition with initializing react-i18next and useMemo
   const tokensTitle = t('home.tokens.title')
@@ -347,23 +344,14 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
 
   const cexTransferProviders = useCexTransferProviders()
   const { isTestnetModeEnabled } = useEnabledChains()
-  const { hapticFeedback } = useHapticFeedback()
 
-  const triggerHaptics = useCallback(async () => {
-    await hapticFeedback.light()
-  }, [hapticFeedback])
-
-  const onPressScan = useCallback(async () => {
+  const onPressScan = useCallback(() => {
     // in case we received a pending session from a previous scan after closing modal
     dispatch(removePendingSession())
     dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr }))
-    await triggerHaptics()
-  }, [dispatch, triggerHaptics])
-  const onPressSend = useCallback(async () => {
-    dispatch(openModal({ name: ModalName.Send }))
-    await triggerHaptics()
-  }, [dispatch, triggerHaptics])
-  const onPressReceive = useCallback(async () => {
+  }, [dispatch])
+  const onPressSend = useCallback(() => dispatch(openModal({ name: ModalName.Send })), [dispatch])
+  const onPressReceive = useCallback(() => {
     dispatch(
       openModal(
         cexTransferProviders.length > 0
@@ -371,8 +359,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
           : { name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr },
       ),
     )
-    await triggerHaptics()
-  }, [dispatch, cexTransferProviders, triggerHaptics])
+  }, [dispatch, cexTransferProviders])
   const onPressViewOnlyLabel = useCallback(() => dispatch(openModal({ name: ModalName.ViewOnlyExplainer })), [dispatch])
 
   // Hide actions when active account isn't a signer account.
@@ -389,8 +376,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     setIsTestnetWarningModalOpen(false)
   }, [])
 
-  const onPressBuy = useCallback(async (): Promise<void> => {
-    await triggerHaptics()
+  const onPressBuy = useCallback((): void => {
     if (isTestnetModeEnabled) {
       setIsTestnetWarningModalOpen(true)
       return
@@ -400,7 +386,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
         name: disableForKorea ? ModalName.KoreaCexTransferInfoModal : ModalName.FiatOnRampAggregator,
       }),
     )
-  }, [dispatch, isTestnetModeEnabled, disableForKorea, triggerHaptics])
+  }, [dispatch, isTestnetModeEnabled, disableForKorea])
 
   const actions = useMemo(
     (): QuickAction[] => [
@@ -475,7 +461,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
         {isSignerAccount ? (
           <QuickActions actions={actions} sentry-label="QuickActions" />
         ) : (
-          <TouchableArea mt="$spacing16" onPress={onPressViewOnlyLabel}>
+          <TouchableArea hapticFeedback mt="$spacing16" onPress={onPressViewOnlyLabel}>
             <Flex centered row backgroundColor="$surface2" borderRadius="$rounded12" minHeight={40} p="$spacing8">
               <Text allowFontScaling={false} color="$neutral2" variant="body2">
                 {viewOnlyLabel}
@@ -591,6 +577,9 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
                   },
                 ]}
                 tabStyle={style}
+                onTabPress={async (): Promise<void> => {
+                  await hapticFeedback.impact()
+                }}
               />
             </Animated.View>
           )}
@@ -608,6 +597,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       routes,
       tabBarStyle,
       tabIndex,
+      hapticFeedback,
     ],
   )
 
@@ -827,7 +817,7 @@ function ActionButton({
 
   return (
     <Trace logPress element={name} eventOnTrigger={eventName}>
-      <TouchableArea flex={flex} scaleTo={activeScale} onPress={onPress}>
+      <TouchableArea hapticFeedback flex={flex} scaleTo={activeScale} onPress={onPress}>
         <AnimatedFlex centered fill backgroundColor="$accent2" borderRadius="$rounded20" p="$spacing16">
           <Icon
             color={colors.accent1.get()}

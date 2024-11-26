@@ -13,6 +13,7 @@ export default function RemoveButton({ visible = true, ...rest }: RemoveButtonPr
 
   return (
     <AnimatedTouchableArea
+      hapticFeedback
       alignItems="center"
       backgroundColor="$neutral3"
       borderRadius="$roundedFull"

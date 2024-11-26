@@ -1,16 +1,12 @@
-import { UNI, USDT } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { UNI, USDT, USDT_ARBITRUM_ONE } from 'uniswap/src/constants/tokens'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { shortenAddress } from 'utilities/src/addresses'
 import { getTestSelector } from '../utils'
 
 const UNI_MAINNET = UNI[UniverseChainId.Mainnet]
 
 const UNI_ADDRESS = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
-
-const INPUT_TOKEN_LABEL = `${TestID.ChooseInputToken}-label`
-const OUTPUT_TOKEN_LABEL = `${TestID.ChooseOutputToken}-label`
 
 describe('Token details', () => {
   beforeEach(() => {
@@ -94,70 +90,61 @@ describe('Token details', () => {
     beforeEach(() => {
       // On mobile widths, we just link back to /swap instead of rendering the swap component.
       cy.viewport(1200, 800)
-      cy.visit(`/explore/tokens/ethereum/${UNI_MAINNET.address}`, {
-        featureFlags: [
-          {
-            flag: FeatureFlags.UniversalSwap,
-            value: true,
-          },
-        ],
+      cy.visit(`/explore/tokens/ethereum/${UNI_MAINNET.address}`).then(() => {
+        cy.scrollTo('top')
       })
     })
 
     it('should have the expected output for a tokens detail page', () => {
-      cy.get(getTestSelector(INPUT_TOKEN_LABEL)).should('contain.text', 'Select token')
-      cy.get(getTestSelector(TestID.AmountInputOut)).should('not.have.value')
-      cy.get(getTestSelector(OUTPUT_TOKEN_LABEL)).should('contain.text', 'UNI')
+      cy.get(`#swap-currency-input .token-amount-input`).should('have.value', '')
+      cy.get(`#swap-currency-input .token-symbol-container`).should('contain.text', 'Select token')
+      cy.get(`#swap-currency-output .token-amount-input`).should('not.have.value')
+      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'UNI')
     })
 
-    it('should automatically navigate to the new TDP (erc20)', () => {
-      cy.get(getTestSelector(OUTPUT_TOKEN_LABEL)).click()
+    it('should automatically navigate to the new TDP', () => {
+      cy.get(`#swap-currency-output .open-currency-select-button`).click()
       cy.get(getTestSelector('token-option-1-USDT')).click()
       cy.url().should('include', `${USDT.address}`)
       cy.url().should('not.include', `${UNI_MAINNET.address}`)
     })
 
-    it('should automatically navigate to the new TDP (native)', () => {
-      cy.get(getTestSelector(OUTPUT_TOKEN_LABEL)).click()
-      cy.get(getTestSelector(`token-option-${UniverseChainId.Optimism}-ETH`)).click()
-      cy.url().should('include', 'optimism')
-    })
-
     it('should not share swap state with the main swap page', () => {
-      cy.get(getTestSelector(OUTPUT_TOKEN_LABEL)).should('contain.text', 'UNI')
-      cy.get(getTestSelector(INPUT_TOKEN_LABEL)).click()
+      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'UNI')
+      cy.get(`#swap-currency-input .open-currency-select-button`).click()
       cy.get(getTestSelector('token-option-1-USDT')).click()
       cy.visit('/swap')
       cy.contains('UNI').should('not.exist')
       cy.contains('USDT').should('not.exist')
     })
 
-    describe('swap input', () => {
-      beforeEach(() => {
-        cy.get(getTestSelector(INPUT_TOKEN_LABEL)).scrollIntoView().click()
-        cy.get(getTestSelector('token-option-1-USDT')).click()
-      })
-      it('can enter an amount into input', () => {
-        cy.get(getTestSelector(TestID.AmountInputIn)).clear().type('0.001').should('have.value', '0.001')
-      })
-
-      it('zero swap amount', () => {
-        cy.get(getTestSelector(TestID.AmountInputIn)).clear().type('0.0').should('have.value', '0.0')
-      })
-
-      it('invalid swap amount', () => {
-        cy.get(getTestSelector(TestID.AmountInputIn)).clear().type('\\').should('have.value', '')
-      })
+    it('can enter an amount into input', () => {
+      cy.get('#swap-currency-input .token-amount-input').clear().type('0.001').should('have.value', '0.001')
     })
 
-    describe('swap output', () => {
-      it('can enter an amount into output', () => {
-        cy.get(getTestSelector(TestID.AmountInputOut)).clear().type('0.001').should('have.value', '0.001')
-      })
+    it('zero swap amount', () => {
+      cy.get('#swap-currency-input .token-amount-input').clear().type('0.0').should('have.value', '0.0')
+    })
 
-      it('zero output amount', () => {
-        cy.get(getTestSelector(TestID.AmountInputOut)).clear().type('0.0').should('have.value', '0.0')
-      })
+    it('invalid swap amount', () => {
+      cy.get('#swap-currency-input .token-amount-input').clear().type('\\').should('have.value', '')
+    })
+
+    it('can enter an amount into output', () => {
+      cy.get('#swap-currency-output .token-amount-input').clear().type('0.001').should('have.value', '0.001')
+    })
+
+    it('zero output amount', () => {
+      cy.get('#swap-currency-output .token-amount-input').clear().type('0.0').should('have.value', '0.0')
+    })
+
+    it('should show a L2 token even if the user is connected to a different network', () => {
+      cy.visit('/explore/tokens/ethereum')
+      cy.get(getTestSelector('tokens-network-filter-selected')).click()
+      cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).first().click()
+      cy.get(getTestSelector('tokens-network-filter-selected')).invoke('attr', 'alt').should('eq', `Arbitrum logo`)
+      cy.get(getTestSelector(`token-table-row-${USDT_ARBITRUM_ONE.address}`)).click()
+      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'USDT')
     })
   })
 })

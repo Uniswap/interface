@@ -5,7 +5,6 @@ import { useBiometricAppSettings, useBiometricPrompt, useOsBiometricAuthEnabled 
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/hooks/useSwapPrefilledState'
@@ -14,7 +13,6 @@ import { WalletSwapFlow } from 'wallet/src/features/transactions/swap/WalletSwap
 export function SwapModal(): JSX.Element {
   const appDispatch = useDispatch()
   const { initialState } = useSelector(selectModalState(ModalName.Swap))
-  const { hapticFeedback } = useHapticFeedback()
 
   const onClose = useCallback((): void => {
     appDispatch(closeModal({ name: ModalName.Swap }))
@@ -40,7 +38,6 @@ export function SwapModal(): JSX.Element {
       openWalletRestoreModal={openWalletRestoreModal}
       prefilledState={swapPrefilledState}
       walletNeedsRestore={Boolean(walletNeedsRestore)}
-      onSubmitSwap={hapticFeedback.success}
       onClose={onClose}
     />
   )

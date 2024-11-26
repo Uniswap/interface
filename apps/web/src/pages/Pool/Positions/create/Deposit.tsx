@@ -1,5 +1,4 @@
 import { LoaderButton } from 'components/Button/LoaderButton'
-import { ButtonError } from 'components/Button/buttons'
 import { DepositInputForm } from 'components/Liquidity/DepositInputForm'
 import {
   useCreatePositionContext,
@@ -15,21 +14,13 @@ import { Flex, FlexProps, Text } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 
 export const DepositStep = ({ ...rest }: FlexProps) => {
-  const {
-    derivedPositionInfo: { currencies, isPoolOutOfSync },
-  } = useCreatePositionContext()
+  const { derivedPositionInfo } = useCreatePositionContext()
   const { derivedPriceRangeInfo } = usePriceRangeContext()
   const {
     setDepositState,
-    derivedDepositInfo: {
-      formattedAmounts,
-      currencyAmounts,
-      currencyAmountsUSDValue,
-      currencyBalances,
-      error: inputError,
-    },
+    derivedDepositInfo: { formattedAmounts, currencyAmounts, currencyAmountsUSDValue, currencyBalances, error },
   } = useDepositContext()
-  const { txInfo, error: dataFetchingError } = useCreateTxContext()
+  const txContext = useCreateTxContext()
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
 
   const handleUserInput = (field: PositionField, newValue: string) => {
@@ -52,15 +43,13 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
     setIsReviewModalOpen(true)
   }, [])
 
-  const [token0, token1] = currencies
+  const [token0, token1] = derivedPositionInfo.currencies
 
   if (!token0 || !token1) {
     return null
   }
 
   const { deposit0Disabled, deposit1Disabled } = derivedPriceRangeInfo
-
-  const disabled = !!inputError || !txInfo?.txRequest
 
   return (
     <>
@@ -89,27 +78,19 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
           deposit0Disabled={deposit0Disabled}
           deposit1Disabled={deposit1Disabled}
         />
-        {!isPoolOutOfSync || disabled ? (
-          <LoaderButton
-            flex={1}
-            py="$spacing16"
-            px="$spacing20"
-            onPress={handleReview}
-            disabled={disabled}
-            buttonKey="Position-Create-DepositButton"
-            loading={Boolean(
-              !dataFetchingError && !txInfo?.txRequest && currencyAmounts?.TOKEN0 && currencyAmounts.TOKEN1,
-            )}
-          >
-            <Text variant="buttonLabel1" color="$neutralContrast">
-              {inputError ? inputError : <Trans i18nKey="swap.button.review" />}
-            </Text>
-          </LoaderButton>
-        ) : (
-          <ButtonError error $borderRadius="20px" onClick={handleReview}>
-            <Trans i18nKey="swap.button.review" />
-          </ButtonError>
-        )}
+        <LoaderButton
+          flex={1}
+          py="$spacing16"
+          px="$spacing20"
+          onPress={handleReview}
+          disabled={!!error || !txContext?.txRequest}
+          buttonKey="Position-Create-DepositButton"
+          loading={Boolean(!txContext?.txRequest && currencyAmounts?.TOKEN0 && currencyAmounts.TOKEN1)}
+        >
+          <Text variant="buttonLabel1" color="$neutralContrast">
+            {error ? error : <Trans i18nKey="swap.button.review" />}
+          </Text>
+        </LoaderButton>
       </Container>
       <CreatePositionModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
     </>

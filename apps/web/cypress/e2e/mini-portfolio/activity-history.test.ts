@@ -113,6 +113,6 @@ describe('mini-portfolio activity history', () => {
     cy.get(getTestSelector('mini-portfolio-navbar')).contains('Activity').click()
 
     // Assert that the local pending transaction is replaced by a remote transaction with the same nonce.
-    cy.get(getTestSelector('mini-portfolio-page')).contains('Swapping').should('not.exist')
+    cy.contains('Swapping').should('not.exist')
   })
 })

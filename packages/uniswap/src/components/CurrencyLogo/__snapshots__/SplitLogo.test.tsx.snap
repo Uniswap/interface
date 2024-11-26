@@ -164,13 +164,13 @@ exports[`SplitLogo renders without error 1`] = `
       style={
         {
           "borderColor": "#131313",
-          "borderRadius": 2.25,
+          "borderRadius": 2.4,
           "borderStyle": "solid",
           "borderWidth": 1.5,
           "flexDirection": "column",
-          "height": 7.5,
+          "height": 8,
           "overflow": "hidden",
-          "width": 7.5,
+          "width": 8,
         }
       }
       testID="network-logo"
@@ -180,8 +180,8 @@ exports[`SplitLogo renders without error 1`] = `
         dir={null}
         style={
           {
-            "height": "4.5px",
-            "width": "4.5px",
+            "height": "5px",
+            "width": "5px",
           }
         }
       >

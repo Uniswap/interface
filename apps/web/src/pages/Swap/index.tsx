@@ -14,7 +14,6 @@ import { SendForm } from 'pages/Swap/Send/SendForm'
 import { SwapForm } from 'pages/Swap/SwapForm'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { isPreviewTrade } from 'state/routing/utils'
 import { useSwapCallback } from 'state/sagas/transactions/swapSaga'
@@ -28,7 +27,7 @@ import { AppTFunction } from 'ui/src/i18n/types'
 import { zIndices } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -45,15 +44,14 @@ import {
 } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/hooks/useSwapPrefilledState'
 import { Deadline } from 'uniswap/src/features/transactions/swap/settings/configs/Deadline'
-import { ProtocolPreference } from 'uniswap/src/features/transactions/swap/settings/configs/ProtocolPreference'
-import { Slippage } from 'uniswap/src/features/transactions/swap/settings/configs/Slippage'
-import { SwapSettingsContextProvider } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/asset'
 import { useTranslation } from 'uniswap/src/i18n'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import noop from 'utilities/src/react/noop'
+
+const WEB_CUSTOM_SWAP_SETTINGS = [Deadline]
 
 export function getIsReviewableQuote(
   trade: InterfaceTrade | undefined,
@@ -138,6 +136,7 @@ export function Swap({
   initialCurrencyLoading?: boolean
   compact?: boolean
   syncTabToUrl: boolean
+  multichainUXEnabled?: boolean
   hideHeader?: boolean
   hideFooter?: boolean
   swapRedirectCallback?: SwapRedirectFn
@@ -165,75 +164,69 @@ export function Swap({
 
   if (universalSwapFlow || isTestnetModeEnabled) {
     return (
-      <MultichainContextProvider initialChainId={chainId}>
-        <SwapSettingsContextProvider>
-          <SwapAndLimitContextProvider
-            initialInputCurrency={initialInputCurrency}
-            initialOutputCurrency={initialOutputCurrency}
-          >
-            <PrefetchBalancesWrapper>
-              <SwapFormContextProvider
-                prefilledState={prefilledState}
-                hideSettings={hideHeader}
+      <SwapAndLimitContextProvider
+        initialChainId={chainId}
+        initialInputCurrency={initialInputCurrency}
+        initialOutputCurrency={initialOutputCurrency}
+        multichainUXEnabled
+      >
+        <PrefetchBalancesWrapper>
+          <SwapFormContextProvider prefilledState={prefilledState} hideSettings={hideHeader} hideFooter={hideFooter}>
+            <Flex position="relative" gap="$spacing16" opacity={isSharedSwapDisabled ? 0.6 : 1}>
+              {isSharedSwapDisabled && <DisabledSwapOverlay />}
+              <UniversalSwapFlow
+                hideHeader={hideHeader}
                 hideFooter={hideFooter}
-              >
-                <Flex position="relative" gap="$spacing16" opacity={isSharedSwapDisabled ? 0.6 : 1}>
-                  {isSharedSwapDisabled && <DisabledSwapOverlay />}
-                  <UniversalSwapFlow
-                    hideHeader={hideHeader}
-                    hideFooter={hideFooter}
-                    syncTabToUrl={syncTabToUrl}
-                    initialInputCurrency={initialInputCurrency}
-                    initialOutputCurrency={initialOutputCurrency}
-                    swapRedirectCallback={swapRedirectCallback}
-                    onCurrencyChange={onCurrencyChange}
-                    prefilledState={prefilledState}
-                  />
-                </Flex>
-              </SwapFormContextProvider>
-            </PrefetchBalancesWrapper>
-          </SwapAndLimitContextProvider>
-        </SwapSettingsContextProvider>
-      </MultichainContextProvider>
+                syncTabToUrl={syncTabToUrl}
+                initialInputCurrency={initialInputCurrency}
+                initialOutputCurrency={initialOutputCurrency}
+                swapRedirectCallback={swapRedirectCallback}
+                prefilledState={prefilledState}
+              />
+            </Flex>
+          </SwapFormContextProvider>
+        </PrefetchBalancesWrapper>
+      </SwapAndLimitContextProvider>
     )
   }
 
   return (
-    <MultichainContextProvider initialChainId={chainId}>
-      <SwapAndLimitContextProvider
-        initialInputCurrency={initialInputCurrency}
-        initialOutputCurrency={initialOutputCurrency}
-      >
-        {/* TODO: Move SwapContextProvider inside Swap tab ONLY after SwapHeader removes references to trade / autoSlippage */}
-        <SwapAndLimitContext.Consumer>
-          {({ currentTab }) => (
-            <SwapContextProvider
-              initialTypedValue={initialTypedValue}
-              initialIndependentField={initialIndependentField}
-            >
-              <Flex width="100%" gap="$spacing16">
-                <SwapWrapper isDark={isDark} className={className} id="swap-page">
-                  {!hideHeader && <SwapHeader compact={compact || !screenSize.sm} syncTabToUrl={syncTabToUrl} />}
-                  {currentTab === SwapTab.Swap && (
-                    <SwapForm
-                      onCurrencyChange={onCurrencyChange}
-                      initialCurrencyLoading={initialCurrencyLoading}
-                      disableTokenInputs={disableTokenInputs}
-                    />
-                  )}
-                  {currentTab === SwapTab.Limit && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
-                  {currentTab === SwapTab.Send && (
-                    <SendForm disableTokenInputs={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
-                  )}
-                  {currentTab === SwapTab.Buy && <BuyForm disabled={disableTokenInputs} />}
-                </SwapWrapper>
-                <SwapBottomCard />
-              </Flex>
-            </SwapContextProvider>
-          )}
-        </SwapAndLimitContext.Consumer>
-      </SwapAndLimitContextProvider>
-    </MultichainContextProvider>
+    <SwapAndLimitContextProvider
+      initialChainId={chainId}
+      initialInputCurrency={initialInputCurrency}
+      initialOutputCurrency={initialOutputCurrency}
+      multichainUXEnabled
+    >
+      {/* TODO: Move SwapContextProvider inside Swap tab ONLY after SwapHeader removes references to trade / autoSlippage */}
+      <SwapAndLimitContext.Consumer>
+        {({ currentTab }) => (
+          <SwapContextProvider
+            initialTypedValue={initialTypedValue}
+            initialIndependentField={initialIndependentField}
+            multichainUXEnabled
+          >
+            <Flex width="100%" gap="$spacing16">
+              <SwapWrapper isDark={isDark} className={className} id="swap-page">
+                {!hideHeader && <SwapHeader compact={compact || !screenSize.sm} syncTabToUrl={syncTabToUrl} />}
+                {currentTab === SwapTab.Swap && (
+                  <SwapForm
+                    onCurrencyChange={onCurrencyChange}
+                    initialCurrencyLoading={initialCurrencyLoading}
+                    disableTokenInputs={disableTokenInputs}
+                  />
+                )}
+                {currentTab === SwapTab.Limit && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
+                {currentTab === SwapTab.Send && (
+                  <SendForm disableTokenInputs={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
+                )}
+                {currentTab === SwapTab.Buy && <BuyForm disabled={disableTokenInputs} />}
+              </SwapWrapper>
+              <SwapBottomCard />
+            </Flex>
+          </SwapContextProvider>
+        )}
+      </SwapAndLimitContext.Consumer>
+    </SwapAndLimitContextProvider>
   )
 }
 
@@ -313,11 +306,6 @@ function UniversalSwapFlow({
   const prefilledInputCurrencyInfo = useCurrencyInfo(initialInputCurrency ? currencyId(initialInputCurrency) : '')
   const prefilledOutputCurrencyInfo = useCurrencyInfo(initialOutputCurrency ? currencyId(initialOutputCurrency) : '')
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
-  useEffect(() => {
-    // react-router-dom nav doesn't unmount/remount components
-    // so we need to reset dismissTokenWarning state across navigations
-    setDismissTokenWarning(false)
-  }, [pathname])
   const closeTokenWarning = useCallback(() => setDismissTokenWarning(true), [setDismissTokenWarning])
   const prefilledTokensWithWarnings: { field: CurrencyField; token: Token }[] = useMemo(() => {
     const tokens = []
@@ -389,12 +377,11 @@ function UniversalSwapFlow({
         {currentTab === SwapTab.Swap && (
           <Flex gap="$spacing16">
             <SwapFlow
-              settings={[Slippage, Deadline, ProtocolPreference]}
+              customSettings={WEB_CUSTOM_SWAP_SETTINGS}
               hideHeader={hideHeader}
               hideFooter={hideFooter}
               onClose={noop}
               swapRedirectCallback={swapRedirectCallback}
-              onCurrencyChange={onCurrencyChange}
               swapCallback={swapCallback}
               wrapCallback={wrapCallback}
               prefilledState={prefilledState}

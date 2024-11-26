@@ -4,7 +4,6 @@
 import { RoundedCandleSeriesOptions } from 'components/Charts/PriceChart/RoundedCandlestickSeries/rounded-candles-series'
 import { positionsLine } from 'components/Charts/VolumeChart/CrosshairHighlightPrimitive'
 import { positionsBox } from 'components/Charts/VolumeChart/utils'
-import { roundRect } from 'components/Charts/utils'
 import { BitmapCoordinatesRenderingScope, CanvasRenderingTarget2D } from 'fancy-canvas'
 import {
   CandlestickData,
@@ -124,14 +123,20 @@ export class RoundedCandleSeriesRenderer<TData extends CandlestickData<UTCTimest
 
       ctx.fillStyle = bar.isUp ? this._options.upColor : this._options.downColor
 
-      roundRect(
-        ctx,
-        linePositions.position,
-        verticalPositions.position,
-        linePositions.length,
-        Math.max(verticalPositions.length, 1),
-        radius,
-      )
+      // roundRect might need to polyfilled for older browsers
+      if (ctx.roundRect) {
+        ctx.beginPath()
+        ctx.roundRect(
+          linePositions.position,
+          verticalPositions.position,
+          linePositions.length,
+          Math.max(verticalPositions.length, 1),
+          radius,
+        )
+        ctx.fill()
+      } else {
+        ctx.fillRect(linePositions.position, verticalPositions.position, linePositions.length, verticalPositions.length)
+      }
     }
   }
 }

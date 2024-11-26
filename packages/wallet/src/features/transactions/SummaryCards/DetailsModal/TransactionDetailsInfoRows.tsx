@@ -223,7 +223,7 @@ function TransactionHashRow({ transactionDetails }: { transactionDetails: Transa
   const { hash, chainId } = transactionDetails
   const { t } = useTranslation()
 
-  if (!hash) {
+  if (!hash && isUniswapX(transactionDetails)) {
     return null
   }
 

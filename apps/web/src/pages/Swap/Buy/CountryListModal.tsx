@@ -1,4 +1,3 @@
-import { ReactComponent as SearchIcon } from 'assets/svg/search.svg'
 import { ScrollBarStyles } from 'components/Common/styles'
 import { SearchInput } from 'components/SearchModal/styled'
 import { CountryListRow } from 'pages/Swap/Buy/CountryListRow'
@@ -7,9 +6,8 @@ import { ChangeEvent, useCallback, useMemo, useRef, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { CloseIcon } from 'theme/components'
-import { AdaptiveWebModal, Flex, styled, useSporeColors } from 'ui/src'
+import { AdaptiveWebModal, Flex, styled } from 'ui/src'
 import { Text } from 'ui/src/components/text/Text'
-import { iconSizes } from 'ui/src/theme'
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
 import { useTranslation } from 'uniswap/src/i18n'
 import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
@@ -40,7 +38,6 @@ export function CountryListModal({
 }: CountryListModalProps) {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const { t } = useTranslation()
-  const colors = useSporeColors()
 
   const filteredData: FORCountry[] = useMemo(() => {
     const sorted = bubbleToTop(countryList, (c) => c.countryCode === selectedCountry?.countryCode)
@@ -78,24 +75,15 @@ export function CountryListModal({
             <Text variant="body2">{t('common.selectRegion.label')}</Text>
             <CloseIcon data-testid="CountryListModal-close" onClick={closeModal} />
           </Flex>
-          <Flex position="relative" height="100%" flex={1}>
-            <SearchIcon
-              fill={colors.neutral3.val}
-              style={{ position: 'absolute', left: '12px', top: '10px' }}
-              width={iconSizes.icon20}
-              height={iconSizes.icon20}
-              pointerEvents="none"
-            />
-            <SearchInput
-              type="text"
-              id="for-country-search-input"
-              data-testid="for-country-search-input"
-              placeholder={t`swap.buy.countryModal.placeholder`}
-              autoComplete="off"
-              value={searchQuery}
-              onChange={handleInput}
-            />
-          </Flex>
+          <SearchInput
+            type="text"
+            id="for-country-search-input"
+            data-testid="for-country-search-input"
+            placeholder={t`swap.buy.countryModal.placeholder`}
+            autoComplete="off"
+            value={searchQuery}
+            onChange={handleInput}
+          />
         </HeaderContent>
         <Flex grow>
           <AutoSizer disableWidth>

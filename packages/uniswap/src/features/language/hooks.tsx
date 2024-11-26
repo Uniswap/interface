@@ -1,17 +1,16 @@
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { AppTFunction } from 'ui/src/i18n/types'
-import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
-import {
-  DEFAULT_LOCALE,
-  Language,
-  Locale,
-  PLATFORM_SUPPORTED_LANGUAGES,
-  mapLanguageToLocale,
-} from 'uniswap/src/features/language/constants'
+import { Language, Locale, mapLanguageToLocale } from 'uniswap/src/features/language/constants'
 import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
-import { isInterface } from 'utilities/src/platform'
+
+/**
+ * Hook used to get the currently selected language for the app
+ * @returns currently selected language enum
+ */
+export function useCurrentLanguage(): Language {
+  return useSelector(selectCurrentLanguage)
+}
 
 export type LanguageInfo = {
   displayName: string
@@ -256,19 +255,18 @@ export function getLanguageInfo(t: AppTFunction, language: Language): LanguageIn
   return languageToLanguageInfo[language]
 }
 
-// Language
-
-/**
- * Hook used to get the currently selected language for the app
- * @returns currently selected language enum
- */
-export function useCurrentLanguage(): Language {
-  return useSelector(selectCurrentLanguage)
-}
-
 export function useLanguageInfo(language: Language): LanguageInfo {
   const { t } = useTranslation()
   return getLanguageInfo(t, language)
+}
+
+/**
+ * Hook used to get the locale for the currently selected language in the app
+ * @returns locale for the currently selected language
+ */
+export function useCurrentLocale(): Locale {
+  const currentLanguage = useCurrentLanguage()
+  return getLocale(currentLanguage)
 }
 
 /**
@@ -278,58 +276,4 @@ export function useLanguageInfo(language: Language): LanguageInfo {
 export function useCurrentLanguageInfo(): LanguageInfo {
   const currentLanguage = useCurrentLanguage()
   return useLanguageInfo(currentLanguage)
-}
-
-// Locale
-
-/**
- * Returns the supported locale read from the user agent (navigator)
- */
-export function navigatorLocale(): Locale | undefined {
-  if (!navigator.language) {
-    return undefined
-  }
-
-  const [language, region] = navigator.language.split('-')
-
-  if (region) {
-    return parseLocale(`${language}-${region.toUpperCase()}`) ?? parseLocale(language)
-  }
-
-  return parseLocale(language)
-}
-
-/**
- * Given a locale string (e.g. from user agent), return the best match for corresponding Locale enum object
- * @param maybeSupportedLocale the fuzzy locale identifier
- */
-export function parseLocale(maybeSupportedLocale: unknown): Locale | undefined {
-  if (typeof maybeSupportedLocale !== 'string') {
-    return undefined
-  }
-  const lowerMaybeSupportedLocale = maybeSupportedLocale.toLowerCase()
-  return PLATFORM_SUPPORTED_LANGUAGES.map((lang) => getLocale(lang)).find(
-    (locale) =>
-      locale.toLowerCase() === lowerMaybeSupportedLocale || locale.split('-')[0] === lowerMaybeSupportedLocale,
-  )
-}
-
-/**
- * Hook used to get the locale for the currently selected language in the app
- * @returns locale for the currently selected language
- */
-export function useCurrentLocale(): Locale {
-  const { useParsedQueryString } = useUrlContext()
-  const parsedQueryString = useParsedQueryString()
-  const urlLocale = parseLocale(parsedQueryString.lng)
-  const currentLanguage = useCurrentLanguage()
-  const currentLocale = getLocale(currentLanguage)
-
-  return useMemo(() => {
-    if (isInterface) {
-      return urlLocale ?? currentLocale ?? navigatorLocale() ?? DEFAULT_LOCALE
-    } else {
-      return currentLocale
-    }
-  }, [urlLocale, currentLocale])
 }

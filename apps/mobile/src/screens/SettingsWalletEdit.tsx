@@ -132,6 +132,7 @@ export function SettingsWalletEdit({
               {showUnitagBanner && <UnitagBanner compact address={address} entryPoint={MobileScreens.Settings} />}
             </Flex>
             <Button
+              hapticFeedback
               disabled={nickname === displayName?.name}
               size="medium"
               theme="primary"

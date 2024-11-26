@@ -31,7 +31,6 @@ import { ArrowDown } from 'react-feather'
 import { LimitContextProvider, useLimitContext } from 'state/limit/LimitContext'
 import { getDefaultPriceInverted } from 'state/limit/hooks'
 import { LimitState } from 'state/limit/types'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { LimitOrderTrade, TradeFillType } from 'state/routing/types'
 import { useSwapActionHandlers } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
@@ -41,7 +40,7 @@ import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
 import { Locale } from 'uniswap/src/features/language/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
@@ -94,8 +93,8 @@ type LimitFormProps = {
 
 function LimitForm({ onCurrencyChange }: LimitFormProps) {
   const account = useAccount()
-  const { chainId } = useMultichainContext()
   const {
+    chainId,
     currencyState: { inputCurrency, outputCurrency },
     setCurrencyState,
   } = useSwapAndLimitContext()
@@ -467,7 +466,7 @@ function SubmitOrderButton({
 }) {
   const accountDrawer = useAccountDrawer()
   const account = useAccount()
-  const { chainId } = useMultichainContext()
+  const { chainId } = useSwapAndLimitContext()
 
   if (!useIsUniswapXSupportedChain(chainId)) {
     return (
@@ -499,16 +498,15 @@ function SubmitOrderButton({
     )
   }
 
-  const errorButtonDisabled = !!limitPriceError || !trade
   return (
     <Trace logPress element={ElementName.LimitOrderButton}>
       <ButtonError
         onClick={handleContinueToReview}
         id="submit-order-button"
         data-testid="submit-order-button"
-        disabled={errorButtonDisabled}
+        disabled={!trade || !!limitPriceError}
       >
-        <Text color={errorButtonDisabled ? '$neutralContrast' : '$white'} fontSize={20}>
+        <Text color="neutralContrast" fontSize={20}>
           <Trans i18nKey="common.confirm" />
         </Text>
       </ButtonError>

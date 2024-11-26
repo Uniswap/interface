@@ -3,7 +3,7 @@ import { PropsWithChildren, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlexAlignType, LayoutChangeEvent, Platform } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { ColorTokens, Flex, SpaceTokens, Text, TextProps, TouchableArea } from 'ui/src'
+import { ColorTokens, Flex, SpaceTokens, Text, TextProps, TouchableArea, useHapticFeedback } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
@@ -12,9 +12,8 @@ import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
+import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
-import { shortenAddress } from 'utilities/src/addresses'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -60,7 +59,7 @@ type CopyButtonWrapperProps = {
 function CopyButtonWrapper({ children, onPress }: PropsWithChildren<CopyButtonWrapperProps>): JSX.Element {
   if (onPress) {
     return (
-      <TouchableArea hitSlop={16} testID={TestID.Copy} onPress={onPress}>
+      <TouchableArea hapticFeedback hitSlop={16} testID={TestID.Copy} onPress={onPress}>
         {children}
       </TouchableArea>
     )
@@ -103,6 +102,7 @@ export function AddressDisplay({
   const dispatch = useDispatch()
   const displayName = useDisplayName(address, { includeUnitagSuffix, overrideDisplayName })
   const { avatar } = useAvatar(address)
+  const { hapticFeedback } = useHapticFeedback()
   const [wrapperWidth, setWrapperWidth] = useState<number | undefined>()
 
   const showAddressAsSubtitle = !hideAddressInSubtitle && displayName?.type !== DisplayNameType.Address
@@ -111,7 +111,7 @@ export function AddressDisplay({
     if (!address) {
       return
     }
-
+    await hapticFeedback.impact()
     await setClipboard(address)
     dispatch(
       pushNotification({
@@ -230,7 +230,7 @@ const AddressSubtitle = ({
       py={showCopyWrapperButton ? '$spacing4' : '$none'}
     >
       <Text color={captionTextColor} variant={captionVariant}>
-        {sanitizeAddressText(shortenAddress(address, 6))}
+        {sanitizeAddressText(shortenAddress(address))}
       </Text>
       {showCopy && <CopySheets color={captionTextColor} size={captionSize} />}
     </Flex>

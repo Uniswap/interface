@@ -54,7 +54,7 @@ export function MenuItem({
         {logo && logo}
         <ThemedText.BodySmall data-testid={testId}>{label}</ThemedText.BodySmall>
       </Row>
-      {isActive && <Check color={theme.accent1} opacity={1} size={20} style={{ marginRight: '12px' }} />}
+      {isActive && <Check color={theme.accent1} opacity={1} size={20} />}
     </InternalLinkMenuItem>
   )
 }

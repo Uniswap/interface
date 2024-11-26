@@ -1,12 +1,31 @@
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers/lib/ethers'
+import { GeneratedIcon } from 'ui/src'
+import { Warning, WarningColor } from 'uniswap/src/components/modals/WarningModal/types'
 import { TransactionListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DappInfo } from 'uniswap/src/types/walletConnect'
+
+export type WarningWithStyle = {
+  warning: Warning
+  color: WarningColor
+  Icon: GeneratedIcon | null
+  displayedInline: boolean
+}
+
+export type ParsedWarnings = {
+  blockingWarning?: Warning
+  formScreenWarning?: WarningWithStyle
+  insufficientBalanceWarning?: Warning
+  insufficientGasFundsWarning?: Warning
+  priceImpactWarning?: Warning
+  reviewScreenWarning?: WarningWithStyle
+  warnings: Warning[]
+}
 
 export type ChainIdToTxIdToDetails = Partial<Record<UniverseChainId, { [txId: string]: TransactionDetails }>>
 
@@ -99,8 +118,7 @@ export interface BridgeTransactionDetails extends BaseTransactionDetails {
   sendConfirmed?: boolean
 }
 
-export type OnChainTransactionDetails = ClassicTransactionDetails | BridgeTransactionDetails
-export type TransactionDetails = UniswapXOrderDetails | OnChainTransactionDetails
+export type TransactionDetails = UniswapXOrderDetails | ClassicTransactionDetails | BridgeTransactionDetails
 
 export enum TransactionStatus {
   Canceled = 'cancelled',

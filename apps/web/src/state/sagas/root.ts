@@ -1,11 +1,10 @@
 import { PersistState } from 'redux-persist'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { swapSaga } from 'state/sagas/transactions/swapSaga'
-import { watchTransactionsSaga } from 'state/sagas/transactions/watcherSaga'
 import { wrapSaga } from 'state/sagas/transactions/wrapSaga'
 import { delay, select, spawn } from 'typed-redux-saga'
 
-const sagas = [swapSaga.wrappedSaga, wrapSaga.wrappedSaga, liquiditySaga.wrappedSaga, watchTransactionsSaga.wrappedSaga]
+const sagas = [swapSaga.wrappedSaga, wrapSaga.wrappedSaga, liquiditySaga.wrappedSaga]
 
 export function* rootWebSaga() {
   // wait until redux-persist has finished rehydration

@@ -6,10 +6,7 @@ import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { CheckApprovalLPResponse, DecreaseLPPositionResponse } from 'uniswap/src/data/tradingApi/__generated__'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import {
-  LiquidityTransactionType,
-  ValidatedDecreasePositionTxAndGasInfo,
-} from 'uniswap/src/features/transactions/liquidity/types'
+import { ValidatedDecreasePositionTxAndGasInfo } from 'uniswap/src/features/transactions/liquidity/types'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { logContextUpdate } from 'utilities/src/logger/contextEnhancer'
 
@@ -20,8 +17,6 @@ export type RemoveLiquidityTxInfo = {
   decreaseCalldataLoading: boolean
   approvalLoading: boolean
   txContext?: ValidatedDecreasePositionTxAndGasInfo
-  error?: boolean
-  refetch?: () => void
 }
 
 const RemoveLiquidityTxContext = createContext<RemoveLiquidityTxInfo | undefined>(undefined)
@@ -31,7 +26,7 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
   const { positionInfo, percent } = useRemoveLiquidityModalContext()
 
   const removeLiquidityTxInfo = useRemoveLiquidityTxAndGasInfo({ account: account?.address })
-  const { approvalLoading, decreaseCalldataLoading, decreaseCalldata, error, refetch } = removeLiquidityTxInfo
+  const { approvalLoading, decreaseCalldataLoading, decreaseCalldata } = removeLiquidityTxInfo
   const datadogEnabled = useFeatureFlag(FeatureFlags.Datadog)
 
   useEffect(() => {
@@ -55,10 +50,9 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
     const currency1AmountToRemove = currency1Amount.multiply(percent).divide(100)
 
     return {
-      type: LiquidityTransactionType.Decrease,
+      type: 'decrease',
       protocolVersion: positionInfo.version,
       action: {
-        type: LiquidityTransactionType.Decrease,
         currency0Amount: currency0AmountToRemove,
         currency1Amount: currency1AmountToRemove,
         liquidityToken: positionInfo.liquidityToken,
@@ -73,9 +67,7 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
   }, [approvalLoading, positionInfo, decreaseCalldataLoading, decreaseCalldata, removeLiquidityTxInfo, percent])
 
   return (
-    <RemoveLiquidityTxContext.Provider
-      value={{ ...removeLiquidityTxInfo, txContext: decreaseLiquidityTxContext, error, refetch }}
-    >
+    <RemoveLiquidityTxContext.Provider value={{ ...removeLiquidityTxInfo, txContext: decreaseLiquidityTxContext }}>
       {children}
     </RemoveLiquidityTxContext.Provider>
   )

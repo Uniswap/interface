@@ -1,10 +1,11 @@
 import { InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
-import { ExploreTopPoolTable } from 'components/Pools/PoolTable/PoolTable'
+import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { TopTokensTable } from 'components/Tokens/TokenTable'
 import TableNetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import VolumeTimeFrameSelector from 'components/Tokens/TokenTable/VolumeTimeFrameSelector'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
 import { getTokenExploreURL } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
@@ -49,7 +50,7 @@ const Pages: Array<Page> = [
   {
     title: <Trans i18nKey="common.pools" />,
     key: ExploreTab.Pools,
-    component: ExploreTopPoolTable,
+    component: TopPoolTable,
     loggingElementName: InterfaceElementName.EXPLORE_POOLS_TAB,
   },
   {
@@ -92,7 +93,7 @@ const HeaderTab = tamaguiStyled(Text, {
 const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const tabNavRef = useRef<HTMLDivElement>(null)
   const resetManualOutage = useResetAtom(manualChainOutageAtom)
-  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
+  const v4EverywhereEnabled = useFeatureFlag(FeatureFlags.V4Everywhere)
 
   const initialKey: number = useMemo(() => {
     const key = initialTab && Pages.findIndex((page) => page.key === initialTab)
@@ -108,9 +109,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
       const offsetTop = tabNavRef.current.getBoundingClientRect().top + window.scrollY
       window.scrollTo({ top: offsetTop - 90, behavior: 'smooth' })
     }
-    // scroll to tab navbar on initial page mount only
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [initialTab])
 
   const [currentTab, setCurrentTab] = useState(initialKey)
 
@@ -181,7 +180,8 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
               data-testid="explore-navbar"
             >
               {Pages.map(({ title, loggingElementName, key }, index) => {
-                const url = getTokenExploreURL({ tab: key, chain: chainInfo?.backendChain.chain })
+                // disable Transactions tab if no chain is selected
+                const disabled = key === ExploreTab.Transactions && !chainInfo
                 return (
                   <Trace
                     logPress
@@ -189,15 +189,31 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                     element={loggingElementName}
                     key={index}
                   >
-                    <HeaderTab onPress={() => navigate(url)} active={currentTab === index} key={key}>
-                      {title}
-                    </HeaderTab>
+                    <MouseoverTooltip
+                      size={TooltipSize.Max}
+                      placement="bottom"
+                      offsetX={68}
+                      text={<Trans i18nKey="explore.transactions.disabled" />}
+                      disabled={!disabled}
+                    >
+                      <HeaderTab
+                        onPress={() => {
+                          // Update tab and only replace url when navigating from the header nav
+                          !disabled && setCurrentTab(index)
+                        }}
+                        active={currentTab === index}
+                        disabled={disabled}
+                        key={key}
+                      >
+                        {title}
+                      </HeaderTab>
+                    </MouseoverTooltip>
                   </Trace>
                 )
               })}
             </Flex>
             <Flex row gap="$spacing8" height="$spacing40" justifyContent="flex-start">
-              {currentKey === ExploreTab.Pools && isLPRedesignEnabled && (
+              {currentKey === ExploreTab.Pools && v4EverywhereEnabled && (
                 <Button
                   size="small"
                   backgroundColor="$accent3"
@@ -206,14 +222,14 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                   onPress={() => navigate('/positions/create')}
                 >
                   <Flex row gap="$gap8" alignItems="center">
-                    <Plus size={20} color="$surface1" />
+                    <Plus size={20} />
                     <Text variant="buttonLabel3" lineHeight={20} color="$surface1">
                       {t('common.addLiquidity')}
                     </Text>
                   </Flex>
                 </Button>
               )}
-              <TableNetworkFilter showMultichainOption={currentKey !== ExploreTab.Transactions} />
+              <TableNetworkFilter />
               {currentKey === ExploreTab.Tokens && <VolumeTimeFrameSelector />}
               {currentKey !== ExploreTab.Transactions && <SearchBar tab={currentKey} />}
             </Flex>

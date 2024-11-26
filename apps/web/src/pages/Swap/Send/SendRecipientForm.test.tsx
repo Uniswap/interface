@@ -1,5 +1,4 @@
 import { SendRecipientForm } from 'pages/Swap/Send/SendRecipientForm'
-import { MultichainContext } from 'state/multichain/types'
 import { SendContext, SendContextType } from 'state/send/SendContext'
 import { SwapAndLimitContext } from 'state/swap/types'
 import { render, screen } from 'test-utils/render'
@@ -7,24 +6,19 @@ import { DAI } from 'uniswap/src/constants/tokens'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { shortenAddress } from 'utilities/src/addresses'
 
-const mockMultichainContextValue = {
-  reset: jest.fn(),
-  setSelectedChainId: jest.fn(),
-  setIsUserSelectedToken: jest.fn(),
-  isSwapAndLimitContext: true,
-  isUserSelectedToken: false,
-  isMultichainContext: true,
-}
-
 const mockSwapAndLimitContextValue = {
   currencyState: {
     inputCurrency: DAI,
     outputCurrency: undefined,
   },
   prefilledState: {},
+  setSelectedChainId: jest.fn(),
   setCurrencyState: jest.fn(),
+  setIsUserSelectedToken: jest.fn(),
   currentTab: SwapTab.Limit,
   setCurrentTab: jest.fn(),
+  isSwapAndLimitContext: true,
+  isUserSelectedToken: false,
 }
 
 const mockedSendContextDefault: SendContextType = {
@@ -97,13 +91,11 @@ const mockedSendContextWithUnitag: SendContextType = {
 describe('SendCurrencyInputform', () => {
   it('should render placeholder values', () => {
     const { container } = render(
-      <MultichainContext.Provider value={mockMultichainContextValue}>
-        <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
-          <SendContext.Provider value={mockedSendContextDefault}>
-            <SendRecipientForm />
-          </SendContext.Provider>
-        </SwapAndLimitContext.Provider>
-      </MultichainContext.Provider>,
+      <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
+        <SendContext.Provider value={mockedSendContextDefault}>
+          <SendRecipientForm />
+        </SendContext.Provider>
+      </SwapAndLimitContext.Provider>,
     )
     expect(screen.getByPlaceholderText('Wallet address or ENS name')).toBeVisible()
     expect(container.firstChild).toMatchSnapshot()
@@ -111,13 +103,11 @@ describe('SendCurrencyInputform', () => {
 
   it('should render correctly with no verified recipient', () => {
     const { container } = render(
-      <MultichainContext.Provider value={mockMultichainContextValue}>
-        <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
-          <SendContext.Provider value={mockedSendContextRecipientInput}>
-            <SendRecipientForm />
-          </SendContext.Provider>
-        </SwapAndLimitContext.Provider>
-      </MultichainContext.Provider>,
+      <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
+        <SendContext.Provider value={mockedSendContextRecipientInput}>
+          <SendRecipientForm />
+        </SendContext.Provider>
+      </SwapAndLimitContext.Provider>,
     )
     expect(screen.getByDisplayValue('hayden.eth')).toBeVisible()
     expect(container.firstChild).toMatchSnapshot()
@@ -125,13 +115,11 @@ describe('SendCurrencyInputform', () => {
 
   it('should render correctly with verified recipient', () => {
     const { container } = render(
-      <MultichainContext.Provider value={mockMultichainContextValue}>
-        <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
-          <SendContext.Provider value={mockedSendContextWithVerifiedRecipientInput}>
-            <SendRecipientForm />
-          </SendContext.Provider>
-        </SwapAndLimitContext.Provider>
-      </MultichainContext.Provider>,
+      <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
+        <SendContext.Provider value={mockedSendContextWithVerifiedRecipientInput}>
+          <SendRecipientForm />
+        </SendContext.Provider>
+      </SwapAndLimitContext.Provider>,
     )
     expect(screen.getByText('hayden.eth')).toBeVisible()
     expect(screen.getByText(shortenAddress('0x9984b4b4E408e8D618A879e5315BD30952c89103'))).toBeVisible()
@@ -140,13 +128,11 @@ describe('SendCurrencyInputform', () => {
 
   it('should render correctly with unitag', () => {
     const { container } = render(
-      <MultichainContext.Provider value={mockMultichainContextValue}>
-        <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
-          <SendContext.Provider value={mockedSendContextWithUnitag}>
-            <SendRecipientForm />
-          </SendContext.Provider>
-        </SwapAndLimitContext.Provider>
-      </MultichainContext.Provider>,
+      <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
+        <SendContext.Provider value={mockedSendContextWithUnitag}>
+          <SendRecipientForm />
+        </SendContext.Provider>
+      </SwapAndLimitContext.Provider>,
     )
     expect(screen.getByText('hayden')).toBeVisible()
     expect(screen.getByText(shortenAddress('0x9984b4b4E408e8D618A879e5315BD30952c89103'))).toBeVisible()

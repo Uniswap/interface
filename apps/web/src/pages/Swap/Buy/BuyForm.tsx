@@ -1,6 +1,8 @@
 import { useAccount } from 'hooks/useAccount'
+import { useActiveLocalCurrencyComponents } from 'hooks/useActiveLocalCurrency'
+import useParsedQueryString from 'hooks/useParsedQueryString'
 import { BuyFormButton } from 'pages/Swap/Buy/BuyFormButton'
-import { BuyFormContextProvider, useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
+import { BuyFormContextProvider, ethCurrencyInfo, useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
 import { ChooseProviderModal } from 'pages/Swap/Buy/ChooseProviderModal'
 import { CountryListModal } from 'pages/Swap/Buy/CountryListModal'
 import { FiatOnRampCurrencyModal } from 'pages/Swap/Buy/FiatOnRampCurrencyModal'
@@ -14,9 +16,7 @@ import {
 } from 'pages/Swap/common/shared'
 import { useEffect } from 'react'
 import { Flex, Text, styled } from 'ui/src'
-import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useAppFiatCurrency, useFiatCurrencyComponents } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import { SelectTokenButton } from 'uniswap/src/features/fiatOnRamp/SelectTokenButton'
 import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fiatOnRamp/api'
@@ -24,7 +24,6 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { FiatOnRampEventName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTranslation } from 'uniswap/src/i18n'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import useResizeObserver from 'use-resize-observer'
 import { useFormatter } from 'utils/formatNumbers'
 
@@ -57,13 +56,13 @@ function BuyFormInner({ disabled }: BuyFormProps) {
   const account = useAccount()
   const { t } = useTranslation()
   const { convertToFiatAmount } = useFormatter()
-  const fiatCurrency = useAppFiatCurrency()
-  const { symbol: fiatSymbol } = useFiatCurrencyComponents(fiatCurrency)
+  const { symbol: fiatSymbol } = useActiveLocalCurrencyComponents()
 
   const { buyFormState, setBuyFormState, derivedBuyFormInfo } = useBuyFormContext()
   const { inputAmount, selectedCountry, quoteCurrency, currencyModalOpen, countryModalOpen, providerModalOpen } =
     buyFormState
-  const { amountOut, amountOutLoading, supportedTokens, countryOptionsResult, error } = derivedBuyFormInfo
+  const { amountOut, amountOutLoading, supportedTokens, countryOptionsResult, error, notAvailableInThisRegion } =
+    derivedBuyFormInfo
 
   const postWidthAdjustedDisplayValue = useWidthAdjustedDisplayValue(inputAmount)
   const hiddenObserver = useResizeObserver<HTMLElement>()
@@ -83,7 +82,6 @@ function BuyFormInner({ disabled }: BuyFormProps) {
     }
   }, [buyFormState.selectedCountry, countryResult, selectedCountry, setBuyFormState])
 
-  const { useParsedQueryString } = useUrlContext()
   const parsedQs = useParsedQueryString()
   useEffect(() => {
     const quoteCurrencyCode = parsedQs.quoteCurrencyCode
@@ -146,7 +144,7 @@ function BuyFormInner({ disabled }: BuyFormProps) {
               onPress={() => {
                 setBuyFormState((state) => ({ ...state, currencyModalOpen: true }))
               }}
-              selectedCurrencyInfo={quoteCurrency?.currencyInfo}
+              selectedCurrencyInfo={quoteCurrency.currencyInfo ?? ethCurrencyInfo}
               formattedAmount={amountOutLoading ? '' : amountOut ?? '-'}
               disabled={disabled}
               iconSize={18}
@@ -154,7 +152,6 @@ function BuyFormInner({ disabled }: BuyFormProps) {
               backgroundColor="$surface1"
               amountReady={Boolean(amountOut)}
               loading={amountOutLoading && inputAmount !== ''}
-              testID={TestID.ChooseInputToken}
             />
             <Flex row alignItems="center" gap="$spacing8" justifyContent="center" mt="$spacing8">
               {PREDEFINED_AMOUNTS.map((amount: number) => (
@@ -173,6 +170,18 @@ function BuyFormInner({ disabled }: BuyFormProps) {
                 />
               ))}
             </Flex>
+            {notAvailableInThisRegion && (
+              <Text
+                variant="body3"
+                userSelect="none"
+                color="$neutral2"
+                textAlign="center"
+                position="absolute"
+                bottom="20px"
+              >
+                {t('fiatOnRamp.notAvailable.error')}
+              </Text>
+            )}
           </Flex>
         </InputWrapper>
         <BuyFormButton />

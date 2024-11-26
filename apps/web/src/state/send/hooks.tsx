@@ -11,8 +11,8 @@ import { useUSDTokenUpdater } from 'hooks/useUSDTokenUpdater'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { SendState } from 'state/send/SendContext'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useUnitagByAddress, useUnitagByName } from 'uniswap/src/features/unitags/hooks'
 import { isAddress } from 'utilities/src/addresses'
@@ -43,7 +43,7 @@ export type SendInfo = {
 export function useDerivedSendInfo(state: SendState): SendInfo {
   const account = useAccount()
   const { provider } = useWeb3React()
-  const { chainId } = useMultichainContext()
+  const { chainId } = useSwapAndLimitContext()
   const { exactAmountToken, exactAmountFiat, inputInFiat, inputCurrency, recipient, validatedRecipientData } = state
 
   const { unitag: recipientInputUnitag } = useUnitagByName(validatedRecipientData ? undefined : recipient)

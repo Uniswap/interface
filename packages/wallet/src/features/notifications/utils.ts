@@ -6,10 +6,9 @@ import { WalletConnectNotification } from 'uniswap/src/features/notifications/ty
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n/i18n'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
-import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { getValidAddress, shortenAddress } from 'uniswap/src/utils/addresses'
 import { getCurrencyDisplayText, getFormattedCurrencyAmount, getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
-import { shortenAddress } from 'utilities/src/addresses'
 
 // eslint-disable-next-line consistent-return
 export const formWCNotificationTitle = (appNotification: WalletConnectNotification): string => {

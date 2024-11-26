@@ -1,11 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { Button, Flex, useSporeColors } from 'ui/src'
 import { opacify, validColor } from 'ui/src/theme'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useTokenBasicProjectPartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
-import { TokenList } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ElementNameType, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { TestID, TestIDType } from 'uniswap/src/test/fixtures/testIDs'
@@ -33,6 +29,7 @@ function CTAButton({
     <Trace logPress element={element} section={SectionName.TokenDetails}>
       <Button
         fill
+        hapticFeedback
         opacity={disabled ? 0.5 : 1}
         color={tokenColor ? getContrastPassingTextColor(tokenColor) : '$white'}
         pressStyle={{ backgroundColor: validColor(opacify(60, tokenColor ?? colors.accent1.val)) }}
@@ -51,23 +48,18 @@ export function TokenDetailsActionButtons({
   onPressBuy,
   onPressSell,
   onPressDisabled,
+  tokenColor,
   userHasBalance,
+  disabled,
 }: {
   onPressBuy: () => void
   onPressSell: () => void
   onPressDisabled?: () => void
+  tokenColor?: Maybe<string>
   userHasBalance: boolean
+  disabled: boolean
 }): JSX.Element {
   const { t } = useTranslation()
-
-  const { currencyId, currencyInfo, isChainEnabled, tokenColor } = useTokenDetailsContext()
-
-  const project = useTokenBasicProjectPartsFragment({ currencyId }).data?.project
-
-  const safetyLevel = project?.safetyLevel
-  const isBlocked = safetyLevel === SafetyLevel.Blocked || currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
-
-  const disabled = isBlocked || !isChainEnabled
 
   return (
     <Flex

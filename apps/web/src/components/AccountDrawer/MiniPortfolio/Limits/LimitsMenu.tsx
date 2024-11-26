@@ -94,13 +94,7 @@ export function LimitsMenu({ onClose, account }: { account: string; onClose: () 
       <CancelOrdersDialog
         isVisible={cancelState !== CancellationState.NOT_STARTED}
         orders={selectedOrders}
-        onCancel={() => {
-          // if the cancel was successful clear the selected orders
-          if (cancelTxHash) {
-            setSelectedOrdersByHash({})
-          }
-          setCancelState(CancellationState.NOT_STARTED)
-        }}
+        onCancel={() => setCancelState(CancellationState.NOT_STARTED)}
         onConfirm={handleConfirm}
         cancelState={cancelState}
         cancelTxHash={cancelTxHash}

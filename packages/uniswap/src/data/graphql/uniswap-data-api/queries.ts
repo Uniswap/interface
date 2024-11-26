@@ -8,7 +8,6 @@ export enum GQLQueries {
   TransactionHistoryUpdater = 'TransactionHistoryUpdater',
   Token = 'Token',
   TokenDetailsScreen = 'TokenDetailsScreen',
-  TokenPriceHistory = 'TokenPriceHistory',
   TokenProjects = 'TokenProjects',
   TransactionList = 'TransactionList',
   FeedTransactionList = 'FeedTransactionList',

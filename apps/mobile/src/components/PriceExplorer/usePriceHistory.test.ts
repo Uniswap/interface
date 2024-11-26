@@ -249,7 +249,7 @@ describe(useTokenPriceHistory, () => {
     describe('when duration is set to non-default value (year)', () => {
       it('returns correct price history', async () => {
         const { result } = renderHookWithProviders(
-          () => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1, HistoryDuration.Year),
+          () => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1, jest.fn(), HistoryDuration.Year),
           { resolvers },
         )
 
@@ -268,7 +268,7 @@ describe(useTokenPriceHistory, () => {
 
       it('returns correct spot price', async () => {
         const { result } = renderHookWithProviders(
-          () => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1, HistoryDuration.Year),
+          () => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1, jest.fn(), HistoryDuration.Year),
           { resolvers },
         )
         await waitFor(() => {
@@ -283,6 +283,42 @@ describe(useTokenPriceHistory, () => {
     })
 
     describe('when duration is changed', () => {
+      it('re-fetches data', async () => {
+        const onCompleted = jest.fn()
+        const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1, onCompleted), {
+          resolvers,
+        })
+
+        await waitFor(() => {
+          expect(result.current).toEqual(
+            expect.objectContaining({
+              loading: false,
+              error: false,
+              selectedDuration: HistoryDuration.Day,
+            }),
+          )
+        })
+
+        expect(onCompleted).toHaveBeenCalledTimes(1)
+
+        // Change duration
+        await act(() => {
+          result.current.setDuration(HistoryDuration.Week)
+        })
+
+        await waitFor(() => {
+          expect(result.current).toEqual(
+            expect.objectContaining({
+              loading: false,
+              error: false,
+              selectedDuration: HistoryDuration.Week,
+            }),
+          )
+        })
+
+        expect(onCompleted).toHaveBeenCalledTimes(2)
+      })
+
       it('returns new price history and spot price', async () => {
         const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), { resolvers })
 

@@ -23,32 +23,57 @@ export enum AddressStringFormat {
  * @returns The normalized address or false if the address is invalid
  */
 export function getValidAddress(address: Maybe<string>, withChecksum = false, log = true): Nullable<string> {
-  try {
-    if (!address) {
+  if (!address) {
+    return null
+  }
+
+  const addressWith0x = ensureLeading0x(address.trim())
+
+  if (withChecksum) {
+    try {
+      return getAddress(addressWith0x)
+    } catch (error) {
+      if (log) {
+        logger.warn('utils/addresses', 'getValidAddress', 'Invalid address at checksum', {
+          data: address,
+          stacktrace: new Error().stack,
+        })
+      }
       return null
     }
+  }
 
-    const addressWith0x = ensureLeading0x(address.trim())
-
-    if (withChecksum) {
-      return getAddress(addressWith0x)
-    }
-
-    // TODO(WALL-5160): Note that we do not check for [0-9a-fA-F] due to possible performance
-    if (addressWith0x.length !== 42) {
-      throw new Error('Address has an invalid format')
-    }
-
-    return normalizeAddress(addressWith0x, AddressStringFormat.Lowercase)
-  } catch (error) {
+  // TODO(WALL-5160): Note that we do not check for [0-9a-fA-F] due to possible performance
+  if (addressWith0x.length !== 42) {
     if (log) {
-      logger.warn('utils/addresses', 'getValidAddress', (error as Error)?.message, {
+      logger.warn('utils/addresses', 'getValidAddress', 'Address has an invalid format', {
         data: address,
         stacktrace: new Error().stack,
       })
     }
     return null
   }
+
+  return normalizeAddress(addressWith0x, AddressStringFormat.Lowercase)
+}
+
+/**
+ * Formats an address to show the first non-0x #chars and last #chars with ... in the middle and an 0x prefixed. @example: 0x1234...5678
+ *
+ * @param address Address to format
+ * @param chars Number of chars to show at the beginning after the 0x and end. This must be between 1 - 19
+ * @returns Formatted string
+ */
+export function shortenAddress(address: string, chars = 4): string {
+  if (address.length !== 42) {
+    throw Error(`Invalid 'address' parameter '${address}'.`)
+  }
+
+  // leave enough space for the ellipsis
+  if (chars < 1 || chars > 19) {
+    throw Error(`Invalid 'chars' parameter '${chars}'.`)
+  }
+  return `${address.substring(0, chars + 2)}...${address.substring(42 - chars)}`
 }
 
 /**

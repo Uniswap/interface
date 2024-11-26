@@ -10,7 +10,8 @@ import {
   useTransactionHistoryUpdaterQuery,
   useTransactionListLazyQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { selectLastTxNotificationUpdate } from 'uniswap/src/features/notifications/selectors'
 import {
   pushNotification,
@@ -19,7 +20,6 @@ import {
 } from 'uniswap/src/features/notifications/slice'
 import { ReceiveCurrencyTxNotification, ReceiveNFTNotification } from 'uniswap/src/features/notifications/types'
 import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
-import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'uniswap/src/features/transactions/refetchGQLQueriesSaga'
 import { useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -27,6 +27,12 @@ import { buildReceiveNotification } from 'wallet/src/features/notifications/buil
 import { shouldSuppressNotification } from 'wallet/src/features/notifications/notificationWatcherSaga'
 import { parseDataResponseToTransactionDetails } from 'wallet/src/features/transactions/history/utils'
 import { useAccounts, useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
+
+export const GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE = [
+  GQLQueries.PortfolioBalances,
+  GQLQueries.TransactionList,
+  GQLQueries.NftsTab,
+]
 
 /**
  * For all imported accounts, checks for new transactions and updates

@@ -1,7 +1,7 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
@@ -10,7 +10,6 @@ import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useSetTradeSlippage } from 'uniswap/src/features/transactions/swap/hooks/useSetTradeSlippage'
 import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { getWrapType, isWrapAction } from 'uniswap/src/features/transactions/swap/utils/wrap'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
@@ -31,9 +30,10 @@ export function useDerivedSwapInfo({
     focusOnCurrencyField = CurrencyField.INPUT,
     selectingCurrencyField,
     txId,
+    customSlippageTolerance,
+    customDeadline,
+    selectedProtocols,
   } = state
-
-  const { customSlippageTolerance, customDeadline, selectedProtocols } = useSwapSettingsContext()
 
   const account = useAccountMeta()
   const { defaultChainId } = useEnabledChains()
@@ -102,15 +102,15 @@ export function useDerivedSwapInfo({
     tradeType: isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     customSlippageTolerance,
     customDeadline,
-    selectedProtocols,
     sendPortionEnabled,
+    selectedProtocols,
     isDebouncing,
   }
 
   const tradeTradeWithoutSlippage = useTrade(tradeParams)
 
   // Calculate auto slippage tolerance for trade. If customSlippageTolerance is undefined, then the Trade slippage is set to the calculated value.
-  const { trade } = useSetTradeSlippage(tradeTradeWithoutSlippage, customSlippageTolerance)
+  const { trade, autoSlippageTolerance } = useSetTradeSlippage(tradeTradeWithoutSlippage, customSlippageTolerance)
 
   const displayableTrade = trade.trade ?? trade.indicativeTrade
 
@@ -169,13 +169,19 @@ export function useDerivedSwapInfo({
       wrapType,
       selectingCurrencyField,
       txId,
+      autoSlippageTolerance,
+      customSlippageTolerance,
+      customDeadline,
     }
   }, [
+    autoSlippageTolerance,
     chainId,
     currencies,
     currencyAmounts,
     currencyAmountsUSDValue,
     currencyBalances,
+    customSlippageTolerance,
+    customDeadline,
     exactAmountFiat,
     exactAmountToken,
     exactCurrencyField,

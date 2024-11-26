@@ -1,6 +1,5 @@
 /* eslint-disable no-restricted-imports */
 import type { ColorValue, FlexStyle } from 'react-native'
-import type { FlexProps } from 'ui/src'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
 export type HandleBarProps = {
@@ -8,7 +7,6 @@ export type HandleBarProps = {
   backgroundColor?: ColorValue
   hidden?: boolean
   containerFlexStyles?: FlexStyle
-  indicatorColor?: FlexProps['backgroundColor']
 }
 
 export function HandleBar(_: HandleBarProps): JSX.Element {

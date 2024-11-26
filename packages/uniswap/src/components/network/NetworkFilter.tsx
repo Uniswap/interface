@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { Flex } from 'ui/src'
+import { Flex, useHapticFeedback } from 'ui/src'
 import { easeInEaseOutLayoutAnimation } from 'ui/src/animations/layout/layoutAnimation'
 import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
 import { Ellipsis } from 'ui/src/components/icons/Ellipsis'
@@ -10,7 +10,7 @@ import {
   ActionSheetDropdownStyleProps,
 } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
 import { useNetworkOptions } from 'uniswap/src/components/network/hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isMobileApp } from 'utilities/src/platform'
 
@@ -86,6 +86,7 @@ export function NetworkFilter({
   styles,
   hideArrow = false,
 }: NetworkFilterProps): JSX.Element {
+  const { hapticFeedback } = useHapticFeedback()
   const { defaultChainId } = useEnabledChains()
   const onPress = useCallback(
     async (chainId: UniverseChainId | null) => {
@@ -93,10 +94,10 @@ export function NetworkFilter({
       if (isMobileApp) {
         easeInEaseOutLayoutAnimation()
       }
-
+      await hapticFeedback.selection()
       onPressChain(chainId)
     },
-    [onPressChain],
+    [hapticFeedback, onPressChain],
   )
 
   const networkOptions = useNetworkOptions({

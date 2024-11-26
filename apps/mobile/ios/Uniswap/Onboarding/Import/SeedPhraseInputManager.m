@@ -18,7 +18,5 @@ RCT_EXPORT_VIEW_PROPERTY(onPasteEnd, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onHeightMeasured, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(testID, NSString?)
 RCT_EXTERN_METHOD(handleSubmit: (nonnull NSNumber *)node)
-RCT_EXTERN_METHOD(focus: (nonnull NSNumber *)node)
-RCT_EXTERN_METHOD(blur: (nonnull NSNumber *)node)
 
 @end

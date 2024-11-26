@@ -2,6 +2,7 @@ import Circle from 'assets/images/blue-loader.svg'
 import { MOONPAY_SUPPORTED_CURRENCY_CODES } from 'components/FiatOnrampModal/constants'
 import { getDefaultCurrencyCode, parsePathParts } from 'components/FiatOnrampModal/utils'
 import { useAccount } from 'hooks/useAccount'
+import useParsedQueryString from 'hooks/useParsedQueryString'
 import styled, { useTheme } from 'lib/styled-components'
 import { useCallback, useEffect, useState } from 'react'
 import { useHref } from 'react-router-dom'
@@ -10,11 +11,11 @@ import { ApplicationModal } from 'state/application/reducer'
 import { CustomLightSpinner, ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { AdaptiveWebModal } from 'ui/src'
-import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { Trans } from 'uniswap/src/i18n'
-import { logger } from 'utilities/src/logger/logger'
 import { getChainIdFromChainUrlParam } from 'utils/chainParams'
+
+import { logger } from 'utilities/src/logger/logger'
 
 const MOONPAY_DARK_BACKGROUND = '#1c1c1e'
 const Wrapper = styled.div<{ isDarkMode: boolean }>`
@@ -79,7 +80,6 @@ export default function FiatOnrampModal() {
 
   const { chainId, tokenAddress } = parsePathParts(location.pathname)
   const chainInfo = chainId ? getChainInfo(chainId) : undefined
-  const { useParsedQueryString } = useUrlContext()
   const parsedChainName = useParsedQueryString().chain
   const queryChainId = typeof parsedChainName === 'string' ? getChainIdFromChainUrlParam(parsedChainName) : undefined
   const queryChainInfo = queryChainId ? getChainInfo(queryChainId) : undefined

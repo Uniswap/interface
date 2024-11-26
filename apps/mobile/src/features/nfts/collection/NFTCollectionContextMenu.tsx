@@ -106,6 +106,7 @@ export function NFTCollectionContextMenu({
       }}
     >
       <TouchableArea
+        hapticFeedback
         backgroundColor={showButtonOutline ? '$scrim' : '$transparent'}
         borderRadius="$roundedFull"
         style={{ padding: ICON_PADDING }}

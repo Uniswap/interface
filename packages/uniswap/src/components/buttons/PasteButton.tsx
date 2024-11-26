@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TextProps, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { ClipboardPaste } from 'ui/src/components/icons/ClipboardPaste'
 import { StickyNoteSquare } from 'ui/src/components/icons/StickyNoteSquare'
 import { getClipboard } from 'uniswap/src/utils/clipboard'
@@ -9,13 +9,11 @@ export default function PasteButton({
   onPress,
   beforePress,
   afterClipboardReceived,
-  textVariant = 'buttonLabel2',
 }: {
   inline?: boolean
   onPress: (text: string) => void
   beforePress?: () => void
   afterClipboardReceived?: () => void
-  textVariant?: Extract<TextProps['variant'], 'buttonLabel2' | 'buttonLabel3'>
 }): JSX.Element {
   const { t } = useTranslation()
 
@@ -35,7 +33,7 @@ export default function PasteButton({
       <TouchableArea p="$spacing8" onPress={onPressButton} onPressIn={beforePress}>
         <Flex centered row gap="$spacing4">
           <ClipboardPaste color="$neutral2" size="$icon.16" />
-          <Text color="$neutral2" variant={textVariant}>
+          <Text color="$neutral2" variant="buttonLabel2">
             {label}
           </Text>
         </Flex>

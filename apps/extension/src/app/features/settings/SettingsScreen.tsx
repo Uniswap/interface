@@ -32,12 +32,11 @@ import {
   RotatableChevron,
   Settings,
   ShieldQuestion,
-  Wrench,
 } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
 import { getFiatCurrencyName, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
@@ -192,7 +191,7 @@ export function SettingsScreen(): JSX.Element {
               onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.Privacy}`)}
             />
             <SettingsToggleRow
-              Icon={Wrench}
+              Icon={ShieldQuestion}
               checked={isTestnetModeEnabled}
               title={t('settings.setting.wallet.testnetMode.title')}
               onCheckedChange={handleTestnetModeToggle}

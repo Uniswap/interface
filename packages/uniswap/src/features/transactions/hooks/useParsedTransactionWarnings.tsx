@@ -1,15 +1,10 @@
 import { useMemo } from 'react'
+import { isWeb } from 'ui/src'
 import { Wifi } from 'ui/src/components/icons/Wifi'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
-import {
-  ParsedWarnings,
-  Warning,
-  WarningAction,
-  WarningLabel,
-  WarningSeverity,
-  WarningWithStyle,
-} from 'uniswap/src/components/modals/WarningModal/types'
+import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { ParsedWarnings, WarningWithStyle } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export function isPriceImpactWarning(warning: Warning): boolean {
   return warning.type === WarningLabel.PriceImpactMedium || warning.type === WarningLabel.PriceImpactHigh
@@ -37,10 +32,10 @@ export function useFormattedWarnings(warnings: Warning[]): ParsedWarnings {
 
     return {
       blockingWarning,
-      formScreenWarning: getFormScreenWarning(warnings),
       insufficientBalanceWarning,
       insufficientGasFundsWarning,
       priceImpactWarning,
+      formScreenWarning: getFormScreenWarning(warnings),
       reviewScreenWarning: getReviewScreenWarning(warnings),
       warnings,
     }
@@ -70,16 +65,19 @@ function getFormScreenWarning(warnings: Warning[]): ParsedWarnings['reviewScreen
     }
   }
 
-  const formWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Low)
+  const formWarning = warnings.find(
+    (warning) => warning.type === WarningLabel.InsufficientFunds || warning.severity >= WarningSeverity.Low,
+  )
 
   if (!formWarning) {
     return undefined
   }
 
-  // InsufficientGasFunds is displayed in a separate banner, rather than inline.
-  const displayedInline = formWarning.type !== WarningLabel.InsufficientGasFunds
-
-  return getWarningWithStyle({ warning: formWarning, displayedInline })
+  return getWarningWithStyle({
+    warning: formWarning,
+    displayedInline:
+      formWarning.type !== WarningLabel.InsufficientGasFunds && (!isWeb || !isPriceImpactWarning(formWarning)),
+  })
 }
 
 function getWarningWithStyle({

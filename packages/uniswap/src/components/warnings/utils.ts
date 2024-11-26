@@ -57,10 +57,10 @@ export function getWarningIconColors(severity?: WarningSeverity): {
       }
     case WarningSeverity.Medium:
       return {
-        color: '$statusWarning',
+        color: '$DEP_accentWarning',
         colorSecondary: '$neutral2',
-        backgroundColor: '$statusWarning2',
-        textColor: '$statusWarning',
+        backgroundColor: '$DEP_accentWarningSoft',
+        textColor: '$DEP_accentWarning',
       }
     case WarningSeverity.Blocked:
       return {

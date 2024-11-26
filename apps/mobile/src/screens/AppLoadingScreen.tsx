@@ -81,7 +81,7 @@ function useFinishAutomatedRecovery(navigation: Props['navigation']): {
         isBiometricAuthEnabled,
       })
 
-      await hideSplashScreen()
+      hideSplashScreen()
 
       // Notification screen should always navigate to biometrics screen if supported
       // This is acceptable because we're already triggering a setup screen

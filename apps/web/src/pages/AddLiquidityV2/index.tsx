@@ -1,16 +1,17 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
-// eslint-disable-next-line no-restricted-imports
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import {
+  InterfaceElementName,
+  InterfaceEventName,
+  LiquidityEventName,
+  LiquiditySource,
+} from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { computePairAddress } from '@uniswap/v2-sdk'
-import { FeeAmount } from '@uniswap/v3-sdk'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button/buttons'
 import { BlueCard, LightCard } from 'components/Card/cards'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { AddRemoveTabs } from 'components/NavigationTabs'
@@ -49,7 +50,6 @@ import { Text } from 'ui/src'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Trans } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -123,8 +123,6 @@ export default function AddLiquidity() {
     [independentField]: typedValue,
     [dependentField]: noLiquidity ? otherTypedValue : parsedAmounts[dependentField]?.toSignificant(6) ?? '',
   }
-  const currency0AmountUsd = useUSDCValue(parsedAmounts[Field.CURRENCY_A])
-  const currency1AmountUsd = useUSDCValue(parsedAmounts[Field.CURRENCY_B])
 
   // get the max amounts user can add
   const maxAmounts: { [field in Field]?: CurrencyAmount<Currency> } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
@@ -228,24 +226,16 @@ export default function AddLiquidity() {
           setTxHash(response.hash)
 
           sendAnalyticsEvent(LiquidityEventName.ADD_LIQUIDITY_SUBMITTED, {
+            label: [currencies[Field.CURRENCY_A]?.symbol, currencies[Field.CURRENCY_B]?.symbol].join('/'),
+            ...trace,
             ...transactionInfo,
-            ...getLPBaseAnalyticsProperties({
-              trace,
-              fee: FeeAmount.MEDIUM,
-              version: ProtocolVersion.V2,
-              poolId: computePairAddress({
-                factoryAddress: V2_FACTORY_ADDRESSES[currencyA.chainId],
-                tokenA: currencyA.wrapped,
-                tokenB: currencyB.wrapped,
-              }),
-              currency0: currencyA,
-              currency1: currencyB,
-              currency0AmountUsd,
-              currency1AmountUsd,
-              chainId: account.chainId,
-            }),
-            createPosition: false,
+            type: LiquiditySource.V2,
             transaction_hash: response.hash,
+            pool_address: computePairAddress({
+              factoryAddress: V2_FACTORY_ADDRESSES[currencyA.chainId],
+              tokenA: currencyA.wrapped,
+              tokenB: currencyB.wrapped,
+            }),
           })
         }),
       )

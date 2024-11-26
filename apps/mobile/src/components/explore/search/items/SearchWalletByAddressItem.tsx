@@ -5,8 +5,7 @@ import { imageSizes } from 'ui/src/theme'
 import { useENSAvatar, useENSName } from 'uniswap/src/features/ens/api'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import { WalletByAddressSearchResult } from 'uniswap/src/features/search/SearchResult'
-import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
-import { shortenAddress } from 'utilities/src/addresses'
+import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 
 type SearchWalletByAddressItemProps = {

@@ -1,10 +1,10 @@
 import { useHeaderHeight } from '@react-navigation/elements'
 import { LinearGradient } from 'expo-linear-gradient'
 import React, { PropsWithChildren } from 'react'
-import { ScrollViewProps, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SafeKeyboardScreen } from 'src/components/layout/SafeKeyboardScreen'
-import { Flex, GeneratedIcon, SpaceTokens, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
+import { Flex, GeneratedIcon, SpaceTokens, Text, useMedia, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { opacify } from 'ui/src/theme'
 
@@ -15,8 +15,6 @@ type OnboardingScreenProps = {
   paddingTop?: SpaceTokens
   footer?: JSX.Element
   minHeightWhenKeyboardExpanded?: boolean
-  onHeaderPress?: () => void
-  keyboardDismissMode?: ScrollViewProps['keyboardDismissMode']
 }
 
 export function SafeKeyboardOnboardingScreen({
@@ -27,8 +25,6 @@ export function SafeKeyboardOnboardingScreen({
   footer,
   paddingTop = '$none',
   minHeightWhenKeyboardExpanded = true,
-  onHeaderPress,
-  keyboardDismissMode,
 }: PropsWithChildren<OnboardingScreenProps>): JSX.Element {
   const headerHeight = useHeaderHeight()
   const colors = useSporeColors()
@@ -37,7 +33,15 @@ export function SafeKeyboardOnboardingScreen({
   const normalGradientPadding = 1.5
   const responsiveGradientPadding = media.short ? 1.25 : normalGradientPadding
 
-  const heading = (
+  const topGradient = (
+    <LinearGradient
+      colors={[colors.surface1.val, opacify(0, colors.surface1.val)]}
+      locations={[0.6, 0.8]}
+      style={[styles.gradient, { height: headerHeight * (responsiveGradientPadding ?? normalGradientPadding) }]}
+    />
+  )
+
+  const page = (
     <>
       {title || subtitle ? (
         <Flex gap="$spacing8" m="$spacing12">
@@ -60,19 +64,6 @@ export function SafeKeyboardOnboardingScreen({
           )}
         </Flex>
       ) : null}
-    </>
-  )
-  const aboveChildren = onHeaderPress ? (
-    <TouchableArea activeOpacity={1} onPress={onHeaderPress}>
-      {heading}
-    </TouchableArea>
-  ) : (
-    heading
-  )
-
-  const page = (
-    <>
-      {aboveChildren}
       <Flex grow justifyContent="space-between">
         {children}
       </Flex>
@@ -83,16 +74,7 @@ export function SafeKeyboardOnboardingScreen({
     <SafeKeyboardScreen
       edges={['right', 'left', 'bottom']}
       footer={footer}
-      header={
-        <LinearGradient
-          // Note: must use pointerEvents="none" to prevent the gradient from blocking touch events as it's not styled in a way that respects what you may otherwise expect from the JSX hierarchy
-          pointerEvents="none"
-          colors={[colors.surface1.val, opacify(0, colors.surface1.val)]}
-          locations={[0.6, 0.8]}
-          style={[styles.gradient, { height: headerHeight * (responsiveGradientPadding ?? normalGradientPadding) }]}
-        />
-      }
-      keyboardDismissMode={keyboardDismissMode}
+      header={topGradient}
       minHeightWhenKeyboardExpanded={minHeightWhenKeyboardExpanded}
     >
       <AnimatedFlex

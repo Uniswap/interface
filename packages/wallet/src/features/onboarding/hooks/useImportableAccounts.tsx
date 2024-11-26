@@ -4,7 +4,7 @@ import {
   SelectWalletScreenDocument,
   SelectWalletScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { NUMBER_OF_WALLETS_TO_GENERATE } from 'wallet/src/features/onboarding/OnboardingContext'

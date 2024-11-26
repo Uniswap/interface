@@ -9,26 +9,24 @@ import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIco
 export function DappHeaderIcon({
   dapp,
   permitCurrencyInfo,
-  size = iconSizes.icon40,
 }: {
   dapp: DappInfo
   permitCurrencyInfo?: CurrencyInfo | null
-  size?: number
 }): JSX.Element {
   if (permitCurrencyInfo) {
     return <CurrencyLogo currencyInfo={permitCurrencyInfo} />
   }
 
-  const fallback = <DappIconPlaceholder iconSize={size} name={dapp.name} />
+  const fallback = <DappIconPlaceholder iconSize={iconSizes.icon40} name={dapp.name} />
 
   return (
-    <Flex height={size} width={size}>
+    <Flex height={iconSizes.icon40} width={iconSizes.icon40}>
       {dapp.icon ? (
         <UniversalImage
           fallback={fallback}
-          size={{ height: size, width: size }}
+          size={{ height: iconSizes.icon40, width: iconSizes.icon40 }}
           style={{
-            image: { borderRadius: borderRadii.rounded8 },
+            image: { borderRadius: borderRadii.rounded4 },
             loadingContainer: {
               borderRadius: borderRadii.roundedFull,
               overflow: 'hidden',

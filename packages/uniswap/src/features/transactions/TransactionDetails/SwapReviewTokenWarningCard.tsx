@@ -1,13 +1,11 @@
-import { useState } from 'react'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
-import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import {
   FeeOnTransferFeeGroupProps,
   TokenWarningProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { getShouldDisplayTokenWarningCard } from 'uniswap/src/features/transactions/TransactionDetails/utils'
 
-type SwapReviewTokenWarningCardProps = {
+type FeeOnTransferWarningCardProps = {
   checked: boolean
   setChecked: (checked: boolean) => void
   feeOnTransferProps?: FeeOnTransferFeeGroupProps
@@ -19,59 +17,30 @@ export function SwapReviewTokenWarningCard({
   tokenWarningProps,
   checked,
   setChecked,
-}: SwapReviewTokenWarningCardProps): JSX.Element | null {
-  const [showModal, setShowModal] = useState(false)
+}: FeeOnTransferWarningCardProps): JSX.Element | null {
   const {
     showFeeSeverityWarning,
     shouldDisplayTokenWarningCard,
     tokenProtectionWarningToDisplay,
     feePercent,
-    feeType,
     currencyInfoToDisplay,
-    tokenFeeInfo,
   } = getShouldDisplayTokenWarningCard({
     tokenWarningProps,
     feeOnTransferProps,
   })
 
-  if (!shouldDisplayTokenWarningCard || !currencyInfoToDisplay) {
+  if (!shouldDisplayTokenWarningCard) {
     return null
   }
 
-  const feeOnTransferOverride =
-    showFeeSeverityWarning && tokenFeeInfo && feeType
-      ? {
-          fee: tokenFeeInfo.fee,
-          feeType,
-        }
-      : undefined
-
-  const onPress = (): void => {
-    setShowModal(true)
-  }
-  const onClose = (): void => {
-    setShowModal(false)
-  }
-
   return (
-    <>
-      <TokenWarningCard
-        hideCtaIcon
-        currencyInfo={currencyInfoToDisplay}
-        tokenProtectionWarningOverride={tokenProtectionWarningToDisplay}
-        feePercentOverride={showFeeSeverityWarning ? feePercent : undefined}
-        checked={checked}
-        setChecked={setChecked}
-        onPress={onPress}
-      />
-      <TokenWarningModal
-        isInfoOnlyWarning
-        isVisible={showModal}
-        currencyInfo0={currencyInfoToDisplay}
-        feeOnTransferOverride={feeOnTransferOverride}
-        closeModalOnly={onClose}
-        onAcknowledge={onClose}
-      />
-    </>
+    <TokenWarningCard
+      hideCtaIcon
+      currencyInfo={currencyInfoToDisplay}
+      tokenProtectionWarningOverride={tokenProtectionWarningToDisplay}
+      feePercentOverride={showFeeSeverityWarning ? feePercent : undefined}
+      checked={checked}
+      setChecked={setChecked}
+    />
   )
 }

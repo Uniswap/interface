@@ -40,7 +40,5 @@ export const gap = {
   gap12: spacing.spacing12,
   gap16: spacing.spacing16,
   gap20: spacing.spacing20,
-  gap24: spacing.spacing24,
-  gap32: spacing.spacing32,
   gap36: spacing.spacing36,
 }

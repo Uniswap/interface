@@ -1,4 +1,4 @@
-import { useModalLiquidityInitialState } from 'components/Liquidity/hooks'
+import { useModalLiquidityPositionInfo } from 'components/Liquidity/hooks'
 import { PositionInfo } from 'components/Liquidity/types'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useState } from 'react'
 
@@ -27,7 +27,7 @@ const RemoveLiquidityModalContext = createContext<RemoveLiquidityModalState>({
 export function RemoveLiquidityModalContextProvider({ children }: PropsWithChildren): JSX.Element {
   const [step, setStep] = useState(DecreaseLiquidityStep.Input)
   const [percent, setPercent] = useState<string>('')
-  const positionInfo = useModalLiquidityInitialState()
+  const positionInfo = useModalLiquidityPositionInfo()
   const percentInvalid = percent === '0' || percent === '' || !percent
 
   return (

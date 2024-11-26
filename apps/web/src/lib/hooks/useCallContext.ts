@@ -1,8 +1,8 @@
 import useBlockNumber from 'lib/hooks/useBlockNumber'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 
 export function useCallContext() {
-  const { chainId } = useMultichainContext()
+  const { chainId } = useSwapAndLimitContext()
   const latestBlock = useBlockNumber()
   return { chainId, latestBlock }
 }

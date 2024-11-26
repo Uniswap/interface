@@ -1,6 +1,5 @@
 import SwapHeader from 'components/swap/SwapHeader'
 import { Dispatch, PropsWithChildren, SetStateAction } from 'react'
-import { MultichainContext } from 'state/multichain/types'
 import { CurrencyState, EMPTY_DERIVED_SWAP_INFO, SwapAndLimitContext, SwapContext } from 'state/swap/types'
 import { act, render, screen } from 'test-utils/render'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -15,44 +14,37 @@ interface WrapperProps {
 
 function Wrapper(props: PropsWithChildren<WrapperProps>) {
   return (
-    <MultichainContext.Provider
+    <SwapAndLimitContext.Provider
       value={{
-        reset: jest.fn(),
+        currencyState: { inputCurrency: undefined, outputCurrency: undefined },
+        setCurrencyState: props.setCurrencyState ?? jest.fn(),
         setSelectedChainId: jest.fn(),
-        isMultichainContext: true,
+        prefilledState: {
+          inputCurrency: undefined,
+          outputCurrency: undefined,
+        },
         initialChainId: props.chainId ?? UniverseChainId.Mainnet,
         chainId: props.chainId ?? UniverseChainId.Mainnet,
+        currentTab: SwapTab.Swap,
+        setCurrentTab: props.setCurrentTab ?? jest.fn(),
         setIsUserSelectedToken: jest.fn(),
+        isSwapAndLimitContext: true,
         isUserSelectedToken: false,
       }}
     >
-      <SwapAndLimitContext.Provider
+      <SwapContext.Provider
         value={{
-          currencyState: { inputCurrency: undefined, outputCurrency: undefined },
-          setCurrencyState: props.setCurrencyState ?? jest.fn(),
-          prefilledState: {
-            inputCurrency: undefined,
-            outputCurrency: undefined,
+          derivedSwapInfo: EMPTY_DERIVED_SWAP_INFO,
+          setSwapState: jest.fn(),
+          swapState: {
+            independentField: CurrencyField.INPUT,
+            typedValue: '',
           },
-
-          currentTab: SwapTab.Swap,
-          setCurrentTab: props.setCurrentTab ?? jest.fn(),
         }}
       >
-        <SwapContext.Provider
-          value={{
-            derivedSwapInfo: EMPTY_DERIVED_SWAP_INFO,
-            setSwapState: jest.fn(),
-            swapState: {
-              independentField: CurrencyField.INPUT,
-              typedValue: '',
-            },
-          }}
-        >
-          {props.children}
-        </SwapContext.Provider>
-      </SwapAndLimitContext.Provider>
-    </MultichainContext.Provider>
+        {props.children}
+      </SwapContext.Provider>
+    </SwapAndLimitContext.Provider>
   )
 }
 

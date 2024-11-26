@@ -4,8 +4,7 @@ import { Flex, TouchableArea } from 'ui/src'
 import { InfoCircle } from 'ui/src/components/icons/InfoCircle'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import TokenWarningModal, { FeeRow } from 'uniswap/src/features/tokens/TokenWarningModal'
-import { WarningModalInfoContainer } from 'uniswap/src/features/tokens/WarningInfoModalContainer'
+import TokenWarningModal, { FeeRow, WarningModalInfoContainer } from 'uniswap/src/features/tokens/TokenWarningModal'
 import { getModalHeaderText, getModalSubtitleTokenWarningText } from 'uniswap/src/features/tokens/safetyUtils'
 import { FoTFeeType, TokenFeeInfo } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { getFeeSeverity } from 'uniswap/src/features/transactions/TransactionDetails/utils'
@@ -25,6 +24,7 @@ export function FeeOnTransferWarning({
   const formattedFeePercent = formatPercent(feePercent)
 
   const { tokenProtectionWarning } = getFeeSeverity(feeInfo.fee)
+  // These should never be null bc tokenProtectionWarning is never None
   const title = getModalHeaderText({ t, tokenProtectionWarning, tokenSymbol0: tokenSymbol }) ?? ''
   const subtitle =
     getModalSubtitleTokenWarningText({ t, tokenProtectionWarning, tokenSymbol, formattedFeePercent }) ?? ''

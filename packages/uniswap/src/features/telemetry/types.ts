@@ -11,6 +11,7 @@ import {
   InterfaceEventName,
   InterfacePageName,
   LiquidityEventName,
+  LiquiditySource,
   MoonpayEventName,
   NFTEventName,
   NFTFilterTypes,
@@ -299,20 +300,6 @@ type OnboardingCardEventProperties = ITraceContext & {
   card_name: OnboardingCardLoggingName
 }
 
-// Camelcase and snakecase used to preserve backwards compatibility for original event names
-export type LiquidityAnalyticsProperties = ITraceContext & {
-  label: string
-  type: string
-  fee_tier: number
-  pool_address?: string // represents pool contract address for v2&v3, and poolId for v4
-  chain_id?: UniverseChainId
-  baseCurrencyId: string
-  quoteCurrencyId: string
-  token0AmountUSD: number
-  token1AmountUSD: number
-  transaction_hash: string
-}
-
 // Please sort new values by EventName type!
 export type UniverseEventProperties = {
   [ExtensionEventName.OnboardingLoad]: undefined
@@ -473,26 +460,40 @@ export type UniverseEventProperties = {
     recipient: string
   }
   [InterfaceEventName.TOKEN_SELECTOR_OPENED]: undefined
-  [LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED]: LiquidityAnalyticsProperties
+  [LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED]: {
+    source: LiquiditySource
+    label: string
+    type: string
+    fee_tier?: number
+  }
   [LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER]: {
     action: FeePoolSelectAction
-    fee_tier: number
-    is_new_fee_tier?: boolean
   } & ITraceContext
   [LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED]: {
     action: string
-  } & LiquidityAnalyticsProperties
+    label: string
+  } & ITraceContext
   [LiquidityEventName.ADD_LIQUIDITY_SUBMITTED]: {
+    label: string
+    type: string
     createPool?: boolean
-    createPosition?: boolean
+    baseCurrencyId: string
+    quoteCurrencyId: string
+    feeAmount?: number
     expectedAmountBaseRaw: string
     expectedAmountQuoteRaw: string
-  } & LiquidityAnalyticsProperties
+    transaction_hash: string
+    fee_tier?: number
+    pool_address?: string
+  } & ITraceContext
   [LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED]: {
-    expectedAmountBaseRaw: string
-    expectedAmountQuoteRaw: string
-    closePosition?: boolean
-  } & LiquidityAnalyticsProperties
+    source: LiquiditySource
+    label: string
+    type: string
+    transaction_hash: string
+    fee_tier?: number
+    pool_address?: string
+  } & ITraceContext
   [MobileEventName.AppRating]: {
     type: 'store-review' | 'feedback-form' | 'remind'
     appRatingPromptedMs?: number

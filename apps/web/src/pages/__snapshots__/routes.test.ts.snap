@@ -131,10 +131,16 @@ Array [
     "getDescription": [Function],
     "getElement": [Function],
     "getTitle": [Function],
-    "nestedPaths": Array [
-      ":protocolVersion",
-    ],
+    "nestedPaths": Array [],
     "path": "/positions/create",
+  },
+  Object {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": Array [],
+    "path": "/positions/create/:protocolVersion",
   },
   Object {
     "enabled": [Function],

@@ -14,7 +14,7 @@ import {
 import styled from 'lib/styled-components'
 import { Text } from 'rebass'
 import { ButtonText, ExternalLink } from 'theme/components'
-import { TokenAddressView } from 'uniswap/src/features/address/TokenAddressView'
+import { ExplorerView } from 'uniswap/src/features/address/ExplorerView'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { Trans } from 'uniswap/src/i18n'
@@ -156,11 +156,11 @@ export default function TokenSafety({
   // Logic for only showing the 'unsupported' warning if one is supported and other isn't
   if (token0 && token0Warning && (token0Unsupported || !(token1Warning && token1Unsupported))) {
     logos.push(<CurrencyLogo key={token0.address} currency={token0} size={48} />)
-    urls.push(<TokenAddressView currency={token0} modalName={ModalName.TokenWarningModal} />)
+    urls.push(<ExplorerView currency={token0} modalName={ModalName.TokenWarningModal} />)
   }
   if (token1 && token1Warning && (token1Unsupported || !(token0Warning && token0Unsupported))) {
     logos.push(<CurrencyLogo key={token1.address} currency={token1} size={48} />)
-    urls.push(<TokenAddressView currency={token1} modalName={ModalName.TokenWarningModal} />)
+    urls.push(<ExplorerView currency={token1} modalName={ModalName.TokenWarningModal} />)
   }
 
   const plural = logos.length > 1

@@ -1,8 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { InterfacePageName, LiquidityEventName } from '@uniswap/analytics-events'
-// eslint-disable-next-line no-restricted-imports
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { InterfacePageName, LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge/Badge'
@@ -10,7 +8,6 @@ import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonConfirmed, ButtonGray, ButtonPrimary, SmallButtonPrimary } from 'components/Button/buttons'
 import { DarkCard, LightCard } from 'components/Card/cards'
 import { PositionNFT } from 'components/Liquidity/PositionNFT'
-import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { LoadingFullscreen } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
@@ -44,8 +41,7 @@ import { useIsTransactionPending, useTransactionAdder } from 'state/transactions
 import { TransactionType } from 'state/transactions/types'
 import { ClickableStyle, ExternalLink, HideExtraSmall, HideSmall, StyledRouterLink, ThemedText } from 'theme/components'
 import { Switch, Text } from 'ui/src'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useIsSupportedChainId, useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useEnabledChains, useIsSupportedChainId, useSupportedChainId } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -53,7 +49,6 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans, t } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
-import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { currencyId } from 'utils/currencyId'
 import { WrongChainError } from 'utils/errors'
@@ -332,7 +327,6 @@ function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
 }
 
 function PositionPageContent() {
-  const trace = useTrace()
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
   const account = useAccount()
   const supportedChain = useSupportedChainId(account.chainId)
@@ -502,18 +496,10 @@ function PositionPageContent() {
           setCollecting(false)
 
           sendAnalyticsEvent(LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED, {
-            transaction_hash: response.hash,
-            ...getLPBaseAnalyticsProperties({
-              trace,
-              fee: feeAmount,
-              currency0: currency0ForFeeCollectionPurposes,
-              currency1: currency1ForFeeCollectionPurposes,
-              version: ProtocolVersion.V3,
-              poolId: poolAddress,
-              chainId: account.chainId,
-              currency0AmountUsd: feeValue0 ?? CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0),
-              currency1AmountUsd: feeValue1 ?? CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0),
-            }),
+            source: LiquiditySource.V3,
+            label: [currency0ForFeeCollectionPurposes.symbol, currency1ForFeeCollectionPurposes.symbol].join('/'),
+            type: LiquiditySource.V3,
+            fee_tier: feeAmount,
           })
 
           addTransaction(response, {
@@ -549,9 +535,7 @@ function PositionPageContent() {
     signer,
     feeValue0,
     feeValue1,
-    trace,
     feeAmount,
-    poolAddress,
     addTransaction,
   ])
 

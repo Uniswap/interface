@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import { ExploreStatsResponse, PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+import { PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import {
   PoolSortFields,
@@ -13,12 +13,9 @@ import { useAtomValue } from 'jotai/utils'
 import { useContext, useMemo } from 'react'
 import { ExploreContext, giveExploreStatDefaultValue } from 'state/explore'
 import { PoolStat } from 'state/explore/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 function useFilteredPools(pools?: PoolStat[]) {
   const filterString = useAtomValue(exploreSearchStringAtom)
-  const isV4Enabled = useFeatureFlag(FeatureFlags.V4Data)
 
   const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
 
@@ -33,16 +30,15 @@ function useFilteredPools(pools?: PoolStat[]) {
         const poolName = `${pool.token0?.symbol}/${pool.token1?.symbol}`.toLowerCase()
         const poolNameIncludesFilterString = poolName.includes(lowercaseFilterString)
         return (
-          (token0IncludesFilterString ||
-            token1IncludesFilterString ||
-            addressIncludesFilterString ||
-            token0HashIncludesFilterString ||
-            token1HashIncludesFilterString ||
-            poolNameIncludesFilterString) &&
-          (pool.protocolVersion?.toLowerCase() !== 'v4' || isV4Enabled)
+          token0IncludesFilterString ||
+          token1IncludesFilterString ||
+          addressIncludesFilterString ||
+          token0HashIncludesFilterString ||
+          token1HashIncludesFilterString ||
+          poolNameIncludesFilterString
         )
       }),
-    [isV4Enabled, lowercaseFilterString, pools],
+    [lowercaseFilterString, pools],
   )
 }
 
@@ -57,10 +53,10 @@ function sortPools(sortState: PoolTableSortState, pools?: PoolStat[]) {
         return sortState.sortDirection === OrderDirection.Desc
           ? giveExploreStatDefaultValue(b?.volume1Day?.value) - giveExploreStatDefaultValue(a?.volume1Day?.value)
           : giveExploreStatDefaultValue(a?.volume1Day?.value) - giveExploreStatDefaultValue(b?.volume1Day?.value)
-      case PoolSortFields.Volume30D:
+      case PoolSortFields.VolumeWeek:
         return sortState.sortDirection === OrderDirection.Desc
-          ? giveExploreStatDefaultValue(b.volume30Day?.value) - giveExploreStatDefaultValue(a.volume30Day?.value)
-          : giveExploreStatDefaultValue(a.volume30Day?.value) - giveExploreStatDefaultValue(b.volume30Day?.value)
+          ? giveExploreStatDefaultValue(b.volume1Week?.value) - giveExploreStatDefaultValue(a.volume1Week?.value)
+          : giveExploreStatDefaultValue(a.volume1Week?.value) - giveExploreStatDefaultValue(b.volume1Week?.value)
       case PoolSortFields.Apr:
         return sortState.sortDirection === OrderDirection.Desc
           ? b.apr.greaterThan(a.apr)
@@ -89,25 +85,13 @@ function convertPoolStatsToPoolStat(poolStats: PoolStats): PoolStat {
     ),
     feeTier: poolStats.feeTier ?? V2_BIPS,
     volOverTvl: calculate1DVolOverTvl(poolStats.volume1Day?.value, poolStats.totalLiquidity?.value),
-    hookAddress: poolStats.hook?.address,
   }
 }
 
-interface TopPoolData {
-  data?: ExploreStatsResponse
-  isLoading: boolean
-  isError: boolean
-}
-
-export function useExploreContextTopPools(sortState: PoolTableSortState) {
+export function useTopPools(sortState: PoolTableSortState) {
   const {
     exploreStats: { data, isLoading, error: isError },
   } = useContext(ExploreContext)
-  return useTopPools({ data, isLoading, isError }, sortState)
-}
-
-export function useTopPools(topPoolData: TopPoolData, sortState: PoolTableSortState) {
-  const { data, isLoading, isError } = topPoolData
   const sortedPoolStats = useMemo(() => {
     const poolStats = data?.stats?.poolStats?.map((poolStat: PoolStats) => convertPoolStatsToPoolStat(poolStat))
     return sortPools(sortState, poolStats)

@@ -22,7 +22,7 @@ export function SwapFormHeader(): JSX.Element {
       height="$spacing32"
     >
       {isWeb && (
-        <TouchableArea testID={TestID.SwapSettings} onPress={onClose}>
+        <TouchableArea hapticFeedback testID={TestID.SwapSettings} onPress={onClose}>
           <Flex
             centered
             row

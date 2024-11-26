@@ -29,7 +29,7 @@ function QRScannerIconButton({ onPress }: { onPress: () => void }): JSX.Element 
   const colors = useSporeColors()
 
   return (
-    <TouchableArea testID={TestID.SelectRecipient} onPress={onPress}>
+    <TouchableArea hapticFeedback testID={TestID.SelectRecipient} onPress={onPress}>
       <ScanQRIcon color={colors.neutral2.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
     </TouchableArea>
   )

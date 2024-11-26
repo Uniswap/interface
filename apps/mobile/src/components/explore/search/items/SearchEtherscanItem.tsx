@@ -1,15 +1,15 @@
 import { default as React } from 'react'
 import { useDispatch } from 'react-redux'
 import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { iconSizes } from 'ui/src/theme'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { EtherscanSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { addToSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
-import { shortenAddress } from 'utilities/src/addresses'
 
 type SearchEtherscanItemProps = {
   etherscanResult: EtherscanSearchResult
@@ -35,7 +35,12 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
   const EtherscanIcon = getBlockExplorerIcon(defaultChainId)
 
   return (
-    <TouchableArea testID={TestID.SearchEtherscanItem} onPress={onPressViewEtherscan}>
+    <TouchableArea
+      hapticFeedback
+      hapticStyle={ImpactFeedbackStyle.Light}
+      testID={TestID.SearchEtherscanItem}
+      onPress={onPressViewEtherscan}
+    >
       <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between" px="$spacing24" py="$spacing12">
         <Flex centered row gap="$spacing12">
           <EtherscanIcon size="$icon.40" />

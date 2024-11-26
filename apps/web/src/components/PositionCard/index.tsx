@@ -21,7 +21,7 @@ import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useTokenBalance } from 'state/connection/hooks'
 import { StyledInternalLink, ThemedText } from 'theme/components'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { Trans } from 'uniswap/src/i18n'
 import { currencyId } from 'utils/currencyId'
@@ -298,7 +298,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 style={{ width: '100%', textAlign: 'center' }}
                 to={`/explore/pools/${toGraphQLChain(pair.chainId ?? defaultChainId).toLowerCase()}/${Pair.getAddress(pair.token0, pair.token1)}`}
               >
-                <Trans i18nKey="pool.viewUncollectedFees" />
+                <Trans i18nKey="pool.accruedFees" />
                 <span style={{ fontSize: '11px' }}>↗</span>
               </StyledInternalLink>
             </ButtonSecondary>

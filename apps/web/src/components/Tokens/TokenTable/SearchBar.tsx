@@ -1,5 +1,5 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { ReactComponent as SearchIcon } from 'assets/svg/search.svg'
+import searchIcon from 'assets/svg/search.svg'
 import xIcon from 'assets/svg/x.svg'
 import { MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
@@ -7,12 +7,19 @@ import useDebounce from 'hooks/useDebounce'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import styled from 'lib/styled-components'
 import { useEffect, useState } from 'react'
-import { Flex, useSporeColors } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { t } from 'uniswap/src/i18n'
 const ICON_SIZE = '20px'
 
+const SearchBarContainer = styled.div`
+  display: flex;
+  flex: 1;
+`
 const SearchInput = styled.input<{ isOpen?: boolean }>`
+  background: no-repeat scroll 7px 7px;
+  background-image: url(${searchIcon});
+  background-size: 20px 20px;
+  background-position: 12px center;
   background-color: ${({ theme }) => theme.surface1};
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.surface3};
@@ -61,7 +68,6 @@ export default function SearchBar({ tab }: { tab?: string }) {
   const setFilterString = useUpdateAtom(exploreSearchStringAtom)
   const debouncedLocalFilterString = useDebounce(localFilterString, 300)
   const [isOpen, setIsOpen] = useState(false)
-  const colors = useSporeColors()
 
   useEffect(() => {
     setLocalFilterString(currentString)
@@ -83,19 +89,13 @@ export default function SearchBar({ tab }: { tab?: string }) {
   }
 
   return (
-    <Trace
-      logFocus
-      eventOnTrigger={InterfaceEventName.EXPLORE_SEARCH_SELECTED}
-      element={InterfaceElementName.EXPLORE_SEARCH_INPUT}
-    >
-      <Flex position="relative" height="100%" flex={1}>
-        <SearchIcon
-          fill={colors.neutral1.val}
-          style={{ position: 'absolute', left: '12px', top: '10px' }}
-          width={ICON_SIZE}
-          height={ICON_SIZE}
-          pointerEvents="none"
-        />
+    <SearchBarContainer>
+      {/* TODO need to figure out new style for this */}
+      <Trace
+        logFocus
+        eventOnTrigger={InterfaceEventName.EXPLORE_SEARCH_SELECTED}
+        element={InterfaceElementName.EXPLORE_SEARCH_INPUT}
+      >
         <SearchInput
           data-testid="explore-tokens-search-input"
           type="search"
@@ -110,7 +110,7 @@ export default function SearchBar({ tab }: { tab?: string }) {
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
-      </Flex>
-    </Trace>
+      </Trace>
+    </SearchBarContainer>
   )
 }

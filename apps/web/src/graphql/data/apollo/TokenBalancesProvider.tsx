@@ -1,22 +1,18 @@
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { AdaptiveTokenBalancesProvider } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useAssetActivitySubscription } from 'graphql/data/apollo/AssetActivityProvider'
-import { apolloClient } from 'graphql/data/apollo/client'
 import { useAccount } from 'hooks/useAccount'
-import { PropsWithChildren, useCallback, useEffect, useMemo } from 'react'
-import { useWatchTransactionsCallback } from 'state/sagas/transactions/watcherSaga'
-import { usePendingTransactions } from 'state/transactions/hooks'
+import { PropsWithChildren, useCallback, useMemo } from 'react'
 import {
   OnAssetActivitySubscription,
   SwapOrderStatus,
   usePortfolioBalancesLazyQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
-
 import { SUBSCRIPTION_CHAINIDS } from 'utilities/src/apollo/constants'
 import { usePrevious } from 'utilities/src/react/hooks'
 
@@ -98,52 +94,42 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
   const valueModifiers = usePortfolioValueModifiers()
   const prevValueModifiers = usePrevious(valueModifiers)
   const { gqlChains } = useEnabledChains()
-  const pendingTransactions = usePendingTransactions()
-  const prevPendingTransactions = usePrevious(pendingTransactions)
-  const pendingDiff = useMemo(
-    () => prevPendingTransactions?.filter((tx) => !pendingTransactions.includes(tx)),
-    [pendingTransactions, prevPendingTransactions],
-  )
-  const watchTransactions = useWatchTransactionsCallback()
-
-  useEffect(() => {
-    if (!account.address || !account.chainId) {
-      return
-    }
-
-    if (!pendingDiff?.length) {
-      return
-    }
-
-    watchTransactions({
-      address: account.address,
-      chainId: account.chainId,
-      pendingDiff,
-      apolloClient,
-    })
-  }, [pendingDiff, account.address, account.chainId, watchTransactions])
 
   const fetch = useCallback(() => {
     if (!account.address) {
       return
     }
-
-    lazyFetch({
-      variables: {
-        ownerAddress: account.address,
-        chains: gqlChains,
-        valueModifiers: [
-          {
-            ownerAddress: account.address,
-            includeSpamTokens: valueModifiers.includeSpamTokens,
-            includeSmallBalances: valueModifiers.includeSmallBalances,
-            tokenExcludeOverrides: [],
-            tokenIncludeOverrides: [],
-          },
-        ],
+    // adds a 3 second delay to account for dependency latency after an account update
+    // TODO(WEB-5370): Remove this delay once we've integrated wallet's refetch logic
+    setTimeout(
+      () => {
+        account.address &&
+          lazyFetch({
+            variables: {
+              ownerAddress: account.address,
+              chains: gqlChains,
+              valueModifiers: [
+                {
+                  ownerAddress: account.address,
+                  includeSpamTokens: valueModifiers.includeSpamTokens,
+                  includeSmallBalances: valueModifiers.includeSmallBalances,
+                  tokenExcludeOverrides: [],
+                  tokenIncludeOverrides: [],
+                },
+              ],
+            },
+          })
       },
-    })
-  }, [account.address, gqlChains, lazyFetch, valueModifiers.includeSmallBalances, valueModifiers.includeSpamTokens])
+      hasAccountUpdate ? 3000 : 0,
+    )
+  }, [
+    account.address,
+    hasAccountUpdate,
+    lazyFetch,
+    gqlChains,
+    valueModifiers.includeSpamTokens,
+    valueModifiers.includeSmallBalances,
+  ])
 
   return (
     <AdaptiveTokenBalancesProvider

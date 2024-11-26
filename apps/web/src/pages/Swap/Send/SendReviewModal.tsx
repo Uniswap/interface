@@ -10,8 +10,8 @@ import Row from 'components/deprecated/Row'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { useSendContext } from 'state/send/SendContext'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { Separator, ThemedText } from 'theme/components'
 import { capitalize } from 'tsafe'
 import { Unitag } from 'ui/src/components/icons/Unitag'
@@ -68,7 +68,7 @@ const SendModalHeader = ({
 
 export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => void; onDismiss: () => void }) {
   const { t } = useTranslation()
-  const { chainId } = useMultichainContext()
+  const { chainId } = useSwapAndLimitContext()
   const {
     sendState: { inputCurrency, inputInFiat, exactAmountFiat },
     derivedSendInfo: { parsedTokenAmount, exactAmountOut, gasFeeCurrencyAmount, recipientData },

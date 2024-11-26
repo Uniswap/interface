@@ -1,6 +1,7 @@
 import { Currency, Price } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { AutoColumn, ColumnCenter } from 'components/deprecated/Column'
+import Loader from 'components/Icons/LoadingSpinner'
 import { Chart } from 'components/LiquidityChartRangeInput/Chart'
 import { useDensityChartData } from 'components/LiquidityChartRangeInput/hooks'
 import { ZoomLevels } from 'components/LiquidityChartRangeInput/types'
@@ -12,7 +13,6 @@ import { BarChart2, CloudOff, Inbox } from 'react-feather'
 import { batch } from 'react-redux'
 import { Bound } from 'state/mint/v3/actions'
 import { ThemedText } from 'theme/components'
-import { Flex, Shine } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 
@@ -60,22 +60,6 @@ function InfoBox({ message, icon }: { message?: ReactNode; icon: ReactNode }) {
         </ThemedText.DeprecatedMediumHeader>
       )}
     </ColumnCenter>
-  )
-}
-
-function LoadingBar({ height }: { height: string }) {
-  return <Flex height={height} width="10%" backgroundColor="$neutral2" />
-}
-
-function LoadingBars() {
-  return (
-    <Shine>
-      <Flex row centered height="100%" width="100%" gap="$gap8" alignItems="flex-end">
-        {[10, 20, 45, 70, 80, 55, 30, 15].map((h) => (
-          <LoadingBar key={h} height={`${h}%`} />
-        ))}
-      </Flex>
-    </Shine>
   )
 }
 
@@ -177,14 +161,14 @@ export default function LiquidityChartRangeInput({
     [formatDelta, isSorted, price, ticksAtLimit],
   )
 
-  const isUninitialized = !currencyA || !currencyB || (formattedData === undefined && !isLoading && !error)
+  const isUninitialized = !currencyA || !currencyB || (formattedData === undefined && !isLoading)
 
   return (
     <AutoColumn gap="md" style={{ minHeight: '200px' }}>
       {isUninitialized ? (
         <InfoBox message={<Trans i18nKey="position.appearHere" />} icon={<Inbox size={56} stroke={theme.neutral1} />} />
       ) : isLoading ? (
-        <LoadingBars />
+        <InfoBox icon={<Loader size="40px" stroke={theme.neutral2} />} />
       ) : error ? (
         <InfoBox
           message={<Trans i18nKey="position.noLiquidity" />}

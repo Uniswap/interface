@@ -28,8 +28,8 @@ export type PriceNumberOfDigits = {
  */
 export function useTokenPriceHistory(
   currencyId: string,
+  onCompleted?: () => void,
   initialDuration: HistoryDuration = HistoryDuration.Day,
-  skip: boolean = false,
 ): Omit<
   GqlResult<{
     priceHistory?: TLineChartData
@@ -61,8 +61,9 @@ export function useTokenPriceHistory(
     },
     notifyOnNetworkStatusChange: true,
     pollInterval: PollingInterval.Normal,
-    fetchPolicy: 'network-only',
-    skip,
+    onCompleted,
+    // TODO(MOB-2308): maybe update to network-only once we have a better loading state
+    fetchPolicy: 'cache-and-network',
   })
 
   const offChainData = priceData?.tokenProjects?.[0]?.markets?.[0]
@@ -127,13 +128,17 @@ export function useTokenPriceHistory(
     await refetch({ contract: currencyIdToContractInput(currencyId) })
   }, [refetch, currencyId])
 
-  return {
-    data,
-    loading: skip || isNonPollingRequestInFlight(networkStatus),
-    error: !skip && isError(networkStatus, !!priceData),
-    refetch: retry,
-    setDuration,
-    selectedDuration: duration,
-    numberOfDigits,
-  }
+  return useMemo(
+    () => ({
+      data,
+      loading: isNonPollingRequestInFlight(networkStatus),
+      error: isError(networkStatus, !!priceData),
+      refetch: retry,
+      setDuration,
+      selectedDuration: duration,
+      numberOfDigits,
+      onCompleted,
+    }),
+    [data, duration, networkStatus, priceData, retry, onCompleted, numberOfDigits],
+  )
 }

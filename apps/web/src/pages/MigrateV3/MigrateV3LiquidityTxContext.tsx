@@ -13,10 +13,7 @@ import {
   MigrateLPPositionRequest,
   ProtocolItems,
 } from 'uniswap/src/data/tradingApi/__generated__'
-import {
-  LiquidityTransactionType,
-  MigrateV3PositionTxAndGasInfo,
-} from 'uniswap/src/features/transactions/liquidity/types'
+import { MigrateV3PositionTxAndGasInfo } from 'uniswap/src/features/transactions/liquidity/types'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useAccount } from 'wagmi'
@@ -24,8 +21,6 @@ import { useAccount } from 'wagmi'
 interface MigrateV3PositionTxContextType {
   txInfo?: MigrateV3PositionTxAndGasInfo
   gasFeeEstimateUSD?: CurrencyAmount<Currency>
-  error?: boolean
-  refetch?: () => void
 }
 
 const MigrateV3PositionTxContext = createContext<MigrateV3PositionTxContextType | undefined>(undefined)
@@ -64,11 +59,7 @@ export function MigrateV3PositionTxContextProvider({
     }
   }, [positionInfo, account.address])
 
-  const {
-    data: migrateTokenApprovals,
-    error: approvalError,
-    refetch: approvalRefetch,
-  } = useCheckLpApprovalQuery({
+  const { data: migrateTokenApprovals } = useCheckLpApprovalQuery({
     params: increaseLiquidityApprovalParams,
     headers: {
       'x-universal-router-version': '2.0',
@@ -163,11 +154,7 @@ export function MigrateV3PositionTxContextProvider({
     feeValue1?.quotient,
   ])
 
-  const {
-    data: migrateCalldata,
-    error: migrateError,
-    refetch: migrateRefetch,
-  } = useMigrateV3LpPositionCalldataQuery({
+  const { data: migrateCalldata } = useMigrateV3LpPositionCalldataQuery({
     params: migratePositionRequestArgs,
     staleTime: 5 * ONE_SECOND_MS,
   })
@@ -188,7 +175,7 @@ export function MigrateV3PositionTxContextProvider({
     }
 
     return {
-      type: LiquidityTransactionType.Migrate,
+      type: 'migrate',
       unsigned: Boolean(migrateTokenApprovals?.permitData),
       migratePositionRequestArgs,
       approveToken0Request: undefined,
@@ -199,7 +186,6 @@ export function MigrateV3PositionTxContextProvider({
       revocationTxRequest: undefined,
       txRequest,
       action: {
-        type: LiquidityTransactionType.Migrate,
         currency0Amount: positionInfo.currency0Amount,
         currency1Amount: positionInfo.currency1Amount,
       },
@@ -213,13 +199,7 @@ export function MigrateV3PositionTxContextProvider({
   ])
 
   return (
-    <MigrateV3PositionTxContext.Provider
-      value={{
-        txInfo: validatedValue,
-        error: Boolean(approvalError || migrateError),
-        refetch: approvalError ? approvalRefetch : migrateError ? migrateRefetch : undefined,
-      }}
-    >
+    <MigrateV3PositionTxContext.Provider value={{ txInfo: validatedValue }}>
       {children}
     </MigrateV3PositionTxContext.Provider>
   )

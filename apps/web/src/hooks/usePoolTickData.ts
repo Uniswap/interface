@@ -1,20 +1,28 @@
-import { Currency, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { Currency, Price, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, TICK_SPACINGS, tickToPrice } from '@uniswap/v3-sdk'
 import { TickData, Ticks } from 'graphql/data/AllV3TicksQuery'
+import { useAccount } from 'hooks/useAccount'
 import { PoolState, usePoolMultichain } from 'hooks/usePools'
 import JSBI from 'jsbi'
 import ms from 'ms'
 import { useEffect, useMemo, useState } from 'react'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { useAllV3TicksQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useEnabledChains, useSupportedChainId } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { logger } from 'utilities/src/logger/logger'
-import computeSurroundingTicks, { TickProcessed } from 'utils/computeSurroundingTicks'
+import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 
 const PRICE_FIXED_DIGITS = 8
+
+// Tick with fields parsed to JSBIs, and active liquidity computed.
+export interface TickProcessed {
+  tick: number
+  liquidityActive: JSBI
+  liquidityNet: JSBI
+  price0: string
+  sdkPrice: Price<Token, Token>
+}
 
 const getActiveTick = (tickCurrent: number | undefined, feeAmount: FeeAmount | undefined) =>
   tickCurrent && feeAmount ? Math.floor(tickCurrent / TICK_SPACINGS[feeAmount]) * TICK_SPACINGS[feeAmount] : undefined
@@ -103,8 +111,8 @@ export function usePoolActiveLiquidity(
   sqrtPriceX96?: JSBI
   data?: TickProcessed[]
 } {
-  const multichainContext = useMultichainContext()
-  const defaultChainId = multichainContext.chainId ?? UniverseChainId.Mainnet
+  const account = useAccount()
+  const defaultChainId = account.chainId ?? UniverseChainId.Mainnet
   const pool = usePoolMultichain(currencyA?.wrapped, currencyB?.wrapped, feeAmount, chainId ?? defaultChainId)
   const liquidity = pool[1]?.liquidity
   const sqrtPriceX96 = pool[1]?.sqrtRatioX96

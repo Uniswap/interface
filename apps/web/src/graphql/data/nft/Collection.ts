@@ -5,7 +5,10 @@ import {
   useCollectionQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
-function formatCollectionQueryData(queryCollection: NonNullable<NftCollection>, address?: string): GenieCollection {
+export function formatCollectionQueryData(
+  queryCollection: NonNullable<NftCollection>,
+  address?: string,
+): GenieCollection {
   const market = queryCollection?.markets?.[0]
   if (!address && !queryCollection?.nftContracts?.[0]?.address) {
     return {} as GenieCollection

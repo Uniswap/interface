@@ -92,7 +92,7 @@ export function useActivityData({
 
   const emptyListView = useMemo(
     () => (
-      <Flex centered pt="$spacing48" px="$spacing36">
+      <Flex centered grow pt="$spacing48" px="$spacing36">
         <BaseCard.EmptyState
           buttonLabel={isExternalProfile || !onPressEmptyState ? undefined : t('home.activity.empty.button')}
           description={

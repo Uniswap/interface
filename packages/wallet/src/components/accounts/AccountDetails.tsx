@@ -1,6 +1,6 @@
 import { ColorTokens, Flex, Text } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
-import { shortenAddress } from 'utilities/src/addresses'
+import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 
 export function AccountDetails({

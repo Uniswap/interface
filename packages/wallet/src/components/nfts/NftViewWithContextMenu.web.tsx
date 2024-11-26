@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 import { Flex } from 'ui/src'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { selectNftsVisibility } from 'uniswap/src/features/favorites/selectors'
 import { ContextMenu } from 'wallet/src/components/menu/ContextMenu'

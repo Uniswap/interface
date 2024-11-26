@@ -45,8 +45,10 @@ export function useHistoricalProtocolVolume(duration: HistoryDuration) {
     protocolStats: { data, isLoading },
   } = useContext(ExploreContext)
 
-  const { value: isV4DataEnabledLoaded, isLoading: isV4DataLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Data)
-  const isV4DataEnabled = isV4DataEnabledLoaded || isV4DataLoading
+  const { value: isV4EverywhereEnabledLoaded, isLoading: isV4EverywhereLoading } = useFeatureFlagWithLoading(
+    FeatureFlags.V4Everywhere,
+  )
+  const isV4EverywhereEnabled = isV4EverywhereEnabledLoaded || isV4EverywhereLoading
   let v4Data: TimestampedAmount[] | undefined
   let v3Data: TimestampedAmount[] | undefined
   let v2Data: TimestampedAmount[] | undefined
@@ -69,7 +71,7 @@ export function useHistoricalProtocolVolume(duration: HistoryDuration) {
   }
 
   return useMemo(() => {
-    const dataByTime = mapDataByTimestamp(v2Data, v3Data, isV4DataEnabled ? v4Data : undefined)
+    const dataByTime = mapDataByTimestamp(v2Data, v3Data, isV4EverywhereEnabled ? v4Data : undefined)
 
     const entries = Object.entries(dataByTime).reduce((acc, [timestamp, values]) => {
       acc.push({
@@ -77,7 +79,7 @@ export function useHistoricalProtocolVolume(duration: HistoryDuration) {
         values: {
           ['SUBGRAPH_V2']: values['v2'],
           ['SUBGRAPH_V3']: values['v3'],
-          ['SUBGRAPH_V4']: isV4DataEnabled ? values['v4'] : undefined,
+          ['SUBGRAPH_V4']: isV4EverywhereEnabled ? values['v4'] : undefined,
         },
       })
       return acc
@@ -85,7 +87,7 @@ export function useHistoricalProtocolVolume(duration: HistoryDuration) {
 
     const dataQuality = checkDataQuality(entries, ChartType.VOLUME, duration)
     return { chartType: ChartType.VOLUME, entries, loading: isLoading, dataQuality }
-  }, [duration, isLoading, isV4DataEnabled, v2Data, v3Data, v4Data])
+  }, [duration, isLoading, isV4EverywhereEnabled, v2Data, v3Data, v4Data])
 }
 
 export function useDailyProtocolTVL() {
@@ -93,20 +95,22 @@ export function useDailyProtocolTVL() {
     protocolStats: { data, isLoading },
   } = useContext(ExploreContext)
 
-  const { value: isV4DataEnabledLoaded, isLoading: isV4DataLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Data)
-  const isV4DataEnabled = isV4DataEnabledLoaded || isV4DataLoading
+  const { value: isV4EverywhereEnabledLoaded, isLoading: isV4EverywhereLoading } = useFeatureFlagWithLoading(
+    FeatureFlags.V4Everywhere,
+  )
+  const isV4EverywhereEnabled = isV4EverywhereEnabledLoaded || isV4EverywhereLoading
   const v4Data = data?.dailyProtocolTvl?.v4
   const v3Data = data?.dailyProtocolTvl?.v3
   const v2Data = data?.dailyProtocolTvl?.v2
 
   return useMemo(() => {
-    const dataByTime = mapDataByTimestamp(v2Data, v3Data, isV4DataEnabled ? v4Data : undefined)
+    const dataByTime = mapDataByTimestamp(v2Data, v3Data, isV4EverywhereEnabled ? v4Data : undefined)
     const entries = Object.entries(dataByTime).map(([timestamp, values]) => ({
       time: Number(timestamp),
-      values: isV4DataEnabled ? [values['v2'], values['v3'], values['v4']] : [values['v2'], values['v3']],
+      values: isV4EverywhereEnabled ? [values['v2'], values['v3'], values['v4']] : [values['v2'], values['v3']],
     })) as StackedLineData[]
 
     const dataQuality = checkDataQuality(entries, ChartType.TVL, HistoryDuration.Year)
     return { chartType: ChartType.TVL, entries, loading: isLoading, dataQuality }
-  }, [isLoading, isV4DataEnabled, v2Data, v3Data, v4Data])
+  }, [isLoading, isV4EverywhereEnabled, v2Data, v3Data, v4Data])
 }

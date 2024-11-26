@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { SEND_CONTENT_RENDER_DELAY_MS } from 'src/features/send/constants'
-import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
@@ -19,8 +18,6 @@ export function SendReviewScreen(): JSX.Element {
 function SendReviewScreenContent({ hideContent }: { hideContent: boolean }): JSX.Element {
   const { bottomSheetViewStyles, renderBiometricsIcon, onClose, authTrigger } = useTransactionModalContext()
 
-  const { hapticFeedback } = useHapticFeedback()
-
   // Same logic we apply in `SwapReviewScreen`
   // We forcefully hide the content via `hideContent` to allow the bottom sheet to animate faster while still allowing all API requests to trigger ASAP.
   // The value of `height + mb` must be equal to the height of the fully rendered component to avoid the modal jumping on open.
@@ -34,7 +31,6 @@ function SendReviewScreenContent({ hideContent }: { hideContent: boolean }): JSX
         ButtonAuthIcon={renderBiometricsIcon?.({ color: 'white' })}
         authTrigger={authTrigger}
         onCloseModal={onClose}
-        onSubmitSend={hapticFeedback.success}
       />
     </TransactionModalInnerContainer>
   )

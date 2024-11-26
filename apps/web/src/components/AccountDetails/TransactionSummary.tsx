@@ -421,7 +421,6 @@ function DecreaseLiquiditySummary({ info }: { info: DecreaseLiquidityTransaction
   )
 }
 
-/** @deprecated this is only used in the legacy LP flows. */
 export function TransactionSummary({ info }: { info: TransactionInfo }) {
   switch (info.type) {
     case TransactionType.ADD_LIQUIDITY_V3_POOL:
@@ -457,7 +456,7 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
     case TransactionType.CREATE_V3_POOL:
       return <CreateV3PoolSummary info={info} />
 
-    case TransactionType.MIGRATE_LIQUIDITY_V2_TO_V3:
+    case TransactionType.MIGRATE_LIQUIDITY_V3:
       return <MigrateLiquidityToV3Summary info={info} />
 
     case TransactionType.COLLECT_FEES:
@@ -484,9 +483,7 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
     case TransactionType.DECREASE_LIQUIDITY:
       return <DecreaseLiquiditySummary info={info} />
 
-    case TransactionType.CREATE_POSITION:
-    case TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4:
     case TransactionType.BRIDGE:
-      return <></> // These features were launched after this code became deprecated
+      return <></> // Bridging was launched after this code became deprecated
   }
 }

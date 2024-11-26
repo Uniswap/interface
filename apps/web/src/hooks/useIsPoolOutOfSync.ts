@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Fraction, Price } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Fraction, Price, Token } from '@uniswap/sdk-core'
 import { parseUnits } from 'ethers/lib/utils'
 import { useStablecoinAmountFromFiatValue } from 'hooks/useStablecoinPrice'
 import { useUSDPrice } from 'hooks/useUSDPrice'
@@ -47,7 +47,7 @@ function useMarketPrice(baseCurrency?: Currency, quoteCurrency?: Currency) {
  * @param quoteCurrency The pool's quote currency (a.k.a. token1)
  * @param poolPrice The exchange rate between token0 and token1
  */
-export function useIsPoolOutOfSync(poolPrice?: Price<Currency, Currency>) {
+export function useIsPoolOutOfSync(poolPrice?: Price<Token, Token>) {
   const marketPrice = useMarketPrice(poolPrice?.baseCurrency, poolPrice?.quoteCurrency)
 
   if (!poolPrice || !marketPrice) {

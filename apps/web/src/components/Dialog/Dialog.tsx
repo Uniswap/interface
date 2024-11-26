@@ -79,8 +79,8 @@ type ButtonConfig = {
 }
 
 type ButtonsConfig = {
-  left?: ButtonConfig | JSX.Element
-  right?: ButtonConfig | JSX.Element
+  left?: ButtonConfig
+  right?: ButtonConfig
   gap?: Gap
 }
 
@@ -111,36 +111,28 @@ export function DialogContent({ icon, title, description, body, buttonsConfig }:
         </ColumnCenter>
       </ColumnCenter>
       <Row align="center" justify="center" gap={gap ?? 'md'}>
-        {left ? (
-          'title' in left ? (
-            <StyledButton
-              size={ButtonSize.small}
-              onClick={left.onClick}
-              disabled={left.disabled}
-              emphasis={getButtonEmphasis(left.type)}
-              $color={left.textColor}
-            >
-              {left.title}
-            </StyledButton>
-          ) : (
-            left
-          )
-        ) : null}
-        {right ? (
-          'title' in right ? (
-            <StyledButton
-              size={ButtonSize.small}
-              onClick={right.onClick}
-              disabled={right.disabled}
-              emphasis={getButtonEmphasis(right.type)}
-              $color={right.textColor}
-            >
-              {right.title}
-            </StyledButton>
-          ) : (
-            right
-          )
-        ) : null}
+        {left && (
+          <StyledButton
+            size={ButtonSize.small}
+            onClick={left.onClick}
+            disabled={left.disabled}
+            emphasis={getButtonEmphasis(left.type)}
+            $color={left.textColor}
+          >
+            {left.title}
+          </StyledButton>
+        )}
+        {right && (
+          <StyledButton
+            size={ButtonSize.small}
+            onClick={right.onClick}
+            disabled={right.disabled}
+            emphasis={getButtonEmphasis(right.type)}
+            $color={right.textColor}
+          >
+            {right.title}
+          </StyledButton>
+        )}
       </Row>
     </ColumnCenter>
   )

@@ -17,8 +17,8 @@ import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { formatCommonPropertiesForTrade, formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback, useRef } from 'react'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { ClassicTrade, TradeFillType } from 'state/routing/types'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { trace } from 'tracing/trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -64,7 +64,7 @@ export function useUniversalRouterSwapCallback(
   const accountRef = useRef(account)
   accountRef.current = account
 
-  const { chainId } = useMultichainContext()
+  const { chainId } = useSwapAndLimitContext()
   const provider = useEthersWeb3Provider({ chainId })
   const providerRef = useRef(provider)
   providerRef.current = provider
@@ -158,8 +158,8 @@ export function useUniversalRouterSwapCallback(
               fiatValues,
               txHash: response.hash,
               portfolioBalanceUsd,
-              trace: analyticsContext,
             }),
+            ...analyticsContext,
             // TODO (WEB-2993): remove these after debugging missing user properties.
             [CustomUserProperties.WALLET_ADDRESS]: account.address,
             [CustomUserProperties.WALLET_TYPE]: account.connector.name,

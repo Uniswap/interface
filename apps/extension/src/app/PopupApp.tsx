@@ -17,7 +17,6 @@ import { getReduxPersistor, getReduxStore } from 'src/store/store'
 import { Button, Flex, Image, Text } from 'ui/src'
 import { CHROME_LOGO, UNISWAP_LOGO } from 'ui/src/assets'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -133,16 +132,14 @@ export default function PopupApp(): JSX.Element {
             <SharedWalletProvider reduxStore={getReduxStore()}>
               <ErrorBoundary>
                 <GraphqlProvider>
-                  <BlankUrlProvider>
-                    <LocalizationContextProvider>
-                      <UnitagUpdaterContextProvider>
-                        <TraceUserProperties />
-                        <DappContextProvider>
-                          <RouterProvider router={router} />
-                        </DappContextProvider>
-                      </UnitagUpdaterContextProvider>
-                    </LocalizationContextProvider>
-                  </BlankUrlProvider>
+                  <LocalizationContextProvider>
+                    <UnitagUpdaterContextProvider>
+                      <TraceUserProperties />
+                      <DappContextProvider>
+                        <RouterProvider router={router} />
+                      </DappContextProvider>
+                    </UnitagUpdaterContextProvider>
+                  </LocalizationContextProvider>
                 </GraphqlProvider>
               </ErrorBoundary>
             </SharedWalletProvider>

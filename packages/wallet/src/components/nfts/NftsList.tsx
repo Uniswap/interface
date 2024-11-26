@@ -11,7 +11,7 @@ import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { HiddenNftsRow } from 'wallet/src/components/nfts/NFTHiddenRow'
@@ -195,7 +195,11 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
                   ? t('tokens.nfts.list.none.description.external')
                   : t('tokens.nfts.list.none.description.default')
               }
-              icon={<NoNfts color="$neutral3" size="$icon.100" />}
+              icon={
+                <Flex pb="$spacing12">
+                  <NoNfts color="$neutral3" size="$icon.70" />
+                </Flex>
+              }
               title={t('tokens.nfts.list.none.title')}
               onPress={onPressEmptyState}
             />

@@ -6,21 +6,17 @@ import {
   Token,
   useV2PairQuery,
   useV3PoolQuery,
-  useV4PoolQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export interface PoolData {
   // basic pool info
-  idOrAddress: string
+  address: string
   feeTier?: number
   txCount?: number
   protocolVersion?: ProtocolVersion
-  hookAddress?: string
 
   // token info
   token0: Token
@@ -66,13 +62,13 @@ function calc24HVolChange(historicalVolume?: (VolumeChange | undefined)[]) {
 }
 
 /**
- * Queries v4, v3, and v2 for pool data
- * @param poolIdOrAddress
+ * Queries both v3 and v2 for pool data
+ * @param poolAddress
  * @param chainId
  * @returns
  */
 export function usePoolData(
-  poolIdOrAddress: string,
+  poolAddress: string,
   chainId?: UniverseChainId,
 ): {
   loading: boolean
@@ -80,23 +76,13 @@ export function usePoolData(
   data?: PoolData
 } {
   const { defaultChainId } = useEnabledChains()
-  const chain = toGraphQLChain(chainId ?? defaultChainId)
-  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
-  const {
-    loading: loadingV4,
-    error: errorV4,
-    data: dataV4,
-  } = useV4PoolQuery({
-    variables: { chain, poolId: poolIdOrAddress },
-    errorPolicy: 'all',
-    skip: !isV4DataEnabled,
-  })
+  const variables = { chain: toGraphQLChain(chainId ?? defaultChainId), address: poolAddress }
   const {
     loading: loadingV3,
     error: errorV3,
     data: dataV3,
   } = useV3PoolQuery({
-    variables: { chain, address: poolIdOrAddress },
+    variables,
     errorPolicy: 'all',
   })
   const {
@@ -104,23 +90,22 @@ export function usePoolData(
     error: errorV2,
     data: dataV2,
   } = useV2PairQuery({
-    variables: { chain, address: poolIdOrAddress },
+    variables,
     skip: !chainId,
     errorPolicy: 'all',
   })
 
   return useMemo(() => {
-    const anyError = Boolean(errorV4 || errorV3 || errorV2)
-    const anyLoading = Boolean(loadingV4 || loadingV3 || loadingV2)
+    const anyError = Boolean(errorV3 || errorV2)
+    const anyLoading = Boolean(loadingV3 || loadingV2)
 
-    const pool = dataV4?.v4Pool ?? dataV3?.v3Pool ?? dataV2?.v2Pair ?? undefined
-    const feeTier = dataV4?.v4Pool?.feeTier ?? dataV3?.v3Pool?.feeTier ?? V2_BIPS
-    const poolId = dataV4?.v4Pool?.id ?? dataV3?.v3Pool?.address ?? dataV2?.v2Pair?.address ?? poolIdOrAddress
+    const pool = dataV3?.v3Pool ?? dataV2?.v2Pair ?? undefined
+    const feeTier = dataV3?.v3Pool?.feeTier ?? V2_BIPS
 
     return {
       data: pool
         ? {
-            idOrAddress: poolId,
+            address: pool.address,
             txCount: pool.txCount,
             protocolVersion: pool.protocolVersion,
             token0: pool.token0 as Token,
@@ -134,22 +119,10 @@ export function usePoolData(
             volumeUSD24HChange: calc24HVolChange(pool.historicalVolume?.concat()),
             tvlUSD: pool.totalLiquidity?.value,
             tvlUSDChange: pool.totalLiquidityPercentChange24h?.value,
-            hookAddress: 'hook' in pool ? pool?.hook?.address : undefined,
           }
         : undefined,
       error: anyError,
       loading: anyLoading,
     }
-  }, [
-    dataV2?.v2Pair,
-    dataV3?.v3Pool,
-    dataV4?.v4Pool,
-    errorV2,
-    errorV3,
-    errorV4,
-    loadingV2,
-    loadingV3,
-    loadingV4,
-    poolIdOrAddress,
-  ])
+  }, [dataV2?.v2Pair, dataV3?.v3Pool, errorV2, errorV3, loadingV2, loadingV3])
 }

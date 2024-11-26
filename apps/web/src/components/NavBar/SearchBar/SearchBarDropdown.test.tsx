@@ -8,16 +8,24 @@ jest.mock('hooks/useDisableNFTRoutes')
 const SearchBarDropdownProps = {
   toggleOpen: () => void 0,
   tokens: [],
+  collections: [],
   queryText: '',
   hasInput: false,
   isLoading: false,
 }
 
-describe('load popular tokens in searchbar', () => {
-  it('should render popular tokens', () => {
+describe('disable nft on searchbar dropdown', () => {
+  it('should render popular nft collections', () => {
     mocked(useDisableNFTRoutes).mockReturnValue(false)
     const { container } = render(<SearchBarDropdown {...SearchBarDropdownProps} />)
     expect(container).toMatchSnapshot()
-    expect(container).toHaveTextContent('Popular tokens')
+    expect(container).toHaveTextContent('Popular NFT collections')
+  })
+  it('should not render popular nft collections', () => {
+    mocked(useDisableNFTRoutes).mockReturnValue(true)
+    const { container } = render(<SearchBarDropdown {...SearchBarDropdownProps} />)
+    expect(container).toMatchSnapshot()
+    expect(container).not.toHaveTextContent('Popular NFT collections')
+    expect(container).not.toHaveTextContent('NFT')
   })
 })

@@ -162,6 +162,20 @@ function extractTokenAddresses(commands: UniversalRouterCommand[]): {
   return { inputAddress, outputAddress }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isZeroBigNumber(bigNumberObj: any): boolean {
+  // The true type of bigNumberObj is { type: string; hex: string } but param.value is any type
+  try {
+    if (!bigNumberObj) {
+      return true
+    }
+    const bigNumber = BigNumber.from(bigNumberObj.hex)
+    return bigNumber.isZero()
+  } catch (error) {
+    return true // Treat as zero if there's any error
+  }
+}
+
 function getTokenAmounts(commands: UniversalRouterCommand[]): {
   inputValue: string
   outputValue: string
@@ -191,9 +205,7 @@ function getTokenAmounts(commands: UniversalRouterCommand[]): {
   const inputValue = firstAmountInParam?.value
   const fallbackOutputValue = sweepAmountOutParam?.value || unwrapWethAmountOutParam?.value
   const outputValue =
-    fallbackOutputValue && isZeroBigNumberParam(lastAmountOutParam?.value)
-      ? fallbackOutputValue
-      : lastAmountOutParam?.value
+    fallbackOutputValue && isZeroBigNumber(lastAmountOutParam?.value) ? fallbackOutputValue : lastAmountOutParam?.value
 
   return {
     inputValue: inputValue || '0', // Safe due to assert
@@ -371,35 +383,4 @@ export function getTokenDetailsFromV4SwapCommands(command: UniversalRouterComman
   }
 
   return { inputAddress, outputAddress, inputValue, outputValue }
-}
-
-export function isNonZeroBigNumber(value: string | undefined): boolean {
-  if (!value) {
-    return false
-  }
-
-  try {
-    const valueBN = BigNumber.from(value)
-    return !valueBN.isZero()
-  } catch {
-    return false
-  }
-}
-
-interface BigNumberParam {
-  type: string
-  hex: string
-}
-
-const isBigNumberParam = (obj: unknown): obj is BigNumberParam =>
-  typeof obj === 'object' && !!obj && 'hex' in obj && typeof (obj as BigNumberParam).hex === 'string'
-
-// We have to type this as unknown because BigNumberSchema is any (as defined in apps/extension/src/app/features/dappRequests/types/EthersTypes.ts)
-function isZeroBigNumberParam(bigNumberObj: unknown): boolean {
-  // We treat an undefined or badly formatted param as zero
-  if (!bigNumberObj || !isBigNumberParam(bigNumberObj)) {
-    return true
-  }
-
-  return !isNonZeroBigNumber(bigNumberObj.hex)
 }

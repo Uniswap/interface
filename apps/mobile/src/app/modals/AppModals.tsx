@@ -9,7 +9,6 @@ import { KoreaCexTransferInfoModal } from 'src/app/modals/KoreaCexTransferInfoMo
 import { LazyModalRenderer } from 'src/app/modals/LazyModalRenderer'
 import { SendTokenModal } from 'src/app/modals/SendTokenModal'
 import { SwapModal } from 'src/app/modals/SwapModal'
-import { TokenWarningModalWrapper } from 'src/app/modals/TokenWarningModalWrapper'
 import { ViewOnlyExplainerModal } from 'src/app/modals/ViewOnlyExplainerModal'
 import { RemoveWalletModal } from 'src/components/RemoveWallet/RemoveWalletModal'
 import { WalletConnectModals } from 'src/components/Requests/WalletConnectModals'
@@ -114,10 +113,6 @@ export function AppModals(): JSX.Element {
 
       <LazyModalRenderer name={ModalName.BackupReminderWarning}>
         <BackupWarningModal />
-      </LazyModalRenderer>
-
-      <LazyModalRenderer name={ModalName.TokenWarning}>
-        <TokenWarningModalWrapper />
       </LazyModalRenderer>
     </>
   )

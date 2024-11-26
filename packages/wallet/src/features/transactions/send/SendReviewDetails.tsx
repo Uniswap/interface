@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Button, Flex, Separator, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { Button, Flex, Separator, Text, TouchableArea, isWeb, useHapticFeedback, useSporeColors } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { BackArrow, X } from 'ui/src/components/icons'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
@@ -42,18 +42,17 @@ export function SendReviewDetails({
   authTrigger,
   ButtonAuthIcon,
   onCloseModal,
-  onSubmitSend,
 }: {
   authTrigger?: AuthTrigger
   ButtonAuthIcon?: JSX.Element | null
   onCloseModal?: () => void
-  onSubmitSend?: () => void
 }): JSX.Element | null {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const dispatch = useDispatch()
   const { fullHeight } = useDeviceDimensions()
   const account = useActiveAccountWithThrow()
+  const { hapticFeedback } = useHapticFeedback()
 
   const { formatCurrencyAmount, formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
   const { navigateToAccountActivityList } = useWalletNavigation()
@@ -122,6 +121,8 @@ export function SendReviewDetails({
   }, [nftIn, transferERC20Callback, transferNFTCallback])
 
   const onSubmitButtonPress = useCallback(async () => {
+    await hapticFeedback.success()
+
     if (authTrigger) {
       await authTrigger({
         successCallback: submitTranaction,
@@ -132,9 +133,7 @@ export function SendReviewDetails({
     } else {
       submitTranaction()
     }
-
-    await onSubmitSend?.()
-  }, [authTrigger, setScreen, submitTranaction, onSubmitSend])
+  }, [authTrigger, hapticFeedback, setScreen, submitTranaction])
 
   const { blockingWarning } = warnings
   const transferWarning = warnings.warnings.find((warning) => warning.severity >= WarningSeverity.Medium)

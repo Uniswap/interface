@@ -9,7 +9,7 @@ import { fonts, iconSizes } from 'ui/src/theme'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
-import { shortenAddress } from 'utilities/src/addresses'
+import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 
 export function NameWallet(): JSX.Element {

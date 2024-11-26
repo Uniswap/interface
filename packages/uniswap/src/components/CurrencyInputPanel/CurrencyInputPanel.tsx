@@ -17,6 +17,7 @@ import type { NativeSyntheticEvent, TextInput, TextInputProps, TextInputSelectio
 import { Easing, useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
 import { Flex, FlexProps, Text, TouchableArea, isWeb, useIsShortMobileDevice, useSporeColors } from 'ui/src'
 import { errorShakeAnimation } from 'ui/src/animations/errorShakeAnimation'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { fonts, spacing } from 'ui/src/theme'
@@ -25,7 +26,7 @@ import { MaxAmountButton } from 'uniswap/src/components/CurrencyInputPanel/MaxAm
 import { SelectTokenButton } from 'uniswap/src/components/CurrencyInputPanel/SelectTokenButton'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -238,6 +239,7 @@ export const CurrencyInputPanel = memo(
 
       return (
         <TouchableArea
+          hapticFeedback
           disabled={enableInputOnly}
           disabledStyle={{
             cursor: 'default',
@@ -264,7 +266,7 @@ export const CurrencyInputPanel = memo(
                   color={showInsufficientBalanceWarning ? '$statusCritical' : color}
                   fontSize={fontSize}
                   lineHeight={lineHeight}
-                  mr={isWeb && '$spacing2'}
+                  mr="$spacing4"
                 >
                   {fiatCurrencySymbol}
                 </Text>
@@ -324,7 +326,7 @@ export const CurrencyInputPanel = memo(
                     />
                   </Flex>
                 ) : (
-                  <TouchableArea onPress={onShowTokenSelector}>
+                  <TouchableArea hapticFeedback onPress={onShowTokenSelector}>
                     <Text color="$neutral3" fontSize={fontSize} variant="heading2" style={{ lineHeight: fontSize }}>
                       0
                     </Text>
@@ -354,8 +356,9 @@ export const CurrencyInputPanel = memo(
                   )}
                 </TouchableArea>
                 <Flex row centered gap="$spacing4" justifyContent="flex-end">
+                  {showInsufficientBalanceWarning && <AlertTriangleFilled color="$neutral2" size="$icon.16" />}
                   {!hideCurrencyBalance && (
-                    <Text color={showInsufficientBalanceWarning ? '$statusCritical' : '$neutral2'} variant="body3">
+                    <Text color="$neutral2" variant="body3">
                       {formatCurrencyAmount({
                         value: currencyBalance,
                         type: NumberType.TokenNonTx,

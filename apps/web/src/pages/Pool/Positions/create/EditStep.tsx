@@ -2,9 +2,9 @@
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import {
   DEFAULT_DEPOSIT_STATE,
+  DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS,
   useCreatePositionContext,
   useDepositContext,
   usePriceRangeContext,
@@ -21,26 +21,11 @@ import { Trans } from 'uniswap/src/i18n'
 
 const EditStep = ({ children, onClick, ...rest }: { children: JSX.Element; onClick: () => void } & FlexProps) => {
   return (
-    <Container
-      row
-      justifyContent="space-between"
-      alignItems="center"
-      $md={{ row: false, alignItems: 'flex-start', justifyContent: 'flex-start' }}
-      {...rest}
-    >
+    <Container row justifyContent="space-between" alignItems="center" borderRadius="$rounded12" {...rest}>
       {children}
-      <Button
-        theme="secondary"
-        py="$spacing8"
-        px="$spacing12"
-        gap="$gap8"
-        height={36}
-        borderRadius="$rounded12"
-        onPress={onClick}
-        $md={{ px: '$spacing8' }}
-      >
+      <Button theme="secondary" py="$spacing8" px="$spacing12" gap="$gap8" height={36} onPress={onClick}>
         <Edit size={iconSizes.icon20} color="$neutral1" />
-        <Text variant="buttonLabel3" $md={{ display: 'none' }}>
+        <Text variant="buttonLabel3">
           <Trans i18nKey="common.edit.button" />
         </Text>
       </Button>
@@ -50,38 +35,30 @@ const EditStep = ({ children, onClick, ...rest }: { children: JSX.Element; onCli
 
 export const EditSelectTokensStep = (props?: FlexProps) => {
   const { setStep, derivedPositionInfo, positionState } = useCreatePositionContext()
-  const { reset: resetPriceRangeState } = usePriceRangeContext()
-  const { reset: resetDepositState } = useDepositContext()
+  const { setPriceRangeState } = usePriceRangeContext()
+  const { setDepositState } = useDepositContext()
   const { currencies, protocolVersion } = derivedPositionInfo
   const { fee, hook } = positionState
   const [token0, token1] = currencies
   const versionLabel = getProtocolVersionLabel(protocolVersion)
-  const screenSize = useScreenSize()
 
   const handleEdit = useCallback(() => {
-    resetPriceRangeState()
-    resetDepositState()
+    setPriceRangeState(DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS)
+    setDepositState(DEFAULT_DEPOSIT_STATE)
     setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
-  }, [resetDepositState, resetPriceRangeState, setStep])
+  }, [setDepositState, setPriceRangeState, setStep])
 
   return (
     <EditStep onClick={handleEdit} {...props}>
-      <Flex row gap="$gap12">
-        <DoubleCurrencyLogo currencies={[token0, token1]} size={!screenSize.sm ? iconSizes.icon44 : iconSizes.icon32} />
-        <Flex row gap="$gap12" $md={{ flexDirection: 'column', gap: '$gap4' }}>
-          <Flex row gap="$gap8" alignItems="center">
-            <Text variant="subheading1">{token0?.symbol}</Text>
-            <Text variant="subheading1">/</Text>
-            <Text variant="subheading1">{token1?.symbol}</Text>
-          </Flex>
-          <Flex row gap={2} alignItems="center">
-            <LiquidityPositionInfoBadges
-              size="small"
-              versionLabel={versionLabel}
-              v4hook={hook}
-              feeTier={fee.feeAmount}
-            />
-          </Flex>
+      <Flex row py="$spacing8" gap="$gap12">
+        <DoubleCurrencyLogo currencies={[token0, token1]} size={iconSizes.icon32} />
+        <Flex row gap="$gap8">
+          <Text variant="heading3">{token0?.symbol}</Text>
+          <Text variant="heading3">/</Text>
+          <Text variant="heading3">{token1?.symbol}</Text>
+        </Flex>
+        <Flex row gap={2} alignItems="center">
+          <LiquidityPositionInfoBadges size="small" versionLabel={versionLabel} v4hook={hook} feeTier={fee.feeAmount} />
         </Flex>
       </Flex>
     </EditStep>
@@ -107,7 +84,7 @@ export const EditRangeSelectionStep = (props?: FlexProps) => {
     setStep(PositionFlowStep.PRICE_RANGE)
   }, [setDepositState, setStep])
 
-  const { formattedPrices, isFullRange } = useMemo(() => {
+  const formattedPrices = useMemo(() => {
     return formatPrices(derivedPriceRangeInfo, formatNumberOrString)
   }, [formatNumberOrString, derivedPriceRangeInfo])
 
@@ -117,26 +94,20 @@ export const EditRangeSelectionStep = (props?: FlexProps) => {
         <Text variant="subheading1" width={80}>
           <Trans i18nKey="common.range" />
         </Text>
-        {!isFullRange ? (
-          <Flex gap="$gap4">
-            <Flex row gap={10}>
-              <Text variant="body2" color="$neutral2">
-                <Trans i18nKey="common.min" />
-              </Text>
-              <Text variant="body2">{`${formattedPrices[0]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
-            </Flex>
-            <Flex row gap={10}>
-              <Text variant="body2" color="$neutral2">
-                <Trans i18nKey="common.max" />
-              </Text>
-              <Text variant="body2">{`${formattedPrices[1]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
-            </Flex>
+        <Flex gap="$gap4">
+          <Flex row gap={10}>
+            <Text variant="body2" color="$neutral2">
+              <Trans i18nKey="chart.price.label.low" />
+            </Text>
+            <Text variant="body2">{`${formattedPrices[0]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
           </Flex>
-        ) : (
-          <Text variant="body2" color="$neutral2">
-            <Trans i18nKey="common.fullRange" />
-          </Text>
-        )}
+          <Flex row gap={10}>
+            <Text variant="body2" color="$neutral2">
+              <Trans i18nKey="chart.price.label.high" />
+            </Text>
+            <Text variant="body2">{`${formattedPrices[1]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
+          </Flex>
+        </Flex>
       </Flex>
     </EditStep>
   )

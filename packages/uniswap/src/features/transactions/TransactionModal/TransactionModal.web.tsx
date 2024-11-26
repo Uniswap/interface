@@ -16,7 +16,6 @@ import { TransactionModalUpdateLogger } from 'uniswap/src/features/transactions/
 export function TransactionModal({
   children,
   onClose,
-  onCurrencyChange,
   openWalletRestoreModal,
   walletNeedsRestore,
   swapRedirectCallback,
@@ -34,7 +33,6 @@ export function TransactionModal({
         setScreen={setScreen}
         swapRedirectCallback={swapRedirectCallback}
         onClose={onClose}
-        onCurrencyChange={onCurrencyChange}
       >
         {children}
         <TransactionModalUpdateLogger modalName={modalName} />

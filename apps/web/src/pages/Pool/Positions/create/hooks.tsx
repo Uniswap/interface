@@ -1,17 +1,15 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
+import { Currency, CurrencyAmount, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { Pair, computePairAddress } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { DepositInfo, DepositState } from 'components/Liquidity/types'
-import { getPoolFromRest } from 'components/Liquidity/utils'
+import { getPairFromRest, getPoolFromRest } from 'components/Liquidity/utils'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
-import { useIsPoolOutOfSync } from 'hooks/useIsPoolOutOfSync'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
-import { PairState, useV2Pair } from 'hooks/useV2Pairs'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
@@ -43,9 +41,10 @@ import {
   validateCurrencyInput,
 } from 'pages/Pool/Positions/create/utils'
 import { useMemo } from 'react'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { PositionField } from 'types/position'
+import { useGetPair } from 'uniswap/src/data/rest/getPair'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 
@@ -54,7 +53,7 @@ import { Trans, useTranslation } from 'uniswap/src/i18n'
  * @returns derived position information such as existing Pools
  */
 export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo {
-  const { chainId } = useMultichainContext()
+  const { chainId } = useAccount()
   const {
     currencyInputs: { TOKEN0: token0Input, TOKEN1: token1Input },
     protocolVersion,
@@ -75,14 +74,13 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
       protocolVersions: [protocolVersion],
       token0: getCurrencyAddressWithWrap(sortedCurrencies?.[0], protocolVersion),
       token1: getCurrencyAddressWithWrap(sortedCurrencies?.[1], protocolVersion),
-      hooks: state.hook?.toLowerCase(), // BE does not accept checksummed addresses
     },
     poolsQueryEnabled,
   )
 
   const pool = poolData?.pools && poolData.pools.length > 0 ? poolData.pools[0] : undefined
 
-  const { pairsQueryEnabled, sortedTokens } = useMemo(() => {
+  const { pairsQueryEnabled, pairAddress, sortedTokens } = useMemo(() => {
     if (!pairEnabledProtocolVersion(protocolVersion)) {
       return {
         pairsQueryEnabled: false,
@@ -102,50 +100,34 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
 
     return {
       pairsQueryEnabled: true,
+      pairAddress: computePairAddress({
+        factoryAddress: V2_FACTORY_ADDRESSES[sortedTokens[0].chainId],
+        tokenA: sortedTokens[0],
+        tokenB: sortedTokens[1],
+      }),
       sortedTokens,
     } as const
   }, [protocolVersion, sortedCurrencies])
 
-  const pairResult = useV2Pair(sortedTokens?.[0], sortedTokens?.[1])
-  const pairIsFetched = pairResult[0] === PairState.EXISTS
-  const pairIsLoading = pairResult[0] === PairState.LOADING
+  const {
+    data: pairData,
+    isFetched: pairIsFetched,
+    isLoading: pairIsLoading,
+  } = useGetPair(
+    {
+      chainId: chainId ?? (UniverseChainId.Mainnet as number),
+      pairAddress,
+    },
+    pairsQueryEnabled,
+  )
 
-  const { pair, v2Price } = useMemo(() => {
-    const pair = pairsQueryEnabled ? pairResult[1] || undefined : undefined
-
-    return { pair, v2Price: pair?.token0Price }
-  }, [pairsQueryEnabled, pairResult])
-
-  const { v3Pool, v3Price } = useMemo(() => {
-    const v3Pool =
-      protocolVersion === ProtocolVersion.V3
-        ? getPoolFromRest({
-            pool,
-            token0: getCurrencyWithWrap(sortedCurrencies?.[0], protocolVersion),
-            token1: getCurrencyWithWrap(sortedCurrencies?.[1], protocolVersion),
-            protocolVersion,
-          })
-        : undefined
-
-    return { v3Pool, v3Price: v3Pool?.token0Price }
-  }, [protocolVersion, pool, sortedCurrencies])
-
-  const { v4Pool, v4Price } = useMemo(() => {
-    const v4Pool =
-      protocolVersion === ProtocolVersion.V4
-        ? getPoolFromRest({
-            pool,
-            token0: sortedCurrencies?.[0],
-            token1: sortedCurrencies?.[1],
-            protocolVersion,
-            hooks: pool?.hooks?.address || '',
-          })
-        : undefined
-
-    return { v4Pool, v4Price: v4Pool?.token0Price }
-  }, [pool, protocolVersion, sortedCurrencies])
-
-  const isPoolOutOfSync = useIsPoolOutOfSync(v4Price || v3Price || v2Price)
+  const pair = pairsQueryEnabled
+    ? getPairFromRest({
+        pair: pairData?.pair,
+        token0: sortedTokens[0],
+        token1: sortedTokens[1],
+      })
+    : undefined
 
   const creatingPoolOrPair = useMemo(() => {
     if (protocolVersion === ProtocolVersion.UNSPECIFIED) {
@@ -153,7 +135,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
     }
 
     if (protocolVersion === ProtocolVersion.V2) {
-      if (!pairResult && pairIsFetched) {
+      if (!pairData && pairIsFetched) {
         return true
       }
 
@@ -161,7 +143,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
     }
 
     return poolData?.pools && poolData.pools.length === 0
-  }, [protocolVersion, poolData?.pools, pairResult, pairIsFetched])
+  }, [protocolVersion, poolData?.pools, pairData, pairIsFetched])
 
   return useMemo(() => {
     const currencies: [OptionalCurrency, OptionalCurrency] = [TOKEN0, TOKEN1]
@@ -169,7 +151,6 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
       return {
         currencies,
         protocolVersion: ProtocolVersion.V4,
-        isPoolOutOfSync: false,
       }
     }
 
@@ -180,7 +161,6 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
         pair,
         creatingPoolOrPair,
         poolOrPairLoading: pairIsLoading,
-        isPoolOutOfSync,
       } satisfies CreateV2PositionInfo
     }
 
@@ -188,41 +168,47 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
       return {
         currencies,
         protocolVersion,
-        pool: v3Pool,
+        pool: getPoolFromRest({
+          pool: poolData?.pools?.[0],
+          token0: getCurrencyWithWrap(sortedCurrencies?.[0], protocolVersion),
+          token1: getCurrencyWithWrap(sortedCurrencies?.[1], protocolVersion),
+          protocolVersion,
+        }),
         creatingPoolOrPair,
         poolOrPairLoading: poolIsLoading,
-        isPoolOutOfSync,
-        poolId: pool?.poolId,
       } satisfies CreateV3PositionInfo
     }
 
     return {
       currencies,
       protocolVersion, // V4
-      pool: v4Pool,
+      pool: getPoolFromRest({
+        pool,
+        token0: sortedCurrencies?.[0],
+        token1: sortedCurrencies?.[1],
+        protocolVersion,
+        hooks: pool?.hooks?.address || '',
+      }),
       creatingPoolOrPair,
       poolOrPairLoading: poolIsLoading,
-      isPoolOutOfSync,
-      poolId: pool?.poolId,
     } satisfies CreateV4PositionInfo
   }, [
     TOKEN0,
     TOKEN1,
     protocolVersion,
-    v4Pool,
+    pool,
+    sortedCurrencies,
     creatingPoolOrPair,
     poolIsLoading,
-    isPoolOutOfSync,
-    pool?.poolId,
     pair,
     pairIsLoading,
-    v3Pool,
+    poolData?.pools,
   ])
 }
 
 export function useDerivedPriceRangeInfo(state: PriceRangeState): PriceRangeInfo {
   const { positionState, derivedPositionInfo } = useCreatePositionContext()
-  const { chainId } = useMultichainContext()
+  const account = useAccount()
 
   const shouldUseTaxes = protocolShouldCalculateTaxes(derivedPositionInfo.protocolVersion)
   const { inputTax: currencyATax, outputTax: currencyBTax } = useSwapTaxes(
@@ -232,7 +218,7 @@ export function useDerivedPriceRangeInfo(state: PriceRangeState): PriceRangeInfo
     shouldUseTaxes
       ? getCurrencyAddressWithWrap(derivedPositionInfo.currencies[1], derivedPositionInfo.protocolVersion)
       : undefined,
-    chainId,
+    account.chainId,
   )
 
   const priceRangeInfo = useMemo(() => {

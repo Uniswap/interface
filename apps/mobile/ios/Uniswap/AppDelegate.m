@@ -8,6 +8,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <ReactNativePerformance/ReactNativePerformance.h>
 #import <RCTAppSetupUtils.h>
+#import "RNSplashScreen.h"
 
 @implementation AppDelegate
 
@@ -46,6 +47,8 @@
   }
   
   [super application:application didFinishLaunchingWithOptions:newLaunchOptions];
+  
+  [RNSplashScreen show];
   
   [[RCTI18nUtil sharedInstance] allowRTL:NO];
 

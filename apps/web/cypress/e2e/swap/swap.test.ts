@@ -128,7 +128,7 @@ describe('Swap', () => {
       const sendSpy = cy.spy(hardhat.provider, 'send')
       cy.wrap(sendSpy).should('not.be.calledWith', 'wallet_switchEthereumChain')
       cy.get(getTestSelector('token-option-10-ETH')).click()
-      cy.get('#swap-currency-input').contains(`Balance`)
+      cy.get('#swap-currency-input').contains(`Balance: <0.001`)
     })
   })
 })

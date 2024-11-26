@@ -28,7 +28,7 @@ describe('Legacy Pool Redirects', () => {
   it('should redirect /pool to /positions', () => {
     cy.visit('/pool', {
       featureFlags: [{
-        flag: FeatureFlags.LPRedesign,
+        flag: FeatureFlags.V4Everywhere,
         value: true,
       }]
     })
@@ -38,7 +38,7 @@ describe('Legacy Pool Redirects', () => {
   it('should redirect /pool/:tokenId with chain param to /positions/v3/:chainName/:tokenId', () => {
     cy.visit('/pool/123?chain=mainnet', {
       featureFlags: [{
-        flag: FeatureFlags.LPRedesign,
+        flag: FeatureFlags.V4Everywhere,
         value: true,
       }]
     })

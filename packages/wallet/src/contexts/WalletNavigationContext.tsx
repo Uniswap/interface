@@ -44,9 +44,7 @@ function isNavigateToTransactionFlowArgsInitialState(
   return Boolean(args && (args as NavigateToTransactionFlowTransactionState).initialState !== undefined)
 }
 
-export function isNavigateToSwapFlowArgsPartialState(
-  args: NavigateToSwapFlowArgs,
-): args is NavigateToSwapFlowPartialState {
+function isNavigateToSwapFlowArgsPartialState(args: NavigateToSwapFlowArgs): args is NavigateToSwapFlowPartialState {
   return Boolean(args && (args as NavigateToSwapFlowPartialState).currencyAddress !== undefined)
 }
 

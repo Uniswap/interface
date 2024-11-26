@@ -1,9 +1,9 @@
+import { BigNumber } from 'ethers'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
-import { isNonZeroBigNumber } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/utils'
 import { SendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { useCopyToClipboard } from 'src/app/hooks/useOnCopyToClipboard'
 import { Anchor, Flex, Text, TouchableArea } from 'ui/src'
@@ -55,7 +55,6 @@ export function FallbackEthSendRequestContent({
   )
   const { parsedTransactionData } = useNoYoloParser(dappRequest.transaction, chainId)
   const transactionCurrencies = useTransactionCurrencies({ chainId, to: toAddress, parsedTransactionData })
-  const showSpendingEthDetails = isNonZeroBigNumber(sending) && chainId
 
   return (
     <DappRequestContent
@@ -75,7 +74,9 @@ export function FallbackEthSendRequestContent({
         p="$spacing16"
         width="100%"
       >
-        {showSpendingEthDetails && <SpendingEthDetails chainId={chainId} value={sending} />}
+        {sending && !BigNumber.from(sending).eq(0) && chainId && (
+          <SpendingEthDetails chainId={chainId} value={sending} />
+        )}
         {transactionCurrencies?.map((currencyInfo, i) => (
           <SpendingDetails
             key={currencyInfo.currencyId}

@@ -10,15 +10,15 @@ import SwiftUI
 
 class SeedPhraseInputView: UIView {
   private let vc = UIHostingController(rootView: SeedPhraseInput())
-
+  
   override init(frame: CGRect) {
     super.init(frame: frame)
-
+    
     vc.view.translatesAutoresizingMaskIntoConstraints = false
     vc.view.backgroundColor = .clear
-
+    
     self.addSubview(vc.view)
-
+    
     NSLayoutConstraint.activate([
       vc.view.topAnchor.constraint(equalTo: self.topAnchor),
       vc.view.bottomAnchor.constraint(equalTo: self.bottomAnchor),
@@ -26,63 +26,53 @@ class SeedPhraseInputView: UIView {
       vc.view.trailingAnchor.constraint(equalTo: self.trailingAnchor)
     ])
   }
-
+  
   required init?(coder aDecoder: NSCoder) {
     // Used to load view into storyboarder
     fatalError("init(coder:) has not been implemented")
   }
-
+  
   override func reactSetFrame(_ frame: CGRect) {
     super.reactSetFrame(frame);
     vc.view.frame = frame
   }
-
+  
   @objc
   var targetMnemonicId: String? {
     get { vc.rootView.viewModel.targetMnemonicId }
     set { vc.rootView.viewModel.targetMnemonicId = newValue }
   }
-
+  
   @objc
   var strings: Dictionary<String, String> {
     get { vc.rootView.viewModel.rawRNStrings }
     set { vc.rootView.viewModel.rawRNStrings = newValue }
   }
-
+  
   @objc
   var onInputValidated: RCTDirectEventBlock {
     get { vc.rootView.viewModel.onInputValidated }
     set { vc.rootView.viewModel.onInputValidated = newValue }
   }
-
+  
   @objc
   var onMnemonicStored: RCTDirectEventBlock {
     set { vc.rootView.viewModel.onMnemonicStored = newValue }
     get { return vc.rootView.viewModel.onMnemonicStored }
   }
-
+  
   @objc
   var onPasteStart: RCTDirectEventBlock {
     set { vc.rootView.viewModel.onPasteStart = newValue }
     get { return vc.rootView.viewModel.onPasteStart }
   }
-
+  
   @objc
   var onPasteEnd: RCTDirectEventBlock {
     set { vc.rootView.viewModel.onPasteEnd = newValue }
     get { return vc.rootView.viewModel.onPasteEnd }
   }
-
-  @objc
-  func focus() {
-    vc.rootView.focusInput()
-  }
-
-  @objc
-  func blur() {
-    vc.rootView.blurInput()
-  }
-
+  
   @objc
   var onHeightMeasured: RCTDirectEventBlock {
     set { vc.rootView.viewModel.onHeightMeasured = newValue }
@@ -94,7 +84,7 @@ class SeedPhraseInputView: UIView {
     get { vc.rootView.viewModel.testID }
     set { vc.rootView.viewModel.testID = newValue }
   }
-
+  
   @objc
   var handleSubmit: () -> Void {
     get { return vc.rootView.viewModel.handleSubmit }
@@ -115,86 +105,31 @@ struct TextEditModifier: ViewModifier {
   }
 }
 
-// We use UIKit and UIViewRepresentable instead of SwiftUI to have better control of focus state here
-// At the time of updating this, there were limitations of @FocusState in SwiftUI, particularly in relation to dynamic updates + interactions from outside the view
-// So, we use this approach to maintain the focus state
-struct SeedPhraseTextView: UIViewRepresentable {
-    @Binding var text: String
-    @Binding var isFocused: Bool
-
-    class Coordinator: NSObject, UITextViewDelegate {
-        var parent: SeedPhraseTextView
-
-        init(_ parent: SeedPhraseTextView) {
-            self.parent = parent
-        }
-
-        func textViewDidChange(_ textView: UITextView) {
-            parent.text = textView.text
-        }
-    }
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-
-    func makeUIView(context: Context) -> UITextView {
-        let textView = UITextView()
-
-        textView.delegate = context.coordinator
-        textView.font = UIFont(name: "BaselGrotesk-Book", size: 17)
-        textView.autocorrectionType = .no
-        textView.autocapitalizationType = .none
-        textView.backgroundColor = UIColor.clear
-
-        return textView
-    }
-
-    func updateUIView(_ uiView: UITextView, context: Context) {
-        uiView.text = text
-
-        if isFocused {
-            if !uiView.isFirstResponder {
-                uiView.becomeFirstResponder()
-            }
-        } else {
-            if uiView.isFirstResponder {
-                uiView.resignFirstResponder()
-            }
-        }
-    }
-}
-
 struct SeedPhraseInput: View {
   @ObservedObject var viewModel = SeedPhraseInputViewModel()
-
+  @FocusState private var focused: Bool
+  
   private var font = Font(UIFont(name: "BaselGrotesk-Book", size: 17)!)
   private var subtitleFont = Font(UIFont(name: "BaselGrotesk-Book", size: 17)!)
   private var labelFont = Font(UIFont(name: "BaselGrotesk-Book", size: 15)!)
   private var buttonFont = Font(UIFont(name: "BaselGrotesk-Medium", size: 15)!)
-
-  func focusInput() {
-    viewModel.isFocused = true
-  }
-
-  func blurInput() {
-    viewModel.isFocused = false
-  }
-
+  
   var body: some View {
     VStack(spacing: 12) {
       VStack {
         VStack {
           ZStack(alignment: .topLeading) {
-            SeedPhraseTextView(text: $viewModel.input, isFocused: $viewModel.isFocused)
+            TextEditor(text: $viewModel.input)
+              .focused($focused)
               .autocorrectionDisabled()
               .textInputAutocapitalization(.never)
               .modifier(TextEditModifier())
               .frame(minHeight: 96) // 120 - 2 * 12 for padding
               .accessibility(identifier: viewModel.testID ?? "import-account-input")
-              if (viewModel.input.isEmpty) {
-                Text(viewModel.strings.inputPlaceholder)
-                  .font(subtitleFont)
+            
+            if (viewModel.input.isEmpty) {
+              Text(viewModel.strings.inputPlaceholder)
+                .font(subtitleFont)
                 .padding(.horizontal, 6)
                 .padding(.vertical, 8)
                 .foregroundColor(Colors.neutral3)
@@ -211,7 +146,12 @@ struct SeedPhraseInput: View {
               .stroke(mapStatusToColor(status: viewModel.status), lineWidth: 1)
           )
           .onTapGesture {
-            self.focusInput()
+            focused = true
+          }
+          .onAppear {
+            DispatchQueue.main.async {
+              focused = true
+            }
           }
           .overlay(
             Group {
@@ -231,8 +171,7 @@ struct SeedPhraseInput: View {
             alignment: .bottom
           )
         }.padding(.bottom, 12)
-
-
+        
         if (errorMessage() != nil) {
           HStack(spacing: 4) {
             AlertTriangleIcon()
@@ -271,7 +210,7 @@ struct SeedPhraseInput: View {
       return Colors.statusCritical
     }
   }
-
+               
   private func errorMessage() -> String? {
     switch viewModel.error {
     case .invalidPhrase:
@@ -286,15 +225,15 @@ struct SeedPhraseInput: View {
       return nil
     }
   }
-
+  
   private func handlePastePress(pastedText: String) {
     // Arbitrary time necessary for callbacks to trigger while permission modal is opened
     let debounceTime = 0.1
-
+    
     viewModel.onPasteStart([:])
     DispatchQueue.main.asyncAfter(deadline: .now() + debounceTime) {
       viewModel.input = pastedText
-
+      
       DispatchQueue.main.asyncAfter(deadline: .now() + debounceTime) {
         viewModel.onPasteEnd([:])
       }

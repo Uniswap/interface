@@ -1,102 +1,134 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
-// eslint-disable-next-line no-restricted-imports
-import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { Position } from '@uniswap/v3-sdk'
 import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
-import { PortfolioSkeleton, PortfolioTabWrapper } from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
+import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
+import { useFeeValues } from 'components/AccountDrawer/MiniPortfolio/Pools/hooks'
+import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
+import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import PortfolioRow, {
+  PortfolioSkeleton,
+  PortfolioTabWrapper,
+} from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
-import { PositionInfo } from 'components/Liquidity/types'
-import { getPositionUrl, parseRestPosition } from 'components/Liquidity/utils'
-import { ZERO_ADDRESS } from 'constants/misc'
+import { MouseoverTooltip } from 'components/Tooltip'
+import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
+import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { useSwitchChain } from 'hooks/useSwitchChain'
+import styled from 'lib/styled-components'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { TouchableArea } from 'ui/src'
-import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { ThemedText } from 'theme/components'
+import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { t } from 'uniswap/src/i18n'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-function isPositionInfo(position: PositionInfo | undefined): position is PositionInfo {
-  return !!position
-}
+/**
+ * Takes an array of PositionInfo objects (format used by the Uniswap Labs gql API).
+ * The hook access PositionInfo.details (format used by the NFT position contract),
+ * filters the PositionDetails data for malicious content,
+ * and then returns the original data in its original format.
+ */
+export function useFilterPossiblyMaliciousPositionInfo(positions: PositionInfo[] | undefined): PositionInfo[] {
+  const tokenIdsToPositionInfo: Record<string, PositionInfo> = useMemo(
+    () =>
+      positions
+        ? positions.reduce((acc, position) => ({ ...acc, [position.details.tokenId.toString()]: position }), {})
+        : {},
+    [positions],
+  )
+  const positionDetails = useMemo(() => positions?.map((position) => position.details) ?? [], [positions])
+  const filteredPositionDetails = useFilterPossiblyMaliciousPositions(positionDetails)
 
-function getPositionKey(position: PositionInfo) {
-  const { chainId } = position
-  if (position.version === ProtocolVersion.V2) {
-    return `${position.liquidityToken.address}-${chainId}`
-  }
-
-  return `${position.tokenId}-${chainId}`
+  return useMemo(
+    () => filteredPositionDetails.map((positionDetails) => tokenIdsToPositionInfo[positionDetails.tokenId.toString()]),
+    [filteredPositionDetails, tokenIdsToPositionInfo],
+  )
 }
 
 export default function Pools({ account }: { account: string }) {
-  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
-
-  const { data, isLoading } = useGetPositionsQuery({
-    address: account,
-    positionStatuses: [PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE],
-    protocolVersions: isLPRedesignEnabled
-      ? [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4]
-      : [ProtocolVersion.V2, ProtocolVersion.V3],
-  })
-
-  const { data: closedData } = useGetPositionsQuery({
-    address: account,
-    positionStatuses: [PositionStatus.CLOSED],
-    protocolVersions: isLPRedesignEnabled
-      ? [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4]
-      : [ProtocolVersion.V2, ProtocolVersion.V3],
-  })
-
-  const openPositions = useMemo(() => data?.positions.map(parseRestPosition).filter(isPositionInfo), [data?.positions])
-  const closedPositions = useMemo(
-    () => closedData?.positions.map(parseRestPosition).filter(isPositionInfo),
-    [closedData?.positions],
-  )
-
+  const { positions, loading } = useMultiChainPositions(account)
+  const filteredPositions = useFilterPossiblyMaliciousPositionInfo(positions)
   const [showClosed, toggleShowClosed] = useReducer((showClosed) => !showClosed, false)
+
+  const [openPositions, closedPositions] = useMemo(() => {
+    const openPositions: PositionInfo[] = []
+    const closedPositions: PositionInfo[] = []
+    for (let i = 0; i < filteredPositions.length; i++) {
+      const position = filteredPositions[i]
+      if (position.closed) {
+        closedPositions.push(position)
+      } else {
+        openPositions.push(position)
+      }
+    }
+    return [openPositions, closedPositions]
+  }, [filteredPositions])
 
   const accountDrawer = useAccountDrawer()
 
-  if (!openPositions && isLoading) {
+  if (!filteredPositions || loading) {
     return <PortfolioSkeleton />
   }
 
-  if (!openPositions || (openPositions?.length === 0 && closedPositions?.length === 0)) {
+  if (filteredPositions.length === 0) {
     return <EmptyWalletModule type="pool" onNavigateClick={accountDrawer.close} />
   }
 
   return (
     <PortfolioTabWrapper>
       {openPositions.map((positionInfo) => (
-        <PositionListItem key={getPositionKey(positionInfo)} positionInfo={positionInfo} />
+        <PositionListItem
+          key={positionInfo.details.tokenId.toString() + positionInfo.chainId}
+          positionInfo={positionInfo}
+        />
       ))}
-      {closedPositions && closedPositions.length > 0 && (
-        <ExpandoRow
-          title={t`liquidityPool.positions.closed.title`}
-          isExpanded={showClosed}
-          toggle={toggleShowClosed}
-          numItems={closedPositions.length}
-        >
-          {closedPositions.map((positionInfo) => (
-            <PositionListItem key={getPositionKey(positionInfo)} positionInfo={positionInfo} />
-          ))}
-        </ExpandoRow>
-      )}
+      <ExpandoRow
+        title={t`liquidityPool.positions.closed.title`}
+        isExpanded={showClosed}
+        toggle={toggleShowClosed}
+        numItems={closedPositions.length}
+      >
+        {closedPositions.map((positionInfo) => (
+          <PositionListItem
+            key={positionInfo.details.tokenId.toString() + positionInfo.chainId}
+            positionInfo={positionInfo}
+          />
+        ))}
+      </ExpandoRow>
     </PortfolioTabWrapper>
   )
 }
 
-function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
-  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
+const ActiveDot = styled.span<{ closed: boolean; outOfRange: boolean }>`
+  background-color: ${({ theme, closed, outOfRange }) =>
+    closed ? theme.neutral2 : outOfRange ? theme.deprecated_accentWarning : theme.success};
+  border-radius: 50%;
+  height: 8px;
+  width: 8px;
+  margin-left: 4px;
+  margin-top: 1px;
+`
 
-  const { tokenId, chainId, currency0Amount, currency1Amount } = positionInfo
-  const token0 = currency0Amount.currency
-  const token1 = currency1Amount.currency
+function calculateLiquidityValue(price0: number | undefined, price1: number | undefined, position: Position) {
+  if (!price0 || !price1) {
+    return undefined
+  }
+
+  const value0 = parseFloat(position.amount0.toExact()) * price0
+  const value1 = parseFloat(position.amount1.toExact()) * price1
+  return value0 + value1
+}
+
+function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
+  const { formatNumber } = useFormatter()
+
+  const { chainId, position, pool, details, inRange, closed } = positionInfo
+
+  const { priceA, priceB, fees: feeValue } = useFeeValues(positionInfo)
+  const liquidityValue = calculateLiquidityValue(priceA, priceB, position)
 
   const navigate = useNavigate()
   const accountDrawer = useAccountDrawer()
@@ -106,32 +138,66 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
     if (account.chainId !== chainId) {
       await switchChain(chainId)
     }
-
     accountDrawer.close()
-
-    const positionUrl = isLPRedesignEnabled
-      ? getPositionUrl(positionInfo)
-      : positionInfo.version === ProtocolVersion.V3
-        ? '/pool/' + tokenId
-        : '/pools/v2'
-    navigate(positionUrl)
-  }, [account.chainId, chainId, switchChain, accountDrawer, navigate, tokenId, isLPRedesignEnabled, positionInfo])
+    navigate('/pool/' + details.tokenId)
+  }, [account.chainId, chainId, switchChain, accountDrawer, navigate, details.tokenId])
   const analyticsEventProperties = useMemo(
     () => ({
       chain_id: chainId,
-      pool_token_0_symbol: token0.symbol,
-      pool_token_1_symbol: token1.symbol,
-      pool_token_0_address: token0.isToken ? token0.wrapped.address : ZERO_ADDRESS,
-      pool_token_1_address: token1.isToken ? token1.wrapped.address : ZERO_ADDRESS,
+      pool_token_0_symbol: pool.token0.symbol,
+      pool_token_1_symbol: pool.token1.symbol,
+      pool_token_0_address: pool.token0.address,
+      pool_token_1_address: pool.token1.address,
     }),
-    [chainId, token0, token1],
+    [chainId, pool.token0.address, pool.token0.symbol, pool.token1.address, pool.token1.symbol],
   )
 
   return (
     <Trace logPress element={InterfaceElementName.MINI_PORTFOLIO_POOLS_ROW} properties={analyticsEventProperties}>
-      <TouchableArea onPress={onClick}>
-        <LiquidityPositionCard isClickableStyle isMiniVersion liquidityPosition={positionInfo} />
-      </TouchableArea>
+      <PortfolioRow
+        onClick={onClick}
+        left={<PortfolioLogo chainId={chainId} currencies={[pool.token0, pool.token1]} />}
+        title={
+          <Row>
+            <ThemedText.SubHeader>
+              {pool.token0.symbol} / {pool.token1?.symbol}
+            </ThemedText.SubHeader>
+          </Row>
+        }
+        descriptor={<ThemedText.BodySmall>{`${pool.fee / BIPS_BASE}%`}</ThemedText.BodySmall>}
+        right={
+          <>
+            <MouseoverTooltip
+              placement="left"
+              text={
+                <div style={{ padding: '4px 0px' }}>
+                  <ThemedText.BodySmall>{`${formatNumber({
+                    input: liquidityValue,
+                    type: NumberType.PortfolioBalance,
+                  })} (liquidity) + ${formatNumber({
+                    input: feeValue,
+                    type: NumberType.PortfolioBalance,
+                  })} (fees)`}</ThemedText.BodySmall>
+                </div>
+              }
+            >
+              <ThemedText.SubHeader>
+                {formatNumber({
+                  input: (liquidityValue ?? 0) + (feeValue ?? 0),
+                  type: NumberType.PortfolioBalance,
+                })}
+              </ThemedText.SubHeader>
+            </MouseoverTooltip>
+
+            <Row justify="flex-end">
+              <ThemedText.BodySmall color="neutral2">
+                {closed ? t('common.closed') : inRange ? t('common.withinRange') : t('common.outOfRange')}
+              </ThemedText.BodySmall>
+              <ActiveDot closed={closed} outOfRange={!inRange} />
+            </Row>
+          </>
+        }
+      />
     </Trace>
   )
 }

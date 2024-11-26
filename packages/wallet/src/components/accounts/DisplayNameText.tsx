@@ -1,7 +1,7 @@
 import { Flex, FlexProps, Text, TextProps } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons'
 import { IconSizeTokens } from 'ui/src/theme'
-import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
+import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
 
 type DisplayNameProps = {

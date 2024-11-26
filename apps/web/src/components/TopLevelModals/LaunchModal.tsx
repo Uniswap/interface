@@ -1,5 +1,3 @@
-// Remove the following line when LaunchModal is used again:
-/* eslint-disable import/no-unused-modules */
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import Modal from 'components/Modal'
 import {

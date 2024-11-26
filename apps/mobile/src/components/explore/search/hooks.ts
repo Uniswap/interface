@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { SearchResultType, WalletSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { useUnitagByAddress, useUnitagByName } from 'uniswap/src/features/unitags/hooks'
@@ -55,7 +54,7 @@ export function useWalletSearchResults(
   // Consider when to show sections
 
   // Only consider queries with the .eth suffix as an exact ENS match
-  const exactENSMatch = dotEthName?.toLowerCase() === query.toLowerCase() && query.includes(ENS_SUFFIX)
+  const exactENSMatch = dotEthName?.toLowerCase() === query.toLowerCase() && query.includes('.eth')
 
   const results: WalletSearchResult[] = []
 
@@ -84,7 +83,7 @@ export function useWalletSearchResults(
       type: SearchResultType.ENSAddress,
       address: ensAddress,
       ensName,
-      isRawName: !ensName.endsWith(ENS_SUFFIX), // Ensure raw name is used for subdomains only
+      isRawName: !ensName.endsWith('.eth'), // Ensure raw name is used for subdomains only
     })
   }
 

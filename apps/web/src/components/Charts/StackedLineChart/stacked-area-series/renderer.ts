@@ -73,14 +73,14 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
     })
     const zeroY = priceToCoordinate(0) ?? 0
     const colorsCount = options.colors.length
-    const isV4DataEnabled = options.colors.length === 3
+    const isV4EverywhereEnabled = options.colors.length === 3
     const { linesMeshed, hoverInfo } = this._createLinePaths(
       bars,
       this._data.visibleRange,
       renderingScope,
       zeroY * renderingScope.verticalPixelRatio,
       options.hoveredLogicalIndex,
-      isV4DataEnabled,
+      isV4EverywhereEnabled,
     )
 
     const fullLinesMeshed = linesMeshed.slice(0, colorsCount + 1)
@@ -176,7 +176,7 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
     renderingScope: BitmapCoordinatesRenderingScope,
     zeroY: number,
     hoveredIndex?: number | null,
-    isV4DataEnabled?: boolean,
+    isV4EverywhereEnabled?: boolean,
   ) {
     const { horizontalPixelRatio, verticalPixelRatio } = renderingScope
     const v2Lines: LinePathData[] = []
@@ -191,7 +191,7 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
     // Modification: tracks and returns coordinates of where a glyph should be rendered for each line when a crosshair is drawn
     const hoverInfo = { points: new Array<number>(), x: 0 }
 
-    const numLines = isV4DataEnabled ? 3 : 2
+    const numLines = isV4EverywhereEnabled ? 3 : 2
     // Modification: updated loop to include one point above and below the visible range to ensure the line is drawn to edges of chart
     for (let i = visibleRange.from - 1; i < visibleRange.to + 1; i++) {
       if (i >= bars.length || i < 0) {
@@ -302,7 +302,7 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
       const stack = bars[i]
       let lineIndex = 0
       stack.ys.forEach((yMedia, index) => {
-        if (index % numLines !== 2 || !isV4DataEnabled) {
+        if (index % numLines !== 2 || !isV4EverywhereEnabled) {
           return
         }
 
@@ -358,13 +358,13 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
       if (i < v3Lines.length) {
         linesMeshed.push(v3Lines[i])
       }
-      if (i < v4Lines.length && isV4DataEnabled) {
+      if (i < v4Lines.length && isV4EverywhereEnabled) {
         linesMeshed.push(v4Lines[i])
       }
       if (hoveredIndex) {
         linesMeshed.push(v2HighlightLines[i])
         linesMeshed.push(v3HighlightLines[i])
-        isV4DataEnabled && linesMeshed.push(v4HighlightLines[i])
+        isV4EverywhereEnabled && linesMeshed.push(v4HighlightLines[i])
       }
     }
 

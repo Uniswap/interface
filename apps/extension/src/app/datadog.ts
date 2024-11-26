@@ -31,9 +31,6 @@ export async function initializeDatadog(appName: string): Promise<void> {
       // otherwise DataDog will ignore error events
       event.view.url = event.view.url.replace(/^chrome-extension:\/\/[a-z]{32}\//i, '')
       if (event.error && event.type === 'error') {
-        if (event.error.source === 'console') {
-          return false
-        }
         Object.defineProperty(event.error, 'stack', {
           value: event.error.stack?.replace(/chrome-extension:\/\/[a-z]{32}/gi, ''),
           writable: false,

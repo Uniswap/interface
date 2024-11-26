@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { queries } from '@testing-library/dom'
 import { RenderOptions, render } from '@testing-library/react'
 import { RenderHookOptions, WrapperComponent, renderHook } from '@testing-library/react-hooks'
-import Web3Provider, { Web3ProviderUpdater } from 'components/Web3Provider'
+import Web3Provider from 'components/Web3Provider'
 import { AssetActivityProvider } from 'graphql/data/apollo/AssetActivityProvider'
 import { TokenBalancesProvider } from 'graphql/data/apollo/TokenBalancesProvider'
 import { BlockNumberContext } from 'lib/hooks/useBlockNumber'
@@ -14,7 +14,6 @@ import { BrowserRouter } from 'react-router-dom'
 import store from 'state'
 import { ThemeProvider } from 'theme'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
-import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 
 const queryClient = new QueryClient()
@@ -34,18 +33,13 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
               <MockedProvider showWarnings={false}>
                 <AssetActivityProvider>
                   <TokenBalancesProvider>
-                    <ReactRouterUrlProvider>
-                      <MockedBlockNumberProvider>
-                        <UnitagUpdaterContextProvider>
-                          <ThemeProvider>
-                            <TamaguiProvider>
-                              <Web3ProviderUpdater />
-                              {children}
-                            </TamaguiProvider>
-                          </ThemeProvider>
-                        </UnitagUpdaterContextProvider>
-                      </MockedBlockNumberProvider>
-                    </ReactRouterUrlProvider>
+                    <MockedBlockNumberProvider>
+                      <UnitagUpdaterContextProvider>
+                        <ThemeProvider>
+                          <TamaguiProvider>{children}</TamaguiProvider>
+                        </ThemeProvider>
+                      </UnitagUpdaterContextProvider>
+                    </MockedBlockNumberProvider>
                   </TokenBalancesProvider>
                 </AssetActivityProvider>
               </MockedProvider>

@@ -16,7 +16,6 @@ import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback, useRef } from 'react'
-import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import {
   DutchOrderTrade,
   LimitOrderTrade,
@@ -25,6 +24,7 @@ import {
   TradeFillType,
   V2DutchOrderTrade,
 } from 'state/routing/types'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { trace } from 'tracing/trace'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -93,7 +93,7 @@ export function useUniswapXSwapCallback({
   const accountRef = useRef(account)
   accountRef.current = account
 
-  const { chainId } = useMultichainContext()
+  const { chainId } = useSwapAndLimitContext()
   const provider = useEthersWeb3Provider({ chainId })
   const providerRef = useRef(provider)
   providerRef.current = provider
@@ -120,16 +120,15 @@ export function useUniswapXSwapCallback({
           throw new WrongChainError()
         }
 
-        sendAnalyticsEvent(
-          InterfaceEventNameLocal.UniswapXSignatureRequested,
-          formatSwapSignedAnalyticsEventProperties({
+        sendAnalyticsEvent(InterfaceEventNameLocal.UniswapXSignatureRequested, {
+          ...formatSwapSignedAnalyticsEventProperties({
             trade,
             allowedSlippage,
             fiatValues,
             portfolioBalanceUsd,
-            trace: analyticsContext,
           }),
-        )
+          ...analyticsContext,
+        })
 
         try {
           // TODO(limits): WEB-3434 - add error state for missing nonce
@@ -210,8 +209,8 @@ export function useUniswapXSwapCallback({
                 allowedSlippage,
                 fiatValues,
                 portfolioBalanceUsd,
-                trace: analyticsContext,
               }),
+              ...analyticsContext,
               deadline,
               resultTime,
             })
@@ -224,8 +223,8 @@ export function useUniswapXSwapCallback({
               fiatValues,
               timeToSignSinceRequestMs: trace.now(),
               portfolioBalanceUsd,
-              trace: analyticsContext,
             }),
+            ...analyticsContext,
             // TODO (WEB-2993): remove these after debugging missing user properties.
             [CustomUserProperties.WALLET_ADDRESS]: account.address,
             [CustomUserProperties.WALLET_TYPE]: account.connector.name,
@@ -275,8 +274,8 @@ export function useUniswapXSwapCallback({
                 allowedSlippage,
                 fiatValues,
                 portfolioBalanceUsd,
-                trace: analyticsContext,
               }),
+              ...analyticsContext,
               errorCode: responseBody.errorCode,
               detail: responseBody.detail,
             })
@@ -290,16 +289,14 @@ export function useUniswapXSwapCallback({
             // backend team provides a list of error codes and potential messages
             throw new Error(`${responseBody.errorCode ?? responseBody.detail ?? 'Unknown error'}`)
           }
-          sendAnalyticsEvent(
-            InterfaceEventNameLocal.UniswapXOrderSubmitted,
-            formatSwapSignedAnalyticsEventProperties({
+          sendAnalyticsEvent(InterfaceEventNameLocal.UniswapXOrderSubmitted, {
+            ...formatSwapSignedAnalyticsEventProperties({
               trade,
               allowedSlippage,
               fiatValues,
               portfolioBalanceUsd,
-              trace: analyticsContext,
             }),
-          )
+          })
 
           return {
             type:

@@ -79,7 +79,6 @@ function BottomSheetModalContents({
   fullScreen,
   hideHandlebar,
   backgroundColor,
-  handlebarColor,
   // defaults to true if snapPoints/fullScreen are not provided and false otherwise
   enableDynamicSizing,
   blurredBackground = false,
@@ -94,7 +93,6 @@ function BottomSheetModalContents({
   // probably it requires usage of <BottomSheetTextInput>
   extendOnKeyboardVisible = false,
   hideScrim = false,
-  analyticsProperties,
 }: ModalProps): JSX.Element {
   const dimensions = useDeviceDimensions()
   const insets = useAppInsets()
@@ -149,11 +147,9 @@ function BottomSheetModalContents({
       if (renderBehindTopInset && hideHandlebar) {
         return null
       }
-
       return (
         <HandleBar
           {...props}
-          indicatorColor={handlebarColor}
           backgroundColor={backgroundColorValue}
           containerFlexStyles={{
             paddingBottom: spacing.spacing12,
@@ -163,7 +159,7 @@ function BottomSheetModalContents({
         />
       )
     },
-    [backgroundColorValue, handlebarColor, hideHandlebar, renderBehindTopInset],
+    [backgroundColorValue, hideHandlebar, renderBehindTopInset],
   )
 
   const animatedBorderRadius = useAnimatedStyle(() => {
@@ -269,7 +265,7 @@ function BottomSheetModalContents({
       onAnimate={onAnimate}
       onDismiss={onClose}
     >
-      <Trace logImpression modal={name} properties={analyticsProperties}>
+      <Trace logImpression modal={name}>
         <BottomSheetContextProvider isSheetReady={isSheetReady}>
           {overrideInnerContainer ? (
             children
@@ -293,7 +289,6 @@ export function BottomSheetDetachedModal({
   fullScreen,
   hideHandlebar,
   backgroundColor,
-  analyticsProperties,
 }: ModalProps): JSX.Element {
   const insets = useAppInsets()
   const dimensions = useDeviceDimensions()
@@ -339,7 +334,7 @@ export function BottomSheetDetachedModal({
       topInset={insets.top}
       onDismiss={onClose}
     >
-      <Trace logImpression modal={name} properties={analyticsProperties}>
+      <Trace logImpression modal={name}>
         <BottomSheetView style={fullScreen ? { height: fullContentHeight } : undefined}>{children}</BottomSheetView>
       </Trace>
     </BaseModal>

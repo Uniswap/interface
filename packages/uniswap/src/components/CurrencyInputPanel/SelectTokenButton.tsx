@@ -45,6 +45,7 @@ export const SelectTokenButton = memo(function _SelectTokenButton({
 
   return (
     <TouchableArea
+      hapticFeedback
       backgroundColor={selectedCurrencyInfo ? '$surface1' : '$accent1'}
       borderRadius="$roundedFull"
       testID={testID}

@@ -8,7 +8,7 @@ import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { useAnimatedCardDragStyle } from 'src/components/explore/hooks'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, TouchableArea, useIsDarkMode, useShadowPropsShort, useSporeColors } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, TouchableArea, useIsDarkMode, useShadowPropsShort, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, iconSizes, opacify } from 'ui/src/theme'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
@@ -84,12 +84,14 @@ function FavoriteWalletCard({
         {...rest}
       >
         <TouchableArea
+          hapticFeedback
           activeOpacity={isEditing ? 1 : undefined}
           backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
           borderColor={opacify(0.05, colors.surface3.val)}
           borderRadius="$rounded16"
           borderWidth={isDarkMode ? '$none' : '$spacing1'}
           disabled={isEditing}
+          hapticStyle={ImpactFeedbackStyle.Light}
           m="$spacing4"
           testID="favorite-wallet-card"
           onLongPress={disableOnPress}

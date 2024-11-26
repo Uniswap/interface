@@ -125,7 +125,7 @@ export const validPoolDataResponse = {
     token0Price: 1605.481,
     token1Price: 0.000622,
     txCount: 5456494,
-    idOrAddress: usdcWethPoolAddress,
+    address: usdcWethPoolAddress,
     volumeUSD24HChange: -17.753809465717136,
     volumeUSD24H: 194273059.265625,
     tvlUSD: 223166198.4690675,

@@ -78,23 +78,6 @@ jest.mock('@react-navigation/elements', () => ({
 
 require('react-native-reanimated').setUpTests()
 
-jest.mock('expo-localization', () => ({
-  getLocales: () => [
-    {
-      languageCode: 'en',
-      languageTag: 'en-US',
-      regionCode: null,
-      currencyCode: null,
-      currencySymbol: null,
-      decimalSeparator: null,
-      digitGroupingSeparator: null,
-      textDirection: null,
-      measurementSystem: null,
-      temperatureUnit: null,
-    },
-  ],
-}))
-
 jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
 
 jest.mock('react-native/Libraries/Share/Share', () => ({

@@ -21,8 +21,6 @@ type OnboardingScreenProps = {
   keyboardAvoidingViewEnabled?: boolean
   disableGoBack?: boolean
   onSkip?: () => void
-  ignoreContainerPaddingX?: boolean
-  ignoreTextContainerMarginBottom?: boolean
 }
 
 export function OnboardingScreen({
@@ -34,8 +32,6 @@ export function OnboardingScreen({
   keyboardAvoidingViewEnabled = true,
   disableGoBack = false,
   onSkip,
-  ignoreContainerPaddingX,
-  ignoreTextContainerMarginBottom,
 }: PropsWithChildren<OnboardingScreenProps>): JSX.Element {
   const navigation = useOnboardingStackNavigation()
   const headerHeight = useHeaderHeight()
@@ -72,16 +68,9 @@ export function OnboardingScreen({
         enabled={keyboardAvoidingViewEnabled}
         style={[WrapperStyle.base, { marginBottom: insets.bottom }]}
       >
-        <AnimatedFlex
-          grow
-          entering={FadeIn}
-          exiting={FadeOut}
-          gap={gapSize}
-          pb="$spacing16"
-          px={ignoreContainerPaddingX ? undefined : '$spacing16'}
-        >
+        <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} gap={gapSize} pb="$spacing16" px="$spacing16">
           {/* Text content */}
-          <Flex centered gap="$spacing8" m="$spacing12" mb={ignoreTextContainerMarginBottom ? '$none' : undefined}>
+          <Flex centered gap="$spacing8" m="$spacing12">
             {Icon && (
               <Flex centered mb="$spacing4">
                 <Flex centered backgroundColor="$surface3" borderRadius="$rounded8" p="$spacing12">

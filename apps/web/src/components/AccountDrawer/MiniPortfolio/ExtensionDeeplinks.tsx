@@ -1,7 +1,7 @@
-// eslint-disable-next-line no-restricted-imports
-import { PositionStatus } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer'
 import { useOpenLimitOrders, usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
+import { useFilterPossiblyMaliciousPositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/PoolsTab'
+import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Pool } from 'components/Icons/Pool'
 import { ExtensionRequestMethods, useUniswapExtensionConnector } from 'components/WalletModal/useOrderedConnections'
@@ -15,7 +15,6 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { TimePast } from 'ui/src/components/icons/TimePast'
 
 import { iconSizes } from 'ui/src/theme/iconSizes'
-import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
 import { t } from 'uniswap/src/i18n'
 
 const UnreadIndicator = () => {
@@ -67,10 +66,8 @@ export function ExtensionDeeplinks({ account }: { account: string }) {
     }
   }, [hasPendingActivity])
 
-  const { data } = useGetPositionsQuery({
-    address: account,
-    positionStatuses: [PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE, PositionStatus.CLOSED],
-  })
+  const { positions } = useMultiChainPositions(account)
+  const filteredPositions = useFilterPossiblyMaliciousPositionInfo(positions)
 
   if (!uniswapExtensionConnector) {
     return null
@@ -100,7 +97,7 @@ export function ExtensionDeeplinks({ account }: { account: string }) {
           setActivityUnread(false)
         }}
       />
-      {data && data?.positions.length > 0 && (
+      {filteredPositions.length > 0 && (
         <DeepLinkButton
           Icon={<Pool width="20px" height="20px" fill={theme.neutral1} />}
           Label={t('common.pools')}

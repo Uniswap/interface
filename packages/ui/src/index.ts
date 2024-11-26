@@ -47,13 +47,11 @@ export type {
   TamaguiElement,
   TamaguiProviderProps,
   ThemeKeys,
-  ThemeName,
   Tokens,
   ViewProps,
 } from 'tamagui'
 export { LinearGradient } from 'tamagui/linear-gradient'
 export * from 'ui/src/animations'
-export * from './components/InlineCard/InlineCard'
 export { QRCodeDisplay } from './components/QRCode/QRCodeDisplay'
 export * from './components/SegmentedControl/SegmentedControl'
 export { Unicon } from './components/Unicon'
@@ -74,10 +72,13 @@ export { Switch, type SwitchProps } from './components/switch/Switch'
 export * from './components/text'
 export { Tooltip } from './components/tooltip/Tooltip'
 export * from './components/touchable'
-export { MobileDeviceHeight } from './hooks/constants'
 export { useIsDarkMode } from './hooks/useIsDarkMode'
 export { useIsShortMobileDevice } from './hooks/useIsShortMobileDevice'
 export { useSporeColors, type DynamicColor } from './hooks/useSporeColors'
+// eslint-disable-next-line no-restricted-imports
+export { ImpactFeedbackStyle } from 'expo-haptics'
+export * from './components/InlineCard/InlineCard'
+export * from './utils/haptics/useHapticFeedback'
 
 // Theme
 export * from './styles/ScrollbarStyles'

@@ -3,7 +3,6 @@ import { Bound } from 'state/mint/v3/actions'
 export interface ChartEntry {
   activeLiquidity: number
   price0: number
-  tick?: number
 }
 
 interface Dimensions {

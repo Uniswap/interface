@@ -15,6 +15,8 @@ import {
   XStack,
 } from 'tamagui'
 import type { IconProps } from 'ui/src/components/factories/createIcon'
+import { HapticFeedbackStyle } from 'ui/src/utils/haptics/helpers'
+import { useHapticFeedback } from 'ui/src/utils/haptics/useHapticFeedback'
 
 export type ButtonSize = 'small' | 'medium' | 'large'
 
@@ -156,6 +158,12 @@ type IconProp = JSX.Element | FunctionComponent<IconProps> | null
 export type ButtonProps = CustomButtonProps &
   TextParentStyles & {
     /**
+     * use haptic feedback on press (native)
+     */
+    hapticFeedback?: boolean
+    hapticStyle?: HapticFeedbackStyle
+
+    /**
      * add icon before, passes color and size automatically if Component
      */
     icon?: IconProp
@@ -175,10 +183,18 @@ export type ButtonProps = CustomButtonProps &
 
 const ButtonComponent = CustomButtonFrame.styleable<ButtonProps>((props, ref) => {
   const { props: buttonProps } = useButton(props)
+  const { hapticFeedback } = useHapticFeedback()
   return (
     <CustomButtonFrame
       ref={ref}
-      onPressIn={undefined} // or remove this line entirely if onPressIn is not needed
+      onPressIn={
+        buttonProps.hapticFeedback
+          ? (): void => {
+              // eslint-disable-next-line no-void
+              void hapticFeedback.impact(buttonProps.hapticStyle)
+            }
+          : undefined
+      }
       {...buttonProps}
     />
   )
