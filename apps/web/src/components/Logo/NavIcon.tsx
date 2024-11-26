@@ -38,12 +38,12 @@ const Container = styled.div<{ clickable?: boolean }>`
 `;
 
 type NavIconProps = SVGProps & {
-  clickable?: boolean;
+  clickable?: string;
   onClick?: () => void;
 };
 
 export const NavIcon = ({ clickable, onClick, ...props }: NavIconProps) => (
-  <Container clickable={clickable}>
+  <Container clickable={clickable === "true"}>
     {HolidayUniIcon(props) !== null ? (
       <HolidayUniIcon {...props} />
     ) : (

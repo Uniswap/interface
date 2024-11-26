@@ -152,9 +152,9 @@ const LegacyNavbar = ({ blur }: { blur: boolean }) => {
               <UniIcon
                 width="48"
                 height="48"
-                data-testid="uniswap-logo"
+                data-testid="taraswap-logo"
                 className={styles.logo}
-                clickable={!account}
+                clickable={account ? "true" : "false"}
                 onClick={handleUniIconClick}
               />
             </Box>

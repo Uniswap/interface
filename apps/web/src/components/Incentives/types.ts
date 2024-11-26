@@ -22,6 +22,8 @@ export type Incentive = {
   reward: string;
   rewardToken: RewardToken;
   startTime: string;
+  vestingPeriod: string;
+  refundee: string;
 };
 
 export type TokenInfoDetails = {
@@ -203,6 +205,7 @@ export const INCENTIVES_QUERY = `
       contract
       startTime
       endTime
+      vestingPeriod
       rewardToken {
         id
         decimals
@@ -211,6 +214,7 @@ export const INCENTIVES_QUERY = `
       pool{
         id
       }
+      refundee
     }
   }
 `;

@@ -162,9 +162,6 @@ const Farms = ({ initialTab }: { initialTab?: LiquidityTab }) => {
 
   const { component: Page, key: currentKey } = Pages[currentTab];
 
-  // Automatically trigger a navigation when the app chain changes
-  const navigate = useNavigate();
-
   return (
     <Trace
       logImpression
