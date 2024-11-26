@@ -7,25 +7,14 @@
     "https://translate.googleapis.com/",
     "https://www.google-analytics.com",
     "https://www.googletagmanager.com",
-    "https://www.taraswap.org"
+    "https://www.taraswap.org/",
+    "https://vercel.com",
+    "https://vercel.live"
   ],
-  "fontSrc": [
-    "'self'",
-    "https://www.taraswap.org",
-    "https://www.taraswap.org/"
-  ],
-  "styleSrc": [
-    "'self'",
-    "'unsafe-inline'",
-    "https://www.taraswap.org",
-    "https://www.taraswap.org/"
-  ],
+  "fontSrc": ["'self'", "https://www.taraswap.org/"],
+  "styleSrc": ["'self'", "'unsafe-inline'", "https://www.taraswap.org/"],
   "imgSrc": ["*", "blob:", "data:"],
-  "manifestSrc": [
-    "'self'",
-    "https://www.taraswap.org",
-    "https://www.taraswap.org/"
-  ],
+  "manifestSrc": ["'self'", "https://www.taraswap.org/"],
   "frameSrc": [
     "'self'",
     "https://buy.moonpay.com/",
@@ -46,6 +35,8 @@
     "https://rpc.mainnet.taraxa.io/",
     "https://rpc.testnet.taraxa.io/",
     "https://k9wetv0ke9.execute-api.eu-central-1.amazonaws.com/prod/",
+    "https://verify.walletconnect.com/",
+    "https://verify.walletconnect.org/",
     "https://*.alchemy.com",
     "https://*.arbitrum.io",
     "https://*.base.org/",
