@@ -25,8 +25,8 @@ export function LiquidityPositionInfo({
         currencies={[currency0Amount?.currency, currency1Amount?.currency]}
         size={currencyLogoSize}
       />
-      <Flex grow $md={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <Flex row gap="$gap16" $md={{ flexDirection: 'column', gap: '$gap4' }}>
+      <Flex grow $md={{ row: true, justifyContent: 'space-between', alignItems: 'flex-start' }}>
+        <Flex row gap="$gap16" $md={{ row: false, gap: '$gap4' }}>
           <Text variant="subheading1">
             {currency0Amount?.currency.symbol} / {currency1Amount?.currency.symbol}
           </Text>

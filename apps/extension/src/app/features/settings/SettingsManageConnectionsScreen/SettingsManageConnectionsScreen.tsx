@@ -8,7 +8,7 @@ import { dappStore } from 'src/app/features/dapp/store'
 import { NoDappConnections } from 'src/app/features/settings/SettingsManageConnectionsScreen/internal/NoDappConnections'
 import { Flex, Text, TouchableArea, UniversalImage, useSporeColors } from 'ui/src'
 import { MinusCircle } from 'ui/src/components/icons'
-import { borderRadii, breakpoints, iconSizes } from 'ui/src/theme'
+import { borderRadii, breakpoints, fonts, gap, iconSizes } from 'ui/src/theme'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -25,6 +25,11 @@ const MIN_SCREEN_WIDTH = breakpoints.xxs
 const HORIZONTAL_SPACING = 12
 // when sidebar is at the minimum width (360px), this will allow 2 cards to cleanly fit per row
 const TILE_WIDTH = (MIN_SCREEN_WIDTH - 3 * HORIZONTAL_SPACING) / 2
+
+const titleVariant: keyof typeof fonts = 'body3'
+const subtitleVariant: keyof typeof fonts = 'body4'
+const textGap: number = gap.gap4
+const textAreaHeight = fonts[titleVariant].lineHeight + fonts[subtitleVariant].lineHeight + textGap
 
 export function SettingsManageConnectionsScreen(): JSX.Element {
   const colors = useSporeColors()
@@ -60,11 +65,67 @@ export function SettingsManageConnectionsScreen(): JSX.Element {
       dappUrls.map((dappUrl) => {
         const dappInfo = dappStore.getDappInfo(dappUrl)
         const name = extractNameFromUrl(dappUrl)
+
+        const hostName = extractUrlHost(dappUrl)
+        const title = dappInfo?.displayName || hostName
+
+        const DeleteDappButton = (
+          <TouchableArea
+            $group-hover={{ display: 'flex' }}
+            display="none"
+            p="$spacing2"
+            position="absolute"
+            right="$padding8"
+            top="$padding8"
+            onPress={getHandleRemoveConnection(dappUrl)}
+          >
+            <MinusCircle size="$icon.20" fill={colors.neutral3.get()} />
+          </TouchableArea>
+        )
+
+        const DappIcon = (
+          <UniversalImage
+            fallback={<DappIconPlaceholder iconSize={iconSizes.icon32} name={name.toUpperCase()} />}
+            size={{
+              height: iconSizes.icon32,
+              width: iconSizes.icon32,
+            }}
+            style={{ image: { borderRadius: borderRadii.rounded8 } }}
+            uri={dappInfo?.iconUrl}
+          />
+        )
+
+        /**
+         * TEXT AREA; TITLE/SUBTITLE
+         *
+         * we only need to set the text area height because it is the only section with optional fields
+         */
+        const Title = (
+          <Flex alignItems="center" gap={textGap} maxWidth="100%" height={textAreaHeight}>
+            <Text variant={titleVariant} maxWidth="100%" textAlign="center" numberOfLines={1} title={title}>
+              {title}
+            </Text>
+            {hostName !== title && (
+              <Text
+                color="$neutral2"
+                maxWidth="100%"
+                variant={subtitleVariant}
+                wordWrap="break-word"
+                textAlign="center"
+                numberOfLines={1}
+                title={hostName}
+              >
+                {hostName}
+              </Text>
+            )}
+          </Flex>
+        )
+
         return (
           <Flex
             key={dappUrl}
             group
-            centered
+            alignItems="center"
             backgroundColor="$surface2"
             borderRadius="$rounded16"
             flexGrow={0}
@@ -74,33 +135,9 @@ export function SettingsManageConnectionsScreen(): JSX.Element {
             // when sidebar is at the minimum width (360px), this will allow 2 cards to cleanly fit per row
             width={TILE_WIDTH}
           >
-            <TouchableArea
-              $group-hover={{ display: 'flex' }}
-              display="none"
-              p="$spacing2"
-              position="absolute"
-              right="$padding8"
-              top="$padding8"
-              onPress={getHandleRemoveConnection(dappUrl)}
-            >
-              <MinusCircle size="$icon.20" fill={colors.neutral3.get()} />
-            </TouchableArea>
-
-            <UniversalImage
-              fallback={<DappIconPlaceholder iconSize={iconSizes.icon32} name={name.toUpperCase()} />}
-              size={{
-                height: iconSizes.icon32,
-                width: iconSizes.icon32,
-              }}
-              style={{ image: { borderRadius: borderRadii.rounded8 } }}
-              uri={dappInfo?.iconUrl}
-            />
-            <Flex alignItems="center" gap="$gap4" maxWidth="100%">
-              <Text variant="body3">{dappInfo?.displayName || name}</Text>
-              <Text color="$neutral2" maxWidth="100%" variant="body4" wordWrap="break-word">
-                {extractUrlHost(dappUrl)}
-              </Text>
-            </Flex>
+            {DeleteDappButton}
+            {DappIcon}
+            {Title}
           </Flex>
         )
       }),

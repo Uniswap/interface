@@ -27,6 +27,7 @@ import { SentryAppNameTag, initializeSentry, sentryCreateHashRouter } from 'src/
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { getReduxPersistor, getReduxStore } from 'src/store/store'
 import { Flex } from 'ui/src'
+import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
@@ -166,12 +167,14 @@ export default function UnitagClaimApp(): JSX.Element {
             <SharedWalletProvider reduxStore={getReduxStore()}>
               <ErrorBoundary>
                 <GraphqlProvider>
-                  <LocalizationContextProvider>
-                    <UnitagUpdaterContextProvider>
-                      <TraceUserProperties />
-                      <RouterProvider router={router} />
-                    </UnitagUpdaterContextProvider>
-                  </LocalizationContextProvider>
+                  <BlankUrlProvider>
+                    <LocalizationContextProvider>
+                      <UnitagUpdaterContextProvider>
+                        <TraceUserProperties />
+                        <RouterProvider router={router} />
+                      </UnitagUpdaterContextProvider>
+                    </LocalizationContextProvider>
+                  </BlankUrlProvider>
                 </GraphqlProvider>
               </ErrorBoundary>
             </SharedWalletProvider>

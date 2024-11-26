@@ -5,9 +5,17 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { isWeb } from 'ui/src'
-import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import {
+  ParsedWarnings,
+  Warning,
+  WarningAction,
+  WarningLabel,
+  WarningSeverity,
+} from 'uniswap/src/components/modals/WarningModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
+import { FetchError, isRateLimitFetchError } from 'uniswap/src/data/apiClients/FetchError'
+import { Err404 } from 'uniswap/src/data/tradingApi/__generated__'
 import { selectHasDismissedBridgingWarning } from 'uniswap/src/features/behaviorHistory/selectors'
 import { useTransactionGasWarning } from 'uniswap/src/features/gas/hooks'
 import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -17,10 +25,8 @@ import {
 } from 'uniswap/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
-import { getSwapWarningDetails } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarningUtils'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { ParsedWarnings } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useIsOffline } from 'utilities/src/connection/useIsOffline'
 import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
@@ -65,8 +71,9 @@ export function getSwapWarnings(
     })
   }
 
-  const swapWarnings = getSwapWarningDetails(trade, t)
-  warnings.push(...swapWarnings)
+  if (trade.error) {
+    warnings.push(getSwapWarningFromError(trade.error, t))
+  }
 
   // swap form is missing input, output fields
   if (formIncomplete(derivedSwapInfo)) {
@@ -114,19 +121,15 @@ function useSwapWarnings(derivedSwapInfo: DerivedSwapInfo): Warning[] {
   return useMemoCompare(() => getSwapWarnings(t, formatPercent, derivedSwapInfo, offline), isEqual)
 }
 
-const formIncomplete = (derivedSwapInfo: DerivedSwapInfo): boolean => {
+function formIncomplete(derivedSwapInfo: DerivedSwapInfo): boolean {
   const { currencyAmounts, currencies, exactCurrencyField } = derivedSwapInfo
 
-  if (
+  return (
     !currencies[CurrencyField.INPUT] ||
     !currencies[CurrencyField.OUTPUT] ||
     (exactCurrencyField === CurrencyField.INPUT && !currencyAmounts[CurrencyField.INPUT]) ||
     (exactCurrencyField === CurrencyField.OUTPUT && !currencyAmounts[CurrencyField.OUTPUT])
-  ) {
-    return true
-  }
-
-  return false
+  )
 }
 
 export function useNeedsBridgingWarning(derivedSwapInfo: DerivedSwapInfo): boolean {
@@ -142,15 +145,57 @@ export function useParsedSwapWarnings(): ParsedWarnings {
 
   const swapWarnings = useSwapWarnings(derivedSwapInfo)
 
-  const gasWarning = useTransactionGasWarning({
-    account,
-    derivedInfo: derivedSwapInfo,
-    gasFee: gasFee.value,
-  })
+  const gasWarning = useTransactionGasWarning({ account, derivedInfo: derivedSwapInfo, gasFee: gasFee.value })
 
   const allWarnings = useMemo(() => {
     return !gasWarning ? swapWarnings : [...swapWarnings, gasWarning]
   }, [gasWarning, swapWarnings])
 
   return useFormattedWarnings(allWarnings)
+}
+
+function getSwapWarningFromError(error: Error, t: TFunction): Warning {
+  if (error instanceof FetchError) {
+    // Special case: rate limit errors are not parsed by errorCode
+    if (isRateLimitFetchError(error)) {
+      return {
+        type: WarningLabel.RateLimit,
+        severity: WarningSeverity.Medium,
+        action: WarningAction.DisableReview,
+        title: t('swap.warning.rateLimit.title'),
+        message: t('swap.warning.rateLimit.message'),
+      }
+    }
+
+    // Map errorCode to Warning
+    switch (error.data.errorCode) {
+      case Err404.errorCode.QUOTE_AMOUNT_TOO_LOW_ERROR: {
+        return {
+          type: WarningLabel.EnterLargerAmount,
+          severity: WarningSeverity.Low,
+          action: WarningAction.DisableReview,
+          title: t('swap.warning.enterLargerAmount.title'),
+          message: '',
+        }
+      }
+      case Err404.errorCode.RESOURCE_NOT_FOUND: {
+        return {
+          type: WarningLabel.NoRoutesError,
+          severity: WarningSeverity.Low,
+          action: WarningAction.DisableReview,
+          title: t('swap.warning.noRoutesFound.title'),
+          message: t('swap.warning.noRoutesFound.message'),
+        }
+      }
+    }
+  }
+
+  // Generic routing error if we can't parse a specific case
+  return {
+    type: WarningLabel.SwapRouterError,
+    severity: WarningSeverity.Low,
+    action: WarningAction.DisableReview,
+    title: t('swap.warning.router.title'),
+    message: t('swap.warning.router.message'),
+  }
 }

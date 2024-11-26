@@ -1,6 +1,6 @@
 import { useUpdateAtom } from 'jotai/utils'
 import { multicallUpdaterSwapChainIdAtom } from 'lib/hooks/useBlockNumber'
-import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
+import { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react'
 import { MultichainContext } from 'state/multichain/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
@@ -19,8 +19,14 @@ export function MultichainContextProvider({
     setMulticallUpdaterChainId(chainId)
   }, [selectedChainId, setMulticallUpdaterChainId])
 
+  const reset = useCallback(() => {
+    setSelectedChainId(initialChainId)
+    setIsUserSelectedToken(false)
+  }, [initialChainId])
+
   const value = useMemo(() => {
     return {
+      reset,
       setSelectedChainId,
       initialChainId,
       chainId: selectedChainId ?? undefined,
@@ -28,6 +34,6 @@ export function MultichainContextProvider({
       isUserSelectedToken,
       setIsUserSelectedToken,
     }
-  }, [initialChainId, selectedChainId, isUserSelectedToken])
+  }, [initialChainId, selectedChainId, isUserSelectedToken, reset])
   return <MultichainContext.Provider value={value}>{children}</MultichainContext.Provider>
 }

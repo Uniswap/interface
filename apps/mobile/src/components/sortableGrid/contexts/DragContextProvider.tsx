@@ -3,7 +3,6 @@ import { runOnJS, useAnimatedReaction, useDerivedValue, useSharedValue } from 'r
 import { useLayoutContext } from 'src/components/sortableGrid/contexts/LayoutContextProvider'
 import { useStableCallback } from 'src/components/sortableGrid/internal/utils'
 import { DragContextProviderProps, DragContextType, Vector } from 'src/components/sortableGrid/types'
-import { ImpactFeedbackStyle, useHapticFeedback } from 'ui/src'
 
 const DragContext = createContext<DragContextType | null>(null)
 
@@ -21,7 +20,6 @@ export function DragContextProvider<I>({
   data,
   itemKeys,
   editable = true,
-  hapticFeedback: triggerHapticFeedback = true,
   activeItemScale: activeItemScaleProp = 1.1,
   activeItemOpacity: activeItemOpacityProp = 0.7,
   activeItemShadowOpacity: activeItemShadowOpacityProp = 0.5,
@@ -31,7 +29,6 @@ export function DragContextProvider<I>({
   keyExtractor,
   children,
 }: DragContextProviderProps<I>): JSX.Element {
-  const { hapticFeedback } = useHapticFeedback()
   const { keyToIndex } = useLayoutContext()
   /**
    * VARIABLES
@@ -59,9 +56,6 @@ export function DragContextProvider<I>({
       return
     }
     const item = data[index]
-    if (triggerHapticFeedback) {
-      await hapticFeedback.impact(ImpactFeedbackStyle.Heavy)
-    }
     if (!onDragStart || !item) {
       return
     }
@@ -91,10 +85,6 @@ export function DragContextProvider<I>({
     const fromIndex = itemKeys.indexOf(swappedKey)
 
     const reorderedData: I[] = []
-
-    if (triggerHapticFeedback) {
-      await hapticFeedback.impact(ImpactFeedbackStyle.Medium)
-    }
 
     for (let i = 0; i < data.length; i++) {
       const item = data[i]

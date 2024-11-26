@@ -8,7 +8,7 @@ import { launchImageLibrary } from 'react-native-image-picker'
 
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Defs, LinearGradient, Path, Rect, Stop, Svg } from 'react-native-svg'
-import { Button, Flex, SpinningLoader, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Button, Flex, SpinningLoader, Text, ThemeName, TouchableArea, useSporeColors } from 'ui/src'
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
 import { Global, PhotoStacked } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
@@ -21,6 +21,7 @@ import { openSettings } from 'wallet/src/utils/linking'
 type QRCodeScannerProps = {
   onScanCode: (data: string) => void
   shouldFreezeCamera: boolean
+  theme?: ThemeName
 }
 interface WCScannerProps extends QRCodeScannerProps {
   numConnections: number
@@ -38,7 +39,7 @@ const SCAN_ICON_MASK_OFFSET_RATIO = 0.02 // used for mask to match spacing in Ca
 const LOADER_SIZE = iconSizes.icon40
 
 export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.Element {
-  const { onScanCode, shouldFreezeCamera } = props
+  const { onScanCode, shouldFreezeCamera, theme } = props
   const isWalletConnectModal = isWalletConnect(props)
 
   const { t } = useTranslation()
@@ -120,6 +121,8 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   const cameraHeight = CAMERA_ASPECT_RATIO * cameraWidth
   const scannerSize = Math.min(overlayWidth, cameraWidth) * SCAN_ICON_WIDTH_RATIO
 
+  const photoSelectBackgroundColor = useSporeColors(theme).surface1
+
   /**
    * Resets the camera auto focus to force the camera to refocus by toggling
    * the auto focus off and on. This allows us to manually let the user refocus
@@ -140,7 +143,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   }
 
   return (
-    <AnimatedFlex grow borderRadius="$rounded12" entering={FadeIn} exiting={FadeOut} overflow="hidden">
+    <AnimatedFlex grow theme={theme} borderRadius="$rounded12" entering={FadeIn} exiting={FadeOut} overflow="hidden">
       <Flex justifyContent="center" style={StyleSheet.absoluteFill}>
         <Flex height={cameraHeight} overflow="hidden" width={cameraWidth}>
           {permissionStatus === PermissionStatus.GRANTED && !isReadingImageFile && (
@@ -245,7 +248,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
           >
             <Flex
               centered
-              backgroundColor={colors.surface1.val}
+              backgroundColor={photoSelectBackgroundColor.val}
               borderRadius="$roundedFull"
               p="$spacing12"
               onPress={onPickImageFilePress}

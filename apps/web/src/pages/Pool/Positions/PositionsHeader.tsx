@@ -11,8 +11,10 @@ import { Plus } from 'ui/src/components/icons/Plus'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { SortHorizontalLines } from 'ui/src/components/icons/SortHorizontalLines'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 
 type PositionsHeaderProps = {
@@ -38,6 +40,15 @@ export function PositionsHeader({
   const { isConnected } = useAccount()
   const { chains } = useEnabledChains()
   const navigate = useNavigate()
+  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
+
+  const protocolVersions = useMemo(
+    () =>
+      isV4DataEnabled
+        ? [ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
+        : [ProtocolVersion.V3, ProtocolVersion.V2],
+    [isV4DataEnabled],
+  )
 
   const filterOptions = useMemo(() => {
     const statusOptions = [PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE, PositionStatus.CLOSED].map(
@@ -55,7 +66,7 @@ export function PositionsHeader({
         />
       ),
     )
-    const versionOptions = [ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2].map((version) => (
+    const versionOptions = protocolVersions.map((version) => (
       <LabeledCheckbox
         key={`PositionsHeader-version-${version}`}
         py="$spacing4"
@@ -78,11 +89,11 @@ export function PositionsHeader({
       </Text>,
       ...versionOptions,
     ]
-  }, [onStatusChange, onVersionChange, selectedStatus, selectedVersions, t])
+  }, [onStatusChange, onVersionChange, selectedStatus, selectedVersions, t, protocolVersions])
 
   const createOptions = useMemo(
     () =>
-      [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4].map((version) => {
+      protocolVersions.map((version) => {
         const protocolVersionLabel = getProtocolVersionLabel(version)
         return (
           <Flex
@@ -99,15 +110,15 @@ export function PositionsHeader({
           </Flex>
         )
       }),
-    [navigate],
+    [navigate, protocolVersions],
   )
 
   const [createDropdownOpen, setCreateDropdownOpen] = useState(false)
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false)
 
   return (
-    <Flex gap={20}>
-      <Text variant="heading2">{t('pool.positions.title')}</Text>
+    <Flex gap={16}>
+      <Text variant="heading3">{t('pool.positions.title')}</Text>
 
       {isConnected && (
         <Flex row gap="$gap12">
@@ -122,11 +133,11 @@ export function PositionsHeader({
               alignItems="center"
               {...ClickableTamaguiStyle}
               onPress={() => {
-                navigate('/positions/create/v4')
+                navigate(`/positions/create/${isV4DataEnabled ? 'v4' : 'v3'}`)
               }}
             >
-              <Plus size={24} color="$neutral1" />
-              <Text variant="buttonLabel2">{t('common.new')}</Text>
+              <Plus size={20} color="$neutral1" />
+              <Text variant="buttonLabel3">{t('common.new')}</Text>
             </Flex>
             <DropdownSelector
               menuLabel={
@@ -137,10 +148,10 @@ export function PositionsHeader({
                   justifyContent="center"
                   alignItems="center"
                   px="$padding12"
-                  py="$spacing12"
+                  py="$spacing8"
                   {...ClickableTamaguiStyle}
                 >
-                  <RotatableChevron direction="down" height={24} width={20} color="$neutral2" />
+                  <RotatableChevron direction="down" height={20} width={20} color="$neutral2" />
                 </Flex>
               }
               buttonStyle={{
@@ -171,12 +182,12 @@ export function PositionsHeader({
                     backgroundColor="$surface3"
                     justifyContent="center"
                     alignItems="center"
-                    px="$padding16"
-                    py="$spacing12"
+                    px="$padding12"
+                    py="$spacing8"
                     testID="lp-version-selector"
                     {...ClickableTamaguiStyle}
                   >
-                    <SortHorizontalLines size={24} color="$neutral1" />
+                    <SortHorizontalLines size={20} color="$neutral1" />
                   </Flex>
                 }
                 internalMenuItems={<>{filterOptions}</>}
@@ -195,7 +206,6 @@ export function PositionsHeader({
                 backgroundColor="$surface3"
                 borderRadius="$rounded16"
                 px="$padding12"
-                py={6}
                 height="100%"
                 {...ClickableTamaguiStyle}
               >

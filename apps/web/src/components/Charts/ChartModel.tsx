@@ -27,6 +27,9 @@ import { v4 as uuidv4 } from 'uuid'
 
 export const refitChartContentAtom = atom<(() => void) | undefined>(undefined)
 
+export const DEFAULT_TOP_PRICE_SCALE_MARGIN = 0.32
+export const DEFAULT_BOTTOM_PRICE_SCALE_MARGIN = 0.15
+
 interface ChartUtilParams<TDataType extends SeriesDataItemType> {
   locale: string
   theme: DefaultTheme
@@ -194,8 +197,8 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
         visible: isLargeScreen,
         borderVisible: false,
         scaleMargins: {
-          top: 0.32,
-          bottom: 0.15,
+          top: DEFAULT_TOP_PRICE_SCALE_MARGIN,
+          bottom: DEFAULT_BOTTOM_PRICE_SCALE_MARGIN,
         },
         autoScale: true,
       },

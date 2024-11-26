@@ -22,6 +22,7 @@ import { TransferNFTNotification } from 'wallet/src/features/notifications/compo
 import { UnknownTxNotification } from 'wallet/src/features/notifications/components/UnknownNotification'
 import { WrapNotification } from 'wallet/src/features/notifications/components/WrapNotification'
 
+// Update name in `packages/wallet/src/components/ErrorBoundary/ErrorBoundary.tsx` if we update here
 export function SharedNotificationToastRouter({ notification }: { notification: AppNotification }): JSX.Element | null {
   switch (notification.type) {
     case AppNotificationType.Default:

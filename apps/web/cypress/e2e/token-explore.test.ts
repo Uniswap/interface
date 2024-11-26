@@ -64,6 +64,7 @@ describe('Token explore', () => {
   })
 
   it('should show a L2 token even if the user is connected to a different network', () => {
+    cy.viewport(1200, 800)
     cy.visit('/explore/tokens/ethereum')
     cy.get(getTestSelector('tokens-network-filter-selected')).click()
     cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).first().click()

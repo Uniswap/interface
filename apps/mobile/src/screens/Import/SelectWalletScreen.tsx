@@ -78,7 +78,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
               {importableAccounts?.map((account, i) => {
                 const { address, balance } = account
                 return (
-                  <Flex px="$spacing16">
+                  <Flex key={address} px="$spacing16">
                     <WalletPreviewCard
                       key={address}
                       address={address}

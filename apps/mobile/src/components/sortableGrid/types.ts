@@ -73,7 +73,6 @@ export type DragContextProviderProps<I> = PropsWithChildren<
     data: I[]
     itemKeys: string[]
     editable?: boolean
-    hapticFeedback?: boolean
     onChange?: (e: SortableGridChangeEvent<I>) => void
     onDragStart?: (e: SortableGridDragStartEvent<I>) => void
     onDrop?: (e: SortableGridDropEvent<I>) => void

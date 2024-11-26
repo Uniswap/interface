@@ -5,7 +5,6 @@ import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import {
   DEFAULT_DEPOSIT_STATE,
-  DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS,
   useCreatePositionContext,
   useDepositContext,
   usePriceRangeContext,
@@ -22,7 +21,13 @@ import { Trans } from 'uniswap/src/i18n'
 
 const EditStep = ({ children, onClick, ...rest }: { children: JSX.Element; onClick: () => void } & FlexProps) => {
   return (
-    <Container row justifyContent="space-between" alignItems="center" {...rest}>
+    <Container
+      row
+      justifyContent="space-between"
+      alignItems="center"
+      $md={{ row: false, alignItems: 'flex-start', justifyContent: 'flex-start' }}
+      {...rest}
+    >
       {children}
       <Button
         theme="secondary"
@@ -45,8 +50,8 @@ const EditStep = ({ children, onClick, ...rest }: { children: JSX.Element; onCli
 
 export const EditSelectTokensStep = (props?: FlexProps) => {
   const { setStep, derivedPositionInfo, positionState } = useCreatePositionContext()
-  const { setPriceRangeState } = usePriceRangeContext()
-  const { setDepositState } = useDepositContext()
+  const { reset: resetPriceRangeState } = usePriceRangeContext()
+  const { reset: resetDepositState } = useDepositContext()
   const { currencies, protocolVersion } = derivedPositionInfo
   const { fee, hook } = positionState
   const [token0, token1] = currencies
@@ -54,10 +59,10 @@ export const EditSelectTokensStep = (props?: FlexProps) => {
   const screenSize = useScreenSize()
 
   const handleEdit = useCallback(() => {
-    setPriceRangeState(DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS)
-    setDepositState(DEFAULT_DEPOSIT_STATE)
+    resetPriceRangeState()
+    resetDepositState()
     setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
-  }, [setDepositState, setPriceRangeState, setStep])
+  }, [resetDepositState, resetPriceRangeState, setStep])
 
   return (
     <EditStep onClick={handleEdit} {...props}>

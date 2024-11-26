@@ -16,7 +16,7 @@ import {
   ZORA_LOGO,
 } from 'ui/src/assets'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 type ChainUI = { symbol: string; bgColor: string; textColor: string }

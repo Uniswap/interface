@@ -14,6 +14,8 @@ import {
   IncreasePositionTxAndGasInfo,
   LiquidityTransactionType,
 } from 'uniswap/src/features/transactions/liquidity/types'
+import { getTradeSettingsDeadline } from 'uniswap/src/features/transactions/swap/form/utils'
+import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useAccount } from 'wagmi'
@@ -21,6 +23,8 @@ import { useAccount } from 'wagmi'
 interface IncreasePositionContextType {
   txInfo?: IncreasePositionTxAndGasInfo
   gasFeeEstimateUSD?: CurrencyAmount<Currency>
+  error?: boolean
+  refetch?: () => void
 }
 
 const IncreaseLiquidityTxContext = createContext<IncreasePositionContextType | undefined>(undefined)
@@ -28,6 +32,7 @@ const IncreaseLiquidityTxContext = createContext<IncreasePositionContextType | u
 export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildren): JSX.Element {
   const positionInfo = useModalLiquidityInitialState()
   const { derivedIncreaseLiquidityInfo } = useIncreaseLiquidityContext()
+  const { customDeadline, customSlippageTolerance } = useSwapSettingsContext()
 
   const { currencyAmounts } = derivedIncreaseLiquidityInfo
 
@@ -58,7 +63,12 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     }
   }, [positionInfo, account.address, currencyAmounts])
 
-  const { data: increaseLiquidityTokenApprovals, isLoading: approvalLoading } = useCheckLpApprovalQuery({
+  const {
+    data: increaseLiquidityTokenApprovals,
+    isLoading: approvalLoading,
+    error: approvalError,
+    refetch: approvalRefetch,
+  } = useCheckLpApprovalQuery({
     params: increaseLiquidityApprovalParams,
     staleTime: 5 * ONE_SECOND_MS,
   })
@@ -94,6 +104,9 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     if (!positionInfo || !account.address || !apiProtocolItems || !amount0 || !amount1) {
       return undefined
     }
+
+    const deadline = getTradeSettingsDeadline(customDeadline)
+
     return {
       simulateTransaction: !approvalsNeeded,
       protocol: apiProtocolItems,
@@ -120,10 +133,17 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
           hooks: positionInfo.v4hook,
         },
       },
+      deadline,
+      slippageTolerance: customSlippageTolerance,
     }
-  }, [account, positionInfo, pool, currencyAmounts, approvalsNeeded])
+  }, [account, positionInfo, pool, currencyAmounts, approvalsNeeded, customDeadline, customSlippageTolerance])
 
-  const { data: increaseCalldata, isLoading: isCalldataLoading } = useIncreaseLpPositionCalldataQuery({
+  const {
+    data: increaseCalldata,
+    isLoading: isCalldataLoading,
+    error: calldataError,
+    refetch: calldataRefetch,
+  } = useIncreaseLpPositionCalldataQuery({
     params: increaseCalldataQueryParams,
     staleTime: 5 * ONE_SECOND_MS,
   })
@@ -199,6 +219,8 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   const value = {
     txInfo: increaseLiquidityTxContext,
     gasFeeEstimateUSD: totalGasFee ?? undefined,
+    error: Boolean(approvalError || calldataError),
+    refetch: approvalError ? approvalRefetch : calldataError ? calldataRefetch : undefined,
   }
 
   return <IncreaseLiquidityTxContext.Provider value={value}>{children}</IncreaseLiquidityTxContext.Provider>

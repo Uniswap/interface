@@ -314,6 +314,12 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
     }
   }
 
+  if ((isBridge(transaction) || isClassic(transaction)) && !transaction.options?.request) {
+    // Transaction was not submitted yet, ignore it for now
+    // Once it's submitted, it'll be updated and the watcher will pick it up
+    return undefined
+  }
+
   // At this point, the tx should either be a classic / bridge tx or a filled order, both of which have hashes
   if (!hash) {
     logger.error(new Error('Watching for tx with no hash'), {

@@ -4,8 +4,19 @@
 import { create, QRCodeErrorCorrectionLevel, QRCodeSegment } from 'qrcode'
 import { useMemo } from 'react'
 import Svg, { Defs, G, LinearGradient, Path, Rect, Stop } from 'react-native-svg'
+import { isWeb } from 'tamagui'
 import { BaseQRProps } from 'ui/src/components/QRCode/QRCodeDisplay'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
+
+// size of the SVG element of the eye for the SVG we use in particular.
+const SVG_SIZE = 40
+// Alignment markers always take up 7x7 cells
+const EYE_SIZE_UNITS = 7
+/**
+ * Unsure why this is need but the scaling on the web is 2x. This
+ * offset multiplier ensures that we the eyes align correctly on web.
+ */
+const EYE_OFFSET_MULTIPLIER = isWeb ? 2 : 1
 
 export interface QRCodeProps extends BaseQRProps {
   /* what the qr code stands for */
@@ -35,7 +46,7 @@ const QREyes = ({
   fillColor?: string
 }): JSX.Element => (
   <Svg x={x} y={y}>
-    <G transform={`scale(${size / 120})`} x={x} y={y}>
+    <G transform={`scale(${size / SVG_SIZE})`} x={x} y={y}>
       <Path
         clipRule="evenodd"
         d="M0 12C0 5.37258 5.37258 0 12 0H28C34.6274 0 40 5.37258 40 12V28C40 34.6274 34.6274 40 28 40H12C5.37258 40 0 34.6274 0 28V12ZM28 6.27451H12C8.8379 6.27451 6.27451 8.8379 6.27451 12V28C6.27451 31.1621 8.8379 33.7255 12 33.7255H28C31.1621 33.7255 33.7255 31.1621 33.7255 28V12C33.7255 8.8379 31.1621 6.27451 28 6.27451Z"
@@ -59,7 +70,7 @@ const QREyeBG = ({
   backgroundColor?: string
 }): JSX.Element => (
   <Svg x={x} y={y}>
-    <G transform={`scale(${size / 120})`} x={x} y={y}>
+    <G transform={`scale(${size / SVG_SIZE})`} x={x} y={y}>
       <Path d="M0 0H40V40H0V0Z" fill={backgroundColor} />
     </G>
   </Svg>
@@ -127,10 +138,20 @@ function genMatrix(value: string | QRCodeSegment[], errorCorrectionLevel: QRCode
   )
 }
 
+/**
+ * Renders a QR code with custom colors, custom eyes, and more.
+ *
+ * @param value - The value to encode in the QR code
+ * @param size - The size of the QR code
+ * @param color - The color of the QR code
+ * @param backgroundColor - The background color of the QR code
+ * @param overlayColor - Additional color to overlay on top of the QR code
+ * @param quietZone - The quiet zone of the QR code
+ * @param ecl - The error correction level of the QR code
+ */
 export function QRCode({
   value,
   size,
-  eyeSize: inputEyeSize,
   color,
   backgroundColor: inputBackgroundColor,
   overlayColor = '#FFFFFF',
@@ -139,13 +160,17 @@ export function QRCode({
 }: QRCodeProps): JSX.Element | null {
   const colors = useSporeColors()
 
-  const { path } = useMemo(() => {
-    return transformMatrixIntoCirclePath(genMatrix(value, ecl), size)
+  const { matrix, path } = useMemo(() => {
+    const _matrix = genMatrix(value, ecl)
+    return {
+      matrix: _matrix,
+      path: transformMatrixIntoCirclePath(_matrix, size).path,
+    }
   }, [value, size, ecl])
 
-  const eyeSize = inputEyeSize ? inputEyeSize : size / 1.5
-
+  const eyeSize = size * (EYE_SIZE_UNITS / matrix.length)
   const backgroundColor = inputBackgroundColor ?? colors.surface1.val
+  const cornerPosition = (size - eyeSize) / EYE_OFFSET_MULTIPLIER
 
   return (
     <Svg
@@ -184,14 +209,14 @@ export function QRCode({
           fillColor={color}
           overlayColor={overlayColor + '2D'}
           size={eyeSize}
-          y={size - eyeSize / 3}
+          y={cornerPosition}
         />
         <QREyeWrapper
           backgroundColor={backgroundColor}
           fillColor={color}
           overlayColor={overlayColor + '2D'}
           size={eyeSize}
-          x={size - eyeSize / 3}
+          x={cornerPosition}
         />
       </G>
     </Svg>

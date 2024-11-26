@@ -1,3 +1,4 @@
+import { GestureResponderEvent } from 'react-native'
 import { ColorTokens, SpaceTokens } from 'tamagui'
 import { Checkbox, CheckboxSizeTokens } from 'ui/src/components/checkbox/Checkbox'
 import { Flex, FlexProps } from 'ui/src/components/layout'
@@ -31,7 +32,10 @@ export function LabeledCheckbox({
   hoverStyle,
   onCheckPressed,
 }: LabeledCheckboxProps): JSX.Element {
-  const onPress = (): void => {
+  const onPress = (e: GestureResponderEvent): void => {
+    // Prevent event from bubbling up to parent
+    e.preventDefault()
+    e.stopPropagation()
     onCheckPressed?.(checked)
   }
 

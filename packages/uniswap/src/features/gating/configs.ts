@@ -8,6 +8,7 @@ export enum DynamicConfigs {
   // Shared
   Swap = 'swap_config',
   NetworkRequests = 'network_requests',
+  Chains = 'chains',
 
   // Wallet
   HomeScreenExploreTokens = 'home_screen_explore_tokens',
@@ -45,6 +46,11 @@ export enum SwapConfigKey {
 
 export enum NetworkRequestsConfigKey {
   BalanceMaxRefetchAttempts = 'balanceMaxRefetchAttempts',
+}
+
+export enum ChainsConfigKey {
+  OrderedChainIds = 'orderedChainIds',
+  NewChainIds = 'newChainIds',
 }
 
 // Wallet
@@ -97,6 +103,7 @@ export type DynamicConfigKeys = {
   // Shared
   [DynamicConfigs.Swap]: SwapConfigKey
   [DynamicConfigs.NetworkRequests]: NetworkRequestsConfigKey
+  [DynamicConfigs.Chains]: ChainsConfigKey
 
   // Wallet
   [DynamicConfigs.HomeScreenExploreTokens]: HomeScreenExploreTokensConfigKey

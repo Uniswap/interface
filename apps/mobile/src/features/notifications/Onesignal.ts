@@ -34,14 +34,12 @@ export const initOneSignal = (): void => {
   })
 }
 
-export const promptPushPermission = (successCallback?: () => void, failureCallback?: () => void): void => {
-  OneSignal.promptForPushNotificationsWithUserResponse((response) => {
-    logger.debug('Onesignal', 'promptForPushNotificationsWithUserResponse', `Prompt response: ${response}`)
-    if (response) {
-      successCallback?.()
-    } else {
-      failureCallback?.()
-    }
+export const promptPushPermission = async (): Promise<boolean> => {
+  return new Promise((resolve) => {
+    OneSignal.promptForPushNotificationsWithUserResponse((response) => {
+      logger.debug('Onesignal', 'promptForPushNotificationsWithUserResponse', `Prompt response: ${response}`)
+      resolve(response)
+    })
   })
 }
 

@@ -104,6 +104,7 @@
     "expo-blur": "12.9.2",
     "expo-camera": "14.1.2",
     "expo-clipboard": "5.0.1",
+    "expo-haptics": "12.8.1",
     "expo-linear-gradient": "12.7.2",
     "expo-linking": "6.2.2",
     "expo-local-authentication": "13.8.0",

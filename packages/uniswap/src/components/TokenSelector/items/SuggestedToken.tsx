@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { ImpactFeedbackStyle, TouchableArea, useMedia, useSporeColors } from 'ui/src'
+import { TouchableArea, useMedia, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { Pill } from 'uniswap/src/components/pill/Pill'
@@ -27,10 +27,8 @@ function _TokenPill({
 
   return (
     <TouchableArea
-      hapticFeedback
       hoverable
       borderRadius="$roundedFull"
-      hapticStyle={ImpactFeedbackStyle.Light}
       testID={`token-option-${currency.chainId}-${currency.symbol}`}
       onPress={onPress}
     >

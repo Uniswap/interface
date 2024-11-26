@@ -20,7 +20,8 @@ import {
   TokenSortableField,
   useTopTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains, useSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { isL2ChainId, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { deserializeToken, serializeToken } from 'uniswap/src/utils/currency'
 

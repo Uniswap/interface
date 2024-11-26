@@ -1,16 +1,17 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
-import { Pair, computePairAddress } from '@uniswap/v2-sdk'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { DepositInfo, DepositState } from 'components/Liquidity/types'
-import { getPairFromRest, getPoolFromRest } from 'components/Liquidity/utils'
+import { getPoolFromRest } from 'components/Liquidity/utils'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useIsPoolOutOfSync } from 'hooks/useIsPoolOutOfSync'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
+import { PairState, useV2Pair } from 'hooks/useV2Pairs'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
@@ -44,9 +45,7 @@ import {
 import { useMemo } from 'react'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { PositionField } from 'types/position'
-import { useGetPair } from 'uniswap/src/data/rest/getPair'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 
@@ -76,13 +75,14 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
       protocolVersions: [protocolVersion],
       token0: getCurrencyAddressWithWrap(sortedCurrencies?.[0], protocolVersion),
       token1: getCurrencyAddressWithWrap(sortedCurrencies?.[1], protocolVersion),
+      hooks: state.hook?.toLowerCase(), // BE does not accept checksummed addresses
     },
     poolsQueryEnabled,
   )
 
   const pool = poolData?.pools && poolData.pools.length > 0 ? poolData.pools[0] : undefined
 
-  const { pairsQueryEnabled, pairAddress, sortedTokens } = useMemo(() => {
+  const { pairsQueryEnabled, sortedTokens } = useMemo(() => {
     if (!pairEnabledProtocolVersion(protocolVersion)) {
       return {
         pairsQueryEnabled: false,
@@ -102,38 +102,19 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
 
     return {
       pairsQueryEnabled: true,
-      pairAddress: computePairAddress({
-        factoryAddress: V2_FACTORY_ADDRESSES[sortedTokens[0].chainId],
-        tokenA: sortedTokens[0],
-        tokenB: sortedTokens[1],
-      }),
       sortedTokens,
     } as const
   }, [protocolVersion, sortedCurrencies])
 
-  const {
-    data: pairData,
-    isFetched: pairIsFetched,
-    isLoading: pairIsLoading,
-  } = useGetPair(
-    {
-      chainId: chainId ?? (UniverseChainId.Mainnet as number),
-      pairAddress,
-    },
-    pairsQueryEnabled,
-  )
+  const pairResult = useV2Pair(sortedTokens?.[0], sortedTokens?.[1])
+  const pairIsFetched = pairResult[0] === PairState.EXISTS
+  const pairIsLoading = pairResult[0] === PairState.LOADING
 
   const { pair, v2Price } = useMemo(() => {
-    const pair = pairsQueryEnabled
-      ? getPairFromRest({
-          pair: pairData?.pair,
-          token0: sortedTokens[0],
-          token1: sortedTokens[1],
-        })
-      : undefined
+    const pair = pairsQueryEnabled ? pairResult[1] || undefined : undefined
 
     return { pair, v2Price: pair?.token0Price }
-  }, [pairData?.pair, sortedTokens, pairsQueryEnabled])
+  }, [pairsQueryEnabled, pairResult])
 
   const { v3Pool, v3Price } = useMemo(() => {
     const v3Pool =
@@ -172,7 +153,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
     }
 
     if (protocolVersion === ProtocolVersion.V2) {
-      if (!pairData && pairIsFetched) {
+      if (!pairResult && pairIsFetched) {
         return true
       }
 
@@ -180,7 +161,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
     }
 
     return poolData?.pools && poolData.pools.length === 0
-  }, [protocolVersion, poolData?.pools, pairData, pairIsFetched])
+  }, [protocolVersion, poolData?.pools, pairResult, pairIsFetched])
 
   return useMemo(() => {
     const currencies: [OptionalCurrency, OptionalCurrency] = [TOKEN0, TOKEN1]
@@ -211,6 +192,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
         creatingPoolOrPair,
         poolOrPairLoading: poolIsLoading,
         isPoolOutOfSync,
+        poolId: pool?.poolId,
       } satisfies CreateV3PositionInfo
     }
 
@@ -221,18 +203,20 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
       creatingPoolOrPair,
       poolOrPairLoading: poolIsLoading,
       isPoolOutOfSync,
+      poolId: pool?.poolId,
     } satisfies CreateV4PositionInfo
   }, [
     TOKEN0,
     TOKEN1,
     protocolVersion,
+    v4Pool,
     creatingPoolOrPair,
     poolIsLoading,
+    isPoolOutOfSync,
+    pool?.poolId,
     pair,
     pairIsLoading,
     v3Pool,
-    v4Pool,
-    isPoolOutOfSync,
   ])
 }
 

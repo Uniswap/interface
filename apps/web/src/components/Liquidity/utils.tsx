@@ -201,7 +201,7 @@ function parseRestToken<T extends Currency>(token: RestToken | undefined): T | u
   return new Token(token.chainId, token.address, token.decimals, token.symbol) as T
 }
 
-export function getPairFromRest({
+function getPairFromRest({
   pair,
   token0,
   token1,
@@ -371,16 +371,6 @@ export function calculateTickSpacingFromFeeAmount(feeAmount: number): number {
   return (2 * feeAmount) / 100
 }
 
-export function calculateInvertedPrice({ price, invert }: { price?: Price<Currency, Currency>; invert: boolean }) {
-  const currentPrice = invert ? price?.invert() : price
-
-  return {
-    price: currentPrice,
-    quote: currentPrice?.quoteCurrency,
-    base: currentPrice?.baseCurrency,
-  }
-}
-
 export enum HookFlag {
   BeforeAddLiquidity = 'before-add-liquidity',
   AfterAddLiquidity = 'after-add-liquidity',
@@ -484,6 +474,7 @@ export function mergeFeeTiers(
       totalLiquidityUsd: 0,
       percentage: new Percent(0, 100),
       created: false,
+      tvl: '0',
     } satisfies FeeTierData
   }
 
@@ -537,42 +528,49 @@ export function getDefaultFeeTiersWithData({
       value: defaultFeeTiersForChain[FeeAmount.LOWEST],
       title: t(`fee.bestForVeryStable`),
       selectionPercent: feeTierData[FeeAmount.LOWEST]?.percentage,
+      tvl: feeTierData[FeeAmount.LOWEST]?.tvl,
     },
     {
       tier: FeeAmount.LOW_200,
       value: defaultFeeTiersForChain[FeeAmount.LOW_200],
       title: '',
       selectionPercent: feeTierData[FeeAmount.LOW_200]?.percentage,
+      tvl: feeTierData[FeeAmount.LOW_200]?.tvl,
     },
     {
       tier: FeeAmount.LOW_300,
       value: defaultFeeTiersForChain[FeeAmount.LOW_300],
       title: '',
       selectionPercent: feeTierData[FeeAmount.LOW_300]?.percentage,
+      tvl: feeTierData[FeeAmount.LOW_300]?.tvl,
     },
     {
       tier: FeeAmount.LOW_400,
       value: defaultFeeTiersForChain[FeeAmount.LOW_400],
       title: '',
       selectionPercent: feeTierData[FeeAmount.LOW_400]?.percentage,
+      tvl: feeTierData[FeeAmount.LOW_400]?.tvl,
     },
     {
       tier: FeeAmount.LOW,
       value: defaultFeeTiersForChain[FeeAmount.LOW],
       title: t(`fee.bestForStablePairs`),
       selectionPercent: feeTierData[FeeAmount.LOW]?.percentage,
+      tvl: feeTierData[FeeAmount.LOW]?.tvl,
     },
     {
       tier: FeeAmount.MEDIUM,
       value: defaultFeeTiersForChain[FeeAmount.MEDIUM],
       title: t(`fee.bestForMost`),
       selectionPercent: feeTierData[FeeAmount.MEDIUM]?.percentage,
+      tvl: feeTierData[FeeAmount.MEDIUM]?.tvl,
     },
     {
       tier: FeeAmount.HIGH,
       value: defaultFeeTiersForChain[FeeAmount.HIGH],
       title: t(`fee.bestForExotic`),
       selectionPercent: feeTierData[FeeAmount.HIGH]?.percentage,
+      tvl: feeTierData[FeeAmount.HIGH]?.tvl,
     },
   ] as const
 

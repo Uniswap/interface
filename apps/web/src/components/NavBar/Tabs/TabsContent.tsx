@@ -24,7 +24,7 @@ export type TabsItem = MenuItem & {
 
 export const useTabsContent = (): TabsSection[] => {
   const { t } = useTranslation()
-  const isV4EverywhereEnabled = useFeatureFlag(FeatureFlags.V4Everywhere)
+  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
   const { pathname } = useLocation()
   const theme = useTheme()
 
@@ -81,19 +81,19 @@ export const useTabsContent = (): TabsSection[] => {
     },
     {
       title: t('common.pool'),
-      href: isV4EverywhereEnabled ? '/positions' : '/pool',
+      href: isLPRedesignEnabled ? '/positions' : '/pool',
       isActive: pathname.startsWith('/pool'),
       items: [
         {
           label: t('nav.tabs.viewPositions'),
           quickKey: 'V',
-          href: isV4EverywhereEnabled ? '/positions' : '/pool',
+          href: isLPRedesignEnabled ? '/positions' : '/pool',
           internal: true,
         },
         {
           label: t('nav.tabs.createPosition'),
           quickKey: 'V',
-          href: isV4EverywhereEnabled ? '/positions/create' : '/add',
+          href: isLPRedesignEnabled ? '/positions/create' : '/add',
           internal: true,
         },
       ],

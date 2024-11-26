@@ -34,12 +34,12 @@ function getPositionKey(position: PositionInfo) {
 }
 
 export default function Pools({ account }: { account: string }) {
-  const isV4EverywhereEnabled = useFeatureFlag(FeatureFlags.V4Everywhere)
+  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
 
   const { data, isLoading } = useGetPositionsQuery({
     address: account,
     positionStatuses: [PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE],
-    protocolVersions: isV4EverywhereEnabled
+    protocolVersions: isLPRedesignEnabled
       ? [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4]
       : [ProtocolVersion.V2, ProtocolVersion.V3],
   })
@@ -47,7 +47,7 @@ export default function Pools({ account }: { account: string }) {
   const { data: closedData } = useGetPositionsQuery({
     address: account,
     positionStatuses: [PositionStatus.CLOSED],
-    protocolVersions: isV4EverywhereEnabled
+    protocolVersions: isLPRedesignEnabled
       ? [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4]
       : [ProtocolVersion.V2, ProtocolVersion.V3],
   })
@@ -92,7 +92,7 @@ export default function Pools({ account }: { account: string }) {
 }
 
 function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
-  const isV4EverywhereEnabled = useFeatureFlag(FeatureFlags.V4Everywhere)
+  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
 
   const { tokenId, chainId, currency0Amount, currency1Amount } = positionInfo
   const token0 = currency0Amount.currency
@@ -109,13 +109,13 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
 
     accountDrawer.close()
 
-    const positionUrl = isV4EverywhereEnabled
+    const positionUrl = isLPRedesignEnabled
       ? getPositionUrl(positionInfo)
       : positionInfo.version === ProtocolVersion.V3
         ? '/pool/' + tokenId
         : '/pools/v2'
     navigate(positionUrl)
-  }, [account.chainId, chainId, switchChain, accountDrawer, navigate, tokenId, isV4EverywhereEnabled, positionInfo])
+  }, [account.chainId, chainId, switchChain, accountDrawer, navigate, tokenId, isLPRedesignEnabled, positionInfo])
   const analyticsEventProperties = useMemo(
     () => ({
       chain_id: chainId,

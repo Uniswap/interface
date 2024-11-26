@@ -13,7 +13,7 @@ import { ClickableStyle, ClickableTamaguiStyle, EllipsisTamaguiStyle, ThemedText
 import { Z_INDEX } from 'theme/zIndex'
 import { Anchor, Flex, Text, View, styled } from 'ui/src'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useTranslation } from 'uniswap/src/i18n'

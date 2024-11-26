@@ -7,7 +7,8 @@ import * as ensHooks from 'uniswap/src/features/ens/api'
 import * as unitagHooks from 'uniswap/src/features/unitags/hooks'
 import { ON_PRESS_EVENT_PAYLOAD, SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
+import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
 import { preloadedWalletReducerState, signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 const mockedNavigation = {

@@ -30,22 +30,17 @@ export function usePoolPriceChartData(
   currencyB: OptionalCurrency,
   protocolVersion: ProtocolVersion,
   sortedCurrencyAAddress: string,
-  isReversed: boolean,
 ): ChartQueryResult<PriceChartData, ChartType.PRICE> {
-  const { data, loading } = usePoolPriceHistoryQuery({ variables })
+  const { data, loading } = usePoolPriceHistoryQuery({ variables, skip: !variables?.addressOrId })
 
   return useMemo(() => {
     const { priceHistory } = data?.v2Pair ?? data?.v3Pool ?? {}
-    const referenceToken = isReversed ? currencyA : currencyB
 
     const entries =
       priceHistory
         ?.filter((price): price is TimestampedPoolPrice => price !== null)
         .map((price) => {
-          const value = isSameAddress(
-            sortedCurrencyAAddress,
-            getCurrencyAddressWithWrap(referenceToken, protocolVersion),
-          )
+          const value = isSameAddress(sortedCurrencyAAddress, getCurrencyAddressWithWrap(currencyA, protocolVersion))
             ? price?.token0Price
             : price?.token1Price
 
@@ -64,5 +59,5 @@ export function usePoolPriceChartData(
     const dataQuality = loading || !priceHistory || !priceHistory.length ? DataQuality.INVALID : DataQuality.VALID
 
     return { chartType: ChartType.PRICE, entries, loading, dataQuality }
-  }, [data?.v2Pair, data?.v3Pool, isReversed, loading, currencyA, currencyB, sortedCurrencyAAddress, protocolVersion])
+  }, [data?.v2Pair, data?.v3Pool, loading, currencyA, sortedCurrencyAAddress, protocolVersion])
 }

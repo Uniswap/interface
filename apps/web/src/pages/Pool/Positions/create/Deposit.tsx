@@ -21,9 +21,15 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
   const { derivedPriceRangeInfo } = usePriceRangeContext()
   const {
     setDepositState,
-    derivedDepositInfo: { formattedAmounts, currencyAmounts, currencyAmountsUSDValue, currencyBalances, error },
+    derivedDepositInfo: {
+      formattedAmounts,
+      currencyAmounts,
+      currencyAmountsUSDValue,
+      currencyBalances,
+      error: inputError,
+    },
   } = useDepositContext()
-  const txContext = useCreateTxContext()
+  const { txInfo, error: dataFetchingError } = useCreateTxContext()
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
 
   const handleUserInput = (field: PositionField, newValue: string) => {
@@ -54,7 +60,7 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
 
   const { deposit0Disabled, deposit1Disabled } = derivedPriceRangeInfo
 
-  const disabled = !!error || !txContext?.txRequest
+  const disabled = !!inputError || !txInfo?.txRequest
 
   return (
     <>
@@ -91,10 +97,12 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
             onPress={handleReview}
             disabled={disabled}
             buttonKey="Position-Create-DepositButton"
-            loading={Boolean(!txContext?.txRequest && currencyAmounts?.TOKEN0 && currencyAmounts.TOKEN1)}
+            loading={Boolean(
+              !dataFetchingError && !txInfo?.txRequest && currencyAmounts?.TOKEN0 && currencyAmounts.TOKEN1,
+            )}
           >
             <Text variant="buttonLabel1" color="$neutralContrast">
-              {error ? error : <Trans i18nKey="swap.button.review" />}
+              {inputError ? inputError : <Trans i18nKey="swap.button.review" />}
             </Text>
           </LoaderButton>
         ) : (

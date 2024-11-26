@@ -10,6 +10,7 @@ import {
 } from 'uniswap/src/features/chains/chainInfo'
 import {
   ALL_CHAIN_IDS,
+  EnabledChainsInfo,
   GqlChainId,
   NetworkLayer,
   SUPPORTED_CHAIN_IDS,
@@ -201,12 +202,7 @@ export function getEnabledChains({
   isTestnetModeEnabled: boolean
   featureFlaggedChainIds: UniverseChainId[]
   connectedWalletChainIds?: UniverseChainId[]
-}): {
-  chains: UniverseChainId[]
-  gqlChains: GqlChainId[]
-  defaultChainId: UniverseChainId
-  isTestnetModeEnabled: boolean
-} {
+}): EnabledChainsInfo {
   if (isTestnetModeEnabled) {
     const supportedTestnetChainIds = SUPPORTED_TESTNET_CHAIN_IDS.filter(
       (chainId) =>

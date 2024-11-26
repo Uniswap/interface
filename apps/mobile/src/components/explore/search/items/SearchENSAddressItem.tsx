@@ -7,7 +7,8 @@ import { useENSAvatar, useENSName } from 'uniswap/src/features/ens/api'
 import { getCompletedENSName } from 'uniswap/src/features/ens/useENS'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import { ENSAddressSearchResult } from 'uniswap/src/features/search/SearchResult'
-import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
+import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 
 type SearchENSAddressItemProps = {

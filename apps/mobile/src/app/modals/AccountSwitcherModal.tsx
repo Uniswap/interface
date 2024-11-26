@@ -276,7 +276,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
       <Flex maxHeight={fullScreenContentHeight / 2}>
         <AccountList accounts={accountsWithoutActive} isVisible={modalState.isOpen} onPress={onPressAccount} />
       </Flex>
-      <TouchableArea hapticFeedback mt="$spacing16" onPress={onPressAddWallet}>
+      <TouchableArea mt="$spacing16" onPress={onPressAddWallet}>
         <Flex row alignItems="center" gap="$spacing8" ml="$spacing24">
           <PlusCircle />
           <Text color="$neutral2" variant="buttonLabel2">

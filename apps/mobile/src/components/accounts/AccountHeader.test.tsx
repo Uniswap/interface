@@ -9,7 +9,8 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
+import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
 import { ACCOUNT, preloadedWalletPackageState, signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 const preloadedState = preloadedWalletPackageState({ account: ACCOUNT })

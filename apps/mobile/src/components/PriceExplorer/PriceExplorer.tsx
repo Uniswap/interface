@@ -11,12 +11,13 @@ import { useLineChartPrice } from 'src/components/PriceExplorer/usePrice'
 import { PriceNumberOfDigits, TokenSpotData, useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { Loader } from 'src/components/loading/loaders'
+import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady'
-import { Flex, SegmentedControl, Text, useHapticFeedback } from 'ui/src'
+import { Flex, SegmentedControl, Text } from 'ui/src'
 import GraphCurve from 'ui/src/assets/backgrounds/graph-curve.svg'
 import { spacing } from 'ui/src/theme'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -110,9 +111,10 @@ export const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Eleme
   const additionalPadding = shouldShowAnimatedDot ? 40 : 0
 
   const { lastPricePoint, convertedPriceHistory } = useMemo(() => {
-    const priceHistory = data?.priceHistory?.map((point) => {
-      return { ...point, value: point.value * conversionRate }
-    })
+    const priceHistory =
+      data?.priceHistory?.map((point) => {
+        return { ...point, value: point.value * conversionRate }
+      }) ?? []
 
     const lastPoint = priceHistory ? priceHistory.length - 1 : 0
 

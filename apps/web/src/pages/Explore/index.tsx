@@ -92,7 +92,7 @@ const HeaderTab = tamaguiStyled(Text, {
 const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const tabNavRef = useRef<HTMLDivElement>(null)
   const resetManualOutage = useResetAtom(manualChainOutageAtom)
-  const v4EverywhereEnabled = useFeatureFlag(FeatureFlags.V4Everywhere)
+  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
 
   const initialKey: number = useMemo(() => {
     const key = initialTab && Pages.findIndex((page) => page.key === initialTab)
@@ -108,7 +108,9 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
       const offsetTop = tabNavRef.current.getBoundingClientRect().top + window.scrollY
       window.scrollTo({ top: offsetTop - 90, behavior: 'smooth' })
     }
-  }, [initialTab])
+    // scroll to tab navbar on initial page mount only
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const [currentTab, setCurrentTab] = useState(initialKey)
 
@@ -179,6 +181,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
               data-testid="explore-navbar"
             >
               {Pages.map(({ title, loggingElementName, key }, index) => {
+                const url = getTokenExploreURL({ tab: key, chain: chainInfo?.backendChain.chain })
                 return (
                   <Trace
                     logPress
@@ -186,14 +189,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                     element={loggingElementName}
                     key={index}
                   >
-                    <HeaderTab
-                      onPress={() => {
-                        // Update tab and only replace url when navigating from the header nav
-                        setCurrentTab(index)
-                      }}
-                      active={currentTab === index}
-                      key={key}
-                    >
+                    <HeaderTab onPress={() => navigate(url)} active={currentTab === index} key={key}>
                       {title}
                     </HeaderTab>
                   </Trace>
@@ -201,7 +197,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
               })}
             </Flex>
             <Flex row gap="$spacing8" height="$spacing40" justifyContent="flex-start">
-              {currentKey === ExploreTab.Pools && v4EverywhereEnabled && (
+              {currentKey === ExploreTab.Pools && isLPRedesignEnabled && (
                 <Button
                   size="small"
                   backgroundColor="$accent3"

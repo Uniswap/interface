@@ -18,8 +18,10 @@ import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gati
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getBaseTradeAnalyticsPropertiesFromSwapInfo } from 'uniswap/src/features/transactions/swap/analytics'
+import { getTradeSettingsDeadline } from 'uniswap/src/features/transactions/swap/form/utils'
 import { usePermit2SignatureWithData } from 'uniswap/src/features/transactions/swap/hooks/usePermit2Signature'
 import { useWrapTransactionRequest } from 'uniswap/src/features/transactions/swap/hooks/useWrapTransactionRequest'
+import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { SwapGasFeeEstimation } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -70,8 +72,9 @@ export function useTransactionRequestInfo({
   const activeGasStrategy = useActiveGasStrategy(derivedSwapInfo.chainId, 'general')
   const shadowGasStrategies = useShadowGasStrategies(derivedSwapInfo.chainId, 'general')
   const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
+  const swapSettings = useSwapSettingsContext()
 
-  const { trade: tradeWithStatus, customDeadline } = derivedSwapInfo
+  const { trade: tradeWithStatus } = derivedSwapInfo
   const { trade } = tradeWithStatus || { trade: undefined }
 
   const isBridgeTrade = trade?.routing === Routing.BRIDGE
@@ -110,9 +113,7 @@ export function useTransactionRequestInfo({
       slippage: tradeWithStatus.trade?.slippageTolerance,
     }
 
-    // if custom deadline is set (in minutes), convert to unix timestamp format from now
-    const deadlineSeconds = (customDeadline ?? 0) * 60
-    const deadline = customDeadline ? Math.floor(Date.now() / 1000) + deadlineSeconds : undefined
+    const deadline = getTradeSettingsDeadline(swapSettings.customDeadline)
 
     const swapArgs: WithV4Flag<CreateSwapRequest> = {
       quote,
@@ -129,7 +130,7 @@ export function useTransactionRequestInfo({
     return swapArgs
   }, [
     activeGasStrategy,
-    customDeadline,
+    swapSettings.customDeadline,
     isBridgeTrade,
     permitData,
     shadowGasStrategies,
@@ -229,20 +230,20 @@ export function useTransactionRequestInfo({
 
     if (gasEstimateError) {
       logger.warn('useTransactionRequestInfo', 'useTransactionRequestInfo', UNKNOWN_SIM_ERROR, {
-        ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter, trace }),
+        ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, swapSettings, formatter, trace }),
         error: gasEstimateError,
         txRequest: data?.swap,
       })
 
       if (!isMobileApp) {
         sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
-          ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter, trace }),
+          ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, swapSettings, formatter, trace }),
           error: gasEstimateError,
           txRequest: data?.swap,
         })
       }
     }
-  }, [data?.swap, derivedSwapInfo, formatter, gasEstimateError, swapRequestArgs, trade, trace])
+  }, [data?.swap, swapSettings, derivedSwapInfo, formatter, gasEstimateError, swapRequestArgs, trade, trace])
 
   const gasEstimate: SwapGasFeeEstimation = useMemo(() => {
     const activeGasEstimate = data?.gasEstimates?.find((e) => areEqualGasStrategies(e.strategy, activeGasStrategy))

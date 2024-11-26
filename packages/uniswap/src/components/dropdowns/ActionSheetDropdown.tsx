@@ -2,17 +2,7 @@ import { PropsWithChildren, memo, useEffect, useMemo, useRef, useState } from 'r
 /* eslint-disable-next-line no-restricted-imports */
 import { GestureResponderEvent, type View } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
-import {
-  AnimatePresence,
-  Flex,
-  FlexProps,
-  ImpactFeedbackStyle,
-  Portal,
-  TouchableArea,
-  isWeb,
-  styled,
-  useIsDarkMode,
-} from 'ui/src'
+import { AnimatePresence, Flex, FlexProps, Portal, TouchableArea, isWeb, styled, useIsDarkMode } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing, zIndices } from 'ui/src/theme'
@@ -133,12 +123,7 @@ export function ActionSheetDropdown({
 
   return (
     <>
-      <TouchableArea
-        hapticFeedback
-        hapticStyle={ImpactFeedbackStyle.Light}
-        width={styles?.width}
-        onPress={openDropdown}
-      >
+      <TouchableArea width={styles?.width} onPress={openDropdown}>
         {/* collapsable property prevents removing view on Android. Without this property we were
         getting undefined in measureInWindow callback. (https://reactnative.dev/docs/view.html#collapsable-android) */}
         <Flex
@@ -369,7 +354,6 @@ function DropdownContent({
               {options.map(({ key, onPress, render }: MenuItemProp) => (
                 <TouchableArea
                   key={key}
-                  hapticFeedback
                   hoverable
                   borderRadius="$rounded8"
                   onPress={(event) => {

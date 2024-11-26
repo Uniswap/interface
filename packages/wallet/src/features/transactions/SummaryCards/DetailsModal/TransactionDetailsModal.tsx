@@ -80,17 +80,19 @@ export function TransactionDetailsHeader({
           </Text>
         </Flex>
       </Flex>
-      {isWeb ? (
-        <ContextMenu closeOnClick itemId={transactionDetails.id} menuOptions={menuItems} onLeftClick>
-          <TouchableArea hoverable borderRadius="$roundedFull" p="$spacing4">
+      {menuItems.length > 0 ? (
+        isWeb ? (
+          <ContextMenu closeOnClick itemId={transactionDetails.id} menuOptions={menuItems} onLeftClick>
+            <TouchableArea hoverable borderRadius="$roundedFull" p="$spacing4">
+              <Ellipsis color="$neutral2" size="$icon.20" />
+            </TouchableArea>
+          </ContextMenu>
+        ) : (
+          <TouchableArea onPress={openActionsModal}>
             <Ellipsis color="$neutral2" size="$icon.20" />
           </TouchableArea>
-        </ContextMenu>
-      ) : (
-        <TouchableArea onPress={openActionsModal}>
-          <Ellipsis color="$neutral2" size="$icon.20" />
-        </TouchableArea>
-      )}
+        )
+      ) : null}
     </Flex>
   )
 }

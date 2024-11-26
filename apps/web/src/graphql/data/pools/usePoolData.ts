@@ -8,7 +8,7 @@ import {
   useV3PoolQuery,
   useV4PoolQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -81,7 +81,7 @@ export function usePoolData(
 } {
   const { defaultChainId } = useEnabledChains()
   const chain = toGraphQLChain(chainId ?? defaultChainId)
-  const v4EverywhereEnabled = useFeatureFlag(FeatureFlags.V4Everywhere)
+  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
   const {
     loading: loadingV4,
     error: errorV4,
@@ -89,7 +89,7 @@ export function usePoolData(
   } = useV4PoolQuery({
     variables: { chain, poolId: poolIdOrAddress },
     errorPolicy: 'all',
-    skip: !v4EverywhereEnabled,
+    skip: !isV4DataEnabled,
   })
   const {
     loading: loadingV3,

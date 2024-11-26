@@ -38,7 +38,8 @@ import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
 import { Switch, Text } from 'ui/src'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
-import { useEnabledChains, useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -69,8 +70,8 @@ export default function RemoveLiquidityV3() {
   }, [tokenId])
 
   const { position, loading } = useV3PositionFromTokenId(parsedTokenId ?? undefined)
-  const isV4EverywhereEnabled = useFeatureFlag(FeatureFlags.V4Everywhere)
-  if (isV4EverywhereEnabled) {
+  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
+  if (isLPRedesignEnabled) {
     const chainName = toGraphQLChain(chainId ?? defaultChainId).toLowerCase()
     return <Navigate to={`/positions/v3/${chainName}/${tokenId}`} replace />
   }

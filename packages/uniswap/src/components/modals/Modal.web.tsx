@@ -25,6 +25,7 @@ export function Modal({
   paddingX,
   paddingY,
   analyticsProperties,
+  skipLogImpression,
 }: ModalProps): JSX.Element {
   const [fullyClosed, setFullyClosed] = useState(false)
 
@@ -53,7 +54,7 @@ export function Modal({
   const ModalComponent = bottomAttachment ? WebModalWithBottomAttachment : AdaptiveWebModal
 
   return (
-    <Trace logImpression={isModalOpen} modal={name} properties={analyticsProperties}>
+    <Trace logImpression={skipLogImpression ? false : isModalOpen} modal={name} properties={analyticsProperties}>
       <ModalComponent
         bottomAttachment={bottomAttachment}
         shadowOpacity={isExtension ? 0 : undefined}

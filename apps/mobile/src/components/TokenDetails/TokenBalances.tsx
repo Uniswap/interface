@@ -7,7 +7,7 @@ import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { InlineNetworkPill } from 'uniswap/src/components/network/NetworkPill'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -137,7 +137,7 @@ function OtherChainBalance({
 
   return (
     <Trace logPress eventOnTrigger={MobileEventName.TokenDetailsOtherChainButtonPressed}>
-      <TouchableArea hapticFeedback onPress={(): void => navigate(balance.currencyInfo.currencyId)}>
+      <TouchableArea onPress={(): void => navigate(balance.currencyInfo.currencyId)}>
         <Flex row alignItems="center" justifyContent="space-between">
           <Flex row alignItems="center" gap="$spacing4">
             <TokenLogo

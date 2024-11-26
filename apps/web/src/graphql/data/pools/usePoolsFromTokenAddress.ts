@@ -12,7 +12,7 @@ import {
   useTopV3PoolsQuery,
   useTopV4PoolsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -27,7 +27,7 @@ export function usePoolsFromTokenAddress(
 ) {
   const { defaultChainId } = useEnabledChains()
   const chain = toGraphQLChain(chainId ?? defaultChainId)
-  const v4Enabled = useFeatureFlag(FeatureFlags.V4Everywhere)
+  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
   const {
     loading: loadingV4,
     error: errorV4,
@@ -39,7 +39,7 @@ export function usePoolsFromTokenAddress(
       tokenAddress,
       chain,
     },
-    skip: !v4Enabled,
+    skip: !isV4DataEnabled,
   })
   const {
     loading: loadingV3,
@@ -67,7 +67,7 @@ export function usePoolsFromTokenAddress(
     },
     skip: !chainId,
   })
-  const loading = (loadingV4 && v4Enabled) || loadingV3 || loadingV2
+  const loading = (loadingV4 && isV4DataEnabled) || loadingV3 || loadingV2
 
   const loadingMoreV4 = useRef(false)
   const loadingMoreV3 = useRef(false)
@@ -75,7 +75,7 @@ export function usePoolsFromTokenAddress(
   const sizeRef = useRef(DEFAULT_QUERY_SIZE)
   const loadMore = useCallback(
     ({ onComplete }: { onComplete?: () => void }) => {
-      if ((loadingMoreV4.current && v4Enabled) || loadingMoreV3.current || loadingMoreV2.current) {
+      if ((loadingMoreV4.current && isV4DataEnabled) || loadingMoreV3.current || loadingMoreV2.current) {
         return
       }
       loadingMoreV4.current = true
@@ -137,11 +137,19 @@ export function usePoolsFromTokenAddress(
         },
       })
     },
-    [dataV2?.topV2Pairs, dataV3?.topV3Pools, dataV4?.topV4Pools, fetchMoreV2, fetchMoreV3, fetchMoreV4, v4Enabled],
+    [
+      dataV2?.topV2Pairs,
+      dataV3?.topV3Pools,
+      dataV4?.topV4Pools,
+      fetchMoreV2,
+      fetchMoreV3,
+      fetchMoreV4,
+      isV4DataEnabled,
+    ],
   )
 
   return useMemo(() => {
-    const topV4Pools: TablePool[] = v4Enabled
+    const topV4Pools: TablePool[] = isV4DataEnabled
       ? dataV4?.topV4Pools?.map((pool) => {
           return {
             hash: pool.poolId,
@@ -201,6 +209,6 @@ export function usePoolsFromTokenAddress(
     loadMore,
     loading,
     sortState,
-    v4Enabled,
+    isV4DataEnabled,
   ])
 }

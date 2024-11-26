@@ -14,7 +14,6 @@
     "@tamagui/theme-base": "1.108.4",
     "@testing-library/react-hooks": "7.0.2",
     "ethers": "5.7.2",
-    "expo-haptics": "12.8.1",
     "expo-linear-gradient": "12.7.2",
     "i18next": "23.10.0",
     "qrcode": "1.5.1",

@@ -13,6 +13,7 @@ import { PositionField } from 'types/position'
 import { CreatePositionTxAndGasInfo } from 'uniswap/src/features/transactions/liquidity/types'
 
 export const CreatePositionContext = React.createContext<CreatePositionContextType>({
+  reset: () => undefined,
   step: PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER,
   setStep: () => undefined,
   positionState: DEFAULT_POSITION_STATE,
@@ -35,7 +36,7 @@ export const useCreatePositionContext = () => {
   return useContext(CreatePositionContext)
 }
 
-export const DEFAULT_PRICE_RANGE_STATE_CREATING_POOL: PriceRangeState = {
+export const DEFAULT_PRICE_RANGE_STATE: PriceRangeState = {
   priceInverted: false,
   fullRange: true,
   minPrice: '',
@@ -44,17 +45,9 @@ export const DEFAULT_PRICE_RANGE_STATE_CREATING_POOL: PriceRangeState = {
   initialPriceInverted: false,
 }
 
-export const DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS: PriceRangeState = {
-  priceInverted: false,
-  fullRange: false,
-  minPrice: undefined,
-  maxPrice: undefined,
-  initialPrice: '',
-  initialPriceInverted: false,
-}
-
 export const PriceRangeContext = React.createContext<PriceRangeContextType>({
-  priceRangeState: DEFAULT_PRICE_RANGE_STATE_CREATING_POOL,
+  reset: () => undefined,
+  priceRangeState: DEFAULT_PRICE_RANGE_STATE,
   setPriceRangeState: () => undefined,
   derivedPriceRangeInfo: {
     protocolVersion: ProtocolVersion.V4,
@@ -83,6 +76,7 @@ export const DEFAULT_DEPOSIT_STATE: DepositState = {
 }
 
 export const DepositContext = React.createContext<DepositContextType>({
+  reset: () => undefined,
   depositState: DEFAULT_DEPOSIT_STATE,
   setDepositState: () => undefined,
   derivedDepositInfo: {},
@@ -92,7 +86,11 @@ export const useDepositContext = () => {
   return useContext(DepositContext)
 }
 
-export const CreateTxContext = React.createContext<CreatePositionTxAndGasInfo | undefined>(undefined)
+export const CreateTxContext = React.createContext<{
+  txInfo?: CreatePositionTxAndGasInfo
+  error?: boolean
+  refetch?: () => void
+}>({})
 
 export const useCreateTxContext = () => {
   return useContext(CreateTxContext)

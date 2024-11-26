@@ -34,6 +34,7 @@ type WarningModalContentProps = {
   // `undefined` means we use the default color, `false` means no background color
   backgroundIconColor?: ColorValue | false
   maxWidth?: number
+  analyticsProperties?: Record<string, unknown>
 }
 
 export type WarningModalProps = {
@@ -61,6 +62,7 @@ export function WarningModalContent({
   maxWidth,
   hideHandlebar = false,
   backgroundIconColor,
+  analyticsProperties,
 }: PropsWithChildren<WarningModalContentProps>): JSX.Element {
   const colors = useSporeColors()
   const alertColor = getAlertColor(severity)
@@ -107,7 +109,7 @@ export function WarningModalContent({
       {children}
       <Flex centered row gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'} width="100%">
         {rejectText && (
-          <Trace logPress element={ElementName.BackButton} modal={modalName}>
+          <Trace logPress element={ElementName.BackButton} modal={modalName} properties={analyticsProperties}>
             <Button
               flex={1}
               flexBasis={1}
@@ -119,7 +121,7 @@ export function WarningModalContent({
           </Trace>
         )}
         {acknowledgeText && (
-          <Trace logPress element={ElementName.Confirm} modal={modalName}>
+          <Trace logPress element={ElementName.Confirm} modal={modalName} properties={analyticsProperties}>
             <Button
               flex={1}
               flexBasis={1}

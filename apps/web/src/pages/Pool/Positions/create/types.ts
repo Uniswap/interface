@@ -6,8 +6,6 @@ import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { Dispatch, SetStateAction } from 'react'
 import { PositionField } from 'types/position'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export type FeeData = {
   feeAmount: number
@@ -39,9 +37,7 @@ export interface PositionState {
 }
 
 export const DEFAULT_POSITION_STATE: PositionState = {
-  currencyInputs: {
-    [PositionField.TOKEN0]: nativeOnChain(UniverseChainId.Mainnet),
-  },
+  currencyInputs: {},
   fee: { feeAmount: FeeAmount.MEDIUM, tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM] },
   hook: undefined,
   protocolVersion: ProtocolVersion.V4,
@@ -52,6 +48,7 @@ type BaseCreatePositionInfo = {
   protocolVersion: ProtocolVersion
   currencies: [OptionalCurrency, OptionalCurrency]
   creatingPoolOrPair?: boolean
+  poolId?: string
   poolOrPairLoading?: boolean
   isPoolOutOfSync: boolean
 }
@@ -79,6 +76,7 @@ export interface DynamicFeeTierSpeedbumpData {
 }
 
 export type CreatePositionContextType = {
+  reset: () => void
   step: PositionFlowStep
   setStep: Dispatch<SetStateAction<PositionFlowStep>>
   positionState: PositionState
@@ -144,6 +142,7 @@ export type V2PriceRangeInfo = BasePriceRangeInfo & {
 export type PriceRangeInfo = V4PriceRangeInfo | V3PriceRangeInfo | V2PriceRangeInfo
 
 export type PriceRangeContextType = {
+  reset: () => void
   priceRangeState: PriceRangeState
   setPriceRangeState: Dispatch<SetStateAction<PriceRangeState>>
   derivedPriceRangeInfo: PriceRangeInfo

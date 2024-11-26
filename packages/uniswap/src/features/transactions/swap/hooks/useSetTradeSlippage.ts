@@ -4,6 +4,7 @@ import { isMainnetChainId, toSupportedChainId } from 'uniswap/src/features/chain
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { Trade, TradeWithStatus } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
@@ -11,27 +12,28 @@ import {
   transformTradingApiResponseToTrade,
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 
-export function useSetTradeSlippage(
-  trade: TradeWithStatus,
-  userSetSlippage?: number,
-): { trade: TradeWithStatus; autoSlippageTolerance: number } {
+export function useSetTradeSlippage(trade: TradeWithStatus, userSetSlippage?: number): { trade: TradeWithStatus } {
   // Always calculate and return autoSlippageTolerance so the UI can warn user when custom slippage is set higher than auto slippage
   const autoSlippageTolerance = useCalculateAutoSlippage(trade?.trade)
+  const { updateSwapSettings } = useSwapSettingsContext()
 
   return useMemo(() => {
     if (trade.trade && isBridge(trade.trade)) {
       // Bridge trades don't have slippage
-      return { trade, autoSlippageTolerance: 0 }
+      updateSwapSettings({ autoSlippageTolerance: 0 })
+      return { trade }
     }
     // If the user has set a custom slippage, use that in the trade instead of the auto-slippage
     if (!trade.trade || userSetSlippage) {
-      return { trade, autoSlippageTolerance }
+      updateSwapSettings({ autoSlippageTolerance })
+      return { trade }
     }
 
     const { isLoading, error, isFetching, indicativeTrade, isIndicativeLoading } = trade
     const { tradeType, deadline, quote, inputAmount, outputAmount } = trade.trade
 
     if (!quote) {
+      updateSwapSettings({ autoSlippageTolerance })
       return { trade, autoSlippageTolerance }
     }
 
@@ -56,7 +58,7 @@ export function useSetTradeSlippage(
       },
       autoSlippageTolerance,
     }
-  }, [trade, userSetSlippage, autoSlippageTolerance])
+  }, [trade, userSetSlippage, updateSwapSettings, autoSlippageTolerance])
 }
 
 /*

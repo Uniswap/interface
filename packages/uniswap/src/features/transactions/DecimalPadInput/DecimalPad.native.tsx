@@ -2,7 +2,7 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { I18nManager, LayoutChangeEvent } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated'
-import { Flex, Text, useHapticFeedback } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { LeftArrow, RightArrow } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
@@ -179,7 +179,6 @@ const KeyButton = memo(function KeyButton({
   onLongPressEnd,
 }: KeyButtonProps): JSX.Element {
   const { decimalSeparator } = useAppFiatCurrencyInfo()
-  const { hapticFeedback } = useHapticFeedback()
 
   const scale = useSharedValue(1)
   const opacity = useSharedValue(1)
@@ -188,8 +187,7 @@ const KeyButton = memo(function KeyButton({
     onPress?.(label, action)
     scale.value = withSequence(withTiming(1.3, animationOptions), withTiming(1, animationOptions))
     opacity.value = withSequence(withTiming(0.75, animationOptions), withTiming(1, animationOptions))
-    await hapticFeedback.impact()
-  }, [action, hapticFeedback, label, onPress, opacity, scale])
+  }, [action, label, onPress, opacity, scale])
 
   const handleLongPressStart = useCallback((): void => {
     onLongPressStart?.(label, action)

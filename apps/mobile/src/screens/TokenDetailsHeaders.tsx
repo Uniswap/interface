@@ -102,7 +102,6 @@ export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Elemen
     <AnimatedFlex row alignItems="center" entering={FadeIn} gap="$spacing16">
       <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
         <TouchableArea
-          hapticFeedback
           hitSlop={{ right: 5, left: 20, top: 20, bottom: 20 }}
           style={{ padding: spacing.spacing8, marginRight: -spacing.spacing8 }}
           testID={TestID.TokenDetailsMoreButton}

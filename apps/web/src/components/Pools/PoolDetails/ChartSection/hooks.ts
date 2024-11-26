@@ -18,10 +18,9 @@ export function usePDPPriceChartData(
   poolData: PoolData | undefined,
   tokenA: Token | undefined,
   tokenB: Token | undefined,
-  isReversed: boolean,
   protocolVersion: ProtocolVersion,
 ): ChartQueryResult<PriceChartData, ChartType.PRICE> {
-  return usePoolPriceChartData(variables, tokenA, tokenB, protocolVersion, poolData?.token0?.address ?? '', isReversed)
+  return usePoolPriceChartData(variables, tokenA, tokenB, protocolVersion, poolData?.token0?.address ?? '')
 }
 
 export function usePDPVolumeChartData(

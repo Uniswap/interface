@@ -3,7 +3,7 @@ import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
 import { openModal } from 'src/features/modals/modalSlice'
-import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useIsDarkMode } from 'ui/src'
+import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
@@ -31,7 +31,7 @@ function CEXItemWrapper({
   const logoUrl = getServiceProviderLogo(serviceProvider.logos, isDarkMode)
 
   return (
-    <TouchableArea hapticFeedback hapticStyle={ImpactFeedbackStyle.Light} onPress={onPress}>
+    <TouchableArea onPress={onPress}>
       <Flex
         fill
         row

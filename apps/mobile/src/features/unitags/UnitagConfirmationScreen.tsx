@@ -104,7 +104,6 @@ export function UnitagConfirmationScreen({
             {elementsToAnimate.map(({ element, coordinates }, index) => (
               <AnimateInOrder
                 key={index}
-                hapticOnEnter
                 index={index + 3}
                 position="absolute"
                 {...getInsetPropsForCoordinates(boxWidth, coordinates.x, coordinates.y)}
@@ -112,7 +111,7 @@ export function UnitagConfirmationScreen({
                 {element}
               </AnimateInOrder>
             ))}
-            <AnimateInOrder key="unitag" hapticOnEnter index={12}>
+            <AnimateInOrder key="unitag" index={12}>
               <UnitagWithProfilePicture address={address} profilePictureUri={profilePictureUri} unitag={unitag} />
             </AnimateInOrder>
           </AnimatePresence>

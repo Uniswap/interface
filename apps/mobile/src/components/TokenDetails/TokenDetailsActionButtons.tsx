@@ -33,7 +33,6 @@ function CTAButton({
     <Trace logPress element={element} section={SectionName.TokenDetails}>
       <Button
         fill
-        hapticFeedback
         opacity={disabled ? 0.5 : 1}
         color={tokenColor ? getContrastPassingTextColor(tokenColor) : '$white'}
         pressStyle={{ backgroundColor: validColor(opacify(60, tokenColor ?? colors.accent1.val)) }}

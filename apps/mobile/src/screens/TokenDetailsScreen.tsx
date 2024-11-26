@@ -36,7 +36,7 @@ import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { useBridgingTokenWithHighestBalance } from 'uniswap/src/features/bridging/hooks/tokens'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
 import { useIsSupportedFiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/hooks'
@@ -48,7 +48,6 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
-import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -200,8 +199,8 @@ const TokenDetailsModals = memo(function _TokenDetailsModals(): JSX.Element {
     <>
       {isTokenWarningModalOpen && currencyInfo && (
         <TokenWarningModal
+          isInfoOnlyWarning
           currencyInfo0={currencyInfo}
-          isInfoOnlyWarning={!activeTransactionType}
           isVisible={isTokenWarningModalOpen}
           closeModalOnly={onCloseTokenWarning}
           onAcknowledge={onAcknowledgeTokenWarning}
@@ -255,8 +254,6 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
   const { balance: nativeCurrencyBalance } = useOnChainNativeCurrencyBalance(chainId, activeAddress)
   const hasZeroNativeBalance = nativeCurrencyBalance && nativeCurrencyBalance.equalTo('0')
 
-  const { tokenWarningDismissed } = useDismissedTokenWarnings(isNativeCurrency ? undefined : { chainId, address })
-
   const nativeFiatOnRampCurrency = useIsSupportedFiatOnRampCurrency(
     buildCurrencyId(chainId, nativeCurrencyAddress),
     isNativeCurrency || !hasZeroNativeBalance,
@@ -282,9 +279,6 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
       if (isBlocked) {
         openTokenWarningModal()
         // show warning modal speed bump if token has a warning level and user has not dismissed
-      } else if (safetyLevel !== SafetyLevel.Verified && !tokenWarningDismissed) {
-        setActiveTransactionType(currencyField)
-        openTokenWarningModal()
       } else if (bridgingTokenWithHighestBalance && currencyField === CurrencyField.OUTPUT) {
         // When clicking "Buy", if the user has a balance in another chain, we pre-populate the input token with that token.
         setActiveTransactionType(undefined)
@@ -311,8 +305,6 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
     },
     [
       isBlocked,
-      safetyLevel,
-      tokenWarningDismissed,
       bridgingTokenWithHighestBalance,
       openTokenWarningModal,
       setActiveTransactionType,

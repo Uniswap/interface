@@ -8,11 +8,12 @@ import {
   LiquidityBarSeriesOptions,
 } from 'components/Charts/LiquidityChart/renderer'
 import { BigNumber } from 'ethers/lib/ethers'
-import { TickProcessed, usePoolActiveLiquidity } from 'hooks/usePoolTickData'
+import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
 import { ISeriesApi, UTCTimestamp } from 'lightweight-charts'
 import { useEffect, useState } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { TickProcessed } from 'utils/computeSurroundingTicks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 interface LiquidityBarChartModelParams extends ChartModelParams<LiquidityBarData>, LiquidityBarProps {}

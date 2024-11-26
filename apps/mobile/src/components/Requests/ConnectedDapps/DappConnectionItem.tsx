@@ -55,7 +55,6 @@ export function DappConnectionItem({
         >
           {isEditing ? (
             <AnimatedTouchableArea
-              hapticFeedback
               alignItems="center"
               backgroundColor="$neutral3"
               borderRadius="$roundedFull"

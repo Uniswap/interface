@@ -25,7 +25,6 @@ export function FeeOnTransferWarning({
   const formattedFeePercent = formatPercent(feePercent)
 
   const { tokenProtectionWarning } = getFeeSeverity(feeInfo.fee)
-  // These should never be null bc tokenProtectionWarning is never None
   const title = getModalHeaderText({ t, tokenProtectionWarning, tokenSymbol0: tokenSymbol }) ?? ''
   const subtitle =
     getModalSubtitleTokenWarningText({ t, tokenProtectionWarning, tokenSymbol, formattedFeePercent }) ?? ''

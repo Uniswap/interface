@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { CHART_WIDTH } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { useGetRangeDisplay } from 'components/Liquidity/hooks'
 import { PriceOrdering } from 'components/PositionListItem'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -33,7 +34,33 @@ const PrimaryText = styled(Text, {
 const SecondaryText = styled(Text, {
   color: '$neutral2',
   variant: 'body3',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
 })
+
+function WrapChildrenForMediaSize({ children }: { children: React.ReactNode }) {
+  const isScreenSize = useScreenSize()
+  const isMobile = !isScreenSize['navDropdownMobileDrawer']
+
+  if (isMobile) {
+    return (
+      <Flex row gap="$gap12">
+        {children}
+      </Flex>
+    )
+  }
+
+  return <>{children}</>
+}
+
+function FeeStat({ children }: { children: React.ReactNode }) {
+  return (
+    <Flex gap="$gap4" flex={1} flexBasis={0} $sm={{ flexBasis: 'auto' }}>
+      {children}
+    </Flex>
+  )
+}
 
 export function LiquidityPositionFeeStats({
   formattedUsdValue,
@@ -48,7 +75,6 @@ export function LiquidityPositionFeeStats({
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
   const [pricesInverted, setPricesInverted] = useState(false)
-  const screenSize = useScreenSize()
 
   const { maxPrice, minPrice, tokenASymbol, tokenBSymbol, isFullRange } = useGetRangeDisplay({
     priceOrdering,
@@ -59,20 +85,25 @@ export function LiquidityPositionFeeStats({
   })
 
   return (
-    <Flex row justifyContent="space-between" flexWrap="wrap" rowGap="$gap24">
-      <Flex gap="$gap4" flexBasis="20%" $md={{ flexBasis: '50%' }}>
-        {formattedUsdValue ? (
-          <PrimaryText>{formattedUsdValue}</PrimaryText>
-        ) : (
-          <MouseoverTooltip text={<Trans i18nKey="position.valueUnavailable" />} placement="top">
-            <PrimaryText>-</PrimaryText>
-          </MouseoverTooltip>
-        )}
-        <SecondaryText>{t('pool.position')}</SecondaryText>
-      </Flex>
-      <Flex gap="$gap4" flexBasis="20%" $md={{ flexBasis: '50%' }}>
-        {version === ProtocolVersion.V2 || !!formattedUsdFees ? (
-          <>
+    <Flex
+      row
+      justifyContent="space-between"
+      gap="$gap20"
+      $md={{ row: false, gap: '$gap24', flexDirection: 'column-reverse' }}
+    >
+      <Flex row gap="$gap20" grow $sm={{ row: false, gap: '$gap24' }}>
+        <WrapChildrenForMediaSize>
+          <FeeStat>
+            {formattedUsdValue ? (
+              <PrimaryText>{formattedUsdValue}</PrimaryText>
+            ) : (
+              <MouseoverTooltip text={<Trans i18nKey="position.valueUnavailable" />} placement="top">
+                <PrimaryText>-</PrimaryText>
+              </MouseoverTooltip>
+            )}
+            <SecondaryText>{t('pool.position')}</SecondaryText>
+          </FeeStat>
+          <FeeStat>
             {version === ProtocolVersion.V2 ? (
               <Flex row gap="$gap4" alignItems="center">
                 <Text variant="body2" color="$neutral2">
@@ -85,43 +116,33 @@ export function LiquidityPositionFeeStats({
                 </MouseoverTooltip>
               </Flex>
             ) : (
-              <PrimaryText>{formattedUsdFees}</PrimaryText>
+              <PrimaryText>{formattedUsdFees ?? '-'}</PrimaryText>
             )}
             <SecondaryText variant="body3" color="$neutral2">
               {t('common.fees')}
             </SecondaryText>
-          </>
-        ) : null}
+          </FeeStat>
+        </WrapChildrenForMediaSize>
+        <FeeStat>
+          <PrimaryText>{apr ? formatPercent(apr) : '-'}</PrimaryText>
+          <SecondaryText variant="body3" color="$neutral2">
+            {t('pool.apr')}
+          </SecondaryText>
+        </FeeStat>
       </Flex>
-      <Flex gap="$gap4" flexBasis="20%" $md={{ flexBasis: '50%' }}>
-        {!!apr && (
-          <>
-            <PrimaryText>{formatPercent(apr)}</PrimaryText>
-            <SecondaryText variant="body3" color="$neutral2">
-              {t('pool.apr')}
-            </SecondaryText>
-          </>
-        )}
-      </Flex>
-      <Flex
-        minWidth={224}
-        alignSelf="flex-start"
-        flexBasis="30%"
-        style={{ order: screenSize.sm ? 1 : -1 }}
-        $md={{ flexBasis: '100%' }}
-      >
+      <Flex group="item" minWidth={224} alignSelf="flex-start" width={CHART_WIDTH} $md={{ width: '100%' }}>
         {priceOrdering.priceLower && priceOrdering.priceUpper && !isFullRange ? (
           <Flex gap="$gap4">
             <Flex row gap="$gap12" alignItems="center">
-              <SecondaryText>
+              <SecondaryText flexShrink={0}>
                 <Trans i18nKey="common.min" />
               </SecondaryText>
               <SecondaryText color="$neutral1">
                 {minPrice} {tokenASymbol} / {tokenBSymbol}
               </SecondaryText>
             </Flex>
-            <Flex row gap="$gap12" alignItems="center">
-              <SecondaryText>
+            <Flex row gap="$gap8" alignItems="center">
+              <SecondaryText flexShrink={0}>
                 <Trans i18nKey="common.max" />
               </SecondaryText>
               <SecondaryText color="$neutral1">
@@ -135,8 +156,11 @@ export function LiquidityPositionFeeStats({
                   e.stopPropagation()
                   setPricesInverted((prevInverted) => !prevInverted)
                 }}
+                {...ClickableTamaguiStyle}
+                display="none"
+                $group-item-hover={{ display: 'flex' }}
               >
-                <ArrowUpDown {...ClickableTamaguiStyle} color="$neutral2" size="$icon.16" rotate="90deg" />
+                <ArrowUpDown color="$neutral2" size="$icon.16" rotate="90deg" />
               </Flex>
             </Flex>
           </Flex>

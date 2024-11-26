@@ -48,7 +48,11 @@ import { MarketPriceImpactWarning } from 'uniswap/src/features/transactions/swap
 import { RoutingInfo } from 'uniswap/src/features/transactions/swap/modals/RoutingInfo'
 import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/review/MaxSlippageRow'
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/review/SwapRateRatio'
+import { ProtocolPreference } from 'uniswap/src/features/transactions/swap/settings/configs/ProtocolPreference'
+import { Slippage } from 'uniswap/src/features/transactions/swap/settings/configs/Slippage'
 import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
+import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
+import { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { WrapCallback } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
@@ -90,7 +94,7 @@ const ON_SELECTION_CHANGE_WAIT_TIME_MS = 500
 interface SwapFormScreenProps {
   hideContent: boolean
   hideFooter?: boolean
-  customSettings: SwapSettingConfig[]
+  settings: SwapSettingConfig[]
   // TODO(WEB-5012): Remove wrap callback prop drilling by aligning interface wrap UX w/ wallet
   wrapCallback?: WrapCallback
 }
@@ -99,16 +103,21 @@ interface SwapFormScreenProps {
  * IMPORTANT: In the Extension, this component remains mounted when the user moves to the `SwapReview` screen.
  *            Make sure you take this into consideration when adding/modifying any hooks that run on this component.
  */
-export function SwapFormScreen({ hideContent, customSettings, wrapCallback }: SwapFormScreenProps): JSX.Element {
+export function SwapFormScreen({
+  hideContent,
+  settings = [Slippage, ProtocolPreference],
+  wrapCallback,
+}: SwapFormScreenProps): JSX.Element {
   const { bottomSheetViewStyles } = useTransactionModalContext()
-  const { selectingCurrencyField, hideSettings } = useSwapFormContext()
+  const { selectingCurrencyField, hideSettings, derivedSwapInfo } = useSwapFormContext()
 
   const showTokenSelector = !hideContent && !!selectingCurrencyField
+  const isBridgeTrade = derivedSwapInfo.trade.trade instanceof BridgeTrade
 
   return (
     <TransactionModalInnerContainer fullscreen bottomSheetViewStyles={bottomSheetViewStyles}>
       {!isInterface && <SwapFormHeader /> /* Interface renders its own header with multiple tabs */}
-      {!hideSettings && <SwapFormSettings customSettings={customSettings} />}
+      {!hideSettings && <SwapFormSettings settings={settings} isBridgeTrade={isBridgeTrade} />}
 
       {!hideContent && <SwapFormContent wrapCallback={wrapCallback} />}
 
@@ -791,7 +800,8 @@ function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Element | nul
   const showPriceImpactWarning = Boolean(priceImpactWarning)
   const warningColor = getAlertColor(priceImpactWarning?.severity)
 
-  const { autoSlippageTolerance, chainId, customSlippageTolerance, trade } = derivedSwapInfo
+  const { autoSlippageTolerance, customSlippageTolerance } = useSwapSettingsContext()
+  const { chainId, trade } = derivedSwapInfo
 
   const swapFeeUsd = getSwapFeeUsdFromDerivedSwapInfo(derivedSwapInfo)
 

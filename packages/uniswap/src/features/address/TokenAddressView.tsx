@@ -51,22 +51,24 @@ export function TokenAddressView({
 
   return (
     <WarningModalInfoContainer py="$spacing12" px="$spacing16">
-      <Flex row centered gap="$spacing8">
-        <Flex shrink>
-          <Text variant="body3" overflow="hidden" numberOfLines={1}>
+      <Flex row centered gap="$spacing8" width="100%">
+        <Flex shrink grow>
+          <Text variant="body3" ellipsizeMode="middle" numberOfLines={1}>
             {currency.address}
           </Text>
         </Flex>
-        <MicroConfirmation
-          text={t('common.button.copied')}
-          icon={<CheckCircleFilled color="$statusSuccess" size="$icon.20" />}
-          showTooltip={showTooltip}
-          trigger={
-            <TouchableArea hoverable onPress={onPressCopyAddress}>
-              <CopyAlt size="$icon.16" color="$neutral1" />
-            </TouchableArea>
-          }
-        />
+        <Flex shrink>
+          <MicroConfirmation
+            text={t('common.button.copied')}
+            icon={<CheckCircleFilled color="$statusSuccess" size="$icon.20" />}
+            showTooltip={showTooltip}
+            trigger={
+              <TouchableArea hoverable onPress={onPressCopyAddress}>
+                <CopyAlt size="$icon.16" color="$neutral1" />
+              </TouchableArea>
+            }
+          />
+        </Flex>
       </Flex>
     </WarningModalInfoContainer>
   )

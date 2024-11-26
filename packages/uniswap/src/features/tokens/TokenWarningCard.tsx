@@ -3,16 +3,20 @@ import { InlineWarningCard } from 'uniswap/src/components/InlineWarningCard/Inli
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import {
   TokenProtectionWarning,
   getCardHeaderText,
   getCardSubtitleText,
   getFeeOnTransfer,
   getSeverityFromTokenProtectionWarning,
+  getTokenProtectionWarning,
   getTokenWarningSeverity,
   useTokenWarningCardText,
 } from 'uniswap/src/features/tokens/safetyUtils'
 import { useTranslation } from 'uniswap/src/i18n'
+import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 
 type TokenWarningCardProps = {
   currencyInfo: Maybe<CurrencyInfo>
@@ -80,20 +84,34 @@ export function TokenWarningCard({
     return null
   }
 
+  const analyticsProperties = {
+    tokenSymbol: currencyInfo.currency.symbol,
+    chainId: currencyInfo.currency.chainId,
+    tokenAddress: currencyIdToAddress(currencyInfo.currencyId),
+    warningSeverity: WarningSeverity[severity],
+    tokenProtectionWarning:
+      TokenProtectionWarning[tokenProtectionWarningOverride ?? getTokenProtectionWarning(currencyInfo)],
+    feeOnTransfer: feePercentOverride ?? getFeeOnTransfer(currencyInfo.currency),
+    safetyInfo: currencyInfo.safetyInfo,
+  }
+
   return (
-    <TouchableArea onPress={onPress}>
-      <InlineWarningCard
-        hideCtaIcon={hideCtaIcon}
-        severity={severity}
-        checkboxLabel={setChecked ? t('common.button.understand') : undefined}
-        heading={heading ?? undefined}
-        description={description}
-        headingTestId={headingTestId}
-        descriptionTestId={descriptionTestId}
-        checked={checked}
-        setChecked={setChecked}
-        onPressCtaButton={onPress}
-      />
-    </TouchableArea>
+    <Trace logPress={!!onPress} element={ElementName.TokenWarningCard} properties={analyticsProperties}>
+      <TouchableArea onPress={onPress}>
+        <InlineWarningCard
+          hideCtaIcon={hideCtaIcon}
+          severity={severity}
+          checkboxLabel={setChecked ? t('common.button.understand') : undefined}
+          heading={heading ?? undefined}
+          description={description}
+          headingTestId={headingTestId}
+          descriptionTestId={descriptionTestId}
+          checked={checked}
+          setChecked={setChecked}
+          analyticsProperties={analyticsProperties}
+          onPressCtaButton={onPress}
+        />
+      </TouchableArea>
+    </Trace>
   )
 }

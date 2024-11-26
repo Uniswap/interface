@@ -177,7 +177,7 @@ export const TokenDetailsStats = memo(function _TokenDetailsStats(): JSX.Element
           </Flex>
 
           {currentLanguage !== Language.English && !!translatedDescription && (
-            <TouchableArea hapticFeedback onPress={(): void => setShowTranslation(!showTranslation)}>
+            <TouchableArea onPress={(): void => setShowTranslation(!showTranslation)}>
               <Flex alignItems="center" backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">
                 {showTranslation ? (
                   <Flex row alignItems="center" gap="$spacing12" width="100%">

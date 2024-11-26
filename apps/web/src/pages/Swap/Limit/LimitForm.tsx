@@ -41,7 +41,7 @@ import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { Locale } from 'uniswap/src/features/language/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
@@ -499,15 +499,16 @@ function SubmitOrderButton({
     )
   }
 
+  const errorButtonDisabled = !!limitPriceError || !trade
   return (
     <Trace logPress element={ElementName.LimitOrderButton}>
       <ButtonError
         onClick={handleContinueToReview}
         id="submit-order-button"
         data-testid="submit-order-button"
-        disabled={!trade || !!limitPriceError}
+        disabled={errorButtonDisabled}
       >
-        <Text color="$neutralContrast" fontSize={20}>
+        <Text color={errorButtonDisabled ? '$neutralContrast' : '$white'} fontSize={20}>
           <Trans i18nKey="common.confirm" />
         </Text>
       </ButtonError>

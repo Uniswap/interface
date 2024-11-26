@@ -5,13 +5,14 @@ import { exploreNavigationRef } from 'src/app/navigation/navigation'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import {
@@ -26,6 +27,7 @@ import {
   WalletNavigationProvider,
   getNavigateToSendFlowArgsInitialState,
   getNavigateToSwapFlowArgsInitialState,
+  isNavigateToSwapFlowArgsPartialState,
 } from 'wallet/src/contexts/WalletNavigationContext'
 import { getNftUrl, getTokenUrl } from 'wallet/src/utils/linking'
 
@@ -141,13 +143,34 @@ function useNavigateToSend(): (args: NavigateToSendFlowArgs) => void {
 
 function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
   const dispatch = useDispatch()
-
   const { defaultChainId } = useEnabledChains()
+
   return useCallback(
     (args: NavigateToSwapFlowArgs): void => {
       const initialState = getNavigateToSwapFlowArgsInitialState(args, defaultChainId)
-      dispatch(closeModal({ name: ModalName.Swap }))
-      dispatch(openModal({ name: ModalName.Swap, initialState }))
+
+      // If no prefilled token, go directly to swap
+      if (!isNavigateToSwapFlowArgsPartialState(args)) {
+        dispatch(closeModal({ name: ModalName.Swap }))
+        dispatch(openModal({ name: ModalName.Swap, initialState }))
+        return
+      }
+
+      // Show warning modal for prefilled tokens, which will handle token safety checks
+      const currencyId = buildCurrencyId(args.currencyChainId, args.currencyAddress)
+      dispatch(
+        openModal({
+          name: ModalName.TokenWarning,
+          initialState: {
+            currencyId,
+            onAcknowledge: () => {
+              dispatch(closeModal({ name: ModalName.TokenWarning }))
+              dispatch(closeModal({ name: ModalName.Swap }))
+              dispatch(openModal({ name: ModalName.Swap, initialState }))
+            },
+          },
+        }),
+      )
     },
     [dispatch, defaultChainId],
   )

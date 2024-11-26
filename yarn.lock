@@ -16221,6 +16221,7 @@ __metadata:
     expo-blur: 12.9.2
     expo-camera: 14.1.2
     expo-clipboard: 5.0.1
+    expo-haptics: 12.8.1
     expo-linear-gradient: 12.7.2
     expo-linking: 6.2.2
     expo-local-authentication: 13.8.0
@@ -45356,7 +45357,6 @@ __metadata:
     esbuild-register: 3.6.0
     eslint: 8.44.0
     ethers: 5.7.2
-    expo-haptics: 12.8.1
     expo-linear-gradient: 12.7.2
     fs-extra: 11.2.0
     i18next: 23.10.0

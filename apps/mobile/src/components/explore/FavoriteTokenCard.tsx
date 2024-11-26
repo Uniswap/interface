@@ -9,21 +9,13 @@ import { useAnimatedCardDragStyle, useExploreTokenContextMenu } from 'src/compon
 import { Loader } from 'src/components/loading/loaders'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
-import {
-  AnimatedTouchableArea,
-  Flex,
-  ImpactFeedbackStyle,
-  Text,
-  useIsDarkMode,
-  useShadowPropsShort,
-  useSporeColors,
-} from 'ui/src'
+import { AnimatedTouchableArea, Flex, Text, useIsDarkMode, useShadowPropsShort, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, imageSizes, opacify } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useFavoriteTokenCardQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
 import { removeFavoriteToken } from 'uniswap/src/features/favorites/slice'
@@ -125,8 +117,6 @@ function FavoriteTokenCard({
           borderColor={opacify(0.05, colors.surface3.val)}
           borderRadius="$rounded16"
           borderWidth={isDarkMode ? '$none' : '$spacing1'}
-          hapticFeedback={!isEditing}
-          hapticStyle={ImpactFeedbackStyle.Light}
           m="$spacing4"
           testID={`token-box-${token?.symbol}`}
           onLongPress={disableOnPress}

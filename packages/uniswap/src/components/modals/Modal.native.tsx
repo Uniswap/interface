@@ -79,6 +79,7 @@ function BottomSheetModalContents({
   fullScreen,
   hideHandlebar,
   backgroundColor,
+  handlebarColor,
   // defaults to true if snapPoints/fullScreen are not provided and false otherwise
   enableDynamicSizing,
   blurredBackground = false,
@@ -148,9 +149,11 @@ function BottomSheetModalContents({
       if (renderBehindTopInset && hideHandlebar) {
         return null
       }
+
       return (
         <HandleBar
           {...props}
+          indicatorColor={handlebarColor}
           backgroundColor={backgroundColorValue}
           containerFlexStyles={{
             paddingBottom: spacing.spacing12,
@@ -160,7 +163,7 @@ function BottomSheetModalContents({
         />
       )
     },
-    [backgroundColorValue, hideHandlebar, renderBehindTopInset],
+    [backgroundColorValue, handlebarColor, hideHandlebar, renderBehindTopInset],
   )
 
   const animatedBorderRadius = useAnimatedStyle(() => {

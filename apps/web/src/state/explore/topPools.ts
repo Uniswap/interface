@@ -18,7 +18,7 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 function useFilteredPools(pools?: PoolStat[]) {
   const filterString = useAtomValue(exploreSearchStringAtom)
-  const isV4Enabled = useFeatureFlag(FeatureFlags.V4Everywhere)
+  const isV4Enabled = useFeatureFlag(FeatureFlags.V4Data)
 
   const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
 

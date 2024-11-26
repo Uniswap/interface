@@ -84,7 +84,7 @@ const defaultWeights = {
 
 // on native, the Basel font files render down a few px
 // this adjusts them to be visually centered by default
-const NATIVE_LINE_HEIGHT_SCALE = 1.15
+export const NATIVE_LINE_HEIGHT_SCALE = 1.15
 
 export const fonts = {
   heading1: {

@@ -19,7 +19,6 @@ export function PlusMinusButton({
 }): JSX.Element {
   return (
     <TouchableArea
-      hapticFeedback
       alignItems="center"
       backgroundColor={disabled ? '$surface3' : '$neutral2'}
       borderRadius="$roundedFull"

@@ -20,7 +20,7 @@ import {
   UnitagEntryPoint,
   UnitagScreens,
 } from 'uniswap/src/types/screens/mobile'
-import { shortenAddress } from 'uniswap/src/utils/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension, isMobileApp } from 'utilities/src/platform'

@@ -1,17 +1,23 @@
 import { Currency } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
 import { ChartEntry } from 'components/LiquidityChartRangeInput/types'
-import { TickProcessed, usePoolActiveLiquidity } from 'hooks/usePoolTickData'
+import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import { useCallback, useMemo } from 'react'
+import { TickProcessed } from 'utils/computeSurroundingTicks'
 
+/**
+ * Currency A and B should be sorted to get accurate data, but you can pass invertPrices = true
+ * to get inverted prices.
+ */
 export function useDensityChartData({
   currencyA,
   currencyB,
   feeAmount,
+  invertPrices,
 }: {
   currencyA?: Currency
   currencyB?: Currency
-  feeAmount?: FeeAmount
+  feeAmount?: number
+  invertPrices?: boolean
 }) {
   const { isLoading, error, data } = usePoolActiveLiquidity(currencyA, currencyB, feeAmount)
 
@@ -25,9 +31,12 @@ export function useDensityChartData({
     for (let i = 0; i < data.length; i++) {
       const t: TickProcessed = data[i]
 
+      const price0 = invertPrices ? t.sdkPrice.invert().toSignificant(8) : t.sdkPrice.toSignificant(8)
+
       const chartEntry = {
         activeLiquidity: parseFloat(t.liquidityActive.toString()),
-        price0: parseFloat(t.price0),
+        price0: parseFloat(price0),
+        tick: t.tick,
       }
 
       if (chartEntry.activeLiquidity > 0) {
@@ -36,7 +45,7 @@ export function useDensityChartData({
     }
 
     return newData
-  }, [data])
+  }, [data, invertPrices])
 
   return useMemo(() => {
     return {

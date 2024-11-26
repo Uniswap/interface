@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { OnSelectCurrency, TokenOption, TokenSection } from 'uniswap/src/components/TokenSelector/types'
@@ -26,10 +26,8 @@ function _TokenCard({
 
   return (
     <TouchableArea
-      hapticFeedback
       hoverable
       borderRadius="$roundedFull"
-      hapticStyle={ImpactFeedbackStyle.Light}
       testID={`token-option-${currency.chainId}-${currency.symbol}`}
       onPress={onPress}
     >

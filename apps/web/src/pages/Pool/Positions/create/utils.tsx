@@ -44,6 +44,8 @@ import {
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { CreatePositionTxAndGasInfo, LiquidityTransactionType } from 'uniswap/src/features/transactions/liquidity/types'
+import { getTradeSettingsDeadline } from 'uniswap/src/features/transactions/swap/form/utils'
+import { SwapSettingsState } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
 import { getTickToPrice, getV4TickToPrice } from 'utils/getTickToPrice'
@@ -436,7 +438,11 @@ export function getDependentAmountFromV2Pair({
       ? pair.priceOf(token0Wrapped).quote(independentAmount.wrapped)
       : pair.priceOf(token1Wrapped).quote(independentAmount.wrapped)
 
-  return dependentToken ? CurrencyAmount.fromRawAmount(dependentToken, dependentTokenAmount.quotient) : undefined
+  return dependentToken
+    ? dependentToken?.isNative
+      ? CurrencyAmount.fromRawAmount(dependentToken, dependentTokenAmount.quotient)
+      : dependentTokenAmount
+    : undefined
 }
 
 export function getDependentAmountFromV3Position({
@@ -559,6 +565,7 @@ export function getV3PriceRangeInfo({
     getCurrencyWithWrap(baseCurrency, protocolVersion),
     getCurrencyWithWrap(quoteCurrency, protocolVersion),
   ]
+
   const initialPriceTokens = getInvertedTuple(
     [getCurrencyWithWrap(currencies[0], protocolVersion), getCurrencyWithWrap(currencies[1], protocolVersion)],
     state.initialPriceInverted,
@@ -594,6 +601,7 @@ export function getV3PriceRangeInfo({
   const [baseRangeInput, quoteRangeInput] = invertPrice
     ? [state.maxPrice, state.minPrice]
     : [state.minPrice, state.maxPrice]
+
   const lowerTick =
     baseRangeInput === ''
       ? tickSpaceLimits[0]
@@ -606,6 +614,7 @@ export function getV3PriceRangeInfo({
       : invertPrice
         ? tryParseTick(sortedToken1, sortedToken0, fee.feeAmount, state.minPrice)
         : tryParseTick(sortedToken0, sortedToken1, fee.feeAmount, state.maxPrice)
+
   const ticks: [OptionalNumber, OptionalNumber] = [lowerTick, upperTick]
   const invalidRange = Boolean(lowerTick && upperTick && lowerTick >= upperTick)
 
@@ -879,6 +888,7 @@ export function generateCreateCalldataQueryParams({
   priceRangeState,
   derivedPriceRangeInfo,
   derivedDepositInfo,
+  swapSettings,
 }: {
   account?: AccountMeta
   approvalCalldata?: CheckApprovalLPResponse
@@ -887,10 +897,12 @@ export function generateCreateCalldataQueryParams({
   priceRangeState: PriceRangeState
   derivedPriceRangeInfo: PriceRangeInfo
   derivedDepositInfo: DepositInfo
+  swapSettings: SwapSettingsState
 }): CreateLPPositionRequest | undefined {
   const apiProtocolItems = getProtocolItems(positionState.protocolVersion)
   const currencies = derivedPositionInfo.currencies
   const { currencyAmounts } = derivedDepositInfo
+  const { customDeadline } = swapSettings
 
   if (
     !account?.address ||
@@ -903,6 +915,8 @@ export function generateCreateCalldataQueryParams({
   }
 
   const { token0Approval, token1Approval, positionTokenApproval, permitData } = approvalCalldata ?? {}
+
+  const deadline = getTradeSettingsDeadline(customDeadline)
 
   if (derivedPositionInfo.protocolVersion === ProtocolVersion.V2) {
     if (derivedPositionInfo.protocolVersion !== derivedPriceRangeInfo.protocolVersion) {
@@ -932,6 +946,7 @@ export function generateCreateCalldataQueryParams({
       chainId: currencyAmounts.TOKEN0.currency.chainId,
       amount0: currencyAmounts[token0Index]?.quotient.toString(),
       amount1: currencyAmounts[token1Index]?.quotient.toString(),
+      deadline,
       position: {
         pool: {
           token0: getCurrencyAddressForTradingApi(currencyAmounts[token0Index]?.currency),
@@ -990,6 +1005,7 @@ export function generateCreateCalldataQueryParams({
     currentTick,
     sqrtRatioX96,
     initialPrice,
+    deadline,
     position: {
       tickLower,
       tickUpper,

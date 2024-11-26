@@ -12,7 +12,7 @@ import {
   useV3PoolTransactionsQuery,
   useV4PoolTransactionsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -63,7 +63,7 @@ export function usePoolTransactions(
 ) {
   const { defaultChainId } = useEnabledChains()
   const variables = { first, chain: toGraphQLChain(chainId ?? defaultChainId) }
-  const v4Enabled = useFeatureFlag(FeatureFlags.V4Everywhere)
+  const v4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
   const {
     loading: loadingV4,
     error: errorV4,
@@ -74,7 +74,7 @@ export function usePoolTransactions(
       ...variables,
       poolId: address,
     },
-    skip: !v4Enabled || protocolVersion !== ProtocolVersion.V4,
+    skip: !v4DataEnabled || protocolVersion !== ProtocolVersion.V4,
   })
   const {
     loading: loadingV3,

@@ -104,7 +104,7 @@ export const RecipientRow = memo(function RecipientRow({ recipient, onPress }: R
   const isNonUnitagSubdomain = !isUnitag && domain !== undefined && domain !== ENS_SUFFIX
 
   return (
-    <TouchableArea hapticFeedback onPress={onPressWithAnalytics}>
+    <TouchableArea onPress={onPressWithAnalytics}>
       <AddressDisplay
         includeUnitagSuffix
         address={recipient.address}

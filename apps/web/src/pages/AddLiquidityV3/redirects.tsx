@@ -7,12 +7,12 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export default function AddLiquidityV3WithTokenRedirects() {
-  const isV4EverywhereEnabled = useFeatureFlag(FeatureFlags.V4Everywhere)
+  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
   const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string; feeAmount?: string }>()
 
   const { chainId } = useAccount()
 
-  if (isV4EverywhereEnabled) {
+  if (isLPRedesignEnabled) {
     // TODO(WEB-5361): update this to enable prefilling form from URL currencyIdA and currencyIdB
     return <Navigate to="/positions/create" replace />
   }

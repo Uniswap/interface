@@ -22,46 +22,63 @@ import { SwapFormButton } from 'uniswap/src/features/transactions/swap/form/Swap
 import { SwapFormScreen } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen'
 import { SwapReviewScreen } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen'
 import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
+import {
+  SwapSettingsContext,
+  useSwapSettingsContext,
+} from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { SwapCallback } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { WrapCallback } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
 import { isInterface } from 'utilities/src/platform'
 
 export interface SwapFlowProps extends Omit<TransactionModalProps, 'fullscreen' | 'modalName'> {
   prefilledState?: SwapFormState
-  customSettings?: SwapSettingConfig[]
+  settings: SwapSettingConfig[]
   hideHeader?: boolean
   hideFooter?: boolean
   swapCallback: SwapCallback
   wrapCallback: WrapCallback
+  onSubmitSwap?: () => Promise<void>
 }
 
 export function SwapFlow({
-  customSettings = [],
+  settings,
   swapCallback,
   wrapCallback,
+  onSubmitSwap,
   ...transactionModalProps
 }: SwapFlowProps): JSX.Element {
   const swapFormContext = useSwapFormContext()
+  const swapSettingsContext = useSwapSettingsContext()
   return (
     <TransactionModal modalName={ModalName.Swap} {...transactionModalProps}>
-      {/* Re-create the SwapFormContextProvider, since native Modal can cause its children to be in a separate component tree. */}
-      <SwapFormContext.Provider value={swapFormContext}>
-        <SwapTxContextProviderTradingApi>
-          <CurrentScreen customSettings={customSettings} swapCallback={swapCallback} wrapCallback={wrapCallback} />
-        </SwapTxContextProviderTradingApi>
-      </SwapFormContext.Provider>
+      {/* Re-create the SwapSettingsContextProvider, since native Modal can cause its children to be in a separate component tree. */}
+      <SwapSettingsContext.Provider value={swapSettingsContext}>
+        {/* Re-create the SwapFormContextProvider, since native Modal can cause its children to be in a separate component tree. */}
+        <SwapFormContext.Provider value={swapFormContext}>
+          <SwapTxContextProviderTradingApi>
+            <CurrentScreen
+              settings={settings}
+              swapCallback={swapCallback}
+              wrapCallback={wrapCallback}
+              onSubmitSwap={onSubmitSwap}
+            />
+          </SwapTxContextProviderTradingApi>
+        </SwapFormContext.Provider>
+      </SwapSettingsContext.Provider>
     </TransactionModal>
   )
 }
 
 function CurrentScreen({
-  customSettings,
+  settings,
   swapCallback,
   wrapCallback,
+  onSubmitSwap,
 }: {
-  customSettings: SwapSettingConfig[]
+  settings: SwapSettingConfig[]
   swapCallback: SwapCallback
   wrapCallback: WrapCallback
+  onSubmitSwap?: () => Promise<void>
 }): JSX.Element {
   const { screen, setScreen } = useTransactionModalContext()
 
@@ -69,7 +86,7 @@ function CurrentScreen({
     return (
       <>
         <Trace logImpression section={SectionName.SwapForm}>
-          <SwapFormScreen customSettings={customSettings} hideContent={false} wrapCallback={wrapCallback} />
+          <SwapFormScreen settings={settings} hideContent={false} wrapCallback={wrapCallback} />
         </Trace>
 
         {/*
@@ -95,7 +112,7 @@ function CurrentScreen({
     case TransactionScreen.Form:
       return (
         <Trace logImpression section={SectionName.SwapForm}>
-          <SwapFormScreenDelayedRender customSettings={customSettings} />
+          <SwapFormScreenDelayedRender settings={settings} />
           <TransactionModalFooterContainer>
             <SwapFormButton />
           </TransactionModalFooterContainer>
@@ -104,7 +121,11 @@ function CurrentScreen({
     case TransactionScreen.Review:
       return (
         <Trace logImpression section={SectionName.SwapReview}>
-          <SwapReviewScreenDelayedRender swapCallback={swapCallback} wrapCallback={wrapCallback} />
+          <SwapReviewScreenDelayedRender
+            swapCallback={swapCallback}
+            wrapCallback={wrapCallback}
+            onSubmitSwap={onSubmitSwap}
+          />
         </Trace>
       )
   }
@@ -115,23 +136,25 @@ const SWAP_FORM_SCREEN_TRANSITION_DELAY = isWeb ? 0 : 25
 const SWAP_REVIEW_SCREEN_TRANSITION_DELAY = isWeb ? 0 : 450
 
 // We add a short hardcoded delay to allow the sheet to animate quickly both on first render and when going back from Review -> Form.
-function SwapFormScreenDelayedRender({ customSettings }: { customSettings: SwapSettingConfig[] }): JSX.Element {
+function SwapFormScreenDelayedRender({ settings }: { settings: SwapSettingConfig[] }): JSX.Element {
   const [hideContent, setHideContent] = useState(SWAP_FORM_SCREEN_TRANSITION_DELAY > 0)
 
   useEffect(() => {
     setTimeout(() => setHideContent(false), SWAP_FORM_SCREEN_TRANSITION_DELAY)
   }, [])
 
-  return <SwapFormScreen customSettings={customSettings} hideContent={hideContent} />
+  return <SwapFormScreen settings={settings} hideContent={hideContent} />
 }
 
 // We add a short hardcoded delay to allow the sheet to animate quickly when going from Form -> Review.
 function SwapReviewScreenDelayedRender({
   swapCallback,
   wrapCallback,
+  onSubmitSwap,
 }: {
   swapCallback: SwapCallback
   wrapCallback: WrapCallback
+  onSubmitSwap?: () => Promise<void>
 }): JSX.Element {
   const [hideContent, setHideContent] = useState(SWAP_REVIEW_SCREEN_TRANSITION_DELAY > 0)
 
@@ -139,5 +162,12 @@ function SwapReviewScreenDelayedRender({
     setTimeout(() => setHideContent(false), SWAP_REVIEW_SCREEN_TRANSITION_DELAY)
   }, [])
 
-  return <SwapReviewScreen hideContent={hideContent} swapCallback={swapCallback} wrapCallback={wrapCallback} />
+  return (
+    <SwapReviewScreen
+      hideContent={hideContent}
+      swapCallback={swapCallback}
+      wrapCallback={wrapCallback}
+      onSubmitSwap={onSubmitSwap}
+    />
+  )
 }

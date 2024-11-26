@@ -48,20 +48,22 @@ export function LiquidityModalDetailRows({
           ),
         }}
       />
-      <DetailLineItem
-        LineItem={{
-          Label: () => (
-            <Text variant="body3" color="$neutral2">
-              <Trans i18nKey="common.networkCost" />
-            </Text>
-          ),
-          Value: () => (
-            <Text variant="body3" color="$neutral1">
-              {formatCurrencyAmount({ value: networkCost, type: NumberType.FiatGasPrice })}
-            </Text>
-          ),
-        }}
-      />
+      {Boolean(networkCost) && (
+        <DetailLineItem
+          LineItem={{
+            Label: () => (
+              <Text variant="body3" color="$neutral2">
+                <Trans i18nKey="common.networkCost" />
+              </Text>
+            ),
+            Value: () => (
+              <Text variant="body3" color="$neutral1">
+                {formatCurrencyAmount({ value: networkCost, type: NumberType.FiatGasPrice })}
+              </Text>
+            ),
+          }}
+        />
+      )}
     </Flex>
   )
 }

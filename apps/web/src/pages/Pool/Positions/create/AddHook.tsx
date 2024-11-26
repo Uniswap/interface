@@ -12,7 +12,8 @@ import { fonts } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useTranslation } from 'uniswap/src/i18n'
-import { getValidAddress, shortenAddress } from 'uniswap/src/utils/addresses'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
 import { useOnClickOutside } from 'utilities/src/react/hooks'
 
 const MenuFlyout = styled(Flex, {

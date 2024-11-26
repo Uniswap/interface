@@ -24,6 +24,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { useAccount } from 'wagmi'
@@ -68,7 +69,7 @@ export default function V2PositionPage() {
 
   usePendingLPTransactionsChangeListener(refetch)
 
-  const { value: v4Enabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Everywhere)
+  const { value: lpRedesignEnabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.LPRedesign)
 
   const { currency0Amount, currency1Amount, status, liquidityAmount } = positionInfo ?? {}
 
@@ -76,7 +77,7 @@ export default function V2PositionPage() {
   const token1USDValue = useUSDCValue(currency1Amount)
   const poolTokenPercentage = useGetPoolTokenPercentage(positionInfo)
 
-  if (!isLoading && !v4Enabled) {
+  if (!isLoading && !lpRedesignEnabled) {
     return <Navigate to="/pools" replace />
   }
 
@@ -125,6 +126,7 @@ export default function V2PositionPage() {
             <BreadcrumbNavLink to="/positions">
               <Trans i18nKey="pool.positions.title" /> <ChevronRight size={14} />
             </BreadcrumbNavLink>
+            <Text variant="subheading2">{shortenAddress(positionInfo.poolId)}</Text>
           </BreadcrumbNavContainer>
         </Flex>
 
