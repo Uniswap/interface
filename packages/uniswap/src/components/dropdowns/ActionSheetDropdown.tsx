@@ -20,8 +20,7 @@ import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { Scrollbar } from 'uniswap/src/components/misc/Scrollbar'
 import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { isAndroid, isInterface, isTouchable } from 'utilities/src/platform'
-import { useTimeout } from 'utilities/src/time/timing'
+import { isAndroid, isInterface, isMobileApp, isTouchable } from 'utilities/src/platform'
 
 const DEFAULT_MIN_WIDTH = 225
 
@@ -177,22 +176,17 @@ const ActionSheetBackdropWithContent = memo(function ActionSheetBackdropWithCont
   toggleMeasurements: DropdownState['toggleMeasurements']
   contentProps: ActionSheetDropdownProps
   closeOnSelect: boolean
-}): JSX.Element | null {
+}): JSX.Element {
   /*
-    There is a race condition when we switch from a view with one Portal to another view with a Portal.
-    It seems that if we mount a second Portal while the first is still mounted, the second would not work properly.
-    setTimeout with 0ms is a workaround to avoid this issue for now
-    Remove when https://linear.app/uniswap/issue/WALL-4817 is resolved
+    We need to add key to Portal on mobile, becuase of a bug in tamagui.
+    Remove when https://linear.app/uniswap/issue/WALL-4817/tamaguis-portal-stops-reacting-to-re-renders is done
   */
-  const [shouldRender, setShouldRender] = useState(false)
-  useTimeout(() => setShouldRender(true), 0)
-
-  if (!shouldRender) {
-    return null
-  }
-
+  const key = useMemo(
+    () => (isMobileApp ? Math.random() : undefined), // eslint-disable-next-line react-hooks/exhaustive-deps
+    [closeDropdown, styles, isOpen, toggleMeasurements, contentProps, closeOnSelect],
+  )
   return (
-    <Portal zIndex={styles?.dropdownZIndex || zIndices.popover}>
+    <Portal key={key} zIndex={styles?.dropdownZIndex || zIndices.popover}>
       <AnimatePresence custom={{ isOpen }}>
         {isOpen && toggleMeasurements && (
           <>
