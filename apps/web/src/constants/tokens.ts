@@ -19,6 +19,14 @@ export const LARA_TARAXA = new Token(
   "Lara"
 );
 
+export const USDM_TARAXA = new Token(
+  ChainId.TARAXA,
+  "0xC26B690773828999c2612549CC815d1F252EA15e",
+  18,
+  "USDM",
+  "USDM Stablecoin"
+);
+
 export const USDT_TARAXA = new Token(
   ChainId.TARAXA,
   "0x5a51fadEF313f503239D1FE0b25DE2486B022c02",

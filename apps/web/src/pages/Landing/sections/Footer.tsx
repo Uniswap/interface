@@ -164,9 +164,9 @@ export function Footer() {
                 <ModalItem onClick={togglePrivacyPolicy}>
                   <Trans i18nKey="common.termsPrivacy" />
                 </ModalItem>
-                <StyledExternalLink href="https://uniswap.org/trademark">
+                {/* <StyledExternalLink href="https://uniswap.org/trademark">
                   <Trans i18nKey="common.trademarkPolicy" />
-                </StyledExternalLink>
+                </StyledExternalLink> */}
               </Box>
               <Box direction="column" gap="10px">
                 <Body1>

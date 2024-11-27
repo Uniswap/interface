@@ -14,6 +14,14 @@
     },
     {
       "chainId": 841,
+      "address": "0xC26B690773828999c2612549CC815d1F252EA15e",
+      "name": "USDM Stablecoin",
+      "symbol": "USDM",
+      "decimals": 18,
+      "logoURI": "https://docs.meridianfinance.net/~gitbook/image?url=https%3A%2F%2F2791058162-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FznH0wmdBqe8s23j9vKpZ%252Ficon%252FUbuNuQudXb1BnT6HAme2%252Fmlogo.png%3Falt%3Dmedia%26token%3Dcdd3a8e5-fc46-444c-b604-d5b366b0b871&width=32&dpr=2&quality=100&sign=a305c8f5&sv=1"
+    },
+    {
+      "chainId": 841,
       "address": "0xE6A69cD4FF127ad8E53C21a593F7BaC4c608945e",
       "name": "Lara",
       "symbol": "LARA",
