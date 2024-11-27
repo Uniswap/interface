@@ -62,97 +62,9 @@
     },
     {
       "chainId": 841,
-      "address": "0x5a51fadEF313f503239D1FE0b25DE2486B022c02",
-      "name": "Test Tether",
-      "symbol": "TUSDT",
-      "decimals": 6,
-      "logoURI": "https://tse3.mm.bing.net/th?id=OIP.pEDUtRL00rm2PTq4gY_J4wHaHa&pid=Api"
-    },
-    {
-      "chainId": 841,
       "address": "0x063F255689b00A877F6be55109b3ECA24e266809",
       "name": "HerbSwap Token",
       "symbol": "HERB",
-      "decimals": 18,
-      "logoURI": "https://iili.io/gFyZjs.png"
-    },
-    {
-      "chainId": 841,
-      "address": "0x46258327541455119869d7344dd2673facf5f104",
-      "name": "TestToken0",
-      "symbol": "T0",
-      "decimals": 18,
-      "logoURI": "https://drive.google.com/file/d/1ieRK-M3oPw-5ASE8QRPAmuvIcfWsPm8S/view?usp=sharing"
-    },
-    {
-      "chainId": 841,
-      "address": "0xc0509f5005a50035e93541e2b8b7c55d32234940",
-      "name": "TestToken1",
-      "symbol": "T1",
-      "decimals": 18,
-      "logoURI": "https://drive.google.com/file/d/1ieRK-M3oPw-5ASE8QRPAmuvIcfWsPm8S/view?usp=sharing"
-    },
-    {
-      "chainId": 841,
-      "address": "0xb7aa5d2bc4a0a28143d2e0af1e9dfa45bb6810c2",
-      "name": "TestToken2",
-      "symbol": "T2",
-      "decimals": 18,
-      "logoURI": "https://iili.io/gFyZjs.png"
-    },
-    {
-      "chainId": 841,
-      "address": "0x7d1eb8c23c9ef9b805d09aab0200e8c2f1654978",
-      "name": "TestToken3",
-      "symbol": "T3",
-      "decimals": 18,
-      "logoURI": "https://iili.io/gFyZjs.png"
-    },
-    {
-      "chainId": 841,
-      "address": "0x447fadbe2e33541153a8b76dca3f8bf32aff9431",
-      "name": "TestToken4",
-      "symbol": "T4",
-      "decimals": 18,
-      "logoURI": "https://iili.io/gFyZjs.png"
-    },
-    {
-      "chainId": 841,
-      "address": "0xe8c5781f927c78f727bcc2ba993e1b9b2187c423",
-      "name": "TestToken5",
-      "symbol": "T5",
-      "decimals": 18,
-      "logoURI": "https://iili.io/gFyZjs.png"
-    },
-    {
-      "chainId": 841,
-      "address": "0x254bb7d11a49fecc0142fa90c6c964e5d35dff5b",
-      "name": "TestToken6",
-      "symbol": "T6",
-      "decimals": 18,
-      "logoURI": "https://iili.io/gFyZjs.png"
-    },
-    {
-      "chainId": 841,
-      "address": "0x7bc602a5cdd267a65babe7ac6d7eeca9469166cc",
-      "name": "TestToken7",
-      "symbol": "T7",
-      "decimals": 18,
-      "logoURI": "https://iili.io/gFyZjs.png"
-    },
-    {
-      "chainId": 841,
-      "address": "0xc0a27f5b7e12076f4eeccac05a5243d8ec1a806e",
-      "name": "TestToken8",
-      "symbol": "T8",
-      "decimals": 18,
-      "logoURI": "https://iili.io/gFyZjs.png"
-    },
-    {
-      "chainId": 841,
-      "address": "0x504ccec9265b2d749b832e737739962b1c9957b0",
-      "name": "TestToken9",
-      "symbol": "T9",
       "decimals": 18,
       "logoURI": "https://iili.io/gFyZjs.png"
     }
@@ -160,6 +72,6 @@
   "version": {
     "major": 1,
     "minor": 0,
-    "patch": 1
+    "patch": 2
   }
 }

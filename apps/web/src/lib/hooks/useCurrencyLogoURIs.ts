@@ -62,6 +62,6 @@ export function getTokenLogoURI(
   }
 
   if (networkName) {
-    return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`;
+    return `https://raw.githubusercontent.com/taraswap/assets/master/logos/${address}/logo.png`;
   }
 }
