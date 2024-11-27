@@ -10,7 +10,6 @@ import { UkDisclaimerModal } from "components/TopLevelModals/UkDisclaimerModal";
 import AddressClaimModal from "components/claim/AddressClaimModal";
 import DevFlagsBox from "dev/DevFlagsBox";
 import { useAccount } from "hooks/useAccount";
-import useAccountRiskCheck from "hooks/useAccountRiskCheck";
 import Bag from "nft/components/bag/Bag";
 import TransactionCompleteModal from "nft/components/collection/TransactionCompleteModal";
 import { useModalIsOpen, useToggleModal } from "state/application/hooks";
@@ -24,7 +23,7 @@ export default function TopLevelModals() {
     ApplicationModal.BLOCKED_ACCOUNT
   );
   const account = useAccount();
-  useAccountRiskCheck(account.address);
+  // useAccountRiskCheck(account.address);
   const accountBlocked = Boolean(
     blockedAccountModalOpen && account.isConnected
   );
