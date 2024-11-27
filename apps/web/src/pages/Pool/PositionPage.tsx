@@ -61,7 +61,7 @@ import {
   useState,
 } from "react";
 import { Helmet } from "react-helmet-async/lib/index";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Bound } from "state/mint/v3/actions";
 import {
   useIsTransactionPending,
@@ -233,7 +233,7 @@ const PairHeader = styled(ThemedText.H1Medium)`
 `;
 
 function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
-  const account = useAccount();
+  const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState({
     hasDeposited: false,
     hasStaked: false,
@@ -257,6 +257,7 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
     stakePosition,
     unstakePosition,
     claim,
+    endIncentive,
     isDeposited,
     isApprovedForTransfer,
     isFetchingRewardInfo,
@@ -266,6 +267,7 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
     isUnstaking,
     isClaiming,
     isWithdrawing,
+    isEndingIncentive,
   } = usePosition(props.tokenId, props.incentiveId);
 
   const { getDepositData, isLoading: isLoadingDepositData } = useTokenPosition(
@@ -275,11 +277,12 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
   const fetchDepositAndRewards = async () => {
     const depositData = await getDepositData();
     const hasDeposited = await isDeposited();
-    const rewardInfo = await getRewardInfo();
-    console.log("~ rewardInfo: ", rewardInfo);
-    const pendingRewards = rewardInfo?.reward ?? BigNumber.from(0);
+    let pendingRewards = BigNumber.from(0);
+    try {
+      const rewardInfo = await getRewardInfo();
+      pendingRewards = rewardInfo?.reward ?? BigNumber.from(0);
+    } catch (e) {}
     const hasStaked = (depositData?.numberOfStakes ?? 0) > 0;
-    console.log("$ pendingreward: ", pendingRewards, rewardInfo?.reward);
     return { hasDeposited, pendingRewards, hasStaked };
   };
 
@@ -332,10 +335,24 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
   }, [claim, refetch]);
 
   const stake = useCallback(async () => {
+    console.log("~ stakePosition: ", stakePosition);
     await stakePosition(() => {
+      console.log("~ stakePosition: ", stakePosition);
       setRefetch((prev) => prev + 1);
     });
   }, [stakePosition, refetch]);
+
+  const endIncentiveCallback = useCallback(async () => {
+    await endIncentive(() => {
+      setRefetch((prev) => prev + 1);
+      navigate("/farms");
+    });
+  }, [endIncentive, refetch, navigate]);
+
+  const incentiveStarted =
+    incentive &&
+    incentive.startTime &&
+    parseInt(incentive.startTime) < Date.now() / 1000;
 
   return props.incentiveId ? (
     <AutoColumn gap="md" justify="center">
@@ -361,6 +378,43 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
           </AutoColumn>
         </LightCard>
       </RowBetween>
+      {incentive &&
+        incentive?.endTime &&
+        parseInt(incentive?.endTime) < Date.now() / 1000 && (
+          <LightCard padding="12px" width="100%">
+            <AutoColumn gap="md" justify="center">
+              <ExtentsText>
+                <Trans i18nKey="common.incentives.end" />
+              </ExtentsText>
+              <ButtonPrimary onClick={endIncentiveCallback}>
+                {isEndingIncentive ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 24 24"
+                    style={{ marginRight: "8px" }}
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M12,4a8,8,0,0,1,7.89,6.7A1.53,1.53,0,0,0,21.38,12h0a1.5,1.5,0,0,0,1.48-1.75,11,11,0,0,0-21.72,0A1.5,1.5,0,0,0,2.62,12h0a1.53,1.53,0,0,0,1.49-1.3A8,8,0,0,1,12,4Z"
+                    >
+                      <animateTransform
+                        attributeName="transform"
+                        dur="0.75s"
+                        repeatCount="indefinite"
+                        type="rotate"
+                        values="0 12 12;360 12 12"
+                      />
+                    </path>
+                  </svg>
+                ) : (
+                  "End incentive"
+                )}
+              </ButtonPrimary>
+            </AutoColumn>
+          </LightCard>
+        )}
       <LightCard padding="12px" width="100%">
         <AutoColumn gap="md" justify="center">
           <ExtentsText>
@@ -433,7 +487,10 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
               <ExtentsText>
                 <Trans i18nKey="common.incentives.lp.stake" />
               </ExtentsText>
-              <ButtonPrimary onClick={stake} disabled={userDetails.hasStaked}>
+              <ButtonPrimary
+                onClick={stake}
+                disabled={userDetails.hasStaked || !incentiveStarted}
+              >
                 {isStaking ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -455,8 +512,12 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
                       />
                     </path>
                   </svg>
-                ) : (
+                ) : incentiveStarted ? (
                   "Stake"
+                ) : (
+                  `Incentive starts at ${new Date(
+                    Number(incentive?.startTime || 0) * 1000
+                  ).toLocaleString()}`
                 )}
               </ButtonPrimary>
               <ButtonPrimary

@@ -66,7 +66,7 @@ export function CompanyMenu() {
             width="48"
             height="48"
             data-testid="taraswap-logo"
-            clickable
+            clickable="true"
             onClick={handleLogoClick}
           />
           {isLargeScreen && (

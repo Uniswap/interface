@@ -31,6 +31,7 @@ import { useV3StakerContract } from "../../hooks/useV3StakerContract";
 import useTotalPositions, { PositionsResponse } from "hooks/useTotalPositions";
 import { ZERO_ADDRESS } from "constants/misc";
 import { LightCard } from "components/Card";
+import { buildIncentiveIdFromIncentive, RewardInfo } from "hooks/usePosition";
 
 const LOGO_DEFAULT_SIZE = 30;
 
@@ -262,6 +263,27 @@ export default function Incentives() {
               ? relevantPosition.id
               : "";
 
+            if (v3StakerContract) {
+              const incentiveId = buildIncentiveIdFromIncentive(incentive);
+              console.log("~incentiveId", { incentiveId, positionId });
+              try {
+                const rewardInfo: RewardInfo =
+                  await v3StakerContract?.getRewardInfo(
+                    incentiveId,
+                    positionId
+                  );
+
+                const pendingRewardsForPosition = formatUnits(
+                  BigInt(rewardInfo.reward.toString()),
+                  incentive.rewardToken.decimals
+                );
+                pendingRewards = pendingRewardsForPosition;
+              } catch (e) {
+                console.warn(e);
+                pendingRewards = "0";
+              }
+            }
+
             const token0 = findTokenByAddress(tokenList, poolDetails.token0.id);
             const token1 = findTokenByAddress(tokenList, poolDetails.token1.id);
 
@@ -348,9 +370,9 @@ export default function Incentives() {
         header: () => (
           <Cell minWidth={200} justifyContent="flex-start" grow>
             <Row gap="4px">
-              <ThemedText.BodySecondary>
+              <ThemedText.BodyPrimary>
                 <Trans i18nKey="common.incentives.pool.label" />
-              </ThemedText.BodySecondary>
+              </ThemedText.BodyPrimary>
             </Row>
           </Cell>
         ),
@@ -361,31 +383,9 @@ export default function Incentives() {
             justifyContent="flex-start"
             grow
           >
-            <ThemedText.BodySecondary>
+            <ThemedText.BodyPrimary>
               <PoolTokenImage pool={pool.getValue?.()} />
-            </ThemedText.BodySecondary>
-          </Cell>
-        ),
-      }),
-      columnHelper.accessor("feeTier", {
-        id: "feeTier",
-        header: () => (
-          <Cell minWidth={200} justifyContent="flex-start" grow>
-            <Row gap="4px">
-              <ThemedText.BodySecondary>
-                <Trans i18nKey="common.incentives.pool.feeTier" />
-              </ThemedText.BodySecondary>
-            </Row>
-          </Cell>
-        ),
-        cell: (feeTier) => (
-          <Cell loading={isLoading} minWidth={200}>
-            <ThemedText.BodySecondary>
-              {parseFloat(
-                (Number(feeTier.getValue?.() || "0") / 100000).toString()
-              ).toFixed(3)}
-              %
-            </ThemedText.BodySecondary>
+            </ThemedText.BodyPrimary>
           </Cell>
         ),
       }),
@@ -393,7 +393,7 @@ export default function Incentives() {
         id: "apy",
         header: () => (
           <Cell minWidth={200}>
-            <ThemedText.BodySecondary>
+            <ThemedText.BodyPrimary>
               <Row gap="4px">
                 <Trans i18nKey="common.incentives.apy" />
                 <MouseoverTooltip
@@ -403,14 +403,14 @@ export default function Incentives() {
                   <StyledInfoIcon />
                 </MouseoverTooltip>
               </Row>
-            </ThemedText.BodySecondary>
+            </ThemedText.BodyPrimary>
           </Cell>
         ),
         cell: (apy) => (
           <Cell loading={isLoading} minWidth={200}>
-            <ThemedText.BodySecondary>
+            <ThemedText.BodyPrimary>
               {apy.getValue?.().toFixed(8)}
-            </ThemedText.BodySecondary>
+            </ThemedText.BodyPrimary>
           </Cell>
         ),
       }),
@@ -418,9 +418,9 @@ export default function Incentives() {
         id: "tvl",
         header: () => (
           <Cell minWidth={200}>
-            <ThemedText.BodySecondary>
+            <ThemedText.BodyPrimary>
               <Trans i18nKey="common.incentives.pool.tvl" />
-            </ThemedText.BodySecondary>
+            </ThemedText.BodyPrimary>
           </Cell>
         ),
         cell: (tvl) => {
@@ -441,12 +441,77 @@ export default function Incentives() {
 
           return (
             <Cell loading={isLoading} minWidth={200}>
-              <ThemedText.BodySecondary>
-                {tvlFormatted}
-              </ThemedText.BodySecondary>
+              <ThemedText.BodyPrimary>{tvlFormatted}</ThemedText.BodyPrimary>
             </Cell>
           );
         },
+      }),
+      columnHelper.accessor("pendingRewards", {
+        id: "pendingRewards",
+        header: () => (
+          <Cell minWidth={200}>
+            <ThemedText.BodyPrimary>
+              <Row gap="4px">
+                <Trans i18nKey="common.incentives.pending.reward" />
+                <MouseoverTooltip
+                  placement="right"
+                  text={
+                    <Trans i18nKey="common.incentives.pending.description" />
+                  }
+                >
+                  <StyledInfoIcon />
+                </MouseoverTooltip>
+              </Row>
+            </ThemedText.BodyPrimary>
+          </Cell>
+        ),
+        cell: (pendingRewards) => (
+          <Cell loading={isLoading} minWidth={200}>
+            <ThemedText.BodyPrimary>
+              {pendingRewards.getValue?.()}
+            </ThemedText.BodyPrimary>
+          </Cell>
+        ),
+      }),
+
+      columnHelper.accessor("displayedTotalDeposit", {
+        id: "displayedTotalDeposit",
+        header: () => (
+          <Cell minWidth={200}>
+            <ThemedText.BodySecondary>
+              <Trans i18nKey="common.incentives.total.deposits" />
+            </ThemedText.BodySecondary>
+          </Cell>
+        ),
+        cell: (displayedTotalDeposit) => (
+          <Cell loading={isLoading} minWidth={200} justifyContent="center">
+            <ThemedText.BodySecondarySmall style={{ textAlign: "right" }}>
+              {displayedTotalDeposit.getValue?.()}
+            </ThemedText.BodySecondarySmall>
+          </Cell>
+        ),
+      }),
+      columnHelper.accessor("feeTier", {
+        id: "feeTier",
+        header: () => (
+          <Cell minWidth={200} justifyContent="flex-end" grow>
+            <Row gap="4px" justify="flex-end">
+              <ThemedText.BodySecondary>
+                <Trans i18nKey="common.incentives.pool.feeTier" />
+              </ThemedText.BodySecondary>
+            </Row>
+          </Cell>
+        ),
+        cell: (feeTier) => (
+          <Cell minWidth={200}>
+            <ThemedText.BodySecondary>
+              {parseFloat(
+                (Number(feeTier.getValue?.() || "0") / 100000).toString()
+              ).toFixed(3)}
+              %
+            </ThemedText.BodySecondary>
+          </Cell>
+        ),
       }),
       columnHelper.accessor("totalrewards", {
         id: "totalrewards",
@@ -495,50 +560,6 @@ export default function Incentives() {
           <Cell loading={isLoading} minWidth={200}>
             <ThemedText.BodySecondary>
               {tokenreward.getValue?.()}
-            </ThemedText.BodySecondary>
-          </Cell>
-        ),
-      }),
-      columnHelper.accessor("displayedTotalDeposit", {
-        id: "displayedTotalDeposit",
-        header: () => (
-          <Cell minWidth={200}>
-            <ThemedText.BodySecondary>
-              <Trans i18nKey="common.incentives.total.deposits" />
-            </ThemedText.BodySecondary>
-          </Cell>
-        ),
-        cell: (displayedTotalDeposit) => (
-          <Cell loading={isLoading} minWidth={200} justifyContent="center">
-            <ThemedText.BodySecondarySmall style={{ textAlign: "right" }}>
-              {displayedTotalDeposit.getValue?.()}
-            </ThemedText.BodySecondarySmall>
-          </Cell>
-        ),
-      }),
-      columnHelper.accessor("pendingRewards", {
-        id: "pendingRewards",
-        header: () => (
-          <Cell minWidth={200}>
-            <ThemedText.BodySecondary>
-              <Row gap="4px">
-                <Trans i18nKey="common.incentives.pending.reward" />
-                <MouseoverTooltip
-                  placement="right"
-                  text={
-                    <Trans i18nKey="common.incentives.pending.description" />
-                  }
-                >
-                  <StyledInfoIcon />
-                </MouseoverTooltip>
-              </Row>
-            </ThemedText.BodySecondary>
-          </Cell>
-        ),
-        cell: (pendingRewards) => (
-          <Cell loading={isLoading} minWidth={200}>
-            <ThemedText.BodySecondary>
-              {pendingRewards.getValue?.()}
             </ThemedText.BodySecondary>
           </Cell>
         ),

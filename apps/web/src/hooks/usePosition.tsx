@@ -1,5 +1,6 @@
 import {
   EXACT_INCENTIVE_QUERY,
+  Incentive,
   indexerTaraswap,
 } from "components/Incentives/types";
 import { BigNumber } from "ethers";
@@ -30,21 +31,6 @@ export interface IncentiveKey {
   refundee: string;
 }
 
-export interface Incentive {
-  id: string;
-  rewardToken: {
-    id: string;
-    symbol: string;
-  };
-  pool: {
-    id: string;
-  };
-  startTime: number;
-  endTime: number;
-  vestingPeriod: number;
-  refundee: string;
-}
-
 const usePosition = (tokenId: number, incentiveId: string) => {
   const { address } = useAccount();
   const v3StakerContract = useV3StakerContract();
@@ -57,6 +43,7 @@ const usePosition = (tokenId: number, incentiveId: string) => {
   const [isUnstaking, setIsUnstaking] = useState<boolean>(false);
   const [isClaiming, setIsClaiming] = useState<boolean>(false);
   const [isWithdrawing, setIsWithdrawing] = useState<boolean>(false);
+  const [isEndingIncentive, setIsEndingIncentive] = useState<boolean>(false);
   const [isFetchingRewardInfo, setIsFetchingRewardInfo] =
     useState<boolean>(false);
 
@@ -262,6 +249,27 @@ const usePosition = (tokenId: number, incentiveId: string) => {
     [tokenId, address, v3StakerContract]
   );
 
+  const endIncentive = useCallback(
+    async (next: () => void) => {
+      if (!(v3StakerContract && incentive)) return;
+
+      try {
+        setIsEndingIncentive(true);
+        const incentiveKey = buildIncentiveIdFromIncentive(incentive);
+        const endIncentiveTx = await v3StakerContract.endIncentive(
+          incentiveKey
+        );
+        await endIncentiveTx.wait();
+        next();
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setIsEndingIncentive(false);
+      }
+    },
+    [incentive, v3StakerContract]
+  );
+
   const getRewardInfo = useCallback(async (): Promise<RewardInfo | null> => {
     if (!(v3StakerContract && address && incentive)) return null;
 
@@ -272,12 +280,12 @@ const usePosition = (tokenId: number, incentiveId: string) => {
         incentiveKey,
         tokenId
       );
+      setIsFetchingRewardInfo(false);
       return rewardInfo;
     } catch (e) {
       console.warn(e);
-      return null;
-    } finally {
       setIsFetchingRewardInfo(false);
+      return null;
     }
   }, [tokenId, incentive, v3StakerContract, address]);
 
@@ -299,6 +307,7 @@ const usePosition = (tokenId: number, incentiveId: string) => {
     isApproving,
     isTransferring,
     isStaking,
+    isEndingIncentive,
     isUnstaking,
     isClaiming,
     isWithdrawing,
@@ -311,16 +320,19 @@ const usePosition = (tokenId: number, incentiveId: string) => {
     unstakePosition,
     claim,
     withdrawPosition,
+    endIncentive,
   };
 };
 
-const buildIncentiveIdFromIncentive = (incentive: Incentive): IncentiveKey => {
+export const buildIncentiveIdFromIncentive = (
+  incentive: Incentive
+): IncentiveKey => {
   return {
     rewardToken: incentive.rewardToken.id,
     pool: incentive.pool.id,
-    startTime: incentive.startTime,
-    endTime: incentive.endTime,
-    vestingPeriod: incentive.vestingPeriod,
+    startTime: parseInt(incentive.startTime),
+    endTime: parseInt(incentive.endTime),
+    vestingPeriod: parseInt(incentive.vestingPeriod),
     refundee: incentive.refundee,
   };
 };
