@@ -70,14 +70,14 @@ export const approvedERC20: InteractiveToken[] = [
 ];
 
 export const approvedERC721: InteractiveToken[] = [
-  {
-    name: "Unisocks",
-    symbol: "SOCKS",
-    address: "0x65770b5283117639760beA3F867b69b3697a91dd",
-    chain: Chain.Ethereum,
-    standard: TokenStandard.ERC721,
-    color: "#CD237A",
-    logoUrl:
-      "https://i.seadn.io/gae/70fhKktz1h38x5pHR-DGxL4zP820_kSe5iVR_dDFXEo-etqbU5H_S-qfnvot7bd2AO7VzsRlgiU1AHYVtLfKaJZx?auto=format&dpr=1&w=384",
-  },
+  // {
+  //   name: "Unisocks",
+  //   symbol: "SOCKS",
+  //   address: "0x65770b5283117639760beA3F867b69b3697a91dd",
+  //   chain: Chain.Ethereum,
+  //   standard: TokenStandard.ERC721,
+  //   color: "#CD237A",
+  //   logoUrl:
+  //     "https://i.seadn.io/gae/70fhKktz1h38x5pHR-DGxL4zP820_kSe5iVR_dDFXEo-etqbU5H_S-qfnvot7bd2AO7VzsRlgiU1AHYVtLfKaJZx?auto=format&dpr=1&w=384",
+  // },
 ];
