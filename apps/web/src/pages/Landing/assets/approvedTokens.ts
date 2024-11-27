@@ -28,6 +28,26 @@ export const approvedERC20: InteractiveToken[] = [
     logoUrl: TARAXA_LOGO,
   },
   {
+    name: "Tarainu",
+    symbol: "TARAINU",
+    address: "0xF847ecc42565BFd2d6183d5429795549Ee89b2Ac",
+    chain: Chain.Taraxa,
+    standard: TokenStandard.ERC20,
+    color: "#11faaa",
+    logoUrl:
+      "https://www.tarainu.com/assets/images/logo/tarainu-medium-logo-1x.png",
+  },
+  {
+    name: "OneBot",
+    symbol: "OB",
+    address: "0x862a3230480b5bab682EaF01F765e6f2726bcd5f",
+    chain: Chain.Taraxa,
+    standard: TokenStandard.ERC20,
+    color: "#10dd5d",
+    logoUrl:
+      "https://pbs.twimg.com/profile_images/1731797041150328832/xLdupln6_400x400.jpg",
+  },
+  {
     name: "Lara",
     symbol: "LARA",
     address: "0xE6A69cD4FF127ad8E53C21a593F7BaC4c608945e",
@@ -38,14 +58,14 @@ export const approvedERC20: InteractiveToken[] = [
       "https://github.com/Lara-staking/visual-elements/blob/main/LARA_profile_Linkedin%20300x300.jpg?raw=true",
   },
   {
-    name: "Herb",
-    symbol: "HERB",
-    address: "0x063f255689b00a877f6be55109b3eca24e266809",
+    name: "USDM Stablecoin",
+    symbol: "USDM",
+    address: "0xC26B690773828999c2612549CC815d1F252EA15e",
     chain: Chain.Taraxa,
     standard: TokenStandard.ERC20,
-    color: "#0c9e7d",
+    color: "#01b8b3",
     logoUrl:
-      "https://pbs.twimg.com/profile_images/1548683854113816583/NnOdHJVb_400x400.jpg",
+      "https://docs.meridianfinance.net/~gitbook/image?url=https%3A%2F%2F2791058162-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252FznH0wmdBqe8s23j9vKpZ%252Ficon%252FUbuNuQudXb1BnT6HAme2%252Fmlogo.png%3Falt%3Dmedia%26token%3Dcdd3a8e5-fc46-444c-b604-d5b366b0b871&width=32&dpr=2&quality=100&sign=a305c8f5&sv=1",
   },
 ];
 
