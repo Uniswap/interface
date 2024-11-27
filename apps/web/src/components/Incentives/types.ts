@@ -196,6 +196,12 @@ query incentive($id: String!) {
   }
 `;
 
+// export const TOKEN_SPOT_PRICE_QUERY = `
+// query tokenSpotPrice($token: String!) {
+//   tokenSpotPrice(subgraphError: deny, token: $token)
+// }
+// `;
+
 export const INCENTIVES_QUERY = `
   query incentives {
     incentives(subgraphError: deny) {

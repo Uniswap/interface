@@ -1,22 +1,22 @@
 /* eslint-disable import/no-unused-modules */
-import { ImageResponse } from '@vercel/og'
+import { ImageResponse } from "@vercel/og";
 
-import { blocklistedCollections } from '../../../../../src/nft/utils/blocklist'
-import { CHECK_URL, WATERMARK_URL } from '../../../../constants'
-import getCollection from '../../../../utils/getCollection'
-import getFont from '../../../../utils/getFont'
-import { getRGBColor } from '../../../../utils/getRGBColor'
-import { getRequest } from '../../../../utils/getRequest'
+import { blocklistedCollections } from "../../../../../src/nft/utils/blocklist";
+import { CHECK_URL, WATERMARK_URL } from "../../../../constants";
+import getCollection from "../../../../utils/getCollection";
+import getFont from "../../../../utils/getFont";
+import { getRGBColor } from "../../../../utils/getRGBColor";
+import { getRequest } from "../../../../utils/getRequest";
 
 export const onRequest: PagesFunction = async ({ params, request }) => {
   try {
-    const origin = new URL(request.url).origin
-    const { index } = params
-    const collectionAddress = index?.toString()
-    const cacheUrl = origin + '/nfts/collection/' + collectionAddress
+    const origin = new URL(request.url).origin;
+    const { index } = params;
+    const collectionAddress = index?.toString();
+    const cacheUrl = origin + "/nfts/collection/" + collectionAddress;
 
     if (blocklistedCollections.includes(collectionAddress)) {
-      return new Response('Collection unsupported.', { status: 404 })
+      return new Response("Collection unsupported.", { status: 404 });
     }
 
     const data = await getRequest(
@@ -24,42 +24,45 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
       () => getCollection(collectionAddress, cacheUrl),
       (data): data is NonNullable<Awaited<ReturnType<typeof getCollection>>> =>
         Boolean(data.ogImage && data.name && data.nftCollectionData?.isVerified)
-    )
+    );
 
     if (!data) {
-      return new Response('Collection not found.', { status: 404 })
+      return new Response("Collection not found.", { status: 404 });
     }
 
-    const [fontData, palette] = await Promise.all([getFont(origin), getRGBColor(data.ogImage)])
+    const [fontData, palette] = await Promise.all([
+      getFont(origin),
+      getRGBColor(data.ogImage),
+    ]);
 
     // Split name into words to wrap them since satori does not support inline text wrapping
-    const words = data.name?.split(' ')
+    const words = data.name?.split(" ");
 
     return new ImageResponse(
       (
         <div
           style={{
-            backgroundColor: 'black',
-            display: 'flex',
-            width: '1200px',
-            height: '630px',
+            backgroundColor: "black",
+            display: "flex",
+            width: "1200px",
+            height: "630px",
           }}
         >
           <div
             style={{
-              display: 'flex',
-              alignItems: 'center',
+              display: "flex",
+              alignItems: "center",
               backgroundColor: `rgba(${palette.red}, ${palette.green}, ${palette.blue}, 0.75)`,
-              padding: '72px',
+              padding: "72px",
             }}
           >
             <div
               style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'flex-end',
-                gap: '48px',
-                width: '100%',
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "flex-end",
+                gap: "48px",
+                width: "100%",
               }}
             >
               <img
@@ -68,34 +71,44 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                 width="500px"
                 height="500px"
                 style={{
-                  borderRadius: '60px',
-                  objectFit: 'cover',
+                  borderRadius: "60px",
+                  objectFit: "cover",
                 }}
               />
               <div
                 style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '32px',
-                  width: '45%',
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "32px",
+                  width: "45%",
                 }}
               >
                 <div
                   style={{
-                    gap: '12px',
-                    fontSize: '72px',
-                    fontFamily: 'Inter',
-                    color: 'white',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    flexWrap: 'wrap',
+                    gap: "12px",
+                    fontSize: "72px",
+                    fontFamily: "Inter",
+                    color: "white",
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    flexWrap: "wrap",
                   }}
                 >
-                  {words && words.map((word: string) => <text key={word + index}>{word}</text>)}
-                  {data.nftCollectionData?.isVerified && <img src={CHECK_URL} height="54px" />}
+                  {words &&
+                    words.map((word: string) => (
+                      <text key={word + index}>{word}</text>
+                    ))}
+                  {data.nftCollectionData?.isVerified && (
+                    <img src={CHECK_URL} height="54px" />
+                  )}
                 </div>
-                <img src={WATERMARK_URL} alt="Uniswap" height="72px" width="324px" />
+                <img
+                  src={WATERMARK_URL}
+                  alt="Taraswap"
+                  height="72px"
+                  width="324px"
+                />
               </div>
             </div>
           </div>
@@ -106,14 +119,14 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
         height: 630,
         fonts: [
           {
-            name: 'Inter',
+            name: "Inter",
             data: fontData,
-            style: 'normal',
+            style: "normal",
           },
         ],
       }
-    ) as Response
+    ) as Response;
   } catch (error: any) {
-    return new Response(error.message || error.toString(), { status: 500 })
+    return new Response(error.message || error.toString(), { status: 500 });
   }
-}
+};

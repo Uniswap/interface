@@ -137,12 +137,12 @@ export function Telegram(props: IconProps) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g id="SVGRepo_bgCarrier" stroke-width="0" />
+      <g id="SVGRepo_bgCarrier" strokeWidth="0" />
 
       <g
         id="SVGRepo_tracerCarrier"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
 
       <g id="SVGRepo_iconCarrier">
@@ -168,8 +168,7 @@ export function Telegram(props: IconProps) {
             gradientUnits="userSpaceOnUse"
           >
             {" "}
-            <stop stop-color="#37BBFE" />{" "}
-            <stop offset="1" stop-color="#007DBB" />{" "}
+            <stop stopColor="#37BBFE" /> <stop offset="1" stopColor="#007DBB" />{" "}
           </linearGradient>{" "}
         </defs>{" "}
       </g>

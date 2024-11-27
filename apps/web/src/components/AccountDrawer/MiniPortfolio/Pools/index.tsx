@@ -1,26 +1,29 @@
-import { Position } from '@taraswap/v3-sdk'
-import { InterfaceElementName } from '@uniswap/analytics-events'
-import Row from 'components/Row'
-import { MouseoverTooltip } from 'components/Tooltip'
-import { BIPS_BASE } from 'constants/misc'
-import { useAccount } from 'hooks/useAccount'
-import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
-import { useSwitchChain } from 'hooks/useSwitchChain'
-import { t } from 'i18n'
-import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
-import { useCallback, useMemo, useReducer } from 'react'
-import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
-import { ThemedText } from 'theme/components'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { ExpandoRow } from '../ExpandoRow'
-import { PortfolioLogo } from '../PortfolioLogo'
-import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
-import { useAccountDrawer } from '../hooks'
-import { PositionInfo } from './cache'
-import { useFeeValues } from './hooks'
-import useMultiChainPositions from './useMultiChainPositions'
+import { Position } from "@taraswap/v3-sdk";
+import { InterfaceElementName } from "@uniswap/analytics-events";
+import Row from "components/Row";
+import { MouseoverTooltip } from "components/Tooltip";
+import { BIPS_BASE } from "constants/misc";
+import { useAccount } from "hooks/useAccount";
+import { useFilterPossiblyMaliciousPositions } from "hooks/useFilterPossiblyMaliciousPositions";
+import { useSwitchChain } from "hooks/useSwitchChain";
+import { t } from "i18n";
+import { EmptyWalletModule } from "nft/components/profile/view/EmptyWalletContent";
+import { useCallback, useMemo, useReducer } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { ThemedText } from "theme/components";
+import Trace from "uniswap/src/features/telemetry/Trace";
+import { NumberType, useFormatter } from "utils/formatNumbers";
+import { ExpandoRow } from "../ExpandoRow";
+import { PortfolioLogo } from "../PortfolioLogo";
+import PortfolioRow, {
+  PortfolioSkeleton,
+  PortfolioTabWrapper,
+} from "../PortfolioRow";
+import { useAccountDrawer } from "../hooks";
+import { PositionInfo } from "./cache";
+import { useFeeValues } from "./hooks";
+import useMultiChainPositions from "./useMultiChainPositions";
 
 /**
  * Takes an array of PositionInfo objects (format used by the Uniswap Labs gql API).
@@ -28,50 +31,71 @@ import useMultiChainPositions from './useMultiChainPositions'
  * filters the PositionDetails data for malicious content,
  * and then returns the original data in its original format.
  */
-function useFilterPossiblyMaliciousPositionInfo(positions: PositionInfo[] | undefined): PositionInfo[] {
+function useFilterPossiblyMaliciousPositionInfo(
+  positions: PositionInfo[] | undefined
+): PositionInfo[] {
   const tokenIdsToPositionInfo: Record<string, PositionInfo> = useMemo(
     () =>
       positions
-        ? positions.reduce((acc, position) => ({ ...acc, [position.details.tokenId.toString()]: position }), {})
+        ? positions.reduce(
+            (acc, position) => ({
+              ...acc,
+              [position.details.tokenId.toString()]: position,
+            }),
+            {}
+          )
         : {},
     [positions]
-  )
-  const positionDetails = useMemo(() => positions?.map((position) => position.details) ?? [], [positions])
-  const filteredPositionDetails = useFilterPossiblyMaliciousPositions(positionDetails)
+  );
+  const positionDetails = useMemo(
+    () => positions?.map((position) => position.details) ?? [],
+    [positions]
+  );
+  const filteredPositionDetails =
+    useFilterPossiblyMaliciousPositions(positionDetails);
 
   return useMemo(
-    () => filteredPositionDetails.map((positionDetails) => tokenIdsToPositionInfo[positionDetails.tokenId.toString()]),
+    () =>
+      filteredPositionDetails.map(
+        (positionDetails) =>
+          tokenIdsToPositionInfo[positionDetails.tokenId.toString()]
+      ),
     [filteredPositionDetails, tokenIdsToPositionInfo]
-  )
+  );
 }
 
 export default function Pools({ account }: { account: string }) {
-  const { positions, loading } = useMultiChainPositions(account)
-  const filteredPositions = useFilterPossiblyMaliciousPositionInfo(positions)
-  const [showClosed, toggleShowClosed] = useReducer((showClosed) => !showClosed, false)
+  const { positions, loading } = useMultiChainPositions(account);
+  const filteredPositions = useFilterPossiblyMaliciousPositionInfo(positions);
+  const [showClosed, toggleShowClosed] = useReducer(
+    (showClosed) => !showClosed,
+    false
+  );
 
   const [openPositions, closedPositions] = useMemo(() => {
-    const openPositions: PositionInfo[] = []
-    const closedPositions: PositionInfo[] = []
+    const openPositions: PositionInfo[] = [];
+    const closedPositions: PositionInfo[] = [];
     for (let i = 0; i < filteredPositions.length; i++) {
-      const position = filteredPositions[i]
+      const position = filteredPositions[i];
       if (position.closed) {
-        closedPositions.push(position)
+        closedPositions.push(position);
       } else {
-        openPositions.push(position)
+        openPositions.push(position);
       }
     }
-    return [openPositions, closedPositions]
-  }, [filteredPositions])
+    return [openPositions, closedPositions];
+  }, [filteredPositions]);
 
-  const accountDrawer = useAccountDrawer()
+  const accountDrawer = useAccountDrawer();
 
   if (!filteredPositions || loading) {
-    return <PortfolioSkeleton />
+    return <PortfolioSkeleton />;
   }
 
   if (filteredPositions.length === 0) {
-    return <EmptyWalletModule type="pool" onNavigateClick={accountDrawer.close} />
+    return (
+      <EmptyWalletModule type="pool" onNavigateClick={accountDrawer.close} />
+    );
   }
 
   return (
@@ -96,48 +120,63 @@ export default function Pools({ account }: { account: string }) {
         ))}
       </ExpandoRow>
     </PortfolioTabWrapper>
-  )
+  );
 }
 
 const ActiveDot = styled.span<{ closed: boolean; outOfRange: boolean }>`
   background-color: ${({ theme, closed, outOfRange }) =>
-    closed ? theme.neutral2 : outOfRange ? theme.deprecated_accentWarning : theme.success};
+    closed
+      ? theme.neutral2
+      : outOfRange
+      ? theme.deprecated_accentWarning
+      : theme.success};
   border-radius: 50%;
   height: 8px;
   width: 8px;
   margin-left: 4px;
   margin-top: 1px;
-`
+`;
 
-function calculateLiquidityValue(price0: number | undefined, price1: number | undefined, position: Position) {
+function calculateLiquidityValue(
+  price0: number | undefined,
+  price1: number | undefined,
+  position: Position
+) {
   if (!price0 || !price1) {
-    return undefined
+    return undefined;
   }
 
-  const value0 = parseFloat(position.amount0.toExact()) * price0
-  const value1 = parseFloat(position.amount1.toExact()) * price1
-  return value0 + value1
+  const value0 = parseFloat(position.amount0.toExact()) * price0;
+  const value1 = parseFloat(position.amount1.toExact()) * price1;
+  return value0 + value1;
 }
 
 function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
-  const { formatNumber } = useFormatter()
+  const { formatNumber } = useFormatter();
 
-  const { chainId, position, pool, details, inRange, closed } = positionInfo
+  const { chainId, position, pool, details, inRange, closed } = positionInfo;
 
-  const { priceA, priceB, fees: feeValue } = useFeeValues(positionInfo)
-  const liquidityValue = calculateLiquidityValue(priceA, priceB, position)
+  const { priceA, priceB, fees: feeValue } = useFeeValues(positionInfo);
+  const liquidityValue = calculateLiquidityValue(priceA, priceB, position);
 
-  const navigate = useNavigate()
-  const accountDrawer = useAccountDrawer()
-  const account = useAccount()
-  const switchChain = useSwitchChain()
+  const navigate = useNavigate();
+  const accountDrawer = useAccountDrawer();
+  const account = useAccount();
+  const switchChain = useSwitchChain();
   const onClick = useCallback(async () => {
     if (account.chainId !== chainId) {
-      await switchChain(chainId)
+      await switchChain(chainId);
     }
-    accountDrawer.close()
-    navigate('/pool/' + details.tokenId)
-  }, [account.chainId, chainId, switchChain, accountDrawer, navigate, details.tokenId])
+    accountDrawer.close();
+    navigate("/pool/" + details.tokenId);
+  }, [
+    account.chainId,
+    chainId,
+    switchChain,
+    accountDrawer,
+    navigate,
+    details.tokenId,
+  ]);
   const analyticsEventProperties = useMemo(
     () => ({
       chain_id: chainId,
@@ -146,14 +185,29 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
       pool_token_0_address: pool.token0.address,
       pool_token_1_address: pool.token1.address,
     }),
-    [chainId, pool.token0.address, pool.token0.symbol, pool.token1.address, pool.token1.symbol]
-  )
+    [
+      chainId,
+      pool.token0.address,
+      pool.token0.symbol,
+      pool.token1.address,
+      pool.token1.symbol,
+    ]
+  );
 
   return (
-    <Trace logPress element={InterfaceElementName.MINI_PORTFOLIO_POOLS_ROW} properties={analyticsEventProperties}>
+    <Trace
+      logPress
+      element={InterfaceElementName.MINI_PORTFOLIO_POOLS_ROW}
+      properties={analyticsEventProperties}
+    >
       <PortfolioRow
         onClick={onClick}
-        left={<PortfolioLogo chainId={chainId} currencies={[pool.token0, pool.token1]} />}
+        left={
+          <PortfolioLogo
+            chainId={chainId}
+            currencies={[pool.token0, pool.token1]}
+          />
+        }
         title={
           <Row>
             <ThemedText.SubHeader>
@@ -161,13 +215,17 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
             </ThemedText.SubHeader>
           </Row>
         }
-        descriptor={<ThemedText.BodySmall>{`${pool.fee / BIPS_BASE}%`}</ThemedText.BodySmall>}
+        descriptor={
+          <ThemedText.BodySmall>{`${
+            pool.fee / BIPS_BASE
+          }%`}</ThemedText.BodySmall>
+        }
         right={
           <>
             <MouseoverTooltip
               placement="left"
               text={
-                <div style={{ padding: '4px 0px' }}>
+                <div style={{ padding: "4px 0px" }}>
                   <ThemedText.BodySmall>{`${formatNumber({
                     input: liquidityValue,
                     type: NumberType.PortfolioBalance,
@@ -188,7 +246,11 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
 
             <Row justify="flex-end">
               <ThemedText.BodySmall color="neutral2">
-                {closed ? t('common.closed') : inRange ? t('common.withinRange') : t('common.outOfRange')}
+                {closed
+                  ? t("common.closed")
+                  : inRange
+                  ? t("common.withinRange")
+                  : t("common.outOfRange")}
               </ThemedText.BodySmall>
               <ActiveDot closed={closed} outOfRange={!inRange} />
             </Row>
@@ -196,5 +258,5 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
         }
       />
     </Trace>
-  )
+  );
 }
