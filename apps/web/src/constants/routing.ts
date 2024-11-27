@@ -29,6 +29,7 @@ import {
   USDC_OPTIMISM_GOERLI,
   USDC_POLYGON,
   USDC_POLYGON_MUMBAI,
+  USDM_TARAXA,
   USDT,
   USDT_ARBITRUM_ONE,
   USDT_AVALANCHE,
@@ -214,6 +215,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     nativeOnChain(ChainId.TARAXA),
     WRAPPED_NATIVE_CURRENCY[ChainId.TARAXA] as Token,
     USDT_TARAXA,
+    USDM_TARAXA,
   ].map(buildCurrencyInfo),
 };
 

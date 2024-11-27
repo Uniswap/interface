@@ -11,7 +11,11 @@
     "https://vercel.com",
     "https://vercel.live"
   ],
-  "fontSrc": ["'self'", "https://www.taraswap.org/"],
+  "fontSrc": [
+    "'self'",
+    "https://www.taraswap.org/",
+    "https://fonts.googleapis.com"
+  ],
   "styleSrc": ["'self'", "'unsafe-inline'", "https://www.taraswap.org/"],
   "imgSrc": ["*", "blob:", "data:"],
   "manifestSrc": ["'self'", "https://www.taraswap.org/"],
@@ -26,7 +30,6 @@
     "'self'",
     "blob:",
     "data:",
-    "https://o4504156929982464.ingest.sentry.io",
     "https://api.eu.amplitude.com/2/httpapi",
     "http://localhost:8545",
     "https://tara.to/api/v2/addresses",
@@ -78,7 +81,6 @@
     "https://ipv6-check-perf.radar.cloudflare.com/",
     "https://lh3.googleusercontent.com/",
     "https://mainnet.base.org/",
-    "https://o1037921.ingest.sentry.io",
     "https://openseauserdata.com/",
     "https://performance.radar.cloudflare.com/",
     "https://polygon-rpc.com/",
