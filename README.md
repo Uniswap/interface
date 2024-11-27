@@ -1,4 +1,31 @@
-# Uniswap Interface
+# Fork Uniswap Interface v3
+
+The current branch is a fork of the v3.3.6 tag.
+
+## Development
+
+Node.js v16 required (Checked on v16.20.2).
+
+### Install Dependencies
+
+```bash
+yarn install
+```
+
+### Run
+
+```bash
+yarn start
+```
+
+After generating types go to `src/types/v3/index.ts` and add two lines:
+
+```ts
+export type { UniswapV3Factory } from './UniswapV3Factory'
+export type { UniswapV3Pool } from './UniswapV3Pool'
+```
+
+## Uniswap Interface
 
 [![Unit Tests](https://github.com/Uniswap/uniswap-interface/actions/workflows/unit-tests.yaml/badge.svg)](https://github.com/Uniswap/uniswap-interface/actions/workflows/unit-tests.yaml)
 [![Integration Tests](https://github.com/Uniswap/uniswap-interface/actions/workflows/integration-tests.yaml/badge.svg)](https://github.com/Uniswap/uniswap-interface/actions/workflows/integration-tests.yaml)
@@ -21,20 +48,6 @@ An open source interface for Uniswap -- a protocol for decentralized exchange of
 To access the Uniswap Interface, use an IPFS gateway link from the
 [latest release](https://github.com/Uniswap/uniswap-interface/releases/latest),
 or visit [app.uniswap.org](https://app.uniswap.org).
-
-## Development
-
-### Install Dependencies
-
-```bash
-yarn install
-```
-
-### Run
-
-```bash
-yarn start
-```
 
 ## Contributions
 
