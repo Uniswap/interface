@@ -1,14 +1,16 @@
-import { CurrencyAmount } from '@ubeswap/sdk-core'
+import { CurrencyAmount, Fraction } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { useToken } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useContract } from 'hooks/useContract'
 import { t } from 'i18n'
+import JSBI from 'jsbi'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { BodyWrapper } from 'pages/AppBody'
 import React, { useCallback, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useTokenBalance } from 'state/connection/hooks'
 import styled from 'styled-components'
@@ -25,6 +27,9 @@ import StakeCollapseCard from '../../components-old/Stake/StakeCollapseCard'
 import StakeInputField from '../../components-old/Stake/StakeInputField'
 import { useDoTransaction } from '../Stake/hooks/useDoTransaction'
 
+const BIG_INT_SECONDS_IN_WEEK = JSBI.BigInt(60 * 60 * 24 * 7)
+const BIG_INT_SECONDS_IN_YEAR = new Fraction(JSBI.BigInt(60 * 60 * 24 * 365))
+
 const StyledButtonRadio = styled(ButtonRadio)({
   padding: '8px',
   borderRadius: '4px',
@@ -39,12 +44,11 @@ const Wrapper = styled.div({
   margin: '0px 24px',
 })
 
-const VOTABLE_STAKING_REWARDS_ADDRESS = '0x8585A611521717Ffe7d93cF264DbE936E484DBa0'
-
 export const StakeCustom: React.FC = () => {
   const { account, chainId, provider } = useWeb3React()
+  const { contractAddress } = useParams<{ contractAddress: string }>()
 
-  const contract = useContract<VotableStakingRewards>(VOTABLE_STAKING_REWARDS_ADDRESS, VOTABLE_STAKING_ABI, true)
+  const contract = useContract<VotableStakingRewards>(contractAddress, VOTABLE_STAKING_ABI, true)
   const tokenAddress = useSingleCallResult(contract, 'stakingToken', undefined, NEVER_RELOAD).result?.[0] as string
   const token = useToken(tokenAddress, chainId)
 
@@ -52,7 +56,7 @@ export const StakeCustom: React.FC = () => {
   const [, toggleAccountDrawer] = useAccountDrawer()
   const [amount, setAmount] = useState('')
   const tokenAmount = tryParseCurrencyAmount(amount === '' ? '0' : amount, token)
-  const [approvalState, approve] = useApproveCallback(tokenAmount, VOTABLE_STAKING_REWARDS_ADDRESS)
+  const [approvalState, approve] = useApproveCallback(tokenAmount, contractAddress)
   const [staking, setStaking] = useState(true)
   const tokenBalance = useTokenBalance(account ?? undefined, token)
   const doTransaction = useDoTransaction()
@@ -69,26 +73,34 @@ export const StakeCustom: React.FC = () => {
   const _rewardRate = useSingleCallResult(contract, 'rewardRate', []).result?.[0] ?? 0
   const rewardRate = token ? CurrencyAmount.fromRawAmount(token, _rewardRate) : undefined
 
+  const apy =
+    rewardRate && totalSupply && totalSupply.greaterThan('0')
+      ? rewardRate.asFraction.multiply(BIG_INT_SECONDS_IN_YEAR).divide(totalSupply.asFraction)
+      : undefined
   const userRewardRate =
     rewardRate && stakeBalance && totalSupply && totalSupply?.greaterThan('0')
-      ? stakeBalance.asFraction.multiply(rewardRate.asFraction).divide(totalSupply.asFraction)
+      ? JSBI.divide(JSBI.multiply(stakeBalance.quotient, rewardRate.quotient), totalSupply.quotient)
+      : undefined
+  const userWeeklyRewards =
+    userRewardRate && token
+      ? CurrencyAmount.fromRawAmount(token, JSBI.multiply(userRewardRate, BIG_INT_SECONDS_IN_WEEK))
       : undefined
 
   const onStakeClick = useCallback(async () => {
-    if (!signer || !tokenAmount) {
+    if (!signer || !tokenAmount || !contractAddress) {
       return
     }
-    const c = VotableStakingRewards__factory.connect(VOTABLE_STAKING_REWARDS_ADDRESS, signer)
+    const c = VotableStakingRewards__factory.connect(contractAddress, signer)
     return await doTransaction(c, 'stake', {
       args: [tokenAmount.quotient.toString()],
       summary: `Stake ${amount} `,
     })
-  }, [doTransaction, amount, signer, tokenAmount])
+  }, [doTransaction, amount, signer, tokenAmount, contractAddress])
   const onUnstakeClick = useCallback(async () => {
-    if (!signer) {
+    if (!signer || !contractAddress) {
       return
     }
-    const c = VotableStakingRewards__factory.connect(VOTABLE_STAKING_REWARDS_ADDRESS, signer)
+    const c = VotableStakingRewards__factory.connect(contractAddress, signer)
     if (!tokenAmount) {
       return
     }
@@ -96,17 +108,17 @@ export const StakeCustom: React.FC = () => {
       args: [tokenAmount.quotient.toString()],
       summary: `Unstake ${amount} ${token?.symbol}`,
     })
-  }, [doTransaction, amount, signer, tokenAmount, token])
+  }, [doTransaction, amount, signer, tokenAmount, token, contractAddress])
   const onClaimClick = useCallback(async () => {
-    if (!signer) {
+    if (!signer || !contractAddress) {
       return
     }
-    const c = VotableStakingRewards__factory.connect(VOTABLE_STAKING_REWARDS_ADDRESS, signer)
+    const c = VotableStakingRewards__factory.connect(contractAddress, signer)
     return await doTransaction(c, 'getReward', {
       args: [],
       summary: `Claim ${token?.symbol} rewards`,
     })
-  }, [doTransaction, signer, token])
+  }, [doTransaction, signer, token, contractAddress])
 
   let button = <ButtonLight onClick={() => toggleAccountDrawer()}>{t('Connect Wallet')}</ButtonLight>
   if (account) {
@@ -184,7 +196,7 @@ export const StakeCustom: React.FC = () => {
                 walletBalance={tokenBalance}
               />
             </div>
-            {userRewardRate?.greaterThan('0') && (
+            {userRewardRate && JSBI.greaterThan(userRewardRate, JSBI.BigInt(0)) && (
               <InformationWrapper style={{ margin: '0px 8px 0px 8px' }}>
                 <Text fontWeight={500} fontSize={16}>
                   {t('Unclaimed Rewards')}
@@ -203,7 +215,15 @@ export const StakeCustom: React.FC = () => {
           </Wrapper>
         </BodyWrapper>
 
-        {userRewardRate?.greaterThan('0') && (
+        {!(userRewardRate && JSBI.greaterThan(userRewardRate, JSBI.BigInt(0))) && (
+          <Text fontSize={20} fontWeight={500} padding="0px 8px">
+            {t('Your Weekly Rewards') + ' '}
+            {userWeeklyRewards ? userWeeklyRewards.toFixed(0, { groupSeparator: ',' }) : '--'} {token?.symbol} / week (
+            {apy?.multiply('100').toFixed(2, { groupSeparator: ',' }) ?? '--'}% APR)
+          </Text>
+        )}
+
+        {userRewardRate && JSBI.greaterThan(userRewardRate, JSBI.BigInt(0)) && (
           <StakeCollapseCard title={t('Staking Statistics')} gap="16px">
             <InformationWrapper>
               <Text>Total {token?.symbol} Staked</Text>
@@ -215,11 +235,14 @@ export const StakeCustom: React.FC = () => {
             </InformationWrapper>
             <InformationWrapper>
               <Text>{t('Your Weekly Rewards')}</Text>
-              <Text>0</Text>
+              <Text>
+                {userWeeklyRewards ? userWeeklyRewards.toFixed(4, { groupSeparator: ',' }) : '--'}
+                {'  '}
+              </Text>
             </InformationWrapper>
             <InformationWrapper>
               <Text>{t('Annual Stake APR')}</Text>
-              <Text>0% </Text>
+              <Text>{apy?.multiply('100').toFixed(2, { groupSeparator: ',' }) ?? '--'}% </Text>
             </InformationWrapper>
             <ExternalLink
               style={{ textDecoration: 'underline', textAlign: 'left' }}

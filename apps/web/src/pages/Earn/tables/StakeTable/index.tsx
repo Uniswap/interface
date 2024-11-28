@@ -180,7 +180,10 @@ export function StakesTable({
           rewardTokensList: <RewardTokensList rewardTokens={pool.rewardTokens} chainId={chainId} />,
           tvl: pool.tvl,
           apr: pool.apr,
-          link: `/stake`,
+          link:
+            pool.stakingRewardAddress == '0x388D611A57Ac15dCC1B937f287E5E908Ba5ff5c9'
+              ? `/stake`
+              : `/stakes/${pool.stakingRewardAddress}`,
           analytics: {
             elementName: InterfaceElementName.POOLS_TABLE_ROW,
             properties: {
