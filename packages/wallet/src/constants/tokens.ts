@@ -14,10 +14,10 @@ export const LARA_TARAXA = new Token(
 
 export const USDT_TARAXA = new Token(
   ChainId.Taraxa,
-  "0x5a51fadEF313f503239D1FE0b25DE2486B022c02",
+  "0x81d87E0a53EAf3723Ecc5B57AB11cC04639c9dEa",
   6,
-  "TUSDT",
-  "Test Tether"
+  "USDT",
+  "Tether USD"
 );
 
 export const DAI = new Token(

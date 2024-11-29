@@ -50,6 +50,7 @@ import {
   USDC_SEPOLIA,
   USDC_ZKSYNC,
   USDC_ZORA,
+  USDM_TARAXA,
   USDT,
   USDT_BSC,
   USDT_TARAXA,
@@ -1245,10 +1246,10 @@ export const UNIVERSE_CHAIN_INFO = {
     urlParam: "taraxa",
     statusPage: undefined,
     spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(
-      USDT_TARAXA,
+      USDM_TARAXA,
       10_000e6
     ),
-    stablecoins: [USDT_TARAXA],
+    stablecoins: [USDT_TARAXA, USDM_TARAXA],
     supportsClientSideRouting: true,
     supportsGasEstimates: false,
     wrappedNativeCurrency: {
