@@ -247,7 +247,7 @@ export const StakeCustom: React.FC = () => {
             <ExternalLink
               style={{ textDecoration: 'underline', textAlign: 'left' }}
               target="_blank"
-              href={`https://explorer.celo.org/address/${tokenAddress}/transactions`}
+              href={`https://celoscan.io/address/${tokenAddress}`}
             >
               <Text fontSize={14} fontWeight={600}>
                 View {token?.symbol} Contract
@@ -256,7 +256,7 @@ export const StakeCustom: React.FC = () => {
             <ExternalLink
               style={{ textDecoration: 'underline', textAlign: 'left' }}
               target="_blank"
-              href={`https://info.ubeswap.org/token/${tokenAddress}`}
+              href={`https://info.ubeswap.org/#/celo/tokens/${tokenAddress}`}
             >
               <Text fontSize={14} fontWeight={600}>
                 View {token?.symbol} Chart

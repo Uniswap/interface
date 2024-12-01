@@ -146,7 +146,7 @@ export const Address: React.FC<Props> = ({ value, truncate, label, link = true }
 
   return (
     <Link
-      href={`https://explorer.celo.org/address/${fmt.toLowerCase()}/transactions`}
+      href={`https://celoscan.io/address/${fmt.toLowerCase()}`}
       target="_blank"
       rel="noopener noreferrer"
       style={{ textDecoration: 'none', color: 'rgb(149, 128, 255)' }}

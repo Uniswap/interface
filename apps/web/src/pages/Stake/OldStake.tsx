@@ -222,7 +222,7 @@ export const OldStake: React.FC = () => {
             <ExternalLink
               style={{ textDecoration: 'underline', textAlign: 'left' }}
               target="_blank"
-              href="https://explorer.celo.org/address/0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC/transactions"
+              href="https://celoscan.io/address/0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC"
             >
               <Text fontSize={14} fontWeight={600}>
                 {t('View old-UBE Contract')}
@@ -231,7 +231,7 @@ export const OldStake: React.FC = () => {
             <ExternalLink
               style={{ textDecoration: 'underline', textAlign: 'left' }}
               target="_blank"
-              href="https://info.ubeswap.org/token/0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC"
+              href="https://info-v2.ubeswap.org/token/0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC"
             >
               <Text fontSize={14} fontWeight={600}>
                 {t('View old-UBE Chart')}
