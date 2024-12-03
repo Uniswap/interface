@@ -9,6 +9,7 @@ import getLibrary from '../utils/getLibrary'
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
 import UNISWAP_LOGO_URL from '../assets/svg/logo.svg'
+import { SupportedChainId } from 'constants/addresses'
 
 const INFURA_KEY = process.env.REACT_APP_INFURA_KEY
 const FORMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY
@@ -19,17 +20,23 @@ if (typeof INFURA_KEY === 'undefined') {
   throw new Error(`REACT_APP_INFURA_KEY must be a defined environment variable`)
 }
 
-const NETWORK_URLS: {
-  [chainId in ChainId]: string
-} = {
+export const NETWORK_URLS: { [key in SupportedChainId]: string } = {
   [ChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
-  [ChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
-  [ChainId.ROPSTEN]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
-  [ChainId.GÖRLI]: `https://goerli.infura.io/v3/${INFURA_KEY}`,
-  [ChainId.KOVAN]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.ROPSTEN]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.GOERLI]: `https://goerli.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.KOVAN]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.POLYGON_AMOY]: `https://polygon-amoy.drpc.org`,
 }
 
-const SUPPORTED_CHAIN_IDS = [ChainId.MAINNET, ChainId.RINKEBY, ChainId.ROPSTEN, ChainId.KOVAN, ChainId.GÖRLI]
+const SUPPORTED_CHAIN_IDS = [
+  ChainId.MAINNET,
+  ChainId.RINKEBY,
+  ChainId.ROPSTEN,
+  ChainId.KOVAN,
+  ChainId.GÖRLI,
+  ChainId.POLYGON_AMOY,
+]
 
 export const network = new NetworkConnector({
   urls: NETWORK_URLS,

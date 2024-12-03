@@ -52,6 +52,9 @@ const PERMITTABLE_TOKENS: {
   [ChainId.KOVAN]: {
     [UNI[ChainId.KOVAN].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
+  [ChainId.POLYGON_AMOY]: {
+    [UNI[ChainId.POLYGON_AMOY].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
+  },
 }
 
 export enum UseERC20PermitState {

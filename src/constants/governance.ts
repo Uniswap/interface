@@ -27,6 +27,11 @@ export const COMMON_CONTRACT_NAMES: { [chainId in ChainId]?: { [address: string]
     [GOVERNANCE_ADDRESS[ChainId.GÖRLI]]: 'Goerli Governance',
     [TIMELOCK_ADDRESS[ChainId.GÖRLI]]: 'Goerli Timelock',
   },
+  [ChainId.POLYGON_AMOY]: {
+    [UNI_ADDRESS[ChainId.POLYGON_AMOY]]: 'Polygon Amoy UNI',
+    [GOVERNANCE_ADDRESS[ChainId.POLYGON_AMOY]]: 'Polygon Amoy Governance',
+    [TIMELOCK_ADDRESS[ChainId.POLYGON_AMOY]]: 'Polygon Amoy Timelock',
+  },
 }
 
 export const DEFAULT_AVERAGE_BLOCK_TIME_IN_SECS = 13

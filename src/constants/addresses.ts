@@ -23,9 +23,28 @@ export const ENS_REGISTRAR_ADDRESSES = {
   [ChainId.GÖRLI]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
   [ChainId.RINKEBY]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
   [ChainId.ROPSTEN]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+  [ChainId.POLYGON_AMOY]: '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
 }
 export const SOCKS_CONTROLLER_ADDRESSES = {
   [ChainId.MAINNET]: '0x65770b5283117639760beA3F867b69b3697a91dd',
 }
 export const SWAP_ROUTER_ADDRESSES = constructSameAddressMap('0xE592427A0AEce92De3Edee1F18E0157C05861564')
 export const V3_MIGRATOR_ADDRESSES = constructSameAddressMap('0xA5644E29708357803b5A882D272c41cC0dF92B34')
+
+export enum SupportedChainId {
+  MAINNET = 1,
+  ROPSTEN = 3,
+  RINKEBY = 4,
+  GOERLI = 5,
+  KOVAN = 42,
+  POLYGON_AMOY = 80002,
+}
+
+export const SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
+  SupportedChainId.MAINNET,
+  SupportedChainId.ROPSTEN,
+  SupportedChainId.RINKEBY,
+  SupportedChainId.GOERLI,
+  SupportedChainId.KOVAN,
+  SupportedChainId.POLYGON_AMOY,
+]
