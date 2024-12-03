@@ -119,8 +119,14 @@ export default function Incentives() {
         poolFeeTier: position.pool.feeTier,
         tokenId: position.id.toString(),
         liquidity: position.liquidity.toString(),
-        depositedToken0: position.depositedToken0,
-        depositedToken1: position.depositedToken1,
+        depositedToken0: (
+          parseFloat(position.depositedToken0) -
+          parseFloat(position.withdrawnToken0)
+        ).toFixed(4),
+        depositedToken1: (
+          parseFloat(position.depositedToken1) -
+          parseFloat(position.withdrawnToken1)
+        ).toFixed(4),
         tickLower: position.tickLower.toString(),
         tickUpper: position.tickUpper.toString(),
       };
@@ -238,8 +244,6 @@ export default function Incentives() {
               totalRewardsToken
             );
 
-            console.log("~userPositionsParam", userPositionsParam);
-
             const poolPosition = userPositionsParam.filter((userPosition) => {
               return (
                 userPosition.poolAddress.toLowerCase() ===
@@ -300,6 +304,8 @@ export default function Incentives() {
                   relevantPosition.depositedToken1 ?? "0"
                 ).toFixed(4)} ${token1?.symbol}`
               : "-";
+
+            console.log("~relevantPosition", relevantPosition);
 
             return {
               ...poolDetails,

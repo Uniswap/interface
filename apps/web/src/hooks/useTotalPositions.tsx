@@ -25,10 +25,12 @@ export interface PositionsResponse {
   };
   liquidity: number;
   depositedToken0: string;
+  withdrawnToken0: string;
+  depositedToken1: string;
+  withdrawnToken1: string;
   token0: {
     symbol: string;
   };
-  depositedToken1: string;
   token1: {
     symbol: string;
   };
@@ -57,10 +59,12 @@ export interface PositionsResponseRaw {
   };
   liquidity: number;
   depositedToken0: string;
+  withdrawnToken0: string;
+  depositedToken1: string;
+  withdrawnToken1: string;
   token0: {
     symbol: string;
   };
-  depositedToken1: string;
   token1: {
     symbol: string;
   };
@@ -90,10 +94,12 @@ const parsePositions = (r: PositionsResponseRaw) => {
     },
     liquidity: r.liquidity,
     depositedToken0: r.depositedToken0,
+    withdrawnToken0: r.withdrawnToken0,
+    depositedToken1: r.depositedToken1,
+    withdrawnToken1: r.withdrawnToken1,
     token0: {
       symbol: r.token0.symbol,
     },
-    depositedToken1: r.depositedToken1,
     token1: {
       symbol: r.token1.symbol,
     },

@@ -295,7 +295,6 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
   useEffect(() => {
     fetchDepositAndRewards().then((data) => {
       if (data) {
-        console.log("~ data rewards: ", data);
         setUserDetails(data);
       }
     });
