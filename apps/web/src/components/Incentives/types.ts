@@ -80,6 +80,8 @@ export type PoolInfo = PoolResponse & {
   totalDeposit: string;
   depositedToken0: number;
   depositedToken1: number;
+  withdrawnToken0: number;
+  withdrawnToken1: number;
   positionId?: string;
   eligible: boolean;
   link: string;
@@ -127,10 +129,12 @@ query positions{
     }
     liquidity
     depositedToken0
+    depositedToken1
+    withdrawnToken0
+    withdrawnToken1
     token0{
       symbol
     }
-    depositedToken1
     token1{
       symbol
     }
@@ -163,10 +167,12 @@ query positions{
     }
     liquidity
     depositedToken0
+    depositedToken1
+    withdrawnToken0
+    withdrawnToken1
     token0{
       symbol
     }
-    depositedToken1
     token1{
       symbol
     }
@@ -199,10 +205,12 @@ query positions($address: String!){
     }
     liquidity
     depositedToken0
+    depositedToken1
+    withdrawnToken0
+    withdrawnToken1
     token0{
       symbol
     }
-    depositedToken1
     token1{
       symbol
     }
@@ -235,10 +243,12 @@ query positions($address: String!){
     }
     liquidity
     depositedToken0
+    depositedToken1
+    withdrawnToken0
+    withdrawnToken1
     token0{
       symbol
     }
-    depositedToken1
     token1{
       symbol
     }
