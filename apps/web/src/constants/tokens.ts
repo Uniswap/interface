@@ -29,7 +29,7 @@ export const USDM_TARAXA = new Token(
 
 export const USDT_TARAXA = new Token(
   ChainId.TARAXA,
-  "0x81d87E0a53EAf3723Ecc5B57AB11cC04639c9dEa",
+  "0x69D411CbF6dBaD54Bfe36f81d0a39922625bC78c",
   6,
   "USDT",
   "Tether USD"
