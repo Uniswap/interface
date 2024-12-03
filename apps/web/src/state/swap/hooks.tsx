@@ -395,7 +395,7 @@ export function useInitialCurrencyState(): {
   const account = useAccount();
   const supportedChainId =
     useSupportedChainId(parsedCurrencyState.chainId ?? account.chainId) ??
-    ChainId.MAINNET;
+    ChainId.TARAXA;
 
   const { data: balanceQuery } = useTokenBalancesQuery({
     cacheOnly: !multichainUXEnabled,
@@ -425,7 +425,7 @@ export function useInitialCurrencyState(): {
     // If no query params & connected, return the native token where user has the highest USD value
     let highestBalance = 0;
     let highestBalanceNativeTokenAddress = "ETH";
-    let highestBalanceChainId = ChainId.MAINNET;
+    let highestBalanceChainId = ChainId.TARAXA;
     balances.forEach((balance) => {
       if (
         balance?.token?.standard === NATIVE_CHAIN_ID &&
@@ -435,7 +435,7 @@ export function useInitialCurrencyState(): {
         highestBalance = balance.denominatedValue.value;
         highestBalanceNativeTokenAddress = balance?.token.address ?? "ETH";
         highestBalanceChainId =
-          supportedChainIdFromGQLChain(balance.token.chain) ?? ChainId.MAINNET;
+          supportedChainIdFromGQLChain(balance.token.chain) ?? ChainId.TARAXA;
       }
     });
     return {

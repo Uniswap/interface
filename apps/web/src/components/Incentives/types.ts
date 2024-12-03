@@ -66,7 +66,7 @@ export type PoolResponse = {
     symbol: string;
   };
   liquidity: string;
-  feeTier: string;
+  feeTier: number;
   tick: string;
   sqrtPrice: string;
   totalValueLockedUSD: string;
@@ -81,6 +81,7 @@ export type PoolInfo = PoolResponse & {
   depositedToken0: number;
   depositedToken1: number;
   positionId?: string;
+  eligible: boolean;
   link: string;
   tickLower: string;
   tickUpper: string;
@@ -119,6 +120,7 @@ query positions{
     }
     pool {
       id
+      feeTier
       incentives {
         id
       }
@@ -154,6 +156,79 @@ query positions{
     }
     pool {
       id
+      feeTier
+      incentives {
+        id
+      }
+    }
+    liquidity
+    depositedToken0
+    token0{
+      symbol
+    }
+    depositedToken1
+    token1{
+      symbol
+    }
+    tickLower {
+      tickIdx
+    }
+    tickUpper {
+  	  tickIdx
+    }
+  }
+}
+`;
+
+export const USER_OWNED_POSITIONS_QUERY = `
+query positions($address: String!){
+	positions(subgraphError: deny, where: {owner: $address}){
+    id
+    minter {
+      id
+    }
+    owner {
+      id
+    }
+    pool {
+      id
+      feeTier
+      incentives {
+        id
+      }
+    }
+    liquidity
+    depositedToken0
+    token0{
+      symbol
+    }
+    depositedToken1
+    token1{
+      symbol
+    }
+    tickLower {
+      tickIdx
+    }
+    tickUpper {
+  	  tickIdx
+    }
+  }
+}
+`;
+
+export const USER_STAKED_POSITIONS_QUERY = `
+query positions($address: String!){
+	positions(subgraphError: deny, where: {minter: $address, owner: "0x3611731bac2f6891dd222f6f47d9f6faf7d72e30"}){
+    id
+    minter {
+      id
+    }
+    owner {
+      id
+    }
+    pool {
+      id
+      feeTier
       incentives {
         id
       }
@@ -187,6 +262,7 @@ query incentive($id: String!) {
     }
     pool{
       id
+      feeTier
     }
     startTime
     endTime
@@ -219,6 +295,7 @@ export const INCENTIVES_QUERY = `
       }
       pool{
         id
+        feeTier
       }
       refundee
     }

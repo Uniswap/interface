@@ -26,7 +26,7 @@ import { useChainId } from "wagmi";
 import { formatUnits } from "viem/utils";
 import { MouseoverTooltip } from "components/Tooltip";
 import styled from "styled-components";
-import { Info } from "react-feather";
+import { Info, Star, Sun } from "react-feather";
 import { useV3StakerContract } from "../../hooks/useV3StakerContract";
 import useTotalPositions, { PositionsResponse } from "hooks/useTotalPositions";
 import { ZERO_ADDRESS } from "constants/misc";
@@ -64,7 +64,7 @@ const PoolTokenImage = ({
           src={pool.token1?.logoURI ?? blankTokenUrl}
         />
       )}
-      {pool.token0?.symbol}-{pool.token1?.symbol}
+      {pool.token0?.symbol}/{pool.token1?.symbol}
     </Row>
   );
 };
@@ -96,6 +96,7 @@ export default function Incentives() {
     if (!account || !account.address) return;
 
     const positions = await getPositionsWithDepositsOfUser(account.address);
+    console.log("~positions", positions);
     setUserPositionsGql(positions);
   }, [getPositionsWithDepositsOfUser, account.address]);
 
@@ -115,6 +116,7 @@ export default function Incentives() {
     return userPositionsGql.map((position) => {
       return {
         poolAddress: position.pool.id,
+        poolFeeTier: position.pool.feeTier,
         tokenId: position.id.toString(),
         liquidity: position.liquidity.toString(),
         depositedToken0: position.depositedToken0,
@@ -193,6 +195,7 @@ export default function Incentives() {
     async (
       userPositionsParam: {
         poolAddress: string;
+        poolFeeTier: number;
         tokenId: string;
         depositedToken0: string;
         depositedToken1: string;
@@ -235,16 +238,20 @@ export default function Incentives() {
               totalRewardsToken
             );
 
+            console.log("~userPositionsParam", userPositionsParam);
+
             const poolPosition = userPositionsParam.filter((userPosition) => {
               return (
                 userPosition.poolAddress.toLowerCase() ===
-                poolDetails.id.toLowerCase()
+                  poolDetails.id.toLowerCase() &&
+                userPosition.poolFeeTier === poolDetails.feeTier
               );
             });
 
             const relevantPosition = userPositionsGql.find(
               (pos) =>
-                pos.pool.id.toLowerCase() === poolDetails.id.toLowerCase()
+                pos.pool.id.toLowerCase() === poolDetails.id.toLowerCase() &&
+                pos.pool.feeTier === poolDetails.feeTier
             );
 
             let unifiedTokenId = poolPosition[0]
@@ -265,7 +272,6 @@ export default function Incentives() {
 
             if (v3StakerContract) {
               const incentiveId = buildIncentiveIdFromIncentive(incentive);
-              console.log("~incentiveId", { incentiveId, positionId });
               try {
                 const rewardInfo: RewardInfo =
                   await v3StakerContract?.getRewardInfo(
@@ -317,6 +323,10 @@ export default function Incentives() {
               tickLower: poolPosition[0] ? poolPosition[0].tickLower : "0",
               tickUpper: poolPosition[0] ? poolPosition[0].tickUpper : "0",
               apy: annualRewardPerStandardLiquidity,
+              eligible:
+                (poolPosition[0] && poolPosition[0].tokenId) || relevantPosition
+                  ? true
+                  : false,
               link:
                 (poolPosition[0] && poolPosition[0].tokenId) || relevantPosition
                   ? `/pool/${unifiedTokenId}?incentive=${incentive.id}`
@@ -344,7 +354,9 @@ export default function Incentives() {
     ) {
       processIncentives(userPositions).then((data) => {
         if (data) {
-          setPoolTransactionTableValues(data);
+          const eligiblePools = data.filter((pool) => pool.eligible);
+          const ineligiblePools = data.filter((pool) => !pool.eligible);
+          setPoolTransactionTableValues([...eligiblePools, ...ineligiblePools]);
         }
       });
     }
@@ -372,6 +384,15 @@ export default function Incentives() {
             <Row gap="4px">
               <ThemedText.BodyPrimary>
                 <Trans i18nKey="common.incentives.pool.label" />
+                &nbsp;
+                <MouseoverTooltip
+                  placement="right"
+                  text={
+                    <Trans i18nKey="common.incentives.eligible.description" />
+                  }
+                >
+                  <StyledInfoIcon />
+                </MouseoverTooltip>
               </ThemedText.BodyPrimary>
             </Row>
           </Cell>
@@ -383,7 +404,13 @@ export default function Incentives() {
             justifyContent="flex-start"
             grow
           >
-            <ThemedText.BodyPrimary>
+            {pool?.row?.original?.eligible && (
+              <>
+                <Star color="#c7a912" size={20} fill="#c7a912" />
+              </>
+            )}
+            &nbsp;&nbsp;&nbsp;
+            <ThemedText.BodyPrimary flex="column">
               <PoolTokenImage pool={pool.getValue?.()} />
             </ThemedText.BodyPrimary>
           </Cell>
@@ -587,4 +614,16 @@ const StyledLightCard = styled(LightCard)`
   margin: 20px 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
+`;
+
+const StyledCell = styled.div<{ isEligible: boolean }>`
+  background-color: ${({ isEligible }) => (isEligible ? "#e6f7e6" : "inherit")};
+  border-radius: 12px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: ${({ isEligible }) => (isEligible ? "1px solid #4caf50" : "none")};
+  box-shadow: ${({ isEligible }) =>
+    isEligible ? "0 4px 8px rgba(0, 0, 0, 0.1)" : "none"};
 `;

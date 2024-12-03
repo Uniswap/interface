@@ -260,6 +260,7 @@
   "common.incentives.apr1d": "APR 1d",
   "common.incentives.apy": "APY",
   "common.incentives.apy.description": "For every 1 Billion liquidity units you provide, you can earn approximately X reward tokens per year",
+  "common.incentives.eligible.description": "You are eligible for this incentive if you see a star next to the pool",
   "common.incentives.duration": "Duration UTC time",
   "common.incentives.vesting": "Vesting period",
   "common.incentives.pool.tvl": "Pool TVL",
