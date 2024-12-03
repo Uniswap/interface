@@ -119,8 +119,8 @@ const POLYGON_MUMBAI = UNIVERSE_CHAIN_INFO[UniverseChainId.PolygonMumbai];
 const SEPOLIA = UNIVERSE_CHAIN_INFO[UniverseChainId.SEPOLIA];
 const ZORA = UNIVERSE_CHAIN_INFO[UniverseChainId.ZORA];
 const ZKSYNC = UNIVERSE_CHAIN_INFO[UniverseChainId.ZKSYNC];
-const TARAXA_TESTNET = UNIVERSE_CHAIN_INFO[UniverseChainId.TARAXA_TESTNET];
 const TARAXA = UNIVERSE_CHAIN_INFO[UniverseChainId.TARAXA];
+const TARAXA_TESTNET = UNIVERSE_CHAIN_INFO[UniverseChainId.TARAXA_TESTNET];
 
 const INTERFACE_SUPPORTED_CHAINS = [
   MAINNET,
@@ -140,8 +140,8 @@ const INTERFACE_SUPPORTED_CHAINS = [
   BLAST,
   ZORA,
   ZKSYNC,
-  TARAXA_TESTNET,
   TARAXA,
+  TARAXA_TESTNET,
 ] as const;
 
 type ExtractObject<
@@ -176,8 +176,8 @@ export const CHAIN_INFO: ChainInfoMap = {
   [ChainId.BLAST]: BLAST,
   [ChainId.ZORA]: ZORA,
   [ChainId.ZKSYNC]: ZKSYNC,
-  [ChainId.TARAXA_TESTNET]: TARAXA_TESTNET,
   [ChainId.TARAXA]: TARAXA,
+  [ChainId.TARAXA_TESTNET]: TARAXA_TESTNET,
 } as const;
 
 export type ChainSlug = SupportedInterfaceChain["urlParam"];

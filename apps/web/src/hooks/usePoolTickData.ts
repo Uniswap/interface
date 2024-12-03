@@ -129,7 +129,7 @@ export function usePoolActiveLiquidity(
   data?: TickProcessed[];
 } {
   const account = useAccount();
-  const defaultChainId = account.chainId ?? ChainId.TARAXA_TESTNET;
+  const defaultChainId = account.chainId ?? ChainId.TARAXA;
   const pool = usePoolMultichain(
     currencyA?.wrapped,
     currencyB?.wrapped,

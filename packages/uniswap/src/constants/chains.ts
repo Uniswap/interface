@@ -1158,7 +1158,7 @@ export const UNIVERSE_CHAIN_INFO = {
     blockPerMainnetEpochForChainId: 1,
     blockWaitMsBeforeWarning: isWeb ? DEFAULT_MS_BEFORE_WARNING : 180000,
     bridge: undefined,
-    chainPriority: 11,
+    chainPriority: 12,
     docs: "https://docs.taraxa.io/",
     elementName: ElementName.ChainTaraxaTestnet,
     explorer: {
@@ -1215,7 +1215,7 @@ export const UNIVERSE_CHAIN_INFO = {
     blockPerMainnetEpochForChainId: 1,
     blockWaitMsBeforeWarning: isWeb ? DEFAULT_MS_BEFORE_WARNING : 180000,
     bridge: undefined,
-    chainPriority: 12,
+    chainPriority: 11,
     docs: "https://docs.taraxa.io/",
     elementName: ElementName.ChainTaraxa,
     explorer: {

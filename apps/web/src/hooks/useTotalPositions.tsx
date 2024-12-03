@@ -4,6 +4,8 @@ import {
   indexerTaraswap,
   POSITIONS_QUERY,
   STAKED_POSITIONS_QUERY,
+  USER_OWNED_POSITIONS_QUERY,
+  USER_STAKED_POSITIONS_QUERY,
 } from "components/Incentives/types";
 
 export interface PositionsResponse {
@@ -16,6 +18,7 @@ export interface PositionsResponse {
   };
   pool: {
     id: string;
+    feeTier: number;
     incentives: {
       id: string;
     }[];
@@ -47,6 +50,7 @@ export interface PositionsResponseRaw {
   };
   pool: {
     id: string;
+    feeTier: number;
     incentives: {
       id: string;
     }[];
@@ -70,7 +74,7 @@ export interface PositionsResponseRaw {
 
 const parsePositions = (r: PositionsResponseRaw) => {
   return {
-    id: parseInt(r.id, 16),
+    id: parseInt(r.id),
     owner: {
       id: r.owner.id,
     },
@@ -79,6 +83,7 @@ const parsePositions = (r: PositionsResponseRaw) => {
     },
     pool: {
       id: r.pool.id,
+      feeTier: r.pool.feeTier,
       incentives: r.pool.incentives.map((i) => ({
         id: i.id,
       })),
@@ -156,15 +161,63 @@ const useTotalPositions = () => {
     return null;
   }, [indexerTaraswap, STAKED_POSITIONS_QUERY, setIsLoading]);
 
-  const getPositionsOfUser = async (
-    address: string
-  ): Promise<PositionsResponse[]> => {
-    const totalPositions = await fetchTotalPositions();
-    if (!totalPositions) return [];
-    return totalPositions.filter(
-      (pos) => pos.owner.id.toLowerCase() === address.toLowerCase()
-    );
-  };
+  const fetchStakedPositionsOfUser = useCallback(
+    async (address: string): Promise<PositionsResponse[] | null> => {
+      if (!indexerTaraswap) {
+        return null;
+      }
+      setIsLoading(true);
+      const response = await fetch(indexerTaraswap, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: USER_STAKED_POSITIONS_QUERY,
+          variables: {
+            address,
+          },
+        }),
+      });
+      const data = await response.json();
+      setIsLoading(false);
+      if (data && data.data && data.data.positions) {
+        const raw: PositionsResponseRaw[] = data.data.positions;
+        return raw.map((r) => parsePositions(r));
+      }
+      return null;
+    },
+    [indexerTaraswap, USER_STAKED_POSITIONS_QUERY, setIsLoading]
+  );
+
+  const getPositionsOfUser = useCallback(
+    async (address: string): Promise<PositionsResponse[] | null> => {
+      if (!indexerTaraswap) {
+        return null;
+      }
+      setIsLoading(true);
+      const response = await fetch(indexerTaraswap, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: USER_OWNED_POSITIONS_QUERY,
+          variables: {
+            address,
+          },
+        }),
+      });
+      const data = await response.json();
+      setIsLoading(false);
+      if (data && data.data && data.data.positions) {
+        const raw: PositionsResponseRaw[] = data.data.positions;
+        return raw.map((r) => parsePositions(r));
+      }
+      return null;
+    },
+    [indexerTaraswap, USER_OWNED_POSITIONS_QUERY, setIsLoading]
+  );
 
   const getStakerOwnedPositions = async (
     address: string
@@ -192,22 +245,14 @@ const useTotalPositions = () => {
     address: string
   ): Promise<PositionsResponse[]> => {
     if (!v3StakerContract) return [];
-    const totalPositions = await fetchTotalPositions();
-    if (!totalPositions) return [];
-
-    setIsLoading(true);
-    const ownPositions = totalPositions.filter(
-      (pos) => pos.owner.id.toLowerCase() === address.toLowerCase()
+    const ownedPositions = await getPositionsOfUser(address.toLowerCase());
+    console.log("~ownedPositions", ownedPositions);
+    const stakedPositions = await fetchStakedPositionsOfUser(
+      address.toLowerCase()
     );
-
-    const stakedPositions = totalPositions.filter(
-      (pos) =>
-        pos.owner.id.toLowerCase() === STAKER_ADDRESS.toLowerCase() &&
-        pos.minter.id.toLowerCase() === address.toLowerCase()
-    );
-
-    setIsLoading(false);
-    return ownPositions.concat(stakedPositions);
+    console.log("~stakedPositions", stakedPositions);
+    if (!ownedPositions || !stakedPositions) return [];
+    return ownedPositions.concat(stakedPositions);
   };
 
   return {
@@ -217,6 +262,7 @@ const useTotalPositions = () => {
     getPositionsOfUser,
     getStakerOwnedPositions,
     getPositionsWithDepositsOfUser,
+    fetchStakedPositionsOfUser,
   };
 };
 
