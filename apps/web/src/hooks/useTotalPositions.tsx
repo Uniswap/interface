@@ -282,11 +282,9 @@ const useTotalPositions = () => {
   ): Promise<PositionsResponse[]> => {
     if (!v3StakerContract) return [];
     const ownedPositions = await getPositionsOfUser(address.toLowerCase());
-    console.log("~ownedPositions", ownedPositions);
     const stakedPositions = await fetchStakedPositionsOfUser(
       address.toLowerCase()
     );
-    console.log("~stakedPositions", stakedPositions);
     if (!ownedPositions || !stakedPositions) return [];
     return ownedPositions.concat(stakedPositions);
   };

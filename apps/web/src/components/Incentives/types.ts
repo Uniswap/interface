@@ -1,3 +1,4 @@
+import { useTokenUsdPrice } from "hooks/useTokenUsdPrice";
 import { PositionsResponse } from "hooks/useTotalPositions";
 
 export type TokenInfo = {
@@ -410,4 +411,37 @@ export const calculateApy = (
     annualRewardPerLiquidityUnit * standardLiquidityAmount;
 
   return annualRewardPerStandardLiquidity;
+};
+
+export const calculateApy24hrs = async (
+  incentive: Incentive,
+  totalPoolLiquidity: number, // in USD ex: 276000.29 USD
+  totalRewardsToken: string // in ETH ex: 100 = 100 * 10^18 wei
+): Promise<number> => {
+  const incentiveDuration =
+    Number(incentive.endTime) - Number(incentive.startTime);
+  const incentiveDurationInDays = incentiveDuration / (60 * 60 * 24);
+
+  // Correctly convert totalRewardsToken to its decimal value
+  const totalRewardTokensDecimal = parseFloat(totalRewardsToken);
+
+  // Calculate daily rewards in tokens
+  const dailyRewardTokens = totalRewardTokensDecimal / incentiveDurationInDays;
+
+  // Get the USD price of the reward token
+  const { usdPrice: rewardTokenUsdPrice } = await useTokenUsdPrice(
+    incentive.rewardToken.id
+  );
+
+  if (!rewardTokenUsdPrice) {
+    return 0;
+  }
+
+  // Daily rewards in USD
+  // need to divide this by number of stakers later
+  const dailyRewardUsd = dailyRewardTokens * rewardTokenUsdPrice;
+
+  const apr24hrs = dailyRewardUsd * 100;
+
+  return apr24hrs;
 };

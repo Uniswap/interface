@@ -164,14 +164,10 @@ const ChoosePositionModal: React.FC<ChoosePositionModalProps> = ({
     }
   };
 
-  const theme = useTheme();
-
   const hasPositions = relevantPositions.length > 0;
 
-  const mockPositions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
   return (
-    <Modal isOpen={show} onDismiss={() => onHide()} slideIn>
+    <Modal isOpen={show && hasPositions} onDismiss={onHide} slideIn>
       <Wrapper>
         <Header>
           <Row width="100%" justify="space-between">
@@ -186,7 +182,6 @@ const ChoosePositionModal: React.FC<ChoosePositionModalProps> = ({
             <>
               {relevantPositions
                 .map((p) => p.id)
-                .concat(mockPositions)
                 .map((id) => (
                   <Tile
                     key={id}
