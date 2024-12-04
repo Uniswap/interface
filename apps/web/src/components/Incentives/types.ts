@@ -79,6 +79,7 @@ export type PoolInfo = PoolResponse & {
   tvl: string;
   totalrewards: string;
   tokenreward: string;
+  tokenRewardLogoUri: string;
   totalDeposit: string;
   depositedToken0: number;
   depositedToken1: number;
