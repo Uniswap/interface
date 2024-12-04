@@ -58,9 +58,13 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
   }, [deviceSupportsBiometrics, hasSeedPhrase, isBiometricAuthEnabled, navigation, onCompleteOnboarding, params])
 
   const onPressEnableNotifications = useCallback(async () => {
-    promptPushPermission(() => {
+    const arePushNotificationsEnabled = await promptPushPermission()
+
+    if (arePushNotificationsEnabled) {
       enableNotifications()
-    }, showNotificationSettingsAlert)
+    } else {
+      showNotificationSettingsAlert()
+    }
 
     await navigateToNextScreen()
   }, [enableNotifications, navigateToNextScreen])

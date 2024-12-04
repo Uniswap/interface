@@ -4,7 +4,9 @@ import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta, AccountType, SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
+import { DynamicConfigs, MainnetPrivateRpcConfigKey } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
+import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -14,7 +16,7 @@ import { transactionActions } from 'uniswap/src/features/transactions/slice'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
-  TransactionDetails,
+  OnChainTransactionDetails,
   TransactionOptions,
   TransactionOriginType,
   TransactionStatus,
@@ -64,38 +66,61 @@ export function* sendTransaction(params: SendTransactionParams) {
     throw new Error('Account must support signing')
   }
 
-  // Only fetch nonce if it's not already set, or we could be overwriting some custom logic
-  // On swapSaga we manually set them for approve+swap to prevent errors in some L2s
-  if (!request.nonce) {
-    const nonce = yield* call(tryGetNonce, account, chainId)
-    if (nonce) {
-      request = { ...request, nonce }
+  // Register the tx in the store before it's submitted
+  let unsubmittedTransaction = yield* call(addUnsubmittedTransaction, params)
+
+  try {
+    // Only fetch nonce if it's not already set, or we could be overwriting some custom logic
+    // On swapSaga we manually set them for approve+swap to prevent errors in some L2s
+    if (!request.nonce) {
+      const nonce = yield* call(tryGetNonce, account, chainId)
+      if (nonce) {
+        request = { ...request, nonce }
+      }
     }
+
+    // Sign and send the transaction
+    const provider = options.submitViaPrivateRpc
+      ? yield* call(getPrivateProvider, chainId, account)
+      : yield* call(getProvider, chainId)
+    const signerManager = yield* call(getSignerManager)
+    const { transactionResponse, populatedRequest } = yield* call(
+      signAndSendTransaction,
+      request,
+      account,
+      provider,
+      signerManager,
+    )
+    logger.debug('sendTransaction', '', 'Tx submitted:', transactionResponse.hash)
+
+    const { gasEstimates } = unsubmittedTransaction.typeInfo
+    if (gasEstimates) {
+      const blockNumber = yield* call([provider, provider.getBlockNumber])
+      unsubmittedTransaction = {
+        ...unsubmittedTransaction,
+        typeInfo: {
+          ...unsubmittedTransaction.typeInfo,
+          gasEstimates: { ...gasEstimates, blockSubmitted: blockNumber },
+        },
+      }
+    }
+
+    // Update the transaction with the hash and populated request
+    yield* call(
+      updateSubmittedTransaction,
+      unsubmittedTransaction,
+      transactionResponse.hash,
+      populatedRequest,
+      params.analytics,
+    )
+    return { transactionResponse }
+  } catch (error) {
+    // TODO(WALL-5027): Improve error segmentation
+
+    yield* put(transactionActions.finalizeTransaction({ ...unsubmittedTransaction, status: TransactionStatus.Failed }))
+
+    throw error
   }
-
-  // Sign and send the transaction
-  const provider = options.submitViaPrivateRpc
-    ? yield* call(getPrivateProvider, chainId, account)
-    : yield* call(getProvider, chainId)
-  const signerManager = yield* call(getSignerManager)
-  const { transactionResponse, populatedRequest } = yield* call(
-    signAndSendTransaction,
-    request,
-    account,
-    provider,
-    signerManager,
-  )
-  logger.debug('sendTransaction', '', 'Tx submitted:', transactionResponse.hash)
-
-  const { gasEstimates } = params.typeInfo
-  if (gasEstimates) {
-    const blockNumber = yield* call([provider, provider.getBlockNumber])
-    gasEstimates.blockSubmitted = blockNumber
-  }
-
-  // Register the tx in the store
-  yield* call(addTransaction, params, transactionResponse.hash, populatedRequest)
-  return { transactionResponse }
 }
 
 export async function signAndSendTransaction(
@@ -116,36 +141,61 @@ export async function signAndSendTransaction(
   return { transactionResponse, populatedRequest }
 }
 
-function* addTransaction(
-  { chainId, typeInfo, account, options, txId, analytics, transactionOriginType }: SendTransactionParams,
-  hash: string,
-  populatedRequest: providers.TransactionRequest,
-) {
+function* addUnsubmittedTransaction({
+  chainId,
+  typeInfo,
+  account,
+  options,
+  txId,
+  transactionOriginType,
+}: SendTransactionParams) {
   const id = txId ?? createTransactionId()
-  const request = getSerializableTransactionRequest(populatedRequest, chainId)
-  const timeoutTimestampMs = typeInfo.gasEstimates ? Date.now() + getTransactionTimeoutMs(chainId) : undefined
 
-  const transaction: TransactionDetails = {
+  const transaction: OnChainTransactionDetails = {
     routing: isBridgeTypeInfo(typeInfo) ? Routing.BRIDGE : Routing.CLASSIC,
     id,
     chainId,
-    hash,
     typeInfo,
     from: account.address,
     addedTime: Date.now(),
     status: TransactionStatus.Pending,
     options: {
       ...options,
+    },
+    transactionOriginType,
+  }
+  yield* put(transactionActions.addTransaction(transaction))
+  logger.debug('sendTransaction', 'addUnsubmittedTransaction', 'Tx added:', { chainId, ...typeInfo })
+  return transaction
+}
+
+function* updateSubmittedTransaction(
+  transaction: OnChainTransactionDetails,
+  hash: string,
+  populatedRequest: providers.TransactionRequest,
+  analytics?: ReturnType<typeof getBaseTradeAnalyticsProperties>,
+) {
+  const request = getSerializableTransactionRequest(populatedRequest, transaction.chainId)
+  const timeoutTimestampMs =
+    transaction.typeInfo.gasEstimates || transaction.options.submitViaPrivateRpc
+      ? Date.now() + getTransactionTimeoutMs(transaction.chainId)
+      : undefined
+
+  const updatedTransaction: OnChainTransactionDetails = {
+    ...transaction,
+    hash,
+    status: TransactionStatus.Pending,
+    options: {
+      ...transaction.options,
       request,
       timeoutTimestampMs,
     },
-    transactionOriginType,
   }
 
   if (transaction.typeInfo.type === TransactionType.Swap || transaction.typeInfo.type === TransactionType.Bridge) {
     if (!analytics) {
       // Don't expect swaps from WC or Dapps to always provide analytics object
-      if (transactionOriginType === TransactionOriginType.Internal) {
+      if (transaction.transactionOriginType === TransactionOriginType.Internal) {
         logger.error(new Error('Missing `analytics` for swap when calling `addTransaction`'), {
           tags: { file: 'sendTransaction', function: 'addTransaction' },
           extra: { transaction },
@@ -159,8 +209,11 @@ function* addTransaction(
       yield* call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, event)
     }
   }
-  yield* put(transactionActions.addTransaction(transaction))
-  logger.debug('sendTransaction', 'addTransaction', 'Tx added:', { chainId, ...typeInfo })
+  yield* put(transactionActions.updateTransaction(updatedTransaction))
+  logger.debug('sendTransaction', 'updateSubmittedTransaction', 'Tx updated:', {
+    chainId: updatedTransaction.chainId,
+    ...updatedTransaction.typeInfo,
+  })
 }
 
 /**
@@ -174,10 +227,21 @@ function* addTransaction(
 export function* tryGetNonce(account: SignerMnemonicAccountMeta, chainId: UniverseChainId) {
   try {
     const isPrivateRpcEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.PrivateRpc))
+
+    const useFlashbots = getDynamicConfigValue<DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey, boolean>(
+      DynamicConfigs.MainnetPrivateRpc,
+      MainnetPrivateRpcConfigKey.UseFlashbots,
+      false,
+    )
+
+    const sendAuthenticationHeader = getDynamicConfigValue<
+      DynamicConfigs.MainnetPrivateRpc,
+      MainnetPrivateRpcConfigKey,
+      boolean
+    >(DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey.SendFlashbotsAuthenticationHeader, false)
+
     const shouldUseFlashbots =
-      isPrivateRpcEnabled &&
-      chainId === UniverseChainId.Mainnet &&
-      Statsig.checkGate(getFeatureFlagName(FeatureFlags.FlashbotsPrivateRpc))
+      isPrivateRpcEnabled && chainId === UniverseChainId.Mainnet && useFlashbots && sendAuthenticationHeader
 
     const provider = shouldUseFlashbots
       ? yield* call(getPrivateProvider, chainId, account)
@@ -185,9 +249,8 @@ export function* tryGetNonce(account: SignerMnemonicAccountMeta, chainId: Univer
 
     const nonce = yield* call([provider, provider.getTransactionCount], account.address, 'pending')
 
+    // If we're using Flashbots with authentication header as private RPC, it will already account for pending private transactions. Otherwise, add the local pending private transactions.
     if (!shouldUseFlashbots && isPrivateRpcSupportedOnChain(chainId)) {
-      // If we're using flashbots as private RPC, it will already account for pending private transactions.
-      // Only need to add the `pendingPrivateTransactionCount` when there could be transactions submitted via MEVBlocker.
       const pendingPrivateTransactionCount = yield* call(getPendingPrivateTxCount, account.address, chainId)
       return nonce + pendingPrivateTransactionCount
     }

@@ -4,7 +4,7 @@ import { Alert } from 'react-native'
 import 'react-native-reanimated'
 import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
 import { getSupportedURI, URIType } from 'src/components/Requests/ScanSheet/util'
-import { Flex, Text, TouchableArea, useHapticFeedback, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -22,19 +22,21 @@ type Props = {
 
 export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
+  const isDarkMode = useIsDarkMode()
+
   const activeAddress = useActiveAccountAddress()
   const [currentScreenState, setCurrentScreenState] = useState<ScannerModalState>(ScannerModalState.ScanQr)
   const [shouldFreezeCamera, setShouldFreezeCamera] = useState(false)
-  const { hapticFeedback } = useHapticFeedback()
+
+  const isScanningQr = currentScreenState === ScannerModalState.ScanQr
+
+  const colors = useSporeColors(isScanningQr ? 'dark' : undefined)
 
   const onScanCode = async (uri: string): Promise<void> => {
-    // don't scan any QR codes if camera is frozen
     if (shouldFreezeCamera) {
       return
     }
 
-    await hapticFeedback.selection()
     setShouldFreezeCamera(true)
     const supportedURI = await getSupportedURI(uri)
 
@@ -60,23 +62,31 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
       setCurrentScreenState(ScannerModalState.ScanQr)
     }
   }
-  const isDarkMode = useIsDarkMode()
 
   return (
-    <Modal fullScreen backgroundColor={colors.surface1.val} name={ModalName.WalletConnectScan} onClose={onClose}>
+    <Modal
+      fullScreen
+      handlebarColor={colors.surface3.val}
+      backgroundColor={colors.surface1.val}
+      name={ModalName.WalletConnectScan}
+      onClose={onClose}
+    >
       {currentScreenState === ScannerModalState.ScanQr && (
-        <QRCodeScanner shouldFreezeCamera={shouldFreezeCamera} onScanCode={onScanCode} />
+        <QRCodeScanner
+          theme={isScanningQr ? 'dark' : undefined}
+          shouldFreezeCamera={shouldFreezeCamera}
+          onScanCode={onScanCode}
+        />
       )}
       {currentScreenState === ScannerModalState.WalletQr && activeAddress && <WalletQRCode address={activeAddress} />}
       <Flex centered mb="$spacing12" mt="$spacing16" mx="$spacing16">
         <TouchableArea
-          hapticFeedback
           borderColor={isDarkMode ? '$transparent' : '$surface3'}
           borderRadius="$roundedFull"
           borderWidth={1}
           p="$spacing16"
           paddingEnd="$spacing24"
-          style={{ backgroundColor: colors.DEP_backgroundOverlay.val }}
+          backgroundColor={colors.DEP_backgroundOverlay.val}
           testID={TestID.QRCodeModalToggle}
           onPress={onPressBottomToggle}
         >
@@ -86,7 +96,7 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
             ) : (
               <ScanQRIcon color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
             )}
-            <Text color="$neutral1" variant="buttonLabel2">
+            <Text color={colors.neutral1.val} variant="buttonLabel2">
               {currentScreenState === ScannerModalState.ScanQr
                 ? t('qrScanner.recipient.action.show')
                 : t('qrScanner.recipient.action.scan')}

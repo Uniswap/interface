@@ -29,7 +29,4 @@ export type DerivedSwapInfo<
   wrapType: WrapType
   selectingCurrencyField?: CurrencyField
   txId?: string
-  autoSlippageTolerance?: number
-  customSlippageTolerance?: number
-  customDeadline?: number
 }

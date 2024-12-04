@@ -11,13 +11,13 @@ import {
   usePoolTransactions,
 } from 'graphql/data/pools/usePoolTransactions'
 import { OrderDirection, supportedChainIdFromGQLChain } from 'graphql/data/util'
-import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import styled from 'lib/styled-components'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -71,7 +71,7 @@ export function PoolDetailsTransactionsTable({
   protocolVersion?: ProtocolVersion
 }) {
   const chainId = useChainIdFromUrlParam() ?? UniverseChainId.Mainnet
-  const activeLocalCurrency = useActiveLocalCurrency()
+  const activeLocalCurrency = useAppFiatCurrency()
   const { formatNumber, formatFiatPrice } = useFormatter()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
   const filterAnchorRef = useRef<HTMLDivElement>(null)

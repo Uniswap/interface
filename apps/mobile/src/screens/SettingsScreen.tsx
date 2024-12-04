@@ -3,7 +3,7 @@ import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { SvgProps } from 'react-native-svg'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { OnboardingStackNavigationProp, SettingsStackNavigationProp } from 'src/app/navigation/types'
 import { FooterSettings } from 'src/components/Settings/FooterSettings'
 import { OnboardingRow } from 'src/components/Settings/OnboardingRow'
@@ -20,6 +20,7 @@ import { APP_FEEDBACK_LINK } from 'src/constants/urls'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricName, useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
 import { useWalletRestore } from 'src/features/wallet/hooks'
+import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { Flex, IconProps, Text, useSporeColors } from 'ui/src'
 import BookOpenIcon from 'ui/src/assets/icons/book-open.svg'
 import ContrastIcon from 'ui/src/assets/icons/contrast.svg'
@@ -42,7 +43,7 @@ import {
 } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
@@ -56,8 +57,8 @@ import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobi
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { isAndroid } from 'utilities/src/platform'
+
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
-import { selectHapticsEnabled, setHapticsUserSettingEnabled } from 'wallet/src/features/appearance/slice'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
@@ -95,12 +96,13 @@ export function SettingsScreen(): JSX.Element {
     }, AVOID_RENDER_DURING_ANIMATION_MS)
   }, [dispatch, hideSpamTokens])
 
-  const hapticsUserEnabled = useSelector(selectHapticsEnabled)
+  const { hapticsEnabled, setHapticsEnabled } = useHapticFeedback()
+
   const onToggleEnableHaptics = useCallback(() => {
     setTimeout(() => {
-      dispatch(setHapticsUserSettingEnabled(!hapticsUserEnabled))
+      setHapticsEnabled(!hapticsEnabled)
     }, AVOID_RENDER_DURING_ANIMATION_MS)
-  }, [dispatch, hapticsUserEnabled])
+  }, [setHapticsEnabled, hapticsEnabled])
 
   const [isTestnetModalOpen, setIsTestnetModalOpen] = useState(false)
   const { isTestnetModeEnabled } = useEnabledChains()
@@ -195,7 +197,7 @@ export function SettingsScreen(): JSX.Element {
           {
             text: t('settings.setting.hapticTouch.title'),
             icon: <WavePulse {...iconProps} />,
-            isToggleEnabled: hapticsUserEnabled,
+            isToggleEnabled: hapticsEnabled,
             onToggle: onToggleEnableHaptics,
           },
           {
@@ -325,7 +327,7 @@ export function SettingsScreen(): JSX.Element {
     onToggleHideSmallBalances,
     hideSpamTokens,
     onToggleHideSpamTokens,
-    hapticsUserEnabled,
+    hapticsEnabled,
     onToggleEnableHaptics,
     noSignerAccountImported,
     deviceSupportsBiometrics,

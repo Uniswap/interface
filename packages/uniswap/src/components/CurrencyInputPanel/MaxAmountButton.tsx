@@ -74,7 +74,6 @@ const MaxButtonContent = memo(function _MaxButtonContent({
       element={currencyField === CurrencyField.INPUT ? ElementName.SetMaxInput : ElementName.SetMaxOutput}
     >
       <TouchableArea
-        hapticFeedback
         backgroundColor={disabled ? '$surface3' : '$accent2'}
         borderRadius="$rounded12"
         opacity={disabled ? 0.5 : 1}

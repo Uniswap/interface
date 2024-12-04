@@ -1,9 +1,11 @@
 // eslint-disable-next-line no-restricted-imports
+// eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
 import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
+import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { PositionInfo } from 'components/Liquidity/types'
 import { parseRestPosition } from 'components/Liquidity/utils'
 import { LoadingRows } from 'components/Loader/styled'
@@ -17,7 +19,7 @@ import {
 } from 'pages/Pool/Positions/create/ContextProviders'
 import {
   DEFAULT_DEPOSIT_STATE,
-  DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS,
+  DEFAULT_PRICE_RANGE_STATE,
   useCreatePositionContext,
   useDepositContext,
   usePriceRangeContext,
@@ -25,12 +27,13 @@ import {
 import { EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
 import { SelectPriceRangeStep } from 'pages/Pool/Positions/create/RangeSelectionStep'
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
+import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { LoadingRow } from 'pages/Pool/Positions/shared'
 import { useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { useDispatch } from 'react-redux'
-import { Navigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { PositionField } from 'types/position'
@@ -44,11 +47,14 @@ import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { useAccount } from 'wagmi'
 
@@ -66,14 +72,16 @@ const BodyWrapper = styled(Main, {
 
 function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   const { chainName, tokenId } = useParams<{ tokenId: string; chainName: string }>()
-
+  const trace = useTrace()
   const { t } = useTranslation()
 
   const { positionState, setPositionState, setStep, step } = useCreatePositionContext()
   const { protocolVersion } = positionState
   const { setPriceRangeState } = usePriceRangeContext()
   const { setDepositState } = useDepositContext()
-  const { value: v4Enabled, isLoading: isV4GateLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Everywhere)
+  const { value: lpRedesignEnabled, isLoading: isLPRedesignGateLoading } = useFeatureFlagWithLoading(
+    FeatureFlags.LPRedesign,
+  )
 
   const [transactionSteps, setTransactionSteps] = useState<TransactionStep[]>([])
   const [currentTransactionStep, setCurrentTransactionStep] = useState<
@@ -83,8 +91,9 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   const startChainId = useAccount().chainId
   const account = useAccountMeta()
   const dispatch = useDispatch()
-  const { txInfo } = useMigrateV3TxContext()
+  const { txInfo, error, refetch } = useMigrateV3TxContext()
   const media = useMedia()
+  const navigate = useNavigate()
 
   const onClose = () => {
     setCurrentTransactionStep(undefined)
@@ -94,11 +103,11 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   const currency0FiatAmount = useUSDCValue(currency0Amount) ?? undefined
   const currency1FiatAmount = useUSDCValue(currency1Amount) ?? undefined
 
-  if (!isV4GateLoading && !v4Enabled) {
+  if (!isLPRedesignGateLoading && !lpRedesignEnabled) {
     return <Navigate to="/pools" replace />
   }
 
-  if (isV4GateLoading) {
+  if (isLPRedesignGateLoading) {
     return null
   }
 
@@ -136,7 +145,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
                   [PositionField.TOKEN1]: currency1Amount.currency,
                 },
               })
-              setPriceRangeState(DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS)
+              setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
               setDepositState(DEFAULT_DEPOSIT_STATE)
               setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
             }}
@@ -178,28 +187,49 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
               <EditSelectTokensStep width="100%" maxWidth="unset" />
             )}
             {step === PositionFlowStep.PRICE_RANGE && (
-              <SelectPriceRangeStep
-                width="100%"
-                maxWidth="unset"
-                onContinue={() => {
-                  const isValidTx = isValidLiquidityTxContext(txInfo)
-                  if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
-                    return
-                  }
-                  dispatch(
-                    liquiditySaga.actions.trigger({
-                      selectChain,
-                      startChainId,
-                      account,
-                      liquidityTxContext: txInfo,
-                      setCurrentStep: setCurrentTransactionStep,
-                      setSteps: setTransactionSteps,
-                      onSuccess: onClose,
-                      onFailure: onClose,
-                    }),
-                  )
-                }}
-              />
+              <>
+                <SelectPriceRangeStep
+                  width="100%"
+                  maxWidth="unset"
+                  onDisableContinue={!txInfo || error}
+                  onContinue={() => {
+                    const isValidTx = isValidLiquidityTxContext(txInfo)
+                    if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
+                      return
+                    }
+                    dispatch(
+                      liquiditySaga.actions.trigger({
+                        selectChain,
+                        startChainId,
+                        account,
+                        liquidityTxContext: txInfo,
+                        setCurrentStep: setCurrentTransactionStep,
+                        setSteps: setTransactionSteps,
+                        onSuccess: () => {
+                          onClose()
+                          navigate('/positions')
+                        },
+                        onFailure: onClose,
+                        analytics: {
+                          ...getLPBaseAnalyticsProperties({
+                            trace,
+                            fee: positionInfo.feeTier,
+                            currency0: currency0Amount.currency,
+                            currency1: currency1Amount.currency,
+                            currency0AmountUsd: currency0FiatAmount,
+                            currency1AmountUsd: currency1FiatAmount,
+                            poolId: positionInfo.poolId,
+                            version: protocolVersion,
+                            chainId: startChainId,
+                          }),
+                          action: 'V3->V4',
+                        },
+                      }),
+                    )
+                  }}
+                />
+                {error && <TradingAPIError refetch={refetch} />}
+              </>
             )}
           </Flex>
         </Flex>
@@ -268,23 +298,36 @@ export default function MigrateV3() {
     )
   }
 
-  const { currency0Amount, currency1Amount } = positionInfo
+  const { currency0Amount, currency1Amount, feeTier } = positionInfo
   return (
-    <CreatePositionContextProvider
-      initialState={{
-        currencyInputs: {
-          [PositionField.TOKEN0]: currency0Amount.currency,
-          [PositionField.TOKEN1]: currency1Amount.currency,
-        },
+    <Trace
+      logImpression
+      page={InterfacePageNameLocal.MigrateV3}
+      properties={{
+        pool_address: positionInfo.poolId,
+        chain_id: chainId ?? account.chainId,
+        label: [currency0Amount.currency.symbol, currency1Amount.currency.symbol].join('/'),
+        fee_tier: feeTier,
+        token0Address: currencyIdToAddress(currencyId(currency0Amount.currency)),
+        token1Address: currencyIdToAddress(currencyId(currency1Amount.currency)),
       }}
     >
-      <PriceRangeContextProvider>
-        <DepositContextProvider>
-          <MigrateV3PositionTxContextProvider positionInfo={positionInfo}>
-            <MigrateV3Inner positionInfo={positionInfo} />
-          </MigrateV3PositionTxContextProvider>
-        </DepositContextProvider>
-      </PriceRangeContextProvider>
-    </CreatePositionContextProvider>
+      <CreatePositionContextProvider
+        initialState={{
+          currencyInputs: {
+            [PositionField.TOKEN0]: currency0Amount.currency,
+            [PositionField.TOKEN1]: currency1Amount.currency,
+          },
+        }}
+      >
+        <PriceRangeContextProvider>
+          <DepositContextProvider>
+            <MigrateV3PositionTxContextProvider positionInfo={positionInfo}>
+              <MigrateV3Inner positionInfo={positionInfo} />
+            </MigrateV3PositionTxContextProvider>
+          </DepositContextProvider>
+        </PriceRangeContextProvider>
+      </CreatePositionContextProvider>
+    </Trace>
   )
 }

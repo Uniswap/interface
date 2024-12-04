@@ -19,6 +19,9 @@ describe(getValidAddress, () => {
     ${INSAMPLE_SEED_ADDRESS_1_NON_HEX}      | ${null}                                   | ${true}  | ${'non hex address'}
     ${null}                                 | ${null}                                   | ${false} | ${'null address'}
     ${undefined}                            | ${null}                                   | ${false} | ${'undefined address'}
+    ${{}}                                   | ${null}                                   | ${false} | ${'handles unexpected object'}
+    ${{ meow: 'woof' }}                     | ${null}                                   | ${false} | ${'handles unexpected object'}
+    ${true}                                 | ${null}                                   | ${false} | ${'handles unexpected boolean'}
   `('$desc for checksum=$checksum $input should return $expected', async ({ input, expected, checksum }) => {
     expect(getValidAddress(input, checksum)).toEqual(expected)
   })

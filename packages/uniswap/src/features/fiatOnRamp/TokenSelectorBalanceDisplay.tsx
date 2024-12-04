@@ -27,7 +27,7 @@ export function TokenSelectorBalanceDisplay({
   testID,
 }: TokenSelectorBalanceDisplayProps): JSX.Element {
   return (
-    <TouchableArea hapticFeedback borderRadius="$roundedFull" disabled={disabled} testID={testID} onPress={onPress}>
+    <TouchableArea borderRadius="$roundedFull" disabled={disabled} testID={testID} onPress={onPress}>
       <Flex
         row
         alignItems="center"

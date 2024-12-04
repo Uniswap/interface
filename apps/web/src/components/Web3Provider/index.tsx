@@ -13,7 +13,7 @@ import { useUpdateAtom } from 'jotai/utils'
 import { ReactNode, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useConnectedWallets } from 'state/wallets/hooks'
-import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -28,17 +28,14 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <ConnectionProvider>
-          <Updater />
-          {children}
-        </ConnectionProvider>
+        <ConnectionProvider>{children}</ConnectionProvider>
       </QueryClientProvider>
     </WagmiProvider>
   )
 }
 
 /** A component to run hooks under the Web3ReactProvider context. */
-function Updater() {
+export function Web3ProviderUpdater() {
   const account = useAccount()
   const provider = useEthersWeb3Provider()
 

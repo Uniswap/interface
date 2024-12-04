@@ -19,6 +19,7 @@ export const ModalName = {
   BridgingWarning: 'bridging-warning-modal',
   BuyNativeToken: 'buy-native-token-modal',
   ChooseProfilePhoto: 'choose-profile-photo-modal',
+  ClaimFee: 'claim-fee-modal',
   CloudBackupInfo: 'cloud-backup-info-modal',
   CreatePosition: 'create-position-modal',
   DappRequest: 'dapp-request',
@@ -53,6 +54,7 @@ export const ModalName = {
   OnDeviceRecoveryConfirmation: 'on-device-recovery-confirmation',
   OtpInputExpired: 'otp-input-expired',
   OtpScanInput: 'otp-scan-input',
+  PrivacyChoices: 'privacy-choices-modal',
   QRCodeNetworkInfo: 'qr-code-network-info',
   QueuedOrderModal: 'queued-order-modal',
   RecipientSelectErc20Warning: 'recipient-select-erc20-warning',
@@ -64,6 +66,7 @@ export const ModalName = {
   RecoverySpeedBump: 'recovery-speed-bump',
   RemoveLiquidity: 'remove-liquidity',
   RemoveWallet: 'remove-wallet-modal',
+  ResetCreatePositionsForm: 'reset-create-positions-form',
   RestoreWallet: 'restore-wallet-modal',
   RemoveSeedPhraseWarningModal: 'remove-seed-phrase-warning-modal',
   Scantastic: 'scantastic',
@@ -82,6 +85,7 @@ export const ModalName = {
   SwapProtection: 'swap-protection-modal',
   TestnetMode: 'testnet-mode-modal',
   TokenSelector: 'token-selector',
+  TokenWarning: 'token-warning',
   TokenWarningModal: 'token-warning-modal',
   TooltipContent: 'tooltip-content',
   TransactionActions: 'transaction-actions',
@@ -115,6 +119,7 @@ export const ElementName = {
   AddManualBackup: 'add-manual-backup',
   AddViewOnlyWallet: 'add-view-only-wallet',
   AddCloudBackup: 'add-cloud-backup',
+  AddHook: 'add-hook',
   AlreadyHaveWalletSignIn: 'already-have-wallet-sign-in',
   BackButton: 'back-button',
   Buy: 'buy',
@@ -152,6 +157,7 @@ export const ElementName = {
   FiatOnRampCountryPicker: 'fiat-on-ramp-country-picker',
   GetHelp: 'get-help',
   ImportAccount: 'import-account',
+  InlineWarningCardCheckbox: 'inline-warning-card-checkbox',
   LimitOrderButton: 'limit-order-button',
   MaybeLaterButton: 'maybe-later-button',
   MoonpayExplorerView: 'moonpay-explorer-view',
@@ -201,6 +207,7 @@ export const ElementName = {
   TokenLinkTwitter: 'token-link-twitter',
   TokenLinkWebsite: 'token-link-website',
   TokenOutputSelector: 'token-output-selector',
+  TokenWarningCard: 'token-warning-card',
   Unwrap: 'unwrap',
   WalletCard: 'wallet-card',
   WalletConnectScan: 'wallet-connect-scan',
@@ -244,7 +251,9 @@ export const SectionName = {
   SendRecipientSelectFullScreen: 'send-recipient-select',
 
   ChainSelector: 'chain-selector',
-
+  CreatePositionDepositStep: 'create-position-deposit-step',
+  CreatePositionPriceRangeStep: 'create-position-price-range-step',
+  CreatePositionSelectTokensStep: 'create-position-select-tokens-step',
   // alphabetize additional values.
 } as const
 
@@ -254,6 +263,12 @@ export const InterfacePageNameLocal = {
   Send: 'send-page',
   Limit: 'limit-page',
   Buy: 'buy-page',
+  Positions: 'positions-page',
+  PositionDetails: 'position-details-page',
+  CreatePosition: 'create-position-page',
+  MigrateV2: 'migrate-v2-page',
+  MigrateV2Pair: 'migrate-v2-pair-page',
+  MigrateV3: 'migrate-v3-page',
 }
 
 export type InterfacePageNameType =

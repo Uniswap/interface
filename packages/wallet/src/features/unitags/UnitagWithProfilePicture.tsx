@@ -1,7 +1,7 @@
 import { Flex, Text } from 'ui/src'
 import { imageSizes } from 'ui/src/theme'
+import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { UnitagProfilePicture } from 'wallet/src/features/unitags/UnitagProfilePicture'
-import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 
 export const UnitagWithProfilePicture = ({
   unitag,

@@ -9,8 +9,10 @@ import { Screen } from 'src/components/layout/Screen'
 import { openModal } from 'src/features/modals/modalSlice'
 import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
 import { hideSplashScreen } from 'src/utils/splashScreen'
-import { Flex, Text, TouchableArea, useHapticFeedback } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -30,7 +32,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 export function LandingScreen({ navigation }: Props): JSX.Element {
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const { hapticFeedback } = useHapticFeedback()
+  const { isTestnetModeEnabled } = useEnabledChains()
 
   const actionButtonsOpacity = useSharedValue(0)
   const actionButtonsStyle = useAnimatedStyle(() => ({ opacity: actionButtonsOpacity.value }), [actionButtonsOpacity])
@@ -41,6 +43,13 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
       actionButtonsOpacity.value = withDelay(LANDING_ANIMATION_DURATION, withTiming(1, { duration: ONE_SECOND_MS }))
     }
   }, [actionButtonsOpacity])
+
+  // Disables testnet mode on mount if enabled (eg upon removing a wallet)
+  useEffect(() => {
+    if (isTestnetModeEnabled) {
+      dispatch(setIsTestnetModeEnabled(false))
+    }
+  }, [dispatch, isTestnetModeEnabled])
 
   const { canClaimUnitag } = useCanAddressClaimUnitag()
   const { getOnboardingAccount, generateOnboardingAccount } = useOnboardingContext()
@@ -91,7 +100,6 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
               <Trace logPress element={ElementName.CreateAccount}>
                 <Flex centered row>
                   <TouchableArea
-                    hapticFeedback
                     alignItems="center"
                     backgroundColor="$accent1"
                     borderRadius="$rounded20"
@@ -114,13 +122,11 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
               </Trace>
               <Trace logPress element={ElementName.ImportAccount}>
                 <TouchableArea
-                  hapticFeedback
                   alignItems="center"
                   hitSlop={16}
                   testID={TestID.ImportAccount}
                   onLongPress={async (): Promise<void> => {
                     if (isDevEnv()) {
-                      await hapticFeedback.selection()
                       dispatch(openModal({ name: ModalName.Experiments }))
                     }
                   }}

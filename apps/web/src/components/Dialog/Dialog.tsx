@@ -1,5 +1,4 @@
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
-import Modal from 'components/Modal'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { ColumnCenter } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
@@ -7,11 +6,11 @@ import styled, { DefaultTheme } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { Gap } from 'theme'
 import { ThemedText } from 'theme/components'
+import { AdaptiveWebModal } from 'ui/src'
 
 export const Container = styled(ColumnCenter)`
   background-color: ${({ theme }) => theme.surface1};
-  outline: 1px solid ${({ theme }) => theme.surface3};
-  border-radius: 20px;
+  border-radius: 16px;
   padding: 16px 24px 24px 24px;
   width: 100%;
 `
@@ -79,8 +78,8 @@ type ButtonConfig = {
 }
 
 type ButtonsConfig = {
-  left?: ButtonConfig
-  right?: ButtonConfig
+  left?: ButtonConfig | JSX.Element
+  right?: ButtonConfig | JSX.Element
   gap?: Gap
 }
 
@@ -111,28 +110,36 @@ export function DialogContent({ icon, title, description, body, buttonsConfig }:
         </ColumnCenter>
       </ColumnCenter>
       <Row align="center" justify="center" gap={gap ?? 'md'}>
-        {left && (
-          <StyledButton
-            size={ButtonSize.small}
-            onClick={left.onClick}
-            disabled={left.disabled}
-            emphasis={getButtonEmphasis(left.type)}
-            $color={left.textColor}
-          >
-            {left.title}
-          </StyledButton>
-        )}
-        {right && (
-          <StyledButton
-            size={ButtonSize.small}
-            onClick={right.onClick}
-            disabled={right.disabled}
-            emphasis={getButtonEmphasis(right.type)}
-            $color={right.textColor}
-          >
-            {right.title}
-          </StyledButton>
-        )}
+        {left ? (
+          'title' in left ? (
+            <StyledButton
+              size={ButtonSize.small}
+              onClick={left.onClick}
+              disabled={left.disabled}
+              emphasis={getButtonEmphasis(left.type)}
+              $color={left.textColor}
+            >
+              {left.title}
+            </StyledButton>
+          ) : (
+            left
+          )
+        ) : null}
+        {right ? (
+          'title' in right ? (
+            <StyledButton
+              size={ButtonSize.small}
+              onClick={right.onClick}
+              disabled={right.disabled}
+              emphasis={getButtonEmphasis(right.type)}
+              $color={right.textColor}
+            >
+              {right.title}
+            </StyledButton>
+          ) : (
+            right
+          )
+        ) : null}
       </Row>
     </ColumnCenter>
   )
@@ -153,11 +160,11 @@ export function DialogContent({ icon, title, description, body, buttonsConfig }:
  */
 export function Dialog(props: DialogProps) {
   return (
-    <Modal $scrollOverlay isOpen={props.isVisible} onDismiss={props.onCancel}>
+    <AdaptiveWebModal isOpen={props.isVisible} onClose={props.onCancel} p={0}>
       <Container gap="lg">
         <DialogHeader closeModal={props.onCancel} closeDataTestId="Dialog-closeButton" />
         <DialogContent {...props} />
       </Container>
-    </Modal>
+    </AdaptiveWebModal>
   )
 }

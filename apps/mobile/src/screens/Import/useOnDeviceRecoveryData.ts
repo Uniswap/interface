@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useMultiplePortfolioBalancesQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 // eslint-disable-next-line no-restricted-imports
 import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'

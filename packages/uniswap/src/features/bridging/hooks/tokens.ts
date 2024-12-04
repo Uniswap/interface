@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { filter } from 'uniswap/src/components/TokenSelector/filter'
-import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks'
+import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
 import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
 import { createEmptyTokenOptionFromBridgingToken } from 'uniswap/src/components/TokenSelector/utils'
 import { useTradingApiSwappableTokensQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
@@ -51,6 +51,7 @@ export function useBridgingTokenWithHighestBalance({
     address,
     currencyId,
     crossChainTokens,
+    fetchPolicy: 'cache-first',
   })
 
   const { data: bridgingTokens } = useTradingApiSwappableTokensQuery({

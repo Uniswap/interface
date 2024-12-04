@@ -7,21 +7,21 @@ import { Flex, Text, TouchableArea, isWeb, useMedia, useScrollbarStyles, useSpor
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { X } from 'ui/src/components/icons/X'
 import { zIndices } from 'ui/src/theme'
-import { TokenSelectorEmptySearchList } from 'uniswap/src/components/TokenSelector/TokenSelectorEmptySearchList'
-import { TokenSelectorSearchResultsList } from 'uniswap/src/components/TokenSelector/TokenSelectorSearchResultsList'
-import { TokenSelectorSendList } from 'uniswap/src/components/TokenSelector/TokenSelectorSendList'
-import { TokenSelectorSwapInputList } from 'uniswap/src/components/TokenSelector/TokenSelectorSwapInputList'
-import { TokenSelectorSwapOutputList } from 'uniswap/src/components/TokenSelector/TokenSelectorSwapOutputList'
-import { flowToModalName } from 'uniswap/src/components/TokenSelector/flowToModalName'
-import { useFilterCallbacks } from 'uniswap/src/components/TokenSelector/hooks'
+import { useFilterCallbacks } from 'uniswap/src/components/TokenSelector/hooks/useFilterCallbacks'
+import { TokenSelectorEmptySearchList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorEmptySearchList'
+import { TokenSelectorSearchResultsList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSearchResultsList'
+import { TokenSelectorSendList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSendList'
+import { TokenSelectorSwapInputList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSwapInputList'
+import { TokenSelectorSwapOutputList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSwapOutputList'
 import { TokenOptionSection, TokenSection, TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
+import { flowToModalName } from 'uniswap/src/components/TokenSelector/utils'
 import PasteButton from 'uniswap/src/components/buttons/PasteButton'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
@@ -279,7 +279,7 @@ export function TokenSelectorContent({
               backgroundColor="$surface2"
               endAdornment={
                 <Flex row alignItems="center">
-                  {hasClipboardString && <PasteButton inline onPress={handlePaste} />}
+                  {hasClipboardString && <PasteButton inline textVariant="buttonLabel3" onPress={handlePaste} />}
                   <NetworkFilter
                     includeAllNetworks={!isTestnetModeEnabled}
                     chainIds={chainIds || enabledChains}

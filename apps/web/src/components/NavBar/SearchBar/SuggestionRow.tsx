@@ -10,7 +10,7 @@ import { GqlSearchToken } from 'graphql/data/SearchTokens'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import styled, { css } from 'lib/styled-components'
-import { searchGenieCollectionToTokenSearchResult, searchTokenToTokenSearchResult } from 'lib/utils/searchBar'
+import { searchTokenToTokenSearchResult } from 'lib/utils/searchBar'
 import { GenieCollection } from 'nft/types'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -20,7 +20,7 @@ import { Flex } from 'ui/src'
 import { Verified } from 'ui/src/components/icons/Verified'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { Token, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -29,7 +29,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
-import { shortenAddress } from 'uniswap/src/utils/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const PriceChangeContainer = styled.div`
@@ -132,9 +132,6 @@ export function SuggestionRow({
         const searchResult = searchTokenToTokenSearchResult({ ...suggestion, address, chainId })
         dispatch(addToSearchHistory({ searchResult }))
       }
-    } else {
-      const searchResult = searchGenieCollectionToTokenSearchResult(suggestion as GenieCollection)
-      dispatch(addToSearchHistory({ searchResult }))
     }
 
     toggleOpen()

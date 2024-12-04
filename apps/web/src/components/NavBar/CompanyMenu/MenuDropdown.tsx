@@ -1,5 +1,6 @@
 import { MenuItem, MenuSection, useMenuContent } from 'components/NavBar/CompanyMenu/Content'
 import { DownloadApp } from 'components/NavBar/CompanyMenu/DownloadAppCTA'
+import { LegalAndPrivacyMenu } from 'components/NavBar/LegalAndPrivacyMenu'
 import { NavDropdown } from 'components/NavBar/NavDropdown'
 import { useTabsVisible } from 'components/NavBar/ScreenSizes'
 import { useTabsContent } from 'components/NavBar/Tabs/TabsContent'
@@ -9,6 +10,8 @@ import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { ExternalLink, Separator, ThemedText } from 'theme/components'
 import { Flex } from 'ui/src'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { t } from 'uniswap/src/i18n'
 
 const Container = styled.div`
@@ -69,6 +72,7 @@ function Section({ title, items, closeMenu }: MenuSection) {
   )
 }
 export function MenuDropdown({ close }: { close?: () => void }) {
+  const isConversionTrackingEnabled = useFeatureFlag(FeatureFlags.ConversionTracking)
   const menuContent = useMenuContent()
   const areTabsVisible = useTabsVisible()
   const tabs = useTabsContent()
@@ -99,6 +103,7 @@ export function MenuDropdown({ close }: { close?: () => void }) {
           <Separator />
           <DownloadApp onClick={close} />
           <Socials iconSize="25px" />
+          {isConversionTrackingEnabled && <LegalAndPrivacyMenu closeMenu={close} />}
         </Flex>
       </Container>
     </NavDropdown>

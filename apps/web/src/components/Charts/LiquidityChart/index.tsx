@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, TICK_SPACINGS, TickMath, tickToPrice } from '@uniswap/v3-sdk'
 import { ChartHoverData, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
@@ -8,11 +10,12 @@ import {
   LiquidityBarSeriesOptions,
 } from 'components/Charts/LiquidityChart/renderer'
 import { BigNumber } from 'ethers/lib/ethers'
-import { TickProcessed, usePoolActiveLiquidity } from 'hooks/usePoolTickData'
+import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import JSBI from 'jsbi'
 import { ISeriesApi, UTCTimestamp } from 'lightweight-charts'
 import { useEffect, useState } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { TickProcessed } from 'utils/computeSurroundingTicks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 interface LiquidityBarChartModelParams extends ChartModelParams<LiquidityBarData>, LiquidityBarProps {}
@@ -226,15 +229,32 @@ export function useLiquidityBarData({
   feeTier,
   isReversed,
   chainId,
+  version,
+  tickSpacing,
+  hooks,
+  poolId,
 }: {
   tokenA: Token
   tokenB: Token
   feeTier: FeeAmount
   isReversed: boolean
   chainId: UniverseChainId
+  version: ProtocolVersion
+  tickSpacing?: number
+  hooks?: string
+  poolId?: string
 }) {
   const { formatNumber, formatPrice } = useFormatter()
-  const activePoolData = usePoolActiveLiquidity(tokenA, tokenB, feeTier, chainId)
+  const activePoolData = usePoolActiveLiquidity({
+    currencyA: tokenA,
+    currencyB: tokenB,
+    feeAmount: feeTier,
+    version,
+    poolId,
+    chainId,
+    tickSpacing: tickSpacing ?? TICK_SPACINGS[feeTier],
+    hooks,
+  })
 
   const [tickData, setTickData] = useState<{
     barData: LiquidityBarData[]

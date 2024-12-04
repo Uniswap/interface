@@ -1,4 +1,4 @@
-import { Flex, Text, TouchableArea, useMedia } from 'ui/src'
+import { Flex, Text, TouchableArea, useMedia, useShadowPropsMedium } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 
 const MAX_WIDTH = 348
@@ -14,6 +14,7 @@ export function ToastRegularSimple({
   onDismiss?: () => void
 }): JSX.Element {
   const media = useMedia()
+  const shadowProps = useShadowPropsMedium()
 
   return (
     <Flex
@@ -30,22 +31,19 @@ export function ToastRegularSimple({
       top={media.sm ? '$spacing16' : '$none'}
       left={0}
       mx={0}
-      $platform-web={
-        media.sm
+      $platform-web={{
+        ...shadowProps,
+        ...(media.sm
           ? {
               position: 'fixed',
               left: '50%',
               width: 'max-content',
               transform: [{ translateX: '-50%' }] as any, // TODO(WEB-4733): Tamagui transform needs array to work but type expects string
             }
-          : {}
-      }
+          : {}),
+      }}
       p="$spacing16"
       position="relative"
-      shadowColor="$shadowColor"
-      shadowOffset={{ width: 0, height: 25 }}
-      shadowOpacity={0.2}
-      shadowRadius={50}
       width={MAX_WIDTH}
       opacity={1}
     >

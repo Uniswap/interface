@@ -1,12 +1,15 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
+import { LiquidityEventName } from '@uniswap/analytics-events'
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount, Percent, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonConfirmed, ButtonPrimary } from 'components/Button/buttons'
 import { LightCard } from 'components/Card/cards'
 import Loader from 'components/Icons/LoadingSpinner'
+import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { AddRemoveTabs } from 'components/NavigationTabs'
@@ -35,8 +38,9 @@ import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
 import { Switch, Text } from 'ui/src'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
-import { useEnabledChains, useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -66,10 +70,11 @@ export default function RemoveLiquidityV3() {
   }, [tokenId])
 
   const { position, loading } = useV3PositionFromTokenId(parsedTokenId ?? undefined)
-  const isV4EverywhereEnabled = useFeatureFlag(FeatureFlags.V4Everywhere)
-  if (isV4EverywhereEnabled) {
-    const chainName = toGraphQLChain(chainId ?? defaultChainId).toLowerCase()
-    return <Navigate to={`/positions/v3/${chainName}/${tokenId}`} replace />
+  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
+  if (isLPRedesignEnabled) {
+    const chainName = getChainInfo(chainId ?? defaultChainId)?.urlParam
+    const positionIdUrl = tokenId ? `/v3/${chainName}/${tokenId}` : ''
+    return <Navigate to={`/positions${positionIdUrl}`} replace />
   }
   if (parsedTokenId === null || parsedTokenId.eq(0)) {
     return <Navigate to={{ ...location, pathname: '/pools' }} replace />
@@ -110,7 +115,6 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
 
   // boilerplate for the slider
   const [percentForSlider, onPercentSelectForSlider] = useDebouncedChangeHandler(percent, onPercentSelect)
-
   const getDeadline = useGetTransactionDeadline() // custom from users settings
   const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE) // custom from users
 
@@ -173,22 +177,30 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
 
         return signer.sendTransaction(newTxn).then((response: TransactionResponse) => {
           sendAnalyticsEvent(LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED, {
-            source: LiquiditySource.V3,
-            label: [liquidityValue0.currency.symbol, liquidityValue1.currency.symbol].join('/'),
-            ...trace,
-            type: LiquiditySource.V3,
+            ...getLPBaseAnalyticsProperties({
+              trace,
+              fee: position?.fee,
+              poolId:
+                account.chainId && position
+                  ? PoolCache.getPoolAddress(
+                      V3_CORE_FACTORY_ADDRESSES[account.chainId],
+                      positionSDK.amount0.currency,
+                      positionSDK.amount1.currency,
+                      position.fee,
+                      account.chainId,
+                    )
+                  : undefined,
+              currency0: liquidityValue0.currency,
+              currency1: liquidityValue1.currency,
+              currency0AmountUsd: liquidityValue0,
+              currency1AmountUsd: liquidityValue1,
+              version: ProtocolVersion.V3,
+              chainId: account.chainId,
+            }),
+            expectedAmountBaseRaw: liquidityValue0.quotient.toString(),
+            expectedAmountQuoteRaw: liquidityValue1.quotient.toString(),
             transaction_hash: response.hash,
-            fee_tier: position?.fee,
-            pool_address:
-              account.chainId && position
-                ? PoolCache.getPoolAddress(
-                    V3_CORE_FACTORY_ADDRESSES[account.chainId],
-                    positionSDK.amount0.currency,
-                    positionSDK.amount1.currency,
-                    position.fee,
-                    account.chainId,
-                  )
-                : undefined,
+            closePosition: percent === 100,
           })
           setTxnHash(response.hash)
           setAttemptingTxn(false)
@@ -227,6 +239,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     feeValue1,
     trace,
     position,
+    percent,
     addTransaction,
   ])
 

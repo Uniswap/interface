@@ -4,7 +4,6 @@ import Circle from 'assets/images/blue-loader.svg'
 import tokenLogo from 'assets/images/token-logo.png'
 import AddressInputPanel from 'components/AddressInputPanel'
 import { ButtonPrimary } from 'components/Button/buttons'
-import Modal from 'components/Modal'
 import { AutoColumn, ColumnCenter } from 'components/deprecated/Column'
 import { RowBetween } from 'components/deprecated/Row'
 import { Break, CardBGImage, CardBGImageSmaller, CardNoise, CardSection, DataCard } from 'components/earn/styled'
@@ -15,7 +14,7 @@ import { useState } from 'react'
 import { useClaimCallback, useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
 import { useIsTransactionPending } from 'state/transactions/hooks'
 import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText, UniTokenAnimated } from 'theme/components'
-import { Text } from 'ui/src'
+import { AdaptiveWebModal, Text } from 'ui/src'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -98,7 +97,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
   // Avoiding translating because the structure for "Claiming UNI for address" is wrong but this modal is rarely used
   // and ran into difficulties with testing it
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight="90vh">
+    <AdaptiveWebModal isOpen={isOpen} onClose={wrappedOnDismiss} maxHeight="90vh" p={0}>
       {!attempting && (
         <ContentWrapper gap="lg">
           <ModalUpper>
@@ -194,6 +193,6 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
           </AutoColumn>
         </ConfirmOrLoadingWrapper>
       )}
-    </Modal>
+    </AdaptiveWebModal>
   )
 }

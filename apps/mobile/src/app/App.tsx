@@ -9,6 +9,7 @@ import {
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
 import { MMKVWrapper } from 'apollo3-cache-persist'
+import * as SplashScreen from 'expo-splash-screen'
 import { PropsWithChildren, default as React, StrictMode, useCallback, useEffect } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { LogBox, NativeModules, StatusBar } from 'react-native'
@@ -45,10 +46,11 @@ import {
 } from 'src/features/widgets/widgets'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { getDatadogEnvironment, getStatsigEnvironmentTier } from 'src/utils/version'
-import { flexStyles, useHapticFeedback, useIsDarkMode } from 'ui/src'
+import { flexStyles, useIsDarkMode } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { DUMMY_STATSIG_SDK_KEY, StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
@@ -81,7 +83,6 @@ import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testne
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { initFirebaseAppCheck } from 'wallet/src/features/appCheck/appCheck'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
-import { selectHapticsEnabled } from 'wallet/src/features/appearance/slice'
 import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
@@ -94,6 +95,9 @@ enableFreeze(true)
 if (__DEV__) {
   registerConsoleOverrides()
 }
+
+// Keep the splash screen visible while we fetch resources until one of our landing pages loads
+SplashScreen.preventAutoHideAsync().catch(() => undefined)
 
 // Datadog
 const datadogConfig = new DatadogProviderConfiguration(
@@ -248,34 +252,36 @@ function AppOuter(): JSX.Element | null {
     <ApolloProvider client={client}>
       <PersistGate loading={null} persistor={persistor}>
         <ErrorBoundary>
-          <LocalizationContextProvider>
-            <GestureHandlerRootView style={flexStyles.fill}>
-              <WalletContextProvider>
-                <UnitagUpdaterContextProvider>
-                  <BiometricContextProvider>
-                    <LockScreenContextProvider>
-                      <DataUpdaters />
-                      <NavigationContainer>
-                        <MobileWalletNavigationProvider>
-                          <OpenAIContextProvider>
-                            <WalletUniswapProvider>
-                              <BottomSheetModalProvider>
-                                <AppModals />
-                                <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                                  <AppInner />
-                                </PerformanceProfiler>
-                              </BottomSheetModalProvider>
-                            </WalletUniswapProvider>
-                            <NotificationToastWrapper />
-                          </OpenAIContextProvider>
-                        </MobileWalletNavigationProvider>
-                      </NavigationContainer>
-                    </LockScreenContextProvider>
-                  </BiometricContextProvider>
-                </UnitagUpdaterContextProvider>
-              </WalletContextProvider>
-            </GestureHandlerRootView>
-          </LocalizationContextProvider>
+          <BlankUrlProvider>
+            <LocalizationContextProvider>
+              <GestureHandlerRootView style={flexStyles.fill}>
+                <WalletContextProvider>
+                  <UnitagUpdaterContextProvider>
+                    <BiometricContextProvider>
+                      <LockScreenContextProvider>
+                        <DataUpdaters />
+                        <NavigationContainer>
+                          <MobileWalletNavigationProvider>
+                            <OpenAIContextProvider>
+                              <WalletUniswapProvider>
+                                <BottomSheetModalProvider>
+                                  <AppModals />
+                                  <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                                    <AppInner />
+                                  </PerformanceProfiler>
+                                </BottomSheetModalProvider>
+                              </WalletUniswapProvider>
+                              <NotificationToastWrapper />
+                            </OpenAIContextProvider>
+                          </MobileWalletNavigationProvider>
+                        </NavigationContainer>
+                      </LockScreenContextProvider>
+                    </BiometricContextProvider>
+                  </UnitagUpdaterContextProvider>
+                </WalletContextProvider>
+              </GestureHandlerRootView>
+            </LocalizationContextProvider>
+          </BlankUrlProvider>
         </ErrorBoundary>
       </PersistGate>
     </ApolloProvider>
@@ -287,8 +293,6 @@ function AppInner(): JSX.Element {
   const isDarkMode = useIsDarkMode()
   const themeSetting = useCurrentAppearanceSetting()
   const allowAnalytics = useSelector(selectAllowAnalytics)
-  const hapticsUserEnabled = useSelector(selectHapticsEnabled)
-  const { setHapticsEnabled } = useHapticFeedback()
 
   useTestnetModeForLoggingAndAnalytics()
 
@@ -307,11 +311,6 @@ function AppInner(): JSX.Element {
       })
     }
   }, [allowAnalytics])
-
-  // Sets haptics for the UI library based on the user redux setting
-  useEffect(() => {
-    setHapticsEnabled(hapticsUserEnabled)
-  }, [hapticsUserEnabled, setHapticsEnabled])
 
   useEffect(() => {
     dispatch(clearNotificationQueue()) // clear all in-app toasts on app start

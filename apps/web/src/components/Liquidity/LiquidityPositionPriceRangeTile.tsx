@@ -75,6 +75,7 @@ export function LiquidityPositionPriceRangeTile({
           </Text>
         </Flex>
         <SegmentedControl
+          size="large"
           options={controlOptions}
           selectedOption={pricesInverted ? currencyBSymbol : currencyASymbol}
           onSelectOption={(selected) => {

@@ -12,6 +12,7 @@ import { fonts, imageSizes, spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import {
   OnboardingScreens,
@@ -19,14 +20,13 @@ import {
   UnitagEntryPoint,
   UnitagScreens,
 } from 'uniswap/src/types/screens/mobile'
-import { shortenAddress } from 'uniswap/src/utils/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension, isMobileApp } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { UnitagInfoModal } from 'wallet/src/features/unitags/UnitagInfoModal'
 import { UnitagName } from 'wallet/src/features/unitags/UnitagName'
-import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 import { useCanClaimUnitagName } from 'wallet/src/features/unitags/hooks'
 import { getYourNameString } from 'wallet/src/features/unitags/utils'
 

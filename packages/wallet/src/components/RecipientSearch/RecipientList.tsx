@@ -7,9 +7,11 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { spacing } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { SearchableRecipient } from 'uniswap/src/features/address/types'
+import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'
 import { SearchResultType, extractDomain } from 'uniswap/src/features/search/SearchResult'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 
@@ -98,10 +100,11 @@ export const RecipientRow = memo(function RecipientRow({ recipient, onPress }: R
   }
 
   const isViewOnlyWallet = recipient.type === AccountType.Readonly
-  const isNonUnitagSubdomain = !recipient.isUnitag && domain !== undefined && domain !== '.eth'
+  const isUnitag = recipient.isUnitag || domain === UNITAG_SUFFIX
+  const isNonUnitagSubdomain = !isUnitag && domain !== undefined && domain !== ENS_SUFFIX
 
   return (
-    <TouchableArea hapticFeedback onPress={onPressWithAnalytics}>
+    <TouchableArea onPress={onPressWithAnalytics}>
       <AddressDisplay
         includeUnitagSuffix
         address={recipient.address}

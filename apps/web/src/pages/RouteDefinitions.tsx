@@ -8,14 +8,14 @@ import { t } from 'uniswap/src/i18n'
 import { isBrowserRouterEnabled } from 'utils/env'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import Landing from 'pages/Landing'
-import { CreatePosition } from 'pages/Pool/Positions/create/CreatePosition'
 import Swap from 'pages/Swap'
 
 const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
+const CreatePosition = lazy(() => import('pages/Pool/Positions/create/CreatePosition'))
 const Profile = lazy(() => import('nft/pages/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
-const AddLiquidityWithTokenRedirects = lazy(() => import('pages/AddLiquidity/redirects'))
+const AddLiquidityV3WithTokenRedirects = lazy(() => import('pages/AddLiquidityV3/redirects'))
 const AddLiquidityV2WithTokenRedirects = lazy(() => import('pages/AddLiquidityV2/redirects'))
 const RedirectExplore = lazy(() => import('pages/Explore/redirects'))
 const MigrateV2 = lazy(() => import('pages/MigrateV2'))
@@ -38,7 +38,7 @@ const LegacyPositionPageRedirects = lazy(() =>
 const PositionPage = lazy(() => import('pages/Pool/Positions/PositionPage'))
 const V2PositionPage = lazy(() => import('pages/Pool/Positions/V2PositionPage'))
 const PoolDetails = lazy(() => import('pages/PoolDetails'))
-const RemoveLiquidity = lazy(() => import('pages/RemoveLiquidity'))
+const RemoveLiquidityV2 = lazy(() => import('pages/RemoveLiquidity/V2'))
 const RemoveLiquidityV3 = lazy(() => import('pages/RemoveLiquidity/V3'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
 
@@ -216,12 +216,7 @@ export const routes: RouteDefinition[] = [
     getElement: () => <CreatePosition />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
-  }),
-  createRouteDefinition({
-    path: '/positions/create/:protocolVersion',
-    getElement: () => <CreatePosition />,
-    getTitle: getPositionPageTitle,
-    getDescription: getPositionPageDescription,
+    nestedPaths: [':protocolVersion'],
   }),
   createRouteDefinition({
     path: '/positions',
@@ -317,13 +312,13 @@ export const routes: RouteDefinition[] = [
       ':currencyIdA/:currencyIdB/:feeAmount',
       ':currencyIdA/:currencyIdB/:feeAmount/:tokenId',
     ],
-    getElement: () => <AddLiquidityWithTokenRedirects />,
+    getElement: () => <AddLiquidityV3WithTokenRedirects />,
     getTitle: getAddLiquidityPageTitle,
     getDescription: () => StaticTitlesAndDescriptions.AddLiquidityDescription,
   }),
   createRouteDefinition({
     path: '/remove/v2/:currencyIdA/:currencyIdB',
-    getElement: () => <RemoveLiquidity />,
+    getElement: () => <RemoveLiquidityV2 />,
     getTitle: () => t('title.removeLiquidityv2'),
     getDescription: () => t('title.removeTokensv2'),
   }),

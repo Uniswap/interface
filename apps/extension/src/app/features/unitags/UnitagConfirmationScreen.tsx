@@ -5,9 +5,9 @@ import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingStepsC
 import { useUnitagClaimContext } from 'src/app/features/unitags/UnitagClaimContext'
 import { closeCurrentTab } from 'src/app/navigation/utils'
 import { Button, Flex, Text } from 'ui/src'
+import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { UnitagWithProfilePicture } from 'wallet/src/features/unitags/UnitagWithProfilePicture'
-import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function UnitagConfirmationScreen(): JSX.Element {

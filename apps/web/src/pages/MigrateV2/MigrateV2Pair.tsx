@@ -1,6 +1,8 @@
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position, TickMath, priceToClosestTick } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge/Badge'
@@ -8,6 +10,7 @@ import { ButtonConfirmed } from 'components/Button/buttons'
 import { BlueCard, DarkGrayCard, LightCard, YellowCard } from 'components/Card/cards'
 import FeeSelector from 'components/FeeSelector'
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
+import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import RangeSelector from 'components/RangeSelector'
@@ -45,7 +48,10 @@ import { BackArrowLink, ExternalLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Trans, t } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { isAddress } from 'utilities/src/addresses'
@@ -160,6 +166,10 @@ function V2PairMigration({
     [token1, pairBalance, reserve1, totalSupply],
   )
 
+  // get token0 and token1 usdc values
+  const token0USD = useUSDCValue(token0Value)
+  const token1USD = useUSDCValue(token1Value)
+
   // set up v3 pool
   const [feeAmount, setFeeAmount] = useState(FeeAmount.MEDIUM)
   const [poolState, pool] = usePool(token0, token1, feeAmount)
@@ -193,13 +203,14 @@ function V2PairMigration({
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks
   const { [Bound.LOWER]: priceLower, [Bound.UPPER]: priceUpper } = pricesAtTicks
 
-  const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper } = useRangeHopCallbacks(
-    baseToken,
-    baseToken.equals(token0) ? token1 : token0,
+  const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper } = useRangeHopCallbacks({
+    baseCurrency: baseToken,
+    quoteCurrency: baseToken.equals(token0) ? token1 : token0,
     feeAmount,
     tickLower,
     tickUpper,
-  )
+    pool,
+  })
 
   const { onLeftRangeInput, onRightRangeInput } = useV3MintActionHandlers(noLiquidity)
 
@@ -346,13 +357,23 @@ function V2PairMigration({
           .multicall(data, { gasLimit: calculateGasMargin(gasEstimate) })
           .then((response: TransactionResponse) => {
             sendAnalyticsEvent(LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED, {
+              ...getLPBaseAnalyticsProperties({
+                trace,
+                fee: feeAmount,
+                currency0: token0,
+                currency1: token1,
+                poolId: pair.address,
+                version: ProtocolVersion.V2,
+                chainId: pairBalance.currency.chainId,
+                currency0AmountUsd: token0USD,
+                currency1AmountUsd: token1USD,
+              }),
               action: `${isNotUniswap ? LiquiditySource.SUSHISWAP : LiquiditySource.V2}->${LiquiditySource.V3}`,
-              label: `${currency0.symbol}/${currency1.symbol}`,
-              ...trace,
+              transaction_hash: response.hash,
             })
 
             addTransaction(response, {
-              type: TransactionType.MIGRATE_LIQUIDITY_V3,
+              type: TransactionType.MIGRATE_LIQUIDITY_V2_TO_V3,
               baseCurrencyId: currencyId(currency0),
               quoteCurrencyId: currencyId(currency1),
               isFork: isNotUniswap,
@@ -365,27 +386,30 @@ function V2PairMigration({
       })
   }, [
     migrator,
+    account.address,
+    account.chainId,
     tickLower,
     tickUpper,
     v3Amount0Min,
     v3Amount1Min,
-    account.address,
-    account.chainId,
     networkSupportsV2,
     signatureData,
     getDeadline,
     noLiquidity,
     pair.address,
     pairBalance.quotient,
-    token0.address,
-    token1.address,
+    pairBalance.currency.chainId,
+    token0,
+    token1,
     feeAmount,
     sqrtPrice,
+    trace,
+    token0USD,
+    token1USD,
     isNotUniswap,
+    addTransaction,
     currency0,
     currency1,
-    trace,
-    addTransaction,
   ])
 
   const isSuccessfullyMigrated = !!pendingMigrationHash && JSBI.equal(pairBalance.quotient, ZERO)
@@ -511,8 +535,8 @@ function V2PairMigration({
                     <Trans
                       i18nKey="migrate.symbolPrice"
                       values={{
-                        name: isNotUniswap ? 'SushiSwap' : 'V2',
-                        sym: invertPrice ? currency1.symbol : currency0.symbol,
+                        protocolName: isNotUniswap ? 'SushiSwap' : 'V2',
+                        tokenSymbol: invertPrice ? currency1.symbol : currency0.symbol,
                       }}
                     />
                   </ThemedText.DeprecatedBody>
@@ -761,38 +785,50 @@ export default function MigrateV2Pair() {
   }
 
   return (
-    <BodyWrapper style={{ padding: 24 }}>
-      <AutoColumn gap="16px">
-        <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
-          <BackArrowLink to="/migrate/v2" />
-          <MigrateHeader>
-            <Trans i18nKey="migrate.v2Title" />
-          </MigrateHeader>
-          <SettingsTab
-            autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE}
-            chainId={account.chainId}
-            hideRoutingSettings
-          />
-        </AutoRow>
+    <Trace
+      logImpression
+      page={InterfacePageNameLocal.MigrateV2Pair}
+      properties={{
+        pool_address: validatedAddress,
+        chain_id: account.chainId,
+        label: [token0?.symbol, token1?.symbol].join('/'),
+        token0Address,
+        token1Address,
+      }}
+    >
+      <BodyWrapper style={{ padding: 24 }}>
+        <AutoColumn gap="16px">
+          <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
+            <BackArrowLink to="/migrate/v2" />
+            <MigrateHeader>
+              <Trans i18nKey="migrate.v2Title" />
+            </MigrateHeader>
+            <SettingsTab
+              autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE}
+              chainId={account.chainId}
+              hideRoutingSettings
+            />
+          </AutoRow>
 
-        {!account.isConnected ? (
-          <ThemedText.DeprecatedLargeHeader>
-            <Trans i18nKey="migrate.connectAccount" />
-          </ThemedText.DeprecatedLargeHeader>
-        ) : pairBalance && totalSupply && reserve0 && reserve1 && token0 && token1 ? (
-          <V2PairMigration
-            pair={pair}
-            pairBalance={pairBalance}
-            totalSupply={totalSupply}
-            reserve0={reserve0}
-            reserve1={reserve1}
-            token0={token0}
-            token1={token1}
-          />
-        ) : (
-          <EmptyState message={<Trans i18nKey="common.loading" />} />
-        )}
-      </AutoColumn>
-    </BodyWrapper>
+          {!account.isConnected ? (
+            <ThemedText.DeprecatedLargeHeader>
+              <Trans i18nKey="migrate.connectAccount" />
+            </ThemedText.DeprecatedLargeHeader>
+          ) : pairBalance && totalSupply && reserve0 && reserve1 && token0 && token1 ? (
+            <V2PairMigration
+              pair={pair}
+              pairBalance={pairBalance}
+              totalSupply={totalSupply}
+              reserve0={reserve0}
+              reserve1={reserve1}
+              token0={token0}
+              token1={token1}
+            />
+          ) : (
+            <EmptyState message={<Trans i18nKey="common.loading" />} />
+          )}
+        </AutoColumn>
+      </BodyWrapper>
+    </Trace>
   )
 }

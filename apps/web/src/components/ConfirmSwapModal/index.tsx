@@ -5,7 +5,6 @@ import { SwapHead } from 'components/ConfirmSwapModal/Head'
 import { SwapModal } from 'components/ConfirmSwapModal/Modal'
 import { Pending } from 'components/ConfirmSwapModal/Pending'
 import SwapProgressIndicator from 'components/ConfirmSwapModal/ProgressIndicator'
-import { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { AutoColumn } from 'components/deprecated/Column'
 import { SwapDetails } from 'components/swap/SwapDetails'
 import { SwapPreview } from 'components/swap/SwapPreview'
@@ -186,7 +185,7 @@ export function ConfirmSwapModal({
     setTimeout(() => {
       // Reset local state after the modal dismiss animation finishes, to avoid UI flicker as it dismisses
       onCancel()
-    }, MODAL_TRANSITION_DURATION)
+    }, 200)
     // Popups are suppressed when modal is open; re-enable them on dismissal
     unsuppressPopups()
   }, [confirmModalState, doesTradeDiffer, onCancel, onDismiss, priceUpdate, unsuppressPopups, trade])
@@ -194,7 +193,7 @@ export function ConfirmSwapModal({
   return (
     // Wrapping in a new theme provider resets any color extraction overriding on the current page. Swap modal should use default/non-overridden theme.
     <ThemeProvider>
-      <SwapModal confirmModalState={confirmModalState} onDismiss={onModalDismiss}>
+      <SwapModal onDismiss={onModalDismiss}>
         {/* Head section displays title, help button, close icon */}
         <Container $height="24px" $padding="6px 12px 4px 12px">
           <SwapHead

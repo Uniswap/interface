@@ -1,3 +1,5 @@
+import { isInterface } from 'utilities/src/platform'
+
 /**
  * List of supported languages in app, represented by ISO 639 language code.
  * If you add a new locale here, be sure to add polyfills for it in intl.js,
@@ -89,6 +91,8 @@ export const WEB_SUPPORTED_LANGUAGES: Language[] = [
   Language.Urdu,
   Language.Vietnamese,
 ]
+
+export const PLATFORM_SUPPORTED_LANGUAGES = isInterface ? WEB_SUPPORTED_LANGUAGES : WALLET_SUPPORTED_LANGUAGES
 
 /**
  * External mapping to be used with system locale strings trying to resolve to specific language

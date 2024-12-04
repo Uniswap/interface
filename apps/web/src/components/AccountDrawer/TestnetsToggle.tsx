@@ -1,7 +1,7 @@
 import { SettingsToggle } from 'components/AccountDrawer/SettingsToggle'
 import { useDispatch } from 'react-redux'
 import { useOpenModal } from 'state/application/hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { t } from 'uniswap/src/i18n'

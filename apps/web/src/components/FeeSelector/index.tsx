@@ -13,7 +13,7 @@ import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState, usePools } from 'hooks/usePools'
 import usePrevious from 'hooks/usePrevious'
 import styled, { keyframes } from 'lib/styled-components'
-import { DynamicSection } from 'pages/AddLiquidity/styled'
+import { DynamicSection } from 'pages/AddLiquidityV3/styled'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Box } from 'rebass'
 import { ThemedText } from 'theme/components'
@@ -116,6 +116,7 @@ export default function FeeSelector({
     (fee: FeeAmount) => {
       sendAnalyticsEvent(LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER, {
         action: FeePoolSelectAction.MANUAL,
+        fee_tier: fee,
         ...trace,
       })
       handleFeePoolSelect(fee)
@@ -137,6 +138,7 @@ export default function FeeSelector({
       recommended.current = true
       sendAnalyticsEvent(LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER, {
         action: FeePoolSelectAction.RECOMMENDED,
+        fee_tier: largestUsageFeeTier,
         ...trace,
       })
 

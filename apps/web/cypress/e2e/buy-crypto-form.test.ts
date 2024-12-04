@@ -1,4 +1,5 @@
 import { getTestSelector } from "../utils"
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 describe('Buy Crypto Form', () => {
   beforeEach(() => {
@@ -8,6 +9,8 @@ describe('Buy Crypto Form', () => {
     cy.intercept('*/fiat-on-ramp/supported-tokens*', { fixture: 'fiatOnRamp/supported-tokens.json' })
     cy.intercept('*/fiat-on-ramp/quote*', { fixture: 'fiatOnRamp/quotes.json' })
     cy.visit('/buy')
+    cy.get(getTestSelector(TestID.ChooseInputToken)).click()
+    cy.get(getTestSelector('token-logo')).first().click()
   })
   
   it('quick amount select', () => {

@@ -7,7 +7,7 @@ import { formatToDecimal, getTokenAddress } from 'lib/utils/analytics'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useRef, useState } from 'react'
 import { useCurrencyBalance } from 'state/connection/hooks'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { trace } from 'tracing/trace'
@@ -28,7 +28,7 @@ enum WrapInputError {
 }
 
 export function WrapErrorText({ wrapInputError }: { wrapInputError: WrapInputError }) {
-  const { chainId } = useSwapAndLimitContext()
+  const { chainId } = useMultichainContext()
   const native = useNativeCurrency(chainId)
   const wrapped = native?.wrapped
 
@@ -59,7 +59,7 @@ export default function useWrapCallback(
   typedValue: string | undefined,
 ): { wrapType: WrapType; execute?: () => Promise<string | undefined>; inputError?: WrapInputError } {
   const account = useAccount()
-  const { chainId } = useSwapAndLimitContext()
+  const { chainId } = useMultichainContext()
 
   const wethContract = useWETHContract(true, chainId)
   const wethContractRef = useRef(wethContract)

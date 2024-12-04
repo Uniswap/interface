@@ -6,7 +6,7 @@ import { call, put, select, takeLatest } from 'typed-redux-saga'
 import {
   Language,
   Locale,
-  WALLET_SUPPORTED_LANGUAGES,
+  PLATFORM_SUPPORTED_LANGUAGES,
   mapDeviceLanguageToLanguage,
   mapLocaleToLanguage,
 } from 'uniswap/src/features/language/constants'
@@ -61,7 +61,7 @@ function getDeviceLanguage(): Language {
     // Prefer languageTag as it's more specific, falls back to languageCode
     const mappedLanguage = mappedLanguageFromTag || mappedLanguageFromCode
 
-    if (mappedLanguage && WALLET_SUPPORTED_LANGUAGES.includes(mappedLanguage)) {
+    if (mappedLanguage && PLATFORM_SUPPORTED_LANGUAGES.includes(mappedLanguage)) {
       return mappedLanguage
     }
   }

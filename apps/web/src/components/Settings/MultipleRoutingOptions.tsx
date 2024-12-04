@@ -11,6 +11,8 @@ import { RouterPreference } from 'state/routing/types'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { Switch } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Trans, t } from 'uniswap/src/i18n'
 
 const LabelWrapper = styled(Column)`
@@ -118,6 +120,7 @@ function RoutePreferenceToggle({
 }
 
 export default function MultipleRoutingOptions({ chainId }: { chainId?: number }) {
+  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
   const [routePreferenceOptions, setRoutePreferenceOptions] = useAtom(routePreferenceOptionsAtom)
   const [, setRoutingPreferences] = useAtom(routingPreferencesAtom)
   const shouldDisableProtocolOptionToggle =
@@ -180,12 +183,15 @@ export default function MultipleRoutingOptions({ chainId }: { chainId?: number }
     [handleSetRoutePreferenceOptions, routePreferenceOptions],
   )
 
+  const routingCheapestText = t('routing.cheapest')
+  const routingCheapestTextV4 = t('routing.cheapest.v4')
+
   return (
     <Column gap="sm">
       <RoutePreferenceToggle
         preference={RoutePreferenceOption.Optimal}
         isActive={routePreferenceOptions[RoutePreferenceOption.Optimal]}
-        text={<Trans i18nKey="routing.cheapest" />}
+        text={v4Enabled ? routingCheapestTextV4 : routingCheapestText}
         subheading={
           routePreferenceOptions[RoutePreferenceOption.Optimal] &&
           uniswapXSupportedChain && (

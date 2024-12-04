@@ -1,9 +1,9 @@
 import 'test-utils/tokens/mocks'
 
 import { Percent } from '@uniswap/sdk-core'
-import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'
+import { ExploreTopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import Router from 'react-router-dom'
-import { useTopPools } from 'state/explore/topPools'
+import { useExploreContextTopPools } from 'state/explore/topPools'
 import { mocked } from 'test-utils/mocked'
 import { validParams, validRestPoolToken0, validRestPoolToken1 } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
@@ -21,25 +21,25 @@ describe('PoolTable', () => {
   })
 
   it('renders loading state', () => {
-    mocked(useTopPools).mockReturnValue({
+    mocked(useExploreContextTopPools).mockReturnValue({
       isLoading: true,
       isError: false,
       topPools: [],
     })
 
-    const { asFragment } = render(<TopPoolTable />)
+    const { asFragment } = render(<ExploreTopPoolTable />)
     expect(screen.getAllByTestId('cell-loading-bubble')).not.toBeNull()
     expect(asFragment()).toMatchSnapshot()
   })
 
   it('renders error state', () => {
-    mocked(useTopPools).mockReturnValue({
+    mocked(useExploreContextTopPools).mockReturnValue({
       isLoading: false,
       isError: true,
       topPools: [],
     })
 
-    const { asFragment } = render(<TopPoolTable />)
+    const { asFragment } = render(<ExploreTopPoolTable />)
     expect(screen.getByTestId('table-error-modal')).not.toBeNull()
     expect(asFragment()).toMatchSnapshot()
   })
@@ -62,13 +62,13 @@ describe('PoolTable', () => {
         protocolVersion: ProtocolVersion.V3,
       },
     ]
-    mocked(useTopPools).mockReturnValue({
+    mocked(useExploreContextTopPools).mockReturnValue({
       topPools: mockData,
       isLoading: false,
       isError: false,
     })
 
-    const { asFragment } = render(<TopPoolTable />)
+    const { asFragment } = render(<ExploreTopPoolTable />)
     expect(screen.getByTestId('top-pools-explore-table')).not.toBeNull()
     expect(asFragment()).toMatchSnapshot()
   })

@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, ReactElement, memo, useMemo } from 'react'
+import React, { PropsWithChildren, ReactElement, memo, useCallback, useMemo, useState } from 'react'
 import { I18nManager } from 'react-native'
 import { SharedValue, useDerivedValue } from 'react-native-reanimated'
 import { LineChart, LineChartProvider } from 'react-native-wagmi-charts'
@@ -9,12 +9,15 @@ import { CURSOR_INNER_SIZE, CURSOR_SIZE, TIME_RANGES } from 'src/components/Pric
 import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensions'
 import { useLineChartPrice } from 'src/components/PriceExplorer/usePrice'
 import { PriceNumberOfDigits, TokenSpotData, useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
+import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { Loader } from 'src/components/loading/loaders'
-import { Flex, SegmentedControl, Text, useHapticFeedback } from 'ui/src'
+import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
+import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady'
+import { Flex, SegmentedControl, Text } from 'ui/src'
 import GraphCurve from 'ui/src/assets/backgrounds/graph-curve.svg'
 import { spacing } from 'ui/src/theme'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -22,6 +25,7 @@ import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { isDetoxBuild } from 'utilities/src/environment/constants'
+import { isAndroid } from 'utilities/src/platform'
 
 type PriceTextProps = {
   loading: boolean
@@ -30,52 +34,75 @@ type PriceTextProps = {
   spotPrice?: SharedValue<number>
 }
 
-function PriceTextSection({ loading, numberOfDigits, spotPrice }: PriceTextProps): JSX.Element {
+const PriceTextSection = memo(function PriceTextSection({
+  loading,
+  numberOfDigits,
+  spotPrice,
+}: PriceTextProps): JSX.Element {
   const price = useLineChartPrice(spotPrice)
   const currency = useAppFiatCurrencyInfo()
-  const mx = spacing.spacing12
+
+  const [isAnimatedNumberReady, setIsAnimatedNumberReady] = useState(false)
+  const onAnimatedNumberReady = useCallback(() => setIsAnimatedNumberReady(true), [])
 
   return (
-    <Flex mx={mx}>
-      <PriceExplorerAnimatedNumber currency={currency} numberOfDigits={numberOfDigits} price={price} />
+    // The `minHeight` is needed to avoid a layout shift on Android when hiding the skeleton.
+    <Flex mx={spacing.spacing12} minHeight={80}>
+      <PriceExplorerAnimatedNumber
+        currency={currency}
+        numberOfDigits={numberOfDigits}
+        price={price}
+        onAnimatedNumberReady={onAnimatedNumberReady}
+      />
       <Flex row gap="$spacing4">
-        <RelativeChangeText loading={loading} />
-        <DatetimeText loading={loading} />
+        {/*
+        We want both the animated number skeleton and the relative change skeleton to hide at the exact same time.
+        When multiple skeletons hide in different order, it gives the feeling of things being slower than they actually are.
+        */}
+        <RelativeChangeText loading={loading || !isAnimatedNumberReady} />
+        <DatetimeText loading={loading || !isAnimatedNumberReady} />
       </Flex>
     </Flex>
   )
-}
+})
 
-const TimeRangeTraceWrapper = ({
+function TimeRangeTraceWrapper({
   children,
   elementName,
-}: PropsWithChildren<{ elementName: ElementNameType }>): ReactElement => (
-  <Trace logPress element={elementName}>
-    {children}
-  </Trace>
-)
+}: PropsWithChildren<{ elementName: ElementNameType }>): ReactElement {
+  return (
+    <Trace logPress element={elementName}>
+      {children}
+    </Trace>
+  )
+}
 
 export type LineChartPriceAndDateTimeTextProps = {
   currencyId: CurrencyId
 }
 
-export const PriceExplorer = memo(function PriceExplorer({
-  currencyId,
-  tokenColor,
-  forcePlaceholder,
-  onRetry,
-}: {
-  currencyId: string
-  tokenColor?: string
-  forcePlaceholder?: boolean
-  onRetry: () => void
-}): JSX.Element {
-  const { data, loading, error, refetch, setDuration, selectedDuration, numberOfDigits } =
-    useTokenPriceHistory(currencyId)
-  const { hapticFeedback } = useHapticFeedback()
-
+export const PriceExplorer = memo(function _PriceExplorer(): JSX.Element {
   const { isTestnetModeEnabled } = useEnabledChains()
   const { chartHeight, chartWidth } = useChartDimensions()
+
+  if (isTestnetModeEnabled) {
+    return <GraphCurve height={chartHeight} width={chartWidth} opacity={0.25} />
+  }
+
+  return <PriceExplorerInner />
+})
+
+export const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Element {
+  const { currencyId, tokenColor, navigation } = useTokenDetailsContext()
+  const isScreenNavigationReady = useIsScreenNavigationReady({ navigation })
+
+  const { data, loading, error, refetch, setDuration, selectedDuration, numberOfDigits } = useTokenPriceHistory(
+    currencyId,
+    HistoryDuration.Day,
+    !isScreenNavigationReady,
+  )
+
+  const { hapticFeedback } = useHapticFeedback()
 
   const { convertFiatAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount(1).amount
@@ -84,9 +111,10 @@ export const PriceExplorer = memo(function PriceExplorer({
   const additionalPadding = shouldShowAnimatedDot ? 40 : 0
 
   const { lastPricePoint, convertedPriceHistory } = useMemo(() => {
-    const priceHistory = data?.priceHistory?.map((point) => {
-      return { ...point, value: point.value * conversionRate }
-    })
+    const priceHistory =
+      data?.priceHistory?.map((point) => {
+        return { ...point, value: point.value * conversionRate }
+      }) ?? []
 
     const lastPoint = priceHistory ? priceHistory.length - 1 : 0
 
@@ -103,38 +131,20 @@ export const PriceExplorer = memo(function PriceExplorer({
     )
   }, [data, convertedSpotValue])
 
-  if (isTestnetModeEnabled) {
-    return <GraphCurve height={chartHeight} width={chartWidth} opacity={0.25} />
-  }
+  const segmentedControlOptions = useMemo(() => {
+    return TIME_RANGES.map(([duration, label, elementName]) => ({
+      value: duration,
+      wrapper: <TimeRangeTraceWrapper key={`${duration}-trace`} elementName={elementName} />,
+      display: (
+        <Text allowFontScaling={false} testID={`token-details-chart-time-range-button-${label}`} variant="buttonLabel2">
+          {label}
+        </Text>
+      ),
+    }))
+  }, [])
 
   if (!loading && (!convertedPriceHistory || (!convertedSpot && selectedDuration === HistoryDuration.Day))) {
-    // Propagate retry up while refetching, if available
-    const refetchAndRetry = (): void => {
-      if (refetch) {
-        refetch()
-      }
-      onRetry()
-    }
-    return <PriceExplorerError showRetry={error !== undefined} onRetry={refetchAndRetry} />
-  }
-
-  let content: JSX.Element | null
-  if (forcePlaceholder) {
-    content = <PriceExplorerPlaceholder />
-  } else if (convertedPriceHistory?.length) {
-    content = (
-      // TODO(MOB-2308): add better loading state
-      <Flex opacity={!loading ? 1 : 0.35}>
-        <PriceExplorerChart
-          additionalPadding={additionalPadding}
-          lastPricePoint={lastPricePoint}
-          shouldShowAnimatedDot={shouldShowAnimatedDot}
-          tokenColor={tokenColor}
-        />
-      </Flex>
-    )
-  } else {
-    content = <PriceExplorerPlaceholder />
+    return <PriceExplorerError showRetry={error !== undefined} onRetry={refetch} />
   }
 
   return (
@@ -146,42 +156,37 @@ export const PriceExplorer = memo(function PriceExplorer({
           relativeChange={convertedSpot?.relativeChange}
           spotPrice={convertedSpot?.value}
         />
-        {content}
-        <Flex px="$spacing8">
-          <SegmentedControl
-            fullWidth
-            outlined={false}
-            options={TIME_RANGES.map(([duration, label, elementName]) => ({
-              value: duration,
-              wrapper: <TimeRangeTraceWrapper key={`${duration}-trace`} elementName={elementName} />,
-              display: (
-                <Text
-                  allowFontScaling={false}
-                  testID={`token-details-chart-time-range-button-${label}`}
-                  variant="buttonLabel2"
-                >
-                  {label}
-                </Text>
-              ),
-            }))}
-            selectedOption={selectedDuration}
-            onSelectOption={setDuration}
-          />
+
+        <Flex animation="quick" enterStyle={{ opacity: isAndroid ? 0 : 1 }}>
+          {convertedPriceHistory?.length ? (
+            <PriceExplorerChart
+              additionalPadding={additionalPadding}
+              lastPricePoint={lastPricePoint}
+              shouldShowAnimatedDot={shouldShowAnimatedDot}
+              tokenColor={tokenColor ?? undefined}
+            />
+          ) : (
+            <Flex my="$spacing24">
+              <Loader.Graph />
+            </Flex>
+          )}
+
+          <Flex px="$spacing8">
+            <SegmentedControl
+              fullWidth
+              outlined={false}
+              options={segmentedControlOptions}
+              selectedOption={selectedDuration}
+              onSelectOption={setDuration}
+            />
+          </Flex>
         </Flex>
       </Flex>
     </LineChartProvider>
   )
 })
 
-function PriceExplorerPlaceholder(): JSX.Element {
-  return (
-    <Flex my="$spacing24">
-      <Loader.Graph />
-    </Flex>
-  )
-}
-
-function PriceExplorerChart({
+const PriceExplorerChart = memo(function PriceExplorerChart({
   tokenColor,
   additionalPadding,
   shouldShowAnimatedDot,
@@ -231,4 +236,4 @@ function PriceExplorerChart({
       </LineChart>
     </Flex>
   )
-}
+})

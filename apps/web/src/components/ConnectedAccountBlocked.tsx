@@ -1,9 +1,8 @@
 import Column from 'components/deprecated/Column'
-import Modal from 'components/Modal'
 import styled, { useTheme } from 'lib/styled-components'
 import { Slash } from 'react-feather'
 import { CopyHelper, ExternalLink, ThemedText } from 'theme/components'
-import { Flex, Text } from 'ui/src'
+import { AdaptiveWebModal, Flex, Text } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 
 const ContentWrapper = styled(Column)`
@@ -20,7 +19,7 @@ interface ConnectedAccountBlockedProps {
 export default function ConnectedAccountBlocked(props: ConnectedAccountBlockedProps) {
   const theme = useTheme()
   return (
-    <Modal isOpen={props.isOpen} onDismiss={Function.prototype()}>
+    <AdaptiveWebModal isOpen={props.isOpen} onClose={Function.prototype()} p={0}>
       <ContentWrapper>
         <Slash size="22px" color={theme.neutral2} />
         <ThemedText.DeprecatedLargeHeader lineHeight={2} marginBottom={1} marginTop={1}>
@@ -56,6 +55,6 @@ export default function ConnectedAccountBlocked(props: ConnectedAccountBlockedPr
           />
         </ThemedText.DeprecatedMain>
       </ContentWrapper>
-    </Modal>
+    </AdaptiveWebModal>
   )
 }

@@ -5,7 +5,7 @@ import { Flex } from 'ui/src/components/layout'
 import { zIndices } from 'ui/src/theme'
 import { useShadowPropsShort } from 'ui/src/theme/shadows'
 
-export function WebBottomSheet({ isOpen, onClose, children, ...rest }: ModalProps): JSX.Element {
+export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: ModalProps): JSX.Element {
   const isTouchDevice = useIsTouchDevice()
   const [isHandlePressed, setHandlePressed] = useState(false)
 
@@ -23,6 +23,12 @@ export function WebBottomSheet({ isOpen, onClose, children, ...rest }: ModalProp
     width: '100%',
     maxWidth: '100%',
     minWidth: '100%',
+  }
+
+  const sheetHeightStyles: GetProps<typeof View> = {
+    flex: 1,
+    height: rest.$sm?.['$platform-web']?.height,
+    maxHeight: rest.$sm?.['$platform-web']?.maxHeight ?? '100dvh',
   }
 
   return (
@@ -44,11 +50,9 @@ export function WebBottomSheet({ isOpen, onClose, children, ...rest }: ModalProp
           borderTopLeftRadius="$rounded16"
           borderTopRightRadius="$rounded16"
           borderWidth="$spacing1"
-          flex={1}
-          height={rest.$sm?.height}
-          maxHeight={rest.$sm?.maxHeight ?? '100dvh'}
           px="$spacing8"
           zIndex={zIndices.modal}
+          {...sheetHeightStyles}
           {...sheetOverrideStyles}
         >
           <Sheet.Handle
@@ -63,7 +67,9 @@ export function WebBottomSheet({ isOpen, onClose, children, ...rest }: ModalProp
           >
             <Flex backgroundColor="$surface3" height="$spacing4" width="$spacing32" />
           </Sheet.Handle>
-          {children}
+          <Flex gap={gap} overflow="scroll" {...sheetHeightStyles}>
+            {children}
+          </Flex>
         </Sheet.Frame>
         <Sheet.Overlay
           animation="lazy"
@@ -105,6 +111,10 @@ export function AdaptiveWebModal({
   adaptToSheet = true,
   style,
   alignment = 'center',
+  gap,
+  px,
+  py,
+  p,
   ...rest
 }: ModalProps): JSX.Element {
   const filteredRest = Object.fromEntries(Object.entries(rest).filter(([_, v]) => v !== undefined)) // Filter out undefined properties from rest
@@ -128,7 +138,15 @@ export function AdaptiveWebModal({
       {adaptToSheet &&
         !isTopAligned && ( // Tamagui Sheets always animate in from the bottom, so we cannot use Sheets on top aligned modals
           <Adapt when="sm">
-            <WebBottomSheet isOpen={isOpen} style={style} onClose={onClose} {...filteredRest}>
+            <WebBottomSheet
+              isOpen={isOpen}
+              gap={gap ?? '$spacing4'}
+              px={px ?? p ?? '$spacing24'}
+              py={py ?? p ?? '$spacing16'}
+              style={style}
+              onClose={onClose}
+              {...filteredRest}
+            >
               <Adapt.Contents />
             </WebBottomSheet>
           </Adapt>
@@ -147,13 +165,13 @@ export function AdaptiveWebModal({
           borderRadius="$rounded16"
           enterStyle={{ x: 0, y: isTopAligned ? -20 : 20, opacity: 0 }}
           exitStyle={{ x: 0, y: isTopAligned ? -20 : 10, opacity: 0 }}
-          gap={4}
+          gap={gap ?? '$spacing4'}
           m="$spacing16"
           maxHeight="calc(100vh - 32px)"
           maxWidth={420}
           overflow="hidden"
-          px="$spacing24"
-          py="$spacing16"
+          px={px ?? p ?? '$spacing24'}
+          py={py ?? p ?? '$spacing16'}
           style={style}
           width="calc(100vw - 32px)"
           zIndex={zIndices.modal}
@@ -179,6 +197,7 @@ export function WebModalWithBottomAttachment({
   alignment = 'center',
   bottomAttachment,
   backgroundColor = '$surface1',
+  gap,
   ...rest
 }: ModalProps & { bottomAttachment?: ReactNode }): JSX.Element {
   const shadowProps = useShadowPropsShort()
@@ -238,7 +257,7 @@ export function WebModalWithBottomAttachment({
               borderWidth="$spacing1"
               px="$spacing24"
               py="$spacing16"
-              gap="$spacing4"
+              gap={gap ?? '$gap4'}
               overflow="hidden"
               {...filteredRest}
             >

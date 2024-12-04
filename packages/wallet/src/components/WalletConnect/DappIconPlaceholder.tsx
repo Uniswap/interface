@@ -12,9 +12,10 @@ export function UnmemoizedDappIconPlaceholder({ name, iconSize }: { name?: strin
       row
       backgroundColor={backgroundColor}
       borderRadius="$roundedFull"
-      height={iconSize}
+      maxHeight={iconSize}
       testID="dapp-icon-placeholder"
       width={iconSize}
+      aspectRatio={1}
     >
       <Text color={textColor} textAlign="center" variant={iconSize >= iconSizes.icon40 ? 'subheading1' : 'body2'}>
         {name && name.length > 0 ? name.charAt(0) : ' '}

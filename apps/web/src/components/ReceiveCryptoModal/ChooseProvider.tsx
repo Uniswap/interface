@@ -7,16 +7,7 @@ import { useTheme } from 'lib/styled-components'
 import { useOpenModal, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { CopyToClipboard } from 'theme/components'
-import {
-  Button,
-  Flex,
-  GeneratedIcon,
-  HeightAnimator,
-  ImpactFeedbackStyle,
-  Separator,
-  Text,
-  TouchableArea,
-} from 'ui/src'
+import { Button, Flex, GeneratedIcon, HeightAnimator, Separator, Text, TouchableArea } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons/CopySheets'
 import { QrCode } from 'ui/src/components/icons/QrCode'
 import { iconSizes } from 'ui/src/theme'
@@ -81,7 +72,7 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
           <CopyToClipboard toCopy={account.address!}>
             <ActionIcon Icon={CopySheets} />
           </CopyToClipboard>
-          <TouchableArea hapticFeedback hapticStyle={ImpactFeedbackStyle.Light} onPress={onPressShowWalletQr}>
+          <TouchableArea onPress={onPressShowWalletQr}>
             <ActionIcon Icon={QrCode} />
           </TouchableArea>
         </Flex>

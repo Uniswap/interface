@@ -1,8 +1,9 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { AppTFunction } from 'ui/src/i18n/types'
-import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
+import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
+import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
 import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
@@ -109,12 +110,28 @@ export function useFiatCurrencyInfo(currency: FiatCurrency): FiatCurrencyInfo {
   }
 }
 
+function useUrlLocalCurrency(): FiatCurrency | undefined {
+  const { useParsedQueryString } = useUrlContext()
+  const parsed = useParsedQueryString()
+  const parsedLocalCurrency = parsed.cur
+
+  if (typeof parsedLocalCurrency !== 'string') {
+    return undefined
+  }
+
+  const lowerCaseSupportedLocalCurrency = parsedLocalCurrency.toLowerCase()
+  return ORDERED_CURRENCIES.find((localCurrency) => localCurrency.toLowerCase() === lowerCaseSupportedLocalCurrency)
+}
+
 /**
  * Hook used to return the current selected fiat currency in the app
  * @returns currently selected fiat currency
  */
 export function useAppFiatCurrency(): FiatCurrency {
-  return useSelector((state: UniswapState) => state.userSettings.currentCurrency)
+  const storeFiatCurrency = useSelector((state: UniswapState) => state.userSettings.currentCurrency)
+  const urlFiatCurrency = useUrlLocalCurrency()
+
+  return useMemo(() => urlFiatCurrency ?? storeFiatCurrency, [storeFiatCurrency, urlFiatCurrency])
 }
 
 /**

@@ -12,11 +12,14 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
 import { findGasStrategyName } from 'uniswap/src/features/gas/hooks'
 import { getGasPrice } from 'uniswap/src/features/gas/types'
+import { DynamicConfigs, MainnetPrivateRpcConfigKey } from 'uniswap/src/features/gating/configs'
+import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { pushNotification, setNotificationStatus } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { MobileAppsFlyerEvents, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import { refetchGQLQueries } from 'uniswap/src/features/transactions/refetchGQLQueriesSaga'
 import {
   makeSelectTransaction,
   selectIncompleteTransactions,
@@ -51,7 +54,6 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import { OrderWatcher } from 'wallet/src/features/transactions/orderWatcherSaga'
-import { refetchGQLQueries } from 'wallet/src/features/transactions/refetchGQLQueriesSaga'
 import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
 import {
   getDiff,
@@ -61,6 +63,7 @@ import {
   receiptFromEthersReceipt,
 } from 'wallet/src/features/transactions/utils'
 import { getProvider } from 'wallet/src/features/wallet/context'
+import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 export const SWAP_STATUS_TO_TX_STATUS: { [key in SwapStatus]: TransactionStatus } = {
   [SwapStatus.PENDING]: TransactionStatus.Pending,
@@ -271,6 +274,7 @@ export function* watchTransaction({
       chainId,
       id,
     })
+    yield* call(logTransactionTimeout, transaction)
     yield* call(maybeLogGasEstimateAccuracy, transaction)
     return
   }
@@ -311,6 +315,12 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
     if (!updatedOrder.hash) {
       return updatedOrder
     }
+  }
+
+  if ((isBridge(transaction) || isClassic(transaction)) && !transaction.options?.request) {
+    // Transaction was not submitted yet, ignore it for now
+    // Once it's submitted, it'll be updated and the watcher will pick it up
+    return undefined
   }
 
   // At this point, the tx should either be a classic / bridge tx or a filled order, both of which have hashes
@@ -606,6 +616,28 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
   maybeLogGasEstimateAccuracy(payload)
 }
 
+function logTransactionTimeout(transaction: TransactionDetails) {
+  const useFlashbots = getDynamicConfigValue<DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey, boolean>(
+    DynamicConfigs.MainnetPrivateRpc,
+    MainnetPrivateRpcConfigKey.UseFlashbots,
+    false,
+  )
+
+  const sendAuthenticationHeader = getDynamicConfigValue<
+    DynamicConfigs.MainnetPrivateRpc,
+    MainnetPrivateRpcConfigKey,
+    boolean
+  >(DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey.SendFlashbotsAuthenticationHeader, false)
+
+  sendAnalyticsEvent(WalletEventName.PendingTransactionTimeout, {
+    use_flashbots: useFlashbots,
+    send_authentication_header: sendAuthenticationHeader,
+    chain_id: transaction.chainId,
+    tx_hash: transaction.hash,
+    private_rpc: (isClassic(transaction) && transaction.options.submitViaPrivateRpc) ?? false,
+  })
+}
+
 function maybeLogGasEstimateAccuracy(transaction: TransactionDetails) {
   const { gasEstimates } = transaction.typeInfo
   if (!gasEstimates) {
@@ -663,7 +695,12 @@ export function* finalizeTransaction({
   // Flip status to true so we can render Notification badge on home
   yield* put(setNotificationStatus({ address: transaction.from, hasNotifications: true }))
   // Refetch data when a local tx has confirmed
-  yield* refetchGQLQueries({ transaction, apolloClient })
+  const activeAddress = yield* select(selectActiveAccountAddress)
+  yield* refetchGQLQueries({
+    transaction,
+    apolloClient,
+    activeAddress,
+  })
 
   if (transaction.typeInfo.type === TransactionType.Swap || transaction.typeInfo.type === TransactionType.Bridge) {
     const hasDoneOneSwap = (yield* select(selectSwapTransactionsCount)) === 1

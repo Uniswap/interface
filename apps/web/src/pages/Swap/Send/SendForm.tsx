@@ -5,7 +5,6 @@ import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperiment
 import Column from 'components/deprecated/Column'
 import { useAccount } from 'hooks/useAccount'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
-import useSelectChain from 'hooks/useSelectChain'
 import { useSendCallback } from 'hooks/useSendCallback'
 import { NewAddressSpeedBumpModal } from 'pages/Swap/Send/NewAddressSpeedBump'
 import SendCurrencyInputForm from 'pages/Swap/Send/SendCurrencyInputForm'
@@ -15,9 +14,6 @@ import { SmartContractSpeedBumpModal } from 'pages/Swap/Send/SmartContractSpeedB
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { SendContextProvider, useSendContext } from 'state/send/SendContext'
 import { CurrencyState } from 'state/swap/types'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
-import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
-import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { Trans } from 'uniswap/src/i18n'
@@ -76,7 +72,6 @@ enum SendSpeedBump {
 
 function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFormProps) {
   const account = useAccount()
-  const selectChain = useSelectChain()
 
   const accountDrawer = useAccountDrawer()
 
@@ -85,8 +80,6 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
     [SendSpeedBump.NEW_ADDRESS_SPEED_BUMP]: false,
     [SendSpeedBump.SMART_CONTRACT_SPEED_BUMP]: false,
   })
-  const { initialChainId, chainId, multichainUXEnabled } = useSwapAndLimitContext()
-  const isSupportedChain = useIsSupportedChainId(chainId)
   const { setSendState, derivedSendInfo } = useSendContext()
   const { inputError, parsedTokenAmount, recipientData, transaction, gasFee } = derivedSendInfo
 
@@ -201,13 +194,6 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
               <ConnectWalletButtonText />
             </ButtonLight>
           </Trace>
-        ) : !multichainUXEnabled && initialChainId && initialChainId !== account.chainId ? (
-          <ButtonPrimary $borderRadius="16px" onClick={async () => await selectChain(initialChainId)}>
-            <Trans
-              i18nKey="common.connectToChain.button"
-              values={{ chainName: isSupportedChain ? getChainLabel(initialChainId) : undefined }}
-            />
-          </ButtonPrimary>
         ) : (
           <Trace logPress element={InterfaceElementName.SEND_BUTTON}>
             <ButtonPrimary

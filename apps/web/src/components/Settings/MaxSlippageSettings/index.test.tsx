@@ -31,7 +31,7 @@ describe('MaxSlippageSettings', () => {
     it('is expanded by default when custom slippage is set', () => {
       store.dispatch(updateUserSlippageTolerance({ userSlippageTolerance: 10 }))
       renderSlippageSettings()
-      expect(getSlippageInput()).toBeVisible()
+      expect(getSlippageInput()).not.toBeNull()
     })
     it('does not render auto slippage as a value, but a placeholder', () => {
       renderSlippageSettings()

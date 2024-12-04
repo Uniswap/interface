@@ -1,18 +1,17 @@
 import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
 import { DepositState } from 'components/Liquidity/types'
-import { useAccount } from 'hooks/useAccount'
 import {
   CreatePositionContext,
   CreateTxContext,
   DEFAULT_DEPOSIT_STATE,
-  DEFAULT_PRICE_RANGE_STATE_CREATING_POOL,
-  DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS,
+  DEFAULT_PRICE_RANGE_STATE,
   DepositContext,
   PriceRangeContext,
   useCreatePositionContext,
   useDepositContext,
   usePriceRangeContext,
 } from 'pages/Pool/Positions/create/CreatePositionContext'
+import { DynamicFeeTierSpeedbump } from 'pages/Pool/Positions/create/DynamicFeeTierSpeedbump'
 import {
   useDerivedDepositInfo,
   useDerivedPositionInfo,
@@ -20,6 +19,7 @@ import {
 } from 'pages/Pool/Positions/create/hooks'
 import {
   DEFAULT_POSITION_STATE,
+  DynamicFeeTierSpeedbumpData,
   PositionFlowStep,
   PositionState,
   PriceRangeState,
@@ -29,14 +29,11 @@ import {
   generateCreateCalldataQueryParams,
   generateCreatePositionTxRequest,
 } from 'pages/Pool/Positions/create/utils'
-import { useEffect, useMemo, useState } from 'react'
-import { PositionField } from 'types/position'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { usePrevious } from 'utilities/src/react/hooks'
+import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function CreatePositionContextProvider({
@@ -50,24 +47,23 @@ export function CreatePositionContextProvider({
   const [step, setStep] = useState<PositionFlowStep>(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
   const derivedPositionInfo = useDerivedPositionInfo(positionState)
   const [feeTierSearchModalOpen, setFeeTierSearchModalOpen] = useState(false)
+  const [dynamicFeeTierSpeedbumpData, setDynamicFeeTierSpeedbumpData] = useState<DynamicFeeTierSpeedbumpData>({
+    open: false,
+    wishFeeData: DEFAULT_POSITION_STATE.fee,
+  })
 
-  const account = useAccount()
-  const prevChainId = usePrevious(account.chainId)
-  useEffect(() => {
-    if (prevChainId && prevChainId !== account.chainId) {
-      setPositionState((prevState) => ({
-        ...prevState,
-        currencyInputs: {
-          [PositionField.TOKEN0]: nativeOnChain(account.chainId ?? UniverseChainId.Mainnet),
-        },
-      }))
-      setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
-    }
-  }, [account.chainId, prevChainId])
+  const reset = useCallback(() => {
+    setPositionState({
+      ...DEFAULT_POSITION_STATE,
+      ...initialState,
+    })
+    setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
+  }, [initialState])
 
   return (
     <CreatePositionContext.Provider
       value={{
+        reset,
         step,
         setStep,
         positionState,
@@ -75,32 +71,46 @@ export function CreatePositionContextProvider({
         derivedPositionInfo,
         feeTierSearchModalOpen,
         setFeeTierSearchModalOpen,
+        dynamicFeeTierSpeedbumpData,
+        setDynamicFeeTierSpeedbumpData,
       }}
     >
       {children}
       <FeeTierSearchModal />
+      <DynamicFeeTierSpeedbump />
     </CreatePositionContext.Provider>
   )
 }
 
 export function PriceRangeContextProvider({ children }: { children: React.ReactNode }) {
   const { derivedPositionInfo } = useCreatePositionContext()
-  const [priceRangeState, setPriceRangeState] = useState<PriceRangeState>(DEFAULT_PRICE_RANGE_STATE_CREATING_POOL)
+  const [priceRangeState, setPriceRangeState] = useState<PriceRangeState>(DEFAULT_PRICE_RANGE_STATE)
+
+  const reset = useCallback(() => {
+    setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
+  }, [])
 
   useEffect(() => {
     // creatingPoolOrPair is calculated in the previous step of the create flow, so
     // it's safe to reset PriceRangeState to defaults when it changes.
-    setPriceRangeState(
-      derivedPositionInfo.creatingPoolOrPair
-        ? DEFAULT_PRICE_RANGE_STATE_CREATING_POOL
-        : DEFAULT_PRICE_RANGE_STATE_POOL_EXISTS,
-    )
+    setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
   }, [derivedPositionInfo.creatingPoolOrPair])
+
+  useEffect(() => {
+    // When the price is inverted, reset the state so that LiquidityChartRangeInput can redraw the default range if needed.
+    setPriceRangeState((prevState) => {
+      if (prevState.fullRange) {
+        return { ...prevState, fullRange: true, minPrice: '', maxPrice: '' }
+      } else {
+        return { ...prevState, fullRange: false, minPrice: undefined, maxPrice: undefined }
+      }
+    })
+  }, [priceRangeState.priceInverted])
 
   const derivedPriceRangeInfo = useDerivedPriceRangeInfo(priceRangeState)
 
   return (
-    <PriceRangeContext.Provider value={{ priceRangeState, setPriceRangeState, derivedPriceRangeInfo }}>
+    <PriceRangeContext.Provider value={{ reset, priceRangeState, setPriceRangeState, derivedPriceRangeInfo }}>
       {children}
     </PriceRangeContext.Provider>
   )
@@ -110,8 +120,12 @@ export function DepositContextProvider({ children }: { children: React.ReactNode
   const [depositState, setDepositState] = useState<DepositState>(DEFAULT_DEPOSIT_STATE)
   const derivedDepositInfo = useDerivedDepositInfo(depositState)
 
+  const reset = useCallback(() => {
+    setDepositState(DEFAULT_DEPOSIT_STATE)
+  }, [])
+
   return (
-    <DepositContext.Provider value={{ depositState, setDepositState, derivedDepositInfo }}>
+    <DepositContext.Provider value={{ reset, depositState, setDepositState, derivedDepositInfo }}>
       {children}
     </DepositContext.Provider>
   )
@@ -122,6 +136,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   const { derivedPositionInfo, positionState } = useCreatePositionContext()
   const { derivedDepositInfo } = useDepositContext()
   const { priceRangeState, derivedPriceRangeInfo } = usePriceRangeContext()
+  const swapSettings = useSwapSettingsContext()
 
   const addLiquidityApprovalParams = useMemo(() => {
     return generateAddLiquidityApprovalParams({
@@ -131,7 +146,11 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
       derivedDepositInfo,
     })
   }, [account, derivedDepositInfo, derivedPositionInfo, positionState])
-  const { data: approvalCalldata } = useCheckLpApprovalQuery({
+  const {
+    data: approvalCalldata,
+    error: approvalError,
+    refetch: approvalRefetch,
+  } = useCheckLpApprovalQuery({
     params: addLiquidityApprovalParams,
     staleTime: 5 * ONE_SECOND_MS,
   })
@@ -155,20 +174,41 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     positionState,
     priceRangeState,
   ])
-  const { data: createCalldata } = useCreateLpPositionCalldataQuery({
+  const {
+    data: createCalldata,
+    error: createError,
+    refetch: createRefetch,
+  } = useCreateLpPositionCalldataQuery({
     params: createCalldataQueryParams,
-    staleTime: 5 * ONE_SECOND_MS,
+    deadlineInMinutes: swapSettings.customDeadline,
+    refetchInterval: 5 * ONE_SECOND_MS,
   })
 
   const validatedValue = useMemo(() => {
-    return generateCreatePositionTxRequest({
+    const txInfo = generateCreatePositionTxRequest({
       approvalCalldata,
       createCalldata,
       createCalldataQueryParams,
       derivedPositionInfo,
       derivedDepositInfo,
     })
-  }, [approvalCalldata, createCalldata, createCalldataQueryParams, derivedPositionInfo, derivedDepositInfo])
+
+    return {
+      txInfo,
+      error: Boolean(approvalError || createError),
+      refetch: approvalError ? approvalRefetch : createError ? createRefetch : undefined,
+    }
+  }, [
+    approvalCalldata,
+    createCalldata,
+    createCalldataQueryParams,
+    derivedPositionInfo,
+    derivedDepositInfo,
+    approvalError,
+    createError,
+    approvalRefetch,
+    createRefetch,
+  ])
 
   return <CreateTxContext.Provider value={validatedValue}>{children}</CreateTxContext.Provider>
 }

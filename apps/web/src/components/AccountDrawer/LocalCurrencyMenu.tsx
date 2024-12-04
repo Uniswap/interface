@@ -1,11 +1,11 @@
 import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
 import { MenuColumn, MenuItem } from 'components/AccountDrawer/shared'
 import { getLocalCurrencyIcon } from 'constants/localCurrencies'
-import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useLocalCurrencyLinkProps } from 'hooks/useLocalCurrencyLinkProps'
 import styled from 'lib/styled-components'
 import { useMemo } from 'react'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
+import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { Trans } from 'uniswap/src/i18n'
 
 const StyledLocalCurrencyIcon = styled.div`
@@ -39,7 +39,7 @@ function LocalCurrencyMenuItem({ localCurrency, isActive }: { localCurrency: Fia
 }
 
 export function LocalCurrencyMenuItems() {
-  const activeLocalCurrency = useActiveLocalCurrency()
+  const activeLocalCurrency = useAppFiatCurrency()
 
   return (
     <>

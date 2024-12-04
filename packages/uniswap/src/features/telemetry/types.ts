@@ -11,7 +11,6 @@ import {
   InterfaceEventName,
   InterfacePageName,
   LiquidityEventName,
-  LiquiditySource,
   MoonpayEventName,
   NFTEventName,
   NFTFilterTypes,
@@ -71,6 +70,14 @@ export type GasEstimateAccuracyProperties = {
   name?: string
   out_of_gas: boolean
   timed_out: boolean
+}
+
+export type PendingTransactionTimeoutProperties = {
+  use_flashbots: boolean
+  send_authentication_header: boolean
+  private_rpc: boolean
+  chain_id: number
+  tx_hash?: string
 }
 
 export type AssetDetailsBaseProperties = {
@@ -300,6 +307,20 @@ type OnboardingCardEventProperties = ITraceContext & {
   card_name: OnboardingCardLoggingName
 }
 
+// Camelcase and snakecase used to preserve backwards compatibility for original event names
+export type LiquidityAnalyticsProperties = ITraceContext & {
+  label: string
+  type: string
+  fee_tier: number
+  pool_address?: string // represents pool contract address for v2&v3, and poolId for v4
+  chain_id?: UniverseChainId
+  baseCurrencyId: string
+  quoteCurrencyId: string
+  token0AmountUSD: number
+  token1AmountUSD: number
+  transaction_hash: string
+}
+
 // Please sort new values by EventName type!
 export type UniverseEventProperties = {
   [ExtensionEventName.OnboardingLoad]: undefined
@@ -460,40 +481,26 @@ export type UniverseEventProperties = {
     recipient: string
   }
   [InterfaceEventName.TOKEN_SELECTOR_OPENED]: undefined
-  [LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED]: {
-    source: LiquiditySource
-    label: string
-    type: string
-    fee_tier?: number
-  }
+  [LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED]: LiquidityAnalyticsProperties
   [LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER]: {
     action: FeePoolSelectAction
+    fee_tier: number
+    is_new_fee_tier?: boolean
   } & ITraceContext
   [LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED]: {
     action: string
-    label: string
-  } & ITraceContext
+  } & LiquidityAnalyticsProperties
   [LiquidityEventName.ADD_LIQUIDITY_SUBMITTED]: {
-    label: string
-    type: string
     createPool?: boolean
-    baseCurrencyId: string
-    quoteCurrencyId: string
-    feeAmount?: number
+    createPosition?: boolean
     expectedAmountBaseRaw: string
     expectedAmountQuoteRaw: string
-    transaction_hash: string
-    fee_tier?: number
-    pool_address?: string
-  } & ITraceContext
+  } & LiquidityAnalyticsProperties
   [LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED]: {
-    source: LiquiditySource
-    label: string
-    type: string
-    transaction_hash: string
-    fee_tier?: number
-    pool_address?: string
-  } & ITraceContext
+    expectedAmountBaseRaw: string
+    expectedAmountQuoteRaw: string
+    closePosition?: boolean
+  } & LiquidityAnalyticsProperties
   [MobileEventName.AppRating]: {
     type: 'store-review' | 'feedback-form' | 'remind'
     appRatingPromptedMs?: number
@@ -768,6 +775,7 @@ export type UniverseEventProperties = {
     url: string
   }
   [WalletEventName.GasEstimateAccuracy]: GasEstimateAccuracyProperties
+  [WalletEventName.PendingTransactionTimeout]: PendingTransactionTimeoutProperties
   [WalletEventName.TokenVisibilityChanged]: { currencyId: string; visible: boolean }
   [WalletEventName.TransferSubmitted]: TransferProperties
   [WalletEventName.WalletAdded]: OnboardingCompletedProps & ITraceContext

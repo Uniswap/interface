@@ -2,6 +2,7 @@ import { BottomSheetModal as BaseModal } from '@gorhom/bottom-sheet'
 import { ComponentProps, PropsWithChildren, ReactNode } from 'react'
 import { SharedValue } from 'react-native-reanimated'
 import { ColorTokens, SpaceTokens, View } from 'ui/src'
+import { HandleBarProps } from 'uniswap/src/components/modals/HandleBar'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 
 export type ModalProps = PropsWithChildren<{
@@ -15,6 +16,7 @@ export type ModalProps = PropsWithChildren<{
   containerComponent?: ComponentProps<typeof BaseModal>['containerComponent']
   footerComponent?: ComponentProps<typeof BaseModal>['footerComponent']
   fullScreen?: boolean
+  handlebarColor?: HandleBarProps['indicatorColor']
   backgroundColor?: ColorTokens
   blurredBackground?: boolean
   dismissOnBackPress?: boolean
@@ -28,12 +30,18 @@ export type ModalProps = PropsWithChildren<{
   extendOnKeyboardVisible?: boolean
   // defaults to `true`
   isModalOpen?: boolean
+  analyticsProperties?: Record<string, unknown>
+  skipLogImpression?: boolean
 
   // TODO MOB-2526 refactor Modal to more platform-agnostic
   alignment?: 'center' | 'top'
   hideScrim?: boolean
   maxWidth?: number
   maxHeight?: ComponentProps<typeof View>['maxHeight']
+  height?: ComponentProps<typeof View>['height']
   padding?: SpaceTokens
+  paddingX?: SpaceTokens
+  paddingY?: SpaceTokens
   bottomAttachment?: ReactNode
+  gap?: ComponentProps<typeof View>['gap']
 }>

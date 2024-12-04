@@ -3,11 +3,10 @@ import { useTranslation } from 'react-i18next'
 // eslint-disable-next-line no-restricted-imports -- type imports are safe
 import type { StyleProp, ViewStyle } from 'react-native'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { useHapticFeedback } from 'ui/src'
 import { errorShakeAnimation } from 'ui/src/animations/errorShakeAnimation'
 import { PlusMinusButtonType } from 'ui/src/components/button/PlusMinusButton'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE, MAX_CUSTOM_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 
 const SLIPPAGE_INCREMENT = 0.1
 
@@ -28,8 +27,11 @@ export function useSlippageSettings(): {
 } {
   const { t } = useTranslation()
 
-  const { derivedSwapInfo, updateSwapForm } = useSwapFormContext()
-  const { customSlippageTolerance, autoSlippageTolerance: derivedAutoSlippageTolerance } = derivedSwapInfo
+  const {
+    customSlippageTolerance,
+    autoSlippageTolerance: derivedAutoSlippageTolerance,
+    updateSwapSettings,
+  } = useSwapSettingsContext()
 
   const [isEditingSlippage, setIsEditingSlippage] = useState<boolean>(false)
   const [autoSlippageEnabled, setAutoSlippageEnabled] = useState<boolean>(!customSlippageTolerance)
@@ -37,7 +39,6 @@ export function useSlippageSettings(): {
     customSlippageTolerance?.toFixed(2)?.toString() ?? '',
   )
   const [inputWarning, setInputWarning] = useState<string | undefined>()
-  const { hapticFeedback } = useHapticFeedback()
 
   // Fall back to default slippage if there is no trade specified.
   // Separate from inputSlippageTolerance since autoSlippage updates when the trade quote updates
@@ -65,7 +66,7 @@ export function useSlippageSettings(): {
     setAutoSlippageEnabled(true)
     setInputWarning(undefined)
     setInputSlippageTolerance('')
-    updateSwapForm({ customSlippageTolerance: undefined })
+    updateSwapSettings({ customSlippageTolerance: undefined })
   }
 
   const onChangeSlippageInput = useCallback(
@@ -112,14 +113,13 @@ export function useSlippageSettings(): {
        */
       if (isZero || isInvalidNumber || overMaxTolerance || moreThanOneDecimalSymbol || moreThanTwoDecimals) {
         inputShakeX.value = errorShakeAnimation(inputShakeX)
-        await hapticFeedback.impact()
         return
       }
 
       setInputSlippageTolerance(value)
-      updateSwapForm({ customSlippageTolerance: parsedValue })
+      updateSwapSettings({ customSlippageTolerance: parsedValue })
     },
-    [hapticFeedback, inputShakeX, updateSwapForm, t],
+    [inputShakeX, updateSwapSettings, t],
   )
 
   const onFocusSlippageInput = useCallback((): void => {
@@ -138,12 +138,12 @@ export function useSlippageSettings(): {
     // Set autoSlippageEnabled to true if input is invalid (ex. '' or '.')
     if (isNaN(parsedInputSlippageTolerance)) {
       setAutoSlippageEnabled(true)
-      updateSwapForm({ customSlippageTolerance: undefined })
+      updateSwapSettings({ customSlippageTolerance: undefined })
       return
     }
 
     setInputSlippageTolerance(parsedInputSlippageTolerance.toFixed(2))
-  }, [parsedInputSlippageTolerance, updateSwapForm])
+  }, [parsedInputSlippageTolerance, updateSwapSettings])
 
   const onPressPlusMinusButton = useCallback(
     (type: PlusMinusButtonType): void => {
@@ -165,9 +165,9 @@ export function useSlippageSettings(): {
       }
 
       setInputSlippageTolerance(constrainedNewSlippage.toFixed(2).toString())
-      updateSwapForm({ customSlippageTolerance: constrainedNewSlippage })
+      updateSwapSettings({ customSlippageTolerance: constrainedNewSlippage })
     },
-    [autoSlippageEnabled, currentSlippageToleranceNum, updateSwapForm, t],
+    [autoSlippageEnabled, currentSlippageToleranceNum, updateSwapSettings, t],
   )
 
   return {

@@ -2,12 +2,12 @@ import { Currency } from '@uniswap/sdk-core'
 import { BigNumberish } from 'ethers'
 import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { makeSelectTransaction, useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
-import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   QueuedOrderStatus,
   TransactionDetails,
@@ -204,6 +204,8 @@ export function useMergeLocalAndRemoteTransactions(
 
     const hashes = new Set<string>()
     const offChainFiatOnRampTxs = new Map<string, TransactionDetails>()
+    const unsubmittedTxs: TransactionDetails[] = []
+
     function addToMap(map: HashToTxMap, tx: TransactionDetails): HashToTxMap {
       // If the FOR tx was done on a disabled chain, then omit it
       if (!chains.includes(tx.chainId)) {
@@ -219,6 +221,8 @@ export function useMergeLocalAndRemoteTransactions(
         tx.typeInfo.type === TransactionType.OnRampTransfer
       ) {
         offChainFiatOnRampTxs.set(tx.id, tx)
+      } else if (isBridge(tx) || isClassic(tx)) {
+        unsubmittedTxs.push(tx)
       }
       return map
     }
@@ -227,7 +231,7 @@ export function useMergeLocalAndRemoteTransactions(
     const remoteTxMap = remoteTransactions.reduce(addToMap, new Map<string, TransactionDetails>())
     const localTxMap = localTransactions.reduce(addToMap, new Map<string, TransactionDetails>())
 
-    const deDupedTxs: TransactionDetails[] = [...offChainFiatOnRampTxs.values()]
+    const deDupedTxs: TransactionDetails[] = [...offChainFiatOnRampTxs.values(), ...unsubmittedTxs]
 
     for (const hash of [...hashes]) {
       const remoteTx = remoteTxMap.get(hash)

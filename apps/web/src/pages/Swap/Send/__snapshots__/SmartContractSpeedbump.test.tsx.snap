@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
-.c8 {
+.c6 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c9 {
+.c7 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -25,7 +25,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   gap: 4px;
 }
 
-.c20 {
+.c18 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -43,7 +43,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   gap: 12px;
 }
 
-.c16 {
+.c14 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -51,7 +51,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c18 {
+.c16 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -59,7 +59,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c10 {
+.c8 {
   color: #222222;
   cursor: pointer;
   -webkit-text-decoration: none;
@@ -69,15 +69,15 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   transition-duration: 125ms;
 }
 
-.c10:hover {
+.c8:hover {
   opacity: 0.6;
 }
 
-.c10:active {
+.c8:active {
   opacity: 0.4;
 }
 
-.c6 {
+.c4 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -88,15 +88,15 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   font-weight: 500;
 }
 
-.c6:hover {
+.c4:hover {
   opacity: 0.6;
 }
 
-.c6:active {
+.c4:active {
   opacity: 0.4;
 }
 
-.c24 {
+.c22 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -110,7 +110,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   width: 100%;
 }
 
-.c21 {
+.c19 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -145,73 +145,30 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   user-select: none;
 }
 
-.c21:active .c23 {
+.c19:active .c21 {
   background-color: #B8C0DC3d;
 }
 
-.c21:focus .c23 {
+.c19:focus .c21 {
   background-color: #B8C0DC3d;
 }
 
-.c21:hover .c23 {
+.c19:hover .c21 {
   background-color: #98A1C014;
 }
 
-.c21:disabled {
+.c19:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c21:disabled:active .c23,
-.c21:disabled:focus .c23,
-.c21:disabled:hover .c23 {
+.c19:disabled:active .c21,
+.c19:disabled:focus .c21,
+.c19:disabled:hover .c21 {
   background-color: transparent;
 }
 
-.c0 {
-  will-change: transform,opacity;
-}
-
-.c0[data-reach-dialog-overlay] {
-  z-index: 1040;
-  background-color: transparent;
-  overflow: hidden;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  overflow-y: scroll;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  background-color: rgba(0,0,0,0.60);
-}
-
-.c1 {
-  overflow-y: auto;
-}
-
-.c1[data-reach-dialog-content] {
-  margin: auto;
-  background-color: #F9F9F9;
-  border: 1px solid #22222212;
-  box-shadow: 8px 12px 20px rgba(51,53,72,0.04),4px 6px 12px rgba(51,53,72,0.02),4px 4px 8px rgba(51,53,72,0.04);
-  padding: 0px;
-  width: 50vw;
-  overflow-y: auto;
-  overflow-x: hidden;
-  max-height: 90vh;
-  max-width: 420px;
-  display: inline-table;
-  border-radius: 20px;
-}
-
-.c7 {
+.c5 {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -225,17 +182,17 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   stroke: none;
 }
 
-.c7:hover {
+.c5:hover {
   background: #22222212;
   color: #222222;
   opacity: unset;
 }
 
-.c7:hover path {
+.c5:hover path {
   fill: #222222;
 }
 
-.c2 {
+.c0 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -250,7 +207,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   gap: 24px;
 }
 
-.c11 {
+.c9 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -265,7 +222,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   gap: 16px;
 }
 
-.c15 {
+.c13 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -280,7 +237,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   gap: 8px;
 }
 
-.c3 {
+.c1 {
   width: 100%;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -288,15 +245,14 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   align-items: center;
 }
 
-.c4 {
+.c2 {
   background-color: #FFFFFF;
-  outline: 1px solid #22222212;
-  border-radius: 20px;
+  border-radius: 16px;
   padding: 16px 24px 24px 24px;
   width: 100%;
 }
 
-.c12 {
+.c10 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -315,14 +271,14 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   border-radius: 12px;
 }
 
-.c17 {
+.c15 {
   font-size: 24px;
   line-height: 32px;
   text-align: center;
   font-weight: 500;
 }
 
-.c19 {
+.c17 {
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -333,7 +289,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   text-align: center;
 }
 
-.c22 {
+.c20 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -346,54 +302,30 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   border-radius: 12px;
 }
 
-.c5 {
+.c3 {
   padding: 4px 0px;
 }
 
-.c13 {
+.c11 {
   height: 28px;
   width: 28px;
 }
 
-.c13 path {
+.c11 path {
   background: #7D7D7D;
   fill: #7D7D7D;
 }
 
-.c14 path {
+.c12 path {
   fill: #7D7D7D;
 }
 
-@media screen and (max-width:640px) {
-  .c0[data-reach-dialog-overlay] {
-    -webkit-align-items: flex-end;
-    -webkit-box-align: flex-end;
-    -ms-flex-align: flex-end;
-    align-items: flex-end;
-  }
-}
-
-@media screen and (max-width:768px) {
-  .c1[data-reach-dialog-content] {
-    width: 65vw;
-  }
-}
-
-@media screen and (max-width:640px) {
-  .c1[data-reach-dialog-content] {
-    margin: 0;
-    width: 100vw;
-    border-radius: 20px;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-}
-
 <body
-  data-scroll-locked=""
+  style="pointer-events: none;"
 >
   <div
     aria-hidden="true"
+    data-aria-hidden="true"
   >
     <span
       class=""
@@ -405,164 +337,178 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
         <span
           class=" t_light _dsp_contents is_Theme"
         >
-          <div
-            tabindex="0"
-          />
+          <span
+            class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+          >
+            <h2
+              class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _fontFamily-f-family _color-color _fontWeight-f-weight-me3083741 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _userSelect-auto _whiteSpace-normal _mt-0px _mr-0px _mb-0px _ml-0px"
+              data-disable-theme="true"
+              id="title-:r0:"
+              role="heading"
+            />
+          </span>
         </span>
       </span>
     </span>
   </div>
-  <reach-portal>
-    <div
-      data-focus-guard="true"
-      style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"
-      tabindex="0"
-    />
-    <div
-      data-focus-lock-disabled="false"
+  <div
+    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _contain-strict _position-fixed _top-0px _left-0px _right-0px _bottom-0px _maxWidth-100vw _maxHeight-100vh _pointerEvents-none _zIndex-1060"
+  >
+    <span
+      class=" _dsp_contents"
     >
-      <div>
+      <span
+        class="t_sub_theme t_light _dsp_contents is_Theme"
+      >
         <div
-          class="c0"
-          data-reach-dialog-overlay=""
-          style="opacity: 0;"
+          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-fixed _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _top-0px _left-0px _right-0px _bottom-0px _zIndex-1060 _maxHeight-100vh _pointerEvents-auto"
         >
           <div
-            aria-label="dialog"
-            aria-modal="true"
-            class="c1"
-            data-reach-dialog-content=""
-            role="dialog"
-            tabindex="-1"
+            aria-hidden="true"
+            class="css-view-175oi2r"
+            data-aria-hidden="true"
+            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: absolute; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; top: 0px; left: 0px; right: 0px; bottom: 0px; background-color: rgba(0, 0, 0, 0.6); z-index: 1040; pointer-events: auto; opacity: 0;"
+          />
+          <div
+            class="_dsp_contents"
+            data-remove-scroll-container="true"
           >
             <div
-              class="c2 c3 c4"
+              style="display: contents; pointer-events: auto;"
             >
               <div
-                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761 _alignItems-center _gap-1481558307 _width-10037 c5"
+                aria-describedby="description-:r0:"
+                aria-labelledby="title-:r0:"
+                class="css-view-175oi2r"
+                id="content-:r0:"
+                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; background-color: rgb(255, 255, 255); padding: 0px 0px 0px 0px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; z-index: 1060; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgba(34,34,34,0.05); border-right-color: rgba(34,34,34,0.05); border-bottom-color: rgba(34,34,34,0.05); border-left-color: rgba(34,34,34,0.05); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; opacity: 0; gap: 4px; margin: 16px 16px 16px 16px; max-height: calc(100vh - 32px); max-width: 420px; overflow-x: hidden; overflow-y: hidden; width: calc(100vw - 32px); outline-style: none; box-shadow: 0px 3px 6px rgba(0,0,0,0.14901960784313725); transform: translateY(20px) translateX(0px);"
+                tabindex="-1"
               >
                 <div
-                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
+                  class="c0 c1 c2"
                 >
-                  <a
-                    class="c6 c7"
-                    href="https://support.uniswap.org/hc/en-us"
-                    rel="noopener noreferrer"
-                    target="_blank"
+                  <div
+                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _gap-t-space-spa94665589 _width-10037 c3"
                   >
                     <div
-                      class="c8 c9"
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
                     >
+                      <a
+                        class="c4 c5"
+                        href="https://support.uniswap.org/hc/en-us"
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        <div
+                          class="c6 c7"
+                        >
+                          <svg
+                            fill="none"
+                            height="16"
+                            viewBox="0 0 16 16"
+                            width="16"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
+                              fill="#9B9B9B"
+                            />
+                          </svg>
+                          Get help
+                        </div>
+                      </a>
                       <svg
+                        class="c8"
+                        data-testid="Dialog-closeButton"
                         fill="none"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        width="16"
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
                         xmlns="http://www.w3.org/2000/svg"
                       >
-                        <path
-                          d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
-                          fill="#9B9B9B"
+                        <line
+                          x1="18"
+                          x2="6"
+                          y1="6"
+                          y2="18"
+                        />
+                        <line
+                          x1="6"
+                          x2="18"
+                          y1="6"
+                          y2="18"
                         />
                       </svg>
-                      Get help
-                    </div>
-                  </a>
-                  <svg
-                    class="c10"
-                    data-testid="Dialog-closeButton"
-                    fill="none"
-                    height="24"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    width="24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <line
-                      x1="18"
-                      x2="6"
-                      y1="6"
-                      y2="18"
-                    />
-                    <line
-                      x1="6"
-                      x2="18"
-                      y1="6"
-                      y2="18"
-                    />
-                  </svg>
-                </div>
-              </div>
-              <div
-                class="c2 c3"
-              >
-                <div
-                  class="c11 c3"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <svg
-                      class="c13 c14"
-                      fill="#7D7D7D"
-                      viewBox="0 0 28 28"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="m25.2086 20.0103-7.7081-14.41555c-1.4933-2.793-5.5055-2.793-7 0l-7.70806 14.41555c-1.36966 2.562.49005 5.6559 3.40088 5.6559h15.61438c2.9097 0 4.7706-3.095 3.4009-5.6559zm-12.0831-8.3441c0-.483.392-.875.875-.875s.875.392.875.875v4.6667c0 .483-.392.875-.875.875s-.875-.392-.875-.875zm.8984 9.3333c-.644 0-1.1727-.5226-1.1727-1.1666s.517-1.1667 1.161-1.1667h.0117c.6452 0 1.1667.5227 1.1667 1.1667s-.5227 1.1666-1.1667 1.1666z"
-                        fill="#9b9b9b"
-                      />
-                    </svg>
-                  </div>
-                  <div
-                    class="c15 c3"
-                  >
-                    <div
-                      class="c16 c17 css-4kpdx7"
-                    >
-                      Is this a wallet address?
-                    </div>
-                    <div
-                      class="c18 c19 css-1urox24"
-                    >
-                      You’re about to send tokens to a special type of address - a smart contract. Double-check it’s the address you intended to send to. If it’s wrong, your tokens could be lost forever.
                     </div>
                   </div>
-                </div>
-                <div
-                  class="c8 c20"
-                >
-                  <button
-                    class="c21 c22"
+                  <div
+                    class="c0 c1"
                   >
                     <div
-                      class="c23 c24"
-                    />
-                    Cancel
-                  </button>
-                  <button
-                    class="c21 c22"
-                  >
+                      class="c9 c1"
+                    >
+                      <div
+                        class="c10"
+                      >
+                        <svg
+                          class="c11 c12"
+                          fill="#7D7D7D"
+                          viewBox="0 0 28 28"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m25.2086 20.0103-7.7081-14.41555c-1.4933-2.793-5.5055-2.793-7 0l-7.70806 14.41555c-1.36966 2.562.49005 5.6559 3.40088 5.6559h15.61438c2.9097 0 4.7706-3.095 3.4009-5.6559zm-12.0831-8.3441c0-.483.392-.875.875-.875s.875.392.875.875v4.6667c0 .483-.392.875-.875.875s-.875-.392-.875-.875zm.8984 9.3333c-.644 0-1.1727-.5226-1.1727-1.1666s.517-1.1667 1.161-1.1667h.0117c.6452 0 1.1667.5227 1.1667 1.1667s-.5227 1.1666-1.1667 1.1666z"
+                            fill="#9b9b9b"
+                          />
+                        </svg>
+                      </div>
+                      <div
+                        class="c13 c1"
+                      >
+                        <div
+                          class="c14 c15 css-4kpdx7"
+                        >
+                          Is this a wallet address?
+                        </div>
+                        <div
+                          class="c16 c17 css-1urox24"
+                        >
+                          You’re about to send tokens to a special type of address - a smart contract. Double-check it’s the address you intended to send to. If it’s wrong, your tokens could be lost forever.
+                        </div>
+                      </div>
+                    </div>
                     <div
-                      class="c23 c24"
-                    />
-                    Continue
-                  </button>
+                      class="c6 c18"
+                    >
+                      <button
+                        class="c19 c20"
+                      >
+                        <div
+                          class="c21 c22"
+                        />
+                        Cancel
+                      </button>
+                      <button
+                        class="c19 c20"
+                      >
+                        <div
+                          class="c21 c22"
+                        />
+                        Continue
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div
-      data-focus-guard="true"
-      style="width: 1px; height: 0px; padding: 0px; overflow: hidden; position: fixed; top: 1px; left: 1px;"
-      tabindex="0"
-    />
-  </reach-portal>
+      </span>
+    </span>
+  </div>
 </body>
 `;

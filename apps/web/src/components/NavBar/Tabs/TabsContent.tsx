@@ -3,7 +3,6 @@ import { Limit } from 'components/Icons/Limit'
 import { Send } from 'components/Icons/Send'
 import { SwapV2 } from 'components/Icons/SwapV2'
 import { MenuItem } from 'components/NavBar/CompanyMenu/Content'
-import { useTabsVisible } from 'components/NavBar/ScreenSizes'
 import { useTheme } from 'lib/styled-components'
 import { useLocation } from 'react-router-dom'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -23,12 +22,11 @@ export type TabsItem = MenuItem & {
   quickKey: string
 }
 
-export const useTabsContent = (props?: { includeNftsLink?: boolean }): TabsSection[] => {
+export const useTabsContent = (): TabsSection[] => {
   const { t } = useTranslation()
-  const isV4EverywhereEnabled = useFeatureFlag(FeatureFlags.V4Everywhere)
+  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
   const { pathname } = useLocation()
   const theme = useTheme()
-  const areTabsVisible = useTabsVisible()
 
   return [
     {
@@ -76,38 +74,29 @@ export const useTabsContent = (props?: { includeNftsLink?: boolean }): TabsSecti
         {
           label: t('common.transactions'),
           quickKey: 'X',
-          href: '/explore/transactions/ethereum',
+          href: '/explore/transactions',
           internal: true,
         },
-        { label: t('common.nfts'), quickKey: 'N', href: '/nfts', internal: true },
       ],
     },
     {
       title: t('common.pool'),
-      href: isV4EverywhereEnabled ? '/positions' : '/pool',
+      href: isLPRedesignEnabled ? '/positions' : '/pool',
       isActive: pathname.startsWith('/pool'),
       items: [
         {
           label: t('nav.tabs.viewPositions'),
           quickKey: 'V',
-          href: isV4EverywhereEnabled ? '/positions' : '/pool',
+          href: isLPRedesignEnabled ? '/positions' : '/pool',
           internal: true,
         },
         {
           label: t('nav.tabs.createPosition'),
           quickKey: 'V',
-          href: isV4EverywhereEnabled ? '/positions/create' : '/add',
+          href: isLPRedesignEnabled ? '/positions/create' : '/add',
           internal: true,
         },
       ],
     },
-    ...(!areTabsVisible || props?.includeNftsLink
-      ? [
-          {
-            title: t('common.nfts'),
-            href: '/nfts',
-          },
-        ]
-      : []),
   ]
 }

@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
@@ -76,8 +76,6 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
   return (
     <ContextMenu actions={menuActions} onPress={onContextMenuPress}>
       <TouchableArea
-        hapticFeedback
-        hapticStyle={ImpactFeedbackStyle.Light}
         testID={`${TestID.SearchTokenItem}-${name}-${chainId}`}
         onLongPress={disableOnPress}
         onPress={onPress}

@@ -1,7 +1,7 @@
 import { default as React } from 'react'
 import { useDispatch } from 'react-redux'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { Verified } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
@@ -56,12 +56,7 @@ export function SearchNFTCollectionItem({ collection, searchContext }: NFTCollec
   }
 
   return (
-    <TouchableArea
-      hapticFeedback
-      hapticStyle={ImpactFeedbackStyle.Light}
-      testID={TestID.SearchNFTCollectionItem}
-      onPress={onPress}
-    >
+    <TouchableArea testID={TestID.SearchNFTCollectionItem} onPress={onPress}>
       <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" px="$spacing24" py="$spacing12">
         <Flex
           centered

@@ -5,7 +5,7 @@ import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withDelay, withTim
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
-import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useHapticFeedback } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { CopyAlt, Settings } from 'ui/src/components/icons'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
@@ -16,8 +16,9 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
+import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
+import { shortenAddress } from 'utilities/src/addresses'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AnimatedUnitagDisplayName } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
@@ -70,7 +71,6 @@ export function AccountHeader(): JSX.Element {
   const activeAddress = useActiveAccountAddress()
   const account = useActiveAccount()
   const dispatch = useDispatch()
-  const { hapticFeedback } = useHapticFeedback()
 
   const { avatar } = useAvatar(activeAddress)
   const displayName = useDisplayName(activeAddress)
@@ -99,7 +99,6 @@ export function AccountHeader(): JSX.Element {
 
   const onPressCopyAddress = async (): Promise<void> => {
     if (activeAddress) {
-      await hapticFeedback.impact()
       await setClipboard(activeAddress)
       dispatch(
         pushNotification({
@@ -123,15 +122,12 @@ export function AccountHeader(): JSX.Element {
         <Flex alignItems="flex-start" gap="$spacing12" width="100%">
           <Flex row justifyContent="space-between" width="100%">
             <TouchableArea
-              hapticFeedback
               alignItems="center"
               flexDirection="row"
-              hapticStyle={ImpactFeedbackStyle.Medium}
               hitSlop={20}
               testID={TestID.AccountHeaderAvatar}
               onLongPress={async (): Promise<void> => {
                 if (isDevEnv()) {
-                  await hapticFeedback.selection()
                   dispatch(openModal({ name: ModalName.Experiments }))
                 }
               }}
@@ -155,17 +151,12 @@ export function AccountHeader(): JSX.Element {
               justifyContent="space-between"
               testID="account-header/display-name"
             >
-              <TouchableArea hapticFeedback flexShrink={1} hitSlop={20} onPress={onPressAccountHeader}>
+              <TouchableArea flexShrink={1} hitSlop={20} onPress={onPressAccountHeader}>
                 <AnimatedUnitagDisplayName address={activeAddress} displayName={displayName} />
               </TouchableArea>
             </Flex>
           ) : (
-            <TouchableArea
-              hapticFeedback
-              hitSlop={20}
-              testID={TestID.AccountHeaderCopyAddress}
-              onPress={onPressCopyAddress}
-            >
+            <TouchableArea hitSlop={20} testID={TestID.AccountHeaderCopyAddress} onPress={onPressCopyAddress}>
               <Flex centered row shrink gap="$spacing4">
                 <Text adjustsFontSizeToFit color="$neutral1" numberOfLines={1} variant="subheading2">
                   {sanitizeAddressText(shortenAddress(activeAddress))}

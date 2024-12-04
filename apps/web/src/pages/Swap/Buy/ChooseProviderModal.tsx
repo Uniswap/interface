@@ -56,7 +56,7 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
     }
   }, ms('5m'))
 
-  const quoteCurrencyCode = quoteCurrency.meldCurrencyCode
+  const quoteCurrencyCode = quoteCurrency?.meldCurrencyCode
   const recipientAddress = account.address
   if (!selectedCountry || !quoteCurrencyCode || !meldSupportedFiatCurrency || !recipientAddress) {
     logger.debug('ChooseProviderModal', 'ChooseProviderModalContent', 'Modal opened with invalid state. Closing modal.')

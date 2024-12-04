@@ -7,6 +7,7 @@ import {
   useRemoveLiquidityModalContext,
 } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { useRemoveLiquidityTxContext } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
+import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
 import { ClickablePill } from 'pages/Swap/Buy/PredefinedAmount'
 import { NumericalInputMimic, NumericalInputSymbolContainer, NumericalInputWrapper } from 'pages/Swap/common/shared'
 import { Flex, Text, useSporeColors } from 'ui/src'
@@ -19,9 +20,7 @@ export function RemoveLiquidityForm() {
   const colors = useSporeColors()
 
   const { percent, positionInfo, setPercent, setStep, percentInvalid } = useRemoveLiquidityModalContext()
-  const removeLiquidityTxContext = useRemoveLiquidityTxContext()
-
-  const { gasFeeEstimateUSD, txContext } = removeLiquidityTxContext
+  const { gasFeeEstimateUSD, txContext, error, refetch } = useRemoveLiquidityTxContext()
 
   if (!positionInfo) {
     throw new Error('RemoveLiquidityModal must have an initial state when opening')
@@ -30,9 +29,9 @@ export function RemoveLiquidityForm() {
   const { currency0Amount, currency1Amount } = positionInfo
 
   return (
-    <>
+    <Flex gap="$gap24">
       {/* Position info */}
-      <Flex width="100%" row justifyContent="center">
+      <Flex width="100%" row justifyContent="flex-start">
         <LiquidityPositionInfo positionInfo={positionInfo} />
       </Flex>
       {/* Percent input panel */}
@@ -84,10 +83,11 @@ export function RemoveLiquidityForm() {
         currency1Amount={currency1Amount}
         networkCost={gasFeeEstimateUSD}
       />
+      {error && <TradingAPIError refetch={refetch} />}
       <LoaderButton
         disabled={percentInvalid || !txContext?.txRequest}
         onPress={() => setStep(DecreaseLiquidityStep.Review)}
-        loading={!percentInvalid && !txContext?.txRequest}
+        loading={!error && !percentInvalid && !txContext?.txRequest}
         buttonKey="RemoveLiquidity-continue"
       >
         <Flex row alignItems="center" gap="$spacing8">
@@ -96,6 +96,6 @@ export function RemoveLiquidityForm() {
           </Text>
         </Flex>
       </LoaderButton>
-    </>
+    </Flex>
   )
 }

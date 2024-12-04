@@ -13,8 +13,9 @@ import { PriceOrdering, getPriceOrderingFromPositionForUI } from 'components/Pos
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import JSBI from 'jsbi'
 import { OptionalCurrency } from 'pages/Pool/Positions/create/types'
-import { getCurrencyAddressWithWrap, getSortedCurrenciesTuple } from 'pages/Pool/Positions/create/utils'
+import { getCurrencyAddressForTradingApi, getSortedCurrenciesTupleWithWrap } from 'pages/Pool/Positions/create/utils'
 import { useMemo } from 'react'
+import { LiquidityModalInitialState } from 'state/application/reducer'
 import { useAppSelector } from 'state/hooks'
 import { Bound } from 'state/mint/v3/actions'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
@@ -39,18 +40,18 @@ export function useAllFeeTierPoolData({
 }): { feeTierData: Record<number, FeeTierData>; hasExistingFeeTiers: boolean } {
   const { t } = useTranslation()
   const { formatPercent } = useFormatter()
-  const sortedCurrencies = getSortedCurrenciesTuple(currencies[0], currencies[1])
-  const token0Address = getCurrencyAddressWithWrap(sortedCurrencies[0], protocolVersion)
-  const token1Address = getCurrencyAddressWithWrap(sortedCurrencies[1], protocolVersion)
+  const sortedCurrencies = getSortedCurrenciesTupleWithWrap(currencies[0], currencies[1], protocolVersion)
+
   const { data: poolData } = useGetPoolsByTokens(
     {
       chainId,
       protocolVersions: [protocolVersion],
-      token0: token0Address,
-      token1: token1Address,
+      token0: getCurrencyAddressForTradingApi(sortedCurrencies[0]),
+      token1: getCurrencyAddressForTradingApi(sortedCurrencies[1]),
     },
     Boolean(chainId && sortedCurrencies?.[0] && sortedCurrencies?.[1]),
   )
+
   return useMemo(() => {
     const liquiditySum = poolData?.pools.reduce(
       (sum, pool) => BigNumber.from(pool.totalLiquidityUsd.split('.')?.[0] ?? '0').add(sum),
@@ -78,6 +79,7 @@ export function useAllFeeTierPoolData({
             formattedFee: formatPercent(new Percent(pool.fee, 1000000)),
             totalLiquidityUsd: totalLiquidityUsdTruncated,
             percentage,
+            tvl: pool.totalLiquidityUsd,
             created: true,
           } satisfies FeeTierData
         }
@@ -110,6 +112,7 @@ export function useV3OrV4PositionDerivedInfo(positionInfo?: PositionInfo) {
     liquidity,
     tickLower,
     tickUpper,
+    apr,
   } = positionInfo ?? {}
   const { price: price0 } = useUSDCPrice(currency0Amount?.currency)
   const { price: price1 } = useUSDCPrice(currency1Amount?.currency)
@@ -179,8 +182,9 @@ export function useV3OrV4PositionDerivedInfo(positionInfo?: PositionInfo) {
         positionInfo?.version === ProtocolVersion.V3 || positionInfo?.version === ProtocolVersion.V4
           ? positionInfo.pool?.token1Price
           : undefined,
+      apr,
     }),
-    [fiatFeeValue0, fiatFeeValue1, fiatValue0, fiatValue1, priceOrdering, feeValue0, feeValue1, positionInfo],
+    [fiatFeeValue0, fiatFeeValue1, fiatValue0, fiatValue1, priceOrdering, feeValue0, feeValue1, positionInfo, apr],
   )
 }
 
@@ -206,6 +210,7 @@ export function useGetRangeDisplay({
   maxPrice: string
   tokenASymbol?: string
   tokenBSymbol?: string
+  isFullRange?: boolean
 } {
   const { formatTickPrice } = useFormatter()
 
@@ -239,6 +244,7 @@ export function useGetRangeDisplay({
     maxPrice,
     tokenASymbol,
     tokenBSymbol,
+    isFullRange: isTickAtLimit[Bound.LOWER] && isTickAtLimit[Bound.UPPER],
   }
 }
 
@@ -255,7 +261,7 @@ export function usePositionCurrentPrice(positionInfo?: PositionInfo) {
 /**
  * Parses the Positions API object from the modal state and returns the relevant information for the modals.
  */
-export function useModalLiquidityPositionInfo(): PositionInfo | undefined {
+export function useModalLiquidityInitialState(): LiquidityModalInitialState | undefined {
   const modalState = useAppSelector((state) => state.application.openModal)
   return modalState?.initialState
 }

@@ -37,13 +37,6 @@ const UNCONNECTED_ADDRESS = '0xAAAA44272dc658575Ba38f43C438447dDED45358'
 
 const DEFAULT_SWAP_VALIDITY_TIME_MINS = 30
 
-export class NoRoutesError extends Error {
-  constructor(message: string = 'No routes found') {
-    super(message)
-    this.name = 'NoRoutesError'
-  }
-}
-
 export function useTrade({
   account,
   amountSpecified: amount,
@@ -137,6 +130,9 @@ export function useTrade({
     // If the user loses internet connection (or leaves the app and comes back) for longer than this,
     // then we clear stale data and show a big loading spinner in the swap review screen.
     immediateGcTime: internalPollInterval + ONE_SECOND_MS * 15,
+    // We want to retry once, rather than the default, in order to populate response.error / Error UI sooner.
+    // The query will still poll after failed retries, due to staleness.
+    retry: 1,
   })
 
   const { error, data, isLoading: queryIsLoading, isFetching, errorUpdatedAt, dataUpdatedAt } = response
@@ -233,7 +229,7 @@ export function useTrade({
         trade: null,
         indicativeTrade: undefined, // We don't want to show the indicative trade if there is no completable trade
         isIndicativeLoading: false,
-        error: new NoRoutesError(),
+        error: new Error('Unable to validate trade'),
         gasEstimates,
       }
     }

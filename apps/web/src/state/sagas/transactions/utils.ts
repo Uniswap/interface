@@ -37,6 +37,7 @@ import {
 import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { BridgeTrade, ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+
 import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
 import { isSameAddress } from 'utilities/src/addresses'

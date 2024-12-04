@@ -1,17 +1,16 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
 import { MenuColumn, MenuItem } from 'components/AccountDrawer/shared'
-import { useActiveLanguage } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import { useDispatch } from 'react-redux'
 import { Language, WEB_SUPPORTED_LANGUAGES } from 'uniswap/src/features/language/constants'
-import { useLanguageInfo } from 'uniswap/src/features/language/hooks'
+import { useCurrentLanguage, useLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { setCurrentLanguage } from 'uniswap/src/features/settings/slice'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
 
 function LanguageMenuItem({ language }: { language: Language }) {
-  const currentLanguage = useActiveLanguage()
+  const currentLanguage = useCurrentLanguage()
   const languageInfo = useLanguageInfo(language)
   const dispatch = useDispatch()
 

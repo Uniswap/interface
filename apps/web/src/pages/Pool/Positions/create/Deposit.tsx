@@ -1,4 +1,5 @@
 import { LoaderButton } from 'components/Button/LoaderButton'
+import { ButtonError } from 'components/Button/buttons'
 import { DepositInputForm } from 'components/Liquidity/DepositInputForm'
 import {
   useCreatePositionContext,
@@ -14,20 +15,30 @@ import { Flex, FlexProps, Text } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 
 export const DepositStep = ({ ...rest }: FlexProps) => {
-  const { derivedPositionInfo } = useCreatePositionContext()
+  const {
+    derivedPositionInfo: { currencies, isPoolOutOfSync },
+  } = useCreatePositionContext()
   const { derivedPriceRangeInfo } = usePriceRangeContext()
   const {
     setDepositState,
-    derivedDepositInfo: { formattedAmounts, currencyAmounts, currencyAmountsUSDValue, currencyBalances, error },
+    derivedDepositInfo: {
+      formattedAmounts,
+      currencyAmounts,
+      currencyAmountsUSDValue,
+      currencyBalances,
+      error: inputError,
+    },
   } = useDepositContext()
-  const txContext = useCreateTxContext()
+  const { txInfo, error: dataFetchingError } = useCreateTxContext()
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
 
   const handleUserInput = (field: PositionField, newValue: string) => {
     setDepositState((prev) => ({
-      ...prev,
       exactField: field,
-      exactAmount: newValue,
+      exactAmounts: {
+        ...prev.exactAmounts,
+        [field]: newValue,
+      },
     }))
   }
 
@@ -43,7 +54,7 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
     setIsReviewModalOpen(true)
   }, [])
 
-  const [token0, token1] = derivedPositionInfo.currencies
+  const [token0, token1] = currencies
 
   if (!token0 || !token1) {
     return null
@@ -51,19 +62,19 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
 
   const { deposit0Disabled, deposit1Disabled } = derivedPriceRangeInfo
 
+  const disabled = !!inputError || !txInfo?.txRequest
+
   return (
     <>
       <Container {...rest}>
         <Flex gap={32}>
-          <Flex row alignItems="center">
-            <Flex>
-              <Text variant="subheading1">
-                <Trans i18nKey="common.depositTokens" />
-              </Text>
-              <Text variant="body3" color="$neutral2">
-                <Trans i18nKey="position.deposit.description" />
-              </Text>
-            </Flex>
+          <Flex gap="$spacing4">
+            <Text variant="subheading1">
+              <Trans i18nKey="common.depositTokens" />
+            </Text>
+            <Text variant="body3" color="$neutral2">
+              <Trans i18nKey="position.deposit.description" />
+            </Text>
           </Flex>
         </Flex>
         <DepositInputForm
@@ -78,19 +89,27 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
           deposit0Disabled={deposit0Disabled}
           deposit1Disabled={deposit1Disabled}
         />
-        <LoaderButton
-          flex={1}
-          py="$spacing16"
-          px="$spacing20"
-          onPress={handleReview}
-          disabled={!!error || !txContext?.txRequest}
-          buttonKey="Position-Create-DepositButton"
-          loading={Boolean(!txContext?.txRequest && currencyAmounts?.TOKEN0 && currencyAmounts.TOKEN1)}
-        >
-          <Text variant="buttonLabel1" color="$neutralContrast">
-            {error ? error : <Trans i18nKey="swap.button.review" />}
-          </Text>
-        </LoaderButton>
+        {!isPoolOutOfSync || disabled ? (
+          <LoaderButton
+            flex={1}
+            py="$spacing16"
+            px="$spacing20"
+            onPress={handleReview}
+            disabled={disabled}
+            buttonKey="Position-Create-DepositButton"
+            loading={Boolean(
+              !dataFetchingError && !txInfo?.txRequest && currencyAmounts?.TOKEN0 && currencyAmounts.TOKEN1,
+            )}
+          >
+            <Text variant="buttonLabel1" color="$neutralContrast">
+              {inputError ? inputError : <Trans i18nKey="swap.button.review" />}
+            </Text>
+          </LoaderButton>
+        ) : (
+          <ButtonError error $borderRadius="20px" onClick={handleReview}>
+            <Trans i18nKey="swap.button.review" />
+          </ButtonError>
+        )}
       </Container>
       <CreatePositionModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
     </>

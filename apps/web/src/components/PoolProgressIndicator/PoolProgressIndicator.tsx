@@ -1,9 +1,13 @@
 import { Fragment } from 'react'
+import { ClickableTamaguiStyle } from 'theme/components'
 import { Flex, FlexProps, Text } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 import { assert } from 'utilities/src/errors'
 
-export function PoolProgressIndicator({ steps, ...rest }: { steps: { label: string; active: boolean }[] } & FlexProps) {
+export function PoolProgressIndicator({
+  steps,
+  ...rest
+}: { steps: { label: string; active: boolean; onPress?: () => void }[] } & FlexProps) {
   assert(steps.length > 0, 'PoolProgressIndicator: steps must have at least one step')
   return (
     <Flex
@@ -17,7 +21,13 @@ export function PoolProgressIndicator({ steps, ...rest }: { steps: { label: stri
     >
       {steps.map((step, index) => (
         <Fragment key={step.label + index}>
-          <Flex row gap="$gap12" alignItems="center">
+          <Flex
+            row
+            gap="$gap12"
+            alignItems="center"
+            onPress={step.onPress}
+            {...(step.onPress ? ClickableTamaguiStyle : {})}
+          >
             <Flex
               height="$spacing32"
               width="$spacing32"

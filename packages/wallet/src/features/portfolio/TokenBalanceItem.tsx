@@ -1,8 +1,8 @@
 import { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, ImpactFeedbackStyle, Shine, Text, TouchableArea, isWeb } from 'ui/src'
+import { Flex, Shine, Text, TouchableArea, isWeb } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { CurrencyId } from 'uniswap/src/types/currency'
@@ -48,13 +48,11 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
 
   return (
     <TouchableArea
-      hapticFeedback
       hoverable
       alignItems="flex-start"
       backgroundColor="$surface1"
       borderRadius="$rounded16"
       flexDirection="row"
-      hapticStyle={ImpactFeedbackStyle.Light}
       justifyContent="space-between"
       px={padded ? '$spacing24' : '$spacing8'}
       py="$spacing8"

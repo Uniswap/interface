@@ -6,6 +6,7 @@ import { BREAKPOINTS } from 'theme'
 
 const AppContainer = styled.div`
   min-height: 100vh;
+  max-width: 100vw;
 
   // grid container settings
   display: grid;

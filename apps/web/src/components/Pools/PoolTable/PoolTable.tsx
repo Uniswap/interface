@@ -20,21 +20,24 @@ import { useAtom } from 'jotai'
 import { atomWithReset, useAtomValue, useResetAtom, useUpdateAtom } from 'jotai/utils'
 import { ReactElement, ReactNode, memo, useCallback, useEffect, useMemo } from 'react'
 import { TABLE_PAGE_SIZE, giveExploreStatDefaultValue } from 'state/explore'
-import { useTopPools as useRestTopPools } from 'state/explore/topPools'
+import { useExploreContextTopPools } from 'state/explore/topPools'
 import { PoolStat } from 'state/explore/types'
+import { ExternalLink, TamaguiClickableStyle } from 'theme/components'
 import { Flex, Text, styled } from 'ui/src'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { Chain, ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { Trans } from 'uniswap/src/i18n'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
+import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const HEADER_DESCRIPTIONS: Record<PoolSortFields, ReactNode | undefined> = {
   [PoolSortFields.TVL]: <Trans i18nKey="stats.tvl" />,
   [PoolSortFields.Volume24h]: <Trans i18nKey="stats.volume.1d" />,
-  [PoolSortFields.VolumeWeek]: <Trans i18nKey="pool.volume.sevenDay" />,
+  [PoolSortFields.Volume30D]: <Trans i18nKey="pool.volume.thirtyDay" />,
   [PoolSortFields.VolOverTvl]: undefined,
   [PoolSortFields.Apr]: <Trans i18nKey="pool.apr.description" />,
 }
@@ -69,7 +72,7 @@ interface PoolTableValues {
   tvl: number
   apr: Percent
   volume24h: number
-  volumeWeek: number // TODO(WEB-4856): update to 30D once this data is available
+  volume30d: number
   volOverTvl?: number
   link: string
 }
@@ -87,13 +90,15 @@ function PoolDescription({
   token1,
   feeTier,
   chainId,
-  protocolVersion = ProtocolVersion.V3,
+  protocolVersion,
+  hookAddress,
 }: {
   token0?: Token | TokenStats
   token1?: Token | TokenStats
   feeTier?: number
   chainId: UniverseChainId
   protocolVersion?: ProtocolVersion | string
+  hookAddress?: string
 }) {
   const isRestPool = token0 && !('id' in token0)
   const currencies = [token0 ? gqlToCurrency(token0) : undefined, token1 ? gqlToCurrency(token1) : undefined]
@@ -110,10 +115,21 @@ function PoolDescription({
         {token0?.symbol}/{token1?.symbol}
       </EllipsisText>
       <Flex row gap="$gap4" alignItems="center">
-        <PoolDetailsBadge variant="body4" $position="left">
-          {protocolVersion.toLowerCase()}
-        </PoolDetailsBadge>
-        {/* TODO(WEB-5364): add hook badge when data available, it should have a hover state and link out to the explorer */}
+        {protocolVersion && (
+          <PoolDetailsBadge variant="body4" $position="left">
+            {protocolVersion.toLowerCase()}
+          </PoolDetailsBadge>
+        )}
+        {hookAddress && (
+          <ExternalLink
+            href={getExplorerLink(chainId, hookAddress, ExplorerDataType.ADDRESS)}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <PoolDetailsBadge variant="body4" {...TamaguiClickableStyle}>
+              {shortenAddress(hookAddress, 0)}
+            </PoolDetailsBadge>
+          </ExternalLink>
+        )}
         {feeTier && (
           <PoolDetailsBadge variant="body4" $position="right">
             {feeTier / BIPS_BASE}%
@@ -146,7 +162,7 @@ function useSetSortMethod(newSortMethod: PoolSortFields) {
 const HEADER_TEXT: Record<PoolSortFields, ReactNode> = {
   [PoolSortFields.TVL]: <Trans i18nKey="common.totalValueLocked" />,
   [PoolSortFields.Volume24h]: <Trans i18nKey="stats.volume.1d.short" />,
-  [PoolSortFields.VolumeWeek]: <Trans i18nKey="pool.volume.sevenDay.short" />,
+  [PoolSortFields.Volume30D]: <Trans i18nKey="pool.volume.thirtyDay.short" />,
   [PoolSortFields.Apr]: <Trans i18nKey="pool.apr" />,
   [PoolSortFields.VolOverTvl]: <Trans i18nKey="pool.volOverTvl" />,
 }
@@ -176,7 +192,13 @@ function PoolTableHeader({
   )
 }
 
-export const TopPoolTable = memo(function TopPoolTable() {
+interface TopPoolTableProps {
+  topPools?: PoolStat[]
+  isLoading: boolean
+  isError: boolean
+}
+
+export const ExploreTopPoolTable = memo(function ExploreTopPoolTable() {
   const sortMethod = useAtomValue(sortMethodAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
 
@@ -187,20 +209,33 @@ export const TopPoolTable = memo(function TopPoolTable() {
     resetSortAscending()
   }, [resetSortAscending, resetSortMethod])
 
-  const { topPools, isLoading, isError } = useRestTopPools({
+  const { topPools, isLoading, isError } = useExploreContextTopPools({
     sortBy: sortMethod,
     sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc,
   })
 
+  return <TopPoolTable topPoolData={{ topPools, isLoading, isError }} />
+})
+
+export const TopPoolTable = memo(function TopPoolTable({
+  topPoolData,
+  pageSize = TABLE_PAGE_SIZE,
+  staticSize = false,
+}: {
+  topPoolData: TopPoolTableProps
+  pageSize?: number
+  staticSize?: boolean
+}) {
+  const { topPools, isLoading, isError } = topPoolData
   const { page, loadMore } = useSimplePagination()
 
   return (
     <TableWrapper data-testid="top-pools-explore-table">
       <PoolsTable
-        pools={topPools?.slice(0, page * TABLE_PAGE_SIZE)}
+        pools={topPools?.slice(0, page * pageSize)}
         loading={isLoading}
         error={isError}
-        loadMore={loadMore}
+        loadMore={staticSize ? undefined : loadMore}
         maxWidth={1200}
       />
     </TableWrapper>
@@ -246,11 +281,12 @@ export function PoolsTable({
               feeTier={pool.feeTier}
               chainId={chainId}
               protocolVersion={pool.protocolVersion}
+              hookAddress={pool.hookAddress}
             />
           ),
           tvl: isGqlPool ? pool.tvl : giveExploreStatDefaultValue(pool.totalLiquidity?.value),
           volume24h: isGqlPool ? pool.volume24h : giveExploreStatDefaultValue(pool.volume1Day?.value),
-          volumeWeek: isGqlPool ? pool.volumeWeek : giveExploreStatDefaultValue(pool.volume1Week?.value),
+          volume30d: isGqlPool ? pool.volume30d : giveExploreStatDefaultValue(pool.volume30Day?.value),
           volOverTvl: pool.volOverTvl,
           apr: pool.apr,
           link: `/explore/pools/${toGraphQLChain(chainId ?? defaultChainId).toLowerCase()}/${isGqlPool ? pool.hash : pool.id}`,
@@ -281,14 +317,14 @@ export function PoolsTable({
       columnHelper.accessor((row) => row.index, {
         id: 'index',
         header: () => (
-          <Cell justifyContent="center" minWidth={44}>
+          <Cell justifyContent="center" maxWidth={44} width={44}>
             <Text variant="body2" color="$neutral2">
               #
             </Text>
           </Cell>
         ),
         cell: (index) => (
-          <Cell justifyContent="center" loading={showLoadingSkeleton} minWidth={44}>
+          <Cell justifyContent="center" loading={showLoadingSkeleton} maxWidth={44} width={44}>
             <Text variant="body2" color="$neutral2">
               {index.getValue?.()}
             </Text>
@@ -298,14 +334,14 @@ export function PoolsTable({
       columnHelper.accessor((row) => row.poolDescription, {
         id: 'poolDescription',
         header: () => (
-          <Cell justifyContent="flex-start" width={240} grow>
+          <Cell justifyContent="flex-start" width={320} grow>
             <Text variant="body2" color="$neutral2">
               <Trans i18nKey="common.pool" />
             </Text>
           </Cell>
         ),
         cell: (poolDescription) => (
-          <Cell justifyContent="flex-start" alignItems="center" loading={showLoadingSkeleton} width={240} grow>
+          <Cell justifyContent="flex-start" alignItems="center" loading={showLoadingSkeleton} width={320} grow>
             {poolDescription.getValue?.()}
           </Cell>
         ),
@@ -314,7 +350,7 @@ export function PoolsTable({
         ? columnHelper.accessor((row) => row.tvl, {
             id: 'tvl',
             header: () => (
-              <Cell minWidth={120} grow>
+              <Cell minWidth={100} grow>
                 <PoolTableHeader
                   category={PoolSortFields.TVL}
                   isCurrentSortMethod={sortMethod === PoolSortFields.TVL}
@@ -323,7 +359,7 @@ export function PoolsTable({
               </Cell>
             ),
             cell: (tvl) => (
-              <Cell loading={showLoadingSkeleton} minWidth={120} grow>
+              <Cell loading={showLoadingSkeleton} minWidth={100} grow>
                 <Text variant="body2" color="$neutral1">
                   {formatNumber({ input: tvl.getValue?.(), type: NumberType.FiatTokenStats })}
                 </Text>
@@ -373,14 +409,14 @@ export function PoolsTable({
             ),
           })
         : null,
-      !hiddenColumns?.includes(PoolSortFields.VolumeWeek)
-        ? columnHelper.accessor((row) => row.volumeWeek, {
-            id: 'volumeWeek',
+      !hiddenColumns?.includes(PoolSortFields.Volume30D)
+        ? columnHelper.accessor((row) => row.volume30d, {
+            id: 'volume30Day',
             header: () => (
               <Cell minWidth={120} grow>
                 <PoolTableHeader
-                  category={PoolSortFields.VolumeWeek}
-                  isCurrentSortMethod={sortMethod === PoolSortFields.VolumeWeek}
+                  category={PoolSortFields.Volume30D}
+                  isCurrentSortMethod={sortMethod === PoolSortFields.Volume30D}
                   direction={orderDirection}
                 />
               </Cell>
@@ -407,7 +443,7 @@ export function PoolsTable({
               </Cell>
             ),
             cell: (volOverTvl) => (
-              <Cell minWidth={100} loading={showLoadingSkeleton} grow>
+              <Cell minWidth={120} loading={showLoadingSkeleton} grow>
                 <Text variant="body2" color="$neutral1">
                   {formatNumber({
                     input: volOverTvl.getValue?.(),

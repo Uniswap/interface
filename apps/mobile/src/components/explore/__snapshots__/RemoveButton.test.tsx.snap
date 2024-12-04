@@ -2,11 +2,16 @@
 
 exports[`RemoveButton renders without error 1`] = `
 <View
-  cancelable={true}
   collapsable={false}
   disabled={false}
-  focusable={true}
-  hitSlop={[Function]}
+  hitSlop={
+    {
+      "bottom": 5,
+      "left": 5,
+      "right": 5,
+      "top": 5,
+    }
+  }
   jestAnimatedStyle={
     {
       "value": {
@@ -14,18 +19,15 @@ exports[`RemoveButton renders without error 1`] = `
       },
     }
   }
-  minPressDuration={0}
-  onBlur={[Function]}
-  onFocus={[Function]}
-  onMouseEnter={[Function]}
-  onMouseLeave={[Function]}
-  onPress={[Function]}
-  onPressIn={[Function]}
-  onPressOut={[Function]}
   style={
     {
       "alignItems": "center",
-      "backgroundColor": "#BFBFBF",
+      "backgroundColor": {
+        "dynamic": {
+          "dark": "#5E5E5E",
+          "light": "#BFBFBF",
+        },
+      },
       "borderBottomLeftRadius": 999999,
       "borderBottomRightRadius": 999999,
       "borderTopLeftRadius": 999999,
@@ -48,7 +50,12 @@ exports[`RemoveButton renders without error 1`] = `
   <View
     style={
       {
-        "backgroundColor": "#FFFFFF",
+        "backgroundColor": {
+          "dynamic": {
+            "dark": "#131313",
+            "light": "#FFFFFF",
+          },
+        },
         "borderBottomLeftRadius": 12,
         "borderBottomRightRadius": 12,
         "borderTopLeftRadius": 12,

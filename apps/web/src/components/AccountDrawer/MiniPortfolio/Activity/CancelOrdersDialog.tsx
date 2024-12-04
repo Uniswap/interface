@@ -3,18 +3,18 @@ import { ConfirmedIcon, LogoContainer, SubmittedIcon } from 'components/AccountD
 import { useCancelOrdersGasEstimate } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { Container, Dialog, DialogButtonType, DialogProps } from 'components/Dialog/Dialog'
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
-import Modal from 'components/Modal'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
-import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import styled, { useTheme } from 'lib/styled-components'
 import { Slash } from 'react-feather'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { ExternalLink, ThemedText } from 'theme/components'
+import { AdaptiveWebModal } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Plural, Trans, t } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -100,7 +100,7 @@ export function CancelOrdersDialog(
       (cancelState === CancellationState.CANCELLED || cancelState === CancellationState.PENDING_CONFIRMATION) &&
       cancelTxHash
     return (
-      <Modal isOpen $scrollOverlay onDismiss={onCancel} maxHeight="90vh">
+      <AdaptiveWebModal isOpen onClose={onCancel} maxHeight="90vh" p={0}>
         <Container gap="lg">
           <ModalHeader closeModal={onCancel} />
           <LogoContainer>{icon}</LogoContainer>
@@ -122,7 +122,7 @@ export function CancelOrdersDialog(
             )}
           </Row>
         </Container>
-      </Modal>
+      </AdaptiveWebModal>
     )
   } else if (cancelState === CancellationState.REVIEWING_CANCELLATION) {
     return (
@@ -164,7 +164,7 @@ export function CancelOrdersDialog(
 
 function GasEstimateDisplay({ gasEstimateValue, chainId }: { gasEstimateValue?: string; chainId: UniverseChainId }) {
   const gasFeeCurrencyAmount = CurrencyAmount.fromRawAmount(nativeOnChain(chainId), gasEstimateValue ?? '0')
-  const gasFeeUSD = useStablecoinValue(gasFeeCurrencyAmount)
+  const gasFeeUSD = useUSDCValue(gasFeeCurrencyAmount)
   const { formatCurrencyAmount } = useFormatter()
   const gasFeeFormatted = formatCurrencyAmount({
     amount: gasFeeUSD,

@@ -1,13 +1,11 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, isWeb, useSporeColors } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
-import { HelpCenter } from 'ui/src/components/icons/HelpCenter'
 import { X } from 'ui/src/components/icons/X'
 import { iconSizes, validColor } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { getChainLabel, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -20,7 +18,6 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { useNetworkColors } from 'uniswap/src/utils/colors'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
-import { openUri } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
 
 export function TransactionAmountsReview({
@@ -84,10 +81,6 @@ export function TransactionAmountsReview({
     throw new Error('Missing required props in `derivedSwapInfo` to render `TransactionAmountsReview` screen.')
   }
 
-  const onPressGetHelp = async (): Promise<void> => {
-    await openUri(uniswapUrls.helpUrl)
-  }
-
   return (
     <Flex $short={{ gap: '$spacing8' }} gap="$spacing16" ml="$spacing12" mr="$spacing12">
       <Flex row alignItems="center">
@@ -98,21 +91,6 @@ export function TransactionAmountsReview({
         </Flex>
         {isWeb && (
           <Flex row centered gap="$spacing12">
-            <TouchableArea
-              hoverable
-              p="$padding6"
-              borderColor="$surface3"
-              borderWidth={1}
-              borderRadius="$rounded12"
-              onPress={onPressGetHelp}
-            >
-              <Flex row centered gap="$spacing4">
-                <HelpCenter color="$neutral1" size="$icon.16" />{' '}
-                <Text variant="body4" color="$neutral1">
-                  {t('common.getHelp.button')}
-                </Text>
-              </Flex>
-            </TouchableArea>
             <Button
               backgroundColor="$transparent"
               color="$neutral2"

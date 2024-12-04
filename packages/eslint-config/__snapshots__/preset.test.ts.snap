@@ -16,6 +16,7 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "sourceType": "module",
   },
   "plugins": [
+    "local-rules",
     "check-file",
     "unused-imports",
     "import",
@@ -127,6 +128,17 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
       "error",
       {
         "unusedExports": true,
+      },
+    ],
+    "local-rules/no-unwrapped-t": [
+      "error",
+      {
+        "blockedElements": [
+          "Flex",
+          "AnimatedFlex",
+          "TouchableArea",
+          "Trace",
+        ],
       },
     ],
     "no-array-constructor": [
@@ -380,6 +392,7 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     "sourceType": "module",
   },
   "plugins": [
+    "local-rules",
     "check-file",
     "unused-imports",
     "import",
@@ -537,6 +550,17 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     ],
     "jest/valid-title": [
       "error",
+    ],
+    "local-rules/no-unwrapped-t": [
+      "error",
+      {
+        "blockedElements": [
+          "Flex",
+          "AnimatedFlex",
+          "TouchableArea",
+          "Trace",
+        ],
+      },
     ],
     "no-array-constructor": [
       "off",
@@ -794,6 +818,7 @@ exports[`should have a correct configuration for a React file 1`] = `
     "unused-imports",
     "import",
     "@typescript-eslint",
+    "local-rules",
     "no-relative-import-paths",
     "react-hooks",
     "react",
@@ -995,6 +1020,17 @@ exports[`should have a correct configuration for a React file 1`] = `
       "error",
       {
         "unusedExports": true,
+      },
+    ],
+    "local-rules/no-unwrapped-t": [
+      "error",
+      {
+        "blockedElements": [
+          "Flex",
+          "AnimatedFlex",
+          "TouchableArea",
+          "Trace",
+        ],
       },
     ],
     "no-array-constructor": [
@@ -1328,6 +1364,7 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     "sourceType": "module",
   },
   "plugins": [
+    "local-rules",
     "check-file",
     "unused-imports",
     "import",
@@ -1426,6 +1463,17 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
       "error",
       {
         "unusedExports": true,
+      },
+    ],
+    "local-rules/no-unwrapped-t": [
+      "error",
+      {
+        "blockedElements": [
+          "Flex",
+          "AnimatedFlex",
+          "TouchableArea",
+          "Trace",
+        ],
       },
     ],
     "no-array-constructor": [

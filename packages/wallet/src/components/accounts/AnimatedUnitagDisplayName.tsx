@@ -2,20 +2,21 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { BaseSyntheticEvent, useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { AnimatePresence, Flex, Text, TouchableArea, useHapticFeedback } from 'ui/src'
+import { AnimatePresence, Flex, Text, TouchableArea } from 'ui/src'
 import { CopyAlt, Unitag } from 'ui/src/components/icons'
 import { IconSizeTokens } from 'ui/src/theme'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
+import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
+import { shortenAddress } from 'utilities/src/addresses'
 import { isExtension, isMobileApp } from 'utilities/src/platform'
-import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
 
 type AnimatedUnitagDisplayNameProps = {
@@ -33,7 +34,6 @@ export function AnimatedUnitagDisplayName({
   const [showUnitagSuffix, setShowUnitagSuffix] = useState(false)
   const [textWidth, setTextWidth] = useState(0)
   const isUnitag = displayName?.type === DisplayNameType.Unitag
-  const { hapticFeedback } = useHapticFeedback()
 
   const onTextLayout = (event: LayoutChangeEvent): void => {
     setTextWidth(event.nativeEvent.layout.width)
@@ -49,7 +49,6 @@ export function AnimatedUnitagDisplayName({
     }
 
     e.stopPropagation()
-    await hapticFeedback.impact()
     await setClipboard(address)
     dispatch(
       pushNotification({
@@ -92,7 +91,6 @@ export function AnimatedUnitagDisplayName({
 
           {address && (
             <TouchableArea
-              hapticFeedback
               hitSlop={20}
               pl="$spacing8"
               testID={TestID.AccountHeaderCopyAddress}

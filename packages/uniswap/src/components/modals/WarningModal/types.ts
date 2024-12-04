@@ -44,6 +44,7 @@ export enum WarningLabel {
   PriceImpactHigh = 'price_impact_high',
   LowLiquidity = 'low_liquidity',
   SwapRouterError = 'swap_router_error',
+  NoRoutesError = 'no_routes_error',
   RateLimit = 'rate_limit',
   RecipientZeroBalances = 'recipient_zero_balances',
   RecipientNewAddress = 'recipient_new_address',
@@ -62,4 +63,21 @@ export interface Warning {
   icon?: GeneratedIcon
   currency?: Currency
   link?: string
+}
+
+export type WarningWithStyle = {
+  warning: Warning
+  color: WarningColor
+  Icon: GeneratedIcon | null
+  displayedInline: boolean
+}
+
+export type ParsedWarnings = {
+  blockingWarning?: Warning
+  formScreenWarning?: WarningWithStyle
+  insufficientBalanceWarning?: Warning
+  insufficientGasFundsWarning?: Warning
+  priceImpactWarning?: Warning
+  reviewScreenWarning?: WarningWithStyle
+  warnings: Warning[]
 }

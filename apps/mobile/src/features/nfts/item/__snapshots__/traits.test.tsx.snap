@@ -4,7 +4,12 @@ exports[`renders trait card 1`] = `
 <View
   style={
     {
-      "backgroundColor": "rgba(34,34,34,0.05)",
+      "backgroundColor": {
+        "dynamic": {
+          "dark": "rgba(255,255,255,0.12)",
+          "light": "rgba(34,34,34,0.05)",
+        },
+      },
       "borderBottomLeftRadius": 16,
       "borderBottomRightRadius": 16,
       "borderTopLeftRadius": 16,
@@ -23,7 +28,12 @@ exports[`renders trait card 1`] = `
     maxFontSizeMultiplier={1.2}
     style={
       {
-        "color": "#7D7D7D",
+        "color": {
+          "dynamic": {
+            "dark": "#9B9B9B",
+            "light": "#7D7D7D",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 17,
         "fontWeight": "500",
@@ -39,7 +49,12 @@ exports[`renders trait card 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#222222",
+        "color": {
+          "dynamic": {
+            "dark": "#FFFFFF",
+            "light": "#222222",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 17,
         "fontWeight": "400",

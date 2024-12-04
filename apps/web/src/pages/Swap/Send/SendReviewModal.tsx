@@ -3,28 +3,27 @@ import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioL
 import { ButtonPrimary } from 'components/Button/buttons'
 import Identicon from 'components/Identicon'
 import { ChainLogo } from 'components/Logo/ChainLogo'
-import Modal from 'components/Modal'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import Column, { ColumnCenter } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { useSendContext } from 'state/send/SendContext'
-import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { Separator, ThemedText } from 'theme/components'
 import { capitalize } from 'tsafe'
+import { AdaptiveWebModal } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const ModalWrapper = styled(ColumnCenter)`
   background-color: ${({ theme }) => theme.surface1};
-  border-radius: 20px;
-  outline: 1px solid ${({ theme }) => theme.surface3};
+  border-radius: 16px;
   width: 100%;
   padding: 8px;
 `
@@ -68,7 +67,7 @@ const SendModalHeader = ({
 
 export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => void; onDismiss: () => void }) {
   const { t } = useTranslation()
-  const { chainId } = useSwapAndLimitContext()
+  const { chainId } = useMultichainContext()
   const {
     sendState: { inputCurrency, inputInFiat, exactAmountFiat },
     derivedSendInfo: { parsedTokenAmount, exactAmountOut, gasFeeCurrencyAmount, recipientData },
@@ -84,7 +83,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
     type: NumberType.PortfolioBalance,
   })
 
-  const gasFeeUSD = useStablecoinValue(gasFeeCurrencyAmount)
+  const gasFeeUSD = useUSDCValue(gasFeeCurrencyAmount)
   const gasFeeFormatted = formatCurrencyAmount({
     amount: gasFeeUSD,
     type: NumberType.PortfolioBalance,
@@ -97,7 +96,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
     : [currencySymbolAmount, formattedFiatInputAmount]
 
   return (
-    <Modal $scrollOverlay isOpen onDismiss={onDismiss} maxHeight="90vh">
+    <AdaptiveWebModal isOpen onClose={onDismiss} maxHeight="90vh" p={0}>
       <ModalWrapper data-testid="send-review-modal" gap="md">
         <ModalHeader title={<Trans i18nKey="sendReviewModal.title" />} closeModal={onDismiss} />
         <ReviewContentContainer>
@@ -143,6 +142,6 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
           </ButtonPrimary>
         </Trace>
       </ModalWrapper>
-    </Modal>
+    </AdaptiveWebModal>
   )
 }

@@ -26,10 +26,9 @@ export function createSwapFormFromTxDetails({
   inputCurrency,
   outputCurrency,
 }: Props): TransactionState | undefined {
-  const txHash = transactionDetails?.hash
   const chainId = transactionDetails?.chainId
 
-  if (!chainId || !txHash) {
+  if (!chainId) {
     return undefined
   }
 
@@ -38,7 +37,9 @@ export function createSwapFormFromTxDetails({
     const isBridging = isBridgeTypeInfo(typeInfo)
 
     if (typeInfo.type !== TransactionType.Swap && !isBridging) {
-      throw new Error(`Tx hash ${txHash} does not correspond to a swap tx. It is of type ${typeInfo.type}`)
+      throw new Error(
+        `Tx with id ${transactionDetails.id}, hash ${transactionDetails.hash} does not correspond to a swap tx. It is of type ${typeInfo.type}`,
+      )
     }
 
     const { inputCurrencyAmountRaw, outputCurrencyAmountRaw } = getAmountsFromTrade(typeInfo)

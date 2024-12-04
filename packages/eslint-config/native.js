@@ -18,6 +18,86 @@ const complexityRules = {
 // To use them, explicitly reference them, e.g. `window.name` or `window.status`.
 const restrictedGlobals = require('confusing-browser-globals')
 
+const noRestrictedImports = [
+  {
+    name: 'expo-haptics',
+    message: "Use our internal `HapticFeedback` wrapper instead: `import { HapticFeedback } from 'mobile/src'`",
+  },
+  {
+    name: '@ethersproject',
+    message: "Please import from 'ethers' directly to support tree-shaking.",
+  },
+  {
+    name: 'react',
+    importNames: ['Suspense'],
+    message: 'Please use Suspense from src/components/data instead.',
+  },
+  {
+    name: 'src/features/telemetry',
+    importNames: ['logException'],
+    message: 'Please use `logger.error` instead.',
+  },
+  {
+    name: '@tamagui/core',
+    message: "Please import from 'tamagui' directly to prevent mismatches.",
+  },
+  {
+    name: 'react-native-safe-area-context',
+    importNames: ['useSafeAreaInsets'],
+    message: 'Use our internal `useAppInsets` hook instead.',
+  },
+  {
+    name: 'react-native',
+    importNames: ['Switch'],
+    message: 'Use our custom Switch component instead.',
+  },
+  {
+    name: 'react-native',
+    importNames: ['Keyboard'],
+    message:
+      'Please use dismissNativeKeyboard() instead for dismissals. addListener is okay to ignore this import for!',
+  },
+  {
+    name: 'wallet/src/data/__generated__/types-and-hooks',
+    importNames: ['usePortfolioBalancesQuery'],
+    message: 'Use `usePortfolioBalances` instead.',
+  },
+  {
+    name: 'uniswap/src/features/settings/selectors',
+    importNames: ['selectIsTestnetModeEnabled'],
+    message: 'Use `useEnabledChains` instead.',
+  },
+  {
+    name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',
+    importNames: ['useAccountListQuery'],
+    message: 'Use `useAccountList` instead.',
+  },
+  {
+    name: '@gorhom/bottom-sheet',
+    importNames: ['BottomSheetTextInput'],
+    message: 'Use our internal `BottomSheetTextInput` wrapper from `/uniswap/src/components/modals/Modal`.',
+  },
+  {
+    name: 'wallet/src/data/apollo/usePersistedApolloClient',
+    importNames: ['usePersistedApolloClient'],
+    message:
+      "This hook should only be used once at the top level where the React app is initialized . You can use `import { useApolloClient } from '@apollo/client'` to get the default apollo client from the provider elsewhere in React. If you need access to apollo outside of React, you can use `import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient''`.",
+  },
+  {
+    name: 'statsig-react',
+    message: 'Import from internal module uniswap/src/features/gating instead',
+  },
+  {
+    name: 'statsig-react-native',
+    message: 'Import from internal module uniswap/src/features/gating instead',
+  },
+  {
+    name: '@uniswap/analytics',
+    message: "Did you mean to import from 'uniswap/src/features/telemetry/send'?",
+  },
+  ...restrictedImports.paths,
+]
+
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
@@ -47,6 +127,7 @@ module.exports = {
     '@typescript-eslint',
     '@jambit/typed-redux-saga',
     'check-file',
+    'local-rules',
   ],
   rules: {
     ...complexityRules,
@@ -122,85 +203,7 @@ module.exports = {
     'no-restricted-imports': [
       'error',
       {
-        paths: [
-          {
-            name: '@ethersproject',
-            message: "Please import from 'ethers' directly to support tree-shaking.",
-          },
-          {
-            name: 'react',
-            importNames: ['Suspense'],
-            message: 'Please use Suspense from src/components/data instead.',
-          },
-          {
-            name: 'src/features/telemetry',
-            importNames: ['logException'],
-            message: 'Please use `logger.error` instead.',
-          },
-          {
-            name: '@tamagui/core',
-            message: "Please import from 'tamagui' directly to prevent mismatches.",
-          },
-          {
-            name: 'react-native-safe-area-context',
-            importNames: ['useSafeAreaInsets'],
-            message: 'Use our internal `useAppInsets` hook instead.',
-          },
-          {
-            name: 'react-native',
-            importNames: ['Switch'],
-            message: 'Use our custom Switch component instead.',
-          },
-          {
-            name: 'react-native',
-            importNames: ['Keyboard'],
-            message:
-              'Please use dismissNativeKeyboard() instead for dismissals. addListener is okay to ignore this import for!',
-          },
-          {
-            name: 'wallet/src/data/__generated__/types-and-hooks',
-            importNames: ['usePortfolioBalancesQuery'],
-            message: 'Use `usePortfolioBalances` instead.',
-          },
-          {
-            name: 'uniswap/src/features/settings/selectors',
-            importNames: ['selectIsTestnetModeEnabled'],
-            message: 'Use `useEnabledChains` instead.',
-          },
-          {
-            name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',
-            importNames: ['useAccountListQuery'],
-            message: 'Use `useAccountList` instead.',
-          },
-          {
-            name: '@gorhom/bottom-sheet',
-            importNames: ['BottomSheetTextInput'],
-            message: 'Use our internal `BottomSheetTextInput` wrapper from `/uniswap/src/components/modals/Modal`.',
-          },
-          {
-            name: 'expo-haptics',
-            message: "Use our internal `HapticFeedback` wrapper instead: `import { HapticFeedback } from 'ui/src'`",
-          },
-          {
-            name: 'wallet/src/data/apollo/usePersistedApolloClient',
-            importNames: ['usePersistedApolloClient'],
-            message:
-              "This hook should only be used once at the top level where the React app is initialized . You can use `import { useApolloClient } from '@apollo/client'` to get the default apollo client from the provider elsewhere in React. If you need access to apollo outside of React, you can use `import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient''`.",
-          },
-          {
-            name: 'statsig-react',
-            message: 'Import from internal module uniswap/src/features/gating instead',
-          },
-          {
-            name: 'statsig-react-native',
-            message: 'Import from internal module uniswap/src/features/gating instead',
-          },
-          {
-            name: '@uniswap/analytics',
-            message: "Did you mean to import from 'uniswap/src/features/telemetry/send'?",
-          },
-          ...restrictedImports.paths,
-        ],
+        paths: noRestrictedImports,
       },
     ],
 
@@ -256,6 +259,7 @@ module.exports = {
     // https://github.com/facebook/react-native/blob/3cf0291008dfeed4d967ebb95bdccbe2d52c5b81/packages/eslint-config-react-native-community/index.js#L313
     'react-native/no-unused-styles': 'error',
     'react-native/sort-styles': 'error',
+    'local-rules/no-unwrapped-t': ['error', { blockedElements: ['Flex', 'AnimatedFlex', 'TouchableArea', 'Trace'] }],
     // Security Linting
     // Mozilla's No Unsanitized - https://github.com/mozilla/eslint-plugin-no-unsanitized
     'no-unsanitized/method': 'error',
@@ -276,6 +280,17 @@ module.exports = {
     'react/no-unsafe': 'error',
   },
   overrides: [
+    {
+      files: ['**/utils/haptics/**'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: noRestrictedImports.filter((rule) => rule.name !== 'expo-haptics'),
+          },
+        ],
+      },
+    },
     {
       files: ['*.e2e.js'],
       env: {
@@ -462,6 +477,12 @@ module.exports = {
               'Only logger.debug is allowed in this file. Please handle errors and info logs explicitly using ErrorLog and InfoLog message passing.',
           },
         ],
+      },
+    },
+    {
+      files: ['**/features/gating/flags.ts'],
+      rules: {
+        'local-rules/custom-map-sort': 'error',
       },
     },
   ],

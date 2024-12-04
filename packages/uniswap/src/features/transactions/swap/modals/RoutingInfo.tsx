@@ -1,13 +1,18 @@
 import { t } from 'i18next'
 import { PropsWithChildren, useMemo } from 'react'
 import { Trans } from 'react-i18next'
-import { Flex, Text, TouchableArea, UniswapXText, isWeb } from 'ui/src'
+import { Flex, Text, TouchableArea, UniswapXText, isWeb, useSporeColors } from 'ui/src'
+import { OrderRouting } from 'ui/src/components/icons/OrderRouting'
+import { RouterLabel } from 'uniswap/src/components/RouterLabel/RouterLabel'
 import RoutingDiagram from 'uniswap/src/components/RoutingDiagram/RoutingDiagram'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useUSDValueOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
@@ -20,68 +25,129 @@ import { NumberType } from 'utilities/src/format/types'
 export function RoutingInfo({
   chainId,
   gasFee,
-  children,
 }: PropsWithChildren<{
   chainId: UniverseChainId
   gasFee: GasFeeResult
 }>): JSX.Element | null {
+  const colors = useSporeColors()
+
   const { trade } = useSwapTxContext()
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const { value: gasFeeUSD } = useUSDValueOfGasFee(chainId, gasFee.value ?? undefined)
-  const gasFeeFormatted = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)
+  const gasFeeFormatted =
+    gasFeeUSD !== undefined ? convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice) : undefined
 
   const routes = useMemo(() => (trade && isClassic(trade) ? getRoutingDiagramEntries(trade) : []), [trade])
 
-  const caption = trade ? (
-    isClassic(trade) ? (
-      <Flex gap="$spacing12">
-        <RoutingDiagram
-          routes={routes}
-          currencyIn={trade.inputAmount.currency}
-          currencyOut={trade.outputAmount.currency}
-        />
-        <Text variant="body4" color="$neutral2">
-          {t('swap.bestRoute.cost', {
-            gasPrice: gasFeeFormatted,
-          })}
-          {t('swap.route.optimizedGasCost')}
-        </Text>
-      </Flex>
-    ) : isUniswapX(trade) ? (
-      <Text variant="body4" color="$neutral2">
-        <Trans
-          i18nKey="uniswapX.aggregatesLiquidity"
-          components={{
-            logo: (
-              <>
-                <UniswapXText variant="body4">Uniswap X</UniswapXText>
-              </>
-            ),
-          }}
-        />
-      </Text>
-    ) : null
-  ) : null
+  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
+  const isMaybeV4 = trade && v4Enabled && isClassic(trade)
 
-  const onPressLearnMore = async (): Promise<void> => {
-    await openUri(uniswapUrls.helpArticleUrls.uniswapXInfo)
-  }
+  const caption = useMemo(() => {
+    if (!trade) {
+      return null
+    }
+
+    const textVariant = isWeb ? 'body4' : 'body2'
+    const textAlign = isWeb ? 'left' : 'center'
+
+    if (isUniswapX(trade)) {
+      return (
+        <Text variant={textVariant} textAlign={textAlign} color="$neutral2">
+          <Trans
+            i18nKey="uniswapX.aggregatesLiquidity"
+            components={{
+              logo: (
+                <>
+                  <UniswapXText variant={textVariant}>Uniswap X</UniswapXText>
+                </>
+              ),
+            }}
+          />
+        </Text>
+      )
+    }
+
+    const bestRouteText = gasFeeFormatted
+      ? t('swap.bestRoute.cost', {
+          gasPrice: gasFeeFormatted,
+        })
+      : undefined
+    const bestRouteTextV4 = gasFeeFormatted
+      ? t('swap.bestRoute.cost.v4', {
+          gasPrice: gasFeeFormatted,
+        })
+      : undefined
+
+    if (isClassic(trade)) {
+      return (
+        <Flex gap="$spacing12">
+          {isWeb && (
+            <RoutingDiagram
+              routes={routes}
+              currencyIn={trade.inputAmount.currency}
+              currencyOut={trade.outputAmount.currency}
+            />
+          )}
+          <Text variant={textVariant} textAlign={textAlign} color="$neutral2">
+            {isMaybeV4 ? bestRouteTextV4 : bestRouteText}
+            {t('swap.route.optimizedGasCost')}
+          </Text>
+        </Flex>
+      )
+    }
+    return null
+  }, [trade, routes, gasFeeFormatted, isMaybeV4])
+
+  const InfoButton = useMemo(() => {
+    if (!trade) {
+      return null
+    }
+    if (!isMaybeV4 && !isUniswapX(trade)) {
+      return null
+    }
+
+    const helpCenterUrl = isUniswapX(trade)
+      ? uniswapUrls.helpArticleUrls.uniswapXInfo
+      : uniswapUrls.helpArticleUrls.v4RoutingInfo
+
+    return (
+      <TouchableArea
+        onPress={async () => {
+          await openUri(helpCenterUrl)
+        }}
+      >
+        <Text color="$accent1" variant={isWeb ? 'body4' : 'buttonLabel2'}>
+          {t('common.button.learn')}
+        </Text>
+      </TouchableArea>
+    )
+  }, [trade, isMaybeV4])
 
   return (
-    <WarningInfo
-      infoButton={
-        trade && isUniswapX(trade) ? (
-          <TouchableArea onPress={onPressLearnMore}>
-            <Text color="$accent1" variant={isWeb ? 'body4' : 'buttonLabel2'}>
-              {t('common.button.learn')}
-            </Text>
-          </TouchableArea>
-        ) : null
-      }
-      modalProps={{ modalName: ModalName.SwapReview }}
-      tooltipProps={{ text: caption, placement: 'top', maxWidth: trade && isClassic(trade) ? 400 : undefined }}
-    >
-      {children}
-    </WarningInfo>
+    <Flex row alignItems="center" justifyContent="space-between">
+      <WarningInfo
+        infoButton={InfoButton}
+        modalProps={{
+          modalName: ModalName.SwapReview,
+          captionComponent: caption,
+          rejectText: t('common.button.close'),
+          icon: <OrderRouting color={colors.neutral1.val} size={24} />,
+          severity: WarningSeverity.None,
+          title: t('swap.tradeRoutes'),
+        }}
+        tooltipProps={{ text: caption, placement: 'top', maxWidth: trade && isClassic(trade) ? 400 : undefined }}
+      >
+        <Flex centered row gap="$spacing4">
+          <Text color="$neutral2" variant="body3">
+            {t('swap.orderRouting')}
+          </Text>
+        </Flex>
+      </WarningInfo>
+      <Flex row shrink justifyContent="flex-end">
+        <Text adjustsFontSizeToFit color="$neutral1" variant="body3">
+          <RouterLabel />
+        </Text>
+      </Flex>
+    </Flex>
   )
 }

@@ -220,7 +220,7 @@ jest.mock('../../../../state/transactions/hooks', () => {
         ),
         ...mockMultiStatus(
           {
-            type: MockTxType.MIGRATE_LIQUIDITY_V3,
+            type: MockTxType.MIGRATE_LIQUIDITY_V2_TO_V3,
             baseCurrencyId: MockUSDC_MAINNET.address,
             quoteCurrencyId: MockDAI.address,
             isFork: false,

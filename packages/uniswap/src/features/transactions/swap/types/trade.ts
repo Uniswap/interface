@@ -85,7 +85,11 @@ export class PriorityOrderTrade extends IPriorityOrderTrade<Currency, Currency, 
     tradeType: TradeType
   }) {
     const orderInfo = transformToPriorityOrderInfo(quote.quote.orderInfo)
-    super({ currencyIn, currenciesOut: [currencyOut], orderInfo, tradeType })
+    const { expectedAmountIn, expectedAmountOut} = quote.quote
+    const expectedAmounts = expectedAmountIn && expectedAmountOut ? { expectedAmountIn, expectedAmountOut  } : undefined
+
+    super({ currencyIn, currenciesOut: [currencyOut], orderInfo, tradeType, expectedAmounts })
+    
     this.quote = quote
     this.slippageTolerance = this.quote.quote.slippageTolerance ?? 0
     this.swapFee = getSwapFee(quote)

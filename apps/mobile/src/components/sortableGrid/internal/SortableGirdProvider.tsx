@@ -19,7 +19,6 @@ export function SortableGridProvider<I>({
   data,
   numColumns,
   editable,
-  hapticFeedback,
   animateContainerHeight,
   activeItemScale,
   activeItemOpacity,
@@ -48,7 +47,6 @@ export function SortableGridProvider<I>({
         activeItemShadowOpacity={activeItemShadowOpacity}
         data={data}
         editable={editable}
-        hapticFeedback={hapticFeedback}
         keyExtractor={keyExtractor}
         onChange={onChange}
         onDragStart={onDragStart}

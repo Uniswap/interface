@@ -15,7 +15,6 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
-import useParsedQueryString from 'hooks/useParsedQueryString'
 import { ScrollDirection, useScroll } from 'hooks/useScroll'
 import deprecatedStyled from 'lib/styled-components'
 import { Swap } from 'pages/Swap'
@@ -25,6 +24,7 @@ import { ChevronRight } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { CurrencyState } from 'state/swap/types'
 import { Flex, useIsTouchDevice } from 'ui/src'
+import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { isUniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -76,6 +76,7 @@ function getCurrencyURLAddress(currency?: Currency): string {
 
 function useSwapInitialInputCurrency() {
   const { currency } = useTDPContext()
+  const { useParsedQueryString } = useUrlContext()
   const parsedQs = useParsedQueryString()
 
   const inputTokenAddress = useMemo(() => {
@@ -96,10 +97,13 @@ function TDPSwapComponent() {
     (tokens: CurrencyState) => {
       const inputCurrencyURLAddress = getCurrencyURLAddress(tokens.inputCurrency)
       const outputCurrencyURLAddress = getCurrencyURLAddress(tokens.outputCurrency)
-      if (
-        addressesAreEquivalent(inputCurrencyURLAddress, address) ||
-        addressesAreEquivalent(outputCurrencyURLAddress, address)
-      ) {
+
+      const inputEquivalent =
+        addressesAreEquivalent(inputCurrencyURLAddress, address) && tokens.inputCurrency?.chainId === currencyChainId
+      const outputEquivalent =
+        addressesAreEquivalent(outputCurrencyURLAddress, address) && tokens.outputCurrency?.chainId === currencyChainId
+
+      if (inputEquivalent || outputEquivalent) {
         return
       }
 
@@ -135,7 +139,7 @@ function TDPSwapComponent() {
   const closeWarningModal = useCallback(() => setShowWarningModal(false), [])
 
   return (
-    <>
+    <Flex gap="$gap12">
       <Swap
         syncTabToUrl={false}
         chainId={currency.chainId}
@@ -161,7 +165,7 @@ function TDPSwapComponent() {
       ) : (
         warning && <TokenSafetyMessage tokenAddress={address} warning={warning} />
       )}
-    </>
+    </Flex>
   )
 }
 
