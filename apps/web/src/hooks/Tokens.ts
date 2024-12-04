@@ -28,6 +28,7 @@ import { currencyId } from "utils/currencyId";
 import { getNativeTokenDBAddress } from "utils/nativeTokens";
 import { useCombinedInactiveLists, useTaraxaList } from "../state/lists/hooks";
 import { useUserAddedTokens } from "../state/user/userAddedTokens";
+import { useSingleTokenBalance } from "./useSingleTokenBalance";
 
 type Maybe<T> = T | undefined;
 
@@ -111,10 +112,15 @@ export function useCurrencyInfo(
   chainId?: ChainId,
   skip?: boolean
 ): Maybe<CurrencyInfo> {
-  const { chainId: connectedChainId } = useAccount();
+  const { chainId: connectedChainId, address: userAddress } = useAccount();
   const fallbackListTokens = useFallbackListTokens(chainId ?? connectedChainId);
 
   const taraxaTokens = useTaraxaList();
+
+  const foundCurrencyAmount = useSingleTokenBalance(
+    userAddress,
+    typeof addressOrCurrency === "string" ? addressOrCurrency : undefined
+  );
   const combinedTokens = {
     ...fallbackListTokens,
     ...taraxaTokens,
@@ -183,7 +189,17 @@ export function useCurrencyInfo(
     }
 
     if (!data?.token || !address || skip) {
-      return;
+      if (!foundCurrencyAmount?.currency) {
+        return undefined;
+      }
+      const unknownCurrency: CurrencyInfo = {
+        currency: foundCurrencyAmount.currency,
+        currencyId: currencyId(foundCurrencyAmount?.currency),
+        logoUrl: undefined,
+        safetyLevel: SafetyLevel.StrongWarning,
+        isSpam: false,
+      };
+      return unknownCurrency;
     }
 
     return gqlTokenToCurrencyInfo(data.token as GqlToken);

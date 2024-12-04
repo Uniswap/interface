@@ -40,6 +40,7 @@ import CurrencyList, {
   formatAnalyticsEventProperties,
 } from "./CurrencyList";
 import { PaddedColumn, SearchInput, Separator } from "./styled";
+import { useSingleTokenBalance } from "hooks/useSingleTokenBalance";
 
 const ContentWrapper = styled(Column)`
   background-color: ${({ theme }) => theme.surface1};
@@ -104,7 +105,7 @@ export function CurrencySearch({
   const debouncedQuery = useDebounce(searchQuery, 200);
   const isAddressSearch = isAddress(debouncedQuery);
 
-  const {
+  let {
     searchCurrency,
     allCurrencyRows,
     loading: currencySearchResultsLoading,
@@ -114,6 +115,12 @@ export function CurrencySearch({
     selectedCurrency,
     otherSelectedCurrency,
   });
+
+  const foundCurrency = useSingleTokenBalance(account.address, searchQuery);
+
+  if (!searchCurrency) {
+    searchCurrency = foundCurrency?.currency;
+  }
 
   const { balanceMap } = useTokenBalances();
 
@@ -257,7 +264,11 @@ export function CurrencySearch({
                       searchCurrency.isNative
                         ? "ETH"
                         : searchCurrency.address?.toLowerCase()
-                    ]?.balance ?? 0
+                    ]?.balance !== 0
+                      ? foundCurrency && Number(foundCurrency.toExact()) !== 0
+                        ? Number(foundCurrency.toExact())
+                        : 0
+                      : 0
                   ),
                   searchCurrency
                 ) ?? CurrencyAmount.fromRawAmount(searchCurrency, 0)
