@@ -595,10 +595,13 @@ export default function Incentives() {
         cell: (tokenreward) => (
           <Cell loading={isLoading} minWidth={200}>
             {tokenreward.row?.original?.tokenRewardLogoUri && (
-              <TokenLogoImage
-                size={LOGO_DEFAULT_SIZE}
-                src={tokenreward.row?.original?.tokenRewardLogoUri}
-              />
+              <>
+                <TokenLogoImage
+                  size={LOGO_DEFAULT_SIZE}
+                  src={tokenreward.row?.original?.tokenRewardLogoUri}
+                />
+                &nbsp;&nbsp;&nbsp;
+              </>
             )}
             <ThemedText.BodySecondary>
               {tokenreward.getValue?.()}
