@@ -3,6 +3,7 @@ import { useCallback, useState } from "react";
 import {
   indexerTaraswap,
   POSITIONS_QUERY,
+  POSITIONS_WITH_IDS_QUERY,
   STAKED_POSITIONS_QUERY,
   USER_OWNED_POSITIONS_QUERY,
   USER_STAKED_POSITIONS_QUERY,
@@ -116,6 +117,35 @@ const useTotalPositions = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const v3StakerContract = useV3StakerContract();
+
+  const fetchPositionsWithIds = useCallback(
+    async (ids: string[]): Promise<PositionsResponse[]> => {
+      if (!indexerTaraswap) {
+        return [];
+      }
+      setIsLoading(true);
+      const response = await fetch(indexerTaraswap, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: POSITIONS_WITH_IDS_QUERY,
+          variables: {
+            ids,
+          },
+        }),
+      });
+      const data = await response.json();
+      setIsLoading(false);
+      if (data && data.data && data.data.positions) {
+        const raw: PositionsResponseRaw[] = data.data.positions;
+        return raw.map((r) => parsePositions(r));
+      }
+      return [];
+    },
+    [indexerTaraswap, POSITIONS_QUERY, setIsLoading]
+  );
 
   const fetchTotalPositions = useCallback(async (): Promise<
     PositionsResponse[] | null
@@ -269,6 +299,7 @@ const useTotalPositions = () => {
     getStakerOwnedPositions,
     getPositionsWithDepositsOfUser,
     fetchStakedPositionsOfUser,
+    fetchPositionsWithIds,
   };
 };
 

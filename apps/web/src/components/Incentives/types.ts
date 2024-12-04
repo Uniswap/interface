@@ -1,3 +1,5 @@
+import { PositionsResponse } from "hooks/useTotalPositions";
+
 export type TokenInfo = {
   address: string;
   name: string;
@@ -82,14 +84,17 @@ export type PoolInfo = PoolResponse & {
   depositedToken1: number;
   withdrawnToken0: number;
   withdrawnToken1: number;
+  incentiveId: string;
   positionId?: string;
   eligible: boolean;
-  link: string;
+  link?: string;
   tickLower: string;
   tickUpper: string;
+  hasMultipleRelevantPositions: boolean;
   displayedTotalDeposit: string;
   apy: number;
   pendingRewards: string;
+  userPositions?: PositionsResponse[];
   pool: {
     token0: TokenInfoDetails | undefined;
     token1: TokenInfoDetails | undefined;
@@ -143,6 +148,44 @@ query positions{
     }
     tickUpper {
   		tickIdx
+    }
+  }
+}
+`;
+
+export const POSITIONS_WITH_IDS_QUERY = `
+query positionsWithIds($ids: [ID!]){
+	positions(subgraphError: deny, where: {id_in: $ids}){
+    id
+    minter {
+      id
+    }
+    owner {
+      id
+    }
+    pool {
+      id
+      feeTier
+      incentives {
+        id
+      }
+    }
+    liquidity
+    depositedToken0
+    depositedToken1
+    withdrawnToken0
+    withdrawnToken1
+    token0{
+      symbol
+    }
+    token1{
+      symbol
+    }
+    tickLower {
+      tickIdx
+    }
+    tickUpper {
+  	  tickIdx
     }
   }
 }
