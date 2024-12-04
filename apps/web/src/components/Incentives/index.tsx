@@ -32,6 +32,8 @@ import useTotalPositions, { PositionsResponse } from "hooks/useTotalPositions";
 import { ZERO_ADDRESS } from "constants/misc";
 import { LightCard } from "components/Card";
 import { buildIncentiveIdFromIncentive, RewardInfo } from "hooks/usePosition";
+import ChoosePositionModal, { SaveButton } from "./ChoosePositionModal";
+import { useNavigate } from "react-router-dom";
 
 const LOGO_DEFAULT_SIZE = 30;
 
@@ -75,6 +77,7 @@ export default function Incentives() {
   const v3StakerContract = useV3StakerContract(true);
   const [tokenList, setTokenList] = useState<TokenInfoDetails[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPositionsModal, setShowPositionsModal] = useState(false);
   const [rawIncentivesData, setRawIncentivesData] = useState<Incentive[]>([]);
   const [poolTransactionTableValues, setPoolTransactionTableValues] = useState<
     PoolInfo[]
@@ -96,7 +99,6 @@ export default function Incentives() {
     if (!account || !account.address) return;
 
     const positions = await getPositionsWithDepositsOfUser(account.address);
-    console.log("~positions", positions);
     setUserPositionsGql(positions);
   }, [getPositionsWithDepositsOfUser, account.address]);
 
@@ -258,6 +260,14 @@ export default function Incentives() {
                 pos.pool.feeTier === poolDetails.feeTier
             );
 
+            const relevantPositions = userPositionsGql.filter(
+              (pos) =>
+                pos.pool.id.toLowerCase() === poolDetails.id.toLowerCase() &&
+                pos.pool.feeTier === poolDetails.feeTier
+            );
+
+            const multipleRelevantPositions = relevantPositions.length > 1;
+
             let unifiedTokenId = poolPosition[0]
               ? poolPosition[0].tokenId
               : relevantPosition?.id;
@@ -305,11 +315,10 @@ export default function Incentives() {
                 ).toFixed(4)} ${token1?.symbol}`
               : "-";
 
-            console.log("~relevantPosition", relevantPosition);
-
             return {
               ...poolDetails,
               address: poolDetails.id,
+              incentiveId: incentive.id,
               pool: {
                 token0: token0,
                 token1: token1,
@@ -333,12 +342,16 @@ export default function Incentives() {
                 (poolPosition[0] && poolPosition[0].tokenId) || relevantPosition
                   ? true
                   : false,
-              link:
-                (poolPosition[0] && poolPosition[0].tokenId) || relevantPosition
-                  ? `/pool/${unifiedTokenId}?incentive=${incentive.id}`
-                  : `/add/${poolDetails.token0.id}/${poolDetails.token1.id}`,
+              link: multipleRelevantPositions
+                ? undefined
+                : (poolPosition[0] && poolPosition[0].tokenId) ||
+                  relevantPosition
+                ? `/pool/${unifiedTokenId}?incentive=${incentive.id}`
+                : `/add/${poolDetails.token0.id}/${poolDetails.token1.id}`,
               pendingRewards,
               displayedTotalDeposit: depositDisplay,
+              hasMultipleRelevantPositions: multipleRelevantPositions,
+              userPositions: relevantPositions,
             } as PoolInfo;
           }
           return null;
@@ -374,6 +387,8 @@ export default function Incentives() {
     account.isConnected,
   ]);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (account.isConnected) {
       fetchCoinDetails();
@@ -381,6 +396,9 @@ export default function Incentives() {
   }, [fetchCoinDetails, account.isConnected]);
 
   const columns = useMemo(() => {
+    const hasMultiplePositions = poolTransactionTableValues.some(
+      (row) => row.userPositions && row.userPositions.length > 1
+    );
     const columnHelper = createColumnHelper<PoolInfo>();
     return [
       columnHelper.accessor("pool", {
@@ -474,7 +492,7 @@ export default function Incentives() {
 
           return (
             <Cell loading={isLoading} minWidth={200}>
-              <ThemedText.BodyPrimary>{tvlFormatted}</ThemedText.BodyPrimary>
+              <ThemedText.BodyPrimary>{tvlFormatted}$</ThemedText.BodyPrimary>
             </Cell>
           );
         },
@@ -506,7 +524,76 @@ export default function Incentives() {
           </Cell>
         ),
       }),
-
+      columnHelper.accessor("hasMultipleRelevantPositions", {
+        id: "choosePosition",
+        header: () =>
+          hasMultiplePositions && (
+            <Cell minWidth={200}>
+              <ThemedText.BodyPrimary>
+                <Row gap="4px">
+                  <Trans i18nKey="common.incentives.choose.position" />
+                  &nbsp;
+                  <MouseoverTooltip
+                    placement="right"
+                    text={
+                      <Trans i18nKey="common.incentives.choose.position.description" />
+                    }
+                  >
+                    <StyledInfoIcon />
+                  </MouseoverTooltip>
+                </Row>
+              </ThemedText.BodyPrimary>
+            </Cell>
+          ),
+        cell: (hasMultipleRelevantPositions) =>
+          hasMultiplePositions && (
+            <Cell loading={isLoading} minWidth={200}>
+              <SaveButton
+                onClick={() => {
+                  setShowPositionsModal(true);
+                }}
+                style={{ textAlign: "center" }}
+              >
+                <Trans i18nKey="common.incentives.choose.position" />
+              </SaveButton>
+              {showPositionsModal && (
+                <ChoosePositionModal
+                  show={showPositionsModal}
+                  onHide={() => {
+                    setShowPositionsModal(false);
+                  }}
+                  onSelectPosition={(positionId: number) =>
+                    navigate(
+                      `/pool/${positionId}?incentive=${hasMultipleRelevantPositions?.row?.original?.incentiveId}`
+                    )
+                  }
+                  positionIds={
+                    hasMultipleRelevantPositions?.row?.original?.userPositions?.map(
+                      (p) => p.id
+                    ) || []
+                  }
+                />
+              )}
+            </Cell>
+          ),
+      }),
+      columnHelper.accessor("tokenreward", {
+        id: "tokenreward",
+        header: () => (
+          <Cell minWidth={200}>
+            <ThemedText.BodySecondary>
+              <Trans i18nKey="common.incentives.token.reward" />
+            </ThemedText.BodySecondary>
+          </Cell>
+        ),
+        cell: (tokenreward) => (
+          <Cell loading={isLoading} minWidth={200}>
+            <ThemedText.BodySecondary>
+              {tokenreward.getValue?.()}
+            </ThemedText.BodySecondary>
+          </Cell>
+        ),
+      }),
       columnHelper.accessor("displayedTotalDeposit", {
         id: "displayedTotalDeposit",
         header: () => (
@@ -580,25 +667,8 @@ export default function Incentives() {
           );
         },
       }),
-      columnHelper.accessor("tokenreward", {
-        id: "tokenreward",
-        header: () => (
-          <Cell minWidth={200}>
-            <ThemedText.BodySecondary>
-              <Trans i18nKey="common.incentives.token.reward" />
-            </ThemedText.BodySecondary>
-          </Cell>
-        ),
-        cell: (tokenreward) => (
-          <Cell loading={isLoading} minWidth={200}>
-            <ThemedText.BodySecondary>
-              {tokenreward.getValue?.()}
-            </ThemedText.BodySecondary>
-          </Cell>
-        ),
-      }),
     ];
-  }, [isLoading]);
+  }, [isLoading, showPositionsModal]);
 
   return account.isConnected ? (
     <Table
@@ -620,16 +690,4 @@ const StyledLightCard = styled(LightCard)`
   margin: 20px 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
-`;
-
-const StyledCell = styled.div<{ isEligible: boolean }>`
-  background-color: ${({ isEligible }) => (isEligible ? "#e6f7e6" : "inherit")};
-  border-radius: 12px;
-  padding: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: ${({ isEligible }) => (isEligible ? "1px solid #4caf50" : "none")};
-  box-shadow: ${({ isEligible }) =>
-    isEligible ? "0 4px 8px rgba(0, 0, 0, 0.1)" : "none"};
 `;

@@ -22,6 +22,14 @@
     },
     {
       "chainId": 841,
+      "address": "0x712037beab9a29216650B8d032b4D9A59AF8AD6C",
+      "name": "Taraswap",
+      "symbol": "TSWAP",
+      "decimals": 18,
+      "logoURI": "https://github.com/taraswap/assets/blob/main/logos/0x712037beab9a29216650B8d032b4D9A59AF8AD6C/logo.png"
+    },
+    {
+      "chainId": 841,
       "address": "0xE6A69cD4FF127ad8E53C21a593F7BaC4c608945e",
       "name": "Lara",
       "symbol": "LARA",
