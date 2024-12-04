@@ -17,6 +17,7 @@ import {
   findTokenByAddress,
   PoolResponse,
   calculateApy,
+  calculateApy24hrs,
 } from "./types";
 import { TokenLogoImage } from "../DoubleLogo";
 import blankTokenUrl from "assets/svg/blank_token.svg";
@@ -33,7 +34,7 @@ import { ZERO_ADDRESS } from "constants/misc";
 import { LightCard } from "components/Card";
 import { buildIncentiveIdFromIncentive, RewardInfo } from "hooks/usePosition";
 import ChoosePositionModal, { SaveButton } from "./ChoosePositionModal";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const LOGO_DEFAULT_SIZE = 30;
 
@@ -90,10 +91,13 @@ export default function Incentives() {
   );
   const { getPositionsWithDepositsOfUser, isLoading: isLoadingDepositData } =
     useTotalPositions();
+
   const positionsKey = positions
     ?.map((pos) => pos.tokenId)
     .sort()
     .join("-");
+
+  const location = useLocation();
 
   const getUserPositionsGql = useCallback(async () => {
     if (!account || !account.address) return;
@@ -106,7 +110,7 @@ export default function Incentives() {
     if (account.isConnected) {
       getUserPositionsGql();
     }
-  }, [account.isConnected]);
+  }, [account.isConnected, location]);
 
   const userPositions = useMemo(() => {
     if (
@@ -223,7 +227,9 @@ export default function Incentives() {
           let pendingRewards = "0";
           if (poolDetails && poolDetails.token0 && poolDetails.token1) {
             // Extract necessary data
-            const totalPoolLiquidity = parseFloat(poolDetails.liquidity);
+            const totalPoolLiquidity = parseFloat(
+              poolDetails.totalValueLockedUSD
+            );
             // Format the value reward
             const totalRewardsToken = formatUnits(
               BigInt(incentive.reward),
@@ -240,7 +246,7 @@ export default function Incentives() {
               );
             }
 
-            const annualRewardPerStandardLiquidity = calculateApy(
+            const apr24hrs = await calculateApy24hrs(
               incentive,
               totalPoolLiquidity,
               totalRewardsToken
@@ -343,7 +349,7 @@ export default function Incentives() {
                 : 0,
               tickLower: poolPosition[0] ? poolPosition[0].tickLower : "0",
               tickUpper: poolPosition[0] ? poolPosition[0].tickUpper : "0",
-              apy: annualRewardPerStandardLiquidity,
+              apy: apr24hrs * 365,
               eligible:
                 (poolPosition[0] && poolPosition[0].tokenId) || relevantPosition
                   ? true
@@ -391,6 +397,7 @@ export default function Incentives() {
     userPositions,
     userPositionsGql,
     account.isConnected,
+    location,
   ]);
 
   const navigate = useNavigate();
@@ -402,15 +409,17 @@ export default function Incentives() {
   }, [fetchCoinDetails, account.isConnected]);
 
   const columns = useMemo(() => {
-    const hasMultiplePositions = poolTransactionTableValues.some(
-      (row) => row.userPositions && row.userPositions.length > 1
-    );
     const columnHelper = createColumnHelper<PoolInfo>();
     return [
       columnHelper.accessor("pool", {
         id: "pool",
-        header: () => (
-          <Cell minWidth={200} justifyContent="flex-start" grow>
+        header: (pool) => (
+          <Cell
+            minWidth={200}
+            justifyContent="flex-start"
+            grow
+            key={pool.column.id}
+          >
             <Row gap="4px">
               <ThemedText.BodyPrimary>
                 <Trans i18nKey="common.incentives.pool.label" />
@@ -433,12 +442,20 @@ export default function Incentives() {
             minWidth={200}
             justifyContent="flex-start"
             grow
+            key={pool?.row?.original?.address}
           >
-            {pool?.row?.original?.eligible && (
-              <>
-                <Star color="#c7a912" size={20} fill="#c7a912" />
-              </>
-            )}
+            <>
+              <Star
+                color="#c7a912"
+                size={20}
+                fill="#c7a912"
+                style={{
+                  visibility: pool?.row?.original?.eligible
+                    ? "visible"
+                    : "hidden",
+                }}
+              />
+            </>
             &nbsp;&nbsp;&nbsp;
             <ThemedText.BodyPrimary flex="column">
               <PoolTokenImage pool={pool.getValue?.()} />
@@ -448,8 +465,8 @@ export default function Incentives() {
       }),
       columnHelper.accessor("apy", {
         id: "apy",
-        header: () => (
-          <Cell minWidth={200}>
+        header: (apy) => (
+          <Cell minWidth={200} key={apy.column.id}>
             <ThemedText.BodyPrimary>
               <Row gap="4px">
                 <Trans i18nKey="common.incentives.apy" />
@@ -464,17 +481,21 @@ export default function Incentives() {
           </Cell>
         ),
         cell: (apy) => (
-          <Cell loading={isLoading} minWidth={200}>
+          <Cell
+            loading={isLoading}
+            minWidth={200}
+            key={apy?.row?.original?.address}
+          >
             <ThemedText.BodyPrimary>
-              {apy.getValue?.().toFixed(8)}
+              {apy.getValue?.().toFixed(3)}%
             </ThemedText.BodyPrimary>
           </Cell>
         ),
       }),
       columnHelper.accessor("tvl", {
         id: "tvl",
-        header: () => (
-          <Cell minWidth={200}>
+        header: (tvl) => (
+          <Cell minWidth={200} key={tvl.column.id}>
             <ThemedText.BodyPrimary>
               <Trans i18nKey="common.incentives.pool.tvl" />
             </ThemedText.BodyPrimary>
@@ -497,7 +518,11 @@ export default function Incentives() {
           });
 
           return (
-            <Cell loading={isLoading} minWidth={200}>
+            <Cell
+              loading={isLoading}
+              minWidth={200}
+              key={tvl?.row?.original?.address}
+            >
               <ThemedText.BodyPrimary>{tvlFormatted}$</ThemedText.BodyPrimary>
             </Cell>
           );
@@ -505,8 +530,8 @@ export default function Incentives() {
       }),
       columnHelper.accessor("pendingRewards", {
         id: "pendingRewards",
-        header: () => (
-          <Cell minWidth={200}>
+        header: (pendingRewards) => (
+          <Cell minWidth={200} key={pendingRewards.column.id}>
             <ThemedText.BodyPrimary>
               <Row gap="4px">
                 <Trans i18nKey="common.incentives.pending.reward" />
@@ -523,7 +548,11 @@ export default function Incentives() {
           </Cell>
         ),
         cell: (pendingRewards) => (
-          <Cell loading={isLoading} minWidth={200}>
+          <Cell
+            loading={isLoading}
+            minWidth={200}
+            key={pendingRewards?.row?.original?.address}
+          >
             <ThemedText.BodyPrimary>
               {pendingRewards.getValue?.()}
             </ThemedText.BodyPrimary>
@@ -532,37 +561,44 @@ export default function Incentives() {
       }),
       columnHelper.accessor("hasMultipleRelevantPositions", {
         id: "choosePosition",
-        header: () =>
-          hasMultiplePositions && (
-            <Cell minWidth={200}>
-              <ThemedText.BodyPrimary>
-                <Row gap="4px">
-                  <Trans i18nKey="common.incentives.choose.position" />
-                  &nbsp;
-                  <MouseoverTooltip
-                    placement="right"
-                    text={
-                      <Trans i18nKey="common.incentives.choose.position.description" />
-                    }
-                  >
-                    <StyledInfoIcon />
-                  </MouseoverTooltip>
-                </Row>
-              </ThemedText.BodyPrimary>
-            </Cell>
-          ),
-        cell: (hasMultipleRelevantPositions) =>
-          hasMultiplePositions && (
-            <Cell loading={isLoading} minWidth={200}>
-              <SaveButton
-                onClick={() => {
-                  setShowPositionsModal(true);
-                }}
-                style={{ textAlign: "center" }}
-              >
+        header: (hasMultipleRelevantPositions) => (
+          <Cell minWidth={200} key={hasMultipleRelevantPositions.column.id}>
+            <ThemedText.BodyPrimary>
+              <Row gap="4px">
                 <Trans i18nKey="common.incentives.choose.position" />
-              </SaveButton>
-              {showPositionsModal && (
+                &nbsp;
+                <MouseoverTooltip
+                  placement="right"
+                  text={
+                    <Trans i18nKey="common.incentives.choose.position.description" />
+                  }
+                >
+                  <StyledInfoIcon />
+                </MouseoverTooltip>
+              </Row>
+            </ThemedText.BodyPrimary>
+          </Cell>
+        ),
+        cell: (hasMultipleRelevantPositions) => (
+          <Cell
+            loading={isLoading}
+            minWidth={200}
+            key={hasMultipleRelevantPositions?.row?.original?.address}
+          >
+            <SaveButton
+              onClick={() => {
+                setShowPositionsModal(true);
+              }}
+              style={{ textAlign: "center" }}
+            >
+              {hasMultipleRelevantPositions.getValue?.() ? (
+                <Trans i18nKey="common.incentives.choose.position" />
+              ) : (
+                <Trans i18nKey="common.incentives.deposit" />
+              )}
+            </SaveButton>
+            {showPositionsModal &&
+              hasMultipleRelevantPositions?.row?.original?.userPositions && (
                 <ChoosePositionModal
                   show={showPositionsModal}
                   onHide={() => {
@@ -580,20 +616,24 @@ export default function Incentives() {
                   }
                 />
               )}
-            </Cell>
-          ),
+          </Cell>
+        ),
       }),
       columnHelper.accessor("tokenreward", {
         id: "tokenreward",
-        header: () => (
-          <Cell minWidth={200}>
+        header: (tokenreward) => (
+          <Cell minWidth={200} key={tokenreward.column.id}>
             <ThemedText.BodySecondary>
               <Trans i18nKey="common.incentives.token.reward" />
             </ThemedText.BodySecondary>
           </Cell>
         ),
         cell: (tokenreward) => (
-          <Cell loading={isLoading} minWidth={200}>
+          <Cell
+            loading={isLoading}
+            minWidth={200}
+            key={tokenreward?.row?.original?.address}
+          >
             {tokenreward.row?.original?.tokenRewardLogoUri && (
               <>
                 <TokenLogoImage
@@ -611,8 +651,8 @@ export default function Incentives() {
       }),
       columnHelper.accessor("displayedTotalDeposit", {
         id: "displayedTotalDeposit",
-        header: () => (
-          <Cell minWidth={200}>
+        header: (displayedTotalDeposit) => (
+          <Cell minWidth={200} key={displayedTotalDeposit.column.id}>
             <ThemedText.BodySecondary>
               <Trans i18nKey="common.incentives.total.deposits" />
             </ThemedText.BodySecondary>
@@ -628,8 +668,13 @@ export default function Incentives() {
       }),
       columnHelper.accessor("feeTier", {
         id: "feeTier",
-        header: () => (
-          <Cell minWidth={200} justifyContent="flex-end" grow>
+        header: (feeTier) => (
+          <Cell
+            minWidth={200}
+            justifyContent="flex-end"
+            grow
+            key={feeTier.column.id}
+          >
             <Row gap="4px" justify="flex-end">
               <ThemedText.BodySecondary>
                 <Trans i18nKey="common.incentives.pool.feeTier" />
@@ -638,10 +683,14 @@ export default function Incentives() {
           </Cell>
         ),
         cell: (feeTier) => (
-          <Cell minWidth={200}>
+          <Cell
+            loading={isLoading}
+            minWidth={200}
+            key={feeTier?.row?.original?.address}
+          >
             <ThemedText.BodySecondary>
               {parseFloat(
-                (Number(feeTier.getValue?.() || "0") / 100000).toString()
+                (Number(feeTier.getValue?.() || "0") / 10000).toString()
               ).toFixed(3)}
               %
             </ThemedText.BodySecondary>
@@ -650,8 +699,8 @@ export default function Incentives() {
       }),
       columnHelper.accessor("totalrewards", {
         id: "totalrewards",
-        header: () => (
-          <Cell minWidth={200}>
+        header: (totalrewards) => (
+          <Cell minWidth={200} key={totalrewards.column.id}>
             <ThemedText.BodySecondary>
               <Trans i18nKey="common.incentives.total.program.rewards" />
             </ThemedText.BodySecondary>
@@ -674,7 +723,11 @@ export default function Incentives() {
           });
 
           return (
-            <Cell loading={isLoading} minWidth={200}>
+            <Cell
+              loading={isLoading}
+              minWidth={200}
+              key={totalrewards?.row?.original?.address}
+            >
               <ThemedText.BodySecondary>
                 {totalrewardsFormatted}
               </ThemedText.BodySecondary>
@@ -683,7 +736,7 @@ export default function Incentives() {
         },
       }),
     ];
-  }, [isLoading, showPositionsModal]);
+  }, [isLoading, showPositionsModal, poolTransactionTableValues]);
 
   return account.isConnected ? (
     <Table
@@ -691,6 +744,7 @@ export default function Incentives() {
       data={poolTransactionTableValues}
       loading={isLoading}
       maxWidth={1200}
+      key={poolTransactionTableValues.map((p) => p.address).join("-")}
     />
   ) : (
     <StyledLightCard>
