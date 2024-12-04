@@ -112,12 +112,13 @@ function TokenRow({
   const accountDrawer = useAccountDrawer();
 
   const navigateToTokenDetails = useCallback(async () => {
-    navigate(
+    window.open(
       getTokenDetailsURL({
         address: token.token.address,
         chain: Chain.Taraxa,
         inputAddress,
-      })
+      }),
+      "_blank"
     );
     accountDrawer.close();
   }, [navigate, token, accountDrawer]);
