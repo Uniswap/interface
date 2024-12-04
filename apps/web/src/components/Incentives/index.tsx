@@ -315,6 +315,11 @@ export default function Incentives() {
                 ).toFixed(4)} ${token1?.symbol}`
               : "-";
 
+            const tokenRewardLogoUri = findTokenByAddress(
+              tokenList,
+              incentive.rewardToken.id
+            )?.logoURI;
+
             return {
               ...poolDetails,
               address: poolDetails.id,
@@ -329,6 +334,7 @@ export default function Incentives() {
               positionId: positionId,
               totalrewards: totalRewardsToken,
               tokenreward: incentive.rewardToken.symbol,
+              tokenRewardLogoUri: tokenRewardLogoUri,
               depositedToken0: relevantPosition
                 ? relevantPosition.depositedToken0
                 : 0,
@@ -588,6 +594,15 @@ export default function Incentives() {
         ),
         cell: (tokenreward) => (
           <Cell loading={isLoading} minWidth={200}>
+            {tokenreward.row?.original?.tokenRewardLogoUri && (
+              <>
+                <TokenLogoImage
+                  size={LOGO_DEFAULT_SIZE}
+                  src={tokenreward.row?.original?.tokenRewardLogoUri}
+                />
+                &nbsp;&nbsp;&nbsp;
+              </>
+            )}
             <ThemedText.BodySecondary>
               {tokenreward.getValue?.()}
             </ThemedText.BodySecondary>

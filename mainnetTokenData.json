@@ -26,7 +26,7 @@
       "name": "Taraswap",
       "symbol": "TSWAP",
       "decimals": 18,
-      "logoURI": "https://github.com/taraswap/assets/blob/main/logos/0x712037beab9a29216650B8d032b4D9A59AF8AD6C/logo.png"
+      "logoURI": "https://raw.githubusercontent.com/taraswap/assets/main/logos/0x712037beab9a29216650B8d032b4D9A59AF8AD6C/logo.png"
     },
     {
       "chainId": 841,
