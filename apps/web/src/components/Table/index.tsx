@@ -1,4 +1,4 @@
-import { ApolloError } from '@apollo/client'
+import { ApolloError } from "@apollo/client";
 import {
   CellContext,
   ColumnDef,
@@ -7,18 +7,18 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-} from '@tanstack/react-table'
-import Loader from 'components/Icons/LoadingSpinner'
-import { ErrorModal } from 'components/Table/ErrorBox'
-import useDebounce from 'hooks/useDebounce'
-import { Trans } from 'i18n'
-import { useEffect, useRef, useState } from 'react'
-import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
-import { ThemedText } from 'theme/components'
-import { FadePresence } from 'theme/components/FadePresence'
-import { Z_INDEX } from 'theme/zIndex'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+} from "@tanstack/react-table";
+import Loader from "components/Icons/LoadingSpinner";
+import { ErrorModal } from "components/Table/ErrorBox";
+import useDebounce from "hooks/useDebounce";
+import { Trans } from "i18n";
+import { useEffect, useRef, useState } from "react";
+import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
+import { ThemedText } from "theme/components";
+import { FadePresence } from "theme/components/FadePresence";
+import { Z_INDEX } from "theme/zIndex";
+import Trace from "uniswap/src/features/telemetry/Trace";
+import { useTrace } from "utilities/src/telemetry/trace/TraceContext";
 import {
   CellContainer,
   DataRow,
@@ -35,18 +35,18 @@ import {
   TableContainer,
   TableHead,
   TableRowLink,
-} from './styled'
+} from "./styled";
 
 function TableBody<Data extends RowData>({
   table,
   loading,
   error,
 }: {
-  table: TanstackTable<Data>
-  loading?: boolean
-  error?: ApolloError
+  table: TanstackTable<Data>;
+  loading?: boolean;
+  error?: ApolloError;
 }) {
-  const analyticsContext = useTrace()
+  const analyticsContext = useTrace();
 
   if (loading || error) {
     // loading and error states
@@ -55,8 +55,13 @@ function TableBody<Data extends RowData>({
         {Array.from({ length: 7 }, (_, rowIndex) => (
           <DataRow key={`skeleton-row-${rowIndex}`}>
             {table.getAllColumns().map((column, columnIndex) => (
-              <CellContainer key={`skeleton-row-${rowIndex}-column-${columnIndex}`}>
-                {flexRender(column.columnDef.cell, {} as CellContext<Data, any>)}
+              <CellContainer
+                key={`skeleton-row-${rowIndex}-column-${columnIndex}`}
+              >
+                {flexRender(
+                  column.columnDef.cell,
+                  {} as CellContext<Data, any>
+                )}
               </CellContainer>
             ))}
           </DataRow>
@@ -68,7 +73,7 @@ function TableBody<Data extends RowData>({
           />
         )}
       </>
-    )
+    );
   }
 
   if (!table.getRowModel()?.rows.length) {
@@ -79,7 +84,7 @@ function TableBody<Data extends RowData>({
           <Trans i18nKey="error.noData" />
         </ThemedText.BodySecondary>
       </NoDataFoundTableRow>
-    )
+    );
   }
 
   return (
@@ -89,11 +94,15 @@ function TableBody<Data extends RowData>({
         const cells = row
           .getVisibleCells()
           .map((cell) => (
-            <CellContainer key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</CellContainer>
-          ))
-        const rowOriginal = row.original as any
-        const linkState = rowOriginal.linkState // optional data passed to linked page, accessible via useLocation().state
-        const rowTestId = rowOriginal.testId
+            <CellContainer key={cell.id}>
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </CellContainer>
+          ));
+        const rowOriginal = row.original as any;
+        const linkState = rowOriginal.linkState; // optional data passed to linked page, accessible via useLocation().state
+        const rowTestId = rowOriginal.testId;
+
+        const isHighlighted = rowOriginal.eligible;
         return (
           <Trace
             logPress
@@ -104,18 +113,29 @@ function TableBody<Data extends RowData>({
             }}
             key={row.id}
           >
-            {'link' in rowOriginal && typeof rowOriginal.link === 'string' ? (
-              <TableRowLink to={rowOriginal.link} state={linkState} data-testid={rowTestId}>
+            {"link" in rowOriginal && typeof rowOriginal.link === "string" ? (
+              <TableRowLink
+                to={rowOriginal.link}
+                state={linkState}
+                data-testid={rowTestId}
+              >
                 <DataRow>{cells}</DataRow>
               </TableRowLink>
+            ) : isHighlighted ? (
+              <EligibleTableRow
+                data-testid={rowTestId}
+                eligible={isHighlighted}
+              >
+                {cells}
+              </EligibleTableRow>
             ) : (
               <DataRow data-testid={rowTestId}>{cells}</DataRow>
             )}
           </Trace>
-        )
+        );
       })}
     </>
-  )
+  );
 }
 
 export function Table<Data extends RowData>({
@@ -127,79 +147,102 @@ export function Table<Data extends RowData>({
   maxWidth,
   maxHeight,
 }: {
-  columns: ColumnDef<Data, any>[]
-  data: Data[]
-  loading?: boolean
-  error?: ApolloError
-  loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
-  maxWidth?: number
-  maxHeight?: number
+  columns: ColumnDef<Data, any>[];
+  data: Data[];
+  loading?: boolean;
+  error?: ApolloError;
+  loadMore?: ({ onComplete }: { onComplete?: () => void }) => void;
+  maxWidth?: number;
+  maxHeight?: number;
 }) {
-  const [showReturn, setShowReturn] = useState(false)
-  const [loadingMore, setLoadingMore] = useState(false)
+  const [showReturn, setShowReturn] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   const [scrollPosition, setScrollPosition] = useState<{
-    distanceFromTop: number
-    distanceToBottom: number
+    distanceFromTop: number;
+    distanceToBottom: number;
   }>({
     distanceFromTop: 0,
     distanceToBottom: LOAD_MORE_BOTTOM_OFFSET,
-  })
-  const { distanceFromTop, distanceToBottom } = useDebounce(scrollPosition, 125)
-  const tableBodyRef = useRef<HTMLDivElement>(null)
-  const lastLoadedLengthRef = useRef(data?.length ?? 0)
-  const canLoadMore = useRef(true)
+  });
+  const { distanceFromTop, distanceToBottom } = useDebounce(
+    scrollPosition,
+    125
+  );
+  const tableBodyRef = useRef<HTMLDivElement>(null);
+  const lastLoadedLengthRef = useRef(data?.length ?? 0);
+  const canLoadMore = useRef(true);
 
   useEffect(() => {
-    const scrollableElement = maxHeight ? tableBodyRef.current : window
+    const scrollableElement = maxHeight ? tableBodyRef.current : window;
     if (scrollableElement === null) {
-      return
+      return;
     }
     const updateScrollPosition = () => {
       if (scrollableElement instanceof HTMLDivElement) {
-        const { scrollTop, scrollHeight, clientHeight } = scrollableElement
+        const { scrollTop, scrollHeight, clientHeight } = scrollableElement;
         setScrollPosition({
           distanceFromTop: scrollTop,
           distanceToBottom: scrollHeight - scrollTop - clientHeight,
-        })
+        });
       } else {
         setScrollPosition({
           distanceFromTop: scrollableElement.scrollY,
-          distanceToBottom: document.body.scrollHeight - scrollableElement.scrollY - scrollableElement.innerHeight,
-        })
+          distanceToBottom:
+            document.body.scrollHeight -
+            scrollableElement.scrollY -
+            scrollableElement.innerHeight,
+        });
       }
-    }
-    scrollableElement.addEventListener('scroll', updateScrollPosition)
-    return () => scrollableElement.removeEventListener('scroll', updateScrollPosition)
-  }, [loadMore, maxHeight, loadingMore])
+    };
+    scrollableElement.addEventListener("scroll", updateScrollPosition);
+    return () =>
+      scrollableElement.removeEventListener("scroll", updateScrollPosition);
+  }, [loadMore, maxHeight, loadingMore]);
 
   useEffect(() => {
-    setShowReturn(!loading && !error && distanceFromTop >= SHOW_RETURN_TO_TOP_OFFSET)
-    if (distanceToBottom < LOAD_MORE_BOTTOM_OFFSET && !loadingMore && loadMore && canLoadMore.current && !error) {
-      setLoadingMore(true)
+    setShowReturn(
+      !loading && !error && distanceFromTop >= SHOW_RETURN_TO_TOP_OFFSET
+    );
+    if (
+      distanceToBottom < LOAD_MORE_BOTTOM_OFFSET &&
+      !loadingMore &&
+      loadMore &&
+      canLoadMore.current &&
+      !error
+    ) {
+      setLoadingMore(true);
       // Manually update scroll position to prevent re-triggering
       setScrollPosition({
         distanceFromTop: SHOW_RETURN_TO_TOP_OFFSET,
         distanceToBottom: LOAD_MORE_BOTTOM_OFFSET,
-      })
+      });
       loadMore({
         onComplete: () => {
-          setLoadingMore(false)
+          setLoadingMore(false);
           if (data?.length === lastLoadedLengthRef.current) {
-            canLoadMore.current = false
+            canLoadMore.current = false;
           } else {
-            lastLoadedLengthRef.current = data?.length ?? 0
+            lastLoadedLengthRef.current = data?.length ?? 0;
           }
         },
-      })
+      });
     }
-  }, [data?.length, distanceFromTop, distanceToBottom, error, loadMore, loading, loadingMore])
+  }, [
+    data?.length,
+    distanceFromTop,
+    distanceToBottom,
+    error,
+    loadMore,
+    loading,
+    loadingMore,
+  ]);
 
   const table = useReactTable({
     columns,
     data,
     getCoreRowModel: getCoreRowModel(),
-  })
+  });
 
   return (
     <div>
@@ -210,7 +253,10 @@ export function Table<Data extends RowData>({
               <HeaderRow $dimmed={!!error}>
                 {table.getFlatHeaders().map((header) => (
                   <CellContainer key={header.id}>
-                    {flexRender(header.column.columnDef.header, header.getContext())}
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
                   </CellContainer>
                 ))}
               </HeaderRow>
@@ -221,12 +267,14 @@ export function Table<Data extends RowData>({
                   <ReturnButton
                     height="24px"
                     onClick={() => {
-                      setShowReturn(false)
-                      const scrollableElement = maxHeight ? tableBodyRef.current : window
+                      setShowReturn(false);
+                      const scrollableElement = maxHeight
+                        ? tableBodyRef.current
+                        : window;
                       scrollableElement?.scrollTo({
                         top: 0,
-                        behavior: 'smooth',
-                      })
+                        behavior: "smooth",
+                      });
                     }}
                   >
                     <ReturnIcon />
@@ -250,5 +298,26 @@ export function Table<Data extends RowData>({
         </TableContainer>
       </ScrollSync>
     </div>
-  )
+  );
 }
+
+import styled from "styled-components";
+
+// Base Row Style
+const EligibleTableRow = styled(DataRow)<{ eligible: boolean }>`
+  background: ${(props) =>
+    props.eligible
+      ? "linear-gradient(115deg, #011a08,#032e12)" // Cool gradient for eligible
+      : "inherit"}; // Neutral background for others
+  border-radius: 8px;
+  box-shadow: ${(props) =>
+    props.eligible ? "0 4px 8px rgba(0, 0, 0, 0.2)" : "none"};
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  marginbottom: 0.3rem;
+
+  &:hover {
+    transform: ${(props) => (props.eligible ? "scale(1.02)" : "none")};
+    box-shadow: ${(props) =>
+      props.eligible ? "0 6px 12px rgba(0, 0, 0, 0.3)" : "none"};
+  }
+`;
