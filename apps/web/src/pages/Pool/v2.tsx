@@ -93,7 +93,6 @@ export default function Pool() {
   const [searchParams] = useSearchParams()
   const [highlight, setHighlight] = useState(searchParams.get('highlight')?.split('/') ?? [undefined, undefined])
   useEffect(() => {
-    console.log('here')
     setHighlight(searchParams.get('highlight')?.split('/') ?? [undefined, undefined])
   }, [searchParams])
 
