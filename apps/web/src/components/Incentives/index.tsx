@@ -495,7 +495,7 @@ export default function Incentives() {
                 style: "percent",
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 2,
-              }).format(apy.getValue?.())}
+              }).format(apy.getValue?.() / 100)}
             </ThemedText.BodyPrimary>
           </Cell>
         ),
