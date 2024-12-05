@@ -22,6 +22,12 @@ import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../Portfol
 import { PositionInfo } from './cache'
 import { useFeeValues } from './hooks'
 import useMultiChainPositions from './useMultiChainPositions'
+import { useV2Pairs } from 'hooks/useV2Pairs'
+import { toV2LiquidityToken, useTrackedTokenPairs } from 'state/user/hooks'
+import { useTokenBalance, useTokenBalancesWithLoadingIndicator } from 'state/connection/hooks'
+import { Pair } from '@uniswap/v2-sdk'
+import { useTotalSupply } from 'hooks/useTotalSupply'
+import JSBI from 'jsbi'
 
 /**
  * Takes an array of PositionInfo objects (format used by the Ubeswap gql API).
@@ -50,6 +56,7 @@ export default function Pools({ account }: { account: string }) {
   const { positions, loading } = useMultiChainPositions(account)
   const filteredPositions = useFilterPossiblyMaliciousPositionInfo(positions)
   const [showClosed, toggleShowClosed] = useReducer((showClosed) => !showClosed, false)
+  const [showV2, toggleShowV2] = useReducer((show) => !show, false)
 
   const [openPositions, closedPositions] = useMemo(() => {
     const openPositions: PositionInfo[] = []
@@ -67,6 +74,35 @@ export default function Pools({ account }: { account: string }) {
 
   const toggleWalletDrawer = useToggleAccountDrawer()
 
+  const trackedTokenPairs = useTrackedTokenPairs()
+  const tokenPairsWithLiquidityTokens = useMemo(
+    () => trackedTokenPairs.map((tokens) => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
+    [trackedTokenPairs]
+  )
+
+  const liquidityTokens = useMemo(
+    () => tokenPairsWithLiquidityTokens.map((tpwlt) => tpwlt.liquidityToken),
+    [tokenPairsWithLiquidityTokens]
+  )
+
+  const [v2PairsBalances] = useTokenBalancesWithLoadingIndicator(account ?? undefined, liquidityTokens)
+
+  // fetch the reserves for all V2 pools in which the user has a balance
+  const liquidityTokensWithBalances = useMemo(
+    () =>
+      tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) =>
+        v2PairsBalances[liquidityToken.address]?.greaterThan('0')
+      ),
+    [tokenPairsWithLiquidityTokens, v2PairsBalances]
+  )
+
+  const v2Pairs = useV2Pairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
+  const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
+
+  useMemo(() => {
+    console.log({ closedPositions, allV2PairsWithLiquidity, openPositions })
+  }, [allV2PairsWithLiquidity, closedPositions, openPositions])
+
   if (!filteredPositions || loading) {
     return <PortfolioSkeleton />
   }
@@ -83,6 +119,19 @@ export default function Pools({ account }: { account: string }) {
           positionInfo={positionInfo}
         />
       ))}
+      <ExpandoRow
+        title={t`V2 Pairs`}
+        isExpanded={showV2}
+        toggle={toggleShowV2}
+        numItems={allV2PairsWithLiquidity.length}
+      >
+        {allV2PairsWithLiquidity.map((pair) => (
+          <V2PairListItem
+            key={`${pair.chainId}-${pair.token0.address}/${pair.token1.address}`}
+            pair={pair}
+          ></V2PairListItem>
+        ))}
+      </ExpandoRow>
       <ExpandoRow
         title={t`Closed Positions`}
         isExpanded={showClosed}
@@ -116,6 +165,96 @@ function calculateLiquidityValue(price0: number | undefined, price1: number | un
   const value0 = parseFloat(position.amount0.toExact()) * price0
   const value1 = parseFloat(position.amount1.toExact()) * price1
   return value0 + value1
+}
+
+function V2PairListItem({ pair }: { pair: Pair }) {
+  const { account } = useWeb3React()
+  const { chainId } = pair.liquidityToken
+
+  const analyticsEventProperties = useMemo(
+    () => ({
+      chain_id: chainId,
+      pool_token_0_symbol: pair.token0.symbol,
+      pool_token_1_symbol: pair.token1.symbol,
+      pool_token_0_address: pair.token0.address,
+      pool_token_1_address: pair.token1.address,
+    }),
+    [chainId, pair.token0.address, pair.token0.symbol, pair.token1.address, pair.token1.symbol]
+  )
+
+  const userDefaultPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
+  const stakedBalance = undefined
+
+  // if staked balance balance provided, add to standard liquidity amount
+  const userPoolBalance = stakedBalance ? userDefaultPoolBalance?.add(stakedBalance) : userDefaultPoolBalance
+
+  const totalPoolTokens = useTotalSupply(pair.liquidityToken)
+  const [token0Deposited, token1Deposited] =
+    !!pair &&
+    !!totalPoolTokens &&
+    !!userPoolBalance &&
+    JSBI.greaterThanOrEqual(totalPoolTokens.quotient, userPoolBalance.quotient)
+      ? [
+          pair.getLiquidityValue(pair.token0, totalPoolTokens, userPoolBalance, false),
+          pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance, false),
+        ]
+      : [undefined, undefined]
+
+  const navigate = useNavigate()
+  const toggleWalletDrawer = useToggleAccountDrawer()
+  const { chainId: walletChainId, connector } = useWeb3React()
+  const switchChain = useSwitchChain()
+  const onClick = useCallback(async () => {
+    if (walletChainId !== chainId) await switchChain(connector, chainId)
+    toggleWalletDrawer()
+    navigate(`/pools/v2?highlight=${`${pair.token0.address}/${pair.token1.address}`}`)
+  }, [
+    walletChainId,
+    chainId,
+    switchChain,
+    connector,
+    toggleWalletDrawer,
+    navigate,
+    pair.token0.address,
+    pair.token1.address,
+  ])
+
+  return (
+    <TraceEvent
+      events={[BrowserEvent.onClick]}
+      name={SharedEventName.ELEMENT_CLICKED}
+      element={InterfaceElementName.MINI_PORTFOLIO_POOLS_ROW}
+      properties={analyticsEventProperties}
+    >
+      <PortfolioRow
+        onClick={onClick}
+        left={<PortfolioLogo chainId={chainId} currencies={[pair.token0, pair.token1]} />}
+        title={
+          <Row>
+            <ThemedText.SubHeader>
+              {pair.token0.symbol} / {pair.token1?.symbol}
+            </ThemedText.SubHeader>
+          </Row>
+        }
+        descriptor={<ThemedText.BodySmall>0.3%</ThemedText.BodySmall>}
+        right={
+          <>
+            <MouseoverTooltip
+              placement="left"
+              text={
+                <div style={{ padding: '4px 0px' }}>
+                  {token0Deposited?.toSignificant(6)} {pair.token0.symbol} +{token1Deposited?.toSignificant(6)}{' '}
+                  {pair.token1.symbol}
+                </div>
+              }
+            >
+              <ThemedText.SubHeader>{userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}</ThemedText.SubHeader>
+            </MouseoverTooltip>
+          </>
+        }
+      />
+    </TraceEvent>
+  )
 }
 
 function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
