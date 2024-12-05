@@ -385,8 +385,12 @@ export default function Incentives() {
     ) {
       processIncentives(userPositions).then((data) => {
         if (data) {
-          const eligiblePools = data.filter((pool) => pool.eligible);
-          const ineligiblePools = data.filter((pool) => !pool.eligible);
+          const eligiblePools = data
+            .filter((pool) => pool.eligible)
+            .sort((a, b) => b.apy - a.apy);
+          const ineligiblePools = data
+            .filter((pool) => !pool.eligible)
+            .sort((a, b) => b.apy - a.apy);
           setPoolTransactionTableValues([...eligiblePools, ...ineligiblePools]);
         }
       });
@@ -554,7 +558,8 @@ export default function Incentives() {
             key={pendingRewards?.row?.original?.address}
           >
             <ThemedText.BodyPrimary>
-              {pendingRewards.getValue?.()}
+              {parseFloat(pendingRewards.getValue?.() || "0").toFixed(6)}&nbsp;
+              {pendingRewards.row?.original?.tokenreward}
             </ThemedText.BodyPrimary>
           </Cell>
         ),
