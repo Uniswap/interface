@@ -1,3 +1,4 @@
+import { useGetStakedPositionsForPool } from "hooks/useGetPositionsForPool";
 import { useTokenUsdPrice } from "hooks/useTokenUsdPrice";
 import { PositionsResponse } from "hooks/useTotalPositions";
 
@@ -437,9 +438,14 @@ export const calculateApy24hrs = async (
     return 0;
   }
 
+  let stakedPositions = await useGetStakedPositionsForPool(incentive.pool.id);
+  if (stakedPositions === 0) {
+    stakedPositions = 1;
+  }
   // Daily rewards in USD
   // need to divide this by number of stakers later
-  const dailyRewardUsd = dailyRewardTokens * rewardTokenUsdPrice;
+  const dailyRewardUsd =
+    (dailyRewardTokens * rewardTokenUsdPrice) / stakedPositions;
 
   const apr24hrs = dailyRewardUsd * 100;
 

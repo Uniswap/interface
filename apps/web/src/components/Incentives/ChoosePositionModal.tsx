@@ -101,7 +101,7 @@ const FlagsColumn = styled(Column)`
 const Tile = styled.div<{ selected: boolean }>`
   padding: 16px;
   background-color: ${({ theme, selected }) =>
-    selected ? theme.accent1 : theme.neutral3};
+    selected ? theme.accent1 : "#011a08"};
   cursor: pointer;
   border-radius: 8px;
   text-align: center;

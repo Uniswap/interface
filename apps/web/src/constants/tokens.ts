@@ -27,6 +27,14 @@ export const USDM_TARAXA = new Token(
   "USDM Stablecoin"
 );
 
+export const TSWAP_TARAXA = new Token(
+  ChainId.TARAXA,
+  "0x712037beab9a29216650B8d032b4D9A59AF8AD6C",
+  18,
+  "TSWAP",
+  "Taraswap Token"
+);
+
 export const USDT_TARAXA = new Token(
   ChainId.TARAXA,
   "0x69D411CbF6dBaD54Bfe36f81d0a39922625bC78c",
