@@ -56,7 +56,7 @@ export default function Pools({ account }: { account: string }) {
   const { positions, loading } = useMultiChainPositions(account)
   const filteredPositions = useFilterPossiblyMaliciousPositionInfo(positions)
   const [showClosed, toggleShowClosed] = useReducer((showClosed) => !showClosed, false)
-  const [showV2, toggleShowV2] = useReducer((show) => !show, false)
+  const [showV2, toggleShowV2] = useReducer((show) => !show, true)
 
   const [openPositions, closedPositions] = useMemo(() => {
     const openPositions: PositionInfo[] = []
@@ -98,10 +98,6 @@ export default function Pools({ account }: { account: string }) {
 
   const v2Pairs = useV2Pairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
   const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
-
-  useMemo(() => {
-    console.log({ closedPositions, allV2PairsWithLiquidity, openPositions })
-  }, [allV2PairsWithLiquidity, closedPositions, openPositions])
 
   if (!filteredPositions || loading) {
     return <PortfolioSkeleton />
