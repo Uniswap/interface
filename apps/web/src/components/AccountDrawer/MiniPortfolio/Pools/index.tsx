@@ -14,6 +14,12 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+import JSBI from 'jsbi'
+import { useV2Pairs } from 'hooks/useV2Pairs'
+import { toV2LiquidityToken, useTrackedTokenPairs } from 'state/user/hooks'
+import { useTokenBalance, useTokenBalancesWithLoadingIndicator } from 'state/connection/hooks'
+import { Pair } from '@uniswap/v2-sdk'
+import { useTotalSupply } from 'hooks/useTotalSupply'
 
 import { ExpandoRow } from '../ExpandoRow'
 import { useToggleAccountDrawer } from '../hooks'
@@ -22,12 +28,6 @@ import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../Portfol
 import { PositionInfo } from './cache'
 import { useFeeValues } from './hooks'
 import useMultiChainPositions from './useMultiChainPositions'
-import { useV2Pairs } from 'hooks/useV2Pairs'
-import { toV2LiquidityToken, useTrackedTokenPairs } from 'state/user/hooks'
-import { useTokenBalance, useTokenBalancesWithLoadingIndicator } from 'state/connection/hooks'
-import { Pair } from '@uniswap/v2-sdk'
-import { useTotalSupply } from 'hooks/useTotalSupply'
-import JSBI from 'jsbi'
 
 /**
  * Takes an array of PositionInfo objects (format used by the Ubeswap gql API).
