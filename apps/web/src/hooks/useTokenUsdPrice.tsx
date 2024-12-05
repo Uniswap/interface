@@ -2,8 +2,8 @@ import { indexerTaraswap } from "components/Incentives/types";
 import { TSWAP_TARAXA } from "constants/tokens";
 
 export const useTokenUsdPrice = async (tokenAddress: string) => {
-  if (tokenAddress === TSWAP_TARAXA.address) {
-    return { usdPrice: Number(process.env.REACT_APP_TSWAP_PRICE || 0.008) };
+  if (tokenAddress.toLowerCase() === TSWAP_TARAXA.address.toLowerCase()) {
+    return { usdPrice: Number(process.env.REACT_APP_TSWAP_PRICE || 0.0025) };
   }
   if (!indexerTaraswap) {
     return { usdPrice: null };
