@@ -491,7 +491,11 @@ export default function Incentives() {
             key={apy?.row?.original?.address}
           >
             <ThemedText.BodyPrimary>
-              {apy.getValue?.().toFixed(3)}%
+              {new Intl.NumberFormat("en-US", {
+                style: "percent",
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2,
+              }).format(apy.getValue?.())}
             </ThemedText.BodyPrimary>
           </Cell>
         ),
@@ -558,7 +562,7 @@ export default function Incentives() {
             key={pendingRewards?.row?.original?.address}
           >
             <ThemedText.BodyPrimary>
-              {parseFloat(pendingRewards.getValue?.() || "0").toFixed(6)}&nbsp;
+              {parseFloat(pendingRewards.getValue?.() || "0").toFixed(2)}&nbsp;
               {pendingRewards.row?.original?.tokenreward}
             </ThemedText.BodyPrimary>
           </Cell>
