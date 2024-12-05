@@ -44,8 +44,7 @@ export const printV2SubgraphPool = (s: V2SubgraphPool) => `${s.token0.id}/${s.to
 
 const SUBGRAPH_URL_BY_CHAIN: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
-  [ChainId.CELO]:
-    'https://gateway-arbitrum.network.thegraph.com/api/4271ef6e8196c6631ad397c7be19082a/subgraphs/id/HsmR9eEf8v77bGBgpHMNbLh36Z1kkeMc654YWDepNcNf',
+  [ChainId.CELO]: 'https://interface-gateway.ubeswap.org/v1/v3-subgraph-proxy',
 }
 
 const PAGE_SIZE = 1000 // 1k is max possible query size from subgraph.

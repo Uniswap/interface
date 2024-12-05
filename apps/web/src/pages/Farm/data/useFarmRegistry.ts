@@ -13,7 +13,7 @@ import { CACHED_FARM_INFO_BLOCK, cachedFarmInfoEvents, cachedLpInfoEvents } from
 import { useCustomStakingInfo } from './useCustomStakingInfo'
 
 const client = new ApolloClient({
-  uri: 'https://gateway-arbitrum.network.thegraph.com/api/4271ef6e8196c6631ad397c7be19082a/subgraphs/id/JWDRLCwj4H945xEkbB6eocBSZcYnibqcJPJ8h9davFi',
+  uri: 'https://interface-gateway.ubeswap.org/v1/v2-subgraph-proxy',
   cache: new InMemoryCache(),
 })
 
