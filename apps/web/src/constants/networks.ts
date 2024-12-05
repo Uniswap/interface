@@ -46,8 +46,8 @@ export const PUBLIC_RPC_URLS: Record<SupportedInterfaceChain, string[]> = {
 export const APP_RPC_URLS: Record<SupportedInterfaceChain, string[]> = {
   [ChainId.MAINNET]: [`https://mainnet.infura.io/v3/${INFURA_KEY}`],
   [ChainId.CELO]: [
-    'https://forno.celo.org',
     `https://celo-mainnet.infura.io/v3/${INFURA_KEY}`,
+    'https://forno.celo.org',
     QUICKNODE_MAINNET_RPC_URL,
   ],
   [ChainId.CELO_ALFAJORES]: [`https://celo-alfajores.infura.io/v3/${INFURA_KEY}`],
