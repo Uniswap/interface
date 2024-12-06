@@ -14,7 +14,7 @@
   "fontSrc": [
     "'self'",
     "https://www.taraswap.org/",
-    "https://fonts.googleapis.com"
+    "https://fonts.googleapis.com/"
   ],
   "styleSrc": ["'self'", "'unsafe-inline'", "https://www.taraswap.org/"],
   "imgSrc": ["*", "blob:", "data:"],

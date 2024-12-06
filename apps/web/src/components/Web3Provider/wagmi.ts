@@ -16,7 +16,7 @@ declare module "wagmi" {
 }
 
 export const wagmiConfig = createConfig({
-  chains: [CHAIN_INFO[ChainId.TARAXA_TESTNET], CHAIN_INFO[ChainId.TARAXA]],
+  chains: [CHAIN_INFO[ChainId.TARAXA]],
   connectors: [
     injectedWithFallback(),
     walletConnect(WC_PARAMS),

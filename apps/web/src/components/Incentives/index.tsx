@@ -248,9 +248,10 @@ export default function Incentives() {
 
             const apr24hrs = await calculateApy24hrs(
               incentive,
-              totalPoolLiquidity,
               totalRewardsToken
             );
+
+            console.log("apr24hrs", apr24hrs);
 
             const poolPosition = userPositionsParam.filter((userPosition) => {
               return (
@@ -495,7 +496,7 @@ export default function Incentives() {
                 style: "percent",
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 2,
-              }).format(apy.getValue?.() / 100)}
+              }).format(apy.getValue?.())}
             </ThemedText.BodyPrimary>
           </Cell>
         ),
