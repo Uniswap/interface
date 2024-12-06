@@ -1,5 +1,5 @@
 import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '../../libs/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'

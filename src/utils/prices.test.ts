@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import { ChainId, Percent, Token, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Percent, Token, CurrencyAmount, TradeType } from '../libs/sdk-core'
 import { Trade, Pair, Route } from '@uniswap/v2-sdk'
 import { computeRealizedLPFeeAmount, warningSeverity } from './prices'
 

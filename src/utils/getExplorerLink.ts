@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '../libs/sdk-core'
 
 const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   1: '',

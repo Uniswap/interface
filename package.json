@@ -117,7 +117,8 @@
     "workbox-strategies": "^6.1.0"
   },
   "resolutions": {
-    "@walletconnect/web3-provider": "1.4.2-rc.2"
+    "@walletconnect/web3-provider": "1.4.2-rc.2",
+    "jsbi": "^3.2.5"
   },
   "scripts": {
     "compile-contract-types": "yarn compile-external-abi-types && yarn compile-v3-core-contract-types && yarn compile-v3-periphery-contract-types",
@@ -127,7 +128,7 @@
     "build": "yarn compile-contract-types && react-scripts build",
     "integration-test": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run'",
     "postinstall": "yarn compile-contract-types",
-    "start": "yarn compile-contract-types && react-scripts start",
+    "start": "set NODE_OPTIONS=--openssl-legacy-provider && yarn compile-contract-types && react-scripts start",
     "storybook": "start-storybook -p 6006",
     "test": "react-scripts test --env=jsdom"
   },
@@ -150,5 +151,7 @@
     ]
   },
   "license": "GPL-3.0-or-later",
-  "dependencies": {}
+  "dependencies": {
+    "jsbi": "^3.1.4"
+  }
 }

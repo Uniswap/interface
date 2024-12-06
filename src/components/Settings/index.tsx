@@ -15,7 +15,7 @@ import QuestionHelper from '../QuestionHelper'
 import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '../../libs/sdk-core'
 
 const StyledMenuIcon = styled(Settings)`
   height: 20px;

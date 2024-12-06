@@ -5,7 +5,7 @@ import { Interface } from '@ethersproject/abi'
 import { useActiveWeb3React } from './web3'
 import { useMultipleContractSingleData } from '../state/multicall/hooks'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '../libs/sdk-core'
 
 const PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
 

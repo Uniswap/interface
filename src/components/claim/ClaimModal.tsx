@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '../../libs/sdk-core'
 import { isAddress } from 'ethers/lib/utils'
 import React, { useEffect, useState } from 'react'
 import { Text } from 'rebass'
@@ -116,11 +116,13 @@ export default function ClaimModal() {
               )}
               {userClaimData?.flags?.isLP &&
                 unclaimedAmount &&
+                // @ts-ignore
                 JSBI.greaterThanOrEqual(unclaimedAmount.quotient, nonLPAmount) && (
                   <RowBetween>
                     <TYPE.subHeader color="white">Liquidity</TYPE.subHeader>
                     <TYPE.subHeader color="white">
                       {unclaimedAmount
+                        // @ts-ignore
                         .subtract(CurrencyAmount.fromRawAmount(unclaimedAmount.currency, nonLPAmount))
                         .toFixed(0, { groupSeparator: ',' })}{' '}
                       UNI

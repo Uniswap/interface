@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import { Percent, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Percent, CurrencyAmount, Token } from '../../libs/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { darken } from 'polished'
 import React, { useState } from 'react'

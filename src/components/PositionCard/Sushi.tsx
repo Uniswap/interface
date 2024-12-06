@@ -1,5 +1,5 @@
 import React from 'react'
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '../../libs/sdk-core'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'

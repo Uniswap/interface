@@ -34,7 +34,7 @@ import {
   Ether,
   currencyEquals,
   ETHER,
-} from '@uniswap/sdk-core'
+} from '../../libs/sdk-core'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'

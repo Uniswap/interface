@@ -4,6 +4,7 @@ import { DEFAULT_LIST_OF_LISTS } from '../../constants/lists'
 import { updateVersion } from '../global/actions'
 import { fetchTokenList, acceptListUpdate, addList, removeList, enableList } from './actions'
 import reducer, { ListsState } from './reducer'
+import { ChainId } from '../../libs/sdk-core'
 
 const STUB_TOKEN_LIST = {
   name: '',

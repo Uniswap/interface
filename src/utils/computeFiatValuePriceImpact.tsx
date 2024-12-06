@@ -1,4 +1,4 @@
-import { Token, CurrencyAmount, currencyEquals, Percent } from '@uniswap/sdk-core'
+import { Token, CurrencyAmount, currencyEquals, Percent } from '../libs/sdk-core'
 import JSBI from 'jsbi'
 import { ONE_HUNDRED_PERCENT } from '../constants/misc'
 

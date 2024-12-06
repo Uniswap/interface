@@ -3,7 +3,7 @@ import { Field } from '../../state/mint/v3/actions'
 import { AutoColumn } from 'components/Column'
 import Card from 'components/Card'
 import styled from 'styled-components/macro'
-import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price } from '../../libs/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import { PositionPreview } from 'components/PositionPreview'
 

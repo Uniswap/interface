@@ -1,5 +1,5 @@
 // a list of tokens by chain
-import { ChainId, Token, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, Token, WETH9 } from '../libs/sdk-core'
 import { AMPL, DAI, FEI, FRAX, FXS, MIR, renBTC, TRIBE, UMA, UNI, USDC, USDT, UST, WBTC } from './tokens'
 
 type ChainTokenList = {
