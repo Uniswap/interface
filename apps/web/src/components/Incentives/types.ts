@@ -197,7 +197,7 @@ query positionsWithIds($ids: [ID!]){
 
 export const STAKED_POSITIONS_QUERY = `
 query positions{
-	positions(subgraphError: deny, where: {owner: "0x3611731bac2f6891dd222f6f47d9f6faf7d72e30"}){
+	positions(subgraphError: deny, where: {owner: "0x3611731bac2f6891dd222f6f47d9f6faf7d72e30", liquidity_gt: "0"}){
     id
     minter {
       id
@@ -235,7 +235,7 @@ query positions{
 
 export const USER_OWNED_POSITIONS_QUERY = `
 query positions($address: String!){
-	positions(subgraphError: deny, where: {owner: $address}){
+	positions(subgraphError: deny, where: {owner: $address, liquidity_gt: "0"}){
     id
     minter {
       id
@@ -273,7 +273,7 @@ query positions($address: String!){
 
 export const USER_STAKED_POSITIONS_QUERY = `
 query positions($address: String!){
-	positions(subgraphError: deny, where: {minter: $address, owner: "0x3611731bac2f6891dd222f6f47d9f6faf7d72e30"}){
+	positions(subgraphError: deny, where: {minter: $address, owner: "0x3611731bac2f6891dd222f6f47d9f6faf7d72e30", liquidity_gt: "0"}){
     id
     minter {
       id
