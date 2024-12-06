@@ -1,4 +1,5 @@
-import { useGetStakedPositionsForPool } from "hooks/useGetPositionsForPool";
+import { BigNumber } from "ethers";
+import { useGetStakedLiqudityForPool } from "hooks/useGetPositionsForPool";
 import { useTokenUsdPrice } from "hooks/useTokenUsdPrice";
 import { PositionsResponse } from "hooks/useTotalPositions";
 
@@ -416,7 +417,6 @@ export const calculateApy = (
 
 export const calculateApy24hrs = async (
   incentive: Incentive,
-  totalPoolLiquidity: number, // in USD ex: 276000.29 USD
   totalRewardsToken: string // in ETH ex: 100 = 100 * 10^18 wei
 ): Promise<number> => {
   const incentiveDuration =
@@ -438,16 +438,21 @@ export const calculateApy24hrs = async (
     return 0;
   }
 
-  let stakedPositions = await useGetStakedPositionsForPool(incentive.pool.id);
-  if (stakedPositions === 0) {
-    stakedPositions = 1;
+  let stakedLiquidity = await useGetStakedLiqudityForPool(
+    incentive.pool.id.toLowerCase()
+  );
+  // console.log("stakedLiquidity", stakedLiquidity);
+  if (stakedLiquidity === 0) {
+    stakedLiquidity = 1;
   }
   // Daily rewards in USD
   // need to divide this by number of stakers later
+  const dailyRewards = dailyRewardTokens * rewardTokenUsdPrice;
+  console.log("dailyRewards", dailyRewards);
   const dailyRewardUsd =
-    (dailyRewardTokens * rewardTokenUsdPrice) / stakedPositions;
+    (dailyRewardTokens * rewardTokenUsdPrice) / stakedLiquidity;
 
-  const apr24hrs = dailyRewardUsd * 100;
+  console.log("dailyRewardUsd", dailyRewardUsd);
 
-  return apr24hrs;
+  return dailyRewardUsd;
 };
