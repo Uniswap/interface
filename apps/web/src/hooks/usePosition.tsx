@@ -157,6 +157,26 @@ const usePosition = (tokenId: number, incentiveId: string) => {
     ]
   );
 
+  const getAccruedRewards = useCallback(async (): Promise<
+    BigNumber | undefined
+  > => {
+    if (!(v3StakerContract && incentive)) return;
+
+    try {
+      setIsFetchingRewardInfo(true);
+      const accruedRewards = await v3StakerContract.rewards(
+        incentive.rewardToken.id,
+        address
+      );
+      return accruedRewards;
+    } catch (e) {
+      console.warn(e);
+      return undefined;
+    } finally {
+      setIsFetchingRewardInfo(false);
+    }
+  }, [incentive, v3StakerContract, address]);
+
   const stakePosition = useCallback(
     async (next: () => void) => {
       if (!(v3StakerContract && incentive)) return;
@@ -270,7 +290,9 @@ const usePosition = (tokenId: number, incentiveId: string) => {
     [incentive, v3StakerContract]
   );
 
-  const getRewardInfo = useCallback(async (): Promise<RewardInfo | null> => {
+  const getRewardInfo = useCallback(async (): Promise<
+    RewardInfo | null | undefined
+  > => {
     if (!(v3StakerContract && address && incentive)) return null;
 
     try {
@@ -285,7 +307,7 @@ const usePosition = (tokenId: number, incentiveId: string) => {
     } catch (e) {
       console.warn(e);
       setIsFetchingRewardInfo(false);
-      return null;
+      return undefined;
     }
   }, [tokenId, incentive, v3StakerContract, address]);
 
@@ -303,6 +325,7 @@ const usePosition = (tokenId: number, incentiveId: string) => {
 
   return {
     incentive,
+    getAccruedRewards,
     isFetchingRewardInfo,
     isApproving,
     isTransferring,
