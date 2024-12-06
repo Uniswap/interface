@@ -140,7 +140,7 @@ const useTotalPositions = () => {
       setIsLoading(false);
       if (data && data.data && data.data.positions) {
         const raw: PositionsResponseRaw[] = data.data.positions;
-        return raw.map((r) => parsePositions(r));
+        return raw.map((r) => parsePositions(r)).filter((p) => p.liquidity > 0);
       }
       return [];
     },
