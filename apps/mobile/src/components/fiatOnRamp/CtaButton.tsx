@@ -29,7 +29,6 @@ export function FiatOnRampCtaButton({
       icon={
         isLoading ? <SpinningLoader color="$white" /> : !eligible ? <InfoCircleFilled color="$neutral3" /> : undefined
       }
-      height={isShortMobileDevice ? 38 : 55}
       size={isShortMobileDevice ? 'small' : 'large'}
       theme={buttonAvailable ? 'primary' : 'tertiary'}
       onPress={onPress}

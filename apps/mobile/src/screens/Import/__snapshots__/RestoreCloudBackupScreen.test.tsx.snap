@@ -5,12 +5,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
   sentry-label="Screen"
   style={
     {
-      "backgroundColor": {
-        "dynamic": {
-          "dark": "#131313",
-          "light": "#FFFFFF",
-        },
-      },
+      "backgroundColor": "#FFFFFF",
       "flex": 1,
       "flexDirection": "column",
       "paddingLeft": undefined,
@@ -86,12 +81,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
             style={
               {
                 "alignItems": "center",
-                "backgroundColor": {
-                  "dynamic": {
-                    "dark": "rgba(255,255,255,0.12)",
-                    "light": "rgba(34,34,34,0.05)",
-                  },
-                },
+                "backgroundColor": "rgba(34,34,34,0.05)",
                 "borderBottomLeftRadius": 8,
                 "borderBottomRightRadius": 8,
                 "borderTopLeftRadius": 8,
@@ -169,12 +159,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
           maxFontSizeMultiplier={1.4}
           style={
             {
-              "color": {
-                "dynamic": {
-                  "dark": "#FFFFFF",
-                  "light": "#222222",
-                },
-              },
+              "color": "#222222",
               "fontFamily": "Basel Grotesk",
               "fontSize": 19,
               "fontWeight": "400",
@@ -192,12 +177,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
           maxFontSizeMultiplier={1.4}
           style={
             {
-              "color": {
-                "dynamic": {
-                  "dark": "#9B9B9B",
-                  "light": "#7D7D7D",
-                },
-              },
+              "color": "#7D7D7D",
               "fontFamily": "Basel Grotesk",
               "fontSize": 17,
               "fontWeight": "400",

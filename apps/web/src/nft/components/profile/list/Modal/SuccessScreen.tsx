@@ -2,6 +2,7 @@ import { ScrollBarStyles } from 'components/Common/styles'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
+import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import styled, { css, useTheme } from 'lib/styled-components'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -13,7 +14,6 @@ import { useMemo } from 'react'
 import { Twitter, X } from 'react-feather'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
-import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -84,7 +84,7 @@ export const SuccessScreen = ({ overlayClick }: { overlayClick: () => void }) =>
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
-  const usdcValue = useUSDCValue(parsedAmount)
+  const usdcValue = useStablecoinValue(parsedAmount)
 
   return (
     <>

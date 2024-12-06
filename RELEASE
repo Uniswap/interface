@@ -1,24 +1,8 @@
-IPFS hash of the deployment:
-- CIDv0: `QmVMsr8YpWVo2SyEuQwKBNaBDKv7uZcZkN63VTDrMgfsX1`
-- CIDv1: `bafybeidiki7lac24gv6xgw65hvxrrqfpk2bdgjsj63rl2uuf5yijufqj6q`
+We are back with some small updates! Here’s the latest:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+- Expanded Fiat Onramp Providers: We’ve continued to add more options for onramp providers to make it easier to change your fiat into crypto, without leaving the app. 
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+Other Changes:
 
-IPFS gateways:
-- https://bafybeidiki7lac24gv6xgw65hvxrrqfpk2bdgjsj63rl2uuf5yijufqj6q.ipfs.dweb.link/
-- https://bafybeidiki7lac24gv6xgw65hvxrrqfpk2bdgjsj63rl2uuf5yijufqj6q.ipfs.cf-ipfs.com/
-- [ipfs://QmVMsr8YpWVo2SyEuQwKBNaBDKv7uZcZkN63VTDrMgfsX1/](ipfs://QmVMsr8YpWVo2SyEuQwKBNaBDKv7uZcZkN63VTDrMgfsX1/)
-
-### 5.61.1 (2024-12-06)
-
-
-### Bug Fixes
-
-* **web): Revert "fix(web:** [2/n] remove react-spring usage (modal) (#13904)" (#14314) 28dfe99
-
-
+- More consistent padding and font sizing
+- Various bug fixes and performance improvements

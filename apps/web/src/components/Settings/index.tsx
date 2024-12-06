@@ -1,12 +1,13 @@
 import { Percent } from '@uniswap/sdk-core'
 import { Scrim } from 'components/AccountDrawer'
+import AnimatedDropdown from 'components/AnimatedDropdown'
+import Column, { AutoColumn } from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import MaxSlippageSettings from 'components/Settings/MaxSlippageSettings'
 import MenuButton from 'components/Settings/MenuButton'
 import MultipleRoutingOptions from 'components/Settings/MultipleRoutingOptions'
 import RouterPreferenceSettings from 'components/Settings/RouterPreferenceSettings'
 import TransactionDeadlineSettings from 'components/Settings/TransactionDeadlineSettings'
-import Column, { AutoColumn } from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useIsUniswapXSupportedChain } from 'hooks/useIsUniswapXSupportedChain'
@@ -21,8 +22,7 @@ import { InterfaceTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import { Divider, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
-import { HeightAnimator } from 'ui/src'
-import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -149,13 +149,13 @@ export default function SettingsTab({
             <RouterPreferenceSettings />
           </AutoColumn>
         )}
-        <HeightAnimator open={!isUniswapXTrade(trade)}>
+        <AnimatedDropdown open={!isUniswapXTrade(trade)}>
           <ExpandColumn $padTop={showRoutingSettings}>
             {showRoutingSettings && <Divider />}
             <MaxSlippageSettings autoSlippage={autoSlippage} />
             {showDeadlineSettings && <TransactionDeadlineSettings />}
           </ExpandColumn>
-        </HeightAnimator>
+        </AnimatedDropdown>
         {multipleRoutingOptionsEnabled && (
           <>
             {!isUniswapXTrade(trade) && <StyledDivider />}

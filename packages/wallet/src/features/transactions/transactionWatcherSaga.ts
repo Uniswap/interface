@@ -12,8 +12,6 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
 import { findGasStrategyName } from 'uniswap/src/features/gas/hooks'
 import { getGasPrice } from 'uniswap/src/features/gas/types'
-import { DynamicConfigs, MainnetPrivateRpcConfigKey } from 'uniswap/src/features/gating/configs'
-import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { pushNotification, setNotificationStatus } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { MobileAppsFlyerEvents, WalletEventName } from 'uniswap/src/features/telemetry/constants'
@@ -274,7 +272,6 @@ export function* watchTransaction({
       chainId,
       id,
     })
-    yield* call(logTransactionTimeout, transaction)
     yield* call(maybeLogGasEstimateAccuracy, transaction)
     return
   }
@@ -614,28 +611,6 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
   }
 
   maybeLogGasEstimateAccuracy(payload)
-}
-
-function logTransactionTimeout(transaction: TransactionDetails) {
-  const useFlashbots = getDynamicConfigValue<DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey, boolean>(
-    DynamicConfigs.MainnetPrivateRpc,
-    MainnetPrivateRpcConfigKey.UseFlashbots,
-    false,
-  )
-
-  const sendAuthenticationHeader = getDynamicConfigValue<
-    DynamicConfigs.MainnetPrivateRpc,
-    MainnetPrivateRpcConfigKey,
-    boolean
-  >(DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey.SendFlashbotsAuthenticationHeader, false)
-
-  sendAnalyticsEvent(WalletEventName.PendingTransactionTimeout, {
-    use_flashbots: useFlashbots,
-    send_authentication_header: sendAuthenticationHeader,
-    chain_id: transaction.chainId,
-    tx_hash: transaction.hash,
-    private_rpc: (isClassic(transaction) && transaction.options.submitViaPrivateRpc) ?? false,
-  })
 }
 
 function maybeLogGasEstimateAccuracy(transaction: TransactionDetails) {

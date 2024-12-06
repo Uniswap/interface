@@ -1,7 +1,8 @@
 import { Currency, CurrencyAmount, Fraction, Price } from '@uniswap/sdk-core'
 import { parseUnits } from 'ethers/lib/utils'
+import { useStablecoinAmountFromFiatValue } from 'hooks/useStablecoinPrice'
+import { useUSDPrice } from 'hooks/useUSDPrice'
 import JSBI from 'jsbi'
-import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 
 // Show warning if the price diverges by more than 5%
 const WARNING_THRESHOLD = new Fraction(5, 100)
@@ -9,25 +10,29 @@ const WARNING_THRESHOLD = new Fraction(5, 100)
 const DECIMAL_SCALAR = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 
 function useMarketPrice(baseCurrency?: Currency, quoteCurrency?: Currency) {
-  const baseCurrencyUSDPrice = useUSDCValue(
+  const baseCurrencyUSDPrice = useUSDPrice(
     baseCurrency
       ? CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(parseUnits('1', baseCurrency?.decimals)))
       : undefined,
+    baseCurrency,
   )
+  const baseCurrencyStableCoinAmount = useStablecoinAmountFromFiatValue(baseCurrencyUSDPrice.data)
 
-  const quoteCurrencyUSDPrice = useUSDCValue(
+  const quoteCurrencyUSDPrice = useUSDPrice(
     quoteCurrency
       ? CurrencyAmount.fromRawAmount(quoteCurrency, JSBI.BigInt(parseUnits('1', quoteCurrency?.decimals)))
       : undefined,
+    quoteCurrency,
   )
+  const quoteCurrencyStableCoinAmount = useStablecoinAmountFromFiatValue(quoteCurrencyUSDPrice.data)
 
-  if (!baseCurrencyUSDPrice || !quoteCurrencyUSDPrice) {
+  if (!baseCurrencyStableCoinAmount || !quoteCurrencyStableCoinAmount) {
     return undefined
   }
 
   const marketPrice = new Fraction(
-    baseCurrencyUSDPrice.multiply(DECIMAL_SCALAR).toFixed(0),
-    quoteCurrencyUSDPrice.multiply(DECIMAL_SCALAR).toFixed(0),
+    baseCurrencyStableCoinAmount.multiply(DECIMAL_SCALAR).toFixed(0),
+    quoteCurrencyStableCoinAmount.multiply(DECIMAL_SCALAR).toFixed(0),
   )
 
   return marketPrice

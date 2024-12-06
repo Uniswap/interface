@@ -18,7 +18,7 @@ import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { Trans } from 'uniswap/src/i18n'
@@ -149,6 +149,9 @@ const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chain
           chain: toGraphQLChain(chainId ?? defaultChainId),
         })}
       >
+        {screenIsNotLarge && (
+          <CurrencyLogo currency={currency} size={16} style={{ marginRight: '4px', marginLeft: '4px' }} />
+        )}
         {unwrappedToken.symbol}
       </StyledLink>
     </PoolBalanceTokenNamesContainer>

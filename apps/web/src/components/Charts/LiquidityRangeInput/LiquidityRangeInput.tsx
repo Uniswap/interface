@@ -2,10 +2,9 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency } from '@uniswap/sdk-core'
 import { ActiveLiquidityChart2 } from 'components/Charts/ActiveLiquidityChart/ActiveLiquidityChart2'
-import { Chart } from 'components/Charts/ChartModel'
+import { Chart, DEFAULT_BOTTOM_PRICE_SCALE_MARGIN, DEFAULT_TOP_PRICE_SCALE_MARGIN } from 'components/Charts/ChartModel'
 import { LPPriceChartModel } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { ChartErrorView } from 'components/Charts/LoadingState'
-import { getCandlestickPriceBounds } from 'components/Charts/PriceChart/utils'
 import { PriceChartType } from 'components/Charts/utils'
 import { useDensityChartData } from 'components/LiquidityChartRangeInput/hooks'
 import { DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
@@ -41,7 +40,6 @@ export function LiquidityRangeInput({
   currency0,
   currency1,
   feeTier,
-  tickSpacing,
   protocolVersion,
   poolId,
   minPrice,
@@ -53,7 +51,6 @@ export function LiquidityRangeInput({
   currency0: Currency
   currency1: Currency
   feeTier: number | string
-  tickSpacing?: number
   protocolVersion: ProtocolVersion
   poolId: string
   minPrice?: number
@@ -91,66 +88,35 @@ export function LiquidityRangeInput({
   // Set via a callback from the LiquidityPositionRangeChart, which is important when the price axis is auto-scaled.
   // This is also used to set the bounds of the ActiveLiquiditChart, so it's necessary to keep separate from the zooming state.
   const [boundaryPrices, setBoundaryPrices] = useState<[number, number]>()
+  // Sets the min/max prices of the price axis manually, which is used to zoom in/out.
+  const [priceScaleMargins, setPriceScaleMargins] = useState({
+    top: DEFAULT_TOP_PRICE_SCALE_MARGIN,
+    bottom: DEFAULT_BOTTOM_PRICE_SCALE_MARGIN,
+  })
 
-  const [zoomFactor, setZoomFactor] = useState(1)
-
-  const { dataMin, dataMax } = useMemo(() => {
-    const { min: dataMin, max: dataMax } = getCandlestickPriceBounds(priceData.entries)
-    return { dataMin, dataMax }
-  }, [priceData.entries])
-
-  // Sets the min/max prices of the price axis manually, which is used to center the current price and zoom in/out.
-  const { minVisiblePrice, maxVisiblePrice } = useMemo(() => {
-    const currentPrice = priceData.entries[priceData.entries.length - 1]?.value
-    // Calculate the default range based on the current price.
-    const maxSpread = Math.max(currentPrice - dataMin, dataMax - currentPrice)
-    // Initial unscaled range to fit all values with the current price centered
-    const initialRange = 2 * maxSpread
-    const newRange = initialRange / zoomFactor
-
-    return {
-      minVisiblePrice: currentPrice - newRange / 2,
-      maxVisiblePrice: currentPrice + newRange / 2,
-    }
-  }, [dataMax, dataMin, priceData.entries, zoomFactor])
+  const maxZoomOut = priceScaleMargins.bottom + priceScaleMargins.top >= 0.9
+  const maxZoomIn = priceScaleMargins.bottom + priceScaleMargins.top <= 0.1
 
   const priceChartParams = useMemo(() => {
     return {
       data: priceData.entries,
       stale: priceData.dataQuality === DataQuality.STALE,
       type: PriceChartType.LINE,
-      height: CHART_HEIGHT,
+      height: 164,
       color: colors.accent1.val,
       currentPriceLineColor: colors.neutral2.val,
       showXAxis: true,
-      minVisiblePrice,
-      maxVisiblePrice,
+      priceScaleMargins,
       setBoundaryPrices,
       isReversed,
-      disableExtendedTimeScale: true,
-      priceScaleMargins: {
-        top: 0,
-        bottom: 0,
-      },
     } as const
-  }, [
-    colors.accent1.val,
-    colors.neutral2.val,
-    isReversed,
-    priceData.dataQuality,
-    priceData.entries,
-    maxVisiblePrice,
-    minVisiblePrice,
-  ])
+  }, [colors.accent1.val, colors.neutral2.val, isReversed, priceData.dataQuality, priceData.entries, priceScaleMargins])
 
   const { formattedData, isLoading: liquidityDataLoading } = useDensityChartData({
-    poolId,
     currencyA: sortedCurrencies[0],
     currencyB: sortedCurrencies[1],
-    invertPrices: !isReversed,
-    version: protocolVersion,
     feeAmount: Number(feeTier),
-    tickSpacing,
+    invertPrices: !isReversed,
   })
 
   const timePeriodOptions = useMemo(() => {
@@ -175,7 +141,7 @@ export function LiquidityRangeInput({
 
   return (
     <Flex gap="$gap8" overflow="hidden">
-      <Flex height={CHART_HEIGHT + BOTTOM_AXIS_HEIGHT} width={CHART_CONTAINER_WIDTH} overflow="hidden">
+      <Flex height={CHART_HEIGHT + BOTTOM_AXIS_HEIGHT} width={CHART_CONTAINER_WIDTH}>
         {showChartErrorView && (
           <ChartErrorView>
             <Text variant="body3" color="$neutral2">
@@ -188,7 +154,7 @@ export function LiquidityRangeInput({
           height={CHART_HEIGHT + BOTTOM_AXIS_HEIGHT}
           overflow="hidden"
         >
-          {(priceData.loading || showChartErrorView) && (!priceData.entries || priceData.entries.length === 0) && (
+          {(priceData.loading || showChartErrorView) && (
             <Shine height={CHART_HEIGHT} disabled={showChartErrorView} zIndex={0}>
               <LoadingPriceCurve
                 size={showChartErrorView ? CHART_CONTAINER_WIDTH : loadedPriceChartWidth}
@@ -246,12 +212,16 @@ export function LiquidityRangeInput({
           selectedOption={timePeriodOptions.selected}
           onSelectOption={(option: HistoryDuration) => {
             setSelectedHistoryDuration(option)
-            setZoomFactor(1)
+            setPriceScaleMargins({
+              top: DEFAULT_TOP_PRICE_SCALE_MARGIN,
+              bottom: DEFAULT_BOTTOM_PRICE_SCALE_MARGIN,
+            })
             setBoundaryPrices(undefined)
           }}
         />
         <Flex row centered borderRadius="$roundedFull">
           <Button
+            disabled={maxZoomIn}
             animation="100ms"
             backgroundColor="$transparent"
             hoverStyle={{ backgroundColor: '$transparent', opacity: 0.8 }}
@@ -264,12 +234,25 @@ export function LiquidityRangeInput({
             borderBottomLeftRadius="$roundedFull"
             p="$spacing8"
             onPress={() => {
-              setZoomFactor((prevZoomFactor) => prevZoomFactor * 1.2)
+              const newTop = priceScaleMargins.top * 0.8
+              const newBottom = priceScaleMargins.bottom * 0.8
+              if (newTop + newBottom <= 0.1) {
+                setPriceScaleMargins({
+                  top: 0.04,
+                  bottom: 0.06,
+                })
+                return
+              }
+              setPriceScaleMargins({
+                top: newTop,
+                bottom: newBottom,
+              })
             }}
           >
             <SearchPlus size={16} color="$neutral1" />
           </Button>
           <Button
+            disabled={maxZoomOut}
             animation="100ms"
             backgroundColor="$transparent"
             hoverStyle={{ backgroundColor: '$transparent', opacity: 0.8 }}
@@ -282,7 +265,19 @@ export function LiquidityRangeInput({
             borderBottomRightRadius="$roundedFull"
             p="$spacing8"
             onPress={() => {
-              setZoomFactor((prevZoomFactor) => prevZoomFactor / 1.2)
+              const newTop = priceScaleMargins.top * 1.2
+              const newBottom = priceScaleMargins.bottom * 1.2
+              if (newTop + newBottom >= 0.9) {
+                setPriceScaleMargins({
+                  top: 0.4,
+                  bottom: 0.5,
+                })
+                return
+              }
+              setPriceScaleMargins({
+                top: newTop,
+                bottom: newBottom,
+              })
             }}
           >
             <SearchMinus size={16} color="$neutral1" />
@@ -297,7 +292,11 @@ export function LiquidityRangeInput({
           pressStyle={{ backgroundColor: '$surface3', opacity: 0.8 }}
           onPress={() => {
             setSelectedHistoryDuration(HistoryDuration.Month)
-            setZoomFactor(1)
+            setPriceScaleMargins({
+              top: DEFAULT_TOP_PRICE_SCALE_MARGIN,
+              bottom: DEFAULT_BOTTOM_PRICE_SCALE_MARGIN,
+            })
+            setBoundaryPrices(undefined)
             setMinPrice(undefined)
             setMaxPrice(undefined)
           }}

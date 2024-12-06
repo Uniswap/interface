@@ -4,9 +4,7 @@ import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta, AccountType, SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { DynamicConfigs, MainnetPrivateRpcConfigKey } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
-import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -176,10 +174,9 @@ function* updateSubmittedTransaction(
   analytics?: ReturnType<typeof getBaseTradeAnalyticsProperties>,
 ) {
   const request = getSerializableTransactionRequest(populatedRequest, transaction.chainId)
-  const timeoutTimestampMs =
-    transaction.typeInfo.gasEstimates || transaction.options.submitViaPrivateRpc
-      ? Date.now() + getTransactionTimeoutMs(transaction.chainId)
-      : undefined
+  const timeoutTimestampMs = transaction.typeInfo.gasEstimates
+    ? Date.now() + getTransactionTimeoutMs(transaction.chainId)
+    : undefined
 
   const updatedTransaction: OnChainTransactionDetails = {
     ...transaction,
@@ -227,21 +224,10 @@ function* updateSubmittedTransaction(
 export function* tryGetNonce(account: SignerMnemonicAccountMeta, chainId: UniverseChainId) {
   try {
     const isPrivateRpcEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.PrivateRpc))
-
-    const useFlashbots = getDynamicConfigValue<DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey, boolean>(
-      DynamicConfigs.MainnetPrivateRpc,
-      MainnetPrivateRpcConfigKey.UseFlashbots,
-      false,
-    )
-
-    const sendAuthenticationHeader = getDynamicConfigValue<
-      DynamicConfigs.MainnetPrivateRpc,
-      MainnetPrivateRpcConfigKey,
-      boolean
-    >(DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey.SendFlashbotsAuthenticationHeader, false)
-
     const shouldUseFlashbots =
-      isPrivateRpcEnabled && chainId === UniverseChainId.Mainnet && useFlashbots && sendAuthenticationHeader
+      isPrivateRpcEnabled &&
+      chainId === UniverseChainId.Mainnet &&
+      Statsig.checkGate(getFeatureFlagName(FeatureFlags.FlashbotsPrivateRpc))
 
     const provider = shouldUseFlashbots
       ? yield* call(getPrivateProvider, chainId, account)
@@ -249,8 +235,9 @@ export function* tryGetNonce(account: SignerMnemonicAccountMeta, chainId: Univer
 
     const nonce = yield* call([provider, provider.getTransactionCount], account.address, 'pending')
 
-    // If we're using Flashbots with authentication header as private RPC, it will already account for pending private transactions. Otherwise, add the local pending private transactions.
     if (!shouldUseFlashbots && isPrivateRpcSupportedOnChain(chainId)) {
+      // If we're using flashbots as private RPC, it will already account for pending private transactions.
+      // Only need to add the `pendingPrivateTransactionCount` when there could be transactions submitted via MEVBlocker.
       const pendingPrivateTransactionCount = yield* call(getPendingPrivateTxCount, account.address, chainId)
       return nonce + pendingPrivateTransactionCount
     }

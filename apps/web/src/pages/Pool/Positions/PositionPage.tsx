@@ -24,7 +24,7 @@ import { Button, Flex, Main, Switch, Text, styled } from 'ui/src'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
+import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
@@ -67,17 +67,6 @@ export const HeaderButton = styled(Flex, {
       },
       secondary: {
         backgroundColor: '$surface2',
-      },
-    },
-    disabled: {
-      true: {
-        cursor: 'default',
-        hoverStyle: {
-          opacity: 1,
-        },
-        pressStyle: {
-          opacity: 1,
-        },
       },
     },
   } as const,
@@ -125,8 +114,6 @@ export default function PositionPage() {
   const [collectAsWeth, setCollectAsWeth] = useState(false)
 
   const { value: lpRedesignEnabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.LPRedesign)
-  const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
-
   const { formatCurrencyAmount } = useFormatter()
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -208,7 +195,6 @@ export default function PositionPage() {
               <BreadcrumbNavLink to="/positions">
                 <Trans i18nKey="pool.positions.title" /> <ChevronRight size={14} />
               </BreadcrumbNavLink>
-              <Text variant="subheading2">{positionInfo.tokenId}</Text>
             </BreadcrumbNavContainer>
           </Flex>
           <Flex
@@ -220,7 +206,7 @@ export default function PositionPage() {
             <LiquidityPositionInfo positionInfo={positionInfo} />
             {status !== PositionStatus.CLOSED && (
               <Flex row gap="$gap12" alignItems="center" flexWrap="wrap">
-                {positionInfo.version === ProtocolVersion.V3 && isV4DataEnabled && (
+                {positionInfo.version === ProtocolVersion.V3 && (
                   <HeaderButton
                     emphasis="secondary"
                     onPress={() => {

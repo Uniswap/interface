@@ -9,6 +9,7 @@ import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import Column from 'components/deprecated/Column'
 import Row, { RowBetween } from 'components/deprecated/Row'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
+import { useUSDPrice } from 'hooks/useUSDPrice'
 import styled, { css } from 'lib/styled-components'
 import {
   NumericalInputMimic,
@@ -26,12 +27,10 @@ import { ClickableStyle, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useEnabledChains, useSupportedChainId } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrency, useFiatCurrencyComponents } from 'uniswap/src/features/fiatCurrency/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Trans } from 'uniswap/src/i18n'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -195,6 +194,7 @@ export default function SendCurrencyInputForm({
   const { formatCurrencyAmount } = useFormatter()
   const appFiatCurrency = useAppFiatCurrency()
   const { symbol: fiatSymbol } = useFiatCurrencyComponents(appFiatCurrency)
+  const { formatNumber } = useFormatter()
 
   const { sendState, setSendState, derivedSendInfo } = useSendContext()
   const { inputInFiat, exactAmountToken, exactAmountFiat, inputCurrency } = sendState
@@ -214,7 +214,7 @@ export default function SendCurrencyInputForm({
     type: NumberType.TokenNonTx,
   })
 
-  const fiatBalanceValue = useUSDCValue(currencyBalance)
+  const fiatBalanceValue = useUSDPrice(currencyBalance, inputCurrency)
   const displayValue = inputInFiat ? exactAmountFiat : exactAmountToken
   const hiddenObserver = useResizeObserver<HTMLElement>()
 
@@ -337,9 +337,9 @@ export default function SendCurrencyInputForm({
                     {currencyBalance && (
                       <ThemedText.LabelMicro lineHeight="16px">{`Balance: ${formattedBalance}`}</ThemedText.LabelMicro>
                     )}
-                    {Boolean(fiatBalanceValue) && (
-                      <ThemedText.LabelMicro lineHeight="16px" color="neutral3">{`(${formatCurrencyAmount({
-                        amount: fiatBalanceValue,
+                    {Boolean(fiatBalanceValue.data) && (
+                      <ThemedText.LabelMicro lineHeight="16px" color="neutral3">{`(${formatNumber({
+                        input: fiatBalanceValue.data,
                         type: NumberType.FiatTokenPrice,
                       })})`}</ThemedText.LabelMicro>
                     )}

@@ -6,7 +6,6 @@ import { call } from 'redux-saga/effects'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { DynamicConfigs, MainnetPrivateRpcConfigKey } from 'uniswap/src/features/gating/configs'
 import { addTransaction, finalizeTransaction, updateTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   TransactionDetails,
@@ -33,7 +32,6 @@ import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { provider, providerManager, signerManager } from 'wallet/src/test/mocks'
 
 let mockGates: Record<string, boolean> = {}
-let mockConfigs: Record<string, Record<string, unknown>> = {}
 jest.mock('uniswap/src/features/gating/sdk/statsig', () => ({
   Statsig: {
     checkGate: jest.fn().mockImplementation((gate) => {
@@ -41,19 +39,6 @@ jest.mock('uniswap/src/features/gating/sdk/statsig', () => ({
     }),
   },
 }))
-
-jest.mock('uniswap/src/features/gating/hooks', () => {
-  return {
-    ...jest.requireActual('uniswap/src/features/gating/hooks'),
-    getDynamicConfigValue: jest
-      .fn()
-      .mockImplementation(
-        (config: DynamicConfigs.MainnetPrivateRpc, key: MainnetPrivateRpcConfigKey, defaultVal: unknown) => {
-          return mockConfigs[config]?.[key] ?? defaultVal
-        },
-      ),
-  }
-})
 
 const account = signerMnemonicAccount()
 
@@ -74,12 +59,7 @@ describe(sendTransaction, () => {
   beforeEach(() => {
     mockGates = {
       'mev-blocker': true,
-    }
-    mockConfigs = {
-      mainnet_private_rpc: {
-        use_flashbots: true,
-        send_authentication_header: true,
-      },
+      'flashbots-private-rpc': true,
     }
   })
 
@@ -281,11 +261,9 @@ describe(sendTransaction, () => {
     })
 
     it('Includes local pending private transactions when using MEVBlocker as private RPC', async () => {
-      mockConfigs = {
-        mainnet_private_rpc: {
-          use_flashbots: false,
-          send_flashbots_authentication_header: false,
-        },
+      mockGates = {
+        'mev-blocker': true,
+        'flashbots-private-rpc': false,
       }
       const mockNonce = 15
       const publicProvider = {
@@ -305,32 +283,11 @@ describe(sendTransaction, () => {
         .silentRun()
     })
 
-    it('Includes local pending private transactions when using Flashbots as private RPC without authentication header', async () => {
-      mockConfigs = {
-        mainnet_private_rpc: {
-          use_flashbots: true,
-          send_flashbots_authentication_header: false,
-        },
+    it('Does not include local pending private transactions when using Flashbots as private RPC', async () => {
+      mockGates = {
+        'mev-blocker': true,
+        'flashbots-private-rpc': true,
       }
-      const mockNonce = 15
-      const publicProvider = {
-        getTransactionCount: jest.fn(),
-      } as unknown as providers.Provider
-
-      return expectSaga(tryGetNonce, account, UniverseChainId.Mainnet)
-        .provide([
-          [call(isPrivateRpcSupportedOnChain, UniverseChainId.Mainnet), false],
-          [call(getProvider, UniverseChainId.Mainnet), publicProvider],
-          [call([publicProvider, publicProvider.getTransactionCount], account.address, 'pending'), mockNonce],
-          [call(getPendingPrivateTxCount, account.address, UniverseChainId.Mainnet), 3],
-        ])
-        .call(getProvider, UniverseChainId.Mainnet)
-        .call([publicProvider, publicProvider.getTransactionCount], account.address, 'pending')
-        .returns(mockNonce + 3)
-        .silentRun()
-    })
-
-    it('Does not include local pending private transactions when using Flashbots as private RPC with authentication header', async () => {
       const mockNonce = 15
       const privateProvider = {
         getTransactionCount: jest.fn(),

@@ -72,14 +72,6 @@ export type GasEstimateAccuracyProperties = {
   timed_out: boolean
 }
 
-export type PendingTransactionTimeoutProperties = {
-  use_flashbots: boolean
-  send_authentication_header: boolean
-  private_rpc: boolean
-  chain_id: number
-  tx_hash?: string
-}
-
 export type AssetDetailsBaseProperties = {
   name?: string
   domain?: string
@@ -775,7 +767,6 @@ export type UniverseEventProperties = {
     url: string
   }
   [WalletEventName.GasEstimateAccuracy]: GasEstimateAccuracyProperties
-  [WalletEventName.PendingTransactionTimeout]: PendingTransactionTimeoutProperties
   [WalletEventName.TokenVisibilityChanged]: { currencyId: string; visible: boolean }
   [WalletEventName.TransferSubmitted]: TransferProperties
   [WalletEventName.WalletAdded]: OnboardingCompletedProps & ITraceContext

@@ -1,5 +1,5 @@
-import { forwardRef, useEffect } from 'react'
-import { Input, InputProps, Input as TextInputBase, isWeb, useSporeColors } from 'ui/src'
+import { forwardRef } from 'react'
+import { Input, InputProps, Input as TextInputBase, useSporeColors } from 'ui/src'
 
 export type TextInputProps = InputProps
 
@@ -10,18 +10,6 @@ export const TextInput = forwardRef<TextInputBase, TextInputProps>(function _Tex
   ref,
 ) {
   const colors = useSporeColors()
-
-  useEffect(() => {
-    // Ensure virtualkeyboardpolicy is set to "auto" on the DOM element
-    // otherwise the virtual keyboard will not show on android mobile
-    // TODO (WEB-5798): remove tamagui input hack
-    if (ref && 'current' in ref && ref.current && isWeb) {
-      const inputElement = ref.current as unknown as HTMLElement
-      inputElement.setAttribute('virtualkeyboardpolicy', 'auto')
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []) // only run on mount since we only need to set this once
-
   return (
     <Input
       ref={ref}

@@ -6,7 +6,7 @@ import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { errorShakeAnimation } from 'ui/src/animations/errorShakeAnimation'
 import { PlusMinusButtonType } from 'ui/src/components/button/PlusMinusButton'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE, MAX_CUSTOM_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
-import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 
 const SLIPPAGE_INCREMENT = 0.1
 
@@ -27,11 +27,8 @@ export function useSlippageSettings(): {
 } {
   const { t } = useTranslation()
 
-  const {
-    customSlippageTolerance,
-    autoSlippageTolerance: derivedAutoSlippageTolerance,
-    updateSwapSettings,
-  } = useSwapSettingsContext()
+  const { derivedSwapInfo, updateSwapForm } = useSwapFormContext()
+  const { customSlippageTolerance, autoSlippageTolerance: derivedAutoSlippageTolerance } = derivedSwapInfo
 
   const [isEditingSlippage, setIsEditingSlippage] = useState<boolean>(false)
   const [autoSlippageEnabled, setAutoSlippageEnabled] = useState<boolean>(!customSlippageTolerance)
@@ -66,7 +63,7 @@ export function useSlippageSettings(): {
     setAutoSlippageEnabled(true)
     setInputWarning(undefined)
     setInputSlippageTolerance('')
-    updateSwapSettings({ customSlippageTolerance: undefined })
+    updateSwapForm({ customSlippageTolerance: undefined })
   }
 
   const onChangeSlippageInput = useCallback(
@@ -117,9 +114,9 @@ export function useSlippageSettings(): {
       }
 
       setInputSlippageTolerance(value)
-      updateSwapSettings({ customSlippageTolerance: parsedValue })
+      updateSwapForm({ customSlippageTolerance: parsedValue })
     },
-    [inputShakeX, updateSwapSettings, t],
+    [inputShakeX, updateSwapForm, t],
   )
 
   const onFocusSlippageInput = useCallback((): void => {
@@ -138,12 +135,12 @@ export function useSlippageSettings(): {
     // Set autoSlippageEnabled to true if input is invalid (ex. '' or '.')
     if (isNaN(parsedInputSlippageTolerance)) {
       setAutoSlippageEnabled(true)
-      updateSwapSettings({ customSlippageTolerance: undefined })
+      updateSwapForm({ customSlippageTolerance: undefined })
       return
     }
 
     setInputSlippageTolerance(parsedInputSlippageTolerance.toFixed(2))
-  }, [parsedInputSlippageTolerance, updateSwapSettings])
+  }, [parsedInputSlippageTolerance, updateSwapForm])
 
   const onPressPlusMinusButton = useCallback(
     (type: PlusMinusButtonType): void => {
@@ -165,9 +162,9 @@ export function useSlippageSettings(): {
       }
 
       setInputSlippageTolerance(constrainedNewSlippage.toFixed(2).toString())
-      updateSwapSettings({ customSlippageTolerance: constrainedNewSlippage })
+      updateSwapForm({ customSlippageTolerance: constrainedNewSlippage })
     },
-    [autoSlippageEnabled, currentSlippageToleranceNum, updateSwapSettings, t],
+    [autoSlippageEnabled, currentSlippageToleranceNum, updateSwapForm, t],
   )
 
   return {

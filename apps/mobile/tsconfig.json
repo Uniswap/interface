@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Mobile App",
-  "extends": "../../config/tsconfig/expo.json",
+  "extends": "tsconfig/expo.json",
   "references": [
     {
       "path": "../../packages/ui"

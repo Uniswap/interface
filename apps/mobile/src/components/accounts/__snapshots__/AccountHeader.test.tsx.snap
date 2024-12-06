@@ -35,7 +35,19 @@ exports[`AccountHeader renders correctly 1`] = `
       }
     >
       <View
-        hitSlop={20}
+        cancelable={true}
+        disabled={false}
+        focusable={true}
+        hitSlop={[Function]}
+        minPressDuration={0}
+        onBlur={[Function]}
+        onFocus={[Function]}
+        onLongPress={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        onPress={[Function]}
+        onPressIn={[Function]}
+        onPressOut={[Function]}
         style={
           {
             "alignItems": "center",
@@ -53,42 +65,17 @@ exports[`AccountHeader renders correctly 1`] = `
         <View
           style={
             {
-              "backgroundColor": {
-                "dynamic": {
-                  "dark": "#131313",
-                  "light": "#FFFFFF",
-                },
-              },
-              "borderBottomColor": {
-                "dynamic": {
-                  "dark": "transparent",
-                  "light": "transparent",
-                },
-              },
+              "backgroundColor": "#FFFFFF",
+              "borderBottomColor": "transparent",
               "borderBottomLeftRadius": 999999,
               "borderBottomRightRadius": 999999,
               "borderBottomWidth": 0,
-              "borderLeftColor": {
-                "dynamic": {
-                  "dark": "transparent",
-                  "light": "transparent",
-                },
-              },
+              "borderLeftColor": "transparent",
               "borderLeftWidth": 0,
-              "borderRightColor": {
-                "dynamic": {
-                  "dark": "transparent",
-                  "light": "transparent",
-                },
-              },
+              "borderRightColor": "transparent",
               "borderRightWidth": 0,
               "borderStyle": "solid",
-              "borderTopColor": {
-                "dynamic": {
-                  "dark": "transparent",
-                  "light": "transparent",
-                },
-              },
+              "borderTopColor": "transparent",
               "borderTopLeftRadius": 999999,
               "borderTopRightRadius": 999999,
               "borderTopWidth": 0,
@@ -270,7 +257,18 @@ exports[`AccountHeader renders correctly 1`] = `
       testID="account-header/display-name"
     >
       <View
-        hitSlop={20}
+        cancelable={true}
+        disabled={false}
+        focusable={true}
+        hitSlop={[Function]}
+        minPressDuration={0}
+        onBlur={[Function]}
+        onFocus={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        onPress={[Function]}
+        onPressIn={[Function]}
+        onPressOut={[Function]}
         style={
           {
             "flexDirection": "column",
@@ -298,12 +296,7 @@ exports[`AccountHeader renders correctly 1`] = `
             numberOfLines={1}
             style={
               {
-                "color": {
-                  "dynamic": {
-                    "dark": "#FFFFFF",
-                    "light": "#222222",
-                  },
-                },
+                "color": "#222222",
                 "fontFamily": "Basel Grotesk",
                 "fontSize": 19,
                 "fontWeight": "400",
@@ -381,7 +374,18 @@ exports[`AccountHeader renders correctly 1`] = `
               </Text>
             </View>
             <View
-              hitSlop={20}
+              cancelable={true}
+              disabled={false}
+              focusable={true}
+              hitSlop={[Function]}
+              minPressDuration={0}
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+              onPress={[Function]}
+              onPressIn={[Function]}
+              onPressOut={[Function]}
               style={
                 {
                   "flexDirection": "column",
@@ -411,12 +415,7 @@ exports[`AccountHeader renders correctly 1`] = `
                   numberOfLines={1}
                   style={
                     {
-                      "color": {
-                        "dynamic": {
-                          "dark": "#5E5E5E",
-                          "light": "#BFBFBF",
-                        },
-                      },
+                      "color": "#BFBFBF",
                       "fontFamily": "Basel Grotesk",
                       "fontSize": 17,
                       "fontWeight": "400",

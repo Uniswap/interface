@@ -17,10 +17,9 @@ describe(NetworkFilter, () => {
     jest.useRealTimers()
   })
 
-  it('renders a NetworkFilter', async () => {
+  it('renders a NetworkFilter', () => {
     const tree = render(<NetworkFilter chainIds={SUPPORTED_CHAIN_IDS} selectedChain={null} onPressChain={() => null} />)
-
-    await act(async () => {
+    act(async () => {
       jest.runAllTimers()
     })
     expect(tree).toMatchSnapshot()

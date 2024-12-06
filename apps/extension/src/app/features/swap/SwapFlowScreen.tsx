@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { Flex } from 'ui/src'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/balances'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/hooks/useSwapPrefilledState'
 import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/transactionState'

@@ -1,6 +1,6 @@
 /* eslint-disable rulesdir/no-undefined-or */
 import { useMemo } from 'react'
-import { useSupportedChainIdWithConnector } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useSupportedChainIdWithConnector } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { UseAccountReturnType as UseAccountReturnTypeWagmi, useAccount as useAccountWagmi, useChainId } from 'wagmi'

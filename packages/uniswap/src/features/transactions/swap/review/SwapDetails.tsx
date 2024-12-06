@@ -1,12 +1,9 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, HeightAnimator, Text, TouchableArea } from 'ui/src'
-import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -15,10 +12,7 @@ import {
   FeeOnTransferFeeGroupProps,
   TokenWarningProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
-import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
 import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/modals/AcrossRoutingInfo'
-import { MarketPriceImpactWarning } from 'uniswap/src/features/transactions/swap/modals/MarketPriceImpactWarning'
-import { RoutingInfo } from 'uniswap/src/features/transactions/swap/modals/RoutingInfo'
 import { EstimatedTime } from 'uniswap/src/features/transactions/swap/review/EstimatedTime'
 import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/review/MaxSlippageRow'
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/review/SwapRateRatio'
@@ -28,7 +22,6 @@ import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transacti
 import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
-import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
 import { NumberType } from 'utilities/src/format/types'
 
 interface SwapDetailsProps {
@@ -65,7 +58,6 @@ export function SwapDetails({
   onShowWarning,
   setTokenWarningChecked,
 }: SwapDetailsProps): JSX.Element {
-  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
   const { t } = useTranslation()
 
   const isBridgeTrade = derivedSwapInfo.trade.trade && isBridge(derivedSwapInfo.trade.trade)
@@ -92,10 +84,6 @@ export function SwapDetails({
 
     return tradeQuote.quote.estimatedFillTimeMs
   }, [derivedSwapInfo.trade.trade?.quote])
-
-  const priceImpactPercentage = acceptedDerivedSwapInfo.trade.trade?.priceImpact
-  const { priceImpactWarning } = useParsedSwapWarnings()
-  const priceImpactWarningColor = getAlertColor(priceImpactWarning?.severity).text
 
   return (
     <HeightAnimator animation="fast">
@@ -146,25 +134,6 @@ export function SwapDetails({
             customSlippageTolerance={customSlippageTolerance}
           />
         )}
-        {!isBridgeTrade && v4Enabled && (
-          <RoutingInfo gasFee={gasFee} chainId={acceptedTrade.inputAmount.currency.chainId} />
-        )}
-        {!isBridgeTrade && v4Enabled && priceImpactPercentage ? (
-          <Flex row alignItems="center" justifyContent="space-between">
-            <MarketPriceImpactWarning>
-              <Flex centered row gap="$spacing4">
-                <Text color="$neutral2" variant="body3">
-                  {t('swap.priceImpact')}
-                </Text>
-              </Flex>
-            </MarketPriceImpactWarning>
-            <Flex row shrink justifyContent="flex-end">
-              <Text adjustsFontSizeToFit color={priceImpactWarningColor} variant="body3">
-                {normalizePriceImpact(priceImpactPercentage)}%
-              </Text>
-            </Flex>
-          </Flex>
-        ) : null}
       </TransactionDetails>
     </HeightAnimator>
   )

@@ -44,47 +44,4 @@ describe('Legacy Pool Redirects', () => {
     })
     cy.url().should('match', /\/positions\/v3\/ethereum\/123/)
   })
-
-  it('should redirect add v2 liquidity to positions create page', () => {
-    cy.visit('/add/v2/0x318400242bFdE3B20F49237a9490b8eBB6bdB761/ETH', {
-      featureFlags: [{
-        flag: FeatureFlags.LPRedesign,
-        value: true,
-      }]
-    })
-    cy.url().should('match', /\/positions\/create\/v2\?currencyA=0x318400242bFdE3B20F49237a9490b8eBB6bdB761&currencyB=ETH/)
-  })
-
-
-  it('should redirect add v3 liquidity to positions create page', () => {
-    cy.visit('/add/0x318400242bFdE3B20F49237a9490b8eBB6bdB761/ETH', {
-      featureFlags: [{
-        flag: FeatureFlags.LPRedesign,
-        value: true,
-      }]
-    })
-    cy.url().should('match', /\/positions\/create\/v3\?currencyA=0x318400242bFdE3B20F49237a9490b8eBB6bdB761&currencyB=ETH/)
-  })
-
-
-  it('should redirect remove v2 liquidity to positions page', () => {
-    cy.visit('/remove/v2/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2', {
-      featureFlags: [{
-        flag: FeatureFlags.LPRedesign,
-        value: true,
-      }]
-    })
-    cy.url().should('match', /\/positions\/v2\/ethereum\/0xBb2b8038a1640196FbE3e38816F3e67Cba72D940/)
-  })
-
-  it('should redirect remove v3 liquidity to positions page', () => {
-    cy.visit('/remove/825708', {
-      featureFlags: [{
-        flag: FeatureFlags.LPRedesign,
-        value: true,
-      }]
-    })
-    cy.url().should('match', /\/positions\/v3\/ethereum\/825708/)
-  })
-  
 })

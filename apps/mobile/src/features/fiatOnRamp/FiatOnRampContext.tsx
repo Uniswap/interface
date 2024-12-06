@@ -27,14 +27,10 @@ interface FiatOnRampContextType {
   quoteCurrency: FiatOnRampCurrency
   defaultCurrency: FiatOnRampCurrency
   setQuoteCurrency: (quoteCurrency: FiatOnRampCurrency) => void
-  fiatAmount: number | undefined
-  tokenAmount: number | undefined
-  setFiatAmount: (fiatAmount: number | undefined) => void
-  setTokenAmount: (tokenAmount: number | undefined) => void
+  amount?: number
+  setAmount: (amount: number | undefined) => void
   isOffRamp: boolean
   setIsOffRamp: (isOffRamp: boolean) => void
-  isTokenInputMode: boolean
-  setIsTokenInputMode: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const initialState: FiatOnRampContextType = {
@@ -44,18 +40,13 @@ const initialState: FiatOnRampContextType = {
   setCountryState: () => undefined,
   setBaseCurrencyInfo: () => undefined,
   setQuoteCurrency: () => undefined,
-  setFiatAmount: () => undefined,
-  setTokenAmount: () => undefined,
-  fiatAmount: undefined,
-  tokenAmount: undefined,
+  setAmount: () => undefined,
   countryCode: '',
   countryState: undefined,
   quoteCurrency: { currencyInfo: undefined },
   defaultCurrency: { currencyInfo: undefined },
   isOffRamp: false,
   setIsOffRamp: () => undefined,
-  isTokenInputMode: false,
-  setIsTokenInputMode: () => undefined,
 }
 
 const FiatOnRampContext = createContext<FiatOnRampContextType>(initialState)
@@ -70,10 +61,8 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
   const [countryCode, setCountryCode] = useState<string>(getCountry())
   const [countryState, setCountryState] = useState<string | undefined>()
   const [baseCurrencyInfo, setBaseCurrencyInfo] = useState<FiatCurrencyInfo>()
+  const [amount, setAmount] = useState<number>()
   const [isOffRamp, setIsOffRamp] = useState<boolean>(false)
-  const [isTokenInputMode, setIsTokenInputMode] = useState<boolean>(false)
-  const [fiatAmount, setFiatAmount] = useState<number | undefined>()
-  const [tokenAmount, setTokenAmount] = useState<number | undefined>()
 
   const { initialState: initialModalState } = useSelector(selectModalState(ModalName.FiatOnRampAggregator))
   const prefilledCurrency = initialModalState?.prefilledCurrency
@@ -104,14 +93,10 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
         quoteCurrency,
         defaultCurrency,
         setQuoteCurrency,
-        fiatAmount,
-        setFiatAmount,
-        tokenAmount,
-        setTokenAmount,
+        amount,
+        setAmount,
         isOffRamp,
         setIsOffRamp,
-        isTokenInputMode,
-        setIsTokenInputMode,
       }}
     >
       {children}

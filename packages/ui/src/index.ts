@@ -34,7 +34,6 @@ export {
 } from 'tamagui'
 export type {
   Adapt,
-  AnchorProps,
   CircleProps,
   ColorTokens,
   GetProps,

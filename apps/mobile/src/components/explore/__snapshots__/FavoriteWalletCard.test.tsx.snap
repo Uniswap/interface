@@ -39,23 +39,22 @@ exports[`FavoriteWalletCard renders without error 1`] = `
     }
   >
     <View
+      cancelable={true}
       disabled={false}
-      hitSlop={
-        {
-          "bottom": 5,
-          "left": 5,
-          "right": 5,
-          "top": 5,
-        }
-      }
+      focusable={true}
+      hitSlop={[Function]}
+      minPressDuration={0}
+      onBlur={[Function]}
+      onFocus={[Function]}
+      onLongPress={[Function]}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      onPress={[Function]}
+      onPressIn={[Function]}
+      onPressOut={[Function]}
       style={
         {
-          "backgroundColor": {
-            "dynamic": {
-              "dark": "#131313",
-              "light": "#FFFFFF",
-            },
-          },
+          "backgroundColor": "#FFFFFF",
           "borderBottomColor": "rgba(34,34,34,0.05)",
           "borderBottomLeftRadius": 16,
           "borderBottomRightRadius": 16,
@@ -117,42 +116,17 @@ exports[`FavoriteWalletCard renders without error 1`] = `
           <View
             style={
               {
-                "backgroundColor": {
-                  "dynamic": {
-                    "dark": "transparent",
-                    "light": "transparent",
-                  },
-                },
-                "borderBottomColor": {
-                  "dynamic": {
-                    "dark": "transparent",
-                    "light": "transparent",
-                  },
-                },
+                "backgroundColor": "transparent",
+                "borderBottomColor": "transparent",
                 "borderBottomLeftRadius": 999999,
                 "borderBottomRightRadius": 999999,
                 "borderBottomWidth": 0,
-                "borderLeftColor": {
-                  "dynamic": {
-                    "dark": "transparent",
-                    "light": "transparent",
-                  },
-                },
+                "borderLeftColor": "transparent",
                 "borderLeftWidth": 0,
-                "borderRightColor": {
-                  "dynamic": {
-                    "dark": "transparent",
-                    "light": "transparent",
-                  },
-                },
+                "borderRightColor": "transparent",
                 "borderRightWidth": 0,
                 "borderStyle": "solid",
-                "borderTopColor": {
-                  "dynamic": {
-                    "dark": "transparent",
-                    "light": "transparent",
-                  },
-                },
+                "borderTopColor": "transparent",
                 "borderTopLeftRadius": 999999,
                 "borderTopRightRadius": 999999,
                 "borderTopWidth": 0,
@@ -242,12 +216,7 @@ exports[`FavoriteWalletCard renders without error 1`] = `
               numberOfLines={1}
               style={
                 {
-                  "color": {
-                    "dynamic": {
-                      "dark": "#FFFFFF",
-                      "light": "#222222",
-                    },
-                  },
+                  "color": "#222222",
                   "flexShrink": 1,
                   "fontFamily": "Basel Grotesk",
                   "fontSize": 19,
@@ -283,12 +252,7 @@ exports[`FavoriteWalletCard renders without error 1`] = `
           style={
             {
               "alignItems": "center",
-              "backgroundColor": {
-                "dynamic": {
-                  "dark": "#5E5E5E",
-                  "light": "#BFBFBF",
-                },
-              },
+              "backgroundColor": "#BFBFBF",
               "borderBottomLeftRadius": 999999,
               "borderBottomRightRadius": 999999,
               "borderTopLeftRadius": 999999,
@@ -311,12 +275,7 @@ exports[`FavoriteWalletCard renders without error 1`] = `
           <View
             style={
               {
-                "backgroundColor": {
-                  "dynamic": {
-                    "dark": "#131313",
-                    "light": "#FFFFFF",
-                  },
-                },
+                "backgroundColor": "#FFFFFF",
                 "borderBottomLeftRadius": 12,
                 "borderBottomRightRadius": 12,
                 "borderTopLeftRadius": 12,

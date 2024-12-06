@@ -1,6 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
 import { PositionStatus } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { TextLoader } from 'pages/Pool/Positions/shared'
 import { Flex, Text } from 'ui/src'
 import { StatusIndicatorCircle } from 'ui/src/components/icons/StatusIndicatorCircle'
 import { Trans } from 'uniswap/src/i18n'
@@ -19,15 +18,6 @@ const statusConfig = {
     i18nKey: 'common.closed',
   },
   [PositionStatus.UNSPECIFIED]: undefined,
-}
-
-export function LiquidityPositionStatusIndicatorLoader() {
-  return (
-    <Flex row gap="$spacing6" alignItems="center">
-      <StatusIndicatorCircle color="$surface3" />
-      <TextLoader variant="body3" width={100} />
-    </Flex>
-  )
 }
 
 export function LiquidityPositionStatusIndicator({ status }: { status: PositionStatus }) {

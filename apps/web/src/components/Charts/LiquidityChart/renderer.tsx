@@ -1,5 +1,4 @@
 import { ColumnPosition, calculateColumnPositionsInPlace, positionsBox } from 'components/Charts/VolumeChart/utils'
-import { roundRect } from 'components/Charts/utils'
 import { BitmapCoordinatesRenderingScope, CanvasRenderingTarget2D } from 'fancy-canvas'
 import {
   CustomData,
@@ -110,7 +109,9 @@ export class LiquidityBarSeriesRenderer<TData extends LiquidityBarData> implemen
 
         // Draw background highlight bar
         ctx.fillStyle = this._options.highlightColor
-        roundRect(ctx, column.left + margin, highlightOffset, widthWithMargin, highlightLength, 8)
+        ctx.beginPath()
+        ctx.roundRect(column.left + margin, highlightOffset, widthWithMargin, highlightLength, 8)
+        ctx.fill()
 
         ctx.globalAlpha = 1
       } else {
@@ -130,7 +131,9 @@ export class LiquidityBarSeriesRenderer<TData extends LiquidityBarData> implemen
       }
 
       // Draw bar
-      roundRect(ctx, column.left + margin, totalBox.position, widthWithMargin, totalBox.length, 8)
+      ctx.beginPath()
+      ctx.roundRect(column.left + margin, totalBox.position, widthWithMargin, totalBox.length, 8)
+      ctx.fill()
 
       // Reset opacity
       ctx.globalAlpha = 1

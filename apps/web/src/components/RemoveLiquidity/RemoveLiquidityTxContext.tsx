@@ -20,8 +20,6 @@ export type RemoveLiquidityTxInfo = {
   decreaseCalldataLoading: boolean
   approvalLoading: boolean
   txContext?: ValidatedDecreasePositionTxAndGasInfo
-  error?: boolean
-  refetch?: () => void
 }
 
 const RemoveLiquidityTxContext = createContext<RemoveLiquidityTxInfo | undefined>(undefined)
@@ -31,7 +29,7 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
   const { positionInfo, percent } = useRemoveLiquidityModalContext()
 
   const removeLiquidityTxInfo = useRemoveLiquidityTxAndGasInfo({ account: account?.address })
-  const { approvalLoading, decreaseCalldataLoading, decreaseCalldata, error, refetch } = removeLiquidityTxInfo
+  const { approvalLoading, decreaseCalldataLoading, decreaseCalldata } = removeLiquidityTxInfo
   const datadogEnabled = useFeatureFlag(FeatureFlags.Datadog)
 
   useEffect(() => {
@@ -73,9 +71,7 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
   }, [approvalLoading, positionInfo, decreaseCalldataLoading, decreaseCalldata, removeLiquidityTxInfo, percent])
 
   return (
-    <RemoveLiquidityTxContext.Provider
-      value={{ ...removeLiquidityTxInfo, txContext: decreaseLiquidityTxContext, error, refetch }}
-    >
+    <RemoveLiquidityTxContext.Provider value={{ ...removeLiquidityTxInfo, txContext: decreaseLiquidityTxContext }}>
       {children}
     </RemoveLiquidityTxContext.Provider>
   )

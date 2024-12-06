@@ -1,8 +1,11 @@
+import { BigNumber } from '@ethersproject/bignumber'
 import { Percent } from '@uniswap/sdk-core'
 import { TFunction } from 'i18next'
 import { useState } from 'react'
 import { Trans } from 'react-i18next'
-import { AnimateTransition, Flex, LabeledCheckbox, Text, useSporeColors } from 'ui/src'
+import { capitalize } from 'tsafe'
+import { AnimateTransition, Flex, LabeledCheckbox, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { X } from 'ui/src/components/icons/X'
 import { BlockaidLogo } from 'ui/src/components/logos/BlockaidLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { WarningModalContent } from 'uniswap/src/components/modals/WarningModal/WarningModal'
@@ -11,14 +14,15 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { TokenAddressView } from 'uniswap/src/features/address/TokenAddressView'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import DeprecatedTokenWarningModal from 'uniswap/src/features/tokens/DeprecatedTokenWarningModal'
-import { TokenWarningFlagsTable } from 'uniswap/src/features/tokens/TokenWarningFlagsTable'
+import { WarningModalInfoContainer } from 'uniswap/src/features/tokens/WarningInfoModalContainer'
 import {
   TokenProtectionWarning,
   getFeeOnTransfer,
@@ -94,6 +98,7 @@ function TokenWarningModalContent({
     t,
     tokenProtectionWarning,
     tokenSymbol,
+    tokenList: currencyInfo0.safetyInfo?.tokenList,
     feePercent,
     shouldHavePluralTreatment: shouldBeCombinedPlural,
     formatPercent,
@@ -103,8 +108,7 @@ function TokenWarningModalContent({
   // Logic for "don't show again" dismissal of warnings
   const [dontShowAgain, setDontShowAgain] = useState<boolean>(false)
   const showCheckbox = !isInfoOnlyWarning && severity === WarningSeverity.Low
-  const showBlockaidLogo =
-    !isFeeRelatedWarning && severity !== WarningSeverity.Low && severity !== WarningSeverity.Blocked
+  const showBlockaidLogo = !isFeeRelatedWarning && severity !== WarningSeverity.Low
 
   const onAcknowledge = (): void => {
     if (showCheckbox) {
@@ -148,15 +152,12 @@ function TokenWarningModalContent({
           modalName={ModalName.TokenWarningModal}
           rejectButtonTheme="tertiary"
           captionComponent={
-            <Text color="$neutral2" textAlign="center" variant="body3">
-              {`${subtitleText} `}
-              <LearnMoreLink
-                display="inline"
-                textColor="$neutral1"
-                textVariant="buttonLabel3"
-                url={uniswapUrls.helpArticleUrls.tokenWarning}
-              />
-            </Text>
+            <Flex centered gap="$spacing12">
+              <Text color="$neutral2" textAlign="center" variant="body2">
+                {subtitleText}
+              </Text>
+              <LearnMoreLink textColor="$neutral1" url={uniswapUrls.helpArticleUrls.tokenWarning} />
+            </Flex>
           }
           rejectText={rejectText}
           acknowledgeText={acknowledgeText}
@@ -172,8 +173,18 @@ function TokenWarningModalContent({
           onClose={onRejectButton}
           onAcknowledge={onAcknowledge}
         >
-          {tokenProtectionWarning !== TokenProtectionWarning.NonDefault && (
-            <TokenWarningFlagsTable currencyInfo={currencyInfo0} tokenProtectionWarning={tokenProtectionWarning} />
+          {isFeeRelatedWarning && currencyInfo0.currency.isToken ? (
+            <FeeDisplayTable
+              buyFeeBps={currencyInfo0.currency.buyFeeBps}
+              sellFeeBps={currencyInfo0.currency.sellFeeBps}
+            />
+          ) : (
+            <>
+              <TokenAddressView currency={currencyInfo0.currency} modalName={ModalName.TokenWarningModal} />
+              {shouldBeCombinedPlural && currencyInfo1 && (
+                <TokenAddressView currency={currencyInfo1.currency} modalName={ModalName.TokenWarningModal} />
+              )}
+            </>
           )}
 
           {showBlockaidLogo && (
@@ -289,14 +300,24 @@ export default function TokenWarningModal({
       skipLogImpression={true} // impression trace logged in TokenWarningModalContent instead to handle multi-token warnings
       onClose={onReject ?? closeModalOnly}
     >
-      {hasSecondWarning && (
-        <Flex row $sm={{ position: 'absolute', top: -16 }}>
-          <Text variant="body2">{warningIndex + 1}</Text>
-          <Text color="$neutral2" variant="body2">
-            {' / 2'}
-          </Text>
+      <Flex row justifyContent="space-between">
+        {hasSecondWarning && (
+          <Flex row $sm={{ position: 'absolute', top: -16 }}>
+            <Text variant="body2">{warningIndex + 1}</Text>
+            <Text color="$neutral2" variant="body2">
+              {' '}
+              / 2
+            </Text>
+          </Flex>
+        )}
+        <Flex $sm={{ display: 'none' }} justifyContent="flex-end">
+          <Trace logPress element={ElementName.Cancel} modal={ModalName.TokenWarningModal}>
+            <TouchableArea onPress={onReject ?? closeModalOnly}>
+              <X size="$icon.24" color="$neutral2" />
+            </TouchableArea>
+          </Trace>
         </Flex>
-      )}
+      </Flex>
       <AnimateTransition currentIndex={warningIndex} animationType={warningIndex === 0 ? 'forward' : 'backward'}>
         <TokenWarningModalContent
           currencyInfo0={currencyInfo0}
@@ -357,6 +378,44 @@ export default function TokenWarningModal({
   )
 }
 
+// feePercent is the percentage as an integer. I.e. feePercent = 5 means 5%
+export function FeeRow({ feeType, feePercent = 0 }: { feeType: 'buy' | 'sell'; feePercent?: number }): JSX.Element {
+  const { t } = useTranslation()
+  // Convert percentage to basis points (multiply by 100) to get integer values
+  const basisPoints = Math.round(feePercent * 100)
+  const tokenProtectionWarning = getFeeWarning(new Percent(basisPoints, 10000))
+  const severity = getSeverityFromTokenProtectionWarning(tokenProtectionWarning)
+  const { headerText: textColor } = getAlertColor(severity)
+  const { formatPercent } = useLocalizationContext()
+  return (
+    <Flex row width="100%" justifyContent="space-between" gap="$spacing4">
+      <Text variant="body3" color="$neutral2">
+        {feeType === 'buy' ? capitalize(t('token.fee.buy.label')) : capitalize(t('token.fee.sell.label'))}
+      </Text>
+      <Text variant="body3" color={textColor}>
+        {formatPercent(feePercent)}
+      </Text>
+    </Flex>
+  )
+}
+
+export function FeeDisplayTable({
+  buyFeeBps,
+  sellFeeBps,
+}: {
+  buyFeeBps?: BigNumber
+  sellFeeBps?: BigNumber
+}): JSX.Element {
+  const buyFeePercent = buyFeeBps ? buyFeeBps.toNumber() / 100 : undefined
+  const sellFeePercent = sellFeeBps ? sellFeeBps.toNumber() / 100 : undefined
+  return (
+    <WarningModalInfoContainer gap="$spacing4" py="$spacing12">
+      <FeeRow feePercent={buyFeePercent} feeType="buy" />
+      <FeeRow feePercent={sellFeePercent} feeType="sell" />
+    </WarningModalInfoContainer>
+  )
+}
+
 /*
 Logic explanation
 
@@ -393,7 +452,7 @@ export function getWarningModalButtonTexts(
   }
 
   return {
-    rejectText: t('common.button.goBack'),
+    rejectText: t('common.button.back'),
     acknowledgeText: t('common.button.continue'),
   }
 }

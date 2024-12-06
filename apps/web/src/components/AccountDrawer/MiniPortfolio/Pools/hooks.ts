@@ -14,8 +14,7 @@ import {
   ContractInput,
   useUniswapPricesQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useEnabledChains, useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { CurrencyKey, currencyKey, currencyKeyFromGraphQL } from 'utils/currencyKey'
@@ -23,7 +22,7 @@ import { CurrencyKey, currencyKey, currencyKeyFromGraphQL } from 'utils/currency
 type ContractMap<T extends BaseContract> = { [key: number]: T }
 
 // Constructs a chain-to-contract map, using the wallet's provider when available
-function useContractMultichain<T extends BaseContract>(
+export function useContractMultichain<T extends BaseContract>(
   addressMap: AddressMap,
   ABI: any,
   chainIds?: UniverseChainId[],

@@ -91,8 +91,6 @@ export const USDC_BASE = new Token(
   'USD Coin',
 )
 
-export const BTC_BSC = new Token(UniverseChainId.Bnb, '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', 18, 'BTCB', 'BTCB')
-
 export const USDC_BNB = new Token(UniverseChainId.Bnb, '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', 18, 'USDC', 'USDC')
 
 export const USDT_BNB = new Token(
@@ -102,6 +100,8 @@ export const USDT_BNB = new Token(
   'USDT',
   'TetherUSD',
 )
+
+export const BTC_BSC = new Token(UniverseChainId.Bnb, '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', 18, 'BTCB', 'BTCB')
 
 export const USDC_BSC = new Token(UniverseChainId.Bnb, '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', 18, 'USDC', 'USDC')
 
@@ -245,12 +245,28 @@ export const CELO_CELO = new Token(
   'Celo',
 )
 
+export const CEUR_CELO = new Token(
+  UniverseChainId.Celo,
+  '0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73',
+  18,
+  'cEUR',
+  'Celo Euro Stablecoin',
+)
+
 export const PORTAL_ETH_CELO = new Token(
   UniverseChainId.Celo,
   '0x66803FB87aBd4aaC3cbB3fAd7C3aa01f6F3FB207',
   18,
   'ETH',
   'Portal Ether',
+)
+
+export const WBTC_CELO = new Token(
+  UniverseChainId.Celo,
+  '0xd71Ffd0940c920786eC4DbB5A12306669b5b81EF',
+  18,
+  'WBTC',
+  'Wrapped BTC',
 )
 
 export const USDC_CELO = new Token(

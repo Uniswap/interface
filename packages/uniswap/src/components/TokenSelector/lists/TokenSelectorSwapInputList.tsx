@@ -17,7 +17,7 @@ import {
   useTokenOptionsSection,
 } from 'uniswap/src/components/TokenSelector/utils'
 import { GqlResult } from 'uniswap/src/data/types'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 import { isMobileApp } from 'utilities/src/platform'
 

@@ -1,5 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
-import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ChartHeader } from 'components/Charts/ChartHeader'
@@ -11,7 +9,6 @@ import { PriceChartData, PriceChartDelta, PriceChartModel } from 'components/Cha
 import { VolumeChart } from 'components/Charts/VolumeChart'
 import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
-import { parseProtocolVersion } from 'components/Liquidity/utils'
 import { usePDPPriceChartData, usePDPVolumeChartData } from 'components/Pools/PoolDetails/ChartSection/hooks'
 import { ChartActionsContainer, DEFAULT_PILL_TIME_SELECTOR_OPTIONS } from 'components/Tokens/TokenDetails/ChartSection'
 import { ChartTypeDropdown } from 'components/Tokens/TokenDetails/ChartSection/ChartTypeSelector'
@@ -24,6 +21,7 @@ import {
 } from 'components/Tokens/TokenTable/VolumeTimeFrameSelector'
 import { PoolData } from 'graphql/data/pools/usePoolData'
 import { TimePeriod, gqlToCurrency, toHistoryDuration } from 'graphql/data/util'
+import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useAtomValue } from 'jotai/utils'
 import styled, { useTheme } from 'lib/styled-components'
 import { useMemo, useState } from 'react'
@@ -31,10 +29,9 @@ import { EllipsisStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { SegmentedControl } from 'ui/src'
 import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Trans, t } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -191,10 +188,6 @@ export default function ChartSection(props: ChartSectionProps) {
       tokenA: currencyA.wrapped,
       tokenB: currencyB.wrapped,
       chainId: fromGraphQLChain(props.chain) ?? defaultChainId,
-      poolId: props.poolData.idOrAddress,
-      hooks: props.poolData.hookAddress,
-      version: parseProtocolVersion(props.poolData.protocolVersion) ?? RestProtocolVersion.V3,
-      tickSpacing: props.poolData.tickSpacing,
     }
 
     // TODO(WEB-3740): Integrate BE tick query, remove special casing for liquidity chart
@@ -298,7 +291,7 @@ function PriceChart({
 
   const params = useMemo(() => ({ data, stale, type: PriceChartType.LINE }), [data, stale])
 
-  const { price } = useUSDCPrice(primaryToken)
+  const { price: stablecoinPrice } = useStablecoinPrice(primaryToken)
 
   const lastPrice = data[data.length - 1]
   return (
@@ -316,7 +309,9 @@ function PriceChart({
               })} 
             ${referenceToken.symbol}`}
             </ChartPriceText>
-            <ChartPriceText color="neutral2">{price ? '(' + formatPrice({ price }) + ')' : ''}</ChartPriceText>
+            <ChartPriceText color="neutral2">
+              {stablecoinPrice ? '(' + formatPrice({ price: stablecoinPrice }) + ')' : ''}
+            </ChartPriceText>
           </PriceDisplayContainer>
         )
         return (
@@ -389,20 +384,12 @@ function LiquidityChart({
   feeTier,
   isReversed,
   chainId,
-  version,
-  tickSpacing,
-  hooks,
-  poolId,
 }: {
   tokenA: Token
   tokenB: Token
   feeTier: FeeAmount
   isReversed: boolean
   chainId: UniverseChainId
-  version: RestProtocolVersion
-  tickSpacing?: number
-  hooks?: string
-  poolId?: string
 }) {
   const tokenADescriptor = tokenA.symbol ?? tokenA.name ?? t('common.tokenA')
   const tokenBDescriptor = tokenB.symbol ?? tokenB.name ?? t('common.tokenB')
@@ -413,10 +400,6 @@ function LiquidityChart({
     feeTier,
     isReversed,
     chainId,
-    version,
-    tickSpacing,
-    hooks,
-    poolId,
   })
 
   const theme = useTheme()

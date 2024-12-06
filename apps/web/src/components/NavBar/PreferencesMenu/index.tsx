@@ -39,7 +39,7 @@ export function PreferenceMenu() {
           <Global size={20} color="$neutral2" cursor="pointer" />
         </NavIcon>
       </Popover.Trigger>
-      <NavDropdown width={325} isOpen={isOpen} padded>
+      <NavDropdown width={325} isOpen={isOpen}>
         <NavDropdownDefaultWrapper>
           <AnimateTransition
             currentIndex={getSettingsViewIndex(settingsView)}

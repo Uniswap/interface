@@ -49,8 +49,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     countryState,
     baseCurrencyInfo,
     quoteCurrency,
-    fiatAmount,
-    tokenAmount,
+    amount,
   } = useFiatOnRampContext()
   const serviceProvider = selectedQuote?.serviceProviderDetails
 
@@ -76,12 +75,12 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     isLoading: widgetLoading,
     error: widgetError,
   } = useFiatOnRampAggregatorWidgetQuery(
-    !isOffRamp && serviceProvider && quoteCurrency.meldCurrencyCode && baseCurrencyInfo && fiatAmount
+    !isOffRamp && serviceProvider && quoteCurrency.meldCurrencyCode && baseCurrencyInfo && amount
       ? {
           serviceProvider: serviceProvider.serviceProvider,
           countryCode,
           destinationCurrencyCode: quoteCurrency.meldCurrencyCode,
-          sourceAmount: fiatAmount,
+          sourceAmount: amount,
           sourceCurrencyCode: baseCurrencyInfo.code,
           walletAddress: activeAccountAddress,
           externalSessionId: externalTransactionId,
@@ -96,12 +95,12 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     isLoading: offRampWidgetLoading,
     error: offRampWidgetError,
   } = useFiatOnRampAggregatorOffRampWidgetQuery(
-    isOffRamp && serviceProvider && quoteCurrency.meldCurrencyCode && baseCurrencyInfo && tokenAmount
+    isOffRamp && serviceProvider && quoteCurrency.meldCurrencyCode && baseCurrencyInfo && amount
       ? {
           serviceProvider: serviceProvider.serviceProvider,
           countryCode,
           baseCurrencyCode: quoteCurrency.meldCurrencyCode,
-          sourceAmount: tokenAmount,
+          sourceAmount: amount,
           quoteCurrencyCode: baseCurrencyInfo.code,
           refundWalletAddress: activeAccountAddress,
           externalCustomerId: activeAccountAddress,
@@ -178,7 +177,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
         <>
           <FiatOnRampConnectingView
             amount={addFiatSymbolToNumber({
-              value: fiatAmount,
+              value: amount,
               currencyCode: baseCurrencyInfo?.code,
               currencySymbol: baseCurrencyInfo?.symbol,
             })}

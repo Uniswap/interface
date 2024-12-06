@@ -2,7 +2,6 @@ import { Dispatch, SetStateAction, createContext } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 type MultichainContextType = {
-  reset: () => void
   setSelectedChainId: Dispatch<SetStateAction<UniverseChainId | undefined | null>>
   initialChainId?: UniverseChainId
   isUserSelectedToken: boolean
@@ -16,7 +15,6 @@ type MultichainContextType = {
 }
 
 export const MultichainContext = createContext<MultichainContextType>({
-  reset: () => undefined,
   setSelectedChainId: () => undefined,
   isUserSelectedToken: false,
   setIsUserSelectedToken: () => undefined,

@@ -1,12 +1,17 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSwapAnalytics } from 'uniswap/src/features/transactions/swap/analytics'
 import { useDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/hooks/useDerivedSwapInfo'
+import { DEFAULT_CUSTOM_DEADLINE } from 'uniswap/src/features/transactions/swap/settings/useDeadlineSettings'
+import {
+  DEFAULT_PROTOCOL_OPTIONS,
+  FrontendSupportedProtocol,
+} from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logContextUpdate } from 'utilities/src/logger/contextEnhancer'
@@ -16,6 +21,8 @@ import { useDebounceWithStatus } from 'utilities/src/time/timing'
 const SWAP_FORM_DEBOUNCE_TIME_MS = 250
 
 export type SwapFormState = {
+  customSlippageTolerance?: number
+  customDeadline?: number
   exactAmountFiat?: string
   exactAmountToken?: string
   exactCurrencyField: CurrencyField
@@ -29,6 +36,7 @@ export type SwapFormState = {
   isSubmitting: boolean
   hideFooter?: boolean
   hideSettings?: boolean
+  selectedProtocols: FrontendSupportedProtocol[]
 }
 
 type DerivedSwapFormState = {
@@ -61,6 +69,8 @@ export const getDefaultState = (defaultChainId: UniverseChainId): Readonly<Omit<
   output: undefined,
   isFiatMode: false,
   isSubmitting: false,
+  selectedProtocols: DEFAULT_PROTOCOL_OPTIONS,
+  customDeadline: DEFAULT_CUSTOM_DEADLINE,
 })
 
 export const SwapFormContext = createContext<SwapFormContextState | undefined>(undefined)
@@ -156,6 +166,9 @@ export function SwapFormContextProvider({
     exactAmountFiat: debouncedExactAmountFiat,
     focusOnCurrencyField: swapForm.focusOnCurrencyField,
     selectingCurrencyField: swapForm.selectingCurrencyField,
+    customSlippageTolerance: swapForm.customSlippageTolerance,
+    customDeadline: swapForm.customDeadline,
+    selectedProtocols: swapForm.selectedProtocols,
     isDebouncing: isDebouncingExactAmountToken || isDebouncingExactAmountFiat,
   })
 
@@ -164,6 +177,8 @@ export function SwapFormContextProvider({
   const state = useMemo<SwapFormContextState>(
     (): SwapFormContextState => ({
       amountUpdatedTimeRef,
+      customSlippageTolerance: swapForm.customSlippageTolerance,
+      customDeadline: swapForm.customDeadline,
       derivedSwapInfo,
       exactAmountFiat: swapForm.exactAmountFiat,
       exactAmountFiatRef,
@@ -176,6 +191,7 @@ export function SwapFormContextProvider({
       isFiatMode: swapForm.isFiatMode,
       isSubmitting: swapForm.isSubmitting,
       output: swapForm.output,
+      selectedProtocols: swapForm.selectedProtocols,
       selectingCurrencyField: swapForm.selectingCurrencyField,
       txId: swapForm.txId,
       hideFooter,
@@ -183,6 +199,8 @@ export function SwapFormContextProvider({
       updateSwapForm,
     }),
     [
+      swapForm.customSlippageTolerance,
+      swapForm.customDeadline,
       swapForm.exactAmountFiat,
       swapForm.exactAmountToken,
       swapForm.exactCurrencyField,
@@ -192,6 +210,7 @@ export function SwapFormContextProvider({
       swapForm.isFiatMode,
       swapForm.isSubmitting,
       swapForm.output,
+      swapForm.selectedProtocols,
       swapForm.selectingCurrencyField,
       swapForm.txId,
       derivedSwapInfo,

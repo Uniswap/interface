@@ -1,32 +1,14 @@
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
-import {
-  LiquidityPositionStatusIndicator,
-  LiquidityPositionStatusIndicatorLoader,
-} from 'components/Liquidity/LiquidityPositionStatusIndicator'
+import { LiquidityPositionStatusIndicator } from 'components/Liquidity/LiquidityPositionStatusIndicator'
 import { PositionInfo } from 'components/Liquidity/types'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
-import { TextLoader } from 'pages/Pool/Positions/shared'
-import { Circle, Flex, Text } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 
 interface LiquidityPositionInfoProps {
   positionInfo: PositionInfo
   currencyLogoSize?: number
   hideStatusIndicator?: boolean
-}
-
-export function LiquidityPositionInfoLoader({ hideStatus }: { hideStatus?: boolean }) {
-  return (
-    <Flex row gap="$gap16" $md={{ width: '100%' }}>
-      <Circle size={44} backgroundColor="$surface3" />
-      <Flex grow $md={{ row: true, justifyContent: 'space-between', alignItems: 'flex-start' }}>
-        <Flex my={hideStatus ? 'auto' : '$none'}>
-          <TextLoader variant="subheading1" width={100} />
-        </Flex>
-        {!hideStatus && <LiquidityPositionStatusIndicatorLoader />}
-      </Flex>
-    </Flex>
-  )
 }
 
 export function LiquidityPositionInfo({

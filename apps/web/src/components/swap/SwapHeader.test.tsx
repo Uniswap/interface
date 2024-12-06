@@ -17,7 +17,6 @@ function Wrapper(props: PropsWithChildren<WrapperProps>) {
   return (
     <MultichainContext.Provider
       value={{
-        reset: jest.fn(),
         setSelectedChainId: jest.fn(),
         isMultichainContext: true,
         initialChainId: props.chainId ?? UniverseChainId.Mainnet,

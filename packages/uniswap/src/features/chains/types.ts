@@ -27,6 +27,7 @@ export enum UniverseChainId {
   AstrochainSepolia = UniswapSDKChainId.ASTROCHAIN_SEPOLIA,
 }
 
+// DON'T CHANGE - order here determines ordering of networks in app
 export const SUPPORTED_CHAIN_IDS: UniverseChainId[] = [
   UniverseChainId.Mainnet,
   UniverseChainId.Polygon,
@@ -47,15 +48,7 @@ export const SUPPORTED_TESTNET_CHAIN_IDS: UniverseChainId[] = [
   UniverseChainId.AstrochainSepolia,
 ]
 
-// This order is used as a fallback for chain ordering but will otherwise defer to useOrderedChainIds
 export const ALL_CHAIN_IDS: UniverseChainId[] = [...SUPPORTED_CHAIN_IDS, ...SUPPORTED_TESTNET_CHAIN_IDS]
-
-export interface EnabledChainsInfo {
-  chains: UniverseChainId[]
-  gqlChains: GqlChainId[]
-  defaultChainId: UniverseChainId
-  isTestnetModeEnabled: boolean
-}
 
 export enum RPCType {
   Public = 'public',

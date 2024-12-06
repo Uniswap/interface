@@ -10,6 +10,7 @@ import {
   BridgeTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  SendTransactionInfo,
   TransactionDetails,
   TransactionInfo,
   TransactionType,
@@ -17,9 +18,11 @@ import {
 import { isPendingTx } from 'state/transactions/utils'
 import { InterfaceState } from 'state/webReducer'
 import { SagaGenerator, call, cancel, fork, put, race, select, take } from 'typed-redux-saga'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   ApprovalEditedInWalletError,
   HandledTransactionInterrupt,
@@ -37,8 +40,12 @@ import {
 import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { BridgeTrade, ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-
+import {
+  TransactionDetails as UniswapTransactionDetails,
+  TransactionType as UniswapTransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
+import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
 import { isSameAddress } from 'utilities/src/addresses'
 import { percentFromFloat } from 'utilities/src/format/percent'
@@ -361,4 +368,89 @@ export function addTransactionBreadcrumb({
     message: `${step.type} ${status}`,
     data,
   })
+}
+
+const createUniverseSwapTransaction = (
+  info: ExactOutputSwapTransactionInfo | ExactInputSwapTransactionInfo | BridgeTransactionInfo,
+  chainId: UniverseChainId,
+) => {
+  const inputCurrencyId = info.inputCurrencyId === 'ETH' ? null : buildCurrencyId(chainId, info.inputCurrencyId)
+  const outputCurrencyId = info.outputCurrencyId === 'ETH' ? null : buildCurrencyId(chainId, info.outputCurrencyId)
+  const nativeCurrencyId = buildNativeCurrencyId(chainId)
+
+  return {
+    typeInfo: {
+      type: UniswapTransactionType.Swap,
+      inputCurrencyId: inputCurrencyId ?? nativeCurrencyId,
+      outputCurrencyId: outputCurrencyId ?? nativeCurrencyId,
+    },
+  } as UniswapTransactionDetails
+}
+
+const createUniverseBridgeTransaction = (
+  info: BridgeTransactionInfo,
+  inputChainId: UniverseChainId,
+  outputChainId: UniverseChainId,
+) => {
+  const inputCurrencyId = info.inputCurrencyId === 'ETH' ? null : buildCurrencyId(inputChainId, info.inputCurrencyId)
+  const outputCurrencyId =
+    info.outputCurrencyId === 'ETH' ? null : buildCurrencyId(outputChainId, info.outputCurrencyId)
+  const inputNativeCurrencyId = buildNativeCurrencyId(inputChainId)
+  const outputNativeCurrencyId = buildNativeCurrencyId(outputChainId)
+
+  return {
+    typeInfo: {
+      type: UniswapTransactionType.Bridge,
+      inputCurrencyId: inputCurrencyId ?? inputNativeCurrencyId,
+      outputCurrencyId: outputCurrencyId ?? outputNativeCurrencyId,
+    },
+  } as UniswapTransactionDetails
+}
+
+const createUniverseSendTransaction = (info: SendTransactionInfo, chainId: UniverseChainId) => {
+  return {
+    typeInfo: {
+      type: UniswapTransactionType.Send,
+      tokenAddress: info.currencyId === 'ETH' ? getNativeAddress(chainId) : info.currencyId,
+    },
+  } as UniswapTransactionDetails
+}
+
+const createUniverseWrapTransaction = () => {
+  return {
+    typeInfo: {
+      type: UniswapTransactionType.Wrap,
+    },
+  } as UniswapTransactionDetails
+}
+
+// Maps a web transaction object to a universe transaction object
+// Currently web and universe transaction types are similar but still different
+// so we need to map them to the correct universe transaction type. Eventually
+// we should align these types across platforms to avoid this mapping.
+// TODO(WEB-5565): Align web and universe transaction types
+export const createUniverseTransaction = (info: TransactionInfo, chainId: UniverseChainId, address: string) => {
+  const baseTransaction: Partial<UniswapTransactionDetails> = {
+    chainId,
+    from: address,
+  }
+
+  let transaction: UniswapTransactionDetails | undefined
+
+  switch (info.type) {
+    case TransactionType.SWAP:
+      transaction = createUniverseSwapTransaction(info, chainId)
+      break
+    case TransactionType.BRIDGE:
+      transaction = createUniverseBridgeTransaction(info, info.inputChainId, info.outputChainId)
+      break
+    case TransactionType.SEND:
+      transaction = createUniverseSendTransaction(info, chainId)
+      break
+    case TransactionType.WRAP:
+      transaction = createUniverseWrapTransaction()
+      break
+  }
+
+  return { ...baseTransaction, ...transaction } as UniswapTransactionDetails
 }

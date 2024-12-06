@@ -1,7 +1,6 @@
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { isWeb, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { ChartBar } from 'ui/src/components/icons/ChartBar'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -28,14 +27,9 @@ export function MarketPriceImpactWarning({ children }: PropsWithChildren): JSX.E
         </TouchableArea>
       }
       modalProps={{
-        hideIcon: isWeb,
-        icon: <ChartBar color={colors.neutral1.val} size={18} />,
+        hideIcon: true,
         backgroundIconColor: colors.surface2.get(),
-        captionComponent: (
-          <Text color="$neutral2" textAlign={isWeb ? 'left' : 'center'} variant={isWeb ? 'body4' : 'body2'}>
-            {caption}
-          </Text>
-        ),
+        caption,
         rejectText: t('common.button.close'),
         modalName: ModalName.NetworkFeeInfo,
         severity: WarningSeverity.None,

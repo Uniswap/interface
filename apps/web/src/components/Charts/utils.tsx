@@ -43,21 +43,3 @@ export function formatTickMarks(time: UTCTimestamp, tickMarkType: TickMarkType, 
       return date.toLocaleString(locale, { hour: 'numeric', minute: 'numeric', second: '2-digit' })
   }
 }
-
-export function roundRect(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  w: number,
-  h: number,
-  radii?: number | DOMPointInit | Iterable<number | DOMPointInit> | undefined,
-): void {
-  // roundRect might need to polyfilled for older browsers
-  if (ctx.roundRect) {
-    ctx.beginPath()
-    ctx.roundRect(x, y, w, h, radii)
-    ctx.fill()
-  } else {
-    ctx.fillRect(x, y, w, h)
-  }
-}

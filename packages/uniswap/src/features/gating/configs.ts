@@ -8,7 +8,6 @@ export enum DynamicConfigs {
   // Shared
   Swap = 'swap_config',
   NetworkRequests = 'network_requests',
-  Chains = 'chains',
 
   // Wallet
   HomeScreenExploreTokens = 'home_screen_explore_tokens',
@@ -16,7 +15,6 @@ export enum DynamicConfigs {
   OnDeviceRecovery = 'on_device_recovery',
   UwuLink = 'uwulink_config',
   GasStrategies = 'gas_strategy',
-  MainnetPrivateRpc = 'mainnet_private_rpc',
 
   // Web
   QuickRouteChains = 'quick_route_chains',
@@ -47,11 +45,6 @@ export enum SwapConfigKey {
 
 export enum NetworkRequestsConfigKey {
   BalanceMaxRefetchAttempts = 'balanceMaxRefetchAttempts',
-}
-
-export enum ChainsConfigKey {
-  OrderedChainIds = 'orderedChainIds',
-  NewChainIds = 'newChainIds',
 }
 
 // Wallet
@@ -91,11 +84,6 @@ export type GasStrategies = {
   strategies: GasStrategyWithConditions[]
 }
 
-export enum MainnetPrivateRpcConfigKey {
-  UseFlashbots = 'use_flashbots',
-  SendFlashbotsAuthenticationHeader = 'send_authentication_header',
-}
-
 // Web
 export enum QuickRouteChainsConfigKey {
   Chains = 'quick_route_chains',
@@ -109,14 +97,12 @@ export type DynamicConfigKeys = {
   // Shared
   [DynamicConfigs.Swap]: SwapConfigKey
   [DynamicConfigs.NetworkRequests]: NetworkRequestsConfigKey
-  [DynamicConfigs.Chains]: ChainsConfigKey
 
   // Wallet
   [DynamicConfigs.HomeScreenExploreTokens]: HomeScreenExploreTokensConfigKey
   [DynamicConfigs.MobileForceUpgrade]: ForceUpgradeConfigKey
   [DynamicConfigs.OnDeviceRecovery]: OnDeviceRecoveryConfigKey
   [DynamicConfigs.UwuLink]: UwuLinkConfigKey
-  [DynamicConfigs.MainnetPrivateRpc]: MainnetPrivateRpcConfigKey
 
   // Web
   [DynamicConfigs.QuickRouteChains]: QuickRouteChainsConfigKey

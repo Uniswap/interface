@@ -4,7 +4,7 @@ import { Wrench } from 'ui/src/components/icons/Wrench'
 // eslint-disable-next-line no-restricted-imports
 import { useDeviceInsets } from 'ui/src/hooks/useDeviceInsets'
 import { zIndices } from 'ui/src/theme'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { TESTNET_MODE_BANNER_HEIGHT } from 'uniswap/src/features/settings/hooks'
 import { isInterface, isMobileApp } from 'utilities/src/platform'
 

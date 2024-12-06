@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 // eslint-disable-next-line no-restricted-imports -- type imports are safe
 import type { LayoutChangeEvent } from 'react-native'
@@ -41,34 +41,13 @@ export const Slippage: SwapSettingConfig = {
 
     const backgroundColor = isEditingSlippage ? '$surface2' : '$surface1'
     const inputValue = autoSlippageEnabled ? autoSlippageTolerance.toFixed(2).toString() : inputSlippageTolerance
-    const parsedInputValue = parseFloat(inputValue)
-
-    const inputValueTextColor = useMemo(() => {
-      if (parsedInputValue > 20) {
-        return '$statusCritical'
-      }
-
-      if (parsedInputValue > 5.5) {
-        return '$statusWarning'
-      }
-
-      return autoSlippageEnabled ? '$neutral2' : '$neutral1'
-    }, [parsedInputValue, autoSlippageEnabled])
-
-    const inputBorderColor = useMemo(() => {
-      if (parsedInputValue > 5.5) {
-        return inputValueTextColor
-      }
-
-      return isEditingSlippage ? '$DEP_accentSoft' : '$surface3'
-    }, [parsedInputValue, inputValueTextColor, isEditingSlippage])
 
     return (
       <Flex row alignItems="center" justifyContent="space-between">
         <Flex
           row
           backgroundColor={backgroundColor}
-          borderColor={inputBorderColor}
+          borderColor={isEditingSlippage ? '$DEP_accentSoft' : '$surface3'}
           borderRadius="$rounded16"
           borderWidth={1}
           gap="$spacing8"
@@ -92,7 +71,7 @@ export const Slippage: SwapSettingConfig = {
               <Input
                 ref={inputRef}
                 backgroundColor={backgroundColor}
-                color={inputValueTextColor}
+                color={autoSlippageEnabled ? '$neutral2' : '$neutral1'}
                 editable={true}
                 fontFamily="$subHeading"
                 fontSize="$small"
@@ -119,7 +98,7 @@ export const Slippage: SwapSettingConfig = {
                 {inputValue}
               </Text>
             </Flex>
-            <Text color={inputValueTextColor} variant="subheading2">
+            <Text color="$neutral2" variant="subheading2">
               %
             </Text>
           </Flex>

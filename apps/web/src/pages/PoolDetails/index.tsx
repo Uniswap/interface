@@ -210,7 +210,6 @@ export default function PoolDetailsPage() {
               token0={token0}
               token1={token1}
               feeTier={poolData?.feeTier}
-              protocolVersion={poolData?.protocolVersion}
               loading={loading}
             />
             <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainInfo?.id} loading={loading} />

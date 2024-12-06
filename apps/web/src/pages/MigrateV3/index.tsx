@@ -27,7 +27,6 @@ import {
 import { EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
 import { SelectPriceRangeStep } from 'pages/Pool/Positions/create/RangeSelectionStep'
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
-import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { LoadingRow } from 'pages/Pool/Positions/shared'
 import { useMemo, useState } from 'react'
@@ -91,7 +90,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   const startChainId = useAccount().chainId
   const account = useAccountMeta()
   const dispatch = useDispatch()
-  const { txInfo, error, refetch } = useMigrateV3TxContext()
+  const { txInfo } = useMigrateV3TxContext()
   const media = useMedia()
   const navigate = useNavigate()
 
@@ -187,49 +186,45 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
               <EditSelectTokensStep width="100%" maxWidth="unset" />
             )}
             {step === PositionFlowStep.PRICE_RANGE && (
-              <>
-                <SelectPriceRangeStep
-                  width="100%"
-                  maxWidth="unset"
-                  onDisableContinue={!txInfo || error}
-                  onContinue={() => {
-                    const isValidTx = isValidLiquidityTxContext(txInfo)
-                    if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
-                      return
-                    }
-                    dispatch(
-                      liquiditySaga.actions.trigger({
-                        selectChain,
-                        startChainId,
-                        account,
-                        liquidityTxContext: txInfo,
-                        setCurrentStep: setCurrentTransactionStep,
-                        setSteps: setTransactionSteps,
-                        onSuccess: () => {
-                          onClose()
-                          navigate('/positions')
-                        },
-                        onFailure: onClose,
-                        analytics: {
-                          ...getLPBaseAnalyticsProperties({
-                            trace,
-                            fee: positionInfo.feeTier,
-                            currency0: currency0Amount.currency,
-                            currency1: currency1Amount.currency,
-                            currency0AmountUsd: currency0FiatAmount,
-                            currency1AmountUsd: currency1FiatAmount,
-                            poolId: positionInfo.poolId,
-                            version: protocolVersion,
-                            chainId: startChainId,
-                          }),
-                          action: 'V3->V4',
-                        },
-                      }),
-                    )
-                  }}
-                />
-                {error && <TradingAPIError refetch={refetch} />}
-              </>
+              <SelectPriceRangeStep
+                width="100%"
+                maxWidth="unset"
+                onContinue={() => {
+                  const isValidTx = isValidLiquidityTxContext(txInfo)
+                  if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
+                    return
+                  }
+                  dispatch(
+                    liquiditySaga.actions.trigger({
+                      selectChain,
+                      startChainId,
+                      account,
+                      liquidityTxContext: txInfo,
+                      setCurrentStep: setCurrentTransactionStep,
+                      setSteps: setTransactionSteps,
+                      onSuccess: () => {
+                        onClose()
+                        navigate('/positions')
+                      },
+                      onFailure: onClose,
+                      analytics: {
+                        ...getLPBaseAnalyticsProperties({
+                          trace,
+                          fee: positionInfo.feeTier,
+                          currency0: currency0Amount.currency,
+                          currency1: currency1Amount.currency,
+                          currency0AmountUsd: currency0FiatAmount,
+                          currency1AmountUsd: currency1FiatAmount,
+                          poolId: positionInfo.poolId,
+                          version: protocolVersion,
+                          chainId: startChainId,
+                        }),
+                        action: 'V3->V4',
+                      },
+                    }),
+                  )
+                }}
+              />
             )}
           </Flex>
         </Flex>

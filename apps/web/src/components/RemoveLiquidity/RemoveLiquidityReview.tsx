@@ -17,10 +17,8 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { Button, Flex, Separator, Text } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -65,7 +63,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
 
   const { feeValue0, feeValue1, fiatFeeValue0, fiatFeeValue1 } = useV3OrV4PositionDerivedInfo(positionInfo)
 
-  const { currency0Amount, currency1Amount, chainId } = positionInfo
+  const { currency0Amount, currency1Amount } = positionInfo
 
   const currentPrice = usePositionCurrentPrice(positionInfo)
 
@@ -247,12 +245,9 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
                   </Text>
                 ),
                 Value: () => (
-                  <Flex row gap="$gap4" alignItems="center">
-                    <NetworkLogo chainId={chainId} size={iconSizes.icon16} shape="square" />
-                    <Text variant="body3">
-                      {formatCurrencyAmount({ value: gasFeeEstimateUSD, type: NumberType.FiatGasPrice })}
-                    </Text>
-                  </Flex>
+                  <Text variant="body3">
+                    {formatCurrencyAmount({ value: gasFeeEstimateUSD, type: NumberType.FiatGasPrice })}
+                  </Text>
                 ),
               }}
             />

@@ -11,9 +11,7 @@ import { RemoveLiquidityForm } from 'pages/RemoveLiquidity/RemoveLiquidityForm'
 import { useCloseModal } from 'state/application/hooks'
 import { HeightAnimator } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { MIN_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { SwapSettingsContextProvider } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { useTranslation } from 'uniswap/src/i18n'
 
 function RemoveLiquidityModalInner() {
@@ -53,11 +51,9 @@ function RemoveLiquidityModalInner() {
 export function RemoveLiquidityModal() {
   return (
     <RemoveLiquidityModalContextProvider>
-      <SwapSettingsContextProvider autoSlippageTolerance={MIN_AUTO_SLIPPAGE_TOLERANCE}>
-        <RemoveLiquidityTxContextProvider>
-          <RemoveLiquidityModalInner />
-        </RemoveLiquidityTxContextProvider>
-      </SwapSettingsContextProvider>
+      <RemoveLiquidityTxContextProvider>
+        <RemoveLiquidityModalInner />
+      </RemoveLiquidityTxContextProvider>
     </RemoveLiquidityModalContextProvider>
   )
 }

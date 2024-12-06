@@ -1,10 +1,7 @@
-// eslint-disable-next-line no-restricted-imports
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency } from '@uniswap/sdk-core'
 import { ChartEntry } from 'components/LiquidityChartRangeInput/types'
 import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'
 import { useCallback, useMemo } from 'react'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TickProcessed } from 'utils/computeSurroundingTicks'
 
 /**
@@ -12,36 +9,17 @@ import { TickProcessed } from 'utils/computeSurroundingTicks'
  * to get inverted prices.
  */
 export function useDensityChartData({
-  poolId,
   currencyA,
   currencyB,
   feeAmount,
   invertPrices,
-  version,
-  chainId,
-  tickSpacing,
-  hooks,
 }: {
-  poolId?: string
   currencyA?: Currency
   currencyB?: Currency
   feeAmount?: number
   invertPrices?: boolean
-  version: ProtocolVersion
-  chainId?: UniverseChainId
-  tickSpacing?: number
-  hooks?: string
 }) {
-  const { isLoading, error, data } = usePoolActiveLiquidity({
-    currencyA,
-    currencyB,
-    version,
-    poolId,
-    feeAmount,
-    chainId,
-    tickSpacing,
-    hooks,
-  })
+  const { isLoading, error, data } = usePoolActiveLiquidity(currencyA, currencyB, feeAmount)
 
   const formatData = useCallback(() => {
     if (!data?.length) {

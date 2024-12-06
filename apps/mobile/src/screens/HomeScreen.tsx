@@ -58,9 +58,8 @@ import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -82,7 +81,6 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { useTimeout } from 'utilities/src/time/timing'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
 import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
 import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
 import { useHeartbeatReporter, useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks'
@@ -117,28 +115,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const { data: balancesById, loading: areBalancesLoading } = usePortfolioBalances({
     address: activeAccount.address,
   })
-
-  const { gqlChains } = useEnabledChains()
-  const { data: nftData } = useNftsTabQuery({
-    variables: {
-      ownerAddress: activeAccount.address,
-      first: 1,
-      filter: { filterSpam: true },
-      chains: gqlChains,
-    },
-    notifyOnNetworkStatusChange: true, // Used to trigger network state / loading on refetch or fetchMore
-    errorPolicy: 'all', // Suppress non-null image.url fields from backend
-  })
-  const isNftBalance = !!nftData?.nftBalances?.edges.length
-
-  const { hasData: isActivity } = useFormattedTransactionDataForActivity({
-    address: activeAccount.address,
-    hideSpamTokens: true,
-    pageSize: 1,
-  })
-
-  const isTokenBalances = !!Object.entries(balancesById || {}).length
-  const showEmptyWalletState = !isTokenBalances && !isNftBalance && !isActivity
+  const showEmptyTokenState = balancesById && !Object.entries(balancesById).length
 
   // opens the wallet restore modal if recovery phrase is missing after the app is opened
   useWalletRestore({ openModalImmediately: true })
@@ -149,7 +126,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
 
   const [routeTabIndex, setRouteTabIndex] = useState(props?.route?.params?.tab ?? HomeScreenTabIndex.Tokens)
   // Ensures that tabIndex has the proper value between the empty state and non-empty state
-  const tabIndex = showEmptyWalletState ? HomeScreenTabIndex.Tokens : routeTabIndex
+  const tabIndex = showEmptyTokenState ? HomeScreenTabIndex.Tokens : routeTabIndex
 
   useHomeScreenCustomAndroidBackButton(routeTabIndex, setRouteTabIndex)
 
@@ -161,7 +138,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const exploreTitle = t('home.explore.title')
 
   const routes = useMemo((): HomeRoute[] => {
-    if (showEmptyWalletState) {
+    if (showEmptyTokenState) {
       return [
         {
           key: SectionName.HomeExploreTab,
@@ -181,7 +158,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     }
 
     return tabs
-  }, [showEmptyWalletState, tokensTitle, nftsTitle, activityTitle, showFeedTab, exploreTitle, feedTitle])
+  }, [showEmptyTokenState, tokensTitle, nftsTitle, activityTitle, showFeedTab, exploreTitle, feedTitle])
 
   useEffect(
     function syncTabIndex() {
@@ -256,7 +233,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const exploreTabScrollRef = useAnimatedRef<FlatList<any>>()
 
   const currentScrollValue = useDerivedValue(() => {
-    if (showEmptyWalletState) {
+    if (showEmptyTokenState) {
       return exploreTabScrollValue.value
     } else if (tabIndex === HomeScreenTabIndex.Tokens) {
       return tokensTabScrollValue.value
@@ -269,7 +246,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   }, [
     activityTabScrollValue.value,
     exploreTabScrollValue.value,
-    showEmptyWalletState,
+    showEmptyTokenState,
     feedTabScrollValue.value,
     nftsTabScrollValue.value,
     tabIndex,
@@ -318,7 +295,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   useScrollToTop(
     useRef({
       scrollToTop: () => {
-        if (showEmptyWalletState) {
+        if (showEmptyTokenState) {
           exploreTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
         } else if (currentTabIndex.value === HomeScreenTabIndex.NFTs && isNftTabsAtTop.value) {
           setRouteTabIndex(HomeScreenTabIndex.Tokens)
@@ -471,10 +448,10 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     () => (
       <OnboardingIntroCardStack
         isLoading={areBalancesLoading && balancesById === undefined}
-        hasTokens={!showEmptyWalletState}
+        hasTokens={!showEmptyTokenState}
       />
     ),
-    [showEmptyWalletState, areBalancesLoading, balancesById],
+    [showEmptyTokenState, areBalancesLoading, balancesById],
   )
 
   const contentHeader = useMemo(() => {
@@ -482,7 +459,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       <Flex
         backgroundColor="$surface1"
         gap="$spacing8"
-        pb={showEmptyWalletState ? '$spacing8' : '$spacing16'}
+        pb={showEmptyTokenState ? '$spacing8' : '$spacing16'}
         px="$spacing12"
       >
         <TestnetModeModal
@@ -510,7 +487,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       </Flex>
     )
   }, [
-    showEmptyWalletState,
+    showEmptyTokenState,
     isTestnetWarningModalOpen,
     t,
     handleTestnetWarningModalClose,
@@ -522,7 +499,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     promoBanner,
   ])
 
-  const paddingTop = headerHeight + TAB_BAR_HEIGHT + (showEmptyWalletState ? 0 : TAB_STYLES.tabListInner.paddingTop)
+  const paddingTop = headerHeight + TAB_BAR_HEIGHT + (showEmptyTokenState ? 0 : TAB_STYLES.tabListInner.paddingTop)
   const paddingBottom = insets.bottom + SWAP_BUTTON_HEIGHT + TAB_STYLES.tabListInner.paddingBottom + spacing.spacing12
 
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(

@@ -1,45 +1,29 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ColorTokens, Flex, FlexProps, Popover, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { Flex, Popover, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { Eye } from 'ui/src/components/icons/Eye'
 import { Settings } from 'ui/src/components/icons/Settings'
-import { IconSizeTokens, iconSizes } from 'ui/src/theme'
+import { iconSizes } from 'ui/src/theme'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ViewOnlyModal } from 'uniswap/src/features/transactions/modals/ViewOnlyModal'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { SwapSettingsModal } from 'uniswap/src/features/transactions/swap/settings/SwapSettingsModal'
 import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
-import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
+import { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { isInterface, isMobileApp } from 'utilities/src/platform'
 
-export function SwapFormSettings({
-  settings,
-  adjustTopAlignment = true,
-  adjustRightAlignment = true,
-  position = 'absolute',
-  iconColor = '$neutral2',
-  iconSize,
-  defaultTitle,
-  isBridgeTrade,
-}: {
-  settings: SwapSettingConfig[]
-  adjustTopAlignment?: boolean
-  adjustRightAlignment?: boolean
-  position?: FlexProps['position']
-  iconColor?: ColorTokens
-  iconSize?: IconSizeTokens
-  defaultTitle?: string
-  isBridgeTrade?: boolean
-}): JSX.Element {
+export function SwapFormSettings({ customSettings }: { customSettings: SwapSettingConfig[] }): JSX.Element {
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
   const colors = useSporeColors()
 
   const account = useAccountMeta()
-  const { customSlippageTolerance } = useSwapSettingsContext()
+  const { customSlippageTolerance, derivedSwapInfo } = useSwapFormContext()
+  const isBridgeTrade = derivedSwapInfo.trade.trade instanceof BridgeTrade
 
   const [showSwapSettingsModal, setShowSettingsModal] = useState(false)
   const [showViewOnlyModal, setShowViewOnlyModal] = useState(false)
@@ -57,13 +41,13 @@ export function SwapFormSettings({
 
   const isViewOnlyWallet = account?.type === AccountType.Readonly
 
-  const topAlignment = adjustTopAlignment ? (isInterface ? -34 : 6) : 0
-  const rightAlignment = adjustRightAlignment ? (isMobileApp ? 24 : 4) : 0
+  const topAlignment = isInterface ? -34 : 6
+  const rightAlignment = isMobileApp ? 24 : 4
 
   const showCustomSlippage = customSlippageTolerance && !isBridgeTrade
 
   return (
-    <Flex row gap="$spacing4" position={position} top={topAlignment} right={rightAlignment} zIndex="$default">
+    <Flex row gap="$spacing4" position="absolute" top={topAlignment} right={rightAlignment} zIndex="$default">
       <ViewOnlyModal isOpen={showViewOnlyModal} onDismiss={(): void => setShowViewOnlyModal(false)} />
       {isViewOnlyWallet && (
         <TouchableArea
@@ -95,29 +79,29 @@ export function SwapFormSettings({
             }
           }}
         >
-          <Popover.Trigger asChild>
-            <TouchableArea testID={TestID.SwapSettings} onPress={onPressSwapSettings}>
-              <Flex
-                centered
-                row
-                backgroundColor={showCustomSlippage ? '$surface2' : '$transparent'}
-                borderRadius="$roundedFull"
-                gap="$spacing4"
-                px={showCustomSlippage ? '$spacing8' : '$spacing4'}
-                py="$spacing4"
-              >
-                {showCustomSlippage ? (
-                  <Text color="$neutral2" variant="buttonLabel3">
-                    {formatPercent(customSlippageTolerance)}
-                  </Text>
-                ) : null}
-                <Settings color={iconColor} size={iconSize ? iconSize : isWeb ? iconSizes.icon20 : iconSizes.icon24} />
-              </Flex>
-            </TouchableArea>
-          </Popover.Trigger>
+          <TouchableArea testID={TestID.SwapSettings}>
+            <Flex
+              centered
+              row
+              backgroundColor={showCustomSlippage ? '$surface2' : '$transparent'}
+              borderRadius="$roundedFull"
+              gap="$spacing4"
+              px={showCustomSlippage ? '$spacing8' : '$spacing4'}
+              py="$spacing4"
+            >
+              {showCustomSlippage ? (
+                <Text color="$neutral2" variant="buttonLabel3">
+                  {formatPercent(customSlippageTolerance)}
+                </Text>
+              ) : null}
+              <Popover.Trigger onPress={onPressSwapSettings}>
+                <Settings color={colors.neutral2.get()} size={isWeb ? iconSizes.icon20 : iconSizes.icon24} />
+              </Popover.Trigger>
+            </Flex>
+          </TouchableArea>
+
           <SwapSettingsModal
-            settings={settings}
-            defaultTitle={defaultTitle}
+            customSettings={customSettings}
             isOpen={showSwapSettingsModal}
             onClose={onCloseSettingsModal}
           />

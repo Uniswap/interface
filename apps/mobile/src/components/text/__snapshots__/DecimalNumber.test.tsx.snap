@@ -6,12 +6,7 @@ exports[`renders a DecimalNumber 1`] = `
   maxFontSizeMultiplier={1.4}
   style={
     {
-      "color": {
-        "dynamic": {
-          "dark": "#FFFFFF",
-          "light": "#222222",
-        },
-      },
+      "color": "#222222",
       "fontFamily": "Basel Grotesk",
       "fontSize": 19,
       "fontWeight": "400",
@@ -26,12 +21,7 @@ exports[`renders a DecimalNumber 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": {
-          "dynamic": {
-            "dark": "#5E5E5E",
-            "light": "#BFBFBF",
-          },
-        },
+        "color": "#BFBFBF",
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -52,12 +42,7 @@ exports[`renders a DecimalNumber without a comma separator 1`] = `
   maxFontSizeMultiplier={1.4}
   style={
     {
-      "color": {
-        "dynamic": {
-          "dark": "#FFFFFF",
-          "light": "#222222",
-        },
-      },
+      "color": "#222222",
       "fontFamily": "Basel Grotesk",
       "fontSize": 19,
       "fontWeight": "400",
@@ -72,12 +57,7 @@ exports[`renders a DecimalNumber without a comma separator 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": {
-          "dynamic": {
-            "dark": "#5E5E5E",
-            "light": "#BFBFBF",
-          },
-        },
+        "color": "#BFBFBF",
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -98,12 +78,7 @@ exports[`renders a DecimalNumber without a decimal part 1`] = `
   maxFontSizeMultiplier={1.4}
   style={
     {
-      "color": {
-        "dynamic": {
-          "dark": "#FFFFFF",
-          "light": "#222222",
-        },
-      },
+      "color": "#222222",
       "fontFamily": "Basel Grotesk",
       "fontSize": 19,
       "fontWeight": "400",

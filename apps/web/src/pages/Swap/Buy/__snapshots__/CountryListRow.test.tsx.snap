@@ -12,10 +12,10 @@ exports[`CountryListRow should render 1`] = `
       class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="_backgroundColor-0hover-surface2 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _height-t-size-spac100347420 _pr-t-space-spa1360334051 _pl-t-space-spa1360334051 _justifyContent-space-betwe3241 _alignItems-center _cursor-pointer"
+        class="_backgroundColor-0hover-568007293 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _height-1611761976 _pr-1316330114 _pl-1316330114 _justifyContent-441309761 _alignItems-center _cursor-pointer"
       >
         <div
-          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa1360334080"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-1481558214"
         >
           <div
             class="is_Avatar _display-flex _flexBasis-auto _boxSizing-border-box _minHeight-32px _minWidth-32px _flexShrink-0 _flexDirection-column _alignItems-center _justifyContent-center _position-relative _overflowX-hidden _overflowY-hidden _width-32px _height-32px _maxWidth-32px _maxHeight-32px _borderTopLeftRadius-100000px _borderTopRightRadius-100000px _borderBottomRightRadius-100000px _borderBottomLeftRadius-100000px _pt-0px _pr-0px _pb-0px _pl-0px"
@@ -41,11 +41,11 @@ exports[`CountryListRow should render 1`] = `
               </div>
             </div>
             <div
-              class="is_AvatarFallback _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _top-0px _left-0px _right-0px _bottom-0px _zIndex-0 _backgroundColor-neutral3"
+              class="is_AvatarFallback _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _top-0px _left-0px _right-0px _bottom-0px _zIndex-0 _backgroundColor-843135036"
             />
           </div>
           <span
-            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
             data-disable-theme="true"
           >
             United States
@@ -69,10 +69,10 @@ exports[`CountryListRow should render selected country 1`] = `
       class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="_backgroundColor-0hover-surface2 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _height-t-size-spac100347420 _pr-t-space-spa1360334051 _pl-t-space-spa1360334051 _justifyContent-space-betwe3241 _alignItems-center _cursor-pointer"
+        class="_backgroundColor-0hover-568007293 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _height-1611761976 _pr-1316330114 _pl-1316330114 _justifyContent-441309761 _alignItems-center _cursor-pointer"
       >
         <div
-          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa1360334080"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-1481558214"
         >
           <div
             class="is_Avatar _display-flex _flexBasis-auto _boxSizing-border-box _minHeight-32px _minWidth-32px _flexShrink-0 _flexDirection-column _alignItems-center _justifyContent-center _position-relative _overflowX-hidden _overflowY-hidden _width-32px _height-32px _maxWidth-32px _maxHeight-32px _borderTopLeftRadius-100000px _borderTopRightRadius-100000px _borderBottomRightRadius-100000px _borderBottomLeftRadius-100000px _pt-0px _pr-0px _pb-0px _pl-0px"
@@ -98,11 +98,11 @@ exports[`CountryListRow should render selected country 1`] = `
               </div>
             </div>
             <div
-              class="is_AvatarFallback _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _top-0px _left-0px _right-0px _bottom-0px _zIndex-0 _backgroundColor-neutral3"
+              class="is_AvatarFallback _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _top-0px _left-0px _right-0px _bottom-0px _zIndex-0 _backgroundColor-843135036"
             />
           </div>
           <span
-            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
             data-disable-theme="true"
           >
             United States

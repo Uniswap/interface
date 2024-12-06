@@ -3,7 +3,6 @@ import { GooglePlayStoreLogo } from 'components/Icons/GooglePlayStoreLogo'
 import { DownloadWalletOption } from 'components/WalletModal/DownloadWalletOption'
 import { DetectedBadge } from 'components/WalletModal/shared'
 import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
-import { uniswapWalletConnect } from 'components/Web3Provider/walletConnect'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useConnect } from 'hooks/useConnect'
@@ -46,6 +45,12 @@ export const AppIcon = styled.img`
 
 export function UniswapWalletOptions() {
   const uniswapExtensionConnector = useConnectorWithId(CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS)
+  const uniswapWalletConnectConnector = useConnectorWithId(
+    CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
+    {
+      shouldThrow: true,
+    },
+  )
 
   const { connect } = useConnect()
 
@@ -70,17 +75,7 @@ export function UniswapWalletOptions() {
         !isMobileWeb ? (
           <DownloadWalletOption />
         ) : null}
-        <OptionContainer
-          gap="md"
-          onClick={() => {
-            connect({
-              // Initialize Uniswap Wallet on click instead of in wagmi config
-              // to avoid multiple wallet connect sockets being opened
-              // and causing issues with messages getting dropped
-              connector: uniswapWalletConnect(),
-            })
-          }}
-        >
+        <OptionContainer gap="md" onClick={() => connect({ connector: uniswapWalletConnectConnector })}>
           {isMobileWeb ? (
             <Image height={iconSizes.icon40} source={UNISWAP_LOGO} width={iconSizes.icon40} />
           ) : (

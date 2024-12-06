@@ -4,7 +4,10 @@ import type { ImageSourcePropType } from 'react-native'
 import { CELO_LOGO, ETH_LOGO } from 'ui/src/assets'
 import {
   ARB,
+  BTC_BSC,
   BUSD_BSC,
+  CEUR_CELO,
+  CUSD_CELO,
   DAI,
   DAI_ARBITRUM_ONE,
   DAI_AVALANCHE,
@@ -35,6 +38,7 @@ import {
   USDT_POLYGON,
   WBTC,
   WBTC_ARBITRUM_ONE,
+  WBTC_CELO,
   WBTC_OPTIMISM,
   WBTC_POLYGON,
   WETH_AVALANCHE,
@@ -55,9 +59,7 @@ type ChainCurrencyList = {
 }
 
 /**
- * @deprecated
- * Instead, see the list used in the token selector's quick-select common options section at useAllCommonBaseCurrencies.ts.
- * This list is currently used as fallback list when Token GQL query fails for above list + for hardcoded tokens on testnet chains.
+ * Shows up in the currency select for swap and add liquidity
  */
 export const COMMON_BASES: ChainCurrencyList = {
   [UniverseChainId.Mainnet]: [
@@ -116,11 +118,24 @@ export const COMMON_BASES: ChainCurrencyList = {
     WBTC_POLYGON,
   ].map(buildPartialCurrencyInfo),
 
-  [UniverseChainId.Celo]: [nativeOnChain(UniverseChainId.Celo), USDC_CELO].map(buildPartialCurrencyInfo),
+  [UniverseChainId.Celo]: [
+    nativeOnChain(UniverseChainId.Celo),
+    CEUR_CELO,
+    CUSD_CELO,
+    PORTAL_ETH_CELO,
+    USDC_CELO,
+    WBTC_CELO,
+  ].map(buildPartialCurrencyInfo),
 
-  [UniverseChainId.Bnb]: [nativeOnChain(UniverseChainId.Bnb), DAI_BSC, USDC_BSC, USDT_BSC, ETH_BSC, BUSD_BSC].map(
-    buildPartialCurrencyInfo,
-  ),
+  [UniverseChainId.Bnb]: [
+    nativeOnChain(UniverseChainId.Bnb),
+    DAI_BSC,
+    USDC_BSC,
+    USDT_BSC,
+    ETH_BSC,
+    BTC_BSC,
+    BUSD_BSC,
+  ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Avalanche]: [
     nativeOnChain(UniverseChainId.Avalanche),
