@@ -241,16 +241,20 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
   });
 
   const [isApproved, setIsApproved] = useState(false);
+  const [accruedRewards, setAccruedRewards] = useState<BigNumber>(
+    BigNumber.from(0)
+  );
   const [refetch, setRefetch] = useState(1);
 
   const formattedPendingRewards = useMemo(
-    () => formatEther(userDetails.pendingRewards),
+    () => Number(formatEther(userDetails.pendingRewards)).toFixed(4),
     [userDetails.pendingRewards]
   );
 
   const {
     incentive,
     getRewardInfo,
+    getAccruedRewards,
     approve,
     transfer,
     withdrawPosition,
@@ -270,6 +274,22 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
     isEndingIncentive,
   } = usePosition(props.tokenId, props.incentiveId);
 
+  const getAccruedRewardsCallback = useCallback(async () => {
+    return await getAccruedRewards();
+  }, [getAccruedRewards]);
+
+  useEffect(() => {
+    getAccruedRewardsCallback().then((rewards) => {
+      setAccruedRewards(rewards ?? BigNumber.from(0));
+      setRefetch((prev) => prev + 1);
+    });
+  }, [getAccruedRewardsCallback]);
+
+  const formattedAccruedRewards = useMemo(
+    () => Number(formatEther(accruedRewards)).toFixed(4),
+    [accruedRewards]
+  );
+
   const { getDepositData, isLoading: isLoadingDepositData } = useTokenPosition(
     props.tokenId
   );
@@ -278,11 +298,14 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
     const depositData = await getDepositData();
     const hasDeposited = await isDeposited();
     let pendingRewards = BigNumber.from(0);
-    try {
-      const rewardInfo = await getRewardInfo();
+    let hasStaked = false;
+    const rewardInfo = await getRewardInfo();
+    if (rewardInfo === undefined) {
+      hasStaked = false;
+    } else {
       pendingRewards = rewardInfo?.reward ?? BigNumber.from(0);
-    } catch (e) {}
-    const hasStaked = (depositData?.numberOfStakes ?? 0) > 0;
+      hasStaked = true;
+    }
     return { hasDeposited, pendingRewards, hasStaked };
   };
 
@@ -334,9 +357,7 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
   }, [claim, refetch]);
 
   const stake = useCallback(async () => {
-    console.log("~ stakePosition: ", stakePosition);
     await stakePosition(() => {
-      console.log("~ stakePosition: ", stakePosition);
       setRefetch((prev) => prev + 1);
     });
   }, [stakePosition, refetch]);
@@ -373,6 +394,16 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
             </ExtentsText>
             <ThemedText.DeprecatedMediumHeader textAlign="center">
               {formattedPendingRewards} {incentive?.rewardToken.symbol}
+            </ThemedText.DeprecatedMediumHeader>
+          </AutoColumn>
+        </LightCard>
+        <LightCard padding="12px" width="100%">
+          <AutoColumn gap="md" justify="center">
+            <ExtentsText>
+              <Trans i18nKey="common.incentives.accrued.reward" />
+            </ExtentsText>
+            <ThemedText.DeprecatedMediumHeader textAlign="center">
+              {formattedAccruedRewards} {incentive?.rewardToken.symbol}
             </ThemedText.DeprecatedMediumHeader>
           </AutoColumn>
         </LightCard>
@@ -488,7 +519,11 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
               </ExtentsText>
               <ButtonPrimary
                 onClick={stake}
-                disabled={userDetails.hasStaked || !incentiveStarted}
+                disabled={
+                  !userDetails.hasDeposited ||
+                  userDetails.hasStaked ||
+                  !incentiveStarted
+                }
               >
                 {isStaking ? (
                   <svg
@@ -521,7 +556,7 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
               </ButtonPrimary>
               <ButtonPrimary
                 onClick={claimReward}
-                disabled={!userDetails.hasStaked}
+                disabled={!userDetails.hasDeposited || accruedRewards.isZero()}
               >
                 {isClaiming ? (
                   <svg

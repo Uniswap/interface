@@ -269,6 +269,7 @@
   "common.incentives.hasDeposited": "Position NFT deposited to the staker contract",
   "common.incentives.token.reward": "Reward token",
   "common.incentives.pending.reward": "Pending rewards",
+  "common.incentives.accrued.reward": "Accrued rewards",
   "common.incentives.choose.position": "Choose Position",
   "common.incentives.choose.position.description": "You have multiple positions in this pool. Choose the one you want to deposit to the staker contract.",
   "common.incentives.pending.description": "Pending rewards are summed up based on the reward token. If there are multiple incentives in the same reward token that you get rewards for, you might see duplicate values.",
