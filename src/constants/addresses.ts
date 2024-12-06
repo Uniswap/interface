@@ -1,4 +1,3 @@
-import { FACTORY_ADDRESS as V2_FACTORY_ADDRESS } from '@uniswap/v2-sdk'
 import { FACTORY_ADDRESS as V3_FACTORY_ADDRESS } from '@uniswap/v3-sdk'
 
 import { constructSameAddressMap } from '../utils/constructSameAddressMap'
@@ -6,7 +5,9 @@ import { SupportedChainId } from './chains'
 
 type AddressMap = { [chainId: number]: string }
 
-export const UNI_ADDRESS: AddressMap = constructSameAddressMap('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')
+const FACTORY_ADDRESS_V2 = '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
+
+export const UNI_ADDRESS: AddressMap = constructSameAddressMap(FACTORY_ADDRESS_V2)
 export const MULTICALL_ADDRESS: AddressMap = {
   ...constructSameAddressMap('0x1F98415757620B543A52E61c46B32eB19261F984', [
     SupportedChainId.OPTIMISTIC_KOVAN,
@@ -18,7 +19,7 @@ export const MULTICALL_ADDRESS: AddressMap = {
   [SupportedChainId.ARBITRUM_RINKEBY]: '0xa501c031958F579dB7676fF1CE78AD305794d579',
   [SupportedChainId.BASE]: '0x091e99cb1C49331a94dD62755D168E941AbD0693',
 }
-export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap(V2_FACTORY_ADDRESS)
+export const V2_FACTORY_ADDRESSES: AddressMap = constructSameAddressMap('0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f')
 export const V2_ROUTER_ADDRESS: AddressMap = constructSameAddressMap('0x1111111254fb6c44bAC0beD2854e76F90643097d')
 export const INCH_ROUTER_ADDRESS: AddressMap = {
   ...constructSameAddressMap('0x1111111254fb6c44bAC0beD2854e76F90643097d', [
@@ -134,6 +135,7 @@ export const LIMIT_ORDER_MANAGER_ADDRESSES: AddressMap = {
   [SupportedChainId.MAINNET]: '0xD1fDF0144be118C30a53E1d08Cc1E61d600E508e',
   [SupportedChainId.POLYGON]: '0x03F490aE5b59E428E6692059d0Dca1B87ED42aE1',
   [SupportedChainId.POLYGON_MUMBAI]: '0x62052292295791fB07C95eF6F7ACD68ae475ee8C',
+  [SupportedChainId.BASE]: '0x5Ca301d3feF15526C7a8b403f475A74eAfb9FED2',
 }
 export const KROM_TOKEN_ADDRESSES: AddressMap = {
   [SupportedChainId.KOVAN]: '0x4cEbC301Cd0E8AD64dE6B19576de7dd0B0140a1f',
@@ -143,7 +145,7 @@ export const KROM_TOKEN_ADDRESSES: AddressMap = {
   [SupportedChainId.ARBITRUM_ONE]: '0x55fF62567f09906A85183b866dF84bf599a4bf70',
   [SupportedChainId.MAINNET]: '0x3af33bef05c2dcb3c7288b77fe1c8d2aeba4d789',
   [SupportedChainId.POLYGON]: '0x14Af1F2f02DCcB1e43402339099A05a5E363b83c',
-  [SupportedChainId.BASE]: '0x14Af1F2f02DCcB1e43402339099A05a5E363b83c', // todo*: update when krom is deployed on base
+  [SupportedChainId.BASE]: '0xdfF3C626De2Ccd1ECf67E97abc8A74C102C86545',
 }
 export const UNISWAP_UTILS_ADDRESSES: AddressMap = {
   [SupportedChainId.KOVAN]: '0x9E1E4f041877f1aB604E5B109Cf699545e20E4bC',
