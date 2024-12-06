@@ -283,7 +283,7 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
       setAccruedRewards(rewards ?? BigNumber.from(0));
       setRefetch((prev) => prev + 1);
     });
-  }, [getAccruedRewardsCallback]);
+  }, [getAccruedRewardsCallback, userDetails.hasStaked, isClaiming]);
 
   const formattedAccruedRewards = useMemo(
     () => Number(formatEther(accruedRewards)).toFixed(4),
@@ -609,7 +609,7 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
                     </path>
                   </svg>
                 ) : (
-                  "Unstake"
+                  "Unstake and claim pending rewards"
                 )}
               </ButtonPrimary>
             </>
