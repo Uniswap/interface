@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmREL7zj6bMggt5yrx5mfiWCnWzbP1xAoVTYAd2J3uFgtb`
-- CIDv1: `bafybeibk6showu2rchiizehaujrhea6a3ebhhapm3ivjdrhnddgbx2u3tq`
+- CIDv0: `QmVMsr8YpWVo2SyEuQwKBNaBDKv7uZcZkN63VTDrMgfsX1`
+- CIDv1: `bafybeidiki7lac24gv6xgw65hvxrrqfpk2bdgjsj63rl2uuf5yijufqj6q`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,50 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeibk6showu2rchiizehaujrhea6a3ebhhapm3ivjdrhnddgbx2u3tq.ipfs.dweb.link/
-- https://bafybeibk6showu2rchiizehaujrhea6a3ebhhapm3ivjdrhnddgbx2u3tq.ipfs.cf-ipfs.com/
-- [ipfs://QmREL7zj6bMggt5yrx5mfiWCnWzbP1xAoVTYAd2J3uFgtb/](ipfs://QmREL7zj6bMggt5yrx5mfiWCnWzbP1xAoVTYAd2J3uFgtb/)
+- https://bafybeidiki7lac24gv6xgw65hvxrrqfpk2bdgjsj63rl2uuf5yijufqj6q.ipfs.dweb.link/
+- https://bafybeidiki7lac24gv6xgw65hvxrrqfpk2bdgjsj63rl2uuf5yijufqj6q.ipfs.cf-ipfs.com/
+- [ipfs://QmVMsr8YpWVo2SyEuQwKBNaBDKv7uZcZkN63VTDrMgfsX1/](ipfs://QmVMsr8YpWVo2SyEuQwKBNaBDKv7uZcZkN63VTDrMgfsX1/)
 
-## 5.61.0 (2024-12-04)
-
-
-### Features
-
-* **web:** add privacy choices nav and modal (#13703) 87a958d
-* **web:** add the range chart into the creation flow (#14008) a0c8c02
-* **web:** reset confirmation modal for positions (#14080) 3485968
-* **web:** support v4 tick data in range input (#14040) 68211cc
+### 5.61.1 (2024-12-06)
 
 
 ### Bug Fixes
 
-* **web:** [1/n] remove react-spring usage (AnimatedDropdown) (#13891) 9af3573
-* **web:** [2/n] remove react-spring usage (modal) (#13904) b9a0890
-* **web:** android keyboard issue (#14266) 7b9834c
-* **web:** bunch of v4 ui polish (#14117) d724fcb
-* **web:** fix newly created v2 pairs (#14061) 5b30b6f
-* **web:** fix refetching and caching issues due to the deadline (#14155) 46856f6
-* **web:** handle gql refetch balance for unknown tx types (#14060) 7413d91
-* **web:** hotfixing v4 fixes (#14244) f3c9411
-* **web:** increase size of pointer target for the filter dropdown (#14068) 2b36a2c
-* **web:** op usdc sends (#14205) ecfe6df
-* **web:** remove nondefault list tokens from common bases (#14203) 42d8203
-* **web:** remove top pools from mweb table (#14053) fa9080a
-* **web:** sticky left column create pool (#14122) dcafb2e
-* **web:** tiny v4 deposit polish (#14059) 002273a
-* **web:** token protection polishes (#14038) fe36c5d
-* **web:** update support articles for v4 and lp redesign (#14257) ec4508b
-* **web:** v2 loading state (#14050) 79bed9c
-* **web:** v4 LP flow cherrypicks (#14196) 0f2dc25
-
-
-### Continuous Integration
-
-* **web:** update sitemaps ef443f0
-
-
-### Tests
-
-* **web:** fix wallet connection test (#14047) 123862c
+* **web): Revert "fix(web:** [2/n] remove react-spring usage (modal) (#13904)" (#14314) 28dfe99
 
 

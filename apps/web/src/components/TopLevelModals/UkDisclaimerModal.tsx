@@ -1,12 +1,12 @@
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
 import Column from 'components/deprecated/Column'
+import Modal from 'components/Modal'
 import { bannerText } from 'components/TopLevelBanners/UkBanner'
 import styled from 'lib/styled-components'
 import { X } from 'react-feather'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { ButtonText, ThemedText } from 'theme/components'
-import { AdaptiveWebModal } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 
 const Wrapper = styled(Column)`
@@ -37,7 +37,7 @@ export function UkDisclaimerModal() {
   const closeModal = useCloseModal()
 
   return (
-    <AdaptiveWebModal isOpen={isOpen} onClose={closeModal} p={0}>
+    <Modal isOpen={isOpen} onDismiss={closeModal}>
       <Wrapper gap="md">
         <CloseIconWrapper onClick={() => closeModal()}>
           <X size={24} />
@@ -56,6 +56,6 @@ export function UkDisclaimerModal() {
           </StyledThemeButton>
         </ButtonContainer>
       </Wrapper>
-    </AdaptiveWebModal>
+    </Modal>
   )
 }

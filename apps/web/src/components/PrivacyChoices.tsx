@@ -1,9 +1,10 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
+import Modal from 'components/Modal'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useCallback, useState } from 'react'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
-import { AdaptiveWebModal, Anchor, Button, Checkbox, Flex, Text, TouchableArea } from 'ui/src'
+import { Anchor, Button, Checkbox, Flex, Text, TouchableArea } from 'ui/src'
 import { Lock } from 'ui/src/components/icons/Lock'
 import { X } from 'ui/src/components/icons/X'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -33,7 +34,7 @@ export function PrivacyChoicesModal() {
   }, [isOptOutChecked, closeModal, setPrivacySharingOptOut])
 
   return (
-    <AdaptiveWebModal isOpen={open} onClose={closeAndResetModal}>
+    <Modal isOpen={open} onDismiss={closeAndResetModal}>
       <Flex fill>
         <Flex py="$spacing20" px="$spacing24" gap="$spacing24">
           <Flex row justifyContent="flex-end">
@@ -90,6 +91,6 @@ export function PrivacyChoicesModal() {
           </Button>
         </Flex>
       </Flex>
-    </AdaptiveWebModal>
+    </Modal>
   )
 }

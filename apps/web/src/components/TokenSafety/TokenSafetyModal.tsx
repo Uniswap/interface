@@ -1,4 +1,4 @@
-import { AdaptiveWebModal } from 'ui/src'
+import Modal from 'components/Modal'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
@@ -47,7 +47,7 @@ export default function TokenSafetyModal({
       onToken1BlockAcknowledged={onToken1BlockAcknowledged}
     />
   ) : (
-    <AdaptiveWebModal isOpen={isOpen} onClose={onReject ?? closeModalOnly} maxHeight={400} p={0}>
+    <Modal isOpen={isOpen} onDismiss={onReject ?? closeModalOnly} maxHeight={400}>
       <TokenSafety
         token0={token0}
         token1={token1}
@@ -60,6 +60,6 @@ export default function TokenSafetyModal({
         closeModalOnly={onReject ?? closeModalOnly}
         showCancel={showCancel}
       />
-    </AdaptiveWebModal>
+    </Modal>
   )
 }

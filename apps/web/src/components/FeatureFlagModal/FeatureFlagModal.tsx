@@ -1,4 +1,5 @@
 import { SmallButtonPrimary } from 'components/Button/buttons'
+import Modal from 'components/Modal'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
@@ -8,7 +9,6 @@ import { X } from 'react-feather'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { BREAKPOINTS } from 'theme'
-import { AdaptiveWebModal } from 'ui/src'
 import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
 import {
   DynamicConfigKeys,
@@ -203,7 +203,7 @@ export default function FeatureFlagModal() {
   const closeModal = useCloseModal()
 
   return (
-    <AdaptiveWebModal isOpen={open} onClose={closeModal} p={0}>
+    <Modal isOpen={open} onDismiss={closeModal}>
       <Wrapper>
         <Header>
           <Row width="100%" justify="space-between">
@@ -291,6 +291,6 @@ export default function FeatureFlagModal() {
         </FlagsColumn>
         <SaveButton onClick={() => window.location.reload()}>Reload</SaveButton>
       </Wrapper>
-    </AdaptiveWebModal>
+    </Modal>
   )
 }

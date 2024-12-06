@@ -1,9 +1,10 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import MobileAppLogo from 'assets/svg/uniswap_app_logo.svg'
+import Modal from 'components/Modal'
 import { useConnect } from 'hooks/useConnect'
 import { useCallback, useEffect, useState } from 'react'
 import { CloseIcon } from 'theme/components'
-import { AdaptiveWebModal, Button, Flex, Image, QRCodeDisplay, Separator, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Image, QRCodeDisplay, Separator, Text, useSporeColors } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTranslation } from 'uniswap/src/i18n'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
@@ -47,7 +48,7 @@ export default function UniwalletModal() {
 
   const colors = useSporeColors()
   return (
-    <AdaptiveWebModal isOpen={open} onClose={close} p={0}>
+    <Modal isOpen={open} onDismiss={close}>
       <Flex shrink grow p="$spacing20">
         <Flex row justifyContent="space-between">
           <Text variant="subheading1">{t('account.drawer.modal.scan')}</Text>
@@ -87,6 +88,6 @@ export default function UniwalletModal() {
           </Button>
         </Flex>
       </Flex>
-    </AdaptiveWebModal>
+    </Modal>
   )
 }

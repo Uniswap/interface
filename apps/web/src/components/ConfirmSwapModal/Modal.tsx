@@ -1,8 +1,9 @@
 import { InterfaceModalName } from '@uniswap/analytics-events'
+import Modal from 'components/Modal'
 import { AutoColumn } from 'components/deprecated/Column'
 import styled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
-import { AdaptiveWebModal, HeightAnimator } from 'ui/src'
+import { HeightAnimator } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 
 const Content = styled(AutoColumn)`
@@ -20,7 +21,7 @@ export function SwapModal({
 }>) {
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
-      <AdaptiveWebModal isOpen onClose={onDismiss} maxHeight="90vh" p={0}>
+      <Modal isOpen $scrollOverlay onDismiss={onDismiss} maxHeight="90vh" slideIn>
         <HeightAnimator
           open={true}
           width="100%"
@@ -35,7 +36,7 @@ export function SwapModal({
         >
           <Content>{children}</Content>
         </HeightAnimator>
-      </AdaptiveWebModal>
+      </Modal>
     </Trace>
   )
 }

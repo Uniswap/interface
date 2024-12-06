@@ -1,4 +1,5 @@
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
+import Modal from 'components/Modal'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { ColumnCenter } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
@@ -6,11 +7,11 @@ import styled, { DefaultTheme } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { Gap } from 'theme'
 import { ThemedText } from 'theme/components'
-import { AdaptiveWebModal } from 'ui/src'
 
 export const Container = styled(ColumnCenter)`
   background-color: ${({ theme }) => theme.surface1};
-  border-radius: 16px;
+  outline: 1px solid ${({ theme }) => theme.surface3};
+  border-radius: 20px;
   padding: 16px 24px 24px 24px;
   width: 100%;
 `
@@ -160,11 +161,11 @@ export function DialogContent({ icon, title, description, body, buttonsConfig }:
  */
 export function Dialog(props: DialogProps) {
   return (
-    <AdaptiveWebModal isOpen={props.isVisible} onClose={props.onCancel} p={0}>
+    <Modal $scrollOverlay isOpen={props.isVisible} onDismiss={props.onCancel}>
       <Container gap="lg">
         <DialogHeader closeModal={props.onCancel} closeDataTestId="Dialog-closeButton" />
         <DialogContent {...props} />
       </Container>
-    </AdaptiveWebModal>
+    </Modal>
   )
 }

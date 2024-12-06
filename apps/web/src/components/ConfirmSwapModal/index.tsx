@@ -5,6 +5,7 @@ import { SwapHead } from 'components/ConfirmSwapModal/Head'
 import { SwapModal } from 'components/ConfirmSwapModal/Modal'
 import { Pending } from 'components/ConfirmSwapModal/Pending'
 import SwapProgressIndicator from 'components/ConfirmSwapModal/ProgressIndicator'
+import { MODAL_TRANSITION_DURATION } from 'components/Modal'
 import { AutoColumn } from 'components/deprecated/Column'
 import { SwapDetails } from 'components/swap/SwapDetails'
 import { SwapPreview } from 'components/swap/SwapPreview'
@@ -185,7 +186,7 @@ export function ConfirmSwapModal({
     setTimeout(() => {
       // Reset local state after the modal dismiss animation finishes, to avoid UI flicker as it dismisses
       onCancel()
-    }, 200)
+    }, MODAL_TRANSITION_DURATION)
     // Popups are suppressed when modal is open; re-enable them on dismissal
     unsuppressPopups()
   }, [confirmModalState, doesTradeDiffer, onCancel, onDismiss, priceUpdate, unsuppressPopups, trade])

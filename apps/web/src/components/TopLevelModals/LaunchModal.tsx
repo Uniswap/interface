@@ -1,6 +1,7 @@
 // Remove the following line when LaunchModal is used again:
 /* eslint-disable import/no-unused-modules */
 import { InterfaceElementName } from '@uniswap/analytics-events'
+import Modal from 'components/Modal'
 import {
   LAUNCH_MODAL_DESKTOP_MAX_HEIGHT,
   LAUNCH_MODAL_DESKTOP_MAX_WIDTH,
@@ -11,7 +12,7 @@ import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useMemo } from 'react'
-import { AdaptiveWebModal, Button, Flex, Image, ImageProps, Text, TouchableArea, useMedia } from 'ui/src'
+import { Button, Flex, Image, ImageProps, Text, TouchableArea, useMedia } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -46,12 +47,12 @@ export function LaunchModal({
 
   return (
     <Trace modal={interfaceModalName}>
-      <AdaptiveWebModal
+      <Modal
         maxWidth={media.md ? undefined : LAUNCH_MODAL_DESKTOP_MAX_WIDTH}
         height={media.md ? LAUNCH_MODAL_MOBILE_MAX_HEIGHT : LAUNCH_MODAL_DESKTOP_MAX_HEIGHT}
         isOpen={showModal && !isOnLandingPage}
-        onClose={() => setShowModal(false)}
-        p={0}
+        onDismiss={() => setShowModal(false)}
+        hideBorder
       >
         <Flex flexDirection={media.md ? 'column' : 'row'} fill>
           <Flex
@@ -101,7 +102,7 @@ export function LaunchModal({
             </Flex>
           </Flex>
         </Flex>
-      </AdaptiveWebModal>
+      </Modal>
     </Trace>
   )
 }
