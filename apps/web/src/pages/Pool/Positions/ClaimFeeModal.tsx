@@ -10,6 +10,7 @@ import { ZERO_ADDRESS } from 'constants/misc'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersSigner } from 'hooks/useEthersSigner'
+import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
 import { useMemo } from 'react'
 import { useCloseModal } from 'state/application/hooks'
 import { PopupType, addPopup } from 'state/application/reducer'
@@ -84,7 +85,12 @@ export function ClaimFeeModal() {
     } satisfies ClaimLPFeesRequest
   }, [account.address, positionInfo, token0Fees, token1Fees])
 
-  const { data, isLoading: calldataLoading } = useClaimLpFeesCalldataQuery({
+  const {
+    data,
+    isLoading: calldataLoading,
+    error,
+    refetch,
+  } = useClaimLpFeesCalldataQuery({
     params: claimLpFeesParams,
   })
 
@@ -94,7 +100,7 @@ export function ClaimFeeModal() {
     <Modal name={ModalName.ClaimFee} onClose={onClose} isDismissible>
       <Flex gap="$gap16">
         <GetHelpHeader
-          link={uniswapUrls.helpArticleUrls.lpCollectFees}
+          link={uniswapUrls.helpRequestUrl}
           title={t('pool.collectFees')}
           closeModal={onClose}
           closeDataTestId="ClaimFeeModal-close-icon"
@@ -139,6 +145,7 @@ export function ClaimFeeModal() {
             </Flex>
           </Flex>
         )}
+        {error && <TradingAPIError refetch={refetch} />}
         <LoaderButton
           buttonKey="ClaimFeeModal-button"
           disabled={!data?.claim}
@@ -185,7 +192,7 @@ export function ClaimFeeModal() {
             }
           }}
         >
-          <Text variant="buttonLabel2" color="$neutralContrast">
+          <Text variant="buttonLabel1" color="$neutralContrast">
             {t('common.collect.button')}
           </Text>
         </LoaderButton>

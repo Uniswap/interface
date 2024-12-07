@@ -1,11 +1,15 @@
 // eslint-disable-next-line no-restricted-imports
+import {
+  LiquidityPositionRangeChart,
+  getLiquidityRangeChartProps,
+} from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
+import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import {
   DEFAULT_DEPOSIT_STATE,
-  DEFAULT_PRICE_RANGE_STATE,
   useCreatePositionContext,
   useDepositContext,
   usePriceRangeContext,
@@ -15,6 +19,7 @@ import { PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useMemo } from 'react'
 import { Button, Flex, FlexProps, Text } from 'ui/src'
+import { ArrowsLeftRight } from 'ui/src/components/icons/ArrowsLeftRight'
 import { Edit } from 'ui/src/components/icons/Edit'
 import { iconSizes } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -22,13 +27,7 @@ import { Trans } from 'uniswap/src/i18n'
 
 const EditStep = ({ children, onClick, ...rest }: { children: JSX.Element; onClick: () => void } & FlexProps) => {
   return (
-    <Container
-      row
-      justifyContent="space-between"
-      alignItems="center"
-      $md={{ row: false, alignItems: 'flex-start', justifyContent: 'flex-start' }}
-      {...rest}
-    >
+    <Container row gap="$gap24" justifyContent="space-between" alignItems="center" {...rest}>
       {children}
       <Button
         theme="secondary"
@@ -51,8 +50,8 @@ const EditStep = ({ children, onClick, ...rest }: { children: JSX.Element; onCli
 
 export const EditSelectTokensStep = (props?: FlexProps) => {
   const { setStep, derivedPositionInfo, positionState } = useCreatePositionContext()
-  const { setPriceRangeState } = usePriceRangeContext()
-  const { setDepositState } = useDepositContext()
+  const { reset: resetPriceRangeState } = usePriceRangeContext()
+  const { reset: resetDepositState } = useDepositContext()
   const { currencies, protocolVersion } = derivedPositionInfo
   const { fee, hook } = positionState
   const [token0, token1] = currencies
@@ -60,10 +59,10 @@ export const EditSelectTokensStep = (props?: FlexProps) => {
   const screenSize = useScreenSize()
 
   const handleEdit = useCallback(() => {
-    setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
-    setDepositState(DEFAULT_DEPOSIT_STATE)
+    resetPriceRangeState()
+    resetDepositState()
     setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
-  }, [setDepositState, setPriceRangeState, setStep])
+  }, [resetDepositState, resetPriceRangeState, setStep])
 
   return (
     <EditStep onClick={handleEdit} {...props}>
@@ -92,6 +91,7 @@ export const EditSelectTokensStep = (props?: FlexProps) => {
 export const EditRangeSelectionStep = (props?: FlexProps) => {
   const {
     setStep,
+    derivedPositionInfo,
     derivedPositionInfo: { currencies },
   } = useCreatePositionContext()
   const {
@@ -102,6 +102,7 @@ export const EditRangeSelectionStep = (props?: FlexProps) => {
 
   const { formatNumberOrString } = useLocalizationContext()
   const [baseCurrency, quoteCurrency] = getInvertedTuple(currencies, priceInverted)
+  const isMobile = useIsMobile()
 
   const handleEdit = useCallback(() => {
     setDepositState(DEFAULT_DEPOSIT_STATE)
@@ -112,31 +113,50 @@ export const EditRangeSelectionStep = (props?: FlexProps) => {
     return formatPrices(derivedPriceRangeInfo, formatNumberOrString)
   }, [formatNumberOrString, derivedPriceRangeInfo])
 
+  const liquidityRangeChartProps = useMemo(
+    () =>
+      getLiquidityRangeChartProps({
+        positionInfo: derivedPositionInfo,
+        priceRangeInfo: derivedPriceRangeInfo,
+      }),
+    [derivedPositionInfo, derivedPriceRangeInfo],
+  )
+
   return (
     <EditStep onClick={handleEdit} {...props}>
-      <Flex row gap={10}>
-        <Text variant="subheading1" width={80}>
-          <Trans i18nKey="common.range" />
-        </Text>
-        {!isFullRange ? (
-          <Flex gap="$gap4">
-            <Flex row gap={10}>
-              <Text variant="body2" color="$neutral2">
-                <Trans i18nKey="common.min" />
-              </Text>
-              <Text variant="body2">{`${formattedPrices[0]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
-            </Flex>
-            <Flex row gap={10}>
-              <Text variant="body2" color="$neutral2">
-                <Trans i18nKey="common.max" />
-              </Text>
-              <Text variant="body2">{`${formattedPrices[1]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
-            </Flex>
+      <Flex grow flexBasis={1} row gap="$gap20" alignItems="center" $md={{ row: false, gap: 10 }}>
+        {!!liquidityRangeChartProps && (
+          <LiquidityPositionRangeChart grow={isMobile ? false : true} {...liquidityRangeChartProps} />
+        )}
+        {isMobile ? (
+          <Flex row gap={10} alignItems="center" alignSelf="flex-start">
+            <Text variant="body4">{`${formattedPrices[0]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
+            <ArrowsLeftRight size={iconSizes.icon16} color="$neutral2" />
+            <Text variant="body4">{`${formattedPrices[1]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
           </Flex>
         ) : (
-          <Text variant="body2" color="$neutral2">
-            <Trans i18nKey="common.fullRange" />
-          </Text>
+          <Flex row>
+            {!isFullRange ? (
+              <Flex gap="$gap4">
+                <Flex row gap={10}>
+                  <Text variant="body2" color="$neutral2">
+                    <Trans i18nKey="common.min" />
+                  </Text>
+                  <Text variant="body2">{`${formattedPrices[0]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
+                </Flex>
+                <Flex row gap={10}>
+                  <Text variant="body2" color="$neutral2">
+                    <Trans i18nKey="common.max" />
+                  </Text>
+                  <Text variant="body2">{`${formattedPrices[1]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
+                </Flex>
+              </Flex>
+            ) : (
+              <Text variant="body2" color="$neutral2">
+                <Trans i18nKey="common.fullRange" />
+              </Text>
+            )}
+          </Flex>
         )}
       </Flex>
     </EditStep>

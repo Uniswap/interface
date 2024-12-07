@@ -1,10 +1,9 @@
 import { Currency } from '@uniswap/sdk-core'
-import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
-import { TradeState } from 'state/routing/types'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const NUM_DECIMALS_USD = 2
@@ -18,14 +17,14 @@ export function useUSDTokenUpdater(
   formattedAmount?: string
   loading: boolean
 } {
-  const { price, state } = useStablecoinPrice(exactCurrency)
+  const { price, isLoading } = useUSDCPrice(exactCurrency)
   const { convertToFiatAmount, formatCurrencyAmount } = useFormatter()
   const conversionRate = convertToFiatAmount(1).amount
   const supportedChainId = useSupportedChainId(exactCurrency?.chainId)
 
   return useMemo(() => {
     if (!exactCurrency || !price) {
-      return { formattedAmount: undefined, loading: state === TradeState.LOADING }
+      return { formattedAmount: undefined, loading: isLoading }
     }
 
     if (isFiatInput) {
@@ -41,7 +40,7 @@ export function useUSDTokenUpdater(
         placeholder: '',
       })
 
-      return { formattedAmount: formattedCurrencyAmount, loading: state === TradeState.LOADING }
+      return { formattedAmount: formattedCurrencyAmount, loading: isLoading }
     }
 
     const exactCurrencyAmount = tryParseCurrencyAmount(exactAmount || '0', exactCurrency)
@@ -50,7 +49,7 @@ export function useUSDTokenUpdater(
     const fiatPrice = convertToFiatAmount(parseFloat(usdPrice?.toExact() ?? '0')).amount
     const formattedFiatPrice = fiatPrice ? fiatPrice.toFixed(NUM_DECIMALS_DISPLAY) : '0'
 
-    return { formattedAmount: formattedFiatPrice, loading: state === TradeState.LOADING }
+    return { formattedAmount: formattedFiatPrice, loading: isLoading }
   }, [
     conversionRate,
     convertToFiatAmount,
@@ -59,7 +58,7 @@ export function useUSDTokenUpdater(
     formatCurrencyAmount,
     isFiatInput,
     price,
-    state,
+    isLoading,
     supportedChainId,
   ])
 }

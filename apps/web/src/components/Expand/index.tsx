@@ -1,9 +1,10 @@
-import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/deprecated/Column'
 import Row, { RowBetween } from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { PropsWithChildren, ReactElement } from 'react'
 import { ChevronDown } from 'react-feather'
+import { HeightAnimator } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 
 const ButtonContainer = styled(Row)`
   cursor: pointer;
@@ -33,13 +34,15 @@ export default function Expand({
   isOpen,
   padding,
   onToggle,
+  iconSize = 'icon24',
 }: PropsWithChildren<{
-  header: ReactElement
+  header?: ReactElement
   button: ReactElement
   testId?: string
   isOpen: boolean
   padding?: string
   onToggle: () => void
+  iconSize?: keyof typeof iconSizes
 }>) {
   return (
     <Wrapper $padding={padding}>
@@ -47,12 +50,12 @@ export default function Expand({
         {header}
         <ButtonContainer data-testid={testId} onClick={onToggle} aria-expanded={isOpen}>
           {button}
-          <ExpandIcon $isOpen={isOpen} />
+          <ExpandIcon $isOpen={isOpen} size={iconSizes[iconSize]} />
         </ButtonContainer>
       </RowBetween>
-      <AnimatedDropdown open={isOpen}>
+      <HeightAnimator open={isOpen}>
         <Content gap="md">{children}</Content>
-      </AnimatedDropdown>
+      </HeightAnimator>
     </Wrapper>
   )
 }

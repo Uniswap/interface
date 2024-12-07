@@ -10,7 +10,7 @@ import {
   Percent,
   V3_CORE_FACTORY_ADDRESSES,
 } from '@uniswap/sdk-core'
-import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
+import { FeeAmount, NonfungiblePositionManager, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from 'components/Button/buttons'
 import { BlueCard, OutlineCard, YellowCard } from 'components/Card/cards'
@@ -45,7 +45,6 @@ import { useIsPoolOutOfSync } from 'hooks/useIsPoolOutOfSync'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 import { PoolCache } from 'hooks/usePools'
 import usePrevious from 'hooks/usePrevious'
-import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
@@ -81,11 +80,12 @@ import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
-import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Trans, t } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -221,8 +221,8 @@ function AddLiquidity() {
   }
 
   const usdcValues = {
-    [Field.CURRENCY_A]: useStablecoinValue(parsedAmounts[Field.CURRENCY_A]),
-    [Field.CURRENCY_B]: useStablecoinValue(parsedAmounts[Field.CURRENCY_B]),
+    [Field.CURRENCY_A]: useUSDCValue(parsedAmounts[Field.CURRENCY_A]),
+    [Field.CURRENCY_B]: useUSDCValue(parsedAmounts[Field.CURRENCY_B]),
   }
 
   // get the max amounts user can add
@@ -500,7 +500,14 @@ function AddLiquidity() {
   const { [Bound.LOWER]: priceLower, [Bound.UPPER]: priceUpper } = pricesAtTicks
 
   const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper, getSetFullRange } =
-    useRangeHopCallbacks(baseCurrency ?? undefined, quoteCurrency ?? undefined, feeAmount, tickLower, tickUpper, pool)
+    useRangeHopCallbacks({
+      baseCurrency,
+      quoteCurrency,
+      feeAmount,
+      tickLower,
+      tickUpper,
+      pool,
+    })
 
   // we need an existence check on parsed amounts for single-asset deposits
   const showApprovalA =
@@ -919,6 +926,8 @@ function AddLiquidity() {
                           onLeftRangeInput={onLeftRangeInput}
                           onRightRangeInput={onRightRangeInput}
                           interactive={!hasExistingPosition}
+                          protocolVersion={ProtocolVersion.V3}
+                          tickSpacing={feeAmount ? TICK_SPACINGS[feeAmount] : undefined}
                         />
                       </>
                     ) : (

@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther } from '@ethersproject/units'
 import { InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Loader from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -15,7 +15,6 @@ import { getURAddress, useNftUniversalRouterAddress } from 'graphql/data/nft/Nft
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
-import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import JSBI from 'jsbi'
 import useCurrencyBalance, { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
@@ -35,10 +34,11 @@ import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
 import { InterfaceTrade, TradeFillType, TradeState } from 'state/routing/types'
 import { ThemedText } from 'theme/components'
-import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Trans, t } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -223,7 +223,7 @@ const FiatValue = ({
   tradeState,
   usingPayWithAnyToken,
 }: {
-  usdcValue: CurrencyAmount<Token> | null
+  usdcValue: CurrencyAmount<Currency> | null
   priceImpact?: PriceImpact
   tradeState: TradeState
   usingPayWithAnyToken: boolean
@@ -323,8 +323,8 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   usePayWithAnyTokenSwap(trade, allowance, allowedSlippage)
   const priceImpact = usePriceImpact(trade)
 
-  const fiatValueTradeInput = useStablecoinValue(trade?.inputAmount)
-  const fiatValueTradeOutput = useStablecoinValue(parsedOutputAmount)
+  const fiatValueTradeInput = useUSDCValue(trade?.inputAmount)
+  const fiatValueTradeOutput = useUSDCValue(parsedOutputAmount)
   const usdcValue = usingPayWithAnyToken ? fiatValueTradeInput : fiatValueTradeOutput
 
   const nativeCurrency = useCurrency(NATIVE_CHAIN_ID)

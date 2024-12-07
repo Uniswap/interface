@@ -159,11 +159,25 @@ export const parseTransactionRequest = (
   }
 }
 
-export function decodeMessage(value: string): string {
-  if (utils.isHexString(value)) {
-    return utils.toUtf8String(value)
-  }
+function isUtf8(str: string): boolean {
+  try {
+    const decoded = new TextDecoder('utf-8').decode(new TextEncoder().encode(str))
 
+    // if the encoded -> decoded string matches the original string (ie no chars swapped),
+    // then it's valid utf-8
+    return decoded === str
+  } catch {
+    return false
+  }
+}
+
+export function decodeMessage(value: string): string {
+  if (utils.isHexString(value) && isUtf8(value)) {
+    const decoded = utils.toUtf8String(value)
+    if (decoded?.trim()) {
+      return decoded
+    }
+  }
   return value
 }
 

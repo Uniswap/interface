@@ -25,7 +25,12 @@ exports[`DatetimeText renders without error 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#7D7D7D",
+        "color": {
+          "dynamic": {
+            "dark": "#9B9B9B",
+            "light": "#7D7D7D",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -252,7 +257,12 @@ exports[`RelativeChangeText renders loading state 1`] = `
           maxFontSizeMultiplier={1.4}
           style={
             {
-              "color": "transparent",
+              "color": {
+                "dynamic": {
+                  "dark": "transparent",
+                  "light": "transparent",
+                },
+              },
               "fontFamily": "Basel Grotesk",
               "fontSize": 19,
               "fontWeight": "400",
@@ -268,7 +278,12 @@ exports[`RelativeChangeText renders loading state 1`] = `
       <View
         style={
           {
-            "backgroundColor": "#F9F9F9",
+            "backgroundColor": {
+              "dynamic": {
+                "dark": "#1B1B1B",
+                "light": "#F9F9F9",
+              },
+            },
             "borderBottomLeftRadius": 999999,
             "borderBottomRightRadius": 999999,
             "borderTopLeftRadius": 999999,

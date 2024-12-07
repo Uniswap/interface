@@ -17,14 +17,15 @@ const TDPActionPill = styled.button<{ $color?: string }>`
   align-items: center;
   justify-content: center;
   text-align: center;
+  height: 48px;
   gap: 8px;
   border: none;
   border-radius: 50px;
   transition: color 0.2s;
   background-color: ${({ $color, theme }) => $color || theme.neutral2};
   color: ${({ theme }) => theme.neutralContrast};
-  padding: 12px 20px 12px 16px;
-  font-size: 18px;
+  padding: 12px;
+  font-size: 16px;
   font-weight: 535;
   flex-grow: 1;
   ${ClickableStyle}

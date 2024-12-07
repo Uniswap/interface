@@ -14,6 +14,7 @@ import {
   DEFAULT_DEPOSIT_STATE,
   DEFAULT_PRICE_RANGE_STATE,
   useCreatePositionContext,
+  useCreateTxContext,
   useDepositContext,
   usePriceRangeContext,
 } from 'pages/Pool/Positions/create/CreatePositionContext'
@@ -21,27 +22,33 @@ import { DepositStep } from 'pages/Pool/Positions/create/Deposit'
 import { EditRangeSelectionStep, EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
 import { PoolOutOfSyncError } from 'pages/Pool/Positions/create/PoolOutOfSyncError'
 import { SelectPriceRangeStep, SelectPriceRangeStepV2 } from 'pages/Pool/Positions/create/RangeSelectionStep'
+import ResetCreatePositionFormModal from 'pages/Pool/Positions/create/ResetCreatePositionsFormModal'
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
+import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
+import { useInitialCurrencyInputs } from 'pages/Pool/Positions/create/hooks'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
+import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { PositionField } from 'types/position'
 import { Button, Flex, Text, useMedia } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
-import { Settings } from 'ui/src/components/icons/Settings'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { ActionSheetDropdown } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/form/SwapFormSettings'
+import { Deadline } from 'uniswap/src/features/transactions/swap/settings/configs/Deadline'
+import { SwapSettingsContextProvider } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 import { usePrevious } from 'utilities/src/react/hooks'
 
 function CreatingPoolInfo() {
@@ -86,6 +93,7 @@ function CreatePositionInner() {
     setStep,
   } = useCreatePositionContext()
   const v2Selected = protocolVersion === ProtocolVersion.V2
+  const { error, refetch } = useCreateTxContext()
 
   const handleContinue = useCallback(() => {
     if (v2Selected) {
@@ -127,6 +135,7 @@ function CreatePositionInner() {
       <EditSelectTokensStep />
       {!v2Selected && <EditRangeSelectionStep />}
       <DepositStep />
+      {error && <TradingAPIError refetch={refetch} />}
     </Trace>
   )
 }
@@ -170,9 +179,37 @@ const Sidebar = () => {
   }, [creatingPoolOrPair, protocolVersion, setStep, step, t])
 
   return (
-    <Flex width={360}>
+    <Flex width={360} alignSelf="flex-start" $platform-web={{ position: 'sticky', top: INTERFACE_NAV_HEIGHT + 25 }}>
       <PoolProgressIndicator steps={PoolProgressSteps} />
     </Flex>
+  )
+}
+
+interface ResetProps {
+  onClickReset: () => void
+  isDisabled: boolean
+}
+
+const ResetButton = ({ onClickReset, isDisabled }: ResetProps) => {
+  return (
+    <Button
+      theme="tertiary"
+      py="10px"
+      px="$spacing12"
+      backgroundColor="$surface1"
+      borderRadius="$rounded12"
+      borderColor="$surface3"
+      borderWidth="$spacing1"
+      gap="$gap4"
+      onPress={onClickReset}
+      disabled={isDisabled}
+      flex={1}
+    >
+      <RotateLeft size={iconSizes.icon16} color="$neutral1" />
+      <Text variant="buttonLabel3" lineHeight="16px">
+        <Trans i18nKey="common.button.reset" />
+      </Text>
+    </Button>
   )
 }
 
@@ -183,11 +220,19 @@ const Toolbar = ({
   defaultInitialToken: Currency
   isV4DataEnabled: boolean
 }) => {
-  const { positionState, setPositionState, setStep } = useCreatePositionContext()
-  const { protocolVersion } = positionState
-  const { priceRangeState, setPriceRangeState } = usePriceRangeContext()
-  const { depositState, setDepositState } = useDepositContext()
   const navigate = useNavigate()
+  const { positionState, setPositionState, setStep, reset: resetCreatePositionState } = useCreatePositionContext()
+  const { protocolVersion } = positionState
+  const { setPriceRangeState } = usePriceRangeContext()
+
+  const [showResetModal, setShowResetModal] = useState(false)
+
+  const { priceRangeState, reset: resetPriceRangeState } = usePriceRangeContext()
+  const { depositState, reset: resetDepositState } = useDepositContext()
+  const { reset: resetMultichainState } = useMultichainContext()
+
+  const { isTestnetModeEnabled } = useEnabledChains()
+  const prevIsTestnetModeEnabled = usePrevious(isTestnetModeEnabled) ?? false
 
   const isFormUnchanged = useMemo(() => {
     // Check if all form fields (except protocol version) are set to their default values
@@ -209,15 +254,17 @@ const Toolbar = ({
   ])
 
   const handleReset = useCallback(() => {
-    setPositionState({
-      ...DEFAULT_POSITION_STATE,
-      protocolVersion,
-      currencyInputs: { [PositionField.TOKEN0]: defaultInitialToken },
-    })
-    setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
-    setDepositState(DEFAULT_DEPOSIT_STATE)
-    setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
-  }, [protocolVersion, setDepositState, setPositionState, setPriceRangeState, setStep, defaultInitialToken])
+    resetCreatePositionState()
+    resetPriceRangeState()
+    resetMultichainState()
+    resetDepositState()
+  }, [resetDepositState, resetCreatePositionState, resetMultichainState, resetPriceRangeState])
+
+  useEffect(() => {
+    if (isTestnetModeEnabled !== prevIsTestnetModeEnabled) {
+      handleReset()
+    }
+  }, [handleReset, isTestnetModeEnabled, prevIsTestnetModeEnabled])
 
   const handleVersionChange = useCallback(
     (version: ProtocolVersion) => {
@@ -260,90 +307,72 @@ const Toolbar = ({
 
   return (
     <Flex flexDirection="row-reverse" gap="$gap8" centered $md={{ justifyContent: 'flex-end' }}>
-      <Button
-        theme="tertiary"
-        py="10px"
-        px="$spacing12"
-        backgroundColor="$surface1"
-        borderRadius="$rounded12"
-        borderColor="$surface3"
-        borderWidth="$spacing1"
-        gap="$gap4"
+      <Flex p="$spacing6" borderRadius="$rounded12" borderWidth="$spacing1" borderColor="$surface3">
+        <SwapFormSettings
+          position="relative"
+          adjustRightAlignment={false}
+          adjustTopAlignment={false}
+          settings={[Deadline]}
+          iconColor="$neutral1"
+          iconSize="$icon.16"
+        />
+      </Flex>
+      <ActionSheetDropdown
+        options={versionOptions}
+        showArrow={false}
+        closeOnSelect={true}
+        styles={{
+          dropdownMinWidth: 200,
+          buttonPaddingY: '$none',
+        }}
       >
-        <Settings size={iconSizes.icon16} color="$neutral1" />
-      </Button>
-      <Button
-        theme="tertiary"
-        py="$spacing8"
-        pl="$spacing12"
-        pr="$spacing8"
-        alignItems="center"
-        backgroundColor="$surface1"
-        borderRadius="$rounded12"
-        borderColor="$surface3"
-        borderWidth="$spacing1"
-        gap="$gap4"
-        flex={1}
-      >
-        <ActionSheetDropdown
-          options={versionOptions}
-          showArrow={false}
-          closeOnSelect={true}
-          styles={{
-            dropdownMinWidth: 200,
-            buttonPaddingY: '$none',
-            width: '100%',
-          }}
+        <Flex
+          row
+          py="$spacing8"
+          px="$spacing12"
+          alignItems="center"
+          backgroundColor="$surface1"
+          borderRadius="$rounded12"
+          borderColor="$surface3"
+          borderWidth="$spacing1"
+          gap="$gap4"
         >
           <Text variant="buttonLabel3" lineHeight="16px">
             <Trans i18nKey="position.protocol" values={{ protocol: getProtocolVersionLabel(protocolVersion) }} />
           </Text>
           <RotatableChevron direction="down" color="$neutral2" width={iconSizes.icon20} height={iconSizes.icon20} />
-        </ActionSheetDropdown>
-      </Button>
-      <Button
-        theme="tertiary"
-        py="10px"
-        px="$spacing12"
-        backgroundColor="$surface1"
-        borderRadius="$rounded12"
-        borderColor="$surface3"
-        borderWidth="$spacing1"
-        gap="$gap4"
-        onPress={handleReset}
-        disabled={isFormUnchanged}
-        flex={1}
-      >
-        <RotateLeft size={iconSizes.icon16} color="$neutral1" />
-        <Text variant="buttonLabel3" lineHeight="16px">
-          <Trans i18nKey="common.button.reset" />
-        </Text>
-      </Button>
+        </Flex>
+      </ActionSheetDropdown>
+      <ResetButton onClickReset={() => setShowResetModal(true)} isDisabled={isFormUnchanged} />
+      <ResetCreatePositionFormModal
+        isOpen={showResetModal}
+        onClose={() => setShowResetModal(false)}
+        onHandleReset={handleReset}
+      />
     </Flex>
   )
 }
 
-export function CreatePosition() {
+export default function CreatePosition() {
   const { value: lpRedesignEnabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.LPRedesign)
   const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
+  const media = useMedia()
 
+  // URL format is `/positions/create/:protocolVersion`, with possible searchParams `?currencyA=...&currencyB=...&chain=...`
   const { protocolVersion } = useParams<{ protocolVersion: string }>()
-  const { defaultChainId } = useEnabledChains()
   const paramsProtocolVersion = parseProtocolVersion(protocolVersion)
+
+  const initialCurrencyInputs = useInitialCurrencyInputs()
   const initialProtocolVersion = useMemo((): ProtocolVersion => {
     if (isV4DataEnabled) {
       return paramsProtocolVersion ?? ProtocolVersion.V4
     }
-
     if (!paramsProtocolVersion || paramsProtocolVersion === ProtocolVersion.V4) {
       return ProtocolVersion.V3
     }
 
     return paramsProtocolVersion
   }, [isV4DataEnabled, paramsProtocolVersion])
-
-  const media = useMedia()
-  const defaultInitialToken = nativeOnChain(defaultChainId)
 
   if (!isLoading && !lpRedesignEnabled) {
     return <Navigate to="/pools" replace />
@@ -355,54 +384,59 @@ export function CreatePosition() {
 
   return (
     <Trace logImpression page={InterfacePageNameLocal.CreatePosition}>
-      <MultichainContextProvider>
-        <CreatePositionContextProvider
-          initialState={{
-            currencyInputs: { [PositionField.TOKEN0]: defaultInitialToken },
-            protocolVersion: initialProtocolVersion,
-          }}
-        >
-          <PriceRangeContextProvider>
-            <DepositContextProvider>
-              <CreateTxContextProvider>
-                <Flex mt="$spacing24" width="100%" px="$spacing40" maxWidth={1200} $lg={{ px: '$spacing20' }}>
-                  <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-                    <BreadcrumbNavLink to="/positions">
-                      <Trans i18nKey="pool.positions.title" /> <ChevronRight size={14} />
-                    </BreadcrumbNavLink>
-                    <BreadcrumbNavLink to="/positions/create">
-                      <Trans i18nKey="pool.newPosition.title" />
-                    </BreadcrumbNavLink>
-                  </BreadcrumbNavContainer>
-                  <Flex
-                    row
-                    alignSelf="flex-end"
-                    gap="$gap20"
-                    width="100%"
-                    maxWidth={360 + 80 + 600}
-                    justifyContent="space-between"
-                    mr="auto"
-                    mb="$spacing32"
-                    $xl={{ maxWidth: 600 }}
-                    $md={{ flexDirection: 'column' }}
-                  >
-                    <Text variant="heading2">
-                      <Trans i18nKey="position.new" />
-                    </Text>
-                    <Toolbar defaultInitialToken={defaultInitialToken} isV4DataEnabled={isV4DataEnabled} />
-                  </Flex>
-                  <Flex row gap={80} width="100%">
-                    {!media.xl && <Sidebar />}
-                    <Flex gap="$spacing24" flex={1} maxWidth={600} mb="$spacing28">
-                      <CreatePositionInner />
-                      <PoolOutOfSyncError />
+      <MultichainContextProvider initialChainId={initialCurrencyInputs[PositionField.TOKEN0].chainId}>
+        <SwapSettingsContextProvider>
+          <CreatePositionContextProvider
+            initialState={{
+              currencyInputs: initialCurrencyInputs,
+              protocolVersion: initialProtocolVersion,
+            }}
+          >
+            <PriceRangeContextProvider>
+              <DepositContextProvider>
+                <CreateTxContextProvider>
+                  <Flex mt="$spacing24" width="100%" px="$spacing40" maxWidth={1200} $lg={{ px: '$spacing20' }}>
+                    <BreadcrumbNavContainer aria-label="breadcrumb-nav">
+                      <BreadcrumbNavLink to="/positions">
+                        <Trans i18nKey="pool.positions.title" /> <ChevronRight size={14} />
+                      </BreadcrumbNavLink>
+                      <BreadcrumbNavLink to="/positions/create">
+                        <Trans i18nKey="pool.newPosition.title" />
+                      </BreadcrumbNavLink>
+                    </BreadcrumbNavContainer>
+                    <Flex
+                      row
+                      alignSelf="flex-end"
+                      gap="$gap20"
+                      width="100%"
+                      maxWidth={360 + 80 + 600}
+                      justifyContent="space-between"
+                      mr="auto"
+                      mb="$spacing32"
+                      $xl={{ maxWidth: 600 }}
+                      $md={{ flexDirection: 'column' }}
+                    >
+                      <Text variant="heading2">
+                        <Trans i18nKey="position.new" />
+                      </Text>
+                      <Toolbar
+                        defaultInitialToken={initialCurrencyInputs[PositionField.TOKEN0]}
+                        isV4DataEnabled={isV4DataEnabled}
+                      />
+                    </Flex>
+                    <Flex row gap={80} width="100%">
+                      {!media.xl && <Sidebar />}
+                      <Flex gap="$spacing24" flex={1} maxWidth={600} mb="$spacing28">
+                        <CreatePositionInner />
+                        <PoolOutOfSyncError />
+                      </Flex>
                     </Flex>
                   </Flex>
-                </Flex>
-              </CreateTxContextProvider>
-            </DepositContextProvider>
-          </PriceRangeContextProvider>
-        </CreatePositionContextProvider>
+                </CreateTxContextProvider>
+              </DepositContextProvider>
+            </PriceRangeContextProvider>
+          </CreatePositionContextProvider>
+        </SwapSettingsContextProvider>
       </MultichainContextProvider>
     </Trace>
   )

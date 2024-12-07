@@ -1,7 +1,7 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { createUniverseTransaction } from 'state/sagas/transactions/utils'
+import { createUniverseTransaction } from 'state/sagas/utils/transaction'
 import { PendingTransactionDetails } from 'state/transactions/types'
 import { call } from 'typed-redux-saga'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'

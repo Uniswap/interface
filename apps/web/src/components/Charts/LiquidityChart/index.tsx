@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, TICK_SPACINGS, TickMath, tickToPrice } from '@uniswap/v3-sdk'
 import { ChartHoverData, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
@@ -227,15 +229,32 @@ export function useLiquidityBarData({
   feeTier,
   isReversed,
   chainId,
+  version,
+  tickSpacing,
+  hooks,
+  poolId,
 }: {
   tokenA: Token
   tokenB: Token
   feeTier: FeeAmount
   isReversed: boolean
   chainId: UniverseChainId
+  version: ProtocolVersion
+  tickSpacing?: number
+  hooks?: string
+  poolId?: string
 }) {
   const { formatNumber, formatPrice } = useFormatter()
-  const activePoolData = usePoolActiveLiquidity(tokenA, tokenB, feeTier, chainId)
+  const activePoolData = usePoolActiveLiquidity({
+    currencyA: tokenA,
+    currencyB: tokenB,
+    feeAmount: feeTier,
+    version,
+    poolId,
+    chainId,
+    tickSpacing: tickSpacing ?? TICK_SPACINGS[feeTier],
+    hooks,
+  })
 
   const [tickData, setTickData] = useState<{
     barData: LiquidityBarData[]

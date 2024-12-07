@@ -1,18 +1,39 @@
-// this allows us to use es6, es2017, es2018 syntax (const, spread operators outside of array literals, etc.)
 /* eslint-env es6, es2017, es2018 */
 
-const preset = require('../../config/jest-presets/jest/jest-preset')
+const preset = require('../../config/jest-presets/jest/jest-preset');
+
+const { NODE_ENV } = process.env;
+
+/**
+ * Babel config for the UI package. This is inside the jest config because
+ * at the time of configuration there was no babel config for the UI package.
+ */
+const babelConfig = {
+  presets: ['module:@react-native/babel-preset', '@babel/preset-typescript'],
+  plugins: [
+    [
+      'module:react-native-dotenv',
+      {
+        moduleName: 'react-native-dotenv',
+        path: '../../.env.defaults',
+        safe: true,
+        allowUndefined: false,
+      },
+    ],
+    // React Native Reanimated plugin fix
+    '@babel/plugin-proposal-export-namespace-from',
+  ].filter(Boolean),
+};
 
 module.exports = {
   ...preset,
+  preset: 'jest-expo',
   transform: {
-    '\\.svg$': 'jest-transformer-svg',
-    '^.+\\.jsx?$': 'babel-jest',
-    '^.+\\.tsx?$': [
-      'ts-jest',
+    '^.+\\.(t|j)sx?$': [
+      'babel-jest',
       {
-        // this avoids type checking other modules
-        isolatedModules: true
+        presets: babelConfig.presets,
+        plugins: babelConfig.plugins,
       },
     ],
   },
@@ -27,7 +48,14 @@ module.exports = {
       lines: 0,
     },
   },
-  setupFilesAfterEnv: [
+  moduleNameMapper: {
+    ...preset.moduleNameMapper,
+    '@tamagui/core': '@tamagui/core/native-test',
+    '@tamagui/web': '@tamagui/core/native-test',
+  },
+  setupFiles: [
     '../../config/jest-presets/jest/setup.js',
+    './jest-setup.js',
+    '../../node_modules/react-native-gesture-handler/jestSetup.js',
   ],
-}
+};

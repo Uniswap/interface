@@ -1,12 +1,10 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import MobileAppLogo from 'assets/svg/uniswap_app_logo.svg'
 import Modal from 'components/Modal'
-import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
 import { useConnect } from 'hooks/useConnect'
 import { useCallback, useEffect, useState } from 'react'
 import { CloseIcon } from 'theme/components'
 import { Button, Flex, Image, QRCodeDisplay, Separator, Text, useSporeColors } from 'ui/src'
-import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTranslation } from 'uniswap/src/i18n'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
@@ -21,13 +19,6 @@ export default function UniwalletModal() {
   const onLaunchedMobilePlatform = isWebIOS || isWebAndroid
   const open = !onLaunchedMobilePlatform && !!uri && connection.isPending
 
-  const uniswapWalletConnectConnector = useConnectorWithId(
-    CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
-    {
-      shouldThrow: true,
-    },
-  )
-
   useEffect(() => {
     function listener({ type, data }: { type: string; data?: unknown }) {
       if (type === 'display_uniswap_uri' && typeof data === 'string') {
@@ -35,12 +26,12 @@ export default function UniwalletModal() {
       }
     }
 
-    uniswapWalletConnectConnector.emitter.on('message', listener)
+    window.addEventListener('display_uniswap_uri', listener)
 
     return () => {
-      uniswapWalletConnectConnector.emitter.off('message', listener)
+      window.removeEventListener('display_uniswap_uri', listener)
     }
-  }, [uniswapWalletConnectConnector.emitter])
+  }, [])
 
   const close = useCallback(() => {
     connection?.reset()

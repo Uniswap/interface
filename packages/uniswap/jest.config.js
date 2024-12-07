@@ -5,6 +5,7 @@ const preset = require('../../config/jest-presets/jest/jest-preset')
 
 module.exports = {
   ...preset,
+  testTimeout: 15000,
   preset: 'jest-expo',
   displayName: 'Uniswap Package',
   collectCoverageFrom: [

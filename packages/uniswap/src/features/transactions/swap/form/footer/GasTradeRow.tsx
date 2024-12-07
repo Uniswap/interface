@@ -1,23 +1,25 @@
-import { useEffect, useState } from 'react'
+import { PropsWithChildren, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Accordion, Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { Gas } from 'ui/src/components/icons/Gas'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes } from 'ui/src/theme'
 import { UniswapXFee } from 'uniswap/src/components/gas/NetworkFee'
+import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
   useFormattedUniswapXGasFeeInfo,
   useGasFeeFormattedAmounts,
   useGasFeeHighRelativeToValue,
 } from 'uniswap/src/features/gas/hooks'
 import { FormattedUniswapXGasFeeInfo, GasFeeResult } from 'uniswap/src/features/gas/types'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
 import { NetworkFeeWarning } from 'uniswap/src/features/transactions/swap/modals/NetworkFeeWarning'
-import { PriceImpactWarning } from 'uniswap/src/features/transactions/swap/modals/PriceImpactWarning'
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/review/SwapRateRatio'
 import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -145,16 +147,14 @@ function GasRow({ gasInfo, hidden }: { gasInfo: DebouncedGasInfo; hidden?: boole
 // the parent needs to check whether to render an empty row based on `gasInfo` fields first.
 export function GasTradeRow({
   gasInfo,
-  showPriceImpactWarning,
-  priceImpactWarning,
+  warning,
 }: {
   gasInfo: DebouncedGasInfo
-  showPriceImpactWarning?: boolean
-  priceImpactWarning?: Warning
+  warning?: Warning
 }): JSX.Element | null {
   // Debounce the trade to prevent flickering on input
   const debouncedTrade = useDebouncedTrade()
-  const warningColor = getAlertColor(priceImpactWarning?.severity)
+  const warningColor = getAlertColor(warning?.severity)
   const { isTestnetModeEnabled } = useEnabledChains()
 
   if (isTestnetModeEnabled) {
@@ -168,19 +168,19 @@ export function GasTradeRow({
   return (
     <Flex centered row>
       <Flex fill>
-        {debouncedTrade && !showPriceImpactWarning && (
+        {debouncedTrade && !warning && (
           <SwapRateRatio initialInverse={true} styling="secondary" trade={debouncedTrade} />
         )}
 
-        {showPriceImpactWarning && priceImpactWarning && (
-          <PriceImpactWarning warning={priceImpactWarning}>
-            <Flex row centered>
-              <AlertTriangleFilled mr={2} color={warningColor.text} size="$icon.16" />
+        {warning && (
+          <TradeWarning warning={warning}>
+            <Flex row centered gap="$gap8">
+              <AlertTriangleFilled color={warningColor.text} size="$icon.20" />
               <Text color={warningColor.text} variant="body3">
-                {priceImpactWarning.title}
+                {warning.title}
               </Text>
             </Flex>
-          </PriceImpactWarning>
+          </TradeWarning>
         )}
       </Flex>
 
@@ -207,6 +207,29 @@ export function GasTradeRow({
       ) : (
         <GasRow gasInfo={gasInfo} />
       )}
+    </Flex>
+  )
+}
+
+export function TradeWarning({ children, warning }: PropsWithChildren<{ warning: Warning }>): JSX.Element {
+  const { t } = useTranslation()
+
+  const caption = warning.message
+
+  return (
+    <Flex animation="quick" enterStyle={{ opacity: 0 }}>
+      <WarningInfo
+        modalProps={{
+          caption,
+          rejectText: t('common.button.close'),
+          modalName: ModalName.SwapWarning,
+          severity: warning.severity,
+          title: warning.title ?? '',
+          icon: <AlertTriangleFilled color="$statusCritical" size="$icon.16" />,
+        }}
+        tooltipProps={{ text: caption ?? '', placement: 'bottom' }}
+        trigger={children}
+      />
     </Flex>
   )
 }

@@ -32,9 +32,8 @@ export function usePoolPriceChartData(
   sortedCurrencyAAddress: string,
 ): ChartQueryResult<PriceChartData, ChartType.PRICE> {
   const { data, loading } = usePoolPriceHistoryQuery({ variables, skip: !variables?.addressOrId })
-
   return useMemo(() => {
-    const { priceHistory } = data?.v2Pair ?? data?.v3Pool ?? {}
+    const { priceHistory } = data?.v2Pair ?? data?.v3Pool ?? data?.v4Pool ?? {}
 
     const entries =
       priceHistory
@@ -59,5 +58,5 @@ export function usePoolPriceChartData(
     const dataQuality = loading || !priceHistory || !priceHistory.length ? DataQuality.INVALID : DataQuality.VALID
 
     return { chartType: ChartType.PRICE, entries, loading, dataQuality }
-  }, [data?.v2Pair, data?.v3Pool, loading, currencyA, sortedCurrencyAAddress, protocolVersion])
+  }, [data?.v2Pair, data?.v3Pool, data?.v4Pool, loading, sortedCurrencyAAddress, currencyA, protocolVersion])
 }

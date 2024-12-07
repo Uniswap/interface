@@ -203,13 +203,14 @@ function V2PairMigration({
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks
   const { [Bound.LOWER]: priceLower, [Bound.UPPER]: priceUpper } = pricesAtTicks
 
-  const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper } = useRangeHopCallbacks(
-    baseToken,
-    baseToken.equals(token0) ? token1 : token0,
+  const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper } = useRangeHopCallbacks({
+    baseCurrency: baseToken,
+    quoteCurrency: baseToken.equals(token0) ? token1 : token0,
     feeAmount,
     tickLower,
     tickUpper,
-  )
+    pool,
+  })
 
   const { onLeftRangeInput, onRightRangeInput } = useV3MintActionHandlers(noLiquidity)
 

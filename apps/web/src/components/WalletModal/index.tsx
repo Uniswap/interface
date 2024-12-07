@@ -73,7 +73,7 @@ const StyledCollapsedIcon = styled(CollapsedIcon)`
 export default function WalletModal() {
   const { t } = useTranslation()
   const showMoonpayText = useShowMoonpayText()
-  const connectors = useOrderedConnections(true /** exclude uniswap connectors since they're shown separately */)
+  const connectors = useOrderedConnections()
   const isUniExtensionAvailable = useIsUniExtensionAvailable()
   const [showOtherWallets, toggleShowOtherWallets] = useReducer((s) => !s, true)
 

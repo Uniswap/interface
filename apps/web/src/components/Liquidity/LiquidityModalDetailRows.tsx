@@ -1,6 +1,10 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
+import { useCurrencyInfo } from 'hooks/Tokens'
 import { Flex, Text } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
+import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
+import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Trans } from 'uniswap/src/i18n'
 import { NumberType } from 'utilities/src/format/types'
@@ -15,6 +19,8 @@ export function LiquidityModalDetailRows({
   networkCost?: CurrencyAmount<Currency>
 }) {
   const { formatCurrencyAmount } = useLocalizationContext()
+  const currency0Info = useCurrencyInfo(currency0Amount.currency)
+  const currency1Info = useCurrencyInfo(currency1Amount.currency)
 
   return (
     <Flex px="$padding16" gap="$gap8">
@@ -26,10 +32,13 @@ export function LiquidityModalDetailRows({
             </Text>
           ),
           Value: () => (
-            <Text variant="body3" color="$neutral1">
-              {formatCurrencyAmount({ value: currency0Amount, type: NumberType.TokenNonTx })}{' '}
-              {currency0Amount?.currency.symbol}
-            </Text>
+            <Flex row gap="$gap4" alignItems="center">
+              <CurrencyLogo currencyInfo={currency0Info} size={iconSizes.icon16} />
+              <Text variant="body3" color="$neutral1">
+                {formatCurrencyAmount({ value: currency0Amount, type: NumberType.TokenNonTx })}{' '}
+                {currency0Amount?.currency.symbol}
+              </Text>
+            </Flex>
           ),
         }}
       />
@@ -41,27 +50,35 @@ export function LiquidityModalDetailRows({
             </Text>
           ),
           Value: () => (
-            <Text variant="body3" color="$neutral1">
-              {formatCurrencyAmount({ value: currency1Amount, type: NumberType.TokenNonTx })}{' '}
-              {currency1Amount?.currency.symbol}
-            </Text>
+            <Flex row gap="$gap4" alignItems="center">
+              <CurrencyLogo currencyInfo={currency1Info} size={iconSizes.icon16} />
+              <Text variant="body3" color="$neutral1">
+                {formatCurrencyAmount({ value: currency1Amount, type: NumberType.TokenNonTx })}{' '}
+                {currency1Amount?.currency.symbol}
+              </Text>
+            </Flex>
           ),
         }}
       />
-      <DetailLineItem
-        LineItem={{
-          Label: () => (
-            <Text variant="body3" color="$neutral2">
-              <Trans i18nKey="common.networkCost" />
-            </Text>
-          ),
-          Value: () => (
-            <Text variant="body3" color="$neutral1">
-              {formatCurrencyAmount({ value: networkCost, type: NumberType.FiatGasPrice })}
-            </Text>
-          ),
-        }}
-      />
+      {Boolean(networkCost) && (
+        <DetailLineItem
+          LineItem={{
+            Label: () => (
+              <Text variant="body3" color="$neutral2">
+                <Trans i18nKey="common.networkCost" />
+              </Text>
+            ),
+            Value: () => (
+              <Flex row gap="$gap4" alignItems="center">
+                <NetworkLogo chainId={currency0Amount.currency.chainId} size={iconSizes.icon16} shape="square" />
+                <Text variant="body3" color="$neutral1">
+                  {formatCurrencyAmount({ value: networkCost, type: NumberType.FiatGasPrice })}
+                </Text>
+              </Flex>
+            ),
+          }}
+        />
+      )}
     </Flex>
   )
 }

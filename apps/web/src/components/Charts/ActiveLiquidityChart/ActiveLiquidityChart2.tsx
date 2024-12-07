@@ -126,6 +126,7 @@ export function ActiveLiquidityChart2({
             yScale={yScale}
             interactive={!disableBrushInteraction}
             brushExtent={brushDomain ?? (yScale.domain() as [number, number])}
+            hideHandles={!brushDomain}
             width={width}
             height={height}
             offset={axisLabelPaneWidth}

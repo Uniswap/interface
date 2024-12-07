@@ -1,22 +1,21 @@
 // eslint-disable-next-line no-restricted-imports
-import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
-import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
+import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from 'components/Liquidity/LiquidityPositionInfo'
 import { useGetPoolTokenPercentage } from 'components/Liquidity/hooks'
 import { parseRestPosition } from 'components/Liquidity/utils'
 import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
 import { ZERO_ADDRESS } from 'constants/misc'
-import { LoadingRows } from 'pages/LegacyPool/styled'
 import NotFound from 'pages/NotFound'
 import { HeaderButton } from 'pages/Pool/Positions/PositionPage'
-import { LoadingRow } from 'pages/Pool/Positions/shared'
+import { TextLoader } from 'pages/Pool/Positions/shared'
 import { useMemo } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
-import { Button, Flex, Main, Text, styled } from 'ui/src'
+import { Button, Circle, Flex, Main, Shine, Text, styled } from 'ui/src'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
@@ -24,6 +23,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { useAccount } from 'wagmi'
@@ -43,6 +43,22 @@ const BodyWrapper = styled(Main, {
     px: '$padding20',
   },
 })
+
+function RowLoader({ withIcon }: { withIcon?: boolean }) {
+  return (
+    <Flex row width="100%" justifyContent="space-between">
+      <TextLoader variant="subheading2" width={120} />
+      {withIcon ? (
+        <Flex row alignItems="center" gap="$gap4">
+          <TextLoader variant="body2" width={78} />
+          <Circle size={24} backgroundColor="$surface3" />
+        </Flex>
+      ) : (
+        <TextLoader variant="body2" width={72} />
+      )}
+    </Flex>
+  )
+}
 
 export default function V2PositionPage() {
   const { pairAddress } = useParams<{ pairAddress: string }>()
@@ -70,7 +86,7 @@ export default function V2PositionPage() {
 
   const { value: lpRedesignEnabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.LPRedesign)
 
-  const { currency0Amount, currency1Amount, status, liquidityAmount } = positionInfo ?? {}
+  const { currency0Amount, currency1Amount, liquidityAmount } = positionInfo ?? {}
 
   const token0USDValue = useUSDCValue(currency0Amount)
   const token1USDValue = useUSDCValue(currency1Amount)
@@ -80,28 +96,7 @@ export default function V2PositionPage() {
     return <Navigate to="/pools" replace />
   }
 
-  if (positionLoading) {
-    return (
-      <BodyWrapper>
-        <LoadingRows>
-          <LoadingRow />
-          <LoadingRow />
-          <LoadingRow />
-          <LoadingRow />
-          <LoadingRow />
-          <LoadingRow />
-          <LoadingRow />
-          <LoadingRow />
-          <LoadingRow />
-          <LoadingRow />
-          <LoadingRow />
-          <LoadingRow />
-        </LoadingRows>
-      </BodyWrapper>
-    )
-  }
-
-  if (!positionInfo || !liquidityAmount || !currency0Amount || !currency1Amount) {
+  if (!positionLoading && (!positionInfo || !liquidityAmount || !currency0Amount || !currency1Amount)) {
     return (
       <NotFound
         title={<Text variant="heading2">{t('position.notFound')}</Text>}
@@ -125,112 +120,134 @@ export default function V2PositionPage() {
             <BreadcrumbNavLink to="/positions">
               <Trans i18nKey="pool.positions.title" /> <ChevronRight size={14} />
             </BreadcrumbNavLink>
+            {positionInfo && <Text variant="subheading2">{shortenAddress(positionInfo.poolId)}</Text>}
           </BreadcrumbNavContainer>
         </Flex>
 
-        <LiquidityPositionInfo positionInfo={positionInfo} />
-        {status === PositionStatus.IN_RANGE && (
-          <Flex row gap="$gap12" alignItems="center" maxWidth="100%" flexWrap="wrap">
-            <HeaderButton
-              emphasis="secondary"
-              onPress={() => {
-                navigate('/migrate/v2')
-              }}
-            >
-              <Text variant="buttonLabel2" color="$neutral1">
-                <Trans i18nKey="common.migrate.v3" />
-              </Text>
-            </HeaderButton>
-            <HeaderButton
-              emphasis="secondary"
-              onPress={() => {
-                dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: positionInfo }))
-              }}
-            >
-              <Text variant="buttonLabel2" color="$neutral1">
-                <Trans i18nKey="common.addLiquidity" />
-              </Text>
-            </HeaderButton>
-            <HeaderButton
-              emphasis="primary"
-              onPress={() => {
-                dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: positionInfo }))
-              }}
-            >
-              <Text variant="buttonLabel2" color="$surface1">
-                <Trans i18nKey="pool.removeLiquidity" />
-              </Text>
-            </HeaderButton>
-          </Flex>
+        {positionLoading || !positionInfo ? (
+          <Shine>
+            <LiquidityPositionInfoLoader hideStatus />
+          </Shine>
+        ) : (
+          <LiquidityPositionInfo positionInfo={positionInfo} />
         )}
+        <Flex row gap="$gap12" alignItems="center" maxWidth="100%" flexWrap="wrap">
+          <HeaderButton
+            disabled={positionLoading}
+            emphasis="secondary"
+            onPress={() => {
+              navigate('/migrate/v2')
+            }}
+          >
+            <Text variant="buttonLabel2" color="$neutral1">
+              <Trans i18nKey="common.migrate.v3" />
+            </Text>
+          </HeaderButton>
+          <HeaderButton
+            disabled={positionLoading}
+            emphasis="secondary"
+            onPress={() => {
+              dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: positionInfo }))
+            }}
+          >
+            <Text variant="buttonLabel2" color="$neutral1">
+              <Trans i18nKey="common.addLiquidity" />
+            </Text>
+          </HeaderButton>
+          <HeaderButton
+            disabled={positionLoading}
+            emphasis="primary"
+            onPress={() => {
+              dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: positionInfo }))
+            }}
+          >
+            <Text variant="buttonLabel2" color="$surface1">
+              <Trans i18nKey="pool.removeLiquidity" />
+            </Text>
+          </HeaderButton>
+        </Flex>
         <Flex borderColor="$surface3" borderWidth={1} p="$spacing24" gap="$gap12" borderRadius="$rounded20">
-          <Flex row width="100%" justifyContent="space-between">
-            <Text variant="subheading2" color="$neutral2">
-              <Trans i18nKey="position.currentValue" />
-            </Text>
-            <Text variant="body2">
-              {token0USDValue && token1USDValue
-                ? formatCurrencyAmount({ value: token0USDValue.add(token1USDValue), type: NumberType.FiatStandard })
-                : '-'}
-            </Text>
-          </Flex>
-          <Flex row width="100%" justifyContent="space-between">
-            <Text variant="subheading2" color="$neutral2">
-              <Trans i18nKey="pool.totalTokens" />
-            </Text>
-            <Flex row gap="$gap8">
-              <Text variant="body2">
-                {formatCurrencyAmount({ value: liquidityAmount, type: NumberType.TokenNonTx })}
-              </Text>
-              <DoubleCurrencyAndChainLogo
-                chainId={currency0Amount.currency.chainId}
-                currencies={[currency0Amount?.currency, currency1Amount?.currency]}
-                size={24}
-              />
-            </Flex>
-          </Flex>
-          <Flex row width="100%" justifyContent="space-between">
-            <Text variant="subheading2" color="$neutral2">
-              <Trans
-                i18nKey="position.depositedCurrency"
-                values={{ currencySymbol: currency0Amount.currency.symbol }}
-              />
-            </Text>
-            <Flex row gap="$gap8">
-              <Text variant="body2">
-                {formatCurrencyAmount({ value: currency0Amount, type: NumberType.TokenNonTx })}
-              </Text>
-              <DoubleCurrencyAndChainLogo
-                chainId={currency0Amount?.currency.chainId}
-                currencies={[currency0Amount?.currency]}
-                size={24}
-              />
-            </Flex>
-          </Flex>
-          <Flex row width="100%" justifyContent="space-between">
-            <Text variant="subheading2" color="$neutral2">
-              <Trans
-                i18nKey="position.depositedCurrency"
-                values={{ currencySymbol: currency1Amount.currency.symbol }}
-              />
-            </Text>
-            <Flex row gap="$gap8">
-              <Text variant="body2">
-                {formatCurrencyAmount({ value: currency1Amount, type: NumberType.TokenNonTx })}
-              </Text>
-              <DoubleCurrencyAndChainLogo
-                chainId={currency1Amount?.currency.chainId}
-                currencies={[currency1Amount?.currency]}
-                size={24}
-              />
-            </Flex>
-          </Flex>
-          <Flex row width="100%" justifyContent="space-between">
-            <Text variant="subheading2" color="$neutral2">
-              <Trans i18nKey="addLiquidity.shareOfPool" />
-            </Text>
-            <Text variant="body2">{formatPercent(poolTokenPercentage?.toFixed(6))}</Text>
-          </Flex>
+          {positionLoading || !currency0Amount || !currency1Amount ? (
+            <Shine>
+              <Flex gap="$gap12">
+                <RowLoader />
+                <RowLoader withIcon />
+                <RowLoader withIcon />
+                <RowLoader withIcon />
+                <RowLoader />
+              </Flex>
+            </Shine>
+          ) : (
+            <>
+              <Flex row width="100%" justifyContent="space-between">
+                <Text variant="subheading2" color="$neutral2">
+                  <Trans i18nKey="position.currentValue" />
+                </Text>
+                <Text variant="body2">
+                  {token0USDValue && token1USDValue
+                    ? formatCurrencyAmount({ value: token0USDValue.add(token1USDValue), type: NumberType.FiatStandard })
+                    : '-'}
+                </Text>
+              </Flex>
+              <Flex row width="100%" justifyContent="space-between">
+                <Text variant="subheading2" color="$neutral2">
+                  <Trans i18nKey="pool.totalTokens" />
+                </Text>
+                <Flex row gap="$gap8">
+                  <Text variant="body2">
+                    {formatCurrencyAmount({ value: liquidityAmount, type: NumberType.TokenNonTx })}
+                  </Text>
+                  <DoubleCurrencyAndChainLogo
+                    chainId={currency0Amount.currency.chainId}
+                    currencies={[currency0Amount?.currency, currency1Amount?.currency]}
+                    size={24}
+                  />
+                </Flex>
+              </Flex>
+              <Flex row width="100%" justifyContent="space-between">
+                <Text variant="subheading2" color="$neutral2">
+                  <Trans
+                    i18nKey="position.depositedCurrency"
+                    values={{ currencySymbol: currency0Amount.currency.symbol }}
+                  />
+                </Text>
+                <Flex row gap="$gap8">
+                  <Text variant="body2">
+                    {formatCurrencyAmount({ value: currency0Amount, type: NumberType.TokenNonTx })}
+                  </Text>
+                  <DoubleCurrencyAndChainLogo
+                    chainId={currency0Amount?.currency.chainId}
+                    currencies={[currency0Amount?.currency]}
+                    size={24}
+                  />
+                </Flex>
+              </Flex>
+              <Flex row width="100%" justifyContent="space-between">
+                <Text variant="subheading2" color="$neutral2">
+                  <Trans
+                    i18nKey="position.depositedCurrency"
+                    values={{ currencySymbol: currency1Amount.currency.symbol }}
+                  />
+                </Text>
+                <Flex row gap="$gap8">
+                  <Text variant="body2">
+                    {formatCurrencyAmount({ value: currency1Amount, type: NumberType.TokenNonTx })}
+                  </Text>
+                  <DoubleCurrencyAndChainLogo
+                    chainId={currency1Amount?.currency.chainId}
+                    currencies={[currency1Amount?.currency]}
+                    size={24}
+                  />
+                </Flex>
+              </Flex>
+              <Flex row width="100%" justifyContent="space-between">
+                <Text variant="subheading2" color="$neutral2">
+                  <Trans i18nKey="addLiquidity.shareOfPool" />
+                </Text>
+                <Text variant="body2">{formatPercent(poolTokenPercentage?.toFixed(6))}</Text>
+              </Flex>
+            </>
+          )}
         </Flex>
       </Flex>
     </BodyWrapper>

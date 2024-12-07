@@ -1,3 +1,4 @@
+import { datadogLogs } from '@datadog/browser-logs'
 import { datadogRum } from '@datadog/browser-rum'
 import { getDatadogEnvironment } from 'src/app/version'
 import { config } from 'uniswap/src/config'
@@ -15,12 +16,16 @@ export async function initializeDatadog(appName: string): Promise<void> {
     return
   }
 
-  datadogRum.init({
-    applicationId: config.datadogProjectId,
+  const sharedDatadogConfig = {
     clientToken: config.datadogClientToken,
     service: `extension-${getDatadogEnvironment()}`,
     env: getDatadogEnvironment(),
     version: process.env.VERSION,
+  }
+
+  datadogRum.init({
+    ...sharedDatadogConfig,
+    applicationId: config.datadogProjectId,
     sessionSampleRate: 100,
     sessionReplaySampleRate: 0,
     trackResources: true,
@@ -42,6 +47,12 @@ export async function initializeDatadog(appName: string): Promise<void> {
       }
       return true
     },
+  })
+
+  datadogLogs.init({
+    ...sharedDatadogConfig,
+    site: 'datadoghq.com',
+    forwardErrorsToLogs: false,
   })
 
   try {

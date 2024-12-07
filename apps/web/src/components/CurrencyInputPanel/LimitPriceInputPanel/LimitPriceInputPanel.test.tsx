@@ -10,6 +10,7 @@ import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
 const mockMultichainContextValue = {
+  reset: jest.fn(),
   setSelectedChainId: jest.fn(),
   setIsUserSelectedToken: jest.fn(),
   isSwapAndLimitContext: true,

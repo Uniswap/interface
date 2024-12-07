@@ -6,19 +6,14 @@ exports[`TokenItem renders without error 1`] = `
   onPress={[MockFunction]}
 >
   <View
-    cancelable={true}
-    disabled={false}
-    focusable={true}
-    hitSlop={[Function]}
-    minPressDuration={0}
-    onBlur={[Function]}
-    onFocus={[Function]}
-    onLongPress={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
-    onPress={[Function]}
-    onPressIn={[Function]}
-    onPressOut={[Function]}
+    hitSlop={
+      {
+        "bottom": 5,
+        "left": 5,
+        "right": 5,
+        "top": 5,
+      }
+    }
     style={
       {
         "flexDirection": "column",
@@ -76,7 +71,12 @@ exports[`TokenItem renders without error 1`] = `
             maxFontSizeMultiplier={1.4}
             style={
               {
-                "color": "#7D7D7D",
+                "color": {
+                  "dynamic": {
+                    "dark": "#9B9B9B",
+                    "light": "#7D7D7D",
+                  },
+                },
                 "fontFamily": "Basel Grotesk",
                 "fontSize": 15,
                 "fontWeight": "400",
@@ -157,7 +157,12 @@ exports[`TokenItem renders without error 1`] = `
           numberOfLines={1}
           style={
             {
-              "color": "#222222",
+              "color": {
+                "dynamic": {
+                  "dark": "#FFFFFF",
+                  "light": "#222222",
+                },
+              },
               "fontFamily": "Basel Grotesk",
               "fontSize": 19,
               "fontWeight": "400",
@@ -174,7 +179,12 @@ exports[`TokenItem renders without error 1`] = `
           numberOfLines={1}
           style={
             {
-              "color": "#7D7D7D",
+              "color": {
+                "dynamic": {
+                  "dark": "#9B9B9B",
+                  "light": "#7D7D7D",
+                },
+              },
               "fontFamily": "Basel Grotesk",
               "fontSize": 17,
               "fontWeight": "400",
@@ -217,7 +227,12 @@ exports[`TokenItem renders without error 1`] = `
               maxFontSizeMultiplier={1.4}
               style={
                 {
-                  "color": "#222222",
+                  "color": {
+                    "dynamic": {
+                      "dark": "#FFFFFF",
+                      "light": "#222222",
+                    },
+                  },
                   "fontFamily": "Basel Grotesk",
                   "fontSize": 19,
                   "fontWeight": "400",
@@ -252,7 +267,12 @@ exports[`TokenItem renders without error 1`] = `
                   maxFontSizeMultiplier={1.4}
                   style={
                     {
-                      "color": "#7D7D7D",
+                      "color": {
+                        "dynamic": {
+                          "dark": "#9B9B9B",
+                          "light": "#7D7D7D",
+                        },
+                      },
                       "fontFamily": "Basel Grotesk",
                       "fontSize": 17,
                       "fontWeight": "400",

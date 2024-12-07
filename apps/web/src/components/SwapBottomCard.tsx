@@ -19,7 +19,7 @@ import { selectHasViewedBridgingBanner } from 'uniswap/src/features/behaviorHist
 import { setHasViewedBridgingBanner } from 'uniswap/src/features/behaviorHistory/slice'
 import { useIsBridgingChain, useNumBridgingChains } from 'uniswap/src/features/bridging/hooks/chains'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTranslation } from 'uniswap/src/i18n'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'

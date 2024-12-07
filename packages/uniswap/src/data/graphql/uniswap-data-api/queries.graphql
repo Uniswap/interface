@@ -513,14 +513,14 @@ query TokenProjects($contracts: [ContractInput!]!) {
   }
 }
 
-query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth, $chains: [Chain!]!) {
+query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth, $chains: [Chain!]!, $pageSize: Int = 100) {
   portfolios(
     ownerAddresses: [$address]
     chains: $chains
   ) {
     id
     assetActivities(
-      pageSize: 100
+      pageSize: $pageSize
       page: 1
       includeOffChain: true
       includeBridging: true

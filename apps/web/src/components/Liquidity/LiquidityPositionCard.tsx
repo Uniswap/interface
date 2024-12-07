@@ -1,8 +1,14 @@
 // eslint-disable-next-line no-restricted-imports
-import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { LiquidityPositionRangeChart } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
-import { LiquidityPositionFeeStats } from 'components/Liquidity/LiquidityPositionFeeStats'
-import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import {
+  LiquidityPositionRangeChart,
+  LiquidityPositionRangeChartLoader,
+} from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
+import {
+  LiquidityPositionFeeStats,
+  LiquidityPositionFeeStatsLoader,
+} from 'components/Liquidity/LiquidityPositionFeeStats'
+import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from 'components/Liquidity/LiquidityPositionInfo'
 import { useGetRangeDisplay, useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
 import { PositionInfo } from 'components/Liquidity/types'
 import { PriceOrdering } from 'components/PositionListItem'
@@ -15,13 +21,23 @@ import { useNavigate } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { ClickableTamaguiStyle } from 'theme/components'
-import { Button, Flex, GeneratedIcon, Separator, Text, TouchableArea, useIsTouchDevice, useSporeColors } from 'ui/src'
-import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
+import {
+  Button,
+  Flex,
+  GeneratedIcon,
+  Separator,
+  Shine,
+  Text,
+  TouchableArea,
+  useIsTouchDevice,
+  useSporeColors,
+} from 'ui/src'
 import { ArrowsLeftRight } from 'ui/src/components/icons/ArrowsLeftRight'
 import { Dollar } from 'ui/src/components/icons/Dollar'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { Minus } from 'ui/src/components/icons/Minus'
 import { Plus } from 'ui/src/components/icons/Plus'
+import { RightArrow } from 'ui/src/components/icons/RightArrow'
 import { iconSizes } from 'ui/src/theme'
 import { ActionSheetDropdown } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -44,6 +60,34 @@ function DropdownOptionRender({ children, Icon }: { children: React.ReactNode; I
   )
 }
 
+export function LiquidityPositionCardLoader() {
+  return (
+    <Shine>
+      <Flex
+        p="$spacing24"
+        gap="$spacing24"
+        borderWidth={1}
+        borderRadius="$rounded20"
+        borderColor="$surface3"
+        width="100%"
+        overflow="hidden"
+        $md={{ gap: '$gap20' }}
+      >
+        <Flex
+          row
+          alignItems="center"
+          justifyContent="space-between"
+          $md={{ row: false, alignItems: 'flex-start', gap: '$gap20' }}
+        >
+          <LiquidityPositionInfoLoader />
+          <LiquidityPositionRangeChartLoader />
+        </Flex>
+        <LiquidityPositionFeeStatsLoader />
+      </Flex>
+    </Shine>
+  )
+}
+
 export function LiquidityPositionCard({
   liquidityPosition,
   isMiniVersion,
@@ -57,6 +101,7 @@ export function LiquidityPositionCard({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const isTouchDevice = useIsTouchDevice()
+  const [pricesInverted, setPricesInverted] = useState(false)
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
@@ -84,8 +129,7 @@ export function LiquidityPositionCard({
     fiatFeeValue0 && fiatFeeValue1
       ? formatCurrencyAmount({
           value: fiatFeeValue0.add(fiatFeeValue1),
-          type:
-            liquidityPosition.status === PositionStatus.CLOSED ? NumberType.FiatStandard : NumberType.FiatTokenPrice,
+          type: NumberType.FiatStandard,
         })
       : undefined
 
@@ -117,7 +161,7 @@ export function LiquidityPositionCard({
         }
         navigate(`/migrate/v2/${liquidityPosition.liquidityToken?.address ?? ''}`)
       },
-      render: () => <DropdownOptionRender Icon={ArrowRight}>{t('pool.migrateLiquidity')}</DropdownOptionRender>,
+      render: () => <DropdownOptionRender Icon={RightArrow}>{t('pool.migrateLiquidity')}</DropdownOptionRender>,
     }
 
     if (liquidityPosition.version === ProtocolVersion.V2) {
@@ -129,7 +173,7 @@ export function LiquidityPositionCard({
       onPress: () => {
         navigate(`/migrate/v3/${chainInfo.urlParam}/${liquidityPosition.tokenId}`)
       },
-      render: () => <DropdownOptionRender Icon={ArrowRight}>{t('pool.migrateLiquidity')}</DropdownOptionRender>,
+      render: () => <DropdownOptionRender Icon={RightArrow}>{t('pool.migrateLiquidity')}</DropdownOptionRender>,
     }
 
     return [
@@ -162,6 +206,23 @@ export function LiquidityPositionCard({
       },
     ]
   }, [liquidityPosition, dispatch, t, account.chainId, navigate, switchChain])
+
+  const priceOrderingForChart = useMemo(() => {
+    if (
+      (liquidityPosition?.version !== ProtocolVersion.V3 && liquidityPosition?.version !== ProtocolVersion.V4) ||
+      !liquidityPosition.position ||
+      !liquidityPosition.liquidity ||
+      !liquidityPosition.tickLower ||
+      !liquidityPosition.tickUpper
+    ) {
+      return {}
+    }
+    return {
+      base: pricesInverted ? liquidityPosition.position.amount1.currency : liquidityPosition.position.amount0.currency,
+      priceLower: liquidityPosition.position.token0PriceLower,
+      priceUpper: liquidityPosition.position.token0PriceUpper,
+    }
+  }, [liquidityPosition, pricesInverted])
 
   if (isMiniVersion) {
     return (
@@ -200,7 +261,19 @@ export function LiquidityPositionCard({
         $md={{ row: false, alignItems: 'flex-start', gap: '$gap20' }}
       >
         <LiquidityPositionInfo positionInfo={liquidityPosition} />
-        <LiquidityPositionRangeChart positionInfo={liquidityPosition} />
+        <LiquidityPositionRangeChart
+          version={liquidityPosition.version}
+          chainId={liquidityPosition.chainId}
+          currency0={
+            pricesInverted ? liquidityPosition.currency1Amount.currency : liquidityPosition.currency0Amount.currency
+          }
+          currency1={
+            pricesInverted ? liquidityPosition.currency0Amount.currency : liquidityPosition.currency1Amount.currency
+          }
+          positionStatus={liquidityPosition.status}
+          poolAddressOrId={liquidityPosition.poolId}
+          priceOrdering={priceOrderingForChart}
+        />
       </Flex>
       <LiquidityPositionFeeStats
         formattedUsdValue={v3OrV4FormattedUsdValue ?? v2FormattedUsdValue}
@@ -211,6 +284,8 @@ export function LiquidityPositionCard({
         tickUpper={liquidityPosition.tickUpper}
         version={liquidityPosition.version}
         apr={apr}
+        pricesInverted={pricesInverted}
+        setPricesInverted={setPricesInverted}
       />
       {!isTouchDevice && (
         <Flex

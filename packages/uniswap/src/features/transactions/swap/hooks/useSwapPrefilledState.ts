@@ -13,7 +13,6 @@ export function useSwapPrefilledState(initialState: TransactionState | undefined
     (): SwapFormState | undefined =>
       initialState
         ? {
-            customSlippageTolerance: initialState.customSlippageTolerance,
             exactAmountFiat: initialState.exactAmountFiat,
             exactAmountToken: initialState.exactAmountToken,
             exactCurrencyField: initialState.exactCurrencyField,
@@ -28,7 +27,6 @@ export function useSwapPrefilledState(initialState: TransactionState | undefined
             txId: initialState.txId,
             isFiatMode: false,
             isSubmitting: false,
-            selectedProtocols: initialState.selectedProtocols ?? DEFAULT_PROTOCOL_OPTIONS,
           }
         : undefined,
     [initialState],

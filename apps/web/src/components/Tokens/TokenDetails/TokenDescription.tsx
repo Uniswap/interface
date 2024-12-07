@@ -44,7 +44,8 @@ const TokenInfoButton = styled(Text, {
   variant: 'buttonLabel3',
   display: 'flex',
   flexDirection: 'row',
-  gap: '$gap8',
+  alignItems: 'center',
+  gap: '$gap4',
   py: '$padding8',
   px: '$padding12',
   borderRadius: '$rounded20',
@@ -82,7 +83,7 @@ const TRUNCATE_CHARACTER_COUNT = 200
 
 export function TokenDescription() {
   const { address, currency, tokenQuery } = useTDPContext()
-  const { neutral2 } = useTheme()
+  const { neutral1 } = useTheme()
 
   const { description, homepageUrl, twitterName } = tokenQuery.data?.token?.project ?? {}
   const explorerUrl = getExplorerLink(
@@ -118,14 +119,14 @@ export function TokenDescription() {
         {!currency.isNative && (
           <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t('common.copied')}>
             <TokenInfoButton onPress={copy}>
-              <Copy width="18px" height="18px" color={neutral2} />
+              <Copy width="18px" height="18px" color={neutral1} />
               {shortenAddress(currency.address)}
             </TokenInfoButton>
           </Tooltip>
         )}
         <ExternalLink href={explorerUrl}>
           <TokenInfoButton>
-            <EtherscanLogo width="18px" height="18px" fill={neutral2} />
+            <EtherscanLogo width="18px" height="18px" fill={neutral1} />
             {currency.chainId === UniverseChainId.Mainnet ? (
               <Trans i18nKey="common.etherscan" />
             ) : (
@@ -136,7 +137,7 @@ export function TokenDescription() {
         {homepageUrl && (
           <ExternalLink href={homepageUrl}>
             <TokenInfoButton>
-              <Globe width="18px" height="18px" fill={neutral2} />
+              <Globe width="18px" height="18px" fill={neutral1} />
               <Trans i18nKey="common.website" />
             </TokenInfoButton>
           </ExternalLink>
@@ -144,7 +145,7 @@ export function TokenDescription() {
         {twitterName && (
           <ExternalLink href={`https://x.com/${twitterName}`}>
             <TokenInfoButton>
-              <TwitterXLogo width="18px" height="18px" fill={neutral2} />
+              <TwitterXLogo width="18px" height="18px" fill={neutral1} />
               <Trans i18nKey="common.twitter" />
             </TokenInfoButton>
           </ExternalLink>

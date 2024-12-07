@@ -11,6 +11,7 @@ import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from 'components/Button/buttons'
 import { BlueCard, LightCard } from 'components/Card/cards'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
+import Loader from 'components/Icons/LoadingSpinner'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
@@ -36,7 +37,7 @@ import { useTheme } from 'lib/styled-components'
 import AppBody from 'pages/App/AppBody'
 import { PositionPageUnsupportedContent } from 'pages/LegacyPool/PositionPage'
 import { ClickableText, MaxButton, Wrapper } from 'pages/LegacyPool/styled'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { Field } from 'state/burn/actions'
@@ -47,8 +48,9 @@ import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
-import { useEnabledChains, useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -70,10 +72,23 @@ export default function RemoveLiquidityV2() {
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
   const { defaultChainId } = useEnabledChains()
 
+  // Slightly hacky way to wait for the pair contract to load in before navigating to the new position page
+  const { pair } = useDerivedBurnInfo(currencyA ?? undefined, currencyB ?? undefined)
+  const chainName = getChainInfo(chainId ?? defaultChainId)?.urlParam
+  const [loading, setLoading] = useState(true)
+  const [positionIdUrl, setPositionIdUrl] = useState('')
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      pair?.liquidityToken?.address && setPositionIdUrl(`/v2/${chainName}/${pair?.liquidityToken?.address}`)
+      setLoading(false)
+    }, 1000)
+    return () => clearTimeout(timer)
+  }, [chainName, pair?.liquidityToken?.address])
   if (isLPRedesignEnabled) {
-    // TODO(WEB-5361): prefill poolId from legacy URL /remove/ETH/0x123
-    const chainName = toGraphQLChain(chainId ?? defaultChainId).toLowerCase()
-    return <Navigate to={`/positions/v2/${chainName}`} replace />
+    if (loading) {
+      return <Loader />
+    }
+    return <Navigate to={`/positions${positionIdUrl}`} replace />
   }
 
   if (isSupportedChain && currencyA !== currencyB) {

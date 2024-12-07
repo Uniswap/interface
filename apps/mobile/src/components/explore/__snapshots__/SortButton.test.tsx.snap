@@ -3,18 +3,14 @@
 exports[`SortButton renders without error 1`] = `
 [
   <View
-    cancelable={true}
-    disabled={false}
-    focusable={true}
-    hitSlop={[Function]}
-    minPressDuration={0}
-    onBlur={[Function]}
-    onFocus={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
-    onPress={[Function]}
-    onPressIn={[Function]}
-    onPressOut={[Function]}
+    hitSlop={
+      {
+        "bottom": 5,
+        "left": 5,
+        "right": 5,
+        "top": 5,
+      }
+    }
     style={
       {
         "flexDirection": "column",
@@ -45,7 +41,12 @@ exports[`SortButton renders without error 1`] = `
         style={
           {
             "alignItems": "center",
-            "backgroundColor": "rgba(34,34,34,0.05)",
+            "backgroundColor": {
+              "dynamic": {
+                "dark": "rgba(255,255,255,0.12)",
+                "light": "rgba(34,34,34,0.05)",
+              },
+            },
             "borderBottomLeftRadius": 20,
             "borderBottomRightRadius": 20,
             "borderTopLeftRadius": 20,
@@ -67,7 +68,12 @@ exports[`SortButton renders without error 1`] = `
           numberOfLines={1}
           style={
             {
-              "color": "#7D7D7D",
+              "color": {
+                "dynamic": {
+                  "dark": "#9B9B9B",
+                  "light": "#7D7D7D",
+                },
+              },
               "flexShrink": 1,
               "fontFamily": "Basel Grotesk",
               "fontSize": 15,

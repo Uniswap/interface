@@ -8,6 +8,7 @@ import {
   isStackedHistogramData,
   positionsBox,
 } from 'components/Charts/VolumeChart/utils'
+import { roundRect } from 'components/Charts/utils'
 import { BitmapCoordinatesRenderingScope, CanvasRenderingTarget2D } from 'fancy-canvas'
 import {
   CustomData,
@@ -129,14 +130,12 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
 
       // Modification: draw rounded rect corresponding to total volume
       const totalBox = positionsBox(zeroY, stack.ys[stack.ys.length - 1], renderingScope.verticalPixelRatio)
-      ctx.beginPath()
 
       if (this._background) {
         ctx.fillStyle = this._background
       }
 
-      ctx.roundRect(column.left + margin, totalBox.position, width - margin, totalBox.length, 4)
-      ctx.fill()
+      roundRect(ctx, column.left + margin, totalBox.position, width - margin, totalBox.length, 4)
 
       // Modification: draw the stack's boxes atop the total volume bar, resulting in the top and bottom boxes being rounded
       ctx.globalCompositeOperation = 'source-atop'

@@ -1,9 +1,11 @@
-import { useCallback, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { useConnector } from 'uniswap/src/contexts/UniswapContext'
-import { ALL_CHAIN_IDS, GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
-import { filterChainIdsByFeatureFlag, getEnabledChains } from 'uniswap/src/features/chains/utils'
+import { useFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
+import { useOrderedChainIds } from 'uniswap/src/features/chains/hooks/useOrderedChainIds'
+import { ALL_CHAIN_IDS, EnabledChainsInfo, GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { getEnabledChains } from 'uniswap/src/features/chains/utils'
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
 import { WalletConnectConnector } from 'uniswap/src/features/web3/walletConnect'
 import { isTestEnv } from 'utilities/src/environment/env'
@@ -50,23 +52,33 @@ function useConnectedWalletSupportedChains(): UniverseChainId[] {
   return useConnectorSupportedChains(connector)
 }
 
-export function useEnabledChains(): {
-  chains: UniverseChainId[]
-  gqlChains: GqlChainId[]
-  defaultChainId: UniverseChainId
-  isTestnetModeEnabled: boolean
-} {
+export function useEnabledChains(): EnabledChainsInfo {
   const featureFlaggedChainIds = useFeatureFlaggedChainIds()
   const connectedWalletChainIds = useConnectedWalletSupportedChains()
   const isTestnetModeEnabled = useSelector(selectIsTestnetModeEnabled)
 
-  return useMemo(
-    () => getEnabledChains({ isTestnetModeEnabled, connectedWalletChainIds, featureFlaggedChainIds }),
+  const {
+    chains: unorderedChains,
+    gqlChains,
+    defaultChainId,
+  } = useMemo(
+    () =>
+      getEnabledChains({
+        isTestnetModeEnabled,
+        connectedWalletChainIds,
+        featureFlaggedChainIds,
+      }),
     [isTestnetModeEnabled, connectedWalletChainIds, featureFlaggedChainIds],
   )
+
+  const orderedChains = useOrderedChainIds(unorderedChains)
+
+  return useMemo(() => {
+    return { chains: orderedChains, gqlChains, defaultChainId, isTestnetModeEnabled }
+  }, [defaultChainId, gqlChains, isTestnetModeEnabled, orderedChains])
 }
 
-function useEnabledChainsWithConnector(connector?: Connector): {
+export function useEnabledChainsWithConnector(connector?: Connector): {
   chains: UniverseChainId[]
   gqlChains: GqlChainId[]
   defaultChainId: UniverseChainId
@@ -80,42 +92,4 @@ function useEnabledChainsWithConnector(connector?: Connector): {
     () => getEnabledChains({ isTestnetModeEnabled, connectedWalletChainIds, featureFlaggedChainIds }),
     [isTestnetModeEnabled, connectedWalletChainIds, featureFlaggedChainIds],
   )
-}
-
-// Used to feature flag chains. If a chain is not included in the object, it is considered enabled by default.
-export function useFeatureFlaggedChainIds(): UniverseChainId[] {
-  // You can use the useFeatureFlag hook here to enable/disable chains based on feature flags.
-  // Example: [ChainId.BLAST]: useFeatureFlag(FeatureFlags.BLAST)
-  // IMPORTANT: Don't forget to also update getEnabledChainIdsSaga
-
-  return useMemo(() => filterChainIdsByFeatureFlag({}), [])
-}
-
-export function useSupportedChainId(chainId?: number | UniverseChainId): UniverseChainId | undefined {
-  const { chains } = useEnabledChains()
-  return chains.includes(chainId as UniverseChainId) ? (chainId as UniverseChainId) : undefined
-}
-
-export function useIsSupportedChainId(chainId?: number | UniverseChainId): chainId is UniverseChainId {
-  const supportedChainId = useSupportedChainId(chainId)
-  return supportedChainId !== undefined
-}
-
-export function useIsSupportedChainIdCallback(): (chainId?: number | UniverseChainId) => chainId is UniverseChainId {
-  const { chains } = useEnabledChains()
-
-  return useCallback(
-    (chainId?: number | UniverseChainId): chainId is UniverseChainId => {
-      return chains.includes(chainId as UniverseChainId)
-    },
-    [chains],
-  )
-}
-
-export function useSupportedChainIdWithConnector(
-  chainId?: number | UniverseChainId,
-  connector?: Connector,
-): UniverseChainId | undefined {
-  const { chains } = useEnabledChainsWithConnector(connector)
-  return chains.includes(chainId as UniverseChainId) ? (chainId as UniverseChainId) : undefined
 }

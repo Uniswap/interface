@@ -79,13 +79,16 @@ export const OffScreenHandle = ({
 /** 
   Points down by default
 */
-export const OffScreenHandleV2 = ({ color, size = 10 }: { color: string; size?: number }) => (
-  <polygon
-    points={`0 0, ${size} ${size}, 0 ${size}`}
-    transform="rotate(-45)"
-    fill={color}
-    stroke={color}
-    strokeWidth="4"
-    strokeLinejoin="round"
-  />
-)
+export const OffScreenHandleV2 = ({ color, size = 6 }: { color: string; size?: number }) => {
+  const center = size / 3
+  return (
+    <polygon
+      points={`0 0, ${size} ${size}, 0 ${size}`}
+      transform={`translate(${center}, ${center}) rotate(-45) translate(-${center}, -${center})`}
+      fill={color}
+      stroke={color}
+      strokeWidth="4"
+      strokeLinejoin="round"
+    />
+  )
+}

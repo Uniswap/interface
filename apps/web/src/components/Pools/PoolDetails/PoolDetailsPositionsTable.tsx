@@ -18,6 +18,8 @@ import { useNavigate } from 'react-router-dom'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 
 const PositionTableWrapper = styled(Column)`
@@ -92,13 +94,14 @@ function PositionRow({ positionInfo }: { positionInfo: PositionInfo }) {
   const navigate = useNavigate()
   const switchChain = useSwitchChain()
   const theme = useTheme()
+  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
 
   const onClick = useCallback(async () => {
-    if (account.chainId !== positionInfo.chainId) {
+    if (!isLPRedesignEnabled && account.chainId !== positionInfo.chainId) {
       await switchChain(positionInfo.chainId)
     }
     navigate(getPositionUrl(positionInfo))
-  }, [account.chainId, positionInfo, navigate, switchChain])
+  }, [isLPRedesignEnabled, account.chainId, positionInfo, navigate, switchChain])
 
   const status = positionInfo.status
 

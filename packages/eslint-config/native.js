@@ -479,6 +479,12 @@ module.exports = {
         ],
       },
     },
+    {
+      files: ['**/features/gating/flags.ts'],
+      rules: {
+        'local-rules/custom-map-sort': 'error',
+      },
+    },
   ],
   globals: {
     Address: 'readonly',

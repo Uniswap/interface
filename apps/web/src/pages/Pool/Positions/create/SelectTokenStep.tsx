@@ -7,6 +7,7 @@ import { useAllFeeTierPoolData } from 'components/Liquidity/hooks'
 import { getDefaultFeeTiersWithData, isDynamicFeeTier } from 'components/Liquidity/utils'
 import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { AddHook } from 'pages/Pool/Positions/create/AddHook'
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
@@ -22,9 +23,11 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { Search } from 'ui/src/components/icons/Search'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { Trans, t, useTranslation } from 'uniswap/src/i18n'
 import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
+import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useFormatter } from 'utils/formatNumbers'
 
@@ -76,6 +79,7 @@ interface FeeTier {
   value: FeeData
   title: string
   selectionPercent?: Percent
+  tvl: string
 }
 
 const FeeTierContainer = styled(Flex, {
@@ -100,19 +104,32 @@ const FeeTier = ({
   onSelect: (value: FeeData) => void
 }) => {
   const { formatPercent } = useFormatter()
+  const { formatNumberOrString } = useLocalizationContext()
 
   return (
-    <FeeTierContainer onPress={() => onSelect(feeTier.value)} background={selected ? '$surface3' : '$surface1'}>
-      <Flex row gap={10} justifyContent="space-between" alignItems="center">
-        <Text variant="buttonLabel3">{formatPercent(new Percent(feeTier.value.feeAmount, 1000000))}</Text>
-        {selected && <CheckCircleFilled right={0} position="absolute" size={iconSizes.icon20} />}
+    <FeeTierContainer
+      onPress={() => onSelect(feeTier.value)}
+      background={selected ? '$surface3' : '$surface1'}
+      justifyContent="space-between"
+    >
+      <Flex gap="$spacing8">
+        <Flex row gap={10} justifyContent="space-between" alignItems="center">
+          <Text variant="buttonLabel3">{formatPercent(new Percent(feeTier.value.feeAmount, 1000000))}</Text>
+          {selected && <CheckCircleFilled right={0} position="absolute" size={iconSizes.icon20} />}
+        </Flex>
+        <Text variant="body4">{feeTier.title}</Text>
       </Flex>
-      <Text variant="body4">{feeTier.title}</Text>
-      {feeTier.selectionPercent && feeTier.selectionPercent.greaterThan(0) && (
+      <Flex gap="$spacing2">
         <Text variant="body4" color="$neutral2">
-          {formatPercent(feeTier.selectionPercent)} select
+          {feeTier.tvl === '0' ? '0' : formatNumberOrString({ value: feeTier.tvl, type: NumberType.FiatTokenStats })}{' '}
+          {t('common.totalValueLocked')}
         </Text>
-      )}
+        {feeTier.selectionPercent && feeTier.selectionPercent.greaterThan(0) && (
+          <Text variant="body4" color="$neutral2">
+            {formatPercent(feeTier.selectionPercent)} select
+          </Text>
+        )}
+      </Flex>
     </FeeTierContainer>
   )
 }
@@ -241,7 +258,7 @@ export function SelectTokensStep({
   }, [mostUsedFeeTier, defaultFeeTierSelected, setPositionState, trace])
 
   return (
-    <>
+    <PrefetchBalancesWrapper>
       <Container {...rest}>
         <Flex gap="$spacing16">
           <Flex gap="$spacing12">
@@ -413,6 +430,6 @@ export function SelectTokensStep({
         onDismiss={() => setCurrencySearchInputState(undefined)}
         onCurrencySelect={handleCurrencySelect}
       />
-    </>
+    </PrefetchBalancesWrapper>
   )
 }

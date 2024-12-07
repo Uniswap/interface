@@ -11,7 +11,9 @@ import { useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { Button, Flex, Separator, Text } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
+import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -45,7 +47,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
     throw new Error('a position must be defined')
   }
 
-  const { currency0Amount, currency1Amount, feeTier } = increaseLiquidityState.position
+  const { currency0Amount, currency1Amount, feeTier, chainId } = increaseLiquidityState.position
 
   const currentPrice = usePositionCurrentPrice(increaseLiquidityState.position)
   const poolTokenPercentage = useGetPoolTokenPercentage(increaseLiquidityState.position)
@@ -200,9 +202,12 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
                   </Text>
                 ),
                 Value: () => (
-                  <Text variant="body3">
-                    {formatCurrencyAmount({ value: gasFeeEstimateUSD, type: NumberType.FiatGasPrice })}
-                  </Text>
+                  <Flex row gap="$gap4" alignItems="center">
+                    <NetworkLogo chainId={chainId} size={iconSizes.icon16} shape="square" />
+                    <Text variant="body3">
+                      {formatCurrencyAmount({ value: gasFeeEstimateUSD, type: NumberType.FiatGasPrice })}
+                    </Text>
+                  </Flex>
                 ),
               }}
             />

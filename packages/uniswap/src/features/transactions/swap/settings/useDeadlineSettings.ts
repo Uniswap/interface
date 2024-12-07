@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 
 import { MAX_CUSTOM_DEADLINE } from 'uniswap/src/constants/transactions'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 
 export const DEFAULT_CUSTOM_DEADLINE = 30
 
@@ -14,8 +14,7 @@ export function useDeadlineSettings(): {
   onFocusDeadlineInput: () => void
   onBlurDeadlineInput: () => void
 } {
-  const { derivedSwapInfo, updateSwapForm } = useSwapFormContext()
-  const { customDeadline } = derivedSwapInfo
+  const { customDeadline, updateSwapSettings } = useSwapSettingsContext()
 
   const [isEditingDeadline, setIsEditingDeadline] = useState<boolean>(false)
   const [inputDeadline, setInputDeadline] = useState<string>(
@@ -49,7 +48,7 @@ export function useDeadlineSettings(): {
 
       if (isZero) {
         setInputDeadline('0')
-        updateSwapForm({ customDeadline: DEFAULT_CUSTOM_DEADLINE })
+        updateSwapSettings({ customDeadline: DEFAULT_CUSTOM_DEADLINE })
         return
       }
 
@@ -60,14 +59,14 @@ export function useDeadlineSettings(): {
 
       if (overMaxDeadline) {
         setInputDeadline(MAX_CUSTOM_DEADLINE.toString())
-        updateSwapForm({ customDeadline: MAX_CUSTOM_DEADLINE })
+        updateSwapSettings({ customDeadline: MAX_CUSTOM_DEADLINE })
         return
       }
 
       setInputDeadline(value)
-      updateSwapForm({ customDeadline: parsedValue })
+      updateSwapSettings({ customDeadline: parsedValue })
     },
-    [updateSwapForm],
+    [updateSwapSettings],
   )
 
   const onFocusDeadlineInput = useCallback((): void => {
@@ -78,10 +77,10 @@ export function useDeadlineSettings(): {
     setIsEditingDeadline(false)
 
     if (isNaN(parsedInputDeadline)) {
-      updateSwapForm({ customDeadline: undefined })
+      updateSwapSettings({ customDeadline: undefined })
       return
     }
-  }, [parsedInputDeadline, updateSwapForm])
+  }, [parsedInputDeadline, updateSwapSettings])
 
   return {
     isEditingDeadline,

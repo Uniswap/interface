@@ -3,6 +3,7 @@ import { BrushBehavior, D3BrushEvent, ScaleLinear, brushY, select } from 'd3'
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSporeColors } from 'ui/src'
+import { useTranslation } from 'uniswap/src/i18n'
 
 // flips the handles draggers when close to the container edges
 const FLIP_HANDLE_THRESHOLD_PX = 20
@@ -27,6 +28,7 @@ export const Brush2 = ({
   interactive,
   brushExtent,
   setBrushExtent,
+  hideHandles,
   width,
   height,
   offset,
@@ -39,10 +41,13 @@ export const Brush2 = ({
   width: number
   height: number
   offset: number
+  hideHandles?: boolean
 }) => {
   const colors = useSporeColors()
   const brushRef = useRef<SVGGElement | null>(null)
   const brushBehavior = useRef<BrushBehavior<SVGGElement> | null>(null)
+
+  const { t } = useTranslation()
 
   // only used to drag the handles on brush for performance
   const [localBrushExtent, setLocalBrushExtent] = useState<[number, number] | null>(brushExtent)
@@ -150,7 +155,7 @@ export const Brush2 = ({
         <g ref={brushRef} clipPath={`url(#${id}-brush-clip)`} />
 
         {/* custom brush handles */}
-        {localBrushExtent && (
+        {localBrushExtent && !hideHandles && (
           <>
             {northHandleInView ? (
               <g
@@ -203,13 +208,35 @@ export const Brush2 = ({
             ) : null}
 
             {showNorthArrow && (
-              <g transform={`translate(${effectiveBrushWidth - 32}, 20) scale(1, -1)`}>
-                <OffScreenHandleV2 color={colors.neutral2.val} />
+              <g transform={`translate(${width - 18}, 16) scale(1, -1)`}>
+                <OffScreenHandleV2 color={colors.accent1.val} />
+                {!showSouthArrow && (
+                  <text
+                    transform="scale(-1, 1)"
+                    x={10}
+                    y={5}
+                    fill={colors.accent1.val}
+                    fontSize={10}
+                    alignmentBaseline="middle"
+                  >
+                    {t('range.outOfView')}
+                  </text>
+                )}
               </g>
             )}
             {showSouthArrow && (
-              <g transform={`translate(${effectiveBrushWidth - 32}, ${height - 20}) `}>
-                <OffScreenHandleV2 color={colors.neutral2.val} />
+              <g transform={`translate(${width - 18}, ${height - 16}) `}>
+                <OffScreenHandleV2 color={colors.accent1.val} />
+                <text
+                  transform="scale(-1, -1)"
+                  x={10}
+                  y={-3}
+                  fill={colors.accent1.val}
+                  fontSize={10}
+                  alignmentBaseline="middle"
+                >
+                  {t('range.outOfView')}
+                </text>
               </g>
             )}
           </>
@@ -218,12 +245,12 @@ export const Brush2 = ({
     ),
     [
       id,
-      colors.accent1.val,
-      colors.neutral2.val,
+      colors,
       offset,
       effectiveBrushWidth,
       height,
       localBrushExtent,
+      hideHandles,
       northHandleInView,
       yScale,
       flipNorthHandle,
@@ -231,6 +258,8 @@ export const Brush2 = ({
       southHandleInView,
       flipSouthHandle,
       showNorthArrow,
+      width,
+      t,
       showSouthArrow,
     ],
   )
