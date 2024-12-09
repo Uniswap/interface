@@ -46,7 +46,7 @@ export const uniswapUrls = {
     poolOutOfSync: `${helpUrl}/articles/25845512413069`,
     positionsLearnMore: `${helpUrl}/sections/8122851346573`,
     priceImpact: `${helpUrl}/articles/8671539602317-What-is-Price-Impact`,
-    providingLiquidityInfo: `${helpUrl}/articles/20982919867021`,
+    providingLiquidityInfo: `${helpUrl}/sections/20982919867021`,
     recoveryPhraseHowToImport: `${helpUrl}/articles/11380692567949-How-to-import-a-recovery-phrase-into-the-Uniswap-Wallet`,
     recoveryPhraseHowToFind: `${helpUrl}/articles/11306360177677-How-to-find-my-recovery-phrase-in-the-Uniswap-Wallet`,
     recoveryPhraseForgotten: `${helpUrl}/articles/11306367118349`,
