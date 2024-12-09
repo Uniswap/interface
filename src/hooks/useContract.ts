@@ -185,8 +185,8 @@ export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean):
   )
 }
 
-export function useV3Quoter() {
-  return useContract<Quoter>(QUOTER_ADDRESSES, QuoterABI)
+export function useV3Quoter(chainId?: number) {
+  return useContract<Quoter>(QUOTER_ADDRESSES, chainId && chainId === 8453 ? QuoterABI : QuoterABI)
 }
 
 export function useLimitOrderManager(): Contract | null {
