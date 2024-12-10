@@ -19,6 +19,7 @@ import { ChevronRight } from 'react-feather'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
+import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { Button, Flex, Main, Switch, Text, styled } from 'ui/src'
@@ -96,7 +97,17 @@ function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
   }
 }
 
-export default function PositionPage() {
+export default function PositionPageWrapper() {
+  const chainId = useChainIdFromUrlParam()
+
+  return (
+    <MultichainContextProvider initialChainId={chainId}>
+      <PositionPage />
+    </MultichainContextProvider>
+  )
+}
+
+function PositionPage() {
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId: string }>()
   const tokenId = parseTokenId(tokenIdFromUrl)
   const chainId = useChainIdFromUrlParam()

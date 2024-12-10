@@ -15,6 +15,7 @@ import { ChevronRight } from 'react-feather'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
+import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
 import { Button, Circle, Flex, Main, Shine, Text, styled } from 'ui/src'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
@@ -61,7 +62,17 @@ function RowLoader({ withIcon }: { withIcon?: boolean }) {
   )
 }
 
-export default function V2PositionPage() {
+export default function V2PositionPageWrapper() {
+  const chainId = useChainIdFromUrlParam()
+
+  return (
+    <MultichainContextProvider initialChainId={chainId}>
+      <V2PositionPage />
+    </MultichainContextProvider>
+  )
+}
+
+function V2PositionPage() {
   const { pairAddress } = useParams<{ pairAddress: string }>()
   const chainId = useChainIdFromUrlParam()
   const account = useAccount()
