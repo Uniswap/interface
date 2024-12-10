@@ -17,10 +17,10 @@ describe('SortButton', () => {
     jest.useRealTimers()
   })
 
-  it('renders without error', async () => {
+  it('renders without error', () => {
     const tree = render(<SortButton orderBy={RankingType.Volume} />)
 
-    await act(async () => {
+    act(async () => {
       jest.runAllTimers()
     })
 
@@ -44,9 +44,9 @@ describe('SortButton', () => {
   ]
 
   describe.each(cases)('when ordering by $test', ({ orderBy, label }) => {
-    it(`renders ${label} as the selected option`, async () => {
+    it(`renders ${label} as the selected option`, () => {
       const { queryByText } = render(<SortButton orderBy={orderBy} />)
-      await act(async () => {
+      act(async () => {
         jest.runAllTimers()
       })
       const selectedOption = queryByText(label)

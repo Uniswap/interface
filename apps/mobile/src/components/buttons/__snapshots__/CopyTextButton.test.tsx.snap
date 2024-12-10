@@ -2,45 +2,31 @@
 
 exports[`CopyTextButton renders without error 1`] = `
 <View
+  cancelable={true}
+  disabled={false}
+  focusable={true}
+  minPressDuration={0}
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+  onPress={[Function]}
+  onPressIn={[Function]}
+  onPressOut={[Function]}
   style={
     {
       "alignItems": "center",
-      "backgroundColor": {
-        "dynamic": {
-          "dark": "rgba(255,255,255,0.12)",
-          "light": "rgba(34,34,34,0.05)",
-        },
-      },
-      "borderBottomColor": {
-        "dynamic": {
-          "dark": "transparent",
-          "light": "transparent",
-        },
-      },
+      "backgroundColor": "rgba(34,34,34,0.05)",
+      "borderBottomColor": "transparent",
       "borderBottomLeftRadius": 16,
       "borderBottomRightRadius": 16,
       "borderBottomWidth": 1,
-      "borderLeftColor": {
-        "dynamic": {
-          "dark": "transparent",
-          "light": "transparent",
-        },
-      },
+      "borderLeftColor": "transparent",
       "borderLeftWidth": 1,
-      "borderRightColor": {
-        "dynamic": {
-          "dark": "transparent",
-          "light": "transparent",
-        },
-      },
+      "borderRightColor": "transparent",
       "borderRightWidth": 1,
       "borderStyle": "solid",
-      "borderTopColor": {
-        "dynamic": {
-          "dark": "transparent",
-          "light": "transparent",
-        },
-      },
+      "borderTopColor": "transparent",
       "borderTopLeftRadius": 16,
       "borderTopRightRadius": 16,
       "borderTopWidth": 1,
@@ -57,14 +43,7 @@ exports[`CopyTextButton renders without error 1`] = `
   }
 >
   <svg
-    color={
-      {
-        "dynamic": {
-          "dark": "#FFFFFF",
-          "light": "#222222",
-        },
-      }
-    }
+    color="#222222"
     data-file-name="SvgCopySheets"
     height={20}
     size={20}
@@ -74,12 +53,7 @@ exports[`CopyTextButton renders without error 1`] = `
     maxFontSizeMultiplier={1.2}
     style={
       {
-        "color": {
-          "dynamic": {
-            "dark": "#FFFFFF",
-            "light": "#222222",
-          },
-        },
+        "color": "#222222",
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "500",

@@ -5,8 +5,7 @@ import { useGetRangeDisplay } from 'components/Liquidity/hooks'
 import { PriceOrdering } from 'components/PositionListItem'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
-import { TextLoader } from 'pages/Pool/Positions/shared'
-import { Dispatch, SetStateAction } from 'react'
+import { useState } from 'react'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { Flex, Text, styled } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
@@ -25,8 +24,6 @@ interface LiquidityPositionFeeStatsProps {
   tickUpper?: string
   version: ProtocolVersion
   apr?: number
-  pricesInverted: boolean
-  setPricesInverted: Dispatch<SetStateAction<boolean>>
 }
 
 const PrimaryText = styled(Text, {
@@ -37,9 +34,6 @@ const PrimaryText = styled(Text, {
 const SecondaryText = styled(Text, {
   color: '$neutral2',
   variant: 'body3',
-  overflow: 'hidden',
-  textOverflow: 'ellipsis',
-  whiteSpace: 'nowrap',
 })
 
 function WrapChildrenForMediaSize({ children }: { children: React.ReactNode }) {
@@ -65,25 +59,6 @@ function FeeStat({ children }: { children: React.ReactNode }) {
   )
 }
 
-function FeeStatLoader() {
-  return (
-    <Flex gap="$gap4">
-      <TextLoader variant="body2" width={60} />
-      <TextLoader variant="body3" width={40} />
-    </Flex>
-  )
-}
-
-export function LiquidityPositionFeeStatsLoader() {
-  return (
-    <Flex row gap="$gap20" justifyContent="space-between" width="50%" $md={{ width: '100%' }}>
-      <FeeStatLoader />
-      <FeeStatLoader />
-      <FeeStatLoader />
-    </Flex>
-  )
-}
-
 export function LiquidityPositionFeeStats({
   formattedUsdValue,
   formattedUsdFees,
@@ -93,11 +68,10 @@ export function LiquidityPositionFeeStats({
   feeTier,
   version,
   apr,
-  pricesInverted,
-  setPricesInverted,
 }: LiquidityPositionFeeStatsProps) {
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
+  const [pricesInverted, setPricesInverted] = useState(false)
 
   const { maxPrice, minPrice, tokenASymbol, tokenBSymbol, isFullRange } = useGetRangeDisplay({
     priceOrdering,
@@ -157,7 +131,7 @@ export function LiquidityPositionFeeStats({
         {priceOrdering.priceLower && priceOrdering.priceUpper && !isFullRange ? (
           <Flex gap="$gap4">
             <Flex row gap="$gap12" alignItems="center">
-              <SecondaryText flexShrink={0}>
+              <SecondaryText>
                 <Trans i18nKey="common.min" />
               </SecondaryText>
               <SecondaryText color="$neutral1">
@@ -165,7 +139,7 @@ export function LiquidityPositionFeeStats({
               </SecondaryText>
             </Flex>
             <Flex row gap="$gap8" alignItems="center">
-              <SecondaryText flexShrink={0}>
+              <SecondaryText>
                 <Trans i18nKey="common.max" />
               </SecondaryText>
               <SecondaryText color="$neutral1">

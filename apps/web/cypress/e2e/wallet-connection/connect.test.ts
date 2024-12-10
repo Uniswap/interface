@@ -10,7 +10,7 @@ describe('disconnect wallet', () => {
     cy.contains('Balance:')
 
     // Disconnect the wallet
-    cy.get(getTestSelector('web3-status-connected')).click()
+    cy.hardhat().then((hardhat) => cy.contains(hardhat.wallet.address.substring(0, 6)).click())
     cy.get(getTestSelector('wallet-disconnect')).click()
     cy.get(getTestSelector('wallet-disconnect')).contains('Disconnect') // Confirmation UI
     cy.get(getTestSelector('wallet-disconnect')).click() // Confirm

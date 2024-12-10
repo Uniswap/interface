@@ -91,12 +91,7 @@ exports[`AccountList renders without error 1`] = `
             maxFontSizeMultiplier={1.4}
             style={
               {
-                "color": {
-                  "dynamic": {
-                    "dark": "#9B9B9B",
-                    "light": "#7D7D7D",
-                  },
-                },
+                "color": "#7D7D7D",
                 "fontFamily": "Basel Grotesk",
                 "fontSize": 17,
                 "fontWeight": "400",
@@ -135,14 +130,19 @@ exports[`AccountList renders without error 1`] = `
           onPress={[Function]}
         >
           <View
-            hitSlop={
-              {
-                "bottom": 5,
-                "left": 5,
-                "right": 5,
-                "top": 5,
-              }
-            }
+            cancelable={true}
+            disabled={false}
+            focusable={true}
+            hitSlop={[Function]}
+            minPressDuration={0}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onLongPress={[Function]}
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+            onPress={[Function]}
+            onPressIn={[Function]}
+            onPressOut={[Function]}
             style={
               {
                 "flexDirection": "column",
@@ -199,42 +199,17 @@ exports[`AccountList renders without error 1`] = `
                     <View
                       style={
                         {
-                          "backgroundColor": {
-                            "dynamic": {
-                              "dark": "transparent",
-                              "light": "transparent",
-                            },
-                          },
-                          "borderBottomColor": {
-                            "dynamic": {
-                              "dark": "transparent",
-                              "light": "transparent",
-                            },
-                          },
+                          "backgroundColor": "transparent",
+                          "borderBottomColor": "transparent",
                           "borderBottomLeftRadius": 999999,
                           "borderBottomRightRadius": 999999,
                           "borderBottomWidth": 0,
-                          "borderLeftColor": {
-                            "dynamic": {
-                              "dark": "transparent",
-                              "light": "transparent",
-                            },
-                          },
+                          "borderLeftColor": "transparent",
                           "borderLeftWidth": 0,
-                          "borderRightColor": {
-                            "dynamic": {
-                              "dark": "transparent",
-                              "light": "transparent",
-                            },
-                          },
+                          "borderRightColor": "transparent",
                           "borderRightWidth": 0,
                           "borderStyle": "solid",
-                          "borderTopColor": {
-                            "dynamic": {
-                              "dark": "transparent",
-                              "light": "transparent",
-                            },
-                          },
+                          "borderTopColor": "transparent",
                           "borderTopLeftRadius": 999999,
                           "borderTopRightRadius": 999999,
                           "borderTopWidth": 0,
@@ -346,12 +321,7 @@ exports[`AccountList renders without error 1`] = `
                           numberOfLines={1}
                           style={
                             {
-                              "color": {
-                                "dynamic": {
-                                  "dark": "#FFFFFF",
-                                  "light": "#222222",
-                                },
-                              },
+                              "color": "#222222",
                               "flexShrink": 1,
                               "fontFamily": "Basel Grotesk",
                               "fontSize": 19,
@@ -375,12 +345,7 @@ exports[`AccountList renders without error 1`] = `
                 maxFontSizeMultiplier={1.4}
                 style={
                   {
-                    "color": {
-                      "dynamic": {
-                        "dark": "#9B9B9B",
-                        "light": "#7D7D7D",
-                      },
-                    },
+                    "color": "#7D7D7D",
                     "fontFamily": "Basel Grotesk",
                     "fontSize": 17,
                     "fontWeight": "400",

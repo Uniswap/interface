@@ -7,6 +7,7 @@ import Modal from 'components/Modal'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import Column, { ColumnCenter } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
+import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
@@ -16,7 +17,6 @@ import { capitalize } from 'tsafe'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -84,7 +84,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
     type: NumberType.PortfolioBalance,
   })
 
-  const gasFeeUSD = useUSDCValue(gasFeeCurrencyAmount)
+  const gasFeeUSD = useStablecoinValue(gasFeeCurrencyAmount)
   const gasFeeFormatted = formatCurrencyAmount({
     amount: gasFeeUSD,
     type: NumberType.PortfolioBalance,

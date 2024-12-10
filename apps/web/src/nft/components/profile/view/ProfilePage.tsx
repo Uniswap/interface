@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { Box } from 'components/deprecated/Box'
+import { AnimatedBox, Box } from 'components/deprecated/Box'
 import { useNftBalance } from 'graphql/data/nft/NftBalance'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import { useAccount } from 'hooks/useAccount'
@@ -22,6 +22,7 @@ import { getOSCollectionsInfiniteQueryOptions } from 'nft/queries/openSea/OSColl
 import { WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { easings, useSpring } from 'react-spring'
 
 const ProfilePageColumn = styled(Column)`
   ${ScreenBreakpointsPaddings}
@@ -181,6 +182,14 @@ const ProfilePageNfts = ({
     first: DEFAULT_WALLET_ASSET_QUERY_AMOUNT,
   })
 
+  const { gridX } = useSpring({
+    gridX: isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING,
+    config: {
+      duration: 250,
+      easing: easings.easeOutSine,
+    },
+  })
+
   if (loading) {
     return <ProfileBodyLoadingSkeleton />
   }
@@ -192,11 +201,13 @@ const ProfilePageNfts = ({
           <EmptyWalletModule />
         </EmptyStateContainer>
       ) : (
-        <Box
+        <AnimatedBox
           flexShrink="0"
           position={isMobile && isBagExpanded ? 'fixed' : 'static'}
           style={{
-            transform: `translate(${Number(isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING) - (!isMobile && isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING)}px)`,
+            transform: gridX.to(
+              (x) => `translate(${Number(x) - (!isMobile && isFiltersExpanded ? FILTER_SIDEBAR_WIDTH : -PADDING)}px)`,
+            ),
           }}
           paddingY="20"
         >
@@ -238,7 +249,7 @@ const ProfilePageNfts = ({
                 ))
               : null}
           </InfiniteScroll>
-        </Box>
+        </AnimatedBox>
       )}
     </Column>
   )

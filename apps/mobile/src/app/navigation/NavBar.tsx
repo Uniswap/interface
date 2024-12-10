@@ -20,7 +20,7 @@ import { Flex, FlexProps, LinearGradient, Text, TouchableArea, useIsDarkMode, us
 import { Search } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, fonts, opacify } from 'ui/src/theme'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/balances'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'

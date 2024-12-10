@@ -75,10 +75,7 @@ export function useActivityData({
     return generateActivityItemRenderer(<Loader.Transaction />, SectionTitle, swapCallbacks, authTrigger)
   }, [swapCallbacks, authTrigger])
 
-  const { onRetry, isError, sectionData, keyExtractor } = useFormattedTransactionDataForActivity({
-    address: owner,
-    hideSpamTokens,
-  })
+  const { onRetry, isError, sectionData, keyExtractor } = useFormattedTransactionDataForActivity(owner, hideSpamTokens)
 
   const errorCard = useMemo(
     () => (

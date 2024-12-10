@@ -5,12 +5,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
   sentry-label="Screen"
   style={
     {
-      "backgroundColor": {
-        "dynamic": {
-          "dark": "#131313",
-          "light": "#FFFFFF",
-        },
-      },
+      "backgroundColor": "#FFFFFF",
       "flex": 1,
       "flexDirection": "column",
       "paddingLeft": undefined,
@@ -86,12 +81,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
             style={
               {
                 "alignItems": "center",
-                "backgroundColor": {
-                  "dynamic": {
-                    "dark": "rgba(255,255,255,0.12)",
-                    "light": "rgba(34,34,34,0.05)",
-                  },
-                },
+                "backgroundColor": "rgba(34,34,34,0.05)",
                 "borderBottomLeftRadius": 8,
                 "borderBottomRightRadius": 8,
                 "borderTopLeftRadius": 8,
@@ -169,12 +159,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
           maxFontSizeMultiplier={1.4}
           style={
             {
-              "color": {
-                "dynamic": {
-                  "dark": "#FFFFFF",
-                  "light": "#222222",
-                },
-              },
+              "color": "#222222",
               "fontFamily": "Basel Grotesk",
               "fontSize": 19,
               "fontWeight": "400",
@@ -192,12 +177,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
           maxFontSizeMultiplier={1.4}
           style={
             {
-              "color": {
-                "dynamic": {
-                  "dark": "#9B9B9B",
-                  "light": "#7D7D7D",
-                },
-              },
+              "color": "#7D7D7D",
               "fontFamily": "Basel Grotesk",
               "fontSize": 17,
               "fontWeight": "400",
@@ -253,52 +233,31 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               }
             >
               <View
-                hitSlop={
-                  {
-                    "bottom": 5,
-                    "left": 5,
-                    "right": 5,
-                    "top": 5,
-                  }
-                }
+                cancelable={true}
+                disabled={false}
+                focusable={true}
+                hitSlop={[Function]}
+                minPressDuration={0}
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+                onPress={[Function]}
+                onPressIn={[Function]}
+                onPressOut={[Function]}
                 style={
                   {
-                    "backgroundColor": {
-                      "dynamic": {
-                        "dark": "#131313",
-                        "light": "#FFFFFF",
-                      },
-                    },
-                    "borderBottomColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "backgroundColor": "#FFFFFF",
+                    "borderBottomColor": "rgba(34,34,34,0.05)",
                     "borderBottomLeftRadius": 20,
                     "borderBottomRightRadius": 20,
                     "borderBottomWidth": 1,
-                    "borderLeftColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderLeftColor": "rgba(34,34,34,0.05)",
                     "borderLeftWidth": 1,
-                    "borderRightColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderRightColor": "rgba(34,34,34,0.05)",
                     "borderRightWidth": 1,
                     "borderStyle": "solid",
-                    "borderTopColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderTopColor": "rgba(34,34,34,0.05)",
                     "borderTopLeftRadius": 20,
                     "borderTopRightRadius": 20,
                     "borderTopWidth": 1,
@@ -331,12 +290,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     style={
                       {
                         "alignItems": "center",
-                        "backgroundColor": {
-                          "dynamic": {
-                            "dark": "#361A37",
-                            "light": "#FEF4FF",
-                          },
-                        },
+                        "backgroundColor": "#FEF4FF",
                         "borderBottomLeftRadius": 999999,
                         "borderBottomRightRadius": 999999,
                         "borderTopLeftRadius": 999999,
@@ -459,12 +413,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                             maxFontSizeMultiplier={1.4}
                             style={
                               {
-                                "color": {
-                                  "dynamic": {
-                                    "dark": "#FFFFFF",
-                                    "light": "#222222",
-                                  },
-                                },
+                                "color": "#222222",
                                 "fontFamily": "Basel Grotesk",
                                 "fontSize": 17,
                                 "fontWeight": "400",
@@ -481,12 +430,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                             {
                               "alignItems": "center",
                               "alignSelf": "flex-start",
-                              "backgroundColor": {
-                                "dynamic": {
-                                  "dark": "#FC72FF1f",
-                                  "light": "#FC72FF1f",
-                                },
-                              },
+                              "backgroundColor": "#FC72FF1f",
                               "borderBottomLeftRadius": 8,
                               "borderBottomRightRadius": 8,
                               "borderTopLeftRadius": 8,
@@ -506,12 +450,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                             maxFontSizeMultiplier={1.2}
                             style={
                               {
-                                "color": {
-                                  "dynamic": {
-                                    "dark": "#FC72FF",
-                                    "light": "#FC72FF",
-                                  },
-                                },
+                                "color": "#FC72FF",
                                 "fontFamily": "Basel Grotesk",
                                 "fontSize": 15,
                                 "fontWeight": "500",
@@ -530,12 +469,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                         maxFontSizeMultiplier={1.4}
                         style={
                           {
-                            "color": {
-                              "dynamic": {
-                                "dark": "#9B9B9B",
-                                "light": "#7D7D7D",
-                              },
-                            },
+                            "color": "#7D7D7D",
                             "fontFamily": "Basel Grotesk",
                             "fontSize": 15,
                             "fontWeight": "400",
@@ -551,52 +485,31 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 </View>
               </View>
               <View
-                hitSlop={
-                  {
-                    "bottom": 5,
-                    "left": 5,
-                    "right": 5,
-                    "top": 5,
-                  }
-                }
+                cancelable={true}
+                disabled={false}
+                focusable={true}
+                hitSlop={[Function]}
+                minPressDuration={0}
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+                onPress={[Function]}
+                onPressIn={[Function]}
+                onPressOut={[Function]}
                 style={
                   {
-                    "backgroundColor": {
-                      "dynamic": {
-                        "dark": "#131313",
-                        "light": "#FFFFFF",
-                      },
-                    },
-                    "borderBottomColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "backgroundColor": "#FFFFFF",
+                    "borderBottomColor": "rgba(34,34,34,0.05)",
                     "borderBottomLeftRadius": 20,
                     "borderBottomRightRadius": 20,
                     "borderBottomWidth": 1,
-                    "borderLeftColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderLeftColor": "rgba(34,34,34,0.05)",
                     "borderLeftWidth": 1,
-                    "borderRightColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderRightColor": "rgba(34,34,34,0.05)",
                     "borderRightWidth": 1,
                     "borderStyle": "solid",
-                    "borderTopColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderTopColor": "rgba(34,34,34,0.05)",
                     "borderTopLeftRadius": 20,
                     "borderTopRightRadius": 20,
                     "borderTopWidth": 1,
@@ -629,12 +542,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     style={
                       {
                         "alignItems": "center",
-                        "backgroundColor": {
-                          "dynamic": {
-                            "dark": "#361A37",
-                            "light": "#FEF4FF",
-                          },
-                        },
+                        "backgroundColor": "#FEF4FF",
                         "borderBottomLeftRadius": 999999,
                         "borderBottomRightRadius": 999999,
                         "borderTopLeftRadius": 999999,
@@ -746,12 +654,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                             maxFontSizeMultiplier={1.4}
                             style={
                               {
-                                "color": {
-                                  "dynamic": {
-                                    "dark": "#FFFFFF",
-                                    "light": "#222222",
-                                  },
-                                },
+                                "color": "#222222",
                                 "fontFamily": "Basel Grotesk",
                                 "fontSize": 17,
                                 "fontWeight": "400",
@@ -769,12 +672,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                         maxFontSizeMultiplier={1.4}
                         style={
                           {
-                            "color": {
-                              "dynamic": {
-                                "dark": "#9B9B9B",
-                                "light": "#7D7D7D",
-                              },
-                            },
+                            "color": "#7D7D7D",
                             "fontFamily": "Basel Grotesk",
                             "fontSize": 15,
                             "fontWeight": "400",
@@ -801,14 +699,18 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
             }
           >
             <View
-              hitSlop={
-                {
-                  "bottom": 5,
-                  "left": 5,
-                  "right": 5,
-                  "top": 5,
-                }
-              }
+              cancelable={true}
+              disabled={false}
+              focusable={true}
+              hitSlop={[Function]}
+              minPressDuration={0}
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+              onPress={[Function]}
+              onPressIn={[Function]}
+              onPressOut={[Function]}
               style={
                 {
                   "alignItems": "center",
@@ -888,12 +790,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 maxFontSizeMultiplier={1.4}
                 style={
                   {
-                    "color": {
-                      "dynamic": {
-                        "dark": "#5E5E5E",
-                        "light": "#BFBFBF",
-                      },
-                    },
+                    "color": "#BFBFBF",
                     "fontFamily": "Basel Grotesk",
                     "fontSize": 17,
                     "fontWeight": "400",
@@ -918,12 +815,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
   sentry-label="Screen"
   style={
     {
-      "backgroundColor": {
-        "dynamic": {
-          "dark": "#131313",
-          "light": "#FFFFFF",
-        },
-      },
+      "backgroundColor": "#FFFFFF",
       "flex": 1,
       "flexDirection": "column",
       "paddingLeft": undefined,
@@ -999,12 +891,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
             style={
               {
                 "alignItems": "center",
-                "backgroundColor": {
-                  "dynamic": {
-                    "dark": "rgba(255,255,255,0.12)",
-                    "light": "rgba(34,34,34,0.05)",
-                  },
-                },
+                "backgroundColor": "rgba(34,34,34,0.05)",
                 "borderBottomLeftRadius": 8,
                 "borderBottomRightRadius": 8,
                 "borderTopLeftRadius": 8,
@@ -1082,12 +969,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
           maxFontSizeMultiplier={1.4}
           style={
             {
-              "color": {
-                "dynamic": {
-                  "dark": "#FFFFFF",
-                  "light": "#222222",
-                },
-              },
+              "color": "#222222",
               "fontFamily": "Basel Grotesk",
               "fontSize": 19,
               "fontWeight": "400",
@@ -1105,12 +987,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
           maxFontSizeMultiplier={1.4}
           style={
             {
-              "color": {
-                "dynamic": {
-                  "dark": "#9B9B9B",
-                  "light": "#7D7D7D",
-                },
-              },
+              "color": "#7D7D7D",
               "fontFamily": "Basel Grotesk",
               "fontSize": 17,
               "fontWeight": "400",
@@ -1166,52 +1043,31 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               }
             >
               <View
-                hitSlop={
-                  {
-                    "bottom": 5,
-                    "left": 5,
-                    "right": 5,
-                    "top": 5,
-                  }
-                }
+                cancelable={true}
+                disabled={false}
+                focusable={true}
+                hitSlop={[Function]}
+                minPressDuration={0}
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+                onPress={[Function]}
+                onPressIn={[Function]}
+                onPressOut={[Function]}
                 style={
                   {
-                    "backgroundColor": {
-                      "dynamic": {
-                        "dark": "#131313",
-                        "light": "#FFFFFF",
-                      },
-                    },
-                    "borderBottomColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "backgroundColor": "#FFFFFF",
+                    "borderBottomColor": "rgba(34,34,34,0.05)",
                     "borderBottomLeftRadius": 20,
                     "borderBottomRightRadius": 20,
                     "borderBottomWidth": 1,
-                    "borderLeftColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderLeftColor": "rgba(34,34,34,0.05)",
                     "borderLeftWidth": 1,
-                    "borderRightColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderRightColor": "rgba(34,34,34,0.05)",
                     "borderRightWidth": 1,
                     "borderStyle": "solid",
-                    "borderTopColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderTopColor": "rgba(34,34,34,0.05)",
                     "borderTopLeftRadius": 20,
                     "borderTopRightRadius": 20,
                     "borderTopWidth": 1,
@@ -1244,12 +1100,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     style={
                       {
                         "alignItems": "center",
-                        "backgroundColor": {
-                          "dynamic": {
-                            "dark": "#361A37",
-                            "light": "#FEF4FF",
-                          },
-                        },
+                        "backgroundColor": "#FEF4FF",
                         "borderBottomLeftRadius": 999999,
                         "borderBottomRightRadius": 999999,
                         "borderTopLeftRadius": 999999,
@@ -1372,12 +1223,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                             maxFontSizeMultiplier={1.4}
                             style={
                               {
-                                "color": {
-                                  "dynamic": {
-                                    "dark": "#FFFFFF",
-                                    "light": "#222222",
-                                  },
-                                },
+                                "color": "#222222",
                                 "fontFamily": "Basel Grotesk",
                                 "fontSize": 17,
                                 "fontWeight": "400",
@@ -1394,12 +1240,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                             {
                               "alignItems": "center",
                               "alignSelf": "flex-start",
-                              "backgroundColor": {
-                                "dynamic": {
-                                  "dark": "#FC72FF1f",
-                                  "light": "#FC72FF1f",
-                                },
-                              },
+                              "backgroundColor": "#FC72FF1f",
                               "borderBottomLeftRadius": 8,
                               "borderBottomRightRadius": 8,
                               "borderTopLeftRadius": 8,
@@ -1419,12 +1260,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                             maxFontSizeMultiplier={1.2}
                             style={
                               {
-                                "color": {
-                                  "dynamic": {
-                                    "dark": "#FC72FF",
-                                    "light": "#FC72FF",
-                                  },
-                                },
+                                "color": "#FC72FF",
                                 "fontFamily": "Basel Grotesk",
                                 "fontSize": 15,
                                 "fontWeight": "500",
@@ -1443,12 +1279,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                         maxFontSizeMultiplier={1.4}
                         style={
                           {
-                            "color": {
-                              "dynamic": {
-                                "dark": "#9B9B9B",
-                                "light": "#7D7D7D",
-                              },
-                            },
+                            "color": "#7D7D7D",
                             "fontFamily": "Basel Grotesk",
                             "fontSize": 15,
                             "fontWeight": "400",
@@ -1464,52 +1295,31 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 </View>
               </View>
               <View
-                hitSlop={
-                  {
-                    "bottom": 5,
-                    "left": 5,
-                    "right": 5,
-                    "top": 5,
-                  }
-                }
+                cancelable={true}
+                disabled={false}
+                focusable={true}
+                hitSlop={[Function]}
+                minPressDuration={0}
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+                onPress={[Function]}
+                onPressIn={[Function]}
+                onPressOut={[Function]}
                 style={
                   {
-                    "backgroundColor": {
-                      "dynamic": {
-                        "dark": "#131313",
-                        "light": "#FFFFFF",
-                      },
-                    },
-                    "borderBottomColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "backgroundColor": "#FFFFFF",
+                    "borderBottomColor": "rgba(34,34,34,0.05)",
                     "borderBottomLeftRadius": 20,
                     "borderBottomRightRadius": 20,
                     "borderBottomWidth": 1,
-                    "borderLeftColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderLeftColor": "rgba(34,34,34,0.05)",
                     "borderLeftWidth": 1,
-                    "borderRightColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderRightColor": "rgba(34,34,34,0.05)",
                     "borderRightWidth": 1,
                     "borderStyle": "solid",
-                    "borderTopColor": {
-                      "dynamic": {
-                        "dark": "rgba(255,255,255,0.12)",
-                        "light": "rgba(34,34,34,0.05)",
-                      },
-                    },
+                    "borderTopColor": "rgba(34,34,34,0.05)",
                     "borderTopLeftRadius": 20,
                     "borderTopRightRadius": 20,
                     "borderTopWidth": 1,
@@ -1542,12 +1352,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     style={
                       {
                         "alignItems": "center",
-                        "backgroundColor": {
-                          "dynamic": {
-                            "dark": "#361A37",
-                            "light": "#FEF4FF",
-                          },
-                        },
+                        "backgroundColor": "#FEF4FF",
                         "borderBottomLeftRadius": 999999,
                         "borderBottomRightRadius": 999999,
                         "borderTopLeftRadius": 999999,
@@ -1659,12 +1464,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                             maxFontSizeMultiplier={1.4}
                             style={
                               {
-                                "color": {
-                                  "dynamic": {
-                                    "dark": "#FFFFFF",
-                                    "light": "#222222",
-                                  },
-                                },
+                                "color": "#222222",
                                 "fontFamily": "Basel Grotesk",
                                 "fontSize": 17,
                                 "fontWeight": "400",
@@ -1682,12 +1482,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                         maxFontSizeMultiplier={1.4}
                         style={
                           {
-                            "color": {
-                              "dynamic": {
-                                "dark": "#9B9B9B",
-                                "light": "#7D7D7D",
-                              },
-                            },
+                            "color": "#7D7D7D",
                             "fontFamily": "Basel Grotesk",
                             "fontSize": 15,
                             "fontWeight": "400",
@@ -1714,14 +1509,18 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
             }
           >
             <View
-              hitSlop={
-                {
-                  "bottom": 5,
-                  "left": 5,
-                  "right": 5,
-                  "top": 5,
-                }
-              }
+              cancelable={true}
+              disabled={false}
+              focusable={true}
+              hitSlop={[Function]}
+              minPressDuration={0}
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+              onPress={[Function]}
+              onPressIn={[Function]}
+              onPressOut={[Function]}
               style={
                 {
                   "alignItems": "center",
@@ -1801,12 +1600,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 maxFontSizeMultiplier={1.4}
                 style={
                   {
-                    "color": {
-                      "dynamic": {
-                        "dark": "#5E5E5E",
-                        "light": "#BFBFBF",
-                      },
-                    },
+                    "color": "#BFBFBF",
                     "fontFamily": "Basel Grotesk",
                     "fontSize": 17,
                     "fontWeight": "400",

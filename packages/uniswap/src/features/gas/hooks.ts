@@ -9,7 +9,7 @@ import { useAccountMeta, useProvider } from 'uniswap/src/contexts/UniswapContext
 import { useGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
 import { GasEstimate, GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   FormattedUniswapXGasFeeInfo,

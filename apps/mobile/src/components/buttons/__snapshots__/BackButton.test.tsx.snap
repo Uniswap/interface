@@ -2,7 +2,18 @@
 
 exports[`BackButton renders without error 1`] = `
 <View
-  hitSlop={24}
+  cancelable={true}
+  disabled={false}
+  focusable={true}
+  hitSlop={[Function]}
+  minPressDuration={0}
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+  onPress={[Function]}
+  onPressIn={[Function]}
+  onPressOut={[Function]}
   style={
     {
       "alignItems": "center",
@@ -110,12 +121,7 @@ exports[`BackButton renders without error 1`] = `
       maxFontSizeMultiplier={1.4}
       style={
         {
-          "color": {
-            "dynamic": {
-              "dark": "#9B9B9B",
-              "light": "#7D7D7D",
-            },
-          },
+          "color": "#7D7D7D",
           "fontFamily": "Basel Grotesk",
           "fontSize": 19,
           "fontWeight": "400",

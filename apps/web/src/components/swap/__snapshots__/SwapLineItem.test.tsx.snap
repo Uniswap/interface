@@ -591,7 +591,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                   class="c3 c6 css-142zc9n"
                 >
                   <div
-                    class="_flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center _width-auto _display-inline-flex"
+                    class="_flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331199 _alignItems-center _width-auto _display-1685637459"
                   >
                     <svg
                       fill="none"
@@ -1270,7 +1270,7 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
                   class="c3 c6 css-142zc9n"
                 >
                   <div
-                    class="_flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap52 _alignItems-center _width-auto _display-inline-flex"
+                    class="_flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331199 _alignItems-center _width-auto _display-1685637459"
                   >
                     <svg
                       fill="none"
@@ -1976,7 +1976,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                           style="padding: 0.1rem 0.5rem;"
                         >
                           <div
-                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _zIndex-1 _opacity-0--5"
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _zIndex-1 _opacity-0d0t546"
                           >
                             <svg
                               stroke-width="8"
@@ -1997,16 +1997,16 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                             </svg>
                           </div>
                           <div
-                            class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
+                            class="_display-_platformweb_grid _gridGap-_platformweb_1481558307 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-568007293 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _pt-1481558307 _pr-1481558307 _pb-1481558307 _pl-1481558307 _zIndex-1020"
                           >
                             <span
-                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
                               data-disable-theme="true"
                             >
                               V3
                             </span>
                             <span
-                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
                               data-disable-theme="true"
                               style="min-width: auto;"
                             >
@@ -2019,11 +2019,12 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                           >
                             <div
                               aria-expanded="false"
+                              aria-haspopup="dialog"
                               class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
                               data-state="closed"
                             >
                               <div
-                                class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
+                                class="_display-_platformweb_grid _gridGap-_platformweb_1481558307 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-568007293 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _pt-1481558307 _pr-1481558307 _pb-1481558307 _pl-1481558307 _zIndex-1020"
                               >
                                 <div
                                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _mr-4px _ml-12px"
@@ -2036,13 +2037,13 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                                       data-testid="input-currency-logo-container"
                                     />
                                     <div
-                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
+                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-1448970769 _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
                                       data-testid="output-currency-logo-container"
                                     />
                                   </div>
                                 </div>
                                 <span
-                                  class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                                  class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
                                   data-disable-theme="true"
                                 >
                                   1%
@@ -2692,7 +2693,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                           style="padding: 0.1rem 0.5rem;"
                         >
                           <div
-                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _zIndex-1 _opacity-0--5"
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _zIndex-1 _opacity-0d0t546"
                           >
                             <svg
                               stroke-width="8"
@@ -2713,16 +2714,16 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                             </svg>
                           </div>
                           <div
-                            class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
+                            class="_display-_platformweb_grid _gridGap-_platformweb_1481558307 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-568007293 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _pt-1481558307 _pr-1481558307 _pb-1481558307 _pl-1481558307 _zIndex-1020"
                           >
                             <span
-                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
                               data-disable-theme="true"
                             >
                               V3
                             </span>
                             <span
-                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
                               data-disable-theme="true"
                               style="min-width: auto;"
                             >
@@ -2735,11 +2736,12 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                           >
                             <div
                               aria-expanded="false"
+                              aria-haspopup="dialog"
                               class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
                               data-state="closed"
                             >
                               <div
-                                class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
+                                class="_display-_platformweb_grid _gridGap-_platformweb_1481558307 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-568007293 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _pt-1481558307 _pr-1481558307 _pb-1481558307 _pl-1481558307 _zIndex-1020"
                               >
                                 <div
                                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _mr-4px _ml-12px"
@@ -2752,13 +2754,13 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                                       data-testid="input-currency-logo-container"
                                     />
                                     <div
-                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
+                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-1448970769 _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
                                       data-testid="output-currency-logo-container"
                                     />
                                   </div>
                                 </div>
                                 <span
-                                  class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                                  class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
                                   data-disable-theme="true"
                                 >
                                   1%
@@ -3449,7 +3451,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                           style="padding: 0.1rem 0.5rem;"
                         >
                           <div
-                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _zIndex-1 _opacity-0--5"
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _zIndex-1 _opacity-0d0t546"
                           >
                             <svg
                               stroke-width="8"
@@ -3470,16 +3472,16 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                             </svg>
                           </div>
                           <div
-                            class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
+                            class="_display-_platformweb_grid _gridGap-_platformweb_1481558307 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-568007293 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _pt-1481558307 _pr-1481558307 _pb-1481558307 _pl-1481558307 _zIndex-1020"
                           >
                             <span
-                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
                               data-disable-theme="true"
                             >
                               V3
                             </span>
                             <span
-                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
                               data-disable-theme="true"
                               style="min-width: auto;"
                             >
@@ -3492,11 +3494,12 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                           >
                             <div
                               aria-expanded="false"
+                              aria-haspopup="dialog"
                               class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
                               data-state="closed"
                             >
                               <div
-                                class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
+                                class="_display-_platformweb_grid _gridGap-_platformweb_1481558307 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-568007293 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _pt-1481558307 _pr-1481558307 _pb-1481558307 _pl-1481558307 _zIndex-1020"
                               >
                                 <div
                                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _mr-4px _ml-12px"
@@ -3509,13 +3512,13 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                                       data-testid="input-currency-logo-container"
                                     />
                                     <div
-                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
+                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-1448970769 _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
                                       data-testid="output-currency-logo-container"
                                     />
                                   </div>
                                 </div>
                                 <span
-                                  class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                                  class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
                                   data-disable-theme="true"
                                 >
                                   0.3%
@@ -4219,7 +4222,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                           style="padding: 0.1rem 0.5rem;"
                         >
                           <div
-                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _zIndex-1 _opacity-0--5"
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _zIndex-1 _opacity-0d0t546"
                           >
                             <svg
                               stroke-width="8"
@@ -4240,16 +4243,16 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                             </svg>
                           </div>
                           <div
-                            class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
+                            class="_display-_platformweb_grid _gridGap-_platformweb_1481558307 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-568007293 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _pt-1481558307 _pr-1481558307 _pb-1481558307 _pl-1481558307 _zIndex-1020"
                           >
                             <span
-                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
                               data-disable-theme="true"
                             >
                               V3
                             </span>
                             <span
-                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
                               data-disable-theme="true"
                               style="min-width: auto;"
                             >
@@ -4262,11 +4265,12 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                           >
                             <div
                               aria-expanded="false"
+                              aria-haspopup="dialog"
                               class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
                               data-state="closed"
                             >
                               <div
-                                class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
+                                class="_display-_platformweb_grid _gridGap-_platformweb_1481558307 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-568007293 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _pt-1481558307 _pr-1481558307 _pb-1481558307 _pl-1481558307 _zIndex-1020"
                               >
                                 <div
                                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _mr-4px _ml-12px"
@@ -4279,13 +4283,13 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                                       data-testid="input-currency-logo-container"
                                     />
                                     <div
-                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
+                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-1448970769 _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
                                       data-testid="output-currency-logo-container"
                                     />
                                   </div>
                                 </div>
                                 <span
-                                  class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                                  class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
                                   data-disable-theme="true"
                                 >
                                   1%
@@ -4989,7 +4993,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                           style="padding: 0.1rem 0.5rem;"
                         >
                           <div
-                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _zIndex-1 _opacity-0--5"
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _zIndex-1 _opacity-0d0t546"
                           >
                             <svg
                               stroke-width="8"
@@ -5010,16 +5014,16 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                             </svg>
                           </div>
                           <div
-                            class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
+                            class="_display-_platformweb_grid _gridGap-_platformweb_1481558307 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-568007293 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _pt-1481558307 _pr-1481558307 _pb-1481558307 _pl-1481558307 _zIndex-1020"
                           >
                             <span
-                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
                               data-disable-theme="true"
                             >
                               V3
                             </span>
                             <span
-                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
                               data-disable-theme="true"
                               style="min-width: auto;"
                             >
@@ -5032,11 +5036,12 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                           >
                             <div
                               aria-expanded="false"
+                              aria-haspopup="dialog"
                               class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
                               data-state="closed"
                             >
                               <div
-                                class="_display-_platformweb_grid _gridGap-_platformweb_t-space-spa94665589 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _pt-t-space-spa94665589 _pr-t-space-spa94665589 _pb-t-space-spa94665589 _pl-t-space-spa94665589 _zIndex-1020"
+                                class="_display-_platformweb_grid _gridGap-_platformweb_1481558307 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-568007293 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _pt-1481558307 _pr-1481558307 _pb-1481558307 _pl-1481558307 _zIndex-1020"
                               >
                                 <div
                                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _mr-4px _ml-12px"
@@ -5049,13 +5054,13 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                                       data-testid="input-currency-logo-container"
                                     />
                                     <div
-                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
+                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-1448970769 _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
                                       data-testid="output-currency-logo-container"
                                     />
                                   </div>
                                 </div>
                                 <span
-                                  class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
+                                  class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
                                   data-disable-theme="true"
                                 >
                                   1%

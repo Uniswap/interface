@@ -20,7 +20,7 @@ import {
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
 import { GqlResult } from 'uniswap/src/data/types'
 import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isMobileApp } from 'utilities/src/platform'
 

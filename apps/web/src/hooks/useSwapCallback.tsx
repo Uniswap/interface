@@ -19,7 +19,7 @@ import {
   ExactOutputSwapTransactionInfo,
   TransactionType,
 } from 'state/transactions/types'
-import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useSupportedChainId } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { currencyId } from 'utils/currencyId'
 

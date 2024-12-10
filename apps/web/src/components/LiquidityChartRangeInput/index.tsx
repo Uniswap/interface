@@ -1,5 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Price } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { AutoColumn, ColumnCenter } from 'components/deprecated/Column'
@@ -85,9 +83,6 @@ export default function LiquidityChartRangeInput({
   currencyA,
   currencyB,
   feeAmount,
-  tickSpacing,
-  poolId,
-  protocolVersion,
   ticksAtLimit,
   price,
   priceLower,
@@ -99,9 +94,6 @@ export default function LiquidityChartRangeInput({
   currencyA?: Currency
   currencyB?: Currency
   feeAmount?: FeeAmount
-  tickSpacing?: number
-  poolId?: string
-  protocolVersion: ProtocolVersion
   ticksAtLimit: { [bound in Bound]?: boolean | undefined }
   price?: number
   priceLower?: Price<Currency, Currency>
@@ -121,9 +113,6 @@ export default function LiquidityChartRangeInput({
     currencyA,
     currencyB,
     feeAmount,
-    version: protocolVersion,
-    poolId,
-    tickSpacing,
   })
 
   const onBrushDomainChangeEnded = useCallback(

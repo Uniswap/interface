@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Popover, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -7,36 +7,30 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { SwapFormContext, useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { SwapSettingRow } from 'uniswap/src/features/transactions/swap/settings/SwapSettingsRow'
+import { ProtocolPreference } from 'uniswap/src/features/transactions/swap/settings/configs/ProtocolPreference'
+import { Slippage } from 'uniswap/src/features/transactions/swap/settings/configs/Slippage'
 import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
-import {
-  SwapSettingsContext,
-  useSwapSettingsContext,
-} from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { isExtension, isInterface } from 'utilities/src/platform'
 
 const POPOVER_WIDTH = 320
 
 export type SwapSettingsModalProps = {
-  settings: SwapSettingConfig[]
-  defaultTitle?: string
+  customSettings: SwapSettingConfig[]
   onClose?: () => void
   isOpen: boolean
 }
 
-const SwapSettingsModalContent = ({
-  settings,
-  defaultTitle,
-  onClose,
-}: Omit<SwapSettingsModalProps, 'isOpen'>): JSX.Element => {
+const SwapSettingsModalContent = ({ customSettings, onClose }: Omit<SwapSettingsModalProps, 'isOpen'>): JSX.Element => {
   const { t } = useTranslation()
+  const allSettings = useMemo(() => [Slippage, ...customSettings, ProtocolPreference], [customSettings])
   const [SelectedSetting, setSelectedSetting] = useState<SwapSettingConfig>()
 
-  const title = SelectedSetting ? SelectedSetting.renderTitle(t) : defaultTitle ?? t('swap.settings.title')
+  const title = SelectedSetting ? SelectedSetting.renderTitle(t) : t('swap.settings.title')
   const screen = SelectedSetting?.Screen ? (
     <SelectedSetting.Screen />
   ) : (
     <Flex gap="$spacing16" py="$spacing12">
-      {settings.map((setting, index) => (
+      {allSettings.map((setting, index) => (
         <SwapSettingRow key={`swap-setting-${index}`} setSelectedSetting={setSelectedSetting} setting={setting} />
       ))}
     </Flex>
@@ -67,37 +61,36 @@ const SwapSettingsModalContent = ({
   )
 }
 
-function SwapSettingsModalInterface({ settings, defaultTitle, onClose }: SwapSettingsModalProps): JSX.Element {
-  return (
-    <Popover.Content
-      animation={[
-        'quick',
-        {
-          opacity: {
-            overshootClamping: true,
-          },
-        },
-      ]}
-      borderColor="$surface3"
-      borderRadius="$rounded24"
-      borderWidth="$spacing1"
-      enterStyle={{ y: -10, opacity: 0 }}
-      exitStyle={{ y: -10, opacity: 0 }}
-      p="$spacing12"
-      shadowColor="$shadowColor"
-      shadowOpacity={0.06}
-      shadowRadius={6}
-      width={POPOVER_WIDTH}
-    >
-      <SwapSettingsModalContent defaultTitle={defaultTitle} settings={settings} onClose={onClose} />
-    </Popover.Content>
-  )
-}
-
-function SwapSettingsModalWallet({ settings, onClose, isOpen }: SwapSettingsModalProps): JSX.Element {
+export function SwapSettingsModal({ onClose, isOpen, customSettings }: SwapSettingsModalProps): JSX.Element {
   const swapFormContext = useSwapFormContext()
-  const swapSettingsContext = useSwapSettingsContext()
   const colors = useSporeColors()
+
+  if (isInterface) {
+    return (
+      <Popover.Content
+        animation={[
+          'quick',
+          {
+            opacity: {
+              overshootClamping: true,
+            },
+          },
+        ]}
+        borderColor="$surface3"
+        borderRadius="$rounded24"
+        borderWidth="$spacing1"
+        enterStyle={{ y: -10, opacity: 0 }}
+        exitStyle={{ y: -10, opacity: 0 }}
+        p="$spacing12"
+        shadowColor="$shadowColor"
+        shadowOpacity={0.06}
+        shadowRadius={6}
+        width={POPOVER_WIDTH}
+      >
+        <SwapSettingsModalContent customSettings={customSettings} onClose={onClose} />
+      </Popover.Content>
+    )
+  }
 
   return (
     <Modal
@@ -107,21 +100,10 @@ function SwapSettingsModalWallet({ settings, onClose, isOpen }: SwapSettingsModa
       name={ModalName.SwapSettings}
       onClose={onClose}
     >
-      {/* Re-create the SwapSettingsContextProvider, since native Modal can cause its children to be in a separate component tree. */}
-      <SwapSettingsContext.Provider value={swapSettingsContext}>
-        {/* Re-create the SwapFormContextProvider, since native Modal can cause its children to be in a separate component tree. */}
-        <SwapFormContext.Provider value={swapFormContext}>
-          <SwapSettingsModalContent settings={settings} onClose={onClose} />
-        </SwapFormContext.Provider>
-      </SwapSettingsContext.Provider>
+      {/* Re-create the SwapFormContextProvider, since native Modal can cause its children to be in a separate component tree. */}
+      <SwapFormContext.Provider value={swapFormContext}>
+        <SwapSettingsModalContent customSettings={customSettings} onClose={onClose} />
+      </SwapFormContext.Provider>
     </Modal>
   )
-}
-
-export function SwapSettingsModal(props: SwapSettingsModalProps): JSX.Element {
-  if (isInterface) {
-    return <SwapSettingsModalInterface {...props} />
-  }
-
-  return <SwapSettingsModalWallet {...props} />
 }

@@ -21,7 +21,7 @@ import { HideSmall, ThemedText } from 'theme/components'
 import { PositionDetails } from 'types/position'
 import { Anchor, Flex, Text, styled } from 'ui/src'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { t, useTranslation } from 'uniswap/src/i18n'
 

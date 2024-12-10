@@ -62,7 +62,6 @@ module.exports = {
         globals: {
           __DEV__: true,
         },
-        testTimeout: 15000,
         cacheDirectory: getCacheDirectory('jest'),
         transform: {
           ...Object.entries(jestConfig.transform).reduce((transform, [key, value]) => {
@@ -111,7 +110,7 @@ module.exports = {
       webpackConfig.resolve.extensions.unshift('.web.tsx')
       webpackConfig.resolve.extensions.unshift('.web.ts')
       webpackConfig.resolve.extensions.unshift('.web.js')
-
+      
       if (isProduction || process.env.UNISWAP_ANALYZE_BUNDLE_SIZE) {
         // do bundle analysis
         webpackConfig.plugins.push(

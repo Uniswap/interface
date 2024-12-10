@@ -111,7 +111,7 @@ export function SubmitSwapButton({
           disabled={disabled}
           pressStyle={{ scale: 0.98 }}
           hoverStyle={{ opacity: 1, backgroundColor: '$statusCritical' }}
-          opacity={disabled ? 0.5 : 0.9}
+          opacity={0.9}
           icon={renderBiometricsIcon?.({ color: 'white' })}
           size={size}
           testID={TestID.Swap}

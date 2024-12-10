@@ -7,9 +7,8 @@ import { useIncreaseLiquidityTxContext } from 'components/IncreaseLiquidity/Incr
 import { DepositInputForm } from 'components/Liquidity/DepositInputForm'
 import { LiquidityModalDetailRows } from 'components/Liquidity/LiquidityModalDetailRows'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
-import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
 import { PositionField } from 'types/position'
-import { Flex, Text } from 'ui/src'
+import { Flex } from 'ui/src'
 import { useTranslation } from 'uniswap/src/i18n'
 
 export function IncreaseLiquidityForm() {
@@ -26,7 +25,7 @@ export function IncreaseLiquidityForm() {
     deposit1Disabled,
   } = derivedIncreaseLiquidityInfo
   const { position } = increaseLiquidityState
-  const { gasFeeEstimateUSD, txInfo, error: dataFetchingError, refetch } = useIncreaseLiquidityTxContext()
+  const { gasFeeEstimateUSD, txInfo } = useIncreaseLiquidityTxContext()
 
   if (!position) {
     throw new Error('AddLiquidityModal must have an initial state when opening')
@@ -103,16 +102,13 @@ export function IncreaseLiquidityForm() {
         currency1Amount={currency1Amount}
         networkCost={gasFeeEstimateUSD}
       />
-      {dataFetchingError && <TradingAPIError refetch={refetch} />}
       <LoaderButton
         disabled={disableContinue || !txInfo?.txRequest}
         onPress={handleOnContinue}
-        loading={Boolean(!dataFetchingError && currencyAmounts?.TOKEN0 && currencyAmounts.TOKEN1 && !txInfo?.txRequest)}
+        loading={Boolean(currencyAmounts?.TOKEN0 && currencyAmounts.TOKEN1 && !txInfo?.txRequest)}
         buttonKey="IncreaseLiquidity-continue"
       >
-        <Text variant="buttonLabel1" color="$white">
-          {errorText || t('common.add.label')}
-        </Text>
+        {errorText || t('common.add.label')}
       </LoaderButton>
     </Flex>
   )

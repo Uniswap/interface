@@ -36,7 +36,6 @@ export function TestnetModeModal({
         </Flex>
       }
       showCloseButton={showCloseButton}
-      height="max-content"
       onDismiss={onClose}
       onButtonPress={onClose}
     />

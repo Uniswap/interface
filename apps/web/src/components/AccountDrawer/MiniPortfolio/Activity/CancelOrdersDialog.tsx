@@ -8,13 +8,13 @@ import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
+import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import styled, { useTheme } from 'lib/styled-components'
 import { Slash } from 'react-feather'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Plural, Trans, t } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -164,7 +164,7 @@ export function CancelOrdersDialog(
 
 function GasEstimateDisplay({ gasEstimateValue, chainId }: { gasEstimateValue?: string; chainId: UniverseChainId }) {
   const gasFeeCurrencyAmount = CurrencyAmount.fromRawAmount(nativeOnChain(chainId), gasEstimateValue ?? '0')
-  const gasFeeUSD = useUSDCValue(gasFeeCurrencyAmount)
+  const gasFeeUSD = useStablecoinValue(gasFeeCurrencyAmount)
   const { formatCurrencyAmount } = useFormatter()
   const gasFeeFormatted = formatCurrencyAmount({
     amount: gasFeeUSD,

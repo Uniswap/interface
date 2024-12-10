@@ -9,9 +9,9 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { UniswapXInfo } from 'uniswap/src/features/transactions/swap/modals/UniswapXInfo'
 import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
-import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import {
   DEFAULT_PROTOCOL_OPTIONS,
   FrontendSupportedProtocol,
@@ -26,7 +26,7 @@ export const ProtocolPreference: SwapSettingConfig = {
   renderTitle: (t) => t('swap.settings.routingPreference.title'),
   Control() {
     const { t } = useTranslation()
-    const { selectedProtocols } = useSwapSettingsContext()
+    const { selectedProtocols } = useSwapFormContext()
     const tradeProtocolPreferenceTitle = isDefaultOptions(selectedProtocols) ? t('common.default') : t('common.custom')
 
     return (
@@ -37,7 +37,7 @@ export const ProtocolPreference: SwapSettingConfig = {
   },
   Screen() {
     const { t } = useTranslation()
-    const { selectedProtocols, updateSwapSettings } = useSwapSettingsContext()
+    const { selectedProtocols, updateSwapForm } = useSwapFormContext()
     const [isDefault, setIsDefault] = useState(isDefaultOptions(selectedProtocols))
     const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
 
@@ -50,12 +50,12 @@ export const ProtocolPreference: SwapSettingConfig = {
     const toggleProtocol = useCallback(
       (protocol: FrontendSupportedProtocol) => {
         if (selectedProtocols.includes(protocol)) {
-          updateSwapSettings({ selectedProtocols: selectedProtocols.filter((p) => p !== protocol) })
+          updateSwapForm({ selectedProtocols: selectedProtocols.filter((p) => p !== protocol) })
         } else {
-          updateSwapSettings({ selectedProtocols: [...selectedProtocols, protocol] })
+          updateSwapForm({ selectedProtocols: [...selectedProtocols, protocol] })
         }
       },
-      [updateSwapSettings, selectedProtocols],
+      [updateSwapForm, selectedProtocols],
     )
 
     const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
@@ -63,9 +63,9 @@ export const ProtocolPreference: SwapSettingConfig = {
     const toggleDefault = useCallback(() => {
       setIsDefault(!isDefault)
       if (!isDefault) {
-        updateSwapSettings({ selectedProtocols: DEFAULT_PROTOCOL_OPTIONS })
+        updateSwapForm({ selectedProtocols: DEFAULT_PROTOCOL_OPTIONS })
       }
-    }, [updateSwapSettings, isDefault])
+    }, [updateSwapForm, isDefault])
 
     return (
       <Flex gap="$spacing16" my="$spacing16">
@@ -192,19 +192,15 @@ function OptionRow({
 }
 
 function DefaultOptionDescription({ isDefault }: { isDefault: boolean }): JSX.Element {
-  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
   const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
   const { t } = useTranslation()
 
   const showIncludesUniswapX = uniswapXEnabled && isDefault
 
-  const cheapestRouteText = t('swap.settings.routingPreference.option.default.description')
-  const cheapestRouteTextV4 = t('swap.settings.routingPreference.option.default.description.v4')
-
   return (
     <Flex gap="$spacing4">
       <Text color="$neutral2" variant="body3">
-        {v4Enabled ? cheapestRouteTextV4 : cheapestRouteText}
+        {t('swap.settings.routingPreference.option.default.description')}
       </Text>
       {showIncludesUniswapX && (
         <UniswapXInfo

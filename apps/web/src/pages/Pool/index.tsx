@@ -4,8 +4,9 @@ import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pool
 import V4_HOOK from 'assets/images/v4Hooks.png'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Pool as PoolIcon } from 'components/Icons/Pool'
-import { LiquidityPositionCard, LiquidityPositionCardLoader } from 'components/Liquidity/LiquidityPositionCard'
+import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
 import { getPositionUrl, parseRestPosition } from 'components/Liquidity/utils'
+import { LoadingRows } from 'components/Loader/styled'
 import { TopPoolTable, sortAscendingAtom, sortMethodAtom } from 'components/Pools/PoolTable/PoolTable'
 import { OrderDirection } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
@@ -13,14 +14,14 @@ import { atom, useAtom } from 'jotai'
 import { useAtomValue, useResetAtom } from 'jotai/utils'
 import { PositionsHeader } from 'pages/Pool/Positions/PositionsHeader'
 import { TopPools } from 'pages/Pool/Positions/TopPools'
-import { ExternalArrowLink } from 'pages/Pool/Positions/shared'
+import { ExternalArrowLink, LoadingRow } from 'pages/Pool/Positions/shared'
 import { useEffect, useMemo, useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'react-feather'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useTopPools } from 'state/explore/topPools'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
 import { ClickableTamaguiStyle } from 'theme/components'
-import { Anchor, Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
+import { Anchor, Button, Flex, Text, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { X } from 'ui/src/components/icons/X'
 import { iconSizes } from 'ui/src/theme'
@@ -28,7 +29,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
 import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
 import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
@@ -38,7 +39,7 @@ import { Trans, useTranslation } from 'uniswap/src/i18n'
 
 const PAGE_SIZE = 8
 
-function EmptyPositionsView({ chainId, isConnected }: { chainId?: UniverseChainId | null; isConnected: boolean }) {
+function EmptyPositionsView({ isConnected }: { isConnected: boolean }) {
   const colors = useSporeColors()
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -60,7 +61,7 @@ function EmptyPositionsView({ chainId, isConnected }: { chainId?: UniverseChainI
     isLoading: exploreStatsLoading,
     error: exploreStatsError,
   } = useExploreStatsQuery({
-    chainId: chainId ? chainId.toString() : ALL_NETWORKS_ARG,
+    chainId: ALL_NETWORKS_ARG,
   })
 
   const { topPools } = useTopPools(
@@ -119,7 +120,7 @@ function EmptyPositionsView({ chainId, isConnected }: { chainId?: UniverseChainI
           pageSize={10}
           staticSize
         />
-        <ExternalArrowLink href="/explore/pools" openInNewTab={false}>
+        <ExternalArrowLink href="/explore" openInNewTab={false}>
           {t('explore.more.pools')}
         </ExternalArrowLink>
       </Flex>
@@ -159,8 +160,6 @@ export default function Pool() {
   )
   const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
 
-  const media = useMedia()
-
   const [chainFilter, setChainFilter] = useAtom(chainFilterAtom)
   const { chains: currentModeChains } = useEnabledChains()
   const [versionFilter, setVersionFilter] = useAtom(versionFilterAtom)
@@ -177,7 +176,7 @@ export default function Pool() {
     }
   }, [isV4DataEnabled, setVersionFilter])
 
-  const { data, isPlaceholderData, refetch, isLoading } = useGetPositionsQuery(
+  const { data, isPlaceholderData, refetch } = useGetPositionsQuery(
     {
       address,
       chainIds: chainFilter ? [chainFilter] : currentModeChains,
@@ -186,7 +185,7 @@ export default function Pool() {
     },
     !isConnected,
   )
-  const isLoadingPositions = !!account.address && (isLoading || !data)
+  const isLoadingPositions = !data && account.address
 
   usePendingLPTransactionsChangeListener(refetch)
 
@@ -210,7 +209,7 @@ export default function Pool() {
     <Trace logImpression page={InterfacePageNameLocal.Positions}>
       <Flex
         row
-        $xl={{ flexDirection: 'column', gap: '$gap16' }}
+        $xl={{ flexDirection: 'column' }}
         width="100%"
         maxWidth={1200}
         gap={80}
@@ -218,144 +217,154 @@ export default function Pool() {
         px="$spacing40"
         $lg={{ px: '$spacing20' }}
       >
-        <Flex grow shrink gap="$spacing24">
-          <PositionsHeader
-            showFilters={account.isConnected}
-            selectedChain={chainFilter}
-            selectedVersions={versionFilter}
-            selectedStatus={statusFilter}
-            onChainChange={(selectedChain) => {
-              setChainFilter(selectedChain ?? null)
-            }}
-            onVersionChange={(toggledVersion) => {
-              if (versionFilter?.includes(toggledVersion)) {
-                setVersionFilter(versionFilter?.filter((v) => v !== toggledVersion))
-              } else {
-                setVersionFilter([...(versionFilter ?? []), toggledVersion])
-              }
-            }}
-            onStatusChange={(toggledStatus) => {
-              if (statusFilter?.includes(toggledStatus)) {
-                setStatusFilter(statusFilter?.filter((s) => s !== toggledStatus))
-              } else {
-                setStatusFilter([...(statusFilter ?? []), toggledStatus])
-              }
-            }}
-          />
-          {!isLoadingPositions ? (
-            currentPageItems.length > 0 ? (
-              <Flex gap="$gap16" mb="$spacing16" opacity={isPlaceholderData ? 0.6 : 1}>
-                {currentPageItems.map((position) => {
-                  return (
-                    position && (
-                      <Link style={{ textDecoration: 'none' }} to={getPositionUrl(position)}>
-                        <LiquidityPositionCard
-                          isClickableStyle
-                          key={`LiquidityPositionCard-${position?.tokenId}`}
-                          liquidityPosition={position}
-                        />
-                      </Link>
+        <Flex grow>
+          <Flex width="100%" gap="$spacing24">
+            <PositionsHeader
+              showFilters={account.isConnected}
+              selectedChain={chainFilter}
+              selectedVersions={versionFilter}
+              selectedStatus={statusFilter}
+              onChainChange={(selectedChain) => {
+                setChainFilter(selectedChain ?? null)
+              }}
+              onVersionChange={(toggledVersion) => {
+                if (versionFilter?.includes(toggledVersion)) {
+                  setVersionFilter(versionFilter?.filter((v) => v !== toggledVersion))
+                } else {
+                  setVersionFilter([...(versionFilter ?? []), toggledVersion])
+                }
+              }}
+              onStatusChange={(toggledStatus) => {
+                if (statusFilter?.includes(toggledStatus)) {
+                  setStatusFilter(statusFilter?.filter((s) => s !== toggledStatus))
+                } else {
+                  setStatusFilter([...(statusFilter ?? []), toggledStatus])
+                }
+              }}
+            />
+            {!isLoadingPositions ? (
+              currentPageItems.length > 0 ? (
+                <Flex gap="$gap16" mb="$spacing16" opacity={isPlaceholderData ? 0.6 : 1}>
+                  {currentPageItems.map((position, index) => {
+                    return (
+                      position && (
+                        <Link style={{ textDecoration: 'none' }} to={getPositionUrl(position)}>
+                          <LiquidityPositionCard
+                            isClickableStyle
+                            key={`LiquidityPositionCard-${index}`}
+                            liquidityPosition={position}
+                          />
+                        </Link>
+                      )
                     )
+                  })}
+                </Flex>
+              ) : (
+                <EmptyPositionsView isConnected={isConnected} />
+              )
+            ) : (
+              <LoadingRows>
+                <LoadingRow />
+                <LoadingRow />
+                <LoadingRow />
+                <LoadingRow />
+                <LoadingRow />
+                <LoadingRow />
+                <LoadingRow />
+                <LoadingRow />
+                <LoadingRow />
+                <LoadingRow />
+                <LoadingRow />
+              </LoadingRows>
+            )}
+            {!statusFilter.includes(PositionStatus.CLOSED) && !closedCTADismissed && account.address && (
+              <Flex
+                borderWidth="$spacing1"
+                borderColor="$surface3"
+                borderRadius="$rounded12"
+                mb="$spacing24"
+                p="$padding12"
+                gap="$gap12"
+                row
+                centered
+              >
+                <Flex height="100%">
+                  <InfoCircleFilled color="$neutral2" size="$icon.20" />
+                </Flex>
+                <Flex grow>
+                  <Text variant="body3" color="$neutral1">
+                    <Trans i18nKey="pool.closedCTA.title" />
+                  </Text>
+                  <Text variant="body3" color="$neutral2">
+                    <Trans i18nKey="pool.closedCTA.description" />
+                  </Text>
+                </Flex>
+                <Flex height="100%" onPress={() => setClosedCTADismissed(true)} cursor="pointer">
+                  <X color="$neutral2" size="$icon.20" />
+                </Flex>
+              </Flex>
+            )}
+            {!!pageCount && pageCount > 1 && data?.positions && (
+              <Flex row gap="$gap12" alignItems="center" mb="$spacing24" alignSelf="center">
+                <ChevronLeft
+                  size={20}
+                  {...ClickableTamaguiStyle}
+                  opacity={currentPage === 0 ? 0.4 : 1}
+                  onClick={() => {
+                    setCurrentPage(Math.max(currentPage - 1, 0))
+                  }}
+                />
+                {Array.from({ length: pageCount > 5 ? 3 : pageCount }).map((_, index) => {
+                  const isSelected = currentPage === index
+                  return (
+                    <Text
+                      variant="buttonLabel2"
+                      color={isSelected ? '$neutral1' : '$neutral2'}
+                      backgroundColor={isSelected ? '$surface3' : 'transparent'}
+                      py="$spacing4"
+                      px="$spacing12"
+                      borderRadius="$roundedFull"
+                      key={`Positions-page-${index}`}
+                      {...ClickableTamaguiStyle}
+                      onPress={() => setCurrentPage(index)}
+                    >
+                      {index + 1}
+                    </Text>
                   )
                 })}
-              </Flex>
-            ) : (
-              <EmptyPositionsView chainId={chainFilter} isConnected={isConnected} />
-            )
-          ) : (
-            <Flex gap="$gap16">
-              {Array.from({ length: 5 }, (_, index) => (
-                <LiquidityPositionCardLoader key={index} />
-              ))}
-            </Flex>
-          )}
-          {!statusFilter.includes(PositionStatus.CLOSED) && !closedCTADismissed && account.address && (
-            <Flex
-              borderWidth="$spacing1"
-              borderColor="$surface3"
-              borderRadius="$rounded12"
-              mb="$spacing24"
-              p="$padding12"
-              gap="$gap12"
-              row
-              centered
-            >
-              <Flex height="100%">
-                <InfoCircleFilled color="$neutral2" size="$icon.20" />
-              </Flex>
-              <Flex grow flexBasis={0}>
-                <Text variant="body3" color="$neutral1">
-                  <Trans i18nKey="pool.closedCTA.title" />
-                </Text>
-                <Text variant="body3" color="$neutral2">
-                  <Trans i18nKey="pool.closedCTA.description" />
-                </Text>
-              </Flex>
-              <Flex height="100%" onPress={() => setClosedCTADismissed(true)} cursor="pointer">
-                <X color="$neutral2" size="$icon.20" />
-              </Flex>
-            </Flex>
-          )}
-          {!!pageCount && pageCount > 1 && data?.positions && (
-            <Flex row gap="$gap12" alignItems="center" mb="$spacing24" alignSelf="center">
-              <ChevronLeft
-                size={20}
-                {...ClickableTamaguiStyle}
-                opacity={currentPage === 0 ? 0.4 : 1}
-                onClick={() => {
-                  setCurrentPage(Math.max(currentPage - 1, 0))
-                }}
-              />
-              {Array.from({ length: pageCount > 5 ? 3 : pageCount }).map((_, index) => {
-                const isSelected = currentPage === index
-                return (
+                {pageCount > 5 && (
+                  <Text variant="buttonLabel2" color="$neutral2" py="$spacing4" px="$spacing12">
+                    ...
+                  </Text>
+                )}
+                {pageCount > 5 && (
                   <Text
                     variant="buttonLabel2"
-                    color={isSelected ? '$neutral1' : '$neutral2'}
-                    backgroundColor={isSelected ? '$surface3' : 'transparent'}
+                    color={currentPage === pageCount - 1 ? '$neutral1' : '$neutral2'}
+                    backgroundColor={currentPage === pageCount - 1 ? '$surface3' : 'transparent'}
                     py="$spacing4"
                     px="$spacing12"
                     borderRadius="$roundedFull"
-                    key={`Positions-page-${index}`}
                     {...ClickableTamaguiStyle}
-                    onPress={() => setCurrentPage(index)}
+                    onPress={() => setCurrentPage(pageCount - 1)}
                   >
-                    {index + 1}
+                    {pageCount}
                   </Text>
-                )
-              })}
-              {pageCount > 5 && (
-                <Text variant="buttonLabel2" color="$neutral2" py="$spacing4" px="$spacing12">
-                  ...
-                </Text>
-              )}
-              {pageCount > 5 && (
-                <Text
-                  variant="buttonLabel2"
-                  color={currentPage === pageCount - 1 ? '$neutral1' : '$neutral2'}
-                  backgroundColor={currentPage === pageCount - 1 ? '$surface3' : 'transparent'}
-                  py="$spacing4"
-                  px="$spacing12"
-                  borderRadius="$roundedFull"
+                )}
+                <ChevronRight
+                  size={20}
                   {...ClickableTamaguiStyle}
-                  onPress={() => setCurrentPage(pageCount - 1)}
-                >
-                  {pageCount}
-                </Text>
-              )}
-              <ChevronRight
-                size={20}
-                {...ClickableTamaguiStyle}
-                opacity={currentPage === pageCount - 1 ? 0.4 : 1}
-                onClick={() => {
-                  setCurrentPage(Math.min(currentPage + 1, pageCount - 1))
-                }}
-              />
-            </Flex>
-          )}
+                  opacity={currentPage === pageCount - 1 ? 0.4 : 1}
+                  onClick={() => {
+                    setCurrentPage(Math.min(currentPage + 1, pageCount - 1))
+                  }}
+                />
+              </Flex>
+            )}
+          </Flex>
         </Flex>
-        <Flex gap="$gap32" pt={64} $xl={{ pt: '$spacing12' }}>
-          {!media.xl && !showingEmptyPositions && !isLoading && <TopPools chainId={chainFilter} />}
+        <Flex gap="$gap32" pt="$spacing12">
+          {!showingEmptyPositions && <TopPools />}
           <Flex gap="$gap20" mb="$spacing24">
             <Text variant="subheading1">{t('liquidity.learnMoreLabel')}</Text>
             <Flex gap="$gap12">
@@ -364,13 +373,7 @@ export default function Pool() {
                 text={t('liquidity.provideOnProtocols')}
                 link={uniswapUrls.helpArticleUrls.providingLiquidityInfo}
               />
-              {isV4DataEnabled && (
-                <LearnMoreTile
-                  img={V4_HOOK}
-                  text={t('liquidity.hooks')}
-                  link={uniswapUrls.helpArticleUrls.v4HooksInfo}
-                />
-              )}
+              <LearnMoreTile img={V4_HOOK} text={t('liquidity.hooks')} link={uniswapUrls.helpArticleUrls.v4HooksInfo} />
             </Flex>
             <ExternalArrowLink href={uniswapUrls.helpArticleUrls.positionsLearnMore}>
               {t('common.button.learn')}

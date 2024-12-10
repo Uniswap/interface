@@ -7,7 +7,7 @@ import {
   useFeedTransactionListQuery,
   useTransactionListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { usePersistedError } from 'uniswap/src/features/dataApi/utils'
 import { selectNftsVisibility } from 'uniswap/src/features/favorites/selectors'
 import { useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
@@ -124,15 +124,10 @@ export function useFormattedTransactionDataForFeed(
   return { onRetry, sectionData, hasData, isError, isLoading, keyExtractor }
 }
 
-export function useFormattedTransactionDataForActivity({
-  address,
-  hideSpamTokens,
-  pageSize,
-}: {
-  address: Address
-  hideSpamTokens: boolean
-  pageSize?: number
-}): {
+export function useFormattedTransactionDataForActivity(
+  address: Address,
+  hideSpamTokens: boolean,
+): {
   hasData: boolean
   isLoading: boolean
   isError: ApolloError | undefined
@@ -149,7 +144,7 @@ export function useFormattedTransactionDataForActivity({
     data,
     error: requestError,
   } = useTransactionListQuery({
-    variables: { address, chains: gqlChains, pageSize },
+    variables: { address, chains: gqlChains },
     notifyOnNetworkStatusChange: true,
     // rely on TransactionHistoryUpdater for polling
     pollInterval: undefined,

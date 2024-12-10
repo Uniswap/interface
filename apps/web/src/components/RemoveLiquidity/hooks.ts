@@ -15,12 +15,10 @@ import {
   ProtocolItems,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
-import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }): RemoveLiquidityTxInfo {
   const { positionInfo, percent, percentInvalid } = useRemoveLiquidityModalContext()
-  const { customDeadline, customSlippageTolerance } = useSwapSettingsContext()
 
   const pool =
     positionInfo?.version === ProtocolVersion.V3 || positionInfo?.version === ProtocolVersion.V4
@@ -42,12 +40,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
         .quotient.toString(),
     }
   }, [positionInfo, percent, account, percentInvalid])
-  const {
-    data: v2LpTokenApproval,
-    isLoading: v2ApprovalLoading,
-    error: approvalError,
-    refetch: approvalRefetch,
-  } = useCheckLpApprovalQuery({
+  const { data: v2LpTokenApproval, isLoading: v2ApprovalLoading } = useCheckLpApprovalQuery({
     params: v2LpTokenApprovalQueryParams,
     staleTime: 5 * ONE_SECOND_MS,
   })
@@ -66,7 +59,6 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
     if (!positionInfo || !apiProtocolItems || !account || percentInvalid) {
       return undefined
     }
-
     return {
       simulateTransaction: !approvalsNeeded,
       protocol: apiProtocolItems,
@@ -104,29 +96,12 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
           hooks: positionInfo.v4hook,
         },
       },
-      slippageTolerance: customSlippageTolerance,
     }
-  }, [
-    account,
-    positionInfo,
-    percentInvalid,
-    percent,
-    pool,
-    approvalsNeeded,
-    feeValue0,
-    feeValue1,
-    customSlippageTolerance,
-  ])
+  }, [account, positionInfo, percentInvalid, percent, pool, approvalsNeeded, feeValue0, feeValue1])
 
-  const {
-    data: decreaseCalldata,
-    isLoading: decreaseCalldataLoading,
-    error: calldataError,
-    refetch: calldataRefetch,
-  } = useDecreaseLpPositionCalldataQuery({
+  const { data: decreaseCalldata, isLoading: decreaseCalldataLoading } = useDecreaseLpPositionCalldataQuery({
     params: decreaseCalldataQueryParams,
-    deadlineInMinutes: customDeadline,
-    refetchInterval: 5 * ONE_SECOND_MS,
+    staleTime: 5 * ONE_SECOND_MS,
   })
 
   const { value: estimatedGasFee } = useTransactionGasFee(decreaseCalldata?.decrease, !!decreaseCalldata?.gasFee)
@@ -142,7 +117,5 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
     decreaseCalldata,
     v2LpTokenApproval,
     approvalLoading: v2ApprovalLoading,
-    error: Boolean(approvalError || calldataError),
-    refetch: approvalError ? approvalRefetch : calldataError ? calldataRefetch : undefined,
   }
 }

@@ -20,8 +20,7 @@ import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContex
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useEnabledChains, useSupportedChainId } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
 import { Trans } from 'uniswap/src/i18n'
@@ -315,7 +314,7 @@ function parseFromURLParameter(urlParam: ParsedQs[string]): string | undefined {
   return undefined
 }
 
-export function parseCurrencyFromURLParameter(urlParam: ParsedQs[string]): string | undefined {
+function parseCurrencyFromURLParameter(urlParam: ParsedQs[string]): string | undefined {
   if (typeof urlParam === 'string') {
     const valid = isAddress(urlParam)
     if (valid) {

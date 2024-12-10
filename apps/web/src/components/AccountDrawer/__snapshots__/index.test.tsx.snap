@@ -738,7 +738,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                     width="100%"
                   >
                     <span
-                      class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                      class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016140"
                       data-disable-theme="true"
                     >
                       Connect a wallet
@@ -772,13 +772,13 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                               class="c4"
                             >
                               <span
-                                class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _whiteSpace-nowrap"
+                                class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-1241035681 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016109 _whiteSpace-nowrap"
                                 data-disable-theme="true"
                               >
                                 Get Uniswap Wallet
                               </span>
                               <span
-                                class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-white _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap"
+                                class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-1241035681 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202 _whiteSpace-nowrap"
                                 data-disable-theme="true"
                               >
                                 Available on iOS, Android, and Chrome
@@ -811,13 +811,13 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                             class="c4"
                           >
                             <span
-                              class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _whiteSpace-nowrap"
+                              class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016109 _whiteSpace-nowrap"
                               data-disable-theme="true"
                             >
                               Uniswap Mobile
                             </span>
                             <span
-                              class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap"
+                              class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202 _whiteSpace-nowrap"
                               data-disable-theme="true"
                             >
                               Scan QR code to connect
@@ -837,7 +837,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                       class="c24 c15"
                     >
                       <span
-                        class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap"
+                        class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202 _whiteSpace-nowrap"
                         data-disable-theme="true"
                       >
                         Other wallets

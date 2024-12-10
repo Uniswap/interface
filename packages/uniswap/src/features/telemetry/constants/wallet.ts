@@ -18,7 +18,6 @@ export enum WalletEventName {
   OnboardingIntroCardSwiped = 'Onboarding Intro Card Swiped',
   OnboardingIntroCardPressed = 'Onboarding Intro Card Pressed',
   OnboardingIntroCardClosed = 'Onboarding Intro Card Closed',
-  PendingTransactionTimeout = 'Pending Transaction Timeout',
   PerformanceGraphql = 'Performance GraphQL',
   PortfolioBalanceFreshnessLag = 'Portfolio Balance Freshness Lag',
   SendRecipientSelected = 'Send Recipient Selected',

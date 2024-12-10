@@ -9,6 +9,9 @@ const NavDropdownContent = styled(Flex, {
   borderColor: '$surface2',
   backgroundColor: '$surface1',
   maxHeight: `calc(100dvh - ${INTERFACE_NAV_HEIGHT * 2}px)`,
+  py: '12px',
+  pl: '16px',
+  pr: '4px', // Smaller right padding allows scrollbar to be closer to container edge
   $sm: {
     width: '100%',
     borderRadius: '$none',
@@ -20,16 +23,6 @@ const NavDropdownContent = styled(Flex, {
     overflowY: 'auto',
     overflowX: 'hidden',
   },
-  variants: {
-    padded: {
-      true: {
-        py: '12px',
-        pl: '16px',
-        pr: '4px', // Smaller right padding allows scrollbar to be closer to container edge
-      },
-      false: {},
-    },
-  },
 })
 
 interface NavDropdownProps {
@@ -38,10 +31,9 @@ interface NavDropdownProps {
   width?: number
   dropdownRef?: RefObject<HTMLDivElement>
   dataTestId?: string
-  padded?: boolean
 }
 
-export function NavDropdown({ children, width, dropdownRef, isOpen, padded, dataTestId }: NavDropdownProps) {
+export function NavDropdown({ children, width, dropdownRef, isOpen, dataTestId }: NavDropdownProps) {
   const shadowProps = useShadowPropsMedium()
   const scrollbarStyles = useScrollbarStyles()
 
@@ -68,7 +60,6 @@ export function NavDropdown({ children, width, dropdownRef, isOpen, padded, data
           data-testid={dataTestId}
           ref={dropdownRef}
           width={width}
-          padded={padded}
           {...shadowProps}
           style={scrollbarStyles}
         >

@@ -29,11 +29,10 @@ import {
   generateCreateCalldataQueryParams,
   generateCreatePositionTxRequest,
 } from 'pages/Pool/Positions/create/utils'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
-import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function CreatePositionContextProvider({
@@ -52,18 +51,9 @@ export function CreatePositionContextProvider({
     wishFeeData: DEFAULT_POSITION_STATE.fee,
   })
 
-  const reset = useCallback(() => {
-    setPositionState({
-      ...DEFAULT_POSITION_STATE,
-      ...initialState,
-    })
-    setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
-  }, [initialState])
-
   return (
     <CreatePositionContext.Provider
       value={{
-        reset,
         step,
         setStep,
         positionState,
@@ -86,10 +76,6 @@ export function PriceRangeContextProvider({ children }: { children: React.ReactN
   const { derivedPositionInfo } = useCreatePositionContext()
   const [priceRangeState, setPriceRangeState] = useState<PriceRangeState>(DEFAULT_PRICE_RANGE_STATE)
 
-  const reset = useCallback(() => {
-    setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
-  }, [])
-
   useEffect(() => {
     // creatingPoolOrPair is calculated in the previous step of the create flow, so
     // it's safe to reset PriceRangeState to defaults when it changes.
@@ -110,7 +96,7 @@ export function PriceRangeContextProvider({ children }: { children: React.ReactN
   const derivedPriceRangeInfo = useDerivedPriceRangeInfo(priceRangeState)
 
   return (
-    <PriceRangeContext.Provider value={{ reset, priceRangeState, setPriceRangeState, derivedPriceRangeInfo }}>
+    <PriceRangeContext.Provider value={{ priceRangeState, setPriceRangeState, derivedPriceRangeInfo }}>
       {children}
     </PriceRangeContext.Provider>
   )
@@ -120,12 +106,8 @@ export function DepositContextProvider({ children }: { children: React.ReactNode
   const [depositState, setDepositState] = useState<DepositState>(DEFAULT_DEPOSIT_STATE)
   const derivedDepositInfo = useDerivedDepositInfo(depositState)
 
-  const reset = useCallback(() => {
-    setDepositState(DEFAULT_DEPOSIT_STATE)
-  }, [])
-
   return (
-    <DepositContext.Provider value={{ reset, depositState, setDepositState, derivedDepositInfo }}>
+    <DepositContext.Provider value={{ depositState, setDepositState, derivedDepositInfo }}>
       {children}
     </DepositContext.Provider>
   )
@@ -136,7 +118,6 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   const { derivedPositionInfo, positionState } = useCreatePositionContext()
   const { derivedDepositInfo } = useDepositContext()
   const { priceRangeState, derivedPriceRangeInfo } = usePriceRangeContext()
-  const swapSettings = useSwapSettingsContext()
 
   const addLiquidityApprovalParams = useMemo(() => {
     return generateAddLiquidityApprovalParams({
@@ -146,11 +127,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
       derivedDepositInfo,
     })
   }, [account, derivedDepositInfo, derivedPositionInfo, positionState])
-  const {
-    data: approvalCalldata,
-    error: approvalError,
-    refetch: approvalRefetch,
-  } = useCheckLpApprovalQuery({
+  const { data: approvalCalldata } = useCheckLpApprovalQuery({
     params: addLiquidityApprovalParams,
     staleTime: 5 * ONE_SECOND_MS,
   })
@@ -174,41 +151,20 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     positionState,
     priceRangeState,
   ])
-  const {
-    data: createCalldata,
-    error: createError,
-    refetch: createRefetch,
-  } = useCreateLpPositionCalldataQuery({
+  const { data: createCalldata } = useCreateLpPositionCalldataQuery({
     params: createCalldataQueryParams,
-    deadlineInMinutes: swapSettings.customDeadline,
-    refetchInterval: 5 * ONE_SECOND_MS,
+    staleTime: 5 * ONE_SECOND_MS,
   })
 
   const validatedValue = useMemo(() => {
-    const txInfo = generateCreatePositionTxRequest({
+    return generateCreatePositionTxRequest({
       approvalCalldata,
       createCalldata,
       createCalldataQueryParams,
       derivedPositionInfo,
       derivedDepositInfo,
     })
-
-    return {
-      txInfo,
-      error: Boolean(approvalError || createError),
-      refetch: approvalError ? approvalRefetch : createError ? createRefetch : undefined,
-    }
-  }, [
-    approvalCalldata,
-    createCalldata,
-    createCalldataQueryParams,
-    derivedPositionInfo,
-    derivedDepositInfo,
-    approvalError,
-    createError,
-    approvalRefetch,
-    createRefetch,
-  ])
+  }, [approvalCalldata, createCalldata, createCalldataQueryParams, derivedPositionInfo, derivedDepositInfo])
 
   return <CreateTxContext.Provider value={validatedValue}>{children}</CreateTxContext.Provider>
 }

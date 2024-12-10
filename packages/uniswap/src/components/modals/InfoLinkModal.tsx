@@ -1,5 +1,5 @@
-import { ComponentProps, ReactNode } from 'react'
-import { Button, Flex, Text, TouchableArea, View, isWeb, useSporeColors } from 'ui/src'
+import { ReactNode } from 'react'
+import { Button, Flex, isWeb, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { zIndices } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -21,7 +21,6 @@ export interface ModalProps {
   onDismiss?: () => void
   onButtonPress?: () => void
   onAnalyticsEvent?: () => void
-  height?: ComponentProps<typeof View>['height']
 }
 
 export function InfoLinkModal({
@@ -38,7 +37,6 @@ export function InfoLinkModal({
   onDismiss,
   onButtonPress,
   onAnalyticsEvent,
-  height,
 }: React.PropsWithChildren<ModalProps>): JSX.Element {
   const colors = useSporeColors()
 
@@ -56,7 +54,7 @@ export function InfoLinkModal({
   }
 
   return (
-    <Modal backgroundColor={colors.surface1.val} isModalOpen={isOpen} name={name} height={height} onClose={onDismiss}>
+    <Modal backgroundColor={colors.surface1.val} isModalOpen={isOpen} name={name} onClose={onDismiss}>
       {showCloseButton && (
         <TouchableArea
           p="$spacing16"

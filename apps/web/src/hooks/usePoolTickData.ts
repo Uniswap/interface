@@ -1,21 +1,13 @@
-// eslint-disable-next-line no-restricted-imports
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
-import { FeeAmount, Pool as V3Pool, tickToPrice } from '@uniswap/v3-sdk'
-import { Pool as V4Pool } from '@uniswap/v4-sdk'
+import { FeeAmount, Pool, TICK_SPACINGS, tickToPrice } from '@uniswap/v3-sdk'
 import { TickData, Ticks } from 'graphql/data/AllV3TicksQuery'
+import { PoolState, usePoolMultichain } from 'hooks/usePools'
 import JSBI from 'jsbi'
 import ms from 'ms'
-import { getCurrencyAddressWithWrap, poolEnabledProtocolVersion } from 'pages/Pool/Positions/create/utils'
 import { useEffect, useMemo, useState } from 'react'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
-import {
-  useAllV3TicksQuery,
-  useAllV4TicksQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useAllV3TicksQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains, useSupportedChainId } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { logger } from 'utilities/src/logger/logger'
@@ -23,111 +15,62 @@ import computeSurroundingTicks, { TickProcessed } from 'utils/computeSurrounding
 
 const PRICE_FIXED_DIGITS = 8
 
-const getActiveTick = (
-  tickCurrent: number | undefined,
-  feeAmount: FeeAmount | undefined,
-  tickSpacing: number | undefined,
-) => (tickCurrent && feeAmount && tickSpacing ? Math.floor(tickCurrent / tickSpacing) * tickSpacing : undefined)
+const getActiveTick = (tickCurrent: number | undefined, feeAmount: FeeAmount | undefined) =>
+  tickCurrent && feeAmount ? Math.floor(tickCurrent / TICK_SPACINGS[feeAmount]) * TICK_SPACINGS[feeAmount] : undefined
 
 const MAX_TICK_FETCH_VALUE = 1000
 function usePaginatedTickQuery(
-  poolId: string | undefined,
-  version: ProtocolVersion,
+  currencyA: Currency | undefined,
+  currencyB: Currency | undefined,
+  feeAmount: FeeAmount | undefined,
   skip = 0,
   chainId: UniverseChainId,
 ) {
   const { defaultChainId } = useEnabledChains()
+
+  const poolAddress =
+    currencyA && currencyB && feeAmount
+      ? Pool.getAddress(
+          currencyA?.wrapped,
+          currencyB?.wrapped,
+          feeAmount,
+          undefined,
+          chainId ? V3_CORE_FACTORY_ADDRESSES[chainId] : undefined,
+        )
+      : undefined
   const supportedChainId = useSupportedChainId(chainId)
 
-  const v3Result = useAllV3TicksQuery({
+  return useAllV3TicksQuery({
     variables: {
-      address: poolId?.toLowerCase() ?? '',
+      address: poolAddress?.toLowerCase() ?? '',
       chain: toGraphQLChain(supportedChainId ?? defaultChainId),
       skip,
       first: MAX_TICK_FETCH_VALUE,
     },
-    skip: !poolId || version !== ProtocolVersion.V3,
+    skip: !poolAddress,
     pollInterval: ms(`30s`),
   })
-
-  const v4Result = useAllV4TicksQuery({
-    variables: {
-      poolId: poolId ?? '',
-      chain: toGraphQLChain(supportedChainId ?? defaultChainId),
-      skip,
-      first: MAX_TICK_FETCH_VALUE,
-    },
-    skip: !poolId || version !== ProtocolVersion.V4,
-    pollInterval: ms(`30s`),
-  })
-
-  return useMemo(() => {
-    if (version === ProtocolVersion.V3) {
-      return v3Result
-    } else if (version === ProtocolVersion.V4) {
-      return v4Result
-    }
-    return {
-      data: undefined,
-      error: new Error('Invalid version'),
-      loading: false,
-    }
-  }, [v3Result, v4Result, version])
 }
 
 // Fetches all ticks for a given pool
-function useAllPoolTicks({
-  currencyA,
-  currencyB,
-  feeAmount,
-  chainId,
-  version,
-  tickSpacing,
-  hooks,
-  precalculatedPoolId,
-}: {
-  currencyA?: Currency
-  currencyB?: Currency
-  feeAmount?: FeeAmount
-  chainId: UniverseChainId
-  version: ProtocolVersion
-  tickSpacing?: number
-  hooks?: string
-  precalculatedPoolId?: string
-}): {
+function useAllV3Ticks(
+  currencyA: Currency | undefined,
+  currencyB: Currency | undefined,
+  feeAmount: FeeAmount | undefined,
+  chainId: UniverseChainId,
+): {
   isLoading: boolean
   error: unknown
   ticks?: TickData[]
 } {
   const [skipNumber, setSkipNumber] = useState(0)
-
   const [tickData, setTickData] = useState<Ticks>([])
-
-  const poolId = useMemo(() => {
-    if (precalculatedPoolId) {
-      return precalculatedPoolId
-    }
-    const v3PoolAddress =
-      currencyA && currencyB && feeAmount && version === ProtocolVersion.V3
-        ? V3Pool.getAddress(
-            currencyA?.wrapped,
-            currencyB?.wrapped,
-            feeAmount,
-            undefined,
-            chainId ? V3_CORE_FACTORY_ADDRESSES[chainId] : undefined,
-          )
-        : undefined
-
-    const v4PoolId =
-      version === ProtocolVersion.V4 && currencyA && currencyB && feeAmount && tickSpacing && hooks
-        ? V4Pool.getPoolId(currencyA, currencyB, feeAmount, tickSpacing, hooks)
-        : undefined
-    return version === ProtocolVersion.V3 ? v3PoolAddress : v4PoolId
-  }, [chainId, currencyA, currencyB, feeAmount, hooks, precalculatedPoolId, tickSpacing, version])
-
-  const { data, error, loading: isLoading } = usePaginatedTickQuery(poolId, version, skipNumber, chainId)
-  // TODO: fix typing on usePaginatedTickQuery function to avoid casting to any
-  const ticks: Ticks = ((data as any)?.v3Pool?.ticks as Ticks) ?? ((data as any)?.v4Pool?.ticks as Ticks)
+  const {
+    data,
+    error,
+    loading: isLoading,
+  } = usePaginatedTickQuery(currencyA, currencyB, feeAmount, skipNumber, chainId)
+  const ticks: Ticks = data?.v3Pool?.ticks as Ticks
 
   useEffect(() => {
     if (ticks?.length) {
@@ -145,25 +88,12 @@ function useAllPoolTicks({
   }
 }
 
-export function usePoolActiveLiquidity({
-  currencyA,
-  currencyB,
-  feeAmount,
-  chainId,
-  version,
-  tickSpacing,
-  hooks,
-  poolId,
-}: {
-  poolId?: string
-  currencyA?: Currency
-  currencyB?: Currency
-  feeAmount?: number
-  version: ProtocolVersion
-  chainId?: UniverseChainId
-  tickSpacing?: number
-  hooks?: string
-}): {
+export function usePoolActiveLiquidity(
+  currencyA: Currency | undefined,
+  currencyB: Currency | undefined,
+  feeAmount: FeeAmount | undefined,
+  chainId?: UniverseChainId,
+): {
   isLoading: boolean
   error: any
   currentTick?: number
@@ -174,46 +104,28 @@ export function usePoolActiveLiquidity({
 } {
   const multichainContext = useMultichainContext()
   const defaultChainId = multichainContext.chainId ?? UniverseChainId.Mainnet
-  const poolsQueryEnabled = Boolean(poolEnabledProtocolVersion(version) && currencyA && currencyB)
-  const { data: poolData, isLoading: poolIsLoading } = useGetPoolsByTokens(
-    {
-      fee: feeAmount,
-      chainId: chainId ?? defaultChainId,
-      protocolVersions: [version],
-      token0: getCurrencyAddressWithWrap(currencyA, version),
-      token1: getCurrencyAddressWithWrap(currencyB, version),
-      hooks,
-    },
-    poolsQueryEnabled,
-  )
+  const pool = usePoolMultichain(currencyA?.wrapped, currencyB?.wrapped, feeAmount, chainId ?? defaultChainId)
+  const liquidity = pool[1]?.liquidity
+  const sqrtPriceX96 = pool[1]?.sqrtRatioX96
 
-  const pool = poolData?.pools && poolData.pools.length > 0 ? poolData.pools[0] : undefined
-
-  const liquidity = pool?.liquidity
-  const sqrtPriceX96 = pool?.sqrtPriceX96
-
-  const currentTick = pool?.tick
+  const currentTick = pool[1]?.tickCurrent
   // Find nearest valid tick for pool in case tick is not initialized.
-  const activeTick = useMemo(
-    () => getActiveTick(currentTick, feeAmount, tickSpacing),
-    [currentTick, feeAmount, tickSpacing],
-  )
+  const activeTick = useMemo(() => getActiveTick(currentTick, feeAmount), [currentTick, feeAmount])
 
-  const { isLoading, error, ticks } = useAllPoolTicks({
-    currencyA,
-    currencyB,
-    feeAmount,
-    precalculatedPoolId: poolId,
-    chainId: chainId ?? defaultChainId,
-    version: version ?? ProtocolVersion.V3,
-    tickSpacing,
-    hooks,
-  })
+  const { isLoading, error, ticks } = useAllV3Ticks(currencyA, currencyB, feeAmount, chainId ?? defaultChainId)
 
   return useMemo(() => {
-    if (!currencyA || !currencyB || activeTick === undefined || !pool || !ticks || ticks.length === 0 || isLoading) {
+    if (
+      !currencyA ||
+      !currencyB ||
+      activeTick === undefined ||
+      pool[0] !== PoolState.EXISTS ||
+      !ticks ||
+      ticks.length === 0 ||
+      isLoading
+    ) {
       return {
-        isLoading: isLoading || poolIsLoading,
+        isLoading: isLoading || pool[0] === PoolState.LOADING,
         error,
         activeTick,
         data: undefined,
@@ -243,27 +155,9 @@ export function usePoolActiveLiquidity({
       }
     }
 
-    let sdkPrice
-    try {
-      sdkPrice = tickToPrice(token0, token1, activeTick)
-    } catch (e) {
-      logger.debug('usePoolTickData', 'usePoolActiveLiquidity', 'Error getting price', {
-        error: e,
-        token0: token0.address,
-        token1: token1.address,
-        chainId: token0.chainId,
-      })
-
-      return {
-        isLoading,
-        error,
-        activeTick,
-        data: undefined,
-      }
-    }
-
+    const sdkPrice = tickToPrice(token0, token1, activeTick)
     const activeTickProcessed: TickProcessed = {
-      liquidityActive: JSBI.BigInt(pool?.liquidity ?? 0),
+      liquidityActive: JSBI.BigInt(pool[1]?.liquidity ?? 0),
       tick: activeTick,
       liquidityNet:
         Number(ticks[pivot]?.tick) === activeTick ? JSBI.BigInt(ticks[pivot]?.liquidityNet ?? 0) : JSBI.BigInt(0),
@@ -282,21 +176,9 @@ export function usePoolActiveLiquidity({
       error,
       currentTick,
       activeTick,
-      liquidity: JSBI.BigInt(liquidity ?? 0),
-      sqrtPriceX96: JSBI.BigInt(sqrtPriceX96 ?? 0),
+      liquidity,
+      sqrtPriceX96,
       data: ticksProcessed,
     }
-  }, [
-    currencyA,
-    currencyB,
-    activeTick,
-    pool,
-    ticks,
-    isLoading,
-    error,
-    currentTick,
-    liquidity,
-    sqrtPriceX96,
-    poolIsLoading,
-  ])
+  }, [currencyA, currencyB, activeTick, pool, ticks, isLoading, error, currentTick, liquidity, sqrtPriceX96])
 }

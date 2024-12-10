@@ -76,7 +76,6 @@ export interface DynamicFeeTierSpeedbumpData {
 }
 
 export type CreatePositionContextType = {
-  reset: () => void
   step: PositionFlowStep
   setStep: Dispatch<SetStateAction<PositionFlowStep>>
   positionState: PositionState
@@ -142,7 +141,6 @@ export type V2PriceRangeInfo = BasePriceRangeInfo & {
 export type PriceRangeInfo = V4PriceRangeInfo | V3PriceRangeInfo | V2PriceRangeInfo
 
 export type PriceRangeContextType = {
-  reset: () => void
   priceRangeState: PriceRangeState
   setPriceRangeState: Dispatch<SetStateAction<PriceRangeState>>
   derivedPriceRangeInfo: PriceRangeInfo

@@ -3,7 +3,7 @@ import { filter } from 'uniswap/src/components/TokenSelector/filter'
 import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
 import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
 import { GqlResult } from 'uniswap/src/data/types'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { sortPortfolioBalances, useTokenBalancesGroupedByVisibility } from 'uniswap/src/features/dataApi/balances'
 
