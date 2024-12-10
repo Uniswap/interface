@@ -4,13 +4,16 @@ import { useAccount } from 'hooks/useAccount'
 import { useIsUniswapXSupportedChain } from 'hooks/useIsUniswapXSupportedChain'
 import { mocked } from 'test-utils/mocked'
 import { fireEvent, render, screen, waitFor } from 'test-utils/render'
-import { useEnabledChains, useIsSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const slippage = new Percent(75, 10_000)
 jest.mock('hooks/useIsUniswapXSupportedChain')
-jest.mock('uniswap/src/features/chains/hooks', () => ({
+jest.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
   useEnabledChains: jest.fn(),
+}))
+jest.mock('uniswap/src/features/chains/hooks/useSupportedChainId', () => ({
   useIsSupportedChainId: jest.fn(),
 }))
 jest.mock('hooks/useAccount')

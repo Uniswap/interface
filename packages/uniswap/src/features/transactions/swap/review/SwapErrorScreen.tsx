@@ -10,7 +10,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { TransactionStepFailedError, getErrorContent } from 'uniswap/src/features/transactions/errors'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
 import { openUri } from 'uniswap/src/utils/linking'
 
@@ -27,7 +27,7 @@ export function SwapErrorScreen({
 }): JSX.Element {
   const { t } = useTranslation()
   const { bottomSheetViewStyles } = useTransactionModalContext()
-  const { updateSwapForm, selectedProtocols } = useSwapFormContext()
+  const { updateSwapSettings, selectedProtocols } = useSwapSettingsContext()
 
   const { title, message, supportArticleURL } = getErrorContent(t, submissionError)
 
@@ -40,7 +40,7 @@ export function SwapErrorScreen({
     if (isUniswapXBackendError) {
       // Update swap preferences for this session to exclude UniswapX if Uniswap x failed
       const updatedProtocols = selectedProtocols.filter((protocol) => protocol !== ProtocolItems.UNISWAPX_V2)
-      updateSwapForm({ selectedProtocols: updatedProtocols })
+      updateSwapSettings({ selectedProtocols: updatedProtocols })
     } else {
       resubmitSwap()
     }

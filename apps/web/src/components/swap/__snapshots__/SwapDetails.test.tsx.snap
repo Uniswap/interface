@@ -432,9 +432,12 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
             </div>
           </div>
           <div
-            style="height: 0px; margin-top: -8px; overflow: hidden; width: 100%; min-width: min-content; will-change: height;"
+            class="css-view-175oi2r"
+            style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; opacity: 0; height: 0px; overflow-x: hidden; overflow-y: hidden; width: 100%; margin-top: -8px;"
           >
-            <div>
+            <div
+              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _width-10037"
+            >
               <div
                 class="c0"
               >
@@ -1033,9 +1036,12 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
             </div>
           </div>
           <div
-            style="height: 0px; margin-top: -8px; overflow: hidden; width: 100%; min-width: min-content; will-change: height;"
+            class="css-view-175oi2r"
+            style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; opacity: 0; height: 0px; overflow-x: hidden; overflow-y: hidden; width: 100%; margin-top: -8px;"
           >
-            <div>
+            <div
+              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _width-10037"
+            >
               <div
                 class="c0"
               >
@@ -1188,13 +1194,13 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
                   class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-20px _justifyContent-center _marginEnd-2px _marginStart-2px _width-20px"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _flexShrink-0 _flexDirection-column _height-20px _minHeight-8px _minWidth-8px _pt-1d0t66667px46 _pr-1d0t66667px46 _pb-1d0t66667px46 _pl-1d0t66667px46 _position-relative _width-20px"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _flexShrink-0 _flexDirection-column _height-20px _minHeight-8px _minWidth-8px _pt-1--66667px _pr-1--66667px _pb-1--66667px _pl-1--66667px _position-relative _width-20px"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-843134974 _borderRightColor-843134974 _borderBottomColor-843134974 _borderLeftColor-843134974 _borderTopLeftRadius-1881200688 _borderTopRightRadius-1881200688 _borderBottomRightRadius-1881200688 _borderBottomLeftRadius-1881200688 _borderTopWidth-3px _borderRightWidth-3px _borderBottomWidth-3px _borderLeftWidth-3px _height-20px _opacity-0d0t146 _position-absolute _width-20px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-neutral1 _borderRightColor-neutral1 _borderBottomColor-neutral1 _borderLeftColor-neutral1 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-3px _borderRightWidth-3px _borderBottomWidth-3px _borderLeftWidth-3px _height-20px _opacity-0--1 _position-absolute _width-20px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                     />
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderBottomColor-transparent _borderBottomWidth-3px _borderLeftColor-transparent _borderLeftWidth-3px _borderTopLeftRadius-1881200688 _borderTopRightRadius-1881200688 _borderBottomRightRadius-1881200688 _borderBottomLeftRadius-1881200688 _borderRightColor-transparent _borderRightWidth-3px _borderTopColor-843134974 _borderTopWidth-3px _height-20px _position-absolute _width-20px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid RotateElement"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderBottomColor-transparent _borderBottomWidth-3px _borderLeftColor-transparent _borderLeftWidth-3px _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderRightColor-transparent _borderRightWidth-3px _borderTopColor-neutral1 _borderTopWidth-3px _height-20px _position-absolute _width-20px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid RotateElement"
                     />
                   </div>
                 </div>

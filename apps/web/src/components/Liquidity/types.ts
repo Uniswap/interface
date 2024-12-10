@@ -11,10 +11,13 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export interface DepositState {
   exactField: PositionField
-  exactAmount?: string
+  exactAmounts: {
+    [field in PositionField]?: string
+  }
 }
 
 export type DepositContextType = {
+  reset: () => void
   depositState: DepositState
   setDepositState: Dispatch<SetStateAction<DepositState>>
   derivedDepositInfo: DepositInfo
@@ -82,5 +85,6 @@ export type FeeTierData = {
   formattedFee: string
   totalLiquidityUsd: number
   percentage: Percent
+  tvl: string
   created: boolean
 }

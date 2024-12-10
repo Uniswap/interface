@@ -5,7 +5,7 @@ import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useEffect, useState } from 'react'
 import { updateChainId } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
-import { useSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 
 export default function Updater(): null {
   const account = useAccount()

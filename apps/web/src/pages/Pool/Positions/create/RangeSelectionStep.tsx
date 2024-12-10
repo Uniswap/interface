@@ -294,7 +294,11 @@ export const SelectPriceRangeStepV2 = ({ onContinue, ...rest }: { onContinue: ()
   )
 }
 
-export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () => void } & FlexProps) => {
+export const SelectPriceRangeStep = ({
+  onContinue,
+  onDisableContinue,
+  ...rest
+}: { onContinue: () => void; onDisableContinue?: boolean } & FlexProps) => {
   const { t } = useTranslation()
 
   const {
@@ -340,14 +344,33 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
 
     return derivedPriceRangeInfo
   }, [derivedPriceRangeInfo])
-  const pool = derivedPositionInfo.protocolVersion === ProtocolVersion.V3 ? derivedPositionInfo.pool : undefined
   const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper } = useRangeHopCallbacks(
-    baseCurrency ?? undefined,
-    quoteCurrency ?? undefined,
-    fee.feeAmount,
-    ticks?.[0],
-    ticks?.[1],
-    pool,
+    derivedPositionInfo.protocolVersion === ProtocolVersion.V3
+      ? {
+          baseCurrency,
+          quoteCurrency,
+          feeAmount: fee.feeAmount,
+          tickLower: ticks?.[0],
+          tickUpper: ticks?.[1],
+          pool: derivedPositionInfo.pool,
+        }
+      : derivedPositionInfo.protocolVersion === ProtocolVersion.V4
+        ? {
+            baseCurrency,
+            quoteCurrency,
+            fee,
+            tickLower: ticks?.[0],
+            tickUpper: ticks?.[1],
+            pool: derivedPositionInfo.pool,
+          }
+        : {
+            baseCurrency: undefined,
+            quoteCurrency: undefined,
+            feeAmount: undefined,
+            tickLower: undefined,
+            tickUpper: undefined,
+            pool: undefined,
+          },
   )
 
   const handleSelectRange = useCallback(
@@ -403,6 +426,7 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
   )
 
   const invalidState =
+    onDisableContinue ||
     invalidPrice ||
     invalidRange ||
     (derivedPositionInfo.creatingPoolOrPair &&
@@ -435,6 +459,7 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
     )
   }
 
+  const showIncrementButtons = !!derivedPositionInfo.pool && !priceRangeState.fullRange
   return (
     <Container {...rest}>
       {creatingPoolOrPair && <InitialPriceInput />}
@@ -457,7 +482,9 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
           size="large"
         />
         <Text variant="body3" color="$neutral2">
-          <Trans i18nKey="position.provide.liquidityDescription" />
+          {priceRangeState.fullRange
+            ? t('position.provide.liquidityDescription')
+            : t('position.provide.liquidityDescription.custom')}
         </Text>
         <Flex gap="$gap4">
           <Flex
@@ -483,6 +510,8 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
                 onLeftRangeInput={(text) => handleChartRangeInput(RangeSelectionInput.MIN, text)}
                 onRightRangeInput={(text) => handleChartRangeInput(RangeSelectionInput.MAX, text)}
                 interactive={true}
+                protocolVersion={derivedPositionInfo.protocolVersion}
+                tickSpacing={derivedPositionInfo.pool?.tickSpacing}
               />
             )}
             {isPriceRangeInputV2Enabled && baseCurrency && quoteCurrency && derivedPositionInfo.poolId && (
@@ -490,6 +519,7 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
                 currency0={quoteCurrency}
                 currency1={baseCurrency}
                 feeTier={fee.feeAmount}
+                tickSpacing={derivedPositionInfo.pool?.tickSpacing}
                 protocolVersion={derivedPositionInfo.protocolVersion}
                 poolId={derivedPositionInfo.poolId}
                 disableBrushInteraction={priceRangeState.fullRange}
@@ -510,7 +540,7 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
               decrement={isSorted ? getDecrementLower : getIncrementUpper}
               increment={isSorted ? getIncrementLower : getDecrementUpper}
               value={rangeSelectionInputValues[0]}
-              showIncrementButtons={!!pool}
+              showIncrementButtons={showIncrementButtons}
               isInvalid={invalidRange}
             />
             <RangeInput
@@ -518,7 +548,7 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
               decrement={isSorted ? getDecrementUpper : getIncrementLower}
               increment={isSorted ? getIncrementUpper : getDecrementLower}
               value={rangeSelectionInputValues[1]}
-              showIncrementButtons={!!pool}
+              showIncrementButtons={showIncrementButtons}
               isInvalid={invalidRange}
             />
           </Flex>

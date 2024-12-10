@@ -24,6 +24,8 @@ import { useAccount } from 'wagmi'
 interface MigrateV3PositionTxContextType {
   txInfo?: MigrateV3PositionTxAndGasInfo
   gasFeeEstimateUSD?: CurrencyAmount<Currency>
+  error?: boolean
+  refetch?: () => void
 }
 
 const MigrateV3PositionTxContext = createContext<MigrateV3PositionTxContextType | undefined>(undefined)
@@ -62,7 +64,11 @@ export function MigrateV3PositionTxContextProvider({
     }
   }, [positionInfo, account.address])
 
-  const { data: migrateTokenApprovals } = useCheckLpApprovalQuery({
+  const {
+    data: migrateTokenApprovals,
+    error: approvalError,
+    refetch: approvalRefetch,
+  } = useCheckLpApprovalQuery({
     params: increaseLiquidityApprovalParams,
     headers: {
       'x-universal-router-version': '2.0',
@@ -157,7 +163,11 @@ export function MigrateV3PositionTxContextProvider({
     feeValue1?.quotient,
   ])
 
-  const { data: migrateCalldata } = useMigrateV3LpPositionCalldataQuery({
+  const {
+    data: migrateCalldata,
+    error: migrateError,
+    refetch: migrateRefetch,
+  } = useMigrateV3LpPositionCalldataQuery({
     params: migratePositionRequestArgs,
     staleTime: 5 * ONE_SECOND_MS,
   })
@@ -203,7 +213,13 @@ export function MigrateV3PositionTxContextProvider({
   ])
 
   return (
-    <MigrateV3PositionTxContext.Provider value={{ txInfo: validatedValue }}>
+    <MigrateV3PositionTxContext.Provider
+      value={{
+        txInfo: validatedValue,
+        error: Boolean(approvalError || migrateError),
+        refetch: approvalError ? approvalRefetch : migrateError ? migrateRefetch : undefined,
+      }}
+    >
       {children}
     </MigrateV3PositionTxContext.Provider>
   )

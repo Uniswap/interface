@@ -33,6 +33,7 @@ import { SubmitSwapButton } from 'uniswap/src/features/transactions/swap/review/
 import { SwapDetails } from 'uniswap/src/features/transactions/swap/review/SwapDetails'
 import { SwapErrorScreen } from 'uniswap/src/features/transactions/swap/review/SwapErrorScreen'
 import { TransactionAmountsReview } from 'uniswap/src/features/transactions/swap/review/TransactionAmountsReview'
+import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { SwapCallback } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { isValidSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
@@ -87,6 +88,8 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
     isFiatMode,
   } = useSwapFormContext()
 
+  const { autoSlippageTolerance, customSlippageTolerance } = useSwapSettingsContext()
+
   const onSuccess = useCallback(() => {
     // On interface, the swap component stays mounted; after swap we reset the form to avoid showing the previous values.
     if (isInterface) {
@@ -97,12 +100,10 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
   }, [onClose, setScreen, updateSwapForm])
 
   const {
-    autoSlippageTolerance,
     chainId,
     currencies,
     currencyAmounts,
     currencyAmountsUSDValue,
-    customSlippageTolerance,
     txId,
     wrapType,
     trade: { trade, indicativeTrade },

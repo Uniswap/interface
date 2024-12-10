@@ -4,7 +4,7 @@ import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useTotalBalancesUsdPerChain } from 'uniswap/src/data/balances/utils'
 import { usePortfolioBalancesQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 // eslint-disable-next-line no-restricted-imports
 import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances'
 import { MobileAppsFlyerEvents, UniswapEventName } from 'uniswap/src/features/telemetry/constants'

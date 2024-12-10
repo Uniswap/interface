@@ -319,7 +319,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       [RPCType.Fallback]: { http: ['https://rpc.ankr.com/optimism'] },
       [RPCType.Interface]: { http: [`https://optimism-mainnet.infura.io/v3/${config.infuraKey}`] },
     },
-    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(DAI_OPTIMISM, 10_000e18),
+    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_OPTIMISM, 10_000e6),
     stablecoins: [USDC_OPTIMISM, DAI_OPTIMISM],
     statusPage: 'https://optimism.io/status',
     supportsInterfaceClientSideRouting: true,

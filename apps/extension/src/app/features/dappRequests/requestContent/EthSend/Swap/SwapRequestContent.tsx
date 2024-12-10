@@ -5,7 +5,7 @@ import { ETH_ADDRESS } from 'src/app/features/dappRequests/requestContent/EthSen
 import { formatUnits, useSwapDetails } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/utils'
 import { SignTypedDataRequest, SwapSendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/chainInfo'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'

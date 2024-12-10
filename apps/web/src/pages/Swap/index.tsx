@@ -28,7 +28,7 @@ import { AppTFunction } from 'ui/src/i18n/types'
 import { zIndices } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -45,14 +45,15 @@ import {
 } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/hooks/useSwapPrefilledState'
 import { Deadline } from 'uniswap/src/features/transactions/swap/settings/configs/Deadline'
+import { ProtocolPreference } from 'uniswap/src/features/transactions/swap/settings/configs/ProtocolPreference'
+import { Slippage } from 'uniswap/src/features/transactions/swap/settings/configs/Slippage'
+import { SwapSettingsContextProvider } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/asset'
 import { useTranslation } from 'uniswap/src/i18n'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import noop from 'utilities/src/react/noop'
-
-const WEB_CUSTOM_SWAP_SETTINGS = [Deadline]
 
 export function getIsReviewableQuote(
   trade: InterfaceTrade | undefined,
@@ -165,28 +166,34 @@ export function Swap({
   if (universalSwapFlow || isTestnetModeEnabled) {
     return (
       <MultichainContextProvider initialChainId={chainId}>
-        <SwapAndLimitContextProvider
-          initialInputCurrency={initialInputCurrency}
-          initialOutputCurrency={initialOutputCurrency}
-        >
-          <PrefetchBalancesWrapper>
-            <SwapFormContextProvider prefilledState={prefilledState} hideSettings={hideHeader} hideFooter={hideFooter}>
-              <Flex position="relative" gap="$spacing16" opacity={isSharedSwapDisabled ? 0.6 : 1}>
-                {isSharedSwapDisabled && <DisabledSwapOverlay />}
-                <UniversalSwapFlow
-                  hideHeader={hideHeader}
-                  hideFooter={hideFooter}
-                  syncTabToUrl={syncTabToUrl}
-                  initialInputCurrency={initialInputCurrency}
-                  initialOutputCurrency={initialOutputCurrency}
-                  swapRedirectCallback={swapRedirectCallback}
-                  onCurrencyChange={onCurrencyChange}
-                  prefilledState={prefilledState}
-                />
-              </Flex>
-            </SwapFormContextProvider>
-          </PrefetchBalancesWrapper>
-        </SwapAndLimitContextProvider>
+        <SwapSettingsContextProvider>
+          <SwapAndLimitContextProvider
+            initialInputCurrency={initialInputCurrency}
+            initialOutputCurrency={initialOutputCurrency}
+          >
+            <PrefetchBalancesWrapper>
+              <SwapFormContextProvider
+                prefilledState={prefilledState}
+                hideSettings={hideHeader}
+                hideFooter={hideFooter}
+              >
+                <Flex position="relative" gap="$spacing16" opacity={isSharedSwapDisabled ? 0.6 : 1}>
+                  {isSharedSwapDisabled && <DisabledSwapOverlay />}
+                  <UniversalSwapFlow
+                    hideHeader={hideHeader}
+                    hideFooter={hideFooter}
+                    syncTabToUrl={syncTabToUrl}
+                    initialInputCurrency={initialInputCurrency}
+                    initialOutputCurrency={initialOutputCurrency}
+                    swapRedirectCallback={swapRedirectCallback}
+                    onCurrencyChange={onCurrencyChange}
+                    prefilledState={prefilledState}
+                  />
+                </Flex>
+              </SwapFormContextProvider>
+            </PrefetchBalancesWrapper>
+          </SwapAndLimitContextProvider>
+        </SwapSettingsContextProvider>
       </MultichainContextProvider>
     )
   }
@@ -382,7 +389,7 @@ function UniversalSwapFlow({
         {currentTab === SwapTab.Swap && (
           <Flex gap="$spacing16">
             <SwapFlow
-              customSettings={WEB_CUSTOM_SWAP_SETTINGS}
+              settings={[Slippage, Deadline, ProtocolPreference]}
               hideHeader={hideHeader}
               hideFooter={hideFooter}
               onClose={noop}

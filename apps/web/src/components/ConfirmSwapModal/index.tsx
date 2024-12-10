@@ -194,7 +194,7 @@ export function ConfirmSwapModal({
   return (
     // Wrapping in a new theme provider resets any color extraction overriding on the current page. Swap modal should use default/non-overridden theme.
     <ThemeProvider>
-      <SwapModal confirmModalState={confirmModalState} onDismiss={onModalDismiss}>
+      <SwapModal onDismiss={onModalDismiss}>
         {/* Head section displays title, help button, close icon */}
         <Container $height="24px" $padding="6px 12px 4px 12px">
           <SwapHead

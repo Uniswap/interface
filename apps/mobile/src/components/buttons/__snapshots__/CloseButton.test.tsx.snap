@@ -2,18 +2,14 @@
 
 exports[`CloseButton renders without error 1`] = `
 <View
-  cancelable={true}
-  disabled={false}
-  focusable={true}
-  hitSlop={[Function]}
-  minPressDuration={0}
-  onBlur={[Function]}
-  onFocus={[Function]}
-  onMouseEnter={[Function]}
-  onMouseLeave={[Function]}
-  onPress={[Function]}
-  onPressIn={[Function]}
-  onPressOut={[Function]}
+  hitSlop={
+    {
+      "bottom": 5,
+      "left": 5,
+      "right": 5,
+      "top": 5,
+    }
+  }
   style={
     {
       "flexDirection": "column",

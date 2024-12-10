@@ -156,7 +156,8 @@ exports[`disable nft on searchbar should render text without nfts 1`] = `
                   autocapitalize="sentences"
                   autocomplete="on"
                   autocorrect="on"
-                  class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _borderTopColor-0hover-1394778429 _borderRightColor-0hover-1394778429 _borderBottomColor-0hover-1394778429 _borderLeftColor-0hover-1394778429 _borderTopColor-0focus-1452587353 _borderRightColor-0focus-1452587353 _borderBottomColor-0focus-1452587353 _borderLeftColor-0focus-1452587353 _outlineColor-0focus-visible-834034279 _outlineWidth-0focus-visible-2px _outlineStyle-0focus-visible-solid _fontFamily-299667014 _fontWeight-233016202 _fontSize-229441189 _lineHeight-222976542 _pr-1316330393 _pl-1316330393 _height-10037 _borderTopLeftRadius-1881200719 _borderTopRightRadius-1881200719 _borderBottomRightRadius-1881200719 _borderBottomLeftRadius-1881200719 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _outlineWidth-0px _color-675002279 _borderTopColor-2122800589 _borderRightColor-2122800589 _borderBottomColor-2122800589 _borderLeftColor-2122800589 _backgroundColor-733175080 _minWidth-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _width-10037"
+                  class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _borderTopColor-0hover-borderColor69916956 _borderRightColor-0hover-borderColor69916956 _borderBottomColor-0hover-borderColor69916956 _borderLeftColor-0hover-borderColor69916956 _borderTopColor-0focus-borderColor68052152 _borderRightColor-0focus-borderColor68052152 _borderBottomColor-0focus-borderColor68052152 _borderLeftColor-0focus-borderColor68052152 _outlineColor-0focus-visible-outlineColo114 _outlineWidth-0focus-visible-2px _outlineStyle-0focus-visible-solid _fontFamily-f-family _fontWeight-f-weight-bo3548 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _pr-t-space-pad95589114 _pl-t-space-pad95589114 _height-10037 _borderTopLeftRadius-t-radius-tr3728 _borderTopRightRadius-t-radius-tr3728 _borderBottomRightRadius-t-radius-tr3728 _borderBottomLeftRadius-t-radius-tr3728 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _outlineWidth-0px _color-color _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _backgroundColor-transparent _minWidth-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _width-10037"
+                  data-disable-theme="true"
                   dir="auto"
                   placeholder="Search tokens"
                   rows="1"
@@ -164,6 +165,7 @@ exports[`disable nft on searchbar should render text without nfts 1`] = `
                   style="--placeholderTextColor: #7D7D7D;"
                   tabindex="0"
                   value=""
+                  virtualkeyboardpolicy="auto"
                 />
               </span>
               <div

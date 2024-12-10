@@ -217,6 +217,7 @@ export function useFiatOnRampQuotes({
   countryCode,
   countryState,
   rampDirection,
+  balanceError,
 }: {
   baseCurrencyAmount?: number
   baseCurrencyCode: string | undefined
@@ -224,6 +225,7 @@ export function useFiatOnRampQuotes({
   countryCode: string | undefined
   countryState: string | undefined
   rampDirection: RampDirection
+  balanceError?: boolean
 }): {
   loading: boolean
   error?: FetchBaseQueryError | SerializedError
@@ -238,7 +240,7 @@ export function useFiatOnRampQuotes({
     isFetching: quotesFetching,
     error: quotesError,
   } = useFiatOnRampAggregatorCryptoQuoteQuery(
-    baseCurrencyAmount && countryCode && quoteCurrencyCode && baseCurrencyCode
+    baseCurrencyAmount && countryCode && quoteCurrencyCode && baseCurrencyCode && !balanceError
       ? {
           sourceAmount: baseCurrencyAmount,
           sourceCurrencyCode: rampDirection === RampDirection.OFFRAMP ? quoteCurrencyCode : baseCurrencyCode,
@@ -269,6 +271,7 @@ export function useFiatOnRampQuotes({
 export function useParseFiatOnRampError(
   error: unknown,
   currencyCode: string,
+  balanceError: boolean,
 ): {
   errorText: string | undefined
 } {
@@ -276,6 +279,11 @@ export function useParseFiatOnRampError(
   const { formatNumberOrString } = useLocalizationContext()
 
   let errorText
+
+  if (balanceError) {
+    errorText = t('fiatOffRamp.error.balance')
+  }
+
   if (!error) {
     return { errorText }
   }

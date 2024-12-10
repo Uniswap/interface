@@ -1,6 +1,5 @@
 import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
-import AnimatedDropdown from 'components/AnimatedDropdown'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import Column from 'components/deprecated/Column'
 import { RowBetween, RowFixed } from 'components/deprecated/Row'
@@ -14,6 +13,7 @@ import { ChevronDown } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import { isSubmittableTrade } from 'state/routing/utils'
 import { ThemedText } from 'theme/components'
+import { HeightAnimator } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans } from 'uniswap/src/i18n'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -106,7 +106,7 @@ function AdvancedSwapDetails(props: SwapDetailsProps & { open: boolean }) {
   const lineItemProps = { trade, allowedSlippage, format, syncing, priceImpact }
 
   return (
-    <AnimatedDropdown open={open}>
+    <HeightAnimator open={open}>
       <SwapDetailsWrapper gap="sm" data-testid="advanced-swap-details">
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.PRICE_IMPACT} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.MAX_SLIPPAGE} />
@@ -117,6 +117,6 @@ function AdvancedSwapDetails(props: SwapDetailsProps & { open: boolean }) {
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.NETWORK_COST} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.ROUTING_INFO} />
       </SwapDetailsWrapper>
-    </AnimatedDropdown>
+    </HeightAnimator>
   )
 }

@@ -22,19 +22,14 @@ exports[`AccountCardItem renders correctly 1`] = `
   onPress={[Function]}
 >
   <View
-    cancelable={true}
-    disabled={false}
-    focusable={true}
-    hitSlop={[Function]}
-    minPressDuration={0}
-    onBlur={[Function]}
-    onFocus={[Function]}
-    onLongPress={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
-    onPress={[Function]}
-    onPressIn={[Function]}
-    onPressOut={[Function]}
+    hitSlop={
+      {
+        "bottom": 5,
+        "left": 5,
+        "right": 5,
+        "top": 5,
+      }
+    }
     style={
       {
         "flexDirection": "column",
@@ -91,17 +86,42 @@ exports[`AccountCardItem renders correctly 1`] = `
             <View
               style={
                 {
-                  "backgroundColor": "transparent",
-                  "borderBottomColor": "transparent",
+                  "backgroundColor": {
+                    "dynamic": {
+                      "dark": "transparent",
+                      "light": "transparent",
+                    },
+                  },
+                  "borderBottomColor": {
+                    "dynamic": {
+                      "dark": "transparent",
+                      "light": "transparent",
+                    },
+                  },
                   "borderBottomLeftRadius": 999999,
                   "borderBottomRightRadius": 999999,
                   "borderBottomWidth": 0,
-                  "borderLeftColor": "transparent",
+                  "borderLeftColor": {
+                    "dynamic": {
+                      "dark": "transparent",
+                      "light": "transparent",
+                    },
+                  },
                   "borderLeftWidth": 0,
-                  "borderRightColor": "transparent",
+                  "borderRightColor": {
+                    "dynamic": {
+                      "dark": "transparent",
+                      "light": "transparent",
+                    },
+                  },
                   "borderRightWidth": 0,
                   "borderStyle": "solid",
-                  "borderTopColor": "transparent",
+                  "borderTopColor": {
+                    "dynamic": {
+                      "dark": "transparent",
+                      "light": "transparent",
+                    },
+                  },
                   "borderTopLeftRadius": 999999,
                   "borderTopRightRadius": 999999,
                   "borderTopWidth": 0,
@@ -213,7 +233,12 @@ exports[`AccountCardItem renders correctly 1`] = `
                   numberOfLines={1}
                   style={
                     {
-                      "color": "#222222",
+                      "color": {
+                        "dynamic": {
+                          "dark": "#FFFFFF",
+                          "light": "#222222",
+                        },
+                      },
                       "flexShrink": 1,
                       "fontFamily": "Basel Grotesk",
                       "fontSize": 19,
@@ -237,7 +262,12 @@ exports[`AccountCardItem renders correctly 1`] = `
         maxFontSizeMultiplier={1.4}
         style={
           {
-            "color": "#7D7D7D",
+            "color": {
+              "dynamic": {
+                "dark": "#9B9B9B",
+                "light": "#7D7D7D",
+              },
+            },
             "fontFamily": "Basel Grotesk",
             "fontSize": 17,
             "fontWeight": "400",

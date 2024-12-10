@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'
 import { useENS } from 'uniswap/src/features/ens/useENS'

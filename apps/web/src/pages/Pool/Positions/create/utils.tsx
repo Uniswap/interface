@@ -413,6 +413,7 @@ function createMockPair({
 
 export function getDependentAmountFromV2Pair({
   independentAmount,
+  otherAmount,
   pair,
   exactField,
   token0,
@@ -420,6 +421,7 @@ export function getDependentAmountFromV2Pair({
   dependentToken,
 }: {
   independentAmount?: CurrencyAmount<Currency>
+  otherAmount?: CurrencyAmount<Currency>
   pair?: Pair
   exactField: PositionField
   token0?: Currency
@@ -431,12 +433,22 @@ export function getDependentAmountFromV2Pair({
     return undefined
   }
 
-  const dependentTokenAmount =
-    exactField === PositionField.TOKEN0
-      ? pair.priceOf(token0Wrapped).quote(independentAmount.wrapped)
-      : pair.priceOf(token1Wrapped).quote(independentAmount.wrapped)
+  try {
+    const dependentTokenAmount =
+      exactField === PositionField.TOKEN0
+        ? pair.priceOf(token0Wrapped).quote(independentAmount.wrapped)
+        : pair.priceOf(token1Wrapped).quote(independentAmount.wrapped)
 
-  return dependentToken ? CurrencyAmount.fromRawAmount(dependentToken, dependentTokenAmount.quotient) : undefined
+    return dependentToken
+      ? dependentToken?.isNative
+        ? CurrencyAmount.fromRawAmount(dependentToken, dependentTokenAmount.quotient)
+        : dependentTokenAmount
+      : undefined
+  } catch (e) {
+    // in some cases there can be an initialized pool but there is no liquidity in which case
+    // the user can enter whatever they want for the dependent amount and that pool will be created
+    return otherAmount
+  }
 }
 
 export function getDependentAmountFromV3Position({

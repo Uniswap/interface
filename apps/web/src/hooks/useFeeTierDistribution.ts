@@ -7,7 +7,7 @@ import {
   useFeeTierDistributionQuery,
   useIsV3SubgraphStaleQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { logger } from 'utilities/src/logger/logger'
 

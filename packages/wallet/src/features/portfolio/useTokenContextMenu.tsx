@@ -5,7 +5,7 @@ import type { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-nat
 import { useDispatch } from 'react-redux'
 import { GeneratedIcon, isWeb } from 'ui/src'
 import { CoinConvert, Eye, EyeOff, ReceiveAlt, SendAction } from 'ui/src/components/icons'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePortfolioCacheUpdater } from 'uniswap/src/features/dataApi/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'

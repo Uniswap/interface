@@ -22,7 +22,12 @@ exports[`FavoriteTokenCard renders without error 1`] = `
     <View
       style={
         {
-          "backgroundColor": "rgba(34,34,34,0.05)",
+          "backgroundColor": {
+            "dynamic": {
+              "dark": "rgba(255,255,255,0.12)",
+              "light": "rgba(34,34,34,0.05)",
+            },
+          },
           "borderBottomLeftRadius": 16,
           "borderBottomRightRadius": 16,
           "borderTopLeftRadius": 16,

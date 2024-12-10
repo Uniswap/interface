@@ -1,4 +1,4 @@
-import { Alert, Platform } from 'react-native'
+import { Alert } from 'react-native'
 import { MobileState } from 'src/app/mobileReducer'
 import { APP_FEEDBACK_LINK } from 'src/constants/urls'
 import { hasConsecutiveRecentSwapsSelector } from 'src/features/appRating/selectors'
@@ -11,12 +11,6 @@ import i18n from 'uniswap/src/i18n/i18n'
 import { openUri } from 'uniswap/src/utils/linking'
 import { isJestRun } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
-import { isAndroid } from 'utilities/src/platform'
-
-function isAndroid14(): boolean {
-  return isAndroid && Platform.Version === 34
-}
-
 import { ONE_DAY_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { setAppRating } from 'wallet/src/features/wallet/slice'
@@ -29,7 +23,7 @@ const MIN_FEEDBACK_REMINDER_MS = 180 * ONE_DAY_MS
 const SWAP_FINALIZED_PROMPT_DELAY_MS = 3 * ONE_SECOND_MS
 
 try {
-  if (!isJestRun && !isAndroid14()) {
+  if (!isJestRun) {
     import('expo-store-review')
   }
 } catch (error) {

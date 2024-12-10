@@ -2,18 +2,15 @@
 
 exports[`renders collection preview card 1`] = `
 <View
-  cancelable={true}
   disabled={false}
-  focusable={true}
-  hitSlop={[Function]}
-  minPressDuration={0}
-  onBlur={[Function]}
-  onFocus={[Function]}
-  onMouseEnter={[Function]}
-  onMouseLeave={[Function]}
-  onPress={[Function]}
-  onPressIn={[Function]}
-  onPressOut={[Function]}
+  hitSlop={
+    {
+      "bottom": 5,
+      "left": 5,
+      "right": 5,
+      "top": 5,
+    }
+  }
   style={
     {
       "flexDirection": "column",
@@ -30,7 +27,12 @@ exports[`renders collection preview card 1`] = `
     style={
       {
         "alignItems": "center",
-        "backgroundColor": "rgba(34,34,34,0.05)",
+        "backgroundColor": {
+          "dynamic": {
+            "dark": "rgba(255,255,255,0.12)",
+            "light": "rgba(34,34,34,0.05)",
+          },
+        },
         "borderBottomLeftRadius": 16,
         "borderBottomRightRadius": 16,
         "borderTopLeftRadius": 16,
@@ -75,7 +77,12 @@ exports[`renders collection preview card 1`] = `
             {
               "alignItems": "center",
               "aspectRatio": 1,
-              "backgroundColor": "#F9F9F9",
+              "backgroundColor": {
+                "dynamic": {
+                  "dark": "#1B1B1B",
+                  "light": "#F9F9F9",
+                },
+              },
               "flex": 1,
               "flexDirection": "column",
               "justifyContent": "center",
@@ -92,7 +99,12 @@ exports[`renders collection preview card 1`] = `
             maxFontSizeMultiplier={1.4}
             style={
               {
-                "color": "#7D7D7D",
+                "color": {
+                  "dynamic": {
+                    "dark": "#9B9B9B",
+                    "light": "#7D7D7D",
+                  },
+                },
                 "fontFamily": "Basel Grotesk",
                 "fontSize": 17,
                 "fontWeight": "400",
@@ -138,7 +150,12 @@ exports[`renders collection preview card 1`] = `
               numberOfLines={1}
               style={
                 {
-                  "color": "#222222",
+                  "color": {
+                    "dynamic": {
+                      "dark": "#FFFFFF",
+                      "light": "#222222",
+                    },
+                  },
                   "fontFamily": "Basel Grotesk",
                   "fontSize": 19,
                   "fontWeight": "400",
@@ -151,7 +168,14 @@ exports[`renders collection preview card 1`] = `
             </Text>
           </View>
           <svg
-            color="#FC72FF"
+            color={
+              {
+                "dynamic": {
+                  "dark": "#FC72FF",
+                  "light": "#FC72FF",
+                },
+              }
+            }
             data-file-name="SvgVerified"
             height={16}
             width={16}

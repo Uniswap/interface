@@ -8,11 +8,11 @@ import { t } from 'uniswap/src/i18n'
 import { isBrowserRouterEnabled } from 'utils/env'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import Landing from 'pages/Landing'
-import { CreatePosition } from 'pages/Pool/Positions/create/CreatePosition'
 import Swap from 'pages/Swap'
 
 const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
+const CreatePosition = lazy(() => import('pages/Pool/Positions/create/CreatePosition'))
 const Profile = lazy(() => import('nft/pages/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
 const AddLiquidityV3WithTokenRedirects = lazy(() => import('pages/AddLiquidityV3/redirects'))

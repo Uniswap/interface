@@ -14,7 +14,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#222222",
+        "color": {
+          "dynamic": {
+            "dark": "#FFFFFF",
+            "light": "#222222",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -30,7 +35,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#222222",
+        "color": {
+          "dynamic": {
+            "dark": "#FFFFFF",
+            "light": "#222222",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -46,7 +56,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#BFBFBF",
+        "color": {
+          "dynamic": {
+            "dark": "#5E5E5E",
+            "light": "#BFBFBF",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -62,7 +77,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#BFBFBF",
+        "color": {
+          "dynamic": {
+            "dark": "#5E5E5E",
+            "light": "#BFBFBF",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -78,7 +98,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#222222",
+        "color": {
+          "dynamic": {
+            "dark": "#FFFFFF",
+            "light": "#222222",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -94,7 +119,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#222222",
+        "color": {
+          "dynamic": {
+            "dark": "#FFFFFF",
+            "light": "#222222",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -110,7 +140,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#222222",
+        "color": {
+          "dynamic": {
+            "dark": "#FFFFFF",
+            "light": "#222222",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -126,7 +161,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#222222",
+        "color": {
+          "dynamic": {
+            "dark": "#FFFFFF",
+            "light": "#222222",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -142,7 +182,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#222222",
+        "color": {
+          "dynamic": {
+            "dark": "#FFFFFF",
+            "light": "#222222",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -158,7 +203,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#BFBFBF",
+        "color": {
+          "dynamic": {
+            "dark": "#5E5E5E",
+            "light": "#BFBFBF",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -174,7 +224,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#BFBFBF",
+        "color": {
+          "dynamic": {
+            "dark": "#5E5E5E",
+            "light": "#BFBFBF",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -190,7 +245,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#BFBFBF",
+        "color": {
+          "dynamic": {
+            "dark": "#5E5E5E",
+            "light": "#BFBFBF",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -206,7 +266,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#BFBFBF",
+        "color": {
+          "dynamic": {
+            "dark": "#5E5E5E",
+            "light": "#BFBFBF",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -222,7 +287,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#BFBFBF",
+        "color": {
+          "dynamic": {
+            "dark": "#5E5E5E",
+            "light": "#BFBFBF",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -238,7 +308,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#BFBFBF",
+        "color": {
+          "dynamic": {
+            "dark": "#5E5E5E",
+            "light": "#BFBFBF",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -254,7 +329,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#BFBFBF",
+        "color": {
+          "dynamic": {
+            "dark": "#5E5E5E",
+            "light": "#BFBFBF",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -270,7 +350,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#BFBFBF",
+        "color": {
+          "dynamic": {
+            "dark": "#5E5E5E",
+            "light": "#BFBFBF",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -286,7 +371,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#BFBFBF",
+        "color": {
+          "dynamic": {
+            "dark": "#5E5E5E",
+            "light": "#BFBFBF",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -302,7 +392,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#BFBFBF",
+        "color": {
+          "dynamic": {
+            "dark": "#5E5E5E",
+            "light": "#BFBFBF",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -318,7 +413,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#BFBFBF",
+        "color": {
+          "dynamic": {
+            "dark": "#5E5E5E",
+            "light": "#BFBFBF",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -334,7 +434,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#BFBFBF",
+        "color": {
+          "dynamic": {
+            "dark": "#5E5E5E",
+            "light": "#BFBFBF",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -350,7 +455,12 @@ exports[`renders text with few matches 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#BFBFBF",
+        "color": {
+          "dynamic": {
+            "dark": "#5E5E5E",
+            "light": "#BFBFBF",
+          },
+        },
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -371,7 +481,12 @@ exports[`renders text without matches 1`] = `
   numberOfLines={1}
   style={
     {
-      "color": "#222222",
+      "color": {
+        "dynamic": {
+          "dark": "#FFFFFF",
+          "light": "#222222",
+        },
+      },
       "fontFamily": "Basel Grotesk",
       "fontSize": 19,
       "fontWeight": "400",

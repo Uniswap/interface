@@ -4,8 +4,10 @@ import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, TextInput, TextInputSelectionChangeEventData } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
+import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { ColorTokens, Flex, Text, TouchableArea, useIsShortMobileDevice, useSporeColors } from 'ui/src'
 import { errorShakeAnimation } from 'ui/src/animations/errorShakeAnimation'
+import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
@@ -28,7 +30,7 @@ const MAX_CHAR_PIXEL_WIDTH = 40
 
 const PREDEFINED_AMOUNTS = [100, 300, 1000]
 
-type OnChangeAmount = (amount: string) => void
+type OnChangeAmount = (amount: string, newIsTokenInputMode?: boolean) => void
 
 function OnRampError({ errorText, color }: { errorText?: string; color: ColorTokens }): JSX.Element {
   return (
@@ -45,7 +47,9 @@ interface FiatOnRampAmountSectionProps {
   currency: FiatOnRampCurrency
   onEnterAmount: OnChangeAmount
   onChoosePredifendAmount: OnChangeAmount
+  onToggleIsTokenInputMode: () => void
   quoteAmount: number
+  sourceAmount: number
   quoteCurrencyAmountReady: boolean
   selectTokenLoading: boolean
   onTokenSelectorPress: () => void
@@ -70,11 +74,13 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
       errorText,
       onEnterAmount,
       onChoosePredifendAmount,
+      onToggleIsTokenInputMode,
       predefinedAmountsSupported,
       appFiatCurrencySupported,
       notAvailableInThisRegion,
       fiatCurrencyInfo,
       quoteAmount,
+      sourceAmount,
       currency,
       selectTokenLoading,
     },
@@ -89,6 +95,8 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
     } = useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_INPUT_FONT_SIZE, MIN_INPUT_FONT_SIZE)
     const prevErrorText = usePrevious(errorText)
     const { fullHeight } = useDeviceDimensions()
+
+    const { isTokenInputMode, isOffRamp } = useFiatOnRampContext()
 
     const inputRef = useRef<TextInput>(null)
 
@@ -147,13 +155,16 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
       }, [inputRef, isTextInputRefActuallyFocused]),
     )
 
-    // TODO: handle this fiat mode switcher
-    function onToggleIsFiatMode(): void {}
-
-    const formattedCurrencyAmount = useFormatExactCurrencyAmount(
-      quoteAmount.toString(),
+    const derivedFiatAmount = isOffRamp ? quoteAmount : sourceAmount
+    const derivedTokenAmount = useFormatExactCurrencyAmount(
+      isOffRamp ? sourceAmount.toString() : quoteAmount.toString(),
       currency.currencyInfo?.currency,
     )
+
+    const derivedAmount = isTokenInputMode ? derivedFiatAmount.toString() : derivedTokenAmount
+    const formattedDerivedAmount = isTokenInputMode
+      ? `${fiatCurrencyInfo.symbol}${derivedAmount}`
+      : `${derivedAmount}${currency.currencyInfo?.currency.symbol}`
 
     // Workaround to avoid incorrect input width calculations by react-native
     // Decimal numbers were manually calculated for Basel Grotesk fonts and will
@@ -171,13 +182,17 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
             return acc + fontSize * 0.595
           case '4':
           case '0':
-          default:
             return acc + fontSize * 0.62
           case '5':
           case '7':
             return acc + fontSize * 0.602
           case '9':
             return acc + fontSize * 0.607
+          case '.':
+          case ',':
+            return acc + fontSize * 0.25
+          default:
+            return acc + fontSize * 0.62
         }
       },
       // ensures a proper width for a "0" placeholder or adds 3 points for the input caret
@@ -202,7 +217,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
           ) : null}
         </Flex>
         <AnimatedFlex style={inputAnimatedStyle} width="100%">
-          <Flex row alignItems="center" justifyContent="center">
+          <Flex alignItems="center" justifyContent="center" flexDirection={isTokenInputMode ? 'row-reverse' : 'row'}>
             <Text
               allowFontScaling
               color={!value ? '$neutral3' : '$neutral1'}
@@ -210,7 +225,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
               height={fontSize}
               lineHeight={fontSize}
             >
-              {fiatCurrencyInfo.symbol}
+              {isTokenInputMode ? currency.currencyInfo?.currency.symbol : fiatCurrencyInfo.symbol}
             </Text>
             <AmountInput
               ref={inputRef}
@@ -256,7 +271,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
             ))}
           </Flex>
         ) : (
-          <TouchableArea onPress={onToggleIsFiatMode}>
+          <TouchableArea onPress={onToggleIsTokenInputMode}>
             <Flex
               centered
               row
@@ -266,12 +281,15 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
               pb="$spacing4"
               pt="$spacing4"
             >
-              <Text color="$neutral2" loading={selectTokenLoading} variant="subheading1">
-                {formattedCurrencyAmount}
-                {currency.currencyInfo?.currency.symbol}
+              <Text
+                color="$neutral2"
+                maxHeight={fonts.subheading1.lineHeight}
+                loading={selectTokenLoading}
+                variant="subheading1"
+              >
+                {formattedDerivedAmount}
               </Text>
-              {/* TODO: support switching from fiat to token amounts */}
-              {/* <ArrowUpDown color="$neutral2" maxWidth={16} size="$icon.16" /> */}
+              <ArrowUpDown color="$neutral2" maxWidth={16} size="$icon.16" />
             </Flex>
           </TouchableArea>
         )}

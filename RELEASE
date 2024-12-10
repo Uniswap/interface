@@ -1,9 +1,24 @@
-We are back with some small updates! Here’s the latest:
+IPFS hash of the deployment:
+- CIDv0: `QmYVkaRHhAZ4CrxfWyaE9qFjTJf5Yz6o25Jm52HtGqRMx8`
+- CIDv1: `bafybeiew5g5rztppslnxuxlb5oyx33nmaajfi4jjjnpx57usr4n7z5fgfu`
 
-Expanded Fiat Onramp Providers: We’ve continued to add more options for onramp providers to make it easier to change your fiat into crypto, without leaving the app. 
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-Other Changes:
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
 
-- Disconnect from all apps in one click, in the Manage Connections page.
-- More detailed error messages for WalletConnect-related issues.
-- Various bug fixes and performance improvements
+IPFS gateways:
+- https://bafybeiew5g5rztppslnxuxlb5oyx33nmaajfi4jjjnpx57usr4n7z5fgfu.ipfs.dweb.link/
+- https://bafybeiew5g5rztppslnxuxlb5oyx33nmaajfi4jjjnpx57usr4n7z5fgfu.ipfs.cf-ipfs.com/
+- [ipfs://QmYVkaRHhAZ4CrxfWyaE9qFjTJf5Yz6o25Jm52HtGqRMx8/](ipfs://QmYVkaRHhAZ4CrxfWyaE9qFjTJf5Yz6o25Jm52HtGqRMx8/)
+
+### 5.61.4 (2024-12-10)
+
+
+### Bug Fixes
+
+* **web:** hide un-owned positions (#14449) d5e701f
+
+

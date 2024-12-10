@@ -12,7 +12,8 @@ import { Flex, Text } from 'ui/src'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
 import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Trans } from 'uniswap/src/i18n/Trans'
@@ -60,14 +61,14 @@ function TopPoolCard({ pool }: { pool: PoolStat }) {
   )
 }
 
-export function TopPools() {
+export function TopPools({ chainId }: { chainId?: UniverseChainId | null }) {
   const { t } = useTranslation()
   const {
     data: exploreStatsData,
     isLoading: exploreStatsLoading,
     error: exploreStatsError,
   } = useExploreStatsQuery({
-    chainId: ALL_NETWORKS_ARG,
+    chainId: chainId ? chainId.toString() : ALL_NETWORKS_ARG,
   })
 
   const { topPools } = useTopPools(
@@ -98,7 +99,7 @@ export function TopPools() {
           return <TopPoolCard key={pool.id} pool={pool} />
         })}
       </Flex>
-      <ExternalArrowLink href="/explore" openInNewTab={false}>
+      <ExternalArrowLink href="/explore/pools" openInNewTab={false}>
         {t('explore.more.pools')}
       </ExternalArrowLink>
     </Flex>

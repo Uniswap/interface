@@ -79,6 +79,7 @@ export function useAllFeeTierPoolData({
             formattedFee: formatPercent(new Percent(pool.fee, 1000000)),
             totalLiquidityUsd: totalLiquidityUsdTruncated,
             percentage,
+            tvl: pool.totalLiquidityUsd,
             created: true,
           } satisfies FeeTierData
         }
