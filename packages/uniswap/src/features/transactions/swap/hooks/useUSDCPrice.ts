@@ -5,17 +5,17 @@ import {
   USDB_BLAST,
   USDC,
   USDC_ARBITRUM,
-  USDC_ASTROCHAIN_SEPOLIA,
   USDC_AVALANCHE,
   USDC_BASE,
+  USDC_BNB,
   USDC_CELO,
   USDC_OPTIMISM,
   USDC_POLYGON,
   USDC_SEPOLIA,
+  USDC_UNICHAIN_SEPOLIA,
   USDC_WORLD_CHAIN,
   USDC_ZKSYNC,
   USDC_ZORA,
-  USDT_BNB,
 } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
@@ -26,19 +26,19 @@ import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 // The amount is large enough to filter low liquidity pairs.
 export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
   [UniverseChainId.Mainnet]: CurrencyAmount.fromRawAmount(USDC, 100_000e6),
-  [UniverseChainId.Sepolia]: CurrencyAmount.fromRawAmount(USDC_SEPOLIA, 100_000e6),
   [UniverseChainId.ArbitrumOne]: CurrencyAmount.fromRawAmount(USDC_ARBITRUM, 10_000e6),
-  [UniverseChainId.Base]: CurrencyAmount.fromRawAmount(USDC_BASE, 10_000e6),
-  [UniverseChainId.Bnb]: CurrencyAmount.fromRawAmount(USDT_BNB, 10_000e18),
-  [UniverseChainId.Polygon]: CurrencyAmount.fromRawAmount(USDC_POLYGON, 10_000e6),
-  [UniverseChainId.Optimism]: CurrencyAmount.fromRawAmount(USDC_OPTIMISM, 10_000e6),
-  [UniverseChainId.Blast]: CurrencyAmount.fromRawAmount(USDB_BLAST, 10_000e18),
   [UniverseChainId.Avalanche]: CurrencyAmount.fromRawAmount(USDC_AVALANCHE, 10_000e6),
+  [UniverseChainId.Base]: CurrencyAmount.fromRawAmount(USDC_BASE, 10_000e6),
+  [UniverseChainId.Blast]: CurrencyAmount.fromRawAmount(USDB_BLAST, 10_000e18),
+  [UniverseChainId.Bnb]: CurrencyAmount.fromRawAmount(USDC_BNB, 10_000e18),
   [UniverseChainId.Celo]: CurrencyAmount.fromRawAmount(USDC_CELO, 10_000e18),
+  [UniverseChainId.Optimism]: CurrencyAmount.fromRawAmount(USDC_OPTIMISM, 10_000e6),
+  [UniverseChainId.Polygon]: CurrencyAmount.fromRawAmount(USDC_POLYGON, 10_000e6),
+  [UniverseChainId.Sepolia]: CurrencyAmount.fromRawAmount(USDC_SEPOLIA, 100_000e6),
+  [UniverseChainId.UnichainSepolia]: CurrencyAmount.fromRawAmount(USDC_UNICHAIN_SEPOLIA, 10_000e6),
   [UniverseChainId.WorldChain]: CurrencyAmount.fromRawAmount(USDC_WORLD_CHAIN, 10_000e6),
-  [UniverseChainId.Zora]: CurrencyAmount.fromRawAmount(USDC_ZORA, 10_000e6),
   [UniverseChainId.Zksync]: CurrencyAmount.fromRawAmount(USDC_ZKSYNC, 10_000e6),
-  [UniverseChainId.AstrochainSepolia]: CurrencyAmount.fromRawAmount(USDC_ASTROCHAIN_SEPOLIA, 10_000e6),
+  [UniverseChainId.Zora]: CurrencyAmount.fromRawAmount(USDC_ZORA, 10_000e6),
 }
 
 /**

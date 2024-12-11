@@ -10,6 +10,7 @@ export const TextInput = forwardRef<TextInputBase, TextInputProps>(function _Tex
   ref,
 ) {
   const colors = useSporeColors()
+
   return (
     <Input
       ref={ref}

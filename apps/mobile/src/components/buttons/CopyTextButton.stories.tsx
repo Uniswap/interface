@@ -1,12 +1,20 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react'
-import React from 'react'
+import type { Meta, StoryObj } from '@storybook/react'
 import { CopyTextButton } from 'src/components/buttons/CopyTextButton'
+import { StorybookTitles } from 'ui/src/storybook'
 
-export default {
-  title: 'WIP/Button/Copy',
+const meta = {
+  title: StorybookTitles.Atoms,
   component: CopyTextButton,
-} as ComponentMeta<typeof CopyTextButton>
+} satisfies Meta<typeof CopyTextButton>
 
-const Template: ComponentStory<typeof CopyTextButton> = (args) => <CopyTextButton {...args} />
+type Story = StoryObj<typeof meta>
 
-export const Primary = Template.bind({})
+const CopyTextButtonStory: Story = {
+  storyName: 'CopyTextButton',
+  args: {
+    copyText: 'You copied me!',
+  },
+}
+
+export default meta
+export { CopyTextButtonStory }

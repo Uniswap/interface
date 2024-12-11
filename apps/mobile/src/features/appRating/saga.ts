@@ -1,8 +1,6 @@
-import { Alert } from 'react-native'
-import { MobileState } from 'src/app/mobileReducer'
-import { APP_FEEDBACK_LINK } from 'src/constants/urls'
-import { hasConsecutiveRecentSwapsSelector } from 'src/features/appRating/selectors'
+import { Alert, Platform } from 'react-native'
 import { call, delay, put, select, takeLatest } from 'typed-redux-saga'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
@@ -11,19 +9,21 @@ import i18n from 'uniswap/src/i18n/i18n'
 import { openUri } from 'uniswap/src/utils/linking'
 import { isJestRun } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
-import { ONE_DAY_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
+import { isAndroid } from 'utilities/src/platform'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { appRatingStateSelector } from 'wallet/src/features/appRating/selectors'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { setAppRating } from 'wallet/src/features/wallet/slice'
 
-// at most once per reminder period (120 days)
-const MIN_PROMPT_REMINDER_MS = 120 * ONE_DAY_MS
-// remind after a longer delay when user filled the feedback form (180 days)
-const MIN_FEEDBACK_REMINDER_MS = 180 * ONE_DAY_MS
+function isAndroid14(): boolean {
+  return isAndroid && Platform.Version === 34
+}
+
 // small delay to help ux
 const SWAP_FINALIZED_PROMPT_DELAY_MS = 3 * ONE_SECOND_MS
 
 try {
-  if (!isJestRun) {
+  if (!isJestRun && !isAndroid14()) {
     import('expo-store-review')
   }
 } catch (error) {
@@ -72,24 +72,8 @@ function* maybeRequestAppRating() {
       return
     }
 
-    // Conditions
-    const appRatingProvidedMs = yield* select((state: MobileState) => state.wallet.appRatingProvidedMs)
-    if (appRatingProvidedMs) {
-      return
-    } // avoids prompting again
-
-    const appRatingPromptedMs = yield* select((state: MobileState) => state.wallet.appRatingPromptedMs)
-    const appRatingFeedbackProvidedMs = yield* select((state: MobileState) => state.wallet.appRatingFeedbackProvidedMs)
-
-    const consecutiveSwapsCondition = yield* select(hasConsecutiveRecentSwapsSelector)
-
-    // prompt if enough time has passed since last prompt or last feedback provided
-    const reminderCondition =
-      (appRatingPromptedMs !== undefined && Date.now() - appRatingPromptedMs > MIN_PROMPT_REMINDER_MS) ||
-      (appRatingFeedbackProvidedMs !== undefined && Date.now() - appRatingFeedbackProvidedMs > MIN_FEEDBACK_REMINDER_MS)
-
-    const hasNeverPrompted = appRatingPromptedMs === undefined
-    const shouldPrompt = consecutiveSwapsCondition && (hasNeverPrompted || reminderCondition)
+    const { shouldPrompt, appRatingProvidedMs, appRatingPromptedMs, consecutiveSwapsCondition } =
+      yield* select(appRatingStateSelector)
 
     if (!shouldPrompt) {
       logger.debug('appRating', 'maybeRequestAppRating', 'Skipping app rating', {
@@ -152,9 +136,9 @@ function* maybeRequestAppRating() {
  */
 async function openRatingOptionsAlert() {
   return new Promise((resolve) => {
-    Alert.alert(i18n.t('mobile.appRating.title'), i18n.t('mobile.appRating.description'), [
+    Alert.alert(i18n.t('appRating.mobile.title'), i18n.t('appRating.description'), [
       {
-        text: i18n.t('mobile.appRating.button.decline'),
+        text: i18n.t('appRating.button.notReally'),
         onPress: () => resolve(false),
         style: 'cancel',
       },
@@ -177,11 +161,11 @@ async function openRatingOptionsAlert() {
 /** Opens feedback request modal which will redirect to our feedback form. */
 async function openFeedbackRequestAlert() {
   return new Promise((resolve) => {
-    Alert.alert(i18n.t('mobile.appRating.feedback.title'), i18n.t('mobile.appRating.feedback.description'), [
+    Alert.alert(i18n.t('appRating.feedback.title'), i18n.t('appRating.feedback.description'), [
       {
-        text: i18n.t('mobile.appRating.feedback.button.send'),
+        text: i18n.t('appRating.feedback.button.send'),
         onPress: () => {
-          openUri(APP_FEEDBACK_LINK).catch((e) =>
+          openUri(uniswapUrls.walletFeedbackForm).catch((e) =>
             logger.error(e, { tags: { file: 'appRating/saga', function: 'openFeedbackAlert' } }),
           )
           resolve(true)
@@ -189,7 +173,7 @@ async function openFeedbackRequestAlert() {
         isPreferred: true,
       },
       {
-        text: i18n.t('mobile.appRating.feedback.button.cancel'),
+        text: i18n.t('common.button.later'),
         onPress: () => resolve(false),
         style: 'cancel',
       },

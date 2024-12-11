@@ -1,17 +1,6 @@
 /* eslint-disable complexity */
-/* eslint-disable max-lines */
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import {
-  RefObject,
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { RefObject, forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
 // eslint-disable-next-line no-restricted-imports -- type imports are safe
 import type { NativeSyntheticEvent, TextInput, TextInputProps, TextInputSelectionChangeEventData } from 'react-native'
 import { Easing, useAnimatedStyle, useSharedValue, withRepeat, withSequence, withTiming } from 'react-native-reanimated'
@@ -402,63 +391,33 @@ function useIndicativeTextDisplay({
   value,
   valueIsIndicative,
 }: CurrentInputPanelProps): PanelTextDisplay {
-  const [display, setDisplay] = useState<PanelTextDisplay>({ value, color: '$neutral1' })
-  const [displayUsdValue, setDisplayUsdValue] = useState<Maybe<CurrencyAmount<Currency>>>(usdValue)
-
-  const prevDisplay = usePrevious(display)
-
-  /** Show interim state (old value in neutral2) for 200ms before showing the final state. */
-  const handleIndicativeTransition = useCallback((interimState: PanelTextDisplay, finalState: PanelTextDisplay) => {
-    // If the value has changed again since the delay, this timeout should no-op
-    setTimeout(() => setDisplay((prev) => (prev !== interimState ? prev : finalState)), 200)
-  }, [])
-
+  const lastDisplayRef = useRef<PanelTextDisplay>({ value, color: '$neutral3', usdValue })
   const hasInput = Boolean(isLoading || currencyAmount)
-  const valueChanged = usePrevious(value) !== value
-  const valueWasIndicative = usePrevious(valueIsIndicative)
+
+  // Clear the lastDisplayRef if input is cleared, so that it is not used upon subsequent input
   useEffect(() => {
-    // Display should only be updated if the value has changed and it's not undefined awaiting a new quote.
-    if (!valueChanged) {
-      return
+    if (!hasInput) {
+      lastDisplayRef.current = { value: undefined, color: '$neutral3' }
+    }
+  }, [hasInput])
+
+  return useMemo(() => {
+    // Ignore all indicative treatment when the field is focused
+    if (focus) {
+      return { value, color: '$neutral1', usdValue }
     }
 
-    if (!value && hasInput) {
-      setDisplay({ value, color: '$neutral1' })
-      return
+    if (!value) {
+      return hasInput ? lastDisplayRef.current : { value, color: '$neutral3' }
     }
 
-    // Handle transition from indicative to full quote.
-    if (valueWasIndicative && !valueIsIndicative) {
-      setDisplay((prev) => ({ ...prev, color: '$neutral2' }))
-      handleIndicativeTransition({ value: prevDisplay?.value, color: '$neutral2' }, display)
-    } else {
-      // Update display w/ latest value, if indicative -> full transition is not happening.
-      setDisplay({ value, color: '$neutral1' })
-    }
-  }, [
-    handleIndicativeTransition,
-    hasInput,
-    value,
-    valueChanged,
-    valueIsIndicative,
-    valueWasIndicative,
-    prevDisplay,
-    display,
-  ])
+    const color = valueIsIndicative ? '$neutral3' : '$neutral1'
 
-  // `usdValue` is not directly synced with `value` changes, so it is handled separately.
-  // Only update the displayed USD value when it's defined, or it's undefined and not loading.
-  useEffect(() => {
-    if (usdValue || !isLoading) {
-      setDisplayUsdValue(usdValue)
-    }
-  }, [usdValue, isLoading])
+    const display = { value, color, usdValue } as const
+    lastDisplayRef.current = display
 
-  // If the input is focused / being edited, pass through the original values and avoid indicative treatment.
-  if (focus) {
-    return { value, color: '$neutral1', usdValue }
-  }
-  return { ...display, usdValue: displayUsdValue }
+    return display
+  }, [focus, value, usdValue, hasInput, valueIsIndicative])
 }
 
 // TODO(WEB-4805): Remove once legacy hook once indicative quotes are fully rolled out and tested

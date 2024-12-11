@@ -11,7 +11,9 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export interface DepositState {
   exactField: PositionField
-  exactAmount?: string
+  exactAmounts: {
+    [field in PositionField]?: string
+  }
 }
 
 export type DepositContextType = {

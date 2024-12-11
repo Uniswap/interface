@@ -3,36 +3,6 @@
 exports[`OffchainOrderLineItem should render type EXCHANGE_RATE 1`] = `
 <DocumentFragment>
   .c0 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c1 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c2 {
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-
-.c3 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -40,17 +10,17 @@ exports[`OffchainOrderLineItem should render type EXCHANGE_RATE 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c4 {
+.c1 {
   cursor: auto;
   color: #7D7D7D;
 }
 
-.c5 {
+.c2 {
   text-align: right;
   overflow-wrap: break-word;
 }
 
-.c6 {
+.c3 {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -93,23 +63,23 @@ exports[`OffchainOrderLineItem should render type EXCHANGE_RATE 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c0 c1 c2"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
         >
           <div
-            class="c3 c4 css-142zc9n"
+            class="c0 c1 css-142zc9n"
             data-testid="swap-li-label"
           >
             Rate
           </div>
           <div
-            class="c3 c5 css-142zc9n"
+            class="c0 c2 css-142zc9n"
           >
             <button
-              class="c6"
+              class="c3"
               title="1 USDC = <0.00001 DAI "
             >
               <div
-                class="c3 css-142zc9n"
+                class="c0 css-142zc9n"
               >
                 1 USDC = &lt;0.00001 DAI 
               </div>
@@ -126,36 +96,6 @@ exports[`OffchainOrderLineItem should render type EXCHANGE_RATE 1`] = `
 exports[`OffchainOrderLineItem should render type NETWORK_COST 1`] = `
 <DocumentFragment>
   .c0 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c1 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c2 {
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-
-.c3 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -163,12 +103,12 @@ exports[`OffchainOrderLineItem should render type NETWORK_COST 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c4 {
+.c1 {
   cursor: auto;
   color: #7D7D7D;
 }
 
-.c5 {
+.c2 {
   text-align: right;
   overflow-wrap: break-word;
 }
@@ -184,16 +124,16 @@ exports[`OffchainOrderLineItem should render type NETWORK_COST 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c0 c1 c2"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
         >
           <div
-            class="c3 c4 css-142zc9n"
+            class="c0 c1 css-142zc9n"
             data-testid="swap-li-label"
           >
             Network cost
           </div>
           <div
-            class="c3 c5 css-142zc9n"
+            class="c0 c2 css-142zc9n"
           >
             <span>
               $0
@@ -209,36 +149,6 @@ exports[`OffchainOrderLineItem should render type NETWORK_COST 1`] = `
 exports[`OffchainOrderLineItem should render type TRANSACTION_ID 1`] = `
 <DocumentFragment>
   .c0 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c1 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c2 {
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-
-.c3 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -246,7 +156,7 @@ exports[`OffchainOrderLineItem should render type TRANSACTION_ID 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c6 {
+.c3 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -257,20 +167,20 @@ exports[`OffchainOrderLineItem should render type TRANSACTION_ID 1`] = `
   font-weight: 500;
 }
 
-.c6:hover {
+.c3:hover {
   opacity: 0.6;
 }
 
-.c6:active {
+.c3:active {
   opacity: 0.4;
 }
 
-.c4 {
+.c1 {
   cursor: auto;
   color: #7D7D7D;
 }
 
-.c5 {
+.c2 {
   text-align: right;
   overflow-wrap: break-word;
 }
@@ -286,19 +196,19 @@ exports[`OffchainOrderLineItem should render type TRANSACTION_ID 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c0 c1 c2"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
         >
           <div
-            class="c3 c4 css-142zc9n"
+            class="c0 c1 css-142zc9n"
             data-testid="swap-li-label"
           >
             Transaction ID
           </div>
           <div
-            class="c3 c5 css-142zc9n"
+            class="c0 c2 css-142zc9n"
           >
             <a
-              class="c6"
+              class="c3"
               href="https://etherscan.io/tx/0x123"
               rel="noopener noreferrer"
               target="_blank"

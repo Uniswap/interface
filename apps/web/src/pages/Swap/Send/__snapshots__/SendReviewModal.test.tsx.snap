@@ -394,8 +394,7 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
 
 .c2 {
   background-color: #FFFFFF;
-  border-radius: 20px;
-  outline: 1px solid #22222212;
+  border-radius: 16px;
   width: 100%;
   padding: 8px;
 }
@@ -408,18 +407,6 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
   width: 100%;
   padding: 12px 16px;
   gap: 16px;
-}
-
-@media screen and (max-width:640px) {
-
-}
-
-@media screen and (max-width:768px) {
-
-}
-
-@media screen and (max-width:640px) {
-
 }
 
 <div
@@ -1033,8 +1020,7 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
 
 .c2 {
   background-color: #FFFFFF;
-  border-radius: 20px;
-  outline: 1px solid #22222212;
+  border-radius: 16px;
   width: 100%;
   padding: 8px;
 }
@@ -1047,18 +1033,6 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
   width: 100%;
   padding: 12px 16px;
   gap: 16px;
-}
-
-@media screen and (max-width:640px) {
-
-}
-
-@media screen and (max-width:768px) {
-
-}
-
-@media screen and (max-width:640px) {
-
 }
 
 <div

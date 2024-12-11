@@ -1,5 +1,6 @@
 /* eslint-disable-next-line no-restricted-imports */
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { DepositContextType, DepositState } from 'components/Liquidity/types'
 import {
   CreatePositionContextType,
@@ -73,6 +74,7 @@ export const usePriceRangeContext = () => {
 
 export const DEFAULT_DEPOSIT_STATE: DepositState = {
   exactField: PositionField.TOKEN0,
+  exactAmounts: {},
 }
 
 export const DepositContext = React.createContext<DepositContextType>({
@@ -88,6 +90,7 @@ export const useDepositContext = () => {
 
 export const CreateTxContext = React.createContext<{
   txInfo?: CreatePositionTxAndGasInfo
+  gasFeeEstimateUSD?: CurrencyAmount<Currency> | null
   error?: boolean
   refetch?: () => void
 }>({})

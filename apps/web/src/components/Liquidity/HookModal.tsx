@@ -162,7 +162,7 @@ export function HookModal({
             <Text variant="body2" color="$neutral2" textAlign="center" my="$padding8">
               {hasDangerous ? t('position.hook.warningInfo') : t('position.addingHook.disclaimer')}
             </Text>
-            <LearnMoreLink centered url={uniswapUrls.helpArticleUrls.v4HooksInfo} textVariant="buttonLabel3" />
+            <LearnMoreLink centered url={uniswapUrls.helpArticleUrls.addingV4Hooks} textVariant="buttonLabel3" />
           </Flex>
 
           <Flex borderRadius="$rounded16" backgroundColor="$surface2" py="$gap12" px="$gap16">

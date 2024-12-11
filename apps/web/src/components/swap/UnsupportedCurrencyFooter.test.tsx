@@ -9,6 +9,7 @@ import { act, render, screen, waitForElementToBeRemoved, within } from 'test-uti
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getExplorerLink } from 'uniswap/src/utils/linking'
+import { shortenAddress } from 'utilities/src/addresses'
 
 const unsupportedTokenAddress = '0x4e83b6287588a96321B2661c5E041845fF7814af'
 const unsupportedTokenSymbol = 'ALTDOM-MAR2021'
@@ -44,7 +45,7 @@ describe('UnsupportedCurrencyFooter.tsx with unsupported tokens', () => {
     expect(screen.getAllByTestId('unsupported-token-card').length).toBe(1)
     const unsupportedCard = screen.getByTestId('unsupported-token-card')
     expect(within(unsupportedCard).getByText(unsupportedTokenSymbol)).toBeInTheDocument()
-    expect(within(unsupportedCard).getByText(unsupportedTokenAddress).closest('a')).toHaveAttribute(
+    expect(within(unsupportedCard).getByText(shortenAddress(unsupportedTokenAddress)).closest('a')).toHaveAttribute(
       'href',
       unsupportedTokenExplorerLink,
     )

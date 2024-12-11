@@ -181,7 +181,7 @@ async function calculateActiveRangeTokensLocked(
 }
 
 /** Returns amounts of tokens locked in the given tick. Reference: https://docs.uniswap.org/sdk/v3/guides/advanced/active-liquidity */
-async function calculateTokensLocked(
+export async function calculateTokensLocked(
   token0: Token,
   token1: Token,
   feeTier: FeeAmount,

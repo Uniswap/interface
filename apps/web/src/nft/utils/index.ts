@@ -8,7 +8,7 @@ export {
 } from './asset'
 export { blocklistedCollections } from './blocklist'
 export { buildNftTradeInputFromBagItems } from './buildSellObject'
-export { calculateCardIndex, calculateFirstCardIndex, calculateRank } from './carousel'
+export { calculateCardIndex, calculateFirstCardIndex } from './carousel'
 export { isInSameMarketplaceCollection, isInSameSudoSwapPool } from './collection'
 export { wrapScientificNotation } from './currency'
 export { formatAssetEventProperties } from './formatEventProperties'

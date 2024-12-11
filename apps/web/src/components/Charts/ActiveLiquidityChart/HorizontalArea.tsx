@@ -18,6 +18,7 @@ export const HorizontalArea = ({
   brushDomain,
   selectedFill,
   containerHeight,
+  containerWidth,
 }: {
   series: ChartEntry[]
   xScale: ScaleLinear<number, number>
@@ -26,6 +27,7 @@ export const HorizontalArea = ({
   yValue: (d: ChartEntry) => number
   brushDomain?: [number, number]
   containerHeight: number
+  containerWidth: number
   fill?: string
   selectedFill?: string
 }) => {
@@ -42,9 +44,9 @@ export const HorizontalArea = ({
           return (
             <Bar
               key={i}
-              x={xScale(0)}
+              x={xScale(xValue(d))}
               y={yScale(price)}
-              width={xScale(xValue(d)) - xScale(0)}
+              width={xScale(containerWidth) - xScale(xValue(d))}
               height={0.2}
               fill={isInDomain ? selectedFill : fill}
               rx={1}

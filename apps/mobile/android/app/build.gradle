@@ -89,9 +89,9 @@ if (isCI && datadogPropertiesAvailable && !isDetox) {
   apply from: "../../../../node_modules/@datadog/mobile-react-native/datadog-sourcemaps.gradle"
 }
 
-def devVersionName = "1.41"
-def betaVersionName = "1.41"
-def prodVersionName = "1.41"
+def devVersionName = "1.42"
+def betaVersionName = "1.42"
+def prodVersionName = "1.42"
 
 android {
     ndkVersion rootProject.ext.ndkVersion
@@ -104,7 +104,6 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        multiDexEnabled true
         testBuildType System.getProperty('testBuildType', 'debug')
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
@@ -209,9 +208,6 @@ dependencies {
     implementation "com.facebook.react:react-android"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
-    // Used to deal with Flipper/OkHttp issues with DevSupportManager
-    implementation "androidx.multidex:multidex:$multidexVersion"
-
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinSerialization"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
@@ -254,8 +250,6 @@ dependencies {
     // Used for device-reported performance class.
     implementation("androidx.core:core-performance:$corePerf")
     implementation("androidx.core:core-performance-play-services:$corePerf")
-
-    implementation("com.facebook.react:flipper-integration")
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")

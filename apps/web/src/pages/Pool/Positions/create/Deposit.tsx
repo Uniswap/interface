@@ -34,17 +34,21 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
 
   const handleUserInput = (field: PositionField, newValue: string) => {
     setDepositState((prev) => ({
-      ...prev,
       exactField: field,
-      exactAmount: newValue,
+      exactAmounts: {
+        ...prev.exactAmounts,
+        [field]: newValue,
+      },
     }))
   }
 
   const handleOnSetMax = (field: PositionField, amount: string) => {
     setDepositState((prev) => ({
-      ...prev,
       exactField: field,
-      exactAmount: amount,
+      exactAmounts: {
+        ...prev.exactAmounts,
+        [field]: amount,
+      },
     }))
   }
 
@@ -66,7 +70,7 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
     <>
       <Container {...rest}>
         <Flex gap={32}>
-          <Flex row alignItems="center">
+          <Flex gap="$spacing4">
             <Text variant="subheading1">
               <Trans i18nKey="common.depositTokens" />
             </Text>
@@ -96,7 +100,11 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
             disabled={disabled}
             buttonKey="Position-Create-DepositButton"
             loading={Boolean(
-              !dataFetchingError && !txInfo?.txRequest && currencyAmounts?.TOKEN0 && currencyAmounts.TOKEN1,
+              !dataFetchingError &&
+                !inputError &&
+                !txInfo?.txRequest &&
+                currencyAmounts?.TOKEN0 &&
+                currencyAmounts.TOKEN1,
             )}
           >
             <Text variant="buttonLabel1" color="$neutralContrast">

@@ -199,7 +199,7 @@ export function SuggestionRow({
             <PrimaryText lineHeight="24px">{suggestion.name}</PrimaryText>
             {isToken ? (
               tokenProtectionEnabled ? (
-                <WarningIcon severity={tokenWarningSeverity} size="$icon.16" />
+                <WarningIcon severity={tokenWarningSeverity} size="$icon.16" flexShrink={0} flexGrow={0} />
               ) : (
                 <TokenSafetyIcon warning={warning} />
               )

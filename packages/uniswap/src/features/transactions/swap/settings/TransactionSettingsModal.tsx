@@ -5,29 +5,29 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import {
+  TransactionSettingsContext,
+  useTransactionSettingsContext,
+} from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { SwapFormContext, useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { SwapSettingRow } from 'uniswap/src/features/transactions/swap/settings/SwapSettingsRow'
 import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
-import {
-  SwapSettingsContext,
-  useSwapSettingsContext,
-} from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { isExtension, isInterface } from 'utilities/src/platform'
 
 const POPOVER_WIDTH = 320
 
-export type SwapSettingsModalProps = {
+export type TransactionSettingsModalProps = {
   settings: SwapSettingConfig[]
   defaultTitle?: string
   onClose?: () => void
   isOpen: boolean
 }
 
-const SwapSettingsModalContent = ({
+const TransactionSettingsModalContent = ({
   settings,
   defaultTitle,
   onClose,
-}: Omit<SwapSettingsModalProps, 'isOpen'>): JSX.Element => {
+}: Omit<TransactionSettingsModalProps, 'isOpen'>): JSX.Element => {
   const { t } = useTranslation()
   const [SelectedSetting, setSelectedSetting] = useState<SwapSettingConfig>()
 
@@ -67,7 +67,11 @@ const SwapSettingsModalContent = ({
   )
 }
 
-function SwapSettingsModalInterface({ settings, defaultTitle, onClose }: SwapSettingsModalProps): JSX.Element {
+function TransactionSettingsModalInterface({
+  settings,
+  defaultTitle,
+  onClose,
+}: TransactionSettingsModalProps): JSX.Element {
   return (
     <Popover.Content
       animation={[
@@ -89,14 +93,14 @@ function SwapSettingsModalInterface({ settings, defaultTitle, onClose }: SwapSet
       shadowRadius={6}
       width={POPOVER_WIDTH}
     >
-      <SwapSettingsModalContent defaultTitle={defaultTitle} settings={settings} onClose={onClose} />
+      <TransactionSettingsModalContent defaultTitle={defaultTitle} settings={settings} onClose={onClose} />
     </Popover.Content>
   )
 }
 
-function SwapSettingsModalWallet({ settings, onClose, isOpen }: SwapSettingsModalProps): JSX.Element {
+function TransactionSettingsModalWallet({ settings, onClose, isOpen }: TransactionSettingsModalProps): JSX.Element {
   const swapFormContext = useSwapFormContext()
-  const swapSettingsContext = useSwapSettingsContext()
+  const transactionSettingsContext = useTransactionSettingsContext()
   const colors = useSporeColors()
 
   return (
@@ -107,21 +111,21 @@ function SwapSettingsModalWallet({ settings, onClose, isOpen }: SwapSettingsModa
       name={ModalName.SwapSettings}
       onClose={onClose}
     >
-      {/* Re-create the SwapSettingsContextProvider, since native Modal can cause its children to be in a separate component tree. */}
-      <SwapSettingsContext.Provider value={swapSettingsContext}>
+      {/* Re-create the TransactionSettingsContextProvider, since native Modal can cause its children to be in a separate component tree. */}
+      <TransactionSettingsContext.Provider value={transactionSettingsContext}>
         {/* Re-create the SwapFormContextProvider, since native Modal can cause its children to be in a separate component tree. */}
         <SwapFormContext.Provider value={swapFormContext}>
-          <SwapSettingsModalContent settings={settings} onClose={onClose} />
+          <TransactionSettingsModalContent settings={settings} onClose={onClose} />
         </SwapFormContext.Provider>
-      </SwapSettingsContext.Provider>
+      </TransactionSettingsContext.Provider>
     </Modal>
   )
 }
 
-export function SwapSettingsModal(props: SwapSettingsModalProps): JSX.Element {
+export function TransactionSettingsModal(props: TransactionSettingsModalProps): JSX.Element {
   if (isInterface) {
-    return <SwapSettingsModalInterface {...props} />
+    return <TransactionSettingsModalInterface {...props} />
   }
 
-  return <SwapSettingsModalWallet {...props} />
+  return <TransactionSettingsModalWallet {...props} />
 }

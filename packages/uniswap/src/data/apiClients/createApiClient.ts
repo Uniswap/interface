@@ -1,6 +1,7 @@
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { REQUEST_SOURCE, getVersionHeader } from 'uniswap/src/data/constants'
+import { logger } from 'utilities/src/logger/logger'
 import { isMobileApp } from 'utilities/src/platform'
 
 export const BASE_UNISWAP_HEADERS = {
@@ -31,14 +32,22 @@ export function createApiClient({
 
   return {
     get fetch() {
-      return (path: string, options: Parameters<typeof fetch>[1]) => {
-        return fetch(`${baseUrl}${path}`, {
-          ...options,
-          headers: {
-            ...headers,
-            ...options?.headers,
-          },
-        })
+      return async (path: string, options: Parameters<typeof fetch>[1]) => {
+        try {
+          return await fetch(`${baseUrl}${path}`, {
+            ...options,
+            headers: {
+              ...headers,
+              ...options?.headers,
+            },
+          })
+        } catch (error) {
+          logger.debug('apiClients', 'fetch', 'Failed to fetch', error, {
+            path,
+            ...options,
+          })
+          throw error
+        }
       }
     },
 
@@ -63,6 +72,10 @@ export function createApiClient({
 
         if (!response.ok) {
           let data: object | undefined
+          logger.debug('apiClients', 'get', 'Failed to fetch', response, {
+            path,
+            ...options,
+          })
           try {
             data = await response.json()
           } catch (e) {

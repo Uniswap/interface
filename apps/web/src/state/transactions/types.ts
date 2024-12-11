@@ -173,6 +173,14 @@ export interface CreatePositionTransactionInfo {
   token1CurrencyAmountRaw: string
 }
 
+export interface CollectFeesTransactionInfo {
+  type: TransactionType.COLLECT_FEES
+  token0CurrencyId: string
+  token1CurrencyId: string
+  token0CurrencyAmountRaw: string
+  token1CurrencyAmountRaw: string
+}
+
 export interface MigrateV3LiquidityToV4TransactionInfo {
   type: TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4
   token0CurrencyId: string
@@ -204,14 +212,6 @@ export interface MigrateV2LiquidityToV3TransactionInfo {
   baseCurrencyId: string
   quoteCurrencyId: string
   isFork: boolean
-}
-
-export interface CollectFeesTransactionInfo {
-  type: TransactionType.COLLECT_FEES
-  currencyId0: string
-  currencyId1: string
-  expectedCurrencyOwed0: string
-  expectedCurrencyOwed1: string
 }
 
 export interface RemoveLiquidityV3TransactionInfo {

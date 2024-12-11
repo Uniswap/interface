@@ -19,6 +19,7 @@ export function useCurrency(address?: string, chainId?: UniverseChainId, skip?: 
 }
 
 /**
+ * @deprecated useCurrencyInfo from packages/uniswap instead
  * Returns a CurrencyInfo from the tokenAddress+chainId pair.
  */
 export function useCurrencyInfo(currency?: Currency, chainId?: UniverseChainId, skip?: boolean): Maybe<CurrencyInfo>

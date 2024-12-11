@@ -1,5 +1,5 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
-import Modal from 'components/Modal'
+import { PRIVACY_SHARING_OPT_OUT_STORAGE_KEY } from 'components/PrivacyChoices/constants'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useCallback, useState } from 'react'
@@ -7,12 +7,11 @@ import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { Anchor, Button, Checkbox, Flex, Text, TouchableArea } from 'ui/src'
 import { Lock } from 'ui/src/components/icons/Lock'
 import { X } from 'ui/src/components/icons/X'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
-
-const PRIVACY_SHARING_OPT_OUT_STORAGE_KEY = 'optOutPrivacySharing'
 
 export function PrivacyChoicesModal() {
   const open = useModalIsOpen(ModalName.PrivacyChoices)
@@ -34,7 +33,7 @@ export function PrivacyChoicesModal() {
   }, [isOptOutChecked, closeModal, setPrivacySharingOptOut])
 
   return (
-    <Modal isOpen={open} onDismiss={closeAndResetModal}>
+    <Modal name={ModalName.PrivacyChoices} isModalOpen={open} onClose={closeAndResetModal}>
       <Flex fill>
         <Flex py="$spacing20" px="$spacing24" gap="$spacing24">
           <Flex row justifyContent="flex-end">

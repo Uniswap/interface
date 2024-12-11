@@ -30,7 +30,9 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
 
   const isScanningQr = currentScreenState === ScannerModalState.ScanQr
 
-  const colors = useSporeColors(isScanningQr ? 'dark' : undefined)
+  const darkColors = useSporeColors('dark')
+  const themeColors = useSporeColors()
+  const colors = isScanningQr ? darkColors : themeColors
 
   const onScanCode = async (uri: string): Promise<void> => {
     if (shouldFreezeCamera) {

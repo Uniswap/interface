@@ -39,15 +39,14 @@ export const uniswapUrls = {
     limitsFailure: `${helpUrl}/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute`,
     limitsInfo: `${helpUrl}/sections/24372644881293`,
     limitsNetworkSupport: `${helpUrl}/articles/24470251716237-What-networks-do-limits-support`,
-    lpCollectFees: `${helpUrl}/articles/20901267003789-How-to-collect-fees-from-a-liquidity-pool-on-Uniswap-v3`,
     fiatOnRampHelp: `${helpUrl}/articles/11306574799117`,
     transferCryptoHelp: `${helpUrl}/articles/27103878635661-How-to-transfer-crypto-from-a-Robinhood-or-Coinbase-account-to-the-Uniswap-Wallet`,
     moonpayRegionalAvailability: `${helpUrl}/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-`,
     networkFeeInfo: `${helpUrl}/articles/8370337377805-What-is-a-network-fee-`,
     poolOutOfSync: `${helpUrl}/articles/25845512413069`,
-    positionsLearnMore: `${helpUrl}/sections/30998264709645`,
+    positionsLearnMore: `${helpUrl}/sections/8122851346573`,
     priceImpact: `${helpUrl}/articles/8671539602317-What-is-Price-Impact`,
-    providingLiquidityInfo: `${helpUrl}/articles/30998269400333`,
+    providingLiquidityInfo: `${helpUrl}/sections/20982919867021`,
     recoveryPhraseHowToImport: `${helpUrl}/articles/11380692567949-How-to-import-a-recovery-phrase-into-the-Uniswap-Wallet`,
     recoveryPhraseHowToFind: `${helpUrl}/articles/11306360177677-How-to-find-my-recovery-phrase-in-the-Uniswap-Wallet`,
     recoveryPhraseForgotten: `${helpUrl}/articles/11306367118349`,
@@ -62,6 +61,7 @@ export const uniswapUrls = {
     uniswapXFailure: `${helpUrl}/articles/17515489874189-Why-can-my-swap-not-be-filled-`,
     unitagClaimPeriod: `${helpUrl}/articles/24009960408589`,
     unsupportedTokenPolicy: `${helpUrl}/articles/18783694078989-Unsupported-Token-Policy`,
+    addingV4Hooks: `${helpUrl}/articles/32402040565133`,
     v4HooksInfo: `${helpUrl}/articles/30998263256717`,
     v4RoutingInfo: `${helpUrl}/articles/32214043316109`,
     walletHelp: `${helpUrl}/categories/11301970439565-Uniswap-Wallet`,
@@ -121,6 +121,10 @@ export const uniswapUrls = {
   webInterfaceNftItemUrl: `${UNISWAP_WEB_URL}/nfts/asset`,
   webInterfaceNftCollectionUrl: `${UNISWAP_WEB_URL}/nfts/collection`,
   webInterfaceBuyUrl: `${UNISWAP_WEB_URL}/buy`,
+
+  // Feedback Links
+  walletFeedbackForm:
+    'https://docs.google.com/forms/d/e/1FAIpQLSepzL5aMuSfRhSgw0zDw_gVmc2aeVevfrb1UbOwn6WGJ--46w/viewform',
 }
 
 function getCloudflarePrefix(flow?: TrafficFlows): string {

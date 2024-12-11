@@ -30,6 +30,7 @@ types
 
 apps/mobile/ios
 apps/mobile/android
+apps/mobile/.storybook/storybook.requires.ts
 
 # extension
 
@@ -42,3 +43,7 @@ packages/uniswap/codegen.ts
 # eslint partials
 
 packages/eslint-config/restrictedImports.js
+
+# generated
+
+packages/uniswap/src/data/rest/conversionTracking/api

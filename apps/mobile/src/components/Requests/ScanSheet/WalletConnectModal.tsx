@@ -64,7 +64,9 @@ export function WalletConnectModal({
   const isScanningQr = currentScreenState === ScannerModalState.ScanQr
 
   // We want to always show the QR Code Scanner in "dark mode"
-  const colors = useSporeColors(isScanningQr ? 'dark' : undefined)
+  const darkColors = useSporeColors('dark')
+  const themeColors = useSporeColors()
+  const colors = isScanningQr ? darkColors : themeColors
 
   // Update QR scanner states when pending session error alert is shown from WCv2 saga event channel
   useEffect(() => {

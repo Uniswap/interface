@@ -24,8 +24,10 @@ export function IncreaseLiquidityForm() {
     currencyBalances,
     deposit0Disabled,
     deposit1Disabled,
+    error,
   } = derivedIncreaseLiquidityInfo
   const { position } = increaseLiquidityState
+
   const { gasFeeEstimateUSD, txInfo, error: dataFetchingError, refetch } = useIncreaseLiquidityTxContext()
 
   if (!position) {
@@ -52,34 +54,11 @@ export function IncreaseLiquidityForm() {
     }))
   }
 
-  // TODO(WEB-4978): account for gas in this calculation once we have the gasfee
-  const insufficientToken0Balance =
-    currencyBalances?.TOKEN0 && currencyAmounts?.TOKEN0?.greaterThan(currencyBalances.TOKEN0)
-  const insufficientToken1Balance =
-    currencyBalances?.TOKEN1 && currencyAmounts?.TOKEN1?.greaterThan(currencyBalances.TOKEN1)
-
-  const disableContinue =
-    !currencyAmounts?.TOKEN0 ||
-    !currencyBalances?.TOKEN0 ||
-    insufficientToken0Balance ||
-    !currencyAmounts?.TOKEN1 ||
-    !currencyBalances.TOKEN1 ||
-    insufficientToken1Balance
-
   const handleOnContinue = () => {
-    if (!disableContinue) {
+    if (!error) {
       setStep(IncreaseLiquidityStep.Review)
     }
   }
-
-  const errorText =
-    insufficientToken0Balance && insufficientToken1Balance
-      ? t('common.insufficientBalance.error')
-      : insufficientToken0Balance || insufficientToken1Balance
-        ? t('common.insufficientTokenBalance.error', {
-            tokenSymbol: insufficientToken0Balance ? token0.symbol : token1.symbol,
-          })
-        : undefined
 
   return (
     <Flex gap="$gap24">
@@ -105,13 +84,15 @@ export function IncreaseLiquidityForm() {
       />
       {dataFetchingError && <TradingAPIError refetch={refetch} />}
       <LoaderButton
-        disabled={disableContinue || !txInfo?.txRequest}
+        disabled={Boolean(error) || !txInfo?.txRequest}
         onPress={handleOnContinue}
-        loading={Boolean(!dataFetchingError && currencyAmounts?.TOKEN0 && currencyAmounts.TOKEN1 && !txInfo?.txRequest)}
+        loading={Boolean(
+          !dataFetchingError && !error && currencyAmounts?.TOKEN0 && currencyAmounts.TOKEN1 && !txInfo?.txRequest,
+        )}
         buttonKey="IncreaseLiquidity-continue"
       >
         <Text variant="buttonLabel1" color="$white">
-          {errorText || t('common.add.label')}
+          {error || t('common.add.label')}
         </Text>
       </LoaderButton>
     </Flex>

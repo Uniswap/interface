@@ -95,6 +95,7 @@ function BottomSheetModalContents({
   extendOnKeyboardVisible = false,
   hideScrim = false,
   analyticsProperties,
+  skipLogImpression,
 }: ModalProps): JSX.Element {
   const dimensions = useDeviceDimensions()
   const insets = useAppInsets()
@@ -269,7 +270,7 @@ function BottomSheetModalContents({
       onAnimate={onAnimate}
       onDismiss={onClose}
     >
-      <Trace logImpression modal={name} properties={analyticsProperties}>
+      <Trace logImpression={!skipLogImpression} modal={name} properties={analyticsProperties}>
         <BottomSheetContextProvider isSheetReady={isSheetReady}>
           {overrideInnerContainer ? (
             children

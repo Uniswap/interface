@@ -16,9 +16,12 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { FetchError, isRateLimitFetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { Err404 } from 'uniswap/src/data/tradingApi/__generated__'
+import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { selectHasDismissedBridgingWarning } from 'uniswap/src/features/behaviorHistory/selectors'
+import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { useTransactionGasWarning } from 'uniswap/src/features/gas/hooks'
 import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import {
   getNetworkWarning,
   useFormattedWarnings,
@@ -28,8 +31,10 @@ import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/context
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { useIsOffline } from 'utilities/src/connection/useIsOffline'
 import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
+import { isInterface } from 'utilities/src/platform'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 
 const PRICE_IMPACT_THRESHOLD_MEDIUM = new Percent(3, 100) // 3%
@@ -48,6 +53,23 @@ export function getSwapWarnings(
   }
 
   const { currencyBalances, currencyAmounts, currencies, trade } = derivedSwapInfo
+
+  // token is blocked
+  const isInputTokenBlocked = currencies[CurrencyField.INPUT]?.safetyInfo?.tokenList === TokenList.Blocked
+  const isOutputTokenBlocked = currencies[CurrencyField.OUTPUT]?.safetyInfo?.tokenList === TokenList.Blocked
+  if (isInputTokenBlocked || isOutputTokenBlocked) {
+    warnings.push({
+      type: WarningLabel.BlockedToken,
+      severity: WarningSeverity.Blocked,
+      action: WarningAction.DisableReview,
+      buttonText: t('swap.warning.tokenBlocked.button', {
+        tokenSymbol:
+          (isInputTokenBlocked
+            ? currencies[CurrencyField.INPUT]?.currency.symbol
+            : currencies[CurrencyField.OUTPUT]?.currency.symbol) ?? 'Token',
+      }),
+    })
+  }
 
   // insufficient balance for swap
   const currencyBalanceIn = currencyBalances[CurrencyField.INPUT]
@@ -136,6 +158,61 @@ export function useNeedsBridgingWarning(derivedSwapInfo: DerivedSwapInfo): boole
   const isBridgeTrade = derivedSwapInfo.trade.trade !== null && isBridge(derivedSwapInfo.trade.trade)
   const hasDismissedBridgingWarning = useSelector(selectHasDismissedBridgingWarning)
   return isBridgeTrade && !hasDismissedBridgingWarning
+}
+
+/*
+ * Display token protection warning modal on swap button click.
+ * For **interface use only**, where the swap component might be prefilled with a token that has a protection warning.
+ * i.e. via TDP swap component or URL /swap?inputCurrency=0x123
+ * In mobile & extension, token protection warnings for prefilled tokens are already surfaced earlier on, on the previous Buy/Sell button click.
+ */
+export function usePrefilledNeedsTokenProtectionWarning(
+  derivedSwapInfo: DerivedSwapInfo,
+  prefilledCurrencies?: TradeableAsset[],
+): {
+  needsTokenProtectionWarning: boolean
+  currenciesWithProtectionWarnings: CurrencyInfo[]
+} {
+  const currenciesWithProtectionWarnings: CurrencyInfo[] = useMemo(() => {
+    const tokens: CurrencyInfo[] = []
+
+    // We only display protection warnings for prefilled tokens on swap button click, bc users should have already seen warning if picked via token selector
+    const inputCurrencyId = derivedSwapInfo.currencies.input && currencyId(derivedSwapInfo.currencies.input.currency)
+    const outputCurrencyId = derivedSwapInfo.currencies.output && currencyId(derivedSwapInfo.currencies.output.currency)
+    const isInputPrefilled =
+      inputCurrencyId &&
+      prefilledCurrencies?.some((currency) => currencyId(currency).toLowerCase() === inputCurrencyId.toLowerCase())
+    const isOutputPrefilled =
+      outputCurrencyId &&
+      prefilledCurrencies?.some((currency) => currencyId(currency).toLowerCase() === outputCurrencyId.toLowerCase())
+
+    if (
+      derivedSwapInfo.currencies.input &&
+      isInputPrefilled &&
+      getTokenWarningSeverity(derivedSwapInfo.currencies.input) !== WarningSeverity.None
+    ) {
+      tokens.push(derivedSwapInfo.currencies.input)
+    }
+    if (
+      derivedSwapInfo.currencies.output &&
+      isOutputPrefilled &&
+      getTokenWarningSeverity(derivedSwapInfo.currencies.output) !== WarningSeverity.None
+    ) {
+      tokens.push(derivedSwapInfo.currencies.output)
+    }
+    return tokens
+  }, [derivedSwapInfo.currencies.input, derivedSwapInfo.currencies.output, prefilledCurrencies])
+
+  if (!isInterface) {
+    return {
+      needsTokenProtectionWarning: false,
+      currenciesWithProtectionWarnings: [],
+    }
+  }
+  return {
+    needsTokenProtectionWarning: currenciesWithProtectionWarnings.length >= 1,
+    currenciesWithProtectionWarnings,
+  }
 }
 
 export function useParsedSwapWarnings(): ParsedWarnings {

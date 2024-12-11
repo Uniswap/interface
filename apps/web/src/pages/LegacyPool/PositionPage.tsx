@@ -518,12 +518,12 @@ function PositionPageContent() {
 
           addTransaction(response, {
             type: TransactionType.COLLECT_FEES,
-            currencyId0: currencyId(currency0ForFeeCollectionPurposes),
-            currencyId1: currencyId(currency1ForFeeCollectionPurposes),
-            expectedCurrencyOwed0:
+            token0CurrencyId: currencyId(currency0ForFeeCollectionPurposes),
+            token1CurrencyId: currencyId(currency1ForFeeCollectionPurposes),
+            token0CurrencyAmountRaw:
               feeValue0?.quotient.toString() ??
               CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0).toExact(),
-            expectedCurrencyOwed1:
+            token1CurrencyAmountRaw:
               feeValue1?.quotient.toString() ??
               CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0).toExact(),
           })

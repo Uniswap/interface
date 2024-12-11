@@ -18,6 +18,13 @@ type UseSporeColorsReturn = {
   }
 }
 
+/**
+ * Wraps `useTheme` hook to provide spore color theme.
+ * Do not pass a conditional value to `name` prop.
+ *
+ * @param name the theme name
+ * @returns `useTheme` hook with the passed color theme
+ */
 export const useSporeColors = (name?: ThemeProps['name']): UseSporeColorsReturn => {
   const config = useMemo(() => ({ name }), [name])
 
