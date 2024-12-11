@@ -41,6 +41,7 @@ export const getTxFixtures = <T extends ClassicTransactionDetails>(transaction?:
       hash: faker.datatype.uuid(),
       options: {
         request: ethersTransactionRequest(),
+        submittedTimestampMs: Date.now(),
       },
     }),
     transaction,

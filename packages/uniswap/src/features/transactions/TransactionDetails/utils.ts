@@ -22,7 +22,7 @@ export function getFeeSeverity(fee: Percent): {
 } {
   // WarningSeverity for styling. Same logic as getTokenWarningSeverity but without non-fee-related cases.
   // If fee >= 5% then HIGH, else 0% < fee < 5% then MEDIUM, else NONE
-  const tokenProtectionWarning = getFeeWarning(fee)
+  const tokenProtectionWarning = getFeeWarning(parseFloat(fee.toFixed()))
   const severity = getSeverityFromTokenProtectionWarning(tokenProtectionWarning)
   return { severity, tokenProtectionWarning }
 }

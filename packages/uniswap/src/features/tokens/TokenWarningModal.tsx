@@ -1,4 +1,3 @@
-import { Percent } from '@uniswap/sdk-core'
 import { TFunction } from 'i18next'
 import { useState } from 'react'
 import { Trans } from 'react-i18next'
@@ -41,7 +40,7 @@ interface TokenWarningProps {
   isInfoOnlyWarning?: boolean // if this is an informational-only warning. Hides the Reject button
   shouldBeCombinedPlural?: boolean // some 2-token warnings will be combined into one plural modal (see `getShouldHaveCombinedPluralTreatment`)
   hasSecondWarning?: boolean // true if this is a 2-token warning with two separate warning screens
-  feeOnTransferOverride?: { fee: Percent; feeType: 'buy' | 'sell' } // if defined, forces TokenWarningModal to display FOT content over any other warning content & overrides GQL fee info with TradingApi quote's fee info, which is more correct for dynamic FoT fees
+  feeOnTransferOverride?: { buyFeePercent?: number; sellFeePercent?: number } // if defined, forces TokenWarningModal to display FOT content over any other warning content & overrides GQL fee info with TradingApi quote's fee info, which is more correct for dynamic FoT fees
 }
 
 interface TokenWarningModalContentProps extends TokenWarningProps {
@@ -74,13 +73,12 @@ function TokenWarningModalContent({
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
 
-  const tokenProtectionWarning = feeOnTransferOverride
-    ? getFeeWarning(feeOnTransferOverride.fee)
-    : getTokenProtectionWarning(currencyInfo0)
+  const tokenProtectionWarning =
+    feeOnTransferOverride?.buyFeePercent || feeOnTransferOverride?.sellFeePercent
+      ? getFeeWarning(Math.max(feeOnTransferOverride.buyFeePercent ?? 0, feeOnTransferOverride.sellFeePercent ?? 0))
+      : getTokenProtectionWarning(currencyInfo0)
   const severity = getSeverityFromTokenProtectionWarning(tokenProtectionWarning)
-  const feePercent = feeOnTransferOverride
-    ? parseFloat(feeOnTransferOverride.fee.toFixed())
-    : getFeeOnTransfer(currencyInfo0.currency)
+  const { buyFeePercent, sellFeePercent } = getFeeOnTransfer(currencyInfo0.currency)
   const isFeeRelatedWarning = getIsFeeRelatedWarning(tokenProtectionWarning)
   const tokenSymbol = currencyInfo0.currency.symbol
   const titleText = getModalHeaderText({
@@ -94,7 +92,8 @@ function TokenWarningModalContent({
     t,
     tokenProtectionWarning,
     tokenSymbol,
-    feePercent,
+    buyFeePercent: feeOnTransferOverride?.buyFeePercent ?? buyFeePercent,
+    sellFeePercent: feeOnTransferOverride?.sellFeePercent ?? sellFeePercent,
     shouldHavePluralTreatment: shouldBeCombinedPlural,
     formatPercent,
   })
@@ -136,7 +135,8 @@ function TokenWarningModalContent({
     tokenAddress1: currencyInfo1 && currencyIdToAddress(currencyInfo1.currencyId),
     warningSeverity: WarningSeverity[severity],
     tokenProtectionWarning: TokenProtectionWarning[tokenProtectionWarning],
-    feeOnTransfer: feePercent,
+    buyFeePercent: feeOnTransferOverride?.buyFeePercent ?? buyFeePercent,
+    sellFeePercent: feeOnTransferOverride?.sellFeePercent ?? sellFeePercent,
     safetyInfo: currencyInfo0.safetyInfo,
     ...(showCheckbox && { dismissTokenWarningCheckbox: dontShowAgain }),
   }

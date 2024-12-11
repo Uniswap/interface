@@ -32,7 +32,13 @@ export function FeeOnTransferWarning({
   const { tokenProtectionWarning } = getFeeSeverity(feeInfo.fee)
   const title = getModalHeaderText({ t, tokenProtectionWarning, tokenSymbol0: tokenSymbol }) ?? ''
   const subtitle =
-    getModalSubtitleTokenWarningText({ t, tokenProtectionWarning, tokenSymbol, formattedFeePercent }) ?? ''
+    getModalSubtitleTokenWarningText({
+      t,
+      tokenProtectionWarning,
+      tokenSymbol,
+      formattedBuyFeePercent: feeType === 'buy' ? formattedFeePercent : undefined,
+      formattedSellFeePercent: feeType === 'sell' ? formattedFeePercent : undefined,
+    }) ?? ''
 
   if (isInterface) {
     return (
@@ -77,8 +83,8 @@ export function FeeOnTransferWarning({
           isVisible={showModal}
           currencyInfo0={feeInfo.currencyInfo}
           feeOnTransferOverride={{
-            fee: feeInfo.fee,
-            feeType,
+            buyFeePercent: feeType === 'buy' ? feePercent : undefined,
+            sellFeePercent: feeType === 'sell' ? feePercent : undefined,
           }}
           closeModalOnly={onClose}
           onAcknowledge={onClose}

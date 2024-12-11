@@ -9,7 +9,7 @@ import { Erc721 } from 'uniswap/src/abis/types/Erc721'
 import { NonfungiblePositionManager } from 'uniswap/src/abis/types/v3/NonfungiblePositionManager'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
-export type TokenId = number | JSBI | BigNumber
+type TokenId = number | JSBI | BigNumber
 
 const STARTS_WITH = 'data:application/json;base64,'
 
@@ -32,7 +32,7 @@ type UsePositionTokenURIResult =
       loading: true
     }
 
-export function useNFTPositionManagerContract(
+function useNFTPositionManagerContract(
   version: ProtocolVersion,
   chainId?: UniverseChainId,
 ): NonfungiblePositionManager | Erc721 | null {

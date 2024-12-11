@@ -176,9 +176,10 @@ function* updateSubmittedTransaction(
   analytics?: ReturnType<typeof getBaseTradeAnalyticsProperties>,
 ) {
   const request = getSerializableTransactionRequest(populatedRequest, transaction.chainId)
+  const submittedTimestampMs = Date.now()
   const timeoutTimestampMs =
     transaction.typeInfo.gasEstimates || transaction.options.submitViaPrivateRpc
-      ? Date.now() + getTransactionTimeoutMs(transaction.chainId)
+      ? submittedTimestampMs + getTransactionTimeoutMs(transaction.chainId)
       : undefined
 
   const updatedTransaction: OnChainTransactionDetails = {
@@ -188,6 +189,7 @@ function* updateSubmittedTransaction(
     options: {
       ...transaction.options,
       request,
+      submittedTimestampMs,
       timeoutTimestampMs,
     },
   }
@@ -275,6 +277,7 @@ export function* getPendingPrivateTxCount(address: Address, chainId: number) {
       tx.chainId === chainId &&
       tx.status === TransactionStatus.Pending &&
       isClassic(tx) &&
-      Boolean(tx.options.submitViaPrivateRpc),
+      Boolean(tx.options.submitViaPrivateRpc) &&
+      tx.hash,
   ).length
 }

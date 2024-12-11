@@ -30,9 +30,7 @@ export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): 
         token0,
         token1,
         exactField,
-        exactAmounts: {
-          [exactField]: exactAmount,
-        },
+        exactAmount,
         deposit0Disabled: false,
         deposit1Disabled: false,
       }
@@ -55,9 +53,7 @@ export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): 
         token0,
         token1,
         exactField,
-        exactAmounts: {
-          [exactField]: exactAmount,
-        },
+        exactAmount,
         deposit0Disabled,
         deposit1Disabled,
       }
@@ -73,9 +69,7 @@ export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): 
         token0: currency0,
         token1: currency1,
         exactField,
-        exactAmounts: {
-          [exactField]: exactAmount,
-        },
+        exactAmount,
         deposit0Disabled,
         deposit1Disabled,
       }
@@ -84,7 +78,6 @@ export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): 
     return {
       protocolVersion: ProtocolVersion.UNSPECIFIED,
       exactField,
-      exactAmounts: {},
     }
   }, [account.address, exactAmount, exactField, positionInfo, currency0, currency1, token0, token1])
 

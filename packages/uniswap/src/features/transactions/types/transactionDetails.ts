@@ -149,6 +149,7 @@ export type FinalizedTransactionDetails = TransactionDetails &
 
 export type TransactionOptions = {
   request: providers.TransactionRequest
+  submittedTimestampMs?: number
   timeoutTimestampMs?: number
   submitViaPrivateRpc?: boolean
 }

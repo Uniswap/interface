@@ -48,7 +48,6 @@ import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/form/Sw
 import { Deadline } from 'uniswap/src/features/transactions/swap/settings/configs/Deadline'
 import { SwapSettingsContextProvider } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
-import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 import { usePrevious } from 'utilities/src/react/hooks'
 
 function CreatingPoolInfo() {
@@ -179,7 +178,7 @@ const Sidebar = () => {
   }, [creatingPoolOrPair, protocolVersion, setStep, step, t])
 
   return (
-    <Flex width={360} alignSelf="flex-start" $platform-web={{ position: 'sticky', top: INTERFACE_NAV_HEIGHT + 25 }}>
+    <Flex width={360}>
       <PoolProgressIndicator steps={PoolProgressSteps} />
     </Flex>
   )
@@ -232,7 +231,7 @@ const Toolbar = ({
   const { reset: resetMultichainState } = useMultichainContext()
 
   const { isTestnetModeEnabled } = useEnabledChains()
-  const prevIsTestnetModeEnabled = usePrevious(isTestnetModeEnabled) ?? false
+  const prevIsTestnetModeEnabled = usePrevious(isTestnetModeEnabled)
 
   const isFormUnchanged = useMemo(() => {
     // Check if all form fields (except protocol version) are set to their default values
@@ -356,13 +355,10 @@ const Toolbar = ({
 export default function CreatePosition() {
   const { value: lpRedesignEnabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.LPRedesign)
   const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
-  const media = useMedia()
 
   // URL format is `/positions/create/:protocolVersion`, with possible searchParams `?currencyA=...&currencyB=...&chain=...`
   const { protocolVersion } = useParams<{ protocolVersion: string }>()
   const paramsProtocolVersion = parseProtocolVersion(protocolVersion)
-
-  const initialCurrencyInputs = useInitialCurrencyInputs()
   const initialProtocolVersion = useMemo((): ProtocolVersion => {
     if (isV4DataEnabled) {
       return paramsProtocolVersion ?? ProtocolVersion.V4
@@ -373,6 +369,10 @@ export default function CreatePosition() {
 
     return paramsProtocolVersion
   }, [isV4DataEnabled, paramsProtocolVersion])
+
+  const initialCurrencyInputs = useInitialCurrencyInputs()
+
+  const media = useMedia()
 
   if (!isLoading && !lpRedesignEnabled) {
     return <Navigate to="/pools" replace />

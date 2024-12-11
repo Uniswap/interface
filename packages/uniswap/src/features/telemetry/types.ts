@@ -192,6 +192,14 @@ type BridgeSwapTransactionResultProperties = BaseSwapTransactionResultProperties
 
 type FailedUniswapXOrderResultProperties = Omit<UniswapXTransactionResultProperties, 'hash'>
 
+type FailedClassicSwapResultProperties = Omit<ClassicSwapTransactionResultProperties, 'hash'> & {
+  hash: string | undefined
+}
+
+type FailedBridgeSwapResultProperties = Omit<BridgeSwapTransactionResultProperties, 'hash'> & {
+  hash: string | undefined
+}
+
 type TransferProperties = {
   chainId: UniverseChainId
   tokenAddress: Address
@@ -679,9 +687,9 @@ export type UniverseEventProperties = {
     | UniswapXTransactionResultProperties
     | BridgeSwapTransactionResultProperties
   [SwapEventName.SWAP_TRANSACTION_FAILED]:
-    | ClassicSwapTransactionResultProperties
+    | FailedClassicSwapResultProperties
     | FailedUniswapXOrderResultProperties
-    | BridgeSwapTransactionResultProperties
+    | FailedBridgeSwapResultProperties
   [SwapEventName.SWAP_DETAILS_EXPANDED]: ITraceContext | undefined
   [SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED]: ITraceContext
   [SwapEventName.SWAP_QUOTE_RECEIVED]: {

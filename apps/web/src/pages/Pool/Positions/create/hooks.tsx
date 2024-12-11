@@ -259,9 +259,7 @@ export type UseDepositInfoProps = {
   token0?: Currency
   token1?: Currency
   exactField: PositionField
-  exactAmounts: {
-    [field in PositionField]?: string
-  }
+  exactAmount?: string
   skipDependentAmount?: boolean
   deposit0Disabled?: boolean
   deposit1Disabled?: boolean
@@ -291,7 +289,7 @@ export function useDerivedDepositInfo(state: DepositState): DepositInfo {
   const account = useAccount()
   const { derivedPositionInfo } = useCreatePositionContext()
   const { derivedPriceRangeInfo } = usePriceRangeContext()
-  const { exactAmounts, exactField } = state
+  const { exactAmount, exactField } = state
   const { protocolVersion } = derivedPriceRangeInfo
 
   const depositInfoProps: UseDepositInfoProps = useMemo(() => {
@@ -303,7 +301,7 @@ export function useDerivedDepositInfo(state: DepositState): DepositInfo {
         token0: derivedPositionInfo.currencies[0],
         token1: derivedPositionInfo.currencies[1],
         exactField,
-        exactAmounts,
+        exactAmount,
       } satisfies UseDepositInfoProps
     }
 
@@ -321,7 +319,7 @@ export function useDerivedDepositInfo(state: DepositState): DepositInfo {
         token0: derivedPositionInfo.currencies[0],
         token1: derivedPositionInfo.currencies[1],
         exactField,
-        exactAmounts,
+        exactAmount,
         skipDependentAmount: outOfRange || invalidRange,
         deposit0Disabled,
         deposit1Disabled,
@@ -337,29 +335,25 @@ export function useDerivedDepositInfo(state: DepositState): DepositInfo {
       token0: derivedPositionInfo.currencies[0],
       token1: derivedPositionInfo.currencies[1],
       exactField,
-      exactAmounts,
+      exactAmount,
       skipDependentAmount: outOfRange || invalidRange,
       deposit0Disabled,
       deposit1Disabled,
     } satisfies UseDepositInfoProps
-  }, [account.address, derivedPositionInfo, derivedPriceRangeInfo, exactAmounts, exactField, protocolVersion])
+  }, [account.address, derivedPositionInfo, derivedPriceRangeInfo, exactAmount, exactField, protocolVersion])
 
   return useDepositInfo(depositInfoProps)
 }
 
 export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
   const account = useAccount()
-  const { protocolVersion, address, token0, token1, exactField, exactAmounts, deposit0Disabled, deposit1Disabled } =
+  const { protocolVersion, address, token0, token1, exactField, exactAmount, deposit0Disabled, deposit1Disabled } =
     state
 
   const [token0Balance, token1Balance] = useCurrencyBalances(address, [token0, token1])
 
   const [independentToken, dependentToken] = exactField === PositionField.TOKEN0 ? [token0, token1] : [token1, token0]
-  const independentAmount = tryParseCurrencyAmount(exactAmounts[exactField], independentToken)
-  const otherAmount = tryParseCurrencyAmount(
-    exactAmounts[exactField === PositionField.TOKEN0 ? PositionField.TOKEN1 : PositionField.TOKEN0],
-    dependentToken,
-  )
+  const independentAmount = tryParseCurrencyAmount(exactAmount, independentToken)
 
   const dependentAmount: CurrencyAmount<Currency> | undefined = useMemo(() => {
     const shouldSkip = state.skipDependentAmount || protocolVersion === ProtocolVersion.UNSPECIFIED
@@ -370,7 +364,6 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
     if (protocolVersion === ProtocolVersion.V2) {
       return getDependentAmountFromV2Pair({
         independentAmount,
-        otherAmount,
         pair: state.pair,
         exactField,
         token0,
@@ -399,7 +392,7 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
             tickUpper,
           })
     return dependentToken && CurrencyAmount.fromRawAmount(dependentToken, dependentTokenAmount.quotient)
-  }, [state, protocolVersion, independentAmount, otherAmount, dependentToken, exactField, token0, token1])
+  }, [state, protocolVersion, independentAmount, dependentToken, exactField, token0, token1])
 
   const independentTokenUSDValue = useUSDCValue(independentAmount) || undefined
   const dependentTokenUSDValue = useUSDCValue(dependentAmount) || undefined
@@ -474,7 +467,7 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
   return useMemo(
     () => ({
       currencyBalances: { [PositionField.TOKEN0]: token0Balance, [PositionField.TOKEN1]: token1Balance },
-      formattedAmounts: { [exactField]: exactAmounts[exactField], [dependentField]: dependentAmount?.toExact() },
+      formattedAmounts: { [exactField]: exactAmount, [dependentField]: dependentAmount?.toExact() },
       currencyAmounts: { [exactField]: independentAmount, [dependentField]: dependentAmount },
       currencyAmountsUSDValue: { [exactField]: independentTokenUSDValue, [dependentField]: dependentTokenUSDValue },
       error,
@@ -483,7 +476,7 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
       token0Balance,
       token1Balance,
       exactField,
-      exactAmounts,
+      exactAmount,
       dependentField,
       dependentAmount,
       independentAmount,
@@ -524,10 +517,8 @@ export function useInitialCurrencyInputs() {
   const currencyA = useCurrency(currencyAddressA, supportedChainId)
   const currencyB = useCurrency(currencyAddressB, supportedChainId)
 
-  return useMemo(() => {
-    return {
-      [PositionField.TOKEN0]: currencyA ?? currencyB ?? defaultInitialToken,
-      [PositionField.TOKEN1]: currencyA && currencyB ? currencyB : undefined,
-    }
-  }, [currencyA, currencyB, defaultInitialToken])
+  return {
+    [PositionField.TOKEN0]: currencyA ?? currencyB ?? defaultInitialToken,
+    [PositionField.TOKEN1]: currencyA && currencyB ? currencyB : undefined,
+  }
 }

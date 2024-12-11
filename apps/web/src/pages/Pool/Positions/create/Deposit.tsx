@@ -34,11 +34,9 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
 
   const handleUserInput = (field: PositionField, newValue: string) => {
     setDepositState((prev) => ({
+      ...prev,
       exactField: field,
-      exactAmounts: {
-        ...prev.exactAmounts,
-        [field]: newValue,
-      },
+      exactAmount: newValue,
     }))
   }
 
@@ -68,7 +66,7 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
     <>
       <Container {...rest}>
         <Flex gap={32}>
-          <Flex gap="$spacing4">
+          <Flex row alignItems="center">
             <Text variant="subheading1">
               <Trans i18nKey="common.depositTokens" />
             </Text>

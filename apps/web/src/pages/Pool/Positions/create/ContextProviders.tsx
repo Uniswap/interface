@@ -30,9 +30,12 @@ import {
   generateCreatePositionTxRequest,
 } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { PositionField } from 'types/position'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
@@ -44,6 +47,10 @@ export function CreatePositionContextProvider({
   initialState?: Partial<PositionState>
 }) {
   const [positionState, setPositionState] = useState<PositionState>({ ...DEFAULT_POSITION_STATE, ...initialState })
+  useEffect(() => {
+    // initial state may load in from the URL
+    setPositionState((positionState) => ({ ...positionState, ...initialState }))
+  }, [initialState])
   const [step, setStep] = useState<PositionFlowStep>(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
   const derivedPositionInfo = useDerivedPositionInfo(positionState)
   const [feeTierSearchModalOpen, setFeeTierSearchModalOpen] = useState(false)
@@ -51,14 +58,18 @@ export function CreatePositionContextProvider({
     open: false,
     wishFeeData: DEFAULT_POSITION_STATE.fee,
   })
+  const { defaultChainId } = useEnabledChains()
+
+  const defaultInitialToken = nativeOnChain(defaultChainId)
 
   const reset = useCallback(() => {
     setPositionState({
       ...DEFAULT_POSITION_STATE,
-      ...initialState,
+      protocolVersion: positionState.protocolVersion,
+      currencyInputs: { [PositionField.TOKEN0]: defaultInitialToken },
     })
     setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
-  }, [initialState])
+  }, [defaultInitialToken, positionState.protocolVersion])
 
   return (
     <CreatePositionContext.Provider
@@ -164,6 +175,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
       priceRangeState,
       derivedPriceRangeInfo,
       derivedDepositInfo,
+      swapSettings,
     })
   }, [
     account,
@@ -171,6 +183,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     derivedDepositInfo,
     derivedPositionInfo,
     derivedPriceRangeInfo,
+    swapSettings,
     positionState,
     priceRangeState,
   ])
@@ -180,8 +193,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     refetch: createRefetch,
   } = useCreateLpPositionCalldataQuery({
     params: createCalldataQueryParams,
-    deadlineInMinutes: swapSettings.customDeadline,
-    refetchInterval: 5 * ONE_SECOND_MS,
+    staleTime: 5 * ONE_SECOND_MS,
   })
 
   const validatedValue = useMemo(() => {

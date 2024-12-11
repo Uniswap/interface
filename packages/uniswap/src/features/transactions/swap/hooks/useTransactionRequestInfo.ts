@@ -3,7 +3,6 @@ import { providers } from 'ethers/lib/ethers'
 import { useEffect, useMemo, useRef } from 'react'
 import { WithV4Flag } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { useTradingApiSwapQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery'
-import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
 import {
   CreateSwapRequest,
   NullablePermit,
@@ -19,6 +18,7 @@ import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gati
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getBaseTradeAnalyticsPropertiesFromSwapInfo } from 'uniswap/src/features/transactions/swap/analytics'
+import { getTradeSettingsDeadline } from 'uniswap/src/features/transactions/swap/form/utils'
 import { usePermit2SignatureWithData } from 'uniswap/src/features/transactions/swap/hooks/usePermit2Signature'
 import { useWrapTransactionRequest } from 'uniswap/src/features/transactions/swap/hooks/useWrapTransactionRequest'
 import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'

@@ -1,6 +1,6 @@
 import { ScrollBarStyles } from 'components/Common/styles'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { Box } from 'components/deprecated/Box'
+import { AnimatedBox, Box } from 'components/deprecated/Box'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import styled from 'lib/styled-components'
 import { Column, Row } from 'nft/components/Flex'
@@ -13,10 +13,12 @@ import { themeVars } from 'nft/css/sprinkles.css'
 import { useFiltersExpanded, useWalletCollections } from 'nft/hooks'
 import { WalletCollection } from 'nft/types'
 import { CSSProperties, Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
+import { easings, useSpring } from 'react-spring'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList, ListOnItemsRenderedProps } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
 import { ThemedText } from 'theme/components'
+import { TRANSITION_DURATIONS } from 'theme/styles'
 import { LabeledCheckbox } from 'ui/src'
 import noop from 'utilities/src/react/noop'
 
@@ -79,13 +81,22 @@ export const FilterSidebar = ({
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
 
+  const { sidebarX } = useSpring({
+    sidebarX: isFiltersExpanded ? 0 : -360,
+    config: {
+      duration: TRANSITION_DURATIONS.medium,
+      easing: easings.easeOutSine,
+    },
+  })
+
   const hideSearch = useMemo(
     () => (walletCollections && walletCollections?.length >= WALLET_COLLECTIONS_PAGINATION_LIMIT) || isFetchingNextPage,
     [walletCollections, isFetchingNextPage],
   )
 
   return (
-    <Box
+    // @ts-ignore
+    <AnimatedBox
       position={{ sm: 'fixed', md: 'sticky' }}
       top={{ sm: '0', md: '72' }}
       left={{ sm: '0', md: 'unset' }}
@@ -93,7 +104,8 @@ export const FilterSidebar = ({
       height={{ sm: 'full', md: 'auto' }}
       zIndex={{ sm: 'modal', md: 'auto' }}
       display={isFiltersExpanded ? 'flex' : 'none'}
-      style={{ transform: isMobile ? undefined : `translateX(${isFiltersExpanded ? 0 : -360}px)` }}
+      style={{ transform: isMobile ? undefined : sidebarX.to((x) => `translateX(${x}px)`) }}
+      background="surface2"
     >
       <Box
         paddingTop={{ sm: '24', md: '0' }}
@@ -122,7 +134,7 @@ export const FilterSidebar = ({
           hideSearch={hideSearch}
         />
       </Box>
-    </Box>
+    </AnimatedBox>
   )
 }
 

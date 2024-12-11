@@ -1,24 +1,10 @@
-IPFS hash of the deployment:
-- CIDv0: `QmemEFGpbyCk7BDVXisJ6TzpqXXoEVpACm1kZxyz5FFGNo`
-- CIDv1: `bafybeihua3m55nwz3am7z7j7yeoi35vrnmohvrkyi5gd4obsax72anky3q`
+We are back with some new updates! Here’s the latest:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Token Warnings: See more information about the tokens you’re attempting to swap, enriched with data from Blockaid. 
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+Other changes: 
 
-IPFS gateways:
-- https://bafybeihua3m55nwz3am7z7j7yeoi35vrnmohvrkyi5gd4obsax72anky3q.ipfs.dweb.link/
-- https://bafybeihua3m55nwz3am7z7j7yeoi35vrnmohvrkyi5gd4obsax72anky3q.ipfs.cf-ipfs.com/
-- [ipfs://QmemEFGpbyCk7BDVXisJ6TzpqXXoEVpACm1kZxyz5FFGNo/](ipfs://QmemEFGpbyCk7BDVXisJ6TzpqXXoEVpACm1kZxyz5FFGNo/)
-
-### 5.61.5 (2024-12-10)
-
-
-### Bug Fixes
-
-* **web:** wrap positions in multichain context (#14468) 4a007d9
-
-
+- Increased manual slippage tolerance up to 50%
+- Support for toggling between fiat and token input for fiat onramp
+- Better dapp signing support
+- Various bug fixes and performance improvements

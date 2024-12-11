@@ -1,4 +1,4 @@
-import { Currency, NativeCurrency, Percent, Token } from '@uniswap/sdk-core'
+import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AttackType, CurrencyInfo, SafetyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
@@ -377,25 +377,25 @@ describe('safetyUtils', () => {
 
   describe('getFeeWarning', () => {
     it.each([
-      [new Percent(0, 100), TokenProtectionWarning.None, '0% -> None'],
+      [0, TokenProtectionWarning.None, '0% -> None'],
       // Low fees (0-5%)
-      [new Percent(3, 1000), TokenProtectionWarning.FotLow, '0.3% -> FotLow'],
-      [new Percent(42, 1000), TokenProtectionWarning.FotLow, '4.2% -> FotLow'],
-      [new Percent(99, 10000), TokenProtectionWarning.FotLow, '0.99% -> FotLow'],
+      [0.3, TokenProtectionWarning.FotLow, '0.3% -> FotLow'],
+      [4.2, TokenProtectionWarning.FotLow, '4.2% -> FotLow'],
+      [0.99, TokenProtectionWarning.FotLow, '0.99% -> FotLow'],
       // High fees (5-80%)
-      [new Percent(5, 100), TokenProtectionWarning.FotHigh, '5% -> FotHigh'],
-      [new Percent(50, 100), TokenProtectionWarning.FotHigh, '50% -> FotHigh'],
-      [new Percent(799, 1000), TokenProtectionWarning.FotHigh, '79.9% -> FotHigh'],
-      [new Percent(5123, 10000), TokenProtectionWarning.FotHigh, '51.23% -> FotHigh'],
-      [new Percent(6789, 10000), TokenProtectionWarning.FotHigh, '67.89% -> FotHigh'],
+      [5, TokenProtectionWarning.FotHigh, '5% -> FotHigh'],
+      [50, TokenProtectionWarning.FotHigh, '50% -> FotHigh'],
+      [79.9, TokenProtectionWarning.FotHigh, '79.9% -> FotHigh'],
+      [51.23, TokenProtectionWarning.FotHigh, '51.23% -> FotHigh'],
+      [67.89, TokenProtectionWarning.FotHigh, '67.89% -> FotHigh'],
       // Very high fees (80-100%)
-      [new Percent(80, 100), TokenProtectionWarning.FotVeryHigh, '80% -> FotVeryHigh'],
-      [new Percent(90, 100), TokenProtectionWarning.FotVeryHigh, '90% -> FotVeryHigh'],
-      [new Percent(8456, 10000), TokenProtectionWarning.FotVeryHigh, '84.56% -> FotVeryHigh'],
-      [new Percent(999, 1000), TokenProtectionWarning.FotVeryHigh, '99.9% -> FotVeryHigh'],
+      [80, TokenProtectionWarning.FotVeryHigh, '80% -> FotVeryHigh'],
+      [90, TokenProtectionWarning.FotVeryHigh, '90% -> FotVeryHigh'],
+      [84.56, TokenProtectionWarning.FotVeryHigh, '84.56% -> FotVeryHigh'],
+      [99.9, TokenProtectionWarning.FotVeryHigh, '99.9% -> FotVeryHigh'],
       // Honeypot (100%)
-      [new Percent(100, 100), TokenProtectionWarning.MaliciousHoneypot, '100% -> MaliciousHoneypot'],
-      [new Percent(10000, 10000), TokenProtectionWarning.MaliciousHoneypot, '100% -> MaliciousHoneypot'],
+      [100, TokenProtectionWarning.MaliciousHoneypot, '100% -> MaliciousHoneypot'],
+      [100, TokenProtectionWarning.MaliciousHoneypot, '100% -> MaliciousHoneypot'],
     ])('%s', (fee, expectedWarning, _) => {
       expect(getFeeWarning(fee)).toBe(expectedWarning)
     })

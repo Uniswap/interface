@@ -21,7 +21,10 @@ import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 type TokenWarningCardProps = {
   currencyInfo: Maybe<CurrencyInfo>
   tokenProtectionWarningOverride?: TokenProtectionWarning
-  feePercentOverride?: number
+  feeOnTransferOverride?: {
+    buyFeePercent?: number
+    sellFeePercent?: number
+  }
   onPress?: () => void
   headingTestId?: string
   descriptionTestId?: string
@@ -33,11 +36,15 @@ type TokenWarningCardProps = {
 function useTokenWarningOverrides(
   currencyInfo: Maybe<CurrencyInfo>,
   tokenProtectionWarningOverride?: TokenProtectionWarning,
-  feePercentOverride?: number,
+  feeOnTransferOverride?: {
+    buyFeePercent?: number
+    sellFeePercent?: number
+  },
 ): { severity: WarningSeverity; heading: string | null; description: string | null } {
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
   const { heading: headingDefault, description: descriptionDefault } = useTokenWarningCardText(currencyInfo)
+  const { buyFeePercent, sellFeePercent } = getFeeOnTransfer(currencyInfo?.currency)
 
   const severity = tokenProtectionWarningOverride
     ? getSeverityFromTokenProtectionWarning(tokenProtectionWarningOverride)
@@ -52,7 +59,8 @@ function useTokenWarningOverrides(
     t,
     tokenProtectionWarning: tokenProtectionWarningOverride ?? TokenProtectionWarning.None,
     tokenSymbol: currencyInfo?.currency.symbol,
-    feePercent: feePercentOverride ?? getFeeOnTransfer(currencyInfo?.currency),
+    buyFeePercent: feeOnTransferOverride?.buyFeePercent ?? buyFeePercent,
+    sellFeePercent: feeOnTransferOverride?.sellFeePercent ?? sellFeePercent,
     formatPercent,
   })
 
@@ -65,7 +73,7 @@ function useTokenWarningOverrides(
 export function TokenWarningCard({
   currencyInfo,
   tokenProtectionWarningOverride,
-  feePercentOverride,
+  feeOnTransferOverride,
   headingTestId,
   descriptionTestId,
   hideCtaIcon,
@@ -77,13 +85,14 @@ export function TokenWarningCard({
   const { severity, heading, description } = useTokenWarningOverrides(
     currencyInfo,
     tokenProtectionWarningOverride,
-    feePercentOverride,
+    feeOnTransferOverride,
   )
 
   if (!currencyInfo || !severity || !description) {
     return null
   }
 
+  const { buyFeePercent, sellFeePercent } = getFeeOnTransfer(currencyInfo?.currency)
   const analyticsProperties = {
     tokenSymbol: currencyInfo.currency.symbol,
     chainId: currencyInfo.currency.chainId,
@@ -91,7 +100,8 @@ export function TokenWarningCard({
     warningSeverity: WarningSeverity[severity],
     tokenProtectionWarning:
       TokenProtectionWarning[tokenProtectionWarningOverride ?? getTokenProtectionWarning(currencyInfo)],
-    feeOnTransfer: feePercentOverride ?? getFeeOnTransfer(currencyInfo.currency),
+    buyFeePercent: feeOnTransferOverride?.buyFeePercent ?? buyFeePercent,
+    sellFeePercent: feeOnTransferOverride?.sellFeePercent ?? sellFeePercent,
     safetyInfo: currencyInfo.safetyInfo,
   }
 

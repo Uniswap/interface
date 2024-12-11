@@ -2,6 +2,7 @@ import { InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { ReactComponent as ExpandoIconClosed } from 'assets/svg/expando-icon-closed.svg'
 import { ReactComponent as ExpandoIconOpened } from 'assets/svg/expando-icon-opened.svg'
+import AnimatedDropdown from 'components/AnimatedDropdown'
 import { ButtonError, SmallButtonPrimary } from 'components/Button/buttons'
 import Column from 'components/deprecated/Column'
 import Row, { AutoRow, RowBetween, RowFixed } from 'components/deprecated/Row'
@@ -20,7 +21,7 @@ import { InterfaceTrade, LimitOrderTrade, RouterPreference } from 'state/routing
 import { isClassicTrade, isLimitTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import { ExternalLink, Separator, ThemedText } from 'theme/components'
-import { HeightAnimator, SpinningLoader } from 'ui/src'
+import { SpinningLoader } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans, t } from 'uniswap/src/i18n'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -306,14 +307,23 @@ function ExpandableLineItems(props: {
   const lineItemProps = { trade, allowedSlippage, syncing: false, open, priceImpact }
 
   return (
-    <HeightAnimator open={open} mt={open ? 0 : -8}>
+    <AnimatedDropdown
+      open={open}
+      springProps={{
+        marginTop: open ? 0 : -8,
+        config: {
+          duration: ms('200ms'),
+          easing: easings.easeOutSine,
+        },
+      }}
+    >
       <Column gap="sm">
         <AnimatedLineItem {...lineItemProps} type={SwapLineItemType.PRICE_IMPACT} delay={ms('50ms')} />
         <AnimatedLineItem {...lineItemProps} type={SwapLineItemType.MAX_SLIPPAGE} delay={ms('100ms')} />
         <AnimatedLineItem {...lineItemProps} type={SwapLineItemType.MINIMUM_OUTPUT} delay={ms('120ms')} />
         <AnimatedLineItem {...lineItemProps} type={SwapLineItemType.MAXIMUM_INPUT} delay={ms('120ms')} />
       </Column>
-    </HeightAnimator>
+    </AnimatedDropdown>
   )
 }
 

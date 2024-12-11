@@ -197,6 +197,15 @@ export function computeRoutes(
       }
     })
   } catch (e) {
+    logger.error(e, {
+      tags: { file: 'tradingApi.ts', function: 'computeRoutes' },
+      extra: {
+        input: parsedCurrencyIn.address,
+        output: parsedCurrencyOut.address,
+        inputChainId: parsedCurrencyIn.chainId,
+        outputChainId: parsedCurrencyOut.chainId,
+      },
+    })
     return undefined
   }
 }
@@ -206,6 +215,11 @@ function parseTokenApi(token: TradingApiTokenInRoute): Token {
   if (!chainId || !address || !decimals || !symbol) {
     throw new Error('Expected token to have chainId, address, decimals, and symbol')
   }
+
+  if (address === NATIVE_ADDRESS_FOR_TRADING_API) {
+    throw new Error('Cannot parse native currency as an erc20 Token')
+  }
+
   return new Token(
     chainId,
     address,
@@ -228,8 +242,16 @@ function parseV4PoolApi({
   tokenIn,
   tokenOut,
 }: TradingApiV4PoolInRoute): V4Pool {
-  const currencyIn = parseTokenApi(tokenIn)
-  const currencyOut = parseTokenApi(tokenOut)
+  if (!tokenIn.address || !tokenOut.address || !tokenIn.chainId || !tokenOut.chainId) {
+    throw new Error('Expected V4 route to have defined addresses and chainIds')
+  }
+
+  const inputIsNative = tokenIn.address === NATIVE_ADDRESS_FOR_TRADING_API
+  const outputIsNative = tokenOut.address === NATIVE_ADDRESS_FOR_TRADING_API
+
+  // Unlike lower protocol versions, v4 routes can involve unwrapped native tokens.
+  const currencyIn = inputIsNative ? NativeCurrency.onChain(tokenIn.chainId) : parseTokenApi(tokenIn)
+  const currencyOut = outputIsNative ? NativeCurrency.onChain(tokenOut.chainId) : parseTokenApi(tokenOut)
 
   return new V4Pool(
     currencyIn,

@@ -73,7 +73,6 @@ export const usePriceRangeContext = () => {
 
 export const DEFAULT_DEPOSIT_STATE: DepositState = {
   exactField: PositionField.TOKEN0,
-  exactAmounts: {},
 }
 
 export const DepositContext = React.createContext<DepositContextType>({

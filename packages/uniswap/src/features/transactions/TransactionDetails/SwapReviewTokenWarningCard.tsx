@@ -41,8 +41,8 @@ export function SwapReviewTokenWarningCard({
   const feeOnTransferOverride =
     showFeeSeverityWarning && tokenFeeInfo && feeType
       ? {
-          fee: tokenFeeInfo.fee,
-          feeType,
+          buyFeePercent: feeType === 'buy' ? feePercent : undefined,
+          sellFeePercent: feeType === 'sell' ? feePercent : undefined,
         }
       : undefined
 
@@ -59,7 +59,7 @@ export function SwapReviewTokenWarningCard({
         hideCtaIcon
         currencyInfo={currencyInfoToDisplay}
         tokenProtectionWarningOverride={tokenProtectionWarningToDisplay}
-        feePercentOverride={showFeeSeverityWarning ? feePercent : undefined}
+        feeOnTransferOverride={feeOnTransferOverride}
         checked={checked}
         setChecked={setChecked}
         onPress={onPress}

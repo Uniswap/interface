@@ -317,7 +317,7 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
     }
   }
 
-  if ((isBridge(transaction) || isClassic(transaction)) && !transaction.options?.request) {
+  if ((isBridge(transaction) || isClassic(transaction)) && !transaction.options?.submittedTimestampMs) {
     // Transaction was not submitted yet, ignore it for now
     // Once it's submitted, it'll be updated and the watcher will pick it up
     return undefined
@@ -579,8 +579,8 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
         sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_FAILED, properties)
       }
     } else {
-      // All classic swaps should be tracked in redux with a tx hash.
-      if (!hash) {
+      // All successful classic swaps should be tracked in redux with a tx hash.
+      if (status !== TransactionStatus.Failed && !hash) {
         logger.error(new Error('Attempting to log swap event without a hash'), {
           tags: {
             file: 'transactionWatcherSaga',
@@ -590,11 +590,11 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
         })
         return
       }
-      const properties = { ...baseProperties, hash }
+
       if (status === TransactionStatus.Success) {
-        logSwapSuccess(properties)
+        logSwapSuccess({ ...baseProperties, hash })
       } else {
-        sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_FAILED, properties)
+        sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_FAILED, { ...baseProperties, hash })
       }
     }
   }

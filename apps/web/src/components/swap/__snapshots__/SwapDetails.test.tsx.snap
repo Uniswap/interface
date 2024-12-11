@@ -432,12 +432,9 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
             </div>
           </div>
           <div
-            class="css-view-175oi2r"
-            style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; opacity: 0; height: 0px; overflow-x: hidden; overflow-y: hidden; width: 100%; margin-top: -8px;"
+            style="height: 0px; margin-top: -8px; overflow: hidden; width: 100%; min-width: min-content; will-change: height;"
           >
-            <div
-              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _width-10037"
-            >
+            <div>
               <div
                 class="c0"
               >
@@ -1036,12 +1033,9 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
             </div>
           </div>
           <div
-            class="css-view-175oi2r"
-            style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; opacity: 0; height: 0px; overflow-x: hidden; overflow-y: hidden; width: 100%; margin-top: -8px;"
+            style="height: 0px; margin-top: -8px; overflow: hidden; width: 100%; min-width: min-content; will-change: height;"
           >
-            <div
-              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _width-10037"
-            >
+            <div>
               <div
                 class="c0"
               >
