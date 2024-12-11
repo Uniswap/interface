@@ -14,7 +14,7 @@ import {
 } from "constants/chains";
 import { nativeOnChain } from "constants/tokens";
 import { PollingInterval } from "graphql/data/util";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ClassicTrade,
   INTERNAL_ROUTER_PREFERENCE_PRICE,
@@ -29,6 +29,7 @@ import { getNativeTokenDBAddress } from "utils/nativeTokens";
 
 import useIsWindowVisible from "./useIsWindowVisible";
 import useStablecoinPrice from "./useStablecoinPrice";
+import { useTokenEthPrice, useTokenUsdPrice } from "./useTokenUsdPrice";
 
 // ETH amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
@@ -97,6 +98,7 @@ export function useUSDPrice(
   data?: number;
   isLoading: boolean;
 } {
+  const [ethPrice, setEthPrice] = useState<number | null>(null);
   const currency = currencyAmount?.currency ?? prefetchCurrency;
   const chainId = useSupportedChainId(currency?.chainId);
   const chain = chainIdToBackendChain({ chainId });
@@ -108,6 +110,14 @@ export function useUSDPrice(
   const { data: tokenEthPrice, isLoading: isTokenEthPriceLoading } =
     useETHPrice(currency);
   const isTokenEthPriced = Boolean(tokenEthPrice || isTokenEthPriceLoading);
+  // Get the USD price of the reward token
+
+  useEffect(() => {
+    useTokenEthPrice(currency?.wrapped?.address ?? "").then(({ ethPrice }) => {
+      setEthPrice(ethPrice);
+    });
+  }, [currency]);
+
   const { data, networkStatus } = useTokenSpotPriceQuery({
     variables: {
       chain: chain ?? Chain.Ethereum,
@@ -134,12 +144,11 @@ export function useUSDPrice(
       };
     } else {
       // Otherwise, get the price of the token in ETH, and then multiply by the price of ETH.
-      const ethUSDPrice = data?.token?.project?.markets?.[0]?.price?.value;
-      if (ethUSDPrice && tokenEthPrice) {
+      if (ethPrice && tokenEthPrice) {
         return {
           data:
             parseFloat(tokenEthPrice.quote(currencyAmount).toExact()) *
-            ethUSDPrice,
+            ethPrice,
           isLoading: false,
         };
       } else {
