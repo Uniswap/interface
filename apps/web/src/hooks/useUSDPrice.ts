@@ -29,7 +29,7 @@ import { getNativeTokenDBAddress } from "utils/nativeTokens";
 
 import useIsWindowVisible from "./useIsWindowVisible";
 import useStablecoinPrice from "./useStablecoinPrice";
-import { useTokenEthPrice, useTokenUsdPrice } from "./useTokenUsdPrice";
+import { useTokenEthPrice } from "./useTokenUsdPrice";
 
 // ETH amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.

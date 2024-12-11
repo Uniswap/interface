@@ -40,3 +40,38 @@ export const useTokenUsdPrice = async (tokenAddress: string) => {
   }
   return { usdPrice: null };
 };
+
+export const useTokenEthPrice = async (tokenAddress: string) => {
+  if (tokenAddress.toLowerCase() === TSWAP_TARAXA.address.toLowerCase()) {
+    return { ethPrice: Number(process.env.REACT_APP_TSWAP_PRICE || 0.008) };
+  }
+  if (!indexerTaraswap) {
+    return { ethPrice: null };
+  }
+  const response = await fetch(indexerTaraswap, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query: `
+          query tokens {
+            token(id: "${tokenAddress}") {
+              id
+              symbol
+              derivedETH
+            }
+          }
+        `,
+    }),
+  });
+  const data = await response.json();
+  if (data && data.data) {
+    const token = data.data.token;
+    if (token) {
+      const tokenEthPrice = token.derivedETH;
+      return { ethPrice: tokenEthPrice };
+    }
+  }
+  return { ethPrice: null };
+};
