@@ -239,6 +239,7 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
     hasStaked: false,
     pendingRewards: BigNumber.from(0),
   });
+  const [lpTokenStaked, setLpTokenStaked] = useState(false);
 
   const [isApproved, setIsApproved] = useState(false);
   const [accruedRewards, setAccruedRewards] = useState<BigNumber>(
@@ -298,6 +299,8 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
     const depositData = await getDepositData();
     const hasDeposited = await isDeposited();
     let pendingRewards = BigNumber.from(0);
+    const hasStakes = depositData?.numberOfStakes ?? 0 > 0;
+    setLpTokenStaked(hasStakes ? true : false);
     let hasStaked = false;
     const rewardInfo = await getRewardInfo();
     if (rewardInfo === undefined) {
@@ -481,7 +484,7 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
           </ButtonPrimary>
           <ButtonPrimary
             onClick={withdraw}
-            disabled={!userDetails.hasDeposited}
+            disabled={!userDetails.hasDeposited || lpTokenStaked}
           >
             {isWithdrawing ? (
               <svg
@@ -504,6 +507,8 @@ function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
                   />
                 </path>
               </svg>
+            ) : lpTokenStaked ? (
+              "LP token is staked. Unstake to withdraw."
             ) : (
               "Withdraw LP Token"
             )}
