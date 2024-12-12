@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmUKDwf73MabW8XFc1EBM7rPqxs9p7sCAPaznFgrLpSJ6S`
-- CIDv1: `bafybeicyzcey52u465bnzqnoat6g6itt7tjmkc47mmssyzge2xif2iihc4`
+- CIDv0: `QmeKVogatGvBPKPZDiUPj87zSqgPLHKmrEHX4DvHBAKus9`
+- CIDv1: `bafybeihnn5l2otftw3dumfziisxkaxlk2cxpwgahpicwbqqn3jrywvsnzq`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,60 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeicyzcey52u465bnzqnoat6g6itt7tjmkc47mmssyzge2xif2iihc4.ipfs.dweb.link/
-- https://bafybeicyzcey52u465bnzqnoat6g6itt7tjmkc47mmssyzge2xif2iihc4.ipfs.cf-ipfs.com/
-- [ipfs://QmUKDwf73MabW8XFc1EBM7rPqxs9p7sCAPaznFgrLpSJ6S/](ipfs://QmUKDwf73MabW8XFc1EBM7rPqxs9p7sCAPaznFgrLpSJ6S/)
+- https://bafybeihnn5l2otftw3dumfziisxkaxlk2cxpwgahpicwbqqn3jrywvsnzq.ipfs.dweb.link/
+- https://bafybeihnn5l2otftw3dumfziisxkaxlk2cxpwgahpicwbqqn3jrywvsnzq.ipfs.cf-ipfs.com/
+- [ipfs://QmeKVogatGvBPKPZDiUPj87zSqgPLHKmrEHX4DvHBAKus9/](ipfs://QmeKVogatGvBPKPZDiUPj87zSqgPLHKmrEHX4DvHBAKus9/)
 
-## 5.62.0 (2024-12-11)
-
-
-### Features
-
-* **web:** add modification check to on chain tx (#14083) 964cb1e
-* **web:** add network cost to create flow (#14224) 9e280d9
-* **web:** add platform id tracking (#13780) 186a9e0
-* **web:** only show token warning on swap button click for prefilled (#14118) 068dd89
-* **web:** price range input tick tooltips (#14129) 3c66f56
-* **web:** show usd values in current tick tooltip for price range input (#14157) 7ecd409
-* **web:** wiring up conversion proxy service (#13935) 6759787
+### 5.62.1 (2024-12-12)
 
 
 ### Bug Fixes
 
-* **web:** [3/n] remove react-spring (SwapLineItem) (#13914) 991557e
-* **web:** android keyboard issue (#14262) 1042833
-* **web:** block lvmh nfts (#14233) dbbb92d
-* **web:** cherrypick of price inversion issue (#14479) 75092f6
-* **web:** delay main API call until approvals are calculated (#14302) af8185b
-* **web:** downgrade react-native-web to 0.19.10 (#14474) 206c46f
-* **web:** enforce privacy opt out choices (#14486) f8c43ad
-* **web:** fix broken link for providing lps (#14372) (#14412) 71a95cc
-* **web:** fix crash with v2 pair where there is a pool but no liquidity (#14186) cd0fd54
-* **web:** fix max button functionality on deposit form (#14285) 1de6b4b
-* **web:** hide un-owned positions (#14448) 280514a
-* **web:** improve x-y positioning of liquidity chart and brush in range input (#14128) e50620d
-* **web:** landing page modal diet - part ii (#14409) d1bd48c
-* **web:** landing page modal diet (#14349) 6547912
-* **web:** move input token warning to post-swap button (#14077) 823bef9
-* **web:** op usdc sends (#14189) 24d41ea
-* **web:** prevent crash when sending on bnb chain (#14359) 496ab28
-* **web:** prevent flash of old swap flow (#14335) de64de2
-* **web:** price range input grab (#14127) b1046cf
-* **web:** remove nondefault list tokens from common bases (#14187) 2c9db40
-* **web:** remove react-spring from NFT pages (#13923) 6045f3c
-* **web:** rename swap settings context to tx settings context (#14276) 87fa4f6
-* **web:** resizing resets flow (#14232) d442d98
-* **web:** skip trading api calls when the form is not filled out (#14245) 389413d
-* **web:** update support articles for v4 and lp redesign (#14248) a109d09
-* **web:** update the claim flow to use the saga to deal with switching chains (#14346) 23246e9
-* **web:** update the create flow to get data from the sdk instead of … (#14427) 94999a8
-* **web:** v4 blocking fixes (#14178) 873bce1
-* **web:** wrap positions in multichain context (#14467) 1d9f25d
-* **web:** zora zk v2 lp fix staging (#14485) 4490890
-
-
-### Continuous Integration
-
-* **web:** update sitemaps b5a5370
+* **web:** hides migrate when flag not on (#14496) 8f69fd0
 
 
