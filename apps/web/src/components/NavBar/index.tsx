@@ -14,7 +14,7 @@ import { ProfilePageStateType } from 'nft/types'
 import { Text } from 'rebass'
 // import { GetTheAppButton } from 'pages/Landing/components/DownloadApp/GetTheAppButton'
 import { ReactNode, useCallback, useState } from 'react'
-import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
+import { Link, NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
@@ -201,10 +201,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
     if (accountDrawerOpen) {
       toggleAccountDrawer()
     }
-    navigate({
-      pathname: '/',
-      search: '?intro=true',
-    })
+    navigate('/home')
   }, [account, accountDrawerOpen, navigate, toggleAccountDrawer])
 
   const [isDarkMode, setMode] = useDarkModeManager()
@@ -227,17 +224,19 @@ const Navbar = ({ blur }: { blur: boolean }) => {
         <Box display="flex" height="full" flexWrap="nowrap">
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
-              <UniIcon
-                width="28"
-                height="28"
-                data-testid="uniswap-logo"
-                className={styles.logo}
-                clickable={!account}
-                onClick={handleUniIconClick}
-              />
-              <Text fontSize={24} marginTop={-1}>
-                Ubeswap
-              </Text>
+              <Link to="/home" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+                <UniIcon
+                  width="28"
+                  height="28"
+                  data-testid="uniswap-logo"
+                  className={styles.logo}
+                  clickable={!account}
+                  onClick={handleUniIconClick}
+                />
+                <Text fontSize={24} marginTop={-1}>
+                  Ubeswap
+                </Text>
+              </Link>
             </Box>
             {!isNftPage && (
               <Box display={{ sm: 'flex', lg: 'none' }}>

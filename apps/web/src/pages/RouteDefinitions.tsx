@@ -44,6 +44,7 @@ const ClaimNewPact = lazy(() => import('pages/ClaimNewPact'))
 const RedirectEarn = lazy(() => import('pages/Earn/redirects'))
 const FarmV3 = lazy(() => import('pages/FarmV3'))
 const Debug = lazy(() => import('pages/Debug'))
+const Dashboard = lazy(() => import('pages/Dashboard'))
 
 // this is the same svg defined in assets/images/blue-loader.svg
 // it is defined here because the remote asset may not have had time to load when this file is executing
@@ -113,6 +114,12 @@ export const routes: RouteDefinition[] = [
       return args.browserRouterEnabled && args.hash ? <Navigate to={args.hash.replace('#', '')} replace /> : <Landing />
     },
   }),
+  createRouteDefinition({
+    path: '/home',
+    getTitle: () => t`Ubeswap | The native DeFi platfor on Celo`,
+    getElement: () => <Dashboard />,
+  }),
+
   createRouteDefinition({
     path: '/explore',
     getTitle: getExploreTitle,
