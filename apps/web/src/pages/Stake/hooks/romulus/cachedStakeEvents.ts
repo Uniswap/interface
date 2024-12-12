@@ -506,4 +506,32 @@ export const cachedProposalEvents = [
     data: '0x',
     topics: ['0x7d84a6263ae0d98d3329bd7b46bb4e8d6f98cd35a7adb45c274c8b7fd5ebd5e0'],
   },
+  {
+    id: '0xa900c1ef3cad2499599d4705c0485dc6871e377bbb9b1ca68a6336a9b1447ce4-56',
+    address: '0xD355A00220FbA16b69Cd8C4fbE16E02CA855f928',
+    blockNumber: 29217094,
+    transactionHash: '0xa900c1ef3cad2499599d4705c0485dc6871e377bbb9b1ca68a6336a9b1447ce4',
+    transactionIndex: 56,
+    blockHash: '0xf177a5dc99ec78d829cc10d96c22576819b6182c419efe1c37fe7929e5716520',
+    logIndex: 236,
+    removed: false,
+    eventSignature: '',
+    args: {
+      id: BN.from('2'),
+      proposer: '0xC9D73e14aAf12d4967fED15CEA1A30e1e05aa848',
+      targets: ['0x71e26d0E519D14591b9dE9a0fE9513A398101490'],
+      values: [BN.from('0')],
+      signatures: ['approve(address,uint256)'],
+      calldatas: [
+        '0x095ea7b300000000000000000000000071e26d0e519d14591b9de9a0fe9513a3981014900000000000000000000000000000000000000000000000000000000000000001',
+      ],
+      startBlock: BN.from('29217814'),
+      endBlock: BN.from('29304214'),
+      description:
+        "As shared in the recent update, we've reached an agreement with a Tier-2 exchange. While we can't share details yet due to a non-disclosure agreement (NDA), we need UIP approval to proceed with listing UBE on a Tier-2 CEX. Additionally, we seek feedback on whether we should list now or delay until market conditions are more favorable. Both options have their merits, but since Ubeswap is governed by a DAO, the majority will decide what’s best for Ubeswap.\n\nAs the team, we suggest delaying the listing until mid-bull market so that the amount payable in UBE tokens will be less and its effect on UBE price would be maximum. UBE price is a priority for the team and we would like our UBE holders to be satisfied with their holdings. Therefore, with everything considered we would like to delay the listing to maximize its effect on token. However, as it was in our roadmap and promised to the community we would like the community to make the decision. \n\nVote for if you would like to list Ubeswap right away and vote against if you would like to delay the listing to a more favorable time.",
+    },
+    event: 'ProposalCreated',
+    data: '0x',
+    topics: ['0x7d84a6263ae0d98d3329bd7b46bb4e8d6f98cd35a7adb45c274c8b7fd5ebd5e0'],
+  },
 ]
