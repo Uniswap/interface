@@ -7,13 +7,14 @@ import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { PoolVersionMenu } from 'pages/Pool/shared'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ChevronsRight } from 'react-feather'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, HideSmall, ThemedText } from 'theme/components'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+
 import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import Card from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -89,6 +90,12 @@ export default function Pool() {
   const theme = useTheme()
   const { account } = useWeb3React()
   const networkSupportsV2 = useNetworkSupportsV2()
+
+  const [searchParams] = useSearchParams()
+  const [highlight, setHighlight] = useState(searchParams.get('highlight')?.split('/') ?? [undefined, undefined])
+  useEffect(() => {
+    setHighlight(searchParams.get('highlight')?.split('/') ?? [undefined, undefined])
+  }, [searchParams])
 
   // fetch the user's balances of all tracked V2 LP tokens
   let trackedTokenPairs = useTrackedTokenPairs()
@@ -241,7 +248,11 @@ export default function Pool() {
                       </RowBetween>
                     </ButtonSecondary>
                     {v2PairsWithoutStakedAmount.map((v2Pair) => (
-                      <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
+                      <FullPositionCard
+                        key={v2Pair.liquidityToken.address}
+                        pair={v2Pair}
+                        show={v2Pair.token0.address === highlight[0] && v2Pair.token1.address === highlight[1]}
+                      />
                     ))}
                     {stakingPairs.map(
                       (stakingPair, i) =>
@@ -250,6 +261,10 @@ export default function Pool() {
                             key={stakingInfosWithBalance[i].stakingRewardAddress}
                             pair={stakingPair[1]}
                             stakedBalance={stakingInfosWithBalance[i].stakedAmount}
+                            show={
+                              stakingPair[1].token0.address === highlight[0] &&
+                              stakingPair[1].token1.address === highlight[1]
+                            }
                           />
                         )
                     )}
