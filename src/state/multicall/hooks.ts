@@ -264,7 +264,7 @@ export function useSingleContractWithCallData(
   options: Partial<ListenerOptions> & { gasRequired?: number } = {}
 ): CallState[] {
   const gasRequired = options?.gasRequired
-  const blocksPerFetch = options?.blocksPerFetch
+  const blocksPerFetch = options?.blocksPerFetch || 10000
 
   // encode calls
   const calls = useMemo(

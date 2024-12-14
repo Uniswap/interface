@@ -51,7 +51,12 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
   const quotesResults = useSingleContractWithCallData(
     quoter,
     amountSpecified
-      ? routes.map((route) => SwapQuoter.quoteCallParameters(route, amountSpecified, tradeType).calldata)
+      ? routes.map(
+          (route) =>
+            SwapQuoter.quoteCallParameters(route, amountSpecified, tradeType, {
+              useQuoterV2: chainId === SupportedChainId.BASE,
+            }).calldata
+        )
       : [],
     {
       gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,
