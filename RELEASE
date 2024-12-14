@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmQKzpEdiGARhh8dTvXWaF5UUSdudfwp48aRvNTwpxtFka`
-- CIDv1: `bafybeia5rsdm7cuxqe65bgmo6ep7st46ya7dkarrrlequsrddkwjtzyqd4`
+- CIDv0: `QmXuD12tmkqjiuUJcoGU2voXN2gYimddzrqQHjQrKaHKsT`
+- CIDv1: `bafybeieocbd53xpdug6dkelfrtzn2r5vt4fn3j2vxnb73plzax7vwjsiqy`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeia5rsdm7cuxqe65bgmo6ep7st46ya7dkarrrlequsrddkwjtzyqd4.ipfs.dweb.link/
-- https://bafybeia5rsdm7cuxqe65bgmo6ep7st46ya7dkarrrlequsrddkwjtzyqd4.ipfs.cf-ipfs.com/
-- [ipfs://QmQKzpEdiGARhh8dTvXWaF5UUSdudfwp48aRvNTwpxtFka/](ipfs://QmQKzpEdiGARhh8dTvXWaF5UUSdudfwp48aRvNTwpxtFka/)
+- https://bafybeieocbd53xpdug6dkelfrtzn2r5vt4fn3j2vxnb73plzax7vwjsiqy.ipfs.dweb.link/
+- https://bafybeieocbd53xpdug6dkelfrtzn2r5vt4fn3j2vxnb73plzax7vwjsiqy.ipfs.cf-ipfs.com/
+- [ipfs://QmXuD12tmkqjiuUJcoGU2voXN2gYimddzrqQHjQrKaHKsT/](ipfs://QmXuD12tmkqjiuUJcoGU2voXN2gYimddzrqQHjQrKaHKsT/)
 
-### 5.62.2 (2024-12-13)
+### 5.62.3 (2024-12-14)
 
 
 ### Bug Fixes
 
-* **web:** utilize height in Modal.web.tsx (#14528) b9c98ed
+* **web:** modal height fix (#14539) 76ce85c
 
 
