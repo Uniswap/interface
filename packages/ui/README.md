@@ -74,7 +74,7 @@ To account for screen size references, components take in props to adapt custom 
 </Flex>
 ```
 
-When components cannot take in these props or a value needs to be resued multiple times, the `useMedia` hook allows these same breakpoint values to be defined programmatically.
+When components cannot take in these props or a value needs to be reused multiple times, the `useMedia` hook allows these same breakpoint values to be defined programmatically.
 
 ### Colors
 
