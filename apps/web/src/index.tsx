@@ -3,11 +3,14 @@ import 'sideEffects'
 
 import { getDeviceId } from '@amplitude/analytics-browser'
 import { ApolloProvider } from '@apollo/client'
+import FrameSDK from '@farcaster/frame-sdk'
+import farcasterFrame from '@farcaster/frame-wagmi-connector'
 import { PortalProvider } from '@tamagui/portal'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { MiniKit } from '@worldcoin/minikit-js'
 import Web3Provider, { Web3ProviderUpdater } from 'components/Web3Provider'
 import { WebUniswapProvider } from 'components/Web3Provider/WebUniswapContext'
+import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { AssetActivityProvider } from 'graphql/data/apollo/AssetActivityProvider'
 import { TokenBalancesProvider } from 'graphql/data/apollo/TokenBalancesProvider'
 import { apolloClient } from 'graphql/data/apollo/client'
@@ -41,6 +44,7 @@ import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/conte
 import { isBrowserRouterEnabled } from 'utils/env'
 import { unregister as unregisterServiceWorker } from 'utils/serviceWorker'
 import { getCanonicalUrl } from 'utils/urlRoutes'
+import { connect } from 'wagmi/actions'
 
 if (window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false
@@ -111,6 +115,27 @@ function MiniKitProvider({ children }: PropsWithChildren) {
   return <>{children}</>
 }
 
+function FarcasterFrameProvider({ children }: PropsWithChildren) {
+  useEffect(() => {
+    const init = async () => {
+      const context = await FrameSDK.context
+
+      // Autoconnect if running in a frame.
+      if (context?.client.clientFid) {
+        connect(wagmiConfig, { connector: farcasterFrame() })
+      }
+
+      // Hide splash screen after UI renders.
+      setTimeout(() => {
+        FrameSDK.actions.ready()
+      }, 500)
+    }
+    init()
+  }, [])
+
+  return <>{children}</>
+}
+
 const container = document.getElementById('root') as HTMLElement
 
 const Router = isBrowserRouterEnabled() ? BrowserRouter : HashRouter
@@ -136,7 +161,9 @@ createRoot(container).render(
                                   <PortalProvider>
                                     <ThemedGlobalStyle />
                                     <MiniKitProvider>
-                                      <App />
+                                      <FarcasterFrameProvider>
+                                        <App />
+                                      </FarcasterFrameProvider>
                                     </MiniKitProvider>
                                   </PortalProvider>
                                 </TamaguiProvider>

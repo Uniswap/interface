@@ -1,3 +1,4 @@
+import { farcasterFrame } from '@farcaster/frame-wagmi-connector'
 import { QueryClient } from '@tanstack/react-query'
 import { injectedWithFallback } from 'components/Web3Provider/injectedWithFallback'
 import { WC_PARAMS } from 'components/Web3Provider/walletConnect'
@@ -19,6 +20,7 @@ declare module 'wagmi' {
 export const wagmiConfig = createConfig({
   chains: [getChainInfo(UniverseChainId.Mainnet), ...ALL_CHAIN_IDS.map(getChainInfo)],
   connectors: [
+    farcasterFrame(),
     injectedWithFallback(),
     walletConnect(WC_PARAMS),
     coinbaseWallet({
