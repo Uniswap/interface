@@ -47,6 +47,18 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+@media (max-width: 450px) {
+  * {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  *::-webkit-scrollbar {
+    display: none !important;
+  }
+}
+
 .last-child-flex-end {
   &:last-child {
     justify-content: flex-end;

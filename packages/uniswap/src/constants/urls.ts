@@ -13,7 +13,7 @@ enum TrafficFlows {
 
 const FLOWS_USING_BETA = [TrafficFlows.FOR]
 
-export const UNISWAP_WEB_HOSTNAME = 'app.uniswap.org'
+export const UNISWAP_WEB_HOSTNAME = 'uniframe.org'
 
 export const UNISWAP_WEB_URL = `https://${UNISWAP_WEB_HOSTNAME}`
 export const UNISWAP_APP_URL = 'https://uniswap.org/app'
@@ -160,5 +160,5 @@ function getServicePrefix(flow?: TrafficFlows): string {
 }
 
 function getCloudflareApiBaseUrl(flow?: TrafficFlows): string {
-  return `https://${getServicePrefix(flow)}${getCloudflarePrefix(flow)}.gateway.uniswap.org`
+  return `https://${getServicePrefix(flow)}${getCloudflarePrefix(flow)}.gateway.uniframe.org`
 }

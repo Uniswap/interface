@@ -28,12 +28,12 @@
         <% Object.entries(cspDevConfig).forEach(([key, value]) => cspConfig[key] = cspConfig[key].concat(value)) %>
       <% } %>
       <meta
-        http-equiv="Content-Security-Policy" 
+        http-equiv="Content-Security-Policy"
         content="default-src <%= cspConfig.defaultSrc.join(' ') %>; script-src <%= cspConfig.scriptSrc.join(' ') %>; style-src <%= cspConfig.styleSrc.concat(['nonce-'+cspStyleNonce]).join(' ') %>; img-src <%= cspConfig.imgSrc.join(' ') %>; frame-src <%= cspConfig.frameSrc.join(' ') %>; connect-src <%= cspConfig.connectSrc.join(' ') %>; worker-src <%= cspConfig.workerSrc.join(' ') %>;"
       >
     <% } %>
 
-    <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://interface.gateway.uniframe.org/" crossorigin/>
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
     <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
@@ -41,7 +41,7 @@
 
     <!-- Include <link rel="preload"> for js assets so that they are loaded with high priority. -->
     <%= htmlWebpackPlugin.files.js.map((href) => `<link rel="preload" href="${href}" as="script" />`).join('\n    ') %>
-   
+
     <style>
       * {
         font-family: 'Basel', sans-serif;
@@ -56,7 +56,7 @@
         font-weight: 535;
         font-style: normal;
         font-display: block;
-        src: 
+        src:
           url('%PUBLIC_URL%/fonts/Basel-Grotesk-Medium.woff2') format('woff2'),
           url('%PUBLIC_URL%/fonts/Basel-Grotesk-Medium.woff') format('woff');
       }
@@ -66,7 +66,7 @@
         font-weight: 485;
         font-style: normal;
         font-display: block;
-        src: 
+        src:
           url('%PUBLIC_URL%/fonts/Basel-Grotesk-Book.woff2') format('woff2'),
           url('%PUBLIC_URL%/fonts/Basel-Grotesk-Book.woff') format('woff');
       }

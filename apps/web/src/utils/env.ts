@@ -1,7 +1,7 @@
 import { isBetaEnv, isProdEnv } from 'utilities/src/environment/env'
 
 function isAppUniswapOrg({ hostname }: { hostname: string }): boolean {
-  return hostname === 'app.uniswap.org'
+  return hostname === 'app.uniframe.org' || hostname === 'uniframe.org'
 }
 
 function isAppUniswapStagingOrg({ hostname }: { hostname: string }): boolean {
