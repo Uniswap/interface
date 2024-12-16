@@ -4,6 +4,7 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import { SupportedChainId } from './chains'
 import {
   AMPL,
+  ARB_ARBITRUM_ONE,
   DAI,
   DAI_ARBITRUM_ONE,
   DAI_BASE,
@@ -13,7 +14,9 @@ import {
   FEI,
   FRAX,
   FXS,
+  KROM,
   nativeOnChain,
+  OP_OPTIMISM,
   renBTC,
   TRIBE,
   USDBC_BASE,
@@ -57,12 +60,14 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     DAI_OPTIMISM,
     USDT_OPTIMISM,
     WBTC_OPTIMISM,
+    OP_OPTIMISM,
   ],
   [SupportedChainId.ARBITRUM_ONE]: [
     ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.ARBITRUM_ONE],
     DAI_ARBITRUM_ONE,
     USDT_ARBITRUM_ONE,
     WBTC_ARBITRUM_ONE,
+    ARB_ARBITRUM_ONE,
   ],
   [SupportedChainId.POLYGON]: [
     ...WRAPPED_NATIVE_CURRENCIES_ONLY[SupportedChainId.POLYGON],
@@ -98,6 +103,7 @@ export const CUSTOM_BASES: { [chainId: number]: { [tokenAddress: string]: Token[
  */
 export const COMMON_BASES: ChainCurrencyList = {
   [SupportedChainId.MAINNET]: [
+    KROM[SupportedChainId.MAINNET],
     nativeOnChain(SupportedChainId.MAINNET),
     DAI,
     USDC,
@@ -116,26 +122,31 @@ export const COMMON_BASES: ChainCurrencyList = {
   [SupportedChainId.GOERLI]: [nativeOnChain(SupportedChainId.GOERLI), WRAPPED_NATIVE_CURRENCY[SupportedChainId.GOERLI]],
   [SupportedChainId.KOVAN]: [nativeOnChain(SupportedChainId.KOVAN), WRAPPED_NATIVE_CURRENCY[SupportedChainId.KOVAN]],
   [SupportedChainId.ARBITRUM_ONE]: [
+    KROM[SupportedChainId.ARBITRUM_ONE],
     nativeOnChain(SupportedChainId.ARBITRUM_ONE),
     DAI_ARBITRUM_ONE,
     USDC_ARBITRUM,
     USDT_ARBITRUM_ONE,
     WBTC_ARBITRUM_ONE,
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.ARBITRUM_ONE],
+    ARB_ARBITRUM_ONE,
   ],
   [SupportedChainId.ARBITRUM_RINKEBY]: [
     nativeOnChain(SupportedChainId.ARBITRUM_RINKEBY),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.ARBITRUM_RINKEBY],
   ],
   [SupportedChainId.OPTIMISM]: [
+    KROM[SupportedChainId.OPTIMISM],
     nativeOnChain(SupportedChainId.OPTIMISM),
     DAI_OPTIMISM,
     USDC_OPTIMISM,
     USDT_OPTIMISM,
     WBTC_OPTIMISM,
+    OP_OPTIMISM,
   ],
   [SupportedChainId.OPTIMISTIC_KOVAN]: [nativeOnChain(SupportedChainId.OPTIMISTIC_KOVAN)],
   [SupportedChainId.POLYGON]: [
+    KROM[SupportedChainId.POLYGON],
     nativeOnChain(SupportedChainId.POLYGON),
     WETH_POLYGON,
     USDC_POLYGON,
@@ -143,7 +154,14 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT_POLYGON,
     WBTC_POLYGON,
   ],
-  [SupportedChainId.BASE]: [nativeOnChain(SupportedChainId.BASE), WETH_BASE, USDC_BASE, DAI_BASE, USDBC_BASE],
+  [SupportedChainId.BASE]: [
+    KROM[SupportedChainId.BASE],
+    nativeOnChain(SupportedChainId.BASE),
+    WETH_BASE,
+    USDC_BASE,
+    DAI_BASE,
+    USDBC_BASE,
+  ],
   [SupportedChainId.POLYGON_MUMBAI]: [
     nativeOnChain(SupportedChainId.POLYGON_MUMBAI),
     WRAPPED_NATIVE_CURRENCY[SupportedChainId.POLYGON_MUMBAI],

@@ -47,8 +47,6 @@ export default function CommonBases({
 }) {
   const bases = typeof chainId !== 'undefined' ? COMMON_BASES[chainId] ?? [] : []
 
-  chainId && chainId !== SupportedChainId.BASE && bases[0] != KROM[chainId] && bases.unshift(KROM[chainId])
-
   return bases.length > 0 ? (
     <MobileWrapper gap="md">
       <AutoRow>

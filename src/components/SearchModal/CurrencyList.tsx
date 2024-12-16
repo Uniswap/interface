@@ -216,11 +216,6 @@ export default function CurrencyList({
     }
     return currencies
   }, [currencies, otherListTokens])
-  const { chainId } = useActiveWeb3React()
-
-  if (chainId && chainId !== SupportedChainId.BASE && currencies[0]?.wrapped == WRAPPED_NATIVE_CURRENCY[chainId]) {
-    chainId && itemData.unshift(KROM[chainId].wrapped)
-  }
 
   const Row = useCallback(
     function TokenRow({ data, index, style }) {
