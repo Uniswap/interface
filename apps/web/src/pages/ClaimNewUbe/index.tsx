@@ -50,6 +50,21 @@ const VoteCard = styled(DataCard)`
   margin-bottom: 20px;
 `
 
+const DisabledOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: ${({ theme }) => (theme.darkMode ? '#000000bb' : '#FFFFFFbb')};
+  border-radius: 30px;
+  z-index: 1001;
+`
+
+const DisabledAppBody = styled(AppBody)`
+  pointer-events: none;
+`
+
 const CONVERT_CONTRACT_ADDRESS = '0x9DFc135e0984Fe88aCd45d68e62a73E98Dbb7A36'
 
 export function useConvertCallback(): [
@@ -326,24 +341,21 @@ export default function ClaimNewUbeToken() {
         <CardSection>
           <AutoColumn gap="md">
             <RowBetween>
-              <ThemedText.DeprecatedWhite fontWeight={600}>New Tokenomics</ThemedText.DeprecatedWhite>
-            </RowBetween>
-            <RowBetween>
-              <ThemedText.DeprecatedWhite fontSize={14}>
-                Ubeswap has migrated to new token economics.
+              <ThemedText.DeprecatedWhite fontWeight={600}>
+                As of December 16th 2024, old UBE token convert has ended.
               </ThemedText.DeprecatedWhite>
             </RowBetween>
             <RowBetween>
               <ThemedText.DeprecatedWhite fontSize={14}>
-                After 75% of the liquid tokens are swapped, 1 month will be provided for the remainder of the community
-                to swap. Any tokens not swapped after this period will be burned.
+                You can swap any remaining old UBE tokens in the swap page
               </ThemedText.DeprecatedWhite>
             </RowBetween>
           </AutoColumn>
         </CardSection>
         <CardNoise />
       </VoteCard>
-      <AppBody>
+      <DisabledAppBody>
+        <DisabledOverlay />
         <SwapHeader title="Convert to new UBE" hideSettings={true} />
         <Wrapper id="swap-page">
           <AutoColumn gap="md">
@@ -448,7 +460,7 @@ export default function ClaimNewUbeToken() {
             {swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
           </BottomGrouping>
         </Wrapper>
-      </AppBody>
+      </DisabledAppBody>
 
       <AutoColumn gap="lg" justify="center" style={{ width: '100%', maxWidth: '420px', marginTop: '30px' }}>
         <AutoColumn gap="lg" style={{ width: '100%' }}>
