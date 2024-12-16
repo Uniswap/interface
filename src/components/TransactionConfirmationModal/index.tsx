@@ -302,7 +302,7 @@ function L2Content({
           </RowBetween>
         )}
         <ConfirmedIcon inline={inline}>
-          {confirmed ? (
+          {confirmed?.confirmed === true ? (
             transactionSuccess ? (
               // <CheckCircle strokeWidth={1} size={inline ? '40px' : '90px'} color={theme.green1} />
               <AnimatedConfirmation />
@@ -317,12 +317,14 @@ function L2Content({
           <Text fontWeight={400} fontSize={20} textAlign="center">
             {!hash ? (
               <Trans>Confirm transaction in wallet</Trans>
-            ) : !confirmed ? (
+            ) : !confirmed.confirmed == false && !transactionSuccess ? (
               <Trans>Transaction Submitted</Trans>
             ) : transactionSuccess ? (
               <Trans>Success</Trans>
-            ) : (
+            ) : !confirmed.confirmed == false && !transactionSuccess && confirmed.logs != undefined ? (
               <Trans>Error</Trans>
+            ) : (
+              <Trans>Loading</Trans>
             )}
           </Text>
           <Text fontWeight={400} fontSize={16} textAlign="center">
