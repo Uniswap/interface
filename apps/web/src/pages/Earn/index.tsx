@@ -2,10 +2,9 @@ import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName 
 import { Trace, TraceEvent } from 'analytics'
 import { AutoRow } from 'components/Row'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { Trans, t } from 'i18n'
-import { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
-import { Info } from 'react-feather'
-import styled, { useTheme } from 'styled-components'
+import { Trans } from 'i18n'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import styled from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 import EarnHeader from './EarnHeader'
 import { ActiveFarmTable, InactiveFarmTable } from './tables/FarmTable'
@@ -109,37 +108,37 @@ const Pages: Array<Page> = [
   },
 ]
 
-const InfoBoxWrapper = styled.div`
-  margin: 0 auto;
-  max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
-`
+// const InfoBoxWrapper = styled.div`
+//   margin: 0 auto;
+//   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
+// `
+//
+// const InfoBoxContainer = styled.div`
+//   display: flex;
+//   align-items: center;
+//   padding: 12px;
+//   gap: 16px;
+//   border: 1px solid ${({ theme }) => theme.accent1};
+//   border-radius: 20px;
+//   background: ${({ theme }) => theme.surface4};
+//   backdrop-filter: blur(5px);
+// `
 
-const InfoBoxContainer = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 12px;
-  gap: 16px;
-  border: 1px solid ${({ theme }) => theme.accent1};
-  border-radius: 20px;
-  background: ${({ theme }) => theme.surface4};
-  backdrop-filter: blur(5px);
-`
-
-function InfoBox({ message }: { message?: ReactNode }) {
-  const theme = useTheme()
-  return (
-    <InfoBoxWrapper>
-      <InfoBoxContainer>
-        <Info size={36} stroke={theme.primary1} />
-        {message && (
-          <ThemedText.BodyPrimary padding={10} textAlign="center">
-            {message}
-          </ThemedText.BodyPrimary>
-        )}
-      </InfoBoxContainer>
-    </InfoBoxWrapper>
-  )
-}
+// function InfoBox({ message }: { message?: ReactNode }) {
+//   const theme = useTheme()
+//   return (
+//     <InfoBoxWrapper>
+//       <InfoBoxContainer>
+//         <Info size={36} stroke={theme.primary1} />
+//         {message && (
+//           <ThemedText.BodyPrimary padding={10} textAlign="center">
+//             {message}
+//           </ThemedText.BodyPrimary>
+//         )}
+//       </InfoBoxContainer>
+//     </InfoBoxWrapper>
+//   )
+// }
 
 const EarnPage = ({ initialTab }: { initialTab?: EarnTab }) => {
   const tabNavRef = useRef<HTMLDivElement>(null)
@@ -175,7 +174,7 @@ const EarnPage = ({ initialTab }: { initialTab?: EarnTab }) => {
     resetManualOutage()
   }, [resetManualOutage, tab])
 
-  const { component: Page, key: currentKey } = Pages[currentTab]
+  const { component: Page } = Pages[currentTab]
 
   // Automatically trigger a navigation when the app chain changes
   // const navigate = useNavigate()
@@ -217,7 +216,7 @@ const EarnPage = ({ initialTab }: { initialTab?: EarnTab }) => {
         </NavWrapper>
         <Page />
         {/*currentKey === EarnTab.Farms && <InfoBox message={t('V3 Farms will be announced soon')} />*/}
-        {currentKey === EarnTab.Stakes && <InfoBox message={t('New Stake programs be announced soon')} />}
+        {/*currentKey === EarnTab.Stakes && <InfoBox message={t('New Stake programs be announced soon')} />*/}
       </EarnContainer>
     </Trace>
   )
