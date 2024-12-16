@@ -4,10 +4,9 @@ import TokenSafety from 'components/TokenSafety'
 import useLast from 'hooks/useLast'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { useUserAddedTokens } from 'state/user/userAddedTokens'
+import { AdaptiveWebModal } from 'ui/src'
 import { TOKEN_SELECTOR_WEB_MAX_WIDTH } from 'uniswap/src/components/TokenSelector/TokenSelector'
-import { Modal } from 'uniswap/src/components/modals/Modal'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 interface CurrencySearchModalProps {
@@ -18,7 +17,6 @@ interface CurrencySearchModalProps {
   otherSelectedCurrency?: Currency | null
   showCurrencyAmount?: boolean
   currencyField?: CurrencyField
-  chainIds?: UniverseChainId[]
 }
 
 enum CurrencyModalView {
@@ -32,7 +30,6 @@ export default memo(function CurrencySearchModal({
   onDismiss,
   onCurrencySelect,
   currencyField = CurrencyField.INPUT,
-  chainIds,
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.search)
   const lastOpen = useLast(isOpen)
@@ -67,12 +64,7 @@ export default memo(function CurrencySearchModal({
   switch (modalView) {
     case CurrencyModalView.search:
       content = (
-        <CurrencySearch
-          currencyField={currencyField}
-          onCurrencySelect={onCurrencySelect}
-          onDismiss={onDismiss}
-          chainIds={chainIds}
-        />
+        <CurrencySearch currencyField={currencyField} onCurrencySelect={onCurrencySelect} onDismiss={onDismiss} />
       )
       break
     case CurrencyModalView.tokenSafety:
@@ -89,16 +81,17 @@ export default memo(function CurrencySearchModal({
       break
   }
   return (
-    <Modal
-      isModalOpen={isOpen}
+    <AdaptiveWebModal
+      isOpen={isOpen}
       onClose={onDismiss}
       maxHeight={modalView === CurrencyModalView.tokenSafety ? 400 : 700}
       maxWidth={TOKEN_SELECTOR_WEB_MAX_WIDTH}
-      padding={0}
+      px={0}
+      py={0}
       flex={1}
-      name={ModalName.CurrencySearch}
+      $sm={{ height: `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)` }}
     >
       {content}
-    </Modal>
+    </AdaptiveWebModal>
   )
 })

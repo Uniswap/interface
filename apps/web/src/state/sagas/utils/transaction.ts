@@ -112,11 +112,19 @@ export const createUniverseTransaction = (info: TransactionInfo, chainId: Univer
     case TransactionType.INCREASE_LIQUIDITY:
     case TransactionType.DECREASE_LIQUIDITY:
     case TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4:
-    case TransactionType.COLLECT_FEES:
       transaction = createUniverseSwapTransaction(
         {
           inputCurrencyId: info.token0CurrencyId,
           outputCurrencyId: info.token1CurrencyId,
+        },
+        chainId,
+      )
+      break
+    case TransactionType.COLLECT_FEES:
+      transaction = createUniverseSwapTransaction(
+        {
+          inputCurrencyId: info.currencyId0,
+          outputCurrencyId: info.currencyId1,
         },
         chainId,
       )

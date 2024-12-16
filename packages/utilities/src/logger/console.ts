@@ -20,6 +20,9 @@ export const IGNORED_MESSAGES: IgnoredMessageSet[] = [
     message: 'Warning: Using UNSAFE_componentWillMount in strict mode',
   },
   {
+    message: 'The native module for Flipper seems unavailable.',
+  },
+  {
     message: `No native ExponentConstants module found, are you sure the expo-constants's module is linked properly?`,
   },
   {

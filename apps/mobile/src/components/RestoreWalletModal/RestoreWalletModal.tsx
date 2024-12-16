@@ -2,9 +2,9 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { closeAllModals } from 'src/features/modals/modalSlice'
+import { closeAllModals, closeModal } from 'src/features/modals/modalSlice'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
-import { WalletFilled } from 'ui/src/components/icons'
+import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { iconSizes, opacify } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -16,6 +16,10 @@ export function RestoreWalletModal(): JSX.Element | null {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const dispatch = useDispatch()
+
+  const onDismiss = (): void => {
+    dispatch(closeModal({ name: ModalName.RestoreWallet }))
+  }
 
   const onRestore = (): void => {
     dispatch(closeAllModals())
@@ -29,7 +33,7 @@ export function RestoreWalletModal(): JSX.Element | null {
   }
 
   return (
-    <Modal hideHandlebar backgroundColor={colors.surface2.val} isDismissible={false} name={ModalName.RestoreWallet}>
+    <Modal backgroundColor={colors.surface2.val} isDismissible={false} name={ModalName.RestoreWallet}>
       <Flex centered gap="$spacing16" px="$spacing24" py="$spacing12">
         <Flex
           centered
@@ -39,7 +43,7 @@ export function RestoreWalletModal(): JSX.Element | null {
             backgroundColor: opacify(12, colors.neutral1.val),
           }}
         >
-          <WalletFilled color="$neutral1" size={iconSizes.icon24} />
+          <LockIcon color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
         </Flex>
         <Text textAlign="center" variant="body1">
           {t('account.wallet.button.restore')}
@@ -48,6 +52,9 @@ export function RestoreWalletModal(): JSX.Element | null {
           {t('account.wallet.restore.description')}
         </Text>
         <Flex centered row gap="$spacing12" pt="$spacing12">
+          <Button fill theme="tertiary" onPress={onDismiss}>
+            {t('common.button.dismiss')}
+          </Button>
           <Button fill testID={TestID.RestoreWallet} theme="primary" onPress={onRestore}>
             {t('common.button.restore')}
           </Button>

@@ -14,11 +14,7 @@ import {
   MigrateLPPositionRequest,
   PriorityQuote,
 } from 'uniswap/src/data/tradingApi/__generated__'
-import {
-  LiquidityTransactionType,
-  LiquidityTxAndGasInfo,
-  isValidLiquidityTxContext,
-} from 'uniswap/src/features/transactions/liquidity/types'
+import { LiquidityTxAndGasInfo, isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import {
   ClassicSwapFlow,
   ClassicSwapSteps,
@@ -320,15 +316,6 @@ export function generateTransactionSteps(
   const isValidLP = isValidLiquidityTxContext(txContext)
 
   if (isValidLP) {
-    if (txContext.type === LiquidityTransactionType.Collect) {
-      return [
-        {
-          type: TransactionStepType.CollectFeesTransactionStep,
-          txRequest: txContext.txRequest,
-        },
-      ]
-    }
-
     const { action, approveToken0Request, approveToken1Request, approvePositionTokenRequest } = txContext
 
     const approvalToken0 = createApprovalTransactionStep(approveToken0Request, action.currency0Amount)

@@ -153,10 +153,6 @@ export function LiquidityRangeInput({
     tickSpacing,
   })
 
-  const sortedFormattedData = useMemo(() => {
-    return formattedData?.sort((a, b) => a.price0 - b.price0)
-  }, [formattedData])
-
   const timePeriodOptions = useMemo(() => {
     const options: SegmentedControlOption<HistoryDuration>[] = [
       [HistoryDuration.Day, t('token.priceExplorer.timeRangeLabel.day')],
@@ -175,7 +171,7 @@ export function LiquidityRangeInput({
   }, [selectedHistoryDuration, t])
 
   const showChartErrorView =
-    (!priceData.loading && priceData.entries.length === 0) || (!liquidityDataLoading && !sortedFormattedData)
+    (!priceData.loading && priceData.entries.length === 0) || (!liquidityDataLoading && !formattedData)
 
   return (
     <Flex gap="$gap8" overflow="hidden">
@@ -216,10 +212,10 @@ export function LiquidityRangeInput({
               <HorizontalDensityChart color="$neutral2" size={CHART_HEIGHT} />
             </Shine>
           )}
-          {sortedFormattedData && !liquidityDataLoading && !priceData.loading && boundaryPrices && (
+          {formattedData && !liquidityDataLoading && !priceData.loading && boundaryPrices && (
             <ActiveLiquidityChart2
               data={{
-                series: sortedFormattedData,
+                series: formattedData,
                 current: priceData.entries[priceData.entries.length - 1]?.value,
                 min: boundaryPrices[0],
                 max: boundaryPrices[1],
@@ -240,8 +236,6 @@ export function LiquidityRangeInput({
                   setMaxPrice(domain[1])
                 }
               }}
-              currency0={currency0}
-              currency1={currency1}
             />
           )}
         </Flex>

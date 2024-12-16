@@ -6,7 +6,6 @@ import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { AccountItem } from 'src/app/features/accounts/AccountItem'
 import { CreateWalletModal } from 'src/app/features/accounts/CreateWalletModal'
 import { EditLabelModal } from 'src/app/features/accounts/EditLabelModal'
-import { useSortedAccountList } from 'src/app/features/accounts/useSortedAccountList'
 import { useDappContext } from 'src/app/features/dapp/DappContext'
 import { updateDappConnectedAddressFromExtension } from 'src/app/features/dapp/actions'
 import { useDappConnectedAccounts } from 'src/app/features/dapp/hooks'
@@ -34,6 +33,7 @@ import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { PlusCircle } from 'wallet/src/components/icons/PlusCircle'
 import { MenuContent } from 'wallet/src/components/menu/MenuContent'
 import { MenuContentItem } from 'wallet/src/components/menu/types'
+import { useAccountList } from 'wallet/src/features/accounts/hooks'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
@@ -148,8 +148,17 @@ export function AccountSwitcherScreen(): JSX.Element {
       onPress: (): void => setShowRemoveWalletModal(true),
     },
   ]
+  const { data: accountBalanceData } = useAccountList({
+    addresses: accountAddresses,
+    notifyOnNetworkStatusChange: true,
+  })
 
-  const sortedAddressesByBalance = useSortedAccountList(accountAddresses)
+  const sortedAddressesByBalance = accountAddresses
+    .map((address) => {
+      const wallet = accountBalanceData?.portfolios?.find((portfolio) => portfolio?.ownerAddress === address)
+      return { address, balance: wallet?.tokensTotalDenominatedValue?.value }
+    })
+    .sort((a, b) => (b.balance ?? 0) - (a.balance ?? 0))
 
   const contentShadowProps = {
     shadowColor: colors.shadowColor.val,

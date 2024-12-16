@@ -10,9 +10,9 @@ jest.mock('react-native-localize', () => mockRNLocalize)
 
 jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
 
-jest.mock('uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext', () => {
+jest.mock('uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext', () => {
   return {
-    useTransactionSettingsContext: () => ({
+    useSwapSettingsContext: () => ({
       customDeadline: 20,
       customSlippage: 0.5,
     })

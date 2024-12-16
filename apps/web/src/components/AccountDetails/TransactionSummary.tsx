@@ -234,9 +234,9 @@ function CreateV3PoolSummary({ info: { quoteCurrencyId, baseCurrencyId } }: { in
   )
 }
 
-function CollectFeesSummary({ info: { token0CurrencyId, token1CurrencyId } }: { info: CollectFeesTransactionInfo }) {
-  const currency0 = useCurrency(token0CurrencyId)
-  const currency1 = useCurrency(token1CurrencyId)
+function CollectFeesSummary({ info: { currencyId0, currencyId1 } }: { info: CollectFeesTransactionInfo }) {
+  const currency0 = useCurrency(currencyId0)
+  const currency1 = useCurrency(currencyId1)
 
   return (
     <Trans

@@ -271,7 +271,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
             ))}
           </Flex>
         ) : (
-          <TouchableArea disabled={selectTokenLoading} onPress={onToggleIsTokenInputMode}>
+          <TouchableArea onPress={onToggleIsTokenInputMode}>
             <Flex
               centered
               row

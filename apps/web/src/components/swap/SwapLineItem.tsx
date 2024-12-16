@@ -12,12 +12,12 @@ import TradePrice from 'components/swap/TradePrice'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import styled, { DefaultTheme } from 'lib/styled-components'
 import React, { ReactNode, useEffect, useState } from 'react'
+import { SpringValue, animated } from 'react-spring'
 import { InterfaceTrade, SubmittableTrade, TradeFillType } from 'state/routing/types'
 import { isLimitTrade, isPreviewTrade, isUniswapXTrade, isUniswapXTradeType } from 'state/routing/utils'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { Flex } from 'ui/src'
 import { chainSupportsGasEstimates } from 'uniswap/src/features/chains/utils'
 import { Trans, t } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -271,35 +271,25 @@ function getFOTLineItem({ type, trade }: SwapLineItemProps): LineItemData | unde
   }
 }
 
-interface SwapLineItemProps {
+export interface SwapLineItemProps {
   trade: InterfaceTrade
   syncing?: boolean
   allowedSlippage?: Percent
   type: SwapLineItemType
+  animatedOpacity?: SpringValue<number>
   priceImpact?: Percent
-  visible?: boolean
-  animationDelay?: number
 }
 
 function SwapLineItem(props: SwapLineItemProps) {
-  const { visible = true, animationDelay, syncing } = props
   const LineItem = useLineItem(props)
   if (!LineItem) {
     return null
   }
 
   return (
-    <Flex
-      opacity={visible ? 1 : 0}
-      animation={{
-        opacity: {
-          type: 'quick',
-          delay: animationDelay,
-        },
-      }}
-    >
-      <DetailLineItem LineItem={LineItem} syncing={syncing} />
-    </Flex>
+    <animated.div style={{ opacity: props.animatedOpacity }}>
+      <DetailLineItem LineItem={LineItem} syncing={props.syncing} />
+    </animated.div>
   )
 }
 

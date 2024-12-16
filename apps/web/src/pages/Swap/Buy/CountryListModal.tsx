@@ -7,13 +7,12 @@ import { ChangeEvent, useCallback, useMemo, useRef, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { CloseIcon } from 'theme/components'
-import { Flex, styled, useSporeColors } from 'ui/src'
+import { AdaptiveWebModal, Flex, styled, useSporeColors } from 'ui/src'
 import { Text } from 'ui/src/components/text/Text'
 import { iconSizes } from 'ui/src/theme'
-import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useTranslation } from 'uniswap/src/i18n'
+import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 import { bubbleToTop } from 'utilities/src/primitives/array'
 
 const ROW_ITEM_SIZE = 56
@@ -65,14 +64,13 @@ export function CountryListModal({
   }, [onDismiss])
 
   return (
-    <Modal
-      name={ModalName.FiatOnRampCountryList}
-      maxWidth={420}
-      height={700}
+    <AdaptiveWebModal
+      p={0}
+      isOpen={isOpen}
+      flex={1}
+      onClose={closeModal}
       maxHeight={700}
-      isModalOpen={isOpen}
-      onClose={onDismiss}
-      padding={0}
+      $sm={{ height: `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)` }}
     >
       <ContentWrapper>
         <HeaderContent>
@@ -130,6 +128,6 @@ export function CountryListModal({
           </AutoSizer>
         </Flex>
       </ContentWrapper>
-    </Modal>
+    </AdaptiveWebModal>
   )
 }

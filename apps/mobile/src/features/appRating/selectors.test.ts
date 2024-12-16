@@ -1,3 +1,5 @@
+import { MobileState } from 'src/app/mobileReducer'
+import { hasConsecutiveRecentSwapsSelector } from 'src/features/appRating/selectors'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   TransactionDetails,
@@ -5,13 +7,6 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
-import {
-  MIN_FEEDBACK_REMINDER_MS,
-  MIN_PROMPT_REMINDER_MS,
-  appRatingStateSelector,
-  hasConsecutiveRecentSwapsSelector,
-} from 'wallet/src/features/appRating/selectors'
-import { WalletState } from 'wallet/src/state/walletReducer'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { preloadedWalletReducerState } from 'wallet/src/test/fixtures/wallet/redux'
 
@@ -45,7 +40,7 @@ const state = {
       },
     },
   },
-} as unknown as WalletState
+} as unknown as MobileState
 
 describe('consecutiveSwapsSelector', () => {
   it('returns false for empty state', () => {
@@ -61,7 +56,7 @@ describe('consecutiveSwapsSelector', () => {
     const condition = hasConsecutiveRecentSwapsSelector({
       ...state,
       wallet: { appRatingPromptedMs: MOCK_DATE_PROMPTED + 2000 },
-    } as unknown as WalletState)
+    } as unknown as MobileState)
 
     expect(condition).toBeFalsy()
   })
@@ -147,141 +142,5 @@ describe('consecutiveSwapsSelector', () => {
     const isConsecutiveSwaps = hasConsecutiveRecentSwapsSelector(state)
 
     expect(isConsecutiveSwaps).toBeTruthy()
-  })
-})
-
-describe('appRatingStateSelector', () => {
-  beforeEach(() => {
-    jest.spyOn(Date, 'now').mockImplementation(() => MOCK_DATE_PROMPTED)
-  })
-
-  afterEach(() => {
-    jest.restoreAllMocks()
-  })
-
-  it('returns correct state when never prompted before', () => {
-    const baseState = {
-      ...state,
-      wallet: {
-        appRatingProvidedMs: undefined,
-        appRatingPromptedMs: undefined,
-        appRatingFeedbackProvidedMs: undefined,
-      },
-    } as WalletState
-
-    const result = appRatingStateSelector(baseState)
-
-    expect(result).toEqual({
-      appRatingPromptedMs: undefined,
-      appRatingProvidedMs: undefined,
-      consecutiveSwapsCondition: true,
-      shouldPrompt: true,
-    })
-  })
-
-  it('returns shouldPrompt false when consecutive swaps condition is false', () => {
-    const baseState = {
-      ...state,
-      wallet: {
-        appRatingProvidedMs: undefined,
-        appRatingPromptedMs: undefined,
-        appRatingFeedbackProvidedMs: undefined,
-      },
-      transactions: {},
-    } as WalletState
-
-    const result = appRatingStateSelector(baseState)
-
-    expect(result).toEqual({
-      appRatingPromptedMs: undefined,
-      appRatingProvidedMs: undefined,
-      consecutiveSwapsCondition: false,
-      shouldPrompt: false,
-    })
-  })
-
-  it('returns shouldPrompt true when enough time passed since last prompt', () => {
-    const lastPromptTime = MOCK_DATE_PROMPTED - MIN_PROMPT_REMINDER_MS - ONE_HOUR_MS
-    const baseState = {
-      ...state,
-      wallet: {
-        appRatingProvidedMs: undefined,
-        appRatingPromptedMs: lastPromptTime,
-        appRatingFeedbackProvidedMs: undefined,
-      },
-    } as WalletState
-
-    const result = appRatingStateSelector(baseState)
-
-    expect(result).toEqual({
-      appRatingPromptedMs: lastPromptTime,
-      appRatingProvidedMs: undefined,
-      consecutiveSwapsCondition: true,
-      shouldPrompt: true,
-    })
-  })
-
-  it('returns shouldPrompt false when not enough time passed since last prompt', () => {
-    const lastPromptTime = MOCK_DATE_PROMPTED - MIN_PROMPT_REMINDER_MS + ONE_HOUR_MS
-    const baseState = {
-      ...state,
-      wallet: {
-        appRatingProvidedMs: undefined,
-        appRatingPromptedMs: lastPromptTime,
-        appRatingFeedbackProvidedMs: undefined,
-      },
-    } as WalletState
-
-    const result = appRatingStateSelector(baseState)
-
-    expect(result).toEqual({
-      appRatingPromptedMs: lastPromptTime,
-      appRatingProvidedMs: undefined,
-      consecutiveSwapsCondition: true,
-      shouldPrompt: false,
-    })
-  })
-
-  it('returns shouldPrompt true when enough time passed since last feedback', () => {
-    const lastFeedbackTime = MOCK_DATE_PROMPTED - MIN_FEEDBACK_REMINDER_MS - ONE_HOUR_MS
-    const baseState = {
-      ...state,
-      wallet: {
-        appRatingProvidedMs: undefined,
-        appRatingPromptedMs: undefined,
-        appRatingFeedbackProvidedMs: lastFeedbackTime,
-      },
-    } as WalletState
-
-    const result = appRatingStateSelector(baseState)
-
-    expect(result).toEqual({
-      appRatingPromptedMs: undefined,
-      appRatingProvidedMs: undefined,
-      consecutiveSwapsCondition: true,
-      shouldPrompt: true,
-    })
-  })
-
-  it('returns shouldPrompt false when not enough time passed since last feedback', () => {
-    const lastPromptTime = MOCK_DATE_PROMPTED - MIN_PROMPT_REMINDER_MS - ONE_HOUR_MS
-    const lastFeedbackTime = MOCK_DATE_PROMPTED - MIN_FEEDBACK_REMINDER_MS + ONE_HOUR_MS
-    const baseState = {
-      ...state,
-      wallet: {
-        appRatingProvidedMs: undefined,
-        appRatingPromptedMs: lastPromptTime,
-        appRatingFeedbackProvidedMs: lastFeedbackTime,
-      },
-    } as WalletState
-
-    const result = appRatingStateSelector(baseState)
-
-    expect(result).toEqual({
-      appRatingPromptedMs: lastPromptTime,
-      appRatingProvidedMs: undefined,
-      consecutiveSwapsCondition: true,
-      shouldPrompt: false,
-    })
   })
 })

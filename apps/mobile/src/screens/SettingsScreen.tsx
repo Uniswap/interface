@@ -16,6 +16,7 @@ import {
 } from 'src/components/Settings/SettingsRow'
 import { WalletSettings } from 'src/components/Settings/WalletSettings'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
+import { APP_FEEDBACK_LINK } from 'src/constants/urls'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricName, useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
 import { useWalletRestore } from 'src/features/wallet/hooks'
@@ -262,7 +263,7 @@ export function SettingsScreen(): JSX.Element {
           {
             screen: MobileScreens.WebView,
             screenProps: {
-              uriLink: uniswapUrls.walletFeedbackForm,
+              uriLink: APP_FEEDBACK_LINK,
               headerTitle: t('settings.action.feedback'),
             },
             text: t('settings.action.feedback'),

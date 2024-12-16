@@ -1,4 +1,4 @@
-import { NumberValue, ScaleLinear, axisRight, Axis as d3Axis, select } from 'd3'
+import { NumberValue, ScaleLinear, axisLeft, Axis as d3Axis, select } from 'd3'
 import styled from 'lib/styled-components'
 import { useMemo } from 'react'
 
@@ -16,8 +16,8 @@ const TEXT_Y_OFFSET = 10
 
 const Axis = ({
   axisGenerator,
-  yScale,
   height,
+  yScale,
 }: {
   axisGenerator: d3Axis<NumberValue>
   height: number
@@ -32,12 +32,12 @@ const Axis = ({
           g.selectAll('text').attr('transform', function (d) {
             const yCoordinate = yScale(d as number)
             if (yCoordinate < TEXT_Y_OFFSET) {
-              return `translate(0, ${TEXT_Y_OFFSET})`
+              return `translate(0, ${TEXT_Y_OFFSET}) scale(-1,-1)`
             }
             if (yCoordinate > height - TEXT_Y_OFFSET) {
-              return `translate(0, ${-TEXT_Y_OFFSET})`
+              return `translate(0, ${-TEXT_Y_OFFSET}) scale(-1,-1)`
             }
-            return ''
+            return 'scale(-1, -1)'
           }),
         )
     }
@@ -46,7 +46,7 @@ const Axis = ({
   return <g ref={axisRef} />
 }
 
-export const AxisRight = ({
+export const AxisLeft = ({
   yScale,
   offset = 0,
   min,
@@ -76,7 +76,7 @@ export const AxisRight = ({
 
   return (
     <StyledGroup transform={`translate(${offset}, 0)`}>
-      <Axis axisGenerator={axisRight(yScale).tickValues(tickValues)} height={height} yScale={yScale} />
+      <Axis axisGenerator={axisLeft(yScale).tickValues(tickValues)} height={height} yScale={yScale} />
     </StyledGroup>
   )
 }

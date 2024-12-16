@@ -4,7 +4,10 @@ import type { ImageSourcePropType } from 'react-native'
 import { CELO_LOGO, ETH_LOGO } from 'ui/src/assets'
 import {
   ARB,
+  BTC_BSC,
   BUSD_BSC,
+  CEUR_CELO,
+  CUSD_CELO,
   DAI,
   DAI_ARBITRUM_ONE,
   DAI_AVALANCHE,
@@ -35,6 +38,7 @@ import {
   USDT_POLYGON,
   WBTC,
   WBTC_ARBITRUM_ONE,
+  WBTC_CELO,
   WBTC_OPTIMISM,
   WBTC_POLYGON,
   WETH_AVALANCHE,
@@ -55,9 +59,7 @@ type ChainCurrencyList = {
 }
 
 /**
- * @deprecated
- * Instead, see the list used in the token selector's quick-select common options section at useAllCommonBaseCurrencies.ts.
- * This list is currently used as fallback list when Token GQL query fails for above list + for hardcoded tokens on testnet chains.
+ * Shows up in the currency select for swap and add liquidity
  */
 export const COMMON_BASES: ChainCurrencyList = {
   [UniverseChainId.Mainnet]: [
@@ -67,6 +69,13 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT,
     WBTC,
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Mainnet] as Token,
+  ].map(buildPartialCurrencyInfo),
+
+  [UniverseChainId.Sepolia]: [
+    nativeOnChain(UniverseChainId.Sepolia),
+    WRAPPED_NATIVE_CURRENCY[UniverseChainId.Sepolia] as Token,
+    USDC_SEPOLIA,
+    UNI[UniverseChainId.Sepolia],
   ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.ArbitrumOne]: [
@@ -79,12 +88,14 @@ export const COMMON_BASES: ChainCurrencyList = {
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.ArbitrumOne] as Token,
   ].map(buildPartialCurrencyInfo),
 
-  [UniverseChainId.Avalanche]: [
-    nativeOnChain(UniverseChainId.Avalanche),
-    DAI_AVALANCHE,
-    USDC_AVALANCHE,
-    USDT_AVALANCHE,
-    WETH_AVALANCHE,
+  [UniverseChainId.Optimism]: [
+    nativeOnChain(UniverseChainId.Optimism),
+    OP,
+    DAI_OPTIMISM,
+    USDC_OPTIMISM,
+    USDT_OPTIMISM,
+    WBTC_OPTIMISM,
+    WETH9[UniverseChainId.Optimism] as Token,
   ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Base]: [
@@ -98,22 +109,6 @@ export const COMMON_BASES: ChainCurrencyList = {
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Blast] as Token,
   ].map(buildPartialCurrencyInfo),
 
-  [UniverseChainId.Bnb]: [nativeOnChain(UniverseChainId.Bnb), DAI_BSC, USDC_BSC, USDT_BSC, ETH_BSC, BUSD_BSC].map(
-    buildPartialCurrencyInfo,
-  ),
-
-  [UniverseChainId.Celo]: [nativeOnChain(UniverseChainId.Celo), USDC_CELO].map(buildPartialCurrencyInfo),
-
-  [UniverseChainId.Optimism]: [
-    nativeOnChain(UniverseChainId.Optimism),
-    OP,
-    DAI_OPTIMISM,
-    USDC_OPTIMISM,
-    USDT_OPTIMISM,
-    WBTC_OPTIMISM,
-    WETH9[UniverseChainId.Optimism] as Token,
-  ].map(buildPartialCurrencyInfo),
-
   [UniverseChainId.Polygon]: [
     nativeOnChain(UniverseChainId.Polygon),
     WETH_POLYGON,
@@ -123,18 +118,31 @@ export const COMMON_BASES: ChainCurrencyList = {
     WBTC_POLYGON,
   ].map(buildPartialCurrencyInfo),
 
-  [UniverseChainId.Sepolia]: [
-    nativeOnChain(UniverseChainId.Sepolia),
-    WRAPPED_NATIVE_CURRENCY[UniverseChainId.Sepolia] as Token,
-    USDC_SEPOLIA,
-    UNI[UniverseChainId.Sepolia],
+  [UniverseChainId.Celo]: [
+    nativeOnChain(UniverseChainId.Celo),
+    CEUR_CELO,
+    CUSD_CELO,
+    PORTAL_ETH_CELO,
+    USDC_CELO,
+    WBTC_CELO,
   ].map(buildPartialCurrencyInfo),
 
-  [UniverseChainId.UnichainSepolia]: [
-    nativeOnChain(UniverseChainId.UnichainSepolia),
-    WRAPPED_NATIVE_CURRENCY[UniverseChainId.UnichainSepolia] as Token,
-    // TODO(WEB-5160): re-add usdc sepolia
-    // USDC_ASTROCHAIN_SEPOLIA,
+  [UniverseChainId.Bnb]: [
+    nativeOnChain(UniverseChainId.Bnb),
+    DAI_BSC,
+    USDC_BSC,
+    USDT_BSC,
+    ETH_BSC,
+    BTC_BSC,
+    BUSD_BSC,
+  ].map(buildPartialCurrencyInfo),
+
+  [UniverseChainId.Avalanche]: [
+    nativeOnChain(UniverseChainId.Avalanche),
+    DAI_AVALANCHE,
+    USDC_AVALANCHE,
+    USDT_AVALANCHE,
+    WETH_AVALANCHE,
   ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.WorldChain]: [
@@ -143,16 +151,23 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDC_WORLD_CHAIN,
   ].map(buildPartialCurrencyInfo),
 
+  [UniverseChainId.Zora]: [
+    nativeOnChain(UniverseChainId.Zora),
+    WRAPPED_NATIVE_CURRENCY[UniverseChainId.Zora] as Token,
+    USDC_ZORA,
+  ].map(buildPartialCurrencyInfo),
+
   [UniverseChainId.Zksync]: [
     nativeOnChain(UniverseChainId.Zksync),
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Zksync] as Token,
     USDC_ZKSYNC,
   ].map(buildPartialCurrencyInfo),
 
-  [UniverseChainId.Zora]: [
-    nativeOnChain(UniverseChainId.Zora),
-    WRAPPED_NATIVE_CURRENCY[UniverseChainId.Zora] as Token,
-    USDC_ZORA,
+  [UniverseChainId.AstrochainSepolia]: [
+    nativeOnChain(UniverseChainId.AstrochainSepolia),
+    WRAPPED_NATIVE_CURRENCY[UniverseChainId.AstrochainSepolia] as Token,
+    // TODO(WEB-5160): re-add usdc sepolia
+    // USDC_ASTROCHAIN_SEPOLIA,
   ].map(buildPartialCurrencyInfo),
 }
 

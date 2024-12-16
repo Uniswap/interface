@@ -1,7 +1,8 @@
 import styled from 'lib/styled-components'
 import { ChevronLeftIcon, ChevronRightIcon } from 'nft/components/icons'
-import { calculateCardIndex, calculateFirstCardIndex } from 'nft/utils'
+import { calculateCardIndex, calculateFirstCardIndex, calculateRank } from 'nft/utils'
 import { ReactNode, useCallback, useEffect, useRef } from 'react'
+import { a, useSprings } from 'react-spring'
 
 const CarouselContainer = styled.div`
   display: flex;
@@ -21,12 +22,12 @@ const CarouselCardContainer = styled.div`
   }
 `
 
-const CarouselItemCard = styled.div`
+const CarouselItemCard = styled(a.div)`
   display: flex;
   justify-content: center;
   padding: 4px 12px 32px;
   position: absolute;
-  transition: transform 0.5s ease-in-out;
+  will-change: transform;
   width: calc(100%);
   height: calc(100%);
 
@@ -67,29 +68,35 @@ export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselPro
     (i: number, firstVis: number, firstVisIdx: number) => calculateFirstCardIndex(i, firstVis, firstVisIdx, idx),
     [idx],
   )
-  const containerRef = useRef<HTMLDivElement>(null)
+  const [springs, set] = useSprings(children.length, (i) => ({
+    x: (i < children.length - 1 ? i : -1) * MAX_CARD_WIDTH,
+  }))
+  const prev = useRef([0, 1])
 
-  const updatePositions = useCallback(
-    (index: number) => {
-      const cards = containerRef.current?.children
-      if (!cards) {
-        return
-      }
-
-      Array.from(cards).forEach((card, i) => {
-        const position = getPos(i, index, 0)
-        const offset = (position - index) * MAX_CARD_WIDTH
-        ;(card as HTMLElement).style.transform = `translateX(${offset}px)`
+  const runSprings = useCallback(
+    (y: number, vy: number) => {
+      const firstVis = idx(Math.floor(y / MAX_CARD_WIDTH) % children.length)
+      const firstVisIdx = vy < 0 ? children.length - 2 : 1
+      set((i) => {
+        const position = getPos(i, firstVis, firstVisIdx)
+        const prevPosition = getPos(i, prev.current[0], prev.current[1])
+        const rank = calculateRank(firstVis, firstVisIdx, position, children.length, y)
+        return {
+          x: (-y % (MAX_CARD_WIDTH * children.length)) + MAX_CARD_WIDTH * rank,
+          immediate: vy < 0 ? prevPosition > position : prevPosition < position,
+          config: { tension: 250, friction: 30 },
+        }
       })
+      prev.current = [firstVis, firstVisIdx]
     },
-    [getPos],
+    [idx, getPos, set, children.length],
   )
 
-  useEffect(() => {
-    updatePositions(activeIndex)
-  }, [activeIndex, updatePositions])
-
   const direction = useRef(0)
+
+  useEffect(() => {
+    runSprings(activeIndex * MAX_CARD_WIDTH, direction.current)
+  }, [activeIndex, runSprings])
 
   const toggleSlide = useCallback(
     (next: -1 | 1) => {
@@ -100,7 +107,7 @@ export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselPro
   )
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       toggleSlide(1)
     }, 7_000)
     return () => {
@@ -113,9 +120,11 @@ export const Carousel = ({ children, activeIndex, toggleNextSlide }: CarouselPro
       <CarouselItemIcon onClick={() => toggleSlide(-1)}>
         <ChevronLeftIcon width="16px" height="16px" />
       </CarouselItemIcon>
-      <CarouselCardContainer ref={containerRef}>
-        {children.map((child, i) => (
-          <CarouselItemCard key={i}>{child}</CarouselItemCard>
+      <CarouselCardContainer>
+        {springs.map(({ x }, i) => (
+          <CarouselItemCard key={i} style={{ x }}>
+            {children[i]}
+          </CarouselItemCard>
         ))}
       </CarouselCardContainer>
       <CarouselItemIcon onClick={() => toggleSlide(1)}>

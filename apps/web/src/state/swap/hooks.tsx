@@ -405,7 +405,6 @@ export function useInitialCurrencyState(): {
   initialField?: CurrencyField
   initialChainId: UniverseChainId
   initialCurrencyLoading: boolean
-  triggerConnect: boolean
 } {
   const { chainId, setIsUserSelectedToken } = useMultichainContext()
   const { defaultChainId } = useEnabledChains()
@@ -481,6 +480,5 @@ export function useInitialCurrencyState(): {
     initialField,
     initialChainId,
     initialCurrencyLoading: false,
-    triggerConnect: !!parsedQs.connect,
   }
 }

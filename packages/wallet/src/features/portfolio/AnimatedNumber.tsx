@@ -92,7 +92,7 @@ const RollNumber = ({
     return {
       color: fontColor.value,
     }
-  }, [fontColor])
+  }, [fontColor.value])
 
   const numbers = NUMBER_ARRAY.map((char, idx) => {
     // Web doesn't like standard Animated.Text custom fonts but Text from Tamagui doesn't like color animations
@@ -132,7 +132,7 @@ const RollNumber = ({
     return {
       transform: [{ translateY: withTiming(yOffset.value) }],
     }
-  }, [yOffset])
+  }, [yOffset.value])
 
   if (digit && !Number.isNaN(parseFloat(digit)) && Number(digit) >= 0) {
     return (
@@ -331,7 +331,7 @@ const ReanimatedNumber = ({
     return {
       transform: [{ translateX: -SCREEN_WIDTH / 2 }, { scale: scale.value }, { translateX: SCREEN_WIDTH / 2 }],
     }
-  }, [scale])
+  }, [scale.value])
 
   const fitBalanceOnLayout = (e: LayoutChangeEvent): void => {
     const newScale = (SCREEN_WIDTH - SCREEN_WIDTH_BUFFER) / e.nativeEvent.layout.width

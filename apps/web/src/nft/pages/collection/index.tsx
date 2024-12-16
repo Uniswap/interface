@@ -22,7 +22,9 @@ import { useDynamicMetatags } from 'pages/metatags'
 import { Suspense, useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { animated, easings, useSpring } from 'react-spring'
 import { ThemedText } from 'theme/components'
+import { TRANSITION_DURATIONS } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { t } from 'uniswap/src/i18n'
@@ -46,9 +48,13 @@ const CollectionContainer = styled(Column)`
   will-change: width;
 `
 
+const AnimatedCollectionContainer = animated(CollectionContainer)
+
 const CollectionAssetsContainer = styled.div<{ hideUnderneath: boolean }>`
   position: ${({ hideUnderneath }) => (hideUnderneath ? 'fixed' : 'static')};
 `
+
+const AnimatedCollectionAssetsContainer = animated(CollectionAssetsContainer)
 
 export const BannerWrapper = styled.div`
   height: 100px;
@@ -134,6 +140,23 @@ const Collection = () => {
 
   const { data: collectionStats, loading } = useCollection(contractAddress as string)
 
+  const { CollectionContainerWidthChange } = useSpring({
+    CollectionContainerWidthChange:
+      isBagExpanded && !isMobile ? (screenSize['xxxl'] ? XXXL_BAG_WIDTH : BAG_WIDTH) + 16 : 0,
+    config: {
+      duration: TRANSITION_DURATIONS.medium,
+      easing: easings.easeOutSine,
+    },
+  })
+
+  const { gridWidthOffset } = useSpring({
+    gridWidthOffset: isFiltersExpanded && !isMobile ? FILTER_WIDTH : 0,
+    config: {
+      duration: TRANSITION_DURATIONS.medium,
+      easing: easings.easeOutSine,
+    },
+  })
+
   const metaTagProperties = useMemo(() => {
     return {
       title: collectionStats.name + ' on Uniswap',
@@ -192,9 +215,9 @@ const Collection = () => {
         page={InterfacePageName.NFT_COLLECTION_PAGE}
         properties={{ collection_address: contractAddress, chain_id: chainId, is_activity_view: isActivityToggled }}
       >
-        <CollectionContainer
+        <AnimatedCollectionContainer
           style={{
-            width: `calc(100% - ${isBagExpanded && !isMobile ? (screenSize['xxxl'] ? XXXL_BAG_WIDTH : BAG_WIDTH) + 16 : 0}px)`,
+            width: CollectionContainerWidthChange.to((x) => `calc(100% - ${x as number}px)`),
           }}
         >
           {contractAddress && !blocklistedCollections.includes(contractAddress) ? (
@@ -234,11 +257,11 @@ const Collection = () => {
                   )}
                 </FiltersContainer>
 
-                <CollectionAssetsContainer
+                <AnimatedCollectionAssetsContainer
                   hideUnderneath={isMobile && (isFiltersExpanded || isBagExpanded)}
                   style={{
-                    transform: `translate(${isFiltersExpanded && !isMobile ? FILTER_WIDTH : 0}px)`,
-                    width: `calc(100% - ${isFiltersExpanded && !isMobile ? FILTER_WIDTH : 0}px)`,
+                    transform: gridWidthOffset.to((x) => `translate(${x as number}px)`),
+                    width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
                   }}
                 >
                   {isActivityToggled
@@ -260,13 +283,13 @@ const Collection = () => {
                           />
                         </Suspense>
                       )}
-                </CollectionAssetsContainer>
+                </AnimatedCollectionAssetsContainer>
               </CollectionDisplaySection>
             </>
           ) : (
             <UnavailableCollectionPage isBlocked />
           )}
-        </CollectionContainer>
+        </AnimatedCollectionContainer>
       </Trace>
       <MobileHoverBag />
     </>

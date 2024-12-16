@@ -24,7 +24,6 @@ import {
   TransactionScreen,
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
 import { useAcceptedTrade } from 'uniswap/src/features/transactions/swap/hooks/useAcceptedTrade'
@@ -34,6 +33,7 @@ import { SubmitSwapButton } from 'uniswap/src/features/transactions/swap/review/
 import { SwapDetails } from 'uniswap/src/features/transactions/swap/review/SwapDetails'
 import { SwapErrorScreen } from 'uniswap/src/features/transactions/swap/review/SwapErrorScreen'
 import { TransactionAmountsReview } from 'uniswap/src/features/transactions/swap/review/TransactionAmountsReview'
+import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { SwapCallback } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { isValidSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
@@ -88,7 +88,7 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
     isFiatMode,
   } = useSwapFormContext()
 
-  const { autoSlippageTolerance, customSlippageTolerance } = useTransactionSettingsContext()
+  const { autoSlippageTolerance, customSlippageTolerance } = useSwapSettingsContext()
 
   const onSuccess = useCallback(() => {
     // On interface, the swap component stays mounted; after swap we reset the form to avoid showing the previous values.
@@ -106,7 +106,7 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
     currencyAmountsUSDValue,
     txId,
     wrapType,
-    trade: { trade, indicativeTrade }, // TODO(WEB-5823): rm indicative trade usage from review screen
+    trade: { trade, indicativeTrade },
   } = derivedSwapInfo
 
   const isWrap = isWrapAction(wrapType)

@@ -1,9 +1,9 @@
+import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/deprecated/Column'
 import Row, { RowBetween } from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { PropsWithChildren, ReactElement } from 'react'
 import { ChevronDown } from 'react-feather'
-import { HeightAnimator } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
 const ButtonContainer = styled(Row)`
@@ -53,9 +53,9 @@ export default function Expand({
           <ExpandIcon $isOpen={isOpen} size={iconSizes[iconSize]} />
         </ButtonContainer>
       </RowBetween>
-      <HeightAnimator open={isOpen}>
+      <AnimatedDropdown open={isOpen}>
         <Content gap="md">{children}</Content>
-      </HeightAnimator>
+      </AnimatedDropdown>
     </Wrapper>
   )
 }

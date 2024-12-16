@@ -2,6 +2,7 @@ import { CSSProperties } from 'react'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import {
   ARBITRUM_LOGO,
+  ASTROCHAIN_SEPOLIA_LOGO,
   AVALANCHE_LOGO,
   BASE_LOGO,
   BLAST_LOGO,
@@ -10,7 +11,6 @@ import {
   ETHEREUM_LOGO,
   OPTIMISM_LOGO,
   POLYGON_LOGO,
-  UNICHAIN_SEPOLIA_LOGO,
   WORLD_CHAIN_LOGO,
   ZKSYNC_LOGO,
   ZORA_LOGO,
@@ -127,9 +127,9 @@ export function getChainUI(chainId: UniverseChainId, darkMode: boolean): ChainUI
             bgColor: 'rgba(0, 0, 0, 0.12)',
             textColor: '#000000',
           }
-    case UniverseChainId.UnichainSepolia:
+    case UniverseChainId.AstrochainSepolia:
       return {
-        symbol: UNICHAIN_SEPOLIA_LOGO,
+        symbol: ASTROCHAIN_SEPOLIA_LOGO,
         bgColor: '#fc0fa4',
         textColor: '#fc0fa4',
       }

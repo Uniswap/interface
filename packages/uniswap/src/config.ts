@@ -67,7 +67,7 @@ export interface Config {
   quicknodeZoraRpcUrl: string
   quicknodeZkSyncRpcUrl: string
   quicknodeWorldChainRpcUrl: string
-  quicknodeUnichainSepoliaRpcUrl: string
+  quicknodeAstrochainSepoliaRpcUrl: string
   quicknodeMainnetRpcUrl: string
   quicknodeSepoliaRpcUrl: string
   tradingApiKey: string
@@ -127,7 +127,7 @@ const _config: Config = {
     process.env.REACT_APP_QUICKNODE_WORLDCHAIN_RPC_URL ||
     process.env.QUICKNODE_WORLDCHAIN_RPC_URL ||
     QUICKNODE_WORLDCHAIN_RPC_URL,
-  quicknodeUnichainSepoliaRpcUrl:
+  quicknodeAstrochainSepoliaRpcUrl:
     process.env.REACT_APP_QUICKNODE_ASTROCHAIN_SEPOLIA_RPC_URL ||
     process.env.QUICKNODE_ASTROCHAIN_SEPOLIA_RPC_URL ||
     QUICKNODE_ASTROCHAIN_SEPOLIA_RPC_URL,

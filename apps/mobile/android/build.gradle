@@ -15,6 +15,7 @@ buildscript {
     flowlayout = "0.23.1"
     kotlinSerialization = "1.5.1"
     lifecycle = "2.5.1"
+    multidexVersion = "2.0.1"
   }
   repositories {
     google()

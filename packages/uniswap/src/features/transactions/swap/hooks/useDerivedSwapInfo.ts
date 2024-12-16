@@ -7,9 +7,10 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { useSetTradeSlippage } from 'uniswap/src/features/transactions/swap/hooks/useSetTradeSlippage'
 import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { getWrapType, isWrapAction } from 'uniswap/src/features/transactions/swap/utils/wrap'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
@@ -32,7 +33,7 @@ export function useDerivedSwapInfo({
     txId,
   } = state
 
-  const { customSlippageTolerance, customDeadline, selectedProtocols } = useTransactionSettingsContext()
+  const { customSlippageTolerance, customDeadline, selectedProtocols } = useSwapSettingsContext()
 
   const account = useAccountMeta()
   const { defaultChainId } = useEnabledChains()
@@ -106,7 +107,10 @@ export function useDerivedSwapInfo({
     isDebouncing,
   }
 
-  const trade = useTrade(tradeParams)
+  const tradeTradeWithoutSlippage = useTrade(tradeParams)
+
+  // Calculate auto slippage tolerance for trade. If customSlippageTolerance is undefined, then the Trade slippage is set to the calculated value.
+  const { trade } = useSetTradeSlippage(tradeTradeWithoutSlippage, customSlippageTolerance)
 
   const displayableTrade = trade.trade ?? trade.indicativeTrade
 

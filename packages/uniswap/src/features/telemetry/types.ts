@@ -509,10 +509,6 @@ export type UniverseEventProperties = {
     expectedAmountQuoteRaw: string
     closePosition?: boolean
   } & LiquidityAnalyticsProperties
-  [LiquidityEventName.TRANSACTION_MODIFIED_IN_WALLET]: {
-    expected?: string
-    actual: string
-  } & LiquidityAnalyticsProperties
   [MobileEventName.AppRating]: {
     type: 'store-review' | 'feedback-form' | 'remind'
     appRatingPromptedMs?: number

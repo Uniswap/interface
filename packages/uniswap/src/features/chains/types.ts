@@ -12,19 +12,19 @@ export function isUniverseChainId(chainId?: number | UniverseChainId | null): ch
 
 export enum UniverseChainId {
   Mainnet = UniswapSDKChainId.MAINNET,
+  Sepolia = UniswapSDKChainId.SEPOLIA,
+  Optimism = UniswapSDKChainId.OPTIMISM,
   ArbitrumOne = UniswapSDKChainId.ARBITRUM_ONE,
+  Polygon = UniswapSDKChainId.POLYGON,
   Avalanche = UniswapSDKChainId.AVALANCHE,
+  Celo = UniswapSDKChainId.CELO,
+  Bnb = UniswapSDKChainId.BNB,
   Base = UniswapSDKChainId.BASE,
   Blast = UniswapSDKChainId.BLAST,
-  Bnb = UniswapSDKChainId.BNB,
-  Celo = UniswapSDKChainId.CELO,
-  Optimism = UniswapSDKChainId.OPTIMISM,
-  Polygon = UniswapSDKChainId.POLYGON,
-  Sepolia = UniswapSDKChainId.SEPOLIA,
-  UnichainSepolia = UniswapSDKChainId.UNICHAIN_SEPOLIA,
   WorldChain = UniswapSDKChainId.WORLDCHAIN,
-  Zksync = UniswapSDKChainId.ZKSYNC,
   Zora = UniswapSDKChainId.ZORA,
+  Zksync = UniswapSDKChainId.ZKSYNC,
+  AstrochainSepolia = UniswapSDKChainId.ASTROCHAIN_SEPOLIA,
 }
 
 export const SUPPORTED_CHAIN_IDS: UniverseChainId[] = [
@@ -42,7 +42,10 @@ export const SUPPORTED_CHAIN_IDS: UniverseChainId[] = [
   UniverseChainId.Zksync,
 ]
 
-export const SUPPORTED_TESTNET_CHAIN_IDS: UniverseChainId[] = [UniverseChainId.Sepolia, UniverseChainId.UnichainSepolia]
+export const SUPPORTED_TESTNET_CHAIN_IDS: UniverseChainId[] = [
+  UniverseChainId.Sepolia,
+  UniverseChainId.AstrochainSepolia,
+]
 
 // This order is used as a fallback for chain ordering but will otherwise defer to useOrderedChainIds
 export const ALL_CHAIN_IDS: UniverseChainId[] = [...SUPPORTED_CHAIN_IDS, ...SUPPORTED_TESTNET_CHAIN_IDS]

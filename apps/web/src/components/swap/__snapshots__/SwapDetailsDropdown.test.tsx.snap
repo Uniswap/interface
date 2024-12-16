@@ -341,22 +341,16 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
             </div>
           </div>
           <div
-            class="css-view-175oi2r"
-            style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; opacity: 0; height: 0px; overflow-x: hidden; overflow-y: hidden; width: 100%;"
+            style="height: 0px; overflow: hidden; width: 100%; min-width: min-content; will-change: height;"
           >
-            <div
-              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _width-10037"
-            >
+            <div>
               <div
                 class="c17 c18"
                 data-testid="advanced-swap-details"
               >
-                <div
-                  class="css-view-175oi2r"
-                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
-                >
+                <div>
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+                    class="c2 c3 c4"
                   >
                     <div
                       class="c9 c19 css-142zc9n"
@@ -386,12 +380,9 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                     </div>
                   </div>
                 </div>
-                <div
-                  class="css-view-175oi2r"
-                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
-                >
+                <div>
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+                    class="c2 c3 c4"
                   >
                     <div
                       class="c9 c19 css-142zc9n"
@@ -412,12 +403,9 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                     </div>
                   </div>
                 </div>
-                <div
-                  class="css-view-175oi2r"
-                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
-                >
+                <div>
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+                    class="c2 c3 c4"
                   >
                     <div
                       class="c9 c19 css-142zc9n"
@@ -438,12 +426,9 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                     </div>
                   </div>
                 </div>
-                <div
-                  class="css-view-175oi2r"
-                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
-                >
+                <div>
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+                    class="c2 c3 c4"
                   >
                     <div
                       class="c9 c19 css-142zc9n"
@@ -503,12 +488,9 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
                     </div>
                   </div>
                 </div>
-                <div
-                  class="css-view-175oi2r"
-                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
-                >
+                <div>
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+                    class="c2 c3 c4"
                   >
                     <div
                       class="c9 c19 css-142zc9n"

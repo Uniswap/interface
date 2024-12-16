@@ -1,7 +1,7 @@
 import { OffScreenHandleV2, brushHandleAccentPathV2, brushHandlePathV2 } from 'components/LiquidityChartRangeInput/svg'
 import { BrushBehavior, D3BrushEvent, ScaleLinear, brushY, select } from 'd3'
 import usePrevious from 'hooks/usePrevious'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSporeColors } from 'ui/src'
 import { useTranslation } from 'uniswap/src/i18n'
 
@@ -22,19 +22,6 @@ const compare = (a: [number, number], b: [number, number], yScale: ScaleLinear<n
   return aNorm.every((v, i) => v === bNorm[i])
 }
 
-// Convert [minPrice, maxPrice] to [yMax, yMin]
-const toYScale = (extent: [number, number], yScale: ScaleLinear<number, number>): [number, number] => {
-  return [yScale(extent[1]), yScale(extent[0])]
-}
-
-// Convert [yMax, yMin] to [minPrice, maxPrice]
-const toPriceExtent = (selection: [number, number], yScale: ScaleLinear<number, number>): [number, number] => {
-  return [yScale.invert(selection[1]), yScale.invert(selection[0])]
-}
-
-const normalizeExtent = (extent: [number, number]): [number, number] =>
-  extent[0] < extent[1] ? extent : [extent[1], extent[0]]
-
 export const Brush2 = ({
   id,
   yScale,
@@ -44,15 +31,16 @@ export const Brush2 = ({
   hideHandles,
   width,
   height,
+  offset,
 }: {
   id: string
   yScale: ScaleLinear<number, number>
   interactive: boolean
-  // [min, max] price values
   brushExtent: [number, number]
   setBrushExtent: (extent: [number, number], mode: string | undefined) => void
   width: number
   height: number
+  offset: number
   hideHandles?: boolean
 }) => {
   const colors = useSporeColors()
@@ -66,6 +54,29 @@ export const Brush2 = ({
 
   const previousBrushExtent = usePrevious(brushExtent)
 
+  const effectiveBrushWidth = width - offset
+
+  const brushed = useCallback(
+    (event: D3BrushEvent<unknown>) => {
+      const { type, selection, mode } = event
+
+      if (!selection) {
+        setLocalBrushExtent(null)
+        return
+      }
+
+      const scaled = (selection as [number, number]).map(yScale.invert) as [number, number]
+
+      // avoid infinite render loop by checking for change
+      if (type === 'end' && !compare(brushExtent, scaled, yScale)) {
+        setBrushExtent(scaled, mode)
+      }
+
+      setLocalBrushExtent(scaled)
+    },
+    [yScale, brushExtent, setBrushExtent],
+  )
+
   // keep local and external brush extent in sync
   // i.e. snap to ticks on brush end
   useEffect(() => {
@@ -78,52 +89,21 @@ export const Brush2 = ({
       return
     }
 
-    const normalizedExtent = normalizeExtent(brushExtent)
-    const scaledExtent = toYScale(normalizedExtent, yScale)
-
     brushBehavior.current = brushY<SVGGElement>()
       .extent([
-        // x0, y0 (top left)
-        [0, BRUSH_EXTENT_MARGIN_PX],
-        // x1, y1 (bottom right)
+        [0, Math.max(0, yScale(0) + BRUSH_EXTENT_MARGIN_PX)],
         [width, height - BRUSH_EXTENT_MARGIN_PX],
       ])
       .handleSize(30)
       .filter(() => interactive)
-      .on('brush', (event: D3BrushEvent<unknown>) => {
-        const { selection } = event
-
-        if (!selection) {
-          setLocalBrushExtent(null)
-          return
-        }
-
-        // Update only the local extent during dragging
-        const priceExtent = normalizeExtent(toPriceExtent(selection as [number, number], yScale))
-        setLocalBrushExtent(priceExtent)
-      })
-      .on('end', (event: D3BrushEvent<unknown>) => {
-        const { selection, mode } = event
-
-        if (!selection) {
-          setLocalBrushExtent(null)
-          return
-        }
-
-        // Finalize state update on end
-        const priceExtent = normalizeExtent(toPriceExtent(selection as [number, number], yScale))
-        if (!compare(normalizedExtent, priceExtent, yScale)) {
-          setBrushExtent(priceExtent, mode)
-        }
-        setLocalBrushExtent(priceExtent)
-      })
+      .on('brush end', brushed)
 
     brushBehavior.current(select(brushRef.current))
 
-    if (previousBrushExtent && compare(normalizedExtent, normalizeExtent(previousBrushExtent), yScale)) {
+    if (previousBrushExtent && compare(brushExtent, previousBrushExtent, yScale)) {
       select(brushRef.current)
         .transition()
-        .call(brushBehavior.current.move as any, scaledExtent)
+        .call(brushBehavior.current.move as any, brushExtent.map(yScale))
     }
 
     // brush linear gradient
@@ -132,8 +112,7 @@ export const Brush2 = ({
       .attr('stroke', 'none')
       .attr('fill-opacity', '0.1')
       .attr('fill', `url(#${id}-gradient-selection)`)
-      .attr('cursor', 'grab')
-  }, [brushExtent, id, height, interactive, previousBrushExtent, yScale, width, setBrushExtent])
+  }, [brushExtent, brushed, id, height, interactive, previousBrushExtent, yScale, offset, effectiveBrushWidth, width])
 
   // respond to yScale changes only
   useEffect(() => {
@@ -141,25 +120,21 @@ export const Brush2 = ({
       return
     }
 
-    brushBehavior.current.move(
-      select(brushRef.current) as any,
-      normalizeExtent(toYScale(brushExtent as [number, number], yScale)),
-    )
+    brushBehavior.current.move(select(brushRef.current) as any, brushExtent.map(yScale) as any)
   }, [brushExtent, yScale])
 
-  const normalizedBrushExtent = normalizeExtent(localBrushExtent ?? brushExtent)
-  const flipNorthHandle = yScale(normalizedBrushExtent[1]) < FLIP_HANDLE_THRESHOLD_PX
-  const flipSouthHandle = yScale(normalizedBrushExtent[0]) > height - FLIP_HANDLE_THRESHOLD_PX
+  // variables to help render the SVGs
+  const flipNorthHandle = localBrushExtent && yScale(localBrushExtent[0]) > FLIP_HANDLE_THRESHOLD_PX
+  const flipSouthHandle = localBrushExtent && yScale(localBrushExtent[1]) > height - FLIP_HANDLE_THRESHOLD_PX
 
-  const showNorthArrow =
-    normalizedBrushExtent && (yScale(normalizedBrushExtent[0]) < 0 || yScale(normalizedBrushExtent[1]) < 0)
+  const showNorthArrow = localBrushExtent && (yScale(localBrushExtent[0]) < 0 || yScale(localBrushExtent[1]) < 0)
   const showSouthArrow =
-    normalizedBrushExtent && (yScale(normalizedBrushExtent[0]) > height || yScale(normalizedBrushExtent[1]) > height)
+    localBrushExtent && (yScale(localBrushExtent[0]) > height || yScale(localBrushExtent[1]) > height)
 
-  const southHandleInView =
-    normalizedBrushExtent && yScale(normalizedBrushExtent[0]) >= 0 && yScale(normalizedBrushExtent[0]) <= height
   const northHandleInView =
-    normalizedBrushExtent && yScale(normalizedBrushExtent[1]) >= 0 && yScale(normalizedBrushExtent[1]) <= height
+    localBrushExtent && yScale(localBrushExtent[0]) >= 0 && yScale(localBrushExtent[0]) <= height
+  const southHandleInView =
+    localBrushExtent && yScale(localBrushExtent[1]) >= 0 && yScale(localBrushExtent[1]) <= height
 
   return useMemo(
     () => (
@@ -172,7 +147,7 @@ export const Brush2 = ({
 
           {/* clips at exactly the svg area */}
           <clipPath id={`${id}-brush-clip`}>
-            <rect x={0} y="0" width={width} height={height} />
+            <rect x={offset} y="0" width={effectiveBrushWidth} height={height} />
           </clipPath>
         </defs>
 
@@ -180,12 +155,12 @@ export const Brush2 = ({
         <g ref={brushRef} clipPath={`url(#${id}-brush-clip)`} />
 
         {/* custom brush handles */}
-        {normalizedBrushExtent && !hideHandles && (
+        {localBrushExtent && !hideHandles && (
           <>
             {northHandleInView ? (
               <g
-                transform={`translate(0, ${Math.max(0, yScale(normalizedBrushExtent[1]))}), scale(1, ${
-                  flipNorthHandle ? '1' : '-1'
+                transform={`translate(${offset}, ${Math.max(0, yScale(localBrushExtent[0]))}), scale(1, ${
+                  flipNorthHandle ? '-1' : '1'
                 })`}
                 cursor={interactive ? 'ns-resize' : 'default'}
                 pointerEvents="none"
@@ -195,14 +170,14 @@ export const Brush2 = ({
                     color={colors.neutral2.val}
                     stroke={colors.neutral2.val}
                     opacity={0.6}
-                    d={brushHandlePathV2(width)}
+                    d={brushHandlePathV2(effectiveBrushWidth)}
                   />
                   <path
                     color={colors.neutral2.val}
                     stroke={colors.neutral2.val}
                     strokeWidth={4}
                     strokeLinecap="round"
-                    d={brushHandleAccentPathV2(width)}
+                    d={brushHandleAccentPathV2(effectiveBrushWidth)}
                   />
                 </g>
               </g>
@@ -210,7 +185,7 @@ export const Brush2 = ({
 
             {southHandleInView ? (
               <g
-                transform={`translate(0, ${yScale(normalizedBrushExtent[0])}), scale(1, ${flipSouthHandle ? '-1' : '1'})`}
+                transform={`translate(${offset}, ${yScale(localBrushExtent[1])}), scale(1, ${flipSouthHandle ? '-1' : '1'})`}
                 cursor={interactive ? 'ns-resize' : 'default'}
                 pointerEvents="none"
               >
@@ -219,42 +194,49 @@ export const Brush2 = ({
                     color={colors.neutral2.val}
                     stroke={colors.neutral2.val}
                     opacity={0.6}
-                    d={brushHandlePathV2(width)}
+                    d={brushHandlePathV2(effectiveBrushWidth)}
                   />
                   <path
                     color={colors.neutral2.val}
                     stroke={colors.neutral2.val}
                     strokeWidth={4}
                     strokeLinecap="round"
-                    d={brushHandleAccentPathV2(width)}
+                    d={brushHandleAccentPathV2(effectiveBrushWidth)}
                   />
                 </g>
               </g>
             ) : null}
 
             {showNorthArrow && (
-              <g transform="translate(18, 16) scale(1,-1)">
+              <g transform={`translate(${width - 18}, 16) scale(1, -1)`}>
+                <OffScreenHandleV2 color={colors.accent1.val} />
+                {!showSouthArrow && (
+                  <text
+                    transform="scale(-1, 1)"
+                    x={10}
+                    y={5}
+                    fill={colors.accent1.val}
+                    fontSize={10}
+                    alignmentBaseline="middle"
+                  >
+                    {t('range.outOfView')}
+                  </text>
+                )}
+              </g>
+            )}
+            {showSouthArrow && (
+              <g transform={`translate(${width - 18}, ${height - 16}) `}>
                 <OffScreenHandleV2 color={colors.accent1.val} />
                 <text
-                  x={14}
+                  transform="scale(-1, -1)"
+                  x={10}
                   y={-3}
                   fill={colors.accent1.val}
                   fontSize={10}
                   alignmentBaseline="middle"
-                  transform="scale(1,-1)"
                 >
                   {t('range.outOfView')}
                 </text>
-              </g>
-            )}
-            {showSouthArrow && (
-              <g transform={`translate(18, ${height - 16}) `}>
-                <OffScreenHandleV2 color={colors.accent1.val} />
-                {!showNorthArrow && (
-                  <text x={14} y={5} fill={colors.accent1.val} fontSize={10} alignmentBaseline="middle">
-                    {t('range.outOfView')}
-                  </text>
-                )}
               </g>
             )}
           </>
@@ -263,11 +245,11 @@ export const Brush2 = ({
     ),
     [
       id,
-      colors.accent1.val,
-      colors.neutral2.val,
-      width,
+      colors,
+      offset,
+      effectiveBrushWidth,
       height,
-      normalizedBrushExtent,
+      localBrushExtent,
       hideHandles,
       northHandleInView,
       yScale,
@@ -276,6 +258,7 @@ export const Brush2 = ({
       southHandleInView,
       flipSouthHandle,
       showNorthArrow,
+      width,
       t,
       showSouthArrow,
     ],

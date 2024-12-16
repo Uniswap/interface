@@ -248,11 +248,7 @@ export default function Pool() {
                 {currentPageItems.map((position) => {
                   return (
                     position && (
-                      <Link
-                        key={`${position.poolId}-${position.tokenId}-${position.chainId}`}
-                        style={{ textDecoration: 'none' }}
-                        to={getPositionUrl(position)}
-                      >
+                      <Link style={{ textDecoration: 'none' }} to={getPositionUrl(position)}>
                         <LiquidityPositionCard
                           isClickableStyle
                           key={`LiquidityPositionCard-${position?.tokenId}`}
@@ -368,13 +364,7 @@ export default function Pool() {
                 text={t('liquidity.provideOnProtocols')}
                 link={uniswapUrls.helpArticleUrls.providingLiquidityInfo}
               />
-              {isV4DataEnabled && (
-                <LearnMoreTile
-                  img={V4_HOOK}
-                  text={t('liquidity.hooks')}
-                  link={uniswapUrls.helpArticleUrls.v4HooksInfo}
-                />
-              )}
+              <LearnMoreTile img={V4_HOOK} text={t('liquidity.hooks')} link={uniswapUrls.helpArticleUrls.v4HooksInfo} />
             </Flex>
             <ExternalArrowLink href={uniswapUrls.helpArticleUrls.positionsLearnMore}>
               {t('common.button.learn')}

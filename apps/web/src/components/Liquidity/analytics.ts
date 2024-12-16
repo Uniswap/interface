@@ -57,8 +57,7 @@ export function getLiquidityEventName(
 ):
   | LiquidityEventName.ADD_LIQUIDITY_SUBMITTED
   | LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED
-  | LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED
-  | LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED {
+  | LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED {
   switch (stepType) {
     case TransactionStepType.IncreasePositionTransaction:
     case TransactionStepType.IncreasePositionTransactionAsync:
@@ -68,8 +67,6 @@ export function getLiquidityEventName(
     case TransactionStepType.MigratePositionTransactionStep:
     case TransactionStepType.MigratePositionTransactionStepAsync:
       return LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED
-    case TransactionStepType.CollectFeesTransactionStep:
-      return LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED
     default:
       throw new Error('Unexpected step type')
   }

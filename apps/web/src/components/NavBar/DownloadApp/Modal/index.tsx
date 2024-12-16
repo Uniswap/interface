@@ -1,8 +1,10 @@
 import { InterfaceModalName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import Modal from 'components/Modal'
+import { useIsAccountCTAExperimentControl } from 'components/NavBar/accountCTAsExperimentUtils'
 import { GetStarted } from 'components/NavBar/DownloadApp/Modal/GetStarted'
 import { GetTheApp } from 'components/NavBar/DownloadApp/Modal/GetTheApp'
-import { useIsAccountCTAExperimentControl } from 'components/NavBar/accountCTAsExperimentUtils'
+import styled from 'lib/styled-components'
 import { useCallback, useState } from 'react'
 import { ArrowLeft, X } from 'react-feather'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
@@ -10,9 +12,11 @@ import { ApplicationModal } from 'state/application/reducer'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { AnimateTransition, Flex, styled as tamaguiStyled } from 'ui/src'
 import { iconSizes, zIndices } from 'ui/src/theme'
-import { Modal } from 'uniswap/src/components/modals/Modal'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+
+const StyledModal = styled(Modal)`
+  display: block;
+`
 
 const HeaderActionIcon = {
   margin: 4,
@@ -63,12 +67,12 @@ export function GetTheAppModal() {
 
   return (
     <Trace modal={InterfaceModalName.GETTING_STARTED_MODAL}>
-      <Modal
-        name={ModalName.DownloadApp}
-        isModalOpen={isOpen}
+      <StyledModal
+        isOpen={isOpen}
         maxWidth={isAccountCTAExperimentControl ? 620 : 700}
-        onClose={closeModal}
-        padding={0}
+        slideIn
+        onDismiss={closeModal}
+        hideBorder
       >
         <Flex
           row
@@ -108,7 +112,7 @@ export function GetTheAppModal() {
             <GetTheApp />
           </AnimateTransition>
         </Flex>
-      </Modal>
+      </StyledModal>
     </Trace>
   )
 }

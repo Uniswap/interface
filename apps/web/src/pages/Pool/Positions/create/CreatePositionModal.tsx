@@ -11,7 +11,6 @@ import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
-import { DetailLineItem } from 'components/swap/DetailLineItem'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import useSelectChain from 'hooks/useSelectChain'
 import { BaseQuoteFiatAmount } from 'pages/Pool/Positions/create/BaseQuoteFiatAmount'
@@ -29,15 +28,13 @@ import { useCallback, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
-import { Button, Flex, Separator, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
-import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
@@ -75,7 +72,7 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
   const [steps, setSteps] = useState<TransactionStep[]>([])
   const [currentStep, setCurrentStep] = useState<{ step: TransactionStep; accepted: boolean } | undefined>()
   const dispatch = useDispatch()
-  const { txInfo, gasFeeEstimateUSD, error, refetch } = useCreateTxContext()
+  const { txInfo, error, refetch } = useCreateTxContext()
   const account = useAccountMeta()
   const selectChain = useSelectChain()
   const startChainId = useAccount().chainId
@@ -281,52 +278,26 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
           {error && <TradingAPIError refetch={refetch} />}
           <PoolOutOfSyncError />
         </Flex>
-        {currentStep && steps.length > 1 ? (
-          <ProgressIndicator steps={steps} currentStep={currentStep} />
+        {currentStep ? (
+          steps.length > 1 ? (
+            <ProgressIndicator steps={steps} currentStep={currentStep} />
+          ) : (
+            <LoaderButton disabled={true} loading={true} buttonKey="create-position-confirm">
+              <Text variant="buttonLabel1" color="$white">
+                <Trans i18nKey="common.confirmWallet" />
+              </Text>
+            </LoaderButton>
+          )
+        ) : !isPoolOutOfSync || !txInfo?.action ? (
+          <Button flex={1} py="$spacing16" px="$spacing20" onPress={handleCreate} disabled={!txInfo?.action}>
+            <Text variant="buttonLabel1" color="$neutralContrast">
+              <Trans i18nKey="common.button.create" />
+            </Text>
+          </Button>
         ) : (
-          <>
-            <Separator mx="$padding12" />
-            <Flex mx="$padding12">
-              <DetailLineItem
-                LineItem={{
-                  Label: () => (
-                    <Text variant="body3" color="$neutral2">
-                      <Trans i18nKey="common.networkCost" />
-                    </Text>
-                  ),
-                  Value: () => (
-                    <Flex row gap="$gap4" alignItems="center">
-                      <NetworkLogo
-                        chainId={baseCurrency?.chainId || UniverseChainId.Mainnet}
-                        size={iconSizes.icon16}
-                        shape="square"
-                      />
-                      <Text variant="body3">
-                        {formatCurrencyAmount({ value: gasFeeEstimateUSD, type: NumberType.FiatGasPrice })}
-                      </Text>
-                    </Flex>
-                  ),
-                }}
-              />
-            </Flex>
-            {currentStep ? (
-              <LoaderButton disabled={true} loading={true} buttonKey="create-position-confirm">
-                <Text variant="buttonLabel1" color="$white">
-                  <Trans i18nKey="common.confirmWallet" />
-                </Text>
-              </LoaderButton>
-            ) : !isPoolOutOfSync || !txInfo?.action ? (
-              <Button flex={1} py="$spacing16" px="$spacing20" onPress={handleCreate} disabled={!txInfo?.action}>
-                <Text variant="buttonLabel1" color="$neutralContrast">
-                  <Trans i18nKey="common.button.create" />
-                </Text>
-              </Button>
-            ) : (
-              <ButtonError error $borderRadius="20px" onClick={handleCreate}>
-                <Trans i18nKey="common.button.create" />
-              </ButtonError>
-            )}
-          </>
+          <ButtonError error $borderRadius="20px" onClick={handleCreate}>
+            <Trans i18nKey="common.button.create" />
+          </ButtonError>
         )}
       </Flex>
     </Modal>

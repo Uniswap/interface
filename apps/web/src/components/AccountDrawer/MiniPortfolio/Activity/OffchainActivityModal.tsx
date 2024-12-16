@@ -17,6 +17,7 @@ import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTi
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
 import { OpacityHoverState } from 'components/Common/styles'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
+import Modal from 'components/Modal'
 import Column, { AutoColumn } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
@@ -32,9 +33,8 @@ import { useOrder } from 'state/signatures/hooks'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { Divider, ThemedText } from 'theme/components'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { Modal } from 'uniswap/src/components/modals/Modal'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { InterfaceEventNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -383,11 +383,9 @@ export function OffchainActivityModal() {
         />
       )}
       <Modal
-        name={ModalName.OffchainActivity}
         maxWidth={375}
-        isModalOpen={!!selectedOrderAtomValue?.modalOpen && cancelState === CancellationState.NOT_STARTED}
-        onClose={reset}
-        padding={0}
+        isOpen={!!selectedOrderAtomValue?.modalOpen && cancelState === CancellationState.NOT_STARTED}
+        onDismiss={reset}
       >
         <Wrapper data-testid="offchain-activity-modal">
           <Row justify="space-between">

@@ -1,9 +1,9 @@
 import { Extras } from '@sentry/types'
-import { localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { logErrorToDatadog, logToDatadog, logWarningToDatadog } from 'utilities/src/logger/Datadog'
 import { Sentry } from 'utilities/src/logger/Sentry'
 import { LogLevel, LoggerErrorContext, OverridesSentryFingerprint } from 'utilities/src/logger/types'
 import { isInterface, isMobileApp, isWeb } from 'utilities/src/platform'
+
 // weird temp fix: the web app is complaining about __DEV__ being global
 // i tried declaring it in a variety of places:
 //   - in web app env.d.ts and polyfills.ts files
@@ -20,7 +20,6 @@ declare global {
 const SENTRY_CHAR_LIMIT = 8192
 
 let walletDatadogEnabled = false
-const skipLogUpload = __DEV__ && !localDevDatadogEnabled
 
 /**
  * Logs a message to console. Additionally sends log to Sentry and Datadog if using 'error', 'warn', or 'info'.
@@ -42,7 +41,7 @@ export const logger = {
     logMessage('warn', fileName, functionName, message, ...args),
   error: (error: unknown, captureContext: LoggerErrorContext): void => logException(error, captureContext),
   setWalletDatadogEnabled: (enabled: boolean): void => {
-    walletDatadogEnabled = enabled || localDevDatadogEnabled
+    walletDatadogEnabled = enabled
   },
 }
 
@@ -59,7 +58,8 @@ function logMessage(
     console[level](...formatMessage(level, fileName, functionName, message), ...args)
   }
 
-  if (skipLogUpload) {
+  // Skip sending logs for dev builds
+  if (__DEV__) {
     return
   }
 
@@ -108,7 +108,8 @@ function logException(error: unknown, captureContext: LoggerErrorContext): void 
     console.error(error)
   }
 
-  if (skipLogUpload) {
+  // Skip sentry logs for dev builds
+  if (__DEV__) {
     return
   }
 

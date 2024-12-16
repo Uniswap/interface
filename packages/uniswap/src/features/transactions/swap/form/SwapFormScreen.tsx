@@ -19,20 +19,17 @@ import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { CurrencyInputPanel, CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
-import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { usePrefetchSwappableTokens } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import {
   DecimalPadCalculatedSpaceId,
   DecimalPadCalculateSpace,
   DecimalPadInput,
   DecimalPadInputRef,
 } from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPadInput'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
 import { GasAndWarningRows } from 'uniswap/src/features/transactions/swap/form/footer/GasAndWarningRows'
@@ -54,6 +51,7 @@ import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/review/Swa
 import { ProtocolPreference } from 'uniswap/src/features/transactions/swap/settings/configs/ProtocolPreference'
 import { Slippage } from 'uniswap/src/features/transactions/swap/settings/configs/Slippage'
 import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
+import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { WrapCallback } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
@@ -541,11 +539,8 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
     [focusOnCurrencyField],
   )
 
-  const isBlockedTokens =
-    getTokenWarningSeverity(currencies.input) === WarningSeverity.Blocked ||
-    getTokenWarningSeverity(currencies.output) === WarningSeverity.Blocked
   // We *always* want to show the footer on native mobile because it's used to calculate the available space for the `DecimalPad`.
-  const showFooter = Boolean(!hideFooter && (isMobileApp || (!isBlockedTokens && input && output)))
+  const showFooter = Boolean(!hideFooter && (isMobileApp || (exactAmountToken && input && output)))
 
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
@@ -679,11 +674,11 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
                     )}
                   </AnimatePresence>
                   {/* Accordion.Toggle is nested in GasAndWarningRows */}
-                  {exactAmountToken && !showWarning && <GasAndWarningRows />}
+                  {!showWarning && <GasAndWarningRows />}
                 </Flex>
               )}
             </Flex>
-            {isWeb && showFooter ? <ExpandableRows isBridge={isBridge} /> : null}
+            {isWeb ? <ExpandableRows isBridge={isBridge} /> : null}
           </Accordion.Item>
         </Accordion>
       </Flex>
@@ -805,7 +800,7 @@ function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Element | nul
   const showPriceImpactWarning = Boolean(priceImpactWarning)
   const warningColor = getAlertColor(priceImpactWarning?.severity)
 
-  const { autoSlippageTolerance, customSlippageTolerance } = useTransactionSettingsContext()
+  const { autoSlippageTolerance, customSlippageTolerance } = useSwapSettingsContext()
   const { chainId, trade } = derivedSwapInfo
 
   const swapFeeUsd = getSwapFeeUsdFromDerivedSwapInfo(derivedSwapInfo)

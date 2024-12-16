@@ -34,7 +34,6 @@ import {
   V3PriceRangeInfo,
   V4PriceRangeInfo,
 } from 'pages/Pool/Positions/create/types'
-import { useMemo } from 'react'
 import { tryParsePrice, tryParseTick } from 'state/mint/v3/utils'
 import { PositionField } from 'types/position'
 import {
@@ -44,11 +43,11 @@ import {
   CreateLPPositionResponse,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { CreatePositionTxAndGasInfo, LiquidityTransactionType } from 'uniswap/src/features/transactions/liquidity/types'
+import { getTradeSettingsDeadline } from 'uniswap/src/features/transactions/swap/form/utils'
+import { SwapSettingsState } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
-import { areCurrenciesEqual, buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
 import { getTickToPrice, getV4TickToPrice } from 'utils/getTickToPrice'
 
 type OptionalToken = Token | undefined
@@ -416,7 +415,6 @@ function createMockPair({
 
 export function getDependentAmountFromV2Pair({
   independentAmount,
-  otherAmount,
   pair,
   exactField,
   token0,
@@ -424,7 +422,6 @@ export function getDependentAmountFromV2Pair({
   dependentToken,
 }: {
   independentAmount?: CurrencyAmount<Currency>
-  otherAmount?: CurrencyAmount<Currency>
   pair?: Pair
   exactField: PositionField
   token0?: Currency
@@ -436,22 +433,16 @@ export function getDependentAmountFromV2Pair({
     return undefined
   }
 
-  try {
-    const dependentTokenAmount =
-      exactField === PositionField.TOKEN0
-        ? pair.priceOf(token0Wrapped).quote(independentAmount.wrapped)
-        : pair.priceOf(token1Wrapped).quote(independentAmount.wrapped)
+  const dependentTokenAmount =
+    exactField === PositionField.TOKEN0
+      ? pair.priceOf(token0Wrapped).quote(independentAmount.wrapped)
+      : pair.priceOf(token1Wrapped).quote(independentAmount.wrapped)
 
-    return dependentToken
-      ? dependentToken?.isNative
-        ? CurrencyAmount.fromRawAmount(dependentToken, dependentTokenAmount.quotient)
-        : dependentTokenAmount
-      : undefined
-  } catch (e) {
-    // in some cases there can be an initialized pool but there is no liquidity in which case
-    // the user can enter whatever they want for the dependent amount and that pool will be created
-    return otherAmount
-  }
+  return dependentToken
+    ? dependentToken?.isNative
+      ? CurrencyAmount.fromRawAmount(dependentToken, dependentTokenAmount.quotient)
+      : dependentTokenAmount
+    : undefined
 }
 
 export function getDependentAmountFromV3Position({
@@ -879,7 +870,6 @@ export function generateAddLiquidityApprovalParams({
   }
 
   return {
-    simulateTransaction: true,
     walletAddress: account.address,
     chainId: currencyAmounts.TOKEN0.currency.chainId,
     protocol: apiProtocolItems,
@@ -898,6 +888,7 @@ export function generateCreateCalldataQueryParams({
   priceRangeState,
   derivedPriceRangeInfo,
   derivedDepositInfo,
+  swapSettings,
 }: {
   account?: AccountMeta
   approvalCalldata?: CheckApprovalLPResponse
@@ -906,10 +897,12 @@ export function generateCreateCalldataQueryParams({
   priceRangeState: PriceRangeState
   derivedPriceRangeInfo: PriceRangeInfo
   derivedDepositInfo: DepositInfo
+  swapSettings: SwapSettingsState
 }): CreateLPPositionRequest | undefined {
   const apiProtocolItems = getProtocolItems(positionState.protocolVersion)
   const currencies = derivedPositionInfo.currencies
   const { currencyAmounts } = derivedDepositInfo
+  const { customDeadline } = swapSettings
 
   if (
     !account?.address ||
@@ -922,6 +915,8 @@ export function generateCreateCalldataQueryParams({
   }
 
   const { token0Approval, token1Approval, positionTokenApproval, permitData } = approvalCalldata ?? {}
+
+  const deadline = getTradeSettingsDeadline(customDeadline)
 
   if (derivedPositionInfo.protocolVersion === ProtocolVersion.V2) {
     if (derivedPositionInfo.protocolVersion !== derivedPriceRangeInfo.protocolVersion) {
@@ -951,6 +946,7 @@ export function generateCreateCalldataQueryParams({
       chainId: currencyAmounts.TOKEN0.currency.chainId,
       amount0: currencyAmounts[token0Index]?.quotient.toString(),
       amount1: currencyAmounts[token1Index]?.quotient.toString(),
+      deadline,
       position: {
         pool: {
           token0: getCurrencyAddressForTradingApi(currencyAmounts[token0Index]?.currency),
@@ -1009,6 +1005,7 @@ export function generateCreateCalldataQueryParams({
     currentTick,
     sqrtRatioX96,
     initialPrice,
+    deadline,
     position: {
       tickLower,
       tickUpper,
@@ -1108,27 +1105,4 @@ export function getPoolIdOrAddressFromCreatePositionInfo(positionInfo: CreatePos
     default:
       return positionInfo.pool?.poolId
   }
-}
-
-export function useCurrencyInfoWithUnwrapForTradingApi({
-  currency,
-  shouldUnwrap,
-}: {
-  currency: OptionalCurrency
-  shouldUnwrap: boolean
-}) {
-  const chainId = currency?.chainId ?? UniverseChainId.Mainnet
-  const nativeCurrencyInfo = useNativeCurrencyInfo(chainId)
-  const currencyId = currency ? (currency.isNative ? undefined : buildCurrencyId(chainId, currency.address)) : undefined
-  const currencyInfo = useCurrencyInfo(currencyId, { skip: !currencyId }) ?? nativeCurrencyInfo
-  const shouldUseUnwrappedCurrencyInfo =
-    shouldUnwrap && areCurrenciesEqual(currencyInfo?.currency, nativeCurrencyInfo?.currency.wrapped)
-
-  return useMemo(() => {
-    if (!currency) {
-      return undefined
-    }
-
-    return shouldUseUnwrappedCurrencyInfo ? nativeCurrencyInfo : currencyInfo
-  }, [currency, nativeCurrencyInfo, currencyInfo, shouldUseUnwrappedCurrencyInfo])
 }

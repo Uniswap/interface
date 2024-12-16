@@ -1,38 +1,32 @@
 import { ScaleLinear } from 'd3'
 import styled from 'lib/styled-components'
 
-const StyledLine = styled.line<{ strokeDasharray: string }>`
+const StyledLine = styled.line`
   opacity: 0.5;
   stroke-width: 1;
   stroke: ${({ theme }) => theme.neutral2};
-  stroke-dasharray: ${({ strokeDasharray }) => strokeDasharray};
+  stroke-dasharray: '2, 5';
   fill: none;
 `
 
 export const HorizontalLine = ({
   value,
   yScale,
+  xScale,
   width,
-  containerWidth,
-  lineStyle = 'dashed',
 }: {
   value: number
   yScale: ScaleLinear<number, number>
+  xScale: ScaleLinear<number, number>
   width: number
-  containerWidth: number
-  lineStyle?: 'solid' | 'dashed'
 }) => {
-  const lineStart = containerWidth - width
-
+  const lineStart = xScale(0)
   if (isNaN(lineStart)) {
     return null
   }
-
-  const strokeDasharray = lineStyle === 'dashed' ? '1, 4' : 'none'
-
   return (
     <StyledLine
-      strokeDasharray={strokeDasharray}
+      style={{ strokeDasharray: '1, 4' }}
       y1={yScale(value)}
       x1={lineStart}
       y2={yScale(value)}

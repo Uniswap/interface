@@ -29,7 +29,6 @@ export type SwapFormState = {
   isSubmitting: boolean
   hideFooter?: boolean
   hideSettings?: boolean
-  prefilledCurrencies?: TradeableAsset[]
 }
 
 type DerivedSwapFormState = {
@@ -182,9 +181,6 @@ export function SwapFormContextProvider({
       hideFooter,
       hideSettings,
       updateSwapForm,
-      prefilledCurrencies: [prefilledState?.input, prefilledState?.output].filter((asset): asset is TradeableAsset =>
-        Boolean(asset),
-      ),
     }),
     [
       swapForm.exactAmountFiat,
@@ -202,7 +198,6 @@ export function SwapFormContextProvider({
       hideSettings,
       hideFooter,
       updateSwapForm,
-      prefilledState,
     ],
   )
 

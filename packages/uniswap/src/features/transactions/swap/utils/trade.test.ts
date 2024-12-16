@@ -29,6 +29,7 @@ describe(requireAcceptNewTrade, () => {
       v2Routes: [],
       mixedRoutes: [],
       tradeType: TradeType.EXACT_INPUT,
+      slippageTolerance: 0.5,
       deadline: Date.now() + 60 * 30 * 1000,
     })
 
@@ -46,6 +47,7 @@ describe(requireAcceptNewTrade, () => {
         v2Routes: [],
         mixedRoutes: [],
         tradeType: TradeType.EXACT_INPUT,
+        slippageTolerance: 0.5,
         deadline: Date.now() + 60 * 30 * 1000,
       })
       expect(requireAcceptNewTrade(oldTrade, newTrade)).toBe(false)
@@ -65,6 +67,7 @@ describe(requireAcceptNewTrade, () => {
         v2Routes: [],
         mixedRoutes: [],
         tradeType: TradeType.EXACT_INPUT,
+        slippageTolerance: 0.5,
         deadline: Date.now() + 60 * 30 * 1000,
       })
       expect(requireAcceptNewTrade(oldTrade, newTrade)).toBe(true)
@@ -83,6 +86,7 @@ describe(requireAcceptNewTrade, () => {
         v2Routes: [],
         mixedRoutes: [],
         tradeType: TradeType.EXACT_INPUT,
+        slippageTolerance: 0.5,
         deadline: Date.now() + 60 * 30 * 1000,
       })
       expect(requireAcceptNewTrade(oldTrade, newTrade)).toBe(false)

@@ -7,10 +7,8 @@
 const { getMetroAndroidAssetsResolutionFix } = require('react-native-monorepo-tools')
 const androidAssetsResolutionFix = getMetroAndroidAssetsResolutionFix()
 
-const withStorybook = require('@storybook/react-native/metro/withStorybook')
-
 const path = require('path')
-const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config')
+const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
 
 const mobileRoot = path.resolve(__dirname)
 const workspaceRoot = path.resolve(mobileRoot, '../..')
@@ -19,18 +17,18 @@ const watchFolders = [mobileRoot, `${workspaceRoot}/node_modules`, `${workspaceR
 
 const detoxExtensions = process.env.DETOX_MODE === 'mocked' ? ['mock.tsx', 'mock.ts'] : []
 
-const defaultConfig = getDefaultConfig(__dirname)
+const defaultConfig = getDefaultConfig(__dirname);
 
 const {
   resolver: { sourceExts, assetExts },
-} = defaultConfig
+} = defaultConfig;
 
 const config = {
   resolver: {
     nodeModulesPaths: [`${workspaceRoot}/node_modules`],
     assetExts: assetExts.filter((ext) => ext !== 'svg'),
     // detox mocking works properly only being spreaded at the beginning of sourceExts array
-    sourceExts: [...detoxExtensions, ...sourceExts, 'svg', 'cjs'],
+    sourceExts: [...detoxExtensions, ...sourceExts, 'svg', 'cjs']
   },
   transformer: {
     getTransformOptions: async () => ({
@@ -50,11 +48,4 @@ const config = {
   watchFolders,
 }
 
-// Checkout more useful options in the docs: https://github.com/storybookjs/react-native?tab=readme-ov-file#options
-module.exports = withStorybook(mergeConfig(defaultConfig, config), {
-  // Set to false to remove storybook specific options
-  // you can also use a env variable to set this
-  enabled: process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test',
-  // Path to your storybook config
-  configPath: path.resolve(__dirname, './.storybook'),
-})
+module.exports = mergeConfig(defaultConfig, config);

@@ -1,11 +1,11 @@
 import { LoadingRow } from 'components/Loader/styled'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { RowBetween } from 'components/deprecated/Row'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import useHoverProps from 'hooks/useHoverProps'
 import styled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
 import { ThemedText } from 'theme/components'
-import { Flex } from 'ui/src'
 
 export type LineItemData = {
   Label: React.FC
@@ -62,13 +62,13 @@ function ValueWrapper({ children, lineItem, labelHovered, syncing }: ValueWrappe
 export function DetailLineItem({ LineItem, syncing }: { LineItem: LineItemData; syncing?: boolean }) {
   const [labelHovered, hoverProps] = useHoverProps()
   return (
-    <Flex row alignItems="center" justifyContent="space-between" width="100%">
+    <RowBetween>
       <LabelText {...hoverProps} hasTooltip={!!LineItem.TooltipBody} data-testid="swap-li-label">
         <LineItem.Label />
       </LabelText>
       <ValueWrapper lineItem={LineItem} labelHovered={labelHovered} syncing={syncing ?? false}>
         <LineItem.Value />
       </ValueWrapper>
-    </Flex>
+    </RowBetween>
   )
 }

@@ -1,11 +1,9 @@
-import { useQuery } from '@tanstack/react-query'
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency } from '@uniswap/sdk-core'
-import { calculateTokensLocked } from 'components/Charts/LiquidityChart'
 import { ChartEntry } from 'components/LiquidityChartRangeInput/types'
 import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TickProcessed } from 'utils/computeSurroundingTicks'
 
@@ -45,9 +43,9 @@ export function useDensityChartData({
     hooks,
   })
 
-  const fetcher = async () => {
-    if (!data?.length || !currencyA || !currencyB || !feeAmount) {
-      return null
+  const formatData = useCallback(() => {
+    if (!data?.length) {
+      return undefined
     }
 
     const newData: ChartEntry[] = []
@@ -57,20 +55,10 @@ export function useDensityChartData({
 
       const price0 = invertPrices ? t.sdkPrice.invert().toSignificant(8) : t.sdkPrice.toSignificant(8)
 
-      // TODO: update this to calculate v4 amounts too.
-      const { amount0Locked, amount1Locked } = await calculateTokensLocked(
-        currencyA?.wrapped,
-        currencyB?.wrapped,
-        feeAmount,
-        t,
-      )
-
       const chartEntry = {
         activeLiquidity: parseFloat(t.liquidityActive.toString()),
         price0: parseFloat(price0),
         tick: t.tick,
-        amount0Locked: invertPrices ? amount0Locked : amount1Locked,
-        amount1Locked: invertPrices ? amount1Locked : amount0Locked,
       }
 
       if (chartEntry.activeLiquidity > 0) {
@@ -79,29 +67,13 @@ export function useDensityChartData({
     }
 
     return newData
-  }
-
-  const { data: formattedData } = useQuery({
-    queryKey: [
-      'densityChartData',
-      poolId,
-      currencyA,
-      currencyB,
-      feeAmount,
-      invertPrices,
-      version,
-      chainId,
-      tickSpacing,
-      data,
-    ],
-    queryFn: fetcher,
-  })
+  }, [data, invertPrices])
 
   return useMemo(() => {
     return {
-      isLoading: isLoading || (Boolean(data) && !formattedData),
+      isLoading,
       error,
-      formattedData: isLoading ? undefined : formattedData,
+      formattedData: !isLoading ? formatData() : undefined,
     }
-  }, [data, error, formattedData, isLoading])
+  }, [isLoading, error, formatData])
 }

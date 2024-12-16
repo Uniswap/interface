@@ -5,6 +5,7 @@ import { TransactionSummary } from 'components/AccountDetails/TransactionSummary
 import Badge from 'components/Badge/Badge'
 import { ButtonLight, ButtonPrimary } from 'components/Button/buttons'
 import { ChainLogo } from 'components/Logo/ChainLogo'
+import Modal from 'components/Modal'
 import AnimatedConfirmation from 'components/TransactionConfirmationModal/AnimatedConfirmation'
 import { AutoColumn, ColumnCenter } from 'components/deprecated/Column'
 import Row, { RowBetween, RowFixed } from 'components/deprecated/Row'
@@ -16,13 +17,11 @@ import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { useTransaction } from 'state/transactions/hooks'
 import { isConfirmedTx } from 'state/transactions/utils'
 import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
-import { Modal } from 'uniswap/src/components/modals/Modal'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
@@ -341,13 +340,7 @@ export default function TransactionConfirmationModal({
 
   // confirmation screen
   return (
-    <Modal
-      name={ModalName.TransactionConfirmation}
-      isModalOpen={isOpen}
-      onClose={onDismiss}
-      maxHeight={700}
-      padding={0}
-    >
+    <Modal isOpen={isOpen} $scrollOverlay={true} onDismiss={onDismiss} maxHeight="90vh">
       {isL2ChainId(chainId) && (hash || attemptingTxn) ? (
         <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
       ) : attemptingTxn ? (

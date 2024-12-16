@@ -16,7 +16,6 @@ import {
   toTradingApiSupportedChainId,
   transformTradingApiResponseToTrade,
   useQuoteRoutingParams,
-  useQuoteSlippageParams,
   validateTrade,
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -66,18 +65,7 @@ export function useTrade({
   const activeGasStrategy = useActiveGasStrategy(tokenInChainId, 'swap')
   const shadowGasStrategies = useShadowGasStrategies(tokenInChainId, 'swap')
 
-  const routingParams = useQuoteRoutingParams({
-    selectedProtocols,
-    tokenInChainId: currencyIn?.chainId,
-    tokenOutChainId: currencyOut?.chainId,
-    isUSDQuote,
-  })
-  const slippageParams = useQuoteSlippageParams({
-    customSlippageTolerance,
-    tokenInChainId: currencyIn?.chainId,
-    tokenOutChainId: currencyOut?.chainId,
-    isUSDQuote,
-  })
+  const routingParams = useQuoteRoutingParams(selectedProtocols, currencyIn?.chainId, currencyOut?.chainId, isUSDQuote)
 
   const requestTradeType =
     tradeType === TradeType.EXACT_INPUT ? TradingApiTradeType.EXACT_INPUT : TradingApiTradeType.EXACT_OUTPUT
@@ -98,35 +86,35 @@ export function useTrade({
       return undefined
     }
     return {
-      amount: amount.quotient.toString(),
-      gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])],
-      isUSDQuote,
-      swapper: activeAccountAddress ?? UNCONNECTED_ADDRESS,
-      tokenIn: tokenInAddress,
-      tokenInChainId,
-      tokenOut: tokenOutAddress,
-      tokenOutChainId,
       type: requestTradeType,
-      urgency: SWAP_GAS_URGENCY_OVERRIDE,
+      amount: amount.quotient.toString(),
+      swapper: activeAccountAddress ?? UNCONNECTED_ADDRESS,
+      tokenInChainId,
+      tokenOutChainId,
+      tokenIn: tokenInAddress,
+      tokenOut: tokenOutAddress,
+      slippageTolerance: customSlippageTolerance,
+      gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])],
       v4Enabled,
+      isUSDQuote,
+      urgency: SWAP_GAS_URGENCY_OVERRIDE,
       ...routingParams,
-      ...slippageParams,
     }
   }, [
     activeAccountAddress,
-    activeGasStrategy,
     amount,
-    isUSDQuote,
+    customSlippageTolerance,
+    activeGasStrategy,
+    shadowGasStrategies,
     requestTradeType,
     routingParams,
-    shadowGasStrategies,
     skipQuery,
-    slippageParams,
     tokenInAddress,
     tokenInChainId,
     tokenOutAddress,
     tokenOutChainId,
     v4Enabled,
+    isUSDQuote,
   ])
 
   /***** Fetch quote from trading API  ******/
@@ -166,6 +154,7 @@ export function useTrade({
     quoteRequestArgs,
     currencyIn,
     currencyOut,
+    customSlippageTolerance,
     skip: !indicativeQuotesEnabled || isUSDQuote,
   })
 
@@ -175,7 +164,7 @@ export function useTrade({
     // Error logging
     // We use DataDog to catch network errors on Mobile
     if (error && (!isMobileApp || !(error instanceof FetchError)) && !isUSDQuote) {
-      logger.error(error, { tags: { file: 'useTrade', function: 'quote' }, extra: { ...quoteRequestArgs } })
+      logger.error(error, { tags: { file: 'useTrade', function: 'quote' } })
     }
 
     if (data && !data.quote) {
@@ -207,7 +196,7 @@ export function useTrade({
         isFetching,
         trade: null,
         indicativeTrade: isLoading ? indicative.trade : undefined,
-        isIndicativeLoading: indicative.isLoading,
+        isIndicativeLoading: isDebouncing || indicative.isLoading,
         error: errorRef.current,
         gasEstimates,
       }
@@ -218,6 +207,7 @@ export function useTrade({
       currencyOut,
       tradeType,
       deadline: inXMinutesUnix(DEFAULT_SWAP_VALIDITY_TIME_MINS), // TODO(MOB-3050): set deadline as `quoteRequestArgs.deadline`
+      slippageTolerance: customSlippageTolerance,
       data,
     })
 
@@ -249,7 +239,7 @@ export function useTrade({
       isFetching,
       trade,
       indicativeTrade: indicative.trade,
-      isIndicativeLoading: indicative.isLoading,
+      isIndicativeLoading: isDebouncing || indicative.isLoading,
       error,
       gasEstimates,
     }
@@ -258,6 +248,7 @@ export function useTrade({
     amount,
     currencyIn,
     currencyOut,
+    customSlippageTolerance,
     data,
     error,
     isDebouncing,

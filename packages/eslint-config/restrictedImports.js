@@ -81,10 +81,6 @@ exports.crossPlatform = {
       name: 'ui/src/components/logos',
       message: "Please import logos directly from their respective files, e.g. `ui/src/components/logos/SpecificLogo`. This is to avoid importing the entire logos folder when only some logos are needed, which increases bundle size",
     },
-    {
-      name: 'ui/src/components/modal/AdaptiveWebModal',
-      message: 'Please import Modal from `uniswap/src/components/modals/Modal` instead. Modal uses AdaptiveWebModal under the hood but has extra logic for handling animation, mounting, and dismounting.',
-    }
   ],
   patterns: [
     ...exports.shared.patterns,

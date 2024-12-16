@@ -1,11 +1,8 @@
-import { NavigationContainer, createNavigationContainerRef } from '@react-navigation/native'
+import { createNavigationContainerRef, NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { TransitionPresets, createStackNavigator } from '@react-navigation/stack'
-import React, { useEffect } from 'react'
-import { DevSettings } from 'react-native'
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
+import React from 'react'
 import { useSelector } from 'react-redux'
-import StorybookUIRoot from 'src/../.storybook'
-import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import { renderHeaderBackButton, renderHeaderBackImage } from 'src/app/navigation/components'
 import {
   AppStackParamList,
@@ -14,7 +11,6 @@ import {
   FiatOnRampStackParamList,
   OnboardingStackParamList,
   SettingsStackParamList,
-  useAppStackNavigation,
 } from 'src/app/navigation/types'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
@@ -79,7 +75,6 @@ import {
   UnitagScreens,
   UnitagStackParamList,
 } from 'uniswap/src/types/screens/mobile'
-import { isDevEnv } from 'utilities/src/environment/env'
 import { OnboardingContextProvider } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
@@ -337,20 +332,6 @@ export function UnitagStackNavigator(): JSX.Element {
 export function AppStackNavigator(): JSX.Element {
   const finishedOnboarding = useSelector(selectFinishedOnboarding)
   useBiometricCheck()
-  const navigation = useAppStackNavigation()
-
-  useEffect(() => {
-    // Adds a menu item to navigate to Storybook in debug builds
-    if (__DEV__) {
-      DevSettings.addMenuItem('Toggle Storybook', () => {
-        if (navigationRef.getCurrentRoute()?.name === MobileScreens.Storybook) {
-          navigation.goBack()
-        } else {
-          navigation.navigate(MobileScreens.Storybook)
-        }
-      })
-    }
-  }, [navigation])
 
   return (
     <AppStack.Navigator
@@ -381,7 +362,6 @@ export function AppStackNavigator(): JSX.Element {
       <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AppStack.Screen component={EducationScreen} name={MobileScreens.Education} />
       </AppStack.Group>
-      {isDevEnv() && <AppStack.Screen component={StorybookUIRoot} name={MobileScreens.Storybook} />}
     </AppStack.Navigator>
   )
 }

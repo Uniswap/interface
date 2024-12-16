@@ -8,7 +8,7 @@ import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/fe
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapRouting, SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { TransactionSettingsState } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { SwapSettingsState } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
@@ -141,13 +141,13 @@ export function getBaseTradeAnalyticsProperties({
 }
 
 export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
-  transactionSettings,
   derivedSwapInfo,
+  swapSettings,
   formatter,
   trace,
 }: {
-  transactionSettings: TransactionSettingsState
   derivedSwapInfo: DerivedSwapInfo
+  swapSettings: SwapSettingsState
   formatter: LocalizationContextState
   trace: ITraceContext
 }): SwapTradeBaseProperties {
@@ -162,7 +162,7 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
     ? parseFloat(currencyAmountsUSDValue[CurrencyField.OUTPUT].toFixed(2))
     : undefined
 
-  const slippageTolerance = transactionSettings.customSlippageTolerance ?? transactionSettings.autoSlippageTolerance
+  const slippageTolerance = swapSettings.customSlippageTolerance ?? swapSettings.autoSlippageTolerance
 
   const portionAmount = getClassicQuoteFromResponse(derivedSwapInfo.trade?.trade?.quote)?.portionAmount
 

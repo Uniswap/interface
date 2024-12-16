@@ -15,7 +15,7 @@ import { PriceOrdering } from 'components/PositionListItem'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getPoolDetailsURL } from 'graphql/data/util'
 import { useSwitchChain } from 'hooks/useSwitchChain'
-import { ReactNode, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { MoreHorizontal } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
@@ -40,11 +40,8 @@ import { Plus } from 'ui/src/components/icons/Plus'
 import { RightArrow } from 'ui/src/components/icons/RightArrow'
 import { iconSizes } from 'ui/src/theme'
 import { ActionSheetDropdown } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
-import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
@@ -104,7 +101,6 @@ export function LiquidityPositionCard({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const isTouchDevice = useIsTouchDevice()
-  const isV4Enabled = useFeatureFlag(FeatureFlags.V4Data)
   const [pricesInverted, setPricesInverted] = useState(false)
 
   const dispatch = useAppDispatch()
@@ -144,14 +140,14 @@ export function LiquidityPositionCard({
         onPress: () => {
           dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: liquidityPosition }))
         },
-        render: (): ReactNode => <DropdownOptionRender Icon={Plus}>{t('common.addLiquidity')}</DropdownOptionRender>,
+        render: () => <DropdownOptionRender Icon={Plus}>{t('common.addLiquidity')}</DropdownOptionRender>,
       },
       {
         key: 'position-card-remove-liquidity',
         onPress: () => {
           dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: liquidityPosition }))
         },
-        render: (): ReactNode => <DropdownOptionRender Icon={Minus}>{t('pool.removeLiquidity')}</DropdownOptionRender>,
+        render: () => <DropdownOptionRender Icon={Minus}>{t('pool.removeLiquidity')}</DropdownOptionRender>,
       },
     ]
 
@@ -165,9 +161,7 @@ export function LiquidityPositionCard({
         }
         navigate(`/migrate/v2/${liquidityPosition.liquidityToken?.address ?? ''}`)
       },
-      render: (): ReactNode => (
-        <DropdownOptionRender Icon={RightArrow}>{t('pool.migrateLiquidity')}</DropdownOptionRender>
-      ),
+      render: () => <DropdownOptionRender Icon={RightArrow}>{t('pool.migrateLiquidity')}</DropdownOptionRender>,
     }
 
     if (liquidityPosition.version === ProtocolVersion.V2) {
@@ -179,9 +173,7 @@ export function LiquidityPositionCard({
       onPress: () => {
         navigate(`/migrate/v3/${chainInfo.urlParam}/${liquidityPosition.tokenId}`)
       },
-      render: (): ReactNode => (
-        <DropdownOptionRender Icon={RightArrow}>{t('pool.migrateLiquidity')}</DropdownOptionRender>
-      ),
+      render: () => <DropdownOptionRender Icon={RightArrow}>{t('pool.migrateLiquidity')}</DropdownOptionRender>,
     }
 
     return [
@@ -192,14 +184,14 @@ export function LiquidityPositionCard({
             setOpenModal({ name: ModalName.ClaimFee, initialState: { ...liquidityPosition, collectAsWeth: false } }),
           )
         },
-        render: (): ReactNode => <DropdownOptionRender Icon={Dollar}>{t('pool.collectFees')}</DropdownOptionRender>,
+        render: () => <DropdownOptionRender Icon={Dollar}>{t('pool.collectFees')}</DropdownOptionRender>,
       },
       ...v2Options,
-      isV4Enabled ? migrateV3Option : undefined,
+      migrateV3Option,
       {
         key: 'position-card-separator',
         onPress: () => null,
-        render: (): ReactNode => <Separator />,
+        render: () => <Separator />,
       },
       {
         key: 'position-card-pool-info',
@@ -210,10 +202,10 @@ export function LiquidityPositionCard({
 
           navigate(getPoolDetailsURL(liquidityPosition.poolId, toGraphQLChain(liquidityPosition.chainId)))
         },
-        render: (): ReactNode => <DropdownOptionRender Icon={InfoCircleFilled}>{t('pool.info')}</DropdownOptionRender>,
+        render: () => <DropdownOptionRender Icon={InfoCircleFilled}>{t('pool.info')}</DropdownOptionRender>,
       },
-    ].filter((option): option is MenuItemProp => option !== undefined)
-  }, [liquidityPosition, isV4Enabled, dispatch, t, account.chainId, navigate, switchChain])
+    ]
+  }, [liquidityPosition, dispatch, t, account.chainId, navigate, switchChain])
 
   const priceOrderingForChart = useMemo(() => {
     if (

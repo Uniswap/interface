@@ -211,10 +211,10 @@ jest.mock('../../../../state/transactions/hooks', () => {
         ...mockMultiStatus(
           {
             type: MockTxType.COLLECT_FEES,
-            token0CurrencyId: MockUSDC_MAINNET.address,
-            token1CurrencyId: MockDAI.address,
-            token0CurrencyAmountRaw: mockCurrencyAmountRawUSDC,
-            token1CurrencyAmountRaw: mockCurrencyAmountRaw,
+            currencyId0: MockUSDC_MAINNET.address,
+            currencyId1: MockDAI.address,
+            expectedCurrencyOwed0: mockCurrencyAmountRawUSDC,
+            expectedCurrencyOwed1: mockCurrencyAmountRaw,
           },
           '0xcollect_fees',
         ),

@@ -217,10 +217,10 @@ async function parseCollectFees(
 ): Promise<Partial<Activity>> {
   // Adapts CollectFeesTransactionInfo to generic LP type
   const {
-    token0CurrencyId: baseCurrencyId,
-    token1CurrencyId: quoteCurrencyId,
-    token0CurrencyAmountRaw: expectedAmountBaseRaw,
-    token1CurrencyAmountRaw: expectedAmountQuoteRaw,
+    currencyId0: baseCurrencyId,
+    currencyId1: quoteCurrencyId,
+    expectedCurrencyOwed0: expectedAmountBaseRaw,
+    expectedCurrencyOwed1: expectedAmountQuoteRaw,
   } = collect
   return parseLegacyLP(
     { baseCurrencyId, quoteCurrencyId, expectedAmountBaseRaw, expectedAmountQuoteRaw },

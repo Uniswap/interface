@@ -42,13 +42,7 @@ export function Switch({
   }, [checkedProp])
 
   const onCheckedChange = (val: boolean): void => {
-    // If the checked prop is undefined, we are in an uncontrolled state
-    // and should update the internal state
-    // Otherwise, we are in a controlled state and should not update the internal state
-    // (because the checked prop will be updated from the outside)
-    if (typeof checkedProp === 'undefined') {
-      setChecked(val)
-    }
+    setChecked(val)
     onCheckedChangeProp?.(val)
   }
 

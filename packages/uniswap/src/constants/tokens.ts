@@ -11,8 +11,8 @@ export const USDC_SEPOLIA = new Token(
   'USD//C',
 )
 
-export const USDC_UNICHAIN_SEPOLIA = new Token(
-  UniverseChainId.UnichainSepolia,
+export const USDC_ASTROCHAIN_SEPOLIA = new Token(
+  UniverseChainId.AstrochainSepolia,
   '0x31d0220469e10c4E71834a79b1f276d740d3768F',
   6,
   'USDC',
@@ -91,8 +91,6 @@ export const USDC_BASE = new Token(
   'USD Coin',
 )
 
-export const BTC_BSC = new Token(UniverseChainId.Bnb, '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', 18, 'BTCB', 'BTCB')
-
 export const USDC_BNB = new Token(UniverseChainId.Bnb, '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', 18, 'USDC', 'USDC')
 
 export const USDT_BNB = new Token(
@@ -102,6 +100,8 @@ export const USDT_BNB = new Token(
   'USDT',
   'TetherUSD',
 )
+
+export const BTC_BSC = new Token(UniverseChainId.Bnb, '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', 18, 'BTCB', 'BTCB')
 
 export const USDC_BSC = new Token(UniverseChainId.Bnb, '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', 18, 'USDC', 'USDC')
 
@@ -245,12 +245,28 @@ export const CELO_CELO = new Token(
   'Celo',
 )
 
+export const CEUR_CELO = new Token(
+  UniverseChainId.Celo,
+  '0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73',
+  18,
+  'cEUR',
+  'Celo Euro Stablecoin',
+)
+
 export const PORTAL_ETH_CELO = new Token(
   UniverseChainId.Celo,
   '0x66803FB87aBd4aaC3cbB3fAd7C3aa01f6F3FB207',
   18,
   'ETH',
   'Portal Ether',
+)
+
+export const WBTC_CELO = new Token(
+  UniverseChainId.Celo,
+  '0xd71Ffd0940c920786eC4DbB5A12306669b5b81EF',
+  18,
+  'WBTC',
+  'Wrapped BTC',
 )
 
 export const USDC_CELO = new Token(
@@ -365,19 +381,12 @@ export const MNW = new Token(
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
   ...(WETH9 as Record<UniverseChainId, Token>),
-  [UniverseChainId.ArbitrumOne]: new Token(
-    UniverseChainId.ArbitrumOne,
-    '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+  [UniverseChainId.Optimism]: new Token(
+    UniverseChainId.Optimism,
+    '0x4200000000000000000000000000000000000006',
     18,
     'WETH',
     'Wrapped Ether',
-  ),
-  [UniverseChainId.Avalanche]: new Token(
-    UniverseChainId.Avalanche,
-    '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
-    18,
-    'WAVAX',
-    'Wrapped AVAX',
   ),
   [UniverseChainId.Base]: new Token(
     UniverseChainId.Base,
@@ -386,30 +395,16 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
     'WETH',
     'Wrapped Ether',
   ),
-  [UniverseChainId.Blast]: new Token(
-    UniverseChainId.Blast,
-    '0x4300000000000000000000000000000000000004',
+  [UniverseChainId.ArbitrumOne]: new Token(
+    UniverseChainId.ArbitrumOne,
+    '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
     18,
     'WETH',
     'Wrapped Ether',
   ),
-  [UniverseChainId.Bnb]: new Token(
-    UniverseChainId.Bnb,
-    '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
-    18,
-    'WBNB',
-    'Wrapped BNB',
-  ),
-  [UniverseChainId.Celo]: new Token(
-    UniverseChainId.Celo,
-    '0x471ece3750da237f93b8e339c536989b8978a438',
-    18,
-    'CELO',
-    'Celo native asset',
-  ),
-  [UniverseChainId.Optimism]: new Token(
-    UniverseChainId.Optimism,
-    '0x4200000000000000000000000000000000000006',
+  [UniverseChainId.Sepolia]: new Token(
+    UniverseChainId.Sepolia,
+    '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14',
     18,
     'WETH',
     'Wrapped Ether',
@@ -421,22 +416,43 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
     'WMATIC',
     'Wrapped MATIC',
   ),
-  [UniverseChainId.Sepolia]: new Token(
-    UniverseChainId.Sepolia,
-    '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14',
+  [UniverseChainId.Celo]: new Token(
+    UniverseChainId.Celo,
+    '0x471ece3750da237f93b8e339c536989b8978a438',
     18,
-    'WETH',
-    'Wrapped Ether',
+    'CELO',
+    'Celo native asset',
   ),
-  [UniverseChainId.UnichainSepolia]: new Token(
-    UniverseChainId.UnichainSepolia,
-    '0x4200000000000000000000000000000000000006',
+  [UniverseChainId.Bnb]: new Token(
+    UniverseChainId.Bnb,
+    '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+    18,
+    'WBNB',
+    'Wrapped BNB',
+  ),
+  [UniverseChainId.Avalanche]: new Token(
+    UniverseChainId.Avalanche,
+    '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
+    18,
+    'WAVAX',
+    'Wrapped AVAX',
+  ),
+  [UniverseChainId.Blast]: new Token(
+    UniverseChainId.Blast,
+    '0x4300000000000000000000000000000000000004',
     18,
     'WETH',
     'Wrapped Ether',
   ),
   [UniverseChainId.WorldChain]: new Token(
     UniverseChainId.WorldChain,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether',
+  ),
+  [UniverseChainId.Zora]: new Token(
+    UniverseChainId.Zora,
     '0x4200000000000000000000000000000000000006',
     18,
     'WETH',
@@ -449,8 +465,8 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
     'WETH',
     'Wrapped Ether',
   ),
-  [UniverseChainId.Zora]: new Token(
-    UniverseChainId.Zora,
+  [UniverseChainId.AstrochainSepolia]: new Token(
+    UniverseChainId.AstrochainSepolia,
     '0x4200000000000000000000000000000000000006',
     18,
     'WETH',

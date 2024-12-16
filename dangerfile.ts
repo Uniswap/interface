@@ -161,7 +161,6 @@ async function processAddChanges() {
   // Check for UI package imports that are longer than needed
   const validLongerImports = [
     `'ui/src'`,
-    `'ui/src/storybook'`,
     `'ui/src/theme'`,
     `'ui/src/loading'`,
     `'ui/src/assets'`,

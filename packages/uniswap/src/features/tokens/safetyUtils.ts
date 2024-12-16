@@ -268,8 +268,8 @@ export function getModalSubtitleText({
     return null
   }
 
-  const formattedBuyFeePercent = buyFeePercent > 0 ? formatPercent(buyFeePercent) : undefined
-  const formattedSellFeePercent = sellFeePercent > 0 ? formatPercent(sellFeePercent) : undefined
+  const formattedBuyFeePercent = formatPercent(buyFeePercent)
+  const formattedSellFeePercent = formatPercent(sellFeePercent)
   const warningCopy = getModalSubtitleTokenWarningText({
     t,
     tokenProtectionWarning,
@@ -419,8 +419,8 @@ export function getCardSubtitleText({
   sellFeePercent: number
   formatPercent: (value: Maybe<string | number>) => string
 }): string | null {
-  const formattedBuyFeePercent = buyFeePercent > 0 ? formatPercent(buyFeePercent) : undefined
-  const formattedSellFeePercent = sellFeePercent > 0 ? formatPercent(sellFeePercent) : undefined
+  const formattedBuyFeePercent = formatPercent(buyFeePercent)
+  const formattedSellFeePercent = formatPercent(sellFeePercent)
   switch (tokenProtectionWarning) {
     case TokenProtectionWarning.Blocked:
       return isInterface

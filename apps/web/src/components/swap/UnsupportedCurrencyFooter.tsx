@@ -2,6 +2,7 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import { ButtonEmpty } from 'components/Button/buttons'
 import Card, { OutlineCard } from 'components/Card/cards'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import Modal from 'components/Modal'
 import { AutoColumn } from 'components/deprecated/Column'
 import { AutoRow, RowBetween } from 'components/deprecated/Row'
 import { useCurrencyInfo } from 'hooks/Tokens'
@@ -11,13 +12,10 @@ import { useState } from 'react'
 import { CloseIcon, ExternalLink, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { Text } from 'ui/src'
-import { Modal } from 'uniswap/src/components/modals/Modal'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { shortenAddress } from 'utilities/src/addresses'
 
 const DetailsFooter = styled.div<{ show: boolean }>`
   padding-top: calc(16px + 2rem);
@@ -70,12 +68,7 @@ export default function UnsupportedCurrencyFooter({
 
   return (
     <DetailsFooter show={show}>
-      <Modal
-        name={ModalName.UnsupportedCurrency}
-        isModalOpen={showDetails}
-        onClose={() => setShowDetails(false)}
-        padding={0}
-      >
+      <Modal isOpen={showDetails} onDismiss={() => setShowDetails(false)}>
         <Card padding="2rem">
           <AutoColumn gap="lg">
             <RowBetween>
@@ -122,7 +115,7 @@ function UnsupportedTokenCard({ token, chainId }: { token?: Token; chainId?: Uni
         </AutoRow>
         {chainId && (
           <ExternalLink href={getExplorerLink(chainId, token.address, ExplorerDataType.ADDRESS)}>
-            <AddressText>{shortenAddress(token.address)}</AddressText>
+            <AddressText>{token.address}</AddressText>
           </ExternalLink>
         )}
       </AutoColumn>

@@ -1,12 +1,11 @@
 import { ButtonEmpty, ButtonPrimary } from 'components/Button/buttons'
+import Modal from 'components/Modal'
 import { useConnect } from 'hooks/useConnect'
 import styled from 'lib/styled-components'
 import { useCallback } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
-import { Modal } from 'uniswap/src/components/modals/Modal'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trans } from 'uniswap/src/i18n'
 
 const Wrapper = styled.div`
@@ -40,12 +39,7 @@ export default function ConnectionErrorView() {
   }, [connection])
 
   return (
-    <Modal
-      name={ModalName.ConnectionError}
-      isModalOpen={Boolean(connection?.error)}
-      onClose={connection?.reset}
-      padding={0}
-    >
+    <Modal isOpen={Boolean(connection?.error)} onDismiss={connection?.reset}>
       <Wrapper>
         <AlertTriangleIcon />
         <ThemedText.HeadlineSmall marginBottom="8px">

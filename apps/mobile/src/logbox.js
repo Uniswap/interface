@@ -13,6 +13,8 @@ LogBox.ignoreLogs([
   'logException:ApolloClient [Network Error]:',
   // Ignore since it's difficult to filter out just these styles and they are often shared styles
   'FlashList only supports padding related props and backgroundColor in contentContainerStyle.',
+  // This is enabled conditionally in bash profile only for dev mode
+  'The native module for Flipper seems unavailable.',
   // https://docs.swmansion.com/react-native-reanimated/docs/guides/troubleshooting#reduced-motion-setting-is-enabled-on-this-device
   '[Reanimated] Reduced motion setting is enabled on this device.',
 ])

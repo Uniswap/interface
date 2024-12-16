@@ -80,7 +80,6 @@ function Step({ step, status }: { step: TransactionStep; status: StepStatus }): 
       return <LPTransactionStepRow step={step} status={status} />
     case TransactionStepType.MigratePositionTransactionStep:
     case TransactionStepType.MigratePositionTransactionStepAsync:
-    case TransactionStepType.CollectFeesTransactionStep:
       return <LPTransactionStepRow step={step} status={status} />
   }
 }

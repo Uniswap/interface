@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { DappInfo } from 'src/app/features/dapp/store'
 import {
   DappRequest,
-  isConnectionRequest,
   isSendTransactionRequest,
   SendTransactionRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
@@ -43,14 +42,6 @@ const slice = createSlice({
   initialState: initialDappRequestState,
   reducers: {
     add: (state, action: PayloadAction<DappRequestStoreItem>) => {
-      if (isConnectionRequest(action.payload.dappRequest)) {
-        // Remove existing connection requests from the same tab and of the same type
-        state.pending = state.pending.filter(
-          (request) =>
-            request.senderTabInfo.id !== action.payload.senderTabInfo.id ||
-            request.dappRequest.type !== action.payload.dappRequest.type,
-        )
-      }
       state.pending.push(action.payload)
     },
     remove: (state, action: PayloadAction<string>) => {

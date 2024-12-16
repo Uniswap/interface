@@ -70,7 +70,7 @@ function useGetMinAmount(chainId?: UniverseChainId, txType?: TransactionType): J
     case UniverseChainId.WorldChain:
     case UniverseChainId.Zora:
     case UniverseChainId.Zksync:
-    case UniverseChainId.UnichainSepolia:
+    case UniverseChainId.AstrochainSepolia:
       return MIN_L2_FOR_GAS
     default:
       logger.error(new Error('unhandled chain when getting min gas amount'), {

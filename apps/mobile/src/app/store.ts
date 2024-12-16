@@ -44,14 +44,11 @@ const dataDogReduxEnhancer = createDatadogReduxEnhancer({
   },
 })
 
-const enhancers = [dataDogReduxEnhancer]
-
-if (isNonJestDev) {
-  const reactotron = require('src/../ReactotronConfig').default
-  enhancers.push(reactotron.createEnhancer())
-}
-
 const middlewares: Middleware[] = [getFiatOnRampAggregatorApi().middleware]
+if (isNonJestDev) {
+  const createDebugger = require('redux-flipper').default
+  middlewares.push(createDebugger())
+}
 
 export const setupStore = (
   preloadedState?: PreloadedState<MobileState>,
@@ -62,7 +59,7 @@ export const setupStore = (
     preloadedState,
     additionalSagas: [rootMobileSaga],
     middlewareAfter: [...middlewares],
-    enhancers,
+    enhancers: [dataDogReduxEnhancer],
   })
 }
 export const store = setupStore()

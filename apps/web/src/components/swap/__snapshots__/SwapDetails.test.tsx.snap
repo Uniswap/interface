@@ -2,13 +2,13 @@
 
 exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
 <DocumentFragment>
-  .c12 {
+  .c6 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c21 {
+.c22 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -31,7 +31,24 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   border-radius: 4px;
 }
 
-.c13 {
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c15 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -49,7 +66,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   gap: 8px;
 }
 
-.c16 {
+.c18 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -67,34 +84,24 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   gap: 4px;
 }
 
-.c19 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
+.c8 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
 }
 
-.c20 {
+.c21 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
 }
 
-.c20 > * {
+.c21 > * {
   margin: !important;
 }
 
-.c17 {
+.c19 {
   position: relative;
   width: -webkit-fit-content;
   width: -moz-fit-content;
@@ -110,7 +117,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c6 {
+.c9 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -124,7 +131,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   background-color: #22222212;
 }
 
-.c22 {
+.c23 {
   padding: 16px;
   width: 100%;
   line-height: 24px;
@@ -163,25 +170,25 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   transform: perspective(1px) translateZ(0);
 }
 
-.c22:disabled {
+.c23:disabled {
   opacity: 50%;
   cursor: auto;
   pointer-events: none;
 }
 
-.c22 > * {
+.c23 > * {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
-.c22 > a {
+.c23 > a {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.c23 {
+.c24 {
   background-color: #FC72FF;
   font-size: 20px;
   font-weight: 535;
@@ -189,21 +196,21 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   color: #FFFFFF;
 }
 
-.c23:focus {
+.c24:focus {
   box-shadow: 0 0 0 1pt #fb58ff;
   background-color: #fb58ff;
 }
 
-.c23:hover {
+.c24:hover {
   background-color: #fb58ff;
 }
 
-.c23:active {
+.c24:active {
   box-shadow: 0 0 0 1pt #fb3fff;
   background-color: #fb3fff;
 }
 
-.c23:disabled {
+.c24:disabled {
   background-color: #22222212;
   color: #7D7D7D;
   cursor: auto;
@@ -227,7 +234,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   gap: 8px;
 }
 
-.c15 {
+.c17 {
   -webkit-filter: none;
   filter: none;
   opacity: 1;
@@ -235,31 +242,31 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   transition: opacity 250ms ease-in-out;
 }
 
-.c8 {
+.c11 {
   display: inline-block;
   height: inherit;
 }
 
-.c7 {
+.c10 {
   cursor: help;
   color: #7D7D7D;
 }
 
-.c9 {
+.c12 {
   text-align: right;
   overflow-wrap: break-word;
 }
 
-.c18 {
+.c20 {
   height: 16px;
   width: 16px;
 }
 
-.c18 > * {
+.c20 > * {
   fill: #CECECE;
 }
 
-.c10 {
+.c13 {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -291,11 +298,11 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   user-select: text;
 }
 
-.c11 {
+.c14 {
   color: #EEB317;
 }
 
-.c14 {
+.c16 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -315,7 +322,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   padding: 0px 12px 8px;
 }
 
-.c24 {
+.c25 {
   height: 56px;
 }
 
@@ -391,32 +398,29 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
               class="c3"
             />
           </button>
-          <div
-            class="css-view-175oi2r"
-            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
-          >
+          <div>
             <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+              class="c6 c7 c8"
             >
               <div
-                class="c6 c7 css-142zc9n"
+                class="c9 c10 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Rate
               </div>
               <div
-                class="c8"
+                class="c11"
               >
                 <div>
                   <div
-                    class="c6 c9 css-142zc9n"
+                    class="c9 c12 css-142zc9n"
                   >
                     <button
-                      class="c10"
+                      class="c13"
                       title="1 DEF = 1.00 ABC "
                     >
                       <div
-                        class="c6 css-142zc9n"
+                        class="c9 css-142zc9n"
                       >
                         1 DEF = 1.00 ABC 
                       </div>
@@ -428,37 +432,33 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
             </div>
           </div>
           <div
-            class="css-view-175oi2r"
-            style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; opacity: 0; height: 0px; overflow-x: hidden; overflow-y: hidden; width: 100%; margin-top: -8px;"
+            style="height: 0px; margin-top: -8px; overflow: hidden; width: 100%; min-width: min-content; will-change: height;"
           >
-            <div
-              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _width-10037"
-            >
+            <div>
               <div
-                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
+                class="c0"
               >
                 <div
-                  class="css-view-175oi2r"
-                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
+                  style="opacity: 0;"
                 >
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+                    class="c6 c7 c8"
                   >
                     <div
-                      class="c6 c7 css-142zc9n"
+                      class="c9 c10 css-142zc9n"
                       data-testid="swap-li-label"
                     >
                       Price impact
                     </div>
                     <div
-                      class="c8"
+                      class="c11"
                     >
                       <div>
                         <div
-                          class="c6 c9 css-142zc9n"
+                          class="c9 c12 css-142zc9n"
                         >
                           <span
-                            class="c11"
+                            class="c14"
                           >
                             5%
                           </span>
@@ -468,30 +468,29 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
                   </div>
                 </div>
                 <div
-                  class="css-view-175oi2r"
-                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
+                  style="opacity: 0;"
                 >
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+                    class="c6 c7 c8"
                   >
                     <div
-                      class="c6 c7 css-142zc9n"
+                      class="c9 c10 css-142zc9n"
                       data-testid="swap-li-label"
                     >
                       Max. slippage
                     </div>
                     <div
-                      class="c8"
+                      class="c11"
                     >
                       <div>
                         <div
-                          class="c6 c9 css-142zc9n"
+                          class="c9 c12 css-142zc9n"
                         >
                           <div
-                            class="c12 c13"
+                            class="c6 c15"
                           >
                             <div
-                              class="c5 c14 css-1lgneq0"
+                              class="c5 c16 css-1lgneq0"
                             >
                               Auto
                             </div>
@@ -503,24 +502,23 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
                   </div>
                 </div>
                 <div
-                  class="css-view-175oi2r"
-                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
+                  style="opacity: 0;"
                 >
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+                    class="c6 c7 c8"
                   >
                     <div
-                      class="c6 c7 css-142zc9n"
+                      class="c9 c10 css-142zc9n"
                       data-testid="swap-li-label"
                     >
                       Receive at least
                     </div>
                     <div
-                      class="c8"
+                      class="c11"
                     >
                       <div>
                         <div
-                          class="c6 c9 css-142zc9n"
+                          class="c9 c12 css-142zc9n"
                         >
                           0.00000000000000098 DEF
                         </div>
@@ -531,25 +529,22 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
               </div>
             </div>
           </div>
-          <div
-            class="css-view-175oi2r"
-            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
-          >
+          <div>
             <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+              class="c6 c7 c8"
             >
               <div
-                class="c6 c7 css-142zc9n"
+                class="c9 c10 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Fee 
               </div>
               <div
-                class="c8"
+                class="c11"
               >
                 <div>
                   <div
-                    class="c6 c9 css-142zc9n"
+                    class="c9 c12 css-142zc9n"
                   >
                     0 DEF
                   </div>
@@ -557,38 +552,35 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
               </div>
             </div>
           </div>
-          <div
-            class="css-view-175oi2r"
-            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
-          >
+          <div>
             <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+              class="c6 c7 c8"
             >
               <div
-                class="c6 c7 css-142zc9n"
+                class="c9 c10 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Network cost
               </div>
               <div
-                class="c8"
+                class="c11"
               >
                 <div>
                   <div
-                    class="c6 c9 css-142zc9n"
+                    class="c9 c12 css-142zc9n"
                   >
                     <div
-                      class="c8"
+                      class="c11"
                     >
                       <div>
                         <div
-                          class="c15"
+                          class="c17"
                         >
                           <div
-                            class="c12 c16 c17"
+                            class="c6 c18 c19"
                           >
                             <svg
-                              class="c18"
+                              class="c20"
                               fill="none"
                               height="24"
                               viewBox="0 0 24 24"
@@ -606,7 +598,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
                               class="c5 css-142zc9n"
                             >
                               <div
-                                class="c12 c13"
+                                class="c6 c15"
                               >
                                 <div>
                                   $1.00
@@ -624,10 +616,10 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
           </div>
         </div>
         <div
-          class="c12 c19 c20"
+          class="c6 c7 c21"
         >
           <button
-            class="c21 c22 c23 c24"
+            class="c22 c23 c24 c25"
             data-testid="confirm-swap-button"
             id="confirm-swap-or-send"
           >
@@ -646,13 +638,13 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
 
 exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] = `
 <DocumentFragment>
-  .c12 {
+  .c6 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c18 {
+.c19 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -675,7 +667,24 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   border-radius: 4px;
 }
 
-.c13 {
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c15 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -693,30 +702,20 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   gap: 8px;
 }
 
-.c16 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
+.c8 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
 }
 
-.c17 {
+.c18 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
 }
 
-.c17 > * {
+.c18 > * {
   margin: !important;
 }
 
@@ -728,7 +727,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   letter-spacing: -0.01em;
 }
 
-.c6 {
+.c9 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -742,7 +741,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   background-color: #22222212;
 }
 
-.c19 {
+.c20 {
   padding: 16px;
   width: 100%;
   line-height: 24px;
@@ -781,25 +780,25 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   transform: perspective(1px) translateZ(0);
 }
 
-.c19:disabled {
+.c20:disabled {
   opacity: 50%;
   cursor: auto;
   pointer-events: none;
 }
 
-.c19 > * {
+.c20 > * {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
-.c19 > a {
+.c20 > a {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.c20 {
+.c21 {
   background-color: #FC72FF;
   font-size: 20px;
   font-weight: 535;
@@ -807,21 +806,21 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   color: #FFFFFF;
 }
 
-.c20:focus {
+.c21:focus {
   box-shadow: 0 0 0 1pt #fb58ff;
   background-color: #fb58ff;
 }
 
-.c20:hover {
+.c21:hover {
   background-color: #fb58ff;
 }
 
-.c20:active {
+.c21:active {
   box-shadow: 0 0 0 1pt #fb3fff;
   background-color: #fb3fff;
 }
 
-.c20:disabled {
+.c21:disabled {
   background-color: #22222212;
   color: #7D7D7D;
   cursor: auto;
@@ -845,7 +844,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   gap: 8px;
 }
 
-.c15 {
+.c17 {
   -webkit-animation: fAQEyV 1.5s infinite;
   animation: fAQEyV 1.5s infinite;
   -webkit-animation-fill-mode: both;
@@ -858,27 +857,27 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   width: 50px;
 }
 
-.c11 {
+.c14 {
   display: inline-block;
   height: inherit;
 }
 
-.c7 {
+.c10 {
   cursor: auto;
   color: #7D7D7D;
 }
 
-.c10 {
+.c13 {
   cursor: help;
   color: #7D7D7D;
 }
 
-.c8 {
+.c11 {
   text-align: right;
   overflow-wrap: break-word;
 }
 
-.c9 {
+.c12 {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -910,7 +909,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   user-select: text;
 }
 
-.c14 {
+.c16 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -930,7 +929,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   padding: 0px 12px 8px;
 }
 
-.c21 {
+.c22 {
   height: 56px;
 }
 
@@ -1006,28 +1005,25 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
               class="c3"
             />
           </button>
-          <div
-            class="css-view-175oi2r"
-            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
-          >
+          <div>
             <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+              class="c6 c7 c8"
             >
               <div
-                class="c6 c7 css-142zc9n"
+                class="c9 c10 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Rate
               </div>
               <div
-                class="c6 c8 css-142zc9n"
+                class="c9 c11 css-142zc9n"
               >
                 <button
-                  class="c9"
+                  class="c12"
                   title="1 DEF = 1.00 ABC "
                 >
                   <div
-                    class="c6 css-142zc9n"
+                    class="c9 css-142zc9n"
                   >
                     1 DEF = 1.00 ABC 
                   </div>
@@ -1037,40 +1033,36 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
             </div>
           </div>
           <div
-            class="css-view-175oi2r"
-            style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; opacity: 0; height: 0px; overflow-x: hidden; overflow-y: hidden; width: 100%; margin-top: -8px;"
+            style="height: 0px; margin-top: -8px; overflow: hidden; width: 100%; min-width: min-content; will-change: height;"
           >
-            <div
-              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _width-10037"
-            >
+            <div>
               <div
-                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap56"
+                class="c0"
               >
                 <div
-                  class="css-view-175oi2r"
-                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
+                  style="opacity: 0;"
                 >
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+                    class="c6 c7 c8"
                   >
                     <div
-                      class="c6 c10 css-142zc9n"
+                      class="c9 c13 css-142zc9n"
                       data-testid="swap-li-label"
                     >
                       Max. slippage
                     </div>
                     <div
-                      class="c11"
+                      class="c14"
                     >
                       <div>
                         <div
-                          class="c6 c8 css-142zc9n"
+                          class="c9 c11 css-142zc9n"
                         >
                           <div
-                            class="c12 c13"
+                            class="c6 c15"
                           >
                             <div
-                              class="c5 c14 css-1lgneq0"
+                              class="c5 c16 css-1lgneq0"
                             >
                               Auto
                             </div>
@@ -1082,24 +1074,23 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
                   </div>
                 </div>
                 <div
-                  class="css-view-175oi2r"
-                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
+                  style="opacity: 0;"
                 >
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+                    class="c6 c7 c8"
                   >
                     <div
-                      class="c6 c10 css-142zc9n"
+                      class="c9 c13 css-142zc9n"
                       data-testid="swap-li-label"
                     >
                       Receive at least
                     </div>
                     <div
-                      class="c11"
+                      class="c14"
                     >
                       <div>
                         <div
-                          class="c6 c8 css-142zc9n"
+                          class="c9 c11 css-142zc9n"
                         >
                           0.00000000000000098 DEF
                         </div>
@@ -1110,24 +1101,21 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
               </div>
             </div>
           </div>
-          <div
-            class="css-view-175oi2r"
-            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
-          >
+          <div>
             <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+              class="c6 c7 c8"
             >
               <div
-                class="c6 c7 css-142zc9n"
+                class="c9 c10 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Fee
               </div>
               <div
-                class="c6 c8 css-142zc9n"
+                class="c9 c11 css-142zc9n"
               >
                 <div
-                  class="c15"
+                  class="c17"
                   data-testid="loading-row"
                   height="15"
                   width="50"
@@ -1135,28 +1123,25 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
               </div>
             </div>
           </div>
-          <div
-            class="css-view-175oi2r"
-            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
-          >
+          <div>
             <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+              class="c6 c7 c8"
             >
               <div
-                class="c6 c10 css-142zc9n"
+                class="c9 c13 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Network cost
               </div>
               <div
-                class="c11"
+                class="c14"
               >
                 <div>
                   <div
-                    class="c6 c8 css-142zc9n"
+                    class="c9 c11 css-142zc9n"
                   >
                     <div
-                      class="c15"
+                      class="c17"
                       data-testid="loading-row"
                       height="15"
                       width="50"
@@ -1168,10 +1153,10 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
           </div>
         </div>
         <div
-          class="c12 c16 c17"
+          class="c6 c7 c18"
         >
           <button
-            class="c18 c19 c20 c21"
+            class="c19 c20 c21 c22"
             data-testid="confirm-swap-button"
             disabled=""
             id="confirm-swap-or-send"
@@ -1180,7 +1165,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
               class="c5 css-1jyz67g"
             >
               <div
-                class="c12 c13"
+                class="c6 c15"
               >
                 <style>
                   

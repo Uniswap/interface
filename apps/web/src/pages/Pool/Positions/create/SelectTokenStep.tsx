@@ -9,7 +9,6 @@ import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useCurrencyInfo } from 'hooks/Tokens'
-import { SUPPORTED_V2POOL_CHAIN_IDS } from 'hooks/useNetworkSupportsV2'
 import { AddHook } from 'pages/Pool/Positions/create/AddHook'
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { AdvancedButton, Container } from 'pages/Pool/Positions/create/shared'
@@ -24,7 +23,6 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { Search } from 'ui/src/components/icons/Search'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans, t, useTranslation } from 'uniswap/src/i18n'
@@ -259,8 +257,6 @@ export function SelectTokensStep({
     }
   }, [mostUsedFeeTier, defaultFeeTierSelected, setPositionState, trace])
 
-  const { chains } = useEnabledChains()
-
   return (
     <PrefetchBalancesWrapper>
       <Container {...rest}>
@@ -433,11 +429,6 @@ export function SelectTokensStep({
         isOpen={currencySearchInputState !== undefined}
         onDismiss={() => setCurrencySearchInputState(undefined)}
         onCurrencySelect={handleCurrencySelect}
-        chainIds={
-          protocolVersion === ProtocolVersion.V2
-            ? chains.filter((chain) => SUPPORTED_V2POOL_CHAIN_IDS.includes(chain))
-            : undefined
-        }
       />
     </PrefetchBalancesWrapper>
   )

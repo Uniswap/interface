@@ -1,4 +1,4 @@
-import { GestureResponderEvent, StyleProp, ViewStyle } from 'react-native'
+import { GestureResponderEvent } from 'react-native'
 import { ColorTokens, SpaceTokens } from 'tamagui'
 import { Checkbox, CheckboxSizeTokens } from 'ui/src/components/checkbox/Checkbox'
 import { Flex, FlexProps } from 'ui/src/components/layout'
@@ -12,13 +12,12 @@ export type LabeledCheckboxProps = {
   checked: boolean
   text?: string | JSX.Element
   checkedColor?: ColorTokens
+  onCheckPressed?: (currentState: boolean) => void
   variant?: SporeComponentVariant
   gap?: SpaceTokens
   px?: SpaceTokens
   py?: SpaceTokens
   hoverStyle?: FlexProps
-  containerStyle?: StyleProp<ViewStyle | React.CSSProperties>
-  onCheckPressed?: (currentState: boolean) => void
 }
 
 export function LabeledCheckbox({
@@ -31,7 +30,6 @@ export function LabeledCheckbox({
   px = '$spacing4',
   py,
   hoverStyle,
-  containerStyle,
   onCheckPressed,
 }: LabeledCheckboxProps): JSX.Element {
   const onPress = (e: GestureResponderEvent): void => {
@@ -51,7 +49,7 @@ export function LabeledCheckbox({
     )
 
   return (
-    <TouchableArea hoverable={!!hoverStyle} hoverStyle={hoverStyle} style={containerStyle} onPress={onPress}>
+    <TouchableArea hoverable={!!hoverStyle} hoverStyle={hoverStyle} onPress={onPress}>
       <Flex row alignItems="center" gap={gap} px={px} py={py}>
         {checkboxPosition === 'start' && <Checkbox checked={checked} size={size} variant={variant} onPress={onPress} />}
         {text && (

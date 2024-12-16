@@ -18,7 +18,6 @@ export enum FeatureFlags {
 
   // Wallet
   DisableFiatOnRampKorea,
-  ExtensionAppRating,
   ExtensionAutoConnect,
   ExtensionClaimUnitag,
   ExtensionPromotionGA,
@@ -38,7 +37,6 @@ export enum FeatureFlags {
   AATestWeb,
   ConversionTracking,
   Eip6936Enabled,
-  GoogleConversionTracking,
   GqlTokenLists,
   L2NFTs,
   LimitsFees,
@@ -49,7 +47,6 @@ export enum FeatureFlags {
   QuickRouteMainnet,
   Realtime,
   TraceJsonRpc,
-  TwitterConversionTracking,
   UniswapXSyntheticQuote,
   UniswapXv2,
   UniversalSwap,
@@ -82,7 +79,6 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.ConversionTracking, 'conversion-tracking'],
   [FeatureFlags.Eip6936Enabled, 'eip6963_enabled'],
   [FeatureFlags.ForAggregator, 'for_aggregator_web'],
-  [FeatureFlags.GoogleConversionTracking, 'google_conversion_tracking'],
   [FeatureFlags.GqlTokenLists, 'gql_token_lists'],
   [FeatureFlags.L2NFTs, 'l2_nfts'],
   [FeatureFlags.LPRedesign, 'lp_redesign'],
@@ -98,7 +94,6 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.QuickRouteMainnet, 'enable_quick_route_mainnet'],
   [FeatureFlags.Realtime, 'realtime'],
   [FeatureFlags.TraceJsonRpc, 'traceJsonRpc'],
-  [FeatureFlags.TwitterConversionTracking, 'twitter_conversion_tracking'],
   [FeatureFlags.UniswapXSyntheticQuote, 'uniswapx_synthetic_quote'],
   [FeatureFlags.UniswapXv2, 'uniswapx_v2'],
   [FeatureFlags.UniversalSwap, 'universal_swap'],
@@ -110,7 +105,6 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
 export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   ...SHARED_FEATURE_FLAG_NAMES,
   [FeatureFlags.DisableFiatOnRampKorea, 'disable-fiat-onramp-korea'],
-  [FeatureFlags.ExtensionAppRating, 'extension_app_rating'],
   [FeatureFlags.ExtensionAutoConnect, 'extension-auto-connect'],
   [FeatureFlags.ExtensionClaimUnitag, 'extension-claim-unitag'],
   [FeatureFlags.ExtensionPromotionGA, 'extension-promotion-ga'],

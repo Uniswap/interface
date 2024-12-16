@@ -1,12 +1,27 @@
 import { InterfaceModalName } from '@uniswap/analytics-events'
+import { ConfirmModalState } from 'components/ConfirmSwapModal'
+import Modal from 'components/Modal'
 import { AutoColumn } from 'components/deprecated/Column'
 import styled from 'lib/styled-components'
-import { PropsWithChildren } from 'react'
-import { HeightAnimator } from 'ui/src'
-import { Modal } from 'uniswap/src/components/modals/Modal'
+import { PropsWithChildren, useRef } from 'react'
+import { animated, easings, useSpring } from 'react-spring'
+import { TRANSITION_DURATIONS } from 'theme/styles'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import useResizeObserver from 'use-resize-observer'
 
+const AnimatedContainer = styled(animated.div)`
+  width: 100%;
+  height: auto;
+  min-width: min-content;
+  will-change: height;
+  overflow: hidden;
+  border-radius: 20px;
+  background-color: ${({ theme }) => theme.surface1};
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+`
 const Content = styled(AutoColumn)`
   background-color: ${({ theme }) => theme.surface1};
   width: 100%;
@@ -16,27 +31,36 @@ const Content = styled(AutoColumn)`
 
 export function SwapModal({
   children,
+  confirmModalState,
   onDismiss,
 }: PropsWithChildren<{
+  confirmModalState: ConfirmModalState
   onDismiss: () => void
 }>) {
+  const prevConfirmModalState = useRef(confirmModalState)
+  const { ref, height } = useResizeObserver()
+  const springProps = useSpring({
+    height,
+    onRest: () => (prevConfirmModalState.current = confirmModalState),
+    config: {
+      mass: 1.2,
+      tension: 300,
+      friction: 30,
+      clamp: true,
+      velocity: 0.01,
+      duration: TRANSITION_DURATIONS.medium,
+      easing: easings.easeInOutCubic,
+    },
+  })
+
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
-      <Modal name={ModalName.SwapReview} isModalOpen onClose={onDismiss} maxHeight="90vh" padding={0}>
-        <HeightAnimator
-          open={true}
-          width="100%"
-          minWidth="min-content"
-          overflow="hidden"
-          borderRadius="$rounded20"
-          backgroundColor="$surface1"
-          $md={{
-            borderBottomLeftRadius: 0,
-            borderBottomRightRadius: 0,
-          }}
-        >
-          <Content>{children}</Content>
-        </HeightAnimator>
+      <Modal isOpen $scrollOverlay onDismiss={onDismiss} maxHeight="90vh" slideIn>
+        <AnimatedContainer style={prevConfirmModalState.current !== confirmModalState ? springProps : undefined}>
+          <div ref={ref}>
+            <Content>{children}</Content>
+          </div>
+        </AnimatedContainer>
       </Modal>
     </Trace>
   )

@@ -120,7 +120,6 @@ export type AppStackParamList = {
     address: string
   }
   [MobileScreens.WebView]: { headerTitle: string; uriLink: string }
-  [MobileScreens.Storybook]: undefined
 }
 
 export type AppStackNavigationProp = NativeStackNavigationProp<AppStackParamList>

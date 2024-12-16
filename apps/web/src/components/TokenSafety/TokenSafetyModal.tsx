@@ -1,7 +1,6 @@
-import { Modal } from 'uniswap/src/components/modals/Modal'
+import Modal from 'components/Modal'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -48,13 +47,7 @@ export default function TokenSafetyModal({
       onToken1BlockAcknowledged={onToken1BlockAcknowledged}
     />
   ) : (
-    <Modal
-      name={ModalName.TokenSafety}
-      isModalOpen={isOpen}
-      onClose={onReject ?? closeModalOnly}
-      maxHeight={400}
-      padding={0}
-    >
+    <Modal isOpen={isOpen} onDismiss={onReject ?? closeModalOnly} maxHeight={400}>
       <TokenSafety
         token0={token0}
         token1={token1}

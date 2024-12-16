@@ -72,19 +72,17 @@ export function getErrorLink(
   networkErrorSamplingRate = APOLLO_NETWORK_ERROR_SAMPLING_RATE,
 ): ApolloLink {
   // Log any GraphQL errors or network error that occurred
-  const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
+  const errorLink = onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors) {
-      const operationName = operation.operationName
-      const operationVariables = JSON.stringify(operation.variables)
       graphQLErrors.forEach(({ message, locations, path }) => {
         sample(
           () =>
-            logger.error(`GraphQL ${operationName} error: ${message}`, {
+            logger.error(`GraphQL error: ${message}`, {
               tags: {
                 file: 'data/links',
                 function: 'getErrorLink',
               },
-              extra: { message, locations, path, operationName, operationVariables },
+              extra: { message, locations, path },
             }),
           graphqlErrorSamplingRate,
         )

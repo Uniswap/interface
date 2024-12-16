@@ -37,18 +37,15 @@ export function useFormattedCurrencyAmountAndUSDValue({
     return {
       tilde: '',
       amount: `${formatter.formatNumberOrString({ value: 0 })}`,
-      value: formatter.convertFiatAmountFormatted(0, NumberType.FiatTokenQuantity),
+      value: formatter.formatNumberOrString({ value: 0, type: NumberType.FiatGasPrice }),
     }
   }
 
   const formattedAmount = formatter.formatCurrencyAmount({ value: currencyAmount })
-
   return {
     tilde: isApproximateAmount ? '~' : '',
     amount: `${formattedAmount}`,
-    value: value
-      ? formatter.convertFiatAmountFormatted(parseFloat(value.toExact()), NumberType.FiatTokenQuantity)
-      : '-', // default placeholder string for when value is loading
+    value: formatter.formatCurrencyAmount({ value, type: NumberType.FiatGasPrice }),
   }
 }
 

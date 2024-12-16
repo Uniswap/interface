@@ -97,9 +97,7 @@ export function CurrencyTransferContent({
         {headingIsLoading ? (
           <Loader.Box height={fonts.heading2.lineHeight} width={iconSizes.icon100} />
         ) : (
-          <Text variant="heading2" textAlign="center">
-            {headingText}
-          </Text>
+          <Text variant="heading2">{headingText}</Text>
         )}
         <Flex centered row gap="$spacing8">
           <CurrencyLogo currencyInfo={currencyInfo} size={iconSizes.icon20} />

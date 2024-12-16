@@ -18,7 +18,7 @@ describe('Expand', () => {
         Body
       </Expand>,
     )
-    expect(screen.queryByText('Body')).not.toBeNull()
+    expect(screen.queryByText('Body')).toBeVisible()
   })
 
   it('calls `onToggle` when button is pressed', () => {

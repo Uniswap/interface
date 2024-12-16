@@ -1,4 +1,3 @@
-import { TransactionResponse } from '@ethersproject/providers'
 import { LiquidityEventName } from '@uniswap/analytics-events'
 import { getLiquidityEventName } from 'components/Liquidity/analytics'
 import { PopupType, addPopup } from 'state/application/reducer'
@@ -9,7 +8,6 @@ import {
   handleSignatureStep,
 } from 'state/sagas/transactions/utils'
 import {
-  CollectFeesTransactionInfo,
   CreatePositionTransactionInfo,
   DecreaseLiquidityTransactionInfo,
   IncreaseLiquidityTransactionInfo,
@@ -27,7 +25,6 @@ import {
   ValidatedLiquidityTxContext,
 } from 'uniswap/src/features/transactions/liquidity/types'
 import {
-  CollectFeesTransactionStep,
   DecreasePositionTransactionStep,
   IncreasePositionTransactionStep,
   IncreasePositionTransactionStepAsync,
@@ -46,11 +43,10 @@ type LiquidityParams = {
   selectChain: (chainId: number) => Promise<boolean>
   startChainId?: number
   account: SignerMnemonicAccountMeta
-  analytics?:
+  analytics:
     | Omit<UniverseEventProperties[LiquidityEventName.ADD_LIQUIDITY_SUBMITTED], 'transaction_hash'>
     | Omit<UniverseEventProperties[LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED], 'transaction_hash'>
     | Omit<UniverseEventProperties[LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED], 'transaction_hash'>
-    | Omit<UniverseEventProperties[LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED], 'transaction_hash'>
   liquidityTxContext: ValidatedLiquidityTxContext
   setCurrentStep: SetCurrentStepFn
   setSteps: (steps: TransactionStep[]) => void
@@ -64,15 +60,13 @@ function* getLiquidityTxRequest(
     | IncreasePositionTransactionStepAsync
     | DecreasePositionTransactionStep
     | MigratePositionTransactionStep
-    | MigratePositionTransactionStepAsync
-    | CollectFeesTransactionStep,
+    | MigratePositionTransactionStepAsync,
   signature: string | undefined,
 ) {
   if (
     step.type === TransactionStepType.IncreasePositionTransaction ||
     step.type === TransactionStepType.DecreasePositionTransaction ||
-    step.type === TransactionStepType.MigratePositionTransactionStep ||
-    step.type === TransactionStepType.CollectFeesTransactionStep
+    step.type === TransactionStepType.MigratePositionTransactionStep
   ) {
     return step.txRequest
   }
@@ -98,51 +92,29 @@ interface HandlePositionStepParams extends Omit<HandleOnChainStepParams, 'step' 
     | DecreasePositionTransactionStep
     | MigratePositionTransactionStep
     | MigratePositionTransactionStepAsync
-    | CollectFeesTransactionStep
   signature?: string
   action: LiquidityAction
-  analytics?:
+  analytics:
     | Omit<UniverseEventProperties[LiquidityEventName.ADD_LIQUIDITY_SUBMITTED], 'transaction_hash'>
     | Omit<UniverseEventProperties[LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED], 'transaction_hash'>
     | Omit<UniverseEventProperties[LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED], 'transaction_hash'>
-    | Omit<UniverseEventProperties[LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED], 'transaction_hash'>
 }
 function* handlePositionTransactionStep(params: HandlePositionStepParams) {
   const { action, step, signature, analytics } = params
   const info = getLiquidityTransactionInfo(action)
   const txRequest = yield* call(getLiquidityTxRequest, step, signature)
 
-  const onModification = (response: TransactionResponse) => {
-    if (analytics) {
-      sendAnalyticsEvent(LiquidityEventName.TRANSACTION_MODIFIED_IN_WALLET, {
-        ...analytics,
-        transaction_hash: response.hash,
-        expected: txRequest.data?.toString(),
-        actual: response.data,
-      })
-    }
-  }
-
   // Now that we have the txRequest, we can create a definitive LiquidityTransactionStep, incase we started with an async step.
   const onChainStep = { ...step, txRequest }
-  const hash = yield* call(handleOnChainStep, {
-    ...params,
-    info,
-    step: onChainStep,
-    shouldWaitForConfirmation: false,
-    onModification,
-  })
+  const hash = yield* call(handleOnChainStep, { ...params, info, step: onChainStep, shouldWaitForConfirmation: false })
 
-  if (analytics) {
-    sendAnalyticsEvent(getLiquidityEventName(onChainStep.type), {
-      ...analytics,
-      transaction_hash: hash,
-    } satisfies
-      | UniverseEventProperties[LiquidityEventName.ADD_LIQUIDITY_SUBMITTED]
-      | UniverseEventProperties[LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED]
-      | UniverseEventProperties[LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED]
-      | UniverseEventProperties[LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED])
-  }
+  sendAnalyticsEvent(getLiquidityEventName(onChainStep.type), {
+    ...analytics,
+    transaction_hash: hash,
+  } satisfies
+    | UniverseEventProperties[LiquidityEventName.ADD_LIQUIDITY_SUBMITTED]
+    | UniverseEventProperties[LiquidityEventName.REMOVE_LIQUIDITY_SUBMITTED]
+    | UniverseEventProperties[LiquidityEventName.MIGRATE_LIQUIDITY_SUBMITTED])
 
   yield* put(addPopup({ content: { type: PopupType.Transaction, hash }, key: hash }))
 }
@@ -176,7 +148,6 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
         case TransactionStepType.DecreasePositionTransaction:
         case TransactionStepType.MigratePositionTransactionStep:
         case TransactionStepType.MigratePositionTransactionStepAsync:
-        case TransactionStepType.CollectFeesTransactionStep:
           yield* call(handlePositionTransactionStep, { account, step, setCurrentStep, action, signature, analytics })
           break
         default: {
@@ -233,8 +204,7 @@ function getLiquidityTransactionInfo(
   | IncreaseLiquidityTransactionInfo
   | DecreaseLiquidityTransactionInfo
   | MigrateV3LiquidityToV4TransactionInfo
-  | CreatePositionTransactionInfo
-  | CollectFeesTransactionInfo {
+  | CreatePositionTransactionInfo {
   let type: TransactionType
   switch (action.type) {
     case LiquidityTransactionType.Create:
@@ -248,9 +218,6 @@ function getLiquidityTransactionInfo(
       break
     case LiquidityTransactionType.Migrate:
       type = TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4
-      break
-    case LiquidityTransactionType.Collect:
-      type = TransactionType.COLLECT_FEES
   }
 
   const {

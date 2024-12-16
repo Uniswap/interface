@@ -43,6 +43,30 @@ exports[`OrderContent should render without error, filled order 1`] = `
   gap: 12px;
 }
 
+.c15 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c16 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
 .c6 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
@@ -66,7 +90,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c18 {
+.c20 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -77,11 +101,11 @@ exports[`OrderContent should render without error, filled order 1`] = `
   font-weight: 500;
 }
 
-.c18:hover {
+.c20:hover {
   opacity: 0.6;
 }
 
-.c18:active {
+.c20:active {
   opacity: 0.4;
 }
 
@@ -152,17 +176,17 @@ exports[`OrderContent should render without error, filled order 1`] = `
   gap: 8px;
 }
 
-.c15 {
+.c17 {
   cursor: auto;
   color: #7D7D7D;
 }
 
-.c16 {
+.c18 {
   text-align: right;
   overflow-wrap: break-word;
 }
 
-.c17 {
+.c19 {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -385,19 +409,19 @@ exports[`OrderContent should render without error, filled order 1`] = `
             class="c14"
           >
             <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+              class="c1 c15 c16"
             >
               <div
-                class="c6 c15 css-142zc9n"
+                class="c6 c17 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Rate
               </div>
               <div
-                class="c6 c16 css-142zc9n"
+                class="c6 c18 css-142zc9n"
               >
                 <button
-                  class="c17"
+                  class="c19"
                   title="1 WETH = 2,359.34 DAI "
                 >
                   <div
@@ -410,16 +434,16 @@ exports[`OrderContent should render without error, filled order 1`] = `
               </div>
             </div>
             <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+              class="c1 c15 c16"
             >
               <div
-                class="c6 c15 css-142zc9n"
+                class="c6 c17 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Network cost
               </div>
               <div
-                class="c6 c16 css-142zc9n"
+                class="c6 c18 css-142zc9n"
               >
                 <span>
                   $0
@@ -427,19 +451,19 @@ exports[`OrderContent should render without error, filled order 1`] = `
               </div>
             </div>
             <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+              class="c1 c15 c16"
             >
               <div
-                class="c6 c15 css-142zc9n"
+                class="c6 c17 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Transaction ID
               </div>
               <div
-                class="c6 c16 css-142zc9n"
+                class="c6 c18 css-142zc9n"
               >
                 <a
-                  class="c18"
+                  class="c20"
                   href="https://etherscan.io/tx/0xad7a8f73f28fd0cc16459111899dd1632164ae139fcf5281a1bced56e1ff6564"
                   rel="noopener noreferrer"
                   target="_blank"
@@ -499,6 +523,30 @@ exports[`OrderContent should render without error, limit order 1`] = `
   gap: 12px;
 }
 
+.c15 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c16 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
 .c6 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
@@ -522,7 +570,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c24 {
+.c26 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -533,11 +581,11 @@ exports[`OrderContent should render without error, limit order 1`] = `
   font-weight: 500;
 }
 
-.c24:hover {
+.c26:hover {
   opacity: 0.6;
 }
 
-.c24:active {
+.c26:active {
   opacity: 0.4;
 }
 
@@ -549,7 +597,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
   background-color: #22222212;
 }
 
-.c21 {
+.c23 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -563,7 +611,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
   width: 100%;
 }
 
-.c18 {
+.c20 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -598,26 +646,26 @@ exports[`OrderContent should render without error, limit order 1`] = `
   user-select: none;
 }
 
-.c18:active .c20 {
+.c20:active .c22 {
   background-color: #B8C0DC3d;
 }
 
-.c18:focus .c20 {
+.c20:focus .c22 {
   background-color: #B8C0DC3d;
 }
 
-.c18:hover .c20 {
+.c20:hover .c22 {
   background-color: #98A1C014;
 }
 
-.c18:disabled {
+.c20:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c18:disabled:active .c20,
-.c18:disabled:focus .c20,
-.c18:disabled:hover .c20 {
+.c20:disabled:active .c22,
+.c20:disabled:focus .c22,
+.c20:disabled:hover .c22 {
   background-color: transparent;
 }
 
@@ -680,17 +728,17 @@ exports[`OrderContent should render without error, limit order 1`] = `
   gap: 8px;
 }
 
-.c15 {
+.c17 {
   cursor: auto;
   color: #7D7D7D;
 }
 
-.c16 {
+.c18 {
   text-align: right;
   overflow-wrap: break-word;
 }
 
-.c17 {
+.c19 {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -769,14 +817,14 @@ exports[`OrderContent should render without error, limit order 1`] = `
   left: 0;
 }
 
-.c22 {
+.c24 {
   background-color: #F9F9F9;
   border-radius: 12px;
   padding: 12px;
   margin-top: 12px;
 }
 
-.c23 {
+.c25 {
   line-height: 16px;
 }
 
@@ -784,7 +832,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
   margin: 28px 0;
 }
 
-.c19 {
+.c21 {
   margin-top: 16px;
   border-radius: 12px;
 }
@@ -929,19 +977,19 @@ exports[`OrderContent should render without error, limit order 1`] = `
             class="c14"
           >
             <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+              class="c1 c15 c16"
             >
               <div
-                class="c6 c15 css-142zc9n"
+                class="c6 c17 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Rate
               </div>
               <div
-                class="c6 c16 css-142zc9n"
+                class="c6 c18 css-142zc9n"
               >
                 <button
-                  class="c17"
+                  class="c19"
                   title="1 WETH = 2,359.34 DAI "
                 >
                   <div
@@ -954,31 +1002,31 @@ exports[`OrderContent should render without error, limit order 1`] = `
               </div>
             </div>
             <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+              class="c1 c15 c16"
             >
               <div
-                class="c6 c15 css-142zc9n"
+                class="c6 c17 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Expiry
               </div>
               <div
-                class="c6 c16 css-142zc9n"
+                class="c6 c18 css-142zc9n"
               >
                 <span />
               </div>
             </div>
             <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+              class="c1 c15 c16"
             >
               <div
-                class="c6 c15 css-142zc9n"
+                class="c6 c17 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Network cost
               </div>
               <div
-                class="c6 c16 css-142zc9n"
+                class="c6 c18 css-142zc9n"
               >
                 <span>
                   $0
@@ -987,32 +1035,32 @@ exports[`OrderContent should render without error, limit order 1`] = `
             </div>
           </div>
           <button
-            class="c18 c19"
+            class="c20 c21"
             size="1"
           >
             <div
-              class="c20 c21"
+              class="c22 c23"
             />
             Cancel limit
           </button>
           <div
-            class="c14 c22"
+            class="c14 c24"
           >
             <div
-              class="c7 c23 css-1m65e73"
+              class="c7 c25 css-1m65e73"
             >
               Please be aware that the execution for limits may vary based on real-time market fluctuations and Ethereum network congestion. Limits may not execute exactly when tokens reach the specified price.
             </div>
             <div
-              class="c7 c23 css-1m65e73"
+              class="c7 c25 css-1m65e73"
             >
               Canceling a limit has a network cost.
             </div>
             <div
-              class="c7 c23 css-1m65e73"
+              class="c7 c25 css-1m65e73"
             >
               <a
-                class="c24"
+                class="c26"
                 href="https://support.uniswap.org/hc/en-us/articles/24300813697933"
                 rel="noopener noreferrer"
                 target="_blank"
@@ -1071,6 +1119,30 @@ exports[`OrderContent should render without error, open order 1`] = `
   gap: 12px;
 }
 
+.c15 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c16 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
 .c6 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
@@ -1102,7 +1174,7 @@ exports[`OrderContent should render without error, open order 1`] = `
   background-color: #22222212;
 }
 
-.c21 {
+.c23 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -1116,7 +1188,7 @@ exports[`OrderContent should render without error, open order 1`] = `
   width: 100%;
 }
 
-.c18 {
+.c20 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -1151,26 +1223,26 @@ exports[`OrderContent should render without error, open order 1`] = `
   user-select: none;
 }
 
-.c18:active .c20 {
+.c20:active .c22 {
   background-color: #B8C0DC3d;
 }
 
-.c18:focus .c20 {
+.c20:focus .c22 {
   background-color: #B8C0DC3d;
 }
 
-.c18:hover .c20 {
+.c20:hover .c22 {
   background-color: #98A1C014;
 }
 
-.c18:disabled {
+.c20:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c18:disabled:active .c20,
-.c18:disabled:focus .c20,
-.c18:disabled:hover .c20 {
+.c20:disabled:active .c22,
+.c20:disabled:focus .c22,
+.c20:disabled:hover .c22 {
   background-color: transparent;
 }
 
@@ -1233,17 +1305,17 @@ exports[`OrderContent should render without error, open order 1`] = `
   gap: 8px;
 }
 
-.c15 {
+.c17 {
   cursor: auto;
   color: #7D7D7D;
 }
 
-.c16 {
+.c18 {
   text-align: right;
   overflow-wrap: break-word;
 }
 
-.c17 {
+.c19 {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -1326,7 +1398,7 @@ exports[`OrderContent should render without error, open order 1`] = `
   margin: 28px 0;
 }
 
-.c19 {
+.c21 {
   margin-top: 16px;
   border-radius: 12px;
 }
@@ -1471,19 +1543,19 @@ exports[`OrderContent should render without error, open order 1`] = `
             class="c14"
           >
             <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+              class="c1 c15 c16"
             >
               <div
-                class="c6 c15 css-142zc9n"
+                class="c6 c17 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Rate
               </div>
               <div
-                class="c6 c16 css-142zc9n"
+                class="c6 c18 css-142zc9n"
               >
                 <button
-                  class="c17"
+                  class="c19"
                   title="1 WETH = 2,359.34 DAI "
                 >
                   <div
@@ -1496,31 +1568,31 @@ exports[`OrderContent should render without error, open order 1`] = `
               </div>
             </div>
             <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+              class="c1 c15 c16"
             >
               <div
-                class="c6 c15 css-142zc9n"
+                class="c6 c17 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Expiry
               </div>
               <div
-                class="c6 c16 css-142zc9n"
+                class="c6 c18 css-142zc9n"
               >
                 <span />
               </div>
             </div>
             <div
-              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+              class="c1 c15 c16"
             >
               <div
-                class="c6 c15 css-142zc9n"
+                class="c6 c17 css-142zc9n"
                 data-testid="swap-li-label"
               >
                 Network cost
               </div>
               <div
-                class="c6 c16 css-142zc9n"
+                class="c6 c18 css-142zc9n"
               >
                 <span>
                   $0
@@ -1529,11 +1601,11 @@ exports[`OrderContent should render without error, open order 1`] = `
             </div>
           </div>
           <button
-            class="c18 c19"
+            class="c20 c21"
             size="1"
           >
             <div
-              class="c20 c21"
+              class="c22 c23"
             />
             Cancel order
           </button>

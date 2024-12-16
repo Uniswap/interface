@@ -15,12 +15,13 @@ import {
   ProtocolItems,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { getTradeSettingsDeadline } from 'uniswap/src/features/transactions/swap/form/utils'
+import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }): RemoveLiquidityTxInfo {
   const { positionInfo, percent, percentInvalid } = useRemoveLiquidityModalContext()
-  const { customDeadline, customSlippageTolerance } = useTransactionSettingsContext()
+  const { customDeadline, customSlippageTolerance } = useSwapSettingsContext()
 
   const pool =
     positionInfo?.version === ProtocolVersion.V3 || positionInfo?.version === ProtocolVersion.V4
@@ -67,6 +68,8 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
       return undefined
     }
 
+    const deadline = getTradeSettingsDeadline(customDeadline)
+
     return {
       simulateTransaction: !approvalsNeeded,
       protocol: apiProtocolItems,
@@ -104,6 +107,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
           hooks: positionInfo.v4hook,
         },
       },
+      deadline,
       slippageTolerance: customSlippageTolerance,
     }
   }, [
@@ -115,6 +119,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
     approvalsNeeded,
     feeValue0,
     feeValue1,
+    customDeadline,
     customSlippageTolerance,
   ])
 
@@ -125,9 +130,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
     refetch: calldataRefetch,
   } = useDecreaseLpPositionCalldataQuery({
     params: decreaseCalldataQueryParams,
-    deadlineInMinutes: customDeadline,
-    refetchInterval: 5 * ONE_SECOND_MS,
-    enabled: !v2LpTokenApprovalQueryParams || (!v2ApprovalLoading && !approvalError && Boolean(v2LpTokenApproval)),
+    staleTime: 5 * ONE_SECOND_MS,
   })
 
   const { value: estimatedGasFee } = useTransactionGasFee(decreaseCalldata?.decrease, !!decreaseCalldata?.gasFee)

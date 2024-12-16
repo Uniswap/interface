@@ -51,7 +51,6 @@ export enum WarningLabel {
   RecipientIsSmartContract = 'recipient_is_smart_contract',
   ViewOnlyAccount = 'view_only_account',
   NetworkError = 'network_error',
-  BlockedToken = 'blocked_token',
 }
 
 export interface Warning {

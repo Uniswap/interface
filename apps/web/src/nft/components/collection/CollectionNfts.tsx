@@ -3,7 +3,7 @@ import { parseEther } from '@ethersproject/units'
 import { InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common/styles'
-import { Box } from 'components/deprecated/Box'
+import { AnimatedBox, Box } from 'components/deprecated/Box'
 import { ASSET_PAGE_SIZE, AssetFetcherParams, useNftAssets } from 'graphql/data/nft/Asset'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
@@ -489,7 +489,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   return (
     <>
-      <Box
+      <AnimatedBox
         backgroundColor="surface1"
         position="sticky"
         top="72"
@@ -594,7 +594,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             )}
           </Row>
         </InfiniteScrollWrapper>
-      </Box>
+      </AnimatedBox>
       <InfiniteScrollWrapper>
         {loading ? (
           <CollectionNftsLoading height={renderedHeight} />

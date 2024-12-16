@@ -142,7 +142,7 @@ export const networkColors = {
     light: '#222222',
     dark: '#FFFFFF',
   },
-  unichain: {
+  astrochain: {
     light: '#fc0fa4',
     dark: '#fc0fa4',
   },
@@ -325,7 +325,7 @@ export const colorsLight = {
 
   // Testnets
   chain_11155111: networkColors.ethereum.light,
-  chain_1301: networkColors.unichain.light,
+  chain_1301: networkColors.astrochain.light,
 }
 
 export type ColorKeys = keyof typeof colorsLight
@@ -408,5 +408,5 @@ export const colorsDark = {
 
   // Testnets
   chain_11155111: networkColors.ethereum.dark,
-  chain_1301: networkColors.unichain.dark,
+  chain_1301: networkColors.astrochain.dark,
 }

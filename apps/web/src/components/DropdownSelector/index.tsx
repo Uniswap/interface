@@ -84,7 +84,6 @@ interface DropdownSelectorProps {
   buttonStyle?: FlexProps
   dropdownStyle?: FlexProps
   adaptToSheet?: boolean
-  containerStyle?: React.CSSProperties
 }
 
 export function DropdownSelector({
@@ -99,7 +98,6 @@ export function DropdownSelector({
   buttonStyle,
   dropdownStyle,
   adaptToSheet = true,
-  containerStyle,
 }: DropdownSelectorProps) {
   const node = useRef<HTMLDivElement | null>(null)
   useOnClickOutside(node, () => isOpen && toggleOpen(false))
@@ -110,7 +108,7 @@ export function DropdownSelector({
 
   return (
     <>
-      <div ref={node} style={{ width: '100%', ...containerStyle }}>
+      <div ref={node} style={{ width: '100%' }}>
         <StyledMenu id="Dropdown">
           <MouseoverTooltip
             disabled={!tooltipText}

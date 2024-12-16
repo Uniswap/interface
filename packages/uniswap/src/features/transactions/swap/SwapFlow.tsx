@@ -13,10 +13,6 @@ import {
 } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { TransactionModalProps } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalProps'
 import {
-  TransactionSettingsContext,
-  useTransactionSettingsContext,
-} from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-import {
   SwapFormContext,
   SwapFormState,
   useSwapFormContext,
@@ -26,6 +22,10 @@ import { SwapFormButton } from 'uniswap/src/features/transactions/swap/form/Swap
 import { SwapFormScreen } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen'
 import { SwapReviewScreen } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen'
 import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
+import {
+  SwapSettingsContext,
+  useSwapSettingsContext,
+} from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { SwapCallback } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { WrapCallback } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
 import { isInterface } from 'utilities/src/platform'
@@ -48,11 +48,11 @@ export function SwapFlow({
   ...transactionModalProps
 }: SwapFlowProps): JSX.Element {
   const swapFormContext = useSwapFormContext()
-  const transactionSettingsContext = useTransactionSettingsContext()
+  const swapSettingsContext = useSwapSettingsContext()
   return (
     <TransactionModal modalName={ModalName.Swap} {...transactionModalProps}>
-      {/* Re-create the TransactionSettingsContextProvider, since native Modal can cause its children to be in a separate component tree. */}
-      <TransactionSettingsContext.Provider value={transactionSettingsContext}>
+      {/* Re-create the SwapSettingsContextProvider, since native Modal can cause its children to be in a separate component tree. */}
+      <SwapSettingsContext.Provider value={swapSettingsContext}>
         {/* Re-create the SwapFormContextProvider, since native Modal can cause its children to be in a separate component tree. */}
         <SwapFormContext.Provider value={swapFormContext}>
           <SwapTxContextProviderTradingApi>
@@ -64,7 +64,7 @@ export function SwapFlow({
             />
           </SwapTxContextProviderTradingApi>
         </SwapFormContext.Provider>
-      </TransactionSettingsContext.Provider>
+      </SwapSettingsContext.Provider>
     </TransactionModal>
   )
 }
@@ -98,7 +98,6 @@ function CurrentScreen({
           alignment={isInterface ? 'center' : 'top'}
           isModalOpen={screen === TransactionScreen.Review}
           name={ModalName.SwapReview}
-          padding="$spacing12"
           onClose={() => setScreen(TransactionScreen.Form)}
         >
           <Trace logImpression section={SectionName.SwapReview}>

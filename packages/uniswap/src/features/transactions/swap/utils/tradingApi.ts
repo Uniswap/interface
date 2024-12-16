@@ -5,9 +5,9 @@ import { FeeAmount, Pool as V3Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, Route as V4Route } from '@uniswap/v4-sdk'
 import { BigNumber } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
+import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { DiscriminatedQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import {
-  AutoSlippage,
   BridgeQuote,
   ClassicQuote,
   Quote,
@@ -25,9 +25,6 @@ import {
 } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isL2ChainId } from 'uniswap/src/features/chains/utils'
-import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
-import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import {
@@ -56,11 +53,12 @@ interface TradingApiResponseToTradeArgs {
   currencyOut: Currency
   tradeType: TradeType
   deadline: number | undefined
+  slippageTolerance: number | undefined
   data: DiscriminatedQuoteResponse | undefined
 }
 
 export function transformTradingApiResponseToTrade(params: TradingApiResponseToTradeArgs): Trade | null {
-  const { currencyIn, currencyOut, tradeType, deadline, data } = params
+  const { currencyIn, currencyOut, tradeType, deadline, slippageTolerance, data } = params
 
   switch (data?.routing) {
     case Routing.CLASSIC: {
@@ -73,6 +71,7 @@ export function transformTradingApiResponseToTrade(params: TradingApiResponseToT
       return new ClassicTrade({
         quote: data,
         deadline,
+        slippageTolerance: slippageTolerance ?? MAX_AUTO_SLIPPAGE_TOLERANCE,
         v2Routes: routes?.flatMap((r) => (r?.routev2 ? { ...r, routev2: r.routev2 } : [])) ?? [],
         v3Routes: routes?.flatMap((r) => (r?.routev3 ? { ...r, routev3: r.routev3 } : [])) ?? [],
         v4Routes: routes?.flatMap((r) => (r?.routev4 ? { ...r, routev4: r.routev4 } : [])) ?? [],
@@ -414,19 +413,12 @@ export function validateTrade({
   return trade
 }
 
-type UseQuoteRoutingParamsArgs = {
-  selectedProtocols: FrontendSupportedProtocol[] | undefined
-  tokenInChainId: UniverseChainId | undefined
-  tokenOutChainId: UniverseChainId | undefined
-  isUSDQuote?: boolean
-}
-
-export function useQuoteRoutingParams({
-  selectedProtocols,
-  tokenInChainId,
-  tokenOutChainId,
-  isUSDQuote,
-}: UseQuoteRoutingParamsArgs): Pick<QuoteRequest, 'routingPreference' | 'protocols'> {
+export function useQuoteRoutingParams(
+  selectedProtocols: FrontendSupportedProtocol[] | undefined,
+  tokenInChainId: UniverseChainId | undefined,
+  tokenOutChainId: UniverseChainId | undefined,
+  isUSDQuote?: boolean,
+): Pick<QuoteRequest, 'routingPreference' | 'protocols'> {
   const protocols = useProtocolsForChain(selectedProtocols ?? DEFAULT_PROTOCOL_OPTIONS, tokenInChainId)
 
   return useMemo(() => {
@@ -443,46 +435,4 @@ export function useQuoteRoutingParams({
     // For normal quotes, we only need to specify protocols
     return { protocols }
   }, [isUSDQuote, tokenInChainId, tokenOutChainId, protocols])
-}
-
-type UseQuoteSlippageParamsArgs = {
-  customSlippageTolerance: number | undefined
-  tokenInChainId: UniverseChainId | undefined
-  tokenOutChainId: UniverseChainId | undefined
-  isUSDQuote?: boolean
-}
-
-// Used if dynamic config value fails to resolve
-const DEFAULT_L2_SLIPPAGE_TOLERANCE_VALUE = 2.5
-
-export function useQuoteSlippageParams({
-  customSlippageTolerance,
-  tokenInChainId,
-  tokenOutChainId,
-  isUSDQuote,
-}: UseQuoteSlippageParamsArgs): Pick<QuoteRequest, 'autoSlippage' | 'slippageTolerance'> | undefined {
-  const minAutoSlippageToleranceL2 = useDynamicConfigValue(
-    DynamicConfigs.Swap,
-    SwapConfigKey.MinAutoSlippageToleranceL2,
-    DEFAULT_L2_SLIPPAGE_TOLERANCE_VALUE,
-  )
-
-  return useMemo(() => {
-    if (customSlippageTolerance) {
-      return { slippageTolerance: customSlippageTolerance }
-    }
-
-    // For bridging or USD quotes, we do not apply any slippage settings
-    if (tokenInChainId !== tokenOutChainId || isUSDQuote) {
-      return undefined
-    }
-
-    // L2 chains should use the minimum slippage tolerance defined in the dynamic config
-    if (isL2ChainId(tokenInChainId)) {
-      return { slippageTolerance: minAutoSlippageToleranceL2 }
-    }
-
-    // Otherwise, use an auto slippage tolerance calculated on the backend
-    return { autoSlippage: AutoSlippage.DEFAULT }
-  }, [customSlippageTolerance, isUSDQuote, minAutoSlippageToleranceL2, tokenInChainId, tokenOutChainId])
 }

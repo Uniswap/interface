@@ -8,7 +8,7 @@ import { Fragment, useCallback } from 'react'
 import { ChevronDown } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
-import { Flex, Text, useMedia } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SwapRedirectFn } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
@@ -20,8 +20,7 @@ interface HeroProps {
 }
 
 export function Hero({ scrollToRef, transition }: HeroProps) {
-  const media = useMedia()
-  const { height: scrollPosition } = useScroll({ enabled: !media.sm })
+  const { height: scrollPosition } = useScroll()
   const initialInputCurrency = useCurrency('ETH', UniverseChainId.Mainnet)
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -56,7 +55,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
       pt={INTERFACE_NAV_HEIGHT}
       pointerEvents="none"
     >
-      {!media.sm && <TokenCloud transition={transition} />}
+      <TokenCloud transition={transition} />
 
       <Flex
         alignSelf="center"

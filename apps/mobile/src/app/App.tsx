@@ -1,10 +1,16 @@
 import { ApolloProvider } from '@apollo/client'
-import { DdRum, DdSdkReactNative } from '@datadog/mobile-react-native'
+import {
+  DatadogProvider,
+  DatadogProviderConfiguration,
+  DdRum,
+  DdSdkReactNative,
+  SdkVerbosity,
+} from '@datadog/mobile-react-native'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
 import { MMKVWrapper } from 'apollo3-cache-persist'
 import * as SplashScreen from 'expo-splash-screen'
-import { default as React, StrictMode, useCallback, useEffect } from 'react'
+import { PropsWithChildren, default as React, StrictMode, useCallback, useEffect } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { LogBox, NativeModules, StatusBar } from 'react-native'
 import appsFlyer from 'react-native-appsflyer'
@@ -15,7 +21,6 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableFreeze } from 'react-native-screens'
 import { useDispatch, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
-import { DatadogProviderWrapper } from 'src/app/DataDogProvider'
 import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'
 import { AppModals } from 'src/app/modals/AppModals'
 import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
@@ -40,9 +45,10 @@ import {
   setI18NUserDefaults,
 } from 'src/features/widgets/widgets'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
-import { getStatsigEnvironmentTier } from 'src/utils/version'
+import { getDatadogEnvironment, getStatsigEnvironmentTier } from 'src/utils/version'
 import { flexStyles, useIsDarkMode } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
+import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
@@ -64,7 +70,7 @@ import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/conte
 import i18n from 'uniswap/src/i18n/i18n'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
-import { isDetoxBuild } from 'utilities/src/environment/constants'
+import { isDetoxBuild, isJestRun } from 'utilities/src/environment/constants'
 import { attachUnhandledRejectionHandler, setAttributesToDatadog } from 'utilities/src/logger/Datadog'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { logger } from 'utilities/src/logger/logger'
@@ -92,6 +98,29 @@ if (__DEV__) {
 
 // Keep the splash screen visible while we fetch resources until one of our landing pages loads
 SplashScreen.preventAutoHideAsync().catch(() => undefined)
+
+// Datadog
+const datadogConfig = new DatadogProviderConfiguration(
+  config.datadogClientToken,
+  getDatadogEnvironment(),
+  config.datadogProjectId,
+  !__DEV__, // trackInteractions
+  !__DEV__, // trackResources
+  !__DEV__, // trackErrors
+)
+datadogConfig.site = 'US1'
+datadogConfig.longTaskThresholdMs = 100
+datadogConfig.nativeCrashReportEnabled = true
+datadogConfig.verbosity = SdkVerbosity.INFO
+// Datadog does not expose event type, hence we can not type return
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+datadogConfig.errorEventMapper = (event) => {
+  // this is Sentry error, which is caused by the not complete closing of their SDK
+  if (event.message.includes('Native is disabled')) {
+    return null
+  }
+  return event
+}
 
 // Log boxes on simulators can block detox tap event when they cover buttons placed at
 // the bottom of the screen and cause tests to fail.
@@ -169,6 +198,15 @@ function App(): JSX.Element | null {
       </DatadogProviderWrapper>
     </StatsigProvider>
   )
+}
+
+function DatadogProviderWrapper({ children }: PropsWithChildren): JSX.Element {
+  logger.setWalletDatadogEnabled(true)
+
+  if (isDetoxBuild || isJestRun) {
+    return <>{children}</>
+  }
+  return <DatadogProvider configuration={datadogConfig}>{children}</DatadogProvider>
 }
 
 const MAX_CACHE_SIZE_IN_BYTES = 1024 * 1024 * 25 // 25 MB

@@ -1,6 +1,7 @@
 // Remove the following line when LaunchModal is used again:
 /* eslint-disable import/no-unused-modules */
 import { InterfaceElementName } from '@uniswap/analytics-events'
+import Modal from 'components/Modal'
 import {
   LAUNCH_MODAL_DESKTOP_MAX_HEIGHT,
   LAUNCH_MODAL_DESKTOP_MAX_WIDTH,
@@ -14,7 +15,6 @@ import { useMemo } from 'react'
 import { Button, Flex, Image, ImageProps, Text, TouchableArea, useMedia } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { iconSizes } from 'ui/src/theme'
-import { Modal } from 'uniswap/src/components/modals/Modal'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { useTranslation } from 'uniswap/src/i18n'
@@ -48,12 +48,11 @@ export function LaunchModal({
   return (
     <Trace modal={interfaceModalName}>
       <Modal
-        name={interfaceModalName}
         maxWidth={media.md ? undefined : LAUNCH_MODAL_DESKTOP_MAX_WIDTH}
         height={media.md ? LAUNCH_MODAL_MOBILE_MAX_HEIGHT : LAUNCH_MODAL_DESKTOP_MAX_HEIGHT}
-        isModalOpen={showModal && !isOnLandingPage}
-        onClose={() => setShowModal(false)}
-        padding={0}
+        isOpen={showModal && !isOnLandingPage}
+        onDismiss={() => setShowModal(false)}
+        hideBorder
       >
         <Flex flexDirection={media.md ? 'column' : 'row'} fill>
           <Flex

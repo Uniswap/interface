@@ -11,9 +11,9 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE, MAX_CUSTOM_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
+import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/settings/useSlippageSettings'
 import { BridgeTrade, TradeWithSlippage } from 'uniswap/src/features/transactions/swap/types/trade'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
@@ -26,7 +26,7 @@ export const Slippage: SwapSettingConfig = {
     const { t } = useTranslation()
     const { formatPercent } = useLocalizationContext()
     const { derivedSwapInfo } = useSwapFormContext()
-    const { autoSlippageTolerance, customSlippageTolerance } = useTransactionSettingsContext()
+    const { autoSlippageTolerance, customSlippageTolerance } = useSwapSettingsContext()
 
     const isCustomSlippage = !!customSlippageTolerance
     let currentSlippage = customSlippageTolerance ?? autoSlippageTolerance ?? MAX_AUTO_SLIPPAGE_TOLERANCE
@@ -190,7 +190,7 @@ function SlippageMessage({
   const slippageTolerancePercent = slippageToleranceToPercent(slippageTolerance)
 
   if (inputWarning) {
-    return <WarningMessage showAlert text={inputWarning} color="$statusWarning" />
+    return <WarningMessage showAlert text={inputWarning} color="$DEP_accentWarning" />
   }
 
   return trade ? (

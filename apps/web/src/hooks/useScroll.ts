@@ -4,7 +4,7 @@ export enum ScrollDirection {
   UP = 'up',
   DOWN = 'down',
 }
-export function useScroll({ enabled = true }: { enabled?: boolean } = {}) {
+export function useScroll() {
   const [direction, setDirection] = useState<ScrollDirection | undefined>()
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const [height, setHeight] = useState(window.scrollY)
@@ -14,9 +14,6 @@ export function useScroll({ enabled = true }: { enabled?: boolean } = {}) {
     let currentScrollPosition = 0
 
     const scrollListener = () => {
-      if (!enabled) {
-        return
-      }
       setIsScrolledDown(window.scrollY > 0)
       if (window.scrollY >= 0) {
         setHeight(window.scrollY)
@@ -34,6 +31,6 @@ export function useScroll({ enabled = true }: { enabled?: boolean } = {}) {
     }
     window.addEventListener('scroll', scrollListener)
     return () => window.removeEventListener('scroll', scrollListener)
-  }, [enabled])
+  }, [])
   return { direction, isScrolledDown, height }
 }

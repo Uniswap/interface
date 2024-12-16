@@ -11,7 +11,6 @@ import { useMultiChainPositionsReturnValue, validBEPoolToken0, validBEPoolToken1
 import { act, render, screen } from 'test-utils/render'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 
 jest.mock('components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions')
@@ -19,15 +18,6 @@ jest.mock('components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions')
 jest.mock('hooks/useAccount')
 
 jest.mock('uniswap/src/contexts/UniswapContext')
-
-jest.mock('uniswap/src/features/gating/hooks', () => {
-  return {
-    useFeatureFlagWithLoading: jest.fn().mockReturnValue({
-      isLoading: false,
-      value: true,
-    }),
-  }
-})
 
 describe('PoolDetailsStatsButton', () => {
   const mockProps = {
@@ -56,10 +46,6 @@ describe('PoolDetailsStatsButton', () => {
     mocked(useAccount).mockReturnValue(USE_DISCONNECTED_ACCOUNT)
     mocked(useMultiChainPositions).mockReturnValue(useMultiChainPositionsReturnValue)
     mocked(useUniswapContext).mockReturnValue(useUniswapContextReturnValue)
-    mocked(useFeatureFlagWithLoading).mockReturnValue({
-      isLoading: false,
-      value: false,
-    })
     store.dispatch(
       dismissTokenWarning({
         token: {
