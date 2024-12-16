@@ -30,13 +30,11 @@ import {
   generateCreatePositionTxRequest,
 } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { PositionField } from 'types/position'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
+import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function CreatePositionContextProvider({
@@ -47,10 +45,6 @@ export function CreatePositionContextProvider({
   initialState?: Partial<PositionState>
 }) {
   const [positionState, setPositionState] = useState<PositionState>({ ...DEFAULT_POSITION_STATE, ...initialState })
-  useEffect(() => {
-    // initial state may load in from the URL
-    setPositionState((positionState) => ({ ...positionState, ...initialState }))
-  }, [initialState])
   const [step, setStep] = useState<PositionFlowStep>(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
   const derivedPositionInfo = useDerivedPositionInfo(positionState)
   const [feeTierSearchModalOpen, setFeeTierSearchModalOpen] = useState(false)
@@ -58,18 +52,14 @@ export function CreatePositionContextProvider({
     open: false,
     wishFeeData: DEFAULT_POSITION_STATE.fee,
   })
-  const { defaultChainId } = useEnabledChains()
-
-  const defaultInitialToken = nativeOnChain(defaultChainId)
 
   const reset = useCallback(() => {
     setPositionState({
       ...DEFAULT_POSITION_STATE,
-      protocolVersion: positionState.protocolVersion,
-      currencyInputs: { [PositionField.TOKEN0]: defaultInitialToken },
+      ...initialState,
     })
     setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
-  }, [defaultInitialToken, positionState.protocolVersion])
+  }, [initialState])
 
   return (
     <CreatePositionContext.Provider
@@ -147,7 +137,9 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   const { derivedPositionInfo, positionState } = useCreatePositionContext()
   const { derivedDepositInfo } = useDepositContext()
   const { priceRangeState, derivedPriceRangeInfo } = usePriceRangeContext()
-  const swapSettings = useSwapSettingsContext()
+  const swapSettings = useTransactionSettingsContext()
+
+  const hasError = Boolean(derivedDepositInfo.error)
 
   const addLiquidityApprovalParams = useMemo(() => {
     return generateAddLiquidityApprovalParams({
@@ -160,11 +152,21 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   const {
     data: approvalCalldata,
     error: approvalError,
+    isLoading: approvalLoading,
     refetch: approvalRefetch,
   } = useCheckLpApprovalQuery({
     params: addLiquidityApprovalParams,
     staleTime: 5 * ONE_SECOND_MS,
+    enabled: !hasError,
   })
+  const gasFeeToken0USD = useUSDCurrencyAmountOfGasFee(
+    derivedPositionInfo.currencies?.[0]?.chainId,
+    approvalCalldata?.gasFeeToken0Approval,
+  )
+  const gasFeeToken1USD = useUSDCurrencyAmountOfGasFee(
+    derivedPositionInfo.currencies?.[1]?.chainId,
+    approvalCalldata?.gasFeeToken1Approval,
+  )
 
   const createCalldataQueryParams = useMemo(() => {
     return generateCreateCalldataQueryParams({
@@ -175,7 +177,6 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
       priceRangeState,
       derivedPriceRangeInfo,
       derivedDepositInfo,
-      swapSettings,
     })
   }, [
     account,
@@ -183,7 +184,6 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     derivedDepositInfo,
     derivedPositionInfo,
     derivedPriceRangeInfo,
-    swapSettings,
     positionState,
     priceRangeState,
   ])
@@ -193,8 +193,27 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     refetch: createRefetch,
   } = useCreateLpPositionCalldataQuery({
     params: createCalldataQueryParams,
-    staleTime: 5 * ONE_SECOND_MS,
+    deadlineInMinutes: swapSettings.customDeadline,
+    refetchInterval: 5 * ONE_SECOND_MS,
+    enabled: !hasError && !approvalLoading && !approvalError && Boolean(approvalCalldata),
   })
+
+  const actualGasFee = createCalldata?.gasFee
+  const { value: calculatedGasFee } = useTransactionGasFee(createCalldata?.create, !!actualGasFee)
+  const increaseGasFeeUsd = useUSDCurrencyAmountOfGasFee(
+    createCalldata?.create?.chainId,
+    actualGasFee || calculatedGasFee,
+  )
+
+  const totalGasFee = useMemo(() => {
+    const fees = [gasFeeToken0USD, gasFeeToken1USD, increaseGasFeeUsd]
+    return fees.reduce((total, fee) => {
+      if (fee && total) {
+        return total.add(fee)
+      }
+      return total || fee
+    })
+  }, [gasFeeToken0USD, gasFeeToken1USD, increaseGasFeeUsd])
 
   const validatedValue = useMemo(() => {
     const txInfo = generateCreatePositionTxRequest({
@@ -207,6 +226,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
 
     return {
       txInfo,
+      gasFeeEstimateUSD: totalGasFee,
       error: Boolean(approvalError || createError),
       refetch: approvalError ? approvalRefetch : createError ? createRefetch : undefined,
     }
@@ -220,6 +240,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     createError,
     approvalRefetch,
     createRefetch,
+    totalGasFee,
   ])
 
   return <CreateTxContext.Provider value={validatedValue}>{children}</CreateTxContext.Provider>

@@ -44,4 +44,5 @@ export type ModalProps = PropsWithChildren<{
   paddingY?: SpaceTokens
   bottomAttachment?: ReactNode
   gap?: ComponentProps<typeof View>['gap']
+  flex?: ComponentProps<typeof View>['flex']
 }>

@@ -6,6 +6,8 @@ import WALLET_CONNECT_ICON from 'assets/wallets/walletconnect-icon.svg'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 
+export const UNISWAP_EXTENSION_CONNECTOR_NAME = 'Uniswap Extension'
+
 export const CONNECTOR_ICON_OVERRIDE_MAP: { [id in string]?: string } = {
   [CONNECTION_PROVIDER_IDS.METAMASK_RDNS]: METAMASK_ICON,
   [CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID]: UNIWALLET_ICON,

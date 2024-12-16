@@ -97,7 +97,7 @@ function TokenWarningModalContent({
     shouldHavePluralTreatment: shouldBeCombinedPlural,
     formatPercent,
   })
-  const { text: titleTextColor } = getAlertColor(severity)
+  const { headerText: titleTextColor } = getAlertColor(severity)
 
   // Logic for "don't show again" dismissal of warnings
   const [dontShowAgain, setDontShowAgain] = useState<boolean>(false)

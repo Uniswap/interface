@@ -1,7 +1,9 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
+import { ProtectionResult, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { Locale } from 'uniswap/src/features/language/constants'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { getSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
@@ -84,6 +86,18 @@ const insufficientBalanceState: DerivedSwapInfo = {
   },
 }
 
+const blockedTokenState: DerivedSwapInfo = {
+  ...swapState,
+  currencies: {
+    ...swapState.currencies,
+    [CurrencyField.INPUT]: {
+      ...daiCurrencyInfo(),
+      safetyLevel: SafetyLevel.Blocked,
+      safetyInfo: { tokenList: TokenList.Blocked, protectionResult: ProtectionResult.Unknown },
+    },
+  },
+}
+
 const tradeErrorState: DerivedSwapInfo = {
   ...emptySwapInfo,
   currencyAmounts: {
@@ -119,6 +133,11 @@ describe(getSwapWarnings, () => {
     const warnings = getSwapWarnings(i18n.t, formatPercent, swapState, false)
     expect(warnings.length).toBe(1)
     expect(warnings[0]?.type).toEqual(WarningLabel.FormIncomplete)
+  })
+
+  it('catches blocked token errors', async () => {
+    const warnings = getSwapWarnings(i18n.t, formatPercent, blockedTokenState, false)
+    expect(warnings.map((w) => w.type)).toContain(WarningLabel.BlockedToken)
   })
 
   it('catches insufficient balance errors', () => {

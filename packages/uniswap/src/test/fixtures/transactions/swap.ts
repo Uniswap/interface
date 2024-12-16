@@ -33,7 +33,6 @@ export const createMockTradeWithStatus = (
   trade: new ClassicTrade({
     tradeType: TradeType.EXACT_INPUT,
     deadline: TWENTY_MINUTES_FROM_NOW,
-    slippageTolerance: 0.5,
     v2Routes: [],
     v3Routes: [
       {

@@ -83,6 +83,17 @@
         padding: 0;
       }
 
+      /* Only apply overflow-x: hidden on desktop */
+      /* This is to prevent ugly horizontal scrollbar from appearing on desktop */
+      /* We need to set it on html element specifically because otherwise we break */
+      /* sticky positioning of some child elements. */
+      /* Applying this on mobile breaks tamagui/remove-scroll. */
+      @media (min-width: 768px) {
+        html {
+          overflow-x: hidden;
+        }
+      }
+
       button {
         user-select: none;
       }

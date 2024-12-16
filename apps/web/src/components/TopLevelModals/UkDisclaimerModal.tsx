@@ -1,12 +1,13 @@
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
 import Column from 'components/deprecated/Column'
-import Modal from 'components/Modal'
 import { bannerText } from 'components/TopLevelBanners/UkBanner'
 import styled from 'lib/styled-components'
 import { X } from 'react-feather'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { ButtonText, ThemedText } from 'theme/components'
+import { Modal } from 'uniswap/src/components/modals/Modal'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trans } from 'uniswap/src/i18n'
 
 const Wrapper = styled(Column)`
@@ -37,7 +38,7 @@ export function UkDisclaimerModal() {
   const closeModal = useCloseModal()
 
   return (
-    <Modal isOpen={isOpen} onDismiss={closeModal}>
+    <Modal name={ModalName.UkDisclaimer} isModalOpen={isOpen} onClose={closeModal} padding={0}>
       <Wrapper gap="md">
         <CloseIconWrapper onClick={() => closeModal()}>
           <X size={24} />

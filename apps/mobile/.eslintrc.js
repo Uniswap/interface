@@ -1,6 +1,7 @@
 module.exports = {
   root: true,
   extends: ['@uniswap/eslint-config/native'],
+  ignorePatterns: ['.storybook/storybook.requires.ts'],
   parserOptions: {
     project: 'tsconfig.eslint.json',
     tsconfigRootDir: __dirname,

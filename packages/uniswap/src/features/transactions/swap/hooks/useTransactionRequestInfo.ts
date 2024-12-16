@@ -3,6 +3,7 @@ import { providers } from 'ethers/lib/ethers'
 import { useEffect, useMemo, useRef } from 'react'
 import { WithV4Flag } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { useTradingApiSwapQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery'
+import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
 import {
   CreateSwapRequest,
   NullablePermit,
@@ -17,11 +18,10 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { getBaseTradeAnalyticsPropertiesFromSwapInfo } from 'uniswap/src/features/transactions/swap/analytics'
-import { getTradeSettingsDeadline } from 'uniswap/src/features/transactions/swap/form/utils'
 import { usePermit2SignatureWithData } from 'uniswap/src/features/transactions/swap/hooks/usePermit2Signature'
 import { useWrapTransactionRequest } from 'uniswap/src/features/transactions/swap/hooks/useWrapTransactionRequest'
-import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { SwapGasFeeEstimation } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -72,7 +72,7 @@ export function useTransactionRequestInfo({
   const activeGasStrategy = useActiveGasStrategy(derivedSwapInfo.chainId, 'general')
   const shadowGasStrategies = useShadowGasStrategies(derivedSwapInfo.chainId, 'general')
   const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
-  const swapSettings = useSwapSettingsContext()
+  const transactionSettings = useTransactionSettingsContext()
 
   const { trade: tradeWithStatus } = derivedSwapInfo
   const { trade } = tradeWithStatus || { trade: undefined }
@@ -106,17 +106,10 @@ export function useTransactionRequestInfo({
     if (tradeWithStatus.trade?.slippageTolerance === undefined && !isBridgeTrade) {
       return undefined
     }
-    // TODO: update this when api does slippage calculation for us
-    // https://linear.app/uniswap/issue/MOB-2581/remove-slippage-adjustment-in-swap-request
-    const quote = {
-      ...swapQuote,
-      slippage: tradeWithStatus.trade?.slippageTolerance,
-    }
-
-    const deadline = getTradeSettingsDeadline(swapSettings.customDeadline)
+    const deadline = getTradeSettingsDeadline(transactionSettings.customDeadline)
 
     const swapArgs: WithV4Flag<CreateSwapRequest> = {
-      quote,
+      quote: swapQuote,
       permitData: permitData ?? undefined,
       signature: signatureInfo.signature,
       simulateTransaction: shouldSimulateTxn,
@@ -130,7 +123,7 @@ export function useTransactionRequestInfo({
     return swapArgs
   }, [
     activeGasStrategy,
-    swapSettings.customDeadline,
+    transactionSettings.customDeadline,
     isBridgeTrade,
     permitData,
     shadowGasStrategies,
@@ -230,20 +223,20 @@ export function useTransactionRequestInfo({
 
     if (gasEstimateError) {
       logger.warn('useTransactionRequestInfo', 'useTransactionRequestInfo', UNKNOWN_SIM_ERROR, {
-        ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, swapSettings, formatter, trace }),
+        ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, transactionSettings, formatter, trace }),
         error: gasEstimateError,
         txRequest: data?.swap,
       })
 
       if (!isMobileApp) {
         sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
-          ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, swapSettings, formatter, trace }),
+          ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, transactionSettings, formatter, trace }),
           error: gasEstimateError,
           txRequest: data?.swap,
         })
       }
     }
-  }, [data?.swap, swapSettings, derivedSwapInfo, formatter, gasEstimateError, swapRequestArgs, trade, trace])
+  }, [data?.swap, transactionSettings, derivedSwapInfo, formatter, gasEstimateError, swapRequestArgs, trade, trace])
 
   const gasEstimate: SwapGasFeeEstimation = useMemo(() => {
     const activeGasEstimate = data?.gasEstimates?.find((e) => areEqualGasStrategies(e.strategy, activeGasStrategy))

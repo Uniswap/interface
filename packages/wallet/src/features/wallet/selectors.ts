@@ -70,3 +70,8 @@ export const selectAnyAddressHasNotificationsEnabled = createSelector(selectAcco
 
 export const selectWalletSwapProtectionSetting = (state: WalletState): SwapProtectionSetting =>
   state.wallet.settings.swapProtection
+
+export const appRatingProvidedMsSelector = (state: WalletState): number | undefined => state.wallet.appRatingProvidedMs
+export const appRatingPromptedMsSelector = (state: WalletState): number | undefined => state.wallet.appRatingPromptedMs
+export const appRatingFeedbackProvidedMsSelector = (state: WalletState): number | undefined =>
+  state.wallet.appRatingFeedbackProvidedMs

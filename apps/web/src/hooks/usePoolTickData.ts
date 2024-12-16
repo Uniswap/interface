@@ -243,7 +243,25 @@ export function usePoolActiveLiquidity({
       }
     }
 
-    const sdkPrice = tickToPrice(token0, token1, activeTick)
+    let sdkPrice
+    try {
+      sdkPrice = tickToPrice(token0, token1, activeTick)
+    } catch (e) {
+      logger.debug('usePoolTickData', 'usePoolActiveLiquidity', 'Error getting price', {
+        error: e,
+        token0: token0.address,
+        token1: token1.address,
+        chainId: token0.chainId,
+      })
+
+      return {
+        isLoading,
+        error,
+        activeTick,
+        data: undefined,
+      }
+    }
+
     const activeTickProcessed: TickProcessed = {
       liquidityActive: JSBI.BigInt(pool?.liquidity ?? 0),
       tick: activeTick,

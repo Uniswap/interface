@@ -1,7 +1,8 @@
 /* eslint-disable complexity */
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, ColorTokens, Flex, Text, useIsShortMobileDevice } from 'ui/src'
+import { Button, ColorTokens, Flex, SpinningLoader, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
@@ -9,6 +10,7 @@ import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import {
   TransactionScreen,
   useTransactionModalContext,
@@ -19,6 +21,7 @@ import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/context
 import {
   useNeedsBridgingWarning,
   useParsedSwapWarnings,
+  usePrefilledNeedsTokenProtectionWarning,
 } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
 import { BridgingModal } from 'uniswap/src/features/transactions/swap/modals/BridgingModal'
 import { getActionName } from 'uniswap/src/features/transactions/swap/review/SubmitSwapButton'
@@ -40,8 +43,16 @@ export function SwapFormButton({ wrapCallback }: { wrapCallback?: WrapCallback }
 
   const activeAccount = useAccountMeta()
   const { walletNeedsRestore, setScreen, swapRedirectCallback } = useTransactionModalContext()
-  const { derivedSwapInfo, isSubmitting, updateSwapForm, exactAmountFiat, exactAmountToken } = useSwapFormContext()
+  const { derivedSwapInfo, prefilledCurrencies, isSubmitting, updateSwapForm, exactAmountFiat, exactAmountToken } =
+    useSwapFormContext()
   const { blockingWarning, insufficientBalanceWarning, insufficientGasFundsWarning } = useParsedSwapWarnings()
+
+  // needsTokenProtectionWarning is only true in interface, where swap component might be prefilled with a token that has a protection warning
+  const { needsTokenProtectionWarning, currenciesWithProtectionWarnings } = usePrefilledNeedsTokenProtectionWarning(
+    derivedSwapInfo,
+    prefilledCurrencies,
+  )
+  const [showTokenWarningModal, setShowTokenWarningModal] = useState(false)
 
   const needsBridgingWarning = useNeedsBridgingWarning(derivedSwapInfo)
   const [showBridgingWarningModal, setShowBridgingWarningModal] = useState(false)
@@ -50,14 +61,23 @@ export function SwapFormButton({ wrapCallback }: { wrapCallback?: WrapCallback }
 
   const { wrapType, trade, currencies, chainId, exactCurrencyField } = derivedSwapInfo
 
-  const { isBlocked, isBlockedLoading } = useIsBlocked(activeAccount?.address)
+  const { isBlocked: isBlockedAccount, isBlockedLoading: isBlockedAccountLoading } = useIsBlocked(
+    activeAccount?.address,
+  )
 
-  const noValidSwap = !isWrapAction(wrapType) && !trade.trade && !trade.indicativeTrade
+  const noValidSwap = !isWrapAction(wrapType) && !trade.trade
+
+  const indicative = !trade.trade && (trade.indicativeTrade || trade.isIndicativeLoading)
 
   const nativeCurrency = NativeCurrency.onChain(chainId)
 
   const reviewButtonDisabled =
-    noValidSwap || !!blockingWarning || isBlocked || isBlockedLoading || walletNeedsRestore || isSubmitting
+    noValidSwap ||
+    !!blockingWarning ||
+    isBlockedAccount ||
+    isBlockedAccountLoading ||
+    walletNeedsRestore ||
+    isSubmitting
 
   const isViewOnlyWallet = activeAccount?.type === AccountType.Readonly
 
@@ -66,7 +86,13 @@ export function SwapFormButton({ wrapCallback }: { wrapCallback?: WrapCallback }
   const { isInterfaceWrap, onInterfaceWrap } = useInterfaceWrap(wrapCallback)
 
   const onReviewPress = useCallback(
-    ({ skipBridgingWarning }: { skipBridgingWarning: boolean }) => {
+    ({
+      skipBridgingWarning,
+      skipTokenProtectionWarning,
+    }: {
+      skipBridgingWarning: boolean
+      skipTokenProtectionWarning: boolean
+    }) => {
       if (swapRedirectCallback) {
         swapRedirectCallback({
           inputCurrency: currencies[CurrencyField.INPUT]?.currency,
@@ -83,6 +109,8 @@ export function SwapFormButton({ wrapCallback }: { wrapCallback?: WrapCallback }
       } else if (isInterfaceWrap) {
         // TODO(WEB-5012): Align interface wrap UX into SwapReviewScreen
         onInterfaceWrap?.()
+      } else if (needsTokenProtectionWarning && !skipTokenProtectionWarning) {
+        setShowTokenWarningModal(true)
       } else if (needsBridgingWarning && !skipBridgingWarning) {
         setShowBridgingWarningModal(true)
       } else {
@@ -104,6 +132,7 @@ export function SwapFormButton({ wrapCallback }: { wrapCallback?: WrapCallback }
       onInterfaceWrap,
       updateSwapForm,
       setScreen,
+      needsTokenProtectionWarning,
     ],
   )
 
@@ -111,7 +140,7 @@ export function SwapFormButton({ wrapCallback }: { wrapCallback?: WrapCallback }
     (accepted: boolean) => {
       setShowBridgingWarningModal(false)
       if (accepted) {
-        onReviewPress({ skipBridgingWarning: true })
+        onReviewPress({ skipBridgingWarning: true, skipTokenProtectionWarning: false })
       }
     },
     [onReviewPress],
@@ -121,7 +150,11 @@ export function SwapFormButton({ wrapCallback }: { wrapCallback?: WrapCallback }
   const invalidAmountSelection = !exactAmountFiat && !exactAmountToken
 
   const isBlockingWithCustomMessage =
-    invalidTokenSelection || invalidAmountSelection || insufficientBalanceWarning || insufficientGasFundsWarning
+    invalidTokenSelection ||
+    invalidAmountSelection ||
+    insufficientBalanceWarning ||
+    insufficientGasFundsWarning ||
+    indicative
 
   const accountsCTAExperimentGroup = useExperimentGroupName(Experiments.AccountCTAs)
   const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
@@ -133,6 +166,9 @@ export function SwapFormButton({ wrapCallback }: { wrapCallback?: WrapCallback }
   const getButtonText = (): string => {
     if (swapRedirectCallback) {
       return t('common.getStarted')
+    }
+    if (indicative) {
+      return t('swap.finalizingQuote')
     }
     if (!activeAccount) {
       return isSignIn ? t('nav.signIn.button') : isLogIn ? t('nav.logIn.button') : t('common.connectWallet.button')
@@ -210,13 +246,18 @@ export function SwapFormButton({ wrapCallback }: { wrapCallback?: WrapCallback }
           // Custom styles are matched with our theme hover opacities - can remove this when we implement full theme support in Button
           pressStyle={{ backgroundColor: buttonProps.backgroundColor, scale: 0.98 }}
           hoverStyle={{ backgroundColor: buttonProps.hoverBackgroundColor }}
+          icon={
+            indicative ? (
+              <SpinningLoader color="$neutral2" size={isWeb ? iconSizes.icon20 : iconSizes.icon24} />
+            ) : undefined
+          }
           backgroundColor={buttonProps.backgroundColor}
           disabled={disabled}
           opacity={buttonProps.opacity}
           size={isShortMobileDevice ? 'small' : 'large'}
           testID={TestID.ReviewSwap}
           width="100%"
-          onPress={() => onReviewPress({ skipBridgingWarning: false })}
+          onPress={() => onReviewPress({ skipBridgingWarning: false, skipTokenProtectionWarning: false })}
         >
           <Text color={buttonProps.buttonTextColor} variant={SWAP_BUTTON_TEXT_VARIANT}>
             {buttonProps.buttonText}
@@ -230,6 +271,18 @@ export function SwapFormButton({ wrapCallback }: { wrapCallback?: WrapCallback }
         onContinue={() => bridgingModalActionCallback(true)}
         onClose={() => bridgingModalActionCallback(false)}
       />
+      {currenciesWithProtectionWarnings.length > 0 && currenciesWithProtectionWarnings[0] && (
+        <TokenWarningModal
+          isVisible={showTokenWarningModal}
+          currencyInfo0={currenciesWithProtectionWarnings[0]}
+          currencyInfo1={currenciesWithProtectionWarnings.length > 1 ? currenciesWithProtectionWarnings[1] : undefined}
+          closeModalOnly={() => setShowTokenWarningModal(false)}
+          onAcknowledge={() => {
+            setShowTokenWarningModal(false)
+            onReviewPress({ skipBridgingWarning: false, skipTokenProtectionWarning: true })
+          }}
+        />
+      )}
     </Flex>
   )
 }

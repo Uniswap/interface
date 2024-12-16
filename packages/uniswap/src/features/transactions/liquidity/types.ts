@@ -13,6 +13,7 @@ export enum LiquidityTransactionType {
   Increase = 'increase',
   Decrease = 'decrease',
   Migrate = 'migrate',
+  Collect = 'collect',
 }
 
 export interface LiquidityAction {
@@ -27,11 +28,13 @@ export type LiquidityTxAndGasInfo =
   | DecreasePositionTxAndGasInfo
   | CreatePositionTxAndGasInfo
   | MigrateV3PositionTxAndGasInfo
+  | CollectFeesTxAndGasInfo
 export type ValidatedLiquidityTxContext =
   | ValidatedIncreasePositionTxAndGasInfo
   | ValidatedDecreasePositionTxAndGasInfo
   | ValidatedCreatePositionTxAndGasInfo
   | ValidatedMigrateV3PositionTxAndGasInfo
+  | ValidatedCollectFeesTxAndGasInfo
 
 export function isValidLiquidityTxContext(
   liquidityTxContext: LiquidityTxAndGasInfo | unknown,
@@ -70,6 +73,13 @@ export interface CreatePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
 export interface MigrateV3PositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   type: LiquidityTransactionType.Migrate
   migratePositionRequestArgs: MigrateLPPositionRequest | undefined
+}
+
+export interface CollectFeesTxAndGasInfo {
+  type: LiquidityTransactionType.Collect
+  protocolVersion: ProtocolVersion
+  action: LiquidityAction
+  txRequest: ValidatedTransactionRequest | undefined
 }
 
 export type ValidatedIncreasePositionTxAndGasInfo = Required<IncreasePositionTxAndGasInfo> &
@@ -118,10 +128,22 @@ export type ValidatedMigrateV3PositionTxAndGasInfo = Required<MigrateV3PositionT
       }
   )
 
+export type ValidatedCollectFeesTxAndGasInfo = CollectFeesTxAndGasInfo & {
+  txRequest: ValidatedTransactionRequest
+}
+
 function validateLiquidityTxContext(
   liquidityTxContext: LiquidityTxAndGasInfo | unknown,
 ): ValidatedLiquidityTxContext | undefined {
   if (!isLiquidityTx(liquidityTxContext)) {
+    return undefined
+  }
+
+  if (liquidityTxContext.type === LiquidityTransactionType.Collect) {
+    if (liquidityTxContext.txRequest) {
+      return { ...liquidityTxContext, txRequest: liquidityTxContext.txRequest }
+    }
+
     return undefined
   }
 

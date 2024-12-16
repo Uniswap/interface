@@ -28,13 +28,10 @@ target 'Uniswap' do
   use_expo_modules!(exclude: ['expo-constants','expo-file-system', 'expo-font', 'expo-keep-awake', 'expo-error-recovery'])
   config = use_native_modules!
 
-  flipper_config = ENV['USE_FLIPPER'] ? FlipperConfiguration.enabled : FlipperConfiguration.disabled
-
   use_react_native!(
     :path => config[:reactNativePath],
     # to enable hermes on iOS, change `false` to `true` and then install pods
-    :hermes_enabled => true,
-    :flipper_configuration => flipper_config
+    :hermes_enabled => true
   )
 
   target 'UniswapTests' do

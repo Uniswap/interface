@@ -5,6 +5,8 @@ import { Flex } from 'ui/src/components/layout'
 import { zIndices } from 'ui/src/theme'
 import { useShadowPropsShort } from 'ui/src/theme/shadows'
 
+export const ADAPTIVE_MODAL_ANIMATION_DURATION = 200
+
 export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: ModalProps): JSX.Element {
   const isTouchDevice = useIsTouchDevice()
   const [isHandlePressed, setHandlePressed] = useState(false)

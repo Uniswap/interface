@@ -3,7 +3,6 @@ import { Interface } from '@ethersproject/abi'
 import { BigintIsh, Currency, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import IUniswapV3PoolStateJSON from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { FeeAmount, Pool, computePoolAddress } from '@uniswap/v3-sdk'
-import { useAccount } from 'hooks/useAccount'
 import JSBI from 'jsbi'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
@@ -97,9 +96,8 @@ export enum PoolState {
 
 export function usePools(
   poolKeys: [Currency | undefined, Currency | undefined, FeeAmount | undefined][],
+  chainId: UniverseChainId | undefined,
 ): [PoolState, Pool | null][] {
-  const { chainId } = useAccount()
-
   const poolTokens: ([Token, Token, FeeAmount] | undefined)[] = useMemo(() => {
     if (!chainId) {
       return new Array(poolKeys.length)
@@ -194,5 +192,5 @@ export function usePool(
     [currencyA, currencyB, feeAmount],
   )
 
-  return usePools(poolKeys)[0]
+  return usePools(poolKeys, currencyA?.chainId)[0]
 }

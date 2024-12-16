@@ -14,9 +14,7 @@ import { SignTypedDataRequestContent } from 'src/app/features/dappRequests/reque
 import { rejectAllRequests } from 'src/app/features/dappRequests/saga'
 import { isDappRequestStoreItemForEthSendTxn } from 'src/app/features/dappRequests/slice'
 import {
-  isGetAccountRequest,
-  isRequestAccountRequest,
-  isRequestPermissionsRequest,
+  isConnectionRequest,
   isSignMessageRequest,
   isSignTypedDataRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
@@ -201,11 +199,7 @@ const DappRequest = memo(function _DappRequest(): JSX.Element | null {
   if (isDappRequestStoreItemForEthSendTxn(request)) {
     return <EthSendRequestContent request={request} />
   }
-  if (
-    isGetAccountRequest(request.dappRequest) ||
-    isRequestAccountRequest(request.dappRequest) ||
-    isRequestPermissionsRequest(request.dappRequest)
-  ) {
+  if (isConnectionRequest(request.dappRequest)) {
     return <ConnectionRequestContent />
   }
 

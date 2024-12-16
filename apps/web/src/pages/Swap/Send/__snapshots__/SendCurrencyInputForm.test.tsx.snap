@@ -553,7 +553,7 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
           <h2
             class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _fontFamily-f-family _color-color _fontWeight-f-weight-me3083741 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _userSelect-auto _whiteSpace-normal _mt-0px _mr-0px _mb-0px _ml-0px"
             data-disable-theme="true"
-            id="title-:r3:"
+            id="title-:r5:"
             role="heading"
           />
         </span>
@@ -1100,7 +1100,7 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
           <h2
             class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _fontFamily-f-family _color-color _fontWeight-f-weight-me3083741 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _userSelect-auto _whiteSpace-normal _mt-0px _mr-0px _mb-0px _ml-0px"
             data-disable-theme="true"
-            id="title-:r5:"
+            id="title-:r8:"
             role="heading"
           />
         </span>
@@ -1662,7 +1662,7 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
           <h2
             class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _fontFamily-f-family _color-color _fontWeight-f-weight-me3083741 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _userSelect-auto _whiteSpace-normal _mt-0px _mr-0px _mb-0px _ml-0px"
             data-disable-theme="true"
-            id="title-:r1:"
+            id="title-:r2:"
             role="heading"
           />
         </span>

@@ -2364,6 +2364,10 @@ PODS:
     - React
     - React-callinvoker
     - React-Core
+  - react-native-slider (4.5.5):
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
   - react-native-webview (11.23.1):
     - React-Core
   - react-native-widgetkit (1.0.9):
@@ -2542,6 +2546,8 @@ PODS:
     - React-Core
   - RNCMaskedView (0.2.9):
     - React-Core
+  - RNDateTimePicker (8.2.0):
+    - React-Core
   - RNDeviceInfo (10.0.2):
     - React-Core
   - RNFastImage (8.6.3):
@@ -2682,6 +2688,7 @@ DEPENDENCIES:
   - react-native-restart (from `../../../node_modules/react-native-restart`)
   - react-native-safe-area-context (from `../../../node_modules/react-native-safe-area-context`)
   - "react-native-skia (from `../../../node_modules/@shopify/react-native-skia`)"
+  - "react-native-slider (from `../../../node_modules/@react-native-community/slider`)"
   - react-native-webview (from `../../../node_modules/react-native-webview`)
   - react-native-widgetkit (from `../../../node_modules/react-native-widgetkit`)
   - React-nativeconfig (from `../../../node_modules/react-native/ReactCommon`)
@@ -2707,6 +2714,7 @@ DEPENDENCIES:
   - "ReactNativePerformance (from `../../../node_modules/@shopify/react-native-performance`)"
   - "RNCAsyncStorage (from `../../../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCMaskedView (from `../../../node_modules/@react-native-masked-view/masked-view`)"
+  - "RNDateTimePicker (from `../../../node_modules/@react-native-community/datetimepicker`)"
   - RNDeviceInfo (from `../../../node_modules/react-native-device-info`)
   - RNFastImage (from `../../../node_modules/react-native-fast-image`)
   - "RNFBApp (from `../../../node_modules/@react-native-firebase/app`)"
@@ -2895,6 +2903,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native-safe-area-context"
   react-native-skia:
     :path: "../../../node_modules/@shopify/react-native-skia"
+  react-native-slider:
+    :path: "../../../node_modules/@react-native-community/slider"
   react-native-webview:
     :path: "../../../node_modules/react-native-webview"
   react-native-widgetkit:
@@ -2945,6 +2955,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/@react-native-async-storage/async-storage"
   RNCMaskedView:
     :path: "../../../node_modules/@react-native-masked-view/masked-view"
+  RNDateTimePicker:
+    :path: "../../../node_modules/@react-native-community/datetimepicker"
   RNDeviceInfo:
     :path: "../../../node_modules/react-native-device-info"
   RNFastImage:
@@ -3078,6 +3090,7 @@ SPEC CHECKSUMS:
   react-native-restart: 7595693413fe3ca15893702f2c8306c62a708162
   react-native-safe-area-context: b97eb6f9e3b7f437806c2ce5983f479f8eb5de4b
   react-native-skia: c7d8d8a380d4dbf8463343e2738bceaf49a9c084
+  react-native-slider: 708dea8f20c91a325d622fe8e11d3b9dfff158a3
   react-native-webview: d33e2db8925d090871ffeb232dfa50cb3a727581
   react-native-widgetkit: efb6680df237463bbe1be3a4d1a1578a1b0bb08f
   React-nativeconfig: e700ac3ec3d66329076bd2c2787a204411815d43
@@ -3104,6 +3117,7 @@ SPEC CHECKSUMS:
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   RNCAsyncStorage: 0c357f3156fcb16c8589ede67cc036330b6698ca
   RNCMaskedView: 949696f25ec596bfc697fc88e6f95cf0c79669b6
+  RNDateTimePicker: 40ffda97d071a98a10fdca4fa97e3977102ccd14
   RNDeviceInfo: 0a7c1d2532aa7691f9b9925a27e43af006db4dae
   RNFastImage: 246de6b52d7642992cfd01e2005dda36d00a6660
   RNFBApp: 4122dd41d8d7ff017b6ecf777a6224f5b349ca04
@@ -3126,6 +3140,6 @@ SPEC CHECKSUMS:
   Yoga: 805bf71192903b20fc14babe48080582fee65a80
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
-PODFILE CHECKSUM: e4219214e71cc0c904d669166daa324a8e54be8f
+PODFILE CHECKSUM: 525fd4a1c78879023ae05970b18e66b654c4c07a
 
 COCOAPODS: 1.14.3

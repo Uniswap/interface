@@ -6,7 +6,7 @@ import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { errorShakeAnimation } from 'ui/src/animations/errorShakeAnimation'
 import { PlusMinusButtonType } from 'ui/src/components/button/PlusMinusButton'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE, MAX_CUSTOM_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
-import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 
 const SLIPPAGE_INCREMENT = 0.1
 
@@ -30,8 +30,8 @@ export function useSlippageSettings(): {
   const {
     customSlippageTolerance,
     autoSlippageTolerance: derivedAutoSlippageTolerance,
-    updateSwapSettings,
-  } = useSwapSettingsContext()
+    updateTransactionSettings,
+  } = useTransactionSettingsContext()
 
   const [isEditingSlippage, setIsEditingSlippage] = useState<boolean>(false)
   const [autoSlippageEnabled, setAutoSlippageEnabled] = useState<boolean>(!customSlippageTolerance)
@@ -66,7 +66,7 @@ export function useSlippageSettings(): {
     setAutoSlippageEnabled(true)
     setInputWarning(undefined)
     setInputSlippageTolerance('')
-    updateSwapSettings({ customSlippageTolerance: undefined })
+    updateTransactionSettings({ customSlippageTolerance: undefined })
   }
 
   const onChangeSlippageInput = useCallback(
@@ -117,9 +117,9 @@ export function useSlippageSettings(): {
       }
 
       setInputSlippageTolerance(value)
-      updateSwapSettings({ customSlippageTolerance: parsedValue })
+      updateTransactionSettings({ customSlippageTolerance: parsedValue })
     },
-    [inputShakeX, updateSwapSettings, t],
+    [inputShakeX, updateTransactionSettings, t],
   )
 
   const onFocusSlippageInput = useCallback((): void => {
@@ -138,12 +138,12 @@ export function useSlippageSettings(): {
     // Set autoSlippageEnabled to true if input is invalid (ex. '' or '.')
     if (isNaN(parsedInputSlippageTolerance)) {
       setAutoSlippageEnabled(true)
-      updateSwapSettings({ customSlippageTolerance: undefined })
+      updateTransactionSettings({ customSlippageTolerance: undefined })
       return
     }
 
     setInputSlippageTolerance(parsedInputSlippageTolerance.toFixed(2))
-  }, [parsedInputSlippageTolerance, updateSwapSettings])
+  }, [parsedInputSlippageTolerance, updateTransactionSettings])
 
   const onPressPlusMinusButton = useCallback(
     (type: PlusMinusButtonType): void => {
@@ -165,9 +165,9 @@ export function useSlippageSettings(): {
       }
 
       setInputSlippageTolerance(constrainedNewSlippage.toFixed(2).toString())
-      updateSwapSettings({ customSlippageTolerance: constrainedNewSlippage })
+      updateTransactionSettings({ customSlippageTolerance: constrainedNewSlippage })
     },
-    [autoSlippageEnabled, currentSlippageToleranceNum, updateSwapSettings, t],
+    [autoSlippageEnabled, currentSlippageToleranceNum, updateTransactionSettings, t],
   )
 
   return {

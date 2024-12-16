@@ -8,9 +8,9 @@ import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ViewOnlyModal } from 'uniswap/src/features/transactions/modals/ViewOnlyModal'
-import { SwapSettingsModal } from 'uniswap/src/features/transactions/swap/settings/SwapSettingsModal'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { TransactionSettingsModal } from 'uniswap/src/features/transactions/swap/settings/TransactionSettingsModal'
 import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
-import { useSwapSettingsContext } from 'uniswap/src/features/transactions/swap/settings/contexts/SwapSettingsContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { isInterface, isMobileApp } from 'utilities/src/platform'
@@ -39,9 +39,9 @@ export function SwapFormSettings({
   const colors = useSporeColors()
 
   const account = useAccountMeta()
-  const { customSlippageTolerance } = useSwapSettingsContext()
+  const { customSlippageTolerance } = useTransactionSettingsContext()
 
-  const [showSwapSettingsModal, setShowSettingsModal] = useState(false)
+  const [showTransactionSettingsModal, setShowSettingsModal] = useState(false)
   const [showViewOnlyModal, setShowViewOnlyModal] = useState(false)
 
   const onPressSwapSettings = useCallback((): void => {
@@ -86,7 +86,7 @@ export function SwapFormSettings({
       {!isViewOnlyWallet && (
         <Popover
           placement="bottom-end"
-          open={showSwapSettingsModal}
+          open={showTransactionSettingsModal}
           onOpenChange={(open) => {
             // Only close on interface because SwapSettings are rendered in a modal on mobile/extension
             // and when click is triggered inside extension Modal it causes onOpenChange to trigger
@@ -115,10 +115,10 @@ export function SwapFormSettings({
               </Flex>
             </TouchableArea>
           </Popover.Trigger>
-          <SwapSettingsModal
+          <TransactionSettingsModal
             settings={settings}
             defaultTitle={defaultTitle}
-            isOpen={showSwapSettingsModal}
+            isOpen={showTransactionSettingsModal}
             onClose={onCloseSettingsModal}
           />
         </Popover>

@@ -1,10 +1,24 @@
-We are back with some new updates! Here’s the latest:
+IPFS hash of the deployment:
+- CIDv0: `QmYVT8bXNHTgPdSTegLQ62Z6f7E51fQbeMvn2nJAxMRGBE`
+- CIDv1: `bafybeiew2yawtry3lld6g5ankyq3bsbvjfchxxhboph45u6os6t2babtru`
 
-Token Warnings: See more information about the tokens you’re attempting to swap, enriched with data from Blockaid. 
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-Other changes: 
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
 
-- Increased manual slippage tolerance up to 50%
-- Support for toggling between fiat and token input for fiat onramp
-- Better dapp signing support
-- Various bug fixes and performance improvements
+IPFS gateways:
+- https://bafybeiew2yawtry3lld6g5ankyq3bsbvjfchxxhboph45u6os6t2babtru.ipfs.dweb.link/
+- https://bafybeiew2yawtry3lld6g5ankyq3bsbvjfchxxhboph45u6os6t2babtru.ipfs.cf-ipfs.com/
+- [ipfs://QmYVT8bXNHTgPdSTegLQ62Z6f7E51fQbeMvn2nJAxMRGBE/](ipfs://QmYVT8bXNHTgPdSTegLQ62Z6f7E51fQbeMvn2nJAxMRGBE/)
+
+### 5.62.4 (2024-12-16)
+
+
+### Bug Fixes
+
+* **web:** fix disabled swap button for previously-dismissed warning tokens (#14560) 2b04e71
+
+
