@@ -43,6 +43,7 @@ const ClaimNewUbe = lazy(() => import('pages/ClaimNewUbe'))
 const ClaimNewPact = lazy(() => import('pages/ClaimNewPact'))
 const RedirectEarn = lazy(() => import('pages/Earn/redirects'))
 const RedirectLaunchpad = lazy(() => import('pages/LaunchpadList/redirects'))
+const LaunchpadCreate = lazy(() => import('pages/LaunchpadCreate'))
 const FarmV3 = lazy(() => import('pages/FarmV3'))
 const Debug = lazy(() => import('pages/Debug'))
 
@@ -373,9 +374,14 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/ubestarter',
-    getTitle: getExploreTitle,
+    getTitle: () => `UbeStarter`,
     nestedPaths: [':tab', ':chainName', ':tab/:chainName'],
     getElement: () => <RedirectLaunchpad />,
+  }),
+  createRouteDefinition({
+    path: '/ubestarter/create',
+    getTitle: getExploreTitle,
+    getElement: () => <LaunchpadCreate />,
   }),
   createRouteDefinition({
     path: '/debug',
