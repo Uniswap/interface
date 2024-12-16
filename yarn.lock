@@ -89,7 +89,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@adraffy/ens-normalize@npm:1.11.0":
+"@adraffy/ens-normalize@npm:1.11.0, @adraffy/ens-normalize@npm:^1.10.1":
   version: 1.11.0
   resolution: "@adraffy/ens-normalize@npm:1.11.0"
   checksum: b2911269e3e0ec6396a2e5433a99e0e1f9726befc6c167994448cd0e53dbdd0be22b4835b4f619558b568ed9aa7312426b8fa6557a13999463489daa88169ee5
@@ -5825,6 +5825,39 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@farcaster/frame-core@npm:^0.0.15":
+  version: 0.0.15
+  resolution: "@farcaster/frame-core@npm:0.0.15"
+  dependencies:
+    ox: ^0.4.0
+    zod: ^3.23.8
+  checksum: 2c8531e49ef6b7931b7aa6efefd510cb2078ce0f212df3a06df3450772afda8296eb1f6d8c5ef182373299fc953f1b925bf62186c37027168263521441686bfd
+  languageName: node
+  linkType: hard
+
+"@farcaster/frame-sdk@npm:0.0.16":
+  version: 0.0.16
+  resolution: "@farcaster/frame-sdk@npm:0.0.16"
+  dependencies:
+    "@farcaster/frame-core": ^0.0.15
+    comlink: ^4.4.2
+    eventemitter3: ^5.0.1
+    ox: ^0.4.0
+  checksum: 5a6c78e99c1f565b14772c68a8d364ee65886dfd30d7d208bf78ec754d94273cb0004a7ec0911b0d048dfe9cb3f15a0c23d7c3f03a2bb4bc63b94a87e77d6a7d
+  languageName: node
+  linkType: hard
+
+"@farcaster/frame-wagmi-connector@npm:0.0.1":
+  version: 0.0.1
+  resolution: "@farcaster/frame-wagmi-connector@npm:0.0.1"
+  peerDependencies:
+    "@farcaster/frame-sdk": ^0.0.16
+    viem: ^2.21.55
+    wagmi: ^2.14.1
+  checksum: f4ce50f9a9af9d83544b124e6715f0737039194425e0d74a510a755d5a0eb95ec1aa5c9784caf8d8d7e50ea1ddc7ac18c33428ce2dcc7d090f684b2cf169e838
+  languageName: node
+  linkType: hard
+
 "@fastify/busboy@npm:^2.0.0":
   version: 2.1.0
   resolution: "@fastify/busboy@npm:2.1.0"
@@ -8822,6 +8855,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@noble/curves@npm:^1.6.0, @noble/curves@npm:~1.7.0":
+  version: 1.7.0
+  resolution: "@noble/curves@npm:1.7.0"
+  dependencies:
+    "@noble/hashes": 1.6.0
+  checksum: e220b704f1e516f326fff985e794e840a267f5542e1388737142b08177672ebc41b460b5a5bf636d7622c68e8ae719bc042ccd8aed16dc14311450a94b5f2a05
+  languageName: node
+  linkType: hard
+
 "@noble/hashes@npm:1.2.0, @noble/hashes@npm:~1.2.0":
   version: 1.2.0
   resolution: "@noble/hashes@npm:1.2.0"
@@ -8847,6 +8889,20 @@ __metadata:
   version: 1.5.0
   resolution: "@noble/hashes@npm:1.5.0"
   checksum: 9cc031d5c888c455bfeef76af649b87f75380a4511405baea633c1e4912fd84aff7b61e99716f0231d244c9cfeda1fafd7d718963e6a0c674ed705e9b1b4f76b
+  languageName: node
+  linkType: hard
+
+"@noble/hashes@npm:1.6.0":
+  version: 1.6.0
+  resolution: "@noble/hashes@npm:1.6.0"
+  checksum: 07729b80108d2a9b862eb4e070d4f78ca7ee86b9a9c13a4f7c338ba47a15d4386dd283235da71f21ad515fa9f0b9429fc3da39d2f2b4a50e2442212d14cfd4a9
+  languageName: node
+  linkType: hard
+
+"@noble/hashes@npm:^1.5.0, @noble/hashes@npm:~1.6.0":
+  version: 1.6.1
+  resolution: "@noble/hashes@npm:1.6.1"
+  checksum: 57c62f65ee217c0293b4321b547792aa6d79812bfe70a7d62dc83e0f936cc677b14ed981b4e88cf8fdad37cd6d3a0cbd3bd0908b0728adc9daf066e678be8901
   languageName: node
   linkType: hard
 
@@ -10611,6 +10667,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@scure/base@npm:~1.2.1":
+  version: 1.2.1
+  resolution: "@scure/base@npm:1.2.1"
+  checksum: 061e04e4f6ed7bada6cdad4c799e6a82f30dda3f4008895bdb2e556f333f9b41f44dc067d25c064357ed6c012ea9c8be1e7927caf8a083af865b8de27b52370c
+  languageName: node
+  linkType: hard
+
 "@scure/bip32@npm:1.1.5":
   version: 1.1.5
   resolution: "@scure/bip32@npm:1.1.5"
@@ -10655,6 +10718,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@scure/bip32@npm:^1.5.0":
+  version: 1.6.0
+  resolution: "@scure/bip32@npm:1.6.0"
+  dependencies:
+    "@noble/curves": ~1.7.0
+    "@noble/hashes": ~1.6.0
+    "@scure/base": ~1.2.1
+  checksum: 1347477e28678a9bc4e2ec5e8e0f679263f2e3cb19c0e65849f76810c4c608461d4b283521c897249fa7dacc8c76e1b50e2a866b22467c8e93662a9c545cd42b
+  languageName: node
+  linkType: hard
+
 "@scure/bip39@npm:1.1.1":
   version: 1.1.1
   resolution: "@scure/bip39@npm:1.1.1"
@@ -10682,6 +10756,16 @@ __metadata:
     "@noble/hashes": ~1.5.0
     "@scure/base": ~1.1.8
   checksum: 211f2c01361993bfe54c0e4949f290224381457c7f76d7cd51d6a983f3f4b6b9f85adfd0e623977d777ed80417a5fe729eb19dd34e657147810a0e58a8e7b9e0
+  languageName: node
+  linkType: hard
+
+"@scure/bip39@npm:^1.4.0":
+  version: 1.5.0
+  resolution: "@scure/bip39@npm:1.5.0"
+  dependencies:
+    "@noble/hashes": ~1.6.0
+    "@scure/base": ~1.2.1
+  checksum: 03d1888f5d0d514eebc5c3adc1e071d225963d434fcf789abea5ef2c8b4b99f3ad9ebee8a597c0c13d5415e6b2b380f55f61560c1643cd871961ab91cbcf5122
   languageName: node
   linkType: hard
 
@@ -16706,6 +16790,8 @@ __metadata:
     "@craco/craco": 7.1.0
     "@crowdin/cli": 3.14.0
     "@ethersproject/experimental": 5.7.0
+    "@farcaster/frame-sdk": 0.0.16
+    "@farcaster/frame-wagmi-connector": 0.0.1
     "@graphql-codegen/cli": 3.3.1
     "@graphql-codegen/client-preset": 3.0.1
     "@graphql-codegen/typescript": 3.0.4
@@ -22048,6 +22134,13 @@ __metadata:
   dependencies:
     delayed-stream: ~1.0.0
   checksum: 49fa4aeb4916567e33ea81d088f6584749fc90c7abec76fd516bf1c5aa5c79f3584b5ba3de6b86d26ddd64bae5329c4c7479343250cfe71c75bb366eae53bb7c
+  languageName: node
+  linkType: hard
+
+"comlink@npm:^4.4.2":
+  version: 4.4.2
+  resolution: "comlink@npm:4.4.2"
+  checksum: 35313f26fdd78c202be21be49a7607f57e9e91963399b524676742ee0cf7db589be500d923ed0809b53f37996461186fb345bf867d93236be22bfae3cb7bd07e
   languageName: node
   linkType: hard
 
@@ -37430,6 +37523,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ox@npm:^0.4.0":
+  version: 0.4.1
+  resolution: "ox@npm:0.4.1"
+  dependencies:
+    "@adraffy/ens-normalize": ^1.10.1
+    "@noble/curves": ^1.6.0
+    "@noble/hashes": ^1.5.0
+    "@scure/bip32": ^1.5.0
+    "@scure/bip39": ^1.4.0
+    abitype: ^1.0.6
+    eventemitter3: 5.0.1
+  peerDependencies:
+    typescript: ">=5.4.0"
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 4bc81504c6888315f436d31df368eb8a8eb1b8f240207326b0e0b8fe39ee7dfa579f5ea564e178e1547f57ece45d04c3aa2ad5504e8a55a2968237c18f06a22d
+  languageName: node
+  linkType: hard
+
 "p-cancelable@npm:^1.0.0":
   version: 1.1.0
   resolution: "p-cancelable@npm:1.1.0"
@@ -49199,6 +49312,13 @@ __metadata:
   version: 3.22.4
   resolution: "zod@npm:3.22.4"
   checksum: 80bfd7f8039b24fddeb0718a2ec7c02aa9856e4838d6aa4864335a047b6b37a3273b191ef335bf0b2002e5c514ef261ffcda5a589fb084a48c336ffc4cdbab7f
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.23.8":
+  version: 3.24.1
+  resolution: "zod@npm:3.24.1"
+  checksum: dcd5334725b29555593c186fd6505878bb7ccb4f5954f728d2de24bf71f9397492d83bdb69d5b8a376eb500a02273ae0691b57deb1eb8718df3f64c77cc5534a
   languageName: node
   linkType: hard
 

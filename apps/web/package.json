@@ -153,6 +153,8 @@
   "dependencies": {
     "@amplitude/analytics-browser": "1.12.1",
     "@apollo/client": "3.10.4",
+    "@farcaster/frame-sdk": "0.0.16",
+    "@farcaster/frame-wagmi-connector": "0.0.1",
     "@graphql-codegen/cli": "3.3.1",
     "@graphql-codegen/client-preset": "3.0.1",
     "@graphql-codegen/typescript": "3.0.4",
