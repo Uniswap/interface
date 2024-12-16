@@ -1,0 +1,15 @@
+{
+    "accountAssociation": {
+      "header": "eyJmaWQiOjM2MjEsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHgyY2Q4NWEwOTMyNjFmNTkyNzA4MDRBNkVBNjk3Q2VBNENlQkVjYWZFIn0",
+      "payload": "eyJkb21haW4iOiJ1bmlmcmFtZS5vcmcifQ",
+      "signature": "MHgxZTZlZTkyNmRiZjU5ZDljZjM4MGI1YTU0ZTI2YzUxYjEyN2MyZjM2NTM3ZDJhYWI5ZGZjOTBiMDVlMjRjY2U4MzYxZDk5YmRhOGZmYWU0NjliZTY0ZWNlZTVhZTA5MjYzNWM5NjVlYzFmZmRjNDEwOGZiNjJlNmRmYmRiM2VkNDFi"
+    },
+    "frame": {
+      "name": "Uniframe",
+      "version": "0.0.1",
+      "iconUrl": "https://uniframe.org/favicon.png",
+      "homeUrl": "https://uniframe.org/#/swap",
+      "splashImageUrl": "https://uniframe.org/favicon.png",
+      "splashBackgroundColor": "#131313"
+    }
+  }
