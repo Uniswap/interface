@@ -64,7 +64,7 @@ export function Modal({
           adaptToSheet={isInterface}
           alignment={alignment}
           backgroundColor={backgroundColor}
-          height={fullScreen ? '100%' : undefined}
+          height={height ?? (fullScreen ? '100%' : undefined)}
           isOpen={isModalOpen}
           justifyContent={justifyContent}
           m="$none"
