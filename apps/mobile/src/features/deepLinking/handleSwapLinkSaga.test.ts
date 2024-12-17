@@ -2,12 +2,9 @@ import { URL } from 'react-native-url-polyfill'
 import { expectSaga } from 'redux-saga-test-plan'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
 import { openModal } from 'src/features/modals/modalSlice'
-import { DAI, UNI } from 'uniswap/src/constants/tokens'
-import { AssetType } from 'uniswap/src/entities/assets'
+import { DAI, UNI, USDC_UNICHAIN_SEPOLIA } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
-import { CurrencyField } from 'uniswap/src/types/currency'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 const account = signerMnemonicAccount()
@@ -29,49 +26,20 @@ const formSwapUrl = (
 &amount=${amount}`.trim(),
   )
 
-const formTransactionState = (
-  chain?: UniverseChainId,
-  inputAddress?: string,
-  outputAddress?: string,
-  currencyField?: string,
-  amount?: string,
-): {
-  input: {
-    address: string | undefined
-    chainId: UniverseChainId | undefined
-    type: AssetType
-  }
-  output: {
-    address: string | undefined
-    chainId: UniverseChainId | undefined
-    type: AssetType
-  }
-  exactCurrencyField: string | undefined
-  exactAmountToken: string | undefined
-} => ({
-  [CurrencyField.INPUT]: {
-    address: inputAddress,
-    chainId: chain,
-    type: AssetType.Currency,
-  },
-  [CurrencyField.OUTPUT]: {
-    address: outputAddress,
-    chainId: chain,
-    type: AssetType.Currency,
-  },
-  exactCurrencyField: !currencyField
-    ? currencyField
-    : currencyField.toLowerCase() === 'output'
-      ? CurrencyField.OUTPUT
-      : CurrencyField.INPUT,
-  exactAmountToken: amount,
-})
-
 const swapUrl = formSwapUrl(
   account.address,
   UniverseChainId.Mainnet,
   DAI.address,
   UNI[UniverseChainId.Mainnet].address,
+  'input',
+  '100',
+)
+
+const testnetSwapUrl = formSwapUrl(
+  account.address,
+  UniverseChainId.Sepolia,
+  USDC_UNICHAIN_SEPOLIA.address,
+  UNI[UniverseChainId.Sepolia].address,
   'input',
   '100',
 )
@@ -121,19 +89,16 @@ const invalidCurrencyFieldSwapUrl = formSwapUrl(
   '100',
 )
 
-const swapFormState = formTransactionState(
-  UniverseChainId.Mainnet,
-  DAI.address,
-  UNI[UniverseChainId.Mainnet].address,
-  'input',
-  '100',
-) as TransactionState
-
 describe(handleSwapLink, () => {
   describe('valid inputs', () => {
-    it('Navigates to the swap screen with all params if all inputs are valid', () => {
+    it('Navigates to the swap screen with all params if all inputs are valid; testnet mode aligned', () => {
       return expectSaga(handleSwapLink, swapUrl)
-        .put(openModal({ name: ModalName.Swap, initialState: swapFormState }))
+        .put(openModal({ name: ModalName.Swap }))
+        .silentRun()
+    })
+    it('Navigates to the swap screen with all params if all inputs are valid; testnet mode not aligned', () => {
+      return expectSaga(handleSwapLink, testnetSwapUrl)
+        .put(openModal({ name: ModalName.Swap }))
         .silentRun()
     })
   })

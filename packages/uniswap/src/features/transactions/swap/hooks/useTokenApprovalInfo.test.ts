@@ -87,6 +87,7 @@ describe('useTokenApprovalInfo', () => {
         maxPriorityFeePerGas: '400000',
       },
       gasFee: '200000',
+      displayGasFee: '200000',
       gasEstimates: mockGasEstimates,
       cancelTxRequest: null,
     })

@@ -8,6 +8,7 @@ import {
   BNB_LOGO,
   CELO_LOGO,
   ETHEREUM_LOGO,
+  MONAD_LOGO,
   OPTIMISM_LOGO,
   POLYGON_LOGO,
   UNICHAIN_SEPOLIA_LOGO,
@@ -37,6 +38,7 @@ import {
   USDC_ZKSYNC,
   USDC_ZORA,
   USDT,
+  USDT_MONAD_TESTNET,
 } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
@@ -484,6 +486,67 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       address: '0x471EcE3750Da237f93B8E339c536989b8978a438',
     },
   } as const satisfies UniverseChainInfo,
+  [UniverseChainId.MonadTestnet]: {
+    id: UniverseChainId.MonadTestnet,
+    testnet: true,
+    sdkId: UniswapSDKChainId.MONAD_TESTNET,
+    assetRepoNetworkName: undefined,
+    backendChain: {
+      chain: BackendChainId.MonadTestnet as GqlChainId,
+      backendSupported: true,
+      isSecondaryChain: false,
+      nativeTokenBackendAddress: undefined,
+    },
+    bridge: undefined,
+    chainPriority: 0,
+    docs: 'https://docs.monad.xyz/',
+    helpCenterUrl: undefined,
+    label: 'Monad Testnet',
+    logo: MONAD_LOGO,
+    name: 'Monad Testnet',
+    nativeCurrency: {
+      name: 'Monad',
+      symbol: 'MON',
+      decimals: 18,
+      address: DEFAULT_NATIVE_ADDRESS,
+      logo: MONAD_LOGO,
+    },
+    networkLayer: NetworkLayer.L1,
+    pendingTransactionsRetryOptions: undefined,
+    statusPage: undefined,
+    supportsInterfaceClientSideRouting: true,
+    supportsGasEstimates: true,
+    urlParam: 'monad_testnet',
+    rpcUrls: {
+      [RPCType.Public]: {
+        http: [config.quicknodeMonadTestnetRpcUrl],
+      },
+      [RPCType.Default]: {
+        http: [config.quicknodeMonadTestnetRpcUrl],
+      },
+      [RPCType.Interface]: {
+        http: [config.quicknodeMonadTestnetRpcUrl],
+      },
+    },
+    wrappedNativeCurrency: {
+      name: 'Wrapped Monad',
+      symbol: 'WMON',
+      decimals: 18,
+      address: '0x93EACdB111FF98dE9a8Ac5823d357BBc4842aE63',
+    },
+    blockPerMainnetEpochForChainId: 1,
+    blockWaitMsBeforeWarning: undefined,
+    elementName: ElementName.ChainMonadTestnet,
+    explorer: {
+      name: 'Monad Explorer',
+      url: 'https://monadscan.xyz/',
+    },
+    infoLink: 'https://app.uniswap.org/explore',
+    infuraPrefix: undefined,
+    interfaceName: 'monad',
+    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDT_MONAD_TESTNET, 10_000e6),
+    stablecoins: [USDT_MONAD_TESTNET],
+  },
   [UniverseChainId.Optimism]: {
     ...optimism,
     id: UniverseChainId.Optimism,

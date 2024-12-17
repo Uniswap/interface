@@ -16,6 +16,7 @@ import {
   QUICKNODE_BNB_RPC_URL,
   QUICKNODE_CELO_RPC_URL,
   QUICKNODE_MAINNET_RPC_URL,
+  QUICKNODE_MONAD_TESTNET_RPC_URL,
   QUICKNODE_OP_RPC_URL,
   QUICKNODE_POLYGON_RPC_URL,
   QUICKNODE_SEPOLIA_RPC_URL,
@@ -68,6 +69,7 @@ export interface Config {
   quicknodeZkSyncRpcUrl: string
   quicknodeWorldChainRpcUrl: string
   quicknodeUnichainSepoliaRpcUrl: string
+  quicknodeMonadTestnetRpcUrl: string
   quicknodeMainnetRpcUrl: string
   quicknodeSepoliaRpcUrl: string
   tradingApiKey: string
@@ -113,6 +115,10 @@ const _config: Config = {
     process.env.REACT_APP_QUICKNODE_BNB_RPC_URL || process.env.QUICKNODE_BNB_RPC_URL || QUICKNODE_BNB_RPC_URL,
   quicknodeCeloRpcUrl:
     process.env.REACT_APP_QUICKNODE_CELO_RPC_URL || process.env.QUICKNODE_CELO_RPC_URL || QUICKNODE_CELO_RPC_URL,
+  quicknodeMonadTestnetRpcUrl:
+    process.env.REACT_APP_QUICKNODE_MONAD_TESTNET_RPC_URL ||
+    process.env.QUICKNODE_MONAD_TESTNET_RPC_URL ||
+    QUICKNODE_MONAD_TESTNET_RPC_URL,
   quicknodeOpRpcUrl:
     process.env.REACT_APP_QUICKNODE_OP_RPC_URL || process.env.QUICKNODE_OP_RPC_URL || QUICKNODE_OP_RPC_URL,
   quicknodePolygonRpcUrl:

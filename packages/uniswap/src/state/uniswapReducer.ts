@@ -7,6 +7,7 @@ import { searchHistoryReducer } from 'uniswap/src/features/search/searchHistoryS
 import { userSettingsReducer } from 'uniswap/src/features/settings/slice'
 import { timingReducer } from 'uniswap/src/features/timing/slice'
 import { tokensReducer } from 'uniswap/src/features/tokens/slice/slice'
+import { transactionSettingsReducer } from 'uniswap/src/features/transactions/settings/slice'
 import { transactionReducer } from 'uniswap/src/features/transactions/slice'
 
 export const uniswapReducers = {
@@ -17,6 +18,7 @@ export const uniswapReducers = {
   timing: timingReducer,
   tokens: tokensReducer,
   transactions: transactionReducer,
+  transactionSettings: transactionSettingsReducer,
   uniswapBehaviorHistory: uniswapBehaviorHistoryReducer,
   userSettings: userSettingsReducer,
 } as const

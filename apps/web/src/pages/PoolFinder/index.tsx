@@ -1,56 +1,43 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { ButtonDropdownLight } from 'components/Button/buttons'
-import { BlueCard, LightCard } from 'components/Card/cards'
-import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { FindPoolTabs } from 'components/NavigationTabs'
-import { MinimalPositionCard } from 'components/PositionCard'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { V2Unsupported } from 'components/V2Unsupported'
-import { AutoColumn, ColumnCenter } from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
-import { PairState, useV2Pair } from 'hooks/useV2Pairs'
+import { useTotalSupply } from 'hooks/useTotalSupply'
+import { useV2Pair } from 'hooks/useV2Pairs'
 import JSBI from 'jsbi'
-import AppBody from 'pages/App/AppBody'
-import { Dots } from 'pages/LegacyPool/styled'
-import { useCallback, useEffect, useState } from 'react'
-import { Plus } from 'react-feather'
-import { useLocation } from 'react-router-dom'
-import { Text } from 'rebass'
+import ms from 'ms'
+import { CurrencySelector } from 'pages/Pool/Positions/create/SelectTokenStep'
+import { useEffect, useState } from 'react'
+import { ArrowLeft } from 'react-feather'
 import { useTokenBalance } from 'state/connection/hooks'
 import { usePairAdder } from 'state/user/hooks'
-import { StyledInternalLink, ThemedText } from 'theme/components'
+import { PositionField } from 'types/position'
+import { Button, Flex, Text } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { Trans } from 'uniswap/src/i18n'
-import { currencyId } from 'utils/currencyId'
-
-enum Fields {
-  TOKEN0 = 0,
-  TOKEN1 = 1,
-}
-
-function useQuery() {
-  return new URLSearchParams(useLocation().search)
-}
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export default function PoolFinder() {
-  const query = useQuery()
-
   const account = useAccount()
+  const { t } = useTranslation()
+  const accountDrawer = useAccountDrawer()
+  const { formatCurrencyAmount } = useFormatter()
+  const [success, setSuccess] = useState(false)
 
-  const [showSearch, setShowSearch] = useState<boolean>(false)
-  const [activeField, setActiveField] = useState<number>(Fields.TOKEN1)
-
-  const [currency0, setCurrency0] = useState<Currency | null>(() =>
-    account.chainId ? nativeOnChain(account.chainId) : null,
+  const [currency0, setCurrency0] = useState<Currency | undefined>(() =>
+    account.chainId ? nativeOnChain(account.chainId) : undefined,
   )
-  const [currency1, setCurrency1] = useState<Currency | null>(null)
+  const [currency1, setCurrency1] = useState<Currency | undefined>()
+  const [currencySearchInputState, setCurrencySearchInputState] = useState<PositionField | undefined>(undefined)
 
-  const [pairState, pair] = useV2Pair(currency0 ?? undefined, currency1 ?? undefined)
+  const [, pair] = useV2Pair(currency0, currency1)
   const addPair = usePairAdder()
   useEffect(() => {
     if (pair) {
@@ -58,40 +45,26 @@ export default function PoolFinder() {
     }
   }, [pair, addPair])
 
-  const validPairNoLiquidity: boolean =
-    pairState === PairState.NOT_EXISTS ||
-    Boolean(
-      pairState === PairState.EXISTS &&
-        pair &&
-        JSBI.equal(pair.reserve0.quotient, JSBI.BigInt(0)) &&
-        JSBI.equal(pair.reserve1.quotient, JSBI.BigInt(0)),
-    )
-
   const position: CurrencyAmount<Token> | undefined = useTokenBalance(account.address, pair?.liquidityToken)
   const hasPosition = Boolean(position && JSBI.greaterThan(position.quotient, JSBI.BigInt(0)))
 
-  const handleCurrencySelect = useCallback(
-    (currency: Currency) => {
-      if (activeField === Fields.TOKEN0) {
-        setCurrency0(currency)
-      } else {
-        setCurrency1(currency)
-      }
-    },
-    [activeField],
-  )
+  const userPoolBalance = useTokenBalance(account.address, pair?.liquidityToken)
+  const totalPoolTokens = useTotalSupply(pair?.liquidityToken)
 
-  const handleSearchDismiss = useCallback(() => {
-    setShowSearch(false)
-  }, [setShowSearch])
+  const [token0Deposited, token1Deposited] =
+    !!pair &&
+    !!totalPoolTokens &&
+    !!userPoolBalance &&
+    // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
+    JSBI.greaterThanOrEqual(totalPoolTokens.quotient, userPoolBalance.quotient)
+      ? [
+          pair.getLiquidityValue(pair.token0, totalPoolTokens, userPoolBalance, false),
+          pair.getLiquidityValue(pair.token1, totalPoolTokens, userPoolBalance, false),
+        ]
+      : [undefined, undefined]
 
-  const prerequisiteMessage = (
-    <LightCard padding="45px 10px">
-      <Text textAlign="center">
-        {!account.isConnected ? <Trans i18nKey="poolFinder.connect" /> : <Trans i18nKey="poolFinder.selectToken" />}
-      </Text>
-    </LightCard>
-  )
+  const token0UsdValue = useUSDCValue(token0Deposited)
+  const token1UsdValue = useUSDCValue(token1Deposited)
 
   const networkSupportsV2 = useNetworkSupportsV2()
   if (!networkSupportsV2) {
@@ -100,137 +73,119 @@ export default function PoolFinder() {
 
   return (
     <Trace logImpression page={InterfacePageName.POOL_PAGE}>
-      <>
-        <AppBody>
-          <FindPoolTabs origin={query.get('origin') ?? '/pools/v2'} />
-          <AutoColumn style={{ padding: '1rem' }} gap="md">
-            <BlueCard>
-              <AutoColumn gap="10px">
-                <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
-                  <Trans i18nKey="poolFinder.tip" />
-                </ThemedText.DeprecatedLink>
-              </AutoColumn>
-            </BlueCard>
-            <ButtonDropdownLight
-              onClick={() => {
-                setShowSearch(true)
-                setActiveField(Fields.TOKEN0)
-              }}
+      <Flex width="100%" py="$spacing48" px="$spacing40" maxWidth={650}>
+        <BreadcrumbNavContainer aria-label="breadcrumb-nav">
+          <BreadcrumbNavLink style={{ gap: '8px' }} to="/positions">
+            <ArrowLeft size={14} /> <Trans i18nKey="pool.positions.title" />
+          </BreadcrumbNavLink>
+        </BreadcrumbNavContainer>
+
+        <Text variant="heading2">{t('pool.import.positions.v2')}</Text>
+
+        <Flex mt="$spacing40" borderRadius="$rounded20" borderColor="$surface3" borderWidth={1} p="$spacing24">
+          <Text variant="subheading1">{t('pool.selectPair')}</Text>
+          <Text variant="body3" mt="$gap4">
+            {t('pool.import.positions.v2.selectPair.description')}
+          </Text>
+          <Flex row gap="$gap16" $md={{ flexDirection: 'column' }} mt="$spacing12">
+            <CurrencySelector
+              currency={currency0 ?? undefined}
+              onPress={() => setCurrencySearchInputState(PositionField.TOKEN0)}
+            />
+            <CurrencySelector
+              currency={currency1 ?? undefined}
+              onPress={() => setCurrencySearchInputState(PositionField.TOKEN1)}
+            />
+          </Flex>
+          {currency0 && currency1 && account.isConnected ? (
+            <>
+              <Text variant="subheading1" mt="$gap32">
+                {t('poolFinder.availablePools')}
+              </Text>
+              <Text variant="body3" mt="$gap4">
+                {hasPosition
+                  ? t('poolFinder.availablePools.found.description')
+                  : t('poolFinder.availablePools.notFound.description')}
+              </Text>
+            </>
+          ) : null}
+          {hasPosition && pair && token0UsdValue && token1UsdValue && (
+            <Flex
+              mt="$gap12"
+              width="100%"
+              row
+              alignItems="center"
+              justifyContent="space-between"
+              p="$padding16"
+              borderRadius="$rounded16"
+              borderWidth="$spacing1"
+              borderColor="$surface3"
+              $md={{ row: false, gap: '$gap16', alignItems: 'flex-start' }}
             >
-              {currency0 ? (
-                <Row>
-                  <CurrencyLogo currency={currency0} />
-                  <Text fontWeight={535} fontSize={20} marginLeft="12px">
-                    {currency0.symbol}
-                  </Text>
-                </Row>
-              ) : (
-                <Text fontWeight={535} fontSize={20} marginLeft="12px">
-                  <Trans i18nKey="common.selectToken.label" />
+              <Flex row alignItems="center" gap="$gap16" $md={{ justifyContent: 'space-between' }}>
+                <DoubleCurrencyLogo currencies={[currency0, currency1]} size={40} />
+                <Text variant="subheading1">
+                  {currency0?.symbol}/{currency1?.symbol}
                 </Text>
-              )}
-            </ButtonDropdownLight>
-
-            <ColumnCenter>
-              <Plus size="16" color="#888D9B" />
-            </ColumnCenter>
-
-            <ButtonDropdownLight
-              onClick={() => {
-                setShowSearch(true)
-                setActiveField(Fields.TOKEN1)
-              }}
-            >
-              {currency1 ? (
-                <Row>
-                  <CurrencyLogo currency={currency1} />
-                  <Text fontWeight={535} fontSize={20} marginLeft="12px">
-                    {currency1.symbol}
-                  </Text>
-                </Row>
-              ) : (
-                <Text fontWeight={535} fontSize={20} marginLeft="12px">
-                  <Trans i18nKey="common.selectToken.label" />
-                </Text>
-              )}
-            </ButtonDropdownLight>
-
-            {hasPosition && (
-              <ColumnCenter
-                style={{ justifyItems: 'center', backgroundColor: '', padding: '12px 0px', borderRadius: '12px' }}
+              </Flex>
+              <Flex
+                $md={{
+                  row: true,
+                  gap: '$gap8',
+                  alignItems: 'center',
+                  flexDirection: 'row-reverse',
+                  justifyContent: 'space-between',
+                }}
               >
-                <Text textAlign="center" fontWeight={535}>
-                  <Trans i18nKey="poolFinder.found" />
+                <Text variant="body2" textAlign="right">
+                  {formatCurrencyAmount({
+                    amount: token0UsdValue.add(token1UsdValue),
+                    type: NumberType.FiatTokenQuantity,
+                  })}
                 </Text>
-                <StyledInternalLink to="/pools/v2">
-                  <Text textAlign="center">
-                    <Trans i18nKey="poolFinder.managePool" />
-                  </Text>
-                </StyledInternalLink>
-              </ColumnCenter>
-            )}
+                <Text variant="body3" color="$neutral2">
+                  {t('position.value')}
+                </Text>
+              </Flex>
+            </Flex>
+          )}
+          {!account.isConnected ? (
+            <Button theme="secondary" mt="$gap32" onPress={accountDrawer.open}>
+              {t('common.connectWallet.button')}
+            </Button>
+          ) : (
+            <Button
+              theme="secondary"
+              mt="$gap32"
+              disabled={!hasPosition || success}
+              onPress={() => {
+                if (hasPosition && pair) {
+                  addPair(pair)
+                  setSuccess(true)
+                  setTimeout(() => {
+                    setSuccess(false)
+                  }, ms('3s'))
+                }
+              }}
+            >
+              {hasPosition ? (success ? t('pool.import.success') : t('pool.import')) : t('common.button.continue')}
+            </Button>
+          )}
+        </Flex>
 
-            {currency0 && currency1 ? (
-              pairState === PairState.EXISTS ? (
-                hasPosition && pair ? (
-                  <MinimalPositionCard pair={pair} border="1px solid #CED0D9" />
-                ) : (
-                  <LightCard padding="45px 10px">
-                    <AutoColumn gap="sm" justify="center">
-                      <Text textAlign="center">
-                        <Trans i18nKey="poolFinder.noLiquidity" />
-                      </Text>
-                      <StyledInternalLink to={`/add/v2/${currencyId(currency0)}/${currencyId(currency1)}`}>
-                        <Text textAlign="center">
-                          <Trans i18nKey="common.addLiquidity" />
-                        </Text>
-                      </StyledInternalLink>
-                    </AutoColumn>
-                  </LightCard>
-                )
-              ) : validPairNoLiquidity ? (
-                <LightCard padding="45px 10px">
-                  <AutoColumn gap="sm" justify="center">
-                    <Text textAlign="center">
-                      <Trans i18nKey="poolFinder.noPoolFound" />
-                    </Text>
-                    <StyledInternalLink to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
-                      <Trans i18nKey="poolFinder.create" />
-                    </StyledInternalLink>
-                  </AutoColumn>
-                </LightCard>
-              ) : pairState === PairState.INVALID ? (
-                <LightCard padding="45px 10px">
-                  <AutoColumn gap="sm" justify="center">
-                    <Text textAlign="center" fontWeight={535}>
-                      <Trans i18nKey="common.invalidPair" />
-                    </Text>
-                  </AutoColumn>
-                </LightCard>
-              ) : pairState === PairState.LOADING ? (
-                <LightCard padding="45px 10px">
-                  <AutoColumn gap="sm" justify="center">
-                    <Text textAlign="center">
-                      <Trans i18nKey="common.loading" />
-                      <Dots />
-                    </Text>
-                  </AutoColumn>
-                </LightCard>
-              ) : null
-            ) : (
-              prerequisiteMessage
-            )}
-          </AutoColumn>
-
-          <CurrencySearchModal
-            isOpen={showSearch}
-            onCurrencySelect={handleCurrencySelect}
-            onDismiss={handleSearchDismiss}
-            selectedCurrency={(activeField === Fields.TOKEN0 ? currency1 : currency0) ?? undefined}
-          />
-        </AppBody>
-        <SwitchLocaleLink />
-      </>
+        <CurrencySearchModal
+          isOpen={currencySearchInputState !== undefined}
+          onDismiss={() => setCurrencySearchInputState(undefined)}
+          onCurrencySelect={(currency) => {
+            if (currencySearchInputState === PositionField.TOKEN0) {
+              setCurrency0(currency)
+            } else if (currencySearchInputState === PositionField.TOKEN1) {
+              setCurrency1(currency)
+            }
+            setCurrencySearchInputState(undefined)
+          }}
+        />
+      </Flex>
     </Trace>
   )
 }

@@ -20,6 +20,7 @@ declare module 'react-native-dotenv' {
   export const QUICKNODE_BLAST_RPC_URL: string
   export const QUICKNODE_BNB_RPC_URL: string
   export const QUICKNODE_CELO_RPC_URL: string
+  export const QUICKNODE_MONAD_TESTNET_RPC_URL: string
   export const QUICKNODE_OP_RPC_URL: string
   export const QUICKNODE_POLYGON_RPC_URL: string
   export const QUICKNODE_ZORA_RPC_URL: string

@@ -10,18 +10,16 @@ import { ErrorEventMapper } from '@datadog/mobile-react-native/lib/typescript/ru
 import { PropsWithChildren, default as React } from 'react'
 import { getDatadogEnvironment } from 'src/utils/version'
 import { config } from 'uniswap/src/config'
-import { isDetoxBuild, isJestRun, localDevDatadogEnabled } from 'utilities/src/environment/constants'
+import { datadogEnabled, isDetoxBuild, isJestRun, localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
-
-const ENABLE_DATADOG = localDevDatadogEnabled || !__DEV__
 
 const datadogConfig = new DatadogProviderConfiguration(
   config.datadogClientToken,
   getDatadogEnvironment(),
   config.datadogProjectId,
-  ENABLE_DATADOG, // trackInteractions
-  ENABLE_DATADOG, // trackResources
-  ENABLE_DATADOG, // trackErrors
+  datadogEnabled, // trackInteractions
+  datadogEnabled, // trackResources
+  datadogEnabled, // trackErrors
   localDevDatadogEnabled ? TrackingConsent.GRANTED : undefined,
 )
 

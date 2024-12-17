@@ -2,13 +2,14 @@ import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { PropsWithChildren, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnimatePresence, Flex, Separator, Text, TouchableArea } from 'ui/src'
+import { AnimatePresence, Button, Flex, Popover, Separator, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { AnglesMaximize } from 'ui/src/components/icons/AnglesMaximize'
 import { AnglesMinimize } from 'ui/src/components/icons/AnglesMinimize'
 import { NetworkFee } from 'uniswap/src/components/gas/NetworkFee'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
+import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -22,9 +23,12 @@ import {
   TokenWarningProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { EstimatedTime } from 'uniswap/src/features/transactions/swap/review/EstimatedTime'
+import { TransactionSettingsModal } from 'uniswap/src/features/transactions/swap/settings/TransactionSettingsModal'
+import { SlippageUpdate } from 'uniswap/src/features/transactions/swap/settings/configs/SlippageUpdate'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { SwapFee as SwapFeeType } from 'uniswap/src/features/transactions/swap/types/trade'
 import { openUri } from 'uniswap/src/utils/linking'
+import { isInterface } from 'utilities/src/platform'
 
 interface TransactionDetailsProps {
   banner?: ReactNode
@@ -52,8 +56,10 @@ interface TransactionDetailsProps {
   RoutingInfo?: JSX.Element
   RateInfo?: JSX.Element
   transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
+  txSimulationErrors?: TransactionFailureReason[]
 }
 
+// eslint-disable-next-line complexity
 export function TransactionDetails({
   banner,
   children,
@@ -76,6 +82,7 @@ export function TransactionDetails({
   indicative = false,
   isSwap,
   transactionUSDValue,
+  txSimulationErrors,
   isBridgeTrade,
   AccountDetails,
   estimatedBridgingTime,
@@ -93,9 +100,22 @@ export function TransactionDetails({
     setShowChildren(!showChildren)
   }
 
+  // Used to show slippage settings on mobile, where the modal needs to be added outside of the conditional expected failure banner
+  const [showSlippageSettings, setShowSlippageSettings] = useState(false)
+  const showExpectedFailureBanner =
+    isSwap &&
+    ((showGasFeeError && gasFee.error) ||
+      txSimulationErrors?.includes(TransactionFailureReason.SIMULATION_ERROR) ||
+      txSimulationErrors?.includes(TransactionFailureReason.SLIPPAGE_TOO_LOW))
+
   return (
     <Flex>
-      {showGasFeeError && gasFee.error && <GasFeeError warning={warning} />}
+      {showExpectedFailureBanner && (
+        <ExpectedFailureBanner
+          txFailureReasons={txSimulationErrors}
+          onSlippageEditPress={() => setShowSlippageSettings(true)}
+        />
+      )}
       {!showWarning && banner && <Flex py="$spacing16">{banner}</Flex>}
       {children && showSeparatorToggle ? (
         <ListSeparatorToggle
@@ -141,6 +161,14 @@ export function TransactionDetails({
       </Flex>
       {showWarning && warning && onShowWarning && (
         <TransactionWarning warning={warning} onShowWarning={onShowWarning} />
+      )}
+      {isSwap && (
+        <TransactionSettingsModal
+          settings={[SlippageUpdate]}
+          initialSelectedSetting={SlippageUpdate}
+          isOpen={showSlippageSettings}
+          onClose={() => setShowSlippageSettings(false)}
+        />
       )}
     </Flex>
   )
@@ -231,24 +259,87 @@ const TransactionWarning = ({
   )
 }
 
-const GasFeeError = ({ warning }: { warning?: Warning }): JSX.Element => {
+const ExpectedFailureBanner = ({
+  txFailureReasons,
+  onSlippageEditPress,
+}: {
+  txFailureReasons?: TransactionFailureReason[]
+  onSlippageEditPress?: () => void
+}): JSX.Element => {
   const { t } = useTranslation()
-  const warningColor = getAlertColor(warning?.severity)
+
+  const showSlippageWarning = txFailureReasons?.includes(TransactionFailureReason.SLIPPAGE_TOO_LOW)
 
   return (
     <Flex
       row
+      justifyContent="space-between"
       alignItems="center"
-      backgroundColor={warningColor.background}
       borderRadius="$rounded16"
-      gap="$spacing8"
-      px="$spacing16"
-      py="$spacing8"
+      borderColor="$surface3"
+      borderWidth={1}
+      gap="$spacing12"
+      p="$spacing12"
     >
-      <AlertTriangleFilled color={warningColor?.text} size="$icon.16" />
-      <Text color="$statusCritical" variant="body3">
-        {t('swap.warning.expectedFailure')}
-      </Text>
+      <Flex row justifyContent="flex-start" gap="$spacing12" alignItems="center">
+        <AlertTriangleFilled color="$DEP_accentWarning" size="$icon.20" />
+        <Flex gap="$spacing4">
+          <Text color="$statusWarning" variant="buttonLabel3">
+            {t('swap.warning.expectedFailure.titleMay')}
+          </Text>
+          {showSlippageWarning && (
+            <Text color="$neutral2" variant="body4">
+              {t('swap.warning.expectedFailure.increaseSlippage')}
+            </Text>
+          )}
+        </Flex>
+      </Flex>
+      {showSlippageWarning && <SlippageEdit onWalletSlippageEditPress={onSlippageEditPress} />}
     </Flex>
+  )
+}
+
+const SlippageEdit = ({
+  onWalletSlippageEditPress: onSlippageEditPress,
+}: {
+  onWalletSlippageEditPress?: () => void
+}): JSX.Element => {
+  const { t } = useTranslation()
+  const [showInterfaceSlippageSettings, setShowInterfaceSlippageSettings] = useState(false)
+  const editButton = (
+    <Button
+      fontSize="$micro"
+      size="small"
+      theme="secondary"
+      borderRadius="$rounded16"
+      onPress={() => (isInterface ? setShowInterfaceSlippageSettings(true) : onSlippageEditPress?.())}
+    >
+      {t('common.button.edit')}
+    </Button>
+  )
+
+  if (!isInterface) {
+    return editButton
+  }
+
+  // Web needs to use a popover, so we need to wrap both the button and the modal in a popover
+  return (
+    <Popover
+      placement="bottom-end"
+      open={showInterfaceSlippageSettings}
+      onOpenChange={(open) => {
+        if (!open && isInterface) {
+          setShowInterfaceSlippageSettings(false)
+        }
+      }}
+    >
+      <Popover.Trigger asChild>{editButton}</Popover.Trigger>
+      <TransactionSettingsModal
+        settings={[SlippageUpdate]}
+        initialSelectedSetting={SlippageUpdate}
+        isOpen={showInterfaceSlippageSettings}
+        onClose={() => setShowInterfaceSlippageSettings(false)}
+      />
+    </Popover>
   )
 }

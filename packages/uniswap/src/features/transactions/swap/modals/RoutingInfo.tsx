@@ -33,7 +33,7 @@ export function RoutingInfo({
 
   const { trade } = useSwapTxContext()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const { value: gasFeeUSD } = useUSDValueOfGasFee(chainId, gasFee.value ?? undefined)
+  const { value: gasFeeUSD } = useUSDValueOfGasFee(chainId, gasFee.displayValue ?? undefined)
   const gasFeeFormatted =
     gasFeeUSD !== undefined ? convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice) : undefined
 

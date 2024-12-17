@@ -12,7 +12,7 @@ export async function initializeDatadog(appName: string): Promise<void> {
   const datadogEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.Datadog))
   logger.setWalletDatadogEnabled(datadogEnabled)
 
-  if (__DEV__ || !datadogEnabled) {
+  if (!datadogEnabled) {
     return
   }
 

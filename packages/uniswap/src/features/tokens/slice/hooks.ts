@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { dismissedWarningTokensSelector } from 'uniswap/src/features/tokens/slice/selectors'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 import { BasicTokenInfo, isBasicTokenInfo } from 'uniswap/src/features/tokens/slice/types'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { serializeToken } from 'uniswap/src/utils/currency'
 
 export function useDismissedTokenWarnings(info: Maybe<Currency | BasicTokenInfo>): {
@@ -15,8 +16,12 @@ export function useDismissedTokenWarnings(info: Maybe<Currency | BasicTokenInfo>
 
   const isBasicInfo = isBasicTokenInfo(info)
 
+  const lowercasedAddress = getValidAddress(
+    isBasicInfo ? info.address : info?.isToken ? info?.address : undefined,
+    false,
+  )
   const tokenWarningDismissed = Boolean(
-    (isBasicInfo || info?.isToken) && dismissedTokens && dismissedTokens[info.chainId]?.[info.address],
+    info && lowercasedAddress && dismissedTokens && dismissedTokens[info.chainId]?.[lowercasedAddress],
   )
 
   const onDismissTokenWarning = useCallback(() => {

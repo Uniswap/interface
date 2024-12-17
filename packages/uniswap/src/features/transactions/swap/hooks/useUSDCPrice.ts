@@ -16,6 +16,7 @@ import {
   USDC_WORLD_CHAIN,
   USDC_ZKSYNC,
   USDC_ZORA,
+  USDT_MONAD_TESTNET,
 } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
@@ -32,6 +33,7 @@ export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> }
   [UniverseChainId.Blast]: CurrencyAmount.fromRawAmount(USDB_BLAST, 10_000e18),
   [UniverseChainId.Bnb]: CurrencyAmount.fromRawAmount(USDC_BNB, 10_000e18),
   [UniverseChainId.Celo]: CurrencyAmount.fromRawAmount(USDC_CELO, 10_000e18),
+  [UniverseChainId.MonadTestnet]: CurrencyAmount.fromRawAmount(USDT_MONAD_TESTNET, 10_000e6),
   [UniverseChainId.Optimism]: CurrencyAmount.fromRawAmount(USDC_OPTIMISM, 10_000e6),
   [UniverseChainId.Polygon]: CurrencyAmount.fromRawAmount(USDC_POLYGON, 10_000e6),
   [UniverseChainId.Sepolia]: CurrencyAmount.fromRawAmount(USDC_SEPOLIA, 100_000e6),

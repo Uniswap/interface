@@ -32,11 +32,6 @@ export function LegacyPoolV2Redirects() {
 
 // /pool/v2/find
 export function PoolFinderRedirects() {
-  const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
-
-  if (isLPRedesignEnabled) {
-    return <Navigate to="/positions" replace />
-  }
   return <PoolFinder />
 }
 

@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { providers } from 'ethers/lib/ethers'
+import { BigNumber, providers } from 'ethers/lib/ethers'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { isWeb } from 'ui/src'
@@ -39,6 +39,7 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 // The default "Urgent" strategy that was previously hardcoded in the gas service
 export const DEFAULT_GAS_STRATEGY: GasStrategy = {
   limitInflationFactor: 1.15,
+  displayLimitInflationFactor: 1.15,
   priceInflationFactor: 1.5,
   percentileThresholdFor1559Fee: 75,
   minPriorityFeeGwei: 2,
@@ -96,15 +97,38 @@ export function useShadowGasStrategies(chainId: number | undefined, type: GasStr
   }, [isLoading, chainId, type])
 }
 
-// Function to find the name of a gas strategy based on the GasEstimate
-export function findGasStrategyName(gasEstimate: GasEstimate, type: GasStrategyType): string | undefined {
-  const gasStrategies = Statsig.getConfig(DynamicConfigs.GasStrategies).value as GasStrategies
+/**
+ * Converts a gas fee calculated with the provided gas strategy to a display value.
+ * When calculating the gas fee, the gas limit is multiplied by the `limitInflationFactor`,
+ * but in the vast majority of cases, the transaction uses only the originally estimated gas limit.
+ * We use the `displayLimitInflationFactor` to calculate the display value, which can be
+ * different from the `limitInflationFactor` so that the gas fee displayed is more accurate.
+ *
+ * More info: https://www.notion.so/uniswaplabs/Gas-Limit-Experiment-14ac52b2548b80ea932ff2edfdab6683
+ *
+ * @param gasFee - The gas fee value to convert.
+ * @param gasStrategy - The gas strategy used to calculate the gas fee.
+ * @returns The display value of the gas fee.
+ */
+export function convertGasFeeToDisplayValue(
+  gasFee: string | undefined,
+  gasStrategy: GasStrategy | undefined,
+): string | undefined {
+  if (!gasFee || !gasStrategy || gasStrategy.limitInflationFactor === 0) {
+    return gasFee
+  }
 
-  const matchingStrategy = gasStrategies.strategies.find(
-    (s) => s.conditions.types === type && areEqualGasStrategies(s.strategy, gasEstimate.strategy),
-  )
+  const PRECISION = 1_000_000
+  const { displayLimitInflationFactor, limitInflationFactor } = gasStrategy
 
-  return matchingStrategy?.conditions.name
+  // Scale the inflation factors to integers
+  const scaledDisplayFactor = Math.round(displayLimitInflationFactor * PRECISION)
+  const scaledLimitFactor = Math.round(limitInflationFactor * PRECISION)
+
+  return BigNumber.from(gasFee)
+    .mul(BigNumber.from(scaledDisplayFactor))
+    .div(BigNumber.from(scaledLimitFactor))
+    .toString()
 }
 
 export function useTransactionGasFee(
@@ -153,6 +177,8 @@ export function useTransactionGasFee(
         const gasUseEstimate = (await provider.estimateGas({ from: account?.address, ...tx })).toNumber() * 10e9
         setClientsideGasEstimate({
           value: gasUseEstimate.toString(),
+          // These estimates don't inflate the gas limit, so we can use the same value for display
+          displayValue: gasUseEstimate.toString(),
           isLoading: false,
           error: null,
         })
@@ -160,6 +186,8 @@ export function useTransactionGasFee(
         // provider.estimateGas will error if the account doesn't have sufficient ETH balance, but we should show an estimated cost anyway
         setClientsideGasEstimate({
           value: fallbackGasLimit?.toString(),
+          // These estimates don't inflate the gas limit, so we can use the same value for display
+          displayValue: fallbackGasLimit?.toString(),
           isLoading: false,
           error: fallbackGasLimit ? null : (e as Error),
         })
@@ -194,6 +222,7 @@ export function useTransactionGasFee(
 
     return {
       value: activeEstimate.gasFee,
+      displayValue: convertGasFeeToDisplayValue(activeEstimate.gasFee, activeGasStrategy),
       isLoading,
       error: error ?? null,
       params: extractGasFeeParams(activeEstimate),
@@ -356,7 +385,7 @@ type GasFeeFormattedAmounts<T extends string | undefined> = T extends string
  * If no placeholder is defined, the response can be null. If a placeholder is defined,
  * the gas fee amount will always be a string.
  */
-export function useGasFeeFormattedAmounts<T extends string | undefined>({
+export function useGasFeeFormattedDisplayAmounts<T extends string | undefined>({
   gasFee,
   chainId,
   placeholder,
@@ -366,7 +395,7 @@ export function useGasFeeFormattedAmounts<T extends string | undefined>({
   placeholder: T
 }): GasFeeFormattedAmounts<T> {
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
-  const { value: gasFeeUSD, isLoading: gasFeeUSDIsLoading } = useUSDValueOfGasFee(chainId, gasFee?.value)
+  const { value: gasFeeUSD, isLoading: gasFeeUSDIsLoading } = useUSDValueOfGasFee(chainId, gasFee?.displayValue)
 
   // In testnet mode, use native currency values as USD pricing may be unreliable
   const { isTestnetModeEnabled } = useEnabledChains()
@@ -374,7 +403,7 @@ export function useGasFeeFormattedAmounts<T extends string | undefined>({
   const nativeCurrency = NativeCurrency.onChain(chainId)
   const nativeCurrencyAmount = getCurrencyAmount({
     currency: nativeCurrency,
-    value: gasFee?.value,
+    value: gasFee?.displayValue,
     valueType: ValueType.Raw,
   })
 
@@ -389,7 +418,7 @@ export function useGasFeeFormattedAmounts<T extends string | undefined>({
 
   const gasFeeFormatted = useMemo(() => {
     // Gas fee not available
-    if (!gasFee?.value) {
+    if (!gasFee?.displayValue) {
       return emptyState
     }
 
@@ -404,7 +433,7 @@ export function useGasFeeFormattedAmounts<T extends string | undefined>({
     emptyState,
     fiatAmountFormatted,
     gasFee?.isLoading,
-    gasFee?.value,
+    gasFee?.displayValue,
     gasFeeUSD,
     gasFeeUSDIsLoading,
     isTestnetModeEnabled,

@@ -8,7 +8,7 @@ import { IndicativeLoadingWrapper } from 'uniswap/src/components/misc/Indicative
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   useFormattedUniswapXGasFeeInfo,
-  useGasFeeFormattedAmounts,
+  useGasFeeFormattedDisplayAmounts,
   useGasFeeHighRelativeToValue,
 } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
@@ -31,7 +31,7 @@ export function NetworkFee({
 }): JSX.Element {
   const { t } = useTranslation()
 
-  const { gasFeeFormatted, gasFeeUSD } = useGasFeeFormattedAmounts({
+  const { gasFeeFormatted, gasFeeUSD } = useGasFeeFormattedDisplayAmounts({
     gasFee,
     chainId,
     placeholder: '-',

@@ -45,6 +45,7 @@ import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
 import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/form/SwapFormSettings'
 import { Deadline } from 'uniswap/src/features/transactions/swap/settings/configs/Deadline'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
@@ -385,7 +386,7 @@ export default function CreatePosition() {
   return (
     <Trace logImpression page={InterfacePageNameLocal.CreatePosition}>
       <MultichainContextProvider initialChainId={initialCurrencyInputs[PositionField.TOKEN0].chainId}>
-        <TransactionSettingsContextProvider>
+        <TransactionSettingsContextProvider settingKey={TransactionSettingKey.LP}>
           <CreatePositionContextProvider
             initialState={{
               currencyInputs: initialCurrencyInputs,
@@ -395,7 +396,7 @@ export default function CreatePosition() {
             <PriceRangeContextProvider>
               <DepositContextProvider>
                 <CreateTxContextProvider>
-                  <Flex mt="$spacing24" width="100%" px="$spacing40" maxWidth={1200} $lg={{ px: '$spacing20' }}>
+                  <Flex mt="$spacing24" width="100%" px="$spacing40" maxWidth={1200} $lg={{ px: '$spacing6' }}>
                     <BreadcrumbNavContainer aria-label="breadcrumb-nav">
                       <BreadcrumbNavLink to="/positions">
                         <Trans i18nKey="pool.positions.title" /> <ChevronRight size={14} />

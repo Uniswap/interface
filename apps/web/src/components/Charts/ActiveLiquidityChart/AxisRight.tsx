@@ -1,6 +1,7 @@
 import { NumberValue, ScaleLinear, axisRight, Axis as d3Axis, select } from 'd3'
 import styled from 'lib/styled-components'
 import { useMemo } from 'react'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const StyledGroup = styled.g`
   line {
@@ -12,7 +13,7 @@ const StyledGroup = styled.g`
   }
 `
 
-const TEXT_Y_OFFSET = 10
+const TEXT_Y_OFFSET = 5
 
 const Axis = ({
   axisGenerator,
@@ -61,6 +62,7 @@ export const AxisRight = ({
   current?: number
   max?: number
 }) => {
+  const { formatNumber } = useFormatter()
   const tickValues = useMemo(() => {
     const minCoordinate = min ? yScale(min) : undefined
     const maxCoordinate = max ? yScale(max) : undefined
@@ -76,7 +78,18 @@ export const AxisRight = ({
 
   return (
     <StyledGroup transform={`translate(${offset}, 0)`}>
-      <Axis axisGenerator={axisRight(yScale).tickValues(tickValues)} height={height} yScale={yScale} />
+      <Axis
+        axisGenerator={axisRight(yScale)
+          .tickValues(tickValues)
+          .tickFormat((d) =>
+            formatNumber({
+              input: d as number,
+              type: NumberType.TokenQuantityStats,
+            }),
+          )}
+        height={height}
+        yScale={yScale}
+      />
     </StyledGroup>
   )
 }

@@ -1,8 +1,6 @@
-import { RowBetween } from 'components/deprecated/Row'
 import styled, { DefaultTheme } from 'lib/styled-components'
 import { darken } from 'polished'
 import { forwardRef } from 'react'
-import { ChevronDown } from 'react-feather'
 import { ButtonProps as ButtonPropsOriginal, Button as RebassButton } from 'rebass/styled-components'
 
 export { default as LoadingButtonSpinner } from './LoadingButtonSpinner'
@@ -304,17 +302,6 @@ export function ButtonError({ error, ...rest }: { error?: boolean } & BaseButton
   } else {
     return <ButtonPrimary {...rest} />
   }
-}
-
-export function ButtonDropdownLight({ disabled = false, children, ...rest }: { disabled?: boolean } & ButtonProps) {
-  return (
-    <ButtonOutlined {...rest} disabled={disabled}>
-      <RowBetween>
-        <div style={{ display: 'flex', alignItems: 'center' }}>{children}</div>
-        <ChevronDown size={24} />
-      </RowBetween>
-    </ButtonOutlined>
-  )
 }
 
 export enum ButtonSize {

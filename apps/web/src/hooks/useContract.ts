@@ -218,7 +218,10 @@ export function useV4NFTPositionManagerContract(
   const chainIdToUse = chainId ?? account.chainId
 
   const contract = useContract<Erc721>(
-    chainIdToUse ? CHAIN_TO_ADDRESSES_MAP[chainIdToUse].v4PositionManagerAddress : undefined,
+    // monad testnet does not have v4 support
+    chainIdToUse && chainIdToUse !== UniverseChainId.MonadTestnet
+      ? CHAIN_TO_ADDRESSES_MAP[chainIdToUse].v4PositionManagerAddress
+      : undefined,
     NFTPositionManagerABI,
     withSignerIfPossible,
     chainIdToUse,

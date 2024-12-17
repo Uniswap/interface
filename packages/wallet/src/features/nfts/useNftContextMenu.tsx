@@ -77,7 +77,7 @@ export function useNFTContextMenu({
       return
     }
 
-    if (!hidden) {
+    if (hidden === false) {
       dispatch(toggleNftVisibility({ nftKey, isSpam: true }))
     }
 

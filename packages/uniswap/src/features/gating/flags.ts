@@ -15,6 +15,7 @@ export enum FeatureFlags {
   UniswapX,
   UniswapXPriorityOrders,
   V4Swap,
+  MonadTestnet,
 
   // Wallet
   DisableFiatOnRampKorea,
@@ -66,6 +67,7 @@ export enum FeatureFlags {
 export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.Datadog, 'datadog'],
   [FeatureFlags.IndicativeSwapQuotes, 'indicative-quotes'],
+  [FeatureFlags.MonadTestnet, 'monad_testnet'],
   [FeatureFlags.PortionFields, 'portion-fields'],
   [FeatureFlags.SharedSwapArbitrumUniswapXExperiment, 'shared_swap_arbitrum_uniswapx_experiment'],
   [FeatureFlags.TokenProtection, 'token_protection'],

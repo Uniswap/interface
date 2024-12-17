@@ -38,7 +38,7 @@ import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/st
 import { SwapCallback } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { isValidSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { WrapCallback } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
-import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { isWrapAction } from 'uniswap/src/features/transactions/swap/utils/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
@@ -112,6 +112,13 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
   const isWrap = isWrapAction(wrapType)
 
   const { blockingWarning, reviewScreenWarning } = useParsedSwapWarnings()
+  const txSimulationErrors = useMemo(() => {
+    if (!trade || !isClassic(trade)) {
+      return undefined
+    }
+
+    return trade.quote?.quote.txFailureReasons
+  }, [trade])
 
   const {
     onAcceptTrade,
@@ -350,6 +357,7 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
               chainId={chainId}
               gasFee={gasFee}
               warning={reviewScreenWarning?.warning}
+              txSimulationErrors={txSimulationErrors}
               onShowWarning={onShowWarning}
             />
           ) : (
@@ -366,6 +374,7 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
               newTradeRequiresAcceptance={newTradeRequiresAcceptance}
               uniswapXGasBreakdown={uniswapXGasBreakdown}
               warning={reviewScreenWarning?.warning}
+              txSimulationErrors={txSimulationErrors}
               onAcceptTrade={onAcceptTrade}
               onShowWarning={onShowWarning}
             />

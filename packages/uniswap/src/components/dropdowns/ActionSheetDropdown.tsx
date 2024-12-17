@@ -11,6 +11,7 @@ import { Scrollbar } from 'uniswap/src/components/misc/Scrollbar'
 import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { isAndroid, isInterface, isTouchable } from 'utilities/src/platform'
+import { executeWithFrameDelay } from 'utilities/src/react/delayUtils'
 import { useTimeout } from 'utilities/src/time/timing'
 
 const DEFAULT_MIN_WIDTH = 225
@@ -357,10 +358,11 @@ function DropdownContent({
                   hoverable
                   borderRadius="$rounded8"
                   onPress={(event) => {
-                    onPress()
-                    if (closeOnSelect) {
-                      handleClose?.(event)
-                    }
+                    executeWithFrameDelay(() => {
+                      if (closeOnSelect) {
+                        handleClose?.(event)
+                      }
+                    }, onPress)
                   }}
                 >
                   <Flex testID={key}>{render()}</Flex>

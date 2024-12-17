@@ -253,6 +253,7 @@ export default function FeatureFlagModal() {
           <FeatureFlagGroup name="New Chains">
             <FeatureFlagOption flag={FeatureFlags.Zora} label="Enable Zora" />
             <FeatureFlagOption flag={FeatureFlags.UnichainPromo} label="Unichain In App Promotion" />
+            <FeatureFlagOption flag={FeatureFlags.MonadTestnet} label="Enable Monad Testnet" />
           </FeatureFlagGroup>
           <FeatureFlagOption flag={FeatureFlags.L2NFTs} label="L2 NFTs" />
           <FeatureFlagGroup name="Quick routes">

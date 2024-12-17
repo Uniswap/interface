@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmYVT8bXNHTgPdSTegLQ62Z6f7E51fQbeMvn2nJAxMRGBE`
-- CIDv1: `bafybeiew2yawtry3lld6g5ankyq3bsbvjfchxxhboph45u6os6t2babtru`
+- CIDv0: `QmP8VRKK9FDri6XhqC8xNCXJTRqbfWmiF7jTdaDBJbt3uv`
+- CIDv1: `bafybeialxy3kyi4xjtgo4u3a6k7gpt76j3y77m3cucofzbjxlegxfzufpu`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,52 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiew2yawtry3lld6g5ankyq3bsbvjfchxxhboph45u6os6t2babtru.ipfs.dweb.link/
-- https://bafybeiew2yawtry3lld6g5ankyq3bsbvjfchxxhboph45u6os6t2babtru.ipfs.cf-ipfs.com/
-- [ipfs://QmYVT8bXNHTgPdSTegLQ62Z6f7E51fQbeMvn2nJAxMRGBE/](ipfs://QmYVT8bXNHTgPdSTegLQ62Z6f7E51fQbeMvn2nJAxMRGBE/)
+- https://bafybeialxy3kyi4xjtgo4u3a6k7gpt76j3y77m3cucofzbjxlegxfzufpu.ipfs.dweb.link/
+- https://bafybeialxy3kyi4xjtgo4u3a6k7gpt76j3y77m3cucofzbjxlegxfzufpu.ipfs.cf-ipfs.com/
+- [ipfs://QmP8VRKK9FDri6XhqC8xNCXJTRqbfWmiF7jTdaDBJbt3uv/](ipfs://QmP8VRKK9FDri6XhqC8xNCXJTRqbfWmiF7jTdaDBJbt3uv/)
 
-### 5.62.4 (2024-12-16)
+## 5.63.0 (2024-12-17)
+
+
+### Features
+
+* **web:** add indicators for % difference from current price (#14235) 6456766
+* **web:** add more interactivity to range input price chart (#14153) f9c4680
+* **web:** filter v2 unsupported chains from LP creation flow (#14462) 734a4e2
+* **web:** mweb designs for price range input (#14424) 2277e82
+* **web:** pool finder redesign and re-enable on new LP pages (#14451) d55c7ea
+* **web:** Revise "unavailable" state for small price charts (#14311) aba0989
 
 
 ### Bug Fixes
 
-* **web:** fix disabled swap button for previously-dismissed warning tokens (#14560) 2b04e71
+* **web:** 12 16 fix web add monad testnet rpc to web env staging (#14564) 588d8bb
+* **web:** check window.__DEV__ cypress fix (#14491) a885720
+* **web:** cherry-pick pagination into staging (#14551) 3920adf
+* **web:** cleanup unused legacy FOR modal (#14356) 302b4f3
+* **web:** Conversion API updates (#14550) 242f8da
+* **web:** downgrade react-native-web to 0.19.10 (#14473) 010b773
+* **web:** enforce privacy opt out choices (#14374) 9760922
+* **web:** fix broken link for providing lps (#14372) 7c06390
+* **web:** fix current price inversion issue (#14445) 3fe1286
+* **web:** fix disabled swap button for previously-dismissed warning tokens (#14559) 4868b63
+* **web:** fix missing mweb swap - staging (#14580) d8f6631
+* **web:** fix v2 lp create networks (#14578) ef585ef
+* **web:** hide un-owned positions (#14447) 742e519
+* **web:** hiding migrate to v4 (#14499) 98825bb
+* **web:** lp links open in new tabs - staging (#14571) bdc1de5
+* **web:** modal diet - part ii (#14364) 5e22130
+* **web:** prevent crash when sending on bnb chain (#14355) b47fc90
+* **web:** price range input - prevent scrolling below zero (#14316) e4e37b4
+* **web:** staging cherrypicks - tooltip + position page crash (#14581) d94f7f9
+* **web:** surface imported v2 positions (#14405) a3519b4
+* **web:** truncation issue on mad price text positions (#14582) 78038ed
+* **web:** update the create flow to get data from the sdk instead of from the backend (#14380) 50ab440
+* **web:** wrap positions in multichain context (#14466) bc07af4
+
+
+### Continuous Integration
+
+* **web:** update sitemaps 721fc2d
 
 

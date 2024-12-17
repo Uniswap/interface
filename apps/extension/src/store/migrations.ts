@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
+import { unchecksumDismissedTokenWarningKeys } from 'uniswap/src/state/uniswapMigrations'
 import {
   activatePendingAccounts,
   addCreatedOnboardingRedesignAccountBehaviorHistory,
@@ -42,6 +43,7 @@ export const migrations = {
   15: moveCurrencySetting,
   16: updateExploreOrderByType,
   17: removeCreatedOnboardingRedesignAccountBehaviorHistory,
+  18: unchecksumDismissedTokenWarningKeys,
 }
 
-export const EXTENSION_STATE_VERSION = 17
+export const EXTENSION_STATE_VERSION = 18

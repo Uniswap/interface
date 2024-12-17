@@ -53,6 +53,8 @@ export function ExploreScreen(): JSX.Element {
   const [isSearchMode, setIsSearchMode] = useState<boolean>(false)
   const textInputRef = useRef<TextInput>(null)
   const [selectedChain, setSelectedChain] = useState<UniverseChainId | null>(null)
+  // TODO(WALL-5482): investigate list rendering performance/scrolling issue
+  const canRenderList = useRenderNextFrame(!isSearchMode)
 
   const onSearchChangeText = (newSearchFilter: string): void => {
     setSearchQuery(newSearchFilter)
@@ -132,8 +134,56 @@ export function ExploreScreen(): JSX.Element {
           )}
         </KeyboardAvoidingView>
       ) : (
-        isSheetReady && <ExploreSections listRef={listRef} />
+        isSheetReady && canRenderList && <ExploreSections listRef={listRef} />
       )}
     </Screen>
   )
+}
+
+/**
+ * A hook that safely handles mounting/unmounting using requestAnimationFrame.
+ * This can help prevent common React Native issues with rendering and gestures
+ * by ensuring elements mount on the next frame. (not ideal, but better than nothing)
+ */
+const useRenderNextFrame = (condition: boolean): boolean => {
+  const [canRender, setCanRender] = useState<boolean>(false)
+  const rafRef = useRef<number>()
+  const mountedRef = useRef<boolean>(true)
+
+  const conditionRef = useRef<boolean>(condition)
+
+  // clean up on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      mountedRef.current = false
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current)
+      }
+    }
+  }, [])
+
+  // schedule render for next frame if we should mount
+  useEffect(() => {
+    conditionRef.current = condition
+
+    if (condition) {
+      rafRef.current = requestAnimationFrame(() => {
+        // By the time this callback runs, 'condition' might have changed
+        // since RAF executes in the next frame, so we store the condition in a ref
+        if (mountedRef.current && conditionRef.current) {
+          setCanRender(true)
+        }
+      })
+    } else {
+      setCanRender(false)
+    }
+
+    return () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current)
+      }
+    }
+  }, [condition])
+
+  return canRender
 }

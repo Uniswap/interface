@@ -10,8 +10,8 @@ import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiCli
 import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
-import { findGasStrategyName } from 'uniswap/src/features/gas/hooks'
 import { getGasPrice } from 'uniswap/src/features/gas/types'
+import { findLocalGasStrategy } from 'uniswap/src/features/gas/utils'
 import { DynamicConfigs, MainnetPrivateRpcConfigKey } from 'uniswap/src/features/gating/configs'
 import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { pushNotification, setNotificationStatus } from 'uniswap/src/features/notifications/slice'
@@ -530,6 +530,7 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
             slippageTolerance: typeInfo.slippageTolerance,
             route: typeInfo.routeString,
             protocol: typeInfo.protocol,
+            simulation_failure_reasons: typeInfo.simulationFailureReasons,
           }
         : undefined
 
@@ -659,6 +660,10 @@ function maybeLogGasEstimateAccuracy(transaction: TransactionDetails) {
   for (const estimate of [gasEstimates.activeEstimate, ...(gasEstimates.shadowEstimates || [])]) {
     const gasUseDiff = getDiff(estimate.gasLimit, transaction.receipt?.gasUsed)
     const gasPriceDiff = getDiff(getGasPrice(estimate), transaction.receipt?.effectiveGasPrice)
+    const localGasStrategy = findLocalGasStrategy(
+      estimate,
+      transaction.typeInfo.type === TransactionType.Swap ? 'swap' : 'general',
+    )
 
     sendAnalyticsEvent(WalletEventName.GasEstimateAccuracy, {
       tx_hash: transaction.hash,
@@ -677,7 +682,8 @@ function maybeLogGasEstimateAccuracy(transaction: TransactionDetails) {
       out_of_gas,
       private_rpc: isClassic(transaction) ? transaction.options.submitViaPrivateRpc ?? false : false,
       is_shadow: estimate !== gasEstimates.activeEstimate,
-      name: findGasStrategyName(estimate, transaction.typeInfo.type === TransactionType.Swap ? 'swap' : 'general'),
+      name: localGasStrategy?.conditions.name,
+      display_limit_inflation_factor: localGasStrategy?.strategy.displayLimitInflationFactor,
       timed_out,
     })
   }

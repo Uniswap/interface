@@ -26,6 +26,7 @@ jest.mock('wallet/src/features/appearance/hooks', () => {
 jest.mock('uniswap/src/features/gas/hooks', () => ({
   useActiveGasStrategy: jest.fn().mockReturnValue({
     limitInflationFactor: 1.15,
+    displayLimitInflationFactor: 1,
     priceInflationFactor: 1.5,
     percentileThresholdFor1559Fee: 75,
   }),

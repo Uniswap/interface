@@ -5,9 +5,11 @@ import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWallet
 import { ExchangeTransferModalState } from 'src/features/fiatOnRamp/ExchangeTransferModalState'
 import { ModalsState } from 'src/features/modals/ModalsState'
 import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
+import { TestnetSwitchModalState } from 'src/features/testnetMode/TestnetSwitchModalState'
 import { FiatOnRampModalState } from 'src/screens/FiatOnRampModalState'
 import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TransactionScreen } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getKeys } from 'utilities/src/primitives/objects'
@@ -60,6 +62,11 @@ type ScantasticModalParams = {
   initialState: ScantasticModalState
 }
 
+type TestnetSwitchModalParams = {
+  name: typeof ModalName.TestnetSwitchModal
+  initialState?: TestnetSwitchModalState
+}
+
 type RemoveWalletModalParams = {
   name: typeof ModalName.RemoveWallet
   initialState?: RemoveWalletModalState
@@ -74,7 +81,12 @@ type WalletConnectModalParams = {
 
 type SwapModalParams = { name: typeof ModalName.Swap; initialState?: TransactionState }
 
-type SendModalParams = { name: typeof ModalName.Send; initialState?: TransactionState }
+type SendModalParams = {
+  name: typeof ModalName.Send
+  initialState?: TransactionState & {
+    sendScreen?: TransactionScreen
+  }
+}
 
 type UnitagsIntroParams = {
   name: typeof ModalName.UnitagsIntro
@@ -114,6 +126,7 @@ export type OpenModalParams =
   | ReceiveCryptoModalParams
   | LanguageSelectorModalParams
   | ScantasticModalParams
+  | TestnetSwitchModalParams
   | RemoveWalletModalParams
   | SendModalParams
   | SwapModalParams

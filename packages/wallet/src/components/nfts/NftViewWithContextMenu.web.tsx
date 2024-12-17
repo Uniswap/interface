@@ -19,6 +19,7 @@ export function NftViewWithContextMenu(props: NftViewWithContextMenuProps): JSX.
     tokenId: item.tokenId,
     owner,
     isSpam: item.isSpam,
+    showNotification: true,
     chainId: fromGraphQLChain(item.chain) ?? defaultChainId,
   })
 

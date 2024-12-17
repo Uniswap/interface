@@ -69,8 +69,8 @@ export function useSwapTxAndGasInfo({
       const orderParams = signature ? { signature, quote: trade.quote.quote, routing: Routing.DUTCH_V2 } : undefined
       const gasFeeBreakdown: UniswapXGasBreakdown = {
         classicGasUseEstimateUSD: trade.quote.quote.classicGasUseEstimateUSD,
-        approvalCost: tokenApprovalInfo?.gasFee,
-        wrapCost: swapTxInfo.gasFeeResult.value,
+        approvalCost: tokenApprovalInfo?.displayGasFee,
+        wrapCost: swapTxInfo.gasFeeResult.displayValue,
         inputTokenSymbol: trade.inputAmount.currency.wrapped.symbol,
       }
 
@@ -157,7 +157,7 @@ function getTotalGasFee(
 
   // For UniswapX orders with no wrap and no approval, show total gas fee as 0.
   if (isGaslessSwap && noApprovalNeeded) {
-    return { value: '0', error, isLoading }
+    return { value: '0', displayValue: '0', error, isLoading }
   }
 
   // If user is disconnected, we don't have approval info, so use swapGasResult only for gas estimation
@@ -169,9 +169,14 @@ function getTotalGasFee(
   // - If errors exist on swap or approval requests.
   // - If we don't have both the approval and transaction gas fees.
   if (approvalGasFeeMissing || swapGasFeeMissing || blockingUnknownApprovalStatus || error) {
-    return { value: undefined, error, isLoading }
+    return { value: undefined, displayValue: undefined, error, isLoading }
   }
 
   const value = sumGasFees([swapGasResult.value, tokenApprovalInfo.gasFee, tokenApprovalInfo.cancelGasFee])
-  return { value, error, isLoading }
+  const displayValue = sumGasFees([
+    swapGasResult.displayValue,
+    tokenApprovalInfo.displayGasFee,
+    tokenApprovalInfo.displayCancelGasFee,
+  ])
+  return { value, displayValue, error, isLoading }
 }

@@ -8,6 +8,7 @@ import {
   BNB_LOGO,
   CELO_LOGO,
   ETHEREUM_LOGO,
+  MONAD_LOGO,
   OPTIMISM_LOGO,
   POLYGON_LOGO,
   UNICHAIN_SEPOLIA_LOGO,
@@ -132,6 +133,12 @@ export function getChainUI(chainId: UniverseChainId, darkMode: boolean): ChainUI
         symbol: UNICHAIN_SEPOLIA_LOGO,
         bgColor: '#fc0fa4',
         textColor: '#fc0fa4',
+      }
+    case UniverseChainId.MonadTestnet:
+      return {
+        symbol: MONAD_LOGO,
+        bgColor: '#200052',
+        textColor: '#836EF9',
       }
     default:
       return undefined

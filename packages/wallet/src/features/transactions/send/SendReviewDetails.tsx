@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -28,6 +29,7 @@ import {
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
+import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
@@ -59,7 +61,7 @@ export function SendReviewDetails({
   const { navigateToAccountActivityList } = useWalletNavigation()
 
   const { setScreen } = useTransactionModalContext()
-  const { derivedSendInfo, warnings, txRequest, gasFee, isFiatInput } = useSendContext()
+  const { derivedSendInfo, warnings, txRequest, gasFee, isFiatInput, fiatOffRampMetaData } = useSendContext()
   const { txId, chainId, recipient, currencyInInfo, currencyAmounts, nftIn, exactAmountFiat } = derivedSendInfo
 
   const { avatar } = useAvatar(recipient)
@@ -174,7 +176,19 @@ export function SendReviewDetails({
     NumberType.FiatTokenQuantity,
   )
 
+  const { navigateToFiatOnRamp } = useWalletNavigation()
+
   const onPrev = (): void => {
+    if (fiatOffRampMetaData) {
+      onCloseModal?.()
+      navigateToFiatOnRamp({
+        prefilledCurrency: {
+          currencyInfo: currencyInInfo,
+          moonpayCurrencyCode: fiatOffRampMetaData.moonpayCurrencyCode,
+          meldCurrencyCode: fiatOffRampMetaData.meldCurrencyCode,
+        },
+      })
+    }
     setScreen(TransactionScreen.Form)
   }
 
@@ -245,14 +259,29 @@ export function SendReviewDetails({
         </Flex>
         {recipient && (
           <Flex centered row justifyContent="space-between">
-            <AddressDisplay
+            {fiatOffRampMetaData ? (
+              <Flex>
+                <Text color="$neutral1" variant="heading3">
+                  {fiatOffRampMetaData.name}
+                </Text>
+                <Text color="$neutral2" variant="body4">
+                  {shortenAddress(recipient)}
+                </Text>
+              </Flex>
+            ) : (
+              <AddressDisplay
+                address={recipient}
+                captionVariant="body3"
+                showAccountIcon={false}
+                textAlign="flex-start"
+                variant="heading3"
+              />
+            )}
+            <AccountIcon
               address={recipient}
-              captionVariant="body3"
-              showAccountIcon={false}
-              textAlign="flex-start"
-              variant="heading3"
+              avatarUri={fiatOffRampMetaData?.logoUrl || avatar}
+              size={iconSizes.icon40}
             />
-            <AccountIcon address={recipient} avatarUri={avatar} size={iconSizes.icon40} />
           </Flex>
         )}
       </Flex>

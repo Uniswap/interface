@@ -24,6 +24,7 @@ import {
 import { Protocol } from '@uniswap/router-sdk'
 import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
 import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import {
@@ -70,6 +71,7 @@ export type GasEstimateAccuracyProperties = {
   name?: string
   out_of_gas: boolean
   timed_out: boolean
+  display_limit_inflation_factor?: number
 }
 
 export type PendingTransactionTimeoutProperties = {
@@ -154,6 +156,7 @@ export type SwapTradeBaseProperties = {
   // Legacy props only used on web. We might be able to delete these after we delete the old swap flow.
   method?: 'ROUTING_API' | 'QUICK_ROUTE' | 'CLIENT_SIDE_FALLBACK'
   offchain_order_type?: 'Dutch' | 'Dutch_V2' | 'Limit' | 'Dutch_V1_V2' | 'Priority'
+  simulation_failure_reasons?: TransactionFailureReason[]
 } & ITraceContext
 
 type BaseSwapTransactionResultProperties = {
@@ -180,6 +183,7 @@ type BaseSwapTransactionResultProperties = {
   submitViaPrivateRpc?: boolean
   protocol?: Protocol
   transactedUSDValue?: number
+  simulation_failure_reasons?: TransactionFailureReason[]
 }
 
 type ClassicSwapTransactionResultProperties = BaseSwapTransactionResultProperties
@@ -285,7 +289,7 @@ export enum DappRequestCardLoggingName {
 }
 
 export type FORAmountEnteredProperties = ITraceContext & {
-  source: 'chip' | 'textInput'
+  source: 'chip' | 'textInput' | 'changeAsset'
   amountUSD?: number
 }
 
@@ -716,6 +720,7 @@ export type UniverseEventProperties = {
     txRequest?: EthersTransactionRequest
     client_block_number?: number
     isAutoSlippage?: boolean
+    simulationFailureReasons?: TransactionFailureReason[]
   } & SwapTradeBaseProperties
   [SwapEventName.SWAP_FIRST_ACTION]: {
     time_to_first_swap_action?: number
@@ -746,6 +751,12 @@ export type UniverseEventProperties = {
   [UniswapEventName.BalancesReportPerChain]: {
     total_balances_usd_per_chain: Record<string, number>
     wallet: string
+  }
+  [UniswapEventName.ConversionEventSubmitted]: {
+    id: string
+    eventId: string
+    eventName: string
+    platformIdType: string
   }
   [UniswapEventName.TokenSelected]:
     | (ITraceContext &
@@ -842,6 +853,7 @@ export type UniverseEventProperties = {
     SwapTradeBaseProperties
   [WalletEventName.TestnetModeToggled]: {
     enabled: boolean
+    location: 'settings' | 'deep_link_modal'
   }
   [WalletEventName.TestnetEvent]: {
     originalEventName: string

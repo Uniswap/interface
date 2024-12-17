@@ -493,6 +493,9 @@ export const SelectPriceRangeStep = ({
             gap="$gap12"
             borderTopLeftRadius="$rounded20"
             borderTopRightRadius="$rounded20"
+            $lg={{
+              px: '$spacing8',
+            }}
           >
             <DisplayCurrentPrice price={price} />
             {!creatingPoolOrPair && !isPriceRangeInputV2Enabled && (
@@ -534,7 +537,7 @@ export const SelectPriceRangeStep = ({
               />
             )}
           </Flex>
-          <Flex row gap="$gap4">
+          <Flex row gap="$gap4" $lg={{ row: false }}>
             <RangeInput
               input={RangeSelectionInput.MIN}
               decrement={isSorted ? getDecrementLower : getIncrementUpper}

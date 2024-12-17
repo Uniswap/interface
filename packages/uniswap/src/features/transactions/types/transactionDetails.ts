@@ -2,7 +2,7 @@ import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers/lib/ethers'
 import { TransactionListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { Routing, TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -236,6 +236,7 @@ export interface BaseSwapTransactionInfo extends BaseTransactionInfo {
   routeString?: string
   gasUseEstimate?: string
   protocol?: Protocol
+  simulationFailureReasons?: TransactionFailureReason[]
 }
 
 export interface BridgeTransactionInfo extends BaseTransactionInfo {

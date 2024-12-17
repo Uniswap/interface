@@ -11,7 +11,12 @@ import {
   TransactionFailureReason,
 } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
-import { useActiveGasStrategy, useShadowGasStrategies, useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
+import {
+  convertGasFeeToDisplayValue,
+  useActiveGasStrategy,
+  useShadowGasStrategies,
+  useTransactionGasFee,
+} from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult, areEqualGasStrategies } from 'uniswap/src/features/gas/types'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -54,6 +59,7 @@ export interface TransactionRequestInfo {
   gasFeeResult: GasFeeResult
   gasEstimate: SwapGasFeeEstimation
   swapRequestArgs: CreateSwapRequest | undefined
+  simulationFailureReasons?: TransactionFailureReason[]
 }
 
 export function useTransactionRequestInfo({
@@ -152,7 +158,11 @@ export function useTransactionRequestInfo({
 
   // Wrap gas cost should not change significantly between trades, so we can use the last value if current is unavailable.
   const wrapGasFee: GasFeeResult = useMemo(
-    () => ({ ...currentWrapGasFee, value: currentWrapGasFee.value ?? wrapGasFeeRef.current.value }),
+    () => ({
+      ...currentWrapGasFee,
+      value: currentWrapGasFee.value ?? wrapGasFeeRef.current.value,
+      displayValue: currentWrapGasFee.displayValue ?? wrapGasFeeRef.current.displayValue,
+    }),
     [currentWrapGasFee],
   )
 
@@ -183,11 +193,20 @@ export function useTransactionRequestInfo({
   })
 
   // We use the gasFee estimate from quote, as its more accurate
-  const swapGasFee = swapQuote?.gasFee
+  const swapGasFee = useMemo(
+    () => ({
+      value: swapQuote?.gasFee,
+      displayValue: convertGasFeeToDisplayValue(swapQuote?.gasFee, activeGasStrategy),
+    }),
+    [swapQuote?.gasFee, activeGasStrategy],
+  )
 
   // This is a case where simulation fails on backend, meaning txn is expected to fail
+  const simulationFailureReasons = isClassicQuote(swapQuote) ? swapQuote?.txFailureReasons : undefined
   const simulationError =
-    isClassicQuote(swapQuote) && swapQuote?.txFailureReasons?.includes(TransactionFailureReason.SIMULATION_ERROR)
+    simulationFailureReasons?.includes(TransactionFailureReason.SIMULATION_ERROR) ||
+    simulationFailureReasons?.includes(TransactionFailureReason.SLIPPAGE_TOO_LOW)
+
   const gasEstimateError = useMemo(
     () => (simulationError ? new Error(UNKNOWN_SIM_ERROR) : error),
     [simulationError, error],
@@ -195,7 +214,8 @@ export function useTransactionRequestInfo({
 
   const gasFeeResult = useMemo(
     () => ({
-      value: isWrapApplicable ? wrapGasFee.value : swapGasFee,
+      value: isWrapApplicable ? wrapGasFee.value : swapGasFee.value,
+      displayValue: isWrapApplicable ? wrapGasFee.displayValue : swapGasFee.displayValue,
       isLoading: isWrapApplicable ? wrapGasFee.isLoading : isSwapLoading,
       error: isWrapApplicable ? wrapGasFee.error : gasEstimateError,
     }),
@@ -225,6 +245,7 @@ export function useTransactionRequestInfo({
       logger.warn('useTransactionRequestInfo', 'useTransactionRequestInfo', UNKNOWN_SIM_ERROR, {
         ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, transactionSettings, formatter, trace }),
         error: gasEstimateError,
+        simulationFailureReasons: isClassicQuote(swapQuote) ? swapQuote?.txFailureReasons : undefined,
         txRequest: data?.swap,
       })
 
@@ -233,10 +254,21 @@ export function useTransactionRequestInfo({
           ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, transactionSettings, formatter, trace }),
           error: gasEstimateError,
           txRequest: data?.swap,
+          simulationFailureReasons: isClassicQuote(swapQuote) ? swapQuote?.txFailureReasons : undefined,
         })
       }
     }
-  }, [data?.swap, transactionSettings, derivedSwapInfo, formatter, gasEstimateError, swapRequestArgs, trade, trace])
+  }, [
+    data?.swap,
+    transactionSettings,
+    derivedSwapInfo,
+    formatter,
+    gasEstimateError,
+    swapRequestArgs,
+    trade,
+    trace,
+    swapQuote,
+  ])
 
   const gasEstimate: SwapGasFeeEstimation = useMemo(() => {
     const activeGasEstimate = data?.gasEstimates?.find((e) => areEqualGasStrategies(e.strategy, activeGasStrategy))
@@ -260,5 +292,6 @@ export function useTransactionRequestInfo({
     permitData,
     gasEstimate,
     swapRequestArgs,
+    simulationFailureReasons,
   }
 }

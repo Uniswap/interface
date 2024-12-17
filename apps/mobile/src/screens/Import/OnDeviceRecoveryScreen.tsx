@@ -29,6 +29,7 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
 import { useTimeout } from 'utilities/src/time/timing'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
@@ -249,7 +250,9 @@ export function OnDeviceRecoveryScreen({
             </Flex>
           </Flex>
           <WarningModal
-            caption={t('onboarding.import.onDeviceRecovery.warning.caption')}
+            caption={t('onboarding.import.onDeviceRecovery.warning.caption', {
+              cloudProvider: getCloudProviderName(),
+            })}
             rejectText={t('common.button.back')}
             acknowledgeText={t('common.button.continue')}
             icon={<PapersText color={colors.neutral1.get()} size="$icon.20" strokeWidth={1.5} />}

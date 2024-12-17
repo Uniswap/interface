@@ -41,6 +41,8 @@ export function OnboardingScreen({
   const headerHeight = useHeaderHeight()
   const insets = useAppInsets()
   const media = useMedia()
+  // TODO(WALL-5483): remove this once we improve seed recovery screen design on smaller devices
+  const showIcon = !media.short
 
   const gapSize = media.short ? '$none' : '$spacing16'
 
@@ -82,7 +84,7 @@ export function OnboardingScreen({
         >
           {/* Text content */}
           <Flex centered gap="$spacing8" m="$spacing12" mb={ignoreTextContainerMarginBottom ? '$none' : undefined}>
-            {Icon && (
+            {showIcon && Icon && (
               <Flex centered mb="$spacing4">
                 <Flex centered backgroundColor="$surface3" borderRadius="$rounded8" p="$spacing12">
                   <Icon color="$neutral1" size="$icon.18" />

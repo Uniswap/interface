@@ -21,6 +21,7 @@ module.exports = {
     QUICKNODE_AVAX_RPC_URL: 'https://api.uniswap.org',
     QUICKNODE_BASE_RPC_URL: 'https://api.uniswap.org',
     QUICKNODE_CELO_RPC_URL: 'https://api.uniswap.org',
+    QUICKNODE_MONAD_TESTNET_RPC_URL: 'https://api.uniswap.org',
     QUICKNODE_OP_RPC_URL: 'https://api.uniswap.org',
     QUICKNODE_POLYGON_RPC_URL: 'https://api.uniswap.org',
     QUICKNODE_WORLDCHAIN_RPC_URL: 'https://api.uniswap.org',

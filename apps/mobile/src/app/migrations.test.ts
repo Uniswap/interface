@@ -83,6 +83,7 @@ import {
   v79Schema,
   v7Schema,
   v80Schema,
+  v81Schema,
   v8Schema,
   v9Schema,
 } from 'src/app/schema'
@@ -125,6 +126,7 @@ import {
   testMovedUserSettings,
   testRemoveCreatedOnboardingRedesignAccount,
   testRemoveHoldToSwap,
+  testUnchecksumDismissedTokenWarningKeys,
   testUpdateExploreOrderByType,
 } from 'wallet/src/state/walletMigrationsTests'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
@@ -1591,5 +1593,9 @@ describe('Redux state migrations', () => {
 
   it('migrates from v80 to v81', async () => {
     testRemoveCreatedOnboardingRedesignAccount(migrations[81], v80Schema)
+  })
+
+  it('migrates from v81 to v82', () => {
+    testUnchecksumDismissedTokenWarningKeys(migrations[82], v81Schema)
   })
 })

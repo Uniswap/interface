@@ -4,7 +4,7 @@ import { useScroll } from 'hooks/useScroll'
 import { TokenCloud } from 'pages/Landing/components/TokenCloud'
 import { Hover, RiseIn, RiseInText } from 'pages/Landing/components/animations'
 import { Swap } from 'pages/Swap'
-import { Fragment, useCallback } from 'react'
+import { Fragment, useCallback, useMemo } from 'react'
 import { ChevronDown } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
@@ -25,9 +25,13 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
   const initialInputCurrency = useCurrency('ETH', UniverseChainId.Mainnet)
   const navigate = useNavigate()
   const { t } = useTranslation()
-
-  const translateY = -scrollPosition / 7
-  const opacityY = 1 - scrollPosition / 1000
+  const { translateY, opacityY } = useMemo(
+    () => ({
+      translateY: !media.sm ? -scrollPosition / 7 : 0,
+      opacityY: !media.sm ? 1 - scrollPosition / 1000 : 1,
+    }),
+    [media.sm, scrollPosition],
+  )
 
   const swapRedirectCallback = useCallback(
     ({ inputCurrency, outputCurrency, typedValue, independentField, chainId }: Parameters<SwapRedirectFn>[0]) => {

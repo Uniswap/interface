@@ -92,6 +92,7 @@ export function SettingsScreen(): JSX.Element {
     const fireAnalytic = (): void => {
       sendAnalyticsEvent(WalletEventName.TestnetModeToggled, {
         enabled: isChecked,
+        location: 'settings',
       })
     }
 

@@ -19,6 +19,7 @@ const POPOVER_WIDTH = 320
 export type TransactionSettingsModalProps = {
   settings: SwapSettingConfig[]
   defaultTitle?: string
+  initialSelectedSetting?: SwapSettingConfig
   onClose?: () => void
   isOpen: boolean
 }
@@ -26,41 +27,55 @@ export type TransactionSettingsModalProps = {
 const TransactionSettingsModalContent = ({
   settings,
   defaultTitle,
+  initialSelectedSetting,
   onClose,
 }: Omit<TransactionSettingsModalProps, 'isOpen'>): JSX.Element => {
   const { t } = useTranslation()
+  const { customSlippageTolerance } = useTransactionSettingsContext()
+
   const [SelectedSetting, setSelectedSetting] = useState<SwapSettingConfig>()
 
   const title = SelectedSetting ? SelectedSetting.renderTitle(t) : defaultTitle ?? t('swap.settings.title')
   const screen = SelectedSetting?.Screen ? (
     <SelectedSetting.Screen />
   ) : (
-    <Flex gap="$spacing16" py="$spacing12">
+    <Flex gap="$spacing8" py="$spacing12">
       {settings.map((setting, index) => (
-        <SwapSettingRow key={`swap-setting-${index}`} setSelectedSetting={setSelectedSetting} setting={setting} />
+        <SwapSettingRow
+          key={`swap-setting-${index}`}
+          setSelectedSetting={setSelectedSetting}
+          setting={setting}
+          customSlippageTolerance={customSlippageTolerance}
+        />
       ))}
     </Flex>
   )
 
   return (
-    <Flex gap="$spacing16" px={isWeb ? '$spacing4' : '$spacing24'} py={isWeb ? '$spacing4' : '$spacing12'}>
-      <Flex row justifyContent="space-between">
-        <TouchableArea onPress={(): void => setSelectedSetting(undefined)}>
-          <RotatableChevron
-            color={SelectedSetting === undefined ? '$transparent' : '$neutral3'}
-            height={iconSizes.icon24}
-            width={iconSizes.icon24}
-          />
-        </TouchableArea>
-        <Text textAlign="center" variant="body1">
-          {title}
-        </Text>
-        <Flex width={iconSizes.icon24} />
-      </Flex>
+    <Flex gap="$spacing16" px={isWeb ? '$spacing4' : '$spacing24'} py={isWeb ? '$spacing4' : '$spacing12'} width="100%">
+      {!SelectedSetting?.hideTitle && (
+        <Flex row justifyContent="space-between">
+          <TouchableArea onPress={(): void => setSelectedSetting(undefined)}>
+            <RotatableChevron
+              color={
+                SelectedSetting === undefined || SelectedSetting === initialSelectedSetting
+                  ? '$transparent'
+                  : '$neutral3'
+              }
+              height={iconSizes.icon24}
+              width={iconSizes.icon24}
+            />
+          </TouchableArea>
+          <Text textAlign="center" variant="body1">
+            {title}
+          </Text>
+          <Flex width={iconSizes.icon24} />
+        </Flex>
+      )}
       {screen}
       <Flex centered row>
         <Button fill testID="swap-settings-close" theme="secondary" onPress={onClose}>
-          {t('common.button.close')}
+          {SelectedSetting?.renderCloseButtonText ? SelectedSetting.renderCloseButtonText(t) : t('common.button.close')}
         </Button>
       </Flex>
     </Flex>
@@ -70,6 +85,7 @@ const TransactionSettingsModalContent = ({
 function TransactionSettingsModalInterface({
   settings,
   defaultTitle,
+  initialSelectedSetting,
   onClose,
 }: TransactionSettingsModalProps): JSX.Element {
   return (
@@ -93,12 +109,22 @@ function TransactionSettingsModalInterface({
       shadowRadius={6}
       width={POPOVER_WIDTH}
     >
-      <TransactionSettingsModalContent defaultTitle={defaultTitle} settings={settings} onClose={onClose} />
+      <TransactionSettingsModalContent
+        defaultTitle={defaultTitle}
+        initialSelectedSetting={initialSelectedSetting}
+        settings={settings}
+        onClose={onClose}
+      />
     </Popover.Content>
   )
 }
 
-function TransactionSettingsModalWallet({ settings, onClose, isOpen }: TransactionSettingsModalProps): JSX.Element {
+function TransactionSettingsModalWallet({
+  settings,
+  initialSelectedSetting,
+  onClose,
+  isOpen,
+}: TransactionSettingsModalProps): JSX.Element {
   const swapFormContext = useSwapFormContext()
   const transactionSettingsContext = useTransactionSettingsContext()
   const colors = useSporeColors()
@@ -115,7 +141,11 @@ function TransactionSettingsModalWallet({ settings, onClose, isOpen }: Transacti
       <TransactionSettingsContext.Provider value={transactionSettingsContext}>
         {/* Re-create the SwapFormContextProvider, since native Modal can cause its children to be in a separate component tree. */}
         <SwapFormContext.Provider value={swapFormContext}>
-          <TransactionSettingsModalContent settings={settings} onClose={onClose} />
+          <TransactionSettingsModalContent
+            initialSelectedSetting={initialSelectedSetting}
+            settings={settings}
+            onClose={onClose}
+          />
         </SwapFormContext.Provider>
       </TransactionSettingsContext.Provider>
     </Modal>

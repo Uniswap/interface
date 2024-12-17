@@ -1,12 +1,18 @@
-import { NavigationContainer, createNavigationContainerRef } from '@react-navigation/native'
+import { DdRumReactNavigationTracking } from '@datadog/mobile-react-navigation'
+import {
+  NavigationContainer,
+  NavigationContainerRefWithCurrent,
+  NavigationState,
+  createNavigationContainerRef,
+} from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { TransitionPresets, createStackNavigator } from '@react-navigation/stack'
 import React, { useEffect } from 'react'
 import { DevSettings } from 'react-native'
 import { useSelector } from 'react-redux'
 import StorybookUIRoot from 'src/../.storybook'
-import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import { renderHeaderBackButton, renderHeaderBackImage } from 'src/app/navigation/components'
+import { navigationRef } from 'src/app/navigation/navigationRef'
 import {
   AppStackParamList,
   AppStackScreenProp,
@@ -79,6 +85,7 @@ import {
   UnitagScreens,
   UnitagStackParamList,
 } from 'uniswap/src/types/screens/mobile'
+import { datadogEnabled } from 'utilities/src/environment/constants'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { OnboardingContextProvider } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -138,6 +145,45 @@ export function WrappedHomeScreen(props: AppStackScreenProp<MobileScreens.Home>)
 }
 
 export const exploreNavigationRef = createNavigationContainerRef<ExploreStackParamList>()
+const fiatOnRampNavigationRef = createNavigationContainerRef<FiatOnRampStackParamList>()
+const navRefs = [exploreNavigationRef, fiatOnRampNavigationRef, navigationRef]
+
+/**
+ * Since we are using multiple navigation containers, we need to start and stop tracking views
+ * manually since multiple nav containers are not supported by the Datadog RUM.
+ *
+ * https://docs.datadoghq.com/real_user_monitoring/mobile_and_tv_monitoring/integrated_libraries/reactnative/#track-view-navigation
+ */
+const startTracking = (
+  navRefToStartTracking: NavigationContainerRefWithCurrent<ReactNavigation.RootParamList>,
+): void => {
+  if (!datadogEnabled) {
+    return
+  }
+  navRefs.forEach((navRef) => {
+    DdRumReactNavigationTracking.stopTrackingViews(navRef.current)
+  })
+  DdRumReactNavigationTracking.startTrackingViews(navRefToStartTracking.current)
+}
+
+/**
+ * Since we are using multiple navigation containers, we need to start and stop tracking views
+ * manually since multiple nav containers are not supported by the Datadog RUM.
+ *
+ * https://docs.datadoghq.com/real_user_monitoring/mobile_and_tv_monitoring/integrated_libraries/reactnative/#track-view-navigation
+ */
+const stopTracking = (state: NavigationState | undefined): void => {
+  if (!datadogEnabled) {
+    return
+  }
+  const navContainerIsClosing = !state || state.routes.length === 0
+  if (navContainerIsClosing) {
+    navRefs.forEach((navRef) => {
+      DdRumReactNavigationTracking.stopTrackingViews(navRef.current)
+    })
+    DdRumReactNavigationTracking.startTrackingViews(navigationRef.current)
+  }
+}
 
 export function ExploreStackNavigator(): JSX.Element {
   const colors = useSporeColors()
@@ -145,7 +191,7 @@ export function ExploreStackNavigator(): JSX.Element {
   return (
     <NavigationContainer
       ref={exploreNavigationRef}
-      independent={true}
+      independent
       theme={{
         dark: false,
         colors: {
@@ -157,6 +203,8 @@ export function ExploreStackNavigator(): JSX.Element {
           notification: 'transparent',
         },
       }}
+      onStateChange={stopTracking}
+      onReady={() => startTracking(exploreNavigationRef)}
     >
       <HorizontalEdgeGestureTarget />
       <ExploreStack.Navigator
@@ -186,7 +234,12 @@ export function ExploreStackNavigator(): JSX.Element {
 
 export function FiatOnRampStackNavigator(): JSX.Element {
   return (
-    <NavigationContainer independent={true}>
+    <NavigationContainer
+      ref={fiatOnRampNavigationRef}
+      independent
+      onReady={() => startTracking(fiatOnRampNavigationRef)}
+      onStateChange={stopTracking}
+    >
       <HorizontalEdgeGestureTarget />
       <FiatOnRampProvider>
         <FiatOnRampStack.Navigator

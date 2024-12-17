@@ -22,6 +22,7 @@ import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAle
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { usePrefetchSwappableTokens } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -188,6 +189,15 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
     // Since we only want to run this on mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const { updateTransactionSettings } = useTransactionSettingsContext()
+  useEffect(() => {
+    if (derivedSwapInfo.chainId === UniverseChainId.MonadTestnet) {
+      updateTransactionSettings({ isOnlyV2Allowed: true })
+    } else {
+      updateTransactionSettings({ isOnlyV2Allowed: false })
+    }
+  }, [derivedSwapInfo.chainId, updateTransactionSettings])
 
   const exactFieldIsInput = exactCurrencyField === CurrencyField.INPUT
   const exactFieldIsOutput = exactCurrencyField === CurrencyField.OUTPUT

@@ -125,6 +125,11 @@ function callsV4PositionManagerContract(assetActivity: TransactionActivity) {
     return false
   }
 
+  // monad testnet does not have v4 support
+  if (supportedChain === UniverseChainId.MonadTestnet) {
+    return false
+  }
+
   return isSameAddress(assetActivity.details.to, CHAIN_TO_ADDRESSES_MAP[supportedChain].v4PositionManagerAddress)
 }
 function callsPositionManagerContract(assetActivity: TransactionActivity) {

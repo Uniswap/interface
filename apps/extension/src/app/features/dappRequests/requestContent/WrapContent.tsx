@@ -5,7 +5,7 @@ import { DappRequestStoreItem } from 'src/app/features/dappRequests/slice'
 import { SendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { Flex, Text } from 'ui/src'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useGasFeeFormattedAmounts, useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
+import { useGasFeeFormattedDisplayAmounts, useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import { useActiveAccountAddressWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 export const WrapTransactionDetails = ({
@@ -31,7 +31,7 @@ export const WrapTransactionDetails = ({
 
   const networkFee = useTransactionGasFee(txRequest)
 
-  const { gasFeeFormatted } = useGasFeeFormattedAmounts({
+  const { gasFeeFormatted } = useGasFeeFormattedDisplayAmounts({
     gasFee: networkFee,
     chainId,
     placeholder: undefined,

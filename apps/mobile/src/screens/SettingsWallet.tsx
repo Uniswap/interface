@@ -1,6 +1,6 @@
-import { useFocusEffect, useNavigation } from '@react-navigation/core'
+import { useNavigation } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { memo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { SvgProps } from 'react-native-svg'
@@ -20,12 +20,7 @@ import {
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { openModal } from 'src/features/modals/modalSlice'
-import { promptPushPermission } from 'src/features/notifications/Onesignal'
-import {
-  NotificationPermission,
-  useNotificationOSPermissionsEnabled,
-} from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
-import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
+import { useNotificationToggle } from 'src/features/notifications/hooks/useNotificationsToggle'
 import { Button, Flex, Switch, Text, useSporeColors } from 'ui/src'
 import NotificationIcon from 'ui/src/assets/icons/bell.svg'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
@@ -40,10 +35,13 @@ import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
-import { useAccounts, useSelectAccountNotificationSetting } from 'wallet/src/features/wallet/hooks'
+import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, MobileScreens.SettingsWallet>
+
+const onPermissionChanged = (enabled: boolean): void => {
+  sendAnalyticsEvent(MobileEventName.NotificationsToggled, { enabled })
+}
 
 // Specific design request not in standard sizing type
 const UNICON_ICON_SIZE = 56
@@ -64,10 +62,6 @@ export function SettingsWallet({
   const readonly = currentAccount?.type === AccountType.Readonly
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
 
-  const notificationOSPermission = useNotificationOSPermissionsEnabled()
-  const notificationsEnabledOnFirebase = useSelectAccountNotificationSetting(address)
-  const [notificationSwitchEnabled, setNotificationSwitchEnabled] = useState<boolean>(notificationsEnabledOnFirebase)
-
   const showEditProfile = !readonly
 
   useEffect(() => {
@@ -76,47 +70,6 @@ export function SettingsWallet({
       navigation.goBack()
     }
   }, [currentAccount, navigation])
-
-  // Need to trigger a state update when the user backgrounds the app to enable notifications and then returns to this screen
-  useFocusEffect(
-    useCallback(
-      () =>
-        setNotificationSwitchEnabled(
-          notificationsEnabledOnFirebase && notificationOSPermission === NotificationPermission.Enabled,
-        ),
-      [notificationOSPermission, notificationsEnabledOnFirebase],
-    ),
-  )
-
-  const onChangeNotificationSettings = async (enabled: boolean): Promise<void> => {
-    sendAnalyticsEvent(MobileEventName.NotificationsToggled, { enabled })
-
-    if (notificationOSPermission === NotificationPermission.Enabled) {
-      dispatch(
-        editAccountActions.trigger({
-          type: EditAccountAction.TogglePushNotification,
-          enabled,
-          address,
-        }),
-      )
-      setNotificationSwitchEnabled(enabled)
-    } else {
-      const arePushNotificationsEnabled = await promptPushPermission()
-
-      if (arePushNotificationsEnabled) {
-        dispatch(
-          editAccountActions.trigger({
-            type: EditAccountAction.TogglePushNotification,
-            enabled: true,
-            address,
-          }),
-        )
-        setNotificationSwitchEnabled(enabled)
-      } else {
-        showNotificationSettingsAlert()
-      }
-    }
-  }
 
   const iconProps: SvgProps = {
     color: colors.neutral2.get(),
@@ -141,14 +94,7 @@ export function SettingsWallet({
       data: [
         ...(showEditProfile ? [] : [editNicknameSectionOption]),
         {
-          action: (
-            <Switch
-              checked={notificationSwitchEnabled}
-              disabled={notificationOSPermission === NotificationPermission.Loading}
-              variant="branded"
-              onCheckedChange={onChangeNotificationSettings}
-            />
-          ),
+          action: <NotificationsSwitch address={address} />,
           text: t('settings.setting.wallet.notifications.title'),
           icon: <NotificationIcon {...iconProps} />,
         },
@@ -267,3 +213,13 @@ function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
     </Flex>
   )
 }
+
+const NotificationsSwitch: React.FC<{ address: Address }> = memo(({ address }) => {
+  const { isEnabled, isPending, toggle } = useNotificationToggle({
+    address,
+    onPermissionChanged,
+  })
+  return <Switch checked={isEnabled} disabled={isPending} variant="branded" onCheckedChange={toggle} />
+})
+
+NotificationsSwitch.displayName = 'NotificationsSwitch'

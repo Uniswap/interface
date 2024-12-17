@@ -29,7 +29,10 @@ export function CancelConfirmationView({
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const cancelationGasFeeInfo = useCancelationGasFeeInfo(transactionDetails)
-  const { value: gasFeeUSD } = useUSDValueOfGasFee(transactionDetails.chainId, cancelationGasFeeInfo?.cancelationGasFee)
+  const { value: gasFeeUSD } = useUSDValueOfGasFee(
+    transactionDetails.chainId,
+    cancelationGasFeeInfo?.cancelationGasFeeDisplayValue,
+  )
   const gasFee = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)
 
   const onCancelConfirm = useCallback(() => {

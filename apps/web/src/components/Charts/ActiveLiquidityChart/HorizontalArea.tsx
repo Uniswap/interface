@@ -3,7 +3,6 @@ import { ScaleLinear } from 'd3'
 import styled from 'lib/styled-components'
 
 const Bar = styled.rect<{ fill?: string }>`
-  opacity: 0.5;
   stroke: ${({ fill, theme }) => fill ?? theme.accent1};
   fill: ${({ fill, theme }) => fill ?? theme.accent1};
 `
