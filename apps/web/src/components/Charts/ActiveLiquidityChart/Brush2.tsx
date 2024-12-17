@@ -68,17 +68,13 @@ export const Brush2 = ({
 
   // keep local and external brush extent in sync
   // i.e. snap to ticks on brush end
-  const [brushInProgress, setBrushInProgress] = useState(false)
   useEffect(() => {
-    if (brushInProgress) {
-      return
-    }
     setLocalBrushExtent(brushExtent)
-  }, [brushExtent, brushInProgress])
+  }, [brushExtent])
 
   // initialize the brush
   useEffect(() => {
-    if (!brushRef.current || brushInProgress) {
+    if (!brushRef.current) {
       return
     }
 
@@ -94,14 +90,8 @@ export const Brush2 = ({
       ])
       .handleSize(30)
       .filter(() => interactive)
-      .filter((event) => {
-        // Allow interactions only if the event target is part of the brush selection or handles
-        const target = event.target as SVGElement
-        return target.classList.contains('selection') || target.classList.contains('handle')
-      })
       .on('brush', (event: D3BrushEvent<unknown>) => {
         const { selection } = event
-        setBrushInProgress(true)
 
         if (!selection) {
           setLocalBrushExtent(null)
@@ -126,7 +116,6 @@ export const Brush2 = ({
           setBrushExtent(priceExtent, mode)
         }
         setLocalBrushExtent(priceExtent)
-        setBrushInProgress(false)
       })
 
     brushBehavior.current(select(brushRef.current))
@@ -137,8 +126,6 @@ export const Brush2 = ({
         .call(brushBehavior.current.move as any, scaledExtent)
     }
 
-    select(brushRef.current).selectAll('.overlay').attr('cursor', 'default')
-
     // brush linear gradient
     select(brushRef.current)
       .selectAll('.selection')
@@ -146,7 +133,7 @@ export const Brush2 = ({
       .attr('fill-opacity', '0.1')
       .attr('fill', `url(#${id}-gradient-selection)`)
       .attr('cursor', 'grab')
-  }, [brushExtent, id, height, interactive, previousBrushExtent, yScale, width, setBrushExtent, brushInProgress])
+  }, [brushExtent, id, height, interactive, previousBrushExtent, yScale, width, setBrushExtent])
 
   // respond to yScale changes only
   useEffect(() => {

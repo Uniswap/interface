@@ -6,8 +6,7 @@ import styled, { DefaultTheme } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { Gap } from 'theme'
 import { ThemedText } from 'theme/components'
-import { Modal } from 'uniswap/src/components/modals/Modal'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { AdaptiveWebModal } from 'ui/src'
 
 export const Container = styled(ColumnCenter)`
   background-color: ${({ theme }) => theme.surface1};
@@ -161,11 +160,11 @@ export function DialogContent({ icon, title, description, body, buttonsConfig }:
  */
 export function Dialog(props: DialogProps) {
   return (
-    <Modal name={ModalName.Dialog} isModalOpen={props.isVisible} onClose={props.onCancel} padding={0}>
+    <AdaptiveWebModal isOpen={props.isVisible} onClose={props.onCancel} p={0}>
       <Container gap="lg">
         <DialogHeader closeModal={props.onCancel} closeDataTestId="Dialog-closeButton" />
         <DialogContent {...props} />
       </Container>
-    </Modal>
+    </AdaptiveWebModal>
   )
 }

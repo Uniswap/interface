@@ -12,7 +12,7 @@ import {
 import React, { PropsWithChildren } from 'react'
 import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'
 import type { MobileState } from 'src/app/mobileReducer'
-import { navigationRef } from 'src/app/navigation/navigationRef'
+import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import { store as appStore, persistedReducer } from 'src/app/store'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'

@@ -1,5 +1,4 @@
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
 import { SwapFlow, SwapFlowProps } from 'uniswap/src/features/transactions/swap/SwapFlow'
 import { SwapFormContextProvider } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { ProtocolPreference } from 'uniswap/src/features/transactions/swap/settings/configs/ProtocolPreference'
@@ -17,7 +16,7 @@ export function WalletSwapFlow({ onSubmitSwap, ...props }: WalletSwapFlowProps):
   const wrapCallback = useWrapCallback()
 
   return (
-    <TransactionSettingsContextProvider settingKey={TransactionSettingKey.Swap}>
+    <TransactionSettingsContextProvider>
       <SwapFormContextProvider
         prefilledState={props.prefilledState}
         hideSettings={props.hideHeader}

@@ -1,5 +1,5 @@
 import { NavigationAction, NavigationState } from '@react-navigation/core'
-import { navigationRef } from 'src/app/navigation/navigationRef'
+import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import { RootParamList } from 'src/app/navigation/types'
 import { logger } from 'utilities/src/logger/logger'
 

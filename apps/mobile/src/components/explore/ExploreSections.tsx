@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItem, ListRenderItemInfo, StyleSheet } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
-import { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
+import { FadeIn, FadeOut, useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
 import { useSelector } from 'react-redux'
 import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
 import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
@@ -13,7 +13,7 @@ import { TokenItemData } from 'src/components/explore/TokenItemData'
 import { AnimatedBottomSheetFlatList } from 'src/components/layout/AnimatedFlatList'
 import { AutoScrollProps } from 'src/components/sortableGrid/types'
 import { getTokenMetadataDisplayType } from 'src/features/explore/utils'
-import { Flex, Loader, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedTouchableArea, Flex, Loader, Text, useSporeColors } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -191,7 +191,7 @@ function NetworkPillsRow({
   const renderItem: ListRenderItem<UniverseChainId> = useCallback(
     ({ item }: ListRenderItemInfo<UniverseChainId>) => {
       return (
-        <TouchableArea onPress={() => onSelectNetwork(item)}>
+        <AnimatedTouchableArea entering={FadeIn} exiting={FadeOut} onPress={() => onSelectNetwork(item)}>
           <NetworkPill
             key={item}
             showIcon
@@ -207,7 +207,7 @@ function NetworkPillsRow({
             showBackgroundColor={false}
             textVariant="buttonLabel3"
           />
-        </TouchableArea>
+        </AnimatedTouchableArea>
       )
     },
     [colors.neutral1.val, onSelectNetwork, selectedNetwork],

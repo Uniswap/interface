@@ -33,7 +33,7 @@
     "firestore:deploy:rules": "firebase deploy --only firestore:rules",
     "link:assets": "react-native-asset",
     "graphql:generate:swift": "cd ios && ./Pods/Apollo/apollo-ios-cli generate",
-    "check:circular": "../../scripts/check-circular-imports.sh ./src/app/App.tsx 2",
+    "check:circular": "../../scripts/check-circular-imports.sh ./src/app/App.tsx 8",
     "ios": "yarn ios:prebuild && SKIP_BUNDLING=1 react-native run-ios",
     "ios:prebuild": "yarn graphql:generate:swift && cd ios/WidgetsCore/MobileSchema && rm -rf !(README.md) && cd ../../.. && yarn graphql:generate:swift && yarn env:local:copy:swift",
     "ios:smol": "SKIP_BUNDLING=1 react-native run-ios --simulator=\"iPhone SE (3rd generation)\"",

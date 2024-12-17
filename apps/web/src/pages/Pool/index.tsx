@@ -5,7 +5,6 @@ import V4_HOOK from 'assets/images/v4Hooks.png'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Pool as PoolIcon } from 'components/Icons/Pool'
 import { LiquidityPositionCard, LiquidityPositionCardLoader } from 'components/Liquidity/LiquidityPositionCard'
-import { PositionInfo } from 'components/Liquidity/types'
 import { getPositionUrl, parseRestPosition } from 'components/Liquidity/utils'
 import { TopPoolTable, sortAscendingAtom, sortMethodAtom } from 'components/Pools/PoolTable/PoolTable'
 import { OrderDirection } from 'graphql/data/util'
@@ -16,10 +15,10 @@ import { PositionsHeader } from 'pages/Pool/Positions/PositionsHeader'
 import { TopPools } from 'pages/Pool/Positions/TopPools'
 import { ExternalArrowLink } from 'pages/Pool/Positions/shared'
 import { useEffect, useMemo, useState } from 'react'
+import { ChevronLeft, ChevronRight } from 'react-feather'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useTopPools } from 'state/explore/topPools'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
-import { useRequestPositionsForSavedPairs } from 'state/user/hooks'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { Anchor, Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
@@ -28,7 +27,7 @@ import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
 import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
-import { useGetPositionsInfiniteQuery } from 'uniswap/src/data/rest/getPositions'
+import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -37,7 +36,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 
-const PAGE_SIZE = 25
+const PAGE_SIZE = 8
 
 function EmptyPositionsView({ chainId, isConnected }: { chainId?: UniverseChainId | null; isConnected: boolean }) {
   const colors = useSporeColors()
@@ -130,13 +129,7 @@ function EmptyPositionsView({ chainId, isConnected }: { chainId?: UniverseChainI
 
 function LearnMoreTile({ img, text, link }: { img: string; text: string; link?: string }) {
   return (
-    <Anchor
-      href={link}
-      textDecorationLine="none"
-      hoverStyle={{ textDecorationLine: 'underline' }}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
+    <Anchor href={link} textDecorationLine="none" hoverStyle={{ textDecorationLine: 'underline' }}>
       <Flex
         row
         width={344}
@@ -176,6 +169,7 @@ export default function Pool() {
 
   const account = useAccount()
   const { address, isConnected } = account
+  const [currentPage, setCurrentPage] = useState(0)
 
   useEffect(() => {
     if (isV4DataEnabled) {
@@ -183,42 +177,26 @@ export default function Pool() {
     }
   }, [isV4DataEnabled, setVersionFilter])
 
-  const { data, isPlaceholderData, refetch, isLoading, fetchNextPage, hasNextPage, isFetching } =
-    useGetPositionsInfiniteQuery(
-      {
-        address,
-        chainIds: chainFilter ? [chainFilter] : currentModeChains,
-        positionStatuses: statusFilter,
-        protocolVersions: versionFilter,
-        pageSize: PAGE_SIZE,
-        pageToken: '',
-      },
-      !isConnected,
-    )
-
-  const loadedPositions = useMemo(() => {
-    return data?.pages.flatMap((positionsResponse) => positionsResponse.positions) || []
-  }, [data])
-
-  const savedPositions = useRequestPositionsForSavedPairs()
-
+  const { data, isPlaceholderData, refetch, isLoading } = useGetPositionsQuery(
+    {
+      address,
+      chainIds: chainFilter ? [chainFilter] : currentModeChains,
+      positionStatuses: statusFilter,
+      protocolVersions: versionFilter,
+    },
+    !isConnected,
+  )
   const isLoadingPositions = !!account.address && (isLoading || !data)
-
-  const combinedPositions = useMemo(() => {
-    return [...loadedPositions, ...(savedPositions.map((p) => p.data?.position) ?? [])]
-      .map(parseRestPosition)
-      .filter((position): position is PositionInfo => !!position)
-  }, [loadedPositions, savedPositions])
 
   usePendingLPTransactionsChangeListener(refetch)
 
-  const loadMorePositions = () => {
-    if (hasNextPage && !isFetching) {
-      fetchNextPage()
-    }
-  }
+  const currentPageItems = useMemo(() => {
+    const start = currentPage * PAGE_SIZE
+    return (data?.positions.slice(start, start + PAGE_SIZE) ?? []).map((position) => parseRestPosition(position))
+  }, [currentPage, data?.positions])
 
-  const showingEmptyPositions = !isLoadingPositions && combinedPositions.length === 0
+  const pageCount = data?.positions ? Math.ceil(data?.positions.length / PAGE_SIZE) : undefined
+  const showingEmptyPositions = !isLoadingPositions && currentPageItems.length === 0
 
   if (!isLoadingFeatureFlag && !lpRedesignEnabled) {
     return <Navigate to="/pools" replace />
@@ -265,22 +243,24 @@ export default function Pool() {
             }}
           />
           {!isLoadingPositions ? (
-            combinedPositions.length > 0 ? (
+            currentPageItems.length > 0 ? (
               <Flex gap="$gap16" mb="$spacing16" opacity={isPlaceholderData ? 0.6 : 1}>
-                {combinedPositions.map((position) => {
-                  return position ? (
-                    <Link
-                      key={`${position.poolId}-${position.tokenId}-${position.chainId}`}
-                      style={{ textDecoration: 'none' }}
-                      to={getPositionUrl(position)}
-                    >
-                      <LiquidityPositionCard
-                        isClickableStyle
-                        key={`LiquidityPositionCard-${position?.tokenId}`}
-                        liquidityPosition={position}
-                      />
-                    </Link>
-                  ) : null
+                {currentPageItems.map((position) => {
+                  return (
+                    position && (
+                      <Link
+                        key={`${position.poolId}-${position.tokenId}-${position.chainId}`}
+                        style={{ textDecoration: 'none' }}
+                        to={getPositionUrl(position)}
+                      >
+                        <LiquidityPositionCard
+                          isClickableStyle
+                          key={`LiquidityPositionCard-${position?.tokenId}`}
+                          liquidityPosition={position}
+                        />
+                      </Link>
+                    )
+                  )
                 })}
               </Flex>
             ) : (
@@ -291,13 +271,6 @@ export default function Pool() {
               {Array.from({ length: 5 }, (_, index) => (
                 <LiquidityPositionCardLoader key={index} />
               ))}
-            </Flex>
-          )}
-          {hasNextPage && (
-            <Flex mx="auto">
-              <Button theme="outline" onPress={loadMorePositions} disabled={isFetching}>
-                <Text variant="buttonLabel3">{t('common.loadMore')}</Text>
-              </Button>
             </Flex>
           )}
           {!statusFilter.includes(PositionStatus.CLOSED) && !closedCTADismissed && account.address && (
@@ -327,16 +300,63 @@ export default function Pool() {
               </Flex>
             </Flex>
           )}
-          <Flex row centered mb="$spacing24" gap="$gap4">
-            <Text variant="body3" color="$neutral2">
-              {t('pool.import.link.description')}
-            </Text>
-            <Anchor href="/pools/v2/find" textDecorationLine="none">
-              <Text variant="body3" color="$neutral1" {...ClickableTamaguiStyle}>
-                {t('pool.import.positions.v2')}
-              </Text>
-            </Anchor>
-          </Flex>
+          {!!pageCount && pageCount > 1 && data?.positions && (
+            <Flex row gap="$gap12" alignItems="center" mb="$spacing24" alignSelf="center">
+              <ChevronLeft
+                size={20}
+                {...ClickableTamaguiStyle}
+                opacity={currentPage === 0 ? 0.4 : 1}
+                onClick={() => {
+                  setCurrentPage(Math.max(currentPage - 1, 0))
+                }}
+              />
+              {Array.from({ length: pageCount > 5 ? 3 : pageCount }).map((_, index) => {
+                const isSelected = currentPage === index
+                return (
+                  <Text
+                    variant="buttonLabel2"
+                    color={isSelected ? '$neutral1' : '$neutral2'}
+                    backgroundColor={isSelected ? '$surface3' : 'transparent'}
+                    py="$spacing4"
+                    px="$spacing12"
+                    borderRadius="$roundedFull"
+                    key={`Positions-page-${index}`}
+                    {...ClickableTamaguiStyle}
+                    onPress={() => setCurrentPage(index)}
+                  >
+                    {index + 1}
+                  </Text>
+                )
+              })}
+              {pageCount > 5 && (
+                <Text variant="buttonLabel2" color="$neutral2" py="$spacing4" px="$spacing12">
+                  ...
+                </Text>
+              )}
+              {pageCount > 5 && (
+                <Text
+                  variant="buttonLabel2"
+                  color={currentPage === pageCount - 1 ? '$neutral1' : '$neutral2'}
+                  backgroundColor={currentPage === pageCount - 1 ? '$surface3' : 'transparent'}
+                  py="$spacing4"
+                  px="$spacing12"
+                  borderRadius="$roundedFull"
+                  {...ClickableTamaguiStyle}
+                  onPress={() => setCurrentPage(pageCount - 1)}
+                >
+                  {pageCount}
+                </Text>
+              )}
+              <ChevronRight
+                size={20}
+                {...ClickableTamaguiStyle}
+                opacity={currentPage === pageCount - 1 ? 0.4 : 1}
+                onClick={() => {
+                  setCurrentPage(Math.min(currentPage + 1, pageCount - 1))
+                }}
+              />
+            </Flex>
+          )}
         </Flex>
         <Flex gap="$gap32" pt={64} $xl={{ pt: '$spacing12' }}>
           {!media.xl && !showingEmptyPositions && !isLoading && <TopPools chainId={chainFilter} />}

@@ -12,11 +12,10 @@ import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { useSendContext } from 'state/send/SendContext'
 import { Separator, ThemedText } from 'theme/components'
 import { capitalize } from 'tsafe'
+import { AdaptiveWebModal } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
-import { Modal } from 'uniswap/src/components/modals/Modal'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -97,7 +96,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
     : [currencySymbolAmount, formattedFiatInputAmount]
 
   return (
-    <Modal name={ModalName.SendReview} isModalOpen onClose={onDismiss} maxHeight="90vh" padding={0}>
+    <AdaptiveWebModal isOpen onClose={onDismiss} maxHeight="90vh" p={0}>
       <ModalWrapper data-testid="send-review-modal" gap="md">
         <ModalHeader title={<Trans i18nKey="sendReviewModal.title" />} closeModal={onDismiss} />
         <ReviewContentContainer>
@@ -143,6 +142,6 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
           </ButtonPrimary>
         </Trace>
       </ModalWrapper>
-    </Modal>
+    </AdaptiveWebModal>
   )
 }

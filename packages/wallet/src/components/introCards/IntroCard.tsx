@@ -7,7 +7,6 @@ import {
   GeneratedIcon,
   IconProps,
   Text,
-  View,
   ViewProps,
   useIsDarkMode,
   useShadowPropsShort,
@@ -185,46 +184,42 @@ export function IntroCard({
 
   return (
     <ClickableWithinGesture onPress={pressHandler}>
-      <View
+      <Flex
         {...shadowProps}
+        grow
+        row
+        alignItems="flex-start"
         backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
         borderColor="$surface3"
         borderRadius="$rounded20"
         borderWidth={1}
+        gap="$spacing12"
+        pl={isIcon ? '$spacing12' : '$none'}
+        pr={cardPadding}
+        overflow="hidden"
+        py={cardPadding}
         {...containerProps}
       >
-        <Flex
-          grow
-          row
-          alignItems="flex-start"
-          borderRadius="$rounded20"
-          gap="$spacing12"
-          pl={isIcon ? '$spacing12' : '$none'}
-          pr={cardPadding}
-          overflow="hidden"
-          py={cardPadding}
-        >
-          {GraphicElement}
+        {GraphicElement}
 
-          <Flex fill gap="$spacing4" paddingStart={isIcon ? '$none' : '$spacing12'}>
-            <Flex row gap="$spacing12" justifyContent="space-between">
-              <Flex fill>
-                <ElementAfterText
-                  text={title}
-                  textProps={{ color: '$neutral1', variant: isExtension ? 'body3' : 'subheading2' }}
-                  element={isNew ? <NewTag /> : undefined}
-                />
-              </Flex>
-              <Flex alignContent="flex-end" alignItems="flex-end">
-                {topRightElement}
-              </Flex>
+        <Flex fill gap="$spacing4" paddingStart={isIcon ? '$none' : '$spacing12'}>
+          <Flex row gap="$spacing12" justifyContent="space-between">
+            <Flex fill>
+              <ElementAfterText
+                text={title}
+                textProps={{ color: '$neutral1', variant: isExtension ? 'body3' : 'subheading2' }}
+                element={isNew ? <NewTag /> : undefined}
+              />
             </Flex>
-            <Text color="$neutral2" variant={isExtension ? 'body4' : 'body2'}>
-              {description}
-            </Text>
+            <Flex alignContent="flex-end" alignItems="flex-end">
+              {topRightElement}
+            </Flex>
           </Flex>
+          <Text color="$neutral2" variant={isExtension ? 'body4' : 'body2'}>
+            {description}
+          </Text>
         </Flex>
-      </View>
+      </Flex>
     </ClickableWithinGesture>
   )
 }

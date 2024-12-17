@@ -7,6 +7,42 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
   min-width: 0;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c18 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 12px;
+}
+
 .c12 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
@@ -188,42 +224,6 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
 .c23:disabled:focus .c21,
 .c23:disabled:hover .c21 {
   background-color: transparent;
-}
-
-.c7 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c18 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 12px;
 }
 
 .c5 {
@@ -412,7 +412,7 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
             <h2
               class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _fontFamily-f-family _color-color _fontWeight-f-weight-me3083741 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _userSelect-auto _whiteSpace-normal _mt-0px _mr-0px _mb-0px _ml-0px"
               data-disable-theme="true"
-              id="title-:r5:"
+              id="title-:r3:"
               role="heading"
             />
           </span>
@@ -446,11 +446,11 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
               style="display: contents; pointer-events: auto;"
             >
               <div
-                aria-describedby="description-:r5:"
-                aria-labelledby="title-:r5:"
+                aria-describedby="description-:r3:"
+                aria-labelledby="title-:r3:"
                 class="css-view-175oi2r"
-                id="content-:r5:"
-                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; background-color: rgb(255, 255, 255); padding: 0px 0px 0px 0px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; z-index: 1060; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgba(34,34,34,0.05); border-right-color: rgba(34,34,34,0.05); border-bottom-color: rgba(34,34,34,0.05); border-left-color: rgba(34,34,34,0.05); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; opacity: 0; gap: 4px; margin: 0px 0px 0px 0px; max-height: calc(100vh - 32px); max-width: 420px; overflow-x: hidden; overflow-y: hidden; width: calc(100vw - 32px); outline-style: none; box-shadow: 0px 3px 6px rgba(0,0,0,0.14901960784313725); transform: translateY(20px) translateX(0px);"
+                id="content-:r3:"
+                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; background-color: rgb(255, 255, 255); padding: 0px 0px 0px 0px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; z-index: 1060; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgba(34,34,34,0.05); border-right-color: rgba(34,34,34,0.05); border-bottom-color: rgba(34,34,34,0.05); border-left-color: rgba(34,34,34,0.05); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; opacity: 0; gap: 4px; margin: 16px 16px 16px 16px; max-height: calc(100vh - 32px); max-width: 420px; overflow-x: hidden; overflow-y: hidden; width: calc(100vw - 32px); outline-style: none; box-shadow: 0px 3px 6px rgba(0,0,0,0.14901960784313725); transform: translateY(20px) translateX(0px);"
                 tabindex="-1"
               >
                 <div
@@ -626,6 +626,42 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
   min-width: 0;
 }
 
+.c7 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c18 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 12px;
+}
+
 .c12 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
@@ -807,42 +843,6 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
 .c23:disabled:focus .c21,
 .c23:disabled:hover .c21 {
   background-color: transparent;
-}
-
-.c7 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c18 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 12px;
 }
 
 .c5 {
@@ -1031,7 +1031,7 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
             <h2
               class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _fontFamily-f-family _color-color _fontWeight-f-weight-me3083741 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _userSelect-auto _whiteSpace-normal _mt-0px _mr-0px _mb-0px _ml-0px"
               data-disable-theme="true"
-              id="title-:r1:"
+              id="title-:r0:"
               role="heading"
             />
           </span>
@@ -1065,11 +1065,11 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
               style="display: contents; pointer-events: auto;"
             >
               <div
-                aria-describedby="description-:r1:"
-                aria-labelledby="title-:r1:"
+                aria-describedby="description-:r0:"
+                aria-labelledby="title-:r0:"
                 class="css-view-175oi2r"
-                id="content-:r1:"
-                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; background-color: rgb(255, 255, 255); padding: 0px 0px 0px 0px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; z-index: 1060; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgba(34,34,34,0.05); border-right-color: rgba(34,34,34,0.05); border-bottom-color: rgba(34,34,34,0.05); border-left-color: rgba(34,34,34,0.05); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; opacity: 0; gap: 4px; margin: 0px 0px 0px 0px; max-height: calc(100vh - 32px); max-width: 420px; overflow-x: hidden; overflow-y: hidden; width: calc(100vw - 32px); outline-style: none; box-shadow: 0px 3px 6px rgba(0,0,0,0.14901960784313725); transform: translateY(20px) translateX(0px);"
+                id="content-:r0:"
+                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; background-color: rgb(255, 255, 255); padding: 0px 0px 0px 0px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; z-index: 1060; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgba(34,34,34,0.05); border-right-color: rgba(34,34,34,0.05); border-bottom-color: rgba(34,34,34,0.05); border-left-color: rgba(34,34,34,0.05); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; opacity: 0; gap: 4px; margin: 16px 16px 16px 16px; max-height: calc(100vh - 32px); max-width: 420px; overflow-x: hidden; overflow-y: hidden; width: calc(100vw - 32px); outline-style: none; box-shadow: 0px 3px 6px rgba(0,0,0,0.14901960784313725); transform: translateY(20px) translateX(0px);"
                 tabindex="-1"
               >
                 <div

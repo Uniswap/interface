@@ -165,6 +165,7 @@ exports[`disable nft on searchbar should render text without nfts 1`] = `
                   style="--placeholderTextColor: #7D7D7D;"
                   tabindex="0"
                   value=""
+                  virtualkeyboardpolicy="auto"
                 />
               </span>
               <div

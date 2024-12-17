@@ -17,7 +17,6 @@ import { borderRadii, spacing } from 'ui/src/theme'
 import { BottomSheetContextProvider } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
-import { BSM_ANIMATION_CONFIGS, IS_SHEET_READY_DELAY } from 'uniswap/src/components/modals/modalConstants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { useKeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'
@@ -208,7 +207,7 @@ function BottomSheetModalContents({
       // We consider the sheet to be "ready" as soon as it starts animating from the bottom to the top.
       // We add a short delay given that this callback is called when the sheet is "about to" animate.
       if (!isSheetReady && fromIndex === -1 && toIndex === 0) {
-        setTimeout(() => setIsSheetReady(true), IS_SHEET_READY_DELAY)
+        setTimeout(() => setIsSheetReady(true), 50)
       }
     },
     [hideKeyboardOnDismiss, hideKeyboardOnSwipeDown, isSheetReady],
@@ -268,7 +267,6 @@ function BottomSheetModalContents({
       snapPoints={snapPoints}
       stackBehavior={stackBehavior}
       topInset={renderBehindTopInset ? 0 : insets.top}
-      animationConfigs={BSM_ANIMATION_CONFIGS}
       onAnimate={onAnimate}
       onDismiss={onClose}
     >

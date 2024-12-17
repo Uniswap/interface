@@ -54,17 +54,8 @@ function logMessage(
 ): void {
   // Log to console directly for dev builds or interface for debugging
   if (__DEV__ || isInterface) {
-    if (isMobileApp && ['log', 'debug', 'warn'].includes(level)) {
-      // `log`, `debug`, and `warn` are all logged with `console.log` on mobile
-      // because `console.debug` and `console.warn` only support one single argument in Reactotron.
-      // Alternatively, we could improve this in the future by removing the Reactotron log plugin and instead
-      // manually call `Reactotron.display(...)` here with some custom formatting.
-      // eslint-disable-next-line no-console
-      console.log(...formatMessage(level, fileName, functionName, message), ...args)
-    } else {
-      // eslint-disable-next-line no-console
-      console[level](...formatMessage(level, fileName, functionName, message), ...args)
-    }
+    // eslint-disable-next-line no-console
+    console[level](...formatMessage(level, fileName, functionName, message), ...args)
   }
 
   if (!datadogEnabled) {

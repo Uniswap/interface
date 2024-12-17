@@ -32,9 +32,9 @@ import { useOrder } from 'state/signatures/hooks'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { Divider, ThemedText } from 'theme/components'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { Modal } from 'uniswap/src/components/modals/Modal'
+import { AdaptiveWebModal } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { InterfaceEventNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -382,12 +382,11 @@ export function OffchainActivityModal() {
           cancelTxHash={cancelTxHash}
         />
       )}
-      <Modal
-        name={ModalName.OffchainActivity}
+      <AdaptiveWebModal
         maxWidth={375}
-        isModalOpen={!!selectedOrderAtomValue?.modalOpen && cancelState === CancellationState.NOT_STARTED}
+        isOpen={!!selectedOrderAtomValue?.modalOpen && cancelState === CancellationState.NOT_STARTED}
         onClose={reset}
-        padding={0}
+        p={0}
       >
         <Wrapper data-testid="offchain-activity-modal">
           <Row justify="space-between">
@@ -406,7 +405,7 @@ export function OffchainActivityModal() {
             />
           )}
         </Wrapper>
-      </Modal>
+      </AdaptiveWebModal>
     </>
   )
 }

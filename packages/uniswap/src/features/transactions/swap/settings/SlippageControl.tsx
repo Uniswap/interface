@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import type { LayoutChangeEvent } from 'react-native'
 import { Flex, Input, Text } from 'ui/src'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/settings/useSlippageSettings'
-import { getSlippageWarningColor } from 'uniswap/src/features/transactions/swap/utils/styleHelpers'
 
 interface SlippageControlProps {
   saveOnBlur: boolean
@@ -43,18 +42,29 @@ export function SlippageControl({ saveOnBlur }: SlippageControlProps): JSX.Eleme
   const inputValue = autoSlippageEnabled ? autoSlippageTolerance.toFixed(2).toString() : inputSlippageTolerance
   const parsedInputValue = parseFloat(inputValue)
 
-  const inputValueTextColor = useMemo(
-    () =>
-      getSlippageWarningColor(parsedInputValue, autoSlippageTolerance, autoSlippageEnabled ? '$neutral2' : '$neutral1'),
-    [parsedInputValue, autoSlippageEnabled, autoSlippageTolerance],
-  )
+  const inputValueTextColor = useMemo(() => {
+    if (parsedInputValue > 20) {
+      return '$statusCritical'
+    }
+    if (parsedInputValue > 5.5) {
+      return '$statusWarning'
+    }
+    return autoSlippageEnabled ? '$neutral2' : '$neutral1'
+  }, [parsedInputValue, autoSlippageEnabled])
+
+  const inputBorderColor = useMemo(() => {
+    if (parsedInputValue > 5.5) {
+      return inputValueTextColor
+    }
+    return isEditingSlippage ? '$DEP_accentSoft' : '$surface3'
+  }, [parsedInputValue, inputValueTextColor, isEditingSlippage])
 
   return (
     <Flex row alignItems="center" justifyContent="space-between">
       <Flex
         row
         backgroundColor={backgroundColor}
-        borderColor={isEditingSlippage ? '$DEP_accentSoft' : '$surface3'}
+        borderColor={inputBorderColor}
         borderRadius="$rounded16"
         borderWidth={1}
         gap="$spacing8"

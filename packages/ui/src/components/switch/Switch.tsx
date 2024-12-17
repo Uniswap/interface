@@ -31,7 +31,6 @@ export function Switch({
   onCheckedChange: onCheckedChangeProp,
   disabled,
   variant,
-  disabledStyle,
   ...rest
 }: SwitchProps): JSX.Element {
   const [checked, setChecked] = useState(checkedProp)
@@ -57,10 +56,8 @@ export function Switch({
   const THUMB_PADDING = getTokenValue('$spacing4')
   const TRACK_HEIGHT = THUMB_HEIGHT + THUMB_PADDING * 2
 
-  const isDisabledStyling = disabled && !checked
-
   const frameBackgroundColor = ((): ColorTokens => {
-    if (isDisabledStyling) {
+    if (disabled) {
       return '$surface3'
     }
     if (isBranded) {
@@ -70,7 +67,7 @@ export function Switch({
   })()
 
   const thumbBackgroundColor = ((): ColorTokens => {
-    if (isDisabledStyling) {
+    if (disabled) {
       if (isBranded) {
         return checked ? '$neutral2' : '$neutral3'
       }
@@ -83,7 +80,7 @@ export function Switch({
   })()
 
   const iconColor = ((): string => {
-    if (isDisabledStyling) {
+    if (disabled) {
       return colors.white.val
     }
     return isBranded ? colors.accent1.val : colors.neutral1.val
@@ -125,10 +122,6 @@ export function Switch({
       minWidth="$spacing60"
       p="$spacing4"
       pointerEvents={disabled ? 'none' : 'auto'}
-      disabledStyle={{
-        ...(checked && { opacity: 0.6 }),
-        ...disabledStyle,
-      }}
       onCheckedChange={disabled ? undefined : onCheckedChange}
       {...rest}
     >

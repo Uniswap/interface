@@ -20,9 +20,6 @@ export const Container = styled(Flex, {
   borderColor: '$surface3',
   overflow: 'hidden',
   width: '100%',
-  $lg: {
-    p: '$spacing16',
-  },
 })
 
 export function AdvancedButton({

@@ -20,7 +20,6 @@ import {
   TokenSortableField,
   useTopTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useGetPositionsForPairs } from 'uniswap/src/data/rest/getPositions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { isL2ChainId, toGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -254,10 +253,4 @@ export function useTrackedTokenPairs(): [Token, Token][] {
 
     return Object.keys(keyed).map((key) => keyed[key])
   }, [combinedList])
-}
-
-export function useRequestPositionsForSavedPairs() {
-  const savedSerializedPairs = useAppSelector(({ user: { pairs } }) => pairs)
-  const account = useAccount()
-  return useGetPositionsForPairs(savedSerializedPairs, account.address)
 }

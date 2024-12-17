@@ -12,6 +12,7 @@ import {
 } from 'components/Charts/ChartModel'
 import { PriceChartData } from 'components/Charts/PriceChart'
 import { PriceChartType, formatTickMarks } from 'components/Charts/utils'
+import { MissingDataIcon } from 'components/Table/icons'
 import { DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
 import { useTheme } from 'lib/styled-components'
@@ -24,11 +25,12 @@ import {
 } from 'pages/Pool/Positions/create/utils'
 import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { opacify } from 'theme/utils'
-import { Flex, FlexProps, Shine, TamaguiElement, assertWebElement } from 'ui/src'
+import { Flex, FlexProps, Shine, TamaguiElement, Text, assertWebElement } from 'ui/src'
 import { LoadingPriceCurve } from 'ui/src/components/icons/LoadingPriceCurve'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useTranslation } from 'uniswap/src/i18n'
 
 const CHART_HEIGHT = 52
 export const CHART_WIDTH = 224
@@ -113,7 +115,7 @@ export class LPPriceChartModel extends ChartModel<PriceChartData> {
                   Math.pow(10, params.positionPriceLower.baseCurrency.decimals),
                 ),
               )
-              ?.toSignificant(params.positionPriceLower.baseCurrency.decimals || 6) ?? 0,
+              ?.toSignificant(params.positionPriceLower.baseCurrency.decimals) ?? 0,
           )
     this.positionRangeMax =
       typeof params.positionPriceUpper === 'number'
@@ -126,7 +128,7 @@ export class LPPriceChartModel extends ChartModel<PriceChartData> {
                   Math.pow(10, params.positionPriceUpper.baseCurrency.decimals),
                 ),
               )
-              ?.toSignificant(params.positionPriceUpper.baseCurrency.decimals || 6) ?? 0,
+              ?.toSignificant(params.positionPriceUpper.baseCurrency.decimals) ?? 0,
           )
 
     if (isEffectivelyInfinity(this.positionRangeMin)) {
@@ -390,6 +392,7 @@ export function LiquidityPositionRangeChart({
   grow = false,
 }: LiquidityPositionRangeChartProps) {
   const theme = useTheme()
+  const { t } = useTranslation()
   const isV2 = version === ProtocolVersion.V2
   const isV3 = version === ProtocolVersion.V3
   const isV4 = version === ProtocolVersion.V4
@@ -474,7 +477,14 @@ export function LiquidityPositionRangeChart({
       overflow="hidden"
     >
       {priceData.loading && <LiquidityPositionRangeChartLoader size={chartWidth} />}
-      {dataUnavailable && <LoadingPriceCurve size={chartWidth} color="$neutral2" />}
+      {dataUnavailable && (
+        <Flex row alignItems="center" gap="$gap12">
+          <MissingDataIcon height={36} width={36} />
+          <Text variant="body3" color="$neutral2">
+            {t('common.dataUnavailable')}
+          </Text>
+        </Flex>
+      )}
       {shouldRenderChart && (
         <Flex width={grow ? chartWidth : width} $md={{ width: grow ? chartWidth : '100%' }}>
           <Chart Model={LPPriceChartModel} params={chartParams} height={CHART_HEIGHT} />

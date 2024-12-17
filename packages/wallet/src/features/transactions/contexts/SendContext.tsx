@@ -61,7 +61,6 @@ export function SendContextProvider({
 
   // state
   const [sendForm, setSendForm] = useState<TransactionState>(prefilledTransactionState || defaultSendState)
-
   const updateSendForm = useCallback(
     (newState: Parameters<SendContextState['updateSendForm']>[0]): void => {
       setSendForm((prevState) => ({ ...prevState, ...newState }))
@@ -127,29 +126,27 @@ export function SendContextProvider({
       showRecipientSelector: sendForm.showRecipientSelector,
       selectedProtocols: sendForm.selectedProtocols,
       customSlippageTolerance: sendForm.customSlippageTolerance,
-      fiatOffRampMetaData: sendForm.fiatOffRampMetaData,
     }
   }, [
     derivedSendInfo,
     gasFee,
     parsedSendWarnings,
+    sendForm.customSlippageTolerance,
+    sendForm.exactAmountFiat,
+    sendForm.exactAmountToken,
+    sendForm.exactCurrencyField,
+    sendForm.focusOnCurrencyField,
+    sendForm.input,
+    sendForm.isFiatInput,
+    sendForm.output,
+    sendForm.recipient,
+    sendForm.selectingCurrencyField,
+    sendForm.showRecipientSelector,
+    sendForm.selectedProtocols,
+    sendForm.txId,
     txRequestWithGasSettings,
     onSelectCurrency,
     updateSendForm,
-    sendForm.txId,
-    sendForm.input,
-    sendForm.output,
-    sendForm.exactAmountToken,
-    sendForm.exactAmountFiat,
-    sendForm.exactCurrencyField,
-    sendForm.focusOnCurrencyField,
-    sendForm.recipient,
-    sendForm.isFiatInput,
-    sendForm.selectingCurrencyField,
-    sendForm.showRecipientSelector,
-    sendForm.customSlippageTolerance,
-    sendForm.selectedProtocols,
-    sendForm.fiatOffRampMetaData,
   ])
   return <SendContext.Provider value={state}>{children}</SendContext.Provider>
 }

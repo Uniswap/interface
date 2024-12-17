@@ -176,8 +176,6 @@ export function SearchResultsSection({
   return (
     <Flex grow gap="$spacing8" pb="$spacing36">
       <AnimatedBottomSheetFlashList
-        // when switching networks, we want to rerender the list to prevent any layout misalignments
-        key={selectedChain}
         estimatedItemSize={ESTIMATED_ITEM_SIZE}
         ListEmptyComponent={
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing8" mx="$spacing20">

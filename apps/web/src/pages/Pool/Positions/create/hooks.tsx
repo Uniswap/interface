@@ -10,7 +10,6 @@ import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperiment
 import { checkIsNative, useCurrency, useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useIsPoolOutOfSync } from 'hooks/useIsPoolOutOfSync'
-import { PoolState, usePool } from 'hooks/usePools'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
 import { PairState, useV2Pair } from 'hooks/useV2Pairs'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
@@ -74,10 +73,6 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
 
   const sortedCurrencies = getSortedCurrenciesTuple(TOKEN0, TOKEN1)
   const validCurrencyInput = validateCurrencyInput(sortedCurrencies)
-  const sortedTokens = getSortedCurrenciesTuple(
-    getCurrencyWithWrap(sortedCurrencies[0], protocolVersion),
-    getCurrencyWithWrap(sortedCurrencies[1], protocolVersion),
-  )
 
   const poolsQueryEnabled = poolEnabledProtocolVersion(protocolVersion) && validCurrencyInput
   const { data: poolData, isLoading: poolIsLoading } = useGetPoolsByTokens(
@@ -94,12 +89,17 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
 
   const pool = poolData?.pools && poolData.pools.length > 0 ? poolData.pools[0] : undefined
 
-  const { pairsQueryEnabled } = useMemo(() => {
+  const { pairsQueryEnabled, sortedTokens } = useMemo(() => {
     if (!pairEnabledProtocolVersion(protocolVersion)) {
       return {
         pairsQueryEnabled: false,
       } as const
     }
+
+    const sortedTokens = getSortedCurrenciesTuple(
+      getCurrencyWithWrap(sortedCurrencies[0], protocolVersion),
+      getCurrencyWithWrap(sortedCurrencies[1], protocolVersion),
+    )
 
     if (!validateCurrencyInput(sortedTokens)) {
       return {
@@ -109,17 +109,28 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
 
     return {
       pairsQueryEnabled: true,
+      sortedTokens,
     } as const
-  }, [protocolVersion, sortedTokens])
+  }, [protocolVersion, sortedCurrencies])
 
   const pairResult = useV2Pair(sortedTokens?.[0], sortedTokens?.[1])
   const pairIsLoading = pairResult[0] === PairState.LOADING
 
   const pair = pairsQueryEnabled ? pairResult[1] || undefined : undefined
 
-  const v3PoolResult = usePool(sortedTokens?.[0], sortedTokens?.[1], state.fee.feeAmount)
-  const v3Pool = protocolVersion === ProtocolVersion.V3 ? v3PoolResult[1] ?? undefined : undefined
-  const v3Price = v3Pool?.token0Price
+  const { v3Pool, v3Price } = useMemo(() => {
+    const v3Pool =
+      protocolVersion === ProtocolVersion.V3
+        ? getPoolFromRest({
+            pool,
+            token0: getCurrencyWithWrap(sortedCurrencies?.[0], protocolVersion),
+            token1: getCurrencyWithWrap(sortedCurrencies?.[1], protocolVersion),
+            protocolVersion,
+          })
+        : undefined
+
+    return { v3Pool, v3Price: v3Pool?.token0Price }
+  }, [protocolVersion, pool, sortedCurrencies])
 
   const { v4Pool, v4Price } = useMemo(() => {
     const v4Pool =
@@ -144,15 +155,15 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
     }
 
     if (protocolVersion === ProtocolVersion.V2) {
-      return pairResult[0] === PairState.NOT_EXISTS
-    }
+      if (pairResult[0] === PairState.NOT_EXISTS) {
+        return true
+      }
 
-    if (protocolVersion === ProtocolVersion.V3) {
-      return v3PoolResult[0] === PoolState.NOT_EXISTS
+      return false
     }
 
     return poolData?.pools && poolData.pools.length === 0
-  }, [protocolVersion, poolData?.pools, pairResult, v3PoolResult])
+  }, [protocolVersion, poolData?.pools, pairResult])
 
   return useMemo(() => {
     const currencies: [OptionalCurrency, OptionalCurrency] = [TOKEN0, TOKEN1]

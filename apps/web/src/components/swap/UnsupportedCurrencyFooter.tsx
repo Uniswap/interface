@@ -10,11 +10,9 @@ import styled from 'lib/styled-components'
 import { useState } from 'react'
 import { CloseIcon, ExternalLink, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
-import { Text } from 'ui/src'
-import { Modal } from 'uniswap/src/components/modals/Modal'
+import { AdaptiveWebModal, Text } from 'ui/src'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -70,12 +68,7 @@ export default function UnsupportedCurrencyFooter({
 
   return (
     <DetailsFooter show={show}>
-      <Modal
-        name={ModalName.UnsupportedCurrency}
-        isModalOpen={showDetails}
-        onClose={() => setShowDetails(false)}
-        padding={0}
-      >
+      <AdaptiveWebModal isOpen={showDetails} onClose={() => setShowDetails(false)} p={0}>
         <Card padding="2rem">
           <AutoColumn gap="lg">
             <RowBetween>
@@ -96,7 +89,7 @@ export default function UnsupportedCurrencyFooter({
             </AutoColumn>
           </AutoColumn>
         </Card>
-      </Modal>
+      </AdaptiveWebModal>
       <StyledButtonEmpty padding="0" onClick={() => setShowDetails(true)} data-testid="read-more-button">
         <Text color="$accent1">
           <Trans i18nKey="swap.unsupportedAssets.readMore" />

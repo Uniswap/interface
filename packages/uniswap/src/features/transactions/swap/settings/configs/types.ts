@@ -1,8 +1,6 @@
 import { AppTFunction } from 'ui/src/i18n/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 
-type SwapSettingId = 'slippage'
-
 export type SwapSettingConfig = {
   renderTitle: (t: AppTFunction) => string
   renderCloseButtonText?: (t: AppTFunction) => string
@@ -16,6 +14,4 @@ export type SwapSettingConfig = {
   InfoModal?: React.FunctionComponent<{ isOpen: boolean; onClose: () => void }>
   /** If defined and the `featureFlag` is disabled, this setting will not be displayed. */
   featureFlag?: FeatureFlags
-  settingId?: SwapSettingId
-  renderTooltip?: (t: AppTFunction) => string
 }

@@ -1,4 +1,4 @@
-import { Currency, Percent } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { AxisRight } from 'components/Charts/ActiveLiquidityChart/AxisRight'
 import { Brush2 } from 'components/Charts/ActiveLiquidityChart/Brush2'
 import { HorizontalArea } from 'components/Charts/ActiveLiquidityChart/HorizontalArea'
@@ -7,9 +7,7 @@ import { TickTooltip } from 'components/Charts/ActiveLiquidityChart/TickTooltip'
 import { ChartEntry } from 'components/LiquidityChartRangeInput/types'
 import { max as getMax, scaleLinear } from 'd3'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Flex, Text, useSporeColors } from 'ui/src'
-import { opacify } from 'ui/src/theme'
-import { useFormatter } from 'utils/formatNumbers'
+import { useSporeColors } from 'ui/src'
 
 const xAccessor = (d: ChartEntry) => d.activeLiquidity
 const yAccessor = (d: ChartEntry) => d.price0
@@ -55,11 +53,6 @@ function findClosestElementBinarySearch(data: ChartEntry[], target?: number) {
   return closestElement
 }
 
-function scaleToInteger(a: number, precision = 18) {
-  const scaleFactor = Math.pow(10, precision)
-  return Math.round(a * scaleFactor)
-}
-
 /**
  * A horizontal version of the active liquidity area chart, which uses the
  * x-y coordinate plane to show the data, but with the axes flipped so lower
@@ -76,8 +69,6 @@ export function ActiveLiquidityChart2({
   brushDomain,
   onBrushDomainChange,
   disableBrushInteraction,
-  showDiffIndicators,
-  isMobile,
 }: {
   id?: string
   currency0: Currency
@@ -89,13 +80,10 @@ export function ActiveLiquidityChart2({
     max?: number
   }
   disableBrushInteraction?: boolean
-  showDiffIndicators?: boolean
   dimensions: { width: number; height: number; contentWidth: number; axisLabelPaneWidth: number }
   brushDomain?: [number, number]
   onBrushDomainChange: (domain: [number, number], mode: string | undefined) => void
-  isMobile?: boolean
 }) {
-  const { formatPercent } = useFormatter()
   const colors = useSporeColors()
   const svgRef = useRef<SVGSVGElement | null>(null)
   const [hoverY, setHoverY] = useState<number>()
@@ -136,9 +124,6 @@ export function ActiveLiquidityChart2({
     }
   }, [brushDomain, onBrushDomainChange, yScale])
 
-  const southHandleInView = brushDomain && yScale(brushDomain[0]) >= 0 && yScale(brushDomain[0]) <= height
-  const northHandleInView = brushDomain && yScale(brushDomain[1]) >= 0 && yScale(brushDomain[1]) <= height
-
   return (
     <>
       {hoverY && hoveredTick && (
@@ -152,42 +137,6 @@ export function ActiveLiquidityChart2({
           currency0={currency0}
           currency1={currency1}
         />
-      )}
-      {showDiffIndicators && (
-        <>
-          {southHandleInView && (
-            <Flex
-              borderRadius="$rounded12"
-              backgroundColor="$surface2"
-              borderColor="$surface3"
-              borderWidth={1}
-              p="$padding8"
-              position="absolute"
-              left={0}
-              top={yScale(brushDomain[0]) - 16}
-            >
-              <Text variant="body4">
-                {formatPercent(new Percent(scaleToInteger(brushDomain[0] - current), scaleToInteger(current)))}
-              </Text>
-            </Flex>
-          )}
-          {northHandleInView && (
-            <Flex
-              borderRadius="$rounded12"
-              backgroundColor="$surface2"
-              borderColor="$surface3"
-              borderWidth={1}
-              p="$padding8"
-              position="absolute"
-              left={0}
-              top={yScale(brushDomain[1]) - 16}
-            >
-              <Text variant="body4">
-                {formatPercent(new Percent(scaleToInteger(brushDomain[1] - current), scaleToInteger(current)))}
-              </Text>
-            </Flex>
-          )}
-        </>
       )}
       <svg
         ref={svgRef}
@@ -237,8 +186,8 @@ export function ActiveLiquidityChart2({
               xValue={xAccessor}
               yValue={yAccessor}
               brushDomain={brushDomain}
-              fill={opacify(isMobile ? 10 : 100, brushDomain ? colors.neutral1.val : colors.accent1.val)}
-              selectedFill={opacify(isMobile ? 10 : 100, colors.accent1.val)}
+              fill={brushDomain ? colors.neutral1.val : colors.accent1.val}
+              selectedFill={colors.accent1.val}
               containerHeight={height}
               containerWidth={width - axisLabelPaneWidth}
             />
@@ -260,16 +209,14 @@ export function ActiveLiquidityChart2({
               />
             )}
 
-            {isMobile ? null : (
-              <AxisRight
-                yScale={yScale}
-                offset={width - contentWidth}
-                min={brushDomain?.[0]}
-                current={current}
-                max={brushDomain?.[1]}
-                height={height}
-              />
-            )}
+            <AxisRight
+              yScale={yScale}
+              offset={width - contentWidth}
+              min={brushDomain?.[0]}
+              current={current}
+              max={brushDomain?.[1]}
+              height={height}
+            />
           </g>
 
           <Brush2

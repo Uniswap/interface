@@ -1,6 +1,6 @@
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
-import { navigationRef } from 'src/app/navigation/navigationRef'
+import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import {
   handleDeepLink,
   handleUniswapAppDeepLink,

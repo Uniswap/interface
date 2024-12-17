@@ -10,7 +10,6 @@ import { Flex } from 'ui/src'
 import { TokenSelectorContent, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/TokenSelector'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
@@ -21,10 +20,9 @@ interface CurrencySearchProps {
   currencyField: CurrencyField
   onCurrencySelect: (currency: Currency) => void
   onDismiss: () => void
-  chainIds?: UniverseChainId[]
 }
 
-export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss, chainIds }: CurrencySearchProps) {
+export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss }: CurrencySearchProps) {
   const account = useAccount()
   const { chainId, setSelectedChainId, isUserSelectedToken, setIsUserSelectedToken, isMultichainContext } =
     useMultichainContext()
@@ -71,7 +69,7 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss, cha
           activeAccountAddress={account.address!}
           isLimits={currentTab === SwapTab.Limit}
           chainId={!isMultichainContext || isUserSelectedToken ? chainId : undefined}
-          chainIds={chainIds ?? chains}
+          chainIds={chains}
           currencyField={currencyField}
           flow={TokenSelectorFlow.Swap}
           isSurfaceReady={true}

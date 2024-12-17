@@ -343,7 +343,7 @@ exports[`LimitPriceInputPanel should render correct subheader with inputCurrency
           <h2
             class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _fontFamily-f-family _color-color _fontWeight-f-weight-me3083741 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _userSelect-auto _whiteSpace-normal _mt-0px _mr-0px _mb-0px _ml-0px"
             data-disable-theme="true"
-            id="title-:r3:"
+            id="title-:r1:"
             role="heading"
           />
         </span>
@@ -696,7 +696,7 @@ exports[`LimitPriceInputPanel should render the component with no currencies sel
           <h2
             class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _fontFamily-f-family _color-color _fontWeight-f-weight-me3083741 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _userSelect-auto _whiteSpace-normal _mt-0px _mr-0px _mb-0px _ml-0px"
             data-disable-theme="true"
-            id="title-:r1:"
+            id="title-:r0:"
             role="heading"
           />
         </span>

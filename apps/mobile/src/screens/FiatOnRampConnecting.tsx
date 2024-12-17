@@ -106,7 +106,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
           refundWalletAddress: activeAccountAddress,
           externalCustomerId: activeAccountAddress,
           externalSessionId: externalTransactionId,
-          redirectUrl: `${uniswapUrls.redirectUrlBase}?screen=transaction&fiatOffRamp=true&userAddress=${activeAccountAddress}&externalTransactionId=${externalTransactionId}`,
+          redirectUrl: `${uniswapUrls.redirectUrlBase}?screen=transaction&fiatOffRamp=true&userAddress=${activeAccountAddress}`,
         }
       : skipToken,
   )

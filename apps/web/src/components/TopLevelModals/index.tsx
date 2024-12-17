@@ -4,6 +4,7 @@ import { AddressQRModal } from 'components/AddressQRModal'
 import { Banners } from 'components/Banner/shared/Banners'
 import ConnectedAccountBlocked from 'components/ConnectedAccountBlocked'
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
+import FiatOnrampModal from 'components/FiatOnrampModal'
 import { GetTheAppModal } from 'components/NavBar/DownloadApp/Modal'
 import { PrivacyChoicesModal } from 'components/PrivacyChoices'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
@@ -68,6 +69,7 @@ export default function TopLevelModals() {
 
       <OffchainActivityModal />
       <TransactionCompleteModal />
+      <FiatOnrampModal />
       {account.address && <ReceiveCryptoModal />}
       {account.address && <AddressQRModal accountAddress={account.address} />}
       <UkDisclaimerModal />

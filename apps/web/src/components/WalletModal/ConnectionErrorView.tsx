@@ -5,8 +5,7 @@ import { useCallback } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
-import { Modal } from 'uniswap/src/components/modals/Modal'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { AdaptiveWebModal } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 
 const Wrapper = styled.div`
@@ -40,12 +39,7 @@ export default function ConnectionErrorView() {
   }, [connection])
 
   return (
-    <Modal
-      name={ModalName.ConnectionError}
-      isModalOpen={Boolean(connection?.error)}
-      onClose={connection?.reset}
-      padding={0}
-    >
+    <AdaptiveWebModal isOpen={Boolean(connection?.error)} onClose={connection?.reset} p={0}>
       <Wrapper>
         <AlertTriangleIcon />
         <ThemedText.HeadlineSmall marginBottom="8px">
@@ -63,6 +57,6 @@ export default function ConnectionErrorView() {
           </ThemedText.BodySecondary>
         </ButtonEmpty>
       </Wrapper>
-    </Modal>
+    </AdaptiveWebModal>
   )
 }

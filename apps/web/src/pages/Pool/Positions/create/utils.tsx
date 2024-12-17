@@ -34,7 +34,6 @@ import {
   V3PriceRangeInfo,
   V4PriceRangeInfo,
 } from 'pages/Pool/Positions/create/types'
-import { useMemo } from 'react'
 import { tryParsePrice, tryParseTick } from 'state/mint/v3/utils'
 import { PositionField } from 'types/position'
 import {
@@ -44,11 +43,9 @@ import {
   CreateLPPositionResponse,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { CreatePositionTxAndGasInfo, LiquidityTransactionType } from 'uniswap/src/features/transactions/liquidity/types'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
-import { areCurrenciesEqual, buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
 import { getTickToPrice, getV4TickToPrice } from 'utils/getTickToPrice'
 
 type OptionalToken = Token | undefined
@@ -1108,27 +1105,4 @@ export function getPoolIdOrAddressFromCreatePositionInfo(positionInfo: CreatePos
     default:
       return positionInfo.pool?.poolId
   }
-}
-
-export function useCurrencyInfoWithUnwrapForTradingApi({
-  currency,
-  shouldUnwrap,
-}: {
-  currency: OptionalCurrency
-  shouldUnwrap: boolean
-}) {
-  const chainId = currency?.chainId ?? UniverseChainId.Mainnet
-  const nativeCurrencyInfo = useNativeCurrencyInfo(chainId)
-  const currencyId = currency ? (currency.isNative ? undefined : buildCurrencyId(chainId, currency.address)) : undefined
-  const currencyInfo = useCurrencyInfo(currencyId, { skip: !currencyId }) ?? nativeCurrencyInfo
-  const shouldUseUnwrappedCurrencyInfo =
-    shouldUnwrap && areCurrenciesEqual(currencyInfo?.currency, nativeCurrencyInfo?.currency.wrapped)
-
-  return useMemo(() => {
-    if (!currency) {
-      return undefined
-    }
-
-    return shouldUseUnwrappedCurrencyInfo ? nativeCurrencyInfo : currencyInfo
-  }, [currency, nativeCurrencyInfo, currencyInfo, shouldUseUnwrappedCurrencyInfo])
 }

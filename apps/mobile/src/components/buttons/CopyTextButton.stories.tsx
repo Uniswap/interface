@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { CopyTextButton } from 'src/components/buttons/CopyTextButton'
+import { StorybookTitles } from 'ui/src/storybook'
 
 const meta = {
-  title: 'Components/Buttons',
+  title: StorybookTitles.Atoms,
   component: CopyTextButton,
 } satisfies Meta<typeof CopyTextButton>
 

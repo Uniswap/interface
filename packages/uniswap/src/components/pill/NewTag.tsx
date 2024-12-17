@@ -1,35 +1,23 @@
 import { memo } from 'react'
-import { ColorTokens, Flex, FlexProps, Text } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { useTranslation } from 'uniswap/src/i18n'
 
-interface NewTagProps {
-  backgroundColor?: ColorTokens
-  textColor?: ColorTokens
-  ml?: FlexProps['ml']
-  exclamation?: boolean
-}
-
-function _NewTag({
-  backgroundColor = '$accent2Hovered',
-  textColor = '$accent1Hovered',
-  ml = '$spacing6',
-  exclamation = false,
-}: NewTagProps): JSX.Element {
+function _NewTag(): JSX.Element {
   const { t } = useTranslation()
   return (
     <Flex shrink pt="$spacing2" display="inline-flex">
       <Flex
         shrink
-        ml={ml}
+        ml="$spacing6"
         px="$spacing4"
         pb="$spacing2"
         pt={3} // hack to make box look visually more vertically centered with text
-        backgroundColor={backgroundColor}
+        backgroundColor="$accent2Hovered"
         borderRadius="$rounded6"
         alignItems="center"
       >
-        <Text variant="buttonLabel4" color={textColor}>
-          {exclamation ? t('common.new.exclamation') : t('common.new')}
+        <Text variant="buttonLabel4" color="$accent1Hovered">
+          {t('common.new')}
         </Text>
       </Flex>
     </Flex>

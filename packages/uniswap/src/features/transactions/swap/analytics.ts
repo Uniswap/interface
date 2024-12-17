@@ -8,7 +8,7 @@ import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/fe
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapRouting, SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { TransactionSettingsState } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
@@ -147,7 +147,7 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
   formatter,
   trace,
 }: {
-  transactionSettings: TransactionSettingsContextState
+  transactionSettings: TransactionSettingsState
   derivedSwapInfo: DerivedSwapInfo
   formatter: LocalizationContextState
   trace: ITraceContext

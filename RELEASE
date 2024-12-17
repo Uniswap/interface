@@ -1,24 +1,9 @@
-IPFS hash of the deployment:
-- CIDv0: `QmbFgzr9RodJzRaqSY5enQfpZhKsNg5TJjRMpjwkVg2nEK`
-- CIDv1: `bafybeif74kosbexaqxwr65grk72zr55nec3ztvt5e4phcwuh64gf3milga`
+We are back with some new updates! Here’s the latest:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Token Warnings: See more information about the tokens you’re attempting to swap, enriched with data from Blockaid. 
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+Transaction Failure improvements: See more granular warnings when your slippage is too low, and increase it straight from the swap review screen. 
 
-IPFS gateways:
-- https://bafybeif74kosbexaqxwr65grk72zr55nec3ztvt5e4phcwuh64gf3milga.ipfs.dweb.link/
-- https://bafybeif74kosbexaqxwr65grk72zr55nec3ztvt5e4phcwuh64gf3milga.ipfs.cf-ipfs.com/
-- [ipfs://QmbFgzr9RodJzRaqSY5enQfpZhKsNg5TJjRMpjwkVg2nEK/](ipfs://QmbFgzr9RodJzRaqSY5enQfpZhKsNg5TJjRMpjwkVg2nEK/)
+Other changes: 
 
-### 5.63.1 (2024-12-17)
-
-
-### Bug Fixes
-
-* **web:** Fix/prod web modal (#14601) 7e6c3f1
-
-
+- Various bug fixes and performance improvements

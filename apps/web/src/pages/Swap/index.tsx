@@ -36,7 +36,6 @@ import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constant
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapRedirectFn } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
 import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow'
 import { SwapFormContextProvider, SwapFormState } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/hooks/useSwapPrefilledState'
@@ -47,7 +46,6 @@ import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/as
 import { useTranslation } from 'uniswap/src/i18n'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
-import { isTestEnv } from 'utilities/src/environment/env'
 import noop from 'utilities/src/react/noop'
 
 export function getIsReviewableQuote(
@@ -170,13 +168,10 @@ export function Swap({
     selectingCurrencyField: isSwapTokenSelectorOpen ? CurrencyField.OUTPUT : undefined,
   })
 
-  // TODO(WEB-5078): Remove this once we upgrade swap e2e tests to use the new swap flow
-  const waitForLoading = isLoading && !isTestEnv()
-
-  if (universalSwapFlow || isTestnetModeEnabled || waitForLoading) {
+  if (universalSwapFlow || isTestnetModeEnabled || isLoading) {
     return (
       <MultichainContextProvider initialChainId={chainId}>
-        <TransactionSettingsContextProvider settingKey={TransactionSettingKey.Swap}>
+        <TransactionSettingsContextProvider>
           <SwapAndLimitContextProvider
             initialInputCurrency={initialInputCurrency}
             initialOutputCurrency={initialOutputCurrency}

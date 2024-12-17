@@ -2,11 +2,7 @@ import dayjs from 'dayjs'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { objectToQueryString } from 'uniswap/src/data/utils'
 import { FOR_API_HEADERS } from 'uniswap/src/features/fiatOnRamp/constants'
-import {
-  FORTransactionResponse,
-  FiatOnRampTransactionDetails,
-  OffRampTransferDetailsResponse,
-} from 'uniswap/src/features/fiatOnRamp/types'
+import { FORTransactionResponse, FiatOnRampTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -76,21 +72,4 @@ export async function fetchFiatOnRampTransaction(
   }
 
   return extractFiatOnRampTransactionDetails(transaction)
-}
-
-export async function fetchOffRampTransferDetails(sessionId: string): Promise<OffRampTransferDetailsResponse> {
-  // TODO: support moonpay once backend is ready
-  const requestParams = {
-    meldDetails: {
-      sessionId,
-    },
-  }
-
-  const res = await fetch(`${uniswapUrls.forApiUrl}/OffRampTransferDetails`, {
-    headers: FOR_API_HEADERS,
-    method: 'POST',
-    body: JSON.stringify(requestParams),
-  })
-
-  return res.json() as Promise<OffRampTransferDetailsResponse>
 }

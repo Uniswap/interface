@@ -13,7 +13,7 @@ import styled, { css } from 'lib/styled-components'
 import { useReducer } from 'react'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
-import { Flex, Text } from 'ui/src'
+import { Text } from 'ui/src'
 import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
 import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
@@ -82,7 +82,6 @@ export default function WalletModal() {
 
   return (
     <Wrapper data-testid="wallet-modal" isUniExtensionAvailable={isUniExtensionAvailable}>
-      <Flex />
       <ConnectionErrorView />
       <AutoRow justify="space-between" width="100%">
         <Text variant="subheading2">

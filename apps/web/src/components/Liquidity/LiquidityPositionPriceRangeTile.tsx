@@ -17,7 +17,6 @@ const InnerTile = styled(Flex, {
 })
 
 interface LiquidityPositionPriceRangeTileProps {
-  token1: Currency
   priceOrdering: PriceOrdering
   token0CurrentPrice: Price<Currency, Currency>
   token1CurrentPrice: Price<Currency, Currency>
@@ -27,7 +26,6 @@ interface LiquidityPositionPriceRangeTileProps {
 }
 
 export function LiquidityPositionPriceRangeTile({
-  token1,
   priceOrdering,
   token0CurrentPrice,
   token1CurrentPrice,
@@ -58,26 +56,15 @@ export function LiquidityPositionPriceRangeTile({
     throw new Error('LiquidityPositionPriceRangeTile: Currency symbols are required')
   }
 
-  const { minPrice, maxPrice, tokenASymbol, tokenBSymbol } = useGetRangeDisplay({
+  const { minPrice, maxPrice, currentPrice, tokenASymbol, tokenBSymbol } = useGetRangeDisplay({
+    token0CurrentPrice,
+    token1CurrentPrice,
     priceOrdering,
     feeTier,
     tickLower,
     tickUpper,
     pricesInverted,
   })
-
-  const currentPrice = useMemo(() => {
-    const { base } = priceOrdering
-    if (!base) {
-      return undefined
-    }
-
-    if (!pricesInverted) {
-      return base?.equals(token1) ? token1CurrentPrice : token0CurrentPrice
-    }
-
-    return base?.equals(token1) ? token0CurrentPrice : token1CurrentPrice
-  }, [priceOrdering, token0CurrentPrice, token1CurrentPrice, token1, pricesInverted])
 
   return (
     <Flex backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12" width="100%" gap="$gap12">

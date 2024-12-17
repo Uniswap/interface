@@ -44,19 +44,15 @@ export function SendFlow(): JSX.Element {
       onClose={onClose}
     >
       <SendContextProvider prefilledTransactionState={initialState}>
-        <CurrentScreen screenOverride={initialState?.sendScreen} />
+        <CurrentScreen />
       </SendContextProvider>
     </TransactionModal>
   )
 }
 
-function CurrentScreen({ screenOverride }: { screenOverride?: TransactionScreen }): JSX.Element {
-  const { screen, setScreen } = useTransactionModalContext()
+function CurrentScreen(): JSX.Element {
+  const { screen } = useTransactionModalContext()
   const { recipient } = useSendContext()
-
-  if (screenOverride) {
-    setScreen(screenOverride)
-  }
 
   // If no recipient, force full screen recipient select. Need to render this outside of `SendFormScreen` to ensure that
   // the modals are rendered correctly, and animations can properly measure the available space for the decimal pad.

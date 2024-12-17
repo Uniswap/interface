@@ -14,7 +14,6 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { MIN_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
 import { useTranslation } from 'uniswap/src/i18n'
 
 function RemoveLiquidityModalInner() {
@@ -54,10 +53,7 @@ function RemoveLiquidityModalInner() {
 export function RemoveLiquidityModal() {
   return (
     <RemoveLiquidityModalContextProvider>
-      <TransactionSettingsContextProvider
-        settingKey={TransactionSettingKey.LP}
-        autoSlippageTolerance={MIN_AUTO_SLIPPAGE_TOLERANCE}
-      >
+      <TransactionSettingsContextProvider autoSlippageTolerance={MIN_AUTO_SLIPPAGE_TOLERANCE}>
         <RemoveLiquidityTxContextProvider>
           <RemoveLiquidityModalInner />
         </RemoveLiquidityTxContextProvider>

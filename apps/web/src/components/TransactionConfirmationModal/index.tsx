@@ -16,13 +16,12 @@ import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { useTransaction } from 'state/transactions/hooks'
 import { isConfirmedTx } from 'state/transactions/utils'
 import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
-import { Modal } from 'uniswap/src/components/modals/Modal'
+import { AdaptiveWebModal } from 'ui/src'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
@@ -341,13 +340,7 @@ export default function TransactionConfirmationModal({
 
   // confirmation screen
   return (
-    <Modal
-      name={ModalName.TransactionConfirmation}
-      isModalOpen={isOpen}
-      onClose={onDismiss}
-      maxHeight={700}
-      padding={0}
-    >
+    <AdaptiveWebModal isOpen={isOpen} onClose={onDismiss} maxHeight="90vh" p={0}>
       {isL2ChainId(chainId) && (hash || attemptingTxn) ? (
         <L2Content chainId={chainId} hash={hash} onDismiss={onDismiss} pendingText={pendingText} />
       ) : attemptingTxn ? (
@@ -362,6 +355,6 @@ export default function TransactionConfirmationModal({
       ) : (
         reviewContent()
       )}
-    </Modal>
+    </AdaptiveWebModal>
   )
 }

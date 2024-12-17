@@ -11,10 +11,9 @@ import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useMemo } from 'react'
-import { Button, Flex, Image, ImageProps, Text, TouchableArea, useMedia } from 'ui/src'
+import { AdaptiveWebModal, Button, Flex, Image, ImageProps, Text, TouchableArea, useMedia } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { iconSizes } from 'ui/src/theme'
-import { Modal } from 'uniswap/src/components/modals/Modal'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { useTranslation } from 'uniswap/src/i18n'
@@ -47,13 +46,12 @@ export function LaunchModal({
 
   return (
     <Trace modal={interfaceModalName}>
-      <Modal
-        name={interfaceModalName}
+      <AdaptiveWebModal
         maxWidth={media.md ? undefined : LAUNCH_MODAL_DESKTOP_MAX_WIDTH}
         height={media.md ? LAUNCH_MODAL_MOBILE_MAX_HEIGHT : LAUNCH_MODAL_DESKTOP_MAX_HEIGHT}
-        isModalOpen={showModal && !isOnLandingPage}
+        isOpen={showModal && !isOnLandingPage}
         onClose={() => setShowModal(false)}
-        padding={0}
+        p={0}
       >
         <Flex flexDirection={media.md ? 'column' : 'row'} fill>
           <Flex
@@ -103,7 +101,7 @@ export function LaunchModal({
             </Flex>
           </Flex>
         </Flex>
-      </Modal>
+      </AdaptiveWebModal>
     </Trace>
   )
 }

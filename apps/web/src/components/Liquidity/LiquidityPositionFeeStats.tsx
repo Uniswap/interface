@@ -7,7 +7,7 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { TextLoader } from 'pages/Pool/Positions/shared'
 import { Dispatch, SetStateAction } from 'react'
-import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from 'theme/components'
+import { ClickableTamaguiStyle } from 'theme/components'
 import { Flex, Text, styled } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
@@ -168,17 +168,8 @@ export function LiquidityPositionFeeStats({
               <SecondaryText flexShrink={0}>
                 <Trans i18nKey="common.max" />
               </SecondaryText>
-              <SecondaryText color="$neutral1" display="flex" alignItems="center" gap="$gap4">
-                <span
-                  style={{
-                    ...EllipsisTamaguiStyle,
-                  }}
-                >
-                  {maxPrice}
-                </span>
-                <span>
-                  {tokenASymbol} / {tokenBSymbol}
-                </span>
+              <SecondaryText color="$neutral1">
+                {maxPrice} {tokenASymbol} / {tokenBSymbol}
               </SecondaryText>
               <Flex
                 height="100%"
