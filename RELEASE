@@ -4,6 +4,8 @@ Token Warnings: See more information about the tokens you’re attempting to swa
 
 Transaction Failure improvements: See more granular warnings when your slippage is too low, and increase it straight from the swap review screen. 
 
+Homescreen improvements: We added labels to the pink Buy/Sell/Receive buttons, and moved the QR code scanner to a button on the top left of the screen. 
+
 Other changes: 
 
 - Various bug fixes and performance improvements
