@@ -233,6 +233,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
                   clickable={!account}
                   onClick={handleUniIconClick}
                 />
+
                 <Text fontSize={24} marginTop={-1}>
                   Ubeswap
                 </Text>

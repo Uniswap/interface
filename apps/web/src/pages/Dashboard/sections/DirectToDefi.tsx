@@ -40,8 +40,8 @@ export function DirectToDefi() {
         </H2> */}
         <Box direction="column" gap="16px">
           <RowToCol direction="row" gap="16px">
-            <WebappCard />
-            <WebappCard />
+            <WebappCard title="Top Gainers" />
+            <WebappCard title="Top Earners" />
 
             {/* <DownloadWalletCard /> */}
           </RowToCol>

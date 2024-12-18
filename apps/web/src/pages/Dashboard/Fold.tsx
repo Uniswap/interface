@@ -8,7 +8,7 @@ const Fold = forwardRef<HTMLDivElement>(function Fold() {
   return (
     <>
       <Stats />
-
+      <div style={{ height: '50px' }}></div>
       <DirectToDefi />
 
       {/* <NewsletterEtc />

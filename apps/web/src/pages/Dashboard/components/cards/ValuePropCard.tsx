@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
 import { Box, BoxProps } from '../Generics'
 
@@ -25,65 +25,65 @@ const Container = motion(styled(Box)<ValuePropCardProps & BoxProps>`
   border-radius: 32px;
   width: 100%;
   cursor: pointer;
-  height: ${(props) => props.height || '609px'};
+  height: ${(props) => props.height || '409px'};
   background-color: ${(props) => (props.isDarkMode ? props.backgroundColor?.dark : props.backgroundColor?.light)};
   overflow: hidden;
   text-decoration: none;
   @media (max-width: 1024px) {
-    height: ${(props) => props.height || '516px'};
-    min-height: ${(props) => props.minHeight || '240px'};
+    height: ${(props) => props.height || '366px'};
+    min-height: 340px;
   }
   @media (max-width: 768px) {
     height: auto;
-    min-height: ${(props) => props.minHeight || '240px'};
+    min-height: 340px;
   }
 `)
 
-const Inner = styled.div<{ alignTextToBottom?: boolean }>`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  ${({ alignTextToBottom }) =>
-    alignTextToBottom
-      ? css`
-          height: 100%;
-          justify-content: space-between;
-        `
-      : 'height: unset;'}
-  z-index: 5;
-  gap: 24px;
-  padding: 32px;
-  @media (max-width: 1024px) {
-    gap: 16px;
-    padding: 24px;
-  }
-  @media (max-width: 396px) {
-    padding: 20px;
-  }
-`
-const Title = styled.div`
-  color: ${(props) => props.color};
-  font-feature-settings: 'ss07' on;
-  font-family: Basel;
-  font-size: 36px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 44px;
-  white-space: pre-line;
-  text-wrap: pretty;
-  @media (max-width: 1024px) {
-    font-size: 28px;
-    line-height: 32px;
-  }
-  @media (max-width: 768px) {
-    font-size: 24px;
-    line-height: 32px;
-  }
-`
+// const Inner = styled.div<{ alignTextToBottom?: boolean }>`
+//   width: 100%;
+//   height: 100%;
+//   display: flex;
+//   flex-direction: column;
+//   align-items: flex-start;
+//   ${({ alignTextToBottom }) =>
+//     alignTextToBottom
+//       ? css`
+//           height: 100%;
+//           justify-content: space-between;
+//         `
+//       : 'height: unset;'}
+//   z-index: 5;
+//   gap: 24px;
+//   padding: 32px;
+//   @media (max-width: 1024px) {
+//     gap: 16px;
+//     padding: 24px;
+//   }
+//   @media (max-width: 396px) {
+//     padding: 20px;
+//   }
+// `
+// const Title = styled.div`
+//   color: ${(props) => props.color};
+//   font-feature-settings: 'ss07' on;
+//   font-family: Basel;
+//   font-size: 36px;
+//   font-style: normal;
+//   font-weight: 500;
+//   line-height: 44px;
+//   white-space: pre-line;
+//   text-wrap: pretty;
+//   @media (max-width: 1024px) {
+//     font-size: 28px;
+//     line-height: 32px;
+//   }
+//   @media (max-width: 768px) {
+//     font-size: 24px;
+//     line-height: 32px;
+//   }
+// `
 export default function ValuePropCard(props: ValuePropCardProps & BoxProps) {
-  const { isDarkMode, backgroundColor, height, textColor, minHeight, alignTextToBottom, href, to } = props
+  const { isDarkMode, backgroundColor, height, minHeight, href, to } = props
   const navigate = useNavigate()
   const handleClick = () => {
     if (to) {
@@ -105,10 +105,10 @@ export default function ValuePropCard(props: ValuePropCardProps & BoxProps) {
       onClick={handleClick}
       {...props}
     >
-      <Inner alignTextToBottom={alignTextToBottom}>
+      {/* <Inner alignTextToBottom={alignTextToBottom}>
         {props.button}
         <Title color={textColor}>{props.titleText}</Title>
-      </Inner>
+      </Inner> */}
       {props.children}
     </Container>
   )

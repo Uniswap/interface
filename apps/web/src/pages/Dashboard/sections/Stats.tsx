@@ -1,9 +1,6 @@
-import Row from 'components/Row'
 import { t, Trans } from 'i18n'
 import { useMemo } from 'react'
-import { ArrowRightCircle } from 'react-feather'
 import styled from 'styled-components'
-import { ClickableStyle, ExternalLink } from 'theme/components'
 import {
   ProtocolVersion,
   useDailyProtocolVolumeQuery,
@@ -123,40 +120,35 @@ const Right = styled.div`
   grid-row-end: 3;
   height: 100%;
 `
-const LearnMoreButton = styled(ExternalLink)`
-  padding: 12px 16px;
-  border-radius: 24px;
-  border: 0;
-  background-color: ${({ theme }) => theme.surface2};
-  font-family: Basel;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 535;
-  line-height: 24px;
-  color: ${({ theme }) => theme.neutral1};
-  ${ClickableStyle}
+const LogoContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  img {
+    width: 54px;
+    height: 40px;
+    border-radius: 24px;
+
+    @media (max-width: 768px) {
+      width: 40px;
+      height: 30px;
+    }
+
+    @media (max-width: 480px) {
+      width: 32px;
+      height: 24px;
+    }
+  }
 `
-const LearnMoreArrow = styled(ArrowRightCircle)`
-  size: 24px;
-  stroke: ${({ theme }) => theme.surface2};
-  fill: ${({ theme }) => theme.neutral1};
-`
+
 const ProtocolDescription = () => (
   <Trans>
     Ubeswap products are powered by the Ubeswap Protocol. The protocol is the largest onchain marketplace, with billions
     of dollars in weekly volume across thousands of tokens on Ethereum and 7+ additional chains.
   </Trans>
 )
-function LearnMore() {
-  return (
-    <LearnMoreButton href="https://info.ubeswap.org">
-      <Row gap="sm" align="center">
-        <Trans>Learn more</Trans>
-        <LearnMoreArrow />
-      </Row>
-    </LearnMoreButton>
-  )
-}
+
 export function Stats() {
   const { ref, inView } = useInView()
 
@@ -168,13 +160,29 @@ export function Stats() {
             <Left>
               <Box direction="column" justify-content="space-between" height="100%">
                 <H2>
-                  <Trans>Trusted by millions</Trans>
+                  <LogoContainer>
+                    <img src="/images/192x192_App_Icon.png" alt="ubeswap" />
+                    <Trans style={{ marginBottom: '50px' }}> UBESWAP</Trans>
+                  </LogoContainer>
                 </H2>
                 <Box bottom="0" position="absolute" direction="column" maxWidth="480px" gap="24px">
+                  <Body1
+                    style={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      padding: '16px',
+                      borderRadius: '12px',
+                      width: '100%',
+                      marginBottom: '32px',
+                    }}
+                  >
+                    <h3>UBE Price</h3>
+                    <h3>Market Cap</h3>
+                    <h3>FDV</h3>
+                  </Body1>
                   <Body1>
                     <ProtocolDescription />
                   </Body1>
-                  <LearnMore />
+                  {/* <LearnMore /> */}
                 </Box>
               </Box>
             </Left>
@@ -185,13 +193,30 @@ export function Stats() {
         </HideWhenSmall>
         <HideWhenLarge maxWidth="1280px" direction="column" gap="32px">
           <H2>
-            <Trans>Trusted by millions</Trans>
+            <LogoContainer>
+              <img src="/images/192x192_App_Icon.png" alt="ubeswap" />
+              <Trans style={{ marginBottom: '50px' }}> UBESWAP</Trans>
+            </LogoContainer>
           </H2>
-          <Cards inView={inView} />
+          <Body1
+            style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              padding: '16px',
+              borderRadius: '12px',
+              width: '100%',
+              marginBottom: '32px',
+            }}
+          >
+            <h3>UBE Price</h3>
+            <h3>Market Cap</h3>
+            <h3>FDV</h3>
+          </Body1>
           <Body1>
             <ProtocolDescription />
           </Body1>
-          <LearnMore />
+          <Cards inView={inView} />
+
+          {/* <LearnMore /> */}
         </HideWhenLarge>
       </SectionLayout>
     </Container>
@@ -226,7 +251,7 @@ function Cards({ inView }: { inView: boolean }) {
     <CardLayout>
       <LeftTop>
         <StatCard
-          title={t`All time volume`}
+          title={t`TVL`}
           value={formatNumber({ input: 2 * 10 ** 12, type: NumberType.FiatTokenStats })}
           delay={0}
           inView={inView}
@@ -234,7 +259,7 @@ function Cards({ inView }: { inView: boolean }) {
       </LeftTop>
       <RightTop>
         <StatCard
-          title={t`All time swappers`}
+          title={t`Volume`}
           value={formatNumber({ input: 16.6 * 10 ** 6, type: NumberType.TokenQuantityStats })}
           delay={0.2}
           inView={inView}
@@ -242,7 +267,7 @@ function Cards({ inView }: { inView: boolean }) {
       </RightTop>
       <LeftBottom>
         <StatCard
-          title={t`All time LP fees `}
+          title={t`Users `}
           value={formatNumber({ input: 3.4 * 10 ** 9, type: NumberType.FiatTokenStats })}
           delay={0.4}
           inView={inView}
@@ -250,7 +275,7 @@ function Cards({ inView }: { inView: boolean }) {
       </LeftBottom>
       <RightBottom>
         <StatCard
-          title={t`24H volume`}
+          title={t`Volume To Date`}
           value={formatNumber({ input: totalVolume || 500000000, type: NumberType.FiatTokenStats })}
           live
           delay={0.6}

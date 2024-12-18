@@ -1,7 +1,7 @@
 import { ChainId } from '@ubeswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
-import { LDO, NATIVE_CHAIN_ID, UBE, USDC_BASE } from 'constants/tokens'
+import { CELO_CELO, CEUR_CELO, CUSD_CELO, NATIVE_CHAIN_ID, UBE } from 'constants/tokens'
 import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useScreenSize } from 'hooks/useScreenSize'
@@ -160,9 +160,27 @@ const DeltaContainer = styled(Box)`
   }
 `
 
+const CardTitle = styled.h2`
+  font-family: Basel;
+  font-size: 28px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.neutral1};
+  margin: 0;
+  padding: 32px 32px 0;
+  @media (max-width: 1024px) {
+    padding: 24px 24px 0;
+    font-size: 24px;
+  }
+  @media (max-width: 396px) {
+    padding: 16px 16px 0;
+    font-size: 20px;
+  }
+`
+
 type WebappCardProps = {
   isDarkMode?: boolean
   tagText?: string
+  title?: string
 }
 
 const primary = '#2ABDFF'
@@ -171,20 +189,20 @@ const primary = '#2ABDFF'
 
 const tokens = [
   {
-    chainId: ChainId.MAINNET,
-    address: 'ETH',
+    chainId: ChainId.CELO,
+    address: CELO_CELO.address,
   },
   {
-    chainId: ChainId.BASE,
-    address: USDC_BASE.address,
+    chainId: ChainId.CELO,
+    address: CUSD_CELO.address,
   },
   {
     chainId: ChainId.CELO,
     address: UBE[ChainId.CELO].address,
   },
   {
-    chainId: ChainId.MAINNET,
-    address: LDO.address,
+    chainId: ChainId.CELO,
+    address: CEUR_CELO.address,
   },
 ]
 
@@ -215,7 +233,8 @@ function Token({ chainId, address }: { chainId: ChainId; address: string }) {
   )
   return (
     <TokenRow onClick={handleClick}>
-      <PortfolioLogo currencies={[currency]} chainId={chainId} size={screenIsSmall ? '32px' : '24px'} />
+      <PortfolioLogo currencies={[currency, currency]} chainId={chainId} size={screenIsSmall ? '32px' : '24px'} />
+
       <Box justify="space-between" gap="16px">
         <Box width="auto" gap="8px" align="center" overflow="hidden">
           <TokenName>{currency?.name}</TokenName>
@@ -245,10 +264,11 @@ export function WebappCard(props: WebappCardProps) {
       minHeight="450px"
       isDarkMode={props.isDarkMode}
       textColor={primary}
-      backgroundColor={{ dark: 'rgba(0, 102, 255, 0.12)', light: 'rgba(0, 102, 255, 0.04)' }}
+      backgroundColor={{ dark: 'rgba(255, 0, 234, 0.12)', light: 'rgba(0, 102, 255, 0.04)' }}
       // button={<PillButton color={primary} label={t`Web app`} icon={<Computer size="24px" fill={primary} />} />}
       // titleText={t`Swapping made simple. Access thousands of tokens on 8+ chains.`}
     >
+      {props.title && <CardTitle>{props.title}</CardTitle>}
       <Contents>
         {tokens.map((token) => (
           <Token key={`tokenRow-${token.address}`} chainId={token.chainId} address={token.address} />
