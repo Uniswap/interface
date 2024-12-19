@@ -7,8 +7,10 @@ import { useAllFeeTierPoolData } from 'components/Liquidity/hooks'
 import { getDefaultFeeTiersWithData, isDynamicFeeTier } from 'components/Liquidity/utils'
 import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useCurrencyInfo } from 'hooks/Tokens'
+import { SUPPORTED_V2POOL_CHAIN_IDS } from 'hooks/useNetworkSupportsV2'
 import { AddHook } from 'pages/Pool/Positions/create/AddHook'
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { AdvancedButton, Container } from 'pages/Pool/Positions/create/shared'
@@ -23,6 +25,7 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { Search } from 'ui/src/components/icons/Search'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans, t, useTranslation } from 'uniswap/src/i18n'
@@ -31,7 +34,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useFormatter } from 'utils/formatNumbers'
 
-const CurrencySelector = ({ currency, onPress }: { currency?: Currency; onPress: () => void }) => {
+export const CurrencySelector = ({ currency, onPress }: { currency?: Currency; onPress: () => void }) => {
   const { t } = useTranslation()
   // TODO: remove when backend returns token logos in graphql response: WEB-4920
   const currencyInfo = useCurrencyInfo(currency)
@@ -257,6 +260,14 @@ export function SelectTokensStep({
     }
   }, [mostUsedFeeTier, defaultFeeTierSelected, setPositionState, trace])
 
+  const { chains } = useEnabledChains()
+  const supportedChains = useMemo(() => {
+    // some chains are not supported for v2 pools, so we need to filter them out
+    return protocolVersion === ProtocolVersion.V2
+      ? chains.filter((chain) => SUPPORTED_V2POOL_CHAIN_IDS.includes(chain))
+      : undefined
+  }, [chains, protocolVersion])
+
   return (
     <PrefetchBalancesWrapper>
       <Container {...rest}>
@@ -310,7 +321,7 @@ export function SelectTokensStep({
                 borderColor="$surface3"
               >
                 <Flex gap="$gap4">
-                  <Flex row gap="$gap8">
+                  <Flex row gap="$gap8" alignItems="center">
                     <Text variant="subheading2" color="$neutral1">
                       {isDynamicFeeTier(fee) ? (
                         <Trans i18nKey="fee.tier.dynamic" />
@@ -322,17 +333,21 @@ export function SelectTokensStep({
                       )}
                     </Text>
                     {fee.feeAmount === mostUsedFeeTier?.fee.feeAmount ? (
-                      <Flex
-                        justifyContent="center"
-                        borderRadius="$rounded6"
-                        backgroundColor="$surface3"
-                        px={7}
-                        $md={{ display: 'none' }}
-                      >
-                        <Text variant="buttonLabel4">
-                          <Trans i18nKey="fee.tier.recommended" />
-                        </Text>
-                      </Flex>
+                      <MouseoverTooltip text={t('fee.tier.recommended.description')}>
+                        <Flex
+                          justifyContent="center"
+                          borderRadius="$rounded6"
+                          backgroundColor="$surface3"
+                          px={7}
+                          py={2}
+                          x
+                          $md={{ display: 'none' }}
+                        >
+                          <Text variant="buttonLabel4">
+                            <Trans i18nKey="fee.tier.recommended" />
+                          </Text>
+                        </Flex>
+                      </MouseoverTooltip>
                     ) : feeTiers.find((tier) => tier.value.feeAmount === fee.feeAmount) ? null : (
                       <Flex justifyContent="center" borderRadius="$rounded6" backgroundColor="$surface3" px={7}>
                         <Text variant="buttonLabel4">
@@ -429,6 +444,7 @@ export function SelectTokensStep({
         isOpen={currencySearchInputState !== undefined}
         onDismiss={() => setCurrencySearchInputState(undefined)}
         onCurrencySelect={handleCurrencySelect}
+        chainIds={supportedChains}
       />
     </PrefetchBalancesWrapper>
   )

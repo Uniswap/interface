@@ -336,30 +336,24 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
 }
 
 export function calculateInvertedValues({
-  token0CurrentPrice,
-  token1CurrentPrice,
   priceLower,
   priceUpper,
   quote,
   base,
   invert,
 }: {
-  token0CurrentPrice?: Price<Currency, Currency>
-  token1CurrentPrice?: Price<Currency, Currency>
   priceLower?: Price<Currency, Currency>
   priceUpper?: Price<Currency, Currency>
   quote?: Currency
   base?: Currency
   invert?: boolean
 }): {
-  currentPrice?: Price<Currency, Currency>
   priceLower?: Price<Currency, Currency>
   priceUpper?: Price<Currency, Currency>
   quote?: Currency
   base?: Currency
 } {
   return {
-    currentPrice: invert ? token0CurrentPrice : token1CurrentPrice,
     priceUpper: invert ? priceLower?.invert() : priceUpper,
     priceLower: invert ? priceUpper?.invert() : priceLower,
     quote: invert ? base : quote,

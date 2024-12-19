@@ -12,7 +12,7 @@ export enum DynamicConfigs {
 
   // Wallet
   HomeScreenExploreTokens = 'home_screen_explore_tokens',
-  MobileForceUpgrade = 'force_upgrade',
+  ForceUpgrade = 'force_upgrade',
   OnDeviceRecovery = 'on_device_recovery',
   UwuLink = 'uwulink_config',
   GasStrategies = 'gas_strategy',
@@ -115,7 +115,7 @@ export type DynamicConfigKeys = {
 
   // Wallet
   [DynamicConfigs.HomeScreenExploreTokens]: HomeScreenExploreTokensConfigKey
-  [DynamicConfigs.MobileForceUpgrade]: ForceUpgradeConfigKey
+  [DynamicConfigs.ForceUpgrade]: ForceUpgradeConfigKey
   [DynamicConfigs.OnDeviceRecovery]: OnDeviceRecoveryConfigKey
   [DynamicConfigs.UwuLink]: UwuLinkConfigKey
   [DynamicConfigs.MainnetPrivateRpc]: MainnetPrivateRpcConfigKey

@@ -1,11 +1,24 @@
-We are back with some new updates! Here’s the latest:
+IPFS hash of the deployment:
+- CIDv0: `QmQgATjf3hM9GXkqFXMBe9mH8iJad7JWMaJNzp53pDQV2a`
+- CIDv1: `bafybeibcw4gnryq4dypbj63jzx2md33b63cvh6eezail7ijyv4twkf72qm`
 
-Token Warnings: See more information about the tokens you’re attempting to swap, enriched with data from Blockaid. 
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-Transaction Failure improvements: See more granular warnings when your slippage is too low, and increase it straight from the swap review screen. 
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
 
-Homescreen improvements: We added labels to the pink Buy/Sell/Receive buttons, and moved the QR code scanner to a button on the top left of the screen. 
+IPFS gateways:
+- https://bafybeibcw4gnryq4dypbj63jzx2md33b63cvh6eezail7ijyv4twkf72qm.ipfs.dweb.link/
+- https://bafybeibcw4gnryq4dypbj63jzx2md33b63cvh6eezail7ijyv4twkf72qm.ipfs.cf-ipfs.com/
+- [ipfs://QmQgATjf3hM9GXkqFXMBe9mH8iJad7JWMaJNzp53pDQV2a/](ipfs://QmQgATjf3hM9GXkqFXMBe9mH8iJad7JWMaJNzp53pDQV2a/)
 
-Other changes: 
+### 5.63.2 (2024-12-19)
 
-- Various bug fixes and performance improvements
+
+### Bug Fixes
+
+* **web:** switch to new marketing events - prod (#14706) ad67ff4
+
+

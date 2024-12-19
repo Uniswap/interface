@@ -15,6 +15,7 @@ import {
   UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM,
   UNISWAP_WALLETCONNECT_URL,
 } from 'src/features/deepLinking/constants'
+import { handleOffRampReturnLink } from 'src/features/deepLinking/handleOffRampReturnLinkSaga'
 import { handleOnRampReturnLink } from 'src/features/deepLinking/handleOnRampReturnLinkSaga'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
@@ -207,6 +208,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
     const screen = url.searchParams.get('screen')
     const userAddress = url.searchParams.get('userAddress')
     const fiatOnRamp = url.searchParams.get('fiatOnRamp') === 'true'
+    const fiatOffRamp = url.searchParams.get('fiatOffRamp') === 'true'
 
     const activeAccount = yield* select(selectActiveAccount)
     if (!activeAccount) {
@@ -271,6 +273,8 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
         case 'transaction':
           if (fiatOnRamp) {
             yield* call(handleOnRampReturnLink)
+          } else if (fiatOffRamp) {
+            yield* call(handleOffRampReturnLink, url)
           } else {
             yield* call(handleTransactionLink)
           }

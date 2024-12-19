@@ -1,7 +1,9 @@
 import { Percent } from '@uniswap/sdk-core'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
-import { AdaptiveWebModal, Button, Flex, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
+import { Modal } from 'uniswap/src/components/modals/Modal'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 
@@ -16,7 +18,7 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
   const impact = `${formatPercent(priceImpact)}`
 
   return (
-    <AdaptiveWebModal isOpen onClose={onDismiss} p={0}>
+    <Modal name={ModalName.PriceImpact} isModalOpen onClose={onDismiss} padding={0}>
       <Flex width="100%" px="$spacing24" py="$spacing16" rowGap="$spacing24" backgroundColor="$surface1">
         <GetHelpHeader closeModal={onDismiss} />
         <Flex rowGap="$spacing16" alignItems="center">
@@ -78,6 +80,6 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
           </Button>
         </Flex>
       </Flex>
-    </AdaptiveWebModal>
+    </Modal>
   )
 }

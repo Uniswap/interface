@@ -31,6 +31,7 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
 import { NumberType } from 'utilities/src/format/types'
+import { isMobileApp, isMobileWeb } from 'utilities/src/platform'
 
 interface SwapDetailsProps {
   acceptedDerivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>
@@ -101,7 +102,7 @@ export function SwapDetails({
   const priceImpactWarningColor = getAlertColor(priceImpactWarning?.severity).text
 
   return (
-    <HeightAnimator animation="fast">
+    <HeightAnimatorWrapper>
       <TransactionDetails
         isSwap
         banner={
@@ -170,7 +171,7 @@ export function SwapDetails({
           </Flex>
         ) : null}
       </TransactionDetails>
-    </HeightAnimator>
+    </HeightAnimatorWrapper>
   )
 }
 
@@ -244,6 +245,15 @@ function AcceptNewQuoteRow({
       </Flex>
     </Flex>
   )
+}
+
+// We don't need to animate the height on mobile because bottom sheet already handles the animation.
+function HeightAnimatorWrapper({ children }: { children: React.ReactNode }): JSX.Element {
+  if (isMobileApp || isMobileWeb) {
+    return <>{children}</>
+  } else {
+    return <HeightAnimator animation="fast">{children}</HeightAnimator>
+  }
 }
 
 function calculatePercentageDifference({

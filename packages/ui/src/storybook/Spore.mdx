@@ -1,0 +1,92 @@
+import { Meta } from '@storybook/blocks'
+
+export const RightArrow = () => (
+  <svg
+    viewBox="0 0 14 14"
+    width="8px"
+    height="14px"
+    style={{
+      marginLeft: '4px',
+      display: 'inline-block',
+      shapeRendering: 'inherit',
+      verticalAlign: 'middle',
+      fill: 'currentColor',
+      'path fill': 'currentColor',
+    }}
+  >
+    <path d="m11.1 7.35-5.5 5.5a.5.5 0 0 1-.7-.7L10.04 7 4.9 1.85a.5.5 0 1 1 .7-.7l5.5 5.5c.2.2.2.5 0 .7Z" />
+  </svg>
+)
+
+<Meta title="Spore/Docs" />
+
+<div className="sb-container">
+  <div className='sb-section-title'>
+    # 🍄 Explore the Spore Library
+
+    The Spore Library is a comprehensive collection of design components and resources that streamline your UI development process. Dive into the guides below to learn how to integrate Spore into your projects and enhance your design workflow.
+
+  </div>
+  <div className="sb-section">
+    <div className="sb-section-item">
+      <h4 className="sb-section-item-heading">Design System</h4>
+      <p className="sb-section-item-paragraph">Discover the principles and guidelines that form the foundation of the Spore design system.</p>
+      <a
+        href="https://www.figma.com/design/5j5YUUMWbrPIe8DMK9oyaC/%F0%9F%8D%84-Spore-Library?node-id=20605-142587&m=dev"
+        target="_blank"
+      >Learn more in Figma<RightArrow /></a>
+    </div>
+    <div className="sb-section-item">
+      <h4 className="sb-section-item-heading">Component Library</h4>
+      <p className="sb-section-item-paragraph">Access a wide range of reusable components that adhere to the Spore design standards.</p>
+      <a
+        href="https://www.figma.com/design/5j5YUUMWbrPIe8DMK9oyaC/%F0%9F%8D%84-Spore-Library?node-id=1488-143&m=dev"
+        target="_blank"
+      >Explore components in Figma<RightArrow /></a>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  {`
+  .sb-container {
+    margin-bottom: 48px;
+  }
+
+  .sb-section {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+
+  img {
+    object-fit: cover;
+  }
+
+  .sb-section-title {
+    margin-bottom: 32px;
+  }
+
+  .sb-section a:not(h1 a, h2 a, h3 a) {
+    font-size: 14px;
+  }
+
+  .sb-section-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sb-section-item-heading {
+    padding-top: 20px !important;
+    padding-bottom: 5px !important;
+    margin: 0 !important;
+  }
+  .sb-section-item-paragraph {
+    margin: 0;
+    padding-bottom: 10px;
+  }
+  `}
+</style>

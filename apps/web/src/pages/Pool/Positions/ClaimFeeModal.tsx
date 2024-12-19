@@ -6,10 +6,10 @@ import { useModalLiquidityInitialState, useV3OrV4PositionDerivedInfo } from 'com
 import { getProtocolItems } from 'components/Liquidity/utils'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { ZERO_ADDRESS } from 'constants/misc'
-import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
+import { useCurrencyInfoWithUnwrapForTradingApi } from 'pages/Pool/Positions/create/utils'
 import { useMemo, useState } from 'react'
 import { useCloseModal } from 'state/application/hooks'
 import { useAppDispatch } from 'state/hooks'
@@ -52,15 +52,23 @@ export function ClaimFeeModal() {
     fiatFeeValue1: token1FeesUsd,
   } = useV3OrV4PositionDerivedInfo(positionInfo)
 
-  const currencyInfo0 = useCurrencyInfo(token0Fees?.currency)
-  const currencyInfo1 = useCurrencyInfo(token1Fees?.currency)
+  const chainId = positionInfo?.currency0Amount.currency.chainId
+
+  const currencyInfo0 = useCurrencyInfoWithUnwrapForTradingApi({
+    currency: token0Fees?.currency,
+    shouldUnwrap: !positionInfo?.collectAsWeth,
+  })
+  const currencyInfo1 = useCurrencyInfoWithUnwrapForTradingApi({
+    currency: token1Fees?.currency,
+    shouldUnwrap: !positionInfo?.collectAsWeth,
+  })
   const dispatch = useAppDispatch()
 
   const selectChain = useSelectChain()
   const startChainId = useAccount().chainId
 
   const claimLpFeesParams = useMemo(() => {
-    if (!positionInfo) {
+    if (!positionInfo || !currencyInfo0 || !currencyInfo1) {
       return undefined
     }
 
@@ -68,15 +76,11 @@ export function ClaimFeeModal() {
       protocol: getProtocolItems(positionInfo.version),
       tokenId: positionInfo.tokenId ? Number(positionInfo.tokenId) : undefined,
       walletAddress: account?.address,
-      chainId: positionInfo.currency0Amount.currency.chainId,
+      chainId,
       position: {
         pool: {
-          token0: positionInfo.currency0Amount.currency.isNative
-            ? ZERO_ADDRESS
-            : positionInfo.currency0Amount.currency.address,
-          token1: positionInfo.currency1Amount.currency.isNative
-            ? ZERO_ADDRESS
-            : positionInfo.currency1Amount.currency.address,
+          token0: currencyInfo0.currency.isNative ? ZERO_ADDRESS : currencyInfo0.currency.address,
+          token1: currencyInfo1.currency.isNative ? ZERO_ADDRESS : currencyInfo1.currency.address,
           fee: positionInfo.feeTier ? Number(positionInfo.feeTier) : undefined,
           tickSpacing: positionInfo?.tickSpacing ? Number(positionInfo?.tickSpacing) : undefined,
           hooks: positionInfo.v4hook,
@@ -90,7 +94,15 @@ export function ClaimFeeModal() {
         positionInfo.version !== ProtocolVersion.V4 ? token1Fees?.quotient.toString() : undefined,
       collectAsWETH: positionInfo.version !== ProtocolVersion.V4 ? positionInfo.collectAsWeth : undefined,
     } satisfies ClaimLPFeesRequest
-  }, [account?.address, positionInfo, token0Fees, token1Fees])
+  }, [
+    account?.address,
+    chainId,
+    currencyInfo0,
+    currencyInfo1,
+    positionInfo,
+    token0Fees?.quotient,
+    token1Fees?.quotient,
+  ])
 
   const {
     data,
@@ -135,7 +147,7 @@ export function ClaimFeeModal() {
               <Flex row gap="$gap8" alignItems="center">
                 <CurrencyLogo currencyInfo={currencyInfo0} size={iconSizes.icon24} />
                 <Text variant="body1" color="neutral1">
-                  {token0Fees.currency.symbol}
+                  {currencyInfo0?.currency.symbol}
                 </Text>
               </Flex>
               <Flex row gap="$gap8" alignItems="center">
@@ -153,7 +165,7 @@ export function ClaimFeeModal() {
               <Flex row gap="$gap8" alignItems="center">
                 <CurrencyLogo currencyInfo={currencyInfo1} size={iconSizes.icon24} />
                 <Text variant="body1" color="neutral1">
-                  {token1Fees.currency.symbol}
+                  {currencyInfo1?.currency.symbol}
                 </Text>
               </Flex>
               <Flex row gap="$gap8" alignItems="center">

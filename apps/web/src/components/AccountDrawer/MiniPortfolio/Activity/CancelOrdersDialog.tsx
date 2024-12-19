@@ -10,9 +10,11 @@ import styled, { useTheme } from 'lib/styled-components'
 import { Slash } from 'react-feather'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { AdaptiveWebModal, Flex } from 'ui/src'
+import { Flex } from 'ui/src'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Plural, Trans, t } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
@@ -94,7 +96,7 @@ export function CancelOrdersDialog(
       (cancelState === CancellationState.CANCELLED || cancelState === CancellationState.PENDING_CONFIRMATION) &&
       cancelTxHash
     return (
-      <AdaptiveWebModal isOpen onClose={onCancel} maxHeight="90vh" p={0}>
+      <Modal name={ModalName.CancelOrders} isModalOpen onClose={onCancel} maxHeight="90vh" padding={0}>
         <Container gap="lg">
           <ModalHeader closeModal={onCancel} />
           <LogoContainer>{icon}</LogoContainer>
@@ -116,7 +118,7 @@ export function CancelOrdersDialog(
             )}
           </Row>
         </Container>
-      </AdaptiveWebModal>
+      </Modal>
     )
   } else if (cancelState === CancellationState.REVIEWING_CANCELLATION) {
     return (

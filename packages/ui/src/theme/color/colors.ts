@@ -331,6 +331,8 @@ export const colorsLight = {
   chain_11155111: networkColors.ethereum.light,
   chain_1301: networkColors.unichain.light,
   chain_41454: networkColors.monad.light,
+
+  pinkThemed: colors.pinkLight,
 }
 
 export type ColorKeys = keyof typeof colorsLight
@@ -415,4 +417,6 @@ export const colorsDark = {
   chain_11155111: networkColors.ethereum.dark,
   chain_1301: networkColors.unichain.dark,
   chain_41454: networkColors.monad.dark,
+
+  pinkThemed: colors.pinkDark,
 }

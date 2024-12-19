@@ -43,7 +43,7 @@
     "eslint-plugin-react-native": "4.1.0",
     "eslint-plugin-security": "1.5.0",
     "eslint-plugin-spellcheck": "0.0.20",
-    "eslint-plugin-storybook": "0.11.1",
+    "eslint-plugin-storybook": "0.8.0",
     "eslint-plugin-unused-imports": "2.0.0"
   },
   "peerDependencies": {

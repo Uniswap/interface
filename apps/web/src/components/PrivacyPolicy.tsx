@@ -8,7 +8,7 @@ import { ArrowDown, Info, X } from 'react-feather'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { AdaptiveWebModal } from 'ui/src'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
@@ -89,7 +89,7 @@ export function PrivacyPolicyModal() {
   }, [open])
 
   return (
-    <AdaptiveWebModal isOpen={open} onClose={() => closeModal()} p={0}>
+    <Modal name={ModalName.Legal} isModalOpen={open} onClose={() => closeModal()} padding={0}>
       <AutoColumn gap="md" ref={node as any}>
         <RowBetween padding="1rem 1rem 0.5rem 1rem">
           <ThemedText.DeprecatedMediumHeader>
@@ -101,7 +101,7 @@ export function PrivacyPolicyModal() {
         </RowBetween>
         <PrivacyPolicy />
       </AutoColumn>
-    </AdaptiveWebModal>
+    </Modal>
   )
 }
 

@@ -7,10 +7,12 @@ import { ProviderConnectionError } from 'pages/Swap/Buy/ProviderConnectionError'
 import { ProviderOption } from 'pages/Swap/Buy/ProviderOption'
 import { ContentWrapper } from 'pages/Swap/Buy/shared'
 import { useMemo, useState } from 'react'
-import { AdaptiveWebModal, Flex, Separator, Text } from 'ui/src'
+import { Flex, Separator, Text } from 'ui/src'
 import { TimePast } from 'ui/src/components/icons/TimePast'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FORQuote, FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trans } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { useInterval } from 'utilities/src/time/timing'
@@ -143,10 +145,10 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
 
 export function ChooseProviderModal(props: ChooseProviderModal) {
   return (
-    <AdaptiveWebModal isOpen={props.isOpen} onClose={props.closeModal} width={420}>
+    <Modal name={ModalName.FiatOnramp} isModalOpen={props.isOpen} onClose={props.closeModal} maxWidth={420}>
       <ContentWrapper>
         <ChooseProviderModalContent {...props} />
       </ContentWrapper>
-    </AdaptiveWebModal>
+    </Modal>
   )
 }

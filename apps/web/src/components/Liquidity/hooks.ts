@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { FeeTierData, PositionInfo } from 'components/Liquidity/types'
 import {
   calculateInvertedValues,
@@ -189,23 +189,18 @@ export function useV3OrV4PositionDerivedInfo(positionInfo?: PositionInfo) {
 }
 
 export function useGetRangeDisplay({
-  token0CurrentPrice,
-  token1CurrentPrice,
   priceOrdering,
   pricesInverted,
   feeTier,
   tickLower,
   tickUpper,
 }: {
-  token0CurrentPrice?: Price<Currency, Currency>
-  token1CurrentPrice?: Price<Currency, Currency>
   priceOrdering: PriceOrdering
   feeTier?: string
   tickLower?: string
   tickUpper?: string
   pricesInverted: boolean
 }): {
-  currentPrice?: Price<Currency, Currency>
   minPrice: string
   maxPrice: string
   tokenASymbol?: string
@@ -214,9 +209,7 @@ export function useGetRangeDisplay({
 } {
   const { formatTickPrice } = useFormatter()
 
-  const { currentPrice, priceLower, priceUpper, base, quote } = calculateInvertedValues({
-    token0CurrentPrice,
-    token1CurrentPrice,
+  const { priceLower, priceUpper, base, quote } = calculateInvertedValues({
     ...priceOrdering,
     invert: pricesInverted,
   })
@@ -239,7 +232,6 @@ export function useGetRangeDisplay({
   const tokenBSymbol = base?.symbol
 
   return {
-    currentPrice,
     minPrice,
     maxPrice,
     tokenASymbol,

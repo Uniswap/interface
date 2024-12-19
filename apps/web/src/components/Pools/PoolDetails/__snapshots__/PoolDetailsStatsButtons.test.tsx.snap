@@ -131,37 +131,6 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   border-radius: 4px;
 }
 
-.c1 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c10 {
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-
-.c12 {
-  position: relative;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-}
-
 .c4 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -312,6 +281,37 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   display: grid;
   grid-auto-rows: auto;
   grid-row-gap: 4px;
+}
+
+.c1 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c10 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c12 {
+  position: relative;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
 }
 
 .c28 {
@@ -1129,7 +1129,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                           <h2
                             class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _fontFamily-f-family _color-color _fontWeight-f-weight-me3083741 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _userSelect-auto _whiteSpace-normal _mt-0px _mr-0px _mb-0px _ml-0px"
                             data-disable-theme="true"
-                            id="title-:r2:"
+                            id="title-:r3:"
                             role="heading"
                           />
                         </span>
@@ -1271,7 +1271,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                             <h2
                               class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _fontFamily-f-family _color-color _fontWeight-f-weight-me3083741 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _userSelect-auto _whiteSpace-normal _mt-0px _mr-0px _mb-0px _ml-0px"
                               data-disable-theme="true"
-                              id="title-:r6:"
+                              id="title-:r8:"
                               role="heading"
                             />
                           </span>

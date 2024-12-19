@@ -8,7 +8,7 @@ rulesDirPlugin.RULES_DIR = 'eslint_rules'
 
 module.exports = {
   root: true,
-  extends: ['@uniswap/eslint-config/react'],
+  extends: ['@uniswap/eslint-config/react', 'plugin:storybook/recommended'],
   plugins: ['rulesdir'],
 
   rules: {

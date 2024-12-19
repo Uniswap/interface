@@ -7,6 +7,7 @@ import {
   USDC_ARBITRUM,
   USDC_AVALANCHE,
   USDC_BASE,
+  USDC_BNB,
   USDC_CELO,
   USDC_OPTIMISM,
   USDC_POLYGON,
@@ -15,7 +16,6 @@ import {
   USDC_WORLD_CHAIN,
   USDC_ZKSYNC,
   USDC_ZORA,
-  USDT_BNB,
   USDT_MONAD_TESTNET,
 } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -31,7 +31,7 @@ export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> }
   [UniverseChainId.Avalanche]: CurrencyAmount.fromRawAmount(USDC_AVALANCHE, 10_000e6),
   [UniverseChainId.Base]: CurrencyAmount.fromRawAmount(USDC_BASE, 10_000e6),
   [UniverseChainId.Blast]: CurrencyAmount.fromRawAmount(USDB_BLAST, 10_000e18),
-  [UniverseChainId.Bnb]: CurrencyAmount.fromRawAmount(USDT_BNB, 10_000e18),
+  [UniverseChainId.Bnb]: CurrencyAmount.fromRawAmount(USDC_BNB, 10_000e18),
   [UniverseChainId.Celo]: CurrencyAmount.fromRawAmount(USDC_CELO, 10_000e18),
   [UniverseChainId.MonadTestnet]: CurrencyAmount.fromRawAmount(USDT_MONAD_TESTNET, 10_000e6),
   [UniverseChainId.Optimism]: CurrencyAmount.fromRawAmount(USDC_OPTIMISM, 10_000e6),

@@ -11,8 +11,8 @@ import React, { useEffect } from 'react'
 import { DevSettings } from 'react-native'
 import { useSelector } from 'react-redux'
 import StorybookUIRoot from 'src/../.storybook'
-import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import { renderHeaderBackButton, renderHeaderBackImage } from 'src/app/navigation/components'
+import { navigationRef } from 'src/app/navigation/navigationRef'
 import {
   AppStackParamList,
   AppStackScreenProp,

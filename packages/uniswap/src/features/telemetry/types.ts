@@ -289,7 +289,7 @@ export enum DappRequestCardLoggingName {
 }
 
 export type FORAmountEnteredProperties = ITraceContext & {
-  source: 'chip' | 'textInput'
+  source: 'chip' | 'textInput' | 'changeAsset'
   amountUSD?: number
 }
 
@@ -751,6 +751,12 @@ export type UniverseEventProperties = {
   [UniswapEventName.BalancesReportPerChain]: {
     total_balances_usd_per_chain: Record<string, number>
     wallet: string
+  }
+  [UniswapEventName.ConversionEventSubmitted]: {
+    id: string
+    eventId: string
+    eventName: string
+    platformIdType: string
   }
   [UniswapEventName.TokenSelected]:
     | (ITraceContext &

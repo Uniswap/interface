@@ -10,16 +10,14 @@ import { RowBetween } from 'components/deprecated/Row'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { navSearchInputVisibleSize } from 'hooks/screenSize/useScreenSize'
 import { useAccount } from 'hooks/useAccount'
-import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { atom, useAtom } from 'jotai'
 import styled from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
 import { darken } from 'polished'
 import { RefObject, useCallback, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useAppSelector } from 'state/hooks'
 import { flexRowNoWrap } from 'theme/styles'
-import { Text, useMedia } from 'ui/src'
+import { Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
 import { useExperimentGroupNameWithLoading } from 'uniswap/src/features/gating/hooks'
@@ -154,9 +152,6 @@ export const Web3StatusRef = atom<RefObject<HTMLElement> | undefined>(undefined)
 
 function Web3StatusInner() {
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
-  const isLandingPage = useIsLandingPage()
-  const navigate = useNavigate()
-  const media = useMedia()
   const account = useAccount()
   const ref = useRef<HTMLDivElement>(null)
   const [, setRef] = useAtom(Web3StatusRef)
@@ -168,16 +163,9 @@ function Web3StatusInner() {
 
   const accountDrawer = useAccountDrawer()
   const handleWalletDropdownClick = useCallback(() => {
-    // Hack to avoid adding the wallet connect modals to the landing page
-    // See TopLevelModals for more info.
-    if (isLandingPage && media.sm) {
-      navigate('/swap?connect=true')
-      return
-    }
-
     sendAnalyticsEvent(InterfaceEventName.ACCOUNT_DROPDOWN_BUTTON_CLICKED)
     accountDrawer.toggle()
-  }, [accountDrawer, isLandingPage, media.sm, navigate])
+  }, [accountDrawer])
 
   const { hasPendingActivity, pendingActivityCount } = usePendingActivity()
   const { accountIdentifier, hasUnitag, hasRecent } = useAccountIdentifier()

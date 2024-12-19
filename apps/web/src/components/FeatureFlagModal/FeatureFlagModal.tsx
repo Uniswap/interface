@@ -8,7 +8,7 @@ import { X } from 'react-feather'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { BREAKPOINTS } from 'theme'
-import { AdaptiveWebModal } from 'ui/src'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
 import {
   DynamicConfigKeys,
@@ -19,6 +19,7 @@ import {
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 const Wrapper = styled(Column)`
   padding: 20px 16px;
@@ -203,7 +204,7 @@ export default function FeatureFlagModal() {
   const closeModal = useCloseModal()
 
   return (
-    <AdaptiveWebModal isOpen={open} onClose={closeModal} p={0}>
+    <Modal name={ModalName.FeatureFlags} isModalOpen={open} onClose={closeModal} padding={0}>
       <Wrapper>
         <Header>
           <Row width="100%" justify="space-between">
@@ -292,6 +293,6 @@ export default function FeatureFlagModal() {
         </FlagsColumn>
         <SaveButton onClick={() => window.location.reload()}>Reload</SaveButton>
       </Wrapper>
-    </AdaptiveWebModal>
+    </Modal>
   )
 }

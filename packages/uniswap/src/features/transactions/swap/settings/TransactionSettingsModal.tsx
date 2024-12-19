@@ -31,15 +31,22 @@ const TransactionSettingsModalContent = ({
   onClose,
 }: Omit<TransactionSettingsModalProps, 'isOpen'>): JSX.Element => {
   const { t } = useTranslation()
-  const [SelectedSetting, setSelectedSetting] = useState<SwapSettingConfig | undefined>(initialSelectedSetting)
+  const { customSlippageTolerance } = useTransactionSettingsContext()
+
+  const [SelectedSetting, setSelectedSetting] = useState<SwapSettingConfig>()
 
   const title = SelectedSetting ? SelectedSetting.renderTitle(t) : defaultTitle ?? t('swap.settings.title')
   const screen = SelectedSetting?.Screen ? (
     <SelectedSetting.Screen />
   ) : (
-    <Flex gap="$spacing16" py="$spacing12">
+    <Flex gap="$spacing8" py="$spacing12">
       {settings.map((setting, index) => (
-        <SwapSettingRow key={`swap-setting-${index}`} setSelectedSetting={setSelectedSetting} setting={setting} />
+        <SwapSettingRow
+          key={`swap-setting-${index}`}
+          setSelectedSetting={setSelectedSetting}
+          setting={setting}
+          customSlippageTolerance={customSlippageTolerance}
+        />
       ))}
     </Flex>
   )

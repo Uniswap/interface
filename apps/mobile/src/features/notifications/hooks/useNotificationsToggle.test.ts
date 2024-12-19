@@ -115,9 +115,10 @@ describe('useNotificationToggle', () => {
         result.current.toggle()
         await new Promise(requestAnimationFrame)
       })
-
-      expect(mockDispatch).toHaveBeenCalled()
-      expect(result.current.isEnabled).toBe(false)
+      await waitFor(() => {
+        expect(mockDispatch).toHaveBeenCalled()
+        expect(result.current.isEnabled).toBe(false)
+      })
     })
 
     it('handles OS permission prompt flow successfully', async () => {
@@ -133,9 +134,11 @@ describe('useNotificationToggle', () => {
         await new Promise(requestAnimationFrame)
       })
 
-      expect(mockPermissionPrompt).toHaveBeenCalled()
-      expect(mockDispatch).toHaveBeenCalled()
-      expect(result.current.isEnabled).toBe(true)
+      await waitFor(() => {
+        expect(mockPermissionPrompt).toHaveBeenCalled()
+        expect(mockDispatch).toHaveBeenCalled()
+        expect(result.current.isEnabled).toBe(true)
+      })
     })
 
     it('handles OS permission prompt flow failure', async () => {

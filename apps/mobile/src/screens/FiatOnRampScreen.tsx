@@ -366,6 +366,14 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   })
 
   const onSelectCurrency = (currency: FORCurrencyOrBalance): void => {
+    if (isTokenInputMode) {
+      resetAmount()
+    } else {
+      setSelectedQuote(undefined)
+      // This is done for formatting reasons.  The existing value may change if max decimals of new currency is different
+      onChangeValue(value, 'changeAsset')
+    }
+
     setShowTokenSelector(false)
     if (isSupportedFORCurrency(currency)) {
       setQuoteCurrency(currency)
@@ -427,14 +435,18 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     }
   }, [navigateToSwapFlow, unsupportedCurrency])
 
-  const onPillToggle = (option: string | number): void => {
-    setIsOffRamp(option === RampToggle.SELL)
-
+  const resetAmount = useCallback(() => {
     setValue('')
     setFiatAmount(0)
     setTokenAmount(0)
     valueRef.current = ''
     resetSelection({ start: 0 })
+    setSelectedQuote(undefined)
+  }, [setValue, setFiatAmount, setTokenAmount, valueRef, resetSelection, setSelectedQuote])
+
+  const onPillToggle = (option: string | number): void => {
+    setIsOffRamp(option === RampToggle.SELL)
+    resetAmount()
     setQuoteCurrency(defaultCurrency)
 
     sendAnalyticsEvent(FiatOffRampEventName.FORBuySellToggled, {

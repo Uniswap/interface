@@ -7,6 +7,7 @@ import { FiatOnRampModalState } from 'src/screens/FiatOnRampModalState'
 import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TransactionScreen } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
@@ -34,7 +35,7 @@ export interface ModalsState {
   [ModalName.RemoveWallet]: AppModalState<RemoveWalletModalState>
   [ModalName.RestoreWallet]: AppModalState<undefined>
   [ModalName.Scantastic]: AppModalState<ScantasticModalState>
-  [ModalName.Send]: AppModalState<TransactionState>
+  [ModalName.Send]: AppModalState<TransactionState & { sendScreen: TransactionScreen }>
   [ModalName.Swap]: AppModalState<TransactionState>
   [ModalName.TestnetSwitchModal]: AppModalState<TestnetSwitchModalState>
   [ModalName.UnitagsIntro]: AppModalState<{

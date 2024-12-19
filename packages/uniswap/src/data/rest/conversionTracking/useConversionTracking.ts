@@ -13,6 +13,8 @@ import { useConversionProxy } from 'uniswap/src/data/rest/conversionTracking/use
 import { getExternalConversionLeadsCookie } from 'uniswap/src/data/rest/conversionTracking/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useAccount } from 'wagmi'
 
 const conversionLeadsAtom = atomWithStorage<ConversionLead[]>(CONVERSION_LEADS_STORAGE_KEY, [])
@@ -42,7 +44,7 @@ export function useConversionTracking(): UseConversionTracking {
   const conversionProxy = useConversionProxy()
 
   const trackConversion = useCallback(
-    ({ platformIdType, eventId, eventName }: TrackConversionArgs) => {
+    async ({ platformIdType, eventId, eventName }: TrackConversionArgs) => {
       const lead = conversionLeads.find(({ type }) => type === platformIdType)
 
       // Prevent triggering events under the following conditions:
@@ -64,17 +66,31 @@ export function useConversionTracking(): UseConversionTracking {
 
       const proxyRequest = buildProxyRequest({ lead, address: account.address, eventId, eventName })
 
-      conversionProxy.mutate(proxyRequest, {
-        onSuccess: () => {
-          setConversionLeads((leads: ConversionLead[]) => [
-            ...leads.filter(({ id }) => lead.id !== id),
-            {
-              ...lead,
-              executedEvents: lead.executedEvents.concat([eventId]),
-            },
-          ])
-        },
-      })
+      try {
+        const response = await conversionProxy.mutateAsync(proxyRequest)
+
+        // Prevent success handler if the underlying request is bad
+        if (response.status !== 200) {
+          throw new Error()
+        }
+
+        setConversionLeads((leads: ConversionLead[]) => [
+          ...leads.filter(({ id }) => lead.id !== id),
+          {
+            ...lead,
+            executedEvents: lead.executedEvents.concat([eventId]),
+          },
+        ])
+
+        sendAnalyticsEvent(UniswapEventName.ConversionEventSubmitted, {
+          id: lead.id,
+          eventId,
+          eventName,
+          platformIdType,
+        })
+      } catch (e) {
+        // Note: The request will be retried until it exists in executedEvents
+      }
     },
     // TODO: Investigate why conversionProxy as a dependency causes a rendering loop
     // eslint-disable-next-line react-hooks/exhaustive-deps

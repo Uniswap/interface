@@ -6,6 +6,7 @@ import { useGetPoolTokenPercentage } from 'components/Liquidity/hooks'
 import { parseRestPosition } from 'components/Liquidity/utils'
 import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
 import { ZERO_ADDRESS } from 'constants/misc'
+import { usePositionOwnerV2 } from 'hooks/usePositionOwner'
 import NotFound from 'pages/NotFound'
 import { HeaderButton } from 'pages/Pool/Positions/PositionPage'
 import { TextLoader } from 'pages/Pool/Positions/shared'
@@ -14,6 +15,7 @@ import { ChevronRight } from 'react-feather'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
+import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
 import { Button, Circle, Flex, Main, Shine, Text, styled } from 'ui/src'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
@@ -60,7 +62,17 @@ function RowLoader({ withIcon }: { withIcon?: boolean }) {
   )
 }
 
-export default function V2PositionPage() {
+export default function V2PositionPageWrapper() {
+  const chainId = useChainIdFromUrlParam()
+
+  return (
+    <MultichainContextProvider initialChainId={chainId}>
+      <V2PositionPage />
+    </MultichainContextProvider>
+  )
+}
+
+function V2PositionPage() {
   const { pairAddress } = useParams<{ pairAddress: string }>()
   const chainId = useChainIdFromUrlParam()
   const account = useAccount()
@@ -91,6 +103,8 @@ export default function V2PositionPage() {
   const token0USDValue = useUSDCValue(currency0Amount)
   const token1USDValue = useUSDCValue(currency1Amount)
   const poolTokenPercentage = useGetPoolTokenPercentage(positionInfo)
+  const liquidityTokenAddress = positionInfo?.liquidityToken?.isToken ? positionInfo.liquidityToken.address : null
+  const isOwner = usePositionOwnerV2(account?.address, liquidityTokenAddress, positionInfo?.chainId)
 
   if (!isLoading && !lpRedesignEnabled) {
     return <Navigate to="/pools" replace />
@@ -131,41 +145,43 @@ export default function V2PositionPage() {
         ) : (
           <LiquidityPositionInfo positionInfo={positionInfo} />
         )}
-        <Flex row gap="$gap12" alignItems="center" maxWidth="100%" flexWrap="wrap">
-          <HeaderButton
-            disabled={positionLoading}
-            emphasis="secondary"
-            onPress={() => {
-              navigate('/migrate/v2')
-            }}
-          >
-            <Text variant="buttonLabel2" color="$neutral1">
-              <Trans i18nKey="common.migrate.v3" />
-            </Text>
-          </HeaderButton>
-          <HeaderButton
-            disabled={positionLoading}
-            emphasis="secondary"
-            onPress={() => {
-              dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: positionInfo }))
-            }}
-          >
-            <Text variant="buttonLabel2" color="$neutral1">
-              <Trans i18nKey="common.addLiquidity" />
-            </Text>
-          </HeaderButton>
-          <HeaderButton
-            disabled={positionLoading}
-            emphasis="primary"
-            onPress={() => {
-              dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: positionInfo }))
-            }}
-          >
-            <Text variant="buttonLabel2" color="$surface1">
-              <Trans i18nKey="pool.removeLiquidity" />
-            </Text>
-          </HeaderButton>
-        </Flex>
+        {isOwner && (
+          <Flex row gap="$gap12" alignItems="center" maxWidth="100%" flexWrap="wrap">
+            <HeaderButton
+              disabled={positionLoading}
+              emphasis="secondary"
+              onPress={() => {
+                navigate('/migrate/v2')
+              }}
+            >
+              <Text variant="buttonLabel2" color="$neutral1">
+                <Trans i18nKey="common.migrate.v3" />
+              </Text>
+            </HeaderButton>
+            <HeaderButton
+              disabled={positionLoading}
+              emphasis="secondary"
+              onPress={() => {
+                dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: positionInfo }))
+              }}
+            >
+              <Text variant="buttonLabel2" color="$neutral1">
+                <Trans i18nKey="common.addLiquidity" />
+              </Text>
+            </HeaderButton>
+            <HeaderButton
+              disabled={positionLoading}
+              emphasis="primary"
+              onPress={() => {
+                dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: positionInfo }))
+              }}
+            >
+              <Text variant="buttonLabel2" color="$surface1">
+                <Trans i18nKey="pool.removeLiquidity" />
+              </Text>
+            </HeaderButton>
+          </Flex>
+        )}
         <Flex borderColor="$surface3" borderWidth={1} p="$spacing24" gap="$gap12" borderRadius="$rounded20">
           {positionLoading || !currency0Amount || !currency1Amount ? (
             <Shine>

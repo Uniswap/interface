@@ -31,6 +31,19 @@ const normalizedStories = [
       /^\.(?:(?:^|\/|(?:(?:(?!(?:^|\/)\.).)*?)\/)(?!\.)(?=.)[^/]*?\.stories\.(?:ts|tsx|js|jsx)?)$/
     ),
   },
+  {
+    titlePrefix: "",
+    directory: "../../packages/ui/src",
+    files: "**/*.mdx",
+    importPathMatcher:
+      /^\.(?:(?:^|\/|(?:(?:(?!(?:^|\/)\.).)*?)\/)(?!\.)(?=.)[^/]*?\.mdx)$/,
+    // @ts-ignore
+    req: require.context(
+      "../../../packages/ui/src",
+      true,
+      /^\.(?:(?:^|\/|(?:(?:(?!(?:^|\/)\.).)*?)\/)(?!\.)(?=.)[^/]*?\.mdx)$/
+    ),
+  },
 ];
 
 declare global {

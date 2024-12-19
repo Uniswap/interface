@@ -1,70 +1,60 @@
-import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from 'react'
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { DEFAULT_CUSTOM_DEADLINE } from 'uniswap/src/features/transactions/swap/settings/useDeadlineSettings'
+import { selectTransactionSettings } from 'uniswap/src/features/transactions/settings/selectors'
 import {
-  DEFAULT_PROTOCOL_OPTIONS,
-  FrontendSupportedProtocol,
-} from 'uniswap/src/features/transactions/swap/utils/protocols'
+  setTransactionSettings,
+  TransactionSettingKey,
+  TransactionSettingsState,
+} from 'uniswap/src/features/transactions/settings/slice'
 import { logContextUpdate } from 'utilities/src/logger/contextEnhancer'
 
-export type TransactionSettingsState = {
-  autoSlippageTolerance?: number
-  customSlippageTolerance?: number
-  customDeadline?: number
-  selectedProtocols: FrontendSupportedProtocol[]
-}
-
-type TransactionSettingsContextState = {
+export type TransactionSettingsContextState = {
   updateTransactionSettings: (newState: Partial<TransactionSettingsState>) => void
 } & TransactionSettingsState
-
-export const getDefaultState = ({
-  autoSlippageTolerance,
-}: Partial<TransactionSettingsState>): TransactionSettingsState => ({
-  customDeadline: DEFAULT_CUSTOM_DEADLINE,
-  autoSlippageTolerance,
-  selectedProtocols: DEFAULT_PROTOCOL_OPTIONS,
-})
 
 export const TransactionSettingsContext = createContext<TransactionSettingsContextState | undefined>(undefined)
 
 export function TransactionSettingsContextProvider({
+  settingKey,
   children,
   autoSlippageTolerance,
-}: { children: ReactNode } & Partial<TransactionSettingsState>): JSX.Element {
-  const defaultState = useMemo(() => getDefaultState({ autoSlippageTolerance }), [autoSlippageTolerance])
-  const [transactionSettings, setTransactionSettings] = useState<TransactionSettingsState>(defaultState)
+}: {
+  children: ReactNode
+  settingKey: TransactionSettingKey
+  autoSlippageTolerance?: TransactionSettingsState['autoSlippageTolerance']
+}): JSX.Element {
+  const appDispatch = useDispatch()
+  const transactionSettings = useSelector(selectTransactionSettings(settingKey))
   const datadogEnabled = useFeatureFlag(FeatureFlags.Datadog)
 
   const updateTransactionSettings = useCallback(
-    (newState: Parameters<TransactionSettingsContextState['updateTransactionSettings']>[0]): void => {
-      setTransactionSettings((prevState) => {
-        const updatedState = { ...prevState, ...newState }
-
-        logContextUpdate('TransactionSettingsContext', updatedState, datadogEnabled)
-
-        return updatedState
-      })
+    (newState: Partial<TransactionSettingsState>): void => {
+      appDispatch(setTransactionSettings({ settingKey, ...newState }))
     },
-    [setTransactionSettings, datadogEnabled],
+    [settingKey, appDispatch],
   )
+
+  useEffect(() => {
+    logContextUpdate('TransactionSettingsContext', transactionSettings, datadogEnabled)
+  }, [transactionSettings, datadogEnabled])
+
+  useEffect(() => {
+    updateTransactionSettings({ autoSlippageTolerance })
+  }, [autoSlippageTolerance, updateTransactionSettings])
 
   const state = useMemo<TransactionSettingsContextState>(
     (): TransactionSettingsContextState => ({
-      autoSlippageTolerance: transactionSettings.autoSlippageTolerance,
-      customSlippageTolerance: transactionSettings.customSlippageTolerance,
-      customDeadline: transactionSettings.customDeadline,
-      selectedProtocols: transactionSettings.selectedProtocols,
+      ...transactionSettings,
       updateTransactionSettings,
+      selectedProtocols: transactionSettings.isOnlyV2Allowed
+        ? [ProtocolItems.V2]
+        : transactionSettings.selectedProtocols,
+      isOnlyV2Allowed: transactionSettings.isOnlyV2Allowed,
     }),
-    [
-      transactionSettings.customSlippageTolerance,
-      transactionSettings.customDeadline,
-      transactionSettings.autoSlippageTolerance,
-      transactionSettings.selectedProtocols,
-      updateTransactionSettings,
-    ],
+    [transactionSettings, updateTransactionSettings],
   )
 
   return <TransactionSettingsContext.Provider value={state}>{children}</TransactionSettingsContext.Provider>

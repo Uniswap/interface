@@ -34,6 +34,7 @@ import { SearchHistoryState } from 'uniswap/src/features/search/searchHistorySli
 import { UserSettingsState } from 'uniswap/src/features/settings/slice'
 import { TimingState } from 'uniswap/src/features/timing/slice'
 import { TokensState } from 'uniswap/src/features/tokens/slice/slice'
+import { transactionSettingsReducer } from 'uniswap/src/features/transactions/settings/slice'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
 
 const forAggregatorApi = getFiatOnRampAggregatorApi()
@@ -84,6 +85,7 @@ type ExpectedAppState = CombinedState<{
   readonly timing: TimingState
   readonly tokens: TokensState
   readonly transactions: TransactionsState
+  readonly transactionSettings: ReturnType<typeof transactionSettingsReducer>
   readonly userSettings: UserSettingsState
 }>
 

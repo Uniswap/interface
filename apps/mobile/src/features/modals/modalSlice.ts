@@ -9,6 +9,7 @@ import { TestnetSwitchModalState } from 'src/features/testnetMode/TestnetSwitchM
 import { FiatOnRampModalState } from 'src/screens/FiatOnRampModalState'
 import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TransactionScreen } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getKeys } from 'utilities/src/primitives/objects'
@@ -80,7 +81,12 @@ type WalletConnectModalParams = {
 
 type SwapModalParams = { name: typeof ModalName.Swap; initialState?: TransactionState }
 
-type SendModalParams = { name: typeof ModalName.Send; initialState?: TransactionState }
+type SendModalParams = {
+  name: typeof ModalName.Send
+  initialState?: TransactionState & {
+    sendScreen?: TransactionScreen
+  }
+}
 
 type UnitagsIntroParams = {
   name: typeof ModalName.UnitagsIntro

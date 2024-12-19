@@ -32,30 +32,9 @@ const StyledLink = styled(Link)<{ flex?: string }>`
   `};
 `
 
-const FindPoolTabsText = styled(ThemedText.H1Small)`
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-`
-
 const StyledArrowLeft = styled(ArrowLeft)`
   color: ${({ theme }) => theme.neutral1};
 `
-
-export function FindPoolTabs({ origin }: { origin: string }) {
-  return (
-    <Tabs>
-      <RowBetween style={{ padding: '1rem 1rem 0 1rem', position: 'relative' }}>
-        <Link to={origin}>
-          <StyledArrowLeft />
-        </Link>
-        <FindPoolTabsText>
-          <Trans i18nKey="pool.import.v2" />
-        </FindPoolTabsText>
-      </RowBetween>
-    </Tabs>
-  )
-}
 
 const AddRemoveTitleText = styled(ThemedText.H1Small)<{ $center: boolean }>`
   flex: 1;

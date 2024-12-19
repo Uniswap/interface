@@ -6,7 +6,8 @@ import { X } from 'react-feather'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { ButtonText, ThemedText } from 'theme/components'
-import { AdaptiveWebModal } from 'ui/src'
+import { Modal } from 'uniswap/src/components/modals/Modal'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trans } from 'uniswap/src/i18n'
 
 const Wrapper = styled(Column)`
@@ -37,7 +38,7 @@ export function UkDisclaimerModal() {
   const closeModal = useCloseModal()
 
   return (
-    <AdaptiveWebModal isOpen={isOpen} onClose={closeModal} p={0}>
+    <Modal name={ModalName.UkDisclaimer} isModalOpen={isOpen} onClose={closeModal} padding={0}>
       <Wrapper gap="md">
         <CloseIconWrapper onClick={() => closeModal()}>
           <X size={24} />
@@ -56,6 +57,6 @@ export function UkDisclaimerModal() {
           </StyledThemeButton>
         </ButtonContainer>
       </Wrapper>
-    </AdaptiveWebModal>
+    </Modal>
   )
 }
