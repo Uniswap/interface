@@ -233,7 +233,9 @@ function Token({ chainId, address }: { chainId: ChainId; address: string }) {
   )
   return (
     <TokenRow onClick={handleClick}>
+      {/* <PortfolioLogo currencies={[currency]} chainId={chainId} size={screenIsSmall ? '32px' : '24px'} /> */}
       <PortfolioLogo currencies={[currency, currency]} chainId={chainId} size={screenIsSmall ? '32px' : '24px'} />
+      {/* deneme amaçlı bidaha currency ekledim üst satırda . */}
 
       <Box justify="space-between" gap="16px">
         <Box width="auto" gap="8px" align="center" overflow="hidden">
