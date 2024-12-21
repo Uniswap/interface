@@ -5,7 +5,7 @@ function wait(ms: number): Promise<void> {
 }
 
 async function loadDashboardData() {
-  await wait(1000)
+  await wait(10000)
   return {
     ubePrice: 0.0085,
     ubeMarketCap: 400000,
