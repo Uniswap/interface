@@ -76,7 +76,7 @@ function TableBody<Data extends RowData>({
     return (
       <NoDataFoundTableRow>
         <ThemedText.BodySecondary>
-          <Trans>No data found</Trans>
+          <Trans>No data</Trans>
         </ThemedText.BodySecondary>
       </NoDataFoundTableRow>
     )

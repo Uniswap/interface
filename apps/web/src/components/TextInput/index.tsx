@@ -59,7 +59,8 @@ const TextAreaInput = styled.textarea<{ error?: boolean; fontSize?: string }>`
   }
 
   ::placeholder {
-    color: ${({ theme }) => theme.neutral2};
+    color: ${({ theme }) => theme.neutral3};
+    font-size: 1.25rem;
   }
 `
 
@@ -107,12 +108,14 @@ export const ResizingTextArea = memo(
     onUserInput,
     placeholder,
     fontSize,
+    minHeight = '535px',
   }: {
     className?: string
     value: string
     onUserInput: (value: string) => void
     placeholder: string
     fontSize: string
+    minHeight?: string
   }) => {
     const inputRef = useRef<HTMLTextAreaElement>(document.createElement('textarea'))
 
@@ -127,7 +130,7 @@ export const ResizingTextArea = memo(
 
     return (
       <TextAreaInput
-        style={{ height: 'auto', minHeight: '535px' }}
+        style={{ height: 'auto', minHeight }}
         className={className}
         autoComplete="off"
         autoCorrect="off"

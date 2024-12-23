@@ -57,9 +57,10 @@ const ActionDropdown = styled(ButtonDropdown)`
 `
 
 const ActionSelectorFlex = styled.div`
-  margin-top: 10px;
   display: flex;
   flex-flow: column nowrap;
+  z-index: 1;
+  width: 100%;
   border-radius: 20px;
   border: 1px solid ${({ theme }) => theme.surface3};
   background-color: ${({ theme }) => theme.surface1};
