@@ -32,7 +32,6 @@ export default function CurrencySearchModal({
   onCurrencySelect,
   selectedCurrency,
   otherSelectedCurrency,
-  showCommonBases = false,
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.manage)
   const lastOpen = useLast(isOpen)
@@ -73,7 +72,6 @@ export default function CurrencySearchModal({
           onCurrencySelect={handleCurrencySelect}
           selectedCurrency={selectedCurrency}
           otherSelectedCurrency={otherSelectedCurrency}
-          showCommonBases={showCommonBases}
           showImportView={() => setModalView(CurrencyModalView.importToken)}
           setImportToken={setImportToken}
           showManageView={() => setModalView(CurrencyModalView.manage)}
