@@ -23,7 +23,12 @@
   ],
   "rules": {
     "@typescript-eslint/explicit-function-return-type": "off",
-    "prettier/prettier": "error",
+    "prettier/prettier": [
+    "error",
+    {
+      "endOfLine": "auto"
+    }
+  ],
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/ban-ts-ignore": "off",
