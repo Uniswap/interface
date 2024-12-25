@@ -26,7 +26,7 @@ export const NETWORK_URLS: { [key in SupportedChainId]: string } = {
   [SupportedChainId.ROPSTEN]: `https://ropsten.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.GOERLI]: `https://goerli.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.KOVAN]: `https://kovan.infura.io/v3/${INFURA_KEY}`,
-  [SupportedChainId.POLYGON_AMOY]: `https://polygon-amoy.drpc.org`,
+  [SupportedChainId.POLYGON_AMOY]: 'https://rpc-amoy.polygon.technology',
 }
 
 const SUPPORTED_CHAIN_IDS = [
@@ -40,7 +40,7 @@ const SUPPORTED_CHAIN_IDS = [
 
 export const network = new NetworkConnector({
   urls: NETWORK_URLS,
-  defaultChainId: ChainId.MAINNET,
+  defaultChainId: ChainId.POLYGON_AMOY,
 })
 
 let networkLibrary: Web3Provider | undefined
