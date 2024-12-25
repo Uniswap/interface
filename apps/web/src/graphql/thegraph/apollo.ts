@@ -5,8 +5,7 @@ import store from '../../state/index'
 
 const CHAIN_SUBGRAPH_URL: Record<number, string> = {
   [ChainId.MAINNET]: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3?source=uniswap',
-  [ChainId.CELO]:
-    'https://gateway-arbitrum.network.thegraph.com/api/4271ef6e8196c6631ad397c7be19082a/subgraphs/id/HsmR9eEf8v77bGBgpHMNbLh36Z1kkeMc654YWDepNcNf',
+  [ChainId.CELO]: 'https://interface-gateway.ubeswap.org/v1/v3-subgraph-proxy',
 }
 
 const httpLink = new HttpLink({ uri: CHAIN_SUBGRAPH_URL[ChainId.CELO] })
