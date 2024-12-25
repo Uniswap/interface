@@ -1,6 +1,25 @@
 // a list of tokens by chain
 import { ChainId, Token, WETH9 } from '../libs/sdk-core'
-import { AMPL, DAI, FEI, FRAX, FXS, MIR, renBTC, TRIBE, UMA, UNI, USDC, USDT, UST, WBTC } from './tokens'
+import {
+  AMPL,
+  DAI,
+  FEI,
+  FRAX,
+  FXS,
+  MIR,
+  renBTC,
+  TRIBE,
+  UMA,
+  UNI,
+  USDC,
+  USDT,
+  UST,
+  WBTC,
+  METALAMP,
+  USDT_POLYGON_AMOY,
+  USDC_POLYGON_AMOY,
+  WBTC_POLYGON_AMOY,
+} from './tokens'
 
 type ChainTokenList = {
   readonly [chainId in ChainId]: Token[]
@@ -64,6 +83,7 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: Partial<ChainTokenList> = {
   [ChainId.MAINNET]: [DAI, USDC, USDT, WBTC],
+  [ChainId.POLYGON_AMOY]: [METALAMP, USDT_POLYGON_AMOY, USDC_POLYGON_AMOY, WBTC_POLYGON_AMOY],
 }
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {

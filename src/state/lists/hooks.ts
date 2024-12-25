@@ -1,4 +1,4 @@
-import DEFAULT_TOKEN_LIST from '@uniswap/default-token-list'
+import DEFAULT_TOKEN_LIST from '../../constants/tokenLists/uniswap-default.tokenlist.json'
 import { ChainId } from '../../libs/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
 import { useMemo } from 'react'

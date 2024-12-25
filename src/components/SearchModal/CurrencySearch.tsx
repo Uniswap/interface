@@ -1,4 +1,4 @@
-import { Currency, ETHER, Token } from '../../libs/sdk-core'
+import { Currency, Token } from '../../libs/sdk-core'
 import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
@@ -106,14 +106,6 @@ export function CurrencySearch({
 
   const filteredSortedTokens = useSortedTokensByQuery(sortedTokens, debouncedQuery)
 
-  const filteredSortedTokensWithETH: Currency[] = useMemo(() => {
-    const s = debouncedQuery.toLowerCase().trim()
-    if (s === '' || s === 'e' || s === 'et' || s === 'eth') {
-      return [ETHER, ...filteredSortedTokens]
-    }
-    return filteredSortedTokens
-  }, [debouncedQuery, filteredSortedTokens])
-
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
       onCurrencySelect(currency)
@@ -139,20 +131,17 @@ export function CurrencySearch({
   const handleEnter = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
-        const s = debouncedQuery.toLowerCase().trim()
-        if (s === 'eth') {
-          handleCurrencySelect(ETHER)
-        } else if (filteredSortedTokensWithETH.length > 0) {
+        if (filteredSortedTokens.length > 0) {
           if (
-            filteredSortedTokensWithETH[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
-            filteredSortedTokensWithETH.length === 1
+            filteredSortedTokens[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
+            filteredSortedTokens.length === 1
           ) {
-            handleCurrencySelect(filteredSortedTokensWithETH[0])
+            handleCurrencySelect(filteredSortedTokens[0])
           }
         }
       }
     },
-    [filteredSortedTokensWithETH, handleCurrencySelect, debouncedQuery]
+    [filteredSortedTokens, handleCurrencySelect, debouncedQuery]
   )
 
   // menu ui
@@ -201,7 +190,7 @@ export function CurrencySearch({
             {({ height }) => (
               <CurrencyList
                 height={height}
-                currencies={filteredSortedTokensWithETH}
+                currencies={filteredSortedTokens}
                 otherListTokens={filteredInactiveTokens}
                 onCurrencySelect={handleCurrencySelect}
                 otherCurrency={otherSelectedCurrency}

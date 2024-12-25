@@ -253,8 +253,8 @@ export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
   let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency)
   let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency)
   if (inputCurrency === '' && outputCurrency === '') {
-    // default to ETH input
-    inputCurrency = 'ETH'
+    // default to METALAMP input
+    inputCurrency = '0x9d88cEdB5E1E7B09Df99e70580Fd36253Cd0690D'
   } else if (inputCurrency === outputCurrency) {
     // clear output if identical
     outputCurrency = ''
