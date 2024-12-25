@@ -51,18 +51,18 @@
     "@types/wcag-contrast": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^4.1.0",
     "@typescript-eslint/parser": "^4.1.0",
-    "@uniswap/default-token-list": "^2.1.0",
+    "@uniswap/default-token-list": "^12.15.0",
     "@uniswap/governance": "^1.0.2",
     "@uniswap/liquidity-staker": "^1.0.2",
     "@uniswap/merkle-distributor": "1.0.1",
-    "@uniswap/sdk-core": "^3.0.1",
-    "@uniswap/token-lists": "^1.0.0-beta.27",
-    "@uniswap/v2-core": "1.0.0",
+    "@uniswap/sdk-core": "6.1.0",
+    "@uniswap/token-lists": "^1.0.0-beta.34",
+    "@uniswap/v2-core": "^1.0.1",
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
-    "@uniswap/v2-sdk": "^3.0.1",
-    "@uniswap/v3-core": "1.0.0",
-    "@uniswap/v3-periphery": "^1.1.1",
-    "@uniswap/v3-sdk": "^3.7.1",
+    "@uniswap/v2-sdk": "^4.4.1",
+    "@uniswap/v3-core": "^1.0.1",
+    "@uniswap/v3-periphery": "^1.4.4",
+    "@uniswap/v3-sdk": "^3.13.1",
     "@web3-react/core": "^6.0.9",
     "@web3-react/fortmatic-connector": "^6.0.9",
     "@web3-react/injected-connector": "^6.0.7",
@@ -145,7 +145,8 @@
     "test": "react-scripts test --env=./custom-test-env.js",
     "test:e2e": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run --record'",
     "bundle": "microbundle --tsconfig tsconfig.lib.json src/lib/index.tsx --format esm,cjs",
-    "cosmos": "open http://localhost:5000 && cross-env FAST_REFRESH=false cosmos"
+    "cosmos": "open http://localhost:5000 && cross-env FAST_REFRESH=false cosmos",
+    "lint": "eslint ./"
   },
   "eslintConfig": {
     "extends": "react-app",
@@ -173,6 +174,7 @@
     "@uauth/web3-react": "^2.2.0",
     "framer-motion": "4.1.17",
     "react-toastify": "^8.2.0",
-    "web3-utils": "^1.7.1"
+    "web3-utils": "^1.7.1",
+    "yarn": "^1.22.22"
   }
 }

@@ -6,6 +6,7 @@ import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build
 import { abi as IUniswapV2PairABI } from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import { abi as IUniswapV2Router02ABI } from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
 import { abi as QuoterABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/Quoter.sol/Quoter.json'
+import { abi as QuoterV2ABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/QuoterV2.sol/QuoterV2.json'
 import { abi as MulticallABI } from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import { abi as NFTPositionManagerABI } from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import ARGENT_WALLET_DETECTOR_ABI from 'abis/argent-wallet-detector.json'
@@ -185,8 +186,8 @@ export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean):
   )
 }
 
-export function useV3Quoter() {
-  return useContract<Quoter>(QUOTER_ADDRESSES, QuoterABI)
+export function useV3Quoter(chainId?: number) {
+  return useContract<Quoter>(QUOTER_ADDRESSES, chainId && chainId === 8453 ? QuoterV2ABI : QuoterABI)
 }
 
 export function useLimitOrderManager(): Contract | null {

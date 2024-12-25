@@ -15,6 +15,7 @@ const QUOTE_GAS_OVERRIDES: { [chainId: number]: number } = {
   [SupportedChainId.OPTIMISTIC_KOVAN]: 6_000_000,
   [SupportedChainId.ARBITRUM_ONE]: 25_000_000,
   [SupportedChainId.ARBITRUM_RINKEBY]: 25_000_000,
+  [SupportedChainId.BASE]: 560_000_000,
 }
 
 const DEFAULT_GAS_QUOTE = 2_000_000
@@ -44,12 +45,18 @@ export function useClientSideV3Trade<TTradeType extends TradeType>(
   )
   const { routes, loading: routesLoading } = useAllV3Routes(currencyIn, currencyOut, maxHops)
 
-  const quoter = useV3Quoter()
   const { chainId } = useActiveWeb3React()
+  const quoter = useV3Quoter(chainId)
+
   const quotesResults = useSingleContractWithCallData(
     quoter,
     amountSpecified
-      ? routes.map((route) => SwapQuoter.quoteCallParameters(route, amountSpecified, tradeType).calldata)
+      ? routes.map(
+          (route) =>
+            SwapQuoter.quoteCallParameters(route, amountSpecified, tradeType, {
+              useQuoterV2: chainId === SupportedChainId.BASE,
+            }).calldata
+        )
       : [],
     {
       gasRequired: chainId ? QUOTE_GAS_OVERRIDES[chainId] ?? DEFAULT_GAS_QUOTE : undefined,

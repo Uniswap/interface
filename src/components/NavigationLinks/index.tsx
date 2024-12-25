@@ -156,20 +156,11 @@ export default function NavigationLinks() {
   return (
     <NavFrame>
       <NavLinks>
-        {chainId !== 8453 ? (
-          <StyledNavLink id={`swap-nav-link`} to={'/limitorder'}>
-            <Text fontSize={16} fontWeight={400}>
-              <Trans>Limit/FELO</Trans>
-            </Text>
-          </StyledNavLink>
-        ) : (
-          <Text fontSize={16} fontWeight={400} alt="Coming Soon" style={{ color: '#696969' }}>
-            <Trans>
-              {' '}
-              Limit/FELO <sub>Soon</sub>
-            </Trans>
+        <StyledNavLink id={`swap-nav-link`} to={'/limitorder'}>
+          <Text fontSize={16} fontWeight={400}>
+            <Trans>Limit/FELO</Trans>
           </Text>
-        )}
+        </StyledNavLink>
         <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
           <Text fontSize={16} fontWeight={400}>
             <Trans>Swap</Trans>

@@ -104,18 +104,10 @@ export default function App() {
                 path="/balance/:action/:currencyIdA?/:currencyIdB?/:feeAmount?"
                 component={RedirectDuplicateTokenIds}
               />
-              <Route
-                exact
-                path="/limitorder"
-                component={chainId !== SupportedChainId.BASE ? LimitOrder : RedirectPathToSwapOnly}
-              />
+              <Route exact path="/limitorder" component={LimitOrder} />
               <Route exact strict path="/limitorder/:tokenId" component={PositionPage} />
               <Route exact path="/swap" component={Market} />
-              {showFallbackRoute && (
-                <Route
-                  component={chainId !== SupportedChainId.BASE ? RedirectPathToLimitOrderOnly : RedirectPathToSwapOnly}
-                />
-              )}
+              {showFallbackRoute && <Route component={RedirectPathToLimitOrderOnly} />}
             </BodyWrapper>
           </AppWrapper>
         </Switch>

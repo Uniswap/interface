@@ -237,7 +237,7 @@ export const KROM: { [chainId: number]: Token } = {
     'KROM',
     'Kromatika'
   ),
-  [SupportedChainId.BASE]: new Token( // todo*: edit this when KROM is deployed on BASE
+  [SupportedChainId.BASE]: new Token(
     SupportedChainId.BASE,
     KROM_TOKEN_ADDRESSES[SupportedChainId.BASE],
     18,
@@ -378,6 +378,21 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
     'Wrapped Ether'
   ),
 }
+
+export const ARB_ARBITRUM_ONE = new Token(
+  SupportedChainId.ARBITRUM_ONE,
+  '0x912CE59144191C1204E64559FE8253a0e49E6548',
+  18,
+  'ARB',
+  'Arbitrum'
+)
+export const OP_OPTIMISM = new Token(
+  SupportedChainId.OPTIMISM,
+  '0x4200000000000000000000000000000000000042',
+  18,
+  'OP',
+  'Optimism'
+)
 
 function isMatic(chainId: number): chainId is SupportedChainId.POLYGON | SupportedChainId.POLYGON_MUMBAI {
   return chainId === SupportedChainId.POLYGON_MUMBAI || chainId === SupportedChainId.POLYGON
