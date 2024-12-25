@@ -250,7 +250,7 @@ export function EarnerTokenRow({ poolData }: { poolData: PoolData }) {
             <TokenPrice>
               {formatNumber({
                 input: poolData.apr,
-                type: NumberType.FiatTokenStats,
+                type: NumberType.TokenNonTx,
               })}
               % APR
             </TokenPrice>
@@ -271,7 +271,7 @@ export function EarnerTokenRow({ poolData }: { poolData: PoolData }) {
           <TokenPrice>
             {formatNumber({
               input: poolData.apr,
-              type: NumberType.FiatTokenStats,
+              type: NumberType.TokenNonTx,
             })}
             % APR
           </TokenPrice>

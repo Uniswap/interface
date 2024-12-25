@@ -25,17 +25,17 @@ const Container = motion(styled(Box)<ValuePropCardProps & BoxProps>`
   border-radius: 32px;
   width: 100%;
   cursor: pointer;
-  height: ${(props) => props.height || '409px'};
+  height: ${(props) => props.height || '340px'};
   background-color: ${(props) => (props.isDarkMode ? props.backgroundColor?.dark : props.backgroundColor?.light)};
   overflow: hidden;
   text-decoration: none;
   @media (max-width: 1024px) {
-    height: ${(props) => props.height || '366px'};
-    min-height: 340px;
+    height: ${(props) => props.height || '326px'};
+    min-height: 320px;
   }
   @media (max-width: 768px) {
-    height: auto;
-    min-height: 340px;
+    height: 300px;
+    min-height: 300px;
   }
 `)
 

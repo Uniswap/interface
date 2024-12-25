@@ -60,18 +60,18 @@ const LogoContainer = styled.div`
   gap: 12px;
 
   img {
-    width: 54px;
-    height: 40px;
-    border-radius: 24px;
+    width: 64px;
+    // height: 40px;
+    border-radius: 50%;
 
     @media (max-width: 768px) {
-      width: 40px;
-      height: 30px;
+      width: 48px;
+      // height: 30px;
     }
 
     @media (max-width: 480px) {
-      width: 32px;
-      height: 24px;
+      width: 48px;
+      // height: 24px;
     }
   }
 `
@@ -230,15 +230,19 @@ function UbeStats() {
         width: '100%',
         marginBottom: '32px',
         fontSize: '24px',
+        opacity: 0.8,
       }}
     >
-      <div style={{ marginBottom: '10px' }}>
-        UBE Price: {formatNumber({ input: data?.ubePrice ?? 0, type: NumberType.FiatTokenPrice })}
+      <div style={{ marginBottom: '10px', display: 'flex', justifyContent: 'space-between' }}>
+        <div>UBE Price:</div> <div>{formatNumber({ input: data?.ubePrice ?? 0, type: NumberType.FiatTokenPrice })}</div>
       </div>
-      <div style={{ marginBottom: '10px' }}>
-        Market Cap: {formatNumber({ input: data?.ubeMarketCap ?? 0, type: NumberType.FiatTokenStats })}
+      <div style={{ marginBottom: '10px', display: 'flex', justifyContent: 'space-between' }}>
+        <div>Market Cap:</div>{' '}
+        <div>{formatNumber({ input: data?.ubeMarketCap ?? 0, type: NumberType.FiatTokenStats })}</div>
       </div>
-      <div>FDV: {formatNumber({ input: data?.UbeFdv ?? 0, type: NumberType.FiatTokenStats })}</div>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div>FDV:</div> <div>{formatNumber({ input: data?.UbeFdv ?? 0, type: NumberType.FiatTokenStats })}</div>
+      </div>
     </Body1>
   )
 }
@@ -323,7 +327,7 @@ export function Stats() {
                 <H2>
                   <LogoContainer>
                     <img src="/images/192x192_App_Icon.png" alt="ubeswap" />
-                    <Trans style={{ marginBottom: '50px' }}> UBESWAP</Trans>
+                    <Trans style={{ marginBottom: '50px' }}> Ubeswap</Trans>
                   </LogoContainer>
                 </H2>
                 <Box bottom="0" position="absolute" direction="column" maxWidth="480px" gap="24px">
@@ -346,7 +350,7 @@ export function Stats() {
           <H2>
             <LogoContainer>
               <img src="/images/192x192_App_Icon.png" alt="ubeswap" />
-              <Trans style={{ marginBottom: '50px' }}> UBESWAP</Trans>
+              <Trans style={{ marginBottom: '50px' }}> Ubeswap</Trans>
             </LogoContainer>
           </H2>
           <UbeStats />
