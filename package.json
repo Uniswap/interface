@@ -91,7 +91,6 @@
     "rebass": "^4.0.7",
     "redux-localstorage-simple": "^2.3.1",
     "serve": "^11.3.2",
-    "start-server-and-test": "^1.11.0",
     "styled-components": "^4.2.0",
     "styled-system": "^5.1.5",
     "typechain": "^5.0.0",
@@ -115,10 +114,8 @@
     "compile-v3-core-contract-types": "npx typechain --target ethers-v5 --out-dir src/types/v3 \"./node_modules/@uniswap/v3-core/artifacts/contracts/**/*.json\"",
     "compile-v3-periphery-contract-types": "npx typechain --target ethers-v5 --out-dir src/types/v3 \"./node_modules/@uniswap/v3-periphery/artifacts/contracts/**/*.json\"",
     "build": "yarn compile-contract-types && react-scripts build",
-    "integration-test": "start-server-and-test 'serve build -l 3000' http://localhost:3000 'cypress run'",
     "postinstall": "yarn compile-contract-types",
     "start": "yarn compile-contract-types && react-scripts start",
-    "storybook": "start-storybook -p 6006",
     "test": "react-scripts test --env=jsdom"
   },
   "eslintConfig": {
