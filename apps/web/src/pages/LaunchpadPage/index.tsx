@@ -17,13 +17,15 @@ import { Trans } from 'i18n'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { Checkbox } from 'nft/components/layout/Checkbox'
 import { getIncentiveIdsByPool } from 'pages/Earn/data/v3-incentive-list'
+import { Discord, Github, Twitter } from 'pages/Landing/components/Icons'
+import { Wiggle } from 'pages/Landing/components/animations'
 import { transparentize } from 'polished'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { AlertTriangle, Calendar, Inbox, Info } from 'react-feather'
+import { AlertTriangle, Calendar, Globe, Inbox, Info, Youtube } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
-import { ThemedText } from 'theme/components'
+import { ExternalLink, ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
 import LaunchpadInfoTable from './LaunchpadInfoTable'
 
@@ -129,7 +131,7 @@ const Divider = styled.div`
 const VerticalDivider = styled.div`
   box-sizing: content-box;
   width: 1px;
-  background-color: ${({ theme }) => theme.surface3};
+  background-color: ${({ theme }) => theme.neutral2};
 `
 
 const Circle = styled.div`
@@ -140,6 +142,17 @@ const Circle = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`
+
+const SocialIcon = styled(Wiggle)`
+  flex: 0;
+  fill: ${(props) => props.theme.neutral1};
+  cursor: pointer;
+  transition: fill;
+  transition-duration: 0.2s;
+  &:hover {
+    fill: ${(props) => props.$hoverColor};
+  }
 `
 
 function InfoBox({ message, desc }: { message?: string; desc?: string }) {
@@ -211,6 +224,19 @@ const StyledBedge = styled.div<{ variant: 'success' | 'warning' | 'error' | 'inf
     margin-left: 0.4rem;
     margin-right: 0.1rem;
   `};
+`
+const WebsiteLink = styled.div`
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  background-color: ${({ theme }) => transparentize(0.8, theme.accent3)};
+  border: 1px solid ${({ theme }) => theme.accent3};
+  border-radius: 14px;
+  font-size: 1rem;
+  padding: 0 10px;
+  gap: 6px;
+  font-weight: 500;
+  color: ${({ theme }) => theme.accent3};
 `
 
 export const TwoColumnAuto = styled(Row)<{ gap?: string; justify?: string }>`
@@ -394,7 +420,7 @@ export default function FarmV3() {
                     />
                   </Row>
                 </Column>
-                <Column flex="3">
+                <Column flex="4">
                   <ResponsiveRow align="stretch" gap="md">
                     <ColumnBetween flex="1">
                       <Row gap="10px">
@@ -462,8 +488,37 @@ export default function FarmV3() {
               </ResponsiveRow>
             </DarkGrayCard>
 
-            <ResponsiveRow align="flex-start" gap="md">
+            <ResponsiveRow align="stretch" gap="md">
               <DarkGrayCard flex="1">
+                <Column gap="16px">
+                  <ThemedText.MediumHeader>Links</ThemedText.MediumHeader>
+                  <Row marginBottom="22px" gap="8px" align="center">
+                    <WebsiteLink style={{ cursor: 'pointer' }}>
+                      <Globe size={12} />
+                      Website
+                    </WebsiteLink>
+                    <SocialIcon $hoverColor="#00C32B">
+                      <ExternalLink href="https://github.com/Ubeswap">
+                        <Github size="32px" fill="inherit" />
+                      </ExternalLink>
+                    </SocialIcon>
+                    <SocialIcon $hoverColor="#20BAFF">
+                      <ExternalLink href="https://twitter.com/Ubeswap">
+                        <Twitter size="32px" fill="inherit" />
+                      </ExternalLink>
+                    </SocialIcon>
+                    <SocialIcon $hoverColor="#5F51FF">
+                      <ExternalLink href="https://discord.com/invite/zZkUXCMPGP">
+                        <Discord size="32px" fill="inherit" />
+                      </ExternalLink>
+                    </SocialIcon>
+                    <SocialIcon $hoverColor="#5F51FF">
+                      <ExternalLink href="https://discord.com/invite/zZkUXCMPGP">
+                        <Youtube size="32px" fill="inherit" />
+                      </ExternalLink>
+                    </SocialIcon>
+                  </Row>
+                </Column>
                 <Column gap="16px">
                   <ThemedText.MediumHeader>Timeline</ThemedText.MediumHeader>
                   <Column>
