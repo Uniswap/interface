@@ -1,12 +1,12 @@
 import { ChainId } from '../libs/sdk-core'
 
-const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
-  1: '',
-  3: 'ropsten.',
-  4: 'rinkeby.',
-  5: 'goerli.',
-  42: 'kovan.',
-  80002: 'polygon-amoy.',
+const CHAIN_ID_TO_PREFIX: { [chainId in ChainId]: string } = {
+  1: 'https://etherscan.io',
+  3: 'https://ropsten.etherscan.io',
+  4: 'https://rinkeby.etherscan.io',
+  5: 'https://goerli.etherscan.io',
+  42: 'https://kovan.etherscan.io',
+  80002: 'https://amoy.polygonscan.com',
 }
 
 export enum ExplorerDataType {
@@ -23,21 +23,14 @@ export enum ExplorerDataType {
  * @param type the type of the data
  */
 export function getExplorerLink(chainId: ChainId, data: string, type: ExplorerDataType): string {
-  const prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}etherscan.io`
-
   switch (type) {
-    case ExplorerDataType.TRANSACTION: {
-      return `${prefix}/tx/${data}`
-    }
-    case ExplorerDataType.TOKEN: {
-      return `${prefix}/token/${data}`
-    }
-    case ExplorerDataType.BLOCK: {
-      return `${prefix}/block/${data}`
-    }
-    case ExplorerDataType.ADDRESS:
-    default: {
-      return `${prefix}/address/${data}`
-    }
+    case ExplorerDataType.TRANSACTION:
+      return `${CHAIN_ID_TO_PREFIX[chainId]}/tx/${data}`
+    case ExplorerDataType.TOKEN:
+      return `${CHAIN_ID_TO_PREFIX[chainId]}/token/${data}`
+    case ExplorerDataType.BLOCK:
+      return `${CHAIN_ID_TO_PREFIX[chainId]}/block/${data}`
+    default:
+      return `${CHAIN_ID_TO_PREFIX[chainId]}/address/${data}`
   }
 }
