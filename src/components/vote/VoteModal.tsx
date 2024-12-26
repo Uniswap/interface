@@ -137,7 +137,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, support }: Vo
                 href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}
                 style={{ marginLeft: '4px' }}
               >
-                <TYPE.subHeader>View transaction on Etherscan</TYPE.subHeader>
+                <TYPE.subHeader>View transaction on Block explorer</TYPE.subHeader>
               </ExternalLink>
             )}
           </AutoColumn>

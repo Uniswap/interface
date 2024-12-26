@@ -115,7 +115,7 @@ export function TransactionSubmittedContent({
           {chainId && hash && (
             <ExternalLink href={getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)}>
               <Text fontWeight={500} fontSize={14} color={theme.primary1}>
-                View on Etherscan
+                View on Block explorer
               </Text>
             </ExternalLink>
           )}

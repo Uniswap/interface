@@ -202,7 +202,7 @@ export default function ClaimModal() {
                 href={getExplorerLink(chainId, claimTxn?.hash, ExplorerDataType.TRANSACTION)}
                 style={{ zIndex: 99 }}
               >
-                View transaction on Etherscan
+                View transaction on Block explorer
               </ExternalLink>
             )}
           </AutoColumn>

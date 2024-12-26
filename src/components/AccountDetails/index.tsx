@@ -357,7 +357,7 @@ export default function AccountDetails({
                             href={chainId && getExplorerLink(chainId, ENSName, ExplorerDataType.ADDRESS)}
                           >
                             <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
+                            <span style={{ marginLeft: '4px' }}>View on Block explorer</span>
                           </AddressLink>
                         )}
                       </div>
@@ -379,7 +379,7 @@ export default function AccountDetails({
                             href={getExplorerLink(chainId, account, ExplorerDataType.ADDRESS)}
                           >
                             <LinkIcon size={16} />
-                            <span style={{ marginLeft: '4px' }}>View on Etherscan</span>
+                            <span style={{ marginLeft: '4px' }}>View on Block explorer</span>
                           </AddressLink>
                         )}
                       </div>
