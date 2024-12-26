@@ -18,6 +18,7 @@ module.exports = {
         semi: false,
         singleQuote: true,
         printWidth: 120,
+        endOfLine: 'auto',
       },
     ],
     // 'import/no-unused-modules': ['error', { unusedExports: true }],

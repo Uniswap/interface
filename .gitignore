@@ -52,3 +52,9 @@ packages/uniswap/src/i18n/locales/@types/resources.d.ts
 
 # Vercel
 .vercel
+
+# Vscode config directory
+.vscode
+
+# Notes
+notes.md
