@@ -27,7 +27,7 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
     }
 
     // return some fake price data for non-mainnet
-    if (chainId !== ChainId.MAINNET) {
+    if (chainId !== ChainId.MAINNET && chainId !== ChainId.POLYGON_AMOY) {
       const fakeUSDC = new Token(chainId, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'fUSDC', 'Fake USDC')
       return new Price(
         currency,

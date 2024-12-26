@@ -56,6 +56,13 @@ const WETH_ONLY: ChainTokenList = {
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, WBTC],
+  [ChainId.POLYGON_AMOY]: [
+    ...WETH_ONLY[ChainId.POLYGON_AMOY],
+    METALAMP,
+    USDC_POLYGON_AMOY,
+    USDT_POLYGON_AMOY,
+    WBTC_POLYGON_AMOY,
+  ],
 }
 export const ADDITIONAL_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: Token[] } } = {
   [ChainId.MAINNET]: {
