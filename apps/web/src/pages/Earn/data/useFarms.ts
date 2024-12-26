@@ -111,23 +111,28 @@ export function useInactiveFarms(sortState: FarmTableSortState, chainId?: ChainI
         .map((farm) => {
           const token0Address = isAddress(farm.token0Address)
           const token1Address = isAddress(farm.token1Address)
-          if (token0Address && tokens[token0Address] && token1Address && tokens[token1Address]) {
-            return {
-              hash: farm.stakingAddress,
-              farmAddress: farm.stakingAddress,
-              poolAddress: '',
-              token0: tokens[token0Address],
-              token1: tokens[token1Address],
-              token0Amount: new Fraction(0),
-              token1Amount: new Fraction(0),
-              tvl: farm.tvlUSD ? Number(formatEther(farm.tvlUSD)) : 0,
-              apr: new Percent(0),
-              feeTier: V2_BIPS,
-              protocolVersion: 'V2',
-              incentiveIds: [],
-            } as TableFarm
+          if (token0Address && token1Address) {
+            if (tokens[token0Address] && tokens[token1Address]) {
+              return {
+                hash: farm.stakingAddress,
+                farmAddress: farm.stakingAddress,
+                poolAddress: '',
+                token0: tokens[token0Address],
+                token1: tokens[token1Address],
+                token0Amount: new Fraction(0),
+                token1Amount: new Fraction(0),
+                tvl: farm.tvlUSD ? Number(formatEther(farm.tvlUSD)) : 0,
+                apr: new Percent(0),
+                feeTier: V2_BIPS,
+                protocolVersion: 'V2',
+                incentiveIds: [],
+              } as TableFarm
+            } else {
+              console.log(`token not found token0=${token0Address} token1=${token1Address}`)
+            }
+          } else {
+            console.log(`no token address token0=${token0Address} token1=${token1Address}`)
           }
-          console.error('this should not happen')
           return []
         })
         .flat() ?? []
