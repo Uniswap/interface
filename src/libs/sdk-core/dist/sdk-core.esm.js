@@ -102,10 +102,10 @@ var Ether = /*#__PURE__*/ (function (_BaseCurrency) {
    * Only called once by this class
    * @protected
    */
-  function Ether() {
+  function Ether(symbol = 'ETH', name = 'Ether') {
     var _this
 
-    _this = _BaseCurrency.call(this, 18, 'ETH', 'Ether') || this
+    _this = _BaseCurrency.call(this, 18, symbol, name) || this
     _this.isEther = true
     _this.isToken = false
     return _this
