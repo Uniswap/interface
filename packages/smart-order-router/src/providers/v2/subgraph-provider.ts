@@ -37,8 +37,7 @@ type RawV2SubgraphPool = {
 
 const SUBGRAPH_URL_BY_CHAIN: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v2-dev',
-  [ChainId.CELO]:
-    'https://gateway-arbitrum.network.thegraph.com/api/4271ef6e8196c6631ad397c7be19082a/subgraphs/id/JWDRLCwj4H945xEkbB6eocBSZcYnibqcJPJ8h9davFi',
+  [ChainId.CELO]: 'https://interface-gateway.ubeswap.org/v1/v2-subgraph-proxy',
 }
 
 const threshold = 0.025

@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { transparentize } from 'polished'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -157,13 +157,22 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
   )
 }
 
-export default function FullPositionCard({ pair, border, stakedBalance }: PositionCardProps) {
+export default function FullPositionCard({
+  pair,
+  border,
+  stakedBalance,
+  show = false,
+}: PositionCardProps & { show: boolean }) {
   const { account } = useWeb3React()
 
   const currency0 = unwrappedToken(pair.token0)
   const currency1 = unwrappedToken(pair.token1)
 
-  const [showMore, setShowMore] = useState(false)
+  const [showMore, setShowMore] = useState(show)
+
+  useEffect(() => {
+    setShowMore(show)
+  }, [show])
 
   const userDefaultPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
   const totalPoolTokens = useTotalSupply(pair.liquidityToken)

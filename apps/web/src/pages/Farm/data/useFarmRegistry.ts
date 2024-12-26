@@ -13,7 +13,7 @@ import { CACHED_FARM_INFO_BLOCK, cachedFarmInfoEvents, cachedLpInfoEvents } from
 import { useCustomStakingInfo } from './useCustomStakingInfo'
 
 const client = new ApolloClient({
-  uri: 'https://gateway-arbitrum.network.thegraph.com/api/4271ef6e8196c6631ad397c7be19082a/subgraphs/id/JWDRLCwj4H945xEkbB6eocBSZcYnibqcJPJ8h9davFi',
+  uri: 'https://interface-gateway.ubeswap.org/v1/v2-subgraph-proxy',
   cache: new InMemoryCache(),
 })
 
@@ -75,6 +75,44 @@ const farmWhitelist: Record<string, boolean> = {
   '0x033ae9200dbfc107e84d682f286f315f36ac452d': true,
   '0xda7f463c27ec862cfbf2369f3f74c364d050d93f': true,
   '0x295d6f96081feb1569d9ce005f7f2710042ec6a1': true,
+  '0xba7dcc70c68e11633d7dacbafa493af61d0c5b1d': true,
+  '0xe76525610652ffc3af751ab0dcc3448b345051f6': true,
+  '0x19f1a692c77b481c23e9916e3e83af919ed49765': true,
+  '0xd930501a0848dc0aa3e301c7b9b8afe8134d7f5f': true,
+  '0xb450940c5297e9b5e7167fac5903fd1e90b439b8': true,
+  '0x750bb68fa18f06d9696af85ecc312f178e75fcfd': true,
+  '0xaaa7bf214367572cadbf17f17d8e035742b55ab9': true,
+  '0xf554690b1a996893c4debadc57b759350dc10b29': true,
+  '0x2ca16986bea18d562d26354b4ff4c504f14fb01c': true,
+  '0xd7d6b5213b9b9dfffbb7ef008b3cf3c677eb2468': true,
+  '0x194478aa91e4d7762c3e51eee57376ea9ac72761': true,
+  '0x33cd870547dd6f30db86e7ee7707dc78e7825289': true,
+  '0x83470506ba97db33df0ebe01e876c6718c762df6': true,
+  '0xcca933d2ffedca69495435049a878c4dc34b079d': true,
+  '0x161c77b4919271b7ed59adb2151fdade3f907a1f': true,
+  '0x32779e096bf913093933ea94d31956af8a763ce9': true,
+  '0x728c650d1fb4da2d18ccf4df45af70c5aeb09f81': true,
+  '0x9d87c01672a7d02b2dc0d0eb7a145c7e13793c3b': true,
+  '0x0079418d54f887e7859c7a3ecc16ce96a416527b': true,
+  '0xf3d9e027b131af5162451601038eddbf456d824b': true,
+  '0xfd517545a5f1bd656b7fda914a8402c44585fa66': true,
+  '0xa6f2ea3008e6ba42b0d3c09159860de24591cd0e': true,
+  '0x5f5c3eea2b9e65f667e34c70db68f62bbbfc9188': true,
+  '0xf4662e4e254006939c2198cb6f61635b03fd14eb': true,
+  '0xc6910db4156b535966e4a7e8cca7d39579b99a81': true,
+  '0xe6ad921bda9f4971abc8fa78cbd07aeb5c1a61ea': true,
+  '0x1e41a9fd5a94def942ed46aa8bdb4a7f248efad3': true,
+  '0x81ddafe15c01adfda3dd8fe9bb984e64cba606eb': true,
+  '0xfc26229c90e6236fc85c492b738c6e496c177cd0': true,
+  '0x6f11b6ea70dee4f167b1a4ed1f01c903f6781960': true,
+  '0x155da6f164d925e3a91f510b50dec08aa03b4071': true,
+  '0xf01e43ebec5ad24f8a8a9ddf78bf42186e158ed2': true,
+  '0xcbf5163744e973227f4b147321ede26ebceb9d53': true,
+  '0xdd8a979b6524a806ea1f1fc8231c4c9fac40cfeb': true,
+  '0x1df0a9c8313a005793501bac2150dfb895d10fad': true,
+  '0x0bda8d343b7d7cfffb1aa1296c84a6fc5b73a932': true,
+  '0x3904056570ca95cc3371e349a7733b5bfaed64e5': true,
+  '0x2dfbe4c7313dec4ecb8c853d924dfcc79be1cc9f': true,
 }
 
 const pairDataGql = gql`
@@ -155,19 +193,20 @@ export const useFarmRegistry = () => {
           tvlUSD: '0',
           rewardsUSDPerYear: '0',
         }
-        if (!farmSummaries.find((f) => f.lpAddress.toLowerCase() == e.lpAddress.toLowerCase())) {
-          farmSummaries.push({
-            farmName: parseBytes32String(e.farmName),
-            stakingAddress: e.stakingAddress,
-            lpAddress: e.lpAddress,
-            token0Address: lps[e.lpAddress][0],
-            token1Address: lps[e.lpAddress][1],
-            tvlUSD: BigNumber.from(fData.tvlUSD),
-            rewardsUSDPerYear: BigNumber.from(fData.rewardsUSDPerYear),
-            isFeatured: !!featuredPoolWhitelist[e.stakingAddress],
-            isImported: false,
-          })
-        }
+        //if (!farmSummaries.find((f) => f.lpAddress.toLowerCase() == e.lpAddress.toLowerCase())) {
+
+        farmSummaries.push({
+          farmName: parseBytes32String(e.farmName),
+          stakingAddress: e.stakingAddress,
+          lpAddress: e.lpAddress,
+          token0Address: lps[e.lpAddress][0],
+          token1Address: lps[e.lpAddress][1],
+          tvlUSD: BigNumber.from(fData.tvlUSD),
+          rewardsUSDPerYear: BigNumber.from(fData.rewardsUSDPerYear),
+          isFeatured: !!featuredPoolWhitelist[e.stakingAddress],
+          isImported: false,
+        })
+        //}
       })
 
     console.log(farmSummaries)
