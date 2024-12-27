@@ -1,4 +1,4 @@
-import { Currency, ETHER, Token } from '@uniswap/sdk-core'
+import { Currency, ETHER, POL, Token } from '@uniswap/sdk-core'
 import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
@@ -106,13 +106,18 @@ export function CurrencySearch({
 
   const filteredSortedTokens = useSortedTokensByQuery(sortedTokens, debouncedQuery)
 
-  const filteredSortedTokensWithETH: Currency[] = useMemo(() => {
+  const filteredSortedTokensWithETHOrPOL: Currency[] = useMemo(() => {
     const s = debouncedQuery.toLowerCase().trim()
+    if (chainId === 80002 && (s === '' || s === 'p' || s === 'po' || s === 'pol')) {
+      return [POL, ...filteredSortedTokens]
+    }
+
     if (s === '' || s === 'e' || s === 'et' || s === 'eth') {
       return [ETHER, ...filteredSortedTokens]
     }
+
     return filteredSortedTokens
-  }, [debouncedQuery, filteredSortedTokens])
+  }, [debouncedQuery, filteredSortedTokens, chainId])
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
@@ -140,19 +145,21 @@ export function CurrencySearch({
     (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
         const s = debouncedQuery.toLowerCase().trim()
-        if (s === 'eth') {
+        if (chainId === 80002 && s === 'pol') {
+          handleCurrencySelect(POL)
+        } else if (s === 'eth') {
           handleCurrencySelect(ETHER)
-        } else if (filteredSortedTokensWithETH.length > 0) {
+        } else if (filteredSortedTokensWithETHOrPOL.length > 0) {
           if (
-            filteredSortedTokensWithETH[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
-            filteredSortedTokensWithETH.length === 1
+            filteredSortedTokensWithETHOrPOL[0].symbol?.toLowerCase() === debouncedQuery.trim().toLowerCase() ||
+            filteredSortedTokensWithETHOrPOL.length === 1
           ) {
-            handleCurrencySelect(filteredSortedTokensWithETH[0])
+            handleCurrencySelect(filteredSortedTokensWithETHOrPOL[0])
           }
         }
       }
     },
-    [filteredSortedTokensWithETH, handleCurrencySelect, debouncedQuery]
+    [filteredSortedTokensWithETHOrPOL, handleCurrencySelect, debouncedQuery, chainId]
   )
 
   // menu ui
@@ -201,7 +208,7 @@ export function CurrencySearch({
             {({ height }) => (
               <CurrencyList
                 height={height}
-                currencies={filteredSortedTokensWithETH}
+                currencies={filteredSortedTokensWithETHOrPOL}
                 otherListTokens={filteredInactiveTokens}
                 onCurrencySelect={handleCurrencySelect}
                 otherCurrency={otherSelectedCurrency}

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text } from 'rebass'
-import { ChainId, Currency, currencyEquals, Token, ETHER } from '@uniswap/sdk-core'
+import { ChainId, Currency, currencyEquals, Token, ETHER, POL } from '@uniswap/sdk-core'
 import styled from 'styled-components/macro'
 
 import { SUGGESTED_BASES } from '../../constants/routing'
@@ -34,6 +34,8 @@ export default function CommonBases({
   selectedCurrency?: Currency | null
   onSelect: (currency: Currency) => void
 }) {
+  const firstCurrency = chainId === 80002 ? POL : ETHER
+
   return (
     <AutoColumn gap="md">
       <AutoRow>
@@ -45,15 +47,15 @@ export default function CommonBases({
       <AutoRow gap="4px">
         <BaseWrapper
           onClick={() => {
-            if (!selectedCurrency || !currencyEquals(selectedCurrency, ETHER)) {
-              onSelect(ETHER)
+            if (!selectedCurrency || !currencyEquals(selectedCurrency, firstCurrency)) {
+              onSelect(firstCurrency)
             }
           }}
           disable={selectedCurrency?.isEther}
         >
-          <CurrencyLogo currency={ETHER} style={{ marginRight: 8 }} />
+          <CurrencyLogo currency={firstCurrency} style={{ marginRight: 8 }} />
           <Text fontWeight={500} fontSize={16}>
-            {chainId === 80002 ? 'POL' : 'ETH'}
+            {firstCurrency.symbol}
           </Text>
         </BaseWrapper>
         {(typeof chainId === 'number' ? SUGGESTED_BASES[chainId] ?? [] : []).map((token: Token) => {

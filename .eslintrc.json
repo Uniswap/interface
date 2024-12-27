@@ -8,7 +8,7 @@
       "jsx": true
     }
   },
-  "ignorePatterns": ["node_modules/**/*"],
+  "ignorePatterns": ["node_modules/**/*", "uniswap-packages-forks/**/*"],
   "settings": {
     "react": {
       "version": "detect"
@@ -24,11 +24,11 @@
   "rules": {
     "@typescript-eslint/explicit-function-return-type": "off",
     "prettier/prettier": [
-    "error",
-    {
-      "endOfLine": "auto"
-    }
-  ],
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/ban-ts-comment": "off",
     "@typescript-eslint/ban-ts-ignore": "off",

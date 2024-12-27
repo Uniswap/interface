@@ -10,7 +10,7 @@ export const USDC = {
     '0x24BD3A3EeabC51f11Ff724F4D0ed4b52569952c2',
     6,
     'USDC',
-    'USD Coin'
+    'USDC'
   ),
 }
 
@@ -20,7 +20,7 @@ export const USDT_POLYGON_AMOY = new Token(
   '0xF0602a35Fd6895bd62cDB4158BaC82689490afCE',
   6,
   'USDT',
-  'Tether USD'
+  'Tether'
 )
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC')
 export const WBTC_POLYGON_AMOY = new Token(
@@ -28,7 +28,7 @@ export const WBTC_POLYGON_AMOY = new Token(
   '0xDcaA4611e721ce9a06D568A0E45dfbBA161A28BA',
   8,
   'WBTC',
-  'Wrapped BTC'
+  'Wrapped Bitcoin'
 )
 export const FEI = new Token(ChainId.MAINNET, '0x956F47F50A910163D8BF957Cf5846D573E7f87CA', 18, 'FEI', 'Fei USD')
 export const TRIBE = new Token(ChainId.MAINNET, '0xc7283b66Eb1EB5FB86327f08e1B5816b0720212B', 18, 'TRIBE', 'Tribe')
@@ -62,10 +62,10 @@ export const METALAMP = new Token(
   'MetaLamp fun'
 )
 export const BNB = new Token(ChainId.POLYGON_AMOY, '0xF61C6c1F4866C1296E2d239e9AEb20036272C3DD', 18, 'BNB', 'BNB')
-export const SHIBA = new Token(
+export const SHIB = new Token(
   ChainId.POLYGON_AMOY,
   '0x36fE2Bdb44f043034cb45A83C514a93a50b10489',
   18,
   'SHIB',
-  'SHIBA INU'
+  'Shiba Inu'
 )

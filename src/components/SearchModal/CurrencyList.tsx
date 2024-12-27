@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, currencyEquals, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, currencyEquals, Token } from '@uniswap/sdk-core'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
@@ -23,8 +23,8 @@ import TokenListLogo from '../../assets/svg/tokenlist.svg'
 import QuestionHelper from 'components/QuestionHelper'
 import useTheme from 'hooks/useTheme'
 
-function currencyKey(currency: Currency): string {
-  return currency.isToken ? currency.address : 'ETHER'
+function currencyKey(currency: Currency, chainId: ChainId | undefined): string {
+  return currency.isToken ? currency.address : chainId === 80002 ? 'POL' : 'ETHER'
 }
 
 const StyledBalanceText = styled(Text)`
@@ -111,8 +111,8 @@ function CurrencyRow({
   otherSelected: boolean
   style: CSSProperties
 }) {
-  const { account } = useActiveWeb3React()
-  const key = currencyKey(currency)
+  const { account, chainId } = useActiveWeb3React()
+  const key = currencyKey(currency, chainId)
   const selectedTokenList = useCombinedActiveList()
   const isOnSelectedList = isTokenOnList(selectedTokenList, currency.isToken ? currency : undefined)
   const customAdded = useIsUserAddedToken(currency)
@@ -238,11 +238,14 @@ export default function CurrencyList({
     [chainId, currencies.length, onCurrencySelect, otherCurrency, selectedCurrency, setImportToken, showImportView]
   )
 
-  const itemKey = useCallback((index: number, data: typeof itemData) => {
-    const currency = data[index]
-    if (isBreakLine(currency)) return BREAK_LINE
-    return currencyKey(currency)
-  }, [])
+  const itemKey = useCallback(
+    (index: number, data: typeof itemData) => {
+      const currency = data[index]
+      if (isBreakLine(currency)) return BREAK_LINE
+      return currencyKey(currency, chainId)
+    },
+    [chainId]
+  )
 
   return (
     <FixedSizeList
