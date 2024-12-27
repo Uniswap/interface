@@ -1,4 +1,4 @@
-import { Token, Price } from '../libs/sdk-core'
+import { Token, Price } from '@uniswap/sdk-core'
 import { tickToPrice } from '@uniswap/v3-sdk'
 
 export function getTickToPrice(

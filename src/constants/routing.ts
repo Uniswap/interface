@@ -1,5 +1,5 @@
 // a list of tokens by chain
-import { ChainId, Token, WETH9 } from '../libs/sdk-core'
+import { ChainId, Token, WETH9 } from '@uniswap/sdk-core'
 import {
   AMPL,
   DAI,

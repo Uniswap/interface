@@ -1,4 +1,4 @@
-import { CurrencyAmount, Token } from '../../libs/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { isAddress } from 'ethers/lib/utils'
 import { PROPOSAL_DESCRIPTION_TEXT } from '../../constants/proposals'
 import { UNI } from '../../constants/tokens'

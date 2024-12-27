@@ -5,7 +5,7 @@ import { TokenList } from '@uniswap/token-lists/dist/types'
 import { DEFAULT_LIST_OF_LISTS } from '../../constants/lists'
 import { updateVersion } from '../global/actions'
 import { acceptListUpdate, addList, fetchTokenList, removeList, enableList, disableList } from './actions'
-import { ChainId } from '../../libs/sdk-core'
+import { ChainId } from '@uniswap/sdk-core'
 
 export interface ListsState {
   readonly byUrl: {

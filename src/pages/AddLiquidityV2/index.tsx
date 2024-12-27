@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, CurrencyAmount, currencyEquals, Percent, WETH9 } from '../../libs/sdk-core'
+import { Currency, CurrencyAmount, currencyEquals, Percent, WETH9 } from '@uniswap/sdk-core'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'

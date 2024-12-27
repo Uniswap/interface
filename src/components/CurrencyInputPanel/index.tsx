@@ -1,5 +1,5 @@
 import { Pair } from '@uniswap/v2-sdk'
-import { Currency, CurrencyAmount, Percent, Token } from '../../libs/sdk-core'
+import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import React, { useState, useCallback } from 'react'
 import styled from 'styled-components/macro'
 import { darken } from 'polished'

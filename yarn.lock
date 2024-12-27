@@ -3130,10 +3130,8 @@
   resolved "https://registry.yarnpkg.com/@uniswap/merkle-distributor/-/merkle-distributor-1.0.1.tgz#dc3d911f65a860fc3f0cae074bdcd08ed6a27a4d"
   integrity sha512-5gDiTI5hrXIh5UWTrxKYjw30QQDnpl8ckDSpefldNenDlYO1RKkdUYMYpvrqGi2r7YzLYTlO6+TDlNs6O7hDRw==
 
-"@uniswap/sdk-core@^3.0.0-alpha.1":
+"@uniswap/sdk-core@file:uniswap-packages-forks/sdk-core":
   version "3.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@uniswap/sdk-core/-/sdk-core-3.0.0-alpha.1.tgz#8d735755818658fd4a6113cb6d30ed637f9e8347"
-  integrity sha512-dCRBMKtmVmQCoG6sju3j/ki81e82zyqcWm0g+eU3JU0hzbSo6i31wzkOQPHMRO6FcYIJ6+9qx3Sy0B7VoZ6t9g==
   dependencies:
     "@ethersproject/address" "^5.0.2"
     big.js "^5.2.2"
@@ -3165,14 +3163,12 @@
     "@uniswap/lib" "1.1.1"
     "@uniswap/v2-core" "1.0.0"
 
-"@uniswap/v2-sdk@^3.0.0-alpha.0":
+"@uniswap/v2-sdk@file:./uniswap-packages-forks/v2-sdk":
   version "3.0.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/@uniswap/v2-sdk/-/v2-sdk-3.0.0-alpha.0.tgz#5bbd3133f832bf8b36bacf9213b06de520313e28"
-  integrity sha512-KHgdCldJ0JY6NC7KImJuU00G5E7X3LNq5yyVy5tGqf2S9fzBf/az91tlVSZzkEyALmH+8RiSvtqKjSNMXTXTfw==
   dependencies:
     "@ethersproject/address" "^5.0.0"
     "@ethersproject/solidity" "^5.0.0"
-    "@uniswap/sdk-core" "^3.0.0-alpha.1"
+    "@uniswap/sdk-core" "file:../../AppData/Local/Yarn/Cache/v6/npm-@uniswap-v2-sdk-3.0.0-alpha.0-f1f74993-b968-4d03-b793-38921ad14899-1735313914952/node_modules/@uniswap/sdk-core"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
 
@@ -3192,14 +3188,12 @@
     "@uniswap/v3-core" "1.0.0"
     base64-sol "1.0.1"
 
-"@uniswap/v3-sdk@^3.0.0-alpha.6":
+"@uniswap/v3-sdk@file:./uniswap-packages-forks/v3-sdk":
   version "3.0.0-alpha.6"
-  resolved "https://registry.yarnpkg.com/@uniswap/v3-sdk/-/v3-sdk-3.0.0-alpha.6.tgz#8050c2970757446e38c024e1ed8f6771ad7aae98"
-  integrity sha512-FsOB2SAeLbZ9lANeaKnc12A+NSfZ2qTeKbRx7JJE9cJrhzR2fg1lSjI9foRcO3uz6aLE87cobELR815sZmPnTw==
   dependencies:
     "@ethersproject/abi" "^5.0.12"
     "@ethersproject/solidity" "^5.0.9"
-    "@uniswap/sdk-core" "^3.0.0-alpha.1"
+    "@uniswap/sdk-core" "file:../../AppData/Local/Yarn/Cache/v6/npm-@uniswap-v3-sdk-3.0.0-alpha.6-8cc04188-5211-461b-a835-9421f513ff67-1735313914956/node_modules/@uniswap/sdk-core"
     "@uniswap/v3-periphery" "1.0.0"
     tiny-invariant "^1.1.0"
     tiny-warning "^1.0.3"
@@ -9934,7 +9928,7 @@ js-yaml@^3.13.1:
     argparse "^1.0.7"
     esprima "^4.0.0"
 
-jsbi@^3.1.4, jsbi@^3.2.5:
+jsbi@^3.1.4:
   version "3.2.5"
   resolved "https://registry.yarnpkg.com/jsbi/-/jsbi-3.2.5.tgz#b37bb90e0e5c2814c1c2a1bcd8c729888a2e37d6"
   integrity sha512-aBE4n43IPvjaddScbvWRA2YlTzKEynHzu7MqOyTipdHucf/VxS63ViCjxYRg86M8Rxwbt/GfzHl1kKERkt45fQ==

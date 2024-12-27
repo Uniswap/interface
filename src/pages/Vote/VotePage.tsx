@@ -1,4 +1,4 @@
-import { CurrencyAmount, Token } from '../../libs/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import JSBI from 'jsbi'

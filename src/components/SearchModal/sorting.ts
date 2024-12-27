@@ -1,4 +1,4 @@
-import { Token, CurrencyAmount, Currency } from '../../libs/sdk-core'
+import { Token, CurrencyAmount, Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useAllTokenBalances } from '../../state/wallet/hooks'
 

@@ -1,4 +1,4 @@
-import { ChainId, Currency } from '../../libs/sdk-core'
+import { ChainId, Currency } from '@uniswap/sdk-core'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { getExplorerLink, ExplorerDataType } from '../../utils/getExplorerLink'

@@ -1,4 +1,4 @@
-import { ChainId, Token, CurrencyAmount, WETH9 } from '../../libs/sdk-core'
+import { ChainId, Token, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'

@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, TradeType } from '../libs/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { encodeRouteToPath, Route, Trade } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
 import { useMemo } from 'react'

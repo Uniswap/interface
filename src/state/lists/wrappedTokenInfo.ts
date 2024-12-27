@@ -1,4 +1,4 @@
-import { ChainId, Token } from '../../libs/sdk-core'
+import { ChainId, Token } from '@uniswap/sdk-core'
 import { Tags, TokenInfo } from '@uniswap/token-lists'
 import { TokenList } from '@uniswap/token-lists/dist/types'
 import { isAddress } from '../../utils'

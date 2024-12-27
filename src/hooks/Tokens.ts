@@ -1,5 +1,5 @@
 import { parseBytes32String } from '@ethersproject/strings'
-import { Currency, currencyEquals, Ether, Token } from '../libs/sdk-core'
+import { Currency, currencyEquals, ETHER, POL, Token } from '@uniswap/sdk-core'
 import { arrayify } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { createTokenFilterFunction } from '../components/SearchModal/filtering'
@@ -172,9 +172,9 @@ export function useToken(tokenAddress?: string): Token | undefined | null {
 }
 
 export function useCurrency(currencyId: string | undefined): Currency | null | undefined {
-  const { chainId } = useActiveWeb3React()
   const isETH = currencyId?.toUpperCase() === 'ETH'
+  const isPOL = currencyId?.toUpperCase() === 'POL'
   const token = useToken(isETH ? undefined : currencyId)
 
-  return isETH ? new Ether(chainId === 80002 ? 'POL' : undefined, chainId === 80002 ? 'Polygon' : undefined) : token
+  return isETH ? ETHER : isPOL ? POL : token
 }

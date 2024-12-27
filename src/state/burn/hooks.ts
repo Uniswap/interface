@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import { Token, Currency, Percent, CurrencyAmount } from '../../libs/sdk-core'
+import { Token, Currency, Percent, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'

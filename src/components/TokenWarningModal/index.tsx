@@ -1,4 +1,4 @@
-import { Token } from '../../libs/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import React from 'react'
 import Modal from '../Modal'
 import { ImportToken } from 'components/SearchModal/ImportToken'

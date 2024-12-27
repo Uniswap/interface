@@ -1,4 +1,4 @@
-import { Token, CurrencyAmount, Percent, Ether, currencyEquals, ETHER } from '../../../libs/sdk-core'
+import { Token, CurrencyAmount, Percent, Ether, currencyEquals, ETHER } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import { usePool } from 'hooks/usePools'
 import { useActiveWeb3React } from 'hooks/web3'

@@ -10,7 +10,7 @@ import { AppDispatch } from '../index'
 import { acceptListUpdate } from './actions'
 import { useActiveListUrls } from './hooks'
 import { UNSUPPORTED_LIST_URLS } from 'constants/lists'
-import { ChainId } from '../../libs/sdk-core'
+import { ChainId } from '@uniswap/sdk-core'
 
 export default function Updater(): null {
   const { library } = useActiveWeb3React()

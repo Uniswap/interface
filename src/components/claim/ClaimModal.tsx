@@ -1,5 +1,5 @@
 import JSBI from 'jsbi'
-import { CurrencyAmount, Token } from '../../libs/sdk-core'
+import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { isAddress } from 'ethers/lib/utils'
 import React, { useEffect, useState } from 'react'
 import { Text } from 'rebass'
