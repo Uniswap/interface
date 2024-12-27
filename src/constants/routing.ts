@@ -17,7 +17,6 @@ import {
   WBTC,
   METALAMP,
   USDT_POLYGON_AMOY,
-  USDC_POLYGON_AMOY,
   WBTC_POLYGON_AMOY,
 } from './tokens'
 
@@ -55,11 +54,11 @@ const WETH_ONLY: ChainTokenList = {
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, WBTC],
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC[ChainId.MAINNET], USDT, WBTC],
   [ChainId.POLYGON_AMOY]: [
     ...WETH_ONLY[ChainId.POLYGON_AMOY],
     METALAMP,
-    USDC_POLYGON_AMOY,
+    USDC[ChainId.POLYGON_AMOY],
     USDT_POLYGON_AMOY,
     WBTC_POLYGON_AMOY,
   ],
@@ -89,13 +88,13 @@ export const CUSTOM_BASES: { [chainId in ChainId]?: { [tokenAddress: string]: To
 }
 // used for display in the default list when adding liquidity
 export const SUGGESTED_BASES: Partial<ChainTokenList> = {
-  [ChainId.MAINNET]: [DAI, USDC, USDT, WBTC],
-  [ChainId.POLYGON_AMOY]: [METALAMP, USDT_POLYGON_AMOY, USDC_POLYGON_AMOY, WBTC_POLYGON_AMOY],
+  [ChainId.MAINNET]: [DAI, USDC[ChainId.MAINNET], USDT, WBTC],
+  [ChainId.POLYGON_AMOY]: [METALAMP, USDT_POLYGON_AMOY, USDC[ChainId.POLYGON_AMOY], WBTC_POLYGON_AMOY],
 }
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WETH_ONLY,
-  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, WBTC],
+  [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC[ChainId.MAINNET], USDT, WBTC],
 }
 export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } = {
   [ChainId.MAINNET]: [
@@ -103,7 +102,7 @@ export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } 
       new Token(ChainId.MAINNET, '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643', 8, 'cDAI', 'Compound Dai'),
       new Token(ChainId.MAINNET, '0x39AA39c021dfbaE8faC545936693aC917d5E7563', 8, 'cUSDC', 'Compound USD Coin'),
     ],
-    [USDC, USDT],
+    [USDC[ChainId.MAINNET], USDT],
     [DAI, USDT],
   ],
 }

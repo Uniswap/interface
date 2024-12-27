@@ -3,14 +3,17 @@ import { UNI_ADDRESS } from './addresses'
 
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
-export const USDC = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C')
-export const USDC_POLYGON_AMOY = new Token(
-  ChainId.POLYGON_AMOY,
-  '0x24BD3A3EeabC51f11Ff724F4D0ed4b52569952c2',
-  6,
-  'USDC',
-  'USD Coin'
-)
+export const USDC = {
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C'),
+  [ChainId.POLYGON_AMOY]: new Token(
+    ChainId.POLYGON_AMOY,
+    '0x24BD3A3EeabC51f11Ff724F4D0ed4b52569952c2',
+    6,
+    'USDC',
+    'USD Coin'
+  ),
+}
+
 export const USDT = new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD')
 export const USDT_POLYGON_AMOY = new Token(
   ChainId.POLYGON_AMOY,

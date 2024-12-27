@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components/macro'
 import { HideSmall, MEDIA_WIDTHS, SmallOnly } from 'theme'
 import { PositionDetails } from 'types/position'
-import { WETH9, Price, Token, Percent } from '../../libs/sdk-core'
+import { WETH9, Price, Token, Percent, ChainId } from '../../libs/sdk-core'
 import { formatPrice } from 'utils/formatTokenAmount'
 import Loader from 'components/Loader'
 import { unwrappedToken } from 'utils/wrappedCurrency'
@@ -134,7 +134,7 @@ export function getPriceOrderingFromPositionForUI(
   const token1 = position.amount1.currency
 
   // if token0 is a dollar-stable asset, set it as the quote token
-  const stables = [DAI, USDC, USDT]
+  const stables = [DAI, USDC[ChainId.MAINNET], USDT]
   if (stables.some((stable) => stable.equals(token0))) {
     return {
       priceLower: position.token0PriceUpper.invert(),

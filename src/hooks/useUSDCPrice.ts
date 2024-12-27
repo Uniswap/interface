@@ -7,7 +7,8 @@ import { useActiveWeb3React } from './web3'
 
 // USDC amount used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
-const usdcCurrencyAmount = CurrencyAmount.fromRawAmount(USDC, 100_000e6)
+const usdcCurrencyAmountMainnet = CurrencyAmount.fromRawAmount(USDC[ChainId.MAINNET], 100_000e6)
+const usdcCurrencyAmountPolygonAmoy = CurrencyAmount.fromRawAmount(USDC[ChainId.POLYGON_AMOY], 100_000e6)
 
 /**
  * Returns the price in USDC of the input currency
@@ -16,10 +17,25 @@ const usdcCurrencyAmount = CurrencyAmount.fromRawAmount(USDC, 100_000e6)
 export default function useUSDCPrice(currency?: Currency): Price<Currency, Token> | undefined {
   const { chainId } = useActiveWeb3React()
 
-  const v2USDCTrade = useV2TradeExactOut(currency, chainId === ChainId.MAINNET ? usdcCurrencyAmount : undefined, {
-    maxHops: 2,
-  })
-  const v3USDCTrade = useBestV3TradeExactOut(currency, chainId === ChainId.MAINNET ? usdcCurrencyAmount : undefined)
+  const v2USDCTrade = useV2TradeExactOut(
+    currency,
+    chainId === ChainId.MAINNET
+      ? usdcCurrencyAmountMainnet
+      : chainId === ChainId.POLYGON_AMOY
+      ? usdcCurrencyAmountPolygonAmoy
+      : undefined,
+    {
+      maxHops: 2,
+    }
+  )
+  const v3USDCTrade = useBestV3TradeExactOut(
+    currency,
+    chainId === ChainId.MAINNET
+      ? usdcCurrencyAmountMainnet
+      : chainId === ChainId.POLYGON_AMOY
+      ? usdcCurrencyAmountPolygonAmoy
+      : undefined
+  )
 
   return useMemo(() => {
     if (!currency || !chainId) {
@@ -40,10 +56,10 @@ export default function useUSDCPrice(currency?: Currency): Price<Currency, Token
     // use v2 price if available, v3 as fallback
     if (v2USDCTrade) {
       const { numerator, denominator } = v2USDCTrade.route.midPrice
-      return new Price(currency, USDC, denominator, numerator)
+      return new Price(currency, USDC[ChainId.MAINNET], denominator, numerator)
     } else if (v3USDCTrade.state === V3TradeState.VALID && v3USDCTrade.trade) {
       const { numerator, denominator } = v3USDCTrade.trade.route.midPrice
-      return new Price(currency, USDC, denominator, numerator)
+      return new Price(currency, USDC[ChainId.MAINNET], denominator, numerator)
     }
 
     return undefined
