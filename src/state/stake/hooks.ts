@@ -1,5 +1,5 @@
 import { ChainId, Token, CurrencyAmount, WETH9 } from '@alagunoff/uniswap-sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
+import { Pair } from '@alagunoff/uniswap-v2-sdk'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { DAI, UNI, USDC, USDT, WBTC } from '../../constants/tokens'
@@ -9,6 +9,7 @@ import { tryParseAmount } from '../swap/hooks'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { Interface } from '@ethersproject/abi'
 import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
+import { PAIR_INIT_CODE_HASHES, V2_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
 
 export const STAKING_REWARDS_INTERFACE = new Interface(STAKING_REWARDS_ABI)
 
@@ -118,9 +119,11 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     undefined,
     NEVER_RELOAD
   )
+  const factoryAddress = chainId && V2_CORE_FACTORY_ADDRESSES[chainId]
+  const pairInitCodeHash = chainId && PAIR_INIT_CODE_HASHES[chainId]
 
   return useMemo(() => {
-    if (!chainId || !uni) return []
+    if (!chainId || !uni || !factoryAddress || !pairInitCodeHash) return []
 
     return rewardsAddresses.reduce<StakingInfo[]>((memo, rewardsAddress, index) => {
       // these two are dependent on account
@@ -158,8 +161,10 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
         // get the LP token
         const tokens = info[index].tokens
         const dummyPair = new Pair(
+          factoryAddress,
           CurrencyAmount.fromRawAmount(tokens[0], '0'),
-          CurrencyAmount.fromRawAmount(tokens[1], '0')
+          CurrencyAmount.fromRawAmount(tokens[1], '0'),
+          pairInitCodeHash
         )
 
         // check for account, if no account set to 0
@@ -222,6 +227,8 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
     rewardsAddresses,
     totalSupplies,
     uni,
+    factoryAddress,
+    pairInitCodeHash,
   ])
 }
 

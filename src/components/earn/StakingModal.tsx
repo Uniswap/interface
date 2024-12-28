@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { V2_ROUTER_ADDRESS } from '../../constants/addresses'
+import { PAIR_INIT_CODE_HASHES, V2_CORE_FACTORY_ADDRESSES, V2_ROUTER_ADDRESS } from '../../constants/addresses'
 import { useV2LiquidityTokenPermit } from '../../hooks/useERC20Permit'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import Modal from '../Modal'
@@ -10,7 +10,7 @@ import { TYPE, CloseIcon } from '../../theme'
 import { ButtonConfirmed, ButtonError } from '../Button'
 import ProgressCircles from '../ProgressSteps'
 import CurrencyInputPanel from '../CurrencyInputPanel'
-import { Pair } from '@uniswap/v2-sdk'
+import { Pair } from '@alagunoff/uniswap-v2-sdk'
 import { Token, CurrencyAmount } from '@alagunoff/uniswap-sdk-core'
 import { useActiveWeb3React } from '../../hooks/web3'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
@@ -75,11 +75,16 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   }, [onDismiss])
 
   // pair contract for this token to be staked
-  const dummyPair = new Pair(
-    CurrencyAmount.fromRawAmount(stakingInfo.tokens[0], '0'),
-    CurrencyAmount.fromRawAmount(stakingInfo.tokens[1], '0')
-  )
-  const pairContract = usePairContract(dummyPair.liquidityToken.address)
+  const dummyPair =
+    typeof chainId === 'number'
+      ? new Pair(
+          V2_CORE_FACTORY_ADDRESSES[chainId],
+          CurrencyAmount.fromRawAmount(stakingInfo.tokens[0], '0'),
+          CurrencyAmount.fromRawAmount(stakingInfo.tokens[1], '0'),
+          PAIR_INIT_CODE_HASHES[chainId]
+        )
+      : undefined
+  const pairContract = usePairContract(dummyPair?.liquidityToken.address)
 
   // approval data for stake
   const deadline = useTransactionDeadline()

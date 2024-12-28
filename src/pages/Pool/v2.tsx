@@ -21,7 +21,8 @@ import { Dots } from '../../components/swap/styleds'
 import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import { useStakingInfo } from '../../state/stake/hooks'
 import { BIG_INT_ZERO } from '../../constants/misc'
-import { Pair } from '@uniswap/v2-sdk'
+import { Pair } from '@alagunoff/uniswap-v2-sdk'
+import { PAIR_INIT_CODE_HASHES, V2_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -77,14 +78,21 @@ const EmptyProposals = styled.div`
 
 export default function Pool() {
   const theme = useContext(ThemeContext)
-  const { account } = useActiveWeb3React()
-
+  const { account, chainId } = useActiveWeb3React()
+  const factoryAddress = chainId && V2_CORE_FACTORY_ADDRESSES[chainId]
+  const pairInitCodeHash = chainId && PAIR_INIT_CODE_HASHES[chainId]
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
-  const tokenPairsWithLiquidityTokens = useMemo(
-    () => trackedTokenPairs.map((tokens) => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
-    [trackedTokenPairs]
-  )
+  const tokenPairsWithLiquidityTokens = useMemo(() => {
+    if (!factoryAddress || !pairInitCodeHash) {
+      return []
+    }
+
+    return trackedTokenPairs.map((tokens) => ({
+      liquidityToken: toV2LiquidityToken(factoryAddress, tokens, pairInitCodeHash),
+      tokens,
+    }))
+  }, [trackedTokenPairs, factoryAddress, pairInitCodeHash])
   const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map((tpwlt) => tpwlt.liquidityToken), [
     tokenPairsWithLiquidityTokens,
   ])

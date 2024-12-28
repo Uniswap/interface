@@ -1,6 +1,6 @@
 import JSBI from 'jsbi'
 import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@alagunoff/uniswap-sdk-core'
-import { Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Trade as V2Trade } from '@alagunoff/uniswap-v2-sdk'
 import { Trade as V3Trade } from '@alagunoff/uniswap-v3-sdk'
 import {
   ALLOWED_PRICE_IMPACT_HIGH,

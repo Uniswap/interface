@@ -1,7 +1,6 @@
 import JSBI from 'jsbi'
 import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import { Fraction, Percent, Price, Token, CurrencyAmount, WETH9 } from '@alagunoff/uniswap-sdk-core'
-import { FACTORY_ADDRESS } from '@uniswap/v2-sdk'
 import { Redirect, RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { AutoColumn } from '../../components/Column'
@@ -48,6 +47,7 @@ import Badge, { BadgeVariant } from 'components/Badge'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from 'state'
 import SettingsTab from 'components/Settings'
+import { V2_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
 
 const ZERO = JSBI.BigInt(0)
 
@@ -125,7 +125,10 @@ function V2PairMigration({
   const theme = useTheme()
 
   const pairFactory = useSingleCallResult(pair, 'factory')
-  const isNotUniswap = pairFactory.result?.[0] && pairFactory.result[0] !== FACTORY_ADDRESS
+  const isNotUniswap =
+    pairFactory.result?.[0] &&
+    typeof chainId === 'number' &&
+    pairFactory.result[0] !== V2_CORE_FACTORY_ADDRESSES[chainId]
 
   const deadline = useTransactionDeadline() // custom from users settings
   const blockTimestamp = useCurrentBlockTimestamp()

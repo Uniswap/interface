@@ -1,6 +1,6 @@
 import JSBI from 'jsbi'
 import { Token, Currency, Percent, CurrencyAmount } from '@alagunoff/uniswap-sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
+import { Pair } from '@alagunoff/uniswap-v2-sdk'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useV2Pair } from '../../hooks/useV2Pairs'

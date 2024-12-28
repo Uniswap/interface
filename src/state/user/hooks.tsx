@@ -1,5 +1,5 @@
 import { ChainId, Percent, Token } from '@alagunoff/uniswap-sdk-core'
-import { Pair } from '@uniswap/v2-sdk'
+import { computePairAddress, Pair } from '@alagunoff/uniswap-v2-sdk'
 import JSBI from 'jsbi'
 import flatMap from 'lodash.flatmap'
 import { useCallback, useMemo } from 'react'
@@ -226,8 +226,23 @@ export function useURLWarningToggle(): () => void {
  * @param tokenA one of the two tokens
  * @param tokenB the other token
  */
-export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
-  return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB), 18, 'UNI-V2', 'Uniswap V2')
+export function toV2LiquidityToken(
+  factoryAddress: string,
+  [tokenA, tokenB]: [Token, Token],
+  pairInitCodeHash: string
+): Token {
+  return new Token(
+    tokenA.chainId,
+    computePairAddress({
+      factoryAddress,
+      tokenA,
+      tokenB,
+      pairInitCodeHash,
+    }),
+    18,
+    'UNI-V2',
+    'Uniswap V2'
+  )
 }
 
 /**

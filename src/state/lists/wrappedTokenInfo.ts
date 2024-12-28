@@ -12,6 +12,7 @@ export interface TagInfo extends TagDetails {
  */
 export class WrappedTokenInfo implements Token {
   public readonly isEther: false = false
+  public readonly isPol: false = false
   public readonly isToken: true = true
   public readonly list: TokenList
 

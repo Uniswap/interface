@@ -1,5 +1,5 @@
 import React, { useContext, useMemo } from 'react'
-import { Pair } from '@uniswap/v2-sdk'
+import { Pair } from '@alagunoff/uniswap-v2-sdk'
 import { Token, ChainId } from '@alagunoff/uniswap-sdk-core'
 import { ThemeContext } from 'styled-components'
 import { AutoColumn } from '../../components/Column'
@@ -18,6 +18,7 @@ import MigrateSushiPositionCard from 'components/PositionCard/Sushi'
 import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
 import { getCreate2Address } from '@ethersproject/address'
 import { pack, keccak256 } from '@ethersproject/solidity'
+import { PAIR_INIT_CODE_HASHES, V2_CORE_FACTORY_ADDRESSES } from 'constants/addresses'
 
 function EmptyState({ message }: { message: string }) {
   return (
@@ -49,24 +50,28 @@ function toSushiLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
 export default function MigrateV2() {
   const theme = useContext(ThemeContext)
   const { account, chainId } = useActiveWeb3React()
+  const factoryAddress = chainId && V2_CORE_FACTORY_ADDRESSES[chainId]
+  const pairInitCodeHash = chainId && PAIR_INIT_CODE_HASHES[chainId]
 
   // fetch the user's balances of all tracked V2 LP tokens
   const trackedTokenPairs = useTrackedTokenPairs()
 
   // calculate v2 + sushi pair contract addresses for all token pairs
-  const tokenPairsWithLiquidityTokens = useMemo(
-    () =>
-      trackedTokenPairs.map((tokens) => {
-        // sushi liquidity token or null
-        const sushiLiquidityToken = chainId === ChainId.MAINNET ? toSushiLiquidityToken(tokens) : null
-        return {
-          v2liquidityToken: toV2LiquidityToken(tokens),
-          sushiLiquidityToken,
-          tokens,
-        }
-      }),
-    [trackedTokenPairs, chainId]
-  )
+  const tokenPairsWithLiquidityTokens = useMemo(() => {
+    if (!factoryAddress || !pairInitCodeHash) {
+      return []
+    }
+
+    return trackedTokenPairs.map((tokens) => {
+      // sushi liquidity token or null
+      const sushiLiquidityToken = chainId === ChainId.MAINNET ? toSushiLiquidityToken(tokens) : null
+      return {
+        v2liquidityToken: toV2LiquidityToken(factoryAddress, tokens, pairInitCodeHash),
+        sushiLiquidityToken,
+        tokens,
+      }
+    })
+  }, [trackedTokenPairs, chainId, factoryAddress, pairInitCodeHash])
 
   //  get pair liquidity token addresses for balance-fetching purposes
   const allLiquidityTokens = useMemo(() => {

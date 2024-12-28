@@ -1,4 +1,4 @@
-import { Pair } from '@uniswap/v2-sdk'
+import { Pair } from '@alagunoff/uniswap-v2-sdk'
 import { Currency, CurrencyAmount, Percent, Token } from '@alagunoff/uniswap-sdk-core'
 import React, { useState, useCallback } from 'react'
 import styled from 'styled-components/macro'

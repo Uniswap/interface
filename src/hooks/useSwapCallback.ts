@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Router, Trade as V2Trade } from '@uniswap/v2-sdk'
+import { Router, Trade as V2Trade } from '@alagunoff/uniswap-v2-sdk'
 import { SwapRouter, Trade as V3Trade } from '@alagunoff/uniswap-v3-sdk'
 import { ChainId, Currency, Percent, TradeType } from '@alagunoff/uniswap-sdk-core'
 import { useMemo } from 'react'
