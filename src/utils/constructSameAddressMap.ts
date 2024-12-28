@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@alagunoff/uniswap-sdk-core'
 
 export function constructSameAddressMap<T extends string>(
   address: T,

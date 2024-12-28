@@ -1,4 +1,4 @@
-import { ChainId, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount, Token } from '@alagunoff/uniswap-sdk-core'
 import React, { useMemo } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components/macro'

@@ -11,8 +11,8 @@ import {
   tickToPrice,
   TICK_SPACINGS,
   encodeSqrtRatioX96,
-} from '@uniswap/v3-sdk/dist/'
-import { Currency, Token, CurrencyAmount, currencyEquals, Price, Rounding } from '@uniswap/sdk-core'
+} from '@alagunoff/uniswap-v3-sdk/dist/'
+import { Currency, Token, CurrencyAmount, currencyEquals, Price, Rounding } from '@alagunoff/uniswap-sdk-core'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useActiveWeb3React } from '../../../hooks/web3'

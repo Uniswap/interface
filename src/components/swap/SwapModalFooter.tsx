@@ -1,6 +1,6 @@
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Currency, TradeType } from '@alagunoff/uniswap-sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
-import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import { Trade as V3Trade } from '@alagunoff/uniswap-v3-sdk'
 
 import React from 'react'
 import { Text } from 'rebass'

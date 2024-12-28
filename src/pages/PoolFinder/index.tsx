@@ -1,4 +1,4 @@
-import { Currency, ETHER, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, ETHER, CurrencyAmount, Token } from '@alagunoff/uniswap-sdk-core'
 import JSBI from 'jsbi'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Plus } from 'react-feather'

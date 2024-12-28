@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@alagunoff/uniswap-sdk-core'
 
 const CHAIN_ID_TO_PREFIX: { [chainId in ChainId]: string } = {
   1: 'https://etherscan.io',

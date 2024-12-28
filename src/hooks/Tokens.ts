@@ -1,5 +1,5 @@
 import { parseBytes32String } from '@ethersproject/strings'
-import { Currency, currencyEquals, ETHER, POL, Token } from '@uniswap/sdk-core'
+import { Currency, currencyEquals, ETHER, POL, Token } from '@alagunoff/uniswap-sdk-core'
 import { arrayify } from 'ethers/lib/utils'
 import { useMemo } from 'react'
 import { createTokenFilterFunction } from '../components/SearchModal/filtering'

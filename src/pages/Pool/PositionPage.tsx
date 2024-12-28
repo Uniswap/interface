@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react'
-import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
+import { NonfungiblePositionManager, Pool, Position } from '@alagunoff/uniswap-v3-sdk'
 
 import { PoolState, usePool } from 'hooks/usePools'
 import { useToken } from 'hooks/Tokens'
@@ -34,7 +34,7 @@ import {
   Ether,
   currencyEquals,
   ETHER,
-} from '@uniswap/sdk-core'
+} from '@alagunoff/uniswap-sdk-core'
 import { useActiveWeb3React } from 'hooks/web3'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'

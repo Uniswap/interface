@@ -7,7 +7,7 @@ import {
   wrappedCurrency as wrappedCurrencyInternal,
   wrappedCurrencyAmount as wrappedCurrencyAmountInternal,
   WETH9,
-} from '@uniswap/sdk-core'
+} from '@alagunoff/uniswap-sdk-core'
 import { supportedChainId } from './supportedChainId'
 
 export function wrappedCurrency(currency: Currency | undefined, chainId: ChainId | undefined): Token | undefined {

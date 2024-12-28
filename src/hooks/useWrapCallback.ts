@@ -1,4 +1,4 @@
-import { Currency, currencyEquals, WETH9 } from '@uniswap/sdk-core'
+import { Currency, currencyEquals, WETH9 } from '@alagunoff/uniswap-sdk-core'
 import { useMemo } from 'react'
 import { tryParseAmount } from '../state/swap/hooks'
 import { useTransactionAdder } from '../state/transactions/hooks'

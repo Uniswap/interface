@@ -1,4 +1,4 @@
-import { Price, CurrencyAmount, Currency, Fraction } from '@uniswap/sdk-core'
+import { Price, CurrencyAmount, Currency, Fraction } from '@alagunoff/uniswap-sdk-core'
 import JSBI from 'jsbi'
 
 export function formatTokenAmount(amount: CurrencyAmount<Currency> | undefined, sigFigs: number) {

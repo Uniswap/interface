@@ -1,5 +1,5 @@
 import React from 'react'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { FeeAmount } from '@alagunoff/uniswap-v3-sdk'
 import { useTranslation } from 'react-i18next'
 import { AutoColumn } from 'components/Column'
 import { DynamicSection } from 'pages/AddLiquidity/styled'

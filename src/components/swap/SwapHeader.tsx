@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components/macro'
 import SettingsTab from '../Settings'
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@alagunoff/uniswap-sdk-core'
 
 import { RowBetween, RowFixed } from '../Row'
 import { TYPE } from '../../theme'

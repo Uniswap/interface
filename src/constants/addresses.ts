@@ -1,5 +1,5 @@
-import { ChainId } from '@uniswap/sdk-core'
-import { FACTORY_ADDRESS as V3_FACTORY_ADDRESS } from '@uniswap/v3-sdk'
+import { ChainId } from '@alagunoff/uniswap-sdk-core'
+import { FACTORY_ADDRESS as V3_FACTORY_ADDRESS } from '@alagunoff/uniswap-v3-sdk'
 import { constructSameAddressMap } from '../utils/constructSameAddressMap'
 
 export const UNI_ADDRESS = constructSameAddressMap('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984')

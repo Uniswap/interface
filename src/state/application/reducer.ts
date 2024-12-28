@@ -1,6 +1,6 @@
 import { createReducer, nanoid } from '@reduxjs/toolkit'
 import { addPopup, PopupContent, removePopup, updateBlockNumber, ApplicationModal, setOpenModal } from './actions'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@alagunoff/uniswap-sdk-core'
 
 type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
 

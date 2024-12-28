@@ -1,5 +1,5 @@
 import React from 'react'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@alagunoff/uniswap-sdk-core'
 import { ToggleElement, ToggleWrapper } from 'components/Toggle/MultiToggle'
 import { useActiveWeb3React } from 'hooks/web3'
 import { wrappedCurrency } from 'utils/wrappedCurrency'

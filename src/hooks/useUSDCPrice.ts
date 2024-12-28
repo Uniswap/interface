@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Price, Token } from '@alagunoff/uniswap-sdk-core'
 import { useMemo } from 'react'
 import { USDC } from '../constants/tokens'
 import { useV2TradeExactOut } from './useV2Trade'
