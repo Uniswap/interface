@@ -6,7 +6,6 @@ import PolygonMaticLogo from '../../assets/images/polygon-matic-logo.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/wrappedTokenInfo'
 import Logo from '../Logo'
-import { useWeb3React } from '@web3-react/core'
 
 export const getTokenLogoURL = (address: string) =>
   `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
@@ -36,7 +35,6 @@ export default function CurrencyLogo({
   size?: string
   style?: React.CSSProperties
 }) {
-  const { chainId } = useWeb3React()
   const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
 
   const srcs: string[] = useMemo(() => {
@@ -53,14 +51,11 @@ export default function CurrencyLogo({
   }, [currency, uriLocations])
 
   if (currency?.isEther) {
-    return (
-      <StyledEthereumLogo
-        src={chainId === 80002 ? PolygonMaticLogo : EthereumLogo}
-        size={size}
-        style={style}
-        {...rest}
-      />
-    )
+    return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} {...rest} />
+  }
+
+  if (currency?.isPol) {
+    return <StyledEthereumLogo src={PolygonMaticLogo} size={size} style={style} {...rest} />
   }
 
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} {...rest} />

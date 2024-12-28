@@ -437,7 +437,7 @@
     {
       "chainId": 80002,
       "address": "0x36fE2Bdb44f043034cb45A83C514a93a50b10489",
-      "name": "SHIBA INU",
+      "name": "Shiba inu",
       "symbol": "SHIB",
       "decimals": 18,
       "logoURI": "https://etherscan.io/token/images/shibainu_ofc_32.svg"
@@ -445,7 +445,7 @@
     {
       "chainId": 80002,
       "address": "0x24BD3A3EeabC51f11Ff724F4D0ed4b52569952c2",
-      "name": "USD Coin",
+      "name": "USDC",
       "symbol": "USDC",
       "decimals": 6,
       "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
@@ -453,7 +453,7 @@
     {
       "chainId": 80002,
       "address": "0xF0602a35Fd6895bd62cDB4158BaC82689490afCE",
-      "name": "Tether USD",
+      "name": "Tether",
       "symbol": "USDT",
       "decimals": 6,
       "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"
@@ -461,7 +461,7 @@
     {
       "chainId": 80002,
       "address": "0xDcaA4611e721ce9a06D568A0E45dfbBA161A28BA",
-      "name": "Wrapped BTC",
+      "name": "Wrapped Bitcoin",
       "symbol": "WBTC",
       "decimals": 8,
       "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png"

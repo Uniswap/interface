@@ -34,7 +34,7 @@ export default function CommonBases({
   selectedCurrency?: Currency | null
   onSelect: (currency: Currency) => void
 }) {
-  const firstCurrency = chainId === 80002 ? POL : ETHER
+  const firstCurrency = chainId === ChainId.POLYGON_AMOY ? POL : ETHER
 
   return (
     <AutoColumn gap="md">

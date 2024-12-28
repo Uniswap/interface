@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import { ChainId } from '@alagunoff/uniswap-sdk-core'
 import { ButtonGray, ButtonOutlined, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, NewMenu } from 'components/Menu'
@@ -93,7 +94,7 @@ const MainContentWrapper = styled.main`
 `
 
 export default function Pool() {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const toggleWalletModal = useWalletModalToggle()
   const { t } = useTranslation()
   const theme = useContext(ThemeContext)
@@ -166,7 +167,11 @@ export default function Pool() {
                     </MoreOptionsButton>
                   )}
                 />
-                <ResponsiveButtonPrimary id="join-pool-button" as={Link} to="/add/ETH">
+                <ResponsiveButtonPrimary
+                  id="join-pool-button"
+                  as={Link}
+                  to={`/add/${chainId === ChainId.POLYGON_AMOY ? 'POL' : 'ETH'}`}
+                >
                   + {t('New Position')}
                 </ResponsiveButtonPrimary>
               </ButtonRow>

@@ -3,7 +3,7 @@ import { Trade as V3Trade } from '@alagunoff/uniswap-v3-sdk'
 import { useBestV3TradeExactIn, useBestV3TradeExactOut, V3TradeState } from '../../hooks/useBestV3Trade'
 import useENS from '../../hooks/useENS'
 import { parseUnits } from '@ethersproject/units'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@alagunoff/uniswap-sdk-core'
+import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@alagunoff/uniswap-sdk-core'
 import { Trade as V2Trade } from '@alagunoff/uniswap-v2-sdk'
 import { ParsedQs } from 'qs'
 import { useCallback, useEffect, useState } from 'react'
@@ -37,7 +37,7 @@ export function useSwapActionHandlers(): {
       dispatch(
         selectCurrency({
           field,
-          currencyId: currency.isToken ? currency.address : currency.isEther ? 'ETH' : '',
+          currencyId: currency.isToken ? currency.address : currency.isEther ? 'ETH' : currency.isPol ? 'POL' : '',
         })
       )
     },
@@ -226,6 +226,7 @@ function parseCurrencyFromURLParameter(urlParam: any): string {
     const valid = isAddress(urlParam)
     if (valid) return valid
     if (urlParam.toUpperCase() === 'ETH') return 'ETH'
+    if (urlParam.toUpperCase() === 'POL') return 'POL'
   }
   return ''
 }
@@ -249,12 +250,17 @@ function validatedRecipient(recipient: any): string | null {
   return null
 }
 
-export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
+export function queryParametersToSwapState(parsedQs: ParsedQs, chainId: ChainId): SwapState {
   let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency)
   let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency)
   if (inputCurrency === '' && outputCurrency === '') {
-    // default to ETH input
-    inputCurrency = 'ETH'
+    if (chainId === ChainId.POLYGON_AMOY) {
+      // default to POL input
+      inputCurrency = 'POL'
+    } else {
+      // default to ETH input
+      inputCurrency = 'ETH'
+    }
   } else if (inputCurrency === outputCurrency) {
     // clear output if identical
     outputCurrency = ''
@@ -288,7 +294,7 @@ export function useDefaultsFromURLSearch():
 
   useEffect(() => {
     if (!chainId) return
-    const parsed = queryParametersToSwapState(parsedQs)
+    const parsed = queryParametersToSwapState(parsedQs, chainId)
 
     dispatch(
       replaceSwapState({

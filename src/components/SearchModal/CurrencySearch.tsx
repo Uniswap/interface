@@ -1,4 +1,4 @@
-import { Currency, ETHER, POL, Token } from '@alagunoff/uniswap-sdk-core'
+import { ChainId, Currency, ETHER, POL, Token } from '@alagunoff/uniswap-sdk-core'
 import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
@@ -108,7 +108,7 @@ export function CurrencySearch({
 
   const filteredSortedTokensWithETHOrPOL: Currency[] = useMemo(() => {
     const s = debouncedQuery.toLowerCase().trim()
-    if (chainId === 80002 && (s === '' || s === 'p' || s === 'po' || s === 'pol')) {
+    if (chainId === ChainId.POLYGON_AMOY && (s === '' || s === 'p' || s === 'po' || s === 'pol')) {
       return [POL, ...filteredSortedTokens]
     }
 
@@ -145,7 +145,7 @@ export function CurrencySearch({
     (e: KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
         const s = debouncedQuery.toLowerCase().trim()
-        if (chainId === 80002 && s === 'pol') {
+        if (chainId === ChainId.POLYGON_AMOY && s === 'pol') {
           handleCurrencySelect(POL)
         } else if (s === 'eth') {
           handleCurrencySelect(ETHER)
