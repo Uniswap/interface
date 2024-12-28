@@ -1,6 +1,6 @@
 {
   "name": "@uniswap/interface",
-  "description": "Uniswap Interface",
+  "description": "MetaLamp Swap Interface",
   "homepage": ".",
   "private": true,
   "devDependencies": {
@@ -37,10 +37,10 @@
     "@uniswap/token-lists": "^1.0.0-beta.19",
     "@uniswap/v2-core": "1.0.0",
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
-    "@uniswap/v2-sdk": "file:./uniswap-packages-forks/v2-sdk",
+    "@uniswap/v2-sdk": "3.0.0-alpha.0",
     "@uniswap/v3-core": "1.0.0",
     "@uniswap/v3-periphery": "1.0.0",
-    "@uniswap/v3-sdk": "file:./uniswap-packages-forks/v3-sdk",
+    "@alagunoff/uniswap-v3-sdk": "3.0.0",
     "@web3-react/core": "^6.0.9",
     "@web3-react/fortmatic-connector": "^6.0.9",
     "@web3-react/injected-connector": "^6.0.7",
