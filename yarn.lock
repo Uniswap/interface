@@ -14,10 +14,10 @@
     tiny-invariant "1.1.0"
     toformat "2.0.0"
 
-"@alagunoff/uniswap-v3-sdk@3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@alagunoff/uniswap-v3-sdk/-/uniswap-v3-sdk-3.0.0.tgz#8e93f288e2af6c179397cfde70efe49717dfa8d9"
-  integrity sha512-JGyxjBN8sHuLY1EGQLlqk7RaNxwyXm2keRJNega/mBQSVwxDQSvhLabDNRAJm5+D0TYm7Vv9TgSiGTn3xKiWGA==
+"@alagunoff/uniswap-v3-sdk@3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@alagunoff/uniswap-v3-sdk/-/uniswap-v3-sdk-3.0.1.tgz#650b905fcf8def4e7a459224e6ebc132130c2873"
+  integrity sha512-ZloqdbKBhQQk/9PrfmUTBPLCCvMYR7vnLpNmnFLuCXbU42iLzFc3rebe0GCfv525Hzhx76CBXWey2DPeI5PMUw==
   dependencies:
     "@alagunoff/uniswap-sdk-core" "3.0.0"
     "@ethersproject/abi" "5.0.12"
