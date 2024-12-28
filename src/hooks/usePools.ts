@@ -1,5 +1,5 @@
 import { computePoolAddress } from '@alagunoff/uniswap-v3-sdk'
-import { V3_CORE_FACTORY_ADDRESSES } from '../constants/addresses'
+import { V3_CORE_FACTORY_ADDRESSES, POOL_INIT_CODE_HASHES } from '../constants/addresses'
 import { IUniswapV3PoolStateInterface } from '../types/v3/IUniswapV3PoolState'
 import { Token, Currency } from '@alagunoff/uniswap-sdk-core'
 import { useMemo } from 'react'
@@ -37,15 +37,17 @@ export function usePools(
   }, [chainId, poolKeys])
 
   const poolAddresses: (string | undefined)[] = useMemo(() => {
-    const v3CoreFactoryAddress = chainId && V3_CORE_FACTORY_ADDRESSES[chainId]
+    const factoryAddress = chainId && V3_CORE_FACTORY_ADDRESSES[chainId]
+    const poolInitCodeHash = chainId && POOL_INIT_CODE_HASHES[chainId]
 
     return transformed.map((value) => {
-      if (!v3CoreFactoryAddress || !value) return undefined
+      if (!factoryAddress || !poolInitCodeHash || !value) return undefined
       return computePoolAddress({
-        factoryAddress: v3CoreFactoryAddress,
+        factoryAddress,
         tokenA: value[0],
         tokenB: value[1],
         fee: value[2],
+        poolInitCodeHash,
       })
     })
   }, [chainId, transformed])
