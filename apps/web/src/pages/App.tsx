@@ -104,6 +104,8 @@ export default function App() {
 
   const location = useLocation()
   const { pathname } = location
+  const isUbestarterPage = location.pathname.includes('/ubestarter')
+
   const currentPage = getCurrentPageFromLocation(pathname)
   const renderUkBanner = useRenderUkBanner()
   const [init, setInit] = useState(false)
@@ -225,11 +227,6 @@ export default function App() {
     <ErrorBoundary>
       <DarkModeQueryParamReader />
       <Trace page={currentPage}>
-        {/*
-          This is where *static* page titles are injected into the <head> tag. If you
-          want to set a page title based on data that's dynamic or not available on first render,
-          you can set it later in the page component itself, since react-helmet-async prefers the most recently rendered title.
-        */}
         <Helmet>
           <title>{findRouteByPath(pathname)?.getTitle(pathname) ?? 'Ubeswap Interface'}</title>
         </Helmet>
@@ -238,7 +235,9 @@ export default function App() {
         <Header />
         <ResetPageScrollEffect />
         <Suspense>
-          {init && <Particles id="tsparticles" particlesLoaded={particlesLoaded} options={options} />}
+          {init && !isUbestarterPage && (
+            <Particles id="tsparticles" particlesLoaded={particlesLoaded} options={options} />
+          )}
         </Suspense>
         <Body />
         <MobileBottomBar>
