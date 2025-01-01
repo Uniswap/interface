@@ -31,6 +31,8 @@ import { loadSlim } from '@tsparticles/slim'
 
 import { findRouteByPath, RouteDefinition, routes, useRouterConfig } from './RouteDefinitions'
 
+import UbestarterParticles from '../components/particles/UbestarterParticles'
+
 // The Chrome is always loaded, but is lazy-loaded because it is not needed without user interaction.
 // Annotating it with webpackPreload allows it to be ready when requested.
 const AppChrome = lazy(() => import(/* webpackPreload: true */ './AppChrome'))
@@ -104,7 +106,7 @@ export default function App() {
 
   const location = useLocation()
   const { pathname } = location
-  const isUbestarterPage = location.pathname.includes('/ubestarter')
+  const isUbestarterPage = location.pathname.startsWith('/ubestarter')
 
   const currentPage = getCurrentPageFromLocation(pathname)
   const renderUkBanner = useRenderUkBanner()
@@ -234,11 +236,19 @@ export default function App() {
         {renderUkBanner && <UkBanner />}
         <Header />
         <ResetPageScrollEffect />
+
+        {/* Particles kontrolü */}
         <Suspense>
           {init && !isUbestarterPage && (
+            // Normal sayfalar için varsayılan particles
             <Particles id="tsparticles" particlesLoaded={particlesLoaded} options={options} />
           )}
+          {isUbestarterPage && (
+            // Ubestarter sayfaları için özel particles
+            <UbestarterParticles />
+          )}
         </Suspense>
+
         <Body />
         <MobileBottomBar>
           <PageTabs />
