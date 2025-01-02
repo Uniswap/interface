@@ -23,9 +23,13 @@ const buildTwitterProxyRequest = ({
   method: RequestType.POST,
   headers: DEFAULT_HEADERS,
   body: JSON.stringify({
-    conversion_time: addJitter(new Date()),
-    event_id: eventId,
-    identifiers: [{ [PlatformIdType.Twitter]: lead.id }],
+    conversions: [
+      {
+        conversion_time: addJitter(new Date()),
+        event_id: eventId,
+        identifiers: [{ [PlatformIdType.Twitter]: lead.id }],
+      },
+    ],
   }),
 })
 

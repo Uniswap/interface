@@ -1,3 +1,4 @@
+import { ConnectError } from '@connectrpc/connect'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { parse } from 'qs'
@@ -46,6 +47,7 @@ export function useConversionTracking(): UseConversionTracking {
   const trackConversion = useCallback(
     async ({ platformIdType, eventId, eventName }: TrackConversionArgs) => {
       const lead = conversionLeads.find(({ type }) => type === platformIdType)
+      let setAsExecuted: boolean = false
 
       // Prevent triggering events under the following conditions:
       // - No corresponding lead
@@ -74,13 +76,7 @@ export function useConversionTracking(): UseConversionTracking {
           throw new Error()
         }
 
-        setConversionLeads((leads: ConversionLead[]) => [
-          ...leads.filter(({ id }) => lead.id !== id),
-          {
-            ...lead,
-            executedEvents: lead.executedEvents.concat([eventId]),
-          },
-        ])
+        setAsExecuted = true
 
         sendAnalyticsEvent(UniswapEventName.ConversionEventSubmitted, {
           id: lead.id,
@@ -88,13 +84,36 @@ export function useConversionTracking(): UseConversionTracking {
           eventName,
           platformIdType,
         })
-      } catch (e) {
+      } catch (error) {
         // Note: The request will be retried until it exists in executedEvents
+        // If the event has already been executed, but doesn't exist in executedEvents, this will ensure we don't retry errors
+        if (error instanceof ConnectError) {
+          if (error.message.includes('limit for this (user, event)')) {
+            setAsExecuted = true
+          }
+        }
+      } finally {
+        if (setAsExecuted) {
+          setConversionLeads((leads: ConversionLead[]) => [
+            ...leads.filter(({ id }) => lead.id !== id),
+            {
+              ...lead,
+              executedEvents: lead.executedEvents.concat([eventId]),
+            },
+          ])
+        }
       }
     },
     // TODO: Investigate why conversionProxy as a dependency causes a rendering loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [account.address, conversionLeads, setConversionLeads],
+    [
+      account.address,
+      conversionLeads,
+      isConversionTrackingEnabled,
+      isGoogleConversionTrackingEnabled,
+      isTwitterConversionTrackingEnabled,
+      setConversionLeads,
+    ],
   )
 
   const trackConversions = useCallback(
