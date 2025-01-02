@@ -13,11 +13,10 @@ import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { Text } from 'rebass'
 // import { GetTheAppButton } from 'pages/Landing/components/DownloadApp/GetTheAppButton'
-import { ReactNode, useCallback, useState } from 'react'
-import { Link, NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
+import { ReactNode, useState } from 'react'
+import { Link, NavLink, NavLinkProps, useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Z_INDEX } from 'theme/zIndex'
 // import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useIsNavSearchInputVisible } from '../../nft/hooks/useIsNavSearchInputVisible'
@@ -189,20 +188,9 @@ const Navbar = ({ blur }: { blur: boolean }) => {
   const isNftPage = useIsNftPage()
   // const isLandingPage = useIsLandingPage()
   const sellPageState = useProfilePageState((state) => state.state)
-  const navigate = useNavigate()
   const isNavSearchInputVisible = useIsNavSearchInputVisible()
 
   const { account } = useWeb3React()
-  const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
-  const handleUniIconClick = useCallback(() => {
-    if (account) {
-      return
-    }
-    if (accountDrawerOpen) {
-      toggleAccountDrawer()
-    }
-    navigate('/home')
-  }, [account, accountDrawerOpen, navigate, toggleAccountDrawer])
 
   const [isDarkMode, setMode] = useDarkModeManager()
   const toggleDarkMode = () => {
@@ -224,15 +212,8 @@ const Navbar = ({ blur }: { blur: boolean }) => {
         <Box display="flex" height="full" flexWrap="nowrap">
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
-              <Link to="/home" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-                <UniIcon
-                  width="28"
-                  height="28"
-                  data-testid="uniswap-logo"
-                  className={styles.logo}
-                  clickable={!account}
-                  onClick={handleUniIconClick}
-                />
+              <Link to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+                <UniIcon width="28" height="28" clickable data-testid="uniswap-logo" className={styles.logo} />
 
                 <Text fontSize={24} marginTop={-1}>
                   Ubeswap
