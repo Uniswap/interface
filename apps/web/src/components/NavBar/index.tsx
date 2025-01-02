@@ -115,6 +115,21 @@ const UBEWrapper = styled.span`
   }
 `
 
+// RocketIcon  tip tanımlaması
+interface RocketIconProps {
+  isClickable?: boolean
+  onClick?: () => void
+  className?: string
+  'data-testid'?: string
+}
+
+// Roket ikonunu stil ve özellikler
+const RocketIcon = styled.img<RocketIconProps>`
+  width: 28px;
+  height: 28px;
+  cursor: default;
+`
+
 interface MenuItemProps {
   href: string
   id?: NavLinkProps['id']
@@ -191,6 +206,8 @@ const Navbar = ({ blur }: { blur: boolean }) => {
   const sellPageState = useProfilePageState((state) => state.state)
   const navigate = useNavigate()
   const isNavSearchInputVisible = useIsNavSearchInputVisible()
+  const location = useLocation()
+  const isUbestarterPage = location.pathname.startsWith('/ubestarter')
 
   const { account } = useWeb3React()
   const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
@@ -227,17 +244,33 @@ const Navbar = ({ blur }: { blur: boolean }) => {
         <Box display="flex" height="full" flexWrap="nowrap">
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
-              <UniIcon
-                width="28"
-                height="28"
-                data-testid="uniswap-logo"
-                className={styles.logo}
-                clickable={!account}
-                onClick={handleUniIconClick}
-              />
-              <Text fontSize={24} marginTop={-1}>
-                Ubeswap
-              </Text>
+              {isUbestarterPage ? (
+                <>
+                  <RocketIcon
+                    src="/images/rocket-purple.png"
+                    data-testid="ubestarter-logo"
+                    className={styles.logo}
+                    alt="Ubestarter Logo"
+                  />
+                  <Text fontSize={24} marginTop={-1} style={{ cursor: 'pointer' }}>
+                    Ubestarter
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <UniIcon
+                    width="28"
+                    height="28"
+                    data-testid="uniswap-logo"
+                    className={styles.logo}
+                    clickable={!account}
+                    onClick={handleUniIconClick}
+                  />
+                  <Text fontSize={24} marginTop={-1}>
+                    Ubeswap
+                  </Text>
+                </>
+              )}
             </Box>
             {!isNftPage && (
               <Box display={{ sm: 'flex', lg: 'none' }}>
