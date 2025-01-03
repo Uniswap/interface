@@ -11,6 +11,7 @@ import { useFeatureFlag } from "uniswap/src/features/gating/hooks";
 export type TabsSection = {
   title: string;
   href: string;
+  external?: boolean;
   isActive?: boolean;
   items?: TabsItem[];
   closeMenu?: () => void;
@@ -19,6 +20,7 @@ export type TabsSection = {
 export type TabsItem = MenuItem & {
   icon?: JSX.Element;
   quickKey: string;
+  external?: boolean;
 };
 
 export const useTabsContent = (): TabsSection[] => {
@@ -36,6 +38,7 @@ export const useTabsContent = (): TabsSection[] => {
         {
           title: t("common.explore"),
           href: "/explore",
+          external: true,
         },
         {
           title: t("common.nfts"),
@@ -87,24 +90,28 @@ export const useTabsContent = (): TabsSection[] => {
         {
           title: t("common.explore"),
           href: "/explore",
+          external: true,
           isActive: pathname.startsWith("/explore"),
           items: [
             {
               label: t("common.generalInfo"),
               quickKey: t`X`,
               href: `${process.env.REACT_APP_INFO_ROOT}/#`,
+              external: true,
               internal: false,
             },
             {
               label: t("common.tokens"),
               quickKey: t`T`,
               href: `${process.env.REACT_APP_INFO_ROOT}/#/tokens`,
+              external: true,
               internal: false,
             },
             {
               label: t("common.pools"),
               quickKey: t`P`,
               href: `${process.env.REACT_APP_INFO_ROOT}/#/pools`,
+              external: true,
               internal: false,
             },
           ],

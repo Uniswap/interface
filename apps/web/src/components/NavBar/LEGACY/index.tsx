@@ -51,10 +51,12 @@ interface MenuItemProps {
   isActive?: boolean;
   children: ReactNode;
   dataTestId?: string;
+  external?: boolean;
 }
 
 const MenuItem = ({
   href,
+  external,
   dataTestId,
   id,
   isActive,
@@ -63,6 +65,8 @@ const MenuItem = ({
   return (
     <NavLink
       to={href}
+      target={external ? "_blank" : "_self"}
+      rel={external ? "noopener noreferrer" : undefined}
       className={isActive ? styles.activeMenuItem : styles.menuItem}
       id={id}
       style={{ textDecoration: "none" }}
@@ -75,7 +79,6 @@ const MenuItem = ({
 
 export const PageTabs = () => {
   const { pathname } = useLocation();
-  const { chainId } = useAccount();
   // const chainName = chainIdToBackendChain({ chainId, withFallback: true });
 
   const isPoolActive = useIsPoolsPage();
@@ -91,6 +94,7 @@ export const PageTabs = () => {
       <MenuItem
         href={`${process.env.REACT_APP_INFO_ROOT}/#`}
         isActive={pathname.startsWith("/explore")}
+        external
       >
         <Trans i18nKey="common.explore" />
       </MenuItem>
@@ -118,7 +122,6 @@ const LegacyNavbar = ({ blur }: { blur: boolean }) => {
   const isSwapPage = useIsSwapPage();
   const isSendPage = useIsSendPage();
   const isLimitPage = useIsLimitPage();
-  const isLandingPage = useIsLandingPage();
   const sellPageState = useProfilePageState((state) => state.state);
   const navigate = useNavigate();
   const isNavSearchInputVisible = useIsNavSearchInputVisible();
