@@ -30,44 +30,48 @@ export const useGetStakedLiqudityForPool = async (
 ): Promise<number> => {
   if (!indexerTaraswap) return 1;
 
-  const response = await fetch(indexerTaraswap, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      query: `
-        query stakes($pool: String) {
-          stakes(subgraphError: deny, where: { position_: { pool: $pool } }) {
-            farmer { id }
-            position {
-              id
-              depositedToken0
-              depositedToken1
-              token0 { id }
-              token1 { id }
-              pool { id }
-            }
-          }
-          unstakes(subgraphError: deny, where: { position_: { pool: $pool } }) {
-            farmer { id }
-            position {
-              id
-              depositedToken0
-              depositedToken1
-              token0 { id }
-              token1 { id }
-              pool { id }
-            }
-          }
-        }
-      `,
-      variables: { pool: poolAddress },
-    }),
-  });
+  let skip = 0;
+  const step = 1000;
+  let totalLiquidity = 0;
 
-  const data = await response.json();
-  if (data.data.stakes) {
-    if (data.data.stakes.length <= 0) {
-      return 1;
+  while (true) {
+    const response = await fetch(indexerTaraswap, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: `
+          query stakes($pool: String, $skip: Int) {
+            stakes(subgraphError: deny, where: { position_: { pool: $pool } }, first: 1000, skip: $skip) {
+              farmer { id }
+              position {
+                id
+                depositedToken0
+                depositedToken1
+                token0 { id }
+                token1 { id }
+                pool { id }
+              }
+            }
+            unstakes(subgraphError: deny, where: { position_: { pool: $pool } }, first: 1000, skip: $skip) {
+              farmer { id }
+              position {
+                id
+                depositedToken0
+                depositedToken1
+                token0 { id }
+                token1 { id }
+                pool { id }
+              }
+            }
+          }
+        `,
+        variables: { pool: poolAddress, skip: skip },
+      }),
+    });
+
+    const data = await response.json();
+    if (!data.data.stakes || data.data.stakes.length === 0) {
+      break; // Exit loop if no more data
     }
 
     const depositedToken0s: number[] = data.data.stakes.map((stake: any) =>
@@ -107,14 +111,14 @@ export const useGetStakedLiqudityForPool = async (
       0
     );
 
-    const totalLiquidity =
+    totalLiquidity +=
       (totalDepositedToken0 - totalUnstakedToken0) *
         (priceToken0.usdPrice || 0) +
       (totalDepositedToken1 - totalUnstakedToken1) *
         (priceToken1.usdPrice || 0);
 
-    return totalLiquidity;
+    skip += step; // Increment skip for the next batch
   }
 
-  return 1;
+  return totalLiquidity < 0 ? 0 : totalLiquidity;
 };
