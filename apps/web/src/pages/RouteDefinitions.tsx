@@ -9,7 +9,6 @@ import { isBrowserRouterEnabled } from 'utils/env'
 import { getDefaultTokensTitle } from './getDefaultTokensTitle'
 import { getExploreTitle } from './getExploreTitle'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
-import Landing from './Landing'
 import Swap from './Swap'
 
 const NftExplore = lazy(() => import('nft/pages/explore'))
@@ -44,6 +43,7 @@ const ClaimNewPact = lazy(() => import('pages/ClaimNewPact'))
 const RedirectEarn = lazy(() => import('pages/Earn/redirects'))
 const FarmV3 = lazy(() => import('pages/FarmV3'))
 const Debug = lazy(() => import('pages/Debug'))
+const Dashboard = lazy(() => import('pages/Dashboard'))
 
 // this is the same svg defined in assets/images/blue-loader.svg
 // it is defined here because the remote asset may not have had time to load when this file is executing
@@ -109,10 +109,17 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/',
     getTitle: () => t`Ubeswap | The native DeFi platfor on Celo`,
-    getElement: (args) => {
-      return args.browserRouterEnabled && args.hash ? <Navigate to={args.hash.replace('#', '')} replace /> : <Landing />
-    },
+    // getElement: (args) => {
+    //   return args.browserRouterEnabled && args.hash ? <Navigate to={args.hash.replace('#', '')} replace /> : <Landing />
+    // },
+    getElement: () => <Dashboard />,
   }),
+  createRouteDefinition({
+    path: '/home',
+    getTitle: () => t`Ubeswap | The native DeFi platfor on Celo`,
+    getElement: () => <Dashboard />,
+  }),
+
   createRouteDefinition({
     path: '/explore',
     getTitle: getExploreTitle,
