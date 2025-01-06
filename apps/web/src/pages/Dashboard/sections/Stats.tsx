@@ -1,8 +1,9 @@
 import Row from 'components/Row'
 import { t, Trans } from 'i18n'
 import { ArrowRightCircle } from 'react-feather'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { ClickableStyle, ExternalLink } from 'theme/components'
+import { ClickableStyle } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { Body1, Box, H2 } from '../components/Generics'
 import { StatCard } from '../components/StatCard'
@@ -162,7 +163,7 @@ const RightBottom = styled.div`
   grid-row-end: 5;
 `
 
-const LearnMoreButton = styled(ExternalLink)`
+const LearnMoreButton = styled(Link)`
   padding: 12px 16px;
   border-radius: 24px;
   border: 0;
@@ -183,7 +184,7 @@ const LearnMoreArrow = styled(ArrowRightCircle)`
 
 function LearnMore() {
   return (
-    <LearnMoreButton href="/swap">
+    <LearnMoreButton to="/swap">
       <Row gap="sm" align="center">
         <Trans>Go To Swap</Trans>
         <LearnMoreArrow />
@@ -293,7 +294,7 @@ function Cards({ inView }: { inView: boolean }) {
       <LeftBottom>
         <StatCard
           title={t`Users`}
-          value={formatNumber({ input: data?.unuqueWallets ?? 0, type: NumberType.WholeNumber })}
+          value={formatNumber({ input: data?.uniqueWallets ?? 0, type: NumberType.WholeNumber })}
           delay={0.4}
           inView={inView}
         />
