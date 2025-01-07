@@ -27,7 +27,7 @@ import { useChainId } from "wagmi";
 import { formatUnits } from "viem/utils";
 import { MouseoverTooltip } from "components/Tooltip";
 import styled from "styled-components";
-import { Info, Star, Sun } from "react-feather";
+import { Info, Star } from "react-feather";
 import { useV3StakerContract } from "../../hooks/useV3StakerContract";
 import useTotalPositions, { PositionsResponse } from "hooks/useTotalPositions";
 import { ZERO_ADDRESS } from "constants/misc";
@@ -72,7 +72,7 @@ const PoolTokenImage = ({
   );
 };
 
-export default function Incentives() {
+export default function EndedIncentives() {
   const account = useAccount();
   const chainId = useChainId();
   const v3StakerContract = useV3StakerContract(true);
@@ -190,9 +190,10 @@ export default function Incentives() {
     });
     const data = await response.json();
     if (data && data.data && data.data.incentives) {
-      let incentivesData: Incentive[] = data.data.incentives.filter(
-        (incentive: Incentive) => incentive.ended === false
-      );
+      let incentivesData: Incentive[] = data.data.incentives;
+      // .filter(
+      //   (incentive: Incentive) => incentive.ended === false
+      // );
       setRawIncentivesData(incentivesData);
     }
   }, [indexerTaraswap]);
@@ -389,12 +390,11 @@ export default function Incentives() {
       processIncentives(userPositions).then((data) => {
         if (data) {
           const eligiblePools = data
-            .filter((pool) => pool.eligible)
+            .filter(
+              (pool) => pool.eligible || pool.hasMultipleRelevantPositions
+            )
             .sort((a, b) => b.apy - a.apy);
-          const ineligiblePools = data
-            .filter((pool) => !pool.eligible)
-            .sort((a, b) => b.apy - a.apy);
-          setPoolTransactionTableValues([...eligiblePools, ...ineligiblePools]);
+          setPoolTransactionTableValues(Array.from([...eligiblePools]));
         }
       });
     }
@@ -602,11 +602,16 @@ export default function Incentives() {
                 setShowPositionsModal(true);
               }}
               style={{ textAlign: "center" }}
+              disabled={
+                hasMultipleRelevantPositions?.row?.original?.eligible
+                  ? false
+                  : true
+              }
             >
               {hasMultipleRelevantPositions.getValue?.() ? (
                 <Trans i18nKey="common.incentives.choose.position" />
               ) : (
-                <Trans i18nKey="common.incentives.deposit" />
+                <Trans i18nKey="common.incentives.withdraw" />
               )}
             </SaveButton>
             {showPositionsModal &&
