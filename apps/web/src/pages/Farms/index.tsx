@@ -21,6 +21,7 @@ import { TitleRow } from "nft/components/profile/list/shared";
 import Incentives from "components/Incentives";
 import Create from "components/Create";
 import FAQ from "components/FAQ";
+import EndedIncentives from "components/Incentives/EndedIncentives";
 
 const ExploreContainer = styled.div`
   width: 100%;
@@ -75,6 +76,7 @@ const FiltersContainer = styled.div`
 
 export enum LiquidityTab {
   Incentives = "incentives",
+  EndedIncentives = "endedIncentives",
   Create = "create",
   FAQ = "faq",
 }
@@ -91,6 +93,12 @@ const Pages: Array<Page> = [
     title: <Trans i18nKey="common.incentives" />,
     key: LiquidityTab.Incentives,
     component: Incentives,
+    loggingElementName: InterfaceElementName.EXPLORE_TOKENS_TAB,
+  },
+  {
+    title: <Trans i18nKey="common.incentives.ended" />,
+    key: LiquidityTab.EndedIncentives,
+    component: EndedIncentives,
     loggingElementName: InterfaceElementName.EXPLORE_TOKENS_TAB,
   },
   {
