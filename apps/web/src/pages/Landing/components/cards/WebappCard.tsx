@@ -3,9 +3,8 @@ import { PortfolioLogo } from "components/AccountDrawer/MiniPortfolio/PortfolioL
 import { DeltaArrow } from "components/Tokens/TokenDetails/Delta";
 import {
   LARA_TARAXA,
-  LDO,
   NATIVE_CHAIN_ID,
-  UNI,
+  TSWAP_TARAXA,
   USDT_TARAXA,
 } from "constants/tokens";
 import { getTokenDetailsURL } from "graphql/data/util";
@@ -193,6 +192,10 @@ const tokens: { chainId: SupportedInterfaceChainId; address: string }[] = [
   {
     chainId: ChainId.TARAXA,
     address: USDT_TARAXA.address,
+  },
+  {
+    chainId: ChainId.TARAXA,
+    address: TSWAP_TARAXA.address,
   },
 ];
 
