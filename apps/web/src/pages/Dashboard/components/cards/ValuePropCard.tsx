@@ -30,13 +30,21 @@ const Container = motion(styled(Box)<ValuePropCardProps & BoxProps>`
   overflow: hidden;
   text-decoration: none;
   @media (max-width: 1024px) {
-    height: ${(props) => props.height || '326px'};
-    min-height: 320px;
+    height: ${(props) => props.height || '306px'};
+    min-height: 306px;
   }
   @media (max-width: 768px) {
-    height: 300px;
-    min-height: 300px;
+    height: 275px;
+    min-height: 275px;
   }
+
+  @media (max-width: 467px) {
+    height: 250px;
+    min-height: 250px;
+  }
+  @media (max-width: 396px) {
+    height: 230px;
+    min-height: 230px;
 `)
 
 // const Inner = styled.div<{ alignTextToBottom?: boolean }>`
