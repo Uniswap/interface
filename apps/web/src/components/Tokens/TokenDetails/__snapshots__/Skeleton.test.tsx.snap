@@ -329,7 +329,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="_pt-_lg_0px _pr-_lg_t-space-pad1331704900 _pl-_lg_t-space-pad1331704900 _pb-_lg_52px _flexDirection-_xl_column _alignItems-_xl_center _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _width-10037 _gap-80px _pt-t-space-spa1360333981 _pb-t-space-spa1360333981 _pr-t-space-spa1360333989 _pl-t-space-spa1360333989"
+          class="_gap-_sm_0px _pt-_lg_0px _pr-_lg_t-space-pad1331704900 _pl-_lg_t-space-pad1331704900 _pb-_lg_52px _flexDirection-_xl_column _alignItems-_xl_center _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _width-10037 _gap-80px _pt-t-space-spa1360333981 _pb-t-space-spa1360333981 _pr-t-space-spa1360333989 _pl-t-space-spa1360333989"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _maxWidth-780px _overflowX-hidden _overflowY-hidden _width-10037 _flexGrow-1 _flexShrink-1"

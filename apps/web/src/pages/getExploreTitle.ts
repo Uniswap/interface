@@ -1,6 +1,6 @@
 import { ExploreTab } from 'pages/Explore'
 import { capitalize } from 'tsafe/capitalize'
-import { t } from 'uniswap/src/i18n'
+import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { isChainUrlParam } from 'utils/chainParams'
 
@@ -14,15 +14,15 @@ export const getExploreTitle = (path?: string) => {
 
   switch (tab) {
     case ExploreTab.Pools:
-      return t(`web.explore.title.pools`, {
+      return i18n.t(`web.explore.title.pools`, {
         network,
       })
     case ExploreTab.Tokens:
-      return t(`web.explore.title.tokens`, {
+      return i18n.t(`web.explore.title.tokens`, {
         network,
       })
     case ExploreTab.Transactions:
-      return t(`web.explore.title.transactions`, {
+      return i18n.t(`web.explore.title.transactions`, {
         network,
       })
     default:
@@ -40,7 +40,7 @@ export const getExploreDescription = (path?: string) => {
   const parts = path?.split('/').filter((part) => part !== '')
   const network: string = parts?.find(isChainUrlParam) ?? 'ethereum'
 
-  return t(`web.explore.description`, {
+  return i18n.t(`web.explore.description`, {
     network: capitalize(network),
   })
 }

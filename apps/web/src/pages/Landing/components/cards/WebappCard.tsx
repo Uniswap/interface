@@ -7,13 +7,13 @@ import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { Computer } from 'pages/Landing/components/Icons'
 import { PillButton } from 'pages/Landing/components/cards/PillButton'
 import ValuePropCard from 'pages/Landing/components/cards/ValuePropCard'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { Flex, Text } from 'ui/src'
 import { LDO, UNI, USDC_BASE } from 'uniswap/src/constants/tokens'
 import { useTokenPromoQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { t } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const primary = '#2ABDFF'
@@ -194,6 +194,7 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
 }
 
 export function WebappCard() {
+  const { t } = useTranslation()
   return (
     <ValuePropCard
       to="/tokens/ethereum"

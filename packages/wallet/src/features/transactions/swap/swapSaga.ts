@@ -17,7 +17,7 @@ import {
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { logger } from 'utilities/src/logger/logger'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
-import { sendTransaction, tryGetNonce } from 'wallet/src/features/transactions/sendTransactionSaga'
+import { CalculatedNonce, sendTransaction, tryGetNonce } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { SubmitUniswapXOrderParams, submitUniswapXOrder } from 'wallet/src/features/transactions/swap/submitOrderSaga'
 import { wrap } from 'wallet/src/features/transactions/swap/wrapSaga'
 import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/selectors'
@@ -34,6 +34,7 @@ export type SwapParams = {
 }
 
 export function* approveAndSwap(params: SwapParams) {
+  let calculatedNonce: CalculatedNonce | undefined
   try {
     const { swapTxContext, account, txId, analytics, onSuccess, onFailure } = params
     const { routing, approveTxRequest } = swapTxContext
@@ -52,7 +53,8 @@ export function* approveAndSwap(params: SwapParams) {
     const submitViaPrivateRpc = !isUniswapX && !isBridge && (yield* call(shouldSubmitViaPrivateRpc, chainId))
     // We must manually set the nonce when submitting multiple transactions in a row,
     // otherwise for some L2s the Provider might fetch the same nonce for both transactions.
-    let nonce = yield* call(tryGetNonce, account, chainId)
+    calculatedNonce = yield* call(tryGetNonce, account, chainId)
+    let nonce = calculatedNonce?.nonce
 
     const gasFeeEstimation = swapTxContext.gasFeeEstimation
 
@@ -152,7 +154,7 @@ export function* approveAndSwap(params: SwapParams) {
   } catch (error) {
     logger.error(error, {
       tags: { file: 'swapSaga', function: 'approveAndSwap' },
-      extra: { analytics: params.analytics },
+      extra: { analytics: params.analytics, calculatedNonce },
     })
   }
 }

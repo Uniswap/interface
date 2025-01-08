@@ -15,6 +15,7 @@ import { PoolVersionMenu } from 'pages/LegacyPool/shared'
 import { LoadingRows } from 'pages/LegacyPool/styled'
 import { useMemo, useState } from 'react'
 import { AlertTriangle, BookOpen, ChevronsRight, Inbox, Layers } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import { HideSmall, ThemedText } from 'theme/components'
@@ -23,7 +24,6 @@ import { Anchor, Flex, Text, styled } from 'ui/src'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { t, useTranslation } from 'uniswap/src/i18n'
 
 const PageWrapper = deprecatedStyled(AutoColumn)`
   padding: 68px 8px 0px;
@@ -121,6 +121,7 @@ function PositionsLoadingPlaceholder() {
 }
 
 function WrongNetworkCard() {
+  const { t } = useTranslation()
   return (
     <>
       <PageWrapper>

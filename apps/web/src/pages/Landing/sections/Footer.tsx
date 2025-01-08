@@ -1,14 +1,14 @@
 import { MenuItem, useMenuContent } from 'components/NavBar/CompanyMenu/Content'
 import { MenuLink } from 'components/NavBar/CompanyMenu/MenuDropdown'
 import { useTabsContent } from 'components/NavBar/Tabs/TabsContent'
-import deprecatedStyled, { useTheme } from 'lib/styled-components'
+import deprecatedStyled from 'lib/styled-components'
 import { Discord, Github, Twitter } from 'pages/Landing/components/Icons'
 import { Wiggle } from 'pages/Landing/components/animations'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useTogglePrivacyPolicy } from 'state/application/hooks'
 import { Anchor, Flex, Separator, Text, styled } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { useTranslation } from 'uniswap/src/i18n'
 
 const SOCIAL_ICONS_SIZE = `${iconSizes.icon32}px`
 
@@ -53,20 +53,21 @@ export function Socials({ iconSize }: { iconSize?: string }) {
 }
 
 function FooterSection({ title, items }: { title: string; items: MenuItem[] }) {
-  const theme = useTheme()
   return (
-    <Flex width={130} $md={{ width: '100%' }} flexGrow={0} flexShrink={1} flexBasis="auto" gap={10}>
+    <Flex width={130} $md={{ width: '100%' }} flexGrow={0} flexShrink={1} flexBasis="auto" gap={8}>
       <Text variant="body1">{title}</Text>
-      {items.map((item, index) => (
-        <MenuLink
-          key={`footer_${title}_${index}}`}
-          label={item.label}
-          href={item.href}
-          internal={item.internal}
-          overflow={item.overflow}
-          $hoverColor={theme.neutral1}
-        />
-      ))}
+      <Flex gap={5}>
+        {items.map((item, index) => (
+          <MenuLink
+            key={`footer_${title}_${index}}`}
+            label={item.label}
+            href={item.href}
+            internal={item.internal}
+            overflow={item.overflow}
+            textVariant="subheading2"
+          />
+        ))}
+      </Flex>
     </Flex>
   )
 }

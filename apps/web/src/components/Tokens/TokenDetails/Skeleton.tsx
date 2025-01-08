@@ -13,13 +13,13 @@ import { useCurrency } from 'hooks/Tokens'
 import deprecatedStyled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { capitalize } from 'tsafe'
 import { Anchor, Flex, Text, TextProps, styled } from 'ui/src'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 
@@ -33,6 +33,9 @@ export const TokenDetailsLayout = styled(Flex, {
   py: '$spacing48',
   px: '$spacing40',
 
+  $sm: {
+    gap: 0,
+  },
   $lg: {
     pt: 0,
     px: '$padding20',

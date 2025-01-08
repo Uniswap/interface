@@ -3,12 +3,12 @@ import { ChainOutageData } from 'featureFlags/flags/outageBanner'
 import styled, { useTheme } from 'lib/styled-components'
 import { useState } from 'react'
 import { Globe } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { capitalize } from 'tsafe'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { Trans } from 'uniswap/src/i18n'
 
 const IconContainer = styled.div`
   height: 100%;
@@ -32,8 +32,9 @@ const OutageTextContainer = styled(TextContainer)`
 `
 
 const HelpCenterLink = styled(ExternalLink)`
-  font-size: 14px;
+  font-size: 12px;
   margin-top: 4px;
+  font-weight: 535;
 `
 
 export function getOutageBannerSessionStorageKey(chainId: UniverseChainId) {

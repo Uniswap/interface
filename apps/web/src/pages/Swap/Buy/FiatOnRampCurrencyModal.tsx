@@ -3,6 +3,7 @@ import { CurrencyRow } from 'components/SearchModal/CurrencyList'
 import { HeaderContent } from 'pages/Swap/Buy/CountryListModal'
 import { ContentWrapper } from 'pages/Swap/Buy/shared'
 import { CSSProperties } from 'react'
+import { useTranslation } from 'react-i18next'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { CloseIcon } from 'theme/components'
@@ -11,7 +12,6 @@ import { Text } from 'ui/src/components/text/Text'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useTranslation } from 'uniswap/src/i18n'
 
 const ROW_ITEM_SIZE = 56
 

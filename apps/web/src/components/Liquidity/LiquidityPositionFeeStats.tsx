@@ -7,12 +7,12 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { TextLoader } from 'pages/Pool/Positions/shared'
 import { Dispatch, SetStateAction } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from 'theme/components'
 import { Flex, Text, styled } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 
 interface LiquidityPositionFeeStatsProps {
   formattedUsdValue?: string

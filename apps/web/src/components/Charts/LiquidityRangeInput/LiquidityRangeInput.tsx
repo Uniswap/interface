@@ -18,6 +18,7 @@ import {
   getSortedCurrenciesTupleWithWrap,
 } from 'pages/Pool/Positions/create/utils'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { Button, Flex, SegmentedControl, SegmentedControlOption, Shine, Text, useSporeColors } from 'ui/src'
 import { HorizontalDensityChart } from 'ui/src/components/icons/HorizontalDensityChart'
@@ -28,7 +29,6 @@ import { SearchMinus } from 'ui/src/components/icons/SearchMinus'
 import { SearchPlus } from 'ui/src/components/icons/SearchPlus'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { useTranslation } from 'uniswap/src/i18n'
 import { isMobileWeb } from 'utilities/src/platform'
 
 /**

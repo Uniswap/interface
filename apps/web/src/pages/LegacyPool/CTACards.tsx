@@ -1,11 +1,11 @@
 import { AutoColumn } from 'components/deprecated/Column'
 import { useAccount } from 'hooks/useAccount'
 import styled, { css } from 'lib/styled-components'
+import { Trans } from 'react-i18next'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Trans } from 'uniswap/src/i18n'
 
 const CTASection = styled.section`
   display: grid;

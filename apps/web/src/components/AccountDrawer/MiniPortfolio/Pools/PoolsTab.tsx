@@ -12,13 +12,14 @@ import { useAccount } from 'hooks/useAccount'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useReducer } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { TouchableArea } from 'ui/src'
 import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { t } from 'uniswap/src/i18n'
 
 function isPositionInfo(position: PositionInfo | undefined): position is PositionInfo {
   return !!position
@@ -34,10 +35,13 @@ function getPositionKey(position: PositionInfo) {
 }
 
 export default function Pools({ account }: { account: string }) {
+  const { t } = useTranslation()
   const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
+  const { chains } = useEnabledChains()
 
   const { data, isLoading } = useGetPositionsQuery({
     address: account,
+    chainIds: chains,
     positionStatuses: [PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE],
     protocolVersions: isLPRedesignEnabled
       ? [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4]
@@ -46,6 +50,7 @@ export default function Pools({ account }: { account: string }) {
 
   const { data: closedData } = useGetPositionsQuery({
     address: account,
+    chainIds: chains,
     positionStatuses: [PositionStatus.CLOSED],
     protocolVersions: isLPRedesignEnabled
       ? [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4]

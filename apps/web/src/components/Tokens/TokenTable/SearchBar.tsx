@@ -7,9 +7,9 @@ import useDebounce from 'hooks/useDebounce'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import styled from 'lib/styled-components'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Flex, useSporeColors } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { t } from 'uniswap/src/i18n'
 const ICON_SIZE = '20px'
 
 const SearchInput = styled.input<{ isOpen?: boolean }>`
@@ -56,6 +56,7 @@ const SearchInput = styled.input<{ isOpen?: boolean }>`
 `
 
 export default function SearchBar({ tab }: { tab?: string }) {
+  const { t } = useTranslation()
   const currentString = useAtomValue(exploreSearchStringAtom)
   const [localFilterString, setLocalFilterString] = useState(currentString)
   const setFilterString = useUpdateAtom(exploreSearchStringAtom)

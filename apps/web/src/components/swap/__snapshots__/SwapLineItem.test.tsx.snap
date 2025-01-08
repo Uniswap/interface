@@ -340,7 +340,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                          aggregates liquidity sources for better prices and gas free swaps. 
                         <a
                           class="c14"
-                          href="https://support.uniswap.org/hc/en-us/articles/17515415311501"
+                          href="https://support.uniswap.org/hc/en-us/articles/17544708791821"
                           rel="noopener noreferrer"
                           target="_blank"
                         >
@@ -377,7 +377,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                      aggregates liquidity sources for better prices and gas free swaps. 
                     <a
                       class="c14"
-                      href="https://support.uniswap.org/hc/en-us/articles/17515415311501"
+                      href="https://support.uniswap.org/hc/en-us/articles/17544708791821"
                       rel="noopener noreferrer"
                       target="_blank"
                     >
@@ -648,7 +648,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
                      aggregates liquidity sources for better prices and gas free swaps. 
                     <a
                       class="c14"
-                      href="https://support.uniswap.org/hc/en-us/articles/17515415311501"
+                      href="https://support.uniswap.org/hc/en-us/articles/17544708791821"
                       rel="noopener noreferrer"
                       target="_blank"
                     >
@@ -1010,7 +1010,7 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
                          aggregates liquidity sources for better prices and gas free swaps. 
                         <a
                           class="c14"
-                          href="https://support.uniswap.org/hc/en-us/articles/17515415311501"
+                          href="https://support.uniswap.org/hc/en-us/articles/17544708791821"
                           rel="noopener noreferrer"
                           target="_blank"
                         >
@@ -1047,7 +1047,7 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
                      aggregates liquidity sources for better prices and gas free swaps. 
                     <a
                       class="c14"
-                      href="https://support.uniswap.org/hc/en-us/articles/17515415311501"
+                      href="https://support.uniswap.org/hc/en-us/articles/17544708791821"
                       rel="noopener noreferrer"
                       target="_blank"
                     >
@@ -1318,7 +1318,7 @@ exports[`SwapLineItem.tsx dutch v2 order eth input 1`] = `
                      aggregates liquidity sources for better prices and gas free swaps. 
                     <a
                       class="c14"
-                      href="https://support.uniswap.org/hc/en-us/articles/17515415311501"
+                      href="https://support.uniswap.org/hc/en-us/articles/17544708791821"
                       rel="noopener noreferrer"
                       target="_blank"
                     >
@@ -2029,7 +2029,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                     <div
                       class="c9 css-obwv3p"
                     >
-                      Best price route costs ~$1.00 in gas.  This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+                      Best price route costs ~$1.00 in gas.  This route optimizes your total output by considering split routes, multiple hops, and the network costs of each step.
                     </div>
                   </div>
                 </div>
@@ -2736,7 +2736,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                     <div
                       class="c9 css-obwv3p"
                     >
-                      Best price route costs ~$1.00 in gas.  This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+                      Best price route costs ~$1.00 in gas.  This route optimizes your total output by considering split routes, multiple hops, and the network costs of each step.
                     </div>
                   </div>
                 </div>
@@ -3487,7 +3487,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                     <div
                       class="c9 css-obwv3p"
                     >
-                      This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+                      This route optimizes your total output by considering split routes, multiple hops, and the network costs of each step.
                     </div>
                   </div>
                 </div>
@@ -4251,7 +4251,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                     <div
                       class="c9 css-obwv3p"
                     >
-                      Best price route costs ~$1.00 in gas.  This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+                      Best price route costs ~$1.00 in gas.  This route optimizes your total output by considering split routes, multiple hops, and the network costs of each step.
                     </div>
                   </div>
                 </div>
@@ -5015,7 +5015,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                     <div
                       class="c9 css-obwv3p"
                     >
-                      Best price route costs ~$1.00 in gas.  This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+                      Best price route costs ~$1.00 in gas.  This route optimizes your total output by considering split routes, multiple hops, and the network costs of each step.
                     </div>
                   </div>
                 </div>

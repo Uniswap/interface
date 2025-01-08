@@ -63,32 +63,35 @@ export function useFiatOnRampTransactionCreator(
   serviceProvider?: string,
 ): {
   externalTransactionId: string
-  dispatchAddTransaction: () => void
+  dispatchAddTransaction: ({ isOffRamp }: { isOffRamp: boolean }) => void
 } {
   const dispatch = useDispatch()
 
   const externalTransactionId = useRef(createOnRampTransactionId(serviceProvider))
 
-  const dispatchAddTransaction = useCallback(() => {
-    // Adds a LocalOnRampTransaction to track the transaction
-    // Later we will query the transaction details for that id
-    const transactionDetail: TransactionDetails = {
-      routing: Routing.CLASSIC,
-      chainId,
-      id: externalTransactionId.current,
-      from: ownerAddress,
-      typeInfo: {
-        type: TransactionType.LocalOnRamp,
-      },
-      status: TransactionStatus.Pending,
-      addedTime: Date.now(),
-      hash: '',
-      options: { request: {} },
-      transactionOriginType: TransactionOriginType.Internal,
-    }
-    // use addTransaction action so transactionWatcher picks it up
-    dispatch(addTransaction(transactionDetail))
-  }, [chainId, ownerAddress, dispatch])
+  const dispatchAddTransaction = useCallback(
+    ({ isOffRamp }: { isOffRamp: boolean }) => {
+      // Adds a local FOR transaction to track the transaction
+      // Later we will query the transaction details for that id
+      const transactionDetail: TransactionDetails = {
+        routing: Routing.CLASSIC,
+        chainId,
+        id: externalTransactionId.current,
+        from: ownerAddress,
+        typeInfo: {
+          type: isOffRamp ? TransactionType.LocalOffRamp : TransactionType.LocalOnRamp,
+        },
+        status: TransactionStatus.Pending,
+        addedTime: Date.now(),
+        hash: '',
+        options: { request: {} },
+        transactionOriginType: TransactionOriginType.Internal,
+      }
+      // use addTransaction action so transactionWatcher picks it up
+      dispatch(addTransaction(transactionDetail))
+    },
+    [chainId, ownerAddress, dispatch],
+  )
 
   return { externalTransactionId: externalTransactionId.current, dispatchAddTransaction }
 }

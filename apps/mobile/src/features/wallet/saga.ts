@@ -3,7 +3,7 @@ import { dispatchNavigationAction } from 'src/app/navigation/rootNavigation'
 import { call, put, takeEvery } from 'typed-redux-saga'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
-import i18n from 'uniswap/src/i18n/i18n'
+import i18n from 'uniswap/src/i18n'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { restoreMnemonicComplete } from 'wallet/src/features/wallet/slice'
 

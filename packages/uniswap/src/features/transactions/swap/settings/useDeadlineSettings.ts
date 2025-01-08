@@ -1,9 +1,7 @@
 import { useCallback, useState } from 'react'
 
-import { MAX_CUSTOM_DEADLINE } from 'uniswap/src/constants/transactions'
+import { DEFAULT_CUSTOM_DEADLINE, MAX_CUSTOM_DEADLINE } from 'uniswap/src/constants/transactions'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-
-export const DEFAULT_CUSTOM_DEADLINE = 30
 
 export function useDeadlineSettings(): {
   isEditingDeadline: boolean

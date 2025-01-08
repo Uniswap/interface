@@ -4,6 +4,7 @@ import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
 import { PoolSortFields } from 'graphql/data/pools/useTopPools'
 import { OrderDirection, gqlToCurrency, supportedChainIdFromGQLChain, unwrapToken } from 'graphql/data/util'
 import { ExternalArrowLink, LoadingRow } from 'pages/Pool/Positions/shared'
+import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { useTopPools } from 'state/explore/topPools'
 import { PoolStat } from 'state/explore/types'
@@ -16,8 +17,6 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { Trans } from 'uniswap/src/i18n/Trans'
-import { useTranslation } from 'uniswap/src/i18n/useTranslation'
 
 function TopPoolCard({ pool }: { pool: PoolStat }) {
   const { defaultChainId } = useEnabledChains()

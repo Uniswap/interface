@@ -4,6 +4,7 @@ import Identicon from 'components/Identicon'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import useENSName from 'hooks/useENSName'
 import { useCallback } from 'react'
+import { Trans } from 'react-i18next'
 import { useModalIsOpen, useOpenModal, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { ThemedText } from 'theme/components'
@@ -15,7 +16,6 @@ import { useOrderedChainIds } from 'uniswap/src/features/chains/hooks/useOrdered
 import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import { Trans } from 'uniswap/src/i18n'
 
 const UNICON_SIZE = 50
 const QR_CODE_SIZE = 240

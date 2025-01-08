@@ -3,10 +3,10 @@ import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import ms from 'ms'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Moon, Sun } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { Flex, SegmentedControl, Text, styled, useSporeColors } from 'ui/src'
 import { Moon as MoonFilled } from 'ui/src/components/icons/Moon'
 import { Sun as SunFilled } from 'ui/src/components/icons/Sun'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { addMediaQueryListener, removeMediaQueryListener } from 'utils/matchMedia'
 
 const THEME_UPDATE_DELAY = ms(`0.1s`)
@@ -95,7 +95,15 @@ export function useDarkModeManager(): [boolean, (mode: ThemeMode) => void] {
   }, [isDarkMode, setMode])
 }
 
-export function ThemeSelector({ disabled, compact = false }: { disabled?: boolean; compact?: boolean }) {
+export function ThemeSelector({
+  disabled,
+  compact = false,
+  fullWidth = false,
+}: {
+  disabled?: boolean
+  compact?: boolean
+  fullWidth?: boolean
+}) {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const [mode, setMode] = useAtom(themeModeAtom)
@@ -162,9 +170,9 @@ export function ThemeSelector({ disabled, compact = false }: { disabled?: boolea
   ]
 
   return (
-    <Flex width="fit">
+    <Flex width={fullWidth ? '100%' : 'fit'}>
       <SegmentedControl
-        key={mode} // force re-render when mode changes to avoid visual glitch
+        fullWidth={fullWidth}
         options={compact ? compactOptions : defaultOptions}
         selectedOption={mode}
         onSelectOption={switchMode}

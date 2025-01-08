@@ -4,9 +4,10 @@
  * TODO(WEB-4896): remove this file
  */
 import { useCurrencyInfo } from 'hooks/Tokens'
+import { Trans } from 'react-i18next'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Trans, t } from 'uniswap/src/i18n'
+import i18n from 'uniswap/src/i18n'
 
 export const TOKEN_SAFETY_ARTICLE = 'https://support.uniswap.org/hc/en-us/articles/8723118437133'
 
@@ -37,26 +38,26 @@ export function getWarningCopy(warning: Warning | undefined, plural = false, tok
     switch (warning.level) {
       case SafetyLevel.MediumWarning:
         heading = tokenSymbol
-          ? t('token.safety.warning.medium.heading.named', {
+          ? i18n.t('token.safety.warning.medium.heading.named', {
               tokenSymbol,
             })
-          : t('token.safety.warning.medium.heading.default', { count: plural ? 2 : 1 })
-        description = t('token.safety.warning.doYourOwnResearch')
+          : i18n.t('token.safety.warning.medium.heading.default', { count: plural ? 2 : 1 })
+        description = i18n.t('token.safety.warning.doYourOwnResearch')
         break
       case SafetyLevel.StrongWarning:
         heading = tokenSymbol
-          ? t('token.safety.warning.strong.heading.named', {
+          ? i18n.t('token.safety.warning.strong.heading.named', {
               tokenSymbol,
             })
-          : t('token.safety.warning.strong.heading.default', { count: plural ? 2 : 1 })
-        description = t('token.safety.warning.doYourOwnResearch')
+          : i18n.t('token.safety.warning.strong.heading.default', { count: plural ? 2 : 1 })
+        description = i18n.t('token.safety.warning.doYourOwnResearch')
         break
       case SafetyLevel.Blocked:
         description = tokenSymbol
-          ? t(`token.safety.warning.blocked.description.named`, {
+          ? i18n.t(`token.safety.warning.blocked.description.named`, {
               tokenSymbol,
             })
-          : t('token.safety.warning.blocked.description.default', { count: plural ? 2 : 1 })
+          : i18n.t('token.safety.warning.blocked.description.default', { count: plural ? 2 : 1 })
         break
     }
   }

@@ -2,41 +2,27 @@ import { CreditCardIcon } from 'components/Icons/CreditCard'
 import { Sell } from 'components/Icons/Sell'
 import { Send } from 'components/Icons/Send'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useAccount } from 'hooks/useAccount'
 import { useSwitchChain } from 'hooks/useSwitchChain'
-import styled from 'lib/styled-components'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { ClickableStyle } from 'theme/components'
-import { Flex } from 'ui/src'
-import { t } from 'uniswap/src/i18n'
+import { Button, Flex, styled, Text } from 'ui/src'
+import { getContrastPassingTextColor } from 'uniswap/src/utils/colors'
 
-const TDPActionPill = styled.button<{ $color?: string }>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  height: 48px;
-  gap: 8px;
-  border: none;
-  border-radius: 50px;
-  transition: color 0.2s;
-  background-color: ${({ $color, theme }) => $color || theme.neutral2};
-  color: ${({ theme }) => theme.neutralContrast};
-  padding: 12px;
-  font-size: 16px;
-  font-weight: 535;
-  flex-grow: 1;
-  ${ClickableStyle}
-
-  @media (max-width: 360px) {
-    padding-left: 20px;
-    > svg {
-      display: none;
-    }
-  }
-`
+const TDPActionPill = styled(Button, {
+  size: 'medium',
+  borderRadius: 50,
+  flexGrow: 1,
+  fontSize: '$medium',
+  fontWeight: '$large',
+  height: 48,
+  hoverStyle: {
+    filter: 'brightness(0.85)',
+  },
+})
 
 type TabItem = {
   label: string
@@ -45,12 +31,15 @@ type TabItem = {
 }
 
 export function TDPActionTabs() {
+  const { t } = useTranslation()
   const { currencyChain, currencyChainId, address, tokenColor } = useTDPContext()
   const switchChain = useSwitchChain()
   const navigate = useNavigate()
   const account = useAccount()
   const chainUrlParam = currencyChain.toLowerCase()
   const addressUrlParam = address === NATIVE_CHAIN_ID ? 'ETH' : address
+  const textColor = tokenColor && getContrastPassingTextColor(tokenColor)
+  const { xs } = useScreenSize()
 
   const toActionLink = useCallback(
     async (href: string) => {
@@ -66,25 +55,36 @@ export function TDPActionTabs() {
     {
       label: t('common.buy.label'),
       href: `/swap/?chain=${chainUrlParam}&outputCurrency=${addressUrlParam}`,
-      icon: <CreditCardIcon fill="white" />,
+      icon: <CreditCardIcon fill="currentColor" />,
     },
     {
       label: t('common.sell.label'),
       href: `/swap?chain=${chainUrlParam}&inputCurrency=${addressUrlParam}`,
-      icon: <Sell fill="white" />,
+      icon: <Sell fill="currentColor" />,
     },
     {
       label: t('common.send.button'),
       href: `/send?chain=${chainUrlParam}&inputCurrency=${addressUrlParam}`,
-      icon: <Send fill="white" />,
+      icon: <Send fill="currentColor" />,
     },
   ]
   return (
     <Flex row justifyContent="center" gap="$spacing8" width="100%">
       {tabs.map((tab) => (
-        <TDPActionPill key={tab.label} onClick={() => toActionLink(tab.href)} $color={tokenColor}>
-          {tab.icon}
-          {tab.label}
+        <TDPActionPill
+          key={tab.label}
+          onPress={() => toActionLink(tab.href)}
+          backgroundColor={tokenColor}
+          hoverStyle={{ backgroundColor: tokenColor }}
+          pressStyle={{ backgroundColor: tokenColor }}
+          color={textColor}
+        >
+          <Text color={textColor}>
+            <Flex row gap="$spacing8" alignItems="center">
+              {xs && tab.icon}
+              {tab.label}
+            </Flex>
+          </Text>
         </TDPActionPill>
       ))}
     </Flex>

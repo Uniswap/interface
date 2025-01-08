@@ -10,6 +10,7 @@ import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
 import styled, { css, keyframes } from 'lib/styled-components'
 import { ChangeEvent, ForwardedRef, KeyboardEvent, forwardRef, useCallback, useRef, useState } from 'react'
 import { X } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { useSendContext } from 'state/send/SendContext'
 import { RecipientData } from 'state/send/hooks'
 import { ClickableStyle, ThemedText } from 'theme/components'
@@ -18,7 +19,6 @@ import { capitalize } from 'tsafe'
 import { Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import { Plural, Trans, t, useTranslation } from 'uniswap/src/i18n'
 import { shortenAddress } from 'utilities/src/addresses'
 
 const StyledConfirmedRecipientRow = styled(Row)`
@@ -121,6 +121,7 @@ const AutocompleteRow = ({
   numberOfTransfers: number
   selectRecipient: (recipient: RecipientData) => void
 }) => {
+  const { t } = useTranslation()
   const account = useAccount()
   const { unitag } = useUnitagByAddress(address)
   const { ENSName } = useENSName(address)
@@ -164,8 +165,7 @@ const AutocompleteRow = ({
       </Row>
       {account.isConnected && (
         <StyledTransferText>
-          {numberOfTransfers}{' '}
-          <Plural value={numberOfTransfers} one={t('common.transfer')} other={t('common.transfers')} />
+          {numberOfTransfers} {t('common.transfer', { count: numberOfTransfers })}
         </StyledTransferText>
       )}
     </StyledAutocompleteRow>
@@ -180,6 +180,7 @@ interface AutocompleteFlyoutProps {
 
 const AutocompleteFlyout = forwardRef((props: AutocompleteFlyoutProps, ref: ForwardedRef<HTMLDivElement>) => {
   const { transfers, validatedRecipientData, selectRecipient } = props
+  const { t } = useTranslation()
 
   if (validatedRecipientData) {
     return (
@@ -200,9 +201,7 @@ const AutocompleteFlyout = forwardRef((props: AutocompleteFlyoutProps, ref: Forw
 
   return (
     <MenuFlyout ref={ref}>
-      <ThemedText.SubHeaderSmall>
-        <Trans i18nKey="sendRecipientForm.recentAddresses.label" />
-      </ThemedText.SubHeaderSmall>
+      <ThemedText.SubHeaderSmall>{t('sendRecipientForm.recentAddresses.label')}</ThemedText.SubHeaderSmall>
       {Object.keys(transfers)
         .slice(0, 3)
         .map((address) => (

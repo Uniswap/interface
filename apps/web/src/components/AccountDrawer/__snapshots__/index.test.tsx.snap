@@ -15,22 +15,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   min-width: 0;
 }
 
-.c20 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-  padding: 8px 0px;
-}
-
-.c24 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-  margin-left: 18px;
-  margin-right: 18px;
-}
-
-.c27 {
+.c23 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -39,7 +24,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   flex: 1;
 }
 
-.c36 {
+.c32 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -47,7 +32,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c37 {
+.c33 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -58,11 +43,11 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   font-weight: 500;
 }
 
-.c37:hover {
+.c33:hover {
   opacity: 0.6;
 }
 
-.c37:active {
+.c33:active {
   opacity: 0.4;
 }
 
@@ -110,7 +95,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   gap: 12px;
 }
 
-.c26 {
+.c22 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -198,25 +183,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   gap: 12px;
 }
 
-.c21 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  padding: 8px 0px;
-}
-
-.c28 {
+.c24 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -247,7 +214,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   margin: !important;
 }
 
-.c32 {
+.c28 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -264,7 +231,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   align-items: center;
 }
 
-.c31 {
+.c27 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -292,7 +259,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   transition: 125ms;
 }
 
-.c34 {
+.c30 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -314,7 +281,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   padding: 0 8px;
 }
 
-.c33 {
+.c29 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -332,18 +299,18 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   justify-content: center;
 }
 
-.c33 img {
+.c29 img {
   border: 1px solid #22222212;
   border-radius: 12px;
 }
 
-.c33 > img,
-.c33 span {
+.c29 > img,
+.c29 span {
   height: 40px;
   width: 40px;
 }
 
-.c30 {
+.c26 {
   -webkit-align-items: stretch;
   -webkit-box-align: stretch;
   -ms-flex-align: stretch;
@@ -364,16 +331,16 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   background-color: #F9F9F9;
 }
 
-.c30:hover {
+.c26:hover {
   cursor: pointer;
   background-color: #22222212;
 }
 
-.c30:focus {
+.c26:focus {
   background-color: #22222212;
 }
 
-.c38 {
+.c34 {
   font-weight: 535;
   color: #7D7D7D;
 }
@@ -449,7 +416,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   gap: 16px;
 }
 
-.c29 {
+.c25 {
   display: grid;
   -webkit-flex: 1;
   -ms-flex: 1;
@@ -463,37 +430,17 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   transition: max-height 125ms ease-in-out,opacity 125ms ease-in-out;
 }
 
-.c35 {
+.c31 {
   padding: 0 4px;
 }
 
-.c22 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.c22:hover {
-  opacity: 0.6;
-}
-
-.c22:active {
-  opacity: 0.4;
-}
-
-.c23 {
+.c20 {
   height: 1px;
   width: 100%;
   background: #22222212;
 }
 
-.c25 {
+.c21 {
   height: 20px;
   width: 20px;
   fill: #7D7D7D;
@@ -640,7 +587,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
 }
 
 @media (max-width:960px) {
-  .c33 {
+  .c29 {
     -webkit-align-items: flex-end;
     -webkit-box-align: flex-end;
     -ms-flex-align: flex-end;
@@ -649,7 +596,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
 }
 
 @media (max-width:960px) {
-  .c29 {
+  .c25 {
     grid-template-columns: 1fr;
   }
 }
@@ -838,13 +785,13 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                     </div>
                   </div>
                   <div
-                    class="c20 c21 c22"
+                    class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _pt-8px _pb-8px _userSelect-none _cursor-pointer"
                   >
                     <div
-                      class="c23"
+                      class="c20"
                     />
                     <div
-                      class="c24 c15"
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _mr-18px _ml-18px"
                     >
                       <span
                         class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _whiteSpace-nowrap"
@@ -853,7 +800,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                         Other wallets
                       </span>
                       <svg
-                        class="c25"
+                        class="c21"
                         fill="none"
                         height="28"
                         viewBox="0 0 28 28"
@@ -871,31 +818,31 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                       </svg>
                     </div>
                     <div
-                      class="c23"
+                      class="c20"
                     />
                   </div>
                   <div
-                    class="c26"
+                    class="c22"
                   >
                     <div
-                      class="c27 c28"
+                      class="c23 c24"
                     >
                       <div
-                        class="c29"
+                        class="c25"
                         data-testid="option-grid"
                       >
                         <div
-                          class="c30"
+                          class="c26"
                         >
                           <button
-                            class="c31"
+                            class="c27"
                             data-testid="wallet-option-walletConnect"
                           >
                             <div
-                              class="c32"
+                              class="c28"
                             >
                               <div
-                                class="c33"
+                                class="c29"
                               >
                                 <img
                                   alt="WalletConnect"
@@ -903,7 +850,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                                 />
                               </div>
                               <div
-                                class="c34"
+                                class="c30"
                               >
                                 WalletConnect
                               </div>
@@ -911,17 +858,17 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                           </button>
                         </div>
                         <div
-                          class="c30"
+                          class="c26"
                         >
                           <button
-                            class="c31"
+                            class="c27"
                             data-testid="wallet-option-coinbaseWallet"
                           >
                             <div
-                              class="c32"
+                              class="c28"
                             >
                               <div
-                                class="c33"
+                                class="c29"
                               >
                                 <img
                                   alt="Coinbase Wallet"
@@ -929,7 +876,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                                 />
                               </div>
                               <div
-                                class="c34"
+                                class="c30"
                               >
                                 Coinbase Wallet
                               </div>
@@ -942,14 +889,14 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                       class="c11"
                     >
                       <div
-                        class="c35"
+                        class="c31"
                       >
                         <div
-                          class="c36 css-142zc9n"
+                          class="c32 css-142zc9n"
                         >
                           By connecting a wallet, you agree to Uniswap Labs’ 
                           <a
-                            class="c37 c38"
+                            class="c33 c34"
                             href="https://uniswap.org/terms-of-service/"
                             rel="noopener noreferrer"
                             target="_blank"
@@ -958,7 +905,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                           </a>
                            and consent to its 
                           <a
-                            class="c37 c38"
+                            class="c33 c34"
                             href="https://uniswap.org/privacy-policy"
                             rel="noopener noreferrer"
                             target="_blank"

@@ -114,7 +114,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   })
 
   const { gqlChains } = useEnabledChains()
-  const { data: nftData } = useNftsTabQuery({
+  const { data: nftData, loading: areNFsLoading } = useNftsTabQuery({
     variables: {
       ownerAddress: activeAccount.address,
       first: 1,
@@ -126,11 +126,14 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   })
   const isNftBalance = !!nftData?.nftBalances?.edges.length
 
-  const { hasData: isActivity } = useFormattedTransactionDataForActivity({
+  const { hasData: isActivity, isLoading: isActivityLoading } = useFormattedTransactionDataForActivity({
     address: activeAccount.address,
     hideSpamTokens: true,
     pageSize: 1,
   })
+
+  const isTabsDataCacheAvailable = !!balancesById || !!nftData || !!isActivity
+  const isTabsDataLoaded = isTabsDataCacheAvailable || (!areBalancesLoading && !areNFsLoading && !isActivityLoading)
 
   const isTokenBalances = !!Object.entries(balancesById || {}).length
   const showEmptyWalletState = !isTokenBalances && !isNftBalance && !isActivity
@@ -563,47 +566,31 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const renderTabBar = useCallback(
     (sceneProps: SceneRendererProps) => {
       const style: ViewStyle = { width: 'auto' }
+      if (!isLayoutReady) {
+        return null
+      }
       return (
-        <>
-          <Animated.View style={headerContainerStyle} onLayout={handleHeaderLayout}>
-            {contentHeader}
-          </Animated.View>
-
-          {isLayoutReady && (
-            <Animated.View entering={FadeIn} style={[TAB_STYLES.header, tabBarStyle]}>
-              <TabBar
-                {...sceneProps}
-                indicatorStyle={TAB_STYLES.activeTabIndicator}
-                navigationState={{ index: tabIndex, routes }}
-                pressColor="transparent" // Android only
-                renderLabel={renderTabLabel}
-                style={[
-                  TAB_STYLES.tabBar,
-                  {
-                    backgroundColor: colors.surface1.get(),
-                    borderBottomColor: colors.surface3.get(),
-                    paddingLeft: spacing.spacing12,
-                  },
-                ]}
-                tabStyle={style}
-              />
-            </Animated.View>
-          )}
-        </>
+        <Animated.View entering={FadeIn} style={[TAB_STYLES.header, tabBarStyle]}>
+          <TabBar
+            {...sceneProps}
+            indicatorStyle={TAB_STYLES.activeTabIndicator}
+            navigationState={{ index: tabIndex, routes }}
+            pressColor="transparent" // Android only
+            renderLabel={renderTabLabel}
+            style={[
+              TAB_STYLES.tabBar,
+              {
+                backgroundColor: colors.surface1.get(),
+                borderBottomColor: colors.surface3.get(),
+                paddingLeft: spacing.spacing12,
+              },
+            ]}
+            tabStyle={style}
+          />
+        </Animated.View>
       )
     },
-    [
-      colors.surface1,
-      colors.surface3,
-      contentHeader,
-      handleHeaderLayout,
-      headerContainerStyle,
-      isLayoutReady,
-      renderTabLabel,
-      routes,
-      tabBarStyle,
-      tabIndex,
-    ],
+    [colors.surface1, colors.surface3, isLayoutReady, renderTabLabel, routes, tabBarStyle, tabIndex],
   )
 
   const [refreshing, setRefreshing] = useState(false)
@@ -742,18 +729,24 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     <Screen edges={['left', 'right']}>
       {openAIAssistantEnabled && <AIAssistantOverlay />}
       <View style={TAB_STYLES.container}>
-        <TraceTabView
-          lazy
-          initialLayout={{
-            height: dimensions.fullHeight,
-            width: dimensions.fullWidth,
-          }}
-          navigationState={{ index: tabIndex, routes }}
-          renderScene={renderTab}
-          renderTabBar={renderTabBar}
-          screenName={MobileScreens.Home}
-          onIndexChange={setRouteTabIndex}
-        />
+        <Animated.View style={headerContainerStyle} onLayout={handleHeaderLayout}>
+          {contentHeader}
+        </Animated.View>
+
+        {isTabsDataLoaded && (
+          <TraceTabView
+            lazy
+            initialLayout={{
+              height: dimensions.fullHeight,
+              width: dimensions.fullWidth,
+            }}
+            navigationState={{ index: tabIndex, routes }}
+            renderScene={renderTab}
+            renderTabBar={renderTabBar}
+            screenName={MobileScreens.Home}
+            onIndexChange={setRouteTabIndex}
+          />
+        )}
       </View>
       <NavBar />
       <AnimatedFlex

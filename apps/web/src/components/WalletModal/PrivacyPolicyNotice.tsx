@@ -1,6 +1,6 @@
 import styled from 'lib/styled-components'
+import { Trans } from 'react-i18next'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
 
 const StyledLink = styled(ExternalLink)`
   font-weight: 535;

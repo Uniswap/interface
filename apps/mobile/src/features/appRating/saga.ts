@@ -1,11 +1,11 @@
 import { Alert, Platform } from 'react-native'
 import { call, delay, put, select, takeLatest } from 'typed-redux-saga'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import i18n from 'uniswap/src/i18n/i18n'
+import i18n from 'uniswap/src/i18n'
 import { openUri } from 'uniswap/src/utils/linking'
 import { isJestRun } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
@@ -98,7 +98,7 @@ function* maybeRequestAppRating() {
       // assume it was and mark rating as provided.
       yield* put(setAppRating({ ratingProvided: true }))
 
-      sendAnalyticsEvent(MobileEventName.AppRating, {
+      sendAnalyticsEvent(WalletEventName.AppRating, {
         type: 'store-review',
         appRatingPromptedMs,
         appRatingProvidedMs,
@@ -110,7 +110,7 @@ function* maybeRequestAppRating() {
       if (feedbackSent) {
         yield* put(setAppRating({ feedbackProvided: true }))
 
-        sendAnalyticsEvent(MobileEventName.AppRating, {
+        sendAnalyticsEvent(WalletEventName.AppRating, {
           type: 'feedback-form',
           appRatingPromptedMs,
           appRatingProvidedMs,
@@ -118,7 +118,7 @@ function* maybeRequestAppRating() {
       } else {
         yield* put(setAppRating({ feedbackProvided: false }))
 
-        sendAnalyticsEvent(MobileEventName.AppRating, {
+        sendAnalyticsEvent(WalletEventName.AppRating, {
           type: 'remind',
           appRatingPromptedMs,
           appRatingProvidedMs,

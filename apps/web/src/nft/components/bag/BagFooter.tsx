@@ -32,6 +32,7 @@ import { useTokenInput } from 'nft/hooks/useTokenInput'
 import { BagStatus } from 'nft/types'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { InterfaceTrade, TradeFillType, TradeState } from 'state/routing/types'
 import { ThemedText } from 'theme/components'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
@@ -39,7 +40,6 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { Trans, t } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const FooterContainer = styled.div`
@@ -228,6 +228,7 @@ const FiatValue = ({
   tradeState: TradeState
   usingPayWithAnyToken: boolean
 }) => {
+  const { t } = useTranslation()
   const { formatNumberOrString } = useFormatter()
 
   if (!usdcValue) {

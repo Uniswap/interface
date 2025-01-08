@@ -9,8 +9,8 @@ import { GenieAsset, Markets, isPooledMarket } from 'nft/types'
 import { calcPoolPrice, isInSameSudoSwapPool } from 'nft/utils'
 import { default as Slider } from 'rc-slider'
 import { useEffect, useMemo, useReducer, useState } from 'react'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const SweepContainer = styled.div`

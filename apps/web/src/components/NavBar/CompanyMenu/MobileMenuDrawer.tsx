@@ -8,19 +8,12 @@ import { LanguageSettings } from 'components/NavBar/PreferencesMenu/Language'
 import { PreferenceSettings } from 'components/NavBar/PreferencesMenu/Preferences'
 import { PreferencesView } from 'components/NavBar/PreferencesMenu/shared'
 import { useTabsContent } from 'components/NavBar/Tabs/TabsContent'
-import styled, { useTheme } from 'lib/styled-components'
+import { useTheme } from 'lib/styled-components'
 import { Socials } from 'pages/Landing/sections/Footer'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronDown } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { Accordion, AnimateTransition, Flex, Square, Text } from 'ui/src'
-import { useTranslation } from 'uniswap/src/i18n'
-
-const StyledMenuLink = styled(MenuLink)`
-  color: ${({ theme }) => theme.neutral2} !important;
-  &:hover {
-    color: ${({ theme }) => theme.neutral2} !important;
-  }
-`
 
 function MenuSection({
   title,
@@ -102,7 +95,7 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
             <Flex gap="$spacing24">
               <MenuSection title={t('common.app')} collapsible={false}>
                 {tabsContent.map((tab, index) => (
-                  <StyledMenuLink
+                  <MenuLink
                     key={`${tab.title}_${index}}`}
                     label={tab.title}
                     href={tab.href}
@@ -115,7 +108,7 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
               {menuContent.map((sectionContent, index) => (
                 <MenuSection key={`${sectionContent.title}_${index}`} title={sectionContent.title}>
                   {sectionContent.items.map(({ label, href, internal }, index) => (
-                    <StyledMenuLink
+                    <MenuLink
                       key={`${label}_${index}}`}
                       label={label}
                       href={href}
@@ -127,7 +120,7 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
               ))}
 
               <MenuSection title={t('common.displaySettings')}>
-                <PreferenceSettings showHeader={false} setSettingsView={changeView} />
+                <PreferenceSettings showHeader={false} showThemeLabel={false} setSettingsView={changeView} />
               </MenuSection>
 
               <DownloadApp onClick={closeMenu} />

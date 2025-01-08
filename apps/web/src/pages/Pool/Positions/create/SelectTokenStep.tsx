@@ -16,6 +16,7 @@ import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePosi
 import { AdvancedButton, Container } from 'pages/Pool/Positions/create/shared'
 import { FeeData } from 'pages/Pool/Positions/create/types'
 import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { TamaguiClickableStyle } from 'theme/components'
 import { PositionField } from 'types/position'
@@ -28,7 +29,6 @@ import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Trans, t, useTranslation } from 'uniswap/src/i18n'
 import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -106,6 +106,7 @@ const FeeTier = ({
   selected: boolean
   onSelect: (value: FeeData) => void
 }) => {
+  const { t } = useTranslation()
   const { formatPercent } = useFormatter()
   const { formatNumberOrString } = useLocalizationContext()
 

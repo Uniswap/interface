@@ -1,9 +1,9 @@
 import Column from 'components/deprecated/Column'
 import styled, { useTheme } from 'lib/styled-components'
 import { AlertTriangle } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { Trans } from 'uniswap/src/i18n'
 
 const Container = styled(Column)`
   height: 75vh;

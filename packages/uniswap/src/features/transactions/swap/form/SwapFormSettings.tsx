@@ -75,7 +75,7 @@ export function SwapFormSettings({
 
   const isViewOnlyWallet = account?.type === AccountType.Readonly
 
-  const topAlignment = adjustTopAlignment ? (isInterface ? -34 : 6) : 0
+  const topAlignment = adjustTopAlignment ? (isInterface ? -38 : 6) : 0
   const rightAlignment = adjustRightAlignment ? (isMobileApp ? 24 : 4) : 0
 
   const showCustomSlippage = customSlippageTolerance && !isBridgeTrade

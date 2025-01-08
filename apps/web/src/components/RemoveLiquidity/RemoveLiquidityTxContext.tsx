@@ -1,6 +1,7 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { useRemoveLiquidityTxAndGasInfo } from 'components/RemoveLiquidity/hooks'
+import { useCurrencyInfoWithUnwrapForTradingApi } from 'pages/Pool/Positions/create/utils'
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo } from 'react'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { CheckApprovalLPResponse, DecreaseLPPositionResponse } from 'uniswap/src/data/tradingApi/__generated__'
@@ -28,7 +29,7 @@ const RemoveLiquidityTxContext = createContext<RemoveLiquidityTxInfo | undefined
 
 export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren): JSX.Element {
   const account = useAccountMeta()
-  const { positionInfo, percent } = useRemoveLiquidityModalContext()
+  const { positionInfo, percent, unwrapNativeCurrency } = useRemoveLiquidityModalContext()
 
   const removeLiquidityTxInfo = useRemoveLiquidityTxAndGasInfo({ account: account?.address })
   const { approvalLoading, decreaseCalldataLoading, decreaseCalldata, error, refetch } = removeLiquidityTxInfo
@@ -38,8 +39,19 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
     logContextUpdate('RemoveLiquidityTxContext', removeLiquidityTxInfo, datadogEnabled)
   }, [removeLiquidityTxInfo, datadogEnabled])
 
+  const currency0Info = useCurrencyInfoWithUnwrapForTradingApi({
+    currency: positionInfo?.currency0Amount.currency,
+    shouldUnwrap: unwrapNativeCurrency,
+  })
+  const currency1Info = useCurrencyInfoWithUnwrapForTradingApi({
+    currency: positionInfo?.currency1Amount.currency,
+    shouldUnwrap: unwrapNativeCurrency,
+  })
+  const token0 = currency0Info?.currency
+  const token1 = currency1Info?.currency
+
   const decreaseLiquidityTxContext = useMemo((): ValidatedDecreasePositionTxAndGasInfo | undefined => {
-    if (!positionInfo || approvalLoading || decreaseCalldataLoading || !decreaseCalldata) {
+    if (!positionInfo || approvalLoading || decreaseCalldataLoading || !decreaseCalldata || !token0 || !token1) {
       return undefined
     }
     const approvePositionTokenRequest = validateTransactionRequest(
@@ -51,8 +63,10 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
     }
 
     const { currency0Amount, currency1Amount } = positionInfo
-    const currency0AmountToRemove = currency0Amount.multiply(percent).divide(100)
-    const currency1AmountToRemove = currency1Amount.multiply(percent).divide(100)
+    const token0Amount = CurrencyAmount.fromRawAmount(token0, currency0Amount.quotient)
+    const token1Amount = CurrencyAmount.fromRawAmount(token1, currency1Amount.quotient)
+    const currency0AmountToRemove = token0Amount.multiply(percent).divide(100)
+    const currency1AmountToRemove = token1Amount.multiply(percent).divide(100)
 
     return {
       type: LiquidityTransactionType.Decrease,
@@ -70,7 +84,16 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
       revocationTxRequest: undefined,
       permit: undefined,
     }
-  }, [approvalLoading, positionInfo, decreaseCalldataLoading, decreaseCalldata, removeLiquidityTxInfo, percent])
+  }, [
+    positionInfo,
+    approvalLoading,
+    decreaseCalldataLoading,
+    decreaseCalldata,
+    token0,
+    token1,
+    removeLiquidityTxInfo.v2LpTokenApproval?.positionTokenApproval,
+    percent,
+  ])
 
   return (
     <RemoveLiquidityTxContext.Provider

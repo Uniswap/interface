@@ -1,11 +1,11 @@
 import GetHelp from 'components/Button/GetHelp'
 import { HelpCircle } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { CloseIcon } from 'theme/components'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { Trans } from 'uniswap/src/i18n/Trans'
 
 interface ResetCreatePositionFormModalProps {
   isOpen: boolean

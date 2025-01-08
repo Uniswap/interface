@@ -5,11 +5,11 @@ import { SmallButtonPrimary } from 'components/Button/buttons'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
+import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { Trans } from 'uniswap/src/i18n'
 
 const Image = styled.img`
   max-width: 510px;

@@ -1,7 +1,7 @@
 import { LocalCurrencyMenuItems } from 'components/AccountDrawer/LocalCurrencyMenu'
 import { PreferencesHeader } from 'components/NavBar/PreferencesMenu/Header'
 import { SettingsColumn } from 'components/NavBar/PreferencesMenu/shared'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans } from 'react-i18next'
 
 export function CurrencySettings({ onExitMenu }: { onExitMenu: () => void }) {
   return (

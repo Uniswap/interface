@@ -25,6 +25,11 @@ exports.shared = {
         'Use the wrapper hooks `usePortfolioTotalValue`, `useAccountList` or `usePortfolioBalances` instead of `usePortfolioValueModifiers` directly.',
     },
     {
+      name: 'i18next',
+      importNames: ['t'],
+      message: 'Please avoid direct imports of t, using `useTranslation` and `i18n.t` when absolutely needed outside of a React context',
+    },
+    {
       name: 'utilities/src/format/localeBased',
       message: 'Use via `useLocalizationContext` instead.',
     },

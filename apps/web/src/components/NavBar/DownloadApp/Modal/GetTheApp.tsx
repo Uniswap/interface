@@ -3,9 +3,9 @@ import { ReactComponent as PlayStoreBadge } from 'assets/svg/play-store-badge.sv
 import { ModalContent } from 'components/NavBar/DownloadApp/Modal/Content'
 import { WalletOneLinkQR } from 'components/WalletOneLinkQR'
 import styled from 'lib/styled-components'
+import { useTranslation } from 'react-i18next'
 import { ExternalLink } from 'theme/components'
 import { Flex } from 'ui/src'
-import { useTranslation } from 'uniswap/src/i18n'
 
 const BadgeLink = styled(ExternalLink)`
   stroke: none;

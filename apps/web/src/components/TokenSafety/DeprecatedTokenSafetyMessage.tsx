@@ -2,9 +2,9 @@ import { displayWarningLabel, getWarningCopy, TOKEN_SAFETY_ARTICLE, Warning } fr
 import { useTokenWarningColor, useTokenWarningTextColor } from 'hooks/useTokenWarningColor'
 import styled from 'lib/styled-components'
 import { AlertTriangle, Slash } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { Text } from 'rebass'
 import { ExternalLink } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
 
 const Label = styled.div<{ color: string; backgroundColor: string }>`
   width: 100%;

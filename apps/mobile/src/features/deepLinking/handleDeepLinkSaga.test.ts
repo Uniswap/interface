@@ -1,13 +1,18 @@
+/* eslint-disable max-lines */
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
 import { navigationRef } from 'src/app/navigation/navigationRef'
+import { DeepLinkAction } from 'src/features/deepLinking/deepLinkUtils'
 import {
   handleDeepLink,
+  handleGoToFiatOnRampDeepLink,
+  handleGoToTokenDetailsDeepLink,
   handleUniswapAppDeepLink,
   handleWalletConnectDeepLink,
   LinkSource,
   parseAndValidateUserAddress,
 } from 'src/features/deepLinking/handleDeepLinkSaga'
+import { handleOnRampReturnLink } from 'src/features/deepLinking/handleOnRampReturnLinkSaga'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
 import { openModal, OpenModalParams } from 'src/features/modals/modalSlice'
 import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/saga'
@@ -23,6 +28,15 @@ import {
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
+
+jest.mock('@walletconnect/utils', () => ({
+  parseUri: jest.fn(() => ({
+    version: 2,
+  })),
+}))
+jest.mock('expo-web-browser', () => ({
+  dismissBrowser: jest.fn(),
+}))
 
 const account = signerMnemonicAccount()
 
@@ -58,26 +72,32 @@ describe(handleDeepLink, () => {
   })
 
   it('Routes to the swap deep link handler if screen=swap and userAddress is valid', () => {
-    return expectSaga(handleDeepLink, { payload: swapDeepLinkPayload, type: '' })
+    const payload = swapDeepLinkPayload
+    return expectSaga(handleDeepLink, { payload, type: '' })
       .withState(stateWithActiveAccountAddress)
       .call(parseAndValidateUserAddress, account.address)
       .put(setAccountAsActive(account.address))
       .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
-        url: swapDeepLinkPayload.url,
+        action: DeepLinkAction.SwapScreen,
+        url: payload.url,
         screen: 'swap',
-        is_cold_start: swapDeepLinkPayload.coldStart,
+        is_cold_start: payload.coldStart,
+        source: 'unknown',
       })
       .silentRun()
   })
 
   it('Routes to the transaction deep link handler if screen=transaction and userAddress is valid', () => {
-    return expectSaga(handleDeepLink, { payload: transactionDeepLinkPayload, type: '' })
+    const payload = transactionDeepLinkPayload
+    return expectSaga(handleDeepLink, { payload, type: '' })
       .withState(stateWithActiveAccountAddress)
       .call(handleTransactionLink)
       .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
-        url: transactionDeepLinkPayload.url,
+        action: DeepLinkAction.TransactionScreen,
+        url: payload.url,
         screen: 'transaction',
-        is_cold_start: transactionDeepLinkPayload.coldStart,
+        is_cold_start: payload.coldStart,
+        source: 'unknown',
       })
       .silentRun()
   })
@@ -85,8 +105,16 @@ describe(handleDeepLink, () => {
   it('Fails if the screen param is not supported', () => {
     jest.spyOn(console, 'error').mockImplementation(() => undefined)
 
-    return expectSaga(handleDeepLink, { payload: unsupportedScreenDeepLinkPayload, type: '' })
+    const payload = unsupportedScreenDeepLinkPayload
+    return expectSaga(handleDeepLink, { payload, type: '' })
       .withState(stateWithActiveAccountAddress)
+      .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
+        action: DeepLinkAction.Unknown,
+        url: payload.url,
+        screen: 'send',
+        is_cold_start: payload.coldStart,
+        source: 'unknown',
+      })
       .silentRun()
   })
 
@@ -103,50 +131,81 @@ describe(handleDeepLink, () => {
   })
 
   it('Handles WalletConnect connection using Universal Link URL', () => {
+    const payload = { url: wcUniversalLinkUrl, coldStart: false }
     return expectSaga(handleDeepLink, {
-      payload: { url: wcUniversalLinkUrl, coldStart: false },
+      payload,
       type: '',
     })
       .withState(stateWithActiveAccountAddress)
       .provide([[call(waitForWcWeb3WalletIsReady), undefined]])
       .call(handleWalletConnectDeepLink, wcUri)
+      .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
+        action: DeepLinkAction.UniversalWalletConnectLink,
+        url: payload.url,
+        screen: 'other',
+        is_cold_start: payload.coldStart,
+        source: 'unknown',
+      })
       .returns(undefined)
       .silentRun()
   })
 
   it('Handles WalletConnect connection using Uniswap URL scheme with WalletConnect URI as query param', () => {
+    const payload = { url: wcAsParamInUniwapScheme, coldStart: false }
     return expectSaga(handleDeepLink, {
-      payload: { url: wcAsParamInUniwapScheme, coldStart: false },
+      payload,
       type: '',
     })
       .withState(stateWithActiveAccountAddress)
       .provide([[call(waitForWcWeb3WalletIsReady), undefined]])
       .call(handleWalletConnectDeepLink, wcUri)
+      .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
+        action: DeepLinkAction.WalletConnectAsParam,
+        url: payload.url,
+        screen: 'other',
+        is_cold_start: payload.coldStart,
+        source: 'unknown',
+      })
       .returns(undefined)
       .silentRun()
   })
 
   it('Handles WalletConnect connection using Uniswap URL scheme with WalletConnect URI', () => {
+    const payload = { url: wcInUniwapScheme, coldStart: false }
     return expectSaga(handleDeepLink, {
-      payload: { url: wcInUniwapScheme, coldStart: false },
+      payload,
       type: '',
     })
       .withState(stateWithActiveAccountAddress)
       .provide([[call(waitForWcWeb3WalletIsReady), undefined]])
       .call(handleWalletConnectDeepLink, wcUri)
+      .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
+        action: DeepLinkAction.UniswapWalletConnect,
+        url: payload.url,
+        screen: 'other',
+        is_cold_start: payload.coldStart,
+        source: 'unknown',
+      })
       .returns(undefined)
       .silentRun()
   })
 
   it('Handles WalletConnect connection using WalletConnect URI', () => {
+    const payload = { url: wcUri, coldStart: false }
     return expectSaga(handleDeepLink, {
-      payload: { url: wcUri, coldStart: false },
+      payload,
       type: '',
     })
       .withState(stateWithActiveAccountAddress)
       .provide([[call(waitForWcWeb3WalletIsReady), undefined]])
       .call(handleWalletConnectDeepLink, wcUri)
-      .returns(undefined)
+      .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
+        action: DeepLinkAction.WalletConnect,
+        url: payload.url,
+        screen: 'other',
+        is_cold_start: payload.coldStart,
+        source: 'unknown',
+      })
       .silentRun()
   })
 
@@ -363,6 +422,117 @@ describe(handleDeepLink, () => {
       .withState(stateWithActiveAccountAddress)
       .call(handleUniswapAppDeepLink, path, pathUrl, LinkSource.Share)
       .put(openModal(expectedModal))
+      .returns(undefined)
+      .silentRun()
+  })
+
+  it('Handles show transaction after fiat onramp', () => {
+    const payload = {
+      url: `https://uniswap.org/app?screen=transaction&fiatOnRamp=true&userAddress=${account.address}`,
+      coldStart: false,
+    }
+    return expectSaga(handleDeepLink, {
+      payload,
+      type: '',
+    })
+      .withState(stateWithActiveAccountAddress)
+      .call(handleOnRampReturnLink)
+      .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
+        action: DeepLinkAction.ShowTransactionAfterFiatOnRamp,
+        url: payload.url,
+        screen: 'transaction',
+        is_cold_start: payload.coldStart,
+        source: 'unknown',
+      })
+      .returns(undefined)
+      .silentRun()
+  })
+  it('Handles show transaction after fiat off ramp', () => {
+    const payload = {
+      url: `https://uniswap.org/app?screen=transaction&fiatOffRamp=true&userAddress=${account.address}`,
+      coldStart: false,
+    }
+    return (
+      expectSaga(handleDeepLink, {
+        payload,
+        type: '',
+      })
+        .withState(stateWithActiveAccountAddress)
+        // FIXME: The URL object is the same URL but a different instance
+        // .call(handleOffRampReturnLink, new URL(payload.url))
+        .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
+          action: DeepLinkAction.ShowTransactionAfterFiatOffRampScreen,
+          url: payload.url,
+          screen: 'transaction',
+          is_cold_start: payload.coldStart,
+          source: 'unknown',
+        })
+        .returns(undefined)
+        .silentRun()
+    )
+  })
+  it('Handles show transaction', () => {
+    const payload = {
+      url: `https://uniswap.org/app?screen=transaction&userAddress=${account.address}`,
+      coldStart: false,
+    }
+    return expectSaga(handleDeepLink, {
+      payload,
+      type: '',
+    })
+      .withState(stateWithActiveAccountAddress)
+      .call(handleTransactionLink)
+      .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
+        action: DeepLinkAction.TransactionScreen,
+        url: payload.url,
+        screen: 'transaction',
+        is_cold_start: payload.coldStart,
+        source: 'unknown',
+      })
+      .returns(undefined)
+      .silentRun()
+  })
+
+  it('Handles showing token details for a token', () => {
+    const payload = {
+      url: `uniswap://app/tokendetails?currencyId=${SAMPLE_CURRENCY_ID_1}&source=push`,
+      coldStart: false,
+    }
+    return expectSaga(handleDeepLink, {
+      payload,
+      type: '',
+    })
+      .withState(stateWithActiveAccountAddress)
+      .call(handleGoToTokenDetailsDeepLink, SAMPLE_CURRENCY_ID_1)
+      .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
+        action: DeepLinkAction.TokenDetails,
+        url: payload.url,
+        screen: 'other',
+        is_cold_start: payload.coldStart,
+        source: 'push',
+      })
+      .returns(undefined)
+      .silentRun()
+  })
+
+  it('Handles showing fiat onramp', () => {
+    const payload = {
+      url: `uniswap://app/fiatonramp?userAddress=${account.address}&source=push`,
+      coldStart: false,
+    }
+    return expectSaga(handleDeepLink, {
+      payload,
+      type: '',
+    })
+      .withState(stateWithActiveAccountAddress)
+      .call(handleGoToFiatOnRampDeepLink)
+      .call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
+        action: DeepLinkAction.FiatOnRampScreen,
+        url: payload.url,
+        screen: 'other',
+        is_cold_start: payload.coldStart,
+        source: 'push',
+      })
       .returns(undefined)
       .silentRun()
   })

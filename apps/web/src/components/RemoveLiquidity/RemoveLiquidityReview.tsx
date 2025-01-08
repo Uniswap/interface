@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import {
@@ -13,7 +14,9 @@ import { DetailLineItem } from 'components/swap/DetailLineItem'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
-import { useState } from 'react'
+import { useCurrencyInfoWithUnwrapForTradingApi } from 'pages/Pool/Positions/create/utils'
+import { useMemo, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { Button, Flex, Separator, Text } from 'ui/src'
@@ -27,7 +30,6 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -35,7 +37,7 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
   const [steps, setSteps] = useState<TransactionStep[]>([])
-  const { percent, positionInfo } = useRemoveLiquidityModalContext()
+  const { percent, positionInfo, unwrapNativeCurrency } = useRemoveLiquidityModalContext()
   const removeLiquidityTxContext = useRemoveLiquidityTxContext()
   const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
   const [currentStep, setCurrentStep] = useState<{ step: TransactionStep; accepted: boolean } | undefined>()
@@ -69,10 +71,43 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
 
   const currentPrice = usePositionCurrentPrice(positionInfo)
 
-  const currency0AmountToRemove = currency0Amount.multiply(percent).divide(100)
-  const currency1AmountToRemove = currency1Amount.multiply(percent).divide(100)
-  const currency0AmountToRemoveUSD = useUSDCValue(currency0AmountToRemove)
-  const currency1AmountToRemoveUSD = useUSDCValue(currency1AmountToRemove)
+  const currency0Info = useCurrencyInfoWithUnwrapForTradingApi({
+    currency: positionInfo?.currency0Amount.currency,
+    shouldUnwrap: unwrapNativeCurrency,
+  })
+  const currency1Info = useCurrencyInfoWithUnwrapForTradingApi({
+    currency: positionInfo?.currency1Amount.currency,
+    shouldUnwrap: unwrapNativeCurrency,
+  })
+
+  const {
+    unwrappedCurrency0AmountToRemove,
+    unwrappedCurrency1AmountToRemove,
+    currency0AmountToRemove,
+    currency1AmountToRemove,
+  } = useMemo(() => {
+    const token0 = currency0Info?.currency
+    const token1 = currency1Info?.currency
+    const unwrappedCurrency0AmountToRemove = CurrencyAmount.fromRawAmount(token0, currency0Amount.quotient)
+      .multiply(percent)
+      .divide(100)
+    const unwrappedCurrency1AmountToRemove = CurrencyAmount.fromRawAmount(token1, currency1Amount.quotient)
+      .multiply(percent)
+      .divide(100)
+
+    const currency0AmountToRemove = currency0Amount.multiply(percent).divide(100)
+    const currency1AmountToRemove = currency1Amount.multiply(percent).divide(100)
+
+    return {
+      unwrappedCurrency0AmountToRemove,
+      unwrappedCurrency1AmountToRemove,
+      currency0AmountToRemove,
+      currency1AmountToRemove,
+    }
+  }, [currency0Amount, currency0Info?.currency, currency1Amount, currency1Info?.currency, percent])
+
+  const currency0AmountToRemoveUSD = useUSDCValue(unwrappedCurrency0AmountToRemove)
+  const currency1AmountToRemoveUSD = useUSDCValue(unwrappedCurrency1AmountToRemove)
 
   const newCurrency0Amount = currency0Amount.subtract(currency0AmountToRemove)
   const newCurrency1Amount = currency1Amount.subtract(currency1AmountToRemove)
@@ -125,14 +160,14 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
     <Flex gap="$gap16">
       <Flex gap="$gap16" px="$padding16">
         <TokenInfo
-          currencyAmount={currency0AmountToRemove}
+          currencyAmount={unwrappedCurrency0AmountToRemove}
           currencyUSDAmount={currency0FiatAmount?.multiply(percent).divide(100)}
         />
         <Text variant="body3" color="$neutral2">
           {t('common.and')}
         </Text>
         <TokenInfo
-          currencyAmount={currency1AmountToRemove}
+          currencyAmount={unwrappedCurrency1AmountToRemove}
           currencyUSDAmount={currency1FiatAmount?.multiply(percent).divide(100)}
         />
         {positionInfo.version !== ProtocolVersion.V2 && (

@@ -6,6 +6,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOffRampMetaData, OffRampTransferDetailsResponse } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionScreen } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+import { forceFetchFiatOnRampTransactions } from 'uniswap/src/features/transactions/slice'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
@@ -79,6 +80,7 @@ function* _handleOffRampReturnLink(url: URL) {
     sendScreen: TransactionScreen.Review,
   }
 
+  yield* put(forceFetchFiatOnRampTransactions())
   yield* call(navigate, MobileScreens.Home)
   yield* put(openModal({ name: ModalName.Send, initialState: initialSendState }))
   yield* call(dismissInAppBrowser)

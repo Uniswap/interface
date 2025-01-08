@@ -5,7 +5,7 @@ import { createUniverseTransaction } from 'state/sagas/utils/transaction'
 import { PendingTransactionDetails } from 'state/transactions/types'
 import { call } from 'typed-redux-saga'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { refetchGQLQueries } from 'uniswap/src/features/transactions/refetchGQLQueriesSaga'
+import { refetchGQLQueries } from 'uniswap/src/features/portfolio/portfolioUpdates/refetchGQLQueriesSaga'
 
 import { createSaga } from 'uniswap/src/utils/saga'
 

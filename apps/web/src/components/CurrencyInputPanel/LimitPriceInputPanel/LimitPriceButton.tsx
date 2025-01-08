@@ -2,8 +2,8 @@ import { Percent } from '@uniswap/sdk-core'
 import Row from 'components/deprecated/Row'
 import styled, { css } from 'lib/styled-components'
 import { X } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { ClickableStyle, ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 
 interface LimitPriceButtonProps {

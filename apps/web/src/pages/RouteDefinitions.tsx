@@ -4,11 +4,11 @@ import { getAddLiquidityPageTitle, getPositionPageDescription, getPositionPageTi
 import { ReactNode, Suspense, lazy, useMemo } from 'react'
 import { Navigate, Route, Routes, matchPath, useLocation } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
-import { t } from 'uniswap/src/i18n'
 import { isBrowserRouterEnabled } from 'utils/env'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import Landing from 'pages/Landing'
 import Swap from 'pages/Swap'
+import i18n from 'uniswap/src/i18n'
 
 const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
@@ -69,18 +69,18 @@ export function useRouterConfig(): RouterConfig {
 // SEO titles and descriptions sourced from https://docs.google.com/spreadsheets/d/1_6vSxGgmsx6QGEZ4mdHppv1VkuiJEro3Y_IopxUHGB4/edit#gid=0
 // getTitle and getDescription are used as static metatags for SEO. Dynamic metatags should be set in the page component itself
 const StaticTitlesAndDescriptions = {
-  UniswapTitle: t('title.uniswapTradeCrypto'),
-  SwapTitle: t('title.buySellTradeEthereum'),
-  SwapDescription: t('title.swappingMadeSimple'),
-  DetailsPageBaseTitle: t('common.buyAndSell'),
-  TDPDescription: t('title.realTime'),
-  PDPDescription: t('title.tradeTokens'),
-  NFTTitle: t('title.explore'),
-  MigrateTitle: t('title.migratev2'),
-  MigrateTitleV3: t('title.migratev3'),
-  MigrateDescription: t('title.easilyRemove'),
-  MigrateDescriptionV4: t('title.easilyRemoveV4'),
-  AddLiquidityDescription: t('title.earnFees'),
+  UniswapTitle: i18n.t('title.uniswapTradeCrypto'),
+  SwapTitle: i18n.t('title.buySellTradeEthereum'),
+  SwapDescription: i18n.t('title.swappingMadeSimple'),
+  DetailsPageBaseTitle: i18n.t('common.buyAndSell'),
+  TDPDescription: i18n.t('title.realTime'),
+  PDPDescription: i18n.t('title.tradeTokens'),
+  NFTTitle: i18n.t('title.explore'),
+  MigrateTitle: i18n.t('title.migratev2'),
+  MigrateTitleV3: i18n.t('title.migratev3'),
+  MigrateDescription: i18n.t('title.easilyRemove'),
+  MigrateDescriptionV4: i18n.t('title.easilyRemoveV4'),
+  AddLiquidityDescription: i18n.t('title.earnFees'),
 }
 
 export interface RouteDefinition {
@@ -124,7 +124,7 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/explore/tokens/:chainName/:tokenAddress',
-    getTitle: () => t('common.buyAndSell'),
+    getTitle: () => i18n.t('common.buyAndSell'),
     getDescription: () => StaticTitlesAndDescriptions.TDPDescription,
     getElement: () => <TokenDetails />,
   }),
@@ -158,8 +158,8 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/vote/*',
-    getTitle: () => t('title.voteOnGov'),
-    getDescription: () => t('title.uniToken'),
+    getTitle: () => i18n.t('title.voteOnGov'),
+    getDescription: () => i18n.t('title.uniToken'),
     getElement: () => {
       return (
         <Routes>
@@ -176,8 +176,8 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/create-proposal',
-    getTitle: () => t('title.createGovernanceOn'),
-    getDescription: () => t('title.createGovernanceTo'),
+    getTitle: () => i18n.t('title.createGovernanceOn'),
+    getDescription: () => i18n.t('title.createGovernanceTo'),
     getElement: () => <Navigate to="/vote/create-proposal" replace />,
   }),
   createRouteDefinition({
@@ -188,17 +188,17 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/send',
     getElement: () => <Swap />,
-    getTitle: () => t('title.sendTokens'),
+    getTitle: () => i18n.t('title.sendTokens'),
   }),
   createRouteDefinition({
     path: '/limits',
     getElement: () => <Navigate to="/limit" replace />,
-    getTitle: () => t('title.placeLimit'),
+    getTitle: () => i18n.t('title.placeLimit'),
   }),
   createRouteDefinition({
     path: '/limit',
     getElement: () => <Swap />,
-    getTitle: () => t('title.placeLimit'),
+    getTitle: () => i18n.t('title.placeLimit'),
   }),
   createRouteDefinition({
     path: '/buy',
@@ -319,14 +319,14 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/remove/v2/:currencyIdA/:currencyIdB',
     getElement: () => <RemoveLiquidityV2 />,
-    getTitle: () => t('title.removeLiquidityv2'),
-    getDescription: () => t('title.removeTokensv2'),
+    getTitle: () => i18n.t('title.removeLiquidityv2'),
+    getDescription: () => i18n.t('title.removeTokensv2'),
   }),
   createRouteDefinition({
     path: '/remove/:tokenId',
     getElement: () => <RemoveLiquidityV3 />,
-    getTitle: () => t('title.removePoolLiquidity'),
-    getDescription: () => t('title.removev3Liquidity'),
+    getTitle: () => i18n.t('title.removePoolLiquidity'),
+    getDescription: () => i18n.t('title.removev3Liquidity'),
   }),
   createRouteDefinition({
     path: '/migrate/v2',
@@ -348,8 +348,8 @@ export const routes: RouteDefinition[] = [
       </Suspense>
     ),
     enabled: (args) => !args.shouldDisableNFTRoutes,
-    getTitle: () => t('title.exploreNFTs'),
-    getDescription: () => t('title.betterPricesMoreListings'),
+    getTitle: () => i18n.t('title.exploreNFTs'),
+    getDescription: () => i18n.t('title.betterPricesMoreListings'),
   }),
   createRouteDefinition({
     path: '/nfts/asset/:contractAddress/:tokenId',
@@ -370,7 +370,7 @@ export const routes: RouteDefinition[] = [
     ),
     enabled: (args) => !args.shouldDisableNFTRoutes,
     getTitle: () => StaticTitlesAndDescriptions.NFTTitle,
-    getDescription: () => t('title.manageNFT'),
+    getDescription: () => i18n.t('title.manageNFT'),
   }),
   createRouteDefinition({
     path: '/nfts/collection/:contractAddress',

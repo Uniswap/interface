@@ -1,5 +1,5 @@
 import { cloneElement, useState } from 'react'
-import { AnimatePresence, ColorTokens, TabLayout, Tabs, TabsTabProps, styled } from 'tamagui'
+import { AnimatePresence, ColorTokens, SpaceTokens, TabLayout, Tabs, TabsTabProps, styled } from 'tamagui'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
 import { assert } from 'utilities/src/errors'
@@ -147,6 +147,7 @@ interface SegmentedControlProps<T extends string = string> {
   disabled?: boolean
   fullWidth?: boolean
   outlined?: boolean
+  gap?: SpaceTokens
 }
 
 /**
@@ -175,6 +176,7 @@ export function SegmentedControl<T extends string = string>({
   disabled,
   fullWidth,
   outlined = true,
+  gap,
 }: SegmentedControlProps<T>): JSX.Element {
   assert(options.length >= 2 && options.length <= 6, 'Segmented control must have between 2 and 6 options, inclusive.')
 
@@ -220,6 +222,7 @@ export function SegmentedControl<T extends string = string>({
         outlined={outlined}
         loop={false}
         size={size}
+        gap={gap}
       >
         {options.map((option, index) => {
           const { value, display, wrapper } = option

@@ -2,6 +2,7 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { PriceRangeInfo } from 'pages/Pool/Positions/create/types'
+import { useTranslation } from 'react-i18next'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { Flex, GeneratedIcon, Text, styled } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
@@ -9,7 +10,6 @@ import { iconSizes } from 'ui/src/theme'
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
-import { useTranslation } from 'uniswap/src/i18n'
 import { NumberType } from 'utilities/src/format/types'
 
 export const Container = styled(Flex, {

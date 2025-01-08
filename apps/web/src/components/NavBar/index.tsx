@@ -12,15 +12,7 @@ import Web3Status from 'components/Web3Status'
 import Row from 'components/deprecated/Row'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useAccount } from 'hooks/useAccount'
-import { useIsBuyPage } from 'hooks/useIsBuyPage'
-import { useIsExplorePage } from 'hooks/useIsExplorePage'
-import { useIsLandingPage } from 'hooks/useIsLandingPage'
-import { useIsLimitPage } from 'hooks/useIsLimitPage'
-import { useIsMigrateV3Page } from 'hooks/useIsMigrateV3Page'
-import { useIsNftPage } from 'hooks/useIsNftPage'
-import { useIsPositionsPage } from 'hooks/useIsPositionsPage'
-import { useIsSendPage } from 'hooks/useIsSendPage'
-import { useIsSwapPage } from 'hooks/useIsSwapPage'
+import { PageType, useIsPage } from 'hooks/useIsPage'
 import styled, { css } from 'lib/styled-components'
 import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
@@ -73,17 +65,17 @@ const SearchContainer = styled.div`
 `
 
 function useShouldHideChainSelector() {
-  const isNftPage = useIsNftPage()
-  const isLandingPage = useIsLandingPage()
-  const isSendPage = useIsSendPage()
-  const isSwapPage = useIsSwapPage()
-  const isLimitPage = useIsLimitPage()
-  const isExplorePage = useIsExplorePage()
-  const isPositionsPage = useIsPositionsPage()
-  const isMigrateV3Page = useIsMigrateV3Page()
-  const isBuyPage = useIsBuyPage()
+  const isNFTPage = useIsPage(PageType.NFTS)
+  const isLandingPage = useIsPage(PageType.LANDING)
+  const isSendPage = useIsPage(PageType.SEND)
+  const isSwapPage = useIsPage(PageType.SWAP)
+  const isLimitPage = useIsPage(PageType.LIMIT)
+  const isExplorePage = useIsPage(PageType.EXPLORE)
+  const isPositionsPage = useIsPage(PageType.POSITIONS)
+  const isMigrateV3Page = useIsPage(PageType.MIGRATE_V3)
+  const isBuyPage = useIsPage(PageType.BUY)
 
-  const baseHiddenPages = isNftPage
+  const baseHiddenPages = isNFTPage
   const multichainHiddenPages =
     isLandingPage ||
     isSendPage ||
@@ -99,8 +91,8 @@ function useShouldHideChainSelector() {
 }
 
 export default function Navbar() {
-  const isNftPage = useIsNftPage()
-  const isLandingPage = useIsLandingPage()
+  const isNFTPage = useIsPage(PageType.NFTS)
+  const isLandingPage = useIsPage(PageType.LANDING)
 
   const sellPageState = useProfilePageState((state) => state.state)
   const isSmallScreen = !useScreenSize()['sm']
@@ -131,7 +123,7 @@ export default function Navbar() {
 
         <Right>
           {collapseSearchBar && <SearchBar maxHeight={NAV_SEARCH_MAX_HEIGHT} fullScreen={isSmallScreen} />}
-          {isNftPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}
+          {isNFTPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}
           {isSignInExperimentControl && !isSignInExperimentControlLoading && isLandingPage && !isSmallScreen && (
             <NewUserCTAButton />
           )}

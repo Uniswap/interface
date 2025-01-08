@@ -22,6 +22,7 @@ import useENSName from 'hooks/useENSName'
 import { useIsUniExtensionAvailable } from 'hooks/useUniswapWalletOptions'
 import styled from 'lib/styled-components'
 import { useCallback, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useOpenModal, useToggleModal } from 'state/application/hooks'
@@ -34,7 +35,6 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import { Trans, t } from 'uniswap/src/i18n'
 import { isPathBlocked } from 'utils/blockedPaths'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -99,6 +99,7 @@ const PortfolioDrawerContainer = styled(Column)`
 export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
   const { disconnect } = useDisconnect()
   const { ENSName } = useENSName(account)
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const openReceiveModal = useOpenModal({ name: ApplicationModal.RECEIVE_CRYPTO })
   const shouldShowBuyFiatButton = !isPathBlocked('/buy')

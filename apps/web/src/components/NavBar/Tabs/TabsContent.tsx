@@ -4,10 +4,10 @@ import { Send } from 'components/Icons/Send'
 import { SwapV2 } from 'components/Icons/SwapV2'
 import { MenuItem } from 'components/NavBar/CompanyMenu/Content'
 import { useTheme } from 'lib/styled-components'
+import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useTranslation } from 'uniswap/src/i18n'
 
 export type TabsSection = {
   title: string

@@ -1,10 +1,10 @@
 import { Percent } from '@uniswap/sdk-core'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
+import { Trans } from 'react-i18next'
 import { Button, Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 
 interface PriceImpactModalProps {

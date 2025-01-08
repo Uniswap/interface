@@ -6,9 +6,13 @@ import {
 } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
 import { useAccount } from 'hooks/useAccount'
 import { UseDepositInfoProps, useDepositInfo } from 'pages/Pool/Positions/create/hooks'
+import { useCurrencyInfoWithUnwrapForTradingApi } from 'pages/Pool/Positions/create/utils'
 import { useMemo } from 'react'
 
-export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): IncreaseLiquidityDerivedInfo {
+export function useDerivedIncreaseLiquidityInfo(
+  state: IncreaseLiquidityState,
+  unwrapNativeCurrency: boolean,
+): IncreaseLiquidityDerivedInfo {
   const account = useAccount()
   const { position: positionInfo, exactAmount, exactField } = state
 
@@ -16,10 +20,17 @@ export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): 
     throw new Error('no position available')
   }
 
-  const currency0 = positionInfo.currency0Amount.currency
-  const token0 = currency0.isNative ? currency0.wrapped : currency0
-  const currency1 = positionInfo.currency1Amount.currency
-  const token1 = currency1.isNative ? currency1.wrapped : currency1
+  const currency0Info = useCurrencyInfoWithUnwrapForTradingApi({
+    currency: positionInfo.currency0Amount.currency,
+    shouldUnwrap: unwrapNativeCurrency,
+  })
+  const currency1Info = useCurrencyInfoWithUnwrapForTradingApi({
+    currency: positionInfo.currency1Amount.currency,
+    shouldUnwrap: unwrapNativeCurrency,
+  })
+
+  const currency0 = currency0Info?.currency
+  const currency1 = currency1Info?.currency
 
   const depositInfoProps = useMemo((): UseDepositInfoProps => {
     if (positionInfo.version === ProtocolVersion.V2) {
@@ -27,8 +38,8 @@ export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): 
         protocolVersion: ProtocolVersion.V2,
         pair: positionInfo.pair,
         address: account.address,
-        token0,
-        token1,
+        token0: currency0,
+        token1: currency1,
         exactField,
         exactAmounts: {
           [exactField]: exactAmount,
@@ -52,8 +63,8 @@ export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): 
         address: account.address,
         tickLower,
         tickUpper,
-        token0,
-        token1,
+        token0: currency0,
+        token1: currency1,
         exactField,
         exactAmounts: {
           [exactField]: exactAmount,
@@ -86,7 +97,7 @@ export function useDerivedIncreaseLiquidityInfo(state: IncreaseLiquidityState): 
       exactField,
       exactAmounts: {},
     }
-  }, [account.address, exactAmount, exactField, positionInfo, currency0, currency1, token0, token1])
+  }, [account.address, exactAmount, exactField, positionInfo, currency0, currency1])
 
   const depositInfo = useDepositInfo(depositInfoProps)
 

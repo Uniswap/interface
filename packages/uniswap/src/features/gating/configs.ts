@@ -17,6 +17,7 @@ export enum DynamicConfigs {
   UwuLink = 'uwulink_config',
   GasStrategies = 'gas_strategy',
   MainnetPrivateRpc = 'mainnet_private_rpc',
+  DatadogIgnoredErrors = 'datadog_ignored_errors',
 
   // Web
   QuickRouteChains = 'quick_route_chains',
@@ -75,6 +76,12 @@ export enum UwuLinkConfigKey {
   Allowlist = 'allowlist',
 }
 
+export enum DatadogIgnoredErrorsConfigKey {
+  Errors = 'errors',
+}
+
+export type DatadogIgnoredErrorsValType = Array<{ messageContains: string; sampleRate: number }>
+
 export type GasStrategyType = 'general' | 'swap'
 
 export type GasStrategyConditions = {
@@ -95,6 +102,7 @@ export type GasStrategies = {
 
 export enum MainnetPrivateRpcConfigKey {
   UseFlashbots = 'use_flashbots',
+  FlashbotsBlockRange = 'flashbots_block_range',
   SendFlashbotsAuthenticationHeader = 'send_authentication_header',
 }
 
@@ -119,6 +127,7 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.OnDeviceRecovery]: OnDeviceRecoveryConfigKey
   [DynamicConfigs.UwuLink]: UwuLinkConfigKey
   [DynamicConfigs.MainnetPrivateRpc]: MainnetPrivateRpcConfigKey
+  [DynamicConfigs.DatadogIgnoredErrors]: DatadogIgnoredErrorsConfigKey
 
   // Web
   [DynamicConfigs.QuickRouteChains]: QuickRouteChainsConfigKey

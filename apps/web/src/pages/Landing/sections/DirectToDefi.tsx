@@ -3,8 +3,8 @@ import { DocumentationCard } from 'pages/Landing/components/cards/DocumentationC
 import { DownloadWalletCard } from 'pages/Landing/components/cards/DownloadWalletCard'
 import { LiquidityCard } from 'pages/Landing/components/cards/LiquidityCard'
 import { WebappCard } from 'pages/Landing/components/cards/WebappCard'
+import { Trans } from 'react-i18next'
 import { Flex } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
 
 export function DirectToDefi() {
   return (

@@ -15,6 +15,7 @@ import { useAccount } from 'hooks/useAccount'
 import deprecatedStyled from 'lib/styled-components'
 import { useEffect, useMemo, useState } from 'react'
 import { Clock, TrendingUp } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { Flex, Text, useScrollbarStyles } from 'ui/src'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -22,7 +23,6 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isBackendSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
-import { Trans } from 'uniswap/src/i18n'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 interface SearchBarDropdownSectionProps {
@@ -52,9 +52,11 @@ function SearchBarDropdownSection({
 }: SearchBarDropdownSectionProps) {
   return (
     <Flex gap="$spacing4" data-testid="searchbar-dropdown">
-      <Flex row alignItems="center" py="$spacing4" px="$spacing16" gap="8px">
-        {headerIcon ? headerIcon : null}
-        <Text variant="body3">{header}</Text>
+      <Flex row alignItems="center" py="$spacing4" px="$spacing16">
+        <Flex row alignItems="center" gap="$spacing8">
+          {headerIcon ? headerIcon : null}
+          <Text variant="body3">{header}</Text>
+        </Flex>
         {headerInfoText ? <QuestionHelper text={headerInfoText} /> : null}
       </Flex>
       <Flex gap="$spacing4">

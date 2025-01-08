@@ -1,4 +1,5 @@
 import { ApolloClient, ApolloLink, from, NormalizedCacheObject } from '@apollo/client'
+import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore'
 import { PersistentStorage } from 'apollo3-cache-persist/lib/types'
 import { useCallback, useState } from 'react'
 import {
@@ -9,6 +10,7 @@ import {
   getPerformanceLink,
   getRestLink,
 } from 'uniswap/src/data/links'
+import { getInstantTokenBalanceUpdateApolloLink } from 'uniswap/src/features/portfolio/portfolioUpdates/getInstantTokenBalanceUpdateApolloLink'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getDatadogApolloLink } from 'utilities/src/logger/datadogLink'
@@ -64,10 +66,12 @@ export const usePersistedApolloClient = ({
   storageWrapper,
   maxCacheSizeInBytes,
   customEndpoint,
+  reduxStore,
 }: {
   storageWrapper: PersistentStorage<string>
   maxCacheSizeInBytes: number
   customEndpoint?: CustomEndpoint
+  reduxStore: ToolkitStore
 }): ApolloClient<NormalizedCacheObject> | undefined => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>()
   const signerManager = useWalletSigners()
@@ -94,6 +98,7 @@ export const usePersistedApolloClient = ({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       getPerformanceLink((args: any) => sendAnalyticsEvent(WalletEventName.PerformanceGraphql, args)),
       getOnRampAuthLink(accounts, signerManager),
+      getInstantTokenBalanceUpdateApolloLink({ reduxStore }),
       restLink,
     ]
     if (isMobileApp) {

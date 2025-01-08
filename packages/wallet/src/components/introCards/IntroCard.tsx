@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   ClickableWithinGesture,
   ElementAfterText,
@@ -22,7 +23,6 @@ import {
   DappRequestCardLoggingName,
   OnboardingCardLoggingName,
 } from 'uniswap/src/features/telemetry/types'
-import { useTranslation } from 'uniswap/src/i18n'
 import { isExtension } from 'utilities/src/platform'
 
 export enum CardType {

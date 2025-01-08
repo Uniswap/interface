@@ -308,6 +308,7 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
           "height": 16,
           "overflow": "hidden",
           "width": 16,
+          "zIndex": 10,
         }
       }
       testID="network-logo"
@@ -493,6 +494,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
           "height": 16,
           "overflow": "hidden",
           "width": 16,
+          "zIndex": 10,
         }
       }
       testID="network-logo"

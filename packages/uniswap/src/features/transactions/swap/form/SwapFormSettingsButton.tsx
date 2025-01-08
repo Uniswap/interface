@@ -9,6 +9,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/settings/useSlippageSettings'
 import { getSlippageWarningColor } from 'uniswap/src/features/transactions/swap/utils/styleHelpers'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { isInterface } from 'utilities/src/platform'
 
 const getSettingsIconBackgroundColor = (autoSlippageTolerance: number, slippageTolerance?: number): ColorTokens => {
   if (!slippageTolerance) {
@@ -65,6 +66,7 @@ export function SwapFormSettingsButton({
           gap="$spacing4"
           px={showCustomSlippage ? '$spacing8' : '$spacing4'}
           py="$spacing4"
+          height={isInterface ? '$spacing32' : 'auto'}
         >
           {showCustomSlippage && (
             <Text color={contentColor} variant="buttonLabel3">

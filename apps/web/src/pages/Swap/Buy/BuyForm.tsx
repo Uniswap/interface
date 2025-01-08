@@ -13,6 +13,7 @@ import {
   useWidthAdjustedDisplayValue,
 } from 'pages/Swap/common/shared'
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Flex, Text, styled } from 'ui/src'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -23,7 +24,6 @@ import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fia
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { FiatOnRampEventName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useTranslation } from 'uniswap/src/i18n'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import useResizeObserver from 'use-resize-observer'
 import { useFormatter } from 'utils/formatNumbers'

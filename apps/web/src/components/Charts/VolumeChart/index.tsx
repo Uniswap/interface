@@ -8,12 +8,13 @@ import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { getCumulativeVolume } from 'components/Charts/VolumeChart/utils'
 import { useHeaderDateFormatter } from 'components/Charts/hooks'
 import { TimePeriod, toHistoryDuration } from 'graphql/data/util'
+import { TFunction } from 'i18next'
 import { useTheme } from 'lib/styled-components'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { t } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 interface VolumeChartModelParams extends ChartModelParams<SingleHistogramData>, CustomVolumeChartModelParams {
@@ -48,7 +49,7 @@ class VolumeChartModel extends CustomVolumeChartModel<SingleHistogramData> {
 }
 
 // eslint-disable-next-line consistent-return
-export function formatHistoryDuration(duration: HistoryDuration): string {
+export function formatHistoryDuration(t: TFunction, duration: HistoryDuration): string {
   switch (duration) {
     case HistoryDuration.FiveMinute:
       return t('common.pastFiveMinutes')
@@ -76,6 +77,7 @@ function VolumeChartHeader({
   volumes: SingleHistogramData[]
   timePeriod: TimePeriod
 }) {
+  const { t } = useTranslation()
   const { formatFiatPrice } = useFormatter()
   const headerDateFormatter = useHeaderDateFormatter()
 
@@ -92,24 +94,25 @@ function VolumeChartHeader({
     if (crosshairData === undefined) {
       const cumulativeVolume = getCumulativeVolume(volumes)
       displayValues.volume = priceFormatter(cumulativeVolume)
-      displayValues.time = formatHistoryDuration(toHistoryDuration(timePeriod))
+      displayValues.time = formatHistoryDuration(t, toHistoryDuration(timePeriod))
     } else {
       displayValues.volume = priceFormatter(crosshairData.value)
       displayValues.time = headerDateFormatter(crosshairData.time)
     }
     return displayValues
-  }, [crosshairData, formatFiatPrice, headerDateFormatter, timePeriod, volumes])
+  }, [crosshairData, formatFiatPrice, headerDateFormatter, t, timePeriod, volumes])
 
   return (
     <ChartHeader
       value={<ThemedText.HeadlineLarge color="inherit">{display.volume}</ThemedText.HeadlineLarge>}
       time={crosshairData?.time}
-      timePlaceholder={formatHistoryDuration(toHistoryDuration(timePeriod))}
+      timePlaceholder={formatHistoryDuration(t, toHistoryDuration(timePeriod))}
     />
   )
 }
 
 function FeesTooltipDisplay({ data, feeTier }: { data: SingleHistogramData; feeTier?: number }) {
+  const { t } = useTranslation()
   const { formatFiatPrice } = useFormatter()
   const fees = data.value * ((feeTier ?? 0) / BIPS_BASE / 100)
 

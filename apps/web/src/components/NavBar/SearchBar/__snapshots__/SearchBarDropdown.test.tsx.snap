@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`load popular tokens in searchbar should render popular tokens 1`] = `
-.c7 {
+.c5 {
   border-radius: 12px;
   border-radius: 12px;
   height: 20px;
@@ -16,7 +16,7 @@ exports[`load popular tokens in searchbar should render popular tokens 1`] = `
   background-size: 400%;
 }
 
-.c8 {
+.c6 {
   border-radius: 12px;
   border-radius: 12px;
   height: 20px;
@@ -31,7 +31,7 @@ exports[`load popular tokens in searchbar should render popular tokens 1`] = `
   background-size: 400%;
 }
 
-.c9 {
+.c7 {
   border-radius: 12px;
   border-radius: 12px;
   height: 16px;
@@ -46,7 +46,7 @@ exports[`load popular tokens in searchbar should render popular tokens 1`] = `
   background-size: 400%;
 }
 
-.c10 {
+.c8 {
   border-radius: 12px;
   border-radius: 12px;
   height: 16px;
@@ -61,7 +61,7 @@ exports[`load popular tokens in searchbar should render popular tokens 1`] = `
   background-size: 400%;
 }
 
-.c5 {
+.c3 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -76,7 +76,7 @@ exports[`load popular tokens in searchbar should render popular tokens 1`] = `
   gap: 8px;
 }
 
-.c3 {
+.c1 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -99,11 +99,11 @@ exports[`load popular tokens in searchbar should render popular tokens 1`] = `
   transition: background 250ms ease;
 }
 
-.c3:hover {
+.c1:hover {
   background: #22222212;
 }
 
-.c4 {
+.c2 {
   width: 36px;
   height: 36px;
   border-radius: 9999px;
@@ -113,54 +113,13 @@ exports[`load popular tokens in searchbar should render popular tokens 1`] = `
   flex-shrink: 0;
 }
 
-.c6 {
+.c4 {
   width: 100%;
 }
 
 .c0 {
   display: inline-block;
   height: inherit;
-}
-
-.c1 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  padding: 0px;
-  width: 18px;
-  height: 18px;
-  border: none;
-  background: none;
-  outline: none;
-  cursor: default;
-  border-radius: 36px;
-  font-size: 12px;
-  border-radius: 12px;
-}
-
-.c1:hover,
-.c1:focus {
-  opacity: 0.7;
-}
-
-.c2 {
-  font-size: 14px;
-  margin-left: 8px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  color: #7D7D7D;
-  margin-top: 2.5px;
 }
 
 <div>
@@ -186,87 +145,87 @@ exports[`load popular tokens in searchbar should render popular tokens 1`] = `
               data-testid="searchbar-dropdown"
             >
               <div
-                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _pt-t-space-spa94665589 _pb-t-space-spa94665589 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-8px"
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _pt-t-space-spa94665589 _pb-t-space-spa94665589 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076"
               >
-                <svg
-                  fill="none"
-                  height="20"
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="20"
-                  xmlns="http://www.w3.org/2000/svg"
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa94665593"
                 >
-                  <polyline
-                    points="23 6 13.5 15.5 8.5 10.5 1 18"
-                  />
-                  <polyline
-                    points="17 6 23 6 23 12"
-                  />
-                </svg>
-                <span
-                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
-                  data-disable-theme="true"
-                >
-                  Popular tokens
-                </span>
-                <span
-                  style="margin-left: 4px; display: flex; align-items: center;"
+                  <svg
+                    fill="none"
+                    height="20"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <polyline
+                      points="23 6 13.5 15.5 8.5 10.5 1 18"
+                    />
+                    <polyline
+                      points="17 6 23 6 23 12"
+                    />
+                  </svg>
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                    data-disable-theme="true"
+                  >
+                    Popular tokens
+                  </span>
+                </div>
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _ml-t-space-spa94665589 _alignItems-center"
                 >
                   <div
                     class="c0"
                   >
                     <div>
                       <div
-                        class="c1"
+                        class="_opacity-0hover-0--7 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _justifyContent-center _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _width-18px _height-18px _outlineWidth-0px _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _cursor-default _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                       >
-                        <span
-                          class="c2"
+                        <svg
+                          fill="none"
+                          stroke-width="8"
+                          style="color: rgb(191, 191, 191); width: 16px; height: 16px;"
+                          viewBox="0 0 16 16"
                         >
-                          <svg
-                            fill="none"
-                            stroke-width="8"
-                            style="color: rgb(191, 191, 191); width: 16px; height: 16px;"
-                            viewBox="0 0 16 16"
-                          >
-                            <path
-                              d="M8.00001 1.33334C4.31801 1.33334 1.33334 4.318 1.33334 8C1.33334 11.682 4.31801 14.6667 8.00001 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.318 11.682 1.33334 8.00001 1.33334ZM8.50001 11C8.50001 11.276 8.27601 11.5 8.00001 11.5C7.72401 11.5 7.50001 11.276 7.50001 11V7.95264C7.50001 7.67664 7.72401 7.45264 8.00001 7.45264C8.27601 7.45264 8.50001 7.67664 8.50001 7.95264V11ZM8.01336 6.33334C7.64536 6.33334 7.34327 6.03467 7.34327 5.66667C7.34327 5.29867 7.63868 5 8.00668 5H8.01336C8.38202 5 8.68002 5.29867 8.68002 5.66667C8.68002 6.03467 8.38136 6.33334 8.01336 6.33334Z"
-                              fill="currentColor"
-                            />
-                          </svg>
-                        </span>
+                          <path
+                            d="M8.00001 1.33334C4.31801 1.33334 1.33334 4.318 1.33334 8C1.33334 11.682 4.31801 14.6667 8.00001 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.318 11.682 1.33334 8.00001 1.33334ZM8.50001 11C8.50001 11.276 8.27601 11.5 8.00001 11.5C7.72401 11.5 7.50001 11.276 7.50001 11V7.95264C7.50001 7.67664 7.72401 7.45264 8.00001 7.45264C8.27601 7.45264 8.50001 7.67664 8.50001 7.95264V11ZM8.01336 6.33334C7.64536 6.33334 7.34327 6.03467 7.34327 5.66667C7.34327 5.29867 7.63868 5 8.00668 5H8.01336C8.38202 5 8.68002 5.29867 8.68002 5.66667C8.68002 6.03467 8.38136 6.33334 8.01336 6.33334Z"
+                            fill="currentColor"
+                          />
+                        </svg>
                       </div>
                     </div>
                   </div>
-                </span>
+                </div>
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665589"
               >
                 <div
-                  class="c3"
+                  class="c1"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-t-space-gap52"
                   >
                     <div
-                      class="c4"
+                      class="c2"
                     />
                     <div
-                      class="c5 c6"
+                      class="c3 c4"
                     >
                       <div
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241"
                       >
                         <div
-                          class="c7"
+                          class="c5"
                           height="20px"
                           width="180px"
                         />
                         <div
-                          class="c8"
+                          class="c6"
                           height="20px"
                           width="48px"
                         />
@@ -275,12 +234,12 @@ exports[`load popular tokens in searchbar should render popular tokens 1`] = `
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241"
                       >
                         <div
-                          class="c9"
+                          class="c7"
                           height="16px"
                           width="120px"
                         />
                         <div
-                          class="c10"
+                          class="c8"
                           height="16px"
                           width="48px"
                         />
@@ -289,27 +248,27 @@ exports[`load popular tokens in searchbar should render popular tokens 1`] = `
                   </div>
                 </div>
                 <div
-                  class="c3"
+                  class="c1"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-t-space-gap52"
                   >
                     <div
-                      class="c4"
+                      class="c2"
                     />
                     <div
-                      class="c5 c6"
+                      class="c3 c4"
                     >
                       <div
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241"
                       >
                         <div
-                          class="c7"
+                          class="c5"
                           height="20px"
                           width="180px"
                         />
                         <div
-                          class="c8"
+                          class="c6"
                           height="20px"
                           width="48px"
                         />
@@ -318,12 +277,12 @@ exports[`load popular tokens in searchbar should render popular tokens 1`] = `
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241"
                       >
                         <div
-                          class="c9"
+                          class="c7"
                           height="16px"
                           width="120px"
                         />
                         <div
-                          class="c10"
+                          class="c8"
                           height="16px"
                           width="48px"
                         />
@@ -332,27 +291,27 @@ exports[`load popular tokens in searchbar should render popular tokens 1`] = `
                   </div>
                 </div>
                 <div
-                  class="c3"
+                  class="c1"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-t-space-gap52"
                   >
                     <div
-                      class="c4"
+                      class="c2"
                     />
                     <div
-                      class="c5 c6"
+                      class="c3 c4"
                     >
                       <div
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241"
                       >
                         <div
-                          class="c7"
+                          class="c5"
                           height="20px"
                           width="180px"
                         />
                         <div
-                          class="c8"
+                          class="c6"
                           height="20px"
                           width="48px"
                         />
@@ -361,12 +320,12 @@ exports[`load popular tokens in searchbar should render popular tokens 1`] = `
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241"
                       >
                         <div
-                          class="c9"
+                          class="c7"
                           height="16px"
                           width="120px"
                         />
                         <div
-                          class="c10"
+                          class="c8"
                           height="16px"
                           width="48px"
                         />

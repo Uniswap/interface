@@ -30,3 +30,10 @@ export const useSporeColors = (name?: ThemeProps['name']): UseSporeColorsReturn 
 
   return useTheme(config) as unknown as UseSporeColorsReturn
 }
+
+export const useSporeColorsForTheme = (name?: ThemeProps['name']): UseSporeColorsReturn => {
+  const darkColors = useSporeColors('dark')
+  const themeColors = useSporeColors()
+
+  return name === 'dark' ? darkColors : themeColors
+}

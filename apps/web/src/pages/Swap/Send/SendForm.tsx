@@ -12,11 +12,11 @@ import { SendRecipientForm } from 'pages/Swap/Send/SendRecipientForm'
 import { SendReviewModal } from 'pages/Swap/Send/SendReviewModal'
 import { SmartContractSpeedBumpModal } from 'pages/Swap/Send/SmartContractSpeedBump'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Trans } from 'react-i18next'
 import { SendContextProvider, useSendContext } from 'state/send/SendContext'
 import { CurrencyState } from 'state/swap/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
-import { Trans } from 'uniswap/src/i18n'
 import { useIsSmartContractAddress } from 'utils/transfer'
 
 type SendFormProps = {

@@ -9,8 +9,8 @@ import { useSellAsset } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { Z_INDEX } from 'theme/zIndex'
-import { Plural, useTranslation } from 'uniswap/src/i18n'
 
 const ModalWrapper = styled(Column)`
   gap: 4px;
@@ -145,16 +145,16 @@ export const SetDurationModal = () => {
   let prompt
   switch (duration) {
     case Duration.hour:
-      prompt = <Plural value={+amount} one={t('common.time.hour')} other={t('common.time.hours')} />
+      prompt = t('common.time.hours', { count: +amount })
       break
     case Duration.day:
-      prompt = <Plural value={+amount} one={t('common.time.day')} other={t('common.time.days')} />
+      prompt = t('common.time.days', { count: +amount })
       break
     case Duration.week:
-      prompt = <Plural value={+amount} one={t('common.time.week')} other={t('common.time.weeks')} />
+      prompt = t('common.time.weeks', { count: +amount })
       break
     case Duration.month:
-      prompt = <Plural value={+amount} one={t('common.time.month')} other={t('common.time.months')} />
+      prompt = t('common.time.months', { count: +amount })
       break
     default:
       break

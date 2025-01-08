@@ -12,6 +12,7 @@ import { useCurrency } from 'hooks/Tokens'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import styled, { css, useTheme } from 'lib/styled-components'
 import { ReactNode, useMemo } from 'react'
+import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import { BREAKPOINTS } from 'theme'
@@ -21,7 +22,6 @@ import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/t
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const HeaderText = styled(Text)`

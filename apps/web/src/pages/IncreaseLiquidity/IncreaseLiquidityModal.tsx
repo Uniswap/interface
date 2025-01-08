@@ -7,6 +7,7 @@ import { IncreaseLiquidityReview } from 'components/IncreaseLiquidity/IncreaseLi
 import { IncreaseLiquidityTxContextProvider } from 'components/IncreaseLiquidity/IncreaseLiquidityTxContext'
 import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
 import { IncreaseLiquidityForm } from 'pages/IncreaseLiquidity/IncreaseLiquidityForm'
+import { useTranslation } from 'react-i18next'
 import { useCloseModal } from 'state/application/hooks'
 import { HeightAnimator } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -14,7 +15,6 @@ import { MIN_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
-import { useTranslation } from 'uniswap/src/i18n'
 
 function IncreaseLiquidityModalInner() {
   const { t } = useTranslation()

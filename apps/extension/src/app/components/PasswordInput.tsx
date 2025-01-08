@@ -1,4 +1,5 @@
 import { forwardRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { TextInput } from 'react-native'
 import { Input, InputProps } from 'src/app/components/Input'
 import { Button, Flex, FlexProps, IconProps, Text } from 'ui/src'
@@ -50,11 +51,12 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(function 
 })
 
 function StrengthIndicator({ strength }: { strength: PasswordStrength }): JSX.Element | null {
+  const { t } = useTranslation()
   if (strength === PasswordStrength.NONE) {
     return null
   }
 
-  const { text, color } = getPasswordStrengthTextAndColor(strength)
+  const { text, color } = getPasswordStrengthTextAndColor(t, strength)
 
   return (
     <Flex position="absolute" right="$spacing24">

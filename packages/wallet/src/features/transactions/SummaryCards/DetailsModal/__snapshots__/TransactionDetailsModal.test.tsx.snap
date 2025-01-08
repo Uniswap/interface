@@ -136,6 +136,7 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
               "flexDirection": "column",
               "position": "absolute",
               "right": -4,
+              "zIndex": 10,
             }
           }
         >
@@ -150,6 +151,7 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
                 "height": 21,
                 "overflow": "hidden",
                 "width": 21,
+                "zIndex": 10,
               }
             }
             testID="network-logo"
@@ -443,6 +445,7 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
             "height": 16,
             "overflow": "hidden",
             "width": 16,
+            "zIndex": 10,
           }
         }
         testID="network-logo"
@@ -678,6 +681,7 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
             "height": 16,
             "overflow": "hidden",
             "width": 16,
+            "zIndex": 10,
           }
         }
         testID="network-logo"

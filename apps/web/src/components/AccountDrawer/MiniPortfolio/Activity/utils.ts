@@ -20,7 +20,7 @@ import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__g
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { t } from 'uniswap/src/i18n'
+import i18n from 'uniswap/src/i18n'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -85,11 +85,11 @@ export const createGroups = (activities: Array<Activity> = [], hideSpam = false)
     .map((year) => ({ title: year, transactions: yearMap[year] }))
 
   const transactionGroups: Array<ActivityGroup> = [
-    { title: t('common.pending'), transactions: pending.sort(sortActivities) },
-    { title: t('common.today'), transactions: today.sort(sortActivities) },
-    { title: t('common.thisWeek'), transactions: currentWeek.sort(sortActivities) },
-    { title: t('common.thisMonth'), transactions: last30Days.sort(sortActivities) },
-    { title: t('common.thisYear'), transactions: currentYear.sort(sortActivities) },
+    { title: i18n.t('common.pending'), transactions: pending.sort(sortActivities) },
+    { title: i18n.t('common.today'), transactions: today.sort(sortActivities) },
+    { title: i18n.t('common.thisWeek'), transactions: currentWeek.sort(sortActivities) },
+    { title: i18n.t('common.thisMonth'), transactions: last30Days.sort(sortActivities) },
+    { title: i18n.t('common.thisYear'), transactions: currentYear.sort(sortActivities) },
     ...sortedYears,
   ]
 

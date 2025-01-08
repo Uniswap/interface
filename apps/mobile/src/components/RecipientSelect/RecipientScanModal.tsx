@@ -4,9 +4,10 @@ import { Alert } from 'react-native'
 import 'react-native-reanimated'
 import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
 import { getSupportedURI, URIType } from 'src/components/Requests/ScanSheet/util'
-import { Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
+import { useSporeColorsForTheme } from 'ui/src/hooks/useSporeColors'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -30,9 +31,8 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
 
   const isScanningQr = currentScreenState === ScannerModalState.ScanQr
 
-  const darkColors = useSporeColors('dark')
-  const themeColors = useSporeColors()
-  const colors = isScanningQr ? darkColors : themeColors
+  // We want to always show the QR Code Scanner in "dark mode"
+  const colors = useSporeColorsForTheme(isScanningQr ? 'dark' : undefined)
 
   const onScanCode = async (uri: string): Promise<void> => {
     if (shouldFreezeCamera) {

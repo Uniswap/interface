@@ -112,13 +112,33 @@ module.exports = {
       webpackConfig.resolve.extensions.unshift('.web.ts')
       webpackConfig.resolve.extensions.unshift('.web.js')
 
-      if (isProduction || process.env.UNISWAP_ANALYZE_BUNDLE_SIZE) {
-        // do bundle analysis
-        webpackConfig.plugins.push(
-          new BundleAnalyzerPlugin({
-            analyzerMode: 'json',
+      if (isProduction) {
+        // Configure bundle analysis based on environment variable
+        const analyzerMode = process.env.UNISWAP_ANALYZE_BUNDLE_SIZE === 'static' ? 'static' : 'json'
+        const analyzerConfig = {
+          analyzerMode,
+          ...(analyzerMode === 'static' && {
+            reportFilename: 'report.html',
+            openAnalyzer: true,
+            generateStatsFile: true,
+            statsFilename: 'webpack-stats.json'
           })
-        )
+        }
+        
+        webpackConfig.plugins.push(new BundleAnalyzerPlugin(analyzerConfig))
+
+        // Only include stats configuration if not in static analyzer mode
+        if (process.env.UNISWAP_ANALYZE_BUNDLE_SIZE !== 'static') {
+          webpackConfig.profile = true
+          webpackConfig.stats = {
+            usedExports: true,
+            optimizationBailout: true,
+            moduleTrace: true,
+            reasons: true,
+            chunks: true,
+            modules: true,
+          }
+        }
       }
 
       // Configure webpack plugins:
@@ -246,6 +266,9 @@ module.exports = {
       webpackConfig.module.rules[1].oneOf.unshift({
         loader: 'babel-loader',
         include: (path) => /uniswap\/src.*\.(js|ts)x?$/.test(path),
+        // Babel transpiles to cjs so any code that requires tree-shaking of it's dependencies
+        // must be excluded here and processed by swc instead.
+        exclude: (path) => ['chains'].some(p => path.includes(p)),
         options: {
           presets: ['module:@react-native/babel-preset'],
           plugins: [
@@ -279,7 +302,10 @@ module.exports = {
         enforce: 'post',
         test: /node_modules.*\.(js)$/,
         loader: path.join(__dirname, 'scripts/terser-loader.js'),
-        options: { compress: true, mangle: false },
+        options: { 
+          compress: true,
+          mangle: false,
+        },
       })
 
       // Configure webpack optimization:
@@ -287,11 +313,17 @@ module.exports = {
         webpackConfig.optimization,
         isProduction
           ? {
+              usedExports: true,
+              sideEffects: true,
               // Optimize over all chunks, instead of async chunks (the default), so that initial chunks are also included.
               splitChunks: { chunks: 'all' },
             }
           : {}
       )
+
+      if (isProduction) {
+        webpackConfig.mode = 'production'
+      }
 
       // Configure webpack resolution. webpackConfig.cache is unused with swc-loader, but the resolver can still cache:
       webpackConfig.resolve = Object.assign(webpackConfig.resolve, { unsafeCache: true })

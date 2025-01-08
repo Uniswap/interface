@@ -1,4 +1,5 @@
 import React, { PropsWithChildren, useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { FlatList, ImageBackground } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -12,7 +13,6 @@ import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexT
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useTranslation } from 'uniswap/src/i18n'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 

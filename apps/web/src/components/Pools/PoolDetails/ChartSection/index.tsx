@@ -27,15 +27,15 @@ import { TimePeriod, gqlToCurrency, toHistoryDuration } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import styled, { useTheme } from 'lib/styled-components'
 import { useMemo, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
-import { SegmentedControl } from 'ui/src'
+import { SegmentedControl, useMedia } from 'ui/src'
 import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { Trans, t } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const PDP_CHART_HEIGHT_PX = 356
@@ -157,6 +157,7 @@ function usePDPChartState(
 
 export default function ChartSection(props: ChartSectionProps) {
   const { defaultChainId } = useEnabledChains()
+  const breakpoints = useMedia()
 
   const [currencyA, currencyB] = [
     props.poolData?.token0 && gqlToCurrency(props.poolData.token0),
@@ -248,6 +249,7 @@ export default function ChartSection(props: ChartSectionProps) {
         {activeQuery.chartType !== ChartType.LIQUIDITY && (
           <TimePeriodSelectorContainer>
             <SegmentedControl
+              fullWidth={breakpoints.sm}
               options={filteredTimeOptions.options}
               selectedOption={filteredTimeOptions.selected}
               onSelectOption={(option) => {
@@ -351,6 +353,7 @@ function LiquidityTooltipDisplay({
   tokenBDescriptor: string
   currentTick?: number
 }) {
+  const { t } = useTranslation()
   const { formatNumber } = useFormatter()
   if (!currentTick) {
     return null
@@ -404,6 +407,7 @@ function LiquidityChart({
   hooks?: string
   poolId?: string
 }) {
+  const { t } = useTranslation()
   const tokenADescriptor = tokenA.symbol ?? tokenA.name ?? t('common.tokenA')
   const tokenBDescriptor = tokenB.symbol ?? tokenB.name ?? t('common.tokenB')
 

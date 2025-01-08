@@ -4,6 +4,7 @@ import { ButtonPrimary } from 'components/Button/buttons'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useAccount } from 'hooks/useAccount'
 import useENSName from 'hooks/useENSName'
+import { TFunction } from 'i18next'
 import styled from 'lib/styled-components'
 import { XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { ListPage } from 'nft/components/profile/list/ListPage'
@@ -13,10 +14,10 @@ import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from 'nft/pages/profile/sha
 import { ProfilePageStateType } from 'nft/types'
 import { useEffect, useRef } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
+import { Trans, useTranslation } from 'react-i18next'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { Trans, t } from 'uniswap/src/i18n'
 import { shortenAddress } from 'utilities/src/addresses'
 
 const ProfilePageWrapper = styled.div`
@@ -62,7 +63,7 @@ const ConnectWalletButton = styled(ButtonPrimary)`
   border: none;
 `
 
-function getProfilePageTitle(account: string | undefined, ENSName: string | null | undefined): string {
+function getProfilePageTitle(t: TFunction, account: string | undefined, ENSName: string | null | undefined): string {
   if (!account) {
     return t('nft.collectionOnUni')
   }
@@ -79,6 +80,7 @@ function getProfilePageTitle(account: string | undefined, ENSName: string | null
 }
 
 export default function Profile() {
+  const { t } = useTranslation()
   const sellPageState = useProfilePageState((state) => state.state)
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const resetSellAssets = useSellAsset((state) => state.reset)
@@ -103,7 +105,7 @@ export default function Profile() {
   return (
     <>
       <Helmet>
-        <title>{getProfilePageTitle(account.address, ENSName)}</title>
+        <title>{getProfilePageTitle(t, account.address, ENSName)}</title>
       </Helmet>
       <Trace logImpression page={InterfacePageName.NFT_PROFILE_PAGE}>
         <ProfilePageWrapper>

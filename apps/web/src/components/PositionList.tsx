@@ -1,9 +1,9 @@
 import PositionListItem from 'components/PositionListItem'
 import styled from 'lib/styled-components'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { MEDIA_WIDTHS } from 'theme'
 import { PositionDetails } from 'types/position'
-import { useTranslation } from 'uniswap/src/i18n'
 
 const DesktopHeader = styled.div`
   display: none;

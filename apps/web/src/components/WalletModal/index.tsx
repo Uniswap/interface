@@ -11,12 +11,12 @@ import Row, { AutoRow } from 'components/deprecated/Row'
 import { useIsUniExtensionAvailable } from 'hooks/useUniswapWalletOptions'
 import styled, { css } from 'lib/styled-components'
 import { useReducer } from 'react'
-import { ClickableStyle, ThemedText } from 'theme/components'
+import { Trans, useTranslation } from 'react-i18next'
+import { ClickableTamaguiStyle, ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
 import { Flex, Text } from 'ui/src'
 import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
 import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 
 const Wrapper = styled.div<{ isUniExtensionAvailable?: boolean }>`
   ${flexColumnNoWrap};
@@ -45,10 +45,6 @@ const TextSectionWrapper = styled.div`
   padding: 0 4px;
 `
 
-const OtherWalletsDividerRow = styled(Row)<{ clickable?: boolean }>`
-  ${({ clickable }) => clickable && ClickableStyle};
-  user-select: none;
-`
 const Line = styled.div`
   height: 1px;
   width: 100%;
@@ -90,21 +86,23 @@ export default function WalletModal() {
         </Text>
       </AutoRow>
       <UniswapWalletOptions />
-      <OtherWalletsDividerRow
-        align="center"
-        padding="8px 0px"
-        clickable={isUniExtensionAvailable}
-        onClick={() => isUniExtensionAvailable && toggleShowOtherWallets()}
+      <Flex
+        row
+        alignItems="center"
+        py={8}
+        userSelect="none"
+        onPress={() => isUniExtensionAvailable && toggleShowOtherWallets()}
+        {...(isUniExtensionAvailable ? ClickableTamaguiStyle : {})}
       >
         <Line />
-        <Row align="center" marginX={18}>
+        <Flex row alignItems="center" mx={18}>
           <Text variant="body3" color="$neutral2" whiteSpace="nowrap">
             <Trans i18nKey="wallet.other" />
           </Text>
           {isUniExtensionAvailable ? showOtherWallets ? <StyledExpandIcon /> : <StyledCollapsedIcon /> : null}
-        </Row>
+        </Flex>
         <Line />
-      </OtherWalletsDividerRow>
+      </Flex>
       <Column gap="md" flex="1">
         <Row flex="1" align="flex-start">
           <OptionGrid data-testid="option-grid" closed={isUniExtensionAvailable && !showOtherWallets}>

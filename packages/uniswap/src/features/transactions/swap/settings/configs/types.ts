@@ -1,7 +1,10 @@
 import { AppTFunction } from 'ui/src/i18n/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 
-type SwapSettingId = 'slippage'
+export enum SwapSettingId {
+  SLIPPAGE = 'slippage',
+  DEADLINE = 'deadline',
+}
 
 export type SwapSettingConfig = {
   renderTitle: (t: AppTFunction) => string

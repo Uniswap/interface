@@ -3,6 +3,7 @@ import { useUSDTokenUpdater } from 'hooks/useUSDTokenUpdater'
 import { useFiatOnRampSupportedTokens, useMeldFiatCurrencyInfo } from 'pages/Swap/Buy/hooks'
 import { formatFiatOnRampFiatAmount } from 'pages/Swap/Buy/shared'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { buildPartialCurrencyInfo } from 'uniswap/src/constants/routing'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -24,7 +25,6 @@ import {
   isInvalidRequestAmountTooHigh,
   isInvalidRequestAmountTooLow,
 } from 'uniswap/src/features/fiatOnRamp/utils'
-import { t } from 'uniswap/src/i18n'
 import { useAccount } from 'wagmi'
 
 class BuyFormError extends Error {
@@ -91,6 +91,7 @@ export function useBuyFormContext() {
 }
 
 function useDerivedBuyFormInfo(state: BuyFormState): BuyInfo {
+  const { t } = useTranslation()
   const account = useAccount()
   const { formattedAmount: amountOut, loading: amountOutLoading } = useUSDTokenUpdater(
     true /* inputInFiat */,
@@ -149,7 +150,7 @@ function useDerivedBuyFormInfo(state: BuyFormState): BuyInfo {
       return new BuyFormError(t('common.card.error.description'))
     }
     return undefined
-  }, [meldSupportedFiatCurrency, quotesError])
+  }, [meldSupportedFiatCurrency, quotesError, t])
 
   return useMemo(
     () => ({

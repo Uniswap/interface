@@ -10,8 +10,10 @@ import GasEstimateTooltip from 'components/swap/GasEstimateTooltip'
 import { RoutingTooltip, SwapRoute } from 'components/swap/SwapRoute'
 import TradePrice from 'components/swap/TradePrice'
 import { useUSDPrice } from 'hooks/useUSDPrice'
+import { TFunction } from 'i18next'
 import styled, { DefaultTheme } from 'lib/styled-components'
 import React, { ReactNode, useEffect, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { InterfaceTrade, SubmittableTrade, TradeFillType } from 'state/routing/types'
 import { isLimitTrade, isPreviewTrade, isUniswapXTrade, isUniswapXTradeType } from 'state/routing/utils'
 import { useUserSlippageTolerance } from 'state/user/hooks'
@@ -19,7 +21,6 @@ import { SlippageTolerance } from 'state/user/types'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { Flex } from 'ui/src'
 import { chainSupportsGasEstimates } from 'uniswap/src/features/chains/utils'
-import { Trans, t } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { getPriceImpactColor } from 'utils/prices'
 
@@ -132,6 +133,7 @@ function FeeRow({ trade: { swapFee, outputAmount } }: { trade: SubmittableTrade 
 
 // eslint-disable-next-line consistent-return
 function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
+  const { t } = useTranslation()
   const { trade, syncing, allowedSlippage, type, priceImpact } = props
   const { formatPercent } = useFormatter()
   const isAutoSlippage = useUserSlippageTolerance()[0] === SlippageTolerance.Auto
@@ -240,7 +242,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
       }
     case SwapLineItemType.INPUT_TOKEN_FEE_ON_TRANSFER:
     case SwapLineItemType.OUTPUT_TOKEN_FEE_ON_TRANSFER:
-      return getFOTLineItem(props)
+      return getFOTLineItem({ ...props, t })
     case SwapLineItemType.EXPIRY:
       if (!isLimitTrade(trade)) {
         return undefined
@@ -252,7 +254,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
   }
 }
 
-function getFOTLineItem({ type, trade }: SwapLineItemProps): LineItemData | undefined {
+function getFOTLineItem({ type, trade, t }: SwapLineItemProps & { t: TFunction }): LineItemData | undefined {
   const isInput = type === SwapLineItemType.INPUT_TOKEN_FEE_ON_TRANSFER
   const currency = isInput ? trade.inputAmount.currency : trade.outputAmount.currency
   const tax = isInput ? trade.inputTax : trade.outputTax

@@ -13,6 +13,7 @@ import { useAccount } from 'hooks/useAccount'
 import styled, { useTheme } from 'lib/styled-components'
 import { ReactNode, useCallback, useState } from 'react'
 import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { useTransaction } from 'state/transactions/hooks'
 import { isConfirmedTx } from 'state/transactions/utils'
 import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
@@ -23,7 +24,6 @@ import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupp
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 const Wrapper = styled.div`

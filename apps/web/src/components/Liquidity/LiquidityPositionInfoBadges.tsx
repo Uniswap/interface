@@ -2,10 +2,10 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import { isDynamicFeeTierAmount } from 'components/Liquidity/utils'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { CopyHelper } from 'theme/components'
 import { styled, Text } from 'ui/src'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
-import { useTranslation } from 'uniswap/src/i18n/useTranslation'
 import { isAddress, shortenAddress } from 'utilities/src/addresses'
 
 const PositionInfoBadge = styled(Text, {

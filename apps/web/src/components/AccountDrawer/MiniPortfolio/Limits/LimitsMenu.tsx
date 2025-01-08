@@ -15,8 +15,8 @@ import Column from 'components/deprecated/Column'
 import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
 import styled from 'lib/styled-components'
 import { useCallback, useMemo, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { UniswapXOrderDetails } from 'state/signatures/types'
-import { Trans, t } from 'uniswap/src/i18n'
 
 const Container = styled(Column)`
   height: 100%;
@@ -34,6 +34,7 @@ const StyledLimitsDisclaimer = styled(LimitDisclaimer)`
 `
 
 export function LimitsMenu({ onClose, account }: { account: string; onClose: () => void }) {
+  const { t } = useTranslation()
   const { openLimitOrders } = useOpenLimitOrders(account)
   const [selectedOrdersByHash, setSelectedOrdersByHash] = useState<Record<string, UniswapXOrderDetails>>({})
   const [cancelState, setCancelState] = useState(CancellationState.NOT_STARTED)

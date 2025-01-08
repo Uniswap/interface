@@ -1,13 +1,13 @@
-import Row from 'components/deprecated/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
+import Row from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { getMarketplaceIcon } from 'nft/components/card/utils'
 import { CollectionSelectedAssetIcon } from 'nft/components/icons'
 import { Markets } from 'nft/types'
 import { AlertTriangle, Check, Tag } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const StyledMarketplaceContainer = styled.div<{ isText?: boolean }>`

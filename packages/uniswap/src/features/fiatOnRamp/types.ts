@@ -1,6 +1,8 @@
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import {
+  LocalOffRampTransactionInfo,
   LocalOnRampTransactionInfo,
+  OffRampSaleInfo,
   OnRampPurchaseInfo,
   OnRampTransferInfo,
   TransactionDetails,
@@ -13,6 +15,12 @@ import { FiatCurrencyComponents } from 'utilities/src/format/localeBased'
 export type FiatOnRampTransactionDetails = TransactionDetails & {
   typeInfo: LocalOnRampTransactionInfo | OnRampPurchaseInfo | OnRampTransferInfo
 }
+
+export type FiatOffRampTransactionDetails = TransactionDetails & {
+  typeInfo: LocalOffRampTransactionInfo | OffRampSaleInfo
+}
+
+export type FORTransactionDetails = FiatOnRampTransactionDetails | FiatOffRampTransactionDetails
 
 export type FORCountry = {
   countryCode: string

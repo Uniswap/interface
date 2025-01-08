@@ -10,9 +10,9 @@ import {
 import { CreatePositionModal } from 'pages/Pool/Positions/create/CreatePositionModal'
 import { Container } from 'pages/Pool/Positions/create/shared'
 import { useCallback, useState } from 'react'
+import { Trans } from 'react-i18next'
 import { PositionField } from 'types/position'
 import { Flex, FlexProps, Text } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
 
 export const DepositStep = ({ ...rest }: FlexProps) => {
   const {

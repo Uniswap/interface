@@ -45,6 +45,7 @@ import {
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { CreatePositionTxAndGasInfo, LiquidityTransactionType } from 'uniswap/src/features/transactions/liquidity/types'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
@@ -1110,6 +1111,33 @@ export function getPoolIdOrAddressFromCreatePositionInfo(positionInfo: CreatePos
   }
 }
 
+export function useCanUnwrapCurrency(currency: OptionalCurrency): boolean {
+  const chainId = currency?.chainId ?? UniverseChainId.Mainnet
+  const nativeCurrencyInfo = useNativeCurrencyInfo(chainId)
+  const currencyId = currency ? (currency.isNative ? undefined : buildCurrencyId(chainId, currency.address)) : undefined
+  const currencyInfo = useCurrencyInfo(currencyId, { skip: !currencyId }) ?? nativeCurrencyInfo
+
+  if (!currency) {
+    return false
+  }
+
+  return areCurrenciesEqual(currencyInfo?.currency, nativeCurrencyInfo?.currency.wrapped)
+}
+
+export function useCurrencyInfoWithUnwrapForTradingApi({
+  currency,
+  shouldUnwrap,
+}: {
+  currency: Currency
+  shouldUnwrap: boolean
+}): CurrencyInfo
+export function useCurrencyInfoWithUnwrapForTradingApi({
+  currency,
+  shouldUnwrap,
+}: {
+  currency: OptionalCurrency
+  shouldUnwrap: boolean
+}): Maybe<CurrencyInfo>
 export function useCurrencyInfoWithUnwrapForTradingApi({
   currency,
   shouldUnwrap,

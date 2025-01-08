@@ -3,8 +3,8 @@ import { LoaderButton } from 'components/Button/LoaderButton'
 import { ButtonLight } from 'components/Button/buttons'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
+import { useTranslation } from 'react-i18next'
 import { Button, Text } from 'ui/src'
-import { useTranslation } from 'uniswap/src/i18n'
 import { useAccount } from 'wagmi'
 
 interface BuyFormButtonProps {

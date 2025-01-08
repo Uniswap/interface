@@ -28,6 +28,7 @@ import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import styled, { useTheme } from 'lib/styled-components'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { ArrowDown, X } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { useOrder } from 'state/signatures/hooks'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { Divider, ThemedText } from 'theme/components'
@@ -36,7 +37,6 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfaceEventNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Trans } from 'uniswap/src/i18n'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
@@ -172,7 +172,6 @@ function getOrderTitle(order: UniswapXOrderDetails): ReactNode {
 
 export function OrderContent({
   order,
-  logos,
   onCancel,
 }: {
   order: UniswapXOrderDetails
@@ -230,7 +229,6 @@ export function OrderContent({
         <PortfolioLogo
           chainId={amounts?.inputAmount.currency.chainId ?? UniverseChainId.Mainnet}
           currencies={currencies}
-          images={[logos?.inputLogo, logos?.outputLogo]}
         />
         <Column>
           <ThemedText.SubHeader fontWeight={500}>{getOrderTitle(order)}</ThemedText.SubHeader>

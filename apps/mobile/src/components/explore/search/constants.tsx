@@ -2,7 +2,7 @@ import { SearchHeader, SearchHeaderKey } from 'src/components/explore/search/typ
 import { Coin, Gallery, Person } from 'ui/src/components/icons'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import i18n from 'uniswap/src/i18n/i18n'
+import i18n from 'uniswap/src/i18n'
 
 export const SEARCH_RESULT_HEADER_KEY: SearchHeaderKey = 'header'
 

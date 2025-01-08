@@ -10,28 +10,24 @@ import { GQL_MAINNET_CHAINS, GQL_TESTNET_CHAINS } from 'uniswap/src/features/cha
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { DynamicConfigs, NetworkRequestsConfigKey } from 'uniswap/src/features/gating/configs'
 import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'uniswap/src/features/portfolio/portfolioUpdates/constants'
+import { getCurrenciesWithExpectedUpdates } from 'uniswap/src/features/portfolio/portfolioUpdates/getCurrenciesWithExpectedUpdates'
 
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { buildCurrencyId, buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'uniswap/src/utils/currencyId'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-
-export const GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE = [
-  GQLQueries.PortfolioBalances,
-  GQLQueries.TransactionList,
-  GQLQueries.NftsTab,
-]
 
 type CurrencyIdToBalance = Record<CurrencyId, number>
 
 const REFETCH_INTERVAL = ONE_SECOND_MS * 3
 const MAX_REFETCH_ATTEMPTS_FALLBACK = 30
 
-export function* refetchGQLQueries({
+export function* refetchGQLQueriesViaBackendPollVariant({
   transaction,
   apolloClient,
   activeAddress,
@@ -131,43 +127,6 @@ export function* refetchGQLQueries({
   })
 }
 
-// based on transaction data, determine which currencies we expect to see a balance update on
-function getCurrenciesWithExpectedUpdates(transaction: TransactionDetails): Set<CurrencyId> | undefined {
-  const currenciesWithBalToUpdate: Set<CurrencyId> = new Set()
-  const txChainId = transaction.chainId
-
-  // All txs besides FOR at least use gas so check for update of gas token
-  currenciesWithBalToUpdate.add(buildNativeCurrencyId(txChainId))
-
-  switch (transaction.typeInfo?.type) {
-    case TransactionType.Swap:
-    case TransactionType.Bridge:
-      currenciesWithBalToUpdate.add(transaction.typeInfo.inputCurrencyId.toLowerCase())
-      currenciesWithBalToUpdate.add(transaction.typeInfo.outputCurrencyId.toLowerCase())
-      break
-    case TransactionType.Send:
-      currenciesWithBalToUpdate.add(buildCurrencyId(txChainId, transaction.typeInfo.tokenAddress).toLowerCase())
-      break
-    case TransactionType.Wrap:
-      currenciesWithBalToUpdate.add(buildWrappedNativeCurrencyId(txChainId))
-      break
-    case TransactionType.OnRampPurchase:
-    case TransactionType.OnRampTransfer:
-      currenciesWithBalToUpdate.add(
-        buildCurrencyId(txChainId, transaction.typeInfo.destinationTokenAddress).toLowerCase(),
-      )
-      break
-    default:
-      logger.info('refetchGQLQueriesSaga', 'getCurrenciesWithExpectedUpdates', 'Unhandled transaction type', {
-        type: transaction.typeInfo?.type,
-        info: JSON.stringify(transaction.typeInfo),
-      })
-      break
-  }
-
-  return currenciesWithBalToUpdate
-}
-
 function readBalancesFromCache({
   owner,
   currencyIds,
@@ -226,7 +185,7 @@ function readBalancesFromCache({
   return currencyIdToBalance
 }
 
-function checkIfBalancesUpdated(balance1: CurrencyIdToBalance, balance2: Maybe<CurrencyIdToBalance>) {
+function checkIfBalancesUpdated(balance1: CurrencyIdToBalance, balance2: Maybe<CurrencyIdToBalance>): boolean {
   if (!balance2) {
     return true
   } // if no currencies to check, then assume balances are updated

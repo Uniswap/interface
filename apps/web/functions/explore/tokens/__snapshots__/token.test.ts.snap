@@ -73,6 +73,17 @@ exports[`should inject metadata for valid tokens 1`] = `
         padding: 0;
       }
 
+      /* Only apply overflow-x: hidden on desktop */
+      /* This is to prevent ugly horizontal scrollbar from appearing on desktop */
+      /* We need to set it on html element specifically because otherwise we break */
+      /* sticky positioning of some child elements. */
+      /* Applying this on mobile breaks tamagui/remove-scroll. */
+      @media (min-width: 768px) {
+        html {
+          overflow-x: hidden;
+        }
+      }
+
       button {
         user-select: none;
       }
@@ -119,7 +130,7 @@ exports[`should inject metadata for valid tokens 1`] = `
         }
       }
     </style>
-  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="Get POL on Uniswap" data-rh="true"><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/polygon/NATIVE" data-rh="true"><meta property="og:image:width" content="1200" data-rh="true"><meta property="og:image:height" content="630" data-rh="true"><meta property="og:image:alt" content="Get POL on Uniswap" data-rh="true"><meta property="og:type" content="website" data-rh="true"><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/polygon/NATIVE" data-rh="true"><meta property="twitter:card" content="summary_large_image" data-rh="true"><meta property="twitter:title" content="Get POL on Uniswap" data-rh="true"><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/polygon/NATIVE" data-rh="true"><meta property="twitter:image:alt" content="Get POL on Uniswap" data-rh="true"></head>
+  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="Get USDC on Uniswap" data-rh="true"><meta property="og:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" data-rh="true"><meta property="og:image:width" content="1200" data-rh="true"><meta property="og:image:height" content="630" data-rh="true"><meta property="og:image:alt" content="Get USDC on Uniswap" data-rh="true"><meta property="og:type" content="website" data-rh="true"><meta property="og:url" content="http://127.0.0.1:3000/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" data-rh="true"><meta property="twitter:card" content="summary_large_image" data-rh="true"><meta property="twitter:title" content="Get USDC on Uniswap" data-rh="true"><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48" data-rh="true"><meta property="twitter:image:alt" content="Get USDC on Uniswap" data-rh="true"></head>
 
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -202,6 +213,17 @@ exports[`should inject metadata for valid tokens 2`] = `
       body {
         margin: 0;
         padding: 0;
+      }
+
+      /* Only apply overflow-x: hidden on desktop */
+      /* This is to prevent ugly horizontal scrollbar from appearing on desktop */
+      /* We need to set it on html element specifically because otherwise we break */
+      /* sticky positioning of some child elements. */
+      /* Applying this on mobile breaks tamagui/remove-scroll. */
+      @media (min-width: 768px) {
+        html {
+          overflow-x: hidden;
+        }
       }
 
       button {
@@ -335,6 +357,17 @@ exports[`should inject metadata for valid tokens 3`] = `
         padding: 0;
       }
 
+      /* Only apply overflow-x: hidden on desktop */
+      /* This is to prevent ugly horizontal scrollbar from appearing on desktop */
+      /* We need to set it on html element specifically because otherwise we break */
+      /* sticky positioning of some child elements. */
+      /* Applying this on mobile breaks tamagui/remove-scroll. */
+      @media (min-width: 768px) {
+        html {
+          overflow-x: hidden;
+        }
+      }
+
       button {
         user-select: none;
       }
@@ -464,6 +497,17 @@ exports[`should inject metadata for valid tokens 4`] = `
       body {
         margin: 0;
         padding: 0;
+      }
+
+      /* Only apply overflow-x: hidden on desktop */
+      /* This is to prevent ugly horizontal scrollbar from appearing on desktop */
+      /* We need to set it on html element specifically because otherwise we break */
+      /* sticky positioning of some child elements. */
+      /* Applying this on mobile breaks tamagui/remove-scroll. */
+      @media (min-width: 768px) {
+        html {
+          overflow-x: hidden;
+        }
       }
 
       button {

@@ -16,12 +16,12 @@ import { getPoolDetailPageTitle } from 'pages/PoolDetails/utils'
 import { useDynamicMetatags } from 'pages/metatags'
 import { useMemo, useReducer } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
+import { Trans, useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import { BREAKPOINTS, ThemeProvider } from 'theme'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { Trans } from 'uniswap/src/i18n'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 
 const PageWrapper = styled(Row)`
@@ -106,6 +106,7 @@ function getUnwrappedPoolToken(poolData?: PoolData, chainId?: number) {
 }
 
 export default function PoolDetailsPage() {
+  const { t } = useTranslation()
   const { poolAddress } = useParams<{ poolAddress: string }>()
   const urlChain = useChainIdFromUrlParam()
   const chainInfo = urlChain ? getChainInfo(urlChain) : undefined
@@ -146,7 +147,7 @@ export default function PoolDetailsPage() {
   return (
     <ThemeProvider token0={color0 !== accent1 ? color0 : undefined} token1={color1 !== accent1 ? color1 : undefined}>
       <Helmet>
-        <title>{getPoolDetailPageTitle(poolData)}</title>
+        <title>{getPoolDetailPageTitle(t, poolData)}</title>
         {metatags.map((tag, index) => (
           <meta key={index} {...tag} />
         ))}

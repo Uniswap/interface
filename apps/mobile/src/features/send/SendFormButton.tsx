@@ -1,8 +1,9 @@
 import React, { Dispatch, SetStateAction, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'ui/src'
-import { WarningAction } from 'uniswap/src/components/modals/WarningModal/types'
+import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import {
   TransactionScreen,
   useTransactionModalContext,
@@ -22,7 +23,12 @@ export function SendFormButton({
   const { t } = useTranslation()
   const account = useActiveAccountWithThrow()
 
-  const { warnings, recipient, updateSendForm } = useSendContext()
+  const {
+    warnings,
+    recipient,
+    updateSendForm,
+    derivedSendInfo: { chainId },
+  } = useSendContext()
   const { setScreen, walletNeedsRestore } = useTransactionModalContext()
 
   const isViewOnlyWallet = account.type === AccountType.Readonly
@@ -32,11 +38,9 @@ export function SendFormButton({
   const isBlocked = isActiveBlocked || isRecipientBlocked
   const isBlockedLoading = isActiveBlockedLoading || isRecipientBlockedLoading
 
-  const actionButtonDisabled =
-    warnings.warnings.some((warning) => warning.action === WarningAction.DisableReview) ||
-    isBlocked ||
-    isBlockedLoading ||
-    walletNeedsRestore
+  const insufficientGasFunds = warnings.warnings.some((warning) => warning.type === WarningLabel.InsufficientGasFunds)
+
+  const actionButtonDisabled = !!warnings.blockingWarning || isBlocked || isBlockedLoading || walletNeedsRestore
 
   const goToNext = useCallback(() => {
     const txId = createTransactionId()
@@ -52,6 +56,14 @@ export function SendFormButton({
     }
   }, [isViewOnlyWallet, goToNext, setShowViewOnlyModal])
 
+  const nativeCurrencySymbol = NativeCurrency.onChain(chainId).symbol
+
+  const buttonText = insufficientGasFunds
+    ? t('send.warning.insufficientFunds.title', {
+        currencySymbol: nativeCurrencySymbol,
+      })
+    : t('send.button.review')
+
   return (
     <Button
       disabled={actionButtonDisabled && !isViewOnlyWallet}
@@ -61,7 +73,7 @@ export function SendFormButton({
       testID={TestID.ReviewTransfer}
       onPress={onPressReview}
     >
-      {t('send.button.review')}
+      {buttonText}
     </Button>
   )
 }

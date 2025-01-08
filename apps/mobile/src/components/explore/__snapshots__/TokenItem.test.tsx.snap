@@ -89,6 +89,7 @@ exports[`TokenItem renders without error 1`] = `
           </Text>
         </View>
         <View
+          pointerEvents="auto"
           style={
             {
               "alignItems": "center",
@@ -116,7 +117,7 @@ exports[`TokenItem renders without error 1`] = `
                 "position": "absolute",
                 "top": "2%",
                 "width": "96%",
-                "zIndex": -1,
+                "zIndex": 0,
               }
             }
           />
@@ -134,6 +135,7 @@ exports[`TokenItem renders without error 1`] = `
                 "aspectRatio": undefined,
                 "borderRadius": 20,
                 "flex": undefined,
+                "zIndex": 1,
               }
             }
             testID="img-token-image"

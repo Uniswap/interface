@@ -1,6 +1,6 @@
 import { memo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ColorTokens, Flex, FlexProps, Text } from 'ui/src'
-import { useTranslation } from 'uniswap/src/i18n'
 
 interface NewTagProps {
   backgroundColor?: ColorTokens

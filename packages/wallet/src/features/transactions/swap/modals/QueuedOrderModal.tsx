@@ -1,6 +1,6 @@
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { t } from 'i18next'
 import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Button, Flex, Separator, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
@@ -31,15 +31,8 @@ import { isSwapTransactionInfo } from 'wallet/src/features/transactions/SummaryC
 import { ErroredQueuedOrderStatus, useErroredQueuedOrders } from 'wallet/src/features/transactions/hooks'
 import { useActiveSignerAccount } from 'wallet/src/features/wallet/hooks'
 
-const QUEUE_STATUS_TO_MESSAGE = {
-  [QueuedOrderStatus.AppClosed]: t('swap.warning.queuedOrder.appClosed'),
-  [QueuedOrderStatus.ApprovalFailed]: t('swap.warning.queuedOrder.approvalFailed'),
-  [QueuedOrderStatus.WrapFailed]: t('swap.warning.queuedOrder.wrapFailed'),
-  [QueuedOrderStatus.SubmissionFailed]: t('swap.warning.queuedOrder.submissionFailed'),
-  [QueuedOrderStatus.Stale]: t('swap.warning.queuedOrder.stale'),
-} as const satisfies Record<ErroredQueuedOrderStatus, string>
-
 export function QueuedOrderModal(): JSX.Element | null {
+  const { t } = useTranslation()
   const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
   const isShortMobileDevice = useIsShortMobileDevice()
 
@@ -80,6 +73,14 @@ export function QueuedOrderModal(): JSX.Element | null {
   if (!uniswapXEnabled || !currentFailedOrder || !isSwapTransactionInfo(currentFailedOrder.typeInfo)) {
     return null
   }
+
+  const QUEUE_STATUS_TO_MESSAGE = {
+    [QueuedOrderStatus.AppClosed]: t('swap.warning.queuedOrder.appClosed'),
+    [QueuedOrderStatus.ApprovalFailed]: t('swap.warning.queuedOrder.approvalFailed'),
+    [QueuedOrderStatus.WrapFailed]: t('swap.warning.queuedOrder.wrapFailed'),
+    [QueuedOrderStatus.SubmissionFailed]: t('swap.warning.queuedOrder.submissionFailed'),
+    [QueuedOrderStatus.Stale]: t('swap.warning.queuedOrder.stale'),
+  } as const satisfies Record<ErroredQueuedOrderStatus, string>
   const reason = QUEUE_STATUS_TO_MESSAGE[currentFailedOrder.queueStatus]
 
   const buttonSize = isShortMobileDevice ? 'small' : 'medium'

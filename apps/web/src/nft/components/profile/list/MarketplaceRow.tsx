@@ -13,9 +13,9 @@ import { useNativeUsdPrice } from 'nft/hooks/useUsdPrice'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
 import { Dispatch, DispatchWithoutAction, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
-import { t } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const LastPriceInfo = styled(Column)`
@@ -126,6 +126,7 @@ export const MarketplaceRow = ({
   toggleExpandMarketplaceRows,
   rowHovered,
 }: MarketplaceRowProps) => {
+  const { t } = useTranslation()
   const { formatNumberOrString, formatDelta } = useFormatter()
   const setAssetListPrice = useSellAsset((state) => state.setAssetListPrice)
   const removeAssetMarketplace = useSellAsset((state) => state.removeAssetMarketplace)

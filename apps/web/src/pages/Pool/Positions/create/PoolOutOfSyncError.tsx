@@ -1,9 +1,9 @@
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
+import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { useTranslation } from 'uniswap/src/i18n'
 
 export function PoolOutOfSyncError() {
   const { t } = useTranslation()

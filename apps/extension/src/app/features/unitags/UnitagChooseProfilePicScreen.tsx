@@ -1,5 +1,5 @@
-import { t } from 'i18next'
 import { useCallback, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingStepsContext'
 import { useUnitagClaimContext } from 'src/app/features/unitags/UnitagClaimContext'
@@ -16,6 +16,7 @@ import { UnitagChooseProfilePicContent } from 'wallet/src/features/unitags/Unita
 import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function UnitagChooseProfilePicScreen(): JSX.Element {
+  const { t } = useTranslation()
   const { goToNextStep, goToPreviousStep } = useOnboardingSteps()
   const { unitag, entryPoint, setProfilePicUri } = useUnitagClaimContext()
   const address = useAccountAddressFromUrlWithThrow()

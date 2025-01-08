@@ -11,9 +11,9 @@ import { Dots } from 'components/swap/styled'
 import { useColor } from 'hooks/useColor'
 import styled from 'lib/styled-components'
 import { transparentize } from 'polished'
+import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
-import { Trans } from 'uniswap/src/i18n'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`

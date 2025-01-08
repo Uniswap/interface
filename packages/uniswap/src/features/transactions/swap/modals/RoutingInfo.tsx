@@ -1,6 +1,5 @@
-import { t } from 'i18next'
 import { PropsWithChildren, useMemo } from 'react'
-import { Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, UniswapXText, isWeb, useSporeColors } from 'ui/src'
 import { OrderRouting } from 'ui/src/components/icons/OrderRouting'
 import { RouterLabel } from 'uniswap/src/components/RouterLabel/RouterLabel'
@@ -30,7 +29,7 @@ export function RoutingInfo({
   gasFee: GasFeeResult
 }>): JSX.Element | null {
   const colors = useSporeColors()
-
+  const { t } = useTranslation()
   const { trade } = useSwapTxContext()
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const { value: gasFeeUSD } = useUSDValueOfGasFee(chainId, gasFee.displayValue ?? undefined)
@@ -96,7 +95,7 @@ export function RoutingInfo({
       )
     }
     return null
-  }, [trade, routes, gasFeeFormatted, isMaybeV4])
+  }, [t, trade, routes, gasFeeFormatted, isMaybeV4])
 
   const InfoButton = useMemo(() => {
     if (!trade) {
@@ -121,7 +120,7 @@ export function RoutingInfo({
         </Text>
       </TouchableArea>
     )
-  }, [trade, isMaybeV4])
+  }, [t, trade, isMaybeV4])
 
   return (
     <Flex row alignItems="center" justifyContent="space-between">

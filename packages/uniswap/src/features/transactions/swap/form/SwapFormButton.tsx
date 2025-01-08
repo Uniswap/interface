@@ -1,7 +1,7 @@
 /* eslint-disable complexity */
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, ColorTokens, Flex, SpinningLoader, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
+import { Button, ColorTokens, Flex, SpinningLoader, Text, useIsShortMobileDevice } from 'ui/src'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
@@ -246,11 +246,7 @@ export function SwapFormButton({ wrapCallback }: { wrapCallback?: WrapCallback }
           // Custom styles are matched with our theme hover opacities - can remove this when we implement full theme support in Button
           pressStyle={{ backgroundColor: buttonProps.backgroundColor, scale: 0.98 }}
           hoverStyle={{ backgroundColor: buttonProps.hoverBackgroundColor }}
-          icon={
-            indicative ? (
-              <SpinningLoader color="$neutral2" size={isWeb ? iconSizes.icon20 : iconSizes.icon24} />
-            ) : undefined
-          }
+          icon={indicative ? <SpinningLoader color="$neutral2" size={iconSizes.icon20} /> : undefined}
           backgroundColor={buttonProps.backgroundColor}
           disabled={disabled}
           opacity={buttonProps.opacity}

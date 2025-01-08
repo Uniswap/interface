@@ -68,14 +68,15 @@ export function* sendTransaction(params: SendTransactionParams) {
 
   // Register the tx in the store before it's submitted
   let unsubmittedTransaction = yield* call(addUnsubmittedTransaction, params)
+  let calculatedNonce: CalculatedNonce | undefined
 
   try {
     // Only fetch nonce if it's not already set, or we could be overwriting some custom logic
     // On swapSaga we manually set them for approve+swap to prevent errors in some L2s
     if (!request.nonce) {
-      const nonce = yield* call(tryGetNonce, account, chainId)
-      if (nonce) {
-        request = { ...request, nonce }
+      calculatedNonce = yield* call(tryGetNonce, account, chainId)
+      if (calculatedNonce) {
+        request = { ...request, nonce: calculatedNonce.nonce }
       }
     }
 
@@ -115,9 +116,37 @@ export function* sendTransaction(params: SendTransactionParams) {
     )
     return { transactionResponse }
   } catch (error) {
-    // TODO(WALL-5027): Improve error segmentation
-
     yield* put(transactionActions.finalizeTransaction({ ...unsubmittedTransaction, status: TransactionStatus.Failed }))
+
+    if (error instanceof Error) {
+      let errorCategory = 'unknown'
+      if (error.message.includes('nonce') || error.message.includes('future transaction tries to replace pending')) {
+        errorCategory = 'nonce_error'
+      } else if (error.message.includes('Failed in pending block with: Reverted')) {
+        errorCategory = 'reverted'
+      } else if (
+        error.message.includes('intrinsic gas too low') ||
+        error.message.includes('max fee per gas less than block base fee') ||
+        error.message.includes('transaction underpriced')
+      ) {
+        errorCategory = 'gas_too_low'
+      } else if (error.message.includes('Too Many Requests')) {
+        errorCategory = 'rate_limited'
+      }
+
+      logger.error(error, {
+        tags: { file: 'sendTransactionSaga', function: 'sendTransaction' },
+        extra: {
+          category: errorCategory,
+          calculatedNonce,
+          ...options,
+        },
+      })
+
+      throw new Error(`Failed to send transaction: ${errorCategory}`, {
+        cause: error,
+      })
+    }
 
     throw error
   }
@@ -218,6 +247,11 @@ function* updateSubmittedTransaction(
   })
 }
 
+export interface CalculatedNonce {
+  nonce: number
+  pendingPrivateTxCount?: number
+}
+
 /**
  * Attempts to fetch the next nonce to be used for a transaction.
  * If the chain supports private RPC, it will use the private RPC provider, in order to account for pending private transactions.
@@ -254,9 +288,14 @@ export function* tryGetNonce(account: SignerMnemonicAccountMeta, chainId: Univer
     // If we're using Flashbots with authentication header as private RPC, it will already account for pending private transactions. Otherwise, add the local pending private transactions.
     if (!shouldUseFlashbots && isPrivateRpcSupportedOnChain(chainId)) {
       const pendingPrivateTransactionCount = yield* call(getPendingPrivateTxCount, account.address, chainId)
-      return nonce + pendingPrivateTransactionCount
+      return {
+        nonce: nonce + pendingPrivateTransactionCount,
+        pendingPrivateTxCount: pendingPrivateTransactionCount,
+      }
     }
-    return nonce
+    return {
+      nonce,
+    }
   } catch (error) {
     logger.error(error, {
       tags: { file: 'sendTransaction', function: 'tryGetNonce' },

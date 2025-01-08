@@ -1,8 +1,8 @@
 import { getChainUI } from 'components/Logo/ChainLogo'
-import { useIsSendPage } from 'hooks/useIsSendPage'
-import { useIsSwapPage } from 'hooks/useIsSwapPage'
+import { PageType, useIsPage } from 'hooks/useIsPage'
 import { useCallback } from 'react'
 import { ArrowUpRight } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { useAppDispatch } from 'state/hooks'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
@@ -21,7 +21,6 @@ import { useIsBridgingChain, useNumBridgingChains } from 'uniswap/src/features/b
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useTranslation } from 'uniswap/src/i18n'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function SwapBottomCard() {
@@ -53,8 +52,8 @@ export function SwapBottomCard() {
     [dispatch, setIsSwapTokenSelectorOpen],
   )
 
-  const isSwapPage = useIsSwapPage()
-  const isSendPage = useIsSendPage()
+  const isSwapPage = useIsPage(PageType.SWAP)
+  const isSendPage = useIsPage(PageType.SEND)
   if (!isSupportedChain || !(isSwapPage || isSendPage)) {
     return null
   }

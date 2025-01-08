@@ -6,7 +6,7 @@ import { ActivityEvent } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
 import { getTimeDifference } from 'nft/utils/date'
 import { ReactNode } from 'react'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans } from 'react-i18next'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 

@@ -87,6 +87,14 @@ export function isOnRampTransaction(tx: TransactionDetails): boolean {
   )
 }
 
+export function isOffRampTransaction(tx: TransactionDetails): boolean {
+  return tx.typeInfo.type === TransactionType.LocalOffRamp || tx.typeInfo.type === TransactionType.OffRampSale
+}
+
+export function isFORTransaction(tx: TransactionDetails): boolean {
+  return isOnRampTransaction(tx) || isOffRampTransaction(tx)
+}
+
 export function getDiff(value1: number | string | undefined, value2: number | undefined): number | undefined {
   if (typeof value1 === 'string') {
     value1 = Number(value1)

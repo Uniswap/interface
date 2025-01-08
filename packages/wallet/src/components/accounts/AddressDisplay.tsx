@@ -194,7 +194,7 @@ export function AddressDisplay({
       </Flex>
 
       {showViewOnlyLabel && (
-        <Flex grow alignItems="flex-end" mr="$spacing8">
+        <Flex grow alignItems="flex-end" flexBasis="30%" mr="$spacing8">
           <Flex backgroundColor="$surface2" borderRadius="$rounded12" px="$spacing8" py="$spacing4">
             <Text color="$neutral2" variant="body4">
               {t('settings.section.wallet.label.viewOnly')}

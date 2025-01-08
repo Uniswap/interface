@@ -7,13 +7,13 @@ import { useIsUniswapXSupportedChain } from 'hooks/useIsUniswapXSupportedChain'
 import { atom, useAtom } from 'jotai'
 import styled from 'lib/styled-components'
 import { ReactNode, useCallback } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { RouterPreference } from 'state/routing/types'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { Switch } from 'ui/src'
+import { Flex, Switch } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { Trans, t } from 'uniswap/src/i18n'
 
 const LabelWrapper = styled(Column)`
   height: 100%;
@@ -62,7 +62,7 @@ const routePreferenceOptionsAtom = atom<RoutePreferenceOptionsType>(DEFAULT_ROUT
 
 function UniswapXPreferenceLabel() {
   return (
-    <Row>
+    <Flex row alignItems="center" gap="$spacing8">
       <UniswapXBrandMark />
       <QuestionHelper
         text={
@@ -75,15 +75,8 @@ function UniswapXPreferenceLabel() {
         }
         placement="right"
       />
-    </Row>
+    </Flex>
   )
-}
-
-const ROUTE_PREFERENCE_TO_LABEL: Record<RoutePreferenceOption, ReactNode> = {
-  [RoutePreferenceOption.Optimal]: t('common.defaultTradeOptions'),
-  [RoutePreferenceOption.UniswapX]: <UniswapXPreferenceLabel />,
-  [RoutePreferenceOption.v3]: t('pool.v3'),
-  [RoutePreferenceOption.v2]: t('pool.v2'),
 }
 
 function RoutePreferenceToggle({
@@ -101,6 +94,15 @@ function RoutePreferenceToggle({
   disabled?: boolean
   toggle: () => void
 }) {
+  const { t } = useTranslation()
+
+  const ROUTE_PREFERENCE_TO_LABEL: Record<RoutePreferenceOption, ReactNode> = {
+    [RoutePreferenceOption.Optimal]: t('common.defaultTradeOptions'),
+    [RoutePreferenceOption.UniswapX]: <UniswapXPreferenceLabel />,
+    [RoutePreferenceOption.v3]: t('pool.v3'),
+    [RoutePreferenceOption.v2]: t('pool.v2'),
+  }
+
   return (
     <RowBetween gap="md" padding="2px 0px" align="start">
       <LabelWrapper gap="xs">
@@ -120,6 +122,7 @@ function RoutePreferenceToggle({
 }
 
 export default function MultipleRoutingOptions({ chainId }: { chainId?: number }) {
+  const { t } = useTranslation()
   const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
   const [routePreferenceOptions, setRoutePreferenceOptions] = useAtom(routePreferenceOptionsAtom)
   const [, setRoutingPreferences] = useAtom(routingPreferencesAtom)

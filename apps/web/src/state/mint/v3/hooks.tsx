@@ -20,6 +20,7 @@ import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { FeeData } from 'pages/Pool/Positions/create/types'
 import { ReactNode, useCallback, useMemo } from 'react'
+import { Trans } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { useCurrencyBalances } from 'state/connection/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
@@ -34,7 +35,6 @@ import {
 } from 'state/mint/v3/actions'
 import { tryParseTick } from 'state/mint/v3/utils'
 import { InterfaceState } from 'state/webReducer'
-import { Trans } from 'uniswap/src/i18n'
 import { getTickToPrice } from 'utils/getTickToPrice'
 
 export function useV3MintState(): InterfaceState['mintV3'] {

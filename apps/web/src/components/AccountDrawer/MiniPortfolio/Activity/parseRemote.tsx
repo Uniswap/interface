@@ -43,7 +43,7 @@ import {
   TransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { t } from 'uniswap/src/i18n'
+import i18n from 'uniswap/src/i18n'
 import { isAddress, isSameAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -67,34 +67,34 @@ const ENS_IMG =
 
 const COMMON_CONTRACTS: { [key: string]: Partial<Activity> | undefined } = {
   [UNI_ADDRESSES[UniverseChainId.Mainnet].toLowerCase()]: {
-    title: t('common.uniGovernance'),
-    descriptor: t('common.contractInteraction'),
+    title: i18n.t('common.uniGovernance'),
+    descriptor: i18n.t('common.contractInteraction'),
     logos: [UNI_IMG],
   },
   // TODO(cartcrom): Add permit2-specific logo
   '0x000000000022d473030f116ddee9f6b43ac78ba3': {
-    title: t('common.permit2'),
-    descriptor: t('common.uniswapProtocol'),
+    title: i18n.t('common.permit2'),
+    descriptor: i18n.t('common.uniswapProtocol'),
     logos: [UNI_IMG],
   },
   '0x4976fb03c32e5b8cfe2b6ccb31c09ba78ebaba41': {
-    title: t('common.ethereumNameService'),
-    descriptor: t('common.publicResolver'),
+    title: i18n.t('common.ethereumNameService'),
+    descriptor: i18n.t('common.publicResolver'),
     logos: [ENS_IMG],
   },
   '0x58774bb8acd458a640af0b88238369a167546ef2': {
-    title: t('common.ethereumNameService'),
-    descriptor: t('common.dnsRegistrar'),
+    title: i18n.t('common.ethereumNameService'),
+    descriptor: i18n.t('common.dnsRegistrar'),
     logos: [ENS_IMG],
   },
   '0x084b1c3c81545d370f3634392de611caabff8148': {
-    title: t('common.ethereumNameService'),
-    descriptor: t('common.reverseRegistrar'),
+    title: i18n.t('common.ethereumNameService'),
+    descriptor: i18n.t('common.reverseRegistrar'),
     logos: [ENS_IMG],
   },
   '0x283af0b28c62c092c9727f1ee09c02ca627eb7f5': {
-    title: t('common.ethereumNameService'),
-    descriptor: t('common.ethRegistrarController'),
+    title: i18n.t('common.ethereumNameService'),
+    descriptor: i18n.t('common.ethRegistrarController'),
     logos: [ENS_IMG],
   },
 }
@@ -167,14 +167,14 @@ function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferP
     sent.tokenStandard === NATIVE_CHAIN_ID &&
     isSameAddress(nativeOnChain(supportedSentChain).wrapped.address, received.asset.address)
   ) {
-    return t('common.wrapped')
+    return i18n.t('common.wrapped')
   } else if (
     received.tokenStandard === NATIVE_CHAIN_ID &&
     isSameAddress(nativeOnChain(supportedReceivedChain).wrapped.address, received.asset.address)
   ) {
-    return t('common.unwrapped')
+    return i18n.t('common.unwrapped')
   } else {
-    return t('common.swapped')
+    return i18n.t('common.swapped')
   }
 }
 
@@ -189,7 +189,7 @@ function getSwapDescriptor({
   tokenOut: TokenAssetPartsFragment
   inputAmount: string
 }) {
-  return t('activity.transaction.swap.descriptor', {
+  return i18n.t('activity.transaction.swap.descriptor', {
     amountWithSymbolA: `${inputAmount} ${tokenIn.symbol}`,
     amountWithSymbolB: `${outputAmount} ${tokenOut.symbol}`,
   })
@@ -229,12 +229,12 @@ export function getBridgeDescriptor({
     <Flex row alignItems="center" gap="4px">
       <NetworkLogo chainId={inputChain} size={16} borderRadius={6} />
       <StyledBridgeAmountText>
-        {inputAmount}&nbsp;{tokenIn?.symbol ?? t('common.unknown')}
+        {inputAmount}&nbsp;{tokenIn?.symbol ?? i18n.t('common.unknown')}
       </StyledBridgeAmountText>
       <Arrow direction="e" color="$neutral3" size={iconSizes.icon16} />
       <NetworkLogo chainId={outputChain} size={16} borderRadius={6} />
       <StyledBridgeAmountText>
-        {outputAmount}&nbsp;{tokenOut?.symbol ?? t('common.unknown')}
+        {outputAmount}&nbsp;{tokenOut?.symbol ?? i18n.t('common.unknown')}
       </StyledBridgeAmountText>
     </Flex>
   )
@@ -313,7 +313,7 @@ function parseSwap(changes: TransactionChanges, formatNumberOrString: FormatNumb
   if (changes.NftTransfer.length > 0 && changes.TokenTransfer.length === 1) {
     const collectionCounts = getCollectionCounts(changes.NftTransfer)
 
-    const title = changes.NftTransfer[0].direction === 'IN' ? t('common.bought') : t('common.sold')
+    const title = changes.NftTransfer[0].direction === 'IN' ? i18n.t('common.bought') : i18n.t('common.sold')
     const descriptor = Object.entries(collectionCounts)
       .map(([collectionName, count]) => `${count} ${collectionName}`)
       .join()
@@ -333,7 +333,7 @@ function parseSwap(changes: TransactionChanges, formatNumberOrString: FormatNumb
       }
     }
   }
-  return { title: t('common.unknownSwap') }
+  return { title: i18n.t('common.unknownSwap') }
 }
 
 function parseBridge(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
@@ -347,7 +347,7 @@ function parseBridge(changes: TransactionChanges, formatNumberOrString: FormatNu
       currencies: [gqlToCurrency(sent.asset), gqlToCurrency(received.asset)],
     }
   }
-  return { title: t('common.unknownBridge') }
+  return { title: i18n.t('common.unknownBridge') }
 }
 
 /**
@@ -360,7 +360,7 @@ function parseLend(changes: TransactionChanges, formatNumberOrString: FormatNumb
   if (native && erc20 && gqlToCurrency(native)?.wrapped.address === gqlToCurrency(erc20)?.wrapped.address) {
     return parseSwap(changes, formatNumberOrString)
   }
-  return { title: t('common.unknownLend') }
+  return { title: i18n.t('common.unknownLend') }
 }
 
 function parseSwapOrder(
@@ -425,12 +425,13 @@ export function offchainOrderDetailsFromGraphQLTransactionActivity(
 
 function parseApprove(changes: TransactionChanges) {
   if (changes.TokenApproval.length === 1) {
-    const title = parseInt(changes.TokenApproval[0].quantity) === 0 ? t('common.revokedApproval') : t('common.approved')
+    const title =
+      parseInt(changes.TokenApproval[0].quantity) === 0 ? i18n.t('common.revokedApproval') : i18n.t('common.approved')
     const descriptor = `${changes.TokenApproval[0].asset.symbol}`
     const currencies = [gqlToCurrency(changes.TokenApproval[0].asset)]
     return { title, descriptor, currencies }
   }
-  return { title: t('common.unknownApproval') }
+  return { title: i18n.t('common.unknownApproval') }
 }
 
 function parseLPTransfers(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
@@ -441,7 +442,7 @@ function parseLPTransfers(changes: TransactionChanges, formatNumberOrString: For
   const tokenBQuantity = formatNumberOrString({ input: poolTokenB.quantity, type: NumberType.TokenNonTx })
 
   return {
-    descriptor: t('activity.transaction.tokens.descriptor', {
+    descriptor: i18n.t('activity.transaction.tokens.descriptor', {
       amountWithSymbolA: `${tokenAQuanitity} ${poolTokenA.asset.symbol}`,
       amountWithSymbolB: `${tokenBQuantity} ${poolTokenB.asset.symbol}`,
     }),
@@ -465,9 +466,9 @@ function parseSendReceive(
     (changes.TokenTransfer.length === 1 || changes.TokenTransfer.length === 2)
   ) {
     if (assetActivity.details.type === TransactionType.Send) {
-      return { title: t('common.addedLiquidity'), ...parseLPTransfers(changes, formatNumberOrString) }
+      return { title: i18n.t('common.addedLiquidity'), ...parseLPTransfers(changes, formatNumberOrString) }
     } else {
-      return { title: t('common.removedLiquidity'), ...parseLPTransfers(changes, formatNumberOrString) }
+      return { title: i18n.t('common.removedLiquidity'), ...parseLPTransfers(changes, formatNumberOrString) }
     }
   }
 
@@ -493,8 +494,8 @@ function parseSendReceive(
     if (transfer.direction === 'IN') {
       return isMoonpayPurchase && transfer.__typename === 'TokenTransfer'
         ? {
-            title: t('common.purchased'),
-            descriptor: t('activity.transaction.swap.descriptor', {
+            title: i18n.t('common.purchased'),
+            descriptor: i18n.t('activity.transaction.swap.descriptor', {
               amountWithSymbolA: `${amount} ${assetName}`,
               amountWithSymbolB: formatNumberOrString({
                 input: getTransactedValue(transfer.transactedValue),
@@ -505,8 +506,8 @@ function parseSendReceive(
             currencies,
           }
         : {
-            title: t('common.received'),
-            descriptor: t('activity.transaction.receive.descriptor', {
+            title: i18n.t('common.received'),
+            descriptor: i18n.t('activity.transaction.receive.descriptor', {
               amountWithSymbol: `${amount} ${assetName}`,
               walletAddress: otherAccount,
             }),
@@ -515,8 +516,8 @@ function parseSendReceive(
           }
     } else {
       return {
-        title: t('common.sent'),
-        descriptor: t('activity.transaction.send.descriptor', {
+        title: i18n.t('common.sent'),
+        descriptor: i18n.t('activity.transaction.send.descriptor', {
           amountWithSymbol: `${amount} ${assetName}`,
           walletAddress: otherAccount,
         }),
@@ -525,7 +526,7 @@ function parseSendReceive(
       }
     }
   }
-  return { title: t('common.unknownSend') }
+  return { title: i18n.t('common.unknownSend') }
 }
 
 function parseMint(
@@ -543,16 +544,16 @@ function parseMint(
       (changes.TokenTransfer.length === 1 || changes.TokenTransfer.length === 2)
     ) {
       if (callsV3PositionManagerContract(assetActivity)) {
-        return { title: t('common.addedLiquidity'), ...parseLPTransfers(changes, formatNumberOrString) }
+        return { title: i18n.t('common.addedLiquidity'), ...parseLPTransfers(changes, formatNumberOrString) }
       }
 
       if (callsV4PositionManagerContract(assetActivity)) {
-        return { title: t('pool.createdPosition'), ...parseLPTransfers(changes, formatNumberOrString) }
+        return { title: i18n.t('pool.createdPosition'), ...parseLPTransfers(changes, formatNumberOrString) }
       }
     }
-    return { title: t('common.minted'), descriptor: `${collectionMap[collectionName]} ${collectionName}` }
+    return { title: i18n.t('common.minted'), descriptor: `${collectionMap[collectionName]} ${collectionName}` }
   }
-  return { title: t('common.unknownMint') }
+  return { title: i18n.t('common.unknownMint') }
 }
 
 function parseUnknown(
@@ -560,7 +561,7 @@ function parseUnknown(
   _formatNumberOrString: FormatNumberOrStringFunctionType,
   assetActivity: TransactionActivity,
 ) {
-  return { title: t('common.contractInteraction'), ...COMMON_CONTRACTS[assetActivity.details.to.toLowerCase()] }
+  return { title: i18n.t('common.contractInteraction'), ...COMMON_CONTRACTS[assetActivity.details.to.toLowerCase()] }
 }
 
 type TransactionTypeParser = (
@@ -648,10 +649,10 @@ function parseFiatOnRampTransaction(activity: TransactionActivity | FiatOnRampAc
       timestamp: activity.timestamp,
       logos: [onRampTransfer.token.project?.logoUrl],
       currencies: [gqlToCurrency(onRampTransfer.token)],
-      title: t('fiatOnRamp.purchasedOn', {
+      title: i18n.t('fiatOnRamp.purchasedOn', {
         serviceProvider: onRampTransfer.serviceProvider.name,
       }),
-      descriptor: t('fiatOnRamp.exchangeRate', {
+      descriptor: i18n.t('fiatOnRamp.exchangeRate', {
         outputAmount: onRampTransfer.amount,
         outputSymbol: onRampTransfer.token.symbol,
         inputAmount: onRampTransfer.sourceAmount,
@@ -678,10 +679,10 @@ function parseFiatOnRampTransaction(activity: TransactionActivity | FiatOnRampAc
       timestamp: activity.timestamp,
       logos: [onRampTransfer.token.project?.logoUrl],
       currencies: [gqlToCurrency(onRampTransfer.token)],
-      title: t('fiatOnRamp.purchasedOn', {
+      title: i18n.t('fiatOnRamp.purchasedOn', {
         serviceProvider: onRampTransfer.serviceProvider.name,
       }),
-      descriptor: t('fiatOnRamp.exchangeRate', {
+      descriptor: i18n.t('fiatOnRamp.exchangeRate', {
         outputAmount: onRampTransfer.amount,
         outputSymbol: onRampTransfer.token.symbol,
         inputAmount: onRampTransfer.sourceAmount,

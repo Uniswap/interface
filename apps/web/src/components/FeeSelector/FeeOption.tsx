@@ -1,11 +1,11 @@
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { AutoColumn } from 'components/deprecated/Column'
 import { FEE_AMOUNT_DETAIL } from 'components/FeeSelector/shared'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { AutoColumn } from 'components/deprecated/Column'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState } from 'hooks/usePools'
+import { Trans } from 'react-i18next'
 import { Flex, RadioButton, Text } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 
 interface FeeOptionProps {

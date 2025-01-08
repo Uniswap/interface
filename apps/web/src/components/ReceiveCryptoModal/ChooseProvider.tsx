@@ -4,6 +4,7 @@ import { ProviderOption } from 'components/ReceiveCryptoModal/ProviderOption'
 import { useAccount } from 'hooks/useAccount'
 import useENSName from 'hooks/useENSName'
 import { useTheme } from 'lib/styled-components'
+import { useTranslation } from 'react-i18next'
 import { useOpenModal, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { CopyToClipboard } from 'theme/components'
@@ -15,7 +16,6 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import { useTranslation } from 'uniswap/src/i18n'
 
 const ICON_SIZE = 32
 const ICON_BORDER_RADIUS = 100

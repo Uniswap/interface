@@ -15,6 +15,7 @@ import styled from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
 import { useCallback, useMemo, useRef } from 'react'
 import { X } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { useCloseModal, useModalIsOpen, useToggleSettingsMenu } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { InterfaceTrade } from 'state/routing/types'
@@ -26,7 +27,6 @@ import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupp
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { Trans } from 'uniswap/src/i18n'
 
 const CloseButton = styled.button`
   background: transparent;

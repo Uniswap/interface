@@ -76,6 +76,7 @@ export type GasEstimateAccuracyProperties = {
 
 export type PendingTransactionTimeoutProperties = {
   use_flashbots: boolean
+  flashbots_block_range: number
   send_authentication_header: boolean
   private_rpc: boolean
   chain_id: number
@@ -517,11 +518,6 @@ export type UniverseEventProperties = {
     expected?: string
     actual: string
   } & LiquidityAnalyticsProperties
-  [MobileEventName.AppRating]: {
-    type: 'store-review' | 'feedback-form' | 'remind'
-    appRatingPromptedMs?: number
-    appRatingProvidedMs?: number
-  }
   [MobileEventName.AutomatedOnDeviceRecoveryTriggered]: {
     showNotificationScreen: boolean
     showBiometricsScreen: boolean
@@ -784,6 +780,12 @@ export type UniverseEventProperties = {
     twitter: boolean
   }
   [UnitagEventName.UnitagRemoved]: undefined
+  [WalletEventName.AppRating]: {
+    type: 'store-review' | 'feedback-form' | 'remind' | 'close'
+    appRatingPromptedMs?: number
+    appRatingProvidedMs?: number
+  }
+
   [WalletEventName.BackupMethodAdded]: {
     backupMethodType: 'manual' | 'cloud'
     newBackupCount: number

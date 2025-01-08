@@ -3,12 +3,12 @@ import { ButtonPrimary } from 'components/Button/buttons'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import styled from 'lib/styled-components'
+import { Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { Trans } from 'uniswap/src/i18n'
 
 const InvalidDetailsContainer = styled.div`
   padding-top: 128px;

@@ -11,7 +11,7 @@ import {
   ArrowUpInCircle,
   QuestionInCircle,
 } from 'ui/src/components/icons'
-import { borderRadii } from 'ui/src/theme'
+import { borderRadii, zIndices } from 'ui/src/theme'
 import { CurrencyLogo, STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { AssetType } from 'uniswap/src/entities/assets'
@@ -103,6 +103,7 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
         Icon = Approve
         break
       case TransactionType.Send:
+      case TransactionType.OffRampSale:
         Icon = ArrowUpInCircle
         break
       case TransactionType.NFTTrade:
@@ -144,7 +145,7 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
     <Flex centered height={size} width={size}>
       {logo ?? icon}
       {logo && icon && (
-        <Flex bottom={-4} position="absolute" right={-4}>
+        <Flex bottom={-4} position="absolute" right={-4} zIndex={zIndices.mask}>
           {icon}
         </Flex>
       )}

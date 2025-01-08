@@ -9,6 +9,7 @@ import Column from 'components/deprecated/Column'
 import styled, { useTheme } from 'lib/styled-components'
 import { Wiggle } from 'pages/Landing/components/animations'
 import { PropsWithChildren } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { StyledInternalLink } from 'theme/components'
 import { Button, Flex, Text, styled as tamaguiStyled } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -16,7 +17,6 @@ import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/ga
 import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 
 const WiggleIcon = styled(Wiggle)`
   flex: 0;

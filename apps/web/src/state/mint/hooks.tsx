@@ -7,11 +7,11 @@ import { PairState, useV2Pair } from 'hooks/useV2Pairs'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useCallback, useMemo } from 'react'
+import { Trans } from 'react-i18next'
 import { useCurrencyBalances } from 'state/connection/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { Field, typeInput } from 'state/mint/actions'
 import { InterfaceState } from 'state/webReducer'
-import { Trans } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 
 const ZERO = JSBI.BigInt(0)

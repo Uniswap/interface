@@ -108,10 +108,7 @@ export function useTransactionRequestInfo({
     if (!swapQuote) {
       return undefined
     }
-    // We cant get correct calldata from /swap if we dont have a valid slippage tolerance
-    if (tradeWithStatus.trade?.slippageTolerance === undefined && !isBridgeTrade) {
-      return undefined
-    }
+
     const deadline = getTradeSettingsDeadline(transactionSettings.customDeadline)
 
     const swapArgs: WithV4Flag<CreateSwapRequest> = {
@@ -130,13 +127,11 @@ export function useTransactionRequestInfo({
   }, [
     activeGasStrategy,
     transactionSettings.customDeadline,
-    isBridgeTrade,
     permitData,
     shadowGasStrategies,
     shouldSimulateTxn,
     signatureInfo.signature,
     swapQuote,
-    tradeWithStatus,
     v4Enabled,
   ])
 

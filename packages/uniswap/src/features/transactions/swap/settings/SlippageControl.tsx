@@ -81,6 +81,7 @@ export function SlippageControl({ saveOnBlur }: SlippageControlProps): JSX.Eleme
               color={inputValueTextColor}
               editable={true}
               fontFamily="$subHeading"
+              fontWeight="normal"
               fontSize="$small"
               height="100%"
               outlineColor="$transparent"
@@ -91,7 +92,7 @@ export function SlippageControl({ saveOnBlur }: SlippageControlProps): JSX.Eleme
               width={inputWidth}
               onBlur={onBlurSlippageInput}
               onChangeText={onChangeSlippageInput}
-              onFocus={onFocusSlippageInput}
+              onPressIn={onFocusSlippageInput}
             />
             <Text
               minWidth={INPUT_MIN_WIDTH}

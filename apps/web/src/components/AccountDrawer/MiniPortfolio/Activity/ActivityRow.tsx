@@ -19,6 +19,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
+import { isHash } from 'viem'
 
 const ActivityRowDescriptor = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.neutral2};
@@ -57,13 +58,13 @@ export function ActivityRow({ activity }: { activity: Activity }) {
     chainId,
     title,
     descriptor,
-    logos,
     otherAccount,
     currencies,
     hash,
     prefixIconSrc,
     suffixIconSrc,
     offchainOrderDetails,
+    logos,
     type,
   } = activity
 
@@ -82,9 +83,13 @@ export function ActivityRow({ activity }: { activity: Activity }) {
       })
       return
     }
+    // Do not allow FOR activity to be opened until confirmed on chain
+    if (activity.status === TransactionStatus.Pending && !isHash(hash)) {
+      return
+    }
 
-    window.open(getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION), '_blank')
-  }, [activity?.logos, chainId, hash, offchainOrderDetails, openOffchainActivityModal])
+    window.open(explorerUrl, '_blank')
+  }, [activity?.logos, activity.status, explorerUrl, hash, offchainOrderDetails, openOffchainActivityModal])
 
   return (
     <Trace

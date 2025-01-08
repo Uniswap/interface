@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
+import { Trans } from 'react-i18next'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { Flex, FlexProps, Text } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
 import { assert } from 'utilities/src/errors'
 
 export function PoolProgressIndicator({

@@ -8,6 +8,7 @@ import { useCurrency } from 'hooks/Tokens'
 import deprecatedStyled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
 import { ArrowDown, CornerLeftUp, ExternalLink as ExternalLinkIcon } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ClickableStyle, ClickableTamaguiStyle, EllipsisTamaguiStyle, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
@@ -16,7 +17,6 @@ import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/t
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
-import { useTranslation } from 'uniswap/src/i18n'
 
 export const SHOW_RETURN_TO_TOP_OFFSET = 500
 export const LOAD_MORE_BOTTOM_OFFSET = 50

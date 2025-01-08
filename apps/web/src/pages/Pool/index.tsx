@@ -16,6 +16,7 @@ import { PositionsHeader } from 'pages/Pool/Positions/PositionsHeader'
 import { TopPools } from 'pages/Pool/Positions/TopPools'
 import { ExternalArrowLink } from 'pages/Pool/Positions/shared'
 import { useEffect, useMemo, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useTopPools } from 'state/explore/topPools'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
@@ -35,7 +36,6 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 
 const PAGE_SIZE = 25
 

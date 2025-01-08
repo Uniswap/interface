@@ -124,10 +124,10 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
         http: [config.quicknodeMainnetRpcUrl],
       },
       [RPCType.Default]: {
-        http: ['https://rpc.ankr.com/eth'],
+        http: ['https://cloudflare-eth.com'],
       },
       [RPCType.Fallback]: {
-        http: ['https://cloudflare-eth.com', 'https://eth-mainnet.public.blastapi.io'],
+        http: ['https://rpc.ankr.com/eth', 'https://eth-mainnet.public.blastapi.io'],
       },
       [RPCType.Interface]: {
         http: [`https://mainnet.infura.io/v3/${config.infuraKey}`, config.quicknodeMainnetRpcUrl],

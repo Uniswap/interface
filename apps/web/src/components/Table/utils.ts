@@ -1,4 +1,4 @@
-import { useTranslation } from 'uniswap/src/i18n'
+import { useTranslation } from 'react-i18next'
 
 /**
  * Displays the time as a human-readable string.

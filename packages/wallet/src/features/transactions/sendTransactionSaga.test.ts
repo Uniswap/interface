@@ -176,12 +176,12 @@ describe(sendTransaction, () => {
         [call(getSignerManager), signerManager],
         [
           call(signAndSendTransaction, txRequest, account, provider as providers.Provider, signerManager),
-          throwError(new Error('Failed to send transaction')),
+          throwError(new Error('Something went wrong with nonce')),
         ],
       ])
       .put(addTransaction(transaction))
       .put(finalizeTransaction({ ...transaction, status: TransactionStatus.Failed }))
-      .throws(new Error('Failed to send transaction'))
+      .throws(new Error('Failed to send transaction: nonce_error'))
       .run()
   })
 
@@ -216,7 +216,7 @@ describe(sendTransaction, () => {
 
     return expectSaga(sendTransaction, sendParamsWithoutNonce)
       .provide([
-        [call(tryGetNonce, account, sendParams.chainId), mockNonce],
+        [call(tryGetNonce, account, sendParams.chainId), { nonce: mockNonce }],
         [call(getProvider, sendParams.chainId), provider],
         [call(getSignerManager), signerManager],
         [
@@ -259,7 +259,7 @@ describe(sendTransaction, () => {
         ])
         .call(getPrivateProvider, UniverseChainId.Mainnet, account)
         .call([privateProvider, privateProvider.getTransactionCount], account.address, 'pending')
-        .returns(mockNonce)
+        .returns({ nonce: mockNonce })
         .silentRun()
     })
 
@@ -277,7 +277,7 @@ describe(sendTransaction, () => {
         ])
         .call(getProvider, UniverseChainId.Optimism)
         .call([publicProvider, publicProvider.getTransactionCount], account.address, 'pending')
-        .returns(mockNonce)
+        .returns({ nonce: mockNonce })
         .silentRun()
     })
 
@@ -302,7 +302,7 @@ describe(sendTransaction, () => {
         ])
         .call(getProvider, UniverseChainId.Mainnet)
         .call([publicProvider, publicProvider.getTransactionCount], account.address, 'pending')
-        .returns(mockNonce + 3)
+        .returns({ nonce: mockNonce + 3, pendingPrivateTxCount: 3 })
         .silentRun()
     })
 
@@ -327,7 +327,7 @@ describe(sendTransaction, () => {
         ])
         .call(getProvider, UniverseChainId.Mainnet)
         .call([publicProvider, publicProvider.getTransactionCount], account.address, 'pending')
-        .returns(mockNonce + 3)
+        .returns({ nonce: mockNonce + 3, pendingPrivateTxCount: 3 })
         .silentRun()
     })
 
@@ -346,7 +346,7 @@ describe(sendTransaction, () => {
         ])
         .call(getPrivateProvider, UniverseChainId.Mainnet, account)
         .call([privateProvider, privateProvider.getTransactionCount], account.address, 'pending')
-        .returns(mockNonce)
+        .returns({ nonce: mockNonce })
         .silentRun()
     })
 

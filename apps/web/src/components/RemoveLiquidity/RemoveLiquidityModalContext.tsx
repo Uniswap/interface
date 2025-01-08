@@ -1,6 +1,6 @@
 import { useModalLiquidityInitialState } from 'components/Liquidity/hooks'
-import { PositionInfo } from 'components/Liquidity/types'
-import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useState } from 'react'
+import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
+import { LiquidityModalInitialState } from 'state/application/reducer'
 
 export enum DecreaseLiquidityStep {
   Input,
@@ -12,8 +12,10 @@ type RemoveLiquidityModalState = {
   setStep: Dispatch<SetStateAction<DecreaseLiquidityStep>>
   percent: string
   setPercent: (percent: string) => void
-  positionInfo?: PositionInfo
+  positionInfo?: LiquidityModalInitialState
   percentInvalid?: boolean
+  unwrapNativeCurrency: boolean
+  setUnwrapNativeCurrency: Dispatch<SetStateAction<boolean>>
 }
 
 const RemoveLiquidityModalContext = createContext<RemoveLiquidityModalState>({
@@ -22,19 +24,32 @@ const RemoveLiquidityModalContext = createContext<RemoveLiquidityModalState>({
   percent: '',
   setPercent: () => null,
   percentInvalid: true,
+  unwrapNativeCurrency: true,
+  setUnwrapNativeCurrency: () => null,
 })
 
 export function RemoveLiquidityModalContextProvider({ children }: PropsWithChildren): JSX.Element {
   const [step, setStep] = useState(DecreaseLiquidityStep.Input)
+  const [unwrapNativeCurrency, setUnwrapNativeCurrency] = useState(true)
   const [percent, setPercent] = useState<string>('')
   const positionInfo = useModalLiquidityInitialState()
   const percentInvalid = percent === '0' || percent === '' || !percent
 
-  return (
-    <RemoveLiquidityModalContext.Provider value={{ percent, setPercent, step, setStep, positionInfo, percentInvalid }}>
-      {children}
-    </RemoveLiquidityModalContext.Provider>
+  const ctx = useMemo(
+    () => ({
+      percent,
+      setPercent,
+      step,
+      setStep,
+      positionInfo,
+      percentInvalid,
+      unwrapNativeCurrency,
+      setUnwrapNativeCurrency,
+    }),
+    [percent, step, positionInfo, percentInvalid, unwrapNativeCurrency, setUnwrapNativeCurrency],
   )
+
+  return <RemoveLiquidityModalContext.Provider value={ctx}>{children}</RemoveLiquidityModalContext.Provider>
 }
 
 export function useRemoveLiquidityModalContext() {

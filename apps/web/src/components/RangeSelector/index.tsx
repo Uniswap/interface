@@ -1,8 +1,8 @@
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import StepCounter from 'components/InputStepCounter'
 import { AutoRow } from 'components/deprecated/Row'
+import { Trans } from 'react-i18next'
 import { Bound } from 'state/mint/v3/actions'
-import { Trans } from 'uniswap/src/i18n'
 
 // currencyA is the base token
 export default function RangeSelector({

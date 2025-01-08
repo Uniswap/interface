@@ -3,8 +3,8 @@ import { Currency, Price } from '@uniswap/sdk-core'
 import { useGetRangeDisplay } from 'components/Liquidity/hooks'
 import { PriceOrdering } from 'components/PositionListItem'
 import { useMemo, useState } from 'react'
+import { Trans } from 'react-i18next'
 import { Flex, SegmentedControl, SegmentedControlOption, Text, styled } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const InnerTile = styled(Flex, {

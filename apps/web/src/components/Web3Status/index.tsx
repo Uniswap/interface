@@ -15,6 +15,7 @@ import styled from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
 import { darken } from 'polished'
 import { RefObject, useCallback, useEffect, useRef } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { useAppSelector } from 'state/hooks'
 import { flexRowNoWrap } from 'theme/styles'
 import { Text } from 'ui/src'
@@ -23,7 +24,6 @@ import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/ga
 import { useExperimentGroupNameWithLoading } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { isIFramed } from 'utils/isIFramed'
 
 // https://stackoverflow.com/a/31617326

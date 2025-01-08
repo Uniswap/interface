@@ -20,6 +20,7 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 import { percentFromFloat } from 'utilities/src/format/percent'
 import { NumberType } from 'utilities/src/format/types'
+import { logger } from 'utilities/src/logger/logger'
 import { ITraceContext, useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 // hook-based analytics because this one is data-lifecycle dependent
@@ -221,6 +222,11 @@ export function logSwapQuoteFetch({
     performanceMetrics = { time_to_first_quote_request, time_to_first_quote_request_since_first_input }
   }
   sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_FETCH, { chainId, isQuickRoute, ...performanceMetrics })
+  logger.info('analytics', 'logSwapQuoteFetch', SwapEventName.SWAP_QUOTE_FETCH, {
+    chainId,
+    isQuickRoute,
+    ...performanceMetrics,
+  })
 }
 
 // eslint-disable-next-line consistent-return

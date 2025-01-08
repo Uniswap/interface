@@ -127,6 +127,7 @@ exports[`DappLogoWithWCBadge renders without error 1`] = `
           "height": 21,
           "overflow": "hidden",
           "width": 21,
+          "zIndex": 10,
         }
       }
       testID="network-logo"
@@ -176,6 +177,7 @@ exports[`LogoWithTxStatus renders without error 1`] = `
   }
 >
   <View
+    pointerEvents="auto"
     style={
       {
         "alignItems": "center",
@@ -203,7 +205,7 @@ exports[`LogoWithTxStatus renders without error 1`] = `
           "position": "absolute",
           "top": "2%",
           "width": "96%",
-          "zIndex": -1,
+          "zIndex": 0,
         }
       }
     />
@@ -225,6 +227,7 @@ exports[`LogoWithTxStatus renders without error 1`] = `
             "aspectRatio": undefined,
             "borderRadius": 20,
             "objectFit": "contain",
+            "zIndex": 1,
           }
         }
         width={40}
@@ -238,6 +241,7 @@ exports[`LogoWithTxStatus renders without error 1`] = `
         "flexDirection": "column",
         "position": "absolute",
         "right": -4,
+        "zIndex": 10,
       }
     }
   >

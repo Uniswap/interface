@@ -1,14 +1,13 @@
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
 import Column from 'components/deprecated/Column'
-import { bannerText } from 'components/TopLevelBanners/UkBanner'
 import styled from 'lib/styled-components'
 import { X } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { ButtonText, ThemedText } from 'theme/components'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { Trans } from 'uniswap/src/i18n'
 
 const Wrapper = styled(Column)`
   padding: 8px;
@@ -34,6 +33,7 @@ const StyledThemeButton = styled(ThemeButton)`
 `
 
 export function UkDisclaimerModal() {
+  const { t } = useTranslation()
   const isOpen = useModalIsOpen(ApplicationModal.UK_DISCLAIMER)
   const closeModal = useCloseModal()
 
@@ -45,15 +45,15 @@ export function UkDisclaimerModal() {
         </CloseIconWrapper>
         <Column gap="sm">
           <ThemedText.HeadlineLarge padding="0px 8px" fontSize="24px" lineHeight="32px">
-            <Trans i18nKey="search.ukDisclaimer" />
+            {t('search.ukDisclaimer')}
           </ThemedText.HeadlineLarge>
           <ThemedText.BodyPrimary padding="8px 8px 12px" lineHeight="24px">
-            {bannerText}
+            {t('notice.uk')}
           </ThemedText.BodyPrimary>
         </Column>
         <ButtonContainer gap="md">
           <StyledThemeButton size={ButtonSize.large} emphasis={ButtonEmphasis.medium} onClick={() => closeModal()}>
-            <Trans i18nKey="common.dismiss" />
+            {t('common.dismiss')}
           </StyledThemeButton>
         </ButtonContainer>
       </Wrapper>

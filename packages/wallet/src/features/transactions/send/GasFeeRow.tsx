@@ -1,4 +1,4 @@
-import { t } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
 import { Flex, isWeb, SpinningLoader, Text } from 'ui/src'
 import { Gas } from 'ui/src/components/icons'
@@ -15,6 +15,7 @@ type GasFeeRowProps = {
 }
 
 export function GasFeeRow({ gasFee, chainId }: GasFeeRowProps): JSX.Element | null {
+  const { t } = useTranslation()
   const { gasFeeFormatted } = useGasFeeFormattedDisplayAmounts({
     gasFee,
     chainId,

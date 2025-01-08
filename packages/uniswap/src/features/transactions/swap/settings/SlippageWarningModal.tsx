@@ -1,10 +1,10 @@
+import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { X } from 'ui/src/components/icons/X'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { Trans } from 'uniswap/src/i18n/Trans'
 import { isMobileApp, isMobileWeb } from 'utilities/src/platform'
 
 interface SlippageWarningModalProps {
@@ -13,6 +13,7 @@ interface SlippageWarningModalProps {
 }
 
 export default function SlippageWarningModal({ isOpen, onClose }: SlippageWarningModalProps): JSX.Element {
+  const { t } = useTranslation()
   return (
     <Modal
       isDismissible
@@ -34,11 +35,9 @@ export default function SlippageWarningModal({ isOpen, onClose }: SlippageWarnin
           <AlertTriangleFilled color="$statusCritical" size="$icon.24" />
         </Flex>
         <Flex centered rowGap="$spacing8">
-          <Text variant="subheading1">
-            <Trans i18nKey="swap.settings.slippage.warning" />
-          </Text>
+          <Text variant="subheading1">{t('swap.settings.slippage.warning')}</Text>
           <Text variant="body2" color="$neutral2" px="$spacing8" textAlign="center">
-            <Trans i18nKey="swap.settings.slippage.warning.description" />
+            {t('swap.settings.slippage.warning.description')}
           </Text>
         </Flex>
         <Flex centered row width="100%" px={isMobileApp ? '$spacing24' : '$spacing6'}>
@@ -51,7 +50,7 @@ export default function SlippageWarningModal({ isOpen, onClose }: SlippageWarnin
             onPress={onClose}
           >
             <Text variant="buttonLabel3" color="$neutral1">
-              <Trans i18nKey="common.close" />
+              {t('common.close')}
             </Text>
           </Button>
         </Flex>

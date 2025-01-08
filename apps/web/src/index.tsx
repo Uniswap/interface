@@ -19,6 +19,7 @@ import App from 'pages/App'
 import { PropsWithChildren, StrictMode, useEffect, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Helmet, HelmetProvider } from 'react-helmet-async/lib/index'
+import { I18nextProvider } from 'react-i18next'
 import { Provider } from 'react-redux'
 import { BrowserRouter, HashRouter, useLocation } from 'react-router-dom'
 import store from 'state'
@@ -38,6 +39,7 @@ import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient
 import { DUMMY_STATSIG_SDK_KEY } from 'uniswap/src/features/gating/constants'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
+import i18n from 'uniswap/src/i18n'
 import { isBrowserRouterEnabled } from 'utils/env'
 import { unregister as unregisterServiceWorker } from 'utils/serviceWorker'
 import { getCanonicalUrl } from 'utils/urlRoutes'
@@ -122,33 +124,35 @@ createRoot(container).render(
         <Provider store={store}>
           <QueryClientProvider client={SharedQueryClient}>
             <Router>
-              <LanguageProvider>
-                <Web3Provider>
-                  <StatsigProvider>
-                    <WebUniswapProvider>
-                      <GraphqlProviders>
-                        <LocalizationContextProvider>
-                          <BlockNumberProvider>
-                            <UnitagUpdaterContextProvider>
-                              <Updaters />
-                              <ThemeProvider>
-                                <TamaguiProvider>
-                                  <PortalProvider>
-                                    <ThemedGlobalStyle />
-                                    <MiniKitProvider>
-                                      <App />
-                                    </MiniKitProvider>
-                                  </PortalProvider>
-                                </TamaguiProvider>
-                              </ThemeProvider>
-                            </UnitagUpdaterContextProvider>
-                          </BlockNumberProvider>
-                        </LocalizationContextProvider>
-                      </GraphqlProviders>
-                    </WebUniswapProvider>
-                  </StatsigProvider>
-                </Web3Provider>
-              </LanguageProvider>
+              <I18nextProvider i18n={i18n}>
+                <LanguageProvider>
+                  <Web3Provider>
+                    <StatsigProvider>
+                      <WebUniswapProvider>
+                        <GraphqlProviders>
+                          <LocalizationContextProvider>
+                            <BlockNumberProvider>
+                              <UnitagUpdaterContextProvider>
+                                <Updaters />
+                                <ThemeProvider>
+                                  <TamaguiProvider>
+                                    <PortalProvider>
+                                      <ThemedGlobalStyle />
+                                      <MiniKitProvider>
+                                        <App />
+                                      </MiniKitProvider>
+                                    </PortalProvider>
+                                  </TamaguiProvider>
+                                </ThemeProvider>
+                              </UnitagUpdaterContextProvider>
+                            </BlockNumberProvider>
+                          </LocalizationContextProvider>
+                        </GraphqlProviders>
+                      </WebUniswapProvider>
+                    </StatsigProvider>
+                  </Web3Provider>
+                </LanguageProvider>
+              </I18nextProvider>
             </Router>
           </QueryClientProvider>
         </Provider>

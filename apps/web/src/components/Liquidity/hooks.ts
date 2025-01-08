@@ -15,12 +15,12 @@ import JSBI from 'jsbi'
 import { OptionalCurrency } from 'pages/Pool/Positions/create/types'
 import { getCurrencyAddressForTradingApi, getSortedCurrenciesTupleWithWrap } from 'pages/Pool/Positions/create/utils'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { LiquidityModalInitialState } from 'state/application/reducer'
 import { useAppSelector } from 'state/hooks'
 import { Bound } from 'state/mint/v3/actions'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { useTranslation } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 /**

@@ -892,6 +892,13 @@ exports[`should have a correct configuration for a React file 1`] = `
             "name": "uniswap/src/features/dataApi/balances",
           },
           {
+            "importNames": [
+              "t",
+            ],
+            "message": "Please avoid direct imports of t, using \`useTranslation\` and \`i18n.t\` when absolutely needed outside of a React context",
+            "name": "i18next",
+          },
+          {
             "message": "Use via \`useLocalizationContext\` instead.",
             "name": "utilities/src/format/localeBased",
           },

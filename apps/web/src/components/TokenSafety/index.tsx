@@ -12,12 +12,12 @@ import {
   Warning,
 } from 'constants/deprecatedTokenSafety'
 import styled from 'lib/styled-components'
+import { Trans } from 'react-i18next'
 import { Text } from 'rebass'
 import { ButtonText, ExternalLink } from 'theme/components'
 import { TokenAddressView } from 'uniswap/src/features/address/TokenAddressView'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
-import { Trans } from 'uniswap/src/i18n'
 
 const Wrapper = styled.div`
   width: 100%;

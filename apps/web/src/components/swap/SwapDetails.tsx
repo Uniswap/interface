@@ -14,6 +14,7 @@ import styled, { useTheme } from 'lib/styled-components'
 import ms from 'ms'
 import { ReactNode, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { Text } from 'rebass'
 import { InterfaceTrade, LimitOrderTrade, RouterPreference } from 'state/routing/types'
 import { isClassicTrade, isLimitTrade } from 'state/routing/utils'
@@ -21,7 +22,6 @@ import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import { ExternalLink, Separator, ThemedText } from 'theme/components'
 import { Flex, HeightAnimator, SpinningLoader } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { Trans, t } from 'uniswap/src/i18n'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
@@ -123,6 +123,7 @@ export function SwapDetails({
   isLoading: boolean
   priceImpact?: Percent
 }) {
+  const { t } = useTranslation()
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const [routerPreference] = useRouterPreference()
   const routes = isClassicTrade(trade) ? getRoutingDiagramEntries(trade) : undefined
@@ -147,7 +148,7 @@ export function SwapDetails({
         buttonText: isLimitTrade(trade) ? t('swap.placeOrder') : t('swap.confirmSwap'),
       }
     }
-  }, [allowance, trade])
+  }, [allowance, t, trade])
 
   return (
     <>

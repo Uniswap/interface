@@ -18,6 +18,7 @@ import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import styled, { useTheme } from 'lib/styled-components'
 import React, { useMemo, useState } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import {
   ClickableStyle,
@@ -35,7 +36,6 @@ import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-ap
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { Trans, t } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
@@ -267,6 +267,7 @@ const PoolDetailsHeaderActions = ({
   token0?: Token
   token1?: Token
 }) => {
+  const { t } = useTranslation()
   const theme = useTheme()
   const [contractsModalIsOpen, toggleContractsModal] = useState(false)
 

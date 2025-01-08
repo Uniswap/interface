@@ -126,6 +126,12 @@ export enum QueuedOrderStatus {
   Submitted = 'submitted',
 }
 
+export const TEMPORARY_TRANSACTION_STATUSES = [
+  TransactionStatus.Pending,
+  TransactionStatus.Replacing,
+  TransactionStatus.Cancelling,
+]
+
 const FINAL_STATUSES = [
   TransactionStatus.Success,
   TransactionStatus.Failed,
@@ -151,6 +157,7 @@ export type TransactionOptions = {
   request: providers.TransactionRequest
   submittedTimestampMs?: number
   timeoutTimestampMs?: number
+  timeoutLogged?: boolean
   submitViaPrivateRpc?: boolean
 }
 
@@ -200,8 +207,10 @@ export enum TransactionType {
   // Fiat onramp
   FiatPurchaseDeprecated = 'fiat-purchase', // Deprecated, still here for use in migrations.
   LocalOnRamp = 'local-onramp',
+  LocalOffRamp = 'local-offramp',
   OnRampPurchase = 'onramp-purchase',
   OnRampTransfer = 'onramp-transfer',
+  OffRampSale = 'offramp-sale',
 
   // General
   WCConfirm = 'wc-confirm',
@@ -304,6 +313,10 @@ export interface LocalOnRampTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.LocalOnRamp
 }
 
+export interface LocalOffRampTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.LocalOffRamp
+}
+
 export interface OnRampTransactionInfo extends BaseTransactionInfo {
   type: TransactionType
   id: string
@@ -326,6 +339,12 @@ export interface OnRampPurchaseInfo extends OnRampTransactionInfo {
 
 export interface OnRampTransferInfo extends OnRampTransactionInfo {
   type: TransactionType.OnRampTransfer
+}
+
+export interface OffRampSaleInfo extends OnRampTransactionInfo {
+  type: TransactionType.OffRampSale
+  sourceCurrency: string
+  sourceAmount?: number
 }
 
 export interface ServiceProviderInfo {
@@ -393,9 +412,11 @@ export type TransactionTypeInfo =
   | UnknownTransactionInfo
   | OnRampPurchaseInfo
   | OnRampTransferInfo
+  | OffRampSaleInfo
   | LocalOnRampTransactionInfo
+  | LocalOffRampTransactionInfo
 
-export function isConfirmedSwapTypeInfo(typeInfo: TransactionTypeInfo): typeInfo is ConfirmedSwapTransactionInfo {
+  export function isConfirmedSwapTypeInfo(typeInfo: TransactionTypeInfo): typeInfo is ConfirmedSwapTransactionInfo {
   return Boolean(
     (typeInfo as ConfirmedSwapTransactionInfo).inputCurrencyAmountRaw &&
       (typeInfo as ConfirmedSwapTransactionInfo).outputCurrencyAmountRaw,
@@ -431,5 +452,6 @@ export function isFinalizedTx(tx: TransactionDetails | FinalizedTransactionDetai
 export enum TransactionDetailsType {
   Transaction = 'TransactionDetails',
   OnRamp = 'OnRampTransactionDetails',
+  OffRamp = 'OffRampTransactionDetails',
   UniswapXOrder = 'SwapOrderDetails',
 }

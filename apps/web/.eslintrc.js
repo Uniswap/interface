@@ -75,11 +75,8 @@ module.exports = {
           {
             paths: [
               {
-                name: 'react-i18next',
-                message: 'Import from `uniswap/src/i18n` instead.',
-              },
-              {
                 name: 'i18next',
+                importNames: ['i18n'],
                 message: 'Import from `uniswap/src/i18n` instead.',
               },
               {
