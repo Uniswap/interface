@@ -194,12 +194,17 @@ function LearnMore() {
 }
 
 // Protokol açıklaması için bileşen
-const ProtocolDescription = () => (
-  <Trans>
-    Ubeswap products are powered by the Ubeswap Protocol. The protocol is the largest onchain marketplace, with billions
-    of dollars in weekly volume across thousands of tokens on Ethereum and 7+ additional chains.
-  </Trans>
-)
+const ProtocolDescription = () => {
+  const { data } = useDashboardData()
+  console.log(data)
+  return (
+    <div>
+      Ubeswap is a protocol for decentralized exchange and automated liquidity provision on Celo. With{' '}
+      {data ? data.poolCount : '-'} pairs and {data ? data.tokenCount : '-'} tokens listed on the protocol, Ubeswap
+      offers the premier experience of DeFi on Celo.
+    </div>
+  )
+}
 
 // UBE istatistiklerini gösteren bileşen
 function UbeStats() {

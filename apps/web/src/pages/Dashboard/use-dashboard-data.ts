@@ -8,6 +8,9 @@ export interface DashboardData {
   volume24h: number
   totalVolume: number
   uniqueWallets: number
+  txCount: number
+  poolCount: number
+  tokenCount: number
   topGainers: {
     tokenAddress: string
     price: number
