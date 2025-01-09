@@ -4,6 +4,9 @@ import { ArbitrumXV2ExperimentGroup, Experiments } from 'uniswap/src/features/ga
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useExperimentGroupName, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
+/**
+ * Returns true if the chain is supported by UniswapX. Does not differentiate between UniswapX v1 and v2.
+ */
 export function useIsUniswapXSupportedChain(chainId?: number) {
   const xv2ArbitrumEnabled =
     useExperimentGroupName(Experiments.ArbitrumXV2OpenOrders) === ArbitrumXV2ExperimentGroup.Test

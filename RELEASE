@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `Qma3xNtyKF992ESqe25eV3JTR8LGZwuLLx2HyfJ2LwcGRw`
-- CIDv1: `bafybeifoavmpqbbjcli2mn7q35itqfnsuiitrvfxvxkikguokyij7cqbhi`
+- CIDv0: `QmQJQv4CsTmaz2YxvP2J6rckTN55Kpb8kgs3nuH75K4HWV`
+- CIDv1: `bafybeia5esoynn6udnsocgpwufk6one5vbkcvowseql5tfilf46asmveqy`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,83 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeifoavmpqbbjcli2mn7q35itqfnsuiitrvfxvxkikguokyij7cqbhi.ipfs.dweb.link/
-- https://bafybeifoavmpqbbjcli2mn7q35itqfnsuiitrvfxvxkikguokyij7cqbhi.ipfs.cf-ipfs.com/
-- [ipfs://Qma3xNtyKF992ESqe25eV3JTR8LGZwuLLx2HyfJ2LwcGRw/](ipfs://Qma3xNtyKF992ESqe25eV3JTR8LGZwuLLx2HyfJ2LwcGRw/)
+- https://bafybeia5esoynn6udnsocgpwufk6one5vbkcvowseql5tfilf46asmveqy.ipfs.dweb.link/
+- https://bafybeia5esoynn6udnsocgpwufk6one5vbkcvowseql5tfilf46asmveqy.ipfs.cf-ipfs.com/
+- [ipfs://QmQJQv4CsTmaz2YxvP2J6rckTN55Kpb8kgs3nuH75K4HWV/](ipfs://QmQJQv4CsTmaz2YxvP2J6rckTN55Kpb8kgs3nuH75K4HWV/)
 
-## 5.64.0 (2025-01-08)
-
-
-### Features
-
-* **web:** add pagination to the positions page (#14478) 69771b0
-* **web:** add recommended tooltip (#14574) 7a763dc
-* **web:** allow users to add with eth/weth (#14461) 4740134
-* **web:** allowing users to remove with eth (#14519) 344c6a4
-* **web:** disable clicking on FOR activity until confirmed on chain (#14605) f8c541a
-* **web:** Enable GPU acceleration and layout containment on AppBody (#14710) 6f0b0ca
+### 5.64.1 (2025-01-09)
 
 
 ### Bug Fixes
 
-* **web:** 01 07 fix web re add images prop to portfoliologo and use split logo staging (#14876) 02a3013
-* **web:** 01 08 fix web fix double logo on doublecurrencyandchainlogo staging (#14948) 1b606bb
-* **web:** add analyze mode to build script (#14610) c9f9392
-* **web:** add monad testnet rpc to web env (#14563) 649d925
-* **web:** add white bgs to images and use universe token logos (#14604) c8ac0c9
-* **web:** Adrian/direct t fixes staging (#14941) 58f2954
-* **web:** bring back network logo on logoless placeholder (#14803) 97bda9d
-* **web:** early return isRNDev (#14685) fb77d3a
-* **web:** enable unitag search with suffix (#14711) 993cbd6
-* **web:** fix alignment of liquidity header modal (#14682) b39d879
-* **web:** fix conversion event success handler (#14532) e81947b
-* **web:** fix crash on positions page (#14562) 2ba514a
-* **web:** fix disabled swap button for previously-dismissed warning tokens (#14553) 5a987f5
-* **web:** fix miniP truncated closed positions + testnet mode in pools tab (#14666) 69c50a7
-* **web:** fix missing mweb swap (#14567) 0eab28e
-* **web:** fix responsive walletconnect pane expando line (#14661) 81fd2ea
-* **web:** fix v2 lp networks dropdown (#14576) a4f41d9
-* **web:** fix v2 position page crash (#14792) af9dd17
-* **web:** info text should be heading3 variant (#14739) 1dbc971
-* **web:** input focus state on press (#14759) e090f25
-* **web:** landing page translations line break (#14649) c1fb00f
-* **web:** modal height fix (#14538) c7eac8b
-* **web:** open LP learn more links in new tabs (#14568) 57c0752
-* **web:** overflow issues in chart header (#14744) 1de24a8
-* **web:** polish sprint nits (#14624) 2849220
-* **web:** set duped events as executed to prevent retry (#14771) 6dcb3ef
-* **web:** show more button hiding (#14742) a5edb7a
-* **web:** some rich link previews broken bc their logo is a webp (#14638) 350a2d6
-* **web:** submit conversion events to amplitude (#14497) e172586
-* **web:** switch to new marketing events (#14700) 35d9d4f
-* **web:** theme value transition for explore page tabs (#14609) 5bb4160
-* **web:** tree-shake wagmi chains (#14566) 2c3d079
-* **web:** truncation issue on max price position text (#14573) f137c41
-* **web:** update global preferences menu (#14636) 38d5f38
-* **web:** update tdp default input currency (#14699) d7147af
-* **web:** URL prefill param without ?chain should use default chain instead of wallet chain (#14227) a8c57d6
-* **web): Revert "feat(web:** Enable GPU acceleration and layout containment on AppBody (#14710)" (#14788) a5b4976
-
-
-### Continuous Integration
-
-* **web:** update sitemaps 77b75a6
-
-
-### Styles
-
-* **web:** all networks icon in explore page dropdown (#14639) bf1a42b
-* **web:** decrease font size for Learn More link (#14626) 6ea86c2
-* **web:** fix helper icon alignment in search dropdown (#14680) 237e505
-* **web:** fix hover on active explore tabs (#14646) b1180ea
-* **web:** fix some style nits in explore token page mobile action tabs (#14743) 9100557
-
-
-### Code Refactoring
-
-* **web:** refactor use is x page part 2 (#14652) aa54d69
-* **web:** refactor use X page into reusable hook (#14651) f53fa2b
-* **web:** refactor useIsNfts hook (#14653) 0132ff0
-* **web:** use default match types and include optional override (#14704) edf95e9
+* **web:** limit orders do not work with uniswapx v2 (#14996) d520262
 
 
