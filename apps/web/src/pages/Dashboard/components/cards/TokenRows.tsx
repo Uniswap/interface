@@ -83,6 +83,10 @@ const TokenTicker = styled.h3`
   line-height: 32px;
   color: ${(props) => props.color || props.theme.neutral2};
 
+  white-space: nowrap; // Metin tek satırda kalacak
+  overflow: hidden;
+  text-overflow: ellipsis; // Taşan kısım ... ile gösterilecek
+
   @media (max-width: 1024px) {
     font-size: 18px;
     line-height: 24px;
@@ -245,13 +249,13 @@ export function EarnerTokenRow({ poolData }: { poolData: PoolData }) {
           currencies={[stakingToken]}
           chainId={ChainId.CELO}
           size={logoSize}
-          style={{ minWidth: logoSize }} // Sabit genişlik için
+          style={{ minWidth: logoSize }}
         />
         <Box justify="space-between" gap="16px" style={{ width: '100%' }}>
           <Box width="auto" gap="8px" align="center" overflow="hidden">
             <TokenName>{`${stakingToken?.symbol} Stake`}</TokenName>
           </Box>
-          <Box width="auto" gap="8px" align="center">
+          <Box width="auto" gap="8px" align="center" style={{ flexShrink: 0, whiteSpace: 'nowrap' }}>
             <TokenPrice>
               {formatNumber({
                 input: poolData.apr,
@@ -272,13 +276,13 @@ export function EarnerTokenRow({ poolData }: { poolData: PoolData }) {
         currencies={[token0, token1]}
         chainId={ChainId.CELO}
         size={logoSize}
-        style={{ minWidth: logoSize }} // Sabit genişlik için
+        style={{ minWidth: logoSize }}
       />
       <Box justify="space-between" gap="16px" style={{ width: '100%' }}>
         <Box width="auto" gap="8px" align="center" overflow="hidden">
           <TokenName>{`${token0?.symbol}-${token1?.symbol} Farm (v${poolData.protocolVersion})`}</TokenName>
         </Box>
-        <Box width="auto" gap="8px" align="center">
+        <Box width="auto" gap="8px" align="center" style={{ flexShrink: 0, whiteSpace: 'nowrap' }}>
           <TokenPrice>
             {formatNumber({
               input: poolData.apr,
