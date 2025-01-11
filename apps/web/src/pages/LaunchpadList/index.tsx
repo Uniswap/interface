@@ -8,14 +8,13 @@ import { Info } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 import LaunchpadHeader from './LaunchpadHeader'
-import { ActiveFarmTable, InactiveFarmTable } from './tables/FarmTable'
-import { StakeTable } from './tables/StakeTable'
 
 import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
 import { validateUrlChainParam } from 'graphql/data/util'
 import { useResetAtom } from 'jotai/utils'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useLaunchpadParams } from './redirects'
+import { ActiveLaunchpadTable, CompletedLaunchpadTable } from './tables/FarmTable/index'
 
 const EarnContainer = styled.div`
   width: 100%;
@@ -67,7 +66,6 @@ const TabItem = styled(ThemedText.HeadlineMedium)<{ active?: boolean }>`
 
 export enum LaunchpadTab {
   Active = 'active',
-  Upcoming = 'upcoming',
   Completed = 'completed',
 }
 
@@ -92,19 +90,13 @@ const Pages: Array<Page> = [
   {
     title: <Trans>Active</Trans>,
     key: LaunchpadTab.Active,
-    component: ActiveFarmTable,
+    component: ActiveLaunchpadTable, // ActiveFarmTable yerine
     loggingElementName: InterfaceElementName.EXPLORE_TOKENS_TAB,
-  },
-  {
-    title: <Trans>Upcoming</Trans>,
-    key: LaunchpadTab.Upcoming,
-    component: StakeTable,
-    loggingElementName: InterfaceElementName.EXPLORE_POOLS_TAB,
   },
   {
     title: <Trans>Completed</Trans>,
     key: LaunchpadTab.Completed,
-    component: InactiveFarmTable,
+    component: CompletedLaunchpadTable, // InactiveFarmTable yerine
     loggingElementName: InterfaceElementName.EXPLORE_TRANSACTIONS_TAB,
   },
 ]
