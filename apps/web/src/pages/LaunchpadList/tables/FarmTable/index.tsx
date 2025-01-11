@@ -135,10 +135,10 @@ export function LaunchpadsTable<T extends ActiveTableValues | CompletedTableValu
   loading,
   error,
   loadMore,
-  chainId,
+  // chainId,
   maxWidth,
   maxHeight,
-  hiddenColumns,
+  // hiddenColumns,
   isCompleted,
 }: {
   launchpads: TableLaunchpad[]
