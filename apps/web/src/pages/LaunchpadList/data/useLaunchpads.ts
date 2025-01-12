@@ -55,7 +55,7 @@ async function fetchLaunchpads(): Promise<LaunchpadApiData[]> {
 const launchpadsFallback: LaunchpadApiData[] = [
   {
     tokenAddress: '0x000000000000000000000000000000000000dEaD',
-    tokenName: 'Acme Project',
+    tokenName: 'Fallback Deneme',
     tokenSymbol: 'ACM',
     tokenDecimals: 18,
     logoUrl:
@@ -64,9 +64,9 @@ const launchpadsFallback: LaunchpadApiData[] = [
     quoteTokenSymbol: 'UBE',
     startDate: '2025-01-12T12:24:00.484Z',
     endDate: '2025-01-15T12:24:00.484Z',
-    hardCapAsQuote: 1000000,
+    hardCapAsQuote: 1000099,
     softCapAsQuote: 500000,
-    status: 'Pending',
+    status: 'Completed',
     totalRaised: 0,
     participants: 0,
   },
@@ -108,7 +108,7 @@ export function useLaunchpads() {
     const transformedData = apiData.map(transformApiDataToTableFormat)
 
     return {
-      active: transformedData.filter((l) => l.status === 'Active'),
+      active: transformedData.filter((l) => l.status === 'Active'), // || l.status === 'Pending'
       completed: transformedData.filter((l) => l.status === 'Completed'),
     }
   }, [launchpadsApi])
