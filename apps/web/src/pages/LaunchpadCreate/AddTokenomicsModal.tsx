@@ -7,6 +7,7 @@ import { Trans } from 'i18n'
 import { useState } from 'react'
 import styled from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
+import { TokenomicsTableValues } from './launchpad-state'
 
 const ModalWrapper = styled(RowBetween)`
   display: flex;
@@ -17,15 +18,6 @@ const HeaderRow = styled(RowBetween)`
   display: flex;
   margin-bottom: 20px;
 `
-
-interface TokenomicsTableValues {
-  index: number
-  name: string
-  amount: number
-  unlockedAmount: number
-  cliff: number
-  vesting: number
-}
 
 export default function AddTokenomicsModal({
   isOpen,
@@ -53,8 +45,8 @@ export default function AddTokenomicsModal({
       name,
       amount: parseFloat(amount),
       unlockedAmount: parseFloat(unlockedAmount),
-      cliff: parseFloat(cliff),
-      vesting: parseFloat(vesting),
+      cliffInDays: parseFloat(cliff),
+      vestingInDays: parseFloat(vesting),
     })
   }
 

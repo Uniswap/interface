@@ -315,7 +315,7 @@ export function getAbbreviatedTimeString(timestamp: number) {
   }
 }
 
-export default function FarmV3() {
+export default function LaunchpadPage() {
   const { account } = useWeb3React()
   const chainId = ChainId.CELO
   const { poolAddress } = useParams<{ poolAddress: string }>()
@@ -562,7 +562,7 @@ export default function FarmV3() {
               <DarkGrayCard flex="2">
                 <Column gap="16px">
                   <ThemedText.MediumHeader>Acme Project Details</ThemedText.MediumHeader>
-                  <LaunchpadInfoTable data={[]} />
+                  <LaunchpadInfoTable />
                 </Column>
               </DarkGrayCard>
             </ResponsiveRow>

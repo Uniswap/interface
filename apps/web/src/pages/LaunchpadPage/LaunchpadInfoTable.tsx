@@ -1,8 +1,11 @@
 import { HideScrollBarStyles } from 'components/Common'
 import { LoadingBubble } from 'components/Tokens/loading'
+import { useToken } from 'hooks/Tokens'
+import { LaunchpadOptions } from 'pages/LaunchpadCreate/launchpad-state'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const Table = styled.table`
   border: 1px solid ${({ theme }) => theme.surface3};
@@ -69,15 +72,43 @@ const LoadingSimpleTableRow = ({ cellCount }: { cellCount: number }) => {
   )
 }
 
-const LaunchpadInfoTable = ({ data, loadingRowCount = 3 }: { data?: ReactNode[][]; loadingRowCount?: number }) => {
-  return data ? (
+const LaunchpadInfoTable = ({
+  options,
+  loadingRowCount = 3,
+}: {
+  options?: LaunchpadOptions
+  loadingRowCount?: number
+}) => {
+  const { formatNumber } = useFormatter()
+  const token = useToken(options?.tokenInfo.tokenAddress)
+  const quoteToken = useToken(options?.tokenSale.quoteToken)
+
+  const tokensOffered = options
+    ? Math.floor(parseFloat(options.tokenSale.hardCapAsQuote) / parseFloat(options.tokenSale.sellPrice))
+    : 0
+
+  const initialCirculatinSupply = options?.tokenInfo.tokenomics.reduce((acc, tokenomicsItem) => {
+    return acc + tokenomicsItem.unlockedAmount
+  }, 0)
+
+  const totalSupply = options?.tokenInfo.tokenomics.reduce((acc, tokenomicsItem) => {
+    return acc + tokenomicsItem.amount
+  }, 0)
+
+  return options ? (
     <SimpleTable>
       <TR>
         <TD>
           <ThemedText.BodyPrimary color="neutral2">Tokens Offered</ThemedText.BodyPrimary>
         </TD>
         <TD>
-          <ThemedText.BodyPrimary color="neutral1">10 000 000 ACME</ThemedText.BodyPrimary>
+          <ThemedText.BodyPrimary color="neutral1">
+            {formatNumber({
+              input: tokensOffered,
+              type: NumberType.PortfolioBalance,
+            })}{' '}
+            {token?.symbol}
+          </ThemedText.BodyPrimary>
         </TD>
       </TR>
       <TR>
@@ -85,7 +116,13 @@ const LaunchpadInfoTable = ({ data, loadingRowCount = 3 }: { data?: ReactNode[][
           <ThemedText.BodyPrimary color="neutral2">Initial Circulating Supply</ThemedText.BodyPrimary>
         </TD>
         <TD>
-          <ThemedText.BodyPrimary color="neutral1">20 000 000 ACME</ThemedText.BodyPrimary>
+          <ThemedText.BodyPrimary color="neutral1">
+            {formatNumber({
+              input: initialCirculatinSupply,
+              type: NumberType.PortfolioBalance,
+            })}{' '}
+            {token?.symbol}
+          </ThemedText.BodyPrimary>
         </TD>
       </TR>
       <TR>
@@ -93,7 +130,13 @@ const LaunchpadInfoTable = ({ data, loadingRowCount = 3 }: { data?: ReactNode[][
           <ThemedText.BodyPrimary color="neutral2">Total Token Supply</ThemedText.BodyPrimary>
         </TD>
         <TD>
-          <ThemedText.BodyPrimary color="neutral1">100 000 000 ACME</ThemedText.BodyPrimary>
+          <ThemedText.BodyPrimary color="neutral1">
+            {formatNumber({
+              input: totalSupply,
+              type: NumberType.PortfolioBalance,
+            })}{' '}
+            {token?.symbol}
+          </ThemedText.BodyPrimary>
         </TD>
       </TR>
       <TR>
@@ -101,7 +144,9 @@ const LaunchpadInfoTable = ({ data, loadingRowCount = 3 }: { data?: ReactNode[][
           <ThemedText.BodyPrimary color="neutral2">Launchpad Price</ThemedText.BodyPrimary>
         </TD>
         <TD>
-          <ThemedText.BodyPrimary color="neutral1">1 ACME = 0.01 CELO</ThemedText.BodyPrimary>
+          <ThemedText.BodyPrimary color="neutral1">
+            1 {token?.symbol} = {options.tokenSale.sellPrice} {quoteToken?.symbol}
+          </ThemedText.BodyPrimary>
         </TD>
       </TR>
       <TR>
@@ -109,7 +154,9 @@ const LaunchpadInfoTable = ({ data, loadingRowCount = 3 }: { data?: ReactNode[][
           <ThemedText.BodyPrimary color="neutral2">Listing Price</ThemedText.BodyPrimary>
         </TD>
         <TD>
-          <ThemedText.BodyPrimary color="neutral1">1 ACME = 0.015 CELO</ThemedText.BodyPrimary>
+          <ThemedText.BodyPrimary color="neutral1">
+            1 {token?.symbol} = {options.liquidity.listingPrice} {quoteToken?.symbol}
+          </ThemedText.BodyPrimary>
         </TD>
       </TR>
       <TR>
@@ -117,7 +164,13 @@ const LaunchpadInfoTable = ({ data, loadingRowCount = 3 }: { data?: ReactNode[][
           <ThemedText.BodyPrimary color="neutral2">Target (Hard Cap)</ThemedText.BodyPrimary>
         </TD>
         <TD>
-          <ThemedText.BodyPrimary color="neutral1">100 000 CELO</ThemedText.BodyPrimary>
+          <ThemedText.BodyPrimary color="neutral1">
+            {formatNumber({
+              input: parseFloat(options.tokenSale.hardCapAsQuote),
+              type: NumberType.PortfolioBalance,
+            })}{' '}
+            {quoteToken?.symbol}
+          </ThemedText.BodyPrimary>
         </TD>
       </TR>
       <TR>
@@ -125,7 +178,13 @@ const LaunchpadInfoTable = ({ data, loadingRowCount = 3 }: { data?: ReactNode[][
           <ThemedText.BodyPrimary color="neutral2">Soft Cap</ThemedText.BodyPrimary>
         </TD>
         <TD>
-          <ThemedText.BodyPrimary color="neutral1">10 000 CELO</ThemedText.BodyPrimary>
+          <ThemedText.BodyPrimary color="neutral1">
+            {formatNumber({
+              input: parseFloat(options.tokenSale.softCapAsQuote),
+              type: NumberType.PortfolioBalance,
+            })}{' '}
+            {quoteToken?.symbol}
+          </ThemedText.BodyPrimary>
         </TD>
       </TR>
       <TR>
@@ -133,7 +192,13 @@ const LaunchpadInfoTable = ({ data, loadingRowCount = 3 }: { data?: ReactNode[][
           <ThemedText.BodyPrimary color="neutral2">Liquidity Action</ThemedText.BodyPrimary>
         </TD>
         <TD>
-          <ThemedText.BodyPrimary color="neutral1">Liquidty will be locked for 3 months</ThemedText.BodyPrimary>
+          {options.liquidity.liquidityAction == 'BURN' ? (
+            <ThemedText.BodyPrimary color="neutral1">Liquidty will be burned</ThemedText.BodyPrimary>
+          ) : (
+            <ThemedText.BodyPrimary color="neutral1">
+              Liquidty will be locked for {options.liquidity.lockDurationDays} days
+            </ThemedText.BodyPrimary>
+          )}
         </TD>
       </TR>
     </SimpleTable>

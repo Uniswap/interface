@@ -6,6 +6,7 @@ import { Trans } from 'i18n'
 import { useState } from 'react'
 import styled from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
+import { TeamTableValues } from './launchpad-state'
 
 const ModalWrapper = styled(RowBetween)`
   display: flex;
@@ -16,15 +17,6 @@ const HeaderRow = styled(RowBetween)`
   display: flex;
   margin-bottom: 20px;
 `
-
-interface TeamTableValues {
-  index: number
-  name: string
-  position: string
-  imgUrl: string
-  linkedin: string
-  twitter: string
-}
 
 export default function AddTokenomicsModal({
   isOpen,
