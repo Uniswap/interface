@@ -8,16 +8,56 @@ import { NameText } from 'components/Tokens/TokenTable'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { Trans } from 'i18n'
+import { transparentize } from 'polished'
 import { ReactElement, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { formatRemainingTime } from 'utilities/src/time/time'
-import { LaunchpadListItem, useLaunchpads } from '../../data/useLaunchpads'
+import { LaunchpadListItem, LaunchpadSatus, useLaunchpads } from '../../data/useLaunchpads'
 
 const TableWrapper = styled.div`
   margin: 0 auto;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
+`
+
+// Status etiketleri için özelleştirilmiş badge bileşeni
+const StyledBadge = styled.div<{ variant: 'success' | 'warning' | 'error' | 'info' | 'accent' }>`
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  background-color: ${({ theme, variant }) =>
+    transparentize(
+      0.8,
+      variant === 'success'
+        ? theme.success
+        : variant === 'error'
+        ? theme.critical
+        : variant === 'accent'
+        ? theme.accent1
+        : theme.primary1
+    )};
+  border: 1px solid
+    ${({ theme, variant }) =>
+      variant === 'success'
+        ? theme.success
+        : variant === 'error'
+        ? theme.critical
+        : variant === 'accent'
+        ? theme.accent1
+        : theme.primary1};
+  border-radius: 12px;
+  font-size: 14px;
+  padding: 0 8px;
+  font-weight: 500;
+  color: ${({ theme, variant }) =>
+    variant === 'success'
+      ? theme.success
+      : variant === 'error'
+      ? theme.critical
+      : variant === 'accent'
+      ? theme.accent1
+      : theme.primary1};
 `
 
 // Active tablosu için değerler
@@ -50,6 +90,22 @@ export enum LaunchpadTableColumns {
   RemainingTime,
   RaisedAmount,
   EndDate,
+}
+
+// Status'e göre badge rengini belirleyen yardımcı fonksiyon
+function getStatusVariant(status: LaunchpadSatus): 'success' | 'warning' | 'error' | 'info' | 'accent' {
+  switch (status) {
+    case 'Pending':
+      return 'accent' // Mor renk
+    case 'Active':
+    case 'Succeeded':
+      return 'success' // Yeşil renk
+    case 'Failed':
+    case 'Canceled':
+      return 'error' // Kırmızı renk
+    default:
+      return 'info'
+  }
 }
 
 // Token bilgilerini gösteren bileşen
@@ -123,7 +179,6 @@ export function LaunchpadsTable<T extends ActiveTableValues | CompletedTableValu
   // chainId,
   maxWidth,
   maxHeight,
-  // hiddenColumns,
   isCompleted,
 }: {
   launchpads: LaunchpadListItem[]
@@ -133,7 +188,6 @@ export function LaunchpadsTable<T extends ActiveTableValues | CompletedTableValu
   chainId: ChainId
   maxWidth?: number
   maxHeight?: number
-  hiddenColumns?: LaunchpadTableColumns[]
   isCompleted: boolean
 }) {
   const showLoadingSkeleton = loading || !!error
@@ -228,7 +282,9 @@ export function LaunchpadsTable<T extends ActiveTableValues | CompletedTableValu
         ),
         cell: (status) => (
           <Cell justifyContent="flex-start" loading={showLoadingSkeleton} minWidth={100}>
-            <ThemedText.BodyPrimary>{status.getValue?.()}</ThemedText.BodyPrimary>
+            <StyledBadge variant={getStatusVariant(status.getValue?.() as LaunchpadSatus)}>
+              {status.getValue?.()}
+            </StyledBadge>
           </Cell>
         ),
       }),
@@ -323,7 +379,9 @@ export function LaunchpadsTable<T extends ActiveTableValues | CompletedTableValu
         ),
         cell: (status) => (
           <Cell justifyContent="flex-start" loading={showLoadingSkeleton} minWidth={100}>
-            <ThemedText.BodyPrimary>{status.getValue?.()}</ThemedText.BodyPrimary>
+            <StyledBadge variant={getStatusVariant(status.getValue?.() as LaunchpadSatus)}>
+              {status.getValue?.()}
+            </StyledBadge>
           </Cell>
         ),
       }),
@@ -360,7 +418,6 @@ export function LaunchpadsTable<T extends ActiveTableValues | CompletedTableValu
     ]
   }, [showLoadingSkeleton])
 
-  // Tablo verilerini ve sütunlarını seç
   const tableData = isCompleted ? completedTableValues : activeTableValues
   const columns = isCompleted ? completedColumns : activeColumns
 
