@@ -183,7 +183,7 @@ const EarnPage = ({ initialTab }: { initialTab?: LaunchpadTab }) => {
                   element={loggingElementName}
                   key={index}
                 >
-                  <StyledInternalLink to={`/earn/${key}`}>
+                  <StyledInternalLink to={`/ubestarter/${key}`}>
                     <TabItem onClick={() => setCurrentTab(index)} active={currentTab === index} key={key}>
                       {title}
                     </TabItem>

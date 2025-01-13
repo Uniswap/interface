@@ -12,7 +12,8 @@ import { ReactElement, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
-import { TableLaunchpad, useLaunchpads } from '../../data/useLaunchpads'
+import { formatRemainingTime } from 'utilities/src/time/time'
+import { LaunchpadListItem, useLaunchpads } from '../../data/useLaunchpads'
 
 const TableWrapper = styled.div`
   margin: 0 auto;
@@ -61,22 +62,6 @@ function TokenDescription({ tokenName, logoUrl }: { tokenName: string; logoUrl: 
   )
 }
 
-// Kalan süreyi hesaplayan yardımcı fonksiyon
-function calculateRemainingTime(endDate: Date): string {
-  const now = new Date()
-  const timeDiff = endDate.getTime() - now.getTime()
-
-  if (timeDiff <= 0) return 'Ended'
-
-  const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24))
-  const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-
-  if (days > 0) {
-    return `in ${days} days ${hours} hours`
-  }
-  return `in ${hours} hours`
-}
-
 // Tarihi formatlayan yardımcı fonksiyon
 function formatDate(date: Date): string {
   return date.toLocaleString('en-US', {
@@ -93,12 +78,12 @@ function formatDate(date: Date): string {
 export function ActiveLaunchpadTable() {
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
   const chainId = supportedChainIdFromGQLChain(chainName)
-  const { launchpads, loading } = useLaunchpads()
+  const { launchpads, loading } = useLaunchpads('active')
 
   return (
     <TableWrapper data-testid="active-launchpads-table">
       <LaunchpadsTable<ActiveTableValues>
-        launchpads={launchpads.active}
+        launchpads={launchpads}
         loading={loading}
         error={undefined}
         chainId={chainId}
@@ -113,12 +98,12 @@ export function ActiveLaunchpadTable() {
 export function CompletedLaunchpadTable() {
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
   const chainId = supportedChainIdFromGQLChain(chainName)
-  const { launchpads, loading } = useLaunchpads()
+  const { launchpads, loading } = useLaunchpads('completed')
 
   return (
     <TableWrapper data-testid="completed-launchpads-table">
       <LaunchpadsTable<CompletedTableValues>
-        launchpads={launchpads.completed}
+        launchpads={launchpads}
         loading={loading}
         error={undefined}
         chainId={chainId}
@@ -141,7 +126,7 @@ export function LaunchpadsTable<T extends ActiveTableValues | CompletedTableValu
   // hiddenColumns,
   isCompleted,
 }: {
-  launchpads: TableLaunchpad[]
+  launchpads: LaunchpadListItem[]
   loading: boolean
   error?: ApolloError
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
@@ -161,9 +146,9 @@ export function LaunchpadsTable<T extends ActiveTableValues | CompletedTableValu
             index: index + 1,
             name: <TokenDescription tokenName={launchpad.tokenName} logoUrl={launchpad.logoUrl} />,
             symbol: launchpad.tokenSymbol,
-            status: new Date() > launchpad.startDate ? 'Active' : 'Upcoming',
-            targetAmount: `${launchpad.hardCap} ${launchpad.quoteTokenSymbol}`,
-            remainingTime: calculateRemainingTime(launchpad.endDate),
+            status: launchpad.status,
+            targetAmount: `${launchpad.hardCapAsQuote} ${launchpad.quoteTokenSymbol}`,
+            remainingTime: formatRemainingTime(launchpad.startDate),
           }))
         : [],
     [isCompleted, launchpads]
@@ -177,14 +162,9 @@ export function LaunchpadsTable<T extends ActiveTableValues | CompletedTableValu
             index: index + 1,
             name: <TokenDescription tokenName={launchpad.tokenName} logoUrl={launchpad.logoUrl} />,
             symbol: launchpad.tokenSymbol,
-            status:
-              launchpad.totalRaised >= launchpad.hardCap
-                ? 'Succeeded'
-                : launchpad.totalRaised >= launchpad.softCap
-                ? 'Partially Succeeded'
-                : 'Failed',
-            raisedAmount: `${launchpad.totalRaised} / ${launchpad.hardCap} ${launchpad.quoteTokenSymbol}`,
-            endDate: formatDate(launchpad.endDate),
+            status: launchpad.status,
+            raisedAmount: `${launchpad.totalRaised} / ${launchpad.hardCapAsQuote} ${launchpad.quoteTokenSymbol}`,
+            endDate: formatDate(new Date(launchpad.endDate)),
           }))
         : [],
     [isCompleted, launchpads]
@@ -350,14 +330,14 @@ export function LaunchpadsTable<T extends ActiveTableValues | CompletedTableValu
       columnHelper.accessor((row) => row.raisedAmount, {
         id: 'raisedAmount',
         header: () => (
-          <Cell justifyContent="flex-start" minWidth={150}>
+          <Cell justifyContent="flex-start" minWidth={200}>
             <ThemedText.BodySecondary>
               <Trans>Raised Amount</Trans>
             </ThemedText.BodySecondary>
           </Cell>
         ),
         cell: (raisedAmount) => (
-          <Cell justifyContent="flex-start" loading={showLoadingSkeleton} minWidth={150}>
+          <Cell justifyContent="flex-start" loading={showLoadingSkeleton} minWidth={200}>
             <ThemedText.BodyPrimary>{raisedAmount.getValue?.()}</ThemedText.BodyPrimary>
           </Cell>
         ),

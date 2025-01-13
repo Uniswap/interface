@@ -1,6 +1,5 @@
 import { useParams } from 'react-router-dom'
 import LaunchpadListPage, { LaunchpadTab } from '.'
-import UbestarterParticles from '../../components/particles/UbestarterParticles'
 
 export function useLaunchpadParams(): {
   tab?: LaunchpadTab
@@ -29,15 +28,5 @@ export function useLaunchpadParams(): {
 export default function RedirectEarn() {
   const { tab } = useLaunchpadParams()
 
-  return (
-    <>
-      <div className="fixed inset-0 w-full h-full overflow-hidden">
-        <UbestarterParticles />
-      </div>
-
-      <div className="relative w-full">
-        <LaunchpadListPage initialTab={tab} />
-      </div>
-    </>
-  )
+  return <LaunchpadListPage initialTab={tab} />
 }
