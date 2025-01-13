@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmQJQv4CsTmaz2YxvP2J6rckTN55Kpb8kgs3nuH75K4HWV`
-- CIDv1: `bafybeia5esoynn6udnsocgpwufk6one5vbkcvowseql5tfilf46asmveqy`
+- CIDv0: `QmRHsud7WNRFUg4cTcXRxuwZYZRAhYMkYAcA97mtqwq9re`
+- CIDv1: `bafybeibl3u67jwwr3vxssx7z6bbz35bk333qe6xdnkruce7pmma5uf2z74`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeia5esoynn6udnsocgpwufk6one5vbkcvowseql5tfilf46asmveqy.ipfs.dweb.link/
-- https://bafybeia5esoynn6udnsocgpwufk6one5vbkcvowseql5tfilf46asmveqy.ipfs.cf-ipfs.com/
-- [ipfs://QmQJQv4CsTmaz2YxvP2J6rckTN55Kpb8kgs3nuH75K4HWV/](ipfs://QmQJQv4CsTmaz2YxvP2J6rckTN55Kpb8kgs3nuH75K4HWV/)
+- https://bafybeibl3u67jwwr3vxssx7z6bbz35bk333qe6xdnkruce7pmma5uf2z74.ipfs.dweb.link/
+- https://bafybeibl3u67jwwr3vxssx7z6bbz35bk333qe6xdnkruce7pmma5uf2z74.ipfs.cf-ipfs.com/
+- [ipfs://QmRHsud7WNRFUg4cTcXRxuwZYZRAhYMkYAcA97mtqwq9re/](ipfs://QmRHsud7WNRFUg4cTcXRxuwZYZRAhYMkYAcA97mtqwq9re/)
 
-### 5.64.1 (2025-01-09)
+### 5.64.2 (2025-01-13)
 
 
 ### Bug Fixes
 
-* **web:** limit orders do not work with uniswapx v2 (#14996) d520262
+* **web:** fix infinite loop on analytics toggle 3a2b4dc
 
 
