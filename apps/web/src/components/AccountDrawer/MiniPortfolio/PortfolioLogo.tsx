@@ -15,26 +15,33 @@ import { useLogolessColorScheme } from 'ui/src/utils/colors'
 import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
 import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 
+interface DoubleLogoContainerProps {
+  size: string
+}
+
 const UnknownContract = styled(UnknownStatus)`
   color: ${({ theme }) => theme.neutral2};
 `
 
-const DoubleLogoContainer = styled.div`
+const DoubleLogoContainer = styled.div<DoubleLogoContainerProps>`
   display: flex;
   flex-direction: row;
   gap: 2px;
   position: relative;
   top: 0;
   left: 0;
+
   img:nth-child(n) {
-    width: 19px;
-    height: 40px;
+    width: calc(${(props) => props.size} / 2);
+    height: ${(props) => props.size};
     object-fit: cover;
   }
+
   img:nth-child(1) {
     border-radius: 20px 0 0 20px;
     object-position: 0 0;
   }
+
   img:nth-child(2) {
     border-radius: 0 20px 20px 0;
     object-position: 100% 0;
@@ -84,7 +91,7 @@ interface DoubleLogoProps {
 
 function DoubleLogo({ logo1, onError1, logo2, onError2, size }: DoubleLogoProps) {
   return (
-    <DoubleLogoContainer>
+    <DoubleLogoContainer size={size}>
       <CircleLogoImage size={size} src={logo1 ?? blankTokenUrl} onError={onError1} />
       <CircleLogoImage size={size} src={logo2 ?? blankTokenUrl} onError={onError2} />
     </DoubleLogoContainer>

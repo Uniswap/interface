@@ -70,10 +70,6 @@ const TokenName = styled.h3`
     font-size: 16px;
     line-height: 20px;
   }
-
-  @media (max-width: ${({ theme }) => theme.breakpoint.xs}px) {
-    display: none;
-  }
 `
 
 // Token sembolü için stil
@@ -86,6 +82,10 @@ const TokenTicker = styled.h3`
   font-weight: 500;
   line-height: 32px;
   color: ${(props) => props.color || props.theme.neutral2};
+
+  white-space: nowrap; // Metin tek satırda kalacak
+  overflow: hidden;
+  text-overflow: ellipsis; // Taşan kısım ... ile gösterilecek
 
   @media (max-width: 1024px) {
     font-size: 18px;
@@ -200,7 +200,7 @@ export function GainerTokenRow({
         )
       }
     >
-      <PortfolioLogo currencies={[currency]} chainId={ChainId.CELO} size={screenIsSmall ? '32px' : '24px'} />
+      <PortfolioLogo currencies={[currency]} chainId={ChainId.CELO} size={screenIsSmall ? '32px' : '32px'} />
       <Box justify="space-between" gap="16px">
         <Box width="auto" gap="8px" align="center" overflow="hidden">
           <TokenName>{currency?.name}</TokenName>
@@ -225,28 +225,37 @@ export function GainerTokenRow({
 
 // Top Earners için token satırı bileşeni
 export function EarnerTokenRow({ poolData }: { poolData: PoolData }) {
-  const screenIsSmall = useScreenSize()['sm']
+  // const screenIsSmall = useScreenSize()['sm']
   const navigate = useNavigate()
   const { formatNumber } = useFormatter()
-
-  const handleClick = () => {
-    navigate(poolData.url) // poolData içindeki url'yi kullan
-  }
 
   const stakingToken = useCurrency(poolData.stakingToken, ChainId.CELO)
   const token0 = useCurrency(poolData.token0, ChainId.CELO)
   const token1 = useCurrency(poolData.token1, ChainId.CELO)
 
+  // Logo boyutunu tek bir değişkende
+  const logoSize = '32px'
+
+  // URL yönlendirmesi için tek bir fonksiyon
+  const handleClick = () => {
+    navigate(poolData.url)
+  }
+
   // Stake durumu için render
   if (poolData.type === 'stake') {
     return (
       <TokenRow onClick={handleClick}>
-        <PortfolioLogo currencies={[stakingToken]} chainId={ChainId.CELO} size={screenIsSmall ? '32px' : '24px'} />
-        <Box justify="space-between" gap="16px">
+        <PortfolioLogo
+          currencies={[stakingToken]}
+          chainId={ChainId.CELO}
+          size={logoSize}
+          style={{ minWidth: logoSize }}
+        />
+        <Box justify="space-between" gap="16px" style={{ width: '100%' }}>
           <Box width="auto" gap="8px" align="center" overflow="hidden">
             <TokenName>{`${stakingToken?.symbol} Stake`}</TokenName>
           </Box>
-          <Box width="auto" gap="8px" align="center">
+          <Box width="auto" gap="8px" align="center" style={{ flexShrink: 0, whiteSpace: 'nowrap' }}>
             <TokenPrice>
               {formatNumber({
                 input: poolData.apr,
@@ -260,14 +269,20 @@ export function EarnerTokenRow({ poolData }: { poolData: PoolData }) {
     )
   }
 
+  // Farm durumu için render
   return (
     <TokenRow onClick={handleClick}>
-      <PortfolioLogo currencies={[token0, token1]} chainId={ChainId.CELO} size={screenIsSmall ? '32px' : '24px'} />
-      <Box justify="space-between" gap="16px">
+      <PortfolioLogo
+        currencies={[token0, token1]}
+        chainId={ChainId.CELO}
+        size={logoSize}
+        style={{ minWidth: logoSize }}
+      />
+      <Box justify="space-between" gap="16px" style={{ width: '100%' }}>
         <Box width="auto" gap="8px" align="center" overflow="hidden">
           <TokenName>{`${token0?.symbol}-${token1?.symbol} Farm (v${poolData.protocolVersion})`}</TokenName>
         </Box>
-        <Box width="auto" gap="8px" align="center">
+        <Box width="auto" gap="8px" align="center" style={{ flexShrink: 0, whiteSpace: 'nowrap' }}>
           <TokenPrice>
             {formatNumber({
               input: poolData.apr,

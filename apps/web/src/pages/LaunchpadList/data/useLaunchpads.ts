@@ -1,161 +1,120 @@
 import { useQuery } from '@tanstack/react-query'
-import { ChainId, Percent, Token } from '@ubeswap/sdk-core'
-import { exploreSearchStringAtom } from 'components/Tokens/state'
-import { OrderDirection } from 'graphql/data/util'
-import { useDefaultActiveTokens } from 'hooks/Tokens'
-import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 
-export function sortStakes(pools: TableStake[], sortState: StakeTableSortState) {
-  return pools.sort((a, b) => {
-    switch (sortState.sortBy) {
-      case StakeSortFields.APR:
-        return sortState.sortDirection === OrderDirection.Desc
-          ? b.apr.greaterThan(a.apr)
-            ? 1
-            : -1
-          : a.apr.greaterThan(b.apr)
-          ? 1
-          : -1
-      case StakeSortFields.TVL:
-        return sortState.sortDirection === OrderDirection.Desc ? b.tvl - a.tvl : a.tvl - b.tvl
-      default:
-        return sortState.sortDirection === OrderDirection.Desc ? b.tvl - a.tvl : a.tvl - b.tvl
-    }
-  })
+// API'den gelen veri yapısı
+export interface LaunchpadApiData {
+  tokenAddress: string
+  tokenName: string
+  tokenSymbol: string
+  tokenDecimals: number
+  logoUrl: string
+  quoteToken: string
+  quoteTokenSymbol: string
+  startDate: string
+  endDate: string
+  hardCapAsQuote: number
+  softCapAsQuote: number
+  status: 'Pending' | 'Active' | 'Completed'
+  totalRaised: number
+  participants: number
 }
 
-export interface TableStake {
-  hash: string
-  stakingRewardAddress: string
-  stakingToken: Token
-  rewardTokens: Token[]
-  tvl: number
-  apr: Percent
-  isActive: boolean
+// Tablo için kullanacağımız dönüştürülmüş veri yapısı
+export interface TableLaunchpad {
+  id: string
+  tokenName: string
+  tokenSymbol: string
+  logoUrl: string
+  quoteTokenSymbol: string
+  startDate: Date
+  endDate: Date
+  hardCap: number
+  softCap: number
+  status: 'Pending' | 'Active' | 'Completed'
+  totalRaised: number
+  progress: number
+  participants: number
 }
 
-export enum StakeSortFields {
-  TVL = 'TVL',
-  APR = 'APR',
-}
-
-export type StakeTableSortState = {
-  sortBy: StakeSortFields
-  sortDirection: OrderDirection
-}
-
-function useFilteredStakes(pools: TableStake[]) {
-  const filterString = useAtomValue(exploreSearchStringAtom)
-
-  const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
-
-  return useMemo(
-    () =>
-      pools.filter((pool) => {
-        const hashIncludesFilterString = pool.hash.toLowerCase().includes(lowercaseFilterString)
-        const addressIncludesFilterString = pool.stakingRewardAddress.toLowerCase().includes(lowercaseFilterString)
-        const tokenIncludesFilterString = pool.stakingToken.symbol?.toLowerCase().includes(lowercaseFilterString)
-        const poolName = `${pool.stakingToken?.symbol} Stake`.toLowerCase()
-        const poolNameIncludesFilterString = poolName.includes(lowercaseFilterString)
-        return (
-          hashIncludesFilterString ||
-          tokenIncludesFilterString ||
-          addressIncludesFilterString ||
-          poolNameIncludesFilterString
-        )
-      }),
-    [lowercaseFilterString, pools]
-  )
-}
-
-interface StakeInfo {
-  stakingRewardAddress: string
-  stakingToken: string
-  rewardTokens: string[]
-  tvl: number
-  apr: number
-  isActive: boolean
-}
-
-async function fetchStakes(): Promise<StakeInfo[] | undefined> {
+// API'den veri çekme fonksiyonu
+async function fetchLaunchpads(): Promise<LaunchpadApiData[]> {
   try {
-    const res = await fetch('https://interface-gateway.ubeswap.org/v1/graphql', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        operationName: 'Stakes',
-        variables: {},
-        query: '',
-      }),
-    })
-    const data = await res.json()
+    const response = await fetch('https://interface-gateway.ubeswap.org/v1/ubestarter/list/active')
+    if (!response.ok) {
+      throw new Error('Network response was not ok')
+    }
+    const data = await response.json()
     return data
-  } catch (e) {
-    console.log(e)
+  } catch (error) {
+    console.error('Error fetching launchpads:', error)
+    return []
   }
-  return
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function useStakes(sortState: StakeTableSortState, chainId?: ChainId) {
-  const tokens = useDefaultActiveTokens(ChainId.CELO)
-  const { data: stakesBackend } = useQuery({
-    queryKey: ['stakes'],
-    queryFn: () => fetchStakes(),
+// Fallback verileri - API çalışmadığında kullanılacak
+const launchpadsFallback: LaunchpadApiData[] = [
+  {
+    tokenAddress: '0x000000000000000000000000000000000000dEaD',
+    tokenName: 'Fallback Deneme',
+    tokenSymbol: 'ACM',
+    tokenDecimals: 18,
+    logoUrl:
+      'https://www.edigitalagency.com.au/wp-content/uploads/ChatGPT-logo-PNG-small-size-white-green-background.png',
+    quoteToken: '0x71e26d0E519D14591b9dE9a0fE9513A398101490',
+    quoteTokenSymbol: 'UBE',
+    startDate: '2025-01-12T12:24:00.484Z',
+    endDate: '2025-01-15T12:24:00.484Z',
+    hardCapAsQuote: 1000099,
+    softCapAsQuote: 500000,
+    status: 'Completed',
+    totalRaised: 0,
+    participants: 0,
+  },
+]
+
+// API verilerini tablo formatına dönüştürme
+function transformApiDataToTableFormat(data: LaunchpadApiData): TableLaunchpad {
+  const hardCap = data.hardCapAsQuote
+  const totalRaised = data.totalRaised
+  const progress = hardCap > 0 ? (totalRaised / hardCap) * 100 : 0
+
+  return {
+    id: data.tokenAddress,
+    tokenName: data.tokenName,
+    tokenSymbol: data.tokenSymbol,
+    logoUrl: data.logoUrl,
+    quoteTokenSymbol: data.quoteTokenSymbol,
+    startDate: new Date(data.startDate),
+    endDate: new Date(data.endDate),
+    hardCap,
+    softCap: data.softCapAsQuote,
+    status: data.status,
+    totalRaised,
+    progress,
+    participants: data.participants,
+  }
+}
+
+// Ana hook fonksiyonu
+export function useLaunchpads() {
+  const { data: launchpadsApi, isLoading } = useQuery({
+    queryKey: ['launchpads'],
+    queryFn: fetchLaunchpads,
     staleTime: 30_000,
   })
 
-  const stakesFallback: StakeInfo[] = [
-    {
-      stakingRewardAddress: '0x388D611A57Ac15dCC1B937f287E5E908Ba5ff5c9',
-      stakingToken: '0x71e26d0E519D14591b9dE9a0fE9513A398101490',
-      rewardTokens: ['0x71e26d0E519D14591b9dE9a0fE9513A398101490'],
-      tvl: 0,
-      apr: 0,
-      isActive: true,
-    },
-    {
-      stakingRewardAddress: '0x8585A611521717Ffe7d93cF264DbE936E484DBa0',
-      stakingToken: '0x7b97031b6297bc8e030B07Bd84Ce92FEa1B00c3e',
-      rewardTokens: ['0x7b97031b6297bc8e030B07Bd84Ce92FEa1B00c3e'],
-      tvl: 0,
-      apr: 0,
-      isActive: true,
-    },
-  ]
+  const launchpads = useMemo(() => {
+    const apiData = launchpadsApi || launchpadsFallback
+    const transformedData = apiData.map(transformApiDataToTableFormat)
 
-  const stakes = (stakesBackend || stakesFallback).map((stake) => ({
-    stakingRewardAddress: stake.stakingRewardAddress,
-    stakingToken: tokens[stake.stakingToken],
-    rewardTokens: stake.rewardTokens.map((t) => tokens[t]),
-    tvl: stake.tvl,
-    apr: new Percent(Math.floor(stake.apr * 100), 10_000),
-    isActive: stake.isActive,
-  }))
+    return {
+      active: transformedData.filter((l) => l.status === 'Active'), // || l.status === 'Pending'
+      completed: transformedData.filter((l) => l.status === 'Completed'),
+    }
+  }, [launchpadsApi])
 
-  const loading = stakes.length == 0
-
-  const unfilteredPools = useMemo(() => {
-    const fff: TableStake[] = stakes.map((stake) => {
-      return {
-        hash: stake.stakingRewardAddress,
-        stakingRewardAddress: stake.stakingRewardAddress,
-        stakingToken: stake.stakingToken,
-        rewardTokens: stake.rewardTokens,
-        tvl: stake.tvl,
-        apr: stake.apr,
-        isActive: true,
-      } as TableStake
-    })
-
-    const rt = sortStakes([...fff], sortState)
-    return rt
-  }, [stakes, sortState])
-
-  const filteredStakes = useFilteredStakes(unfilteredPools).slice(0, 100)
-  return { stakes: filteredStakes, loading }
+  return {
+    launchpads,
+    loading: isLoading,
+  }
 }

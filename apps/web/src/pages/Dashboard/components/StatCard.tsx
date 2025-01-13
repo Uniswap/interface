@@ -137,13 +137,13 @@ const Title = styled.h3<{ color: string }>`
 
 // Bileşen props tanımlaması
 type StatCardProps = {
-  title: string // Kartın başlığı
-  value: string // Gösterilecek değer
-  live?: boolean // Canlı gösterge aktif mi
-  prefix?: string // Değer öneki (örn: $)
-  suffix?: string // Değer soneki (örn: K, M, B)
-  delay?: number // Animasyon gecikmesi
-  inView?: boolean // Görünürlük durumu
+  title: string
+  value: string
+  live?: boolean
+  prefix?: string
+  suffix?: string
+  delay?: number
+  inView?: boolean
 }
 
 // Dizi elemanlarını döndürmek için yardımcı fonksiyon

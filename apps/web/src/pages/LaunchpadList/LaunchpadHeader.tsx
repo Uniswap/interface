@@ -1,5 +1,10 @@
 import bannerUrl from 'assets/svg/ubestarter-launchpad.svg'
+import Row from 'components/Row'
+import { Trans } from 'i18n'
+import { ArrowRightCircle } from 'react-feather'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { ClickableStyle } from 'theme/components'
 
 const BannerContainer = styled.div`
   display: flex;
@@ -90,6 +95,37 @@ const HeaderDetails = styled.div`
     display: none;
   }
 `
+const LearnMoreButton = styled(Link)`
+  display: flex;
+  width: 70%;
+  padding: 12px 16px;
+  border-radius: 24px;
+  border: 0;
+  background-color: ${({ theme }) => theme.surface2};
+  font-family: Basel;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 535;
+  line-height: 24px;
+  color: ${({ theme }) => theme.neutral1};
+  ${ClickableStyle}
+`
+const LearnMoreArrow = styled(ArrowRightCircle)`
+  size: 24px;
+  stroke: ${({ theme }) => theme.surface2};
+  fill: ${({ theme }) => theme.neutral1};
+`
+
+function LearnMore() {
+  return (
+    <LearnMoreButton to="/ubestarter/create">
+      <Row gap="sm" align="center">
+        <Trans>Create Launchpad</Trans>
+        <LearnMoreArrow />
+      </Row>
+    </LearnMoreButton>
+  )
+}
 
 const LaunchpadHeader = () => {
   return (
@@ -98,6 +134,7 @@ const LaunchpadHeader = () => {
         <HeaderContainer>
           UbeStarter
           <HeaderDetails>An amazing launchpad on Celo Network</HeaderDetails>
+          <LearnMore />
         </HeaderContainer>
         <Image src={bannerUrl} />
       </BannerMainArea>
