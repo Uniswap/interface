@@ -67,6 +67,12 @@ const Input = styled.input<{ error?: boolean }>`
   }
 `
 
+const ErrorMessage = styled(ThemedText.BodySmall)`
+  color: ${({ theme }) => theme.critical};
+  margin-top: 8px;
+  margin-left: 4px;
+`
+
 export default function TextInputPanel({
   id,
   className = '',
@@ -74,15 +80,17 @@ export default function TextInputPanel({
   placeholder,
   value,
   onChange,
+  isError = false,
+  errorMessage,
 }: {
   id?: string
   className?: string
   label?: ReactNode
   placeholder?: string
-  // the typed string value
   value: string
-  // triggers whenever the typed value changes
   onChange: (value: string) => void
+  isError?: boolean
+  errorMessage?: string
 }) {
   const theme = useTheme()
 
@@ -94,11 +102,9 @@ export default function TextInputPanel({
     [onChange]
   )
 
-  const error = false
-
   return (
     <InputPanel id={id}>
-      <ContainerRow error={error}>
+      <ContainerRow error={isError}>
         <InputContainer>
           <AutoColumn gap="md">
             <RowBetween>
@@ -114,13 +120,14 @@ export default function TextInputPanel({
               autoCapitalize="off"
               spellCheck="false"
               placeholder={placeholder ?? t`Enter the value`}
-              error={error}
+              error={isError}
               onChange={handleInput}
               value={value}
             />
           </AutoColumn>
         </InputContainer>
       </ContainerRow>
+      {isError && errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
     </InputPanel>
   )
 }

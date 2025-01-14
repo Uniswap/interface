@@ -35,6 +35,12 @@ const InputContainer = styled.div`
   padding: 1rem;
 `
 
+const ErrorMessage = styled(ThemedText.BodySmall)`
+  color: ${({ theme }) => theme.critical};
+  margin-top: 8px;
+  margin-left: 4px;
+`
+
 const StyledInput = styled(NumericalInput)`
   background-color: ${({ theme }) => theme.surface1};
   transition: color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')};
@@ -48,6 +54,7 @@ const StyledInput = styled(NumericalInput)`
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     font-size: 16px;
   `};
+
   ::placeholder {
     color: ${({ theme }) => theme.neutral3};
   }
@@ -65,30 +72,30 @@ const StyledInput = styled(NumericalInput)`
   }
 `
 
-export default function TextInputPanel({
+export default function NumericalInputPanel({
   id,
   className = '',
   label,
   placeholder,
   value,
   onChange,
+  isError = false,
+  errorMessage,
 }: {
   id?: string
   className?: string
   label?: ReactNode
   placeholder?: string
-  // the typed string value
   value: string
-  // triggers whenever the typed value changes
   onChange: (value: string) => void
+  isError?: boolean
+  errorMessage?: string
 }) {
   const theme = useTheme()
 
-  const error = false
-
   return (
     <InputPanel id={id}>
-      <ContainerRow error={error}>
+      <ContainerRow error={isError}>
         <InputContainer>
           <AutoColumn gap="md">
             <RowBetween>
@@ -104,13 +111,14 @@ export default function TextInputPanel({
               autoCapitalize="off"
               spellCheck="false"
               placeholder={placeholder ?? t`Enter the value`}
-              error={error}
+              error={isError}
               onUserInput={onChange}
               value={value}
             />
           </AutoColumn>
         </InputContainer>
       </ContainerRow>
+      {isError && errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
     </InputPanel>
   )
 }

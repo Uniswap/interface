@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
 import { AutoColumn } from 'components/Column'
 import { RowBetween } from 'components/Row'
 import { ResizingTextArea } from 'components/TextInput'
@@ -33,7 +32,13 @@ const InputContainer = styled.div`
   padding: 1rem;
 `
 
-export default function TextInputPanel({
+const ErrorMessage = styled(ThemedText.BodySmall)`
+  color: ${({ theme }) => theme.critical};
+  margin-top: 8px;
+  margin-left: 4px;
+`
+
+export default function TextareaPanel({
   id,
   className = '',
   label,
@@ -42,6 +47,8 @@ export default function TextInputPanel({
   value,
   onChange,
   minHeight,
+  isError = false,
+  errorMessage,
 }: {
   id?: string
   className?: string
@@ -49,18 +56,16 @@ export default function TextInputPanel({
   placeholder?: string
   fontSize: string
   minHeight?: string
-  // the typed string value
   value: string
-  // triggers whenever the typed value changes
   onChange: (value: string) => void
+  isError?: boolean
+  errorMessage?: string
 }) {
   const theme = useTheme()
 
-  const error = false
-
   return (
     <InputPanel id={id}>
-      <ContainerRow error={error}>
+      <ContainerRow error={isError}>
         <InputContainer>
           <AutoColumn gap="md">
             <RowBetween>
@@ -79,6 +84,7 @@ export default function TextInputPanel({
           </AutoColumn>
         </InputContainer>
       </ContainerRow>
+      {isError && errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
     </InputPanel>
   )
 }
