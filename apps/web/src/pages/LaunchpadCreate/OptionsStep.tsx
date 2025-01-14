@@ -1,32 +1,42 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+import { formatUnits } from '@ethersproject/units'
 import { CurrencyAmount, Token } from '@ubeswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import AddressInputPanel from 'components/AddressInputPanel'
 import { ButtonError, ButtonPrimary } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import Column, { AutoColumn } from 'components/Column'
+import Modal from 'components/Modal'
 import NumericalInputPanel from 'components/NumericalInputPanel'
 import Row from 'components/Row'
 import TextInputPanel from 'components/TextInputPanel'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { useToken } from 'hooks/Tokens'
+import { useUbestarterFactory } from 'hooks/useContract'
 import { Trans } from 'i18n'
 import { useAtom } from 'jotai'
-import JSBI from 'jsbi'
-import { useCallback, useState } from 'react'
+import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
+import { Checkbox } from 'nft/components/layout/Checkbox'
+import { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { CreateProposalData, useCreateProposalCallback } from 'state/governance/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
+import AppBody from '../AppBody'
+import { Action, ActionSelector } from './ActionSelector'
 import AddTeamMemberModal from './AddTeamMemberModal'
 import AddTokenomicsModal from './AddTokenomicsModal'
 import SimpleTable from './SimpleTable'
 import TextareaPanel from './TextareaPanel'
-import { TeamTableValues, TokenomicsTableValues, launchpadParams } from './launchpad-state'
-
-import AppBody from '../AppBody'
-import { Action, ActionSelector } from './ActionSelector'
+import {
+  TeamTableValues,
+  TokenomicsTableValues,
+  getCreatorSignatureAtom,
+  launchpadParams,
+  validateOptions,
+} from './launchpad-state'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;
@@ -70,57 +80,13 @@ export const SmallButtonPrimary = styled(ButtonPrimary)`
   border-radius: 4px;
 `
 
-const CreateProposalButton = ({
-  proposalThreshold,
-  hasActiveOrPendingProposal,
-  hasEnoughVote,
-  isFormInvalid,
-  handleCreateProposal,
-}: {
-  proposalThreshold?: CurrencyAmount<Token>
-  hasActiveOrPendingProposal: boolean
-  hasEnoughVote: boolean
-  isFormInvalid: boolean
-  handleCreateProposal: () => void
-}) => {
-  const formattedProposalThreshold = proposalThreshold
-    ? JSBI.divide(
-        proposalThreshold.quotient,
-        JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(proposalThreshold.currency.decimals))
-      ).toLocaleString()
-    : undefined
-
-  return (
-    <ButtonError
-      style={{ marginTop: '18px' }}
-      error={hasActiveOrPendingProposal || !hasEnoughVote}
-      disabled={isFormInvalid || hasActiveOrPendingProposal || !hasEnoughVote}
-      onClick={handleCreateProposal}
-    >
-      {hasActiveOrPendingProposal ? (
-        <Trans>You already have an active or pending proposal</Trans>
-      ) : !hasEnoughVote ? (
-        <>
-          {formattedProposalThreshold ? (
-            <Trans>You must have {{ formattedProposalThreshold }} votes to submit a proposal</Trans>
-          ) : (
-            <Trans>You don&apos;t have enough votes to submit a proposal</Trans>
-          )}
-        </>
-      ) : (
-        <Trans>Create proposal</Trans>
-      )}
-    </ButtonError>
-  )
-}
-
 const CreateProposalWrapper = styled.div`
   padding: 20px;
   display: flex;
   flex-flow: column wrap;
 `
 
-const AutonomousProposalCTA = styled.div`
+const ErrorInfoBox = styled.div`
   text-align: center;
   margin-top: 10px;
 `
@@ -131,8 +97,17 @@ const Divider = styled.div`
   margin: 20px 0;
 `
 
+const disclaimerMsg = `Ubestarter provides a platform for decentralized application (DApp) developers to launch new projects and for users to participate in these projects by purchasing tokens. The information provided on Ubestarter's website and through its services is for general informational purposes only and should not be considered financial, legal, or investment advice.
+Ubestarter does not guarantee the success of any project or the performance of any token issued through its platform. The success of blockchain projects and the utility of their tokens can be affected by a multitude of factors beyond our control.
+Projects are responsible for ensuring that their participation in token sales and their use of Ubestarter's services comply with laws and regulations in their jurisdiction, including but not limited to securities laws, anti-money laundering (AML) and know your customer (KYC) requirements.
+Ubestarter, its affiliates, and its service providers will not be liable for any loss or damage arising from your use of the platform, including, but not limited to, any losses, damages, or claims arising from: (a) user error, such as forgotten passwords or incorrectly construed smart contracts; (b) server failure or data loss; (c) unauthorized access or activities by third parties, including the use of viruses, phishing, brute-forcing, or other means of attack against the platform or cryptocurrency wallets.
+This disclaimer is subject to change at any time without notice. It is the project's responsibility to review it regularly to stay informed of any changes.
+By using the Ubestarter, you acknowledge that you have read this disclaimer, understand it, and agree to be bound by its terms.`
+
+const factoryContractAddress = '0xd1620a07A4b82d082917a3C0717CAE9ddFE4a982'
+
 export default function OptionsStep({ onNext }: { onNext: () => void }) {
-  //const { account, chainId } = useWeb3React()
+  const { account, provider } = useWeb3React()
 
   const proposalThreshold: CurrencyAmount<Token> | undefined = undefined
 
@@ -140,6 +115,20 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
 
   const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
+
+  const [signature, setSignature] = useAtom(getCreatorSignatureAtom(account))
+  const [isDisclaimerAccepted, setIsDisclaimerAccepted] = useState(false)
+
+  const showDisclaimer = useMemo(() => !(signature && signature.length > 5), [signature])
+  const handleCheckbox = () => {
+    setIsDisclaimerAccepted(!isDisclaimerAccepted)
+  }
+  const signDisclaimer = async () => {
+    const signature = await provider?.getSigner().signMessage('I accept the following disclaimer.\n' + disclaimerMsg)
+    if (signature && signature.length > 5) {
+      setSignature(signature)
+    }
+  }
 
   const [options, setOptions] = useAtom(launchpadParams)
   const setOptionsProp = (propName: string, value: string) => {
@@ -155,6 +144,22 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
   }
 
   const token = useToken(options.tokenInfo.tokenAddress)
+  const quoteToken = useToken(options.tokenSale.quoteToken)
+
+  const factoryContract = useUbestarterFactory(factoryContractAddress)
+  const { result: softCapInfo } = useSingleCallResult(
+    factoryContract,
+    'quoteTokens',
+    [options.tokenSale.quoteToken],
+    NEVER_RELOAD
+  ) as {
+    result?: Awaited<ReturnType<NonNullable<typeof factoryContract>['quoteTokens']>>
+  }
+  const minSoftCapBn = softCapInfo?.[0]
+  const maxSoftCapBn = softCapInfo?.[1]
+  const minSoftCap = quoteToken && minSoftCapBn ? parseFloat(formatUnits(minSoftCapBn, quoteToken.decimals)) : undefined
+  const maxSoftCap = quoteToken && maxSoftCapBn ? parseFloat(formatUnits(maxSoftCapBn, quoteToken.decimals)) : undefined
+  const validationError = validateOptions(options, token?.symbol, minSoftCap, maxSoftCap)
 
   // ----- tokenomics -----
   const [tokenomicsModalOpened, setTokenomicsModalOpened] = useState(false)
@@ -323,6 +328,27 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
 
   return (
     <PageWrapper>
+      <Modal isOpen={showDisclaimer} $scrollOverlay={true} maxHeight={90}>
+        <div style={{ padding: '16px' }}>
+          <div>
+            {disclaimerMsg.split('\n').map((line, index) => (
+              <p key={index}>{line}</p>
+            ))}
+          </div>
+          <Checkbox checked={isDisclaimerAccepted} hovered={true} onChange={handleCheckbox}>
+            <div style={{ marginRight: '10px' }}>I accept this disclaimer</div>
+          </Checkbox>
+          <AutoColumn justify="center">
+            <ButtonPrimary
+              disabled={!isDisclaimerAccepted}
+              style={{ marginTop: '16px', width: 'fit-content', padding: '8px 20px' }}
+              onClick={signDisclaimer}
+            >
+              Sign With Wallet
+            </ButtonPrimary>
+          </AutoColumn>
+        </div>
+      </Modal>
       <AppBody $maxWidth="800px">
         <Nav to="/vote">
           <BackArrow />
@@ -333,13 +359,10 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
             <AutoColumn gap="10px">
               <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
                 <Trans>
-                  <strong>Tip:</strong> Select an action and describe your proposal for the community. The proposal
-                  cannot be modified after submission, so please verify all information before submitting. The voting
-                  period will begin immediately and last for 7 days. To propose a custom action,{' '}
-                  <ExternalLink href="https://docs.uniswap.org/protocol/reference/Governance/governance-reference#propose">
-                    read the docs
-                  </ExternalLink>
-                  .
+                  <strong>Tip:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                  ullamco laboris nisi ut aliquip ex ea commodo consequat.,{' '}
+                  <ExternalLink href="https://docs.uniswap.org/">read the docs</ExternalLink>.
                 </Trans>
               </ThemedText.DeprecatedLink>
             </AutoColumn>
@@ -531,16 +554,16 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
           <Row gap="10px" marginBottom="12px">
             <Column flex="1">
               <NumericalInputPanel
-                label="Total Token on Sale"
-                placeholder="Total Token on Sale"
+                label="Target Raise Amount (Hard Cap)"
+                placeholder=""
                 value={options.tokenSale.hardCapAsQuote}
                 onChange={(val) => setOptionsProp('tokenSale.hardCapAsQuote', val)}
               />
             </Column>
             <Column flex="1">
               <NumericalInputPanel
-                label="Soft Cap"
-                placeholder="Soft cap"
+                label="Min Raise Amount (Soft Cap)"
+                placeholder=""
                 value={options.tokenSale.softCapAsQuote}
                 onChange={(val) => setOptionsProp('tokenSale.softCapAsQuote', val)}
               />
@@ -650,21 +673,20 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
             </Row>
           )}
 
-          <ButtonPrimary onClick={onNext}>Next</ButtonPrimary>
-
-          <CreateProposalButton
-            proposalThreshold={proposalThreshold}
-            hasActiveOrPendingProposal={false}
-            hasEnoughVote={hasEnoughVote}
-            isFormInvalid={isFormInvalid}
-            handleCreateProposal={handleCreateProposal}
-          />
-          {!hasEnoughVote ? (
-            <AutonomousProposalCTA>
-              Don’t have 2.5M votes? Anyone can create an autonomous proposal using{' '}
-              <ExternalLink href="https://fish.vote">fish.vote</ExternalLink>
-            </AutonomousProposalCTA>
-          ) : null}
+          <ButtonError
+            style={{ marginTop: '18px' }}
+            error={!!validationError}
+            disabled={!!validationError}
+            onClick={onNext}
+          >
+            <Trans>See Preview</Trans>
+          </ButtonError>
+          {validationError && (
+            <ErrorInfoBox>
+              <div>{validationError.field}</div>
+              <div>{validationError.message}</div>
+            </ErrorInfoBox>
+          )}
         </CreateProposalWrapper>
       </AppBody>
     </PageWrapper>
