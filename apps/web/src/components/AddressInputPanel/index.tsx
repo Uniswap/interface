@@ -70,6 +70,12 @@ const Input = styled.input<{ error?: boolean }>`
   }
 `
 
+const ErrorMessage = styled(ThemedText.BodySmall)`
+  color: ${({ theme }) => theme.critical};
+  margin-top: 8px;
+  margin-left: 4px;
+`
+
 export default function AddressInputPanel({
   id,
   className = 'recipient-address-input',
@@ -77,20 +83,22 @@ export default function AddressInputPanel({
   placeholder,
   value,
   onChange,
+  isError = false,
+  errorMessage,
 }: {
   id?: string
   className?: string
   label?: ReactNode
   placeholder?: string
-  // the typed string value
   value: string
-  // triggers whenever the typed value changes
   onChange: (value: string) => void
+  isError?: boolean
+  errorMessage?: string
 }) {
   const { chainId } = useWeb3React()
   const theme = useTheme()
 
-  const { address, loading, name } = useENS(value)
+  const { address, name } = useENS(value)
 
   const handleInput = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -101,11 +109,9 @@ export default function AddressInputPanel({
     [onChange]
   )
 
-  const error = Boolean(value.length > 0 && !loading && !address)
-
   return (
     <InputPanel id={id}>
-      <ContainerRow error={error}>
+      <ContainerRow error={isError}>
         <InputContainer>
           <AutoColumn gap="md">
             <RowBetween>
@@ -129,7 +135,7 @@ export default function AddressInputPanel({
               autoCapitalize="off"
               spellCheck="false"
               placeholder={placeholder ?? t`Wallet address or ENS name`}
-              error={error}
+              error={isError}
               pattern="^(0x[a-fA-F0-9]{40})$"
               onChange={handleInput}
               value={value}
@@ -137,6 +143,7 @@ export default function AddressInputPanel({
           </AutoColumn>
         </InputContainer>
       </ContainerRow>
+      {isError && errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
     </InputPanel>
   )
 }
