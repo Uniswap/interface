@@ -1,9 +1,9 @@
 import { EnvelopeHeartIcon } from 'components/Icons/EnvelopeHeart'
 import Row from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
+import { Trans } from 'react-i18next'
 import { ExternalLink } from 'theme/components'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { Trans } from 'uniswap/src/i18n'
 
 const StyledExternalLink = styled(ExternalLink)`
   width: fit-content;

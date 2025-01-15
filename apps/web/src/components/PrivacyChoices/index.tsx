@@ -3,6 +3,7 @@ import { PRIVACY_SHARING_OPT_OUT_STORAGE_KEY } from 'components/PrivacyChoices/c
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useCallback, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { Anchor, Button, Checkbox, Flex, Text, TouchableArea } from 'ui/src'
 import { Lock } from 'ui/src/components/icons/Lock'
@@ -11,7 +12,6 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 
 export function PrivacyChoicesModal() {
   const open = useModalIsOpen(ModalName.PrivacyChoices)

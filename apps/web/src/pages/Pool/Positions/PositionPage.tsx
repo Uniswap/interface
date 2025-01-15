@@ -13,9 +13,12 @@ import { ZERO_ADDRESS } from 'constants/misc'
 import { usePositionOwner } from 'hooks/usePositionOwner'
 import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
 import NotFound from 'pages/NotFound'
+import { useCanUnwrapCurrency } from 'pages/Pool/Positions/create/utils'
 import { LoadingRow } from 'pages/Pool/Positions/shared'
 import { useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
+import { Helmet } from 'react-helmet-async/lib/index'
+import { Trans, useTranslation } from 'react-i18next'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
@@ -25,11 +28,12 @@ import { ClickableTamaguiStyle } from 'theme/components'
 import { Button, Flex, Main, Switch, Text, styled } from 'ui/src'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
@@ -157,6 +161,11 @@ function PositionPage() {
     priceOrdering,
   } = useV3OrV4PositionDerivedInfo(positionInfo)
 
+  const canUnwrap0 = useCanUnwrapCurrency(currency0Amount?.currency)
+  const canUnwrap1 = useCanUnwrapCurrency(currency1Amount?.currency)
+  const canUnwrap = positionInfo && chainId && positionInfo.version !== ProtocolVersion.V4 && (canUnwrap0 || canUnwrap1)
+  const nativeCurrencyInfo = useNativeCurrencyInfo(chainId ?? UniverseChainId.Mainnet)
+
   if (!isLoading && !lpRedesignEnabled) {
     return <Navigate to="/pools" replace />
   }
@@ -215,6 +224,14 @@ function PositionPage() {
         quoteCurrencyId: currencyIdToAddress(currencyId(currency1Amount.currency)),
       }}
     >
+      <Helmet>
+        <title>
+          {t(`liquidityPool.positions.page.title`, {
+            quoteSymbol: currency1Amount.currency.symbol,
+            baseSymbol: currency0Amount.currency.symbol,
+          })}
+        </title>
+      </Helmet>
       <BodyWrapper>
         <Flex gap="$gap20">
           <BreadcrumbNavContainer aria-label="breadcrumb-nav">
@@ -246,7 +263,12 @@ function PositionPage() {
                 <HeaderButton
                   emphasis="secondary"
                   onPress={() => {
-                    dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: positionInfo }))
+                    dispatch(
+                      setOpenModal({
+                        name: ModalName.AddLiquidity,
+                        initialState: { ...positionInfo, collectAsWeth },
+                      }),
+                    )
                   }}
                 >
                   <Text variant="buttonLabel2" color="$neutral1">
@@ -256,7 +278,12 @@ function PositionPage() {
                 <HeaderButton
                   emphasis="primary"
                   onPress={() => {
-                    dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: positionInfo }))
+                    dispatch(
+                      setOpenModal({
+                        name: ModalName.RemoveLiquidity,
+                        initialState: { ...positionInfo, collectAsWeth },
+                      }),
+                    )
                   }}
                 >
                   <Text variant="buttonLabel2" color="$surface1">
@@ -345,10 +372,13 @@ function PositionPage() {
                   fiatValue1={fiatFeeValue1}
                 />
               )}
-              {positionInfo.version !== ProtocolVersion.V4 && (
+              {canUnwrap && (
                 <Flex row width="100%" justifyContent="space-between" mt="$spacing16" alignItems="center">
                   <Text variant="body1">
-                    <Trans i18nKey="pool.collectAs" values={{ nativeWrappedSymbol: 'WETH' }} />
+                    <Trans
+                      i18nKey="pool.collectAs"
+                      values={{ nativeWrappedSymbol: nativeCurrencyInfo?.currency.wrapped.symbol }}
+                    />
                   </Text>
                   <Switch
                     variant="default"

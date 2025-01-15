@@ -1,7 +1,7 @@
-import { isWebAndroid } from 'utilities/src/platform'
+import { isAndroid } from 'utilities/src/platform'
 
 export function getCloudProviderName(): string {
-  if (isWebAndroid) {
+  if (isAndroid) {
     return 'Google Drive'
   }
   return 'iCloud'

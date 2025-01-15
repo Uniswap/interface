@@ -1,8 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import dayjs from 'dayjs'
 import { isEnrolledAsync } from 'expo-local-authentication'
-import { t } from 'i18next'
 import { useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { SplashScreen } from 'src/features/appLoading/SplashScreen'
@@ -36,6 +36,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 function useFinishAutomatedRecovery(navigation: Props['navigation']): {
   finishRecovery: (mnemonicId: string, recoveryWalletInfos: RecoveryWalletInfo[]) => void
 } {
+  const { t } = useTranslation()
   const dispatch = useDispatch()
   const { setRecoveredImportedAccounts, finishOnboarding } = useOnboardingContext()
 
@@ -58,7 +59,7 @@ function useFinishAutomatedRecovery(navigation: Props['navigation']): {
       })
       setRecoveredImportedAccounts(accountsToImport)
     },
-    [setRecoveredImportedAccounts],
+    [t, setRecoveredImportedAccounts],
   )
 
   const finishRecovery = useCallback(

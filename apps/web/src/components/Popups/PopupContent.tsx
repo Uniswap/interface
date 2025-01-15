@@ -13,6 +13,7 @@ import Column, { AutoColumn } from 'components/deprecated/Column'
 import { AutoRow } from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { X } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { useOrder } from 'state/signatures/hooks'
 import { useTransaction } from 'state/transactions/hooks'
 import { EllipsisStyle, ThemedText } from 'theme/components'
@@ -22,7 +23,6 @@ import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__g
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { useFormatter } from 'utils/formatNumbers'
 
@@ -120,7 +120,6 @@ function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupConte
               <PortfolioLogo
                 chainId={activity.chainId}
                 currencies={activity.currencies}
-                images={activity.logos}
                 accountAddress={activity.otherAccount}
                 customIcon={isBridgeActivity ? BridgeIcon : undefined}
               />

@@ -14,11 +14,11 @@ import React, {
   useState,
 } from 'react'
 import { AlertTriangle, ArrowLeft, CheckCircle, Copy, Icon, X } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Z_INDEX } from 'theme/zIndex'
 import { FlexProps, TextProps } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Trans } from 'uniswap/src/i18n'
 import { anonymizeLink } from 'utils/anonymizeLink'
 
 // TODO: Break this file into a components folder
@@ -91,7 +91,8 @@ export const ClickableTamaguiStyle = {
 export const TamaguiClickableStyle = {
   textDecorationLine: 'none',
   cursor: 'pointer',
-  animation: '100ms',
+  // Tamagui bug. Animation property breaks theme value transition, must use style instead
+  style: { transition: '100ms' },
   hoverStyle: {
     opacity: 0.6,
   },

@@ -8,15 +8,14 @@ import { ExtensionRequestMethods, useUniswapExtensionConnector } from 'component
 import { useUpdateAtom } from 'jotai/utils'
 import { useTheme } from 'lib/styled-components'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button, Flex, Image, Text } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { ArrowRightToLine } from 'ui/src/components/icons/ArrowRightToLine'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { TimePast } from 'ui/src/components/icons/TimePast'
-
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
-import { t } from 'uniswap/src/i18n'
 
 const UnreadIndicator = () => {
   const theme = useTheme()
@@ -53,6 +52,7 @@ const DeepLinkButton = ({ Icon, Label, onPress }: { Icon: JSX.Element; Label: st
 }
 
 export function ExtensionDeeplinks({ account }: { account: string }) {
+  const { t } = useTranslation()
   const theme = useTheme()
   const uniswapExtensionConnector = useUniswapExtensionConnector()
   const accountDrawer = useAccountDrawer()

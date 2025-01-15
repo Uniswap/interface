@@ -75,10 +75,10 @@ export function useInsufficientNativeTokenWarning({
     return null
   }
 
-  const supportedChainId = toSupportedChainId(nativeCurrency?.chainId)
+  const supportedChainId = toSupportedChainId(nativeCurrency.chainId)
 
   if (!supportedChainId) {
-    throw new Error(`Unsupported chain ID: ${nativeCurrency?.chainId}`)
+    throw new Error(`Unsupported chain ID: ${nativeCurrency.chainId}`)
   }
 
   const networkName = getChainLabel(supportedChainId)

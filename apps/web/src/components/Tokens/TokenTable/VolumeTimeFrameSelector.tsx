@@ -6,8 +6,8 @@ import { useAtom } from 'jotai'
 import { useTheme } from 'lib/styled-components'
 import { useState } from 'react'
 import { Check } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { FlexProps } from 'ui/src'
-import { useTranslation } from 'uniswap/src/i18n'
 
 export enum TimePeriodDisplay {
   HOUR = '1H',

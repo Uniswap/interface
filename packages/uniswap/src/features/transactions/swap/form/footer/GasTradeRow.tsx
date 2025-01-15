@@ -12,7 +12,7 @@ import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
   useFormattedUniswapXGasFeeInfo,
-  useGasFeeFormattedAmounts,
+  useGasFeeFormattedDisplayAmounts,
   useGasFeeHighRelativeToValue,
 } from 'uniswap/src/features/gas/hooks'
 import { FormattedUniswapXGasFeeInfo, GasFeeResult } from 'uniswap/src/features/gas/types'
@@ -49,7 +49,7 @@ export function useDebouncedGasInfo(): DebouncedGasInfo {
     chainId,
   )
 
-  const { gasFeeFormatted, gasFeeUSD } = useGasFeeFormattedAmounts({
+  const { gasFeeFormatted, gasFeeUSD } = useGasFeeFormattedDisplayAmounts({
     gasFee,
     chainId,
     placeholder: undefined,

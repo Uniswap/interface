@@ -10,6 +10,7 @@ export const zIndices = {
   modalBackdrop: 1040,
   offcanvas: 1050,
   modal: 1060,
+  popoverBackdrop: 1065,
   popover: 1070,
   tooltip: 1080,
   // Custom value needed to properly display components

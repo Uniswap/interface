@@ -18,6 +18,7 @@ export enum UniverseChainId {
   Blast = UniswapSDKChainId.BLAST,
   Bnb = UniswapSDKChainId.BNB,
   Celo = UniswapSDKChainId.CELO,
+  MonadTestnet = UniswapSDKChainId.MONAD_TESTNET,
   Optimism = UniswapSDKChainId.OPTIMISM,
   Polygon = UniswapSDKChainId.POLYGON,
   Sepolia = UniswapSDKChainId.SEPOLIA,
@@ -42,7 +43,11 @@ export const SUPPORTED_CHAIN_IDS: UniverseChainId[] = [
   UniverseChainId.Zksync,
 ]
 
-export const SUPPORTED_TESTNET_CHAIN_IDS: UniverseChainId[] = [UniverseChainId.Sepolia, UniverseChainId.UnichainSepolia]
+export const SUPPORTED_TESTNET_CHAIN_IDS: UniverseChainId[] = [
+  UniverseChainId.Sepolia,
+  UniverseChainId.UnichainSepolia,
+  UniverseChainId.MonadTestnet,
+]
 
 // This order is used as a fallback for chain ordering but will otherwise defer to useOrderedChainIds
 export const ALL_CHAIN_IDS: UniverseChainId[] = [...SUPPORTED_CHAIN_IDS, ...SUPPORTED_TESTNET_CHAIN_IDS]
@@ -106,7 +111,7 @@ export interface UniverseChainInfo extends WagmiChain {
   readonly elementName: ElementNameType
   readonly explorer: {
     name: string
-    url: string
+    url: `${string}/`
     apiURL?: string
   }
   readonly rpcUrls: {

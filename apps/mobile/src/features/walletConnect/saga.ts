@@ -29,7 +29,7 @@ import { ALL_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/type
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
-import i18n from 'uniswap/src/i18n/i18n'
+import i18n from 'uniswap/src/i18n'
 import { EthEvent, EthMethod, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'

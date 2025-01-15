@@ -44,6 +44,7 @@ import {
   validateCurrencyInput,
 } from 'pages/Pool/Positions/create/utils'
 import { useMemo } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { parseCurrencyFromURLParameter } from 'state/swap/hooks'
 import { PositionField } from 'types/position'
@@ -53,7 +54,6 @@ import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { getParsedChainId } from 'utils/chainParams'
 
 /**

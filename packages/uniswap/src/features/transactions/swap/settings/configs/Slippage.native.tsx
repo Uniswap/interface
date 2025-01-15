@@ -8,7 +8,11 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { BottomSheetTextInput } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
-import { MAX_AUTO_SLIPPAGE_TOLERANCE, MAX_CUSTOM_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
+import {
+  MAX_AUTO_SLIPPAGE_TOLERANCE,
+  MAX_CUSTOM_SLIPPAGE_TOLERANCE,
+  SLIPPAGE_CRITICAL_TOLERANCE,
+} from 'uniswap/src/constants/transactions'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
@@ -17,6 +21,7 @@ import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settin
 import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/settings/useSlippageSettings'
 import { BridgeTrade, TradeWithSlippage } from 'uniswap/src/features/transactions/swap/types/trade'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
+import { getSlippageWarningColor } from 'uniswap/src/features/transactions/swap/utils/styleHelpers'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -82,6 +87,11 @@ export const Slippage: SwapSettingConfig = {
 
     const isBridgeTrade = trade instanceof BridgeTrade
 
+    const inputValueTextColor = useMemo(
+      () => getSlippageWarningColor(currentSlippageTolerance, autoSlippageTolerance),
+      [currentSlippageTolerance, autoSlippageTolerance],
+    )
+
     const slippageMessage = useMemo(() => {
       if (isBridgeTrade) {
         return <WarningMessage text={t('swap.slippage.bridging')} color="$neutral2" />
@@ -92,10 +102,11 @@ export const Slippage: SwapSettingConfig = {
             showSlippageWarning={showSlippageWarning}
             slippageTolerance={currentSlippageTolerance}
             trade={trade}
+            color={inputValueTextColor}
           />
         )
       }
-    }, [currentSlippageTolerance, inputWarning, isBridgeTrade, showSlippageWarning, t, trade])
+    }, [currentSlippageTolerance, inputWarning, isBridgeTrade, showSlippageWarning, t, trade, inputValueTextColor])
 
     return (
       <Flex centered gap="$spacing16">
@@ -136,7 +147,10 @@ export const Slippage: SwapSettingConfig = {
                 <BottomSheetTextInput
                   keyboardType="numeric"
                   style={{
-                    color: autoSlippageEnabled ? colors.neutral2.get() : colors.neutral1.get(),
+                    color:
+                      currentSlippageTolerance >= SLIPPAGE_CRITICAL_TOLERANCE
+                        ? colors.statusCritical.val
+                        : colors.neutral1.val,
                     fontSize: fonts.subheading1.fontSize,
                     width: fonts.subheading1.fontSize * 4,
                     padding: spacing.none,
@@ -177,20 +191,21 @@ function SlippageMessage({
   slippageTolerance,
   showSlippageWarning,
   showEmpty = true,
+  color = '$statusWarning',
 }: {
   inputWarning?: string
   trade: TradeWithSlippage | null
   slippageTolerance: number
   showSlippageWarning: boolean
   showEmpty?: boolean
+  color?: ColorTokens
 }): JSX.Element | null {
-  const colors = useSporeColors()
   const { t } = useTranslation()
   const { formatCurrencyAmount } = useLocalizationContext()
   const slippageTolerancePercent = slippageToleranceToPercent(slippageTolerance)
 
   if (inputWarning) {
-    return <WarningMessage showAlert text={inputWarning} color="$statusWarning" />
+    return <WarningMessage showAlert text={inputWarning} color={color} />
   }
 
   return trade ? (
@@ -211,7 +226,7 @@ function SlippageMessage({
       </Text>
       {showSlippageWarning ? (
         <Flex centered row gap="$spacing8">
-          <AlertTriangleFilled color={colors.DEP_accentWarning.val} size="$icon.16" />
+          <AlertTriangleFilled color={color} size="$icon.16" />
           <Text color="$DEP_accentWarning" variant="body2">
             {t('swap.settings.slippage.warning.message')}
           </Text>
@@ -234,7 +249,7 @@ function WarningMessage({
 }): JSX.Element {
   return (
     <Flex row centered px="$spacing12" gap="$spacing8" height={fonts.body3.lineHeight * 2 + spacing.spacing8}>
-      {showAlert ?? <AlertTriangleFilled color={color} size="$icon.16" />}
+      {showAlert && <AlertTriangleFilled color={color} size="$icon.16" />}
       <Text color={color} textAlign="center" variant="body3">
         {text}
       </Text>

@@ -12,6 +12,7 @@ exports[`NetworkLogo renders without error 1`] = `
       "height": 20,
       "overflow": "hidden",
       "width": 20,
+      "zIndex": 10,
     }
   }
   testID="network-logo"
@@ -47,6 +48,7 @@ exports[`TransactionSummaryNetworkLogo renders without error 1`] = `
       "height": 23,
       "overflow": "hidden",
       "width": 23,
+      "zIndex": 10,
     }
   }
   testID="network-logo"

@@ -4,6 +4,8 @@ interface TokenData {
   symbol: string
 }
 interface PoolData {
+  token0Symbol?: string
+  token1Symbol?: string
   feeTier: string
   protocolVersion: ProtocolVersion
   token0Image?: string

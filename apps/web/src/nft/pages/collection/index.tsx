@@ -21,11 +21,11 @@ import { blocklistedCollections } from 'nft/utils'
 import { useDynamicMetatags } from 'pages/metatags'
 import { Suspense, useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
+import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { t } from 'uniswap/src/i18n'
 
 const FILTER_WIDTH = 332
 const EMPTY_TRAIT_OBJ = {}
@@ -120,6 +120,7 @@ const IconWrapper = styled.button`
 `
 
 const Collection = () => {
+  const { t } = useTranslation()
   const { contractAddress } = useParams()
   const isMobile = useIsMobile()
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()

@@ -14,11 +14,11 @@ import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { PoolSortFields, TablePool } from 'graphql/data/pools/useTopPools'
 import { OrderDirection, gqlToCurrency, supportedChainIdFromGQLChain, unwrapToken } from 'graphql/data/util'
-import { useCurrencyInfo } from 'hooks/Tokens'
 import useSimplePagination from 'hooks/useSimplePagination'
 import { useAtom } from 'jotai'
 import { atomWithReset, useAtomValue, useResetAtom, useUpdateAtom } from 'jotai/utils'
 import { ReactElement, ReactNode, memo, useCallback, useEffect, useMemo } from 'react'
+import { Trans } from 'react-i18next'
 import { TABLE_PAGE_SIZE, giveExploreStatDefaultValue } from 'state/explore'
 import { useExploreContextTopPools } from 'state/explore/topPools'
 import { PoolStat } from 'state/explore/types'
@@ -29,7 +29,6 @@ import { Chain, ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -77,14 +76,6 @@ interface PoolTableValues {
   link: string
 }
 
-function getRestTokenLogo(token?: Token | TokenStats, currencyLogo?: string | null): string | undefined {
-  // We can retrieve currencies for native chain assets and should use that logo over the rest returned logo
-  if (currencyLogo) {
-    return currencyLogo
-  }
-  return token && !('id' in token) ? token?.logo : undefined
-}
-
 function PoolDescription({
   token0,
   token1,
@@ -100,17 +91,11 @@ function PoolDescription({
   protocolVersion?: ProtocolVersion | string
   hookAddress?: string
 }) {
-  const isRestPool = token0 && !('id' in token0)
   const currencies = [token0 ? gqlToCurrency(token0) : undefined, token1 ? gqlToCurrency(token1) : undefined]
-  const currencyLogos = [
-    useCurrencyInfo(currencies?.[0], chainId, isRestPool)?.logoUrl,
-    useCurrencyInfo(currencies?.[1], chainId, isRestPool)?.logoUrl,
-  ]
-  const images = [getRestTokenLogo(token0, currencyLogos[0]), getRestTokenLogo(token1, currencyLogos[1])]
 
   return (
     <Flex row gap="$gap8" alignItems="center">
-      <PortfolioLogo currencies={currencies} chainId={chainId} images={images} size={28} />
+      <PortfolioLogo currencies={currencies} chainId={chainId} size={28} />
       <EllipsisText>
         {token0?.symbol}/{token1?.symbol}
       </EllipsisText>

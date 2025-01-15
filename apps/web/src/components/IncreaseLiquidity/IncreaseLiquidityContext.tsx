@@ -1,7 +1,8 @@
 import { useDerivedIncreaseLiquidityInfo } from 'components/IncreaseLiquidity/hooks'
 import { useModalLiquidityInitialState } from 'components/Liquidity/hooks'
-import { DepositInfo, PositionInfo } from 'components/Liquidity/types'
+import { DepositInfo } from 'components/Liquidity/types'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
+import { LiquidityModalInitialState } from 'state/application/reducer'
 import { PositionField } from 'types/position'
 
 export enum IncreaseLiquidityStep {
@@ -10,7 +11,7 @@ export enum IncreaseLiquidityStep {
 }
 
 export interface IncreaseLiquidityState {
-  position?: PositionInfo
+  position?: LiquidityModalInitialState
   exactField: PositionField
   exactAmount?: string
 }
@@ -32,6 +33,8 @@ interface IncreaseLiquidityContextType {
   increaseLiquidityState: IncreaseLiquidityState
   derivedIncreaseLiquidityInfo: IncreaseLiquidityDerivedInfo
   setIncreaseLiquidityState: Dispatch<SetStateAction<IncreaseLiquidityState>>
+  unwrapNativeCurrency: boolean
+  setUnwrapNativeCurrency: Dispatch<SetStateAction<boolean>>
 }
 
 const IncreaseLiquidityContext = createContext<IncreaseLiquidityContextType>({
@@ -40,6 +43,8 @@ const IncreaseLiquidityContext = createContext<IncreaseLiquidityContextType>({
   increaseLiquidityState: DEFAULT_INCREASE_LIQUIDITY_STATE,
   derivedIncreaseLiquidityInfo: {},
   setIncreaseLiquidityState: () => undefined,
+  unwrapNativeCurrency: true,
+  setUnwrapNativeCurrency: () => undefined,
 })
 
 export function useIncreaseLiquidityContext() {
@@ -50,13 +55,13 @@ export function IncreaseLiquidityContextProvider({ children }: PropsWithChildren
   const positionInfo = useModalLiquidityInitialState()
 
   const [step, setStep] = useState(IncreaseLiquidityStep.Input)
-
+  const [unwrapNativeCurrency, setUnwrapNativeCurrency] = useState(true)
   const [increaseLiquidityState, setIncreaseLiquidityState] = useState<IncreaseLiquidityState>({
     ...DEFAULT_INCREASE_LIQUIDITY_STATE,
     position: positionInfo,
   })
 
-  const derivedIncreaseLiquidityInfo = useDerivedIncreaseLiquidityInfo(increaseLiquidityState)
+  const derivedIncreaseLiquidityInfo = useDerivedIncreaseLiquidityInfo(increaseLiquidityState, unwrapNativeCurrency)
 
   const value = useMemo(
     () => ({
@@ -65,8 +70,10 @@ export function IncreaseLiquidityContextProvider({ children }: PropsWithChildren
       increaseLiquidityState,
       setIncreaseLiquidityState,
       derivedIncreaseLiquidityInfo,
+      unwrapNativeCurrency,
+      setUnwrapNativeCurrency,
     }),
-    [increaseLiquidityState, derivedIncreaseLiquidityInfo, step],
+    [increaseLiquidityState, derivedIncreaseLiquidityInfo, step, unwrapNativeCurrency],
   )
 
   return <IncreaseLiquidityContext.Provider value={value}>{children}</IncreaseLiquidityContext.Provider>

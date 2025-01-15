@@ -15,7 +15,6 @@ import Animated, {
   useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated'
-import { SvgProps } from 'react-native-svg'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useDispatch, useSelector } from 'react-redux'
 import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
@@ -45,16 +44,12 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
 import { AIAssistantOverlay } from 'src/features/openai/AIAssistantOverlay'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
 import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { hideSplashScreen } from 'src/utils/splashScreen'
 import { useOpenBackupReminderModal } from 'src/utils/useOpenBackupReminderModal'
-import { Flex, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
-import ReceiveIcon from 'ui/src/assets/icons/arrow-down-circle.svg'
-import BuyIcon from 'ui/src/assets/icons/buy.svg'
-import ScanIcon from 'ui/src/assets/icons/scan-home.svg'
-import SendIcon from 'ui/src/assets/icons/send-action.svg'
+import { Flex, GeneratedIcon, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
+import { ArrowDownCircle, Buy, SendAction } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -119,7 +114,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   })
 
   const { gqlChains } = useEnabledChains()
-  const { data: nftData } = useNftsTabQuery({
+  const { data: nftData, loading: areNFsLoading } = useNftsTabQuery({
     variables: {
       ownerAddress: activeAccount.address,
       first: 1,
@@ -131,11 +126,14 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   })
   const isNftBalance = !!nftData?.nftBalances?.edges.length
 
-  const { hasData: isActivity } = useFormattedTransactionDataForActivity({
+  const { hasData: isActivity, isLoading: isActivityLoading } = useFormattedTransactionDataForActivity({
     address: activeAccount.address,
     hideSpamTokens: true,
     pageSize: 1,
   })
+
+  const isTabsDataCacheAvailable = !!balancesById || !!nftData || !!isActivity
+  const isTabsDataLoaded = isTabsDataCacheAvailable || (!areBalancesLoading && !areNFsLoading && !isActivityLoading)
 
   const isTokenBalances = !!Object.entries(balancesById || {}).length
   const showEmptyWalletState = !isTokenBalances && !isNftBalance && !isActivity
@@ -376,12 +374,6 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     await hapticFeedback.light()
   }, [hapticFeedback])
 
-  const onPressScan = useCallback(async () => {
-    // in case we received a pending session from a previous scan after closing modal
-    dispatch(removePendingSession())
-    dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr }))
-    await triggerHaptics()
-  }, [dispatch, triggerHaptics])
   const onPressSend = useCallback(async () => {
     dispatch(openModal({ name: ModalName.Send }))
     await triggerHaptics()
@@ -400,11 +392,6 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
 
   // Hide actions when active account isn't a signer account.
   const isSignerAccount = activeAccount.type === AccountType.SignerMnemonic
-  // Necessary to declare these as direct dependencies due to race condition with initializing react-i18next and useMemo
-  const buyLabel = t('home.label.buy')
-  const sendLabel = t('home.label.send')
-  const receiveLabel = t('home.label.receive')
-  const scanLabel = t('home.label.scan')
 
   const [isTestnetWarningModalOpen, setIsTestnetWarningModalOpen] = useState(false)
 
@@ -425,41 +412,34 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     )
   }, [dispatch, isTestnetModeEnabled, disableForKorea, triggerHaptics])
 
+  // Necessary to declare these as direct dependencies due to race condition with initializing react-i18next and useMemo
+  const buyLabel = t('home.label.buy')
+  const sendLabel = t('home.label.send')
+  const receiveLabel = t('home.label.receive')
+
   const actions = useMemo(
     (): QuickAction[] => [
       {
-        Icon: BuyIcon,
+        Icon: Buy,
         eventName: MobileEventName.FiatOnRampQuickActionButtonPressed,
-        iconScale: 1.2,
         label: buyLabel,
         name: ElementName.Buy,
-        sentryLabel: 'BuyActionButton',
         onPress: onPressBuy,
       },
       {
-        Icon: SendIcon,
-        iconScale: 1.1,
+        Icon: SendAction,
         label: sendLabel,
         name: ElementName.Send,
-        sentryLabel: 'SendActionButton',
         onPress: onPressSend,
       },
       {
-        Icon: ReceiveIcon,
+        Icon: ArrowDownCircle,
         label: receiveLabel,
         name: ElementName.Receive,
-        sentryLabel: 'ReceiveActionButton',
         onPress: onPressReceive,
       },
-      {
-        Icon: ScanIcon,
-        label: scanLabel,
-        name: ElementName.WalletConnectScan,
-        sentryLabel: 'ScanActionButton',
-        onPress: onPressScan,
-      },
     ],
-    [buyLabel, sendLabel, scanLabel, receiveLabel, onPressBuy, onPressScan, onPressSend, onPressReceive],
+    [buyLabel, sendLabel, receiveLabel, onPressBuy, onPressSend, onPressReceive],
   )
 
   // This hooks handles the logic for when to open the BackupReminderModal
@@ -479,12 +459,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
 
   const contentHeader = useMemo(() => {
     return (
-      <Flex
-        backgroundColor="$surface1"
-        gap="$spacing8"
-        pb={showEmptyWalletState ? '$spacing8' : '$spacing16'}
-        px="$spacing12"
-      >
+      <Flex backgroundColor="$surface1" pb={showEmptyWalletState ? '$spacing8' : '$spacing16'} px="$spacing12">
         <TestnetModeModal
           unsupported
           isOpen={isTestnetWarningModalOpen}
@@ -492,15 +467,15 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
           onClose={handleTestnetWarningModalClose}
         />
         <AccountHeader />
-        <Flex pb="$spacing8" px="$spacing12">
+        <Flex py="$spacing20" px="$spacing12">
           <PortfolioBalance owner={activeAccount.address} />
         </Flex>
         {isSignerAccount ? (
-          <QuickActions actions={actions} sentry-label="QuickActions" />
+          <QuickActions actions={actions} />
         ) : (
-          <TouchableArea mt="$spacing16" onPress={onPressViewOnlyLabel}>
+          <TouchableArea mt="$spacing8" onPress={onPressViewOnlyLabel}>
             <Flex centered row backgroundColor="$surface2" borderRadius="$rounded12" minHeight={40} p="$spacing8">
-              <Text allowFontScaling={false} color="$neutral2" variant="body2">
+              <Text color="$neutral2" variant="body2">
                 {viewOnlyLabel}
               </Text>
             </Flex>
@@ -591,47 +566,31 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const renderTabBar = useCallback(
     (sceneProps: SceneRendererProps) => {
       const style: ViewStyle = { width: 'auto' }
+      if (!isLayoutReady) {
+        return null
+      }
       return (
-        <>
-          <Animated.View style={headerContainerStyle} onLayout={handleHeaderLayout}>
-            {contentHeader}
-          </Animated.View>
-
-          {isLayoutReady && (
-            <Animated.View entering={FadeIn} style={[TAB_STYLES.header, tabBarStyle]}>
-              <TabBar
-                {...sceneProps}
-                indicatorStyle={TAB_STYLES.activeTabIndicator}
-                navigationState={{ index: tabIndex, routes }}
-                pressColor="transparent" // Android only
-                renderLabel={renderTabLabel}
-                style={[
-                  TAB_STYLES.tabBar,
-                  {
-                    backgroundColor: colors.surface1.get(),
-                    borderBottomColor: colors.surface3.get(),
-                    paddingLeft: spacing.spacing12,
-                  },
-                ]}
-                tabStyle={style}
-              />
-            </Animated.View>
-          )}
-        </>
+        <Animated.View entering={FadeIn} style={[TAB_STYLES.header, tabBarStyle]}>
+          <TabBar
+            {...sceneProps}
+            indicatorStyle={TAB_STYLES.activeTabIndicator}
+            navigationState={{ index: tabIndex, routes }}
+            pressColor="transparent" // Android only
+            renderLabel={renderTabLabel}
+            style={[
+              TAB_STYLES.tabBar,
+              {
+                backgroundColor: colors.surface1.get(),
+                borderBottomColor: colors.surface3.get(),
+                paddingLeft: spacing.spacing12,
+              },
+            ]}
+            tabStyle={style}
+          />
+        </Animated.View>
       )
     },
-    [
-      colors.surface1,
-      colors.surface3,
-      contentHeader,
-      handleHeaderLayout,
-      headerContainerStyle,
-      isLayoutReady,
-      renderTabLabel,
-      routes,
-      tabBarStyle,
-      tabIndex,
-    ],
+    [colors.surface1, colors.surface3, isLayoutReady, renderTabLabel, routes, tabBarStyle, tabIndex],
   )
 
   const [refreshing, setRefreshing] = useState(false)
@@ -770,18 +729,24 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     <Screen edges={['left', 'right']}>
       {openAIAssistantEnabled && <AIAssistantOverlay />}
       <View style={TAB_STYLES.container}>
-        <TraceTabView
-          lazy
-          initialLayout={{
-            height: dimensions.fullHeight,
-            width: dimensions.fullWidth,
-          }}
-          navigationState={{ index: tabIndex, routes }}
-          renderScene={renderTab}
-          renderTabBar={renderTabBar}
-          screenName={MobileScreens.Home}
-          onIndexChange={setRouteTabIndex}
-        />
+        <Animated.View style={headerContainerStyle} onLayout={handleHeaderLayout}>
+          {contentHeader}
+        </Animated.View>
+
+        {isTabsDataLoaded && (
+          <TraceTabView
+            lazy
+            initialLayout={{
+              height: dimensions.fullHeight,
+              width: dimensions.fullWidth,
+            }}
+            navigationState={{ index: tabIndex, routes }}
+            renderScene={renderTab}
+            renderTabBar={renderTabBar}
+            screenName={MobileScreens.Home}
+            onIndexChange={setRouteTabIndex}
+          />
+        )}
       </View>
       <NavBar />
       <AnimatedFlex
@@ -797,69 +762,51 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
 }
 
 type QuickAction = {
-  Icon: React.FC<SvgProps>
+  /* Icon to display for the action */
+  Icon: GeneratedIcon
+  /* Event name to log when the action is triggered */
   eventName?: MobileEventName
-  iconScale?: number
+  /* Label to display for the action */
   label: string
+  /* Name of the element to log when the action is triggered */
   name: ElementNameType
-  sentryLabel: string
+  /* Callback to execute when the action is triggered */
   onPress: () => void
 }
 
+/**
+ * CTA buttons that appear at top of the screen showing actions such as
+ * "Send", "Receive", "Buy" etc.
+ */
 function QuickActions({ actions }: { actions: QuickAction[] }): JSX.Element {
+  const colors = useSporeColors()
+  const iconSize = iconSizes.icon24
+  const contentColor = colors.accent1.val
+  const activeScale = 0.96
+
   return (
     <Flex centered row gap="$spacing12" px="$spacing12">
-      {actions.map((action) => (
-        <ActionButton
-          key={action.name}
-          Icon={action.Icon}
-          eventName={action.eventName}
-          flex={1}
-          iconScale={action.iconScale}
-          label={action.label}
-          name={action.name}
-          sentry-label={action.sentryLabel}
-          onPress={action.onPress}
-        />
+      {actions.map(({ eventName, name, label, Icon, onPress }) => (
+        <Trace key={name} logPress element={name} eventOnTrigger={eventName}>
+          <TouchableArea flex={1} scaleTo={activeScale} onPress={onPress}>
+            <Flex
+              fill
+              backgroundColor="$accent2"
+              borderRadius="$rounded20"
+              pt="$spacing16"
+              pb="$spacing12"
+              px="$spacing12"
+              gap="$spacing4"
+              justifyContent="space-between"
+            >
+              <Icon color={contentColor} size={iconSize} strokeWidth={2} />
+              <Text color={contentColor} variant="buttonLabel2">
+                {label}
+              </Text>
+            </Flex>
+          </TouchableArea>
+        </Trace>
       ))}
     </Flex>
-  )
-}
-
-function ActionButton({
-  eventName,
-  name,
-  Icon,
-  onPress,
-  flex,
-  activeScale = 0.96,
-  iconScale = 1,
-}: {
-  eventName?: MobileEventName
-  name: ElementNameType
-  label: string
-  Icon: React.FC<SvgProps>
-  onPress: () => void
-  flex: number
-  activeScale?: number
-  iconScale?: number
-}): JSX.Element {
-  const colors = useSporeColors()
-  const media = useMedia()
-  const iconSize = media.short ? iconSizes.icon24 : iconSizes.icon28
-
-  return (
-    <Trace logPress element={name} eventOnTrigger={eventName}>
-      <TouchableArea flex={flex} scaleTo={activeScale} onPress={onPress}>
-        <AnimatedFlex centered fill backgroundColor="$accent2" borderRadius="$rounded20" p="$spacing16">
-          <Icon
-            color={colors.accent1.get()}
-            height={iconSize * iconScale}
-            strokeWidth={2}
-            width={iconSize * iconScale}
-          />
-        </AnimatedFlex>
-      </TouchableArea>
-    </Trace>
   )
 }

@@ -22,6 +22,7 @@ import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { useTransactionGasWarning } from 'uniswap/src/features/gas/hooks'
 import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
+import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import {
   getNetworkWarning,
   useFormattedWarnings,
@@ -173,12 +174,22 @@ export function usePrefilledNeedsTokenProtectionWarning(
   needsTokenProtectionWarning: boolean
   currenciesWithProtectionWarnings: CurrencyInfo[]
 } {
+  const inputCurrencyInfo = derivedSwapInfo.currencies.input
+  const outputCurrencyInfo = derivedSwapInfo.currencies.output
+
+  const { tokenWarningDismissed: inputTokenWarningPreviouslyDismissed } = useDismissedTokenWarnings(
+    inputCurrencyInfo?.currency,
+  )
+  const { tokenWarningDismissed: outputTokenWarningPreviouslyDismissed } = useDismissedTokenWarnings(
+    outputCurrencyInfo?.currency,
+  )
+
   const currenciesWithProtectionWarnings: CurrencyInfo[] = useMemo(() => {
     const tokens: CurrencyInfo[] = []
 
     // We only display protection warnings for prefilled tokens on swap button click, bc users should have already seen warning if picked via token selector
-    const inputCurrencyId = derivedSwapInfo.currencies.input && currencyId(derivedSwapInfo.currencies.input.currency)
-    const outputCurrencyId = derivedSwapInfo.currencies.output && currencyId(derivedSwapInfo.currencies.output.currency)
+    const inputCurrencyId = inputCurrencyInfo && currencyId(inputCurrencyInfo.currency)
+    const outputCurrencyId = outputCurrencyInfo && currencyId(outputCurrencyInfo.currency)
     const isInputPrefilled =
       inputCurrencyId &&
       prefilledCurrencies?.some((currency) => currencyId(currency).toLowerCase() === inputCurrencyId.toLowerCase())
@@ -187,21 +198,29 @@ export function usePrefilledNeedsTokenProtectionWarning(
       prefilledCurrencies?.some((currency) => currencyId(currency).toLowerCase() === outputCurrencyId.toLowerCase())
 
     if (
-      derivedSwapInfo.currencies.input &&
+      inputCurrencyInfo &&
+      !inputTokenWarningPreviouslyDismissed &&
       isInputPrefilled &&
-      getTokenWarningSeverity(derivedSwapInfo.currencies.input) !== WarningSeverity.None
+      getTokenWarningSeverity(inputCurrencyInfo) !== WarningSeverity.None
     ) {
-      tokens.push(derivedSwapInfo.currencies.input)
+      tokens.push(inputCurrencyInfo)
     }
     if (
-      derivedSwapInfo.currencies.output &&
+      outputCurrencyInfo &&
+      !outputTokenWarningPreviouslyDismissed &&
       isOutputPrefilled &&
-      getTokenWarningSeverity(derivedSwapInfo.currencies.output) !== WarningSeverity.None
+      getTokenWarningSeverity(outputCurrencyInfo) !== WarningSeverity.None
     ) {
-      tokens.push(derivedSwapInfo.currencies.output)
+      tokens.push(outputCurrencyInfo)
     }
     return tokens
-  }, [derivedSwapInfo.currencies.input, derivedSwapInfo.currencies.output, prefilledCurrencies])
+  }, [
+    inputCurrencyInfo,
+    outputCurrencyInfo,
+    prefilledCurrencies,
+    inputTokenWarningPreviouslyDismissed,
+    outputTokenWarningPreviouslyDismissed,
+  ])
 
   if (!isInterface) {
     return {

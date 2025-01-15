@@ -1,7 +1,7 @@
 import { PoolData } from 'graphql/data/pools/usePoolData'
-import { t } from 'uniswap/src/i18n'
+import { TFunction } from 'i18next'
 
-export const getPoolDetailPageTitle = (poolData?: PoolData) => {
+export const getPoolDetailPageTitle = (t: TFunction, poolData?: PoolData) => {
   const token0Symbol = poolData?.token0.symbol
   const token1Symbol = poolData?.token1.symbol
   const baseTitle = t('common.buyAndSell')

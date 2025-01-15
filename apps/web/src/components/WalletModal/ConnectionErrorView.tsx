@@ -3,11 +3,11 @@ import { useConnect } from 'hooks/useConnect'
 import styled from 'lib/styled-components'
 import { useCallback } from 'react'
 import { AlertTriangle } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { Trans } from 'uniswap/src/i18n'
 
 const Wrapper = styled.div`
   ${flexColumnNoWrap};

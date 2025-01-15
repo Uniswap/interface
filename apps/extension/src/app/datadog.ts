@@ -2,8 +2,14 @@ import { datadogLogs } from '@datadog/browser-logs'
 import { datadogRum } from '@datadog/browser-rum'
 import { getDatadogEnvironment } from 'src/app/version'
 import { config } from 'uniswap/src/config'
+import {
+  DatadogIgnoredErrorsConfigKey,
+  DatadogIgnoredErrorsValType,
+  DynamicConfigs,
+} from 'uniswap/src/features/gating/configs'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
+import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { logger } from 'utilities/src/logger/logger'
@@ -12,7 +18,7 @@ export async function initializeDatadog(appName: string): Promise<void> {
   const datadogEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.Datadog))
   logger.setWalletDatadogEnabled(datadogEnabled)
 
-  if (__DEV__ || !datadogEnabled) {
+  if (!datadogEnabled) {
     return
   }
 
@@ -39,12 +45,24 @@ export async function initializeDatadog(appName: string): Promise<void> {
         if (event.error.source === 'console') {
           return false
         }
+        const ignoredErrors = getDynamicConfigValue<
+          DynamicConfigs.DatadogIgnoredErrors,
+          DatadogIgnoredErrorsConfigKey,
+          DatadogIgnoredErrorsValType
+        >(DynamicConfigs.DatadogIgnoredErrors, DatadogIgnoredErrorsConfigKey.Errors, [])
+
+        const ignoredError = ignoredErrors.find(({ messageContains }) => event.error?.message.includes(messageContains))
+        if (ignoredError && Math.random() > ignoredError.sampleRate) {
+          return false
+        }
+
         Object.defineProperty(event.error, 'stack', {
           value: event.error.stack?.replace(/chrome-extension:\/\/[a-z]{32}/gi, ''),
           writable: false,
           configurable: true,
         })
       }
+
       return true
     },
   })

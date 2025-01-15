@@ -1,7 +1,7 @@
 import { AutoColumn } from 'components/deprecated/Column'
 import styled from 'lib/styled-components'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
 
 const TextWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.neutral3};

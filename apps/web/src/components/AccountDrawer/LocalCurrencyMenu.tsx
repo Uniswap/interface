@@ -4,9 +4,9 @@ import { getLocalCurrencyIcon } from 'constants/localCurrencies'
 import { useLocalCurrencyLinkProps } from 'hooks/useLocalCurrencyLinkProps'
 import styled from 'lib/styled-components'
 import { useMemo } from 'react'
+import { Trans } from 'react-i18next'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
-import { Trans } from 'uniswap/src/i18n'
 
 const StyledLocalCurrencyIcon = styled.div`
   width: 20px;

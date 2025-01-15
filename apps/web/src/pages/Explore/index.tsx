@@ -13,6 +13,7 @@ import { ExploreChartsSection } from 'pages/Explore/charts/ExploreChartsSection'
 import { useExploreParams } from 'pages/Explore/redirects'
 import RecentTransactions from 'pages/Explore/tables/RecentTransactions'
 import { NamedExoticComponent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ExploreContextProvider } from 'state/explore'
 import { TamaguiClickableStyle } from 'theme/components'
@@ -23,7 +24,6 @@ import { isBackendSupportedChain } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { Trans, t } from 'uniswap/src/i18n'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 
 export enum ExploreTab {
@@ -75,6 +75,9 @@ const HeaderTab = tamaguiStyled(Text, {
     active: {
       true: {
         color: '$neutral1',
+        hoverStyle: {
+          opacity: 1,
+        },
       },
     },
     disabled: {
@@ -90,6 +93,7 @@ const HeaderTab = tamaguiStyled(Text, {
 })
 
 const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
+  const { t } = useTranslation()
   const tabNavRef = useRef<HTMLDivElement>(null)
   const resetManualOutage = useResetAtom(manualChainOutageAtom)
   const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)

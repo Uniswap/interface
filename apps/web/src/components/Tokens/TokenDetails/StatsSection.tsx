@@ -5,12 +5,12 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { TokenQueryData } from 'graphql/data/Token'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
+import { Trans } from 'react-i18next'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export const StatWrapper = styled.div`

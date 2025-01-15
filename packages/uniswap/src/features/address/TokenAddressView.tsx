@@ -1,6 +1,7 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
@@ -11,7 +12,6 @@ import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WarningModalInfoContainer } from 'uniswap/src/features/tokens/WarningInfoModalContainer'
-import { useTranslation } from 'uniswap/src/i18n'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { isInterface } from 'utilities/src/platform'
 

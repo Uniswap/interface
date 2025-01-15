@@ -36,6 +36,7 @@ import { useTheme } from 'lib/styled-components'
 import { BodyWrapper } from 'pages/App/AppBody'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowDown } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { Navigate, useParams } from 'react-router-dom'
 import { useTokenBalance } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
@@ -52,7 +53,6 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { Trans, t } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -134,6 +134,7 @@ function V2PairMigration({
   token0: Token
   token1: Token
 }) {
+  const { t } = useTranslation()
   const account = useAccount()
   const theme = useTheme()
   const v2FactoryAddress = account.chainId ? V2_FACTORY_ADDRESSES[account.chainId] : undefined

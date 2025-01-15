@@ -8,13 +8,14 @@ import {
 import { RemoveLiquidityReview } from 'components/RemoveLiquidity/RemoveLiquidityReview'
 import { RemoveLiquidityTxContextProvider } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
 import { RemoveLiquidityForm } from 'pages/RemoveLiquidity/RemoveLiquidityForm'
+import { useTranslation } from 'react-i18next'
 import { useCloseModal } from 'state/application/hooks'
 import { HeightAnimator } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { MIN_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-import { useTranslation } from 'uniswap/src/i18n'
+import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
 
 function RemoveLiquidityModalInner() {
   const closeModal = useCloseModal(ModalName.RemoveLiquidity)
@@ -53,7 +54,10 @@ function RemoveLiquidityModalInner() {
 export function RemoveLiquidityModal() {
   return (
     <RemoveLiquidityModalContextProvider>
-      <TransactionSettingsContextProvider autoSlippageTolerance={MIN_AUTO_SLIPPAGE_TOLERANCE}>
+      <TransactionSettingsContextProvider
+        settingKey={TransactionSettingKey.LP}
+        autoSlippageTolerance={MIN_AUTO_SLIPPAGE_TOLERANCE}
+      >
         <RemoveLiquidityTxContextProvider>
           <RemoveLiquidityModalInner />
         </RemoveLiquidityTxContextProvider>

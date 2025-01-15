@@ -30,10 +30,12 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FavoritesState } from 'uniswap/src/features/favorites/slice'
 import { getFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { NotificationState } from 'uniswap/src/features/notifications/slice'
+import { PortfolioState } from 'uniswap/src/features/portfolio/slice/slice'
 import { SearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
 import { UserSettingsState } from 'uniswap/src/features/settings/slice'
 import { TimingState } from 'uniswap/src/features/timing/slice'
 import { TokensState } from 'uniswap/src/features/tokens/slice/slice'
+import { transactionSettingsReducer } from 'uniswap/src/features/transactions/settings/slice'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
 
 const forAggregatorApi = getFiatOnRampAggregatorApi()
@@ -84,7 +86,9 @@ type ExpectedAppState = CombinedState<{
   readonly timing: TimingState
   readonly tokens: TokensState
   readonly transactions: TransactionsState
+  readonly transactionSettings: ReturnType<typeof transactionSettingsReducer>
   readonly userSettings: UserSettingsState
+  readonly portfolio: PortfolioState
 }>
 
 assert<Equals<InterfaceState, ExpectedAppState>>()

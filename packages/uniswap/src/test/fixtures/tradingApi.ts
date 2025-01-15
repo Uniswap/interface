@@ -9,6 +9,7 @@ export const createGasFeeEstimates = (): GasFeeEstimates => {
     type: FeeType.LEGACY,
     strategy: {
       limitInflationFactor: 1,
+      displayLimitInflationFactor: 1,
       priceInflationFactor: 1,
       percentileThresholdFor1559Fee: 1,
     },
@@ -22,6 +23,7 @@ export const createGasFeeEstimates = (): GasFeeEstimates => {
     type: FeeType.EIP1559,
     strategy: {
       limitInflationFactor: 1,
+      displayLimitInflationFactor: 1,
       priceInflationFactor: 1,
       percentileThresholdFor1559Fee: 1,
     },

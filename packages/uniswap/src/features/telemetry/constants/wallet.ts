@@ -4,6 +4,7 @@ import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants/ext
 import { TestnetModeConfig } from 'utilities/src/telemetry/analytics/analytics'
 
 export enum WalletEventName {
+  AppRating = 'App Rating',
   BackupMethodAdded = 'Backup Method Added',
   BackupMethodRemoved = 'Backup Method Removed',
   DappRequestCardPressed = 'DappRequestCardPressed',

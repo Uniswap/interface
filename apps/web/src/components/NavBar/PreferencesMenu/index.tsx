@@ -5,8 +5,8 @@ import { LanguageSettings } from 'components/NavBar/PreferencesMenu/Language'
 import { PreferenceSettings } from 'components/NavBar/PreferencesMenu/Preferences'
 import { PreferencesView } from 'components/NavBar/PreferencesMenu/shared'
 import { useCallback, useState } from 'react'
-import { AnimateTransition, Popover } from 'ui/src'
-import { Global } from 'ui/src/components/icons/Global'
+import { AnimateTransition, Popover, useMedia } from 'ui/src'
+import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
 
 export function getSettingsViewIndex(view: PreferencesView) {
   if (view === PreferencesView.SETTINGS) {
@@ -19,6 +19,8 @@ export function getSettingsViewIndex(view: PreferencesView) {
 }
 
 export function PreferenceMenu() {
+  const breakpoints = useMedia()
+
   const [settingsView, setSettingsView] = useState<PreferencesView>(PreferencesView.SETTINGS)
   const [isOpen, setIsOpen] = useState(false)
   const handleExitMenu = useCallback(() => setSettingsView(PreferencesView.SETTINGS), [setSettingsView])
@@ -36,16 +38,19 @@ export function PreferenceMenu() {
     <Popover placement="bottom" stayInFrame allowFlip onOpenChange={onOpenChange}>
       <Popover.Trigger>
         <NavIcon isActive={isOpen}>
-          <Global size={20} color="$neutral2" cursor="pointer" />
+          <MoreHorizontal size={20} color="$neutral2" cursor="pointer" />
         </NavIcon>
       </Popover.Trigger>
-      <NavDropdown width={325} isOpen={isOpen} padded>
+      <NavDropdown width={325} isOpen={isOpen} padded mr={12}>
         <NavDropdownDefaultWrapper>
           <AnimateTransition
             currentIndex={getSettingsViewIndex(settingsView)}
             animationType={settingsView === PreferencesView.SETTINGS ? 'forward' : 'backward'}
           >
-            <PreferenceSettings setSettingsView={(view: PreferencesView) => setSettingsView(view)} />
+            <PreferenceSettings
+              showThemeLabel={!breakpoints.sm}
+              setSettingsView={(view: PreferencesView) => setSettingsView(view)}
+            />
             <LanguageSettings onExitMenu={handleExitMenu} />
             <CurrencySettings onExitMenu={handleExitMenu} />
           </AnimateTransition>

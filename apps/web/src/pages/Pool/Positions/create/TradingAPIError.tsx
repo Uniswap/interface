@@ -1,8 +1,8 @@
+import { useTranslation } from 'react-i18next'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
-import { useTranslation } from 'uniswap/src/i18n'
 
 export function TradingAPIError({ refetch }: { refetch?: () => void }) {
   const { t } = useTranslation()

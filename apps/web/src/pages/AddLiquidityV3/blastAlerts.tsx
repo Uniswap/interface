@@ -5,9 +5,9 @@ import Row from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { useCallback, useState } from 'react'
 import { ChevronDown } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ButtonText, ExternalLink, ThemedText } from 'theme/components'
-import { Trans, t } from 'uniswap/src/i18n'
 
 const StyledAlertIcon = styled(AlertTriangleFilled)`
   path {
@@ -111,6 +111,7 @@ const StyledChevronDown = styled(ChevronDown)<{ $expanded: boolean }>`
 `
 
 export function BlastRebasingAlert() {
+  const { t } = useTranslation()
   const [expanded, setExpanded] = useState(false)
   const handleSetExpanded = useCallback(() => setExpanded(!expanded), [expanded])
 

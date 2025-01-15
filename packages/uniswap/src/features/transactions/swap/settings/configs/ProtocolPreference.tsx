@@ -5,11 +5,13 @@ import { Flex, Switch, Text, UniswapXText } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
 import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { UniswapXInfo } from 'uniswap/src/features/transactions/swap/modals/UniswapXInfo'
 import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
 import {
@@ -27,19 +29,37 @@ export const ProtocolPreference: SwapSettingConfig = {
   Control() {
     const { t } = useTranslation()
     const { selectedProtocols } = useTransactionSettingsContext()
-    const tradeProtocolPreferenceTitle = isDefaultOptions(selectedProtocols) ? t('common.default') : t('common.custom')
+    const { isOnlyV2Allowed } = useTransactionSettingsContext()
+
+    const getTradeProtocolPreferenceTitle = (): string => {
+      if (isDefaultOptions(selectedProtocols)) {
+        return t('common.default')
+      }
+
+      if (isOnlyV2Allowed) {
+        return t('swap.settings.routingPreference.option.v2.title')
+      }
+
+      return t('common.custom')
+    }
 
     return (
       <Text color="$neutral2" flexWrap="wrap" variant="subheading2">
-        {tradeProtocolPreferenceTitle}
+        {getTradeProtocolPreferenceTitle()}
       </Text>
     )
   },
   Screen() {
     const { t } = useTranslation()
-    const { selectedProtocols, updateTransactionSettings } = useTransactionSettingsContext()
+    const { selectedProtocols, updateTransactionSettings, isOnlyV2Allowed } = useTransactionSettingsContext()
     const [isDefault, setIsDefault] = useState(isDefaultOptions(selectedProtocols))
     const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
+
+    const { chainId } = useSwapFormContext().derivedSwapInfo
+    const chainName = getChainInfo(chainId).name
+    const v2RestrictionDescription = isOnlyV2Allowed
+      ? t('swap.settings.protection.subtitle.unavailable', { chainName })
+      : null
 
     // We prevent the user from deselecting all options
     const onlyOneProtocolSelected = selectedProtocols.length === 1
@@ -75,6 +95,7 @@ export const ProtocolPreference: SwapSettingConfig = {
           elementName={ElementName.SwapRoutingPreferenceDefault}
           title={t('common.default')}
           cantDisable={false}
+          disabled={isOnlyV2Allowed}
           onSelect={toggleDefault}
         />
         {!isDefault && (
@@ -85,6 +106,8 @@ export const ProtocolPreference: SwapSettingConfig = {
                 elementName={ElementName.SwapRoutingPreferenceUniswapX}
                 title={getProtocolTitle(ProtocolItems.UNISWAPX_V2, t)}
                 cantDisable={onlyOneProtocolSelected}
+                disabled={isOnlyV2Allowed}
+                description={v2RestrictionDescription}
                 onSelect={() => toggleProtocol(ProtocolItems.UNISWAPX_V2)}
               />
             )}
@@ -94,6 +117,8 @@ export const ProtocolPreference: SwapSettingConfig = {
                 elementName={ElementName.SwapRoutingPreferenceV4}
                 title={getProtocolTitle(ProtocolItems.V4, t)}
                 cantDisable={onlyOneProtocolSelected}
+                disabled={isOnlyV2Allowed}
+                description={v2RestrictionDescription}
                 onSelect={() => toggleProtocol(ProtocolItems.V4)}
               />
             )}
@@ -102,13 +127,15 @@ export const ProtocolPreference: SwapSettingConfig = {
               elementName={ElementName.SwapRoutingPreferenceV3}
               title={getProtocolTitle(ProtocolItems.V3, t)}
               cantDisable={onlyOneClassicProtocolSelected}
+              disabled={isOnlyV2Allowed}
+              description={v2RestrictionDescription}
               onSelect={() => toggleProtocol(ProtocolItems.V3)}
             />
             <OptionRow
               active={selectedProtocols.includes(ProtocolItems.V2)}
               elementName={ElementName.SwapRoutingPreferenceV3}
               title={getProtocolTitle(ProtocolItems.V2, t)}
-              cantDisable={onlyOneClassicProtocolSelected}
+              cantDisable={onlyOneClassicProtocolSelected || isOnlyV2Allowed}
               onSelect={() => toggleProtocol(ProtocolItems.V2)}
             />
           </>
@@ -161,6 +188,7 @@ function OptionRow({
   elementName,
   cantDisable,
   onSelect,
+  disabled,
 }: {
   title: JSX.Element | string
   active: boolean
@@ -168,6 +196,7 @@ function OptionRow({
   cantDisable: boolean
   onSelect: () => void
   description?: ReactNode
+  disabled?: boolean
 }): JSX.Element {
   return (
     <Flex row gap="$spacing16" justifyContent="space-between">
@@ -185,7 +214,12 @@ function OptionRow({
       </Flex>
       {/* Only log this event if toggle value is off, and then turned on */}
       <Trace element={elementName} logPress={!active}>
-        <Switch disabled={active && cantDisable} checked={active} variant="branded" onCheckedChange={onSelect} />
+        <Switch
+          disabled={(active && cantDisable) || disabled}
+          checked={active}
+          variant="branded"
+          onCheckedChange={onSelect}
+        />
       </Trace>
     </Flex>
   )

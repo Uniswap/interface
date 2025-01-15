@@ -5,6 +5,7 @@ import { lpStatusConfig } from 'components/Liquidity/constants'
 import { getProtocolStatusLabel, getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { useAccount } from 'hooks/useAccount'
 import { useMemo, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { Flex, LabeledCheckbox, Text } from 'ui/src'
@@ -16,7 +17,6 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 
 const StyledDropdownButton = {
   borderRadius: '$rounded16',

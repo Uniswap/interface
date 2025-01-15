@@ -23,9 +23,13 @@ const buildTwitterProxyRequest = ({
   method: RequestType.POST,
   headers: DEFAULT_HEADERS,
   body: JSON.stringify({
-    conversion_time: addJitter(new Date()),
-    event_id: eventId,
-    identifiers: [{ [PlatformIdType.Twitter]: lead.id }],
+    conversions: [
+      {
+        conversion_time: addJitter(new Date()),
+        event_id: eventId,
+        identifiers: [{ [PlatformIdType.Twitter]: lead.id }],
+      },
+    ],
   }),
 })
 
@@ -62,8 +66,7 @@ const buildRedditProxyRequest = ({
         event_at: new Date(new Date().valueOf() + ms('5m')),
         event_metadata: { currency: 'USD', value_decimal: 1 },
         event_type: {
-          tracking_type: 'Custom',
-          custom_event_name: eventId,
+          tracking_type: eventId,
         },
       },
     ],
@@ -87,9 +90,6 @@ const buildGoogleProxyRequest = ({
         gclid: lead.id,
         conversionDateTime: addJitter(new Date()),
         conversionAction: eventId,
-        conversionValue: 1.0,
-        conversionCode: 'USD',
-        conversionEnvironment: 'WEB',
       },
     ],
   }),

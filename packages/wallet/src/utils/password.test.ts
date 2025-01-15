@@ -1,3 +1,4 @@
+import i18n from 'uniswap/src/i18n'
 import {
   PasswordStrength,
   getPasswordStrength,
@@ -73,22 +74,22 @@ describe(getPasswordStrength, () => {
 
 describe(getPasswordStrengthTextAndColor, () => {
   it('returns text and color for strength', () => {
-    expect(getPasswordStrengthTextAndColor(PasswordStrength.WEAK)).toEqual({
+    expect(getPasswordStrengthTextAndColor(i18n.t, PasswordStrength.WEAK)).toEqual({
       text: 'Weak',
       color: '$statusCritical',
     })
-    expect(getPasswordStrengthTextAndColor(PasswordStrength.MEDIUM)).toEqual({
+    expect(getPasswordStrengthTextAndColor(i18n.t, PasswordStrength.MEDIUM)).toEqual({
       text: 'Medium',
       color: '$DEP_accentWarning',
     })
-    expect(getPasswordStrengthTextAndColor(PasswordStrength.STRONG)).toEqual({
+    expect(getPasswordStrengthTextAndColor(i18n.t, PasswordStrength.STRONG)).toEqual({
       text: 'Strong',
       color: '$statusSuccess',
     })
   })
 
   it('returns empty text and neutral color for other strengths', () => {
-    expect(getPasswordStrengthTextAndColor(PasswordStrength.NONE)).toEqual({
+    expect(getPasswordStrengthTextAndColor(i18n.t, PasswordStrength.NONE)).toEqual({
       text: '',
       color: '$neutral1',
     })

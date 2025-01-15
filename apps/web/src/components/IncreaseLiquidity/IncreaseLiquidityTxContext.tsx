@@ -99,11 +99,20 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
 
   const increaseCalldataQueryParams = useMemo((): IncreaseLPPositionRequest | undefined => {
     const apiProtocolItems = getProtocolItems(positionInfo?.version)
-    const amount0 = currencyAmounts?.TOKEN0?.quotient.toString()
-    const amount1 = currencyAmounts?.TOKEN1?.quotient.toString()
-    if (!positionInfo || !account.address || !apiProtocolItems || !amount0 || !amount1) {
+    if (
+      !positionInfo ||
+      !account.address ||
+      !apiProtocolItems ||
+      !currencyAmounts?.TOKEN0 ||
+      !currencyAmounts?.TOKEN1
+    ) {
       return undefined
     }
+
+    const token0 = currencyAmounts.TOKEN0.currency
+    const token1 = currencyAmounts.TOKEN1.currency
+    const amount0 = currencyAmounts.TOKEN0.quotient.toString()
+    const amount1 = currencyAmounts.TOKEN1.quotient.toString()
 
     return {
       simulateTransaction: !approvalsNeeded,
@@ -120,12 +129,8 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
         tickLower: positionInfo.tickLower ? Number(positionInfo.tickLower) : undefined,
         tickUpper: positionInfo.tickUpper ? Number(positionInfo.tickUpper) : undefined,
         pool: {
-          token0: positionInfo.currency0Amount.currency.isNative
-            ? ZERO_ADDRESS
-            : positionInfo.currency0Amount.currency.address,
-          token1: positionInfo.currency1Amount.currency.isNative
-            ? ZERO_ADDRESS
-            : positionInfo.currency1Amount.currency.address,
+          token0: token0.isNative ? ZERO_ADDRESS : token0.address,
+          token1: token1.isNative ? ZERO_ADDRESS : token1.address,
           fee: positionInfo.feeTier ? Number(positionInfo.feeTier) : undefined,
           tickSpacing: positionInfo.tickSpacing ? Number(positionInfo.tickSpacing) : undefined,
           hooks: positionInfo.v4hook,

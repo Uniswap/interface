@@ -83,7 +83,7 @@ export function ExchangeTransferConnecting({
       })
 
       await openUri(widgetUrl).catch(onError)
-      dispatchAddTransaction()
+      dispatchAddTransaction({ isOffRamp: false })
     }
     if (timeoutElapsed && !widgetLoading && widgetData) {
       navigateToWidget(widgetData.widgetUrl).catch(() => undefined)

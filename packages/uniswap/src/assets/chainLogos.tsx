@@ -53,6 +53,12 @@ export const UNIVERSE_CHAIN_LOGO = {
       logoDark: BlockExplorer,
     },
   } as const satisfies UniverseChainLogoInfo,
+  [UniverseChainId.MonadTestnet]: {
+    explorer: {
+      logoLight: BlockExplorer,
+      logoDark: BlockExplorer,
+    },
+  } as const satisfies UniverseChainLogoInfo,
   [UniverseChainId.Optimism]: {
     explorer: {
       logoLight: OpEtherscanLogoLight,

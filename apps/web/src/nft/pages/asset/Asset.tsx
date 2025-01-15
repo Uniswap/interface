@@ -8,10 +8,10 @@ import { blocklistedCollections } from 'nft/utils'
 import { useDynamicMetatags } from 'pages/metatags'
 import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
+import { useTranslation } from 'react-i18next'
 import { Navigate, useParams } from 'react-router-dom'
 import { formatNFTAssetMetatagTitleName } from 'shared-cloud/metatags'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { t } from 'uniswap/src/i18n'
 import { isIFramed } from 'utils/isIFramed'
 
 const AssetContainer = styled.div`
@@ -42,6 +42,7 @@ const AssetPriceDetailsContainer = styled.div`
 `
 
 const AssetPage = () => {
+  const { t } = useTranslation()
   const { tokenId = '', contractAddress = '' } = useParams()
   const { data, loading } = useNftAssetDetails(contractAddress, tokenId)
 

@@ -8,15 +8,15 @@ import Row from 'components/deprecated/Row'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
 import styled, { useTheme } from 'lib/styled-components'
 import { Slash } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { Plural, Trans, t } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -82,6 +82,7 @@ export function CancelOrdersDialog(
     onConfirm: () => void
   },
 ) {
+  const { t } = useTranslation()
   const { orders, cancelState, cancelTxHash, onConfirm, onCancel } = props
 
   const { title, icon } = useCancelOrdersDialogContent(cancelState, orders)
@@ -128,11 +129,7 @@ export function CancelOrdersDialog(
         title={title}
         description={
           <Flex width="100%">
-            <Plural
-              value={orders.length}
-              one={t('swap.cancel.cannotExecute')}
-              other={t('swap.cancel.cannotExecute.plural')}
-            />
+            <Text>{t('swap.cancel.cannotExecute', { count: orders.length })}</Text>
             <GasEstimateDisplay chainId={orders[0].chainId} gasEstimateValue={gasEstimate?.value} />
           </Flex>
         }

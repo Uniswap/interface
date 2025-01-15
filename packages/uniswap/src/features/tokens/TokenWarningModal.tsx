@@ -1,6 +1,6 @@
 import { TFunction } from 'i18next'
 import { useState } from 'react'
-import { Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { AnimateTransition, Flex, LabeledCheckbox, Text, useSporeColors } from 'ui/src'
 import { BlockaidLogo } from 'ui/src/components/logos/BlockaidLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -31,7 +31,6 @@ import {
   getTokenWarningSeverity,
 } from 'uniswap/src/features/tokens/safetyUtils'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
-import { useTranslation } from 'uniswap/src/i18n'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 
 interface TokenWarningProps {

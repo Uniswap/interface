@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   ClickableWithinGesture,
   ElementAfterText,
@@ -7,6 +8,7 @@ import {
   GeneratedIcon,
   IconProps,
   Text,
+  View,
   ViewProps,
   useIsDarkMode,
   useShadowPropsShort,
@@ -21,7 +23,6 @@ import {
   DappRequestCardLoggingName,
   OnboardingCardLoggingName,
 } from 'uniswap/src/features/telemetry/types'
-import { useTranslation } from 'uniswap/src/i18n'
 import { isExtension } from 'utilities/src/platform'
 
 export enum CardType {
@@ -184,42 +185,46 @@ export function IntroCard({
 
   return (
     <ClickableWithinGesture onPress={pressHandler}>
-      <Flex
+      <View
         {...shadowProps}
-        grow
-        row
-        alignItems="flex-start"
         backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
         borderColor="$surface3"
         borderRadius="$rounded20"
         borderWidth={1}
-        gap="$spacing12"
-        pl={isIcon ? '$spacing12' : '$none'}
-        pr={cardPadding}
-        overflow="hidden"
-        py={cardPadding}
         {...containerProps}
       >
-        {GraphicElement}
+        <Flex
+          grow
+          row
+          alignItems="flex-start"
+          borderRadius="$rounded20"
+          gap="$spacing12"
+          pl={isIcon ? '$spacing12' : '$none'}
+          pr={cardPadding}
+          overflow="hidden"
+          py={cardPadding}
+        >
+          {GraphicElement}
 
-        <Flex fill gap="$spacing4" paddingStart={isIcon ? '$none' : '$spacing12'}>
-          <Flex row gap="$spacing12" justifyContent="space-between">
-            <Flex fill>
-              <ElementAfterText
-                text={title}
-                textProps={{ color: '$neutral1', variant: isExtension ? 'body3' : 'subheading2' }}
-                element={isNew ? <NewTag /> : undefined}
-              />
+          <Flex fill gap="$spacing4" paddingStart={isIcon ? '$none' : '$spacing12'}>
+            <Flex row gap="$spacing12" justifyContent="space-between">
+              <Flex fill>
+                <ElementAfterText
+                  text={title}
+                  textProps={{ color: '$neutral1', variant: isExtension ? 'body3' : 'subheading2' }}
+                  element={isNew ? <NewTag /> : undefined}
+                />
+              </Flex>
+              <Flex alignContent="flex-end" alignItems="flex-end">
+                {topRightElement}
+              </Flex>
             </Flex>
-            <Flex alignContent="flex-end" alignItems="flex-end">
-              {topRightElement}
-            </Flex>
+            <Text color="$neutral2" variant={isExtension ? 'body4' : 'body2'}>
+              {description}
+            </Text>
           </Flex>
-          <Text color="$neutral2" variant={isExtension ? 'body4' : 'body2'}>
-            {description}
-          </Text>
         </Flex>
-      </Flex>
+      </View>
     </ClickableWithinGesture>
   )
 }

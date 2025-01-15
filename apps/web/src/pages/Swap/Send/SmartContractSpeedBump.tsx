@@ -1,7 +1,7 @@
 import { Dialog } from 'components/Dialog/Dialog'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import styled from 'lib/styled-components'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans } from 'react-i18next'
 
 const StyledAlertIcon = styled(AlertTriangleFilled)`
   path {

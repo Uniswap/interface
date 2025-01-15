@@ -1,12 +1,12 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
 import { useCurrencyInfo } from 'hooks/Tokens'
+import { Trans } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { Trans } from 'uniswap/src/i18n'
 import { NumberType } from 'utilities/src/format/types'
 
 export function LiquidityModalDetailRows({
@@ -14,13 +14,13 @@ export function LiquidityModalDetailRows({
   currency1Amount,
   networkCost,
 }: {
-  currency0Amount: CurrencyAmount<Currency>
-  currency1Amount: CurrencyAmount<Currency>
+  currency0Amount?: CurrencyAmount<Currency>
+  currency1Amount?: CurrencyAmount<Currency>
   networkCost?: CurrencyAmount<Currency>
 }) {
   const { formatCurrencyAmount } = useLocalizationContext()
-  const currency0Info = useCurrencyInfo(currency0Amount.currency)
-  const currency1Info = useCurrencyInfo(currency1Amount.currency)
+  const currency0Info = useCurrencyInfo(currency0Amount?.currency)
+  const currency1Info = useCurrencyInfo(currency1Amount?.currency)
 
   return (
     <Flex px="$padding16" gap="$gap8">
@@ -60,7 +60,7 @@ export function LiquidityModalDetailRows({
           ),
         }}
       />
-      {Boolean(networkCost) && (
+      {Boolean(networkCost) && !!currency0Amount && (
         <DetailLineItem
           LineItem={{
             Label: () => (

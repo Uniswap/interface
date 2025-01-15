@@ -4,14 +4,14 @@ import { useScroll } from 'hooks/useScroll'
 import { TokenCloud } from 'pages/Landing/components/TokenCloud'
 import { Hover, RiseIn, RiseInText } from 'pages/Landing/components/animations'
 import { Swap } from 'pages/Swap'
-import { Fragment, useCallback } from 'react'
+import { Fragment, useCallback, useMemo } from 'react'
 import { ChevronDown } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
 import { Flex, Text, useMedia } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SwapRedirectFn } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 
 interface HeroProps {
@@ -25,9 +25,13 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
   const initialInputCurrency = useCurrency('ETH', UniverseChainId.Mainnet)
   const navigate = useNavigate()
   const { t } = useTranslation()
-
-  const translateY = -scrollPosition / 7
-  const opacityY = 1 - scrollPosition / 1000
+  const { translateY, opacityY } = useMemo(
+    () => ({
+      translateY: !media.sm ? -scrollPosition / 7 : 0,
+      opacityY: !media.sm ? 1 - scrollPosition / 1000 : 1,
+    }),
+    [media.sm, scrollPosition],
+  )
 
   const swapRedirectCallback = useCallback(
     ({ inputCurrency, outputCurrency, typedValue, independentField, chainId }: Parameters<SwapRedirectFn>[0]) => {
@@ -84,7 +88,8 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
             $short={{ variant: 'heading2', fontSize: 36 }}
           >
             {t('hero.swap.title')
-              .split(' ')
+              .split(/(<br\/>)|\s+/)
+              .filter(Boolean) // splits the string by spaces but also captures "<br/>" as a separate element in the array
               .map((word, index) => {
                 if (word === '<br/>') {
                   return <br key={word} />

@@ -1,10 +1,10 @@
 import { useIsAccountCTAExperimentControl } from 'components/NavBar/accountCTAsExperimentUtils'
+import { useTranslation } from 'react-i18next'
 import { useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { Button, Text, styled } from 'ui/src'
 import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
 import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
-import { useTranslation } from 'uniswap/src/i18n'
 
 const StyledButton = styled(Button, {
   height: '40px',

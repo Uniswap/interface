@@ -1,5 +1,5 @@
 import { useAccount } from 'hooks/useAccount'
-import { useIsNftPage } from 'hooks/useIsNftPage'
+import { PageType, useIsPage } from 'hooks/useIsPage'
 import { useEffect } from 'react'
 import { darkTheme, lightTheme } from 'theme/colors'
 import { useDarkModeManager } from 'theme/components/ThemeToggle'
@@ -37,7 +37,7 @@ function setDefaultBackground(backgroundRadialGradientElement: HTMLElement, dark
 export default function RadialGradientByChainUpdater(): null {
   const { chainId } = useAccount()
   const [darkMode] = useDarkModeManager()
-  const isNftPage = useIsNftPage()
+  const isNFTPage = useIsPage(PageType.NFTS)
 
   // manage background color
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function RadialGradientByChainUpdater(): null {
       return
     }
 
-    if (isNftPage) {
+    if (isNFTPage) {
       setBackground(initialStyles)
       backgroundRadialGradientElement.style.background = darkMode ? darkTheme.surface1 : lightTheme.surface1
       return
@@ -119,6 +119,6 @@ export default function RadialGradientByChainUpdater(): null {
         setDefaultBackground(backgroundRadialGradientElement, darkMode)
       }
     }
-  }, [darkMode, chainId, isNftPage])
+  }, [darkMode, chainId, isNFTPage])
   return null
 }

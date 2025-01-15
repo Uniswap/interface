@@ -1,12 +1,12 @@
 import { ReactComponent as CandlestickChartIcon } from 'assets/svg/candlestick-chart-icon.svg'
 import { ReactComponent as LineChartIcon } from 'assets/svg/line-chart-icon.svg'
 import { CHART_TYPE_LABELS, PriceChartType } from 'components/Charts/utils'
-import Row from 'components/deprecated/Row'
 import { ChartTypeDropdown } from 'components/Tokens/TokenDetails/ChartSection/ChartTypeSelector'
+import Row from 'components/deprecated/Row'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import styled from 'lib/styled-components'
+import { useTranslation } from 'react-i18next'
 import { EllipsisStyle } from 'theme/components'
-import { t } from 'uniswap/src/i18n'
 
 const ChartTypeRow = styled(Row)`
   ${EllipsisStyle}
@@ -43,6 +43,7 @@ export const AdvancedPriceChartToggle = ({
   onChartTypeChange: (c: PriceChartType) => void
   disableCandlestickUI?: boolean
 }) => {
+  const { t } = useTranslation()
   const screenSize = useScreenSize()
   const isMobileScreen = !screenSize['sm']
   const currentChartTypeDisplayOptions = ADVANCED_PRICE_CHART_OPTIONS.find((o) => o.value === currentChartType)

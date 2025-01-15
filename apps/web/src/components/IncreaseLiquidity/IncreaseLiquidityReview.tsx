@@ -1,4 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { useIncreaseLiquidityContext } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
 import { useIncreaseLiquidityTxContext } from 'components/IncreaseLiquidity/IncreaseLiquidityTxContext'
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
@@ -8,6 +9,7 @@ import { DetailLineItem } from 'components/swap/DetailLineItem'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { useMemo, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { Button, Flex, Separator, Text } from 'ui/src'
@@ -20,7 +22,6 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -53,12 +54,28 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   const poolTokenPercentage = useGetPoolTokenPercentage(increaseLiquidityState.position)
 
   const newToken0Amount = useMemo(() => {
-    return currencyAmounts?.TOKEN0?.add(currency0Amount)
+    if (!currencyAmounts?.TOKEN0) {
+      return undefined
+    }
+
+    const additionalToken0Amount = CurrencyAmount.fromRawAmount(
+      currencyAmounts?.TOKEN0?.currency,
+      currency0Amount.quotient,
+    )
+    return currencyAmounts?.TOKEN0?.add(additionalToken0Amount)
   }, [currency0Amount, currencyAmounts?.TOKEN0])
   const newToken0AmountUSD = useUSDCValue(newToken0Amount)
 
   const newToken1Amount = useMemo(() => {
-    return currencyAmounts?.TOKEN1?.add(currency1Amount)
+    if (!currencyAmounts?.TOKEN1) {
+      return undefined
+    }
+
+    const additionalToken1Amount = CurrencyAmount.fromRawAmount(
+      currencyAmounts?.TOKEN1?.currency,
+      currency1Amount.quotient,
+    )
+    return currencyAmounts?.TOKEN1?.add(additionalToken1Amount)
   }, [currency1Amount, currencyAmounts?.TOKEN1])
   const newToken1AmountUSD = useUSDCValue(newToken1Amount)
 
@@ -74,7 +91,14 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
 
   const onIncreaseLiquidity = () => {
     const isValidTx = isValidLiquidityTxContext(txInfo)
-    if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx || !increaseLiquidityState.position) {
+    if (
+      !account ||
+      account?.type !== AccountType.SignerMnemonic ||
+      !isValidTx ||
+      !increaseLiquidityState.position ||
+      !currencyAmounts?.TOKEN0 ||
+      !currencyAmounts.TOKEN1
+    ) {
       return
     }
 
@@ -95,8 +119,8 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
             fee: feeTier,
             version,
             poolId,
-            currency0: currency0Amount.currency,
-            currency1: currency1Amount.currency,
+            currency0: currencyAmounts?.TOKEN0?.currency,
+            currency1: currencyAmounts?.TOKEN1?.currency,
             currency0AmountUsd: currencyAmountsUSDValue?.TOKEN0,
             currency1AmountUsd: currencyAmountsUSDValue?.TOKEN1,
             chainId: startChainId,

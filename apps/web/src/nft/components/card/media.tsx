@@ -4,10 +4,10 @@ import { getHeightFromAspectRatio, getMediaAspectRatio, handleUniformAspectRatio
 import { UniformAspectRatio, UniformAspectRatios } from 'nft/types'
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import { Pause, Play } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { BREAKPOINTS } from 'theme'
 import { colors } from 'theme/colors'
 import { ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
 
 const StyledImageContainer = styled.div<{ isDisabled?: boolean }>`
   position: relative;

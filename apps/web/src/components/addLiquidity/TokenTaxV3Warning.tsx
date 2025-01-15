@@ -1,6 +1,6 @@
 import { PoolWarning } from 'components/addLiquidity/PoolWarning'
+import { Trans } from 'react-i18next'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { Trans } from 'uniswap/src/i18n'
 
 export function TokenTaxV3Warning() {
   return (

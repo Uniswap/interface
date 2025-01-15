@@ -9,6 +9,7 @@ import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletConten
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useNavigate } from 'react-router-dom'
 import { Gallery } from 'ui/src/components/icons/Gallery'
@@ -16,7 +17,6 @@ import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/t
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { t } from 'uniswap/src/i18n'
 
 const StyledTabButton = styled(TabButton)`
   width: calc(100% - 32px);
@@ -24,6 +24,7 @@ const StyledTabButton = styled(TabButton)`
 `
 
 export default function NFTs({ account }: { account: string }) {
+  const { t } = useTranslation()
   const accountDrawer = useAccountDrawer()
   const navigate = useNavigate()
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)

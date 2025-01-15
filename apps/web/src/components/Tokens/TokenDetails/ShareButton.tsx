@@ -6,12 +6,12 @@ import useCopyClipboard from 'hooks/useCopyClipboard'
 import styled from 'lib/styled-components'
 import { useState } from 'react'
 import { Link } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { colors } from 'theme/colors'
 import { opacify } from 'theme/utils'
 import { Text, useSporeColors } from 'ui/src'
 import { Check } from 'ui/src/components/icons/Check'
-import { useTranslation } from 'uniswap/src/i18n/useTranslation'
 import { isMobileWeb } from 'utilities/src/platform'
 
 const TWITTER_WIDTH = 560

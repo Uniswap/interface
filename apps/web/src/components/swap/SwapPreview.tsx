@@ -3,10 +3,10 @@ import Column, { AutoColumn } from 'components/deprecated/Column'
 import { SwapModalHeaderAmount } from 'components/swap/SwapModalHeaderAmount'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import styled from 'lib/styled-components'
+import { Trans } from 'react-i18next'
 import { InterfaceTrade } from 'state/routing/types'
 import { isPreviewTrade } from 'state/routing/utils'
 import { ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 const HeaderContainer = styled(AutoColumn)`

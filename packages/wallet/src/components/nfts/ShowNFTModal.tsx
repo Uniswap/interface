@@ -1,5 +1,5 @@
-import { t } from 'i18next'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
 import { ShieldCheck } from 'ui/src/components/icons'
 import { InfoLinkModal } from 'uniswap/src/components/modals/InfoLinkModal'
@@ -10,6 +10,7 @@ import { isExtension } from 'utilities/src/platform'
 import { InformationBanner } from 'wallet/src/components/banners/InformationBanner'
 
 export function ShowNFTModal(): JSX.Element {
+  const { t } = useTranslation()
   const [isModalVisible, setModalVisible] = useState(false)
 
   const handlePressToken = (): void => {

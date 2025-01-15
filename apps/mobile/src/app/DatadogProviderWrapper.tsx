@@ -10,18 +10,22 @@ import { ErrorEventMapper } from '@datadog/mobile-react-native/lib/typescript/ru
 import { PropsWithChildren, default as React } from 'react'
 import { getDatadogEnvironment } from 'src/utils/version'
 import { config } from 'uniswap/src/config'
-import { isDetoxBuild, isJestRun, localDevDatadogEnabled } from 'utilities/src/environment/constants'
+import {
+  DatadogIgnoredErrorsConfigKey,
+  DatadogIgnoredErrorsValType,
+  DynamicConfigs,
+} from 'uniswap/src/features/gating/configs'
+import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import { datadogEnabled, isDetoxBuild, isJestRun, localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
-
-const ENABLE_DATADOG = localDevDatadogEnabled || !__DEV__
 
 const datadogConfig = new DatadogProviderConfiguration(
   config.datadogClientToken,
   getDatadogEnvironment(),
   config.datadogProjectId,
-  ENABLE_DATADOG, // trackInteractions
-  ENABLE_DATADOG, // trackResources
-  ENABLE_DATADOG, // trackErrors
+  datadogEnabled, // trackInteractions
+  datadogEnabled, // trackResources
+  datadogEnabled, // trackErrors
   localDevDatadogEnabled ? TrackingConsent.GRANTED : undefined,
 )
 
@@ -31,10 +35,17 @@ Object.assign(datadogConfig, {
   nativeCrashReportEnabled: true,
   verbosity: SdkVerbosity.INFO,
   errorEventMapper: (event: ReturnType<ErrorEventMapper>) => {
-    // this is Sentry error, which is caused by the not complete closing of their SDK
-    if (event?.message.includes('Native is disabled')) {
-      return null
+    const ignoredErrors = getDynamicConfigValue<
+      DynamicConfigs.DatadogIgnoredErrors,
+      DatadogIgnoredErrorsConfigKey,
+      DatadogIgnoredErrorsValType
+    >(DynamicConfigs.DatadogIgnoredErrors, DatadogIgnoredErrorsConfigKey.Errors, [])
+
+    const ignoredError = ignoredErrors.find(({ messageContains }) => event?.message.includes(messageContains))
+    if (ignoredError) {
+      return Math.random() < ignoredError.sampleRate ? event : null
     }
+
     return event
   },
 })

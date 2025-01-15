@@ -2,25 +2,31 @@ import dayjs from 'dayjs'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { objectToQueryString } from 'uniswap/src/data/utils'
 import { FOR_API_HEADERS } from 'uniswap/src/features/fiatOnRamp/constants'
-import { FORTransactionResponse, FiatOnRampTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
+import {
+  FORTransactionDetails,
+  FORTransactionResponse,
+  OffRampTransferDetailsResponse,
+} from 'uniswap/src/features/fiatOnRamp/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { extractFiatOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
+import { extractFORTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
 
 const FIAT_ONRAMP_STALE_TX_TIMEOUT = ONE_MINUTE_MS * 20
 const FIAT_ONRAMP_FORCE_FETCH_TX_TIMEOUT = ONE_MINUTE_MS * 5
 
 /**
- * Utility to fetch fiat onramp transactions
+ * Utility to fetch FOR transactions
  */
-export async function fetchFiatOnRampTransaction(
-  previousTransactionDetails: FiatOnRampTransactionDetails,
+export async function fetchFORTransaction(
+  previousTransactionDetails: FORTransactionDetails,
   forceFetch: boolean,
-): Promise<FiatOnRampTransactionDetails | undefined> {
+  activeAccountAddress: Address | null,
+): Promise<FORTransactionDetails | undefined> {
   const isForMigrationEnabled = getFeatureFlag(FeatureFlags.ForMonorepoMigration)
+  const isOffRamp = previousTransactionDetails.typeInfo.type === TransactionType.LocalOffRamp
   const isRecent = dayjs(previousTransactionDetails.addedTime).isAfter(
     dayjs().subtract(FIAT_ONRAMP_FORCE_FETCH_TX_TIMEOUT, 'ms'),
   )
@@ -71,5 +77,22 @@ export async function fetchFiatOnRampTransaction(
     }
   }
 
-  return extractFiatOnRampTransactionDetails(transaction)
+  return extractFORTransactionDetails(transaction, isOffRamp, activeAccountAddress)
+}
+
+export async function fetchOffRampTransferDetails(sessionId: string): Promise<OffRampTransferDetailsResponse> {
+  // TODO: support moonpay once backend is ready
+  const requestParams = {
+    meldDetails: {
+      sessionId,
+    },
+  }
+
+  const res = await fetch(`${uniswapUrls.forApiUrl}/OffRampTransferDetails`, {
+    headers: FOR_API_HEADERS,
+    method: 'POST',
+    body: JSON.stringify(requestParams),
+  })
+
+  return res.json() as Promise<OffRampTransferDetailsResponse>
 }

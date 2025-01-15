@@ -56,6 +56,7 @@ export function tradeToTransactionInfo(
     gasUseEstimate,
     routeString,
     protocol: getProtocolVersionFromTrade(trade),
+    simulationFailureReasons: isClassic(trade) ? trade.quote?.quote.txFailureReasons : undefined,
     transactedUSDValue,
     gasEstimates,
   }

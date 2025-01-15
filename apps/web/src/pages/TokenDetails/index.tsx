@@ -15,6 +15,7 @@ import { getTokenPageDescription, getTokenPageTitle } from 'pages/TokenDetails/u
 import { useDynamicMetatags } from 'pages/metatags'
 import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
+import { useTranslation } from 'react-i18next'
 import { useLocation, useParams } from 'react-router-dom'
 import { formatTokenMetatagTitleName } from 'shared-cloud/metatags'
 import { ThemeProvider } from 'theme'
@@ -158,6 +159,7 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
 }
 
 export default function TokenDetailsPage() {
+  const { t } = useTranslation()
   const account = useAccount()
   const pageChainId = account.chainId ?? UniverseChainId.Mainnet
   const contextValue = useCreateTDPContext()
@@ -182,7 +184,7 @@ export default function TokenDetailsPage() {
   return (
     <ThemeProvider accent1={tokenColor ?? undefined}>
       <Helmet>
-        <title>{getTokenPageTitle(currency, currencyChainId)}</title>
+        <title>{getTokenPageTitle(t, currency, currencyChainId)}</title>
         {metatags.map((tag, index) => (
           <meta key={index} {...tag} />
         ))}

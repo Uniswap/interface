@@ -2,7 +2,7 @@ import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { Globe } from 'components/Icons/Globe'
 import { TwitterXLogo } from 'components/Icons/TwitterX'
 import { FOTTooltipContent } from 'components/swap/SwapLineItem'
-import { NoInfoAvailable, truncateDescription, TruncateDescriptionButton } from 'components/Tokens/TokenDetails/shared'
+import { NoInfoAvailable, truncateDescription } from 'components/Tokens/TokenDetails/shared'
 import Tooltip, { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
@@ -10,10 +10,10 @@ import { useTheme } from 'lib/styled-components'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useCallback, useReducer } from 'react'
 import { Copy } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { ClickableTamaguiStyle, EllipsisTamaguiStyle, ExternalLink, ThemedText } from 'theme/components'
 import { Flex, Paragraph, styled, Text } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { t, Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
@@ -24,10 +24,6 @@ const TokenInfoSection = styled(Flex, {
   $xl: {
     gap: 24,
   },
-})
-
-const InfoSectionHeader = styled(Text, {
-  variant: 'subheading1',
 })
 
 const TokenNameRow = styled(Flex, {
@@ -82,6 +78,7 @@ const DescriptionVisibilityWrapper = styled(Paragraph, {
 const TRUNCATE_CHARACTER_COUNT = 200
 
 export function TokenDescription() {
+  const { t } = useTranslation()
   const { address, currency, tokenQuery } = useTDPContext()
   const { neutral1 } = useTheme()
 
@@ -112,9 +109,9 @@ export function TokenDescription() {
 
   return (
     <TokenInfoSection data-testid="token-details-info-section">
-      <InfoSectionHeader>
+      <Text variant="heading3">
         <Trans i18nKey="common.info.label" />
-      </InfoSectionHeader>
+      </Text>
       <TokenButtonRow data-testid="token-details-info-links">
         {!currency.isNative && (
           <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t('common.copied')}>
@@ -168,8 +165,15 @@ export function TokenDescription() {
           </>
         )}
         {shouldTruncate && (
-          <TruncateDescriptionButton
-            onClick={toggleIsDescriptionTruncated}
+          <Text
+            display="flex"
+            color="neutral2"
+            fontWeight="485"
+            variant="body2"
+            pt="0.5em"
+            $sm={{ mb: '2rem' }}
+            onPress={toggleIsDescriptionTruncated}
+            {...ClickableTamaguiStyle}
             data-testid="token-description-show-more-button"
           >
             {isDescriptionTruncated ? (
@@ -177,7 +181,7 @@ export function TokenDescription() {
             ) : (
               <Trans i18nKey="common.hide.button" />
             )}
-          </TruncateDescriptionButton>
+          </Text>
         )}
       </TokenDescriptionContainer>
       {hasFee && (

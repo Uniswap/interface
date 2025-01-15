@@ -8,7 +8,7 @@ import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/fe
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapRouting, SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { TransactionSettingsState } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { TransactionSettingsContextState } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
@@ -20,6 +20,7 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 import { percentFromFloat } from 'utilities/src/format/percent'
 import { NumberType } from 'utilities/src/format/types'
+import { logger } from 'utilities/src/logger/logger'
 import { ITraceContext, useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 // hook-based analytics because this one is data-lifecycle dependent
@@ -137,6 +138,7 @@ export function getBaseTradeAnalyticsProperties({
     token_out_amount_min: trade.minimumAmountOut(slippagePercent).toExact(),
     token_in_detected_tax: parseFloat(trade.inputTax.toFixed(2)),
     token_out_detected_tax: parseFloat(trade.outputTax.toFixed(2)),
+    simulation_failure_reasons: isClassic(trade) ? trade.quote?.quote.txFailureReasons : undefined,
   }
 }
 
@@ -146,7 +148,7 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
   formatter,
   trace,
 }: {
-  transactionSettings: TransactionSettingsState
+  transactionSettings: TransactionSettingsContextState
   derivedSwapInfo: DerivedSwapInfo
   formatter: LocalizationContextState
   trace: ITraceContext
@@ -220,6 +222,11 @@ export function logSwapQuoteFetch({
     performanceMetrics = { time_to_first_quote_request, time_to_first_quote_request_since_first_input }
   }
   sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_FETCH, { chainId, isQuickRoute, ...performanceMetrics })
+  logger.info('analytics', 'logSwapQuoteFetch', SwapEventName.SWAP_QUOTE_FETCH, {
+    chainId,
+    isQuickRoute,
+    ...performanceMetrics,
+  })
 }
 
 // eslint-disable-next-line consistent-return

@@ -1,20 +1,15 @@
 import { createAction } from '@reduxjs/toolkit'
 import { parseUri } from '@walletconnect/utils'
 import { Alert } from 'react-native'
-import { URL } from 'react-native-url-polyfill'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { getScantasticQueryParams, parseScantasticParams } from 'src/components/Requests/ScanSheet/util'
+import { parseScantasticParams } from 'src/components/Requests/ScanSheet/util'
 import {
   getFormattedUwuLinkTxnRequest,
   isAllowedUwuLinkRequest,
-  isUwuLinkUniswapDeepLink,
   parseUwuLinkDataFromDeeplink,
 } from 'src/components/Requests/Uwulink/utils'
-import {
-  UNISWAP_URL_SCHEME,
-  UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM,
-  UNISWAP_WALLETCONNECT_URL,
-} from 'src/features/deepLinking/constants'
+import { DeepLinkAction, DeepLinkActionResult, parseDeepLinkUrl } from 'src/features/deepLinking/deepLinkUtils'
+import { handleOffRampReturnLink } from 'src/features/deepLinking/handleOffRampReturnLinkSaga'
 import { handleOnRampReturnLink } from 'src/features/deepLinking/handleOnRampReturnLinkSaga'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
@@ -23,7 +18,6 @@ import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/saga'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { addRequest, setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
 import { call, put, select, takeLatest } from 'typed-redux-saga'
-import { UNISWAP_WEB_HOSTNAME } from 'uniswap/src/constants/urls'
 import { fromUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
 import { DynamicConfigs, UwuLinkConfigKey } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
@@ -32,7 +26,7 @@ import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { BACKEND_NATIVE_CHAIN_ADDRESS_STRING } from 'uniswap/src/features/search/utils'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import i18n from 'uniswap/src/i18n/i18n'
+import i18n from 'uniswap/src/i18n'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { UwULinkRequest } from 'uniswap/src/types/walletConnect'
@@ -54,9 +48,6 @@ export enum LinkSource {
   Widget = 'Widget',
   Share = 'Share',
 }
-
-const UNISWAP_URL_SCHEME_WIDGET = 'uniswap://widget/'
-const WALLETCONNECT_URI_SCHEME = 'wc:' // https://eips.ethereum.org/EIPS/eip-1328
 
 const NFT_ITEM_SHARE_LINK_HASH_REGEX = /^(#\/)?nfts\/asset\/(0x[a-fA-F0-9]{40})\/(\d+)$/
 const NFT_COLLECTION_SHARE_LINK_HASH_REGEX = /^(#\/)?nfts\/collection\/(0x[a-fA-F0-9]{40})$/
@@ -201,137 +192,134 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
 
 // eslint-disable-next-line complexity
 export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
-  const { coldStart } = action.payload
   try {
-    const url = new URL(action.payload.url)
-    const screen = url.searchParams.get('screen')
-    const userAddress = url.searchParams.get('userAddress')
-    const fiatOnRamp = url.searchParams.get('fiatOnRamp') === 'true'
-
+    const { coldStart } = action.payload
+    const deepLinkAction = parseDeepLinkUrl(action.payload.url)
     const activeAccount = yield* select(selectActiveAccount)
     if (!activeAccount) {
-      // For app.uniswap.org links it should open a browser with the link
-      // instead of handling it inside the app
-      if (url.hostname === UNISWAP_WEB_HOSTNAME) {
-        yield* call(openUri, action.payload.url, /* openExternalBrowser */ true)
+      if (deepLinkAction.action === DeepLinkAction.UniswapWebLink) {
+        yield* call(openUri, deepLinkAction.data.url.toString(), true)
+        yield* _sendAnalyticsEvent(deepLinkAction, coldStart)
       }
-      // Skip handling any other deep links
+      // If there is no active account, we don't want to handle the deep link
       return
     }
 
-    // Handle WC deep link via connections in the format uniswap://wc?uri=${WC_URI}
-    // Ex: uniswap://wc?uri=wc:123@2?relay-protocol=irn&symKey=51e
-    if (action.payload.url.startsWith(UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM)) {
-      let wcUri = action.payload.url.split(UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM)[1]
-      if (!wcUri) {
-        return
+    switch (deepLinkAction.action) {
+      case DeepLinkAction.UniswapWebLink: {
+        yield* call(
+          handleUniswapAppDeepLink,
+          deepLinkAction.data.urlPath,
+          deepLinkAction.data.url.href,
+          LinkSource.Share,
+        )
+        break
       }
-      // Decode URI to handle special characters like %3A => :
-      wcUri = decodeURIComponent(wcUri)
-      yield* call(handleWalletConnectDeepLink, wcUri)
-      return
-    }
-
-    // Handle WC deep link via connections in the format uniswap://${WC_URI}
-    // Ex: uniswap://wc:123@2?relay-protocol=irn&symKey=51e
-    if (action.payload.url.startsWith(UNISWAP_URL_SCHEME + WALLETCONNECT_URI_SCHEME)) {
-      let wcUri = action.payload.url.split(UNISWAP_URL_SCHEME)[1]
-      if (!wcUri) {
-        return
+      case DeepLinkAction.WalletConnectAsParam:
+      case DeepLinkAction.UniswapWalletConnect: {
+        yield* call(handleWalletConnectDeepLink, deepLinkAction.data.wcUri)
+        break
       }
-      // Decode URI to handle special characters like %3A => :
-      wcUri = decodeURIComponent(wcUri)
-      yield* call(handleWalletConnectDeepLink, wcUri)
-      return
-    }
-
-    // Handles deep links from Uniswap Widgets (ex. uniswap://widget/#/tokens/ethereum/0x...)
-    if (action.payload.url.startsWith(UNISWAP_URL_SCHEME_WIDGET)) {
-      yield* call(handleUniswapAppDeepLink, url.hash, action.payload.url, LinkSource.Widget)
-      return
-    }
-
-    // Handle scantastic deep links in the format uniswap://scantastic?${PARAMS}
-    const maybeScantasticQueryParams = getScantasticQueryParams(action.payload.url)
-    if (maybeScantasticQueryParams) {
-      yield* call(handleScantasticDeepLink, maybeScantasticQueryParams)
-      return
-    }
-
-    if (isUwuLinkUniswapDeepLink(action.payload.url)) {
-      yield* call(handleUwuLinkDeepLink, action.payload.url)
-      return
-    }
-
-    if (screen && userAddress) {
-      const validUserAddress = yield* call(parseAndValidateUserAddress, userAddress)
-      yield* put(setAccountAsActive(validUserAddress))
-
-      switch (screen) {
-        case 'transaction':
-          if (fiatOnRamp) {
-            yield* call(handleOnRampReturnLink)
-          } else {
+      case DeepLinkAction.UniswapWidget: {
+        yield* call(
+          handleUniswapAppDeepLink,
+          deepLinkAction.data.url.hash,
+          deepLinkAction.data.url.toString(),
+          LinkSource.Widget,
+        )
+        break
+      }
+      case DeepLinkAction.Scantastic: {
+        yield* call(handleScantasticDeepLink, deepLinkAction.data.scantasticQueryParams)
+        break
+      }
+      case DeepLinkAction.UwuLink: {
+        yield* call(handleUwuLinkDeepLink, deepLinkAction.data.url.toString())
+        break
+      }
+      case DeepLinkAction.TransactionScreen:
+      case DeepLinkAction.ShowTransactionAfterFiatOnRamp:
+      case DeepLinkAction.ShowTransactionAfterFiatOffRampScreen:
+      case DeepLinkAction.SwapScreen: {
+        const validUserAddress = yield* call(parseAndValidateUserAddress, deepLinkAction.data.userAddress)
+        yield* put(setAccountAsActive(validUserAddress))
+        switch (deepLinkAction.action) {
+          case DeepLinkAction.TransactionScreen: {
             yield* call(handleTransactionLink)
+            break
           }
-          break
-        case 'swap':
-          yield* call(handleSwapLink, url)
-          break
-        default:
-          throw new Error('Invalid or unsupported screen')
+          case DeepLinkAction.ShowTransactionAfterFiatOnRamp: {
+            yield* call(handleOnRampReturnLink)
+            break
+          }
+          case DeepLinkAction.ShowTransactionAfterFiatOffRampScreen: {
+            yield* call(handleOffRampReturnLink, deepLinkAction.data.url)
+            break
+          }
+          case DeepLinkAction.SwapScreen: {
+            yield* call(handleSwapLink, deepLinkAction.data.url)
+            break
+          }
+        }
+        break
+      }
+      case DeepLinkAction.SkipNonWalletConnect: {
+        // Set didOpenFromDeepLink so that `returnToPreviousApp()` is enabled during WalletConnect flows
+        yield* put(setDidOpenFromDeepLink(true))
+        break
+      }
+      case DeepLinkAction.UniversalWalletConnectLink: {
+        yield* call(handleWalletConnectDeepLink, deepLinkAction.data.wcUri)
+        break
+      }
+      case DeepLinkAction.WalletConnect: {
+        yield* call(handleWalletConnectDeepLink, deepLinkAction.data.wcUri)
+        break
+      }
+      case DeepLinkAction.FiatOnRampScreen: {
+        yield* call(handleGoToFiatOnRampDeepLink)
+        break
+      }
+      case DeepLinkAction.TokenDetails: {
+        yield* call(handleGoToTokenDetailsDeepLink, deepLinkAction.data.currencyId)
+        break
+      }
+      case DeepLinkAction.Unknown:
+      case DeepLinkAction.Error: {
+        break
       }
     }
-
-    // Skip handling any non-WalletConnect uniswap:// URL scheme deep links for now for security reasons
-    // Currently only used on WalletConnect Universal Link web page fallback button (https://uniswap.org/app/wc)
-    if (action.payload.url.startsWith(UNISWAP_URL_SCHEME)) {
-      // Set didOpenFromDeepLink so that `returnToPreviousApp()` is enabled during WalletConnect flows
-      yield* put(setDidOpenFromDeepLink(true))
-      return
-    }
-
-    /*
-    Handle WC universal links connections in the format https://uniswap.org/app/wc?uri=wc:123
-    Notice that we assume the URL has only one parameter, named uri, which is the WallectConnect URI.
-    Any other parameter present in the URI is considered to be part of the WallectConnect URI.
-    For example, in the URL below, symKey is a parameter of the WallectConnect URI.
-    https://uniswap.org/app/wc?uri=wc:111f1ff289d1cc5a70ec5354779c6a82b3bde5ac72476f7f67326c38a4ce99f2@2?relay-protocol=irn&symKey=75e152d915a717da9f7bca3df23a0c65fcc4725d769f877ccfaa1f65270cded2
-    */
-    if (action.payload.url.startsWith(UNISWAP_WALLETCONNECT_URL)) {
-      // Only initial session connections include `uri` param, signing requests only link to /wc and should be ignored
-      const wcUri = action.payload.url.split(UNISWAP_WALLETCONNECT_URL).pop()
-      if (!wcUri) {
-        return
-      }
-      yield* call(handleWalletConnectDeepLink, decodeURIComponent(wcUri))
-      return
-    }
-
-    // Handle plain WalletConnect URIs
-    if (action.payload.url.startsWith(WALLETCONNECT_URI_SCHEME)) {
-      const wcUri = decodeURIComponent(action.payload.url)
-      yield* call(handleWalletConnectDeepLink, wcUri)
-      return
-    }
-
-    if (url.hostname === UNISWAP_WEB_HOSTNAME) {
-      const urlParts = url.href.split(`${UNISWAP_WEB_HOSTNAME}/`)
-      const urlPath = urlParts.length >= 1 ? (urlParts[1] as string) : ''
-      yield* call(handleUniswapAppDeepLink, urlPath, action.payload.url, LinkSource.Share)
-      return
-    }
-
-    yield* call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
-      url: url.toString(),
-      screen: screen ?? 'other',
-      is_cold_start: coldStart,
-    })
+    yield* _sendAnalyticsEvent(deepLinkAction, coldStart)
   } catch (error) {
     yield* call(logger.error, error, {
       tags: { file: 'handleDeepLinkSaga', function: 'handleDeepLink' },
     })
   }
+}
+
+function* _sendAnalyticsEvent(deepLinkAction: DeepLinkActionResult, coldStart: boolean) {
+  yield* call(sendAnalyticsEvent, MobileEventName.DeepLinkOpened, {
+    action: deepLinkAction.action,
+    url: deepLinkAction.data.url.toString(),
+    screen: deepLinkAction.data.screen ?? 'other',
+    is_cold_start: coldStart,
+    source: deepLinkAction.data.source ?? 'unknown',
+  })
+}
+
+export function* handleGoToFiatOnRampDeepLink() {
+  const disableForKorea = Statsig.checkGate(getFeatureFlagName(FeatureFlags.DisableFiatOnRampKorea))
+  yield* put(
+    openModal({
+      name: disableForKorea ? ModalName.KoreaCexTransferInfoModal : ModalName.FiatOnRampAggregator,
+    }),
+  )
+}
+
+export function* handleGoToTokenDetailsDeepLink(currencyId: string) {
+  yield* call(navigate, MobileScreens.TokenDetails, {
+    currencyId,
+  })
 }
 
 export function* handleWalletConnectDeepLink(wcUri: string) {

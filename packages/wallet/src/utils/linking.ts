@@ -25,7 +25,7 @@ export async function openUniswapHelpLink(): Promise<void> {
   return openUri(uniswapUrls.helpRequestUrl)
 }
 
-export async function openOnRampSupportLink(serviceProvider: ServiceProviderInfo): Promise<void> {
+export async function openFORSupportLink(serviceProvider: ServiceProviderInfo): Promise<void> {
   return openUri(serviceProvider.supportUrl ?? uniswapUrls.helpRequestUrl)
 }
 

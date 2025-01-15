@@ -52,6 +52,7 @@ exports[`NetworkFilter renders a NetworkFilter 1`] = `
             "height": 20,
             "overflow": "hidden",
             "width": 20,
+            "zIndex": 10,
           }
         }
         testID="network-logo"

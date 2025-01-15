@@ -8,16 +8,9 @@ import getFont from '../../../utils/getFont'
 import getNetworkLogoUrl from '../../../utils/getNetworkLogoURL'
 import { getRequest } from '../../../utils/getRequest'
 
-function PoolImage({
-  token0Image,
-  token1Image,
-  children,
-}: {
-  token0Image?: string
-  token1Image?: string
-  children?: React.ReactNode
-}) {
-  const unknownTokenImage = (
+function UnknownTokenImage({ symbol }: { symbol?: string }) {
+  const ticker = symbol?.slice(0, 3)
+  return (
     <div
       style={{
         fontFamily: 'Inter',
@@ -33,9 +26,28 @@ function PoolImage({
         clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)',
       }}
     >
-      UNK
+      {ticker ?? 'UNK'}
     </div>
   )
+}
+
+function PoolImage({
+  token0ImageUrl,
+  token1ImageUrl,
+  tokenSymbol0,
+  tokenSymbol1,
+  children,
+}: {
+  token0ImageUrl?: string
+  token1ImageUrl?: string
+  tokenSymbol0?: string
+  tokenSymbol1?: string
+  children?: React.ReactNode
+}) {
+  // ImageResponse cannot handle webp images: https://github.com/vercel/satori/issues/273#issuecomment-1296323042
+  // TODO: remove this check logic once @vercel/og supports webp, which appears to be in-progress https://github.com/vercel/satori/pull/622
+  const token0Image = token0ImageUrl?.includes('.webp') ? undefined : token0ImageUrl
+  const token1Image = token1ImageUrl?.includes('.webp') ? undefined : token1ImageUrl
 
   return (
     <div
@@ -59,7 +71,7 @@ function PoolImage({
           }}
         />
       ) : (
-        unknownTokenImage
+        <UnknownTokenImage symbol={tokenSymbol0} />
       )}
       {token1Image ? (
         <div
@@ -75,7 +87,7 @@ function PoolImage({
           }}
         />
       ) : (
-        unknownTokenImage
+        <UnknownTokenImage symbol={tokenSymbol1} />
       )}
       {children}
     </div>
@@ -134,7 +146,12 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                 gap: '54px',
               }}
             >
-              <PoolImage token0Image={data.poolData?.token0Image} token1Image={data.poolData?.token1Image}>
+              <PoolImage
+                token0ImageUrl={data.poolData?.token0Image}
+                token1ImageUrl={data.poolData?.token1Image}
+                tokenSymbol0={data.poolData?.token0Symbol}
+                tokenSymbol1={data.poolData?.token1Symbol}
+              >
                 {networkLogo != '' && (
                   <img
                     src={networkLogo}

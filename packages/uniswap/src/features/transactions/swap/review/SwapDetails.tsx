@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, HeightAnimator, Text, TouchableArea } from 'ui/src'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
+import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -30,6 +31,7 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
 import { NumberType } from 'utilities/src/format/types'
+import { isMobileApp, isMobileWeb } from 'utilities/src/platform'
 
 interface SwapDetailsProps {
   acceptedDerivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>
@@ -47,6 +49,7 @@ interface SwapDetailsProps {
   onAcceptTrade: () => void
   onShowWarning?: () => void
   setTokenWarningChecked?: (checked: boolean) => void
+  txSimulationErrors?: TransactionFailureReason[]
 }
 
 export function SwapDetails({
@@ -64,6 +67,7 @@ export function SwapDetails({
   onAcceptTrade,
   onShowWarning,
   setTokenWarningChecked,
+  txSimulationErrors,
 }: SwapDetailsProps): JSX.Element {
   const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
   const { t } = useTranslation()
@@ -98,7 +102,7 @@ export function SwapDetails({
   const priceImpactWarningColor = getAlertColor(priceImpactWarning?.severity).text
 
   return (
-    <HeightAnimator animation="fast">
+    <HeightAnimatorWrapper>
       <TransactionDetails
         isSwap
         banner={
@@ -127,6 +131,7 @@ export function SwapDetails({
         warning={warning}
         estimatedBridgingTime={estimatedBridgingTime}
         isBridgeTrade={isBridgeTrade ?? false}
+        txSimulationErrors={txSimulationErrors}
         onShowWarning={onShowWarning}
       >
         <Flex row alignItems="center" justifyContent="space-between">
@@ -166,7 +171,7 @@ export function SwapDetails({
           </Flex>
         ) : null}
       </TransactionDetails>
-    </HeightAnimator>
+    </HeightAnimatorWrapper>
   )
 }
 
@@ -240,6 +245,15 @@ function AcceptNewQuoteRow({
       </Flex>
     </Flex>
   )
+}
+
+// We don't need to animate the height on mobile because bottom sheet already handles the animation.
+function HeightAnimatorWrapper({ children }: { children: React.ReactNode }): JSX.Element {
+  if (isMobileApp || isMobileWeb) {
+    return <>{children}</>
+  } else {
+    return <HeightAnimator animation="fast">{children}</HeightAnimator>
+  }
 }
 
 function calculatePercentageDifference({

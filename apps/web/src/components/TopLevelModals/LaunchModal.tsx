@@ -7,17 +7,17 @@ import {
   LAUNCH_MODAL_MOBILE_MAX_HEIGHT,
   LAUNCH_MODAL_MOBILE_MAX_IMAGE_HEIGHT,
 } from 'components/TopLevelModals/constants'
-import { useIsLandingPage } from 'hooks/useIsLandingPage'
+import { PageType, useIsPage } from 'hooks/useIsPage'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Button, Flex, Image, ImageProps, Text, TouchableArea, useMedia } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { useTranslation } from 'uniswap/src/i18n'
 import { openUri } from 'uniswap/src/utils/linking'
 
 type Props = {
@@ -41,7 +41,7 @@ export function LaunchModal({
 }: Props) {
   const showModalAtom = useMemo(() => atomWithStorage(`showModal.${interfaceModalName}`, true), [interfaceModalName])
   const [showModal, setShowModal] = useAtom(showModalAtom)
-  const isOnLandingPage = useIsLandingPage()
+  const isLandingPage = useIsPage(PageType.LANDING)
   const media = useMedia()
   const { t } = useTranslation()
 
@@ -51,7 +51,7 @@ export function LaunchModal({
         name={interfaceModalName}
         maxWidth={media.md ? undefined : LAUNCH_MODAL_DESKTOP_MAX_WIDTH}
         height={media.md ? LAUNCH_MODAL_MOBILE_MAX_HEIGHT : LAUNCH_MODAL_DESKTOP_MAX_HEIGHT}
-        isModalOpen={showModal && !isOnLandingPage}
+        isModalOpen={showModal && !isLandingPage}
         onClose={() => setShowModal(false)}
         padding={0}
       >

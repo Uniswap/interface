@@ -24,6 +24,7 @@ exports[`SplitLogo renders without error 1`] = `
     testID="input-currency-logo-container"
   >
     <View
+      pointerEvents="auto"
       style={
         {
           "alignItems": "center",
@@ -51,7 +52,7 @@ exports[`SplitLogo renders without error 1`] = `
             "position": "absolute",
             "top": "2%",
             "width": "96%",
-            "zIndex": -1,
+            "zIndex": 0,
           }
         }
       />
@@ -73,6 +74,7 @@ exports[`SplitLogo renders without error 1`] = `
               "aspectRatio": undefined,
               "borderRadius": 5,
               "objectFit": "contain",
+              "zIndex": 1,
             }
           }
           width={10}
@@ -94,6 +96,7 @@ exports[`SplitLogo renders without error 1`] = `
     testID="output-currency-logo-container"
   >
     <View
+      pointerEvents="auto"
       style={
         {
           "alignItems": "center",
@@ -121,7 +124,7 @@ exports[`SplitLogo renders without error 1`] = `
             "position": "absolute",
             "top": "2%",
             "width": "96%",
-            "zIndex": -1,
+            "zIndex": 0,
           }
         }
       />
@@ -143,6 +146,7 @@ exports[`SplitLogo renders without error 1`] = `
               "aspectRatio": undefined,
               "borderRadius": 5,
               "objectFit": "contain",
+              "zIndex": 1,
             }
           }
           width={10}
@@ -157,6 +161,7 @@ exports[`SplitLogo renders without error 1`] = `
         "flexDirection": "column",
         "position": "absolute",
         "right": -4,
+        "zIndex": 10,
       }
     }
   >
@@ -171,6 +176,7 @@ exports[`SplitLogo renders without error 1`] = `
           "height": 7.5,
           "overflow": "hidden",
           "width": 7.5,
+          "zIndex": 10,
         }
       }
       testID="network-logo"

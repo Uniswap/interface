@@ -22,7 +22,7 @@ import {
 } from 'uniswap/src/test/fixtures'
 import { mockApolloClient } from 'uniswap/src/test/mocks'
 import { sleep } from 'utilities/src/time/timing'
-import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
+import { fetchFORTransaction } from 'wallet/src/features/fiatOnRamp/api'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import {
   deleteTransaction,
@@ -33,6 +33,7 @@ import {
   watchTransaction,
 } from 'wallet/src/features/transactions/transactionWatcherSaga'
 import { getProvider, getProviderManager } from 'wallet/src/features/wallet/context'
+import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { getTxProvidersMocks } from 'wallet/src/test/mocks'
 
 const {
@@ -199,8 +200,9 @@ describe(watchFiatOnRampTransaction, () => {
     return (
       expectSaga(watchFiatOnRampTransaction, txDetailsPending)
         .provide([
-          [call(fetchFiatOnRampTransaction, txDetailsPending, false), staleTx],
+          [call(fetchFORTransaction, txDetailsPending, false, null), staleTx],
           [matchers.call.fn(sendAnalyticsEvent), undefined],
+          [matchers.select(selectActiveAccountAddress), null],
         ])
         .put(
           transactionActions.deleteTransaction({
@@ -226,7 +228,7 @@ describe(watchFiatOnRampTransaction, () => {
         .provide([
           {
             call(effect): TransactionDetails | undefined {
-              if (effect.fn === fetchFiatOnRampTransaction) {
+              if (effect.fn === fetchFORTransaction) {
                 switch (fetchCalledCount++) {
                   case 0:
                   case 1:
@@ -240,6 +242,7 @@ describe(watchFiatOnRampTransaction, () => {
             },
           },
           [delay(PollingInterval.Fast), Promise.resolve(() => undefined)],
+          [matchers.select(selectActiveAccountAddress), null],
         ])
         .delay(PollingInterval.Fast)
         // only called once
@@ -259,7 +262,7 @@ describe(watchFiatOnRampTransaction, () => {
         .provide([
           {
             call(effect): TransactionDetails | undefined {
-              if (effect.fn === fetchFiatOnRampTransaction) {
+              if (effect.fn === fetchFORTransaction) {
                 switch (fetchCalledCount++) {
                   case 0:
                   case 1:
@@ -272,6 +275,7 @@ describe(watchFiatOnRampTransaction, () => {
               return undefined
             },
           },
+          [matchers.select(selectActiveAccountAddress), null],
         ])
         .dispatch(forceFetchFiatOnRampTransactions())
         .dispatch(forceFetchFiatOnRampTransactions())
@@ -286,8 +290,9 @@ describe(watchFiatOnRampTransaction, () => {
     const confirmedTx = { ...txDetailsPending, status: TransactionStatus.Success }
     return expectSaga(watchFiatOnRampTransaction, txDetailsPending)
       .provide([
-        [call(fetchFiatOnRampTransaction, txDetailsPending, false), confirmedTx],
+        [call(fetchFORTransaction, txDetailsPending, false, null), confirmedTx],
         [matchers.call.fn(sendAnalyticsEvent), undefined],
+        [matchers.select(selectActiveAccountAddress), null],
       ])
       .put(transactionActions.upsertFiatOnRampTransaction(confirmedTx))
       .not.call.fn(sleep)

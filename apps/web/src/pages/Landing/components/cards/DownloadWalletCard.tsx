@@ -3,13 +3,14 @@ import { Alignment, Fit, Layout, useRive } from '@rive-app/react-canvas'
 import { Wallet } from 'pages/Landing/components/Icons'
 import { PillButton } from 'pages/Landing/components/cards/PillButton'
 import ValuePropCard from 'pages/Landing/components/cards/ValuePropCard'
+import { useTranslation } from 'react-i18next'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { Flex, useSporeColors } from 'ui/src'
-import { t } from 'uniswap/src/i18n'
 
 export function DownloadWalletCard() {
   const theme = useSporeColors()
   const isDarkMode = useIsDarkMode()
+  const { t } = useTranslation()
 
   const { rive: lightAnimation, RiveComponent: LightAnimation } = useRive({
     src: '/rive/landing-page.riv',

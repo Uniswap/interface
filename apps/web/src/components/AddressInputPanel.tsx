@@ -4,9 +4,9 @@ import { useAccount } from 'hooks/useAccount'
 import useENS from 'hooks/useENS'
 import styled, { useTheme } from 'lib/styled-components'
 import { ChangeEvent, ReactNode, useCallback } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
-import { Trans, t } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 const InputPanel = styled.div`
@@ -85,6 +85,7 @@ export default function AddressInputPanel({
   // triggers whenever the typed value changes
   onChange: (value: string) => void
 }) {
+  const { t } = useTranslation()
   const { chainId } = useAccount()
   const theme = useTheme()
 

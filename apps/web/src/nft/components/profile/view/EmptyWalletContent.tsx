@@ -2,9 +2,9 @@ import styled from 'lib/styled-components'
 import { EmptyActivityIcon, EmptyNftsIcon, EmptyPoolsIcon, EmptyTokensIcon } from 'nft/components/profile/view/icons'
 import { headlineMedium } from 'nft/css/common.css'
 import { useCallback } from 'react'
+import { Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
 
 const EmptyWalletContainer = styled.div`
   display: flex;

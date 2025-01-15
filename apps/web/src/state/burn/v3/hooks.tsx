@@ -6,11 +6,11 @@ import { useAccount } from 'hooks/useAccount'
 import { usePool } from 'hooks/usePools'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { ReactNode, useCallback, useMemo } from 'react'
+import { Trans } from 'react-i18next'
 import { selectPercent } from 'state/burn/v3/actions'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { InterfaceState } from 'state/webReducer'
 import { PositionDetails } from 'types/position'
-import { Trans } from 'uniswap/src/i18n'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 export function useBurnV3State(): InterfaceState['burnV3'] {

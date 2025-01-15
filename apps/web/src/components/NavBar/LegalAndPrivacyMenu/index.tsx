@@ -1,12 +1,12 @@
 import Expand from 'components/Expand'
 import { PrivacyOptions } from 'components/Icons/PrivacyOptions'
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useOpenModal, useTogglePrivacyPolicy } from 'state/application/hooks'
 import { Anchor, AnchorProps, Flex, Text } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useTranslation } from 'uniswap/src/i18n'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 const MenuLink = ({ children, ...rest }: AnchorProps) => (

@@ -1,7 +1,7 @@
 import styled from 'lib/styled-components'
 import { AlertTriangle } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
 
 const ExplainerText = styled.div`
   color: ${({ theme }) => theme.neutral2};

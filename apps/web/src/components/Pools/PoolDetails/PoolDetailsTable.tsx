@@ -7,10 +7,10 @@ import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
 import styled from 'lib/styled-components'
 import { useMemo, useState } from 'react'
+import { Trans } from 'react-i18next'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
-import { Trans } from 'uniswap/src/i18n'
 
 enum PoolDetailsTableTabs {
   TRANSACTIONS = 'transactions',

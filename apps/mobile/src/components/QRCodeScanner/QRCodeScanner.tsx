@@ -13,6 +13,7 @@ import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
 import { Global, PhotoStacked } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
+import { useSporeColorsForTheme } from 'ui/src/hooks/useSporeColors'
 import { iconSizes, spacing } from 'ui/src/theme'
 import PasteButton from 'uniswap/src/components/buttons/PasteButton'
 import { DevelopmentOnly } from 'wallet/src/components/DevelopmentOnly/DevelopmentOnly'
@@ -43,7 +44,8 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   const isWalletConnectModal = isWalletConnect(props)
 
   const { t } = useTranslation()
-  const colors = useSporeColors()
+  const colors = useSporeColorsForTheme(theme)
+
   const dimensions = useDeviceDimensions()
 
   const [permissionResponse, requestPermissionResponse] = Camera.useCameraPermissions()
@@ -121,8 +123,6 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   const cameraHeight = CAMERA_ASPECT_RATIO * cameraWidth
   const scannerSize = Math.min(overlayWidth, cameraWidth) * SCAN_ICON_WIDTH_RATIO
 
-  const photoSelectBackgroundColor = useSporeColors(theme).surface1
-
   /**
    * Resets the camera auto focus to force the camera to refocus by toggling
    * the auto focus off and on. This allows us to manually let the user refocus
@@ -184,7 +184,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             width="100%"
             onLayout={(event: LayoutChangeEvent): void => setInfoLayout(event.nativeEvent.layout)}
           >
-            <Text color="$neutral1" variant="heading3">
+            <Text color={colors.neutral1.val} variant="heading3">
               {t('qrScanner.title')}
             </Text>
           </Flex>
@@ -248,7 +248,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
           >
             <Flex
               centered
-              backgroundColor={photoSelectBackgroundColor.val}
+              backgroundColor={colors.surface1.val}
               borderRadius="$roundedFull"
               p="$spacing12"
               onPress={onPickImageFilePress}
@@ -263,8 +263,9 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             {isWalletConnectModal && props.numConnections > 0 && (
               <Button
                 fontFamily="$body"
-                icon={<Global color="$neutral2" />}
-                theme="secondary"
+                icon={<Global color={colors.neutral2.val} />}
+                backgroundColor={colors.surface3.val}
+                color={colors.neutral1.val}
                 onPress={props.onPressConnections}
               >
                 {t('qrScanner.button.connections', { count: props.numConnections })}

@@ -1,3 +1,4 @@
+import { config } from 'uniswap/src/config'
 import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
 import { isAndroid, isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
 
@@ -57,7 +58,7 @@ export const uniswapUrls = {
     swapSlippage: `${helpUrl}/articles/8643879653261-What-is-Price-Slippage-`,
     tokenWarning: `${helpUrl}/articles/8723118437133-What-are-token-warnings-`,
     transactionFailure: `${helpUrl}/articles/8643975058829-Why-did-my-transaction-fail-`,
-    uniswapXInfo: `${helpUrl}/articles/17515415311501`,
+    uniswapXInfo: `${helpUrl}/articles/17544708791821`,
     uniswapXFailure: `${helpUrl}/articles/17515489874189-Why-can-my-swap-not-be-filled-`,
     unitagClaimPeriod: `${helpUrl}/articles/24009960408589`,
     unsupportedTokenPolicy: `${helpUrl}/articles/18783694078989-Unsupported-Token-Policy`,
@@ -74,20 +75,22 @@ export const uniswapUrls = {
 
   // Core API Urls
   apiOrigin: 'https://api.uniswap.org',
-  apiBaseUrl: getCloudflareApiBaseUrl(),
-  apiBaseUrlV2: `${getCloudflareApiBaseUrl()}/v2`,
-  graphQLUrl: `${getCloudflareApiBaseUrl(TrafficFlows.GraphQL)}/v1/graphql`,
+  apiBaseUrl: config.apiBaseUrlOverride || getCloudflareApiBaseUrl(),
+  apiBaseUrlV2: config.apiBaseUrlV2Override || `${getCloudflareApiBaseUrl()}/v2`,
+  graphQLUrl: config.graphqlUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.GraphQL)}/v1/graphql`,
 
   // Proxies
-  amplitudeProxyUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Metrics)}/v1/amplitude-proxy`,
-  statsigProxyUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Gating)}/v1/statsig-proxy`,
+  amplitudeProxyUrl:
+    config.amplitudeProxyUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Metrics)}/v1/amplitude-proxy`,
+  statsigProxyUrl: config.statsigProxyUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Gating)}/v1/statsig-proxy`,
 
   // Feature service URL's
-  unitagsApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Unitags)}/v2/unitags`,
-  scantasticApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Scantastic)}/v2/scantastic`,
-  fiatOnRampApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/fiat-on-ramp`, // TODO: WALL-5189 - remove this once we finish migrating away from original FOR endpoint service
-  forApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/FOR.v1.FORService`,
-  tradingApiUrl: getCloudflareApiBaseUrl(TrafficFlows.TradingApi),
+  unitagsApiUrl: config.unitagsApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Unitags)}/v2/unitags`,
+  scantasticApiUrl:
+    config.scantasticApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Scantastic)}/v2/scantastic`,
+  fiatOnRampApiUrl: config.fiatOnRampApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/fiat-on-ramp`,
+  forApiUrl: config.forApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/FOR.v1.FORService`,
+  tradingApiUrl: config.tradingApiUrlOverride || getCloudflareApiBaseUrl(TrafficFlows.TradingApi),
 
   // API Paths
   trmPath: '/v1/screen',

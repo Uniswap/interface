@@ -9,6 +9,7 @@ import { Container } from 'pages/Pool/Positions/create/shared'
 import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { useRangeHopCallbacks } from 'state/mint/v3/hooks'
 import { Button, Flex, FlexProps, SegmentedControl, Text, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
@@ -16,7 +17,6 @@ import { fonts } from 'ui/src/theme'
 import { AmountInput, numericInputRegex } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
 
 enum RangeSelectionInput {
@@ -493,6 +493,9 @@ export const SelectPriceRangeStep = ({
             gap="$gap12"
             borderTopLeftRadius="$rounded20"
             borderTopRightRadius="$rounded20"
+            $lg={{
+              px: '$spacing8',
+            }}
           >
             <DisplayCurrentPrice price={price} />
             {!creatingPoolOrPair && !isPriceRangeInputV2Enabled && (
@@ -534,7 +537,7 @@ export const SelectPriceRangeStep = ({
               />
             )}
           </Flex>
-          <Flex row gap="$gap4">
+          <Flex row gap="$gap4" $lg={{ row: false }}>
             <RangeInput
               input={RangeSelectionInput.MIN}
               decrement={isSorted ? getDecrementLower : getIncrementUpper}

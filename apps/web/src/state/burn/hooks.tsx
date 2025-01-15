@@ -8,10 +8,10 @@ import JSBI from 'jsbi'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useCallback } from 'react'
+import { Trans } from 'react-i18next'
 import { Field, typeInput } from 'state/burn/actions'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { InterfaceState } from 'state/webReducer'
-import { Trans } from 'uniswap/src/i18n'
 
 export function useBurnState(): InterfaceState['burn'] {
   return useAppSelector((state) => state.burn)

@@ -9,6 +9,7 @@ import { currencyId } from 'uniswap/src/utils/currencyId'
 export const MAINNET_CURRENCY = NativeCurrency.onChain(UniverseChainId.Mainnet)
 export const BASE_CURRENCY = NativeCurrency.onChain(UniverseChainId.Base)
 export const ARBITRUM_CURRENCY = NativeCurrency.onChain(UniverseChainId.ArbitrumOne)
+export const MONAD_TESTNET_CURRENCY = NativeCurrency.onChain(UniverseChainId.MonadTestnet)
 export const OPTIMISM_CURRENCY = NativeCurrency.onChain(UniverseChainId.Optimism)
 export const POLYGON_CURRENCY = NativeCurrency.onChain(UniverseChainId.Polygon)
 export const CELO_CURRENCY = NativeCurrency.onChain(UniverseChainId.Celo)

@@ -18,6 +18,7 @@ import { useRpcTokenBalancesWithLoadingIndicator } from 'lib/hooks/useCurrencyBa
 import styled, { useTheme } from 'lib/styled-components'
 import { BodyWrapper } from 'pages/App/AppBody'
 import { ReactNode, useMemo } from 'react'
+import { Trans } from 'react-i18next'
 import { useNavigate, useNavigationType } from 'react-router-dom'
 import { Text } from 'rebass'
 import { toV2LiquidityToken, useTrackedTokenPairs } from 'state/user/hooks'
@@ -25,7 +26,6 @@ import { BackArrowIcon, StyledInternalLink, ThemedText } from 'theme/components'
 import { Button } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
-import { Trans } from 'uniswap/src/i18n'
 
 export const MigrateHeader = styled(ThemedText.H1Small)`
   font-weight: 535;

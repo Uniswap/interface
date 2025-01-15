@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { useDispatch, useSelector } from 'react-redux'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { Feedback, LikeSquare, MessageText, X } from 'ui/src/components/icons'
 import { IconSizeTokens, zIndices } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useTranslation } from 'uniswap/src/i18n'
+import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { appRatingPromptedMsSelector, appRatingProvidedMsSelector } from 'wallet/src/features/wallet/selectors'
 import { setAppRating } from 'wallet/src/features/wallet/slice'
 
 interface AppRatingModalProps {
@@ -23,6 +25,26 @@ export default function AppRatingModal({ onClose }: AppRatingModalProps): JSX.El
   const { t } = useTranslation()
   const [state, setState] = useState(State.Initial)
   const dispatch = useDispatch()
+  const appRatingPromptedMs = useSelector(appRatingPromptedMsSelector)
+  const appRatingProvidedMs = useSelector(appRatingProvidedMsSelector)
+
+  const close = (): void => {
+    sendAnalyticsEvent(WalletEventName.AppRating, {
+      type: 'close',
+      appRatingPromptedMs,
+      appRatingProvidedMs,
+    })
+    onClose()
+  }
+
+  const onRemindLater = (): void => {
+    sendAnalyticsEvent(WalletEventName.AppRating, {
+      type: 'remind',
+      appRatingPromptedMs,
+      appRatingProvidedMs,
+    })
+    onClose()
+  }
 
   const stateConfig = {
     [State.Initial]: {
@@ -42,11 +64,16 @@ export default function AppRatingModal({ onClose }: AppRatingModalProps): JSX.El
       primaryButtonText: t('appRating.feedback.button.send'),
       Icon: MessageText,
       iconSize: '$icon.18' as IconSizeTokens,
-      onSecondaryButtonPress: () => onClose(),
+      onSecondaryButtonPress: onRemindLater,
       onPrimaryButtonPress: (): void => {
         // eslint-disable-next-line security/detect-non-literal-fs-filename
         window.open(uniswapUrls.walletFeedbackForm)
         dispatch(setAppRating({ feedbackProvided: true }))
+        sendAnalyticsEvent(WalletEventName.AppRating, {
+          type: 'feedback-form',
+          appRatingPromptedMs,
+          appRatingProvidedMs,
+        })
         onClose()
       },
     },
@@ -57,11 +84,16 @@ export default function AppRatingModal({ onClose }: AppRatingModalProps): JSX.El
       primaryButtonText: t('common.button.review'),
       Icon: Feedback,
       iconSize: '$icon.24' as IconSizeTokens,
-      onSecondaryButtonPress: () => onClose(),
+      onSecondaryButtonPress: onRemindLater,
       onPrimaryButtonPress: (): void => {
         // eslint-disable-next-line security/detect-non-literal-fs-filename
         window.open(`https://chromewebstore.google.com/detail/uniswap-extension/${chrome.runtime.id}/reviews`)
         dispatch(setAppRating({ ratingProvided: true }))
+        sendAnalyticsEvent(WalletEventName.AppRating, {
+          type: 'store-review',
+          appRatingPromptedMs,
+          appRatingProvidedMs: Date.now(), // to avoid race condition with updates from redux
+        })
         onClose()
       },
     },
@@ -84,8 +116,8 @@ export default function AppRatingModal({ onClose }: AppRatingModalProps): JSX.El
   }, [dispatch])
 
   return (
-    <Modal isDismissible isModalOpen name={ModalName.TokenWarningModal} backgroundColor="$surface1" onClose={onClose}>
-      <TouchableArea p="$spacing16" position="absolute" right={0} top={0} zIndex={zIndices.default} onPress={onClose}>
+    <Modal isDismissible isModalOpen name={ModalName.TokenWarningModal} backgroundColor="$surface1" onClose={close}>
+      <TouchableArea p="$spacing16" position="absolute" right={0} top={0} zIndex={zIndices.default} onPress={close}>
         <X color="$neutral2" size="$icon.20" />
       </TouchableArea>
       <Flex alignItems="center" gap="$spacing8" pt="$spacing16">

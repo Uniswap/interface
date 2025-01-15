@@ -138,6 +138,10 @@ export const networkColors = {
     light: '#222222',
     dark: '#FCFF52',
   },
+  monad: {
+    light: '#836EF9',
+    dark: '#836EF9',
+  },
   worldchain: {
     light: '#222222',
     dark: '#FFFFFF',
@@ -326,6 +330,9 @@ export const colorsLight = {
   // Testnets
   chain_11155111: networkColors.ethereum.light,
   chain_1301: networkColors.unichain.light,
+  chain_41454: networkColors.monad.light,
+
+  pinkThemed: colors.pinkLight,
 }
 
 export type ColorKeys = keyof typeof colorsLight
@@ -409,4 +416,7 @@ export const colorsDark = {
   // Testnets
   chain_11155111: networkColors.ethereum.dark,
   chain_1301: networkColors.unichain.dark,
+  chain_41454: networkColors.monad.dark,
+
+  pinkThemed: colors.pinkDark,
 }

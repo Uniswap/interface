@@ -46,6 +46,8 @@ export default async function getPool(networkName: string, poolAddress: string, 
     url,
     name,
     poolData: {
+      token0Symbol: token0?.symbol,
+      token1Symbol: token1?.symbol,
       feeTier,
       protocolVersion,
       token0Image: token0?.project?.logoUrl,

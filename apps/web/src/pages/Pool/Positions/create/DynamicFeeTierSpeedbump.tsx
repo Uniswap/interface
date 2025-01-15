@@ -1,8 +1,8 @@
 import { Dialog } from 'components/Dialog/Dialog'
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
+import { Trans } from 'react-i18next'
 import { Button, Text } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { Trans } from 'uniswap/src/i18n'
 
 export const DynamicFeeTierSpeedbump = () => {
   const { setPositionState, dynamicFeeTierSpeedbumpData, setDynamicFeeTierSpeedbumpData } = useCreatePositionContext()

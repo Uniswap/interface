@@ -1,6 +1,6 @@
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
-import { t } from 'uniswap/src/i18n'
+import { useTranslation } from 'react-i18next'
 
 const Container = styled.div<{ $size: number; $isActive: boolean }>`
   position: relative;
@@ -32,15 +32,11 @@ interface NavIconProps {
   onClick?: () => void
 }
 
-export const NavIcon = ({
-  children,
-  isActive = false,
-  size = 40,
-  label = t('common.navigationButton'),
-  onClick,
-}: NavIconProps) => {
+export const NavIcon = ({ children, isActive = false, size = 40, label, onClick }: NavIconProps) => {
+  const { t } = useTranslation()
+  const labelWithDefault = label ?? t('common.navigationButton')
   return (
-    <Container $size={size} $isActive={isActive} onClick={onClick} aria-label={label}>
+    <Container $size={size} $isActive={isActive} onClick={onClick} aria-label={labelWithDefault}>
       {children}
     </Container>
   )

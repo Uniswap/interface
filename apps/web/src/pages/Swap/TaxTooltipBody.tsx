@@ -1,6 +1,6 @@
 import styled from 'lib/styled-components'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
 
 const Divider = styled.div`
   width: 100%;

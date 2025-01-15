@@ -16,6 +16,7 @@ import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import {
   DutchOrderTrade,
@@ -89,6 +90,7 @@ export function useUniswapXSwapCallback({
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }
   allowedSlippage: Percent
 }) {
+  const { t } = useTranslation()
   const account = useAccount()
   const accountRef = useRef(account)
   accountRef.current = account
@@ -196,7 +198,7 @@ export function useUniswapXSwapCallback({
             } catch (error) {
               if (didUserReject(error)) {
                 walletTrace.setStatus('cancelled')
-                throw new UserRejectedRequestError(swapErrorToUserReadableMessage(error))
+                throw new UserRejectedRequestError(swapErrorToUserReadableMessage(t, error))
               } else {
                 throw error
               }
@@ -321,10 +323,10 @@ export function useUniswapXSwapCallback({
             throw error
           } else {
             trace.setError(error)
-            throw new Error(swapErrorToUserReadableMessage(error))
+            throw new Error(swapErrorToUserReadableMessage(t, error))
           }
         }
       }),
-    [chainId, trade, allowedSlippage, fiatValues, portfolioBalanceUsd, analyticsContext],
+    [trade, chainId, allowedSlippage, fiatValues, portfolioBalanceUsd, analyticsContext, t],
   )
 }

@@ -1,4 +1,5 @@
 import { ApolloProvider } from '@apollo/client'
+import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev'
 import { DdRum, DdSdkReactNative } from '@datadog/mobile-react-native'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
@@ -15,7 +16,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableFreeze } from 'react-native-screens'
 import { useDispatch, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
-import { DatadogProviderWrapper } from 'src/app/DataDogProvider'
+import { DatadogProviderWrapper } from 'src/app/DatadogProviderWrapper'
 import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'
 import { AppModals } from 'src/app/modals/AppModals'
 import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
@@ -61,7 +62,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
-import i18n from 'uniswap/src/i18n/i18n'
+import i18n from 'uniswap/src/i18n'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { isDetoxBuild } from 'utilities/src/environment/constants'
@@ -71,12 +72,12 @@ import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
-import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
-import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
 // eslint-disable-next-line no-restricted-imports
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { initFirebaseAppCheck } from 'wallet/src/features/appCheck/appCheck'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
+import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
+import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
 import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
@@ -88,6 +89,8 @@ enableFreeze(true)
 
 if (__DEV__) {
   registerConsoleOverrides()
+  loadDevMessages()
+  loadErrorMessages()
 }
 
 // Keep the splash screen visible while we fetch resources until one of our landing pages loads
@@ -180,6 +183,7 @@ function AppOuter(): JSX.Element | null {
     storageWrapper: new MMKVWrapper(new MMKV()),
     maxCacheSizeInBytes: MAX_CACHE_SIZE_IN_BYTES,
     customEndpoint,
+    reduxStore: store,
   })
 
   const onReportPrepared = useCallback((report: RenderPassReport) => {

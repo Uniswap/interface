@@ -1,5 +1,5 @@
-import { t } from 'i18next'
 import { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingStepsContext'
 import { useUnitagClaimContext } from 'src/app/features/unitags/UnitagClaimContext'
@@ -14,6 +14,7 @@ import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/ho
 type onNavigateContinueType = Exclude<ClaimUnitagContentProps['onNavigateContinue'], undefined>
 
 export function UnitagCreateUsernameScreen(): JSX.Element {
+  const { t } = useTranslation()
   const { goToNextStep, goToPreviousStep } = useOnboardingSteps()
   const { setUnitag, setEntryPoint } = useUnitagClaimContext()
   const address = useAccountAddressFromUrlWithThrow()

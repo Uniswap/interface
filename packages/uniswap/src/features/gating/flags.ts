@@ -8,6 +8,8 @@ export enum FeatureFlags {
   Datadog,
   ForAggregator,
   IndicativeSwapQuotes,
+  InstantTokenBalanceUpdate,
+  MonadTestnet,
   PortionFields,
   SharedSwapArbitrumUniswapXExperiment,
   TokenProtection,
@@ -66,6 +68,8 @@ export enum FeatureFlags {
 export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.Datadog, 'datadog'],
   [FeatureFlags.IndicativeSwapQuotes, 'indicative-quotes'],
+  [FeatureFlags.InstantTokenBalanceUpdate, 'instant-token-balance-update'],
+  [FeatureFlags.MonadTestnet, 'monad_testnet'],
   [FeatureFlags.PortionFields, 'portion-fields'],
   [FeatureFlags.SharedSwapArbitrumUniswapXExperiment, 'shared_swap_arbitrum_uniswapx_experiment'],
   [FeatureFlags.TokenProtection, 'token_protection'],

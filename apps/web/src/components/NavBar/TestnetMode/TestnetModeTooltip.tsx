@@ -1,9 +1,9 @@
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { useAtom } from 'jotai'
+import { useTranslation } from 'react-i18next'
 import { Flex, Text, Tooltip } from 'ui/src'
 import { Wrench } from 'ui/src/components/icons/Wrench'
-import { useTranslation } from 'uniswap/src/i18n'
 
 export default function TestnetModeTooltip() {
   const { t } = useTranslation()

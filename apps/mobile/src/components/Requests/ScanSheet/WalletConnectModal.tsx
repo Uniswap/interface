@@ -17,9 +17,10 @@ import { openDeepLink } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { addRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
+import { useSporeColorsForTheme } from 'ui/src/hooks/useSporeColors'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -64,9 +65,7 @@ export function WalletConnectModal({
   const isScanningQr = currentScreenState === ScannerModalState.ScanQr
 
   // We want to always show the QR Code Scanner in "dark mode"
-  const darkColors = useSporeColors('dark')
-  const themeColors = useSporeColors()
-  const colors = isScanningQr ? darkColors : themeColors
+  const colors = useSporeColorsForTheme(isScanningQr ? 'dark' : undefined)
 
   // Update QR scanner states when pending session error alert is shown from WCv2 saga event channel
   useEffect(() => {

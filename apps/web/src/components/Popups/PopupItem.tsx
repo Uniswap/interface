@@ -5,7 +5,9 @@ import {
 } from 'components/Popups/PopupContent'
 import { ToastRegularSimple } from 'components/Popups/ToastRegularSimple'
 import { useAccount } from 'hooks/useAccount'
+import { TFunction } from 'i18next'
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useRemovePopup } from 'state/application/hooks'
 import { PopupContent, PopupType } from 'state/application/reducer'
 import { Flex, Text } from 'ui/src'
@@ -14,7 +16,6 @@ import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { t } from 'uniswap/src/i18n'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
 export default function PopupItem({
@@ -26,6 +27,7 @@ export default function PopupItem({
   content: PopupContent
   popKey: string
 }) {
+  const { t } = useTranslation()
   const removePopup = useRemovePopup()
   const onClose = () => removePopup(popKey)
 
@@ -63,7 +65,7 @@ export default function PopupItem({
         <ToastRegularSimple
           onDismiss={onClose}
           icon={<NetworkLogo chainId={content.chainId} />}
-          text={getSwitchNetworkTitle(content.action, content.chainId as UniverseChainId)}
+          text={getSwitchNetworkTitle(t, content.action, content.chainId as UniverseChainId)}
         />
       )
     }
@@ -78,7 +80,7 @@ export default function PopupItem({
   }
 }
 
-function getSwitchNetworkTitle(action: SwapTab, chainId: UniverseChainId) {
+function getSwitchNetworkTitle(t: TFunction, action: SwapTab, chainId: UniverseChainId) {
   const { label } = getChainInfo(chainId)
 
   switch (action) {

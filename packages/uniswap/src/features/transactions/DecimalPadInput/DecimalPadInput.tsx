@@ -104,6 +104,10 @@ export const DecimalPadInput = memo(
     const [disabledKeys, setDisabledKeys] = useState<Partial<Record<KeyLabel, boolean>>>({})
     const [maxHeight, setMaxHeight] = useState<number | null>(null)
 
+    const hasDecimalSeparator = (v: string): boolean => {
+      return v.includes('.')
+    }
+
     useEffect(() => {
       updateDisabledKeys(valueRef.current)
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -123,27 +127,53 @@ export const DecimalPadInput = memo(
       return { start: selection?.start, end: selection?.end }
     }, [selectionRef])
 
-    const disableKeysConditions = useMemo<Partial<Record<KeyLabel, DisableKeyCondition>>>(
-      () => ({
-        '0': (v) => maxDecimalsReached({ value: v, maxDecimals }),
-        '1': (v) => maxDecimalsReached({ value: v, maxDecimals }),
-        '2': (v) => maxDecimalsReached({ value: v, maxDecimals }),
-        '3': (v) => maxDecimalsReached({ value: v, maxDecimals }),
-        '4': (v) => maxDecimalsReached({ value: v, maxDecimals }),
-        '5': (v) => maxDecimalsReached({ value: v, maxDecimals }),
-        '6': (v) => maxDecimalsReached({ value: v, maxDecimals }),
-        '7': (v) => maxDecimalsReached({ value: v, maxDecimals }),
-        '8': (v) => maxDecimalsReached({ value: v, maxDecimals }),
-        '9': (v) => maxDecimalsReached({ value: v, maxDecimals }),
-        '.': (v) => v.includes('.'),
-        backspace: (v): boolean => {
-          const { start, end } = getCurrentSelection()
-          const cursorAtStart = start === 0 && end === 0
-          return cursorAtStart || v.length === 0
-        },
-      }),
-      [getCurrentSelection, maxDecimals],
+    const isCursorBeforeDecimalSeparator = useCallback(
+      (v: string): boolean => {
+        const { start } = getCurrentSelection()
+        const dotIndex = v.indexOf('.')
+
+        // If no dot exists, we can insert freely, otherwise, check if the cursor is before it
+        if (dotIndex === -1) {
+          return true
+        }
+
+        // If dot exists, check if the cursor is before the dot
+        return start !== undefined && start <= dotIndex
+      },
+      [getCurrentSelection],
     )
+
+    const disableKeysConditions = useMemo<Partial<Record<KeyLabel, DisableKeyCondition>>>(() => {
+      const disableOnMaxDecimals = (v: string): boolean => {
+        // If there's no decimal separator or cursor is before it, always allow input no need to check decimals
+        if (!hasDecimalSeparator(v) || isCursorBeforeDecimalSeparator(v)) {
+          return false
+        }
+        // Otherwise check if we've reached max decimals
+        return maxDecimalsReached({ value: v, maxDecimals })
+      }
+
+      const numericKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] as const
+
+      const disableConditions: Partial<Record<KeyLabel, DisableKeyCondition>> = {}
+
+      // Adding conditions for numeric keys
+      numericKeys.forEach((key) => {
+        disableConditions[key] = disableOnMaxDecimals
+      })
+
+      // Adding condition for the dot key
+      disableConditions['.'] = hasDecimalSeparator
+
+      // Adding condition for the backspace key
+      disableConditions.backspace = (v: string): boolean => {
+        const { start, end } = getCurrentSelection()
+        const cursorAtStart = start === 0 && end === 0
+        return cursorAtStart || v.length === 0
+      }
+
+      return disableConditions
+    }, [getCurrentSelection, isCursorBeforeDecimalSeparator, maxDecimals])
 
     const updateDisabledKeys = useCallback(
       (value: string): void => {

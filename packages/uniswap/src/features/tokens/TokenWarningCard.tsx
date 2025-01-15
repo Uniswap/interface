@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { TouchableArea } from 'ui/src'
 import { InlineWarningCard } from 'uniswap/src/components/InlineWarningCard/InlineWarningCard'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -15,7 +16,6 @@ import {
   getTokenWarningSeverity,
   useTokenWarningCardText,
 } from 'uniswap/src/features/tokens/safetyUtils'
-import { useTranslation } from 'uniswap/src/i18n'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 
 type TokenWarningCardProps = {

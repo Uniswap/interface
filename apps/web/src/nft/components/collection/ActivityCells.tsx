@@ -26,6 +26,7 @@ import { getMarketplaceIcon } from 'nft/utils'
 import { buildActivityAsset } from 'nft/utils/buildActivityAsset'
 import { getTimeDifference } from 'nft/utils/date'
 import { MouseEvent, ReactNode, useMemo, useState } from 'react'
+import { Trans } from 'react-i18next'
 import { ExternalLink } from 'theme/components'
 import {
   NftActivityType,
@@ -34,7 +35,6 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'

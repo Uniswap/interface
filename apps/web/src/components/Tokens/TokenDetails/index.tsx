@@ -21,9 +21,11 @@ import { Swap } from 'pages/Swap'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { PropsWithChildren, useCallback, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { CurrencyState } from 'state/swap/types'
 import { Flex, useIsTouchDevice } from 'ui/src'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { isUniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -33,7 +35,6 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { Trans } from 'uniswap/src/i18n'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { getInitialLogoUrl } from 'utils/getInitialLogoURL'
@@ -74,14 +75,20 @@ function getCurrencyURLAddress(currency?: Currency): string {
   return NATIVE_CHAIN_ID
 }
 
+// Defaults the input currency to the output currency's native currency or undefined if the output currency is already the chain's native currency
+// Note: Query string input currency takes precedence if it's set
 function useSwapInitialInputCurrency() {
   const { currency } = useTDPContext()
   const { useParsedQueryString } = useUrlContext()
   const parsedQs = useParsedQueryString()
 
   const inputTokenAddress = useMemo(() => {
-    return typeof parsedQs.inputCurrency === 'string' ? (parsedQs.inputCurrency as string) : undefined
-  }, [parsedQs])
+    return typeof parsedQs.inputCurrency === 'string'
+      ? parsedQs.inputCurrency
+      : currency.isNative
+        ? undefined
+        : getNativeAddress(currency.chainId)
+  }, [currency.chainId, currency.isNative, parsedQs.inputCurrency])
 
   return useCurrency(inputTokenAddress, currency.chainId)
 }

@@ -3,7 +3,10 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DynamicConfigs, MainnetPrivateRpcConfigKey } from 'uniswap/src/features/gating/configs'
 import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
-import { FLASHBOTS_RPC_URL, FlashbotsRpcProvider } from 'uniswap/src/features/providers/FlashbotsRpcProvider'
+import {
+  FLASHBOTS_DEFAULT_BLOCK_RANGE,
+  FlashbotsRpcProvider,
+} from 'uniswap/src/features/providers/FlashbotsRpcProvider'
 import { logger } from 'utilities/src/logger/logger'
 
 // Should use ProviderManager for provider access unless being accessed outside of ProviderManagerContext (e.g., Apollo initialization)
@@ -32,11 +35,17 @@ export function createEthersProvider(
           boolean
         >(DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey.SendFlashbotsAuthenticationHeader, false)
 
-        if (sendAuthenticationHeader) {
-          return new FlashbotsRpcProvider(signer)
-        } else {
-          return new ethersProviders.JsonRpcProvider(FLASHBOTS_RPC_URL)
-        }
+        const flashbotsBlockRange = getDynamicConfigValue<
+          DynamicConfigs.MainnetPrivateRpc,
+          MainnetPrivateRpcConfigKey,
+          number
+        >(
+          DynamicConfigs.MainnetPrivateRpc,
+          MainnetPrivateRpcConfigKey.FlashbotsBlockRange,
+          FLASHBOTS_DEFAULT_BLOCK_RANGE,
+        )
+
+        return new FlashbotsRpcProvider(flashbotsBlockRange, sendAuthenticationHeader ? signer : undefined)
       }
 
       return new ethersProviders.JsonRpcProvider(privateRPCUrl)

@@ -2,11 +2,11 @@ import { PreferencesHeader } from 'components/NavBar/PreferencesMenu/Header'
 import { PreferencesView } from 'components/NavBar/PreferencesMenu/shared'
 import styled, { useTheme } from 'lib/styled-components'
 import { ChevronRight } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { ThemeSelector } from 'theme/components/ThemeToggle'
-import { Text } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguage, useLanguageInfo } from 'uniswap/src/features/language/hooks'
-import { Trans, t } from 'uniswap/src/i18n'
 
 const Pref = styled.div`
   display: flex;
@@ -14,7 +14,6 @@ const Pref = styled.div`
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 0px;
   gap: 12px;
 `
 const StyledChevron = styled(ChevronRight)`
@@ -46,25 +45,28 @@ function SelectButton({ label, onClick }: { label: string; onClick?: () => void 
 }
 
 type SettingItem = {
-  label: string
+  label?: string
   component: JSX.Element
 }
 
 export function PreferenceSettings({
   setSettingsView,
   showHeader = true,
+  showThemeLabel = true,
 }: {
   setSettingsView: (view: PreferencesView) => void
   showHeader?: boolean
+  showThemeLabel?: boolean
 }) {
+  const { t } = useTranslation()
   const activeLocalCurrency = useAppFiatCurrency()
   const activeLanguage = useCurrentLanguage()
   const languageInfo = useLanguageInfo(activeLanguage)
 
   const items: SettingItem[] = [
     {
-      label: t('themeToggle.theme'),
-      component: <ThemeSelector compact />,
+      label: showThemeLabel ? t('themeToggle.theme') : undefined,
+      component: <ThemeSelector compact fullWidth={!showThemeLabel} />,
     },
     {
       label: t('common.language'),
@@ -86,14 +88,18 @@ export function PreferenceSettings({
         </PreferencesHeader>
       )}
 
-      {items.map(({ label, component }, index) => (
-        <Pref key={`${label}_${index}`}>
-          <Text variant="body2" color="$neutral2" textAlign="left">
-            {label}
-          </Text>
-          {component}
-        </Pref>
-      ))}
+      <Flex gap="$gap12">
+        {items.map(({ label, component }, index) => (
+          <Pref key={`${label}_${index}`}>
+            {label && (
+              <Text variant="body2" color="$neutral2" textAlign="left">
+                {label}
+              </Text>
+            )}
+            {component}
+          </Pref>
+        ))}
+      </Flex>
     </>
   )
 }

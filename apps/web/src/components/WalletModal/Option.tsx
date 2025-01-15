@@ -6,10 +6,10 @@ import { CONNECTOR_ICON_OVERRIDE_MAP, useRecentConnectorId } from 'components/We
 import { walletTypeToAmplitudeWalletType } from 'components/Web3Provider/walletConnect'
 import { useConnect } from 'hooks/useConnect'
 import styled from 'lib/styled-components'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { Trans } from 'uniswap/src/i18n'
 import { isIFramed } from 'utils/isIFramed'
 import { Connector } from 'wagmi'
 

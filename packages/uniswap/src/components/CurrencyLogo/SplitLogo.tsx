@@ -1,15 +1,18 @@
 import { ReactNode } from 'react'
 import { Flex } from 'ui/src'
 import { Shuffle } from 'ui/src/components/icons/Shuffle'
-import { iconSizes } from 'ui/src/theme'
+import { iconSizes, zIndices } from 'ui/src/theme'
 import { CurrencyLogo, STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 
 interface Props {
   inputCurrencyInfo: Maybe<CurrencyInfo>
   outputCurrencyInfo: Maybe<CurrencyInfo>
+  inputLogoUrl?: string
+  outputLogoUrl?: string
   size: number
   chainId: UniverseChainId | null
   customIcon?: ReactNode
@@ -19,7 +22,15 @@ interface Props {
  * Logo, where left 50% of width is taken from one icon (its left 50%)
  * and right side is taken from another icon (its right 50%)
  */
-export function SplitLogo({ size, inputCurrencyInfo, outputCurrencyInfo, chainId, customIcon }: Props): JSX.Element {
+export function SplitLogo({
+  size,
+  inputCurrencyInfo,
+  outputCurrencyInfo,
+  inputLogoUrl,
+  outputLogoUrl,
+  chainId,
+  customIcon,
+}: Props): JSX.Element {
   const iconSize = size / 2
   const networkLogo =
     chainId && chainId !== UniverseChainId.Mainnet ? (
@@ -36,7 +47,11 @@ export function SplitLogo({ size, inputCurrencyInfo, outputCurrencyInfo, chainId
         top={0}
         width={iconSize - 1 /* -1 to allow for space between the icons */}
       >
-        <CurrencyLogo hideNetworkLogo currencyInfo={inputCurrencyInfo} size={size} />
+        {inputLogoUrl ? (
+          <TokenLogo hideNetworkLogo url={inputLogoUrl} chainId={chainId ?? undefined} size={size} />
+        ) : (
+          <CurrencyLogo hideNetworkLogo currencyInfo={inputCurrencyInfo} size={size} />
+        )}
       </Flex>
       <Flex
         flexDirection="row-reverse"
@@ -47,10 +62,14 @@ export function SplitLogo({ size, inputCurrencyInfo, outputCurrencyInfo, chainId
         top={0}
         width={iconSize - 1 /* -1 to allow for space between the icons */}
       >
-        <CurrencyLogo hideNetworkLogo currencyInfo={outputCurrencyInfo} size={size} />
+        {outputLogoUrl ? (
+          <TokenLogo hideNetworkLogo url={outputLogoUrl} chainId={chainId ?? undefined} size={size} />
+        ) : (
+          <CurrencyLogo hideNetworkLogo currencyInfo={outputCurrencyInfo} size={size} />
+        )}
       </Flex>
       {(customIcon || networkLogo) && (
-        <Flex bottom={-4} position="absolute" right={-4}>
+        <Flex bottom={-4} position="absolute" right={-4} zIndex={zIndices.mask}>
           {customIcon ?? networkLogo}
         </Flex>
       )}

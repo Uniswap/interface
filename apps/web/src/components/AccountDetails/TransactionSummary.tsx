@@ -3,6 +3,7 @@ import { BigNumber } from 'ethers/lib/ethers'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import useENSName from 'hooks/useENSName'
 import JSBI from 'jsbi'
+import { Trans } from 'react-i18next'
 import { VoteOption } from 'state/governance/types'
 import {
   AddLiquidityV2PoolTransactionInfo,
@@ -27,7 +28,6 @@ import {
   WrapTransactionInfo,
 } from 'state/transactions/types'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { Trans } from 'uniswap/src/i18n'
 
 function formatAmount(amountRaw: string, decimals: number, sigFigs: number): string {
   return new Fraction(amountRaw, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toSignificant(sigFigs)

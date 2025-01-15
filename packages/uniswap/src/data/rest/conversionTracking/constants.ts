@@ -48,7 +48,7 @@ export const PERSONAL3_CONVERSION_URL = 'https://www.persona3.tech/events/attrib
 const REDDIT_PIXEL_ID = 't2_tic7kuip'
 export const REDDIT_CONVERSION_URL = `https://ads-api.reddit.com/api/v2.0/conversions/events/${REDDIT_PIXEL_ID}`
 
-const GOOGLE_CUSTOMER_ID = '987-182-6344'
+const GOOGLE_CUSTOMER_ID = '9871826344'
 export const GOOGLE_CONVERSION_URL = `https://googleads.googleapis.com/v18/customers/${GOOGLE_CUSTOMER_ID}:uploadClickConversions`
 
 export const GOOGLE_CONVERSION_EVENTS = {
@@ -109,24 +109,24 @@ const REDDIT_CONVERSION_EVENTS = {
   Web: {
     WalletConnected: {
       platformIdType: PlatformIdType.Reddit,
-      eventId: 'wallet_connected_web',
+      eventId: 'SignUp',
       eventName: 'Wallet Connected - Web - CAPI',
     },
     WalletFunded: {
       platformIdType: PlatformIdType.Reddit,
-      eventId: 'wallet_funded_web',
+      eventId: 'AddToCart',
       eventName: 'Wallet Funded - Web - CAPI',
     },
   },
   Extension: {
     Download: {
       platformIdType: PlatformIdType.Reddit,
-      eventId: 'download_extension',
+      eventId: 'Lead',
       eventName: 'Download - Extension - CAPI',
     },
     WalletFunded: {
       platformIdType: PlatformIdType.Reddit,
-      eventId: 'wallet_funded_extension',
+      eventId: 'AddToWishlist',
       eventName: 'Wallet Funded - Extension - CAPI',
     },
   },

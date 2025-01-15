@@ -1,3 +1,4 @@
+import { ConnectError } from '@connectrpc/connect'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { parse } from 'qs'
@@ -13,6 +14,8 @@ import { useConversionProxy } from 'uniswap/src/data/rest/conversionTracking/use
 import { getExternalConversionLeadsCookie } from 'uniswap/src/data/rest/conversionTracking/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useAccount } from 'wagmi'
 
 const conversionLeadsAtom = atomWithStorage<ConversionLead[]>(CONVERSION_LEADS_STORAGE_KEY, [])
@@ -42,8 +45,9 @@ export function useConversionTracking(): UseConversionTracking {
   const conversionProxy = useConversionProxy()
 
   const trackConversion = useCallback(
-    ({ platformIdType, eventId, eventName }: TrackConversionArgs) => {
+    async ({ platformIdType, eventId, eventName }: TrackConversionArgs) => {
       const lead = conversionLeads.find(({ type }) => type === platformIdType)
+      let setAsExecuted: boolean = false
 
       // Prevent triggering events under the following conditions:
       // - No corresponding lead
@@ -64,8 +68,32 @@ export function useConversionTracking(): UseConversionTracking {
 
       const proxyRequest = buildProxyRequest({ lead, address: account.address, eventId, eventName })
 
-      conversionProxy.mutate(proxyRequest, {
-        onSuccess: () => {
+      try {
+        const response = await conversionProxy.mutateAsync(proxyRequest)
+
+        // Prevent success handler if the underlying request is bad
+        if (response.status !== 200) {
+          throw new Error()
+        }
+
+        setAsExecuted = true
+
+        sendAnalyticsEvent(UniswapEventName.ConversionEventSubmitted, {
+          id: lead.id,
+          eventId,
+          eventName,
+          platformIdType,
+        })
+      } catch (error) {
+        // Note: The request will be retried until it exists in executedEvents
+        // If the event has already been executed, but doesn't exist in executedEvents, this will ensure we don't retry errors
+        if (error instanceof ConnectError) {
+          if (error.message.includes('limit for this (user, event)')) {
+            setAsExecuted = true
+          }
+        }
+      } finally {
+        if (setAsExecuted) {
           setConversionLeads((leads: ConversionLead[]) => [
             ...leads.filter(({ id }) => lead.id !== id),
             {
@@ -73,12 +101,19 @@ export function useConversionTracking(): UseConversionTracking {
               executedEvents: lead.executedEvents.concat([eventId]),
             },
           ])
-        },
-      })
+        }
+      }
     },
     // TODO: Investigate why conversionProxy as a dependency causes a rendering loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [account.address, conversionLeads, setConversionLeads],
+    [
+      account.address,
+      conversionLeads,
+      isConversionTrackingEnabled,
+      isGoogleConversionTrackingEnabled,
+      isTwitterConversionTrackingEnabled,
+      setConversionLeads,
+    ],
   )
 
   const trackConversions = useCallback(

@@ -39,9 +39,10 @@ interface NavDropdownProps {
   dropdownRef?: RefObject<HTMLDivElement>
   dataTestId?: string
   padded?: boolean
+  mr?: number
 }
 
-export function NavDropdown({ children, width, dropdownRef, isOpen, padded, dataTestId }: NavDropdownProps) {
+export function NavDropdown({ children, width, dropdownRef, isOpen, padded, dataTestId, mr = 0 }: NavDropdownProps) {
   const shadowProps = useShadowPropsMedium()
   const scrollbarStyles = useScrollbarStyles()
 
@@ -52,6 +53,7 @@ export function NavDropdown({ children, width, dropdownRef, isOpen, padded, data
         enterStyle={{ scale: 0.95, opacity: 0 }}
         exitStyle={{ scale: 0.95, opacity: 0 }}
         width={width}
+        mr={mr}
         elevate
         animation={[
           'fast',

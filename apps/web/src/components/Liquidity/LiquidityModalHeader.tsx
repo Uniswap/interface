@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { CloseIcon } from 'theme/components'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
@@ -6,7 +7,6 @@ import { iconSizes } from 'ui/src/theme'
 import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/form/SwapFormSettings'
 import { Deadline } from 'uniswap/src/features/transactions/swap/settings/configs/Deadline'
 import { Slippage } from 'uniswap/src/features/transactions/swap/settings/configs/Slippage'
-import { useTranslation } from 'uniswap/src/i18n'
 
 export function LiquidityModalHeader({
   title,
@@ -43,7 +43,9 @@ export function LiquidityModalHeader({
           defaultTitle={t('pool.positions.transaction.settings')}
         />
       ) : (
-        CloseIconComponent
+        <Flex position="absolute" top="0" right="0" p="$spacing4">
+          {CloseIconComponent}
+        </Flex>
       )}
     </Flex>
   )

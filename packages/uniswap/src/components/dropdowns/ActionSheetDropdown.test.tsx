@@ -110,7 +110,9 @@ describe(ActionSheetDropdown, () => {
 
     fireEvent.press(option, ON_PRESS_EVENT_PAYLOAD)
 
-    // Should call the onPress function of the option
-    expect(options[2]?.onPress).toHaveBeenCalledTimes(1)
+    await waitFor(() => {
+      // Should call the onPress function of the option
+      expect(options[2]?.onPress).toHaveBeenCalledTimes(1)
+    })
   })
 })

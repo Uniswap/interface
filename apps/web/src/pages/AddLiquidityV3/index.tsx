@@ -66,6 +66,7 @@ import { Dots } from 'pages/LegacyPool/styled'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { Helmet } from 'react-helmet-async/lib/index'
+import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Bound, Field } from 'state/mint/v3/actions'
 import {
@@ -86,7 +87,6 @@ import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { Trans, t } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
@@ -134,6 +134,7 @@ function AddLiquidity() {
     feeAmount?: string
     tokenId?: string
   }>()
+  const { t } = useTranslation()
   const account = useAccount()
   const signer = useEthersSigner()
   const theme = useTheme()

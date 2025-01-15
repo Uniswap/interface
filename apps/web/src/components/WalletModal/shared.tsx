@@ -1,5 +1,5 @@
+import { Trans } from 'react-i18next'
 import { Flex, Text, useMedia } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
 
 export const DetectedBadge = () => {
   const media = useMedia()

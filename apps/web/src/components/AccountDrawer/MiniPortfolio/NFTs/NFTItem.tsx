@@ -9,6 +9,7 @@ import { NftCard } from 'nft/components/card'
 import { detailsHref } from 'nft/components/card/utils'
 import { VerifiedIcon } from 'nft/components/icons'
 import { WalletAsset } from 'nft/types'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
 import { capitalize } from 'tsafe'
@@ -16,7 +17,6 @@ import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/t
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { GqlChainId } from 'uniswap/src/features/chains/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { t } from 'uniswap/src/i18n'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -53,6 +53,7 @@ export function NFT({
   mediaShouldBePlaying: boolean
   setCurrentTokenPlayingMedia: (tokenId: string | undefined) => void
 }) {
+  const { t } = useTranslation()
   const { isTestnetModeEnabled, gqlChains } = useEnabledChains()
   const accountDrawer = useAccountDrawer()
   const navigate = useNavigate()

@@ -4,7 +4,6 @@ import { AddressQRModal } from 'components/AddressQRModal'
 import { Banners } from 'components/Banner/shared/Banners'
 import ConnectedAccountBlocked from 'components/ConnectedAccountBlocked'
 import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
-import FiatOnrampModal from 'components/FiatOnrampModal'
 import { GetTheAppModal } from 'components/NavBar/DownloadApp/Modal'
 import { PrivacyChoicesModal } from 'components/PrivacyChoices'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
@@ -14,7 +13,7 @@ import AddressClaimModal from 'components/claim/AddressClaimModal'
 import DevFlagsBox from 'dev/DevFlagsBox'
 import { useAccount } from 'hooks/useAccount'
 import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
-import { useIsLandingPage } from 'hooks/useIsLandingPage'
+import { PageType, useIsPage } from 'hooks/useIsPage'
 import Bag from 'nft/components/bag/Bag'
 import TransactionCompleteModal from 'nft/components/collection/TransactionCompleteModal'
 import { IncreaseLiquidityModal } from 'pages/IncreaseLiquidity/IncreaseLiquidityModal'
@@ -28,7 +27,7 @@ import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 
 export default function TopLevelModals() {
-  const isLandingPage = useIsLandingPage()
+  const isLandingPage = useIsPage(PageType.LANDING)
   const media = useMedia()
 
   const addressClaimOpen = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)
@@ -69,7 +68,6 @@ export default function TopLevelModals() {
 
       <OffchainActivityModal />
       <TransactionCompleteModal />
-      <FiatOnrampModal />
       {account.address && <ReceiveCryptoModal />}
       {account.address && <AddressQRModal accountAddress={account.address} />}
       <UkDisclaimerModal />

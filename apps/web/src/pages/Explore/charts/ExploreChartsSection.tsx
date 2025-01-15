@@ -14,6 +14,7 @@ import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useAtomValue } from 'jotai/utils'
 import { useTheme } from 'lib/styled-components'
 import { ReactNode, useMemo, useState } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import {
   useDailyProtocolTVL as useRestDailyProtocolTVL,
   useHistoricalProtocolVolume as useRestHistoricalProtocolVolume,
@@ -23,7 +24,6 @@ import { Flex, SegmentedControl, Text, styled } from 'ui/src'
 import { HistoryDuration, PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
-import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const EXPLORE_CHART_HEIGHT_PX = 368
@@ -31,16 +31,6 @@ const EXPLORE_PRICE_SOURCES_V3 = [PriceSource.SubgraphV2, PriceSource.SubgraphV3
 const EXPLORE_PRICE_SOURCES_V4 = [PriceSource.SubgraphV2, PriceSource.SubgraphV3, PriceSource.SubgraphV4]
 
 const TIME_SELECTOR_OPTIONS = [{ value: TimePeriod.DAY }, { value: TimePeriod.WEEK }, { value: TimePeriod.MONTH }]
-
-const ChartsContainer = styled(Flex, {
-  row: true,
-  justifyContent: 'space-between',
-  maxWidth: MAX_WIDTH_MEDIA_BREAKPOINT,
-  width: '100%',
-  ml: 'auto',
-  mr: 'auto',
-  pb: 56,
-})
 
 // a 6% gap is achieved using two 47% width containers, as a parent gap causes an autosizing error with side-by-side lightweight-charts
 const SectionContainer = styled(Flex, {
@@ -69,6 +59,7 @@ const SectionTitle = styled(Text, {
 })
 
 function VolumeChartSection() {
+  const { t } = useTranslation()
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
   const theme = useTheme()
   const isSmallScreen = !useScreenSize()['sm']
@@ -173,7 +164,7 @@ function VolumeChartSection() {
               <ChartHeader
                 value={crosshairData ? getCumulativeSum(crosshairData) : getCumulativeVolume(entries)}
                 time={crosshairData?.time}
-                timePlaceholder={formatHistoryDuration(timeGranularityToHistoryDuration(timePeriod))}
+                timePlaceholder={formatHistoryDuration(t, timeGranularityToHistoryDuration(timePeriod))}
                 protocolData={getVolumeProtocolInfo(crosshairData, EXPLORE_PRICE_SOURCES)}
               />
             )}
@@ -255,9 +246,20 @@ function MinimalStatDisplay({ title, value, time }: { title: ReactNode; value: n
 
 export function ExploreChartsSection() {
   return (
-    <ChartsContainer>
+    <Flex
+      row
+      justifyContent="space-between"
+      maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT}
+      width="100%"
+      ml="auto"
+      mr="auto"
+      pb={56}
+      $sm={{
+        pb: 32,
+      }}
+    >
       <TVLChartSection />
       <VolumeChartSection />
-    </ChartsContainer>
+    </Flex>
   )
 }

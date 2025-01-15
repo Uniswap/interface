@@ -1,39 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
-.c22 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c22 img {
-  width: 17px;
-  height: 36px;
-  object-fit: cover;
-}
-
-.c22 img:first-child {
-  border-radius: 18px 0 0 18px;
-  object-position: 0 0;
-}
-
-.c22 img:last-child {
-  border-radius: 0 18px 18px 0;
-  object-position: 100% 0;
-}
-
-.c23 {
-  width: 18px;
-  height: 36px;
-  border-radius: 50%;
-}
-
 .c21 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -61,84 +28,6 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
   width: 100%;
 }
 
-.c5 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c12 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 4px;
-}
-
-.c19 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c25 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c16 {
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-
 .c14 {
   color: #CECECE;
   -webkit-letter-spacing: -0.01em;
@@ -147,7 +36,7 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c24 {
+.c22 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -225,6 +114,84 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
+}
+
+.c5 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c12 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.c19 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c23 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c16 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
 }
 
 .c6 {
@@ -348,7 +315,7 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
   left: 16px;
 }
 
-.c26 {
+.c24 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -358,15 +325,15 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
   height: 8px;
 }
 
-.c26:hover {
+.c24:hover {
   opacity: 0.6;
 }
 
-.c26:active {
+.c24:active {
   opacity: 0.4;
 }
 
-.c26 path {
+.c24 path {
   stroke: #CECECE;
   stroke-width: 2px;
 }
@@ -504,19 +471,56 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
                   >
                     <div
-                      class="c22"
-                      size="36"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px _width-36px"
                     >
-                      <img
-                        class="c23"
-                        size="36"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                      />
-                      <img
-                        class="c23"
-                        size="36"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                      />
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-17px"
+                        data-testid="input-currency-logo-container"
+                      >
+                        <div
+                          class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+                          data-testid="token-logo"
+                        >
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
+                          />
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                            data-testid="img-token-image"
+                          >
+                            <img
+                              height="36"
+                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                              style="object-fit: contain; border-radius: 18px; z-index: 1;"
+                              width="36"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-17px"
+                        data-testid="output-currency-logo-container"
+                      >
+                        <div
+                          class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+                          data-testid="token-logo"
+                        >
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
+                          />
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                            data-testid="img-token-image"
+                          >
+                            <img
+                              height="36"
+                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                              style="object-fit: contain; border-radius: 18px; z-index: 1;"
+                              width="36"
+                            />
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -528,12 +532,12 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
                     class="c0"
                   >
                     <div
-                      class="c24 css-n8z49y"
+                      class="c22 css-n8z49y"
                     >
                       DAI
                     </div>
                     <div
-                      class="c18 c25"
+                      class="c18 c23"
                       width="100%"
                     />
                   </div>
@@ -541,7 +545,7 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
               </div>
             </div>
             <svg
-              class="c26"
+              class="c24"
             >
               dropdown.svg
             </svg>
@@ -564,39 +568,6 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
 `;
 
 exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
-.c21 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c21 img {
-  width: 17px;
-  height: 36px;
-  object-fit: cover;
-}
-
-.c21 img:first-child {
-  border-radius: 18px 0 0 18px;
-  object-position: 0 0;
-}
-
-.c21 img:last-child {
-  border-radius: 0 18px 18px 0;
-  object-position: 100% 0;
-}
-
-.c22 {
-  width: 18px;
-  height: 36px;
-  border-radius: 50%;
-}
-
 .c20 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -624,84 +595,6 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
   width: 100%;
 }
 
-.c5 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c11 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 4px;
-}
-
-.c18 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c24 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c15 {
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-
 .c13 {
   color: #CECECE;
   -webkit-letter-spacing: -0.01em;
@@ -710,7 +603,7 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c23 {
+.c21 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -788,6 +681,84 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
+}
+
+.c5 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c11 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.c18 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c22 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c15 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
 }
 
 .c6 {
@@ -900,7 +871,7 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
   left: 16px;
 }
 
-.c25 {
+.c23 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -910,15 +881,15 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
   height: 8px;
 }
 
-.c25:hover {
+.c23:hover {
   opacity: 0.6;
 }
 
-.c25:active {
+.c23:active {
   opacity: 0.4;
 }
 
-.c25 path {
+.c23 path {
   stroke: #CECECE;
   stroke-width: 2px;
 }
@@ -1051,19 +1022,56 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
                   >
                     <div
-                      class="c21"
-                      size="36"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px _width-36px"
                     >
-                      <img
-                        class="c22"
-                        size="36"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                      />
-                      <img
-                        class="c22"
-                        size="36"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                      />
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-17px"
+                        data-testid="input-currency-logo-container"
+                      >
+                        <div
+                          class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+                          data-testid="token-logo"
+                        >
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
+                          />
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                            data-testid="img-token-image"
+                          >
+                            <img
+                              height="36"
+                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                              style="object-fit: contain; border-radius: 18px; z-index: 1;"
+                              width="36"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-17px"
+                        data-testid="output-currency-logo-container"
+                      >
+                        <div
+                          class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+                          data-testid="token-logo"
+                        >
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
+                          />
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                            data-testid="img-token-image"
+                          >
+                            <img
+                              height="36"
+                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                              style="object-fit: contain; border-radius: 18px; z-index: 1;"
+                              width="36"
+                            />
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1075,12 +1083,12 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
                     class="c0"
                   >
                     <div
-                      class="c23 css-n8z49y"
+                      class="c21 css-n8z49y"
                     >
                       DAI
                     </div>
                     <div
-                      class="c17 c24"
+                      class="c17 c22"
                       width="100%"
                     />
                   </div>
@@ -1088,7 +1096,7 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
               </div>
             </div>
             <svg
-              class="c25"
+              class="c23"
             >
               dropdown.svg
             </svg>
@@ -1111,39 +1119,6 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
 `;
 
 exports[`SendCurrencyInputform should render placeholder values 1`] = `
-.c22 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c22 img {
-  width: 17px;
-  height: 36px;
-  object-fit: cover;
-}
-
-.c22 img:first-child {
-  border-radius: 18px 0 0 18px;
-  object-position: 0 0;
-}
-
-.c22 img:last-child {
-  border-radius: 0 18px 18px 0;
-  object-position: 100% 0;
-}
-
-.c23 {
-  width: 18px;
-  height: 36px;
-  border-radius: 50%;
-}
-
 .c21 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1171,84 +1146,6 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
   width: 100%;
 }
 
-.c5 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c12 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 4px;
-}
-
-.c19 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c25 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c16 {
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-
 .c14 {
   color: #CECECE;
   -webkit-letter-spacing: -0.01em;
@@ -1257,7 +1154,7 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c24 {
+.c22 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -1335,6 +1232,84 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
+}
+
+.c5 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c12 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.c19 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c23 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c16 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
 }
 
 .c6 {
@@ -1459,7 +1434,7 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
   left: 16px;
 }
 
-.c26 {
+.c24 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -1469,15 +1444,15 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
   height: 8px;
 }
 
-.c26:hover {
+.c24:hover {
   opacity: 0.6;
 }
 
-.c26:active {
+.c24:active {
   opacity: 0.4;
 }
 
-.c26 path {
+.c24 path {
   stroke: #CECECE;
   stroke-width: 2px;
 }
@@ -1613,19 +1588,56 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
                   >
                     <div
-                      class="c22"
-                      size="36"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-36px _width-36px"
                     >
-                      <img
-                        class="c23"
-                        size="36"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                      />
-                      <img
-                        class="c23"
-                        size="36"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                      />
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-17px"
+                        data-testid="input-currency-logo-container"
+                      >
+                        <div
+                          class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+                          data-testid="token-logo"
+                        >
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
+                          />
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                            data-testid="img-token-image"
+                          >
+                            <img
+                              height="36"
+                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                              style="object-fit: contain; border-radius: 18px; z-index: 1;"
+                              width="36"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-17px"
+                        data-testid="output-currency-logo-container"
+                      >
+                        <div
+                          class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-36px _justifyContent-center _pointerEvents-auto _width-36px _position-relative"
+                          data-testid="token-logo"
+                        >
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-18px _borderTopRightRadius-18px _borderBottomRightRadius-18px _borderBottomLeftRadius-18px"
+                          />
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                            data-testid="img-token-image"
+                          >
+                            <img
+                              height="36"
+                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                              style="object-fit: contain; border-radius: 18px; z-index: 1;"
+                              width="36"
+                            />
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1637,12 +1649,12 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
                     class="c0"
                   >
                     <div
-                      class="c24 css-n8z49y"
+                      class="c22 css-n8z49y"
                     >
                       DAI
                     </div>
                     <div
-                      class="c18 c25"
+                      class="c18 c23"
                       width="100%"
                     />
                   </div>
@@ -1650,7 +1662,7 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
               </div>
             </div>
             <svg
-              class="c26"
+              class="c24"
             >
               dropdown.svg
             </svg>

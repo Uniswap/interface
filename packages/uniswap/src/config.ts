@@ -1,10 +1,16 @@
 // eslint-disable-next-line no-restricted-imports
 import {
+  AMPLITUDE_PROXY_URL_OVERRIDE,
+  API_BASE_URL_OVERRIDE,
+  API_BASE_URL_V2_OVERRIDE,
   APPSFLYER_API_KEY,
   APPSFLYER_APP_ID,
   DATADOG_CLIENT_TOKEN,
   DATADOG_PROJECT_ID,
+  FIAT_ON_RAMP_API_URL_OVERRIDE,
   FIREBASE_APP_CHECK_DEBUG_TOKEN,
+  FOR_API_URL_OVERRIDE,
+  GRAPHQL_URL_OVERRIDE,
   INFURA_KEY,
   ONESIGNAL_APP_ID,
   OPENAI_API_KEY,
@@ -16,18 +22,22 @@ import {
   QUICKNODE_BNB_RPC_URL,
   QUICKNODE_CELO_RPC_URL,
   QUICKNODE_MAINNET_RPC_URL,
+  QUICKNODE_MONAD_TESTNET_RPC_URL,
   QUICKNODE_OP_RPC_URL,
   QUICKNODE_POLYGON_RPC_URL,
   QUICKNODE_SEPOLIA_RPC_URL,
   QUICKNODE_WORLDCHAIN_RPC_URL,
   QUICKNODE_ZKSYNC_RPC_URL,
   QUICKNODE_ZORA_RPC_URL,
+  SCANTASTIC_API_URL_OVERRIDE,
   SENTRY_DSN,
   SIMPLEHASH_API_KEY,
   SIMPLEHASH_API_URL,
-  STATSIG_PROXY_URL,
+  STATSIG_PROXY_URL_OVERRIDE,
   TRADING_API_KEY,
+  TRADING_API_URL_OVERRIDE,
   UNISWAP_API_KEY,
+  UNITAGS_API_URL_OVERRIDE,
   WALLETCONNECT_PROJECT_ID,
 } from 'react-native-dotenv'
 import { isNonJestDev } from 'utilities/src/environment/constants'
@@ -43,35 +53,45 @@ import { isNonJestDev } from 'utilities/src/environment/constants'
  */
 
 export interface Config {
+  amplitudeProxyUrlOverride: string
+  apiBaseUrlOverride: string
+  apiBaseUrlV2Override: string
   appsflyerApiKey: string
   appsflyerAppId: string
   datadogClientToken: string
   datadogProjectId: string
-  uniswapApiKey: string
+  fiatOnRampApiUrlOverride: string
+  firebaseAppCheckDebugToken: string
+  forApiUrlOverride: string
+  graphqlUrlOverride: string
   infuraKey: string
   onesignalAppId: string
   openaiApiKey: string
-  sentryDsn: string
-  simpleHashApiKey: string
-  simpleHashApiUrl: string
-  statSigProxyUrl: string
-  walletConnectProjectId: string
   quicknodeArbitrumRpcUrl: string
   quicknodeAvaxRpcUrl: string
   quicknodeBaseRpcUrl: string
   quicknodeBlastRpcUrl: string
   quicknodeBnbRpcUrl: string
   quicknodeCeloRpcUrl: string
+  quicknodeMainnetRpcUrl: string
+  quicknodeMonadTestnetRpcUrl: string
   quicknodeOpRpcUrl: string
   quicknodePolygonRpcUrl: string
-  quicknodeZoraRpcUrl: string
-  quicknodeZkSyncRpcUrl: string
-  quicknodeWorldChainRpcUrl: string
-  quicknodeUnichainSepoliaRpcUrl: string
-  quicknodeMainnetRpcUrl: string
   quicknodeSepoliaRpcUrl: string
+  quicknodeUnichainSepoliaRpcUrl: string
+  quicknodeWorldChainRpcUrl: string
+  quicknodeZkSyncRpcUrl: string
+  quicknodeZoraRpcUrl: string
+  scantasticApiUrlOverride: string
+  sentryDsn: string
+  simpleHashApiKey: string
+  simpleHashApiUrl: string
+  statsigProxyUrlOverride: string
   tradingApiKey: string
-  firebaseAppCheckDebugToken: string
+  tradingApiUrlOverride: string
+  uniswapApiKey: string
+  unitagsApiUrlOverride: string
+  walletConnectProjectId: string
 }
 
 /**
@@ -85,20 +105,20 @@ export interface Config {
  */
 
 const _config: Config = {
+  amplitudeProxyUrlOverride: process.env.AMPLITUDE_PROXY_URL_OVERRIDE || AMPLITUDE_PROXY_URL_OVERRIDE,
+  apiBaseUrlOverride: process.env.API_BASE_URL_OVERRIDE || API_BASE_URL_OVERRIDE,
+  apiBaseUrlV2Override: process.env.API_BASE_URL_V2_OVERRIDE || API_BASE_URL_V2_OVERRIDE,
   appsflyerApiKey: process.env.APPSFLYER_API_KEY || APPSFLYER_API_KEY,
   appsflyerAppId: process.env.APPSFLYER_APP_ID || APPSFLYER_APP_ID,
   datadogClientToken: process.env.DATADOG_CLIENT_TOKEN || DATADOG_CLIENT_TOKEN,
   datadogProjectId: process.env.DATADOG_PROJECT_ID || DATADOG_PROJECT_ID,
-  uniswapApiKey: process.env.UNISWAP_API_KEY || UNISWAP_API_KEY,
+  fiatOnRampApiUrlOverride: process.env.FIAT_ON_RAMP_API_URL_OVERRIDE || FIAT_ON_RAMP_API_URL_OVERRIDE,
+  firebaseAppCheckDebugToken: process.env.FIREBASE_APP_CHECK_DEBUG_TOKEN || FIREBASE_APP_CHECK_DEBUG_TOKEN,
+  forApiUrlOverride: process.env.FOR_API_URL_OVERRIDE || FOR_API_URL_OVERRIDE,
+  graphqlUrlOverride: process.env.GRAPHQL_URL_OVERRIDE || GRAPHQL_URL_OVERRIDE,
   infuraKey: process.env.REACT_APP_INFURA_KEY || INFURA_KEY,
   onesignalAppId: process.env.ONESIGNAL_APP_ID || ONESIGNAL_APP_ID,
   openaiApiKey: process.env.OPENAI_API_KEY || OPENAI_API_KEY,
-  sentryDsn: process.env.REACT_APP_SENTRY_DSN || process.env.SENTRY_DSN || SENTRY_DSN,
-  simpleHashApiKey: process.env.SIMPLEHASH_API_KEY || SIMPLEHASH_API_KEY,
-  simpleHashApiUrl: process.env.SIMPLEHASH_API_URL || SIMPLEHASH_API_URL,
-  statSigProxyUrl: process.env.REACT_APP_STATSIG_PROXY_URL || process.env.STATSIG_PROXY_URL || STATSIG_PROXY_URL,
-  walletConnectProjectId:
-    process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID || process.env.WALLETCONNECT_PROJECT_ID || WALLETCONNECT_PROJECT_ID,
   quicknodeArbitrumRpcUrl:
     process.env.REACT_APP_QUICKNODE_ARBITRUM_RPC_URL ||
     process.env.QUICKNODE_ARBITRUM_RPC_URL ||
@@ -113,34 +133,47 @@ const _config: Config = {
     process.env.REACT_APP_QUICKNODE_BNB_RPC_URL || process.env.QUICKNODE_BNB_RPC_URL || QUICKNODE_BNB_RPC_URL,
   quicknodeCeloRpcUrl:
     process.env.REACT_APP_QUICKNODE_CELO_RPC_URL || process.env.QUICKNODE_CELO_RPC_URL || QUICKNODE_CELO_RPC_URL,
+  quicknodeMainnetRpcUrl:
+    process.env.REACT_APP_QUICKNODE_MAINNET_RPC_URL ||
+    process.env.QUICKNODE_MAINNET_RPC_URL ||
+    QUICKNODE_MAINNET_RPC_URL,
+  quicknodeMonadTestnetRpcUrl:
+    process.env.REACT_APP_QUICKNODE_MONAD_TESTNET_RPC_URL ||
+    process.env.QUICKNODE_MONAD_TESTNET_RPC_URL ||
+    QUICKNODE_MONAD_TESTNET_RPC_URL,
   quicknodeOpRpcUrl:
     process.env.REACT_APP_QUICKNODE_OP_RPC_URL || process.env.QUICKNODE_OP_RPC_URL || QUICKNODE_OP_RPC_URL,
   quicknodePolygonRpcUrl:
     process.env.REACT_APP_QUICKNODE_POLYGON_RPC_URL ||
     process.env.QUICKNODE_POLYGON_RPC_URL ||
     QUICKNODE_POLYGON_RPC_URL,
-  quicknodeZoraRpcUrl:
-    process.env.REACT_APP_QUICKNODE_ZORA_RPC_URL || process.env.QUICKNODE_ZORA_RPC_URL || QUICKNODE_ZORA_RPC_URL,
-  quicknodeZkSyncRpcUrl:
-    process.env.REACT_APP_QUICKNODE_ZKSYNC_RPC_URL || process.env.QUICKNODE_ZKSYNC_RPC_URL || QUICKNODE_ZKSYNC_RPC_URL,
-  quicknodeWorldChainRpcUrl:
-    process.env.REACT_APP_QUICKNODE_WORLDCHAIN_RPC_URL ||
-    process.env.QUICKNODE_WORLDCHAIN_RPC_URL ||
-    QUICKNODE_WORLDCHAIN_RPC_URL,
-  quicknodeUnichainSepoliaRpcUrl:
-    process.env.REACT_APP_QUICKNODE_ASTROCHAIN_SEPOLIA_RPC_URL ||
-    process.env.QUICKNODE_ASTROCHAIN_SEPOLIA_RPC_URL ||
-    QUICKNODE_ASTROCHAIN_SEPOLIA_RPC_URL,
-  quicknodeMainnetRpcUrl:
-    process.env.REACT_APP_QUICKNODE_MAINNET_RPC_URL ||
-    process.env.QUICKNODE_MAINNET_RPC_URL ||
-    QUICKNODE_MAINNET_RPC_URL,
   quicknodeSepoliaRpcUrl:
     process.env.REACT_APP_QUICKNODE_SEPOLIA_RPC_URL ||
     process.env.QUICKNODE_SEPOLIA_RPC_URL ||
     QUICKNODE_SEPOLIA_RPC_URL,
+  quicknodeUnichainSepoliaRpcUrl:
+    process.env.REACT_APP_QUICKNODE_ASTROCHAIN_SEPOLIA_RPC_URL ||
+    process.env.QUICKNODE_ASTROCHAIN_SEPOLIA_RPC_URL ||
+    QUICKNODE_ASTROCHAIN_SEPOLIA_RPC_URL,
+  quicknodeWorldChainRpcUrl:
+    process.env.REACT_APP_QUICKNODE_WORLDCHAIN_RPC_URL ||
+    process.env.QUICKNODE_WORLDCHAIN_RPC_URL ||
+    QUICKNODE_WORLDCHAIN_RPC_URL,
+  quicknodeZkSyncRpcUrl:
+    process.env.REACT_APP_QUICKNODE_ZKSYNC_RPC_URL || process.env.QUICKNODE_ZKSYNC_RPC_URL || QUICKNODE_ZKSYNC_RPC_URL,
+  quicknodeZoraRpcUrl:
+    process.env.REACT_APP_QUICKNODE_ZORA_RPC_URL || process.env.QUICKNODE_ZORA_RPC_URL || QUICKNODE_ZORA_RPC_URL,
+  scantasticApiUrlOverride: process.env.SCANTASTIC_API_URL_OVERRIDE || SCANTASTIC_API_URL_OVERRIDE,
+  sentryDsn: process.env.REACT_APP_SENTRY_DSN || process.env.SENTRY_DSN || SENTRY_DSN,
+  simpleHashApiKey: process.env.SIMPLEHASH_API_KEY || SIMPLEHASH_API_KEY,
+  simpleHashApiUrl: process.env.SIMPLEHASH_API_URL || SIMPLEHASH_API_URL,
+  statsigProxyUrlOverride: process.env.STATSIG_PROXY_URL_OVERRIDE || STATSIG_PROXY_URL_OVERRIDE,
   tradingApiKey: process.env.REACT_APP_TRADING_API_KEY || process.env.TRADING_API_KEY || TRADING_API_KEY,
-  firebaseAppCheckDebugToken: process.env.FIREBASE_APP_CHECK_DEBUG_TOKEN || FIREBASE_APP_CHECK_DEBUG_TOKEN,
+  tradingApiUrlOverride: process.env.TRADING_API_URL_OVERRIDE || TRADING_API_URL_OVERRIDE,
+  uniswapApiKey: process.env.UNISWAP_API_KEY || UNISWAP_API_KEY,
+  unitagsApiUrlOverride: process.env.UNITAGS_API_URL_OVERRIDE || UNITAGS_API_URL_OVERRIDE,
+  walletConnectProjectId:
+    process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID || process.env.WALLETCONNECT_PROJECT_ID || WALLETCONNECT_PROJECT_ID,
 }
 
 export const config = Object.freeze(_config)

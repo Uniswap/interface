@@ -2,40 +2,7 @@
 
 exports[`TDPPoolTable renders data filled state 1`] = `
 <DocumentFragment>
-  .c4 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c4 img {
-  width: 13px;
-  height: 28px;
-  object-fit: cover;
-}
-
-.c4 img:first-child {
-  border-radius: 14px 0 0 14px;
-  object-position: 0 0;
-}
-
-.c4 img:last-child {
-  border-radius: 0 14px 14px 0;
-  object-position: 100% 0;
-}
-
-.c5 {
-  width: 14px;
-  height: 28px;
-  border-radius: 50%;
-}
-
-.c3 {
+  .c3 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -282,19 +249,56 @@ exports[`TDPPoolTable renders data filled state 1`] = `
                               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
                             >
                               <div
-                                class="c4"
-                                size="28"
+                                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-28px _width-28px"
                               >
-                                <img
-                                  class="c5"
-                                  size="28"
-                                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                                />
-                                <img
-                                  class="c5"
-                                  size="28"
-                                  src="ethereum-logo.png"
-                                />
+                                <div
+                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-13px"
+                                  data-testid="input-currency-logo-container"
+                                >
+                                  <div
+                                    class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-28px _justifyContent-center _pointerEvents-auto _width-28px _position-relative"
+                                    data-testid="token-logo"
+                                  >
+                                    <div
+                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-14px _borderTopRightRadius-14px _borderBottomRightRadius-14px _borderBottomLeftRadius-14px"
+                                    />
+                                    <div
+                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                                      data-testid="img-token-image"
+                                    >
+                                      <img
+                                        height="28"
+                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                                        style="object-fit: contain; border-radius: 14px; z-index: 1;"
+                                        width="28"
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                                <div
+                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-13px"
+                                  data-testid="output-currency-logo-container"
+                                >
+                                  <div
+                                    class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-28px _justifyContent-center _pointerEvents-auto _width-28px _position-relative"
+                                    data-testid="token-logo"
+                                  >
+                                    <div
+                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-14px _borderTopRightRadius-14px _borderBottomRightRadius-14px _borderBottomLeftRadius-14px"
+                                    />
+                                    <div
+                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                                      data-testid="img-token-image"
+                                    >
+                                      <img
+                                        height="28"
+                                        src="ethereum-logo.png"
+                                        style="object-fit: contain; border-radius: 14px; z-index: 1;"
+                                        width="28"
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>

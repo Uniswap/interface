@@ -11,10 +11,10 @@ import { useSellAsset } from 'nft/hooks'
 import { generateTweetForList, pluralize } from 'nft/utils'
 import { useMemo } from 'react'
 import { Twitter, X } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const SuccessImage = styled.img<{ numImages: number }>`

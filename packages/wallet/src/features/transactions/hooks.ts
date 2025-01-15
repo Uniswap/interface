@@ -203,7 +203,7 @@ export function useMergeLocalAndRemoteTransactions(
     }
 
     const hashes = new Set<string>()
-    const offChainFiatOnRampTxs = new Map<string, TransactionDetails>()
+    const offChainFORTxs = new Map<string, TransactionDetails>()
     const unsubmittedTxs: TransactionDetails[] = []
 
     function addToMap(map: HashToTxMap, tx: TransactionDetails): HashToTxMap {
@@ -217,10 +217,11 @@ export function useMergeLocalAndRemoteTransactions(
         map.set(hash, tx)
         hashes.add(hash)
       } else if (
+        tx.typeInfo.type === TransactionType.OffRampSale ||
         tx.typeInfo.type === TransactionType.OnRampPurchase ||
         tx.typeInfo.type === TransactionType.OnRampTransfer
       ) {
-        offChainFiatOnRampTxs.set(tx.id, tx)
+        offChainFORTxs.set(tx.id, tx)
       } else if (isBridge(tx) || isClassic(tx)) {
         unsubmittedTxs.push(tx)
       }
@@ -231,7 +232,7 @@ export function useMergeLocalAndRemoteTransactions(
     const remoteTxMap = remoteTransactions.reduce(addToMap, new Map<string, TransactionDetails>())
     const localTxMap = localTransactions.reduce(addToMap, new Map<string, TransactionDetails>())
 
-    const deDupedTxs: TransactionDetails[] = [...offChainFiatOnRampTxs.values(), ...unsubmittedTxs]
+    const deDupedTxs: TransactionDetails[] = [...offChainFORTxs.values(), ...unsubmittedTxs]
 
     for (const hash of [...hashes]) {
       const remoteTx = remoteTxMap.get(hash)

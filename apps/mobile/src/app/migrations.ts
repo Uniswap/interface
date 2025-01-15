@@ -16,6 +16,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { unchecksumDismissedTokenWarningKeys } from 'uniswap/src/state/uniswapMigrations'
 import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -954,6 +955,8 @@ export const migrations = {
   80: updateExploreOrderByType,
 
   81: removeCreatedOnboardingRedesignAccountBehaviorHistory,
+
+  82: unchecksumDismissedTokenWarningKeys,
 }
 
-export const MOBILE_STATE_VERSION = 81
+export const MOBILE_STATE_VERSION = 82

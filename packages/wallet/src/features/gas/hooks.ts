@@ -12,7 +12,7 @@ import { getCancelOrderTxRequest } from 'wallet/src/features/transactions/cancel
 
 export type CancelationGasFeeDetails = {
   cancelRequest: providers.TransactionRequest
-  cancelationGasFee: string
+  cancelationGasFeeDisplayValue: string
 }
 
 /**
@@ -37,13 +37,16 @@ export function useCancelationGasFeeInfo(transaction: TransactionDetails): Cance
   const baseTxGasFee = useTransactionGasFee(classicCancelRequest, /* skip = */ isUniswapXTx)
   return useMemo(() => {
     if (isUniswapXTx) {
-      if (!uniswapXCancelRequest.data || !uniswapXGasFee.value) {
+      if (!uniswapXCancelRequest.data || !uniswapXGasFee.value || !uniswapXGasFee.displayValue) {
         return undefined
       }
-      return { cancelRequest: uniswapXCancelRequest.data, cancelationGasFee: uniswapXGasFee.value }
+      return {
+        cancelRequest: uniswapXCancelRequest.data,
+        cancelationGasFeeDisplayValue: uniswapXGasFee.displayValue,
+      }
     }
 
-    if (!baseTxGasFee.params) {
+    if (!baseTxGasFee.params || !baseTxGasFee.value || !baseTxGasFee.displayValue) {
       return undefined
     }
 
@@ -68,27 +71,47 @@ export function useCancelationGasFeeInfo(transaction: TransactionDetails): Cance
       gasLimit: baseTxGasFee.params.gasLimit,
     }
 
+    const cancelationGasFeeDisplayValue = getCancellationGasFeeDisplayValue(
+      adjustedFeeDetails,
+      baseTxGasFee.params.gasLimit,
+      baseTxGasFee.value,
+      baseTxGasFee.displayValue,
+    )
+
     return {
       cancelRequest,
-      cancelationGasFee: getCancelationGasFee(adjustedFeeDetails, baseTxGasFee.params.gasLimit),
+      cancelationGasFeeDisplayValue,
     }
   }, [
     isUniswapXTx,
     baseTxGasFee.params,
+    baseTxGasFee.value,
+    baseTxGasFee.displayValue,
     classicCancelRequest,
     transaction,
     uniswapXCancelRequest.data,
     uniswapXGasFee.value,
+    uniswapXGasFee.displayValue,
   ])
 }
 
-function getCancelationGasFee(adjustedFeeDetails: FeeDetails, gasLimit: string): string {
+function getCancellationGasFeeDisplayValue(
+  adjustedFeeDetails: FeeDetails,
+  gasLimit: string,
+  previousValue: string,
+  previousDisplayValue: string,
+): string {
+  // Use the original ratio of displayValue to value to maintain consistency with original gas fees
+  return getCancelationGasFee(adjustedFeeDetails, gasLimit).mul(previousDisplayValue).div(previousValue).toString()
+}
+
+function getCancelationGasFee(adjustedFeeDetails: FeeDetails, gasLimit: string): BigNumber {
   // doing object destructuring here loses ts checks based on FeeDetails.type >:(
   if (adjustedFeeDetails.type === FeeType.LEGACY) {
-    return BigNumber.from(gasLimit).mul(adjustedFeeDetails.params.gasPrice).toString()
+    return BigNumber.from(gasLimit).mul(adjustedFeeDetails.params.gasPrice)
   }
 
-  return BigNumber.from(adjustedFeeDetails.params.maxFeePerGas).mul(gasLimit).toString()
+  return BigNumber.from(adjustedFeeDetails.params.maxFeePerGas).mul(gasLimit)
 }
 
 function useUniswapXCancelRequest(transaction: TransactionDetails): {

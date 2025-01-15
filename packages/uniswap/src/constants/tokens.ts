@@ -3,6 +3,14 @@ import { Currency, NativeCurrency, Token, UNI_ADDRESSES, WETH9 } from '@uniswap/
 import invariant from 'tiny-invariant'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
+export const USDT_MONAD_TESTNET = new Token(
+  UniverseChainId.MonadTestnet,
+  '0xfBC2D240A5eD44231AcA3A9e9066bc4b33f01149',
+  6,
+  'USDT',
+  'Tether USD',
+)
+
 export const USDC_SEPOLIA = new Token(
   UniverseChainId.Sepolia,
   '0x1c7d4b196cb0c7b01d743fbc6116a902379c7238',
@@ -407,6 +415,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
     'CELO',
     'Celo native asset',
   ),
+  [UniverseChainId.MonadTestnet]: new Token(
+    UniverseChainId.MonadTestnet,
+    '0x93EACdB111FF98dE9a8Ac5823d357BBc4842aE63',
+    18,
+    'WMON',
+    'Wrapped MON',
+  ),
   [UniverseChainId.Optimism]: new Token(
     UniverseChainId.Optimism,
     '0x4200000000000000000000000000000000000006',
@@ -553,6 +568,33 @@ class AvaxNativeCurrency extends NativeCurrency {
   }
 }
 
+function isMonadTestnet(chainId: number): chainId is UniverseChainId.MonadTestnet {
+  return chainId === UniverseChainId.MonadTestnet
+}
+
+// can reuse for monad mainnet when we add support
+class MonadTestnetNativeCurrency extends NativeCurrency {
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId
+  }
+
+  get wrapped(): Token {
+    if (!isMonadTestnet(this.chainId)) {
+      throw new Error('Not monad testnet')
+    }
+    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
+    invariant(wrapped instanceof Token)
+    return wrapped
+  }
+
+  public constructor(chainId: number) {
+    if (!isMonadTestnet(chainId)) {
+      throw new Error('Not monad testnet')
+    }
+    super(chainId, 18, 'MON', 'MON')
+  }
+}
+
 class ExtendedEther extends NativeCurrency {
   public get wrapped(): Token {
     const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
@@ -591,6 +633,8 @@ export function nativeOnChain(chainId: number): NativeCurrency | Token {
     nativeCurrency = new BscNativeCurrency(chainId)
   } else if (isAvalanche(chainId)) {
     nativeCurrency = new AvaxNativeCurrency(chainId)
+  } else if (isMonadTestnet(chainId)) {
+    nativeCurrency = new MonadTestnetNativeCurrency(chainId)
   } else {
     nativeCurrency = ExtendedEther.onChain(chainId)
   }

@@ -19,6 +19,9 @@ import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   BridgeTransactionInfo,
+  OffRampSaleInfo,
+  OnRampPurchaseInfo,
+  OnRampTransferInfo,
   TransactionDetails,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -108,24 +111,17 @@ export function useTransactionDetailsInfoRows(
       break
     case TransactionType.OnRampPurchase:
     case TransactionType.OnRampTransfer:
+      specificRows.push(<FORProviderRow key="forProvider" isDarkMode={isDarkMode} typeInfo={typeInfo} />)
+      break
+    case TransactionType.OffRampSale:
       specificRows.push(
-        <InfoRow key="onRampSender" label={t('transaction.details.from')}>
-          <UniversalImage
-            size={{
-              width: iconSizes.icon16,
-              height: iconSizes.icon16,
-              resizeMode: UniversalImageResizeMode.Contain,
-            }}
-            style={{
-              image: {
-                borderRadius: borderRadii.rounded4,
-              },
-            }}
-            uri={isDarkMode ? typeInfo.serviceProvider.logoDarkUrl : typeInfo.serviceProvider.logoLightUrl}
-          />
-          <Text variant="body3">{typeInfo.serviceProvider.name}</Text>
+        <InfoRow key="forFee" label={t('transaction.details.providerFee')}>
+          <Text variant="body3">
+            {typeInfo.transactionFee} {typeInfo.destinationTokenSymbol}
+          </Text>
         </InfoRow>,
       )
+      specificRows.push(<FORProviderRow key="forProvider" isDarkMode={isDarkMode} typeInfo={typeInfo} />)
       break
     case TransactionType.Bridge:
       if (isShowingMore) {
@@ -320,6 +316,35 @@ function UniswapFeeRow({ typeInfo }: { typeInfo: SwapTypeTransactionInfo }): JSX
   return (
     <InfoRow label={t('transaction.details.uniswapFee', { feePercent: UNISWAP_FEE * 100 })}>
       <Text variant="body3">{formattedApproximateFee}</Text>
+    </InfoRow>
+  )
+}
+
+function FORProviderRow({
+  isDarkMode,
+  typeInfo,
+}: {
+  isDarkMode: boolean
+  typeInfo: OnRampPurchaseInfo | OnRampTransferInfo | OffRampSaleInfo
+}): JSX.Element {
+  const { t } = useTranslation()
+
+  return (
+    <InfoRow key="forProvider" label={t('transaction.details.from')}>
+      <UniversalImage
+        size={{
+          width: iconSizes.icon16,
+          height: iconSizes.icon16,
+          resizeMode: UniversalImageResizeMode.Contain,
+        }}
+        style={{
+          image: {
+            borderRadius: borderRadii.rounded4,
+          },
+        }}
+        uri={isDarkMode ? typeInfo.serviceProvider.logoDarkUrl : typeInfo.serviceProvider.logoLightUrl}
+      />
+      <Text variant="body3">{typeInfo.serviceProvider.name}</Text>
     </InfoRow>
   )
 }

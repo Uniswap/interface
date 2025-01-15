@@ -2,15 +2,16 @@ import { InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events
 import Badge from 'components/Badge/Badge'
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
 import { ChainLogo } from 'components/Logo/ChainLogo'
-import { AllNetworksIcon } from 'components/Tokens/TokenTable/icons'
 import deprecatedStyled, { useTheme } from 'lib/styled-components'
 import { ExploreTab } from 'pages/Explore'
 import { useExploreParams } from 'pages/Explore/redirects'
 import { Dispatch, SetStateAction, memo, useCallback, useState } from 'react'
 import { Check } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { EllipsisTamaguiStyle } from 'theme/components'
 import { ElementAfterText, Flex, FlexProps, ScrollView, styled } from 'ui/src'
+import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -21,7 +22,6 @@ import { ALL_CHAIN_IDS, UniverseChainId, UniverseChainInfo } from 'uniswap/src/f
 import { isBackendSupportedChainId, isTestnetChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useTranslation } from 'uniswap/src/i18n'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 
 const NetworkLabel = styled(Flex, {
@@ -87,7 +87,7 @@ export default function TableNetworkFilter({ showMultichainOption = true }: { sh
           menuLabel={
             <NetworkLabel>
               {!currentChainId && showMultichainOption ? (
-                <AllNetworksIcon />
+                <NetworkLogo chainId={null} />
               ) : (
                 <ChainLogo
                   chainId={currentChainId ?? UniverseChainId.Mainnet}
@@ -166,7 +166,11 @@ const TableNetworkItem = memo(function TableNetworkItem({
         }}
       >
         <NetworkLabel>
-          {isAllNetworks ? <AllNetworksIcon /> : <ChainLogo chainId={chainId ?? UniverseChainId.Mainnet} size={20} />}{' '}
+          {isAllNetworks ? (
+            <NetworkLogo chainId={null} />
+          ) : (
+            <ChainLogo chainId={chainId ?? UniverseChainId.Mainnet} size={20} />
+          )}
           <ElementAfterText
             text={isAllNetworks ? t('transaction.network.all') : chainInfo.label}
             textProps={{ variant: 'body2', ...EllipsisTamaguiStyle }}

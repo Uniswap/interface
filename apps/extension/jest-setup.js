@@ -1,16 +1,13 @@
-import 'utilities/src/logger/mocks'
+import 'utilities/jest-package-mocks'
+import 'uniswap/jest-package-mocks'
+import 'wallet/jest-package-mocks'
+import 'ui/jest-package-mocks'
 
 import { chrome } from 'jest-chrome'
 import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
-import { TextEncoder, TextDecoder } from 'util'
 import { mockSharedPersistQueryClientProvider } from 'uniswap/src/test/mocks/mockSharedPersistQueryClientProvider'
-import { mockUIAssets } from 'ui/src/test/mocks/mockUIAssets'
-import { mockLocalizationContext } from 'uniswap/src/test/mocks/locale'
 
 process.env.IS_UNISWAP_EXTENSION = true
-
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder;
 
 const ignoreLogs = {
   error: [
@@ -73,8 +70,3 @@ jest.mock('wallet/src/features/appearance/hooks', () => {
   }
 })
 
-jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
-
-jest.mock('uniswap/src/data/apiClients/SharedPersistQueryClientProvider', () => mockSharedPersistQueryClientProvider)
-
-mockUIAssets()

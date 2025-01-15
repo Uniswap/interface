@@ -21,6 +21,7 @@ import { ExchangeTransferModal } from 'src/features/fiatOnRamp/ExchangeTransferM
 import { FiatOnRampAggregatorModal } from 'src/features/fiatOnRamp/FiatOnRampAggregatorModal'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { ScantasticModal } from 'src/features/scantastic/ScantasticModal'
+import { TestnetSwitchModal } from 'src/features/testnetMode/TestnetSwitchModal'
 import { ReceiveCryptoModal } from 'src/screens/ReceiveCryptoModal'
 import { SettingsFiatCurrencyModal } from 'src/screens/SettingsFiatCurrencyModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -118,6 +119,10 @@ export function AppModals(): JSX.Element {
 
       <LazyModalRenderer name={ModalName.TokenWarning}>
         <TokenWarningModalWrapper />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.TestnetSwitchModal}>
+        <TestnetSwitchModal />
       </LazyModalRenderer>
     </>
   )

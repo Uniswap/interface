@@ -47,7 +47,7 @@ exports[`TokenDescription no description or social buttons shown when not availa
           data-testid="token-details-info-section"
         >
           <span
-            class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548"
+            class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
             data-disable-theme="true"
           >
             Info
@@ -163,19 +163,6 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
   height: inherit;
 }
 
-.c2 {
-  color: #7D7D7D;
-  font-weight: 485;
-  font-size: 0.85em;
-  padding-top: 0.5em;
-}
-
-.c2:hover,
-.c2:focus {
-  color: #636363;
-  cursor: pointer;
-}
-
 <span
     class=""
     style="display: contents;"
@@ -191,7 +178,7 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
           data-testid="token-details-info-section"
         >
           <span
-            class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548"
+            class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
             data-disable-theme="true"
           >
             Info
@@ -332,12 +319,13 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
             >
               USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value...
             </p>
-            <div
-              class="c2"
+            <span
+              class="font_body _mb-_sm_2rem _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _opacity-0hover-0--8 _opacity-0active-0--6 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _display-flex _fontWeight-f-weight-bo3548 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _pt-0--5em _cursor-pointer"
+              data-disable-theme="true"
               data-testid="token-description-show-more-button"
             >
               Show more
-            </div>
+            </span>
           </span>
         </div>
       </span>
@@ -372,19 +360,6 @@ exports[`TokenDescription truncates description and shows more 1`] = `
   height: inherit;
 }
 
-.c2 {
-  color: #7D7D7D;
-  font-weight: 485;
-  font-size: 0.85em;
-  padding-top: 0.5em;
-}
-
-.c2:hover,
-.c2:focus {
-  color: #636363;
-  cursor: pointer;
-}
-
 <span
     class=""
     style="display: contents;"
@@ -400,7 +375,7 @@ exports[`TokenDescription truncates description and shows more 1`] = `
           data-testid="token-details-info-section"
         >
           <span
-            class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548"
+            class="font_heading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
             data-disable-theme="true"
           >
             Info
@@ -541,12 +516,13 @@ exports[`TokenDescription truncates description and shows more 1`] = `
             >
               USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value...
             </p>
-            <div
-              class="c2"
+            <span
+              class="font_body _mb-_sm_2rem _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _opacity-0hover-0--8 _opacity-0active-0--6 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _display-flex _fontWeight-f-weight-bo3548 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _pt-0--5em _cursor-pointer"
+              data-disable-theme="true"
               data-testid="token-description-show-more-button"
             >
               Show more
-            </div>
+            </span>
           </span>
         </div>
       </span>

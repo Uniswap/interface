@@ -2,19 +2,14 @@
 // For example: https://reactnavigation.org/docs/testing/
 
 import 'core-js' // necessary so setImmediate works in tests
-import 'uniswap/src/i18n/i18n' // Uses real translations for tests
-import 'utilities/src/logger/mocks'
+import 'utilities/jest-package-mocks'
+import 'uniswap/jest-package-mocks'
+import 'wallet/jest-package-mocks'
+import 'ui/jest-package-mocks'
+
+import 'uniswap/src/i18n' // Uses real translations for tests
 
 import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js'
-import { localizeMock as mockRNLocalize } from 'react-native-localize/mock'
-import { mockUIAssets } from 'ui/src/test/mocks/mockUIAssets'
-import { mockLocalizationContext } from 'uniswap/src/test/mocks/locale'
-import { mockSharedPersistQueryClientProvider } from 'uniswap/src/test/mocks/mockSharedPersistQueryClientProvider'
-import { TextDecoder, TextEncoder } from 'util'
-import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
-
-global.TextEncoder = TextEncoder
-global.TextDecoder = TextDecoder
 
 jest.mock('@uniswap/client-explore/dist/uniswap/explore/v1/service-ExploreStatsService_connectquery', () => {})
 
@@ -78,30 +73,9 @@ jest.mock('@react-navigation/elements', () => ({
 
 require('react-native-reanimated').setUpTests()
 
-jest.mock('expo-localization', () => ({
-  getLocales: () => [
-    {
-      languageCode: 'en',
-      languageTag: 'en-US',
-      regionCode: null,
-      currencyCode: null,
-      currencySymbol: null,
-      decimalSeparator: null,
-      digitGroupingSeparator: null,
-      textDirection: null,
-      measurementSystem: null,
-      temperatureUnit: null,
-    },
-  ],
-}))
-
-jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
-
 jest.mock('react-native/Libraries/Share/Share', () => ({
   share: jest.fn(),
 }))
-
-jest.mock('react-native-localize', () => mockRNLocalize)
 
 jest.mock('@react-native-firebase/auth', () => () => ({
   signInAnonymously: jest.fn(),
@@ -123,21 +97,7 @@ jest.mock('react-native/Libraries/Linking/Linking', () => ({
   getInitialURL: jest.fn(),
 }))
 
-// Mock the appearance hook for all tests
-const mockAppearanceSetting = AppearanceSettingType.System
-jest.mock('wallet/src/features/appearance/hooks', () => {
-  return {
-    useCurrentAppearanceSetting: () => mockAppearanceSetting,
-  }
-})
-jest.mock('wallet/src/features/appearance/hooks', () => {
-  return {
-    useSelectedColorScheme: () => 'light',
-  }
-})
 
 jest.mock('openai')
 
-jest.mock('uniswap/src/data/apiClients/SharedPersistQueryClientProvider', () => mockSharedPersistQueryClientProvider)
 
-mockUIAssets()

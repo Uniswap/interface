@@ -98,6 +98,7 @@ describe(LogoWithTxStatus, () => {
         TransactionType.Send,
         TransactionType.OnRampPurchase,
         TransactionType.OnRampTransfer,
+        TransactionType.OffRampSale,
         TransactionType.Receive,
         TransactionType.NFTMint,
         TransactionType.Unknown,

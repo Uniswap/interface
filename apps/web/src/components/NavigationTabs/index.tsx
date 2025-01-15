@@ -1,10 +1,11 @@
 import { Percent } from '@uniswap/sdk-core'
-import { RowBetween } from 'components/deprecated/Row'
 import SettingsTab from 'components/Settings'
+import { RowBetween } from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
 import styled, { useTheme } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ArrowLeft } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { Link, useLocation } from 'react-router-dom'
 import { Box } from 'rebass'
 import { useAppDispatch } from 'state/hooks'
@@ -12,7 +13,6 @@ import { resetMintState } from 'state/mint/actions'
 import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
 import { ThemedText } from 'theme/components'
 import { flexRowNoWrap } from 'theme/styles'
-import { Trans } from 'uniswap/src/i18n'
 
 const Tabs = styled.div`
   ${flexRowNoWrap};
@@ -32,30 +32,9 @@ const StyledLink = styled(Link)<{ flex?: string }>`
   `};
 `
 
-const FindPoolTabsText = styled(ThemedText.H1Small)`
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-`
-
 const StyledArrowLeft = styled(ArrowLeft)`
   color: ${({ theme }) => theme.neutral1};
 `
-
-export function FindPoolTabs({ origin }: { origin: string }) {
-  return (
-    <Tabs>
-      <RowBetween style={{ padding: '1rem 1rem 0 1rem', position: 'relative' }}>
-        <Link to={origin}>
-          <StyledArrowLeft />
-        </Link>
-        <FindPoolTabsText>
-          <Trans i18nKey="pool.import.v2" />
-        </FindPoolTabsText>
-      </RowBetween>
-    </Tabs>
-  )
-}
 
 const AddRemoveTitleText = styled(ThemedText.H1Small)<{ $center: boolean }>`
   flex: 1;

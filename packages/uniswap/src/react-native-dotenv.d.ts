@@ -20,6 +20,7 @@ declare module 'react-native-dotenv' {
   export const QUICKNODE_BLAST_RPC_URL: string
   export const QUICKNODE_BNB_RPC_URL: string
   export const QUICKNODE_CELO_RPC_URL: string
+  export const QUICKNODE_MONAD_TESTNET_RPC_URL: string
   export const QUICKNODE_OP_RPC_URL: string
   export const QUICKNODE_POLYGON_RPC_URL: string
   export const QUICKNODE_ZORA_RPC_URL: string
@@ -30,4 +31,14 @@ declare module 'react-native-dotenv' {
   export const QUICKNODE_SEPOLIA_RPC_URL: string
   export const TRADING_API_KEY: string
   export const FIREBASE_APP_CHECK_DEBUG_TOKEN: string
+  export const AMPLITUDE_PROXY_URL_OVERRIDE: string
+  export const API_BASE_URL_OVERRIDE: string
+  export const API_BASE_URL_V2_OVERRIDE: string
+  export const FIAT_ON_RAMP_API_URL_OVERRIDE: string
+  export const FOR_API_URL_OVERRIDE: string
+  export const GRAPHQL_URL_OVERRIDE: string
+  export const SCANTASTIC_API_URL_OVERRIDE: string
+  export const STATSIG_PROXY_URL_OVERRIDE: string
+  export const TRADING_API_URL_OVERRIDE: string
+  export const UNITAGS_API_URL_OVERRIDE: string
 }

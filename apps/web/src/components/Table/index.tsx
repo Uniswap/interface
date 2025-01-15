@@ -29,12 +29,12 @@ import {
 } from 'components/Table/styled'
 import useDebounce from 'hooks/useDebounce'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { Trans } from 'react-i18next'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
 import { ThemedText } from 'theme/components'
 import { FadePresence } from 'theme/components/FadePresence'
 import { Z_INDEX } from 'theme/zIndex'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { Trans } from 'uniswap/src/i18n'
 import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 

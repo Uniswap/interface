@@ -7,12 +7,12 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { TextLoader } from 'pages/Pool/Positions/shared'
 import { Dispatch, SetStateAction } from 'react'
-import { ClickableTamaguiStyle } from 'theme/components'
+import { Trans, useTranslation } from 'react-i18next'
+import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from 'theme/components'
 import { Flex, Text, styled } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 
 interface LiquidityPositionFeeStatsProps {
   formattedUsdValue?: string
@@ -168,8 +168,17 @@ export function LiquidityPositionFeeStats({
               <SecondaryText flexShrink={0}>
                 <Trans i18nKey="common.max" />
               </SecondaryText>
-              <SecondaryText color="$neutral1">
-                {maxPrice} {tokenASymbol} / {tokenBSymbol}
+              <SecondaryText color="$neutral1" display="flex" alignItems="center" gap="$gap4">
+                <span
+                  style={{
+                    ...EllipsisTamaguiStyle,
+                  }}
+                >
+                  {maxPrice}
+                </span>
+                <span>
+                  {tokenASymbol} / {tokenBSymbol}
+                </span>
               </SecondaryText>
               <Flex
                 height="100%"

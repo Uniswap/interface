@@ -285,6 +285,7 @@ export function TokenSelectorContent({
                     chainIds={chainIds || enabledChains}
                     selectedChain={chainFilter}
                     styles={isExtension ? { dropdownZIndex: zIndices.overlay } : undefined}
+                    onDismiss={dismissNativeKeyboard}
                     onPressChain={(newChainId) => {
                       onChangeChainFilter(newChainId)
                       onSelectChain?.(newChainId)

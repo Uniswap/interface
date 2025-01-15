@@ -7,12 +7,13 @@ import SwapHeader, { PathnameToTab } from 'components/swap/SwapHeader'
 import { PageWrapper, SwapWrapper } from 'components/swap/styled'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
-import { useIsExplorePage } from 'hooks/useIsExplorePage'
+import { PageType, useIsPage } from 'hooks/useIsPage'
 import { BuyForm } from 'pages/Swap/Buy/BuyForm'
 import { LimitFormWrapper } from 'pages/Swap/Limit/LimitForm'
 import { SendForm } from 'pages/Swap/Send/SendForm'
 import { SwapForm } from 'pages/Swap/SwapForm'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
@@ -36,6 +37,7 @@ import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constant
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapRedirectFn } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
 import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow'
 import { SwapFormContextProvider, SwapFormState } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/hooks/useSwapPrefilledState'
@@ -43,9 +45,10 @@ import { Deadline } from 'uniswap/src/features/transactions/swap/settings/config
 import { ProtocolPreference } from 'uniswap/src/features/transactions/swap/settings/configs/ProtocolPreference'
 import { Slippage } from 'uniswap/src/features/transactions/swap/settings/configs/Slippage'
 import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/asset'
-import { useTranslation } from 'uniswap/src/i18n'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
+import { isTestEnv } from 'utilities/src/environment/env'
+import { isMobileWeb } from 'utilities/src/platform'
 import noop from 'utilities/src/react/noop'
 
 export function getIsReviewableQuote(
@@ -148,12 +151,12 @@ export function Swap({
 }) {
   const isDark = useIsDarkMode()
   const screenSize = useScreenSize()
-  const isExplore = useIsExplorePage()
+  const isExplorePage = useIsPage(PageType.EXPLORE)
 
   const { value: universalSwapFlow, isLoading } = useFeatureFlagWithLoading(FeatureFlags.UniversalSwap)
 
   const { isTestnetModeEnabled } = useEnabledChains()
-  const isSharedSwapDisabled = isTestnetModeEnabled && isExplore
+  const isSharedSwapDisabled = isTestnetModeEnabled && isExplorePage
 
   const input = currencyToAsset(initialInputCurrency)
   const output = currencyToAsset(initialOutputCurrency)
@@ -168,10 +171,13 @@ export function Swap({
     selectingCurrencyField: isSwapTokenSelectorOpen ? CurrencyField.OUTPUT : undefined,
   })
 
-  if (universalSwapFlow || isTestnetModeEnabled || isLoading) {
+  // TODO(WEB-5078): Remove this once we upgrade swap e2e tests to use the new swap flow
+  const waitForLoading = isLoading && !isTestEnv()
+
+  if (universalSwapFlow || isTestnetModeEnabled || waitForLoading) {
     return (
       <MultichainContextProvider initialChainId={chainId}>
-        <TransactionSettingsContextProvider>
+        <TransactionSettingsContextProvider settingKey={TransactionSettingKey.Swap}>
           <SwapAndLimitContextProvider
             initialInputCurrency={initialInputCurrency}
             initialOutputCurrency={initialOutputCurrency}
@@ -318,6 +324,7 @@ function UniversalSwapFlow({
             options={SWAP_TAB_OPTIONS}
             selectedOption={currentTab}
             onSelectOption={onTabClick}
+            gap={isMobileWeb ? '$spacing8' : undefined}
           />
         </Flex>
       )}
