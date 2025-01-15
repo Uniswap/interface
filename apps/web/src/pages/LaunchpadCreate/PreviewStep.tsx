@@ -24,7 +24,14 @@ export default function PreviewStep({ onNext, onBack }: { onNext: () => void; on
   const options = useAtomValue(launchpadParams)
   return (
     <PageWrapper>
-      <LaunchpadView options={options} participants={0} totalRaisedAsQuote={0} />
+      <LaunchpadView
+        options={options}
+        participants={0}
+        totalRaisedAsQuote={0}
+        status="Pending"
+        userTokens={0}
+        userActionComponent={() => <div />}
+      />
       <button onClick={onBack}>Back</button>
       <button onClick={onNext}>Next</button>
     </PageWrapper>

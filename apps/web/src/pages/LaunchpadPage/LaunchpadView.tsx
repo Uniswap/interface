@@ -7,8 +7,9 @@ import { useToken } from 'hooks/Tokens'
 import { Discord, Twitter } from 'pages/Landing/components/Icons'
 import { Wiggle } from 'pages/Landing/components/animations'
 import { LaunchpadOptions } from 'pages/LaunchpadCreate/launchpad-state'
+import { LaunchpadSatus } from 'pages/LaunchpadList/data/useLaunchpads'
 import { transparentize } from 'polished'
-import { useMemo } from 'react'
+import { ReactNode, useMemo } from 'react'
 import { Calendar, Globe, Square, Youtube } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
@@ -153,25 +154,27 @@ const LeftBorderedRow = styled(Row)`
   padding: 6px 0 12px 24px;
 `
 
-export function getAbbreviatedTimeString(timestamp: number) {
+export function getCounterParts(timestamp: number) {
   const now = Date.now()
-  const timeSince = now - timestamp
-  const secondsPassed = Math.floor(timeSince / 1000)
-  const minutesPassed = Math.floor(secondsPassed / 60)
-  const hoursPassed = Math.floor(minutesPassed / 60)
-  const daysPassed = Math.floor(hoursPassed / 24)
-  const monthsPassed = Math.floor(daysPassed / 30)
+  const timeDiff = timestamp < now ? 0 : timestamp - now
+  const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24))
+  const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+  const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60))
+  const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000)
 
-  if (monthsPassed > 0) {
-    return `${monthsPassed} months ago`
-  } else if (daysPassed > 0) {
-    return `${daysPassed} days ago`
-  } else if (hoursPassed > 0) {
-    return `${hoursPassed} hours ago`
-  } else if (minutesPassed > 0) {
-    return `${minutesPassed} minutes ago`
+  if (days > 0) {
+    return [days.toString(), days == 1 ? 'day' : 'days', hours.toString(), hours == 1 ? 'hour' : 'hours']
+  } else if (hours > 0) {
+    return [hours.toString(), hours == 1 ? 'hour' : 'hours', minutes.toString(), minutes == 1 ? 'minute' : 'minutes']
+  } else if (minutes > 0) {
+    return [
+      minutes.toString(),
+      minutes == 1 ? 'minute' : 'minutes',
+      seconds.toString(),
+      seconds == 1 ? 'second' : 'seconds',
+    ]
   } else {
-    return `${secondsPassed} seconds ago`
+    return ['0', 'minutes', seconds.toString(), seconds == 1 ? 'second' : 'seconds']
   }
 }
 
@@ -179,10 +182,16 @@ export default function LaunchpadView({
   options,
   participants,
   totalRaisedAsQuote,
+  status,
+  userTokens,
+  userActionComponent,
 }: {
   options: LaunchpadOptions
   participants: number
   totalRaisedAsQuote: number
+  status: LaunchpadSatus
+  userTokens: number
+  userActionComponent: () => ReactNode
 }) {
   const { account } = useWeb3React()
 
@@ -250,6 +259,12 @@ export default function LaunchpadView({
     return rt
   }, [options])
 
+  const startDate = new Date(options.tokenSale.startDate)
+  const counterParts = getCounterParts(startDate.valueOf())
+  const statusVariant =
+    status == 'Pending' ? 'info' : status == 'Active' || status == 'Succeeded' || status == 'Done' ? 'success' : 'error'
+  const statusText = status == 'Pending' ? 'Upcoming' : status == 'Done' ? 'Succeeded' : status
+
   return (
     <AutoColumn gap="lg" justify="center">
       <AutoColumn gap="lg" style={{ width: '100%' }}>
@@ -259,8 +274,6 @@ export default function LaunchpadView({
               <Row
                 style={{
                   borderRadius: '16px',
-                  backgroundColor: '#00000055',
-                  padding: '8px',
                   overflow: 'hidden',
                   justifyContent: 'center',
                 }}
@@ -277,40 +290,53 @@ export default function LaunchpadView({
                       src={options.tokenInfo.logoUrl}
                     />
                     <ThemedText.H1Medium>{token?.name}</ThemedText.H1Medium>
-                    <StyledBedge variant="info">Upcoming</StyledBedge>
+                    <StyledBedge variant={statusVariant}>{statusText}</StyledBedge>
                   </Row>
                   <Row>
-                    <ThemedText.BodySecondary paddingLeft="4px" marginTop="8px">
-                      Symbol: {token?.symbol} Contract: {shortenAddress(options.tokenInfo.tokenAddress)}
-                    </ThemedText.BodySecondary>
+                    <ThemedText.BodySecondary paddingLeft="4px">Symbol:</ThemedText.BodySecondary>
+                    <ThemedText.BodyPrimary paddingLeft="4px">{token?.symbol}</ThemedText.BodyPrimary>
+                    <ThemedText.BodySecondary paddingLeft="16px">Contract:</ThemedText.BodySecondary>
+                    <ExternalLink
+                      style={{ textDecoration: 'underline', textAlign: 'left' }}
+                      target="_blank"
+                      href={`https://celoscan.io/address/${options.tokenInfo.tokenAddress}`}
+                    >
+                      <ThemedText.BodyPrimary paddingLeft="4px">
+                        {shortenAddress(options.tokenInfo.tokenAddress)}
+                      </ThemedText.BodyPrimary>
+                    </ExternalLink>
                   </Row>
                 </ColumnBetween>
                 <Column>
-                  <DarkGrayCard>
-                    <Row align="stretch" gap="12px">
-                      <Column gap="6px">
-                        <Row alignItems="center" justify="center">
-                          <CalendarIcon />
-                          <ThemedText.Caption>Start Date</ThemedText.Caption>
-                        </Row>
-                        <Row>
-                          <ThemedText.BodyPrimary>{formatDateTime(options.tokenSale.startDate)}</ThemedText.BodyPrimary>
-                        </Row>
-                      </Column>
-                      <VerticalDivider />
-                      <Column gap="2px">
-                        <Row>
-                          <ThemedText.Caption>Time until launch</ThemedText.Caption>
-                        </Row>
-                        <Row gap="6px" align="flex-end">
-                          <ThemedText.MediumHeader>2</ThemedText.MediumHeader>
-                          <ThemedText.Caption marginBottom="1px">days</ThemedText.Caption>
-                          <ThemedText.MediumHeader>15</ThemedText.MediumHeader>
-                          <ThemedText.Caption marginBottom="1px">hours</ThemedText.Caption>
-                        </Row>
-                      </Column>
-                    </Row>
-                  </DarkGrayCard>
+                  {status == 'Pending' ? (
+                    <DarkGrayCard>
+                      <Row align="stretch" gap="12px">
+                        <Column gap="6px">
+                          <Row alignItems="center" justify="center">
+                            <CalendarIcon />
+                            <ThemedText.Caption>Start Date</ThemedText.Caption>
+                          </Row>
+                          <Row>
+                            <ThemedText.BodyPrimary>{formatDateTime(startDate)}</ThemedText.BodyPrimary>
+                          </Row>
+                        </Column>
+                        <VerticalDivider />
+                        <Column gap="2px">
+                          <Row>
+                            <ThemedText.Caption>Time until launch</ThemedText.Caption>
+                          </Row>
+                          <Row gap="6px" align="flex-end">
+                            <ThemedText.MediumHeader>{counterParts[0]}</ThemedText.MediumHeader>
+                            <ThemedText.Caption marginBottom="1px">{counterParts[1]}</ThemedText.Caption>
+                            <ThemedText.MediumHeader>{counterParts[2]}</ThemedText.MediumHeader>
+                            <ThemedText.Caption marginBottom="1px">{counterParts[3]}</ThemedText.Caption>
+                          </Row>
+                        </Column>
+                      </Row>
+                    </DarkGrayCard>
+                  ) : (
+                    userActionComponent()
+                  )}
                 </Column>
               </ResponsiveRow>
               <Divider />
@@ -320,7 +346,7 @@ export default function LaunchpadView({
                   <ThemedText.SubHeader>
                     {formatNumber({
                       input: tokensOffered,
-                      type: NumberType.PortfolioBalance,
+                      type: NumberType.TokenNonTx,
                     })}{' '}
                     {token?.symbol}
                   </ThemedText.SubHeader>
@@ -339,6 +365,22 @@ export default function LaunchpadView({
                   <ThemedText.BodySecondary>Duration</ThemedText.BodySecondary>
                   <ThemedText.SubHeader>{options.tokenSale.durationDays} days</ThemedText.SubHeader>
                 </RowBetween>
+                {status !== 'Pending' && (
+                  <>
+                    <RowBetween>
+                      <ThemedText.BodySecondary>Total Raised</ThemedText.BodySecondary>
+                      <ThemedText.SubHeader>
+                        {totalRaisedAsQuote} {quoteToken?.symbol}
+                      </ThemedText.SubHeader>
+                    </RowBetween>
+                    <RowBetween>
+                      <ThemedText.BodySecondary>Your Allocation</ThemedText.BodySecondary>
+                      <ThemedText.SubHeader>
+                        {userTokens} {token?.symbol}
+                      </ThemedText.SubHeader>
+                    </RowBetween>
+                  </>
+                )}
               </TwoColumnAuto>
             </Column>
           </ResponsiveRow>
@@ -402,7 +444,7 @@ export default function LaunchpadView({
               <Column>
                 {timeline.map((timelineItem, index) => (
                   <>
-                    <Row align="center" gap="12px">
+                    <Row align="center" gap="12px" key={'timeline' + index}>
                       <Circle>{index + 1}</Circle>
                       <ThemedText.BodySecondary>{formatDateTime(timelineItem.time)}</ThemedText.BodySecondary>
                     </Row>

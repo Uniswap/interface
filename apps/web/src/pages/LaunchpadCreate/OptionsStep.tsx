@@ -124,7 +124,7 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
     setIsDisclaimerAccepted(!isDisclaimerAccepted)
   }
   const signDisclaimer = async () => {
-    const signature = await provider?.getSigner().signMessage('I accept the following disclaimer.\n' + disclaimerMsg)
+    const signature = await provider?.getSigner().signMessage('I accept the following disclaimer:\n' + disclaimerMsg)
     if (signature && signature.length > 5) {
       setSignature(signature)
     }
@@ -159,7 +159,10 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
   const maxSoftCapBn = softCapInfo?.[1]
   const minSoftCap = quoteToken && minSoftCapBn ? parseFloat(formatUnits(minSoftCapBn, quoteToken.decimals)) : undefined
   const maxSoftCap = quoteToken && maxSoftCapBn ? parseFloat(formatUnits(maxSoftCapBn, quoteToken.decimals)) : undefined
+
+  const [showErrors, setShowErrors] = useState(true)
   const validationError = validateOptions(options, token?.symbol, minSoftCap, maxSoftCap)
+  const isError = (field: string) => validationError?.field == field && showErrors
 
   // ----- tokenomics -----
   const [tokenomicsModalOpened, setTokenomicsModalOpened] = useState(false)
@@ -388,6 +391,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Token logo url must be 200x200 png image link."
                 value={options.tokenInfo.logoUrl}
                 onChange={(val) => setOptionsProp('tokenInfo.logoUrl', val)}
+                isError={isError('tokenInfo.logoUrl')}
+                errorMessage={validationError?.message}
               />
             </Column>
             {options.tokenInfo.logoUrl && (
@@ -405,6 +410,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
               placeholder="Project info"
               fontSize="1rem"
               minHeight="100px"
+              isError={isError('tokenInfo.description')}
+              errorMessage={validationError?.message}
             />
           </Row>
 
@@ -425,6 +432,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
               placeholder="Website link"
               value={options.tokenInfo.website}
               onChange={(val) => setOptionsProp('tokenInfo.website', val)}
+              isError={isError('tokenInfo.website')}
+              errorMessage={validationError?.message}
             />
           </Row>
 
@@ -435,6 +444,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Twitter page link"
                 value={options.tokenInfo.twitter}
                 onChange={(val) => setOptionsProp('tokenInfo.twitter', val)}
+                isError={isError('tokenInfo.twitter')}
+                errorMessage={validationError?.message}
               />
             </Column>
             <Column flex="1">
@@ -443,6 +454,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Telegram group link"
                 value={options.tokenInfo.telegram}
                 onChange={(val) => setOptionsProp('tokenInfo.telegram', val)}
+                isError={isError('tokenInfo.telegram')}
+                errorMessage={validationError?.message}
               />
             </Column>
           </Row>
@@ -453,6 +466,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Discord link"
                 value={options.tokenInfo.discord}
                 onChange={(val) => setOptionsProp('tokenInfo.discord', val)}
+                isError={isError('tokenInfo.discord')}
+                errorMessage={validationError?.message}
               />
             </Column>
             <Column flex="1">
@@ -461,6 +476,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Medium link"
                 value={options.tokenInfo.medium}
                 onChange={(val) => setOptionsProp('tokenInfo.medium', val)}
+                isError={isError('tokenInfo.medium')}
+                errorMessage={validationError?.message}
               />
             </Column>
           </Row>
@@ -471,6 +488,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Youtube link"
                 value={options.tokenInfo.youtube}
                 onChange={(val) => setOptionsProp('tokenInfo.youtube', val)}
+                isError={isError('tokenInfo.youtube')}
+                errorMessage={validationError?.message}
               />
             </Column>
             <Column flex="1">
@@ -479,6 +498,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Farcaster link"
                 value={options.tokenInfo.farcaster}
                 onChange={(val) => setOptionsProp('tokenInfo.farcaster', val)}
+                isError={isError('tokenInfo.farcaster')}
+                errorMessage={validationError?.message}
               />
             </Column>
           </Row>
@@ -558,6 +579,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder=""
                 value={options.tokenSale.hardCapAsQuote}
                 onChange={(val) => setOptionsProp('tokenSale.hardCapAsQuote', val)}
+                isError={isError('tokenSale.hardCapAsQuote')}
+                errorMessage={validationError?.message}
               />
             </Column>
             <Column flex="1">
@@ -566,6 +589,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder=""
                 value={options.tokenSale.softCapAsQuote}
                 onChange={(val) => setOptionsProp('tokenSale.softCapAsQuote', val)}
+                isError={isError('tokenSale.softCapAsQuote')}
+                errorMessage={validationError?.message}
               />
             </Column>
           </Row>
@@ -576,6 +601,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Sell Price"
                 value={options.tokenSale.sellPrice}
                 onChange={(val) => setOptionsProp('tokenSale.sellPrice', val)}
+                isError={isError('tokenSale.sellPrice')}
+                errorMessage={validationError?.message}
               />
             </Column>
             <Column flex="1">
@@ -584,6 +611,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Listing Price"
                 value={options.liquidity.listingPrice}
                 onChange={(val) => setOptionsProp('liquidity.listingPrice', val)}
+                isError={isError('liquidity.listingPrice')}
+                errorMessage={validationError?.message}
               />
             </Column>
           </Row>
@@ -594,6 +623,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="e.g. 2025-01-01 15:00:00"
                 value={options.tokenSale.startDate}
                 onChange={(val) => setOptionsProp('tokenSale.startDate', val)}
+                isError={isError('tokenSale.startDate')}
+                errorMessage={validationError?.message}
               />
             </Column>
             <Column flex="1">
@@ -602,6 +633,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Duration in days"
                 value={options.tokenSale.durationDays}
                 onChange={(val) => setOptionsProp('tokenSale.durationDays', val)}
+                isError={isError('tokenSale.durationDays')}
+                errorMessage={validationError?.message}
               />
             </Column>
           </Row>
@@ -612,6 +645,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Percentage of Unlocked Tokens on TGE"
                 value={options.tokenSale.initialReleaseRate}
                 onChange={(val) => setOptionsProp('tokenSale.initialReleaseRate', val)}
+                isError={isError('tokenSale.initialReleaseRate')}
+                errorMessage={validationError?.message}
               />
             </Column>
             <Column flex="1">
@@ -620,6 +655,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Vesting Duration in days"
                 value={options.tokenSale.releaseDurationDays}
                 onChange={(val) => setOptionsProp('tokenSale.releaseDurationDays', val)}
+                isError={isError('tokenSale.releaseDurationDays')}
+                errorMessage={validationError?.message}
               />
             </Column>
           </Row>
@@ -635,6 +672,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="How much amount of the raised tokend will be used as liquidity"
                 value={options.liquidity.liquidityRate}
                 onChange={(val) => setOptionsProp('liquidity.liquidityRate', val)}
+                isError={isError('liquidity.liquidityRate')}
+                errorMessage={validationError?.message}
               />
             </Column>
             <Column flex="1">
@@ -669,6 +708,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Locking period in days"
                 value={options.liquidity.lockDurationDays}
                 onChange={(val) => setOptionsProp('liquidity.lockDurationDays', val)}
+                isError={isError('liquidity.lockDurationDays')}
+                errorMessage={validationError?.message}
               />
             </Row>
           )}
