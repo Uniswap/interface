@@ -17,18 +17,15 @@ export interface MenuItem {
 export const useMenuContent = (): MenuSection[] => {
   const { t } = useTranslation()
   return [
-    // {
-    //   title: t('App'),
-    //   items: [
-    //     { label: t('Pool'), href: '/pool', internal: true, overflow: true },
-    //     { label: 'Farm', href: '/farm', internal: true, overflow: true },
-    //     { label: 'Convert', href: '/claim-new-ube', internal: true, overflow: true },
-    //   ],
-    // },
+    {
+      title: t('App'),
+      items: [{ label: 'Convert', href: '/claim-new-ube', internal: true }],
+    },
     {
       title: t('Charts'),
       items: [
-        { label: t('Analytics'), href: 'https://info.ubeswap.org/' },
+        { label: t('Analytics v3'), href: 'https://info.ubeswap.org/' },
+        { label: t('Analytics v2'), href: 'https://info-v2.ubeswap.org/' },
         { label: t('Celo Tracker'), href: 'https://celotracker.com/' },
       ],
     },

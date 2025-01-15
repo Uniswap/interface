@@ -1,4 +1,5 @@
-import { PrimitiveAtom } from 'jotai'
+import { BigNumberish } from '@ethersproject/bignumber'
+import { PrimitiveAtom, atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import invariant from 'tiny-invariant'
 
@@ -64,6 +65,40 @@ export interface LaunchpadOptions {
   }
 }
 
+export type LaunchpadParamsStruct = {
+  token: string
+  quoteToken: string
+  owner: string
+  startDate: BigNumberish
+  endDate: BigNumberish
+  exchangeRate: BigNumberish
+  releaseDuration: BigNumberish
+  releaseInterval: BigNumberish
+  cliffDuration: BigNumberish
+  initialReleaseRate: BigNumberish
+  cliffReleaseRate: BigNumberish
+  hardCapAsQuote: BigNumberish
+  softCapAsQuote: BigNumberish
+  liquidityRate: BigNumberish
+  liquidityFee: BigNumberish
+  priceTick: BigNumberish
+  tickLower: BigNumberish
+  tickUpper: BigNumberish
+  lockDuration: BigNumberish
+}
+
+export interface LaunchpadValidationResult {
+  implementation: string
+  params: LaunchpadParamsStruct
+  infoCID: string
+  creatorDisclaimerHash: string
+  creatorDisclaimerSignature: string
+  verifierSignature: string
+  feeAmountWei: string
+  tokensForSaleWei: string
+  tokensForLiquidityWei: string
+}
+
 const defaultState: LaunchpadOptions = {
   tokenInfo: {
     tokenAddress: '',
@@ -84,25 +119,27 @@ const defaultState: LaunchpadOptions = {
     quoteToken: '0x71e26d0E519D14591b9dE9a0fE9513A398101490',
     owner: '',
     startDate: '',
-    durationDays: '3',
-    sellPrice: '0',
-    releaseDurationDays: '0',
+    durationDays: '',
+    sellPrice: '',
+    releaseDurationDays: '',
     cliffDurationDays: '0',
     initialReleaseRate: '',
-    cliffReleaseRate: '',
+    cliffReleaseRate: '0',
     hardCapAsQuote: '',
     softCapAsQuote: '',
   },
   liquidity: {
     liquidityRate: '50',
-    listingPrice: '0',
+    listingPrice: '',
     liquidityFee: '3000',
     liquidityRange: 'MEDIUM',
     liquidityAction: 'BURN',
-    lockDurationDays: '123',
+    lockDurationDays: '',
   },
 }
 export const launchpadParams = atomWithStorage<LaunchpadOptions>('ubestarter_options', defaultState)
+
+export const launchpadValidationResult = atom<LaunchpadValidationResult | null>(null)
 
 const signatureAtoms: Record<string, PrimitiveAtom<string>> = {
   '-': atomWithStorage<string>('ubestarter_creator_signature', ''),
@@ -206,6 +243,12 @@ function _checkOptions(
   invariant(durationMs >= MIN_LAUNCHPAD_DURATION, 'tokenSale.durationDays | Launchpad duration must be at least 1 day')
   invariant(durationMs <= MAX_LAUNCHPAD_DURATION, 'tokenSale.durationDays | Launchpad duration must be at most 7 day')
 
+  const initialReleaseRate = parseFloat(sale.initialReleaseRate)
+  invariant(
+    initialReleaseRate >= 0 && initialReleaseRate <= 100,
+    'tokenSale.initialReleaseRate | Enter a valid percentage'
+  )
+
   const releaseDurationDays = Math.floor(parseFloat(sale.releaseDurationDays))
   invariant(
     releaseDurationDays.toString() === sale.releaseDurationDays,
@@ -214,12 +257,6 @@ function _checkOptions(
   invariant(
     releaseDurationDays >= 0 && releaseDurationDays <= 365,
     'tokenSale.releaseDurationDays | Value must be between 1 and 365'
-  )
-
-  const initialReleaseRate = parseFloat(sale.initialReleaseRate)
-  invariant(
-    initialReleaseRate >= 0 && initialReleaseRate <= 100,
-    'tokenSale.initialReleaseRate | Enter a valid percentage'
   )
 
   const liquidityRate = parseFloat(options.liquidity.liquidityRate)

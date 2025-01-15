@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { formatUnits } from '@ethersproject/units'
-import { CurrencyAmount, Token } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import AddressInputPanel from 'components/AddressInputPanel'
 import { ButtonError, ButtonPrimary } from 'components/Button'
@@ -9,21 +8,22 @@ import { BlueCard } from 'components/Card'
 import Column, { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import NumericalInputPanel from 'components/NumericalInputPanel'
-import Row from 'components/Row'
+import Row, { AutoRow } from 'components/Row'
 import TextInputPanel from 'components/TextInputPanel'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import { hashMessage } from 'ethers/lib/utils'
 import { useToken } from 'hooks/Tokens'
 import { useUbestarterFactory } from 'hooks/useContract'
 import { Trans } from 'i18n'
 import { useAtom } from 'jotai'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { Checkbox } from 'nft/components/layout/Checkbox'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Link } from 'react-router-dom'
-import { CreateProposalData, useCreateProposalCallback } from 'state/governance/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
+import Loader from '../../components-old/Loader'
 import AppBody from '../AppBody'
 import { Action, ActionSelector } from './ActionSelector'
 import AddTeamMemberModal from './AddTeamMemberModal'
@@ -31,12 +31,15 @@ import AddTokenomicsModal from './AddTokenomicsModal'
 import SimpleTable from './SimpleTable'
 import TextareaPanel from './TextareaPanel'
 import {
+  LaunchpadValidationResult,
   TeamTableValues,
   TokenomicsTableValues,
   getCreatorSignatureAtom,
   launchpadParams,
+  launchpadValidationResult,
   validateOptions,
 } from './launchpad-state'
+import { UBESTARTER_FACTORY_ADDRESS } from './ubestarter-factory-actions'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;
@@ -80,15 +83,10 @@ export const SmallButtonPrimary = styled(ButtonPrimary)`
   border-radius: 4px;
 `
 
-const CreateProposalWrapper = styled.div`
+const OptionsWrapper = styled.div`
   padding: 20px;
   display: flex;
   flex-flow: column wrap;
-`
-
-const ErrorInfoBox = styled.div`
-  text-align: center;
-  margin-top: 10px;
 `
 
 const Divider = styled.div`
@@ -104,16 +102,11 @@ Ubestarter, its affiliates, and its service providers will not be liable for any
 This disclaimer is subject to change at any time without notice. It is the project's responsibility to review it regularly to stay informed of any changes.
 By using the Ubestarter, you acknowledge that you have read this disclaimer, understand it, and agree to be bound by its terms.`
 
-const factoryContractAddress = '0xd1620a07A4b82d082917a3C0717CAE9ddFE4a982'
-
 export default function OptionsStep({ onNext }: { onNext: () => void }) {
   const { account, provider } = useWeb3React()
 
-  const proposalThreshold: CurrencyAmount<Token> | undefined = undefined
-
   const theme = useTheme()
 
-  const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
 
   const [signature, setSignature] = useAtom(getCreatorSignatureAtom(account))
@@ -131,22 +124,30 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
   }
 
   const [options, setOptions] = useAtom(launchpadParams)
-  const setOptionsProp = (propName: string, value: string) => {
-    const path = propName.split('.')
-    setOptions((oldVal) => {
-      const newVal: any = { ...oldVal }
-      newVal[path[0]] = {
-        ...newVal[path[0]],
-        [path[1]]: value,
-      }
-      return newVal
-    })
-  }
+  const setOptionsProp = useCallback(
+    (propName: string, value: string) => {
+      const path = propName.split('.')
+      setOptions((oldVal) => {
+        const newVal: any = { ...oldVal }
+        newVal[path[0]] = {
+          ...newVal[path[0]],
+          [path[1]]: value,
+        }
+        return newVal
+      })
+    },
+    [setOptions]
+  )
+  useEffect(() => {
+    if (account) {
+      setOptionsProp('tokenSale.owner', account)
+    }
+  }, [account, setOptionsProp])
 
   const token = useToken(options.tokenInfo.tokenAddress)
   const quoteToken = useToken(options.tokenSale.quoteToken)
 
-  const factoryContract = useUbestarterFactory(factoryContractAddress)
+  const factoryContract = useUbestarterFactory(UBESTARTER_FACTORY_ADDRESS)
   const { result: softCapInfo } = useSingleCallResult(
     factoryContract,
     'quoteTokens',
@@ -304,29 +305,44 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
     },
   ]
 
-  const handleDismissSubmissionModal = useCallback(() => {
-    setHash(undefined)
-    setAttempting(false)
-  }, [setHash, setAttempting])
-
-  const isFormInvalid = true
-  const hasEnoughVote = true
-
-  const createProposalCallback = useCreateProposalCallback()
-
-  const handleCreateProposal = async () => {
+  const [_validationResult, seValidationResult] = useAtom(launchpadValidationResult)
+  const validateAndNext = async () => {
     setAttempting(true)
 
-    const createProposalData: CreateProposalData = {} as CreateProposalData
+    const disclaimer = 'I accept the following disclaimer:\n' + disclaimerMsg
 
-    // const tokenAmount = tryParseCurrencyAmount(amountValue, currencyValue)
-    // if (!tokenAmount) return
-
-    const hash = await createProposalCallback(createProposalData ?? undefined)?.catch(() => {
-      setAttempting(false)
+    const request = await fetch('https://interface-gateway.ubeswap.org/v1/ubestarter/validateAndSign', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        options,
+        disclaimer,
+        disclaimerHash: hashMessage(disclaimer),
+        disclaimerSignature: signature,
+      }),
     })
 
-    if (hash) setHash(hash)
+    if (request.ok) {
+      let result: LaunchpadValidationResult | null = null
+      try {
+        result = (await request.json()) as LaunchpadValidationResult
+      } catch (e) {
+        console.log('validation parse error', e)
+      }
+      seValidationResult(result)
+      onNext()
+    } else {
+      let message = 'Validation failed'
+      try {
+        message = (await request.json()).message
+      } catch (e) {
+        console.log('validation response error', e)
+      }
+      alert(message)
+    }
+    setAttempting(false)
   }
 
   return (
@@ -353,11 +369,11 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
         </div>
       </Modal>
       <AppBody $maxWidth="800px">
-        <Nav to="/vote">
+        <Nav to="/ubestarter">
           <BackArrow />
           <HeaderText>Launchpad Options</HeaderText>
         </Nav>
-        <CreateProposalWrapper>
+        <OptionsWrapper>
           <BlueCard>
             <AutoColumn gap="10px">
               <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
@@ -717,18 +733,18 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
           <ButtonError
             style={{ marginTop: '18px' }}
             error={!!validationError}
-            disabled={!!validationError}
-            onClick={onNext}
+            disabled={!!validationError || attempting}
+            onClick={validateAndNext}
           >
-            <Trans>See Preview</Trans>
+            {attempting ? (
+              <AutoRow gap="6px" justify="center">
+                Validating <Loader stroke="white" />
+              </AutoRow>
+            ) : (
+              <Trans>See Preview</Trans>
+            )}
           </ButtonError>
-          {validationError && (
-            <ErrorInfoBox>
-              <div>{validationError.field}</div>
-              <div>{validationError.message}</div>
-            </ErrorInfoBox>
-          )}
-        </CreateProposalWrapper>
+        </OptionsWrapper>
       </AppBody>
     </PageWrapper>
   )

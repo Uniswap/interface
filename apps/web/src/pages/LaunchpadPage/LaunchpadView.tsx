@@ -292,7 +292,7 @@ export default function LaunchpadView({
                     <ThemedText.H1Medium>{token?.name}</ThemedText.H1Medium>
                     <StyledBedge variant={statusVariant}>{statusText}</StyledBedge>
                   </Row>
-                  <Row>
+                  <Row marginTop="10px">
                     <ThemedText.BodySecondary paddingLeft="4px">Symbol:</ThemedText.BodySecondary>
                     <ThemedText.BodyPrimary paddingLeft="4px">{token?.symbol}</ThemedText.BodyPrimary>
                     <ThemedText.BodySecondary paddingLeft="16px">Contract:</ThemedText.BodySecondary>
