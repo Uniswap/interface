@@ -85,5 +85,5 @@ export function formatRemainingTime(input: Date | string): string {
 }
 
 export const formatDateTime = (date: Date | string | number): string => {
-  return dayjs(date).format('yyyy-MM-DD HH:mm')
+  return dayjs(date).format('YYYY-MM-DD HH:mm')
 }
