@@ -6,6 +6,7 @@ import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { Action } from '../LaunchpadCreate/ActionSelector'
 
 const Table = styled.table`
   border: 1px solid ${({ theme }) => theme.surface3};
@@ -84,7 +85,7 @@ const LaunchpadInfoTable = ({
   const quoteToken = useToken(options?.tokenSale.quoteToken)
 
   const tokensOffered = options
-    ? Math.floor(parseFloat(options.tokenSale.hardCapAsQuote) / parseFloat(options.tokenSale.sellPrice))
+    ? parseFloat(options.tokenSale.hardCapAsQuote) / parseFloat(options.tokenSale.sellPrice)
     : 0
 
   const initialCirculatinSupply = options?.tokenInfo.tokenomics.reduce((acc, tokenomicsItem) => {
@@ -94,6 +95,43 @@ const LaunchpadInfoTable = ({
   const totalSupply = options?.tokenInfo.tokenomics.reduce((acc, tokenomicsItem) => {
     return acc + tokenomicsItem.amount
   }, 0)
+
+  const liqFees: Action[] = [
+    {
+      id: '100',
+      name: '0.01%',
+    },
+    {
+      id: '500',
+      name: '0.05%',
+    },
+    {
+      id: '3000',
+      name: '0.3%',
+    },
+    {
+      id: '10000',
+      name: '1%',
+    },
+  ]
+  const liqRanges: Action[] = [
+    {
+      id: 'NARROW',
+      name: 'Narrow Range (66% ↓ \u00A0-\u00A0 3X ↑)',
+    },
+    {
+      id: 'MEDIUM',
+      name: 'Medium Range (90% ↓ \u00A0-\u00A0 10X ↑)',
+    },
+    {
+      id: 'WIDE',
+      name: 'Wide Range (99% ↓ \u00A0-\u00A0 100X ↑)',
+    },
+    {
+      id: 'FULL',
+      name: 'Full Range',
+    },
+  ]
 
   return options ? (
     <SimpleTable>
@@ -105,7 +143,7 @@ const LaunchpadInfoTable = ({
           <ThemedText.BodyPrimary color="neutral1">
             {formatNumber({
               input: tokensOffered,
-              type: NumberType.PortfolioBalance,
+              type: NumberType.TokenNonTx,
             })}{' '}
             {token?.symbol}
           </ThemedText.BodyPrimary>
@@ -119,7 +157,7 @@ const LaunchpadInfoTable = ({
           <ThemedText.BodyPrimary color="neutral1">
             {formatNumber({
               input: initialCirculatinSupply,
-              type: NumberType.PortfolioBalance,
+              type: NumberType.TokenNonTx,
             })}{' '}
             {token?.symbol}
           </ThemedText.BodyPrimary>
@@ -133,7 +171,7 @@ const LaunchpadInfoTable = ({
           <ThemedText.BodyPrimary color="neutral1">
             {formatNumber({
               input: totalSupply,
-              type: NumberType.PortfolioBalance,
+              type: NumberType.TokenNonTx,
             })}{' '}
             {token?.symbol}
           </ThemedText.BodyPrimary>
@@ -151,23 +189,13 @@ const LaunchpadInfoTable = ({
       </TR>
       <TR>
         <TD>
-          <ThemedText.BodyPrimary color="neutral2">Listing Price</ThemedText.BodyPrimary>
-        </TD>
-        <TD>
-          <ThemedText.BodyPrimary color="neutral1">
-            1 {token?.symbol} = {options.liquidity.listingPrice} {quoteToken?.symbol}
-          </ThemedText.BodyPrimary>
-        </TD>
-      </TR>
-      <TR>
-        <TD>
           <ThemedText.BodyPrimary color="neutral2">Target (Hard Cap)</ThemedText.BodyPrimary>
         </TD>
         <TD>
           <ThemedText.BodyPrimary color="neutral1">
             {formatNumber({
               input: parseFloat(options.tokenSale.hardCapAsQuote),
-              type: NumberType.PortfolioBalance,
+              type: NumberType.TokenNonTx,
             })}{' '}
             {quoteToken?.symbol}
           </ThemedText.BodyPrimary>
@@ -181,9 +209,32 @@ const LaunchpadInfoTable = ({
           <ThemedText.BodyPrimary color="neutral1">
             {formatNumber({
               input: parseFloat(options.tokenSale.softCapAsQuote),
-              type: NumberType.PortfolioBalance,
+              type: NumberType.TokenNonTx,
             })}{' '}
             {quoteToken?.symbol}
+          </ThemedText.BodyPrimary>
+        </TD>
+      </TR>
+      <TR>
+        <TD>
+          <ThemedText.BodyPrimary color="neutral2">Listing Price (Liquidity)</ThemedText.BodyPrimary>
+        </TD>
+        <TD>
+          <ThemedText.BodyPrimary color="neutral1">
+            1 {token?.symbol} = {options.liquidity.listingPrice} {quoteToken?.symbol}
+          </ThemedText.BodyPrimary>
+        </TD>
+      </TR>
+      <TR>
+        <TD>
+          <ThemedText.BodyPrimary color="neutral2">Liquidty Info</ThemedText.BodyPrimary>
+        </TD>
+        <TD>
+          <ThemedText.BodyPrimary color="neutral1">
+            Fee tier = {liqFees.find((l) => l.id == options.liquidity.liquidityFee)?.name}
+          </ThemedText.BodyPrimary>
+          <ThemedText.BodyPrimary color="neutral1">
+            Price range = {liqRanges.find((l) => l.id == options.liquidity.liquidityRange)?.name}
           </ThemedText.BodyPrimary>
         </TD>
       </TR>

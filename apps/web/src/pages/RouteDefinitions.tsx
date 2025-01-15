@@ -392,7 +392,7 @@ export const routes: RouteDefinition[] = [
     getElement: () => <LaunchpadCreate />,
   }),
   createRouteDefinition({
-    path: '/ubestarter/details/:id',
+    path: '/ubestarter/details/:launchpadAddress',
     getTitle: () => 'UbeStarter',
     getElement: () => <LaunchpadPage />,
   }),

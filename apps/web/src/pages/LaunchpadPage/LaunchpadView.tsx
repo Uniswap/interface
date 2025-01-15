@@ -3,18 +3,20 @@ import { useWeb3React } from '@web3-react/core'
 import { DarkGrayCard } from 'components/Card'
 import { AutoColumn, Column } from 'components/Column'
 import Row, { RowBetween } from 'components/Row'
+import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { useToken } from 'hooks/Tokens'
 import { Discord, Twitter } from 'pages/Landing/components/Icons'
 import { Wiggle } from 'pages/Landing/components/animations'
+import SimpleTable from 'pages/LaunchpadCreate/SimpleTable'
 import { LaunchpadOptions } from 'pages/LaunchpadCreate/launchpad-state'
-import { LaunchpadSatus } from 'pages/LaunchpadList/data/useLaunchpads'
+import { LaunchpadStatus } from 'pages/LaunchpadList/data/useLaunchpads'
 import { transparentize } from 'polished'
 import { ReactNode, useMemo } from 'react'
 import { Calendar, Globe, Square, Youtube } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { shortenAddress } from 'utilities/src/addresses'
+import { ellipseMiddle, shortenAddress } from 'utilities/src/addresses'
 import { formatDateTime } from 'utilities/src/time/time'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import LaunchpadInfoTable from './LaunchpadInfoTable'
@@ -39,6 +41,11 @@ const ResponsiveRow = styled(Row)`
   @media screen and (max-width: ${BREAKPOINTS.md}px) {
     flex-direction: column;
   }
+`
+const TableWrapper = styled.div`
+  overflow-x: auto;
+  width: 100%;
+  max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
 `
 const Divider = styled.div`
   border-bottom: ${({ theme }) => `1px solid ${theme.surface3}`};
@@ -189,7 +196,7 @@ export default function LaunchpadView({
   options: LaunchpadOptions
   participants: number
   totalRaisedAsQuote: number
-  status: LaunchpadSatus
+  status: LaunchpadStatus
   userTokens: number
   userActionComponent: () => ReactNode
 }) {
@@ -264,6 +271,22 @@ export default function LaunchpadView({
   const statusVariant =
     status == 'Pending' ? 'info' : status == 'Active' || status == 'Succeeded' || status == 'Done' ? 'success' : 'error'
   const statusText = status == 'Pending' ? 'Upcoming' : status == 'Done' ? 'Succeeded' : status
+
+  const tokenomicsHeaders = ['#', 'Type', 'Amount', 'Unlocked at TGE', 'Cliff', 'Vesting']
+  const tokenomicsData = options.tokenInfo.tokenomics.map((info) => [
+    info.index.toString(),
+    info.name,
+    formatNumber({
+      input: info.amount,
+      type: NumberType.TokenNonTx,
+    }),
+    formatNumber({
+      input: info.unlockedAmount,
+      type: NumberType.TokenNonTx,
+    }),
+    info.cliffInDays.toString(),
+    info.vestingInDays.toString(),
+  ])
 
   return (
     <AutoColumn gap="lg" justify="center">
@@ -462,6 +485,38 @@ export default function LaunchpadView({
             <Column gap="16px">
               <ThemedText.MediumHeader>{token?.name} Details</ThemedText.MediumHeader>
               <LaunchpadInfoTable options={options} />
+              <ThemedText.MediumHeader>Project Description</ThemedText.MediumHeader>
+              <pre>{options.tokenInfo.description}</pre>
+              <ThemedText.MediumHeader>Tokenomics</ThemedText.MediumHeader>
+              <TableWrapper data-testid="tokenomics-table">
+                <SimpleTable headers={tokenomicsHeaders} data={tokenomicsData} />
+              </TableWrapper>
+              {options.tokenInfo.teamMembers.length > 0 && (
+                <>
+                  <ThemedText.MediumHeader>Team Members</ThemedText.MediumHeader>
+                  <TableWrapper data-testid="team-members"></TableWrapper>
+                </>
+              )}
+              {options.tokenInfo.auditLinks.trim().length > 0 && (
+                <>
+                  <ThemedText.MediumHeader>Audit Links</ThemedText.MediumHeader>
+                  {options.tokenInfo.auditLinks
+                    .trim()
+                    .split('\n')
+                    .map((link) => (
+                      <ExternalLink
+                        key={link}
+                        style={{ textDecoration: 'underline', textAlign: 'left' }}
+                        target="_blank"
+                        href={link}
+                      >
+                        <ThemedText.BodyPrimary paddingLeft="4px">
+                          {link.length > 50 ? ellipseMiddle(link, 30, 10) : link}
+                        </ThemedText.BodyPrimary>
+                      </ExternalLink>
+                    ))}
+                </>
+              )}
             </Column>
           </DarkGrayCard>
         </ResponsiveRow>

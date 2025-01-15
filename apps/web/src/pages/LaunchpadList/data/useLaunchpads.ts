@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
+import { LaunchpadOptions, LaunchpadParamsStruct } from 'pages/LaunchpadCreate/launchpad-state'
 
-export type LaunchpadSatus = 'Pending' | 'Active' | 'Succeeded' | 'Done' | 'Failed' | 'Canceled'
+export type LaunchpadStatus = 'Pending' | 'Active' | 'Succeeded' | 'Done' | 'Failed' | 'Canceled'
 export interface LaunchpadListItem {
   launchpadAddress: string
   tokenAddress: string
@@ -14,12 +15,11 @@ export interface LaunchpadListItem {
   endDate: string
   hardCapAsQuote: number
   softCapAsQuote: number
-  status: LaunchpadSatus
+  status: LaunchpadStatus
   totalRaised: number
   participants: number
 }
 
-// API'den veri çekme fonksiyonu
 async function fetchLaunchpads(listType: 'active' | 'completed'): Promise<LaunchpadListItem[]> {
   try {
     const response = await fetch('https://interface-gateway.ubeswap.org/v1/ubestarter/list/' + listType)
@@ -34,7 +34,6 @@ async function fetchLaunchpads(listType: 'active' | 'completed'): Promise<Launch
   }
 }
 
-// Ana hook fonksiyonu
 export function useLaunchpads(listType: 'active' | 'completed') {
   const { data: launchpadsApi, isLoading } = useQuery({
     queryKey: ['launchpads', listType],
@@ -43,6 +42,51 @@ export function useLaunchpads(listType: 'active' | 'completed') {
   })
   return {
     launchpads: launchpadsApi || [],
+    loading: isLoading,
+  }
+}
+
+interface BackendToken {
+  address: string
+  name: string
+  symbol: string
+  decimals: number
+}
+interface LaunchpadDetails {
+  options: LaunchpadOptions
+  params: LaunchpadParamsStruct
+  token: BackendToken
+  quoteToken: BackendToken
+  stats: {
+    status: LaunchpadStatus
+    totalRaised: number
+    participants: number
+  }
+}
+
+async function fetchLaunchpadDetails(launchpadAddress: string): Promise<LaunchpadDetails | null> {
+  try {
+    const response = await fetch('https://interface-gateway.ubeswap.org/v1/ubestarter/details/' + launchpadAddress)
+    if (!response.ok) {
+      throw new Error('Network response was not ok')
+    }
+    const data = await response.json()
+    return data
+  } catch (error) {
+    console.error('Error fetching launchpads:', error)
+    return null
+  }
+}
+
+export function useLaunchpad(launchpadAddress?: string) {
+  const { data, isLoading } = useQuery({
+    queryKey: ['launchpad', launchpadAddress],
+    queryFn: () => fetchLaunchpadDetails(launchpadAddress || ''),
+    staleTime: 10_000,
+    enabled: !!launchpadAddress,
+  })
+  return {
+    launchpad: data,
     loading: isLoading,
   }
 }
