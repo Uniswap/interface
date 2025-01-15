@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { AppStackParamList, OnboardingStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
-import { Button, Flex, Loader, Text, useMedia, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Loader, Text, useMedia, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { fonts, iconSizes, opacify } from 'ui/src/theme'
@@ -113,7 +113,7 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
         </Flex>
       </Flex>
       <Trace logPress element={ElementName.Next}>
-        <Button
+        <DeprecatedButton
           disabled={!onboardingAccountAddress}
           icon={
             <Flex grow row alignItems="center" justifyContent="space-between">

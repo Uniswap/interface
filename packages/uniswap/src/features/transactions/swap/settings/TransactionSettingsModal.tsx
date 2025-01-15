@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Popover, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Popover, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes } from 'ui/src/theme'
 import { WarningMessage } from 'uniswap/src/components/WarningMessage/WarningMessage'
@@ -105,9 +105,9 @@ const TransactionSettingsModalContent = ({
       )}
       {screen}
       <Flex centered row>
-        <Button fill testID="swap-settings-close" theme="secondary" onPress={onClose}>
+        <DeprecatedButton fill testID="swap-settings-close" theme="secondary" onPress={onClose}>
           {SelectedSetting?.renderCloseButtonText ? SelectedSetting.renderCloseButtonText(t) : t('common.button.close')}
-        </Button>
+        </DeprecatedButton>
       </Flex>
     </Flex>
   )

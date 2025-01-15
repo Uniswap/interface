@@ -7,7 +7,7 @@ import { Flex, useIsDarkMode } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampConnectingView } from 'uniswap/src/features/fiatOnRamp/FiatOnRampConnectingView'
-import { getFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { useFiatOnRampAggregatorTransferWidgetQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { useFiatOnRampTransactionCreator } from 'uniswap/src/features/fiatOnRamp/hooks'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
@@ -58,7 +58,6 @@ export function ExchangeTransferConnecting({
     setTimeoutElapsed(true)
   }, CONNECTING_TIMEOUT)
 
-  const { useFiatOnRampAggregatorTransferWidgetQuery } = getFiatOnRampAggregatorApi()
   const {
     data: widgetData,
     isLoading: widgetLoading,

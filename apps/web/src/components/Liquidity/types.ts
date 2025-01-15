@@ -57,6 +57,7 @@ type V2PairInfo = BasePositionInfo & {
   liquidityToken: Token
   feeTier: undefined
   v4hook: undefined
+  owner: undefined
 }
 
 export type V3PositionInfo = BasePositionInfo & {
@@ -66,6 +67,7 @@ export type V3PositionInfo = BasePositionInfo & {
   feeTier?: FeeAmount
   position?: V3Position
   v4hook: undefined
+  owner: string
 }
 
 type V4PositionInfo = BasePositionInfo & {
@@ -75,6 +77,7 @@ type V4PositionInfo = BasePositionInfo & {
   position?: V4Position
   feeTier?: string
   v4hook?: string
+  owner: string
 }
 
 export type PositionInfo = V2PairInfo | V3PositionInfo | V4PositionInfo

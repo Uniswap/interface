@@ -12,7 +12,12 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrencyInfo, useFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { getFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import {
+  useFiatOnRampAggregatorCryptoQuoteQuery,
+  useFiatOnRampAggregatorGetCountryQuery,
+  useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
+  useFiatOnRampAggregatorSupportedTokensQuery,
+} from 'uniswap/src/features/fiatOnRamp/api'
 import {
   FORQuote,
   FORSupportedFiatCurrency,
@@ -110,7 +115,6 @@ export function useMeldFiatCurrencySupportInfo(
   const fallbackCurrencyInfo = useFiatCurrencyInfo(FiatCurrency.UnitedStatesDollar)
   const appFiatCurrencyCode = appFiatCurrencyInfo.code.toLowerCase()
 
-  const { useFiatOnRampAggregatorSupportedFiatCurrenciesQuery } = getFiatOnRampAggregatorApi()
   const { data: supportedFiatCurrencies } = useFiatOnRampAggregatorSupportedFiatCurrenciesQuery(
     { countryCode, rampDirection },
     { skip },
@@ -155,7 +159,6 @@ export function useFiatOnRampSupportedTokens({
   loading: boolean
   refetch: () => void
 } {
-  const { useFiatOnRampAggregatorSupportedTokensQuery } = getFiatOnRampAggregatorApi()
   const {
     data: supportedTokensResponse,
     isLoading: supportedTokensLoading,
@@ -237,7 +240,6 @@ export function useFiatOnRampQuotes({
   const debouncedBaseCurrencyAmount = useDebounce(baseCurrencyAmount, SHORT_DELAY)
   const walletAddress = useAccountMeta()?.address
 
-  const { useFiatOnRampAggregatorCryptoQuoteQuery } = getFiatOnRampAggregatorApi()
   const {
     currentData: quotesResponse,
     isFetching: quotesFetching,
@@ -319,7 +321,6 @@ export function useIsSupportedFiatOnRampCurrency(
   skip: boolean = false,
 ): FiatOnRampCurrency | undefined {
   const fallbackCountryCode = getCountry()
-  const { useFiatOnRampAggregatorGetCountryQuery } = getFiatOnRampAggregatorApi()
   const { currentData: ipCountryData } = useFiatOnRampAggregatorGetCountryQuery(undefined, { skip })
   const { meldSupportedFiatCurrency } = useMeldFiatCurrencySupportInfo(
     ipCountryData?.countryCode ?? fallbackCountryCode,

@@ -2,13 +2,7 @@
 
 exports[`PoolDetailsHeader renders link for pool address 1`] = `
 <DocumentFragment>
-  .c4 {
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c9 {
+  .c8 {
   display: inline-block;
   height: inherit;
 }
@@ -53,7 +47,7 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   justify-content: flex-start;
 }
 
-.c5 {
+.c4 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -61,7 +55,7 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c12 {
+.c11 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -72,15 +66,15 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   font-weight: 500;
 }
 
-.c12:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c12:active {
+.c11:active {
   opacity: 0.4;
 }
 
-.c6 {
+.c5 {
   display: none;
   white-space: nowrap;
   overflow: hidden;
@@ -95,13 +89,13 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   text-overflow: ellipsis;
 }
 
-.c7 {
+.c6 {
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
 }
 
-.c10 {
+.c9 {
   gap: 8px;
   padding: 8px 12px;
   border-radius: 20px;
@@ -122,15 +116,15 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   transition-duration: 125ms;
 }
 
-.c10:hover {
+.c9:hover {
   opacity: 0.6;
 }
 
-.c10:active {
+.c9:active {
   opacity: 0.4;
 }
 
-.c11 {
+.c10 {
   width: 16px;
   height: 16px;
   color: #7D7D7D;
@@ -139,7 +133,7 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   flex-shrink: 0;
 }
 
-.c13 {
+.c12 {
   padding: 8px;
   border-radius: 20px;
   background-color: #22222212;
@@ -154,15 +148,15 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   transition-duration: 125ms;
 }
 
-.c13:hover {
+.c12:hover {
   opacity: 0.6;
 }
 
-.c13:active {
+.c12:active {
   opacity: 0.4;
 }
 
-.c8 {
+.c7 {
   gap: 8px;
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
@@ -173,13 +167,13 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
 }
 
 @media (max-width:1024px) and (min-width:396px) {
-  .c6 {
+  .c5 {
     display: block;
   }
 }
 
 @media (max-width:1024px) and (min-width:396px) {
-  .c7 {
+  .c6 {
     color: #7D7D7D;
   }
 }
@@ -202,85 +196,81 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
             data-testid="pdp-pool-logo-USDC-WETH"
           >
             <div
-              class="c4"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-20px _width-20px"
             >
               <div
-                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-20px _width-20px"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-9px"
+                data-testid="input-currency-logo-container"
               >
                 <div
-                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-9px"
-                  data-testid="input-currency-logo-container"
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-20px _justifyContent-center _pointerEvents-auto _width-20px _position-relative"
+                  data-testid="token-logo"
                 >
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-20px _justifyContent-center _pointerEvents-auto _width-20px _position-relative"
-                    data-testid="token-logo"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-10px _borderTopRightRadius-10px _borderBottomRightRadius-10px _borderBottomLeftRadius-10px"
+                  />
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    data-testid="img-token-image"
                   >
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-10px _borderTopRightRadius-10px _borderBottomRightRadius-10px _borderBottomLeftRadius-10px"
+                    <img
+                      height="20"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                      style="object-fit: contain; border-radius: 10px; z-index: 1;"
+                      width="20"
                     />
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                      data-testid="img-token-image"
-                    >
-                      <img
-                        height="20"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                        style="object-fit: contain; border-radius: 10px; z-index: 1;"
-                        width="20"
-                      />
-                    </div>
                   </div>
                 </div>
+              </div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
+                data-testid="output-currency-logo-container"
+              >
                 <div
-                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
-                  data-testid="output-currency-logo-container"
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-20px _justifyContent-center _pointerEvents-auto _width-20px _position-relative"
+                  data-testid="token-logo"
                 >
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-20px _justifyContent-center _pointerEvents-auto _width-20px _position-relative"
-                    data-testid="token-logo"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-10px _borderTopRightRadius-10px _borderBottomRightRadius-10px _borderBottomLeftRadius-10px"
+                  />
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    data-testid="img-token-image"
                   >
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-10px _borderTopRightRadius-10px _borderBottomRightRadius-10px _borderBottomLeftRadius-10px"
+                    <img
+                      height="20"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                      style="object-fit: contain; border-radius: 10px; z-index: 1;"
+                      width="20"
                     />
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                      data-testid="img-token-image"
-                    >
-                      <img
-                        height="20"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                        style="object-fit: contain; border-radius: 10px; z-index: 1;"
-                        width="20"
-                      />
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
             <div
-              class="c5 c6 css-1urox24"
+              class="c4 c5 css-1urox24"
             >
               Pool
             </div>
             <div
-              class="c5 c7 css-1urox24"
+              class="c4 c6 css-1urox24"
             >
               USDC / WETH
             </div>
           </div>
           <div
-            class="c0 c2 c8"
+            class="c0 c2 c7"
           >
             <div
-              class="c9"
+              class="c8"
             >
               <div
-                class="c0 c2 c10"
+                class="c0 c2 c9"
                 data-testid="copy-address-0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
               >
                 0x88e6...5640
                 <svg
-                  class="c11"
+                  class="c10"
                   fill="none"
                   height="24"
                   stroke="currentColor"
@@ -306,14 +296,14 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
               </div>
             </div>
             <a
-              class="c12"
+              class="c11"
               data-testid="explorer-url-https://etherscan.io/address/0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
               href="https://etherscan.io/address/0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
               rel="noopener noreferrer"
               target="_blank"
             >
               <div
-                class="c13"
+                class="c12"
               >
                 <svg
                   fill="#222222"

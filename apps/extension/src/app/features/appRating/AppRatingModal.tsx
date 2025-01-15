@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { DeprecatedButton, Flex, Text, TouchableArea } from 'ui/src'
 import { Feedback, LikeSquare, MessageText, X } from 'ui/src/components/icons'
 import { IconSizeTokens, zIndices } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -133,12 +133,12 @@ export default function AppRatingModal({ onClose }: AppRatingModalProps): JSX.El
           </Text>
         </Flex>
         <Flex row width="100%" gap="$spacing12">
-          <Button flex={1} flexBasis={1} size="small" theme="secondary" onPress={onSecondaryButtonPress}>
+          <DeprecatedButton flex={1} flexBasis={1} size="small" theme="secondary" onPress={onSecondaryButtonPress}>
             {secondaryButtonText}
-          </Button>
-          <Button flex={1} flexBasis={1} size="small" theme="primary" onPress={onPrimaryButtonPress}>
+          </DeprecatedButton>
+          <DeprecatedButton flex={1} flexBasis={1} size="small" theme="primary" onPress={onPrimaryButtonPress}>
             {primaryButtonText}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

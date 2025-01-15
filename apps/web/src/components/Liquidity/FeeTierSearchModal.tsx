@@ -12,7 +12,7 @@ import { useMultichainContext } from 'state/multichain/useMultichainContext'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import styled from 'styled-components'
 import { ClickableTamaguiStyle, CloseIcon } from 'theme/components'
-import { Button, Flex, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Text } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { Plus } from 'ui/src/components/icons/Plus'
@@ -238,7 +238,7 @@ export function FeeTierSearchModal() {
             </Text> */}
             {/* TODO(WEB-4920): search existing fee tiers for close matches and optionally similar list */}
 
-            <Button
+            <DeprecatedButton
               flex={1}
               py="$spacing16"
               px="$spacing20"
@@ -271,7 +271,7 @@ export function FeeTierSearchModal() {
               <Text variant="buttonLabel2" color="$surface1">
                 {feeTierData[feeHundredthsOfBips] ? t('fee.tier.select.existing.button') : t('fee.tier.create.button')}
               </Text>
-            </Button>
+            </DeprecatedButton>
           </Flex>
         ) : (
           <>
@@ -386,7 +386,7 @@ export function FeeTierSearchModal() {
               <Text variant="body3" color="$neutral2">
                 {t('fee.tier.missing.description')}
               </Text>
-              <Button
+              <DeprecatedButton
                 py="$spacing8"
                 px="$spacing12"
                 gap="$gap4"
@@ -396,7 +396,7 @@ export function FeeTierSearchModal() {
                 onPress={() => setCreateModeEnabled(true)}
               >
                 {t('fee.tier.create.button')}
-              </Button>
+              </DeprecatedButton>
             </Flex>
           </>
         )}

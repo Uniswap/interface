@@ -20,7 +20,7 @@ import {
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ClickableTamaguiStyle } from 'theme/components'
-import { Button, Flex, SegmentedControl, SegmentedControlOption, Shine, Text, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, SegmentedControl, SegmentedControlOption, Shine, Text, useSporeColors } from 'ui/src'
 import { HorizontalDensityChart } from 'ui/src/components/icons/HorizontalDensityChart'
 import { LoadingPriceCurve } from 'ui/src/components/icons/LoadingPriceCurve'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -421,7 +421,7 @@ export function LiquidityRangeInput({
             />
           )}
           <Flex row centered borderRadius="$roundedFull">
-            <Button
+            <DeprecatedButton
               animation="100ms"
               backgroundColor="$transparent"
               hoverStyle={{ backgroundColor: '$transparent', opacity: 0.8 }}
@@ -438,8 +438,8 @@ export function LiquidityRangeInput({
               }}
             >
               <SearchPlus size={16} color="$neutral1" />
-            </Button>
-            <Button
+            </DeprecatedButton>
+            <DeprecatedButton
               animation="100ms"
               backgroundColor="$transparent"
               hoverStyle={{ backgroundColor: '$transparent', opacity: 0.8 }}
@@ -456,10 +456,10 @@ export function LiquidityRangeInput({
               }}
             >
               <SearchMinus size={16} color="$neutral1" />
-            </Button>
+            </DeprecatedButton>
           </Flex>
         </Flex>
-        <Button
+        <DeprecatedButton
           height={32}
           backgroundColor="$transparent"
           borderColor="$surface3"
@@ -479,7 +479,7 @@ export function LiquidityRangeInput({
           ) : (
             <Text variant="buttonLabel3">{t('common.button.reset')}</Text>
           )}
-        </Button>
+        </DeprecatedButton>
       </Flex>
     </Flex>
   )

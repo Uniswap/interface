@@ -849,6 +849,11 @@ query ExploreSearch(
     protectionInfo {
       result
       attackTypes
+      blockaidFees {
+        buy
+        sell
+        transfer
+      }
     }
     feeData {
       buyFeeBps
@@ -934,6 +939,9 @@ fragment TokenProjectMarketsParts on Token {
       priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
         value
       }
+      pricePercentChange24h {
+        value
+      }
     }
   }
 }
@@ -967,6 +975,11 @@ fragment TokenProtectionInfoParts on Token {
   protectionInfo {
     result
     attackTypes
+    blockaidFees {
+      buy
+      sell
+      transfer
+    }
   }
 }
 
@@ -1084,6 +1097,7 @@ query FavoriteTokenCard($chain: Chain!, $address: String) {
   token(chain: $chain, address: $address) {
     ...TokenBasicInfoParts
     ...TokenBasicProjectParts
+    ...TokenProjectMarketsParts
     market(currency: USD) {
       id
       price {

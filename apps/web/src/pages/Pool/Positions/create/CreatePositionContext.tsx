@@ -43,7 +43,6 @@ export const DEFAULT_PRICE_RANGE_STATE: PriceRangeState = {
   minPrice: '',
   maxPrice: '',
   initialPrice: '',
-  initialPriceInverted: false,
 }
 
 export const PriceRangeContext = React.createContext<PriceRangeContextType>({

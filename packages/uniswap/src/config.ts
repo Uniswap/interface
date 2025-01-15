@@ -7,28 +7,14 @@ import {
   APPSFLYER_APP_ID,
   DATADOG_CLIENT_TOKEN,
   DATADOG_PROJECT_ID,
-  FIAT_ON_RAMP_API_URL_OVERRIDE,
   FIREBASE_APP_CHECK_DEBUG_TOKEN,
   FOR_API_URL_OVERRIDE,
   GRAPHQL_URL_OVERRIDE,
   INFURA_KEY,
   ONESIGNAL_APP_ID,
   OPENAI_API_KEY,
-  QUICKNODE_ARBITRUM_RPC_URL,
-  QUICKNODE_ASTROCHAIN_SEPOLIA_RPC_URL,
-  QUICKNODE_AVAX_RPC_URL,
-  QUICKNODE_BASE_RPC_URL,
-  QUICKNODE_BLAST_RPC_URL,
-  QUICKNODE_BNB_RPC_URL,
-  QUICKNODE_CELO_RPC_URL,
-  QUICKNODE_MAINNET_RPC_URL,
-  QUICKNODE_MONAD_TESTNET_RPC_URL,
-  QUICKNODE_OP_RPC_URL,
-  QUICKNODE_POLYGON_RPC_URL,
-  QUICKNODE_SEPOLIA_RPC_URL,
-  QUICKNODE_WORLDCHAIN_RPC_URL,
-  QUICKNODE_ZKSYNC_RPC_URL,
-  QUICKNODE_ZORA_RPC_URL,
+  QUICKNODE_ENDPOINT_NAME,
+  QUICKNODE_ENDPOINT_TOKEN,
   SCANTASTIC_API_URL_OVERRIDE,
   SENTRY_DSN,
   SIMPLEHASH_API_KEY,
@@ -60,28 +46,14 @@ export interface Config {
   appsflyerAppId: string
   datadogClientToken: string
   datadogProjectId: string
-  fiatOnRampApiUrlOverride: string
   firebaseAppCheckDebugToken: string
   forApiUrlOverride: string
   graphqlUrlOverride: string
   infuraKey: string
   onesignalAppId: string
   openaiApiKey: string
-  quicknodeArbitrumRpcUrl: string
-  quicknodeAvaxRpcUrl: string
-  quicknodeBaseRpcUrl: string
-  quicknodeBlastRpcUrl: string
-  quicknodeBnbRpcUrl: string
-  quicknodeCeloRpcUrl: string
-  quicknodeMainnetRpcUrl: string
-  quicknodeMonadTestnetRpcUrl: string
-  quicknodeOpRpcUrl: string
-  quicknodePolygonRpcUrl: string
-  quicknodeSepoliaRpcUrl: string
-  quicknodeUnichainSepoliaRpcUrl: string
-  quicknodeWorldChainRpcUrl: string
-  quicknodeZkSyncRpcUrl: string
-  quicknodeZoraRpcUrl: string
+  quicknodeEndpointName: string
+  quicknodeEndpointToken: string
   scantasticApiUrlOverride: string
   sentryDsn: string
   simpleHashApiKey: string
@@ -112,57 +84,16 @@ const _config: Config = {
   appsflyerAppId: process.env.APPSFLYER_APP_ID || APPSFLYER_APP_ID,
   datadogClientToken: process.env.DATADOG_CLIENT_TOKEN || DATADOG_CLIENT_TOKEN,
   datadogProjectId: process.env.DATADOG_PROJECT_ID || DATADOG_PROJECT_ID,
-  fiatOnRampApiUrlOverride: process.env.FIAT_ON_RAMP_API_URL_OVERRIDE || FIAT_ON_RAMP_API_URL_OVERRIDE,
   firebaseAppCheckDebugToken: process.env.FIREBASE_APP_CHECK_DEBUG_TOKEN || FIREBASE_APP_CHECK_DEBUG_TOKEN,
   forApiUrlOverride: process.env.FOR_API_URL_OVERRIDE || FOR_API_URL_OVERRIDE,
   graphqlUrlOverride: process.env.GRAPHQL_URL_OVERRIDE || GRAPHQL_URL_OVERRIDE,
   infuraKey: process.env.REACT_APP_INFURA_KEY || INFURA_KEY,
   onesignalAppId: process.env.ONESIGNAL_APP_ID || ONESIGNAL_APP_ID,
   openaiApiKey: process.env.OPENAI_API_KEY || OPENAI_API_KEY,
-  quicknodeArbitrumRpcUrl:
-    process.env.REACT_APP_QUICKNODE_ARBITRUM_RPC_URL ||
-    process.env.QUICKNODE_ARBITRUM_RPC_URL ||
-    QUICKNODE_ARBITRUM_RPC_URL,
-  quicknodeAvaxRpcUrl:
-    process.env.REACT_APP_QUICKNODE_AVAX_RPC_URL || process.env.QUICKNODE_AVAX_RPC_URL || QUICKNODE_AVAX_RPC_URL,
-  quicknodeBaseRpcUrl:
-    process.env.REACT_APP_QUICKNODE_BASE_RPC_URL || process.env.QUICKNODE_BASE_RPC_URL || QUICKNODE_BASE_RPC_URL,
-  quicknodeBlastRpcUrl:
-    process.env.REACT_APP_QUICKNODE_BLAST_RPC_URL || process.env.QUICKNODE_BLAST_RPC_URL || QUICKNODE_BLAST_RPC_URL,
-  quicknodeBnbRpcUrl:
-    process.env.REACT_APP_QUICKNODE_BNB_RPC_URL || process.env.QUICKNODE_BNB_RPC_URL || QUICKNODE_BNB_RPC_URL,
-  quicknodeCeloRpcUrl:
-    process.env.REACT_APP_QUICKNODE_CELO_RPC_URL || process.env.QUICKNODE_CELO_RPC_URL || QUICKNODE_CELO_RPC_URL,
-  quicknodeMainnetRpcUrl:
-    process.env.REACT_APP_QUICKNODE_MAINNET_RPC_URL ||
-    process.env.QUICKNODE_MAINNET_RPC_URL ||
-    QUICKNODE_MAINNET_RPC_URL,
-  quicknodeMonadTestnetRpcUrl:
-    process.env.REACT_APP_QUICKNODE_MONAD_TESTNET_RPC_URL ||
-    process.env.QUICKNODE_MONAD_TESTNET_RPC_URL ||
-    QUICKNODE_MONAD_TESTNET_RPC_URL,
-  quicknodeOpRpcUrl:
-    process.env.REACT_APP_QUICKNODE_OP_RPC_URL || process.env.QUICKNODE_OP_RPC_URL || QUICKNODE_OP_RPC_URL,
-  quicknodePolygonRpcUrl:
-    process.env.REACT_APP_QUICKNODE_POLYGON_RPC_URL ||
-    process.env.QUICKNODE_POLYGON_RPC_URL ||
-    QUICKNODE_POLYGON_RPC_URL,
-  quicknodeSepoliaRpcUrl:
-    process.env.REACT_APP_QUICKNODE_SEPOLIA_RPC_URL ||
-    process.env.QUICKNODE_SEPOLIA_RPC_URL ||
-    QUICKNODE_SEPOLIA_RPC_URL,
-  quicknodeUnichainSepoliaRpcUrl:
-    process.env.REACT_APP_QUICKNODE_ASTROCHAIN_SEPOLIA_RPC_URL ||
-    process.env.QUICKNODE_ASTROCHAIN_SEPOLIA_RPC_URL ||
-    QUICKNODE_ASTROCHAIN_SEPOLIA_RPC_URL,
-  quicknodeWorldChainRpcUrl:
-    process.env.REACT_APP_QUICKNODE_WORLDCHAIN_RPC_URL ||
-    process.env.QUICKNODE_WORLDCHAIN_RPC_URL ||
-    QUICKNODE_WORLDCHAIN_RPC_URL,
-  quicknodeZkSyncRpcUrl:
-    process.env.REACT_APP_QUICKNODE_ZKSYNC_RPC_URL || process.env.QUICKNODE_ZKSYNC_RPC_URL || QUICKNODE_ZKSYNC_RPC_URL,
-  quicknodeZoraRpcUrl:
-    process.env.REACT_APP_QUICKNODE_ZORA_RPC_URL || process.env.QUICKNODE_ZORA_RPC_URL || QUICKNODE_ZORA_RPC_URL,
+  quicknodeEndpointName:
+    process.env.REACT_APP_QUICKNODE_ENDPOINT_NAME || process.env.QUICKNODE_ENDPOINT_NAME || QUICKNODE_ENDPOINT_NAME,
+  quicknodeEndpointToken:
+    process.env.REACT_APP_QUICKNODE_ENDPOINT_TOKEN || process.env.QUICKNODE_ENDPOINT_TOKEN || QUICKNODE_ENDPOINT_TOKEN,
   scantasticApiUrlOverride: process.env.SCANTASTIC_API_URL_OVERRIDE || SCANTASTIC_API_URL_OVERRIDE,
   sentryDsn: process.env.REACT_APP_SENTRY_DSN || process.env.SENTRY_DSN || SENTRY_DSN,
   simpleHashApiKey: process.env.SIMPLEHASH_API_KEY || SIMPLEHASH_API_KEY,

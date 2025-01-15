@@ -1,9 +1,9 @@
 #!/bin/bash
 
-check () {
+check() {
   if [[ "$2" != $3* ]]; then
-      echo "Mismatched $1 version: Expected $3 but got $2"
-      exit 1
+    echo "Mismatched $1 version: Expected $3 but got $2"
+    exit 1
   fi
 }
 
@@ -14,7 +14,7 @@ check "yarn" $localYarnVersion "3.2.3"
 # Check Xcode version
 localXcodeOutput="$(/usr/bin/xcodebuild -version)"
 localXcodeVersion=$(echo "$localXcodeOutput" | awk '/Xcode/ {print $2}')
-check "Xcode" $localXcodeVersion "16.1"
+check "Xcode" $localXcodeVersion "16.2"
 
 # Check node version
 localNodeVersion="$(node --version)"

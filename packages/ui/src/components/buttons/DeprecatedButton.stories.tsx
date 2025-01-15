@@ -1,12 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Button } from 'ui/src/components/button/Button'
+import { DeprecatedButton } from 'ui/src/components/buttons/DeprecatedButton'
 
 const meta = {
-  // NOTE: On Web, titles must be statically analyzable at build time in Storybook v8. Please refer to our documentation for valid values.
-  // https://github.com/Uniswap/universe/blob/main/docs/storybook.md#storybook-titles
-  title: 'Spore/Button',
-  component: Button,
-} satisfies Meta<typeof Button>
+  title: 'Components/Buttons',
+  component: DeprecatedButton,
+} satisfies Meta<typeof DeprecatedButton>
 
 type Story = StoryObj<typeof meta>
 

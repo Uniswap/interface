@@ -4,7 +4,7 @@ import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingStepsContext'
 import { useUnitagClaimContext } from 'src/app/features/unitags/UnitagClaimContext'
 import { closeCurrentTab } from 'src/app/navigation/utils'
-import { Button, Flex, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Text } from 'ui/src'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { UnitagWithProfilePicture } from 'wallet/src/features/unitags/UnitagWithProfilePicture'
@@ -49,12 +49,12 @@ export function UnitagConfirmationScreen(): JSX.Element {
           </Text>
         </Flex>
         <Flex gap="$spacing12" pt="$spacing12">
-          <Button size="medium" theme="primary" onPress={closeCurrentTab}>
+          <DeprecatedButton size="medium" theme="primary" onPress={closeCurrentTab}>
             {t('common.button.done')}
-          </Button>
-          <Button size="medium" theme="secondary" onPress={onPressCustomize}>
+          </DeprecatedButton>
+          <DeprecatedButton size="medium" theme="secondary" onPress={onPressCustomize}>
             {t('unitags.claim.confirmation.customize')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </OnboardingScreen>

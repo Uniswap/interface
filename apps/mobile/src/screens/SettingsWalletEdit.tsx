@@ -8,7 +8,7 @@ import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
-import { Button, Flex, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Text } from 'ui/src'
 import { PenLine } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
@@ -115,7 +115,7 @@ export function SettingsWalletEdit({
                   onSubmitEditing={onFinishEditing}
                 />
                 {showEditButton && accountNameIsEditable && (
-                  <Button
+                  <DeprecatedButton
                     backgroundless
                     icon={<PenLine color="$neutral3" />}
                     m="$none"
@@ -131,14 +131,14 @@ export function SettingsWalletEdit({
               )}
               {showUnitagBanner && <UnitagBanner compact address={address} entryPoint={MobileScreens.Settings} />}
             </Flex>
-            <Button
+            <DeprecatedButton
               disabled={nickname === displayName?.name}
               size="medium"
               theme="primary"
               onPress={onPressSaveChanges}
             >
               {t('settings.setting.wallet.editLabel.save')}
-            </Button>
+            </DeprecatedButton>
           </Flex>
         </KeyboardAvoidingView>
       </GestureDetector>

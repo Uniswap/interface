@@ -1,5 +1,10 @@
 import React from 'react'
-import { NFTHeaderItem, TokenHeaderItem, WalletHeaderItem } from 'src/components/explore/search/constants'
+import {
+  NFTHeaderItem,
+  SEARCH_ITEM_PX,
+  TokenHeaderItem,
+  WalletHeaderItem,
+} from 'src/components/explore/search/constants'
 import { SectionHeaderText } from 'src/components/explore/search/SearchSectionHeader'
 import { SearchHeader } from 'src/components/explore/search/types'
 import { Flex, Loader } from 'ui/src'
@@ -9,7 +14,7 @@ function SectionLoader({ searchHeader, repeat = 1 }: { searchHeader: SearchHeade
   return (
     <Flex gap="$spacing12">
       <SectionHeaderText icon={searchHeader.icon} title={searchHeader.title} />
-      <Flex mx="$spacing24">
+      <Flex px={SEARCH_ITEM_PX}>
         <Loader.SearchResult repeat={repeat} />
       </Flex>
     </Flex>

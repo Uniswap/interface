@@ -8,7 +8,7 @@ import { AccountList } from 'src/components/accounts/AccountList'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
 import { ActionSheetModal, MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
@@ -268,9 +268,9 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
           variant="subheading1"
         />
         <Flex px="$spacing24">
-          <Button size="small" testID={TestID.WalletSettings} theme="secondary" onPress={onManageWallet}>
+          <DeprecatedButton size="small" testID={TestID.WalletSettings} theme="secondary" onPress={onManageWallet}>
             {t('account.wallet.button.manage')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
       <Flex maxHeight={fullScreenContentHeight / 2}>

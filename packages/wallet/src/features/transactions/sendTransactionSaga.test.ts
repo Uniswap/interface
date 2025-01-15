@@ -147,6 +147,7 @@ describe(sendTransaction, () => {
             },
             submittedTimestampMs: Date.now(),
             timeoutTimestampMs: undefined,
+            privateRpcProvider: undefined,
           },
         }),
       )

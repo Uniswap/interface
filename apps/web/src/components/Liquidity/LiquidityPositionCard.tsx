@@ -23,7 +23,7 @@ import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { ClickableTamaguiStyle } from 'theme/components'
 import {
-  Button,
+  DeprecatedButton,
   Flex,
   GeneratedIcon,
   Separator,
@@ -240,7 +240,7 @@ export function LiquidityPositionCard({
         formattedUsdValue={v3OrV4FormattedUsdValue ?? v2FormattedUsdValue}
         formattedUsdFees={v3OrV4FormattedFeesValue}
         priceOrdering={priceOrdering}
-        feeTier={liquidityPosition.feeTier?.toString()}
+        tickSpacing={liquidityPosition.tickSpacing}
         tickLower={liquidityPosition.tickLower}
         tickUpper={liquidityPosition.tickUpper}
       />
@@ -287,7 +287,7 @@ export function LiquidityPositionCard({
         formattedUsdValue={v3OrV4FormattedUsdValue ?? v2FormattedUsdValue}
         formattedUsdFees={v3OrV4FormattedFeesValue}
         priceOrdering={priceOrdering}
-        feeTier={liquidityPosition.feeTier?.toString()}
+        tickSpacing={liquidityPosition.tickSpacing}
         tickLower={liquidityPosition.tickLower}
         tickUpper={liquidityPosition.tickUpper}
         version={liquidityPosition.version}
@@ -321,9 +321,9 @@ export function LiquidityPositionCard({
             }}
             options={dropdownOptions}
           >
-            <Button size="small" theme="secondary" backgroundColor="$surface3">
+            <DeprecatedButton size="small" theme="secondary" backgroundColor="$surface3">
               <MoreHorizontal size={iconSizes.icon16} color={colors.neutral1.val} />
-            </Button>
+            </DeprecatedButton>
           </ActionSheetDropdown>
         </Flex>
       )}
@@ -336,7 +336,7 @@ function MiniPositionCard({
   formattedUsdFees,
   formattedUsdValue,
   priceOrdering,
-  feeTier,
+  tickSpacing,
   tickLower,
   tickUpper,
   isClickableStyle,
@@ -345,7 +345,7 @@ function MiniPositionCard({
   formattedUsdFees?: string
   formattedUsdValue?: string
   priceOrdering: PriceOrdering
-  feeTier?: string
+  tickSpacing?: number
   tickLower?: string
   tickUpper?: string
   isClickableStyle?: boolean
@@ -355,7 +355,7 @@ function MiniPositionCard({
 
   const { maxPrice, minPrice, tokenASymbol, tokenBSymbol, isFullRange } = useGetRangeDisplay({
     priceOrdering,
-    feeTier,
+    tickSpacing,
     tickLower,
     tickUpper,
     pricesInverted,

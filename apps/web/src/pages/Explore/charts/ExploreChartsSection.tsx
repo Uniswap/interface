@@ -127,10 +127,7 @@ function VolumeChartSection() {
 
   return (
     <SectionContainer>
-      <Flex row justifyContent="space-between" alignItems="center" mb="$spacing8">
-        <SectionTitle>
-          <Trans i18nKey="explore.uniVolume" />
-        </SectionTitle>
+      <ChartSectionHeader titleKey="explore.uniVolume">
         <SegmentedControl
           options={TIME_SELECTOR_OPTIONS}
           selectedOption={timePeriod}
@@ -143,7 +140,8 @@ function VolumeChartSection() {
           }}
           size="small"
         />
-      </Flex>
+      </ChartSectionHeader>
+
       {(() => {
         if (dataQuality === DataQuality.INVALID) {
           const errorText = loading ? undefined : <Trans i18nKey="explore.unableToDisplayHistorical" />
@@ -200,9 +198,7 @@ function TVLChartSection() {
 
   return (
     <SectionContainer>
-      <SectionTitle color="$neutral2" mb="$spacing8">
-        <Trans i18nKey="common.uniswapTVL" />
-      </SectionTitle>
+      <ChartSectionHeader titleKey="common.uniswapTVL" />
       {(() => {
         if (dataQuality === DataQuality.INVALID) {
           const errorText = loading ? undefined : <Trans i18nKey="explore.unableToDisplayHistoricalTVL" />
@@ -260,6 +256,22 @@ export function ExploreChartsSection() {
     >
       <TVLChartSection />
       <VolumeChartSection />
+    </Flex>
+  )
+}
+
+interface ChartSectionHeaderProps {
+  titleKey: string
+  children?: ReactNode
+}
+
+function ChartSectionHeader({ titleKey, children }: ChartSectionHeaderProps) {
+  const { t } = useTranslation()
+
+  return (
+    <Flex row justifyContent="space-between" alignItems="center" mb="$spacing8" height="34px">
+      <SectionTitle>{t(titleKey)}</SectionTitle>
+      {children}
     </Flex>
   )
 }

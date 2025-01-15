@@ -23,50 +23,58 @@ function getWarningFlags({
 
   const isToken = currencyInfo.currency.isToken
 
-  if (isToken && currencyInfo.currency.buyFeeBps) {
-    const buyFeePercent = currencyInfo.currency.buyFeeBps.toNumber() / 100
-    const buyFeeColor = getFeeColor(buyFeePercent)
+  if (isToken) {
+    // If Blockaid marks the token as having high fees, but we don't have data on token fees, show Blockaid's fees data
+    const buyFeePercent = currencyInfo.currency.buyFeeBps
+      ? currencyInfo.currency.buyFeeBps?.toNumber() / 100
+      : currencyInfo.safetyInfo?.blockaidFees?.buyFeePercent
+    const sellFeePercent = currencyInfo.currency.sellFeeBps
+      ? currencyInfo.currency.sellFeeBps?.toNumber() / 100
+      : currencyInfo.safetyInfo?.blockaidFees?.sellFeePercent
 
-    flags.push(
-      <WarningFlag key="buy-fee">
-        <Trans
-          i18nKey="token.safety.warning.feeDescription"
-          components={{
-            fee: (
-              <Text variant="body3" color={buyFeeColor}>
-                {formatPercent(buyFeePercent)} {t('common.fee').toLowerCase()}
-              </Text>
-            ),
-          }}
-          values={{
-            action: t('common.bought').toLowerCase(),
-          }}
-        />
-      </WarningFlag>,
-    )
-  }
+    if (buyFeePercent) {
+      const buyFeeColor = getFeeColor(buyFeePercent)
 
-  if (isToken && currencyInfo.currency.sellFeeBps) {
-    const sellFeePercent = currencyInfo.currency.sellFeeBps.toNumber() / 100
-    const sellFeeColor = getFeeColor(sellFeePercent)
+      flags.push(
+        <WarningFlag key="buy-fee">
+          <Trans
+            i18nKey="token.safety.warning.feeDescription"
+            components={{
+              fee: (
+                <Text variant="body3" color={buyFeeColor}>
+                  {formatPercent(buyFeePercent)} {t('common.fee').toLowerCase()}
+                </Text>
+              ),
+            }}
+            values={{
+              action: t('common.bought').toLowerCase(),
+            }}
+          />
+        </WarningFlag>,
+      )
+    }
 
-    flags.push(
-      <WarningFlag key="sell-fee">
-        <Trans
-          i18nKey="token.safety.warning.feeDescription"
-          components={{
-            fee: (
-              <Text variant="body3" color={sellFeeColor}>
-                {formatPercent(sellFeePercent)} {t('common.fee').toLowerCase()}
-              </Text>
-            ),
-          }}
-          values={{
-            action: t('common.sold').toLowerCase(),
-          }}
-        />
-      </WarningFlag>,
-    )
+    if (sellFeePercent) {
+      const sellFeeColor = getFeeColor(sellFeePercent)
+
+      flags.push(
+        <WarningFlag key="sell-fee">
+          <Trans
+            i18nKey="token.safety.warning.feeDescription"
+            components={{
+              fee: (
+                <Text variant="body3" color={sellFeeColor}>
+                  {formatPercent(sellFeePercent)} {t('common.fee').toLowerCase()}
+                </Text>
+              ),
+            }}
+            values={{
+              action: t('common.sold').toLowerCase(),
+            }}
+          />
+        </WarningFlag>,
+      )
+    }
   }
 
   if (tokenProtectionWarning === TokenProtectionWarning.SpamAirdrop) {

@@ -85,10 +85,10 @@ export function SearchEmptySection({ selectedChain }: { selectedChain: UniverseC
         </Flex>
       </AnimatedFlex>
       <WarningModal
-        backgroundIconColor={colors.surface2.get()}
+        backgroundIconColor={colors.surface3.get()}
         caption={t('explore.search.section.popularTokenInfo')}
         rejectText={t('common.button.close')}
-        icon={<Star color="$neutral2" size="$icon.24" />}
+        icon={<Star color="$neutral1" size="$icon.24" />}
         isOpen={showPopularInfo}
         modalName={ModalName.NetworkFeeInfo}
         severity={WarningSeverity.None}

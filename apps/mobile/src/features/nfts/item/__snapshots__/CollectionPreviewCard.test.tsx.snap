@@ -27,12 +27,7 @@ exports[`renders collection preview card 1`] = `
     style={
       {
         "alignItems": "center",
-        "backgroundColor": {
-          "dynamic": {
-            "dark": "rgba(255,255,255,0.12)",
-            "light": "rgba(34,34,34,0.05)",
-          },
-        },
+        "backgroundColor": "#F9F9F9",
         "borderBottomLeftRadius": 16,
         "borderBottomRightRadius": 16,
         "borderTopLeftRadius": 16,
@@ -150,14 +145,9 @@ exports[`renders collection preview card 1`] = `
               numberOfLines={1}
               style={
                 {
-                  "color": {
-                    "dynamic": {
-                      "dark": "#FFFFFF",
-                      "light": "#222222",
-                    },
-                  },
+                  "color": "#222222",
                   "fontFamily": "Basel Grotesk",
-                  "fontSize": 19,
+                  "fontSize": 17,
                   "fontWeight": "400",
                   "lineHeight": 24,
                 }

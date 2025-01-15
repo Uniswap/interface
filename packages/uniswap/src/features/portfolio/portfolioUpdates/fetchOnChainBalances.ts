@@ -1,31 +1,46 @@
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
-import { TokenDocument, TokenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { CurrencyAmount, NativeCurrency, Token } from '@uniswap/sdk-core'
+import { fetchTradingApiIndicativeQuote } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiIndicativeQuoteQuery'
+import {
+  PortfolioBalancesQuery,
+  TokenDocument,
+  TokenQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { TradeType } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput, gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
 import { getOnChainBalancesFetch } from 'uniswap/src/features/portfolio/api'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { STABLECOIN_AMOUNT_OUT } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyIdToAddress, currencyIdToChain, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 
 type OnChainMap = Map<
   CurrencyId,
-  { currencyAddress: Address; chainId: UniverseChainId; rawBalance?: string; quantity?: number }
+  {
+    currencyAddress: Address
+    chainId: UniverseChainId
+    rawBalance?: string
+    quantity?: number
+    denominatedValue?: { value: number; currency: string }
+  }
 >
 
 export async function fetchOnChainBalances({
   apolloCache,
+  cachedPortfolio,
   accountAddress,
   currencyIds,
 }: {
   apolloCache: ApolloCache<NormalizedCacheObject>
+  cachedPortfolio: NonNullable<PortfolioBalancesQuery['portfolios']>[0]
   accountAddress: Address
   currencyIds: Set<CurrencyId>
 }): Promise<OnChainMap> {
-  const onchainBalancesByCurrencyId = new Map<
-    CurrencyId,
-    { currencyAddress: Address; chainId: UniverseChainId; rawBalance?: string; quantity?: number }
-  >()
+  const onchainBalancesByCurrencyId: OnChainMap = new Map()
 
   await Promise.all(
     Array.from(currencyIds).map(async (currencyId): Promise<void> => {
@@ -64,20 +79,160 @@ export async function fetchOnChainBalances({
         return
       }
 
-      const quantity = getCurrencyAmount({
+      const onchainQuantityCurrencyAmount = getCurrencyAmount({
         value: onchainBalance,
         valueType: ValueType.Raw,
         currency: currencyInfo.currency,
-      })?.toExact()
+      })
+
+      const quantity = onchainQuantityCurrencyAmount?.toExact()
+
+      const denominatedValue = onchainQuantityCurrencyAmount
+        ? await getDenominatedValue({
+            onchainQuantityCurrencyAmount,
+            token,
+            cachedPortfolio,
+          })
+        : undefined
 
       onchainBalancesByCurrencyId.set(currencyId, {
         currencyAddress,
         chainId,
         rawBalance: onchainBalance,
         quantity: quantity ? parseFloat(quantity) : undefined,
+        denominatedValue,
       })
     }),
   )
 
+  logger.debug('getOnChainBalances.ts', 'getOnChainBalances', '[ITBU] Onchain balances fetched', {
+    onchainBalancesByCurrencyId,
+  })
+
   return onchainBalancesByCurrencyId
+}
+
+type DenominatedValue = { value: number; currency: string }
+
+async function getDenominatedValue({
+  onchainQuantityCurrencyAmount,
+  token,
+  cachedPortfolio,
+}: {
+  onchainQuantityCurrencyAmount: CurrencyAmount<NativeCurrency | Token>
+  token: NonNullable<TokenQuery['token']>
+  cachedPortfolio: NonNullable<PortfolioBalancesQuery['portfolios']>[0]
+}): Promise<DenominatedValue | undefined> {
+  const inferredDenominatedValue = getInferredCachedDenominatedValue({
+    cachedPortfolio,
+    token,
+    onchainQuantityCurrencyAmount,
+  })
+
+  if (inferredDenominatedValue) {
+    return inferredDenominatedValue
+  }
+
+  // If we don't have enough data to calculate the USD value, we continue by fetching an indicative quote.
+
+  // For logging purposes.
+  const extra = {
+    cachedPortfolio,
+    token,
+    onchainQuantityCurrencyAmount,
+  }
+
+  const chainId = toTradingApiSupportedChainId(fromGraphQLChain(token.chain))
+
+  if (!chainId) {
+    logger.error(new Error('[ITBU] No `chainId` found'), {
+      tags: {
+        file: 'fetchOnChainBalances.ts',
+        function: 'getDenominatedValue',
+      },
+      extra,
+    })
+    return undefined
+  }
+
+  if (!token.address) {
+    logger.error(new Error('[ITBU] No `token.address` found'), {
+      tags: {
+        file: 'fetchOnChainBalances.ts',
+        function: 'getDenominatedValue',
+      },
+      extra,
+    })
+    return undefined
+  }
+
+  const stablecoinCurrency = STABLECOIN_AMOUNT_OUT[chainId]?.currency
+
+  if (!stablecoinCurrency) {
+    logger.error(new Error('[ITBU] No `stablecoinCurrency` found'), {
+      tags: {
+        file: 'fetchOnChainBalances.ts',
+        function: 'getDenominatedValue',
+      },
+      extra,
+    })
+    return undefined
+  }
+
+  const indicativeQuote = await fetchTradingApiIndicativeQuote({
+    params: {
+      type: TradeType.EXACT_INPUT,
+      amount: onchainQuantityCurrencyAmount.quotient.toString(),
+      tokenInChainId: chainId,
+      tokenOutChainId: chainId,
+      tokenIn: token.address,
+      tokenOut: stablecoinCurrency.address,
+    },
+  })
+
+  const amountOut = indicativeQuote?.output.amount
+
+  if (!amountOut) {
+    return undefined
+  }
+
+  const currencyAmountOut = getCurrencyAmount({
+    value: amountOut,
+    valueType: ValueType.Raw,
+    currency: stablecoinCurrency,
+  })
+
+  return currencyAmountOut
+    ? {
+        value: parseFloat(currencyAmountOut.toFixed()),
+        currency: 'USD',
+      }
+    : undefined
+}
+
+function getInferredCachedDenominatedValue({
+  cachedPortfolio,
+  token,
+  onchainQuantityCurrencyAmount,
+}: {
+  cachedPortfolio: NonNullable<PortfolioBalancesQuery['portfolios']>[0]
+  token: NonNullable<TokenQuery['token']>
+  onchainQuantityCurrencyAmount: CurrencyAmount<NativeCurrency | Token>
+}): DenominatedValue | undefined {
+  const cachedTokenBalance = cachedPortfolio?.tokenBalances?.find(
+    (balance) => balance?.token?.address === token.address && balance?.token?.chain === token.chain,
+  )
+
+  if (cachedTokenBalance?.denominatedValue && cachedTokenBalance.quantity) {
+    // If we have the cached USD quantity and USD value, we can use it to calculate the new USD value.
+
+    const onchainQuantity = onchainQuantityCurrencyAmount.toExact()
+
+    return {
+      value: (cachedTokenBalance.denominatedValue.value * parseFloat(onchainQuantity)) / cachedTokenBalance.quantity,
+      currency: cachedTokenBalance.denominatedValue.currency ?? 'USD',
+    }
+  }
+
+  return undefined
 }

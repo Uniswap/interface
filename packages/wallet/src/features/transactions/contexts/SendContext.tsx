@@ -10,10 +10,14 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTransactionGasFee, useTransactionGasWarning } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { useMaxAmountSpend } from 'uniswap/src/features/gas/useMaxAmountSpend'
 import { useFormattedWarnings } from 'uniswap/src/features/transactions/hooks/useParsedTransactionWarnings'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
+import { logger } from 'utilities/src/logger/logger'
+import { parseFloatWithThrow } from 'utilities/src/primitives/string'
 import { useDerivedSendInfo } from 'wallet/src/features/transactions/send/hooks/useDerivedSendInfo'
 import { useSendTransactionRequest } from 'wallet/src/features/transactions/send/hooks/useSendTransactionRequest'
 import { useSendWarnings } from 'wallet/src/features/transactions/send/hooks/useSendWarnings'
@@ -34,6 +38,7 @@ export const getDefaultSendState = (defaultChainId: UniverseChainId): Readonly<T
   selectingCurrencyField: undefined,
   showRecipientSelector: true,
   customSlippageTolerance: undefined,
+  isMax: false,
 })
 
 type SendContextState = {
@@ -62,15 +67,46 @@ export function SendContextProvider({
   // state
   const [sendForm, setSendForm] = useState<TransactionState>(prefilledTransactionState || defaultSendState)
 
-  const updateSendForm = useCallback(
-    (newState: Parameters<SendContextState['updateSendForm']>[0]): void => {
-      setSendForm((prevState) => ({ ...prevState, ...newState }))
-    },
-    [setSendForm],
-  )
-
   // derived info based on transfer state
   const derivedSendInfo = useDerivedSendInfo(sendForm)
+  const maxInputAmount = useMaxAmountSpend({
+    currencyAmount: derivedSendInfo.currencyBalances[CurrencyField.INPUT],
+    txType: TransactionType.Send,
+    isExtraTx: true,
+  })?.toExact()
+
+  const updateSendForm = useCallback(
+    (passedNewState: Parameters<SendContextState['updateSendForm']>[0]): void => {
+      const newState = { ...passedNewState }
+      const isAmountSet = (newState.isFiatInput ? newState.exactAmountFiat : newState.exactAmountToken) !== undefined
+
+      if (isAmountSet) {
+        try {
+          // for explicit "max" actions (eg max button clicked)
+          const isExplicitMax = !!newState.isMax
+
+          const isMaxTokenAmount =
+            maxInputAmount && newState.exactAmountToken
+              ? parseFloatWithThrow(maxInputAmount) <= parseFloatWithThrow(newState.exactAmountToken)
+              : isExplicitMax
+
+          newState.isMax = isMaxTokenAmount
+        } catch (error) {
+          logger.error(error, {
+            tags: { file: 'SendContext.tsx', function: 'updateSendForm' },
+            extra: {
+              maxInputAmount,
+              exactAmountToken: newState.exactAmountToken,
+            },
+          })
+        }
+      }
+
+      setSendForm((prevState) => ({ ...prevState, ...newState }))
+    },
+    [setSendForm, maxInputAmount],
+  )
+
   const warnings = useSendWarnings(t, derivedSendInfo)
   const txRequest = useSendTransactionRequest(derivedSendInfo)
   const gasFee = useTransactionGasFee(
@@ -121,6 +157,7 @@ export function SendContextProvider({
       exactAmountFiat: sendForm.exactAmountFiat,
       exactCurrencyField: sendForm.exactCurrencyField,
       focusOnCurrencyField: sendForm.focusOnCurrencyField,
+      isMax: sendForm.isMax,
       recipient: sendForm.recipient,
       isFiatInput: sendForm.isFiatInput,
       selectingCurrencyField: sendForm.selectingCurrencyField,
@@ -145,6 +182,7 @@ export function SendContextProvider({
     sendForm.focusOnCurrencyField,
     sendForm.recipient,
     sendForm.isFiatInput,
+    sendForm.isMax,
     sendForm.selectingCurrencyField,
     sendForm.showRecipientSelector,
     sendForm.customSlippageTolerance,

@@ -88,9 +88,14 @@ export const uniswapUrls = {
   unitagsApiUrl: config.unitagsApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Unitags)}/v2/unitags`,
   scantasticApiUrl:
     config.scantasticApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Scantastic)}/v2/scantastic`,
-  fiatOnRampApiUrl: config.fiatOnRampApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/fiat-on-ramp`,
   forApiUrl: config.forApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/FOR.v1.FORService`,
   tradingApiUrl: config.tradingApiUrlOverride || getCloudflareApiBaseUrl(TrafficFlows.TradingApi),
+
+  // Embedded Wallet URL's
+  // Totally fine that these are public
+  evervaultDevUrl: 'https://embedded-wallet-dev.app-907329d19a06.enclave.evervault.com',
+  evervaultStagingUrl: 'https://embedded-wallet-staging.app-907329d19a06.enclave.evervault.com',
+  evervaultProductionUrl: 'https://embedded-wallet.app-907329d19a06.enclave.evervault.com',
 
   // API Paths
   trmPath: '/v1/screen',

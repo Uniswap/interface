@@ -1,11 +1,14 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
-import { Button, Flex, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, GeneratedIcon, useSporeColors } from 'ui/src'
+import { SwapCoin } from 'ui/src/components/icons'
 import { opacify, validColor } from 'ui/src/theme'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useTokenBasicProjectPartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ElementNameType, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { TestID, TestIDType } from 'uniswap/src/test/fixtures/testIDs'
@@ -19,6 +22,7 @@ function CTAButton({
   testID,
   tokenColor,
   disabled,
+  icon,
 }: {
   title: string
   element: ElementNameType
@@ -27,12 +31,14 @@ function CTAButton({
   testID?: TestIDType
   tokenColor?: Maybe<string>
   disabled?: boolean
+  icon?: GeneratedIcon
 }): JSX.Element {
   const colors = useSporeColors()
   return (
     <Trace logPress element={element} section={SectionName.TokenDetails}>
-      <Button
+      <DeprecatedButton
         fill
+        icon={icon}
         opacity={disabled ? 0.5 : 1}
         color={tokenColor ? getContrastPassingTextColor(tokenColor) : '$white'}
         pressStyle={{ backgroundColor: validColor(opacify(60, tokenColor ?? colors.accent1.val)) }}
@@ -42,7 +48,7 @@ function CTAButton({
         onPress={disabled ? onPressDisabled : onPress}
       >
         {title}
-      </Button>
+      </DeprecatedButton>
     </Trace>
   )
 }
@@ -50,15 +56,18 @@ function CTAButton({
 export function TokenDetailsActionButtons({
   onPressBuy,
   onPressSell,
+  onPressSwap,
   onPressDisabled,
   userHasBalance,
 }: {
   onPressBuy: () => void
   onPressSell: () => void
+  onPressSwap: () => void
   onPressDisabled?: () => void
   userHasBalance: boolean
 }): JSX.Element {
   const { t } = useTranslation()
+  const isOffRampEnabled = useFeatureFlag(FeatureFlags.FiatOffRamp)
 
   const { currencyId, currencyInfo, isChainEnabled, tokenColor } = useTokenDetailsContext()
 
@@ -80,25 +89,40 @@ export function TokenDetailsActionButtons({
       pt="$spacing12"
       px="$spacing16"
     >
-      <CTAButton
-        disabled={disabled}
-        element={ElementName.Buy}
-        testID={TestID.TokenDetailsBuyButton}
-        title={t('common.button.buy')}
-        tokenColor={tokenColor}
-        onPress={onPressBuy}
-        onPressDisabled={onPressDisabled}
-      />
-      {userHasBalance && (
+      {isOffRampEnabled ? (
         <CTAButton
           disabled={disabled}
-          element={ElementName.Sell}
-          testID={TestID.TokenDetailsSellButton}
-          title={t('common.button.sell')}
+          element={ElementName.Swap}
+          testID={TestID.TokenDetailsSwapButton}
+          title={t('common.button.swap')}
           tokenColor={tokenColor}
-          onPress={onPressSell}
+          icon={SwapCoin}
+          onPress={onPressSwap}
           onPressDisabled={onPressDisabled}
         />
+      ) : (
+        <>
+          <CTAButton
+            disabled={disabled}
+            element={ElementName.Buy}
+            testID={TestID.TokenDetailsBuyButton}
+            title={t('common.button.buy')}
+            tokenColor={tokenColor}
+            onPress={onPressBuy}
+            onPressDisabled={onPressDisabled}
+          />
+          {userHasBalance && (
+            <CTAButton
+              disabled={disabled}
+              element={ElementName.Sell}
+              testID={TestID.TokenDetailsSellButton}
+              title={t('common.button.sell')}
+              tokenColor={tokenColor}
+              onPress={onPressSell}
+              onPressDisabled={onPressDisabled}
+            />
+          )}
+        </>
       )}
     </Flex>
   )

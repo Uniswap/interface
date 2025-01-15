@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
-import { Button, Flex, Text, useIsDarkMode } from 'ui/src'
+import { DeprecatedButton, Flex, Text, useIsDarkMode } from 'ui/src'
 import ViewOnlyWalletDark from 'ui/src/assets/graphics/view-only-wallet-dark.svg'
 import ViewOnlyWalletLight from 'ui/src/assets/graphics/view-only-wallet-light.svg'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -53,10 +53,16 @@ export function ViewOnlyExplainerModal(): JSX.Element {
           </Flex>
         </Flex>
         <Flex gap="$spacing8">
-          <Button alignSelf="center" borderRadius="$rounded20" px={40} theme="primary" onPress={onPressImportWallet}>
+          <DeprecatedButton
+            alignSelf="center"
+            borderRadius="$rounded20"
+            px={40}
+            theme="primary"
+            onPress={onPressImportWallet}
+          >
             {t('account.wallet.viewOnly.button')}
-          </Button>
-          <Button
+          </DeprecatedButton>
+          <DeprecatedButton
             alignSelf="center"
             backgroundColor={undefined}
             borderRadius="$rounded20"
@@ -66,7 +72,7 @@ export function ViewOnlyExplainerModal(): JSX.Element {
             onPress={onClose}
           >
             {t('common.button.later')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

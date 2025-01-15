@@ -278,7 +278,7 @@ exports[`PoolDetailsHeader renders breadcrumb text correctly 1`] = `
 
 exports[`PoolDetailsHeader renders header text correctly 1`] = `
 <DocumentFragment>
-  .c10 {
+  .c9 {
   display: inline-block;
   height: inherit;
 }
@@ -289,7 +289,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   min-width: 0;
 }
 
-.c8 {
+.c7 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -316,7 +316,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   gap: 12px;
 }
 
-.c9 {
+.c8 {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
@@ -336,18 +336,12 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   gap: 8px;
 }
 
-.c5 {
+.c4 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c3 {
-  position: relative;
-  top: 0;
-  left: 0;
 }
 
 .c0 {
@@ -370,7 +364,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   animation-duration: 250ms;
 }
 
-.c4 {
+.c3 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -388,11 +382,11 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   align-items: center;
 }
 
-.c6 {
+.c5 {
   font-size: 24px !important;
 }
 
-.c7 {
+.c6 {
   color: #222222;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -403,16 +397,16 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   transition-duration: 125ms;
 }
 
-.c7:hover {
+.c6:hover {
   opacity: 0.6;
 }
 
-.c7:active {
+.c6:active {
   opacity: 0.4;
 }
 
 @media screen and (max-width:640px) {
-  .c6 {
+  .c5 {
     font-size: 18px !important;
     line-height: 24px !important;
   }
@@ -435,77 +429,73 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
             class="c1 c2"
           >
             <div
-              class="c3"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-32px _width-32px"
             >
               <div
-                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-32px _width-32px"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-15px"
+                data-testid="input-currency-logo-container"
               >
                 <div
-                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-15px"
-                  data-testid="input-currency-logo-container"
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-32px _justifyContent-center _pointerEvents-auto _width-32px _position-relative"
+                  data-testid="token-logo"
                 >
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-32px _justifyContent-center _pointerEvents-auto _width-32px _position-relative"
-                    data-testid="token-logo"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-16px _borderTopRightRadius-16px _borderBottomRightRadius-16px _borderBottomLeftRadius-16px"
+                  />
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    data-testid="img-token-image"
                   >
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-16px _borderTopRightRadius-16px _borderBottomRightRadius-16px _borderBottomLeftRadius-16px"
+                    <img
+                      height="32"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                      style="object-fit: contain; border-radius: 16px; z-index: 1;"
+                      width="32"
                     />
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                      data-testid="img-token-image"
-                    >
-                      <img
-                        height="32"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                        style="object-fit: contain; border-radius: 16px; z-index: 1;"
-                        width="32"
-                      />
-                    </div>
                   </div>
                 </div>
+              </div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-15px"
+                data-testid="output-currency-logo-container"
+              >
                 <div
-                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-15px"
-                  data-testid="output-currency-logo-container"
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-32px _justifyContent-center _pointerEvents-auto _width-32px _position-relative"
+                  data-testid="token-logo"
                 >
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-32px _justifyContent-center _pointerEvents-auto _width-32px _position-relative"
-                    data-testid="token-logo"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-16px _borderTopRightRadius-16px _borderBottomRightRadius-16px _borderBottomLeftRadius-16px"
+                  />
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    data-testid="img-token-image"
                   >
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-0 _height-9637 _width-9637 _zIndex-0 _backgroundColor-FFFFFF35 _position-absolute _top-237 _left-237 _borderTopLeftRadius-16px _borderTopRightRadius-16px _borderBottomRightRadius-16px _borderBottomLeftRadius-16px"
+                    <img
+                      height="32"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                      style="object-fit: contain; border-radius: 16px; z-index: 1;"
+                      width="32"
                     />
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-                      data-testid="img-token-image"
-                    >
-                      <img
-                        height="32"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                        style="object-fit: contain; border-radius: 16px; z-index: 1;"
-                        width="32"
-                      />
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
             <div
-              class="c4"
+              class="c3"
             >
               <div>
                 <div
-                  class="c5 c6 css-4kpdx7"
+                  class="c4 c5 css-4kpdx7"
                 >
                   <a
-                    class="c7"
+                    class="c6"
                     href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
                   >
                     USDC
                   </a>
                    / 
                   <a
-                    class="c7"
+                    class="c6"
                     href="/explore/tokens/ethereum/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
                   >
                     WETH
@@ -527,19 +517,19 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
                 </span>
               </div>
               <div
-                class="_opacity-0hover-0--8 _opacity-0active-0--75 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
+                class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _backgroundColor-0hover-backgroundH3423444 _opacity-0hover-0--8 _opacity-0active-0--6 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
+                data-testid="toggle-tokens-reverse-arrows"
               >
                 <svg
-                  data-testid="toggle-tokens-reverse-arrows"
+                  color="#7D7D7D"
                   fill="none"
-                  height="100%"
-                  stroke-width="8"
-                  style="color: rgb(125, 125, 125); width: 20px; height: 20px; cursor: pointer; text-decoration: none; transition-duration: 0.2s; opacity: 1; transform: rotate(90deg);"
-                  viewBox="0 0 16 16"
-                  width="100%"
+                  height="20px"
+                  viewBox="0 3 24 24"
+                  width="20px"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M7.33336 4.00003V14C7.33336 14.2694 7.1714 14.5127 6.92206 14.6161C6.8394 14.6501 6.75269 14.6667 6.66669 14.6667C6.49336 14.6667 6.32267 14.5987 6.19534 14.4714L2.862 11.1381C2.60134 10.8774 2.60134 10.456 2.862 10.1953C3.12267 9.93468 3.54405 9.93468 3.80471 10.1953L6.00002 12.3907V4.00003C6.00002 3.63203 6.29802 3.33337 6.66669 3.33337C7.03536 3.33337 7.33336 3.63203 7.33336 4.00003ZM13.8047 4.86201L10.4714 1.52868C10.2807 1.33801 9.99532 1.28132 9.74465 1.38399C9.49532 1.48732 9.33336 1.7307 9.33336 2.00003V12C9.33336 12.368 9.63136 12.6667 10 12.6667C10.3687 12.6667 10.6667 12.368 10.6667 12V3.60941L12.862 5.80472C13.1227 6.06539 13.544 6.06539 13.8047 5.80472C14.0654 5.54405 14.0654 5.12268 13.8047 4.86201Z"
+                    d="M19.4834 5.71191C19.0879 5.29883 18.4727 5.30762 18.0859 5.71191L13.6562 10.2471C13.4805 10.4229 13.3662 10.6953 13.3662 10.9326C13.3662 11.4863 13.7529 11.8643 14.2979 11.8643C14.5615 11.8643 14.7725 11.7764 14.9482 11.5918L16.7588 9.71094L17.9189 8.375L17.8486 10.2383L17.8486 21.6465C17.8486 22.1914 18.2441 22.5869 18.7891 22.5869C19.334 22.5869 19.7207 22.1914 19.7207 21.6465L19.7207 10.2383L19.6592 8.375L20.8105 9.71094L22.6211 11.5918C22.7969 11.7764 23.0166 11.8643 23.2803 11.8643C23.8164 11.8643 24.2031 11.4863 24.2031 10.9326C24.2031 10.6953 24.0889 10.4229 23.9131 10.2471L19.4834 5.71191ZM7.84668 22.2793C8.24218 22.6924 8.85742 22.6836 9.24414 22.2793L13.6738 17.7529C13.8496 17.5684 13.9639 17.2959 13.9639 17.0586C13.9639 16.5137 13.5771 16.1357 13.0322 16.1357C12.7773 16.1357 12.5576 16.2236 12.3818 16.3994L10.5713 18.2803L9.41992 19.6162L9.48144 17.7529L9.48144 6.34473C9.48144 5.80859 9.08594 5.4043 8.54101 5.4043C8.00488 5.4043 7.60937 5.80859 7.60937 6.34473L7.60937 17.7529L7.6709 19.6162L6.51953 18.2803L4.70898 16.3994C4.5332 16.2236 4.31347 16.1357 4.05859 16.1357C3.51367 16.1357 3.12695 16.5137 3.12695 17.0586C3.12695 17.2959 3.24121 17.5684 3.41699 17.7529L7.84668 22.2793Z"
                     fill="currentColor"
                   />
                 </svg>
@@ -547,7 +537,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
             </div>
           </div>
           <div
-            class="c8 c9"
+            class="c7 c8"
             width="max-content"
           >
             <div
@@ -559,12 +549,12 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
                 id="Dropdown"
               >
                 <div
-                  class="c10"
+                  class="c9"
                   style="width: 100%;"
                 >
                   <div>
                     <span
-                      class="font_body _cursor-0hover-pointer _backgroundColor-0hover-surface2Hov3121676 _backgroundColor-0focus-surface1Hov3121676 _boxSizing-border-box _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-24px _fontWeight-f-weight-bo3548 _flexDirection-row _height-10037 _mt-0px _mr-0px _mb-0px _ml-0px _pt-t-space-spa94665593 _pr-t-space-spa1360334080 _pb-t-space-spa94665593 _pl-t-space-spa1360334080 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _whiteSpace-nowrap _display-flex _alignItems-center _justifyContent-flex-start _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _backgroundColor-surface2 _width-maxContent _textDecorationLine-none _cursor-pointer"
+                      class="font_body _cursor-0hover-pointer _backgroundColor-0hover-surface2Hov3121676 _backgroundColor-0focus-surface1Hov3121676 _boxSizing-border-box _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-24px _fontWeight-f-weight-bo3548 _flexDirection-row _height-10037 _backgroundColor-surface1 _mt-0px _mr-0px _mb-0px _ml-0px _pt-t-space-spa94665593 _pr-t-space-spa1360334080 _pb-t-space-spa94665593 _pl-t-space-spa1360334080 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _whiteSpace-nowrap _display-flex _alignItems-center _justifyContent-flex-start _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _width-maxContent _textDecorationLine-none _cursor-pointer"
                       data-disable-theme="true"
                       style="transition: 100ms;"
                     >
@@ -604,12 +594,12 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
                 id="Dropdown"
               >
                 <div
-                  class="c10"
+                  class="c9"
                   style="width: 100%;"
                 >
                   <div>
                     <span
-                      class="font_body _cursor-0hover-pointer _backgroundColor-0hover-surface2Hov3121676 _backgroundColor-0focus-surface1Hov3121676 _boxSizing-border-box _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-24px _fontWeight-f-weight-bo3548 _flexDirection-row _height-10037 _mt-0px _mr-0px _mb-0px _ml-0px _pt-t-space-spa94665593 _pr-t-space-spa1360334080 _pb-t-space-spa94665593 _pl-t-space-spa1360334080 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _whiteSpace-nowrap _display-flex _alignItems-center _justifyContent-flex-start _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _backgroundColor-surface2 _width-maxContent _textDecorationLine-none _cursor-pointer"
+                      class="font_body _cursor-0hover-pointer _backgroundColor-0hover-surface2Hov3121676 _backgroundColor-0focus-surface1Hov3121676 _boxSizing-border-box _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-24px _fontWeight-f-weight-bo3548 _flexDirection-row _height-10037 _backgroundColor-surface1 _mt-0px _mr-0px _mb-0px _ml-0px _pt-t-space-spa94665593 _pr-t-space-spa1360334080 _pb-t-space-spa94665593 _pl-t-space-spa1360334080 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _whiteSpace-nowrap _display-flex _alignItems-center _justifyContent-flex-start _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _width-maxContent _textDecorationLine-none _cursor-pointer"
                       data-disable-theme="true"
                       style="transition: 100ms;"
                     >

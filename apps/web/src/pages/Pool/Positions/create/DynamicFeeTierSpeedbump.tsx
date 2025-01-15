@@ -1,7 +1,7 @@
 import { Dialog } from 'components/Dialog/Dialog'
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { Trans } from 'react-i18next'
-import { Button, Text } from 'ui/src'
+import { DeprecatedButton, Text } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 
 export const DynamicFeeTierSpeedbump = () => {
@@ -42,7 +42,7 @@ export const DynamicFeeTierSpeedbump = () => {
       onCancel={handleCancel}
       buttonsConfig={{
         left: (
-          <Button
+          <DeprecatedButton
             flex={1}
             theme="secondary"
             borderRadius="$rounded12"
@@ -53,10 +53,10 @@ export const DynamicFeeTierSpeedbump = () => {
             <Text variant="buttonLabel3" color="$neutral1">
               <Trans i18nKey="common.button.cancel" />
             </Text>
-          </Button>
+          </DeprecatedButton>
         ),
         right: (
-          <Button
+          <DeprecatedButton
             flex={1}
             borderRadius="$rounded12"
             py="$spacing8"
@@ -74,7 +74,7 @@ export const DynamicFeeTierSpeedbump = () => {
             <Text variant="buttonLabel3" color="$surface1">
               <Trans i18nKey="common.button.continue" />
             </Text>
-          </Button>
+          </DeprecatedButton>
         ),
       }}
     />

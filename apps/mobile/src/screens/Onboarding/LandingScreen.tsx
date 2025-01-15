@@ -89,7 +89,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
   useTimeout(hideSplashScreen, 1)
 
   return (
-    <ReactNavigationPerformanceView screenName={OnboardingScreens.Landing}>
+    <ReactNavigationPerformanceView interactive screenName={OnboardingScreens.Landing}>
       <Screen backgroundColor="$surface1" edges={['bottom']}>
         <Flex fill gap="$spacing8">
           <Flex shrink height="100%" width="100%">

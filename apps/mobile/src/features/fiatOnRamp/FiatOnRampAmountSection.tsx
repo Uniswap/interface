@@ -26,9 +26,10 @@ const MIN_SCREEN_HEIGHT = 667 // iPhone SE 3rd Gen
 
 // if font changes from `fontFamily.sansSerif.regular` or `MAX_INPUT_FONT_SIZE`
 // changes from 36 then width value must be adjusted
-const MAX_CHAR_PIXEL_WIDTH = 40
+const MAX_CHAR_PIXEL_WIDTH = 44
 
-const PREDEFINED_AMOUNTS = [100, 300, 1000]
+const PREDEFINED_ONRAMP_AMOUNTS = [100, 300, 1000]
+const PREDEFINED_OFFRAMP_PERCENTAGES = [25, 50, 75]
 
 type OnChangeAmount = (amount: string, newIsTokenInputMode?: boolean) => void
 
@@ -46,7 +47,7 @@ interface FiatOnRampAmountSectionProps {
   errorText: string | undefined
   currency: FiatOnRampCurrency
   onEnterAmount: OnChangeAmount
-  onChoosePredifendAmount: OnChangeAmount
+  onChoosePredefinedValue: OnChangeAmount
   onToggleIsTokenInputMode: () => void
   quoteAmount: number
   sourceAmount: number
@@ -73,7 +74,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
       onSelectionChange: selectionChange,
       errorText,
       onEnterAmount,
-      onChoosePredifendAmount,
+      onChoosePredefinedValue,
       onToggleIsTokenInputMode,
       predefinedAmountsSupported,
       appFiatCurrencySupported,
@@ -259,14 +260,15 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
         </AnimatedFlex>
         {!value && predefinedAmountsSupported ? (
           <Flex centered row gap="$spacing12" mt={isShortMobileDevice ? 0 : '$spacing8'} pb="$spacing4">
-            {PREDEFINED_AMOUNTS.map((amount) => (
+            {(isOffRamp ? PREDEFINED_OFFRAMP_PERCENTAGES : PREDEFINED_ONRAMP_AMOUNTS).map((amount) => (
               <PredefinedAmount
                 key={amount}
+                isOffRamp={isOffRamp}
                 amount={amount}
                 currentAmount={value}
                 disabled={notAvailableInThisRegion}
                 fiatCurrencyInfo={fiatCurrencyInfo}
-                onPress={onChoosePredifendAmount}
+                onPress={onChoosePredefinedValue}
               />
             ))}
           </Flex>
@@ -305,20 +307,24 @@ function PredefinedAmount({
   currentAmount,
   fiatCurrencyInfo,
   disabled,
+  isOffRamp,
 }: {
   amount: number
   currentAmount: string
   onPress: (amount: string) => void
   fiatCurrencyInfo: FiatCurrencyInfo
   disabled?: boolean
+  isOffRamp?: boolean
 }): JSX.Element {
   const colors = useSporeColors()
   const { addFiatSymbolToNumber } = useLocalizationContext()
-  const formattedAmount = addFiatSymbolToNumber({
-    value: amount,
-    currencyCode: fiatCurrencyInfo.code,
-    currencySymbol: fiatCurrencyInfo.symbol,
-  })
+  const formattedAmount = isOffRamp
+    ? `${amount}%`
+    : addFiatSymbolToNumber({
+        value: amount,
+        currencyCode: fiatCurrencyInfo.code,
+        currencySymbol: fiatCurrencyInfo.symbol,
+      })
 
   const highlighted = currentAmount === amount.toString()
 

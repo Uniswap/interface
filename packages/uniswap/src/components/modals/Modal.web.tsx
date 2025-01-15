@@ -27,6 +27,7 @@ export function Modal({
   analyticsProperties,
   skipLogImpression,
   flex,
+  isDismissible = true,
 }: ModalProps): JSX.Element {
   const [fullyClosed, setFullyClosed] = useState(false)
 
@@ -85,7 +86,7 @@ export function Modal({
           flex={flex}
           position={isTopAligned ? 'absolute' : undefined}
           top={isTopAligned ? '$spacing16' : undefined}
-          onClose={onClose}
+          onClose={isDismissible ? onClose : undefined}
         >
           {/*
             To keep this consistent with how the `Modal` works on native mobile, we only mount the children when the modal is open.

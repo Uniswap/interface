@@ -26,11 +26,10 @@ import { useLocalFiatToUSDConverter } from 'uniswap/src/features/fiatCurrency/ho
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import { TokenSelectorBalanceDisplay } from 'uniswap/src/features/fiatOnRamp/TokenSelectorBalanceDisplay'
 import UnsupportedTokenModal from 'uniswap/src/features/fiatOnRamp/UnsupportedTokenModal'
-import { getFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import {
   useFiatOnRampQuotes,
   useFiatOnRampSupportedTokens,
-  useFormatExactCurrencyAmount,
   useMeldFiatCurrencySupportInfo,
   useParseFiatOnRampError,
 } from 'uniswap/src/features/fiatOnRamp/hooks'
@@ -74,6 +73,7 @@ import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.AmountInput>
 
 const ON_SELECTION_CHANGE_WAIT_TIME_MS = 500
+const MAX_TOKEN_DECIMALS = 9 // limited for design purposes
 
 function preloadServiceProviderLogos(serviceProviders: FORServiceProvider[], isDarkMode: boolean): void {
   FastImage.preload(
@@ -152,10 +152,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const activeAccount = useActiveAccountWithThrow()
   const { data: balancesById } = usePortfolioBalances({ address: activeAccount.address })
   const portfolioBalance = quoteCurrency.currencyInfo && balancesById?.[quoteCurrency.currencyInfo.currencyId]
-  const formattedAmount = useFormatExactCurrencyAmount(
-    portfolioBalance?.quantity.toString() || '0',
-    quoteCurrency.currencyInfo?.currency,
-  )
+  const tokenMaxDecimals = Math.min(quoteCurrency.currencyInfo?.currency.decimals ?? 0, MAX_TOKEN_DECIMALS)
 
   const exceedsBalanceError = useMemo(() => {
     if (!isOffRamp) {
@@ -183,7 +180,11 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
       setFiatAmount(parseFloat(amount))
     },
     onTokenAmountUpdated: (amount: string) => {
-      setTokenAmount(parseFloat(amount))
+      const truncatedAmount = truncateToMaxDecimals({
+        value: amount,
+        maxDecimals: tokenMaxDecimals,
+      })
+      setTokenAmount(parseFloat(truncatedAmount))
     },
     currency: quoteCurrency.currencyInfo?.currency,
   })
@@ -202,22 +203,15 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     balanceError: exceedsBalanceError,
   })
 
-  useEffect(() => {
-    if (quotesLoading) {
-      setSelectedQuote(undefined)
-    }
-  }, [quotesLoading, setSelectedQuote])
-
   const debouncedAmountsMatch = isTokenInputMode
     ? tokenAmount === debouncedTokenAmount
     : fiatAmount === debouncedFiatAmount
 
-  // always eforce the amount used in the request to backend service
+  // always enforce the amount used in the request to backend service
   const hasValidAmount = isOffRamp ? !!tokenAmount : !!fiatAmount
 
   const selectTokenLoading = hasValidAmount && (quotesLoading || !debouncedAmountsMatch) && !exceedsBalanceError
 
-  const { useFiatOnRampAggregatorGetCountryQuery } = getFiatOnRampAggregatorApi()
   const { currentData: ipCountryData } = useFiatOnRampAggregatorGetCountryQuery()
 
   useEffect(() => {
@@ -276,8 +270,6 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   }
 
   const fiatToUSDConverter = useLocalFiatToUSDConverter()
-
-  const tokenMaxDecimals = quoteCurrency.currencyInfo?.currency.decimals
 
   const onChangeValue = (
     newAmount: string,
@@ -515,8 +507,18 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
               quoteCurrencyAmountReady={Boolean(fiatAmount && selectedQuote)}
               selectTokenLoading={selectTokenLoading}
               value={value}
-              onChoosePredifendAmount={(amount: string): void => {
-                onChangeValue(amount, 'chip', false)
+              onChoosePredefinedValue={(val: string): void => {
+                if (isOffRamp) {
+                  const quantity = portfolioBalance?.quantity
+                  if (!quantity) {
+                    return
+                  }
+
+                  const percentOfBalance = (quantity * (parseFloat(val) / 100)).toString()
+                  onChangeValue(percentOfBalance, 'chip', true)
+                } else {
+                  onChangeValue(val, 'chip', false)
+                }
               }}
               onEnterAmount={(amount: string, newIsTokenInputMode?: boolean): void => {
                 onChangeValue(amount, 'textInput', newIsTokenInputMode)
@@ -545,10 +547,15 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
               {quoteCurrency.currencyInfo && (
                 <TokenSelectorBalanceDisplay
                   disabled={notAvailableInThisRegion}
-                  formattedAmount={formattedAmount}
+                  isOffRamp={isOffRamp}
+                  portfolioBalance={portfolioBalance}
+                  tokenAmount={tokenAmount}
                   selectedCurrencyInfo={quoteCurrency.currencyInfo}
                   onPress={(): void => {
                     setShowTokenSelector(true)
+                  }}
+                  onMaxPress={(amount: string): void => {
+                    onChangeValue(amount, 'maxButton', true)
                   }}
                 />
               )}

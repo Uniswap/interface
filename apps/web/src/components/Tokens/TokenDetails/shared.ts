@@ -10,7 +10,6 @@ export const ActionButtonStyle = {
   px: '$spacing12',
   borderRadius: 20,
   borderWidth: 0,
-  backgroundColor: '$surface2',
   width: 'maxContent',
   ...TamaguiClickableStyle,
 

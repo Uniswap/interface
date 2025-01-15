@@ -49,7 +49,7 @@ import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { hideSplashScreen } from 'src/utils/splashScreen'
 import { useOpenBackupReminderModal } from 'src/utils/useOpenBackupReminderModal'
 import { Flex, GeneratedIcon, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
-import { ArrowDownCircle, Buy, SendAction } from 'ui/src/components/icons'
+import { ArrowDownCircle, Bank, Buy, SendAction } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -414,15 +414,17 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
 
   // Necessary to declare these as direct dependencies due to race condition with initializing react-i18next and useMemo
   const buyLabel = t('home.label.buy')
+  const forLabel = t('home.label.for')
   const sendLabel = t('home.label.send')
   const receiveLabel = t('home.label.receive')
+  const isOffRampEnabled = useFeatureFlag(FeatureFlags.FiatOffRamp)
 
   const actions = useMemo(
     (): QuickAction[] => [
       {
-        Icon: Buy,
+        Icon: isOffRampEnabled ? Bank : Buy,
         eventName: MobileEventName.FiatOnRampQuickActionButtonPressed,
-        label: buyLabel,
+        label: isOffRampEnabled ? forLabel : buyLabel,
         name: ElementName.Buy,
         onPress: onPressBuy,
       },
@@ -439,7 +441,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
         onPress: onPressReceive,
       },
     ],
-    [buyLabel, sendLabel, receiveLabel, onPressBuy, onPressSend, onPressReceive],
+    [isOffRampEnabled, buyLabel, forLabel, sendLabel, receiveLabel, onPressBuy, onPressSend, onPressReceive],
   )
 
   // This hooks handles the logic for when to open the BackupReminderModal
@@ -785,7 +787,7 @@ function QuickActions({ actions }: { actions: QuickAction[] }): JSX.Element {
   const activeScale = 0.96
 
   return (
-    <Flex centered row gap="$spacing12" px="$spacing12">
+    <Flex centered row gap="$spacing8" px="$spacing12">
       {actions.map(({ eventName, name, label, Icon, onPress }) => (
         <Trace key={name} logPress element={name} eventOnTrigger={eventName}>
           <TouchableArea flex={1} scaleTo={activeScale} onPress={onPress}>
@@ -793,10 +795,9 @@ function QuickActions({ actions }: { actions: QuickAction[] }): JSX.Element {
               fill
               backgroundColor="$accent2"
               borderRadius="$rounded20"
-              pt="$spacing16"
-              pb="$spacing12"
+              py="$spacing16"
               px="$spacing12"
-              gap="$spacing4"
+              gap="$spacing12"
               justifyContent="space-between"
             >
               <Icon color={contentColor} size={iconSize} strokeWidth={2} />

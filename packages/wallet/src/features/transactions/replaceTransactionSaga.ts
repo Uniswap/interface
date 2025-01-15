@@ -15,7 +15,7 @@ import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { logger } from 'utilities/src/logger/logger'
 import { signAndSendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { getSerializableTransactionRequest } from 'wallet/src/features/transactions/utils'
-import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
+import { getPrivateProvider, getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 
 export function* attemptReplaceTransaction(
@@ -49,7 +49,11 @@ export function* attemptReplaceTransaction(
       nonce,
     }
 
-    const provider = yield* call(getProvider, chainId)
+    // If the transaction was submitted through Flashbots, use Flashbots to submit the replacement transaction
+    const provider =
+      transaction.options.privateRpcProvider === 'flashbots'
+        ? yield* call(getPrivateProvider, chainId)
+        : yield* call(getProvider, chainId)
     const signerManager = yield* call(getSignerManager)
 
     const { transactionResponse, populatedRequest } = yield* call(

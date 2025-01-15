@@ -10,7 +10,6 @@ import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
 import { parseRestPosition } from 'components/Liquidity/utils'
 import { LoadingFullscreen, LoadingRows } from 'components/Loader/styled'
 import { ZERO_ADDRESS } from 'constants/misc'
-import { usePositionOwner } from 'hooks/usePositionOwner'
 import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
 import NotFound from 'pages/NotFound'
 import { useCanUnwrapCurrency } from 'pages/Pool/Positions/create/utils'
@@ -25,7 +24,7 @@ import { useAppDispatch } from 'state/hooks'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
 import { ClickableTamaguiStyle } from 'theme/components'
-import { Button, Flex, Main, Switch, Text, styled } from 'ui/src'
+import { DeprecatedButton, Flex, Main, Switch, Text, styled } from 'ui/src'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -135,7 +134,6 @@ function PositionPage() {
   const position = data?.position
   const positionInfo = useMemo(() => parseRestPosition(position), [position])
   const metadata = usePositionTokenURI(tokenId, chainInfo?.id, positionInfo?.version)
-  const owner = usePositionOwner(tokenId, chainInfo?.id, positionInfo?.version)
   usePendingLPTransactionsChangeListener(refetch)
 
   const dispatch = useAppDispatch()
@@ -201,15 +199,15 @@ function PositionPage() {
             </Text>
           </Flex>
         }
-        actionButton={<Button onPress={() => navigate('/positions')}>{t('common.backToPositions')}</Button>}
+        actionButton={
+          <DeprecatedButton onPress={() => navigate('/positions')}>{t('common.backToPositions')}</DeprecatedButton>
+        }
       />
     )
   }
 
   const hasFees = feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || false
-  const isOwner = addressesAreEquivalent(owner, account?.address)
-
-  // TODO (WEB-5859): Use owner from GetPositions instead of on-chain calls
+  const isOwner = addressesAreEquivalent(positionInfo.owner, account?.address)
 
   return (
     <Trace
@@ -372,7 +370,7 @@ function PositionPage() {
                   fiatValue1={fiatFeeValue1}
                 />
               )}
-              {canUnwrap && (
+              {canUnwrap && isOwner && (
                 <Flex row width="100%" justifyContent="space-between" mt="$spacing16" alignItems="center">
                   <Text variant="body1">
                     <Trans
@@ -396,7 +394,7 @@ function PositionPage() {
           <LiquidityPositionPriceRangeTile
             token1={positionInfo.currency1Amount.currency}
             priceOrdering={priceOrdering}
-            feeTier={positionInfo.feeTier?.toString()}
+            tickSpacing={positionInfo.tickSpacing}
             tickLower={positionInfo.tickLower}
             tickUpper={positionInfo.tickUpper}
             token0CurrentPrice={token0CurrentPrice}

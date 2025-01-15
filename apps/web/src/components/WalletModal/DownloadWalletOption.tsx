@@ -11,6 +11,8 @@ import { ApplicationModal } from 'state/application/reducer'
 import { colors } from 'theme/colors'
 import { Z_INDEX } from 'theme/zIndex'
 import { Text } from 'ui/src'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 
 // The light background is needed so that when hovered the background image always becomes lighter even when the app is in dark mode
@@ -40,6 +42,7 @@ const BackgroundImage = styled.div<{ backgroundImage?: string; isHovered?: boole
 
 export const DownloadWalletOption = () => {
   const openGetTheAppModal = useOpenModal({ name: ApplicationModal.GET_THE_APP })
+  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   // Hovered state is passed from the background component to the background image which is layered underneath the option container
   const [optionHovered, setOptionHovered] = useState(false)
   return (
@@ -50,8 +53,8 @@ export const DownloadWalletOption = () => {
         data-testid="download-uniswap-wallet"
       >
         <BackgroundImage backgroundImage="/images/extension_promo/background_connector.png" isHovered={optionHovered} />
-        <OptionContainer onClick={openGetTheAppModal}>
-          <AppIcon src={UNIWALLET_ICON} alt="uniswap-app-icon" />
+        <OptionContainer onClick={openGetTheAppModal} hideBackground>
+          <AppIcon isEmbeddedWalletEnabled={isEmbeddedWalletEnabled} src={UNIWALLET_ICON} alt="uniswap-app-icon" />
           <Row gap="xs">
             <Column>
               <Text variant="buttonLabel2" color="$white" whiteSpace="nowrap">

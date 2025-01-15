@@ -19,7 +19,7 @@ import { PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useMemo } from 'react'
 import { Trans } from 'react-i18next'
-import { Button, Flex, FlexProps, Text } from 'ui/src'
+import { DeprecatedButton, Flex, FlexProps, Text } from 'ui/src'
 import { ArrowsLeftRight } from 'ui/src/components/icons/ArrowsLeftRight'
 import { Edit } from 'ui/src/components/icons/Edit'
 import { iconSizes } from 'ui/src/theme'
@@ -29,7 +29,7 @@ const EditStep = ({ children, onClick, ...rest }: { children: JSX.Element; onCli
   return (
     <Container row gap="$gap24" justifyContent="space-between" alignItems="center" {...rest}>
       {children}
-      <Button
+      <DeprecatedButton
         theme="secondary"
         py="$spacing8"
         px="$spacing12"
@@ -43,7 +43,7 @@ const EditStep = ({ children, onClick, ...rest }: { children: JSX.Element; onCli
         <Text variant="buttonLabel3" $md={{ display: 'none' }}>
           <Trans i18nKey="common.edit.button" />
         </Text>
-      </Button>
+      </DeprecatedButton>
     </Container>
   )
 }

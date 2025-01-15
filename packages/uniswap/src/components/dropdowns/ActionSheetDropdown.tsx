@@ -15,6 +15,7 @@ import { executeWithFrameDelay } from 'utilities/src/react/delayUtils'
 import { useTimeout } from 'utilities/src/time/timing'
 
 const DEFAULT_MIN_WIDTH = 225
+const MIN_HEIGHT = 250
 
 type LayoutMeasurements = {
   x: number
@@ -284,7 +285,7 @@ function DropdownContent({
   const bottomOffset = insets.bottom + spacing.spacing12
   const maxHeight =
     (isInterface && dropdownMaxHeight) ||
-    Math.max(fullHeight - toggleMeasurements.y - toggleMeasurements.height - bottomOffset, 0)
+    Math.max(fullHeight - toggleMeasurements.y - toggleMeasurements.height - bottomOffset, MIN_HEIGHT)
   const overflowsContainer = contentHeight > maxHeight
 
   const initialScrollY = useMemo(() => window.scrollY, [])
@@ -311,6 +312,21 @@ function DropdownContent({
     }
   }, [toggleMeasurements])
 
+  const position = useMemo((): { top?: number; bottom?: number } => {
+    // top is used to position the dropdown when it is opened below the toggle
+    const top = toggleMeasurements.y + toggleMeasurements.height - windowScrollY + spacing.spacing8
+    // bottom is used to position the dropdown when it is opened above the toggle
+    const bottom = fullHeight - toggleMeasurements.y + spacing.spacing8
+
+    const isEnoughSpaceUnder = fullHeight - top > MIN_HEIGHT
+    const isEnoughSpaceOver = fullHeight - bottom > MIN_HEIGHT
+    if (!isEnoughSpaceUnder && isEnoughSpaceOver) {
+      return { bottom }
+    }
+
+    return { top }
+  }, [toggleMeasurements.y, windowScrollY, fullHeight, toggleMeasurements.height])
+
   return (
     <TouchableWhenOpen
       animation="quicker"
@@ -318,7 +334,7 @@ function DropdownContent({
       minWidth={dropdownMinWidth ?? DEFAULT_MIN_WIDTH}
       position="absolute"
       testID="dropdown-content"
-      top={toggleMeasurements.y + toggleMeasurements.height - windowScrollY + spacing.spacing8}
+      {...position}
       {...containerProps}
     >
       <BaseCard.Shadow

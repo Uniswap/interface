@@ -4,17 +4,19 @@ import WalletIllustration from 'assets/images/walletIllustration.png'
 import { AndroidLogo } from 'components/Icons/AndroidLogo'
 import { AppleLogo } from 'components/Icons/AppleLogo'
 import { GoogleChromeLogo } from 'components/Icons/GoogleChromeLogo'
+import { Page } from 'components/NavBar/DownloadApp/Modal'
 import { ModalContent } from 'components/NavBar/DownloadApp/Modal/Content'
 import Column from 'components/deprecated/Column'
 import styled, { useTheme } from 'lib/styled-components'
 import { Wiggle } from 'pages/Landing/components/animations'
-import { PropsWithChildren } from 'react'
+import { Dispatch, PropsWithChildren, SetStateAction } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { StyledInternalLink } from 'theme/components'
-import { Button, Flex, Text, styled as tamaguiStyled } from 'ui/src'
+import { StyledInternalLink, TamaguiClickableStyle } from 'theme/components'
+import { Button, Flex, Text } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
-import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useExperimentGroupName, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 
@@ -46,22 +48,6 @@ const Card = styled(Column)`
   }
 `
 
-const SmallCard = tamaguiStyled(Button, {
-  width: '100%',
-  height: 72,
-  backgroundColor: '$surface3',
-  borderRadius: '$spacing16',
-  borderWidth: 0,
-  hoverStyle: {
-    backgroundColor: '$surface3',
-    opacity: 0.9,
-  },
-  pressStyle: {
-    backgroundColor: '$surface3',
-    opacity: 0.7,
-  },
-})
-
 const PromoImage = styled.img`
   display: flex;
   width: 320px;
@@ -89,52 +75,101 @@ function CardInfo({ title, details, children }: PropsWithChildren<{ title: strin
 }
 
 export function GetStarted({
-  toAppDownload,
+  setPage,
   toConnectWalletDrawer,
 }: {
-  toAppDownload: () => void
+  setPage: Dispatch<SetStateAction<Page>>
   toConnectWalletDrawer: () => void
 }) {
   const theme = useTheme()
   const { t } = useTranslation()
 
-  const isSignUp = useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.SignInSignUp
+  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
+  const isSignUp =
+    useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.SignInSignUp ||
+    isEmbeddedWalletEnabled
   const isCreateAccount =
-    useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.LogInCreateAccount
+    useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.LogInCreateAccount &&
+    !isEmbeddedWalletEnabled
 
   return isSignUp || isCreateAccount ? (
     <ModalContent
       title={isSignUp ? t('downloadApp.modal.signUp.title') : t('downloadApp.modal.getStarted.title')}
-      subtext={isSignUp ? t('downloadApp.modal.signUp.description') : t('downloadApp.modal.getStarted.description')}
+      subtext={
+        isEmbeddedWalletEnabled
+          ? t('downloadApp.modal.signUp.description.embeddedWallet')
+          : isSignUp
+            ? t('downloadApp.modal.signUp.description')
+            : t('downloadApp.modal.getStarted.description')
+      }
       rightThumbnail={<PromoImage />}
     >
-      <Flex gap="$spacing24" width="100%">
-        <Flex gap="$spacing12" alignItems="flex-start">
-          <SmallCard onPress={toAppDownload}>
-            <CardInfo title={t('common.mobileWallet')} details={t('common.iOSAndroid')}>
-              <Flex row gap="$spacing8">
-                <WiggleIcon>
-                  <AppleLogo fill={theme.neutral1} />
-                </WiggleIcon>
-                <WiggleIcon>
-                  <AndroidLogo fill={theme.neutral1} />
-                </WiggleIcon>
-              </Flex>
-            </CardInfo>
-          </SmallCard>
+      <Flex gap="$spacing16" width="100%">
+        <Button
+          variant="branded"
+          onPress={() => setPage(Page.PasskeyGeneration)}
+          py="$gap16"
+          display={isEmbeddedWalletEnabled ? 'flex' : 'none'}
+        >
+          <Text color="white" variant="buttonLabel1">
+            {t('nav.signUp.button')}
+          </Text>
+        </Button>
+        <Flex flexDirection={isEmbeddedWalletEnabled ? 'row' : 'column'} gap="$gap12">
+          <Flex
+            justifyContent="space-between"
+            alignItems="center"
+            p="$gap12"
+            pl="$gap16"
+            background="$surface3"
+            borderRadius="$rounded16"
+            height="$spacing48"
+            flex={1}
+            flexWrap="nowrap"
+            flexDirection="row"
+            onPress={() => setPage(Page.GetApp)}
+            {...TamaguiClickableStyle}
+          >
+            <Text variant="buttonLabel2">{t('common.mobile')}</Text>
+            <Flex row gap="$spacing4">
+              <WiggleIcon>
+                <AppleLogo fill={theme.neutral1} />
+              </WiggleIcon>
+              <WiggleIcon>
+                <AndroidLogo fill={theme.neutral1} />
+              </WiggleIcon>
+            </Flex>
+          </Flex>
           <Trace logPress element={InterfaceElementName.EXTENSION_DOWNLOAD_BUTTON}>
-            <SmallCard onPress={() => window.open(uniswapUrls.chromeExtension)}>
-              <CardInfo title={t('common.chromeExtension')} details="Google Chrome">
-                <Flex row gap="$spacing8">
-                  <WiggleIcon>
-                    <GoogleChromeLogo width="16px" height="16px" />
-                  </WiggleIcon>
-                </Flex>
-              </CardInfo>
-            </SmallCard>
+            <Flex
+              justifyContent="space-between"
+              alignItems="center"
+              p="$gap12"
+              pl="$gap16"
+              background="$surface3"
+              borderRadius="$rounded16"
+              height="$spacing48"
+              flex={1}
+              flexWrap="nowrap"
+              flexDirection="row"
+              onPress={() => window.open(uniswapUrls.chromeExtension)}
+              {...TamaguiClickableStyle}
+            >
+              <Text variant="buttonLabel2">{t('common.chromeExtension')}</Text>
+              <WiggleIcon>
+                <GoogleChromeLogo width="16px" height="16px" />
+              </WiggleIcon>
+            </Flex>
           </Trace>
         </Flex>
-        <Text variant="body2" $xxl={{ variant: 'body3' }} color="$neutral2" textAlign="center" width="100%">
+        <Text
+          variant="body2"
+          $xxl={{ variant: 'body3' }}
+          color="$neutral2"
+          textAlign="center"
+          width="100%"
+          py="$spacing12"
+        >
           <Trans
             i18nKey="downloadApp.modal.alreadyHaveWallet"
             components={{
@@ -163,7 +198,7 @@ export function GetStarted({
       subtext={t('downloadApp.modal.uniswapProducts.subtitle')}
     >
       <Flex row gap="$spacing12" width="100%" alignItems="flex-start">
-        <Card flex="1 1 auto" onClick={toAppDownload}>
+        <Card flex="1 1 auto" onClick={() => setPage(Page.GetApp)}>
           <IllustrationContainer>
             <Illustration src={WalletIllustration} alt="Wallet example page" />
           </IllustrationContainer>

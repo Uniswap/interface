@@ -6,7 +6,7 @@ export {
   getMarketplaceIcon,
   getRarityStatus,
 } from './asset'
-export { blocklistedCollections } from './blocklist'
+export { useDynamicBlocklistedNftCollections } from './blocklist'
 export { buildNftTradeInputFromBagItems } from './buildSellObject'
 export { calculateCardIndex, calculateFirstCardIndex } from './carousel'
 export { isInSameMarketplaceCollection, isInSameSudoSwapPool } from './collection'

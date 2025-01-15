@@ -19,7 +19,7 @@ import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
-import { Button, Flex, Separator, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Separator, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
@@ -292,7 +292,9 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
               }}
             />
           </Flex>
-          <Button onPress={onDecreaseLiquidity}>{t('common.confirm')}</Button>
+          <DeprecatedButton size="large" onPress={onDecreaseLiquidity}>
+            {t('common.confirm')}
+          </DeprecatedButton>
         </>
       )}
     </Flex>

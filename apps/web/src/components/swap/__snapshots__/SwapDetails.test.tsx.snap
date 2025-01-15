@@ -1186,10 +1186,10 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
                   
   @keyframes rotate360 {
       from {
-          transform: rotate(45deg);
+          transform: rotate(0deg);
       }
       to {
-          transform: rotate(405deg);
+          transform: rotate(360deg);
       }
   }
 
@@ -1206,11 +1206,29 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _flexShrink-0 _flexDirection-column _height-20px _minHeight-8px _minWidth-8px _pt-1--66667px _pr-1--66667px _pb-1--66667px _pl-1--66667px _position-relative _width-20px"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-neutral1 _borderRightColor-neutral1 _borderBottomColor-neutral1 _borderLeftColor-neutral1 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-3px _borderRightWidth-3px _borderBottomWidth-3px _borderLeftWidth-3px _height-20px _opacity-0--1 _position-absolute _width-20px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
-                    />
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderBottomColor-transparent _borderBottomWidth-3px _borderLeftColor-transparent _borderLeftWidth-3px _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderRightColor-transparent _borderRightWidth-3px _borderTopColor-neutral1 _borderTopWidth-3px _height-20px _position-absolute _width-20px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid RotateElement"
-                    />
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute RotateElement"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 20px; height: 20px;"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"
+                          opacity="0.1"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-width="3"
+                        />
+                        <path
+                          d="M21 12C21 7.02944 16.9706 3 12 3"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-width="3"
+                        />
+                      </svg>
+                    </div>
                   </div>
                 </div>
                 Finalizing quote...

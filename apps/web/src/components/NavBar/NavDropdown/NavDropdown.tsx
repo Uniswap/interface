@@ -8,7 +8,7 @@ const NavDropdownContent = styled(Flex, {
   borderStyle: 'solid',
   borderColor: '$surface2',
   backgroundColor: '$surface1',
-  maxHeight: `calc(100dvh - ${INTERFACE_NAV_HEIGHT * 2}px)`,
+  maxHeight: `calc(100dvh - ${INTERFACE_NAV_HEIGHT + 20}px)`,
   $sm: {
     width: '100%',
     borderRadius: '$none',
@@ -72,6 +72,7 @@ export function NavDropdown({ children, width, dropdownRef, isOpen, padded, data
           width={width}
           padded={padded}
           {...shadowProps}
+          overflow="scroll"
           style={scrollbarStyles}
         >
           {children}

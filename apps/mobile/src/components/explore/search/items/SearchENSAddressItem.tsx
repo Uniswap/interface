@@ -1,8 +1,8 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { SEARCH_ITEM_ICON_SIZE, SEARCH_ITEM_PX, SEARCH_ITEM_PY } from 'src/components/explore/search/constants'
 import { SearchWalletItemBase } from 'src/components/explore/search/items/SearchWalletItemBase'
 import { Flex, Text } from 'ui/src'
-import { imageSizes } from 'ui/src/theme'
 import { useENSAvatar, useENSName } from 'uniswap/src/features/ens/api'
 import { getCompletedENSName } from 'uniswap/src/features/ens/useENS'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
@@ -48,8 +48,8 @@ export function SearchENSAddressItem({ searchResult, searchContext }: SearchENSA
 
   return (
     <SearchWalletItemBase searchContext={searchContext} searchResult={searchResult}>
-      <Flex row alignItems="center" gap="$spacing12" px="$spacing24" py="$spacing12">
-        <AccountIcon address={address} avatarUri={avatar} size={imageSizes.image40} />
+      <Flex row alignItems="center" gap="$spacing12" px={SEARCH_ITEM_PX} py={SEARCH_ITEM_PY}>
+        <AccountIcon address={address} avatarUri={avatar} size={SEARCH_ITEM_ICON_SIZE} />
         <Flex shrink>
           <Text ellipsizeMode="tail" numberOfLines={1} testID={`address-display/name/${ensName}`} variant="body1">
             {completedENSName || formattedAddress}

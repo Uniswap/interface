@@ -24,6 +24,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import com.uniswap.onboarding.shared.CopyButton
 import com.uniswap.theme.relativeOffset
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.math.abs
 
 @Composable
@@ -32,7 +33,8 @@ fun MnemonicDisplay(
   mnemonicId: String,
   copyText: String,
   copiedText: String,
-  onHeightMeasured: (height: Float) -> Unit
+  onHeightMeasured: (height: Float) -> Unit,
+  onEmptyMnemonic: (mnemonicId: String) -> Unit
 ) {
   val words by viewModel.words.collectAsState()
   val textToCopy = AnnotatedString(words.joinToString(" ") { it.text })
@@ -41,6 +43,16 @@ fun MnemonicDisplay(
 
   LaunchedEffect(mnemonicId) {
     viewModel.setup(mnemonicId)
+
+    // Check and log if the mnemonic is empty after 1 second to avoid calling onEmptyMnemonic too early
+    withTimeoutOrNull<Unit>(1000L) {
+      viewModel.words.collect { currentWords ->
+        if (currentWords.isEmpty() || currentWords.any { it.text.isBlank() }) {
+          onEmptyMnemonic(mnemonicId)
+          return@collect
+        }
+      }
+    }
   }
 
   BoxWithConstraints {

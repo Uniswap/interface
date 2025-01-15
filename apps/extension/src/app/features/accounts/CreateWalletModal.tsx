@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { OpaqueColorValue } from 'react-native'
-import { Button, Flex, Text, getUniconColors, useIsDarkMode } from 'ui/src'
+import { DeprecatedButton, Flex, Text, getUniconColors, useIsDarkMode } from 'ui/src'
 import { iconSizes, opacify } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -44,7 +44,7 @@ export function CreateWalletModal({
     ? getUniconColors(onboardingAccountAddress, isDark)
     : { color: '' }
 
-  // Cast because Button component doesnt acccept sytling outside of theme color values for hover and press states
+  // Cast because DeprecatedButton component doesnt acccept sytling outside of theme color values for hover and press states
   const hoverAndPressButtonStyle = useMemo(() => {
     return {
       backgroundColor: opacify(15, uniconColor) as unknown as OpaqueColorValue,
@@ -76,10 +76,10 @@ export function CreateWalletModal({
         </Flex>
 
         <Flex centered fill row gap="$spacing12" justifyContent="space-between" width="100%">
-          <Button color="$neutral1" flex={1} flexBasis={1} size="small" theme="secondary" onPress={onCancel}>
+          <DeprecatedButton color="$neutral1" flex={1} flexBasis={1} size="small" theme="secondary" onPress={onCancel}>
             {t('common.button.cancel')}
-          </Button>
-          <Button
+          </DeprecatedButton>
+          <DeprecatedButton
             flex={1}
             flexBasis={1}
             hoverStyle={hoverAndPressButtonStyle}
@@ -89,7 +89,7 @@ export function CreateWalletModal({
             onPress={onPressConfirm}
           >
             {t('common.button.create')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

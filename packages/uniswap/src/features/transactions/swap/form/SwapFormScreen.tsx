@@ -98,6 +98,7 @@ interface SwapFormScreenProps {
   hideContent: boolean
   hideFooter?: boolean
   settings: SwapSettingConfig[]
+  tokenColor?: string
   // TODO(WEB-5012): Remove wrap callback prop drilling by aligning interface wrap UX w/ wallet
   wrapCallback?: WrapCallback
 }
@@ -109,6 +110,7 @@ interface SwapFormScreenProps {
 export function SwapFormScreen({
   hideContent,
   settings = [Slippage, ProtocolPreference],
+  tokenColor,
   wrapCallback,
 }: SwapFormScreenProps): JSX.Element {
   const { bottomSheetViewStyles } = useTransactionModalContext()
@@ -122,14 +124,20 @@ export function SwapFormScreen({
       {!isInterface && <SwapFormHeader /> /* Interface renders its own header with multiple tabs */}
       {!hideSettings && <SwapFormSettings settings={settings} isBridgeTrade={isBridgeTrade} />}
 
-      {!hideContent && <SwapFormContent wrapCallback={wrapCallback} />}
+      {!hideContent && <SwapFormContent wrapCallback={wrapCallback} tokenColor={tokenColor} />}
 
       <SwapTokenSelector isModalOpen={showTokenSelector} />
     </TransactionModalInnerContainer>
   )
 }
 
-function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX.Element {
+function SwapFormContent({
+  wrapCallback,
+  tokenColor,
+}: {
+  wrapCallback?: WrapCallback
+  tokenColor?: string
+}): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const isShortMobileDevice = useIsShortMobileDevice()
@@ -415,6 +423,7 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
         exactAmountToken: amount,
         exactCurrencyField: CurrencyField.INPUT,
         focusOnCurrencyField: undefined,
+        isMax: true,
       })
 
       // We want this update to happen on the next tick, after the input value is updated.
@@ -588,6 +597,7 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
               usdValue={currencyAmountsUSDValue[CurrencyField.INPUT]}
               value={exactFieldIsInput ? exactValue : formattedDerivedValue}
               valueIsIndicative={!exactFieldIsInput && trade.indicativeTrade && !trade.trade}
+              tokenColor={tokenColor}
               onPressIn={onFocusInput}
               onSelectionChange={onInputSelectionChange}
               onSetExactAmount={onSetExactAmountInput}
@@ -626,6 +636,7 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
               usdValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
               value={exactFieldIsOutput ? exactValue : formattedDerivedValue}
               valueIsIndicative={!exactFieldIsOutput && trade.indicativeTrade && !trade.trade}
+              tokenColor={tokenColor}
               onPressDisabled={isBridge ? undefined : showTemporaryFoTWarning}
               onPressIn={onFocusOutput}
               onSelectionChange={onOutputSelectionChange}
@@ -673,7 +684,7 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
             <Flex>
               {isWeb && (
                 <Flex pt="$spacing4">
-                  <SwapFormButton wrapCallback={wrapCallback} />
+                  <SwapFormButton wrapCallback={wrapCallback} tokenColor={tokenColor} />
                 </Flex>
               )}
               {/*

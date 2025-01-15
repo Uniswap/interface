@@ -28,7 +28,7 @@ import { Equals, assert } from 'tsafe'
 import { UniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FavoritesState } from 'uniswap/src/features/favorites/slice'
-import { getFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { NotificationState } from 'uniswap/src/features/notifications/slice'
 import { PortfolioState } from 'uniswap/src/features/portfolio/slice/slice'
 import { SearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
@@ -37,8 +37,6 @@ import { TimingState } from 'uniswap/src/features/timing/slice'
 import { TokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { transactionSettingsReducer } from 'uniswap/src/features/transactions/settings/slice'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
-
-const forAggregatorApi = getFiatOnRampAggregatorApi()
 
 /**
  * WARNING:
@@ -78,7 +76,7 @@ type ExpectedAppState = CombinedState<{
   readonly [quickRouteApi.reducerPath]: ReturnType<typeof quickRouteApi.reducer>
 
   // Uniswap State
-  readonly [forAggregatorApi.reducerPath]: ReturnType<typeof forAggregatorApi.reducer>
+  readonly [fiatOnRampAggregatorApi.reducerPath]: ReturnType<typeof fiatOnRampAggregatorApi.reducer>
   readonly uniswapBehaviorHistory: UniswapBehaviorHistoryState
   readonly favorites: FavoritesState
   readonly notifications: NotificationState

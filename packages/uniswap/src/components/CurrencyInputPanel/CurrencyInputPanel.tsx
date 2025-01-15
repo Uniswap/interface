@@ -21,6 +21,7 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useTokenAndFiatDisplayAmounts } from 'uniswap/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
@@ -29,7 +30,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
-type CurrentInputPanelProps = {
+type CurrencyInputPanelProps = {
   autoFocus?: boolean
   currencyAmount: Maybe<CurrencyAmount<Currency>>
   currencyBalance: Maybe<CurrencyAmount<Currency>>
@@ -47,6 +48,7 @@ type CurrentInputPanelProps = {
   onToggleIsFiatMode: (currencyField: CurrencyField) => void
   selection?: TextInputProps['selection']
   showSoftInputOnFocus?: boolean
+  transactionType?: TransactionType
   usdValue: Maybe<CurrencyAmount<Currency>>
   value?: string
   valueIsIndicative?: boolean
@@ -55,6 +57,7 @@ type CurrentInputPanelProps = {
   onPressDisabled?: () => void
   enableInputOnly?: boolean // only allow the input field to be changed. Clicking elsewhere has no effect
   resetSelection?: (args: { start: number; end?: number; currencyField?: CurrencyField }) => void
+  tokenColor?: string
 } & FlexProps
 
 const MAX_INPUT_FONT_SIZE = 36
@@ -70,7 +73,7 @@ export type CurrencyInputPanelRef = {
 }
 
 export const CurrencyInputPanel = memo(
-  forwardRef<CurrencyInputPanelRef, CurrentInputPanelProps>(
+  forwardRef<CurrencyInputPanelRef, CurrencyInputPanelProps>(
     function _CurrencyInputPanel(props, forwardedRef): JSX.Element {
       const {
         autoFocus,
@@ -92,6 +95,8 @@ export const CurrencyInputPanel = memo(
         onPressDisabled,
         enableInputOnly,
         headerLabel,
+        transactionType,
+        tokenColor,
         ...rest
       } = props
 
@@ -324,6 +329,7 @@ export const CurrencyInputPanel = memo(
                 <SelectTokenButton
                   selectedCurrencyInfo={currencyInfo}
                   testID={currencyField === CurrencyField.INPUT ? TestID.ChooseInputToken : TestID.ChooseOutputToken}
+                  tokenColor={tokenColor}
                   onPress={onShowTokenSelector}
                 />
               </Flex>
@@ -357,6 +363,7 @@ export const CurrencyInputPanel = memo(
                       currencyAmount={currencyAmount}
                       currencyBalance={currencyBalance}
                       currencyField={currencyField}
+                      transactionType={transactionType}
                       onSetMax={handleSetMax}
                     />
                   )}
@@ -390,7 +397,7 @@ function useIndicativeTextDisplay({
   usdValue,
   value,
   valueIsIndicative,
-}: CurrentInputPanelProps): PanelTextDisplay {
+}: CurrencyInputPanelProps): PanelTextDisplay {
   const lastDisplayRef = useRef<PanelTextDisplay>({ value, color: '$neutral3', usdValue })
   const hasInput = Boolean(isLoading || currencyAmount)
 
@@ -422,7 +429,7 @@ function useIndicativeTextDisplay({
 
 // TODO(WEB-4805): Remove once legacy hook once indicative quotes are fully rolled out and tested
 /** Controls the display value and color according to legacy, pre-indicative-quotes logic. */
-function useLegacyTextDisplay({ isLoading, value, usdValue }: CurrentInputPanelProps): PanelTextDisplay {
+function useLegacyTextDisplay({ isLoading, value, usdValue }: CurrencyInputPanelProps): PanelTextDisplay {
   // We need to store the previous value, because new quote request resets `Trade`, and this value, to undefined
   const previousValue = usePrevious(value)
 
@@ -441,7 +448,7 @@ function useRefetchAnimationStyle({
   isLoading,
   isIndicativeLoading,
   valueIsIndicative,
-}: CurrentInputPanelProps): { opacity: number } {
+}: CurrencyInputPanelProps): { opacity: number } {
   const indicativeQuotesEnabled = useFeatureFlag(FeatureFlags.IndicativeSwapQuotes)
 
   const loadingFlexProgress = useSharedValue(1)

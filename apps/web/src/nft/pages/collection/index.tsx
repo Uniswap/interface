@@ -17,7 +17,7 @@ import { UnavailableCollectionPage } from 'nft/components/collection/Unavailable
 import { BagCloseIcon } from 'nft/components/icons'
 import { useBag, useCollectionFilters, useFiltersExpanded } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
-import { blocklistedCollections } from 'nft/utils'
+import { useDynamicBlocklistedNftCollections } from 'nft/utils'
 import { useDynamicMetatags } from 'pages/metatags'
 import { Suspense, useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
@@ -163,6 +163,8 @@ const Collection = () => {
     setBagExpanded({ bagExpanded: false, manualClose: false })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const blocklistedCollections = useDynamicBlocklistedNftCollections()
 
   if (loading) {
     return <CollectionPageSkeleton />

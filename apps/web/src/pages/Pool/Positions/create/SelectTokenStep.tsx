@@ -5,7 +5,7 @@ import { Currency, Percent } from '@uniswap/sdk-core'
 import { LoaderButton } from 'components/Button/LoaderButton'
 import { useAllFeeTierPoolData } from 'components/Liquidity/hooks'
 import { getDefaultFeeTiersWithData, isDynamicFeeTier } from 'components/Liquidity/utils'
-import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
@@ -20,7 +20,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { TamaguiClickableStyle } from 'theme/components'
 import { PositionField } from 'types/position'
-import { Button, Flex, FlexProps, HeightAnimator, Text, styled } from 'ui/src'
+import { DeprecatedButton, Flex, FlexProps, HeightAnimator, Text, styled } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { Search } from 'ui/src/components/icons/Search'
@@ -40,7 +40,7 @@ export const CurrencySelector = ({ currency, onPress }: { currency?: Currency; o
   const currencyInfo = useCurrencyInfo(currency)
 
   return (
-    <Button
+    <DeprecatedButton
       flex={1}
       width="100%"
       onPress={onPress}
@@ -74,7 +74,7 @@ export const CurrencySelector = ({ currency, onPress }: { currency?: Currency; o
         </Text>
       </Flex>
       <RotatableChevron direction="down" color="$neutral2" width={iconSizes.icon24} height={iconSizes.icon24} />
-    </Button>
+    </DeprecatedButton>
   )
 }
 
@@ -282,7 +282,7 @@ export function SelectTokensStep({
             </Flex>
             {tokensLocked && token0 && token1 ? (
               <Flex row gap="$gap16" py="$spacing4" alignItems="center">
-                <DoubleCurrencyAndChainLogo chainId={token0.chainId} currencies={[token0, token1]} size={44} />
+                <DoubleCurrencyLogo currencies={[token0, token1]} size={44} />
                 <Flex grow>
                   <Text variant="heading3">
                     {token0.symbol} / {token1.symbol}
@@ -361,7 +361,7 @@ export function SelectTokensStep({
                     <Trans i18nKey="fee.tier.label" />
                   </Text>
                 </Flex>
-                <Button
+                <DeprecatedButton
                   disabled={!currencyInputs.TOKEN0 || !currencyInputs.TOKEN1}
                   size="small"
                   px="$spacing12"
@@ -379,7 +379,7 @@ export function SelectTokensStep({
                     width={iconSizes.icon20}
                     height={iconSizes.icon20}
                   />
-                </Button>
+                </DeprecatedButton>
               </Flex>
               <HeightAnimator open={isShowMoreFeeTiersEnabled}>
                 <Flex flexDirection="column" display="flex" gap="$gap12">

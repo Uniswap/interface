@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import { useDispatch } from 'react-redux'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -9,19 +10,21 @@ import { Screen } from 'src/components/layout/Screen'
 import { deleteCloudStorageMnemonicBackup } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
-import { Button, Flex, Text, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Text, useSporeColors } from 'ui/src'
 import Checkmark from 'ui/src/assets/icons/check.svg'
-import { iconSizes } from 'ui/src/theme'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
+import { iconSizes, spacing } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
-import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { Account, BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, MobileScreens.SettingsCloudBackupStatus>
@@ -33,6 +36,8 @@ export function SettingsCloudBackupStatus({
   },
 }: Props): JSX.Element {
   const { t } = useTranslation()
+  const insets = useAppInsets()
+  const dimensions = useDeviceDimensions()
   const colors = useSporeColors()
   const dispatch = useDispatch()
   const accounts = useAccounts()
@@ -82,6 +87,14 @@ export function SettingsCloudBackupStatus({
     navigation.navigate(MobileScreens.Settings)
   }
 
+  const renderItem = ({ item, index }: { item: Account; index: number }): JSX.Element => (
+    <Flex row alignItems="center" justifyContent="space-between" pt="$spacing8">
+      <AddressDisplay key={`${index}-${item.address}`} address={item.address} size={36} variant="subheading1" />
+    </Flex>
+  )
+
+  const fullScreenContentHeight = (dimensions.fullHeight - insets.top - insets.bottom - spacing.spacing36) / 2
+
   const googleDriveEmail = backups[0]?.googleDriveEmail
 
   return (
@@ -120,7 +133,7 @@ export function SettingsCloudBackupStatus({
             </Flex>
           </Flex>
         </Flex>
-        <Button
+        <DeprecatedButton
           testID={TestID.Remove}
           theme="detrimental"
           onPress={(): void => {
@@ -128,7 +141,7 @@ export function SettingsCloudBackupStatus({
           }}
         >
           {t('settings.setting.backup.status.action.delete')}
-        </Button>
+        </DeprecatedButton>
       </Flex>
 
       <WarningModal
@@ -146,14 +159,16 @@ export function SettingsCloudBackupStatus({
         onAcknowledge={onConfirmDeleteBackup}
       >
         {associatedAccounts.length > 1 && (
-          <Flex>
+          <Flex shrink gap="$spacing8">
             <Text textAlign="left" variant="subheading2">
               {t('settings.setting.backup.delete.confirm.message')}
             </Text>
-            <Flex>
-              {associatedAccounts.map((account) => (
-                <AddressDisplay address={account.address} size={36} variant="subheading1" />
-              ))}
+            <Flex maxHeight={fullScreenContentHeight}>
+              <FlatList
+                data={associatedAccounts}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => `${index}-${item.address}`}
+              />
             </Flex>
           </Flex>
         )}

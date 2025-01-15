@@ -62,7 +62,7 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationCategoryType</key>
-	<string/>
+	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>itms-apps</string>
@@ -85,8 +85,6 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) Wallet needs access to your Camera to scan QR codes</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>$(PRODUCT_NAME) Wallet needs access to your Camera Roll to choose an avatar for your username</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Enabling Face ID helps $(PRODUCT_NAME) Wallet keep your assets secure.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -95,6 +93,8 @@
 	<string>$(PRODUCT_NAME) Wallet does not require access to your location.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>$(PRODUCT_NAME) Wallet does not require access to the microphone.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>$(PRODUCT_NAME) Wallet needs access to your Camera Roll to choose an avatar for your username</string>
 	<key>NSUbiquitousContainers</key>
 	<dict>
 		<key>iCloud.Uniswap</key>
@@ -111,6 +111,8 @@
 	<array>
 		<string>TokenPriceConfigurationIntent</string>
 	</array>
+	<key>OneSignal_app_groups_key</key>
+	<string>group.com.uniswap.mobile.onesignal</string>
 	<key>OneSignal_suppress_launch_urls</key>
 	<true/>
 	<key>UIAppFonts</key>

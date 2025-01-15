@@ -342,6 +342,7 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
         userHasBalance={hasTokenBalance}
         onPressBuy={onPressBuy}
         onPressSell={(): void => onPressSwap(CurrencyField.INPUT)}
+        onPressSwap={(): void => onPressSwap(CurrencyField.OUTPUT)}
         onPressDisabled={isTestnetModeEnabled ? openTestnetWarningModal : openTokenWarningModal}
       />
     </AnimatedFlex>

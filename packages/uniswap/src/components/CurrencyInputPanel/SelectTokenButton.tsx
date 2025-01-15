@@ -1,11 +1,12 @@
 import { ComponentProps, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea, isWeb } from 'ui/src'
+import { Flex, Text, TouchableArea, getHoverCssFilter, isWeb, useIsDarkMode } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import { iconSizes, spacing } from 'ui/src/theme'
+import { iconSizes, spacing, validColor } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
+import { getContrastPassingTextColor } from 'uniswap/src/utils/colors'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { isInterface, isMobileWeb } from 'utilities/src/platform'
 
@@ -13,18 +14,25 @@ interface SelectTokenButtonProps {
   onPress?: () => void
   selectedCurrencyInfo?: CurrencyInfo | null
   testID?: TestIDType
+  tokenColor?: string
 }
 
 export const SelectTokenButton = memo(function _SelectTokenButton({
   selectedCurrencyInfo,
   onPress,
   testID,
+  tokenColor,
 }: SelectTokenButtonProps): JSX.Element {
   const { t } = useTranslation()
+  const isDarkMode = useIsDarkMode()
 
+  const validTokenColor = validColor(tokenColor)
   const hoverStyle: { backgroundColor: ComponentProps<typeof Flex>['backgroundColor'] } = useMemo(
-    () => ({ backgroundColor: selectedCurrencyInfo ? '$surface1Hovered' : '$accent1Hovered' }),
-    [selectedCurrencyInfo],
+    () => ({
+      backgroundColor: selectedCurrencyInfo ? '$surface1Hovered' : validTokenColor ?? '$accent1Hovered',
+      filter: validTokenColor ? getHoverCssFilter(isDarkMode) : undefined,
+    }),
+    [selectedCurrencyInfo, validTokenColor, isDarkMode],
   )
 
   const isCompact = !isInterface || isMobileWeb
@@ -40,12 +48,16 @@ export const SelectTokenButton = memo(function _SelectTokenButton({
     )
   }
 
-  const textColor = selectedCurrencyInfo ? '$neutral1' : '$white'
+  const textColor = selectedCurrencyInfo
+    ? '$neutral1'
+    : tokenColor
+      ? getContrastPassingTextColor(tokenColor) ?? '$white'
+      : '$white'
   const chevronColor = selectedCurrencyInfo ? '$neutral2' : textColor
 
   return (
     <TouchableArea
-      backgroundColor={selectedCurrencyInfo ? '$surface1' : '$accent1'}
+      backgroundColor={selectedCurrencyInfo ? '$surface1' : validTokenColor ?? '$accent1'}
       borderRadius="$roundedFull"
       testID={testID}
       borderColor="$surface3Solid"

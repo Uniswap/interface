@@ -1,4 +1,7 @@
-export const blocklistedCollections = [
+import { BlockedNftCollectionsConfigKey, DynamicConfigs } from 'uniswap/src/features/gating/configs'
+import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+
+const baseBlocklistedCollections = [
   '0xd5eeac01b0d1d929d6cffaaf78020af137277293',
   '0x85c08fffa9510f87019efdcf986301873cbb10d6',
   '0x32d7e58933fceea6b73a13f8e30605d80915b616',
@@ -84,3 +87,31 @@ export const blocklistedCollections = [
   '0xf158ecbab7da7e6a0502628ad391a3d29710c576',
   '0xf673623e8507551bde72290e909c7e184a4799a3',
 ]
+
+export function useDynamicBlocklistedNftCollections() {
+  return useDynamicConfigValue(
+    DynamicConfigs.BlockedNftCollections,
+    BlockedNftCollectionsConfigKey.BlocklistedCollections,
+    baseBlocklistedCollections,
+  )
+}
+
+// Only use this for server side rendered previews where the client statsig constext hasn't been initialized
+export async function getDynamicBlocklistedNftCollections(): Promise<string[]> {
+  try {
+    const response = await fetch('https://interface.gateway.uniswap.org/v1/statsig-proxy/get_config', {
+      method: 'POST',
+      headers: {
+        'statsig-sdk-type': 'react-client',
+      },
+      body: JSON.stringify({
+        configName: DynamicConfigs.BlockedNftCollections,
+        key: BlockedNftCollectionsConfigKey.BlocklistedCollections,
+      }),
+    })
+    const data: any = await response.json()
+    return data.value.blocklistedCollections ?? baseBlocklistedCollections
+  } catch (error) {
+    return baseBlocklistedCollections
+  }
+}

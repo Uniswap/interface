@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { Button, Flex, Text, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -109,7 +109,7 @@ export function DeleteUnitagModal({
           <UnitagName name={unitag} fontSize={fonts.heading3.fontSize} />
         </Flex>
         <Flex centered row width="100%">
-          <Button fill disabled={isDeleting} testID={TestID.Remove} theme="detrimental" onPress={onDelete}>
+          <DeprecatedButton fill disabled={isDeleting} testID={TestID.Remove} theme="detrimental" onPress={onDelete}>
             {isDeleting ? (
               <Flex height={fonts.buttonLabel1.lineHeight}>
                 <ActivityIndicator color={colors.white.val} />
@@ -117,7 +117,7 @@ export function DeleteUnitagModal({
             ) : (
               t('common.button.delete')
             )}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

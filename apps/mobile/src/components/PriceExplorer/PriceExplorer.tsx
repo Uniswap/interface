@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, ReactElement, memo, useCallback, useMemo, useState } from 'react'
+import React, { PropsWithChildren, ReactElement, memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { I18nManager } from 'react-native'
 import { SharedValue, useDerivedValue } from 'react-native-reanimated'
 import { LineChart, LineChartProvider } from 'react-native-wagmi-charts'
@@ -25,6 +25,7 @@ import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { isDetoxBuild } from 'utilities/src/environment/constants'
+import { logger } from 'utilities/src/logger/logger'
 import { isAndroid } from 'utilities/src/platform'
 
 type PriceTextProps = {
@@ -101,6 +102,24 @@ export const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Eleme
     HistoryDuration.Day,
     !isScreenNavigationReady,
   )
+
+  // Log the number of points in the data
+  useEffect(() => {
+    if (data?.priceHistory) {
+      if (data.priceHistory.length < 10) {
+        logger.warn('PriceExplorer.tsx', 'PriceExplorerInner', 'Missing token details data points', {
+          currencyId,
+          duration: selectedDuration,
+          dataLength: data?.priceHistory?.length,
+        })
+      }
+      logger.info('PriceExplorer.tsx', 'PriceExplorerInner', 'Token details data length', {
+        currencyId,
+        duration: selectedDuration,
+        dataLength: data?.priceHistory?.length,
+      })
+    }
+  }, [data?.priceHistory, selectedDuration, currencyId])
 
   const { hapticFeedback } = useHapticFeedback()
 

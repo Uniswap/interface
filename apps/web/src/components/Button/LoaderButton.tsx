@@ -1,9 +1,8 @@
 import { PropsWithChildren } from 'react'
-import { Button, ColorTokens, Flex, SpinningLoader, WidthAnimator } from 'ui/src'
-import { ButtonProps } from 'ui/src/components/button/Button'
+import { ColorTokens, DeprecatedButton, Flex, SpinningLoader, WidthAnimator, type DeprecatedButtonProps } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
-type LoaderButtonProps = ButtonProps & {
+type LoaderButtonProps = DeprecatedButtonProps & {
   buttonKey: string
   loading: boolean
   loaderColor?: ColorTokens
@@ -19,7 +18,7 @@ export function LoaderButton({
   ...rest
 }: PropsWithChildren<LoaderButtonProps>) {
   return (
-    <Button
+    <DeprecatedButton
       key={`LoaderButton-animation-${buttonKey}`}
       size={size ?? 'large'}
       animation={animation ?? 'fastHeavy'}
@@ -33,6 +32,6 @@ export function LoaderButton({
         </WidthAnimator>
         {children}
       </Flex>
-    </Button>
+    </DeprecatedButton>
   )
 }

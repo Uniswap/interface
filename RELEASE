@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmRHsud7WNRFUg4cTcXRxuwZYZRAhYMkYAcA97mtqwq9re`
-- CIDv1: `bafybeibl3u67jwwr3vxssx7z6bbz35bk333qe6xdnkruce7pmma5uf2z74`
+- CIDv0: `QmXkPV7sagZDwbUR5PRBNWAvFrJSuTUh5Fu1aJpFA1whLV`
+- CIDv1: `bafybeielzxuhhhlrf7rtyfrqtzqawka7oyjb3qklvfvcexvwdumpsnujdi`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,61 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeibl3u67jwwr3vxssx7z6bbz35bk333qe6xdnkruce7pmma5uf2z74.ipfs.dweb.link/
-- https://bafybeibl3u67jwwr3vxssx7z6bbz35bk333qe6xdnkruce7pmma5uf2z74.ipfs.cf-ipfs.com/
-- [ipfs://QmRHsud7WNRFUg4cTcXRxuwZYZRAhYMkYAcA97mtqwq9re/](ipfs://QmRHsud7WNRFUg4cTcXRxuwZYZRAhYMkYAcA97mtqwq9re/)
+- https://bafybeielzxuhhhlrf7rtyfrqtzqawka7oyjb3qklvfvcexvwdumpsnujdi.ipfs.dweb.link/
+- https://bafybeielzxuhhhlrf7rtyfrqtzqawka7oyjb3qklvfvcexvwdumpsnujdi.ipfs.cf-ipfs.com/
+- [ipfs://QmXkPV7sagZDwbUR5PRBNWAvFrJSuTUh5Fu1aJpFA1whLV/](ipfs://QmXkPV7sagZDwbUR5PRBNWAvFrJSuTUh5Fu1aJpFA1whLV/)
 
-### 5.64.2 (2025-01-13)
+## 5.65.0 (2025-01-15)
+
+
+### Features
+
+* **web:** [EW] Add passkey sign in (#13883) 01fd45c
+* **web:** [EW] Add show recovery phrase modal (#13894) 05748a7
+* **web:** [EW] Add sign up (#13862) aa9771e
+* **web:** [EW] Add signing txs (#13890) c779f0c
+* **web:** add the v4 whitepaper (#14867) e87e686
+* **web:** delete unused background updating code (#14612) aa26058
+* **web:** replace usage of DoubleLogoWithChain with DoubleLogo (#15011) e723da8
+* **web:** update uniswapx-sdk (#14654) ab645c7
+* **web:** use dynamic config for blocked nft collections (#14643) a748576
 
 
 ### Bug Fixes
 
-* **web:** fix infinite loop on analytics toggle 3a2b4dc
+* **web:** 5859 get position owner from get position call (#14729) b412b95
+* **web:** align chart headers in explore (#14830) 4a2e838
+* **web:** consistent lp buttons (#14664) 4c3c0d9
+* **web:** eth logo flash (#15013) 486ab05
+* **web:** filter toggle behavior on TDP (#14898) dbebd9a
+* **web:** fix crash on v4 create (#14891) 53b84d8
+* **web:** fix double logo on DoubleCurrencyAndChainLogo (#14946) 0579dcf
+* **web:** fix infinite loop on analytics toggle f4b5fde
+* **web:** fix infinite loop on analytics toggle (#15068) ad1a014
+* **web:** fix pdp price display (#14902) 2f00216
+* **web:** fix range display for v4 positions in custom fee tiers (#14904) 3be2db0
+* **web:** hero title bug when switching languages (#15022) d6511f5
+* **web:** inverted initial price bug (#14994) 017e47e
+* **web:** limit orders do not work with uniswapx v2 (#14995) b492069
+* **web:** make the swap primary colors on the tdp use token extraction colors (#14696) ea7f43b
+* **web:** move both price toggles together in the create flow (#14971) 8d8f595
+* **web:** re-add images prop to PortfolioLogo and use split logo (#14864) 840edff
+* **web:** reduce size impact of ui icons (#14613) f89a87e
+* **web:** remove direct t imports and fix translations outside of React context on web (#14829) e040834
+* **web:** remove worldchain minikit provider (#14544) 6794856
+* **web:** scroll on nav dropdown and adjust max height (#15094) 3bbd575
+* **web:** send speed bump font size fix (#15004) 0bd82df
+* **web:** update google conversion datetime format (#15131) 6a7ca9a
+* **web:** update input behavior on send tab (#14843) 8c4eab7
+
+
+### Continuous Integration
+
+* **web:** update sitemaps 8e5f49e
+
+
+### Styles
+
+* **web:** round ends of loading spinner component (#14779) 26b3a8b
 
 

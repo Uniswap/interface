@@ -15,7 +15,6 @@ import {
   NumericalInputSymbolContainer,
   NumericalInputWrapper,
   StyledNumericalInput,
-  useWidthAdjustedDisplayValue,
 } from 'pages/Swap/common/shared'
 import { useCallback, useMemo, useState } from 'react'
 import { Trans } from 'react-i18next'
@@ -218,8 +217,6 @@ export default function SendCurrencyInputForm({
   const displayValue = inputInFiat ? exactAmountFiat : exactAmountToken
   const hiddenObserver = useResizeObserver<HTMLElement>()
 
-  const postWidthAdjustedDisplayValue = useWidthAdjustedDisplayValue(displayValue)
-
   const handleUserInput = useCallback(
     (newValue: string) => {
       setSendState((prev) => ({
@@ -302,10 +299,11 @@ export default function SendCurrencyInputForm({
             <NumericalInputSymbolContainer showPlaceholder={!displayValue}>{fiatSymbol}</NumericalInputSymbolContainer>
           )}
           <StyledNumericalInput
-            value={postWidthAdjustedDisplayValue}
+            value={displayValue}
             disabled={disabled}
             onUserInput={handleUserInput}
             placeholder="0"
+            $hasPrefix={inputInFiat}
             $width={displayValue && hiddenObserver.width ? hiddenObserver.width + 1 : undefined}
             maxDecimals={inputInFiat ? 6 : inputCurrency?.decimals}
           />

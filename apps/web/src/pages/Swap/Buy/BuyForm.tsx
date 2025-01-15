@@ -31,10 +31,11 @@ import { useFormatter } from 'utils/formatNumbers'
 const InputWrapper = styled(Flex, {
   backgroundColor: '$surface2',
   p: '$spacing16',
+  pt: '$spacing12',
   pb: 52,
   height: 342,
   alignItems: 'center',
-  borderRadius: '$rounded20',
+  borderRadius: '$rounded16',
   justifyContent: 'space-between',
   overflow: 'hidden',
   gap: '$spacing8',

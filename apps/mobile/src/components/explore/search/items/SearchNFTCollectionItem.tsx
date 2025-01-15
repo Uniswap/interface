@@ -1,9 +1,9 @@
 import { default as React } from 'react'
 import { useDispatch } from 'react-redux'
 import { useAppStackNavigation } from 'src/app/navigation/types'
+import { SEARCH_ITEM_ICON_SIZE, SEARCH_ITEM_PX, SEARCH_ITEM_PY } from 'src/components/explore/search/constants'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { Verified } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import { NFTCollectionSearchResult, SearchResultType } from 'uniswap/src/features/search/SearchResult'
 import { addToSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
@@ -57,14 +57,14 @@ export function SearchNFTCollectionItem({ collection, searchContext }: NFTCollec
 
   return (
     <TouchableArea testID={TestID.SearchNFTCollectionItem} onPress={onPress}>
-      <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" px="$spacing24" py="$spacing12">
+      <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" px={SEARCH_ITEM_PX} py={SEARCH_ITEM_PY}>
         <Flex
           centered
           borderRadius="$roundedFull"
-          height={iconSizes.icon40}
+          height={SEARCH_ITEM_ICON_SIZE}
           mr="$spacing4"
           overflow="hidden"
-          width={iconSizes.icon40}
+          width={SEARCH_ITEM_ICON_SIZE}
         >
           {imageUrl ? (
             <NFTViewer uri={imageUrl} />

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import {
-  Button,
+  DeprecatedButton,
   Flex,
   InputProps,
   LinearGradient,
@@ -381,7 +381,7 @@ export function EditUnitagProfileContent({
           </Flex>
         </Flex>
       </ScrollView>
-      <Button
+      <DeprecatedButton
         disabled={!profileMetadataEdited}
         mt="$spacing12"
         mx={isExtension ? undefined : '$spacing24'}
@@ -390,7 +390,7 @@ export function EditUnitagProfileContent({
         onPress={onPressSaveChanges}
       >
         {t('common.button.save')}
-      </Button>
+      </DeprecatedButton>
       {showAvatarModal && (
         <ChoosePhotoOptionsModal
           address={address}

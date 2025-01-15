@@ -23,7 +23,7 @@ import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
-import { useTokenContextMenu } from 'wallet/src/features/portfolio/useTokenContextMenu'
+import { TokenMenuActionType, useTokenContextMenu } from 'wallet/src/features/portfolio/useTokenContextMenu'
 
 export const HeaderTitleElement = memo(function HeaderTitleElement(): JSX.Element {
   const { t } = useTranslation()
@@ -88,9 +88,12 @@ export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Elemen
   const safetyLevel = project?.safetyLevel
   const isBlocked = safetyLevel === SafetyLevel.Blocked || currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
 
+  const excludedActions = [TokenMenuActionType.Swap, TokenMenuActionType.Send, TokenMenuActionType.Receive]
+
   const { menuActions, onContextMenuPress } = useTokenContextMenu({
     currencyId,
     isBlocked,
+    excludedActions,
     tokenSymbolForNotification: token?.symbol,
     portfolioBalance: currentChainBalance,
   })

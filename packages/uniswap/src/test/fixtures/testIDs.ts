@@ -65,6 +65,7 @@ export const TestID = {
   TokenDetailsBuyButton: 'token-details-buy-button',
   TokenDetailsMoreButton: 'token-details-more-button',
   TokenDetailsSellButton: 'token-details-sell-button',
+  TokenDetailsSwapButton: 'token-details-swap-button',
   TokenDetailsHeaderText: 'token-details-header-text',
   TokenSelectorToggle: 'token-selector-toggle',
   TokenLinkCopy: 'token-link-copy',

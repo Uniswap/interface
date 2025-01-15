@@ -268,7 +268,7 @@ module.exports = {
         include: (path) => /uniswap\/src.*\.(js|ts)x?$/.test(path),
         // Babel transpiles to cjs so any code that requires tree-shaking of it's dependencies
         // must be excluded here and processed by swc instead.
-        exclude: (path) => ['chains'].some(p => path.includes(p)),
+        exclude: (path) => ['chains', 'transactions/swap/types'].some(p => path.includes(p)),
         options: {
           presets: ['module:@react-native/babel-preset'],
           plugins: [

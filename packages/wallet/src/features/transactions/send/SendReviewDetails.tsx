@@ -2,7 +2,7 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Button, Flex, Separator, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Separator, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { BackArrow, X } from 'ui/src/components/icons'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
@@ -311,8 +311,8 @@ export function SendReviewDetails({
 
       <TransactionModalFooterContainer>
         <Flex row gap="$spacing8">
-          {!isWeb && <Button icon={<BackArrow />} size="large" theme="tertiary" onPress={onPrev} />}
-          <Button
+          {!isWeb && <DeprecatedButton icon={<BackArrow />} size="large" theme="tertiary" onPress={onPrev} />}
+          <DeprecatedButton
             fill
             disabled={actionButtonProps.disabled}
             icon={ButtonAuthIcon}
@@ -321,7 +321,7 @@ export function SendReviewDetails({
             onPress={actionButtonProps.onPress}
           >
             {actionButtonProps.label}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </TransactionModalFooterContainer>
     </Trace>

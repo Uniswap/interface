@@ -185,6 +185,12 @@ export function getCurrencySafetyInfo(
     tokenList: getTokenListFromSafetyLevel(safetyLevel),
     attackType: getHighestPriorityAttackType(protectionInfo?.attackTypes),
     protectionResult: protectionInfo?.result ?? ProtectionResult.Unknown,
+    blockaidFees: protectionInfo?.blockaidFees
+      ? {
+          buyFeePercent: protectionInfo.blockaidFees.buy ? protectionInfo.blockaidFees.buy * 100 : undefined,
+          sellFeePercent: protectionInfo.blockaidFees.sell ? protectionInfo.blockaidFees.sell * 100 : undefined,
+        }
+      : undefined,
   }
 }
 

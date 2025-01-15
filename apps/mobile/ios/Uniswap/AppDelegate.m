@@ -8,6 +8,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <ReactNativePerformance/ReactNativePerformance.h>
 #import <RCTAppSetupUtils.h>
+#import <RNBootSplash.h>
 
 @implementation AppDelegate
 
@@ -48,6 +49,7 @@
   [super application:application didFinishLaunchingWithOptions:newLaunchOptions];
   
   [[RCTI18nUtil sharedInstance] allowRTL:NO];
+  [RNBootSplash initWithStoryboard:@"SplashScreen" rootView:self.window.rootViewController.view];
 
   return YES;
 }

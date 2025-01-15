@@ -4,6 +4,32 @@
 
 If you have suggestions on how we can improve the app, or would like to report a bug or a problem, check out the [Uniswap Help Center](https://support.uniswap.org/).
 
+## Table of contents
+
+- [Setup](#setup)
+ - [Packages and Software](#packages-and-software)
+ - [iOS Setup](#ios-setup)
+   - [Xcode](#xcode)
+   - [Add Xcode Command Line Tools](#add-xcode-command-line-tools)
+ - [Android Setup](#android-setup)
+   - [Deploying to Physical Android Device](#deploying-to-physical-android-device)
+- [Development](#development)
+ - [Environment variables](#environment-variables)
+ - [Compile contract ABI types](#compile-contract-abi-types) 
+ - [Run the app](#run-the-app)
+ - [Using Radon IDE](#using-radon-ide-vscodecursor-extension)
+   - [Running on a Physical iOS Device](#running-on-a-physical-ios-device)
+- [Important Libraries and Tools](#important-libraries-and-tools)
+- [Migrations](#migrations)
+- [Testing & Performance](#testing--performance)
+ - [Build local app files](./docs/build-app-files.md)
+ - [E2E testing](./docs/e2e-testing.md)
+ - [Performance monitoring](./docs/perf-monitoring.md)
+- [Troubleshooting](#troubleshooting)
+ - [Common issues](#common-issues)
+ - [Common fixes](#common-fixes)
+ - [Shell profile setup](#shell-profile-setup)
+
 ## Setup
 
 This guide assumes that:
@@ -124,7 +150,7 @@ Note: If you are indeed using an Apple Silicon Mac, we recommend setting up your
 
 You should start with downloading Xcode if you don't already have it installed, since the file is so large. You can find it here: [developer.apple.com/xcode](https://developer.apple.com/xcode/)
 
-You must use **XCode 15** to compile the app. [Older versions of xCode can be found here](https://developer.apple.com/download/all/?q=xcode).
+You must use the [Required Xcode Version](https://github.com/Uniswap/universe/blob/main/apps/mobile/scripts/podinstall.sh#L5) to compile the app. [Older versions of xCode can be found here](https://developer.apple.com/download/all/?q=xcode).
 
 #### Add Xcode Command Line Tools
 
@@ -255,6 +281,13 @@ These are some tools you might want to familiarize yourself with to understand t
 
 We use `redux-persist` to persist the Redux state between user sessions. Most of this state is shared between the mobile app and the extension. Please review the [Wallet Migrations README](../../packages/wallet/src/state//README.md) for details on how to write migrations when you add or remove anything from the Redux state structure.
 
+## Testing & Performance
+
+- [Build local app files](./docs/build-app-files.md)
+- [E2E testing](./docs/e2e-testing.md)
+- [Performance monitoring](./docs/perf-monitoring.md)
+
+
 ## Troubleshooting
 
 ### Common issues
@@ -313,3 +346,4 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+

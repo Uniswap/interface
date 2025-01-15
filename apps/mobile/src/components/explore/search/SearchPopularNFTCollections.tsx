@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
 import { ListRenderItemInfo } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
+import { SEARCH_ITEM_PX, SEARCH_ITEM_PY } from 'src/components/explore/search/constants'
 import { SearchNFTCollectionItem } from 'src/components/explore/search/items/SearchNFTCollectionItem'
 import { getSearchResultId, gqlNFTToNFTCollectionSearchResult } from 'src/components/explore/search/utils'
 import { Flex, Loader } from 'ui/src'
@@ -26,7 +27,7 @@ export function SearchPopularNFTCollections(): JSX.Element {
 
   if (loading) {
     return (
-      <Flex px="$spacing24" py="$spacing8">
+      <Flex px={SEARCH_ITEM_PX} py={SEARCH_ITEM_PY}>
         <Loader.Token repeat={2} />
       </Flex>
     )

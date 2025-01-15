@@ -19,6 +19,8 @@ import { ProfilePageStateType } from 'nft/types'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 
 const Nav = styled.nav`
@@ -105,9 +107,11 @@ export default function Navbar() {
   const hideChainSelector = useShouldHideChainSelector()
 
   const { isTestnetModeEnabled } = useEnabledChains()
+  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
 
-  const { isControl: isSignInExperimentControl, isLoading: isSignInExperimentControlLoading } =
-    useIsAccountCTAExperimentControl()
+  const { isControl, isLoading: isSignInExperimentControlLoading } = useIsAccountCTAExperimentControl()
+
+  const isSignInExperimentControl = !isEmbeddedWalletEnabled && isControl
 
   return (
     <Nav>

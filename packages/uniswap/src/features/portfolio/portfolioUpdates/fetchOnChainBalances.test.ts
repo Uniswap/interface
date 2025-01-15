@@ -5,6 +5,16 @@ import { getOnChainBalancesFetch } from 'uniswap/src/features/portfolio/api'
 import { fetchOnChainBalances } from 'uniswap/src/features/portfolio/portfolioUpdates/fetchOnChainBalances'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
+jest.mock('uniswap/src/data/apiClients/tradingApi/useTradingApiIndicativeQuoteQuery', () => ({
+  fetchTradingApiIndicativeQuote: jest.fn().mockResolvedValue({
+    output: {
+      token: '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
+      chainId: 8453,
+      amount: '99750',
+    },
+  }),
+}))
+
 jest.mock('uniswap/src/features/portfolio/api', () => ({
   getOnChainBalancesFetch: jest.fn(),
 }))
@@ -53,6 +63,10 @@ describe(fetchOnChainBalances, () => {
       apolloCache: mockApolloCache,
       accountAddress: TEST_ACCOUNT,
       currencyIds: new Set([currencyId]),
+      cachedPortfolio: {
+        id: 'test-portfolio',
+        tokenBalances: [],
+      },
     })
 
     expect(mockGetOnChainBalancesFetch).toHaveBeenCalledWith({
@@ -95,6 +109,10 @@ describe(fetchOnChainBalances, () => {
       apolloCache: mockApolloCache,
       accountAddress: TEST_ACCOUNT,
       currencyIds: new Set([currencyId]),
+      cachedPortfolio: {
+        id: 'test-portfolio',
+        tokenBalances: [],
+      },
     })
 
     expect(mockGetOnChainBalancesFetch).toHaveBeenCalledWith({
@@ -124,6 +142,10 @@ describe(fetchOnChainBalances, () => {
       apolloCache: mockApolloCache,
       accountAddress: TEST_ACCOUNT,
       currencyIds: new Set([currencyId]),
+      cachedPortfolio: {
+        id: 'test-portfolio',
+        tokenBalances: [],
+      },
     })
 
     const balanceInfo = result.get(currencyId)
@@ -137,6 +159,10 @@ describe(fetchOnChainBalances, () => {
       apolloCache: mockApolloCache,
       accountAddress: TEST_ACCOUNT,
       currencyIds: new Set([invalidCurrencyId]),
+      cachedPortfolio: {
+        id: 'test-portfolio',
+        tokenBalances: [],
+      },
     })
 
     expect(result.size).toBe(0)
@@ -158,6 +184,10 @@ describe(fetchOnChainBalances, () => {
       apolloCache: mockApolloCache,
       accountAddress: TEST_ACCOUNT,
       currencyIds: new Set([currencyId1, currencyId2]),
+      cachedPortfolio: {
+        id: 'test-portfolio',
+        tokenBalances: [],
+      },
     })
 
     expect(result.size).toBe(2)

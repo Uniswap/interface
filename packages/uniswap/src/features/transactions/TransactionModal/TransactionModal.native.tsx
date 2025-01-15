@@ -117,7 +117,8 @@ export function TransactionModalInnerContainer({
 
   return (
     <BottomSheetView style={[bottomSheetViewStyles]}>
-      <TouchableWithoutFeedback>
+      {/* Do not remove `accessible`, this allows maestro to view components within this */}
+      <TouchableWithoutFeedback accessible={false}>
         <Flex mt={fullscreen ? insets.top : '$spacing8'}>
           {fullscreen && <HandleBar backgroundColor="none" />}
 

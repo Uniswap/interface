@@ -4,7 +4,7 @@ import { ButtonLight } from 'components/Button/buttons'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
 import { useTranslation } from 'react-i18next'
-import { Button, Text } from 'ui/src'
+import { DeprecatedButton, Text } from 'ui/src'
 import { useAccount } from 'wagmi'
 
 interface BuyFormButtonProps {
@@ -30,7 +30,7 @@ export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
 
   if (!inputAmount || forceDisabled || notAvailableInThisRegion) {
     return (
-      <Button
+      <DeprecatedButton
         key="BuyFormButton"
         disabled
         size="large"
@@ -41,7 +41,7 @@ export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
         <Text variant="buttonLabel1">
           {notAvailableInThisRegion ? t('common.notAvailableInRegion.error') : t('common.noAmount.error')}
         </Text>
-      </Button>
+      </DeprecatedButton>
     )
   }
 

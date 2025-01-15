@@ -2,7 +2,7 @@ import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { PropsWithChildren, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnimatePresence, Button, Flex, Popover, Separator, Text, TouchableArea } from 'ui/src'
+import { AnimatePresence, DeprecatedButton, Flex, Popover, Separator, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { AnglesMaximize } from 'ui/src/components/icons/AnglesMaximize'
 import { AnglesMinimize } from 'ui/src/components/icons/AnglesMinimize'
@@ -307,7 +307,7 @@ const SlippageEdit = ({
   const { t } = useTranslation()
   const [showInterfaceSlippageSettings, setShowInterfaceSlippageSettings] = useState(false)
   const editButton = (
-    <Button
+    <DeprecatedButton
       fontSize="$micro"
       size="small"
       theme="secondary"
@@ -315,7 +315,7 @@ const SlippageEdit = ({
       onPress={() => (isInterface ? setShowInterfaceSlippageSettings(true) : onSlippageEditPress?.())}
     >
       {t('common.button.edit')}
-    </Button>
+    </DeprecatedButton>
   )
 
   if (!isInterface) {

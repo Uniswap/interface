@@ -300,7 +300,7 @@ function PriceChart({
 
   const params = useMemo(() => ({ data, stale, type: PriceChartType.LINE }), [data, stale])
 
-  const { price } = useUSDCPrice(primaryToken)
+  const { price } = useUSDCPrice(referenceToken)
 
   const lastPrice = data[data.length - 1]
   return (
@@ -313,10 +313,10 @@ function PriceChart({
         const priceDisplay = (
           <PriceDisplayContainer>
             <ChartPriceText>
-              {`1 ${primaryToken.symbol} = ${formatCurrencyAmount({
+              {`1 ${referenceToken.symbol} = ${formatCurrencyAmount({
                 amount: CurrencyAmount.fromRawAmount(referenceToken, currencyBAmountRaw),
               })} 
-            ${referenceToken.symbol}`}
+            ${primaryToken.symbol}`}
             </ChartPriceText>
             <ChartPriceText color="neutral2">{price ? '(' + formatPrice({ price }) + ')' : ''}</ChartPriceText>
           </PriceDisplayContainer>

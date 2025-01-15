@@ -3,7 +3,7 @@ import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CopyHelper } from 'theme/components'
-import { Button, Checkbox, Flex, HeightAnimator, Separator, Text, TouchableArea } from 'ui/src'
+import { Checkbox, DeprecatedButton, Flex, HeightAnimator, Separator, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { ContractInteraction } from 'ui/src/components/icons/ContractInteraction'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
@@ -193,14 +193,20 @@ export function HookModal({
 
           <Flex row gap="$gap8">
             <Trace logPress element={ElementName.Cancel}>
-              <Button size="small" theme="secondary" width="49%" onPress={handleClearHook}>
+              <DeprecatedButton size="small" theme="secondary" width="49%" onPress={handleClearHook}>
                 {t('position.removeHook')}
-              </Button>
+              </DeprecatedButton>
             </Trace>
             <Trace logPress element={ElementName.Continue}>
-              <Button disabled={!canContinue} size="small" theme="primary" width="49%" onPress={handleContinue}>
+              <DeprecatedButton
+                disabled={!canContinue}
+                size="small"
+                theme="primary"
+                width="49%"
+                onPress={handleContinue}
+              >
                 {t('common.button.continue')}
-              </Button>
+              </DeprecatedButton>
             </Trace>
           </Flex>
         </Flex>

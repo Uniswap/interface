@@ -22,7 +22,7 @@ import { useTopPools } from 'state/explore/topPools'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
 import { useRequestPositionsForSavedPairs } from 'state/user/hooks'
 import { ClickableTamaguiStyle } from 'theme/components'
-import { Anchor, Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
+import { Anchor, DeprecatedButton, Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { X } from 'ui/src/components/icons/X'
 import { iconSizes } from 'ui/src/theme'
@@ -106,9 +106,14 @@ function EmptyPositionsView({ chainId, isConnected }: { chainId?: UniverseChainI
           </Flex>
         </Flex>
         {isConnected && (
-          <Button theme="secondary" size="medium" onPress={() => navigate('/explore/pools')} $md={{ width: '100%' }}>
+          <DeprecatedButton
+            theme="secondary"
+            size="medium"
+            onPress={() => navigate('/explore/pools')}
+            $md={{ width: '100%' }}
+          >
             <Text>{t('pools.explore')}</Text>
-          </Button>
+          </DeprecatedButton>
         )}
       </Flex>
       <Flex gap="$gap24">
@@ -295,9 +300,9 @@ export default function Pool() {
           )}
           {hasNextPage && (
             <Flex mx="auto">
-              <Button theme="outline" onPress={loadMorePositions} disabled={isFetching}>
+              <DeprecatedButton theme="outline" onPress={loadMorePositions} disabled={isFetching}>
                 <Text variant="buttonLabel3">{t('common.loadMore')}</Text>
-              </Button>
+              </DeprecatedButton>
             </Flex>
           )}
           {!statusFilter.includes(PositionStatus.CLOSED) && !closedCTADismissed && account.address && (

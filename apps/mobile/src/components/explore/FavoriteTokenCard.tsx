@@ -14,7 +14,10 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, imageSizes, opacify } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { useFavoriteTokenCardQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import {
+  FavoriteTokenCardQuery,
+  useFavoriteTokenCardQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
@@ -55,7 +58,7 @@ function FavoriteTokenCard({
   const { data, networkStatus, startPolling, stopPolling } = useFavoriteTokenCardQuery({
     variables: currencyIdToContractInput(currencyId),
     // Rely on cache for fast favoriting UX, and poll for updates.
-    fetchPolicy: 'cache-first',
+    fetchPolicy: 'cache-and-network',
     returnPartialData: true,
   })
 
@@ -66,8 +69,10 @@ function FavoriteTokenCard({
   // Mirror behavior in top tokens list, use first chain the token is on for the symbol
   const chainId = fromGraphQLChain(token?.chain) ?? defaultChainId
 
-  const price = convertFiatAmountFormatted(token?.market?.price?.value, NumberType.FiatTokenPrice)
-  const pricePercentChange = token?.market?.pricePercentChange?.value
+  // Coingecko price is more accurate but lacks long tail tokens
+  // Uniswap price comes from Uniswap pools, which may be updated less frequently
+  const { price, pricePercentChange } = getCoingeckoPrice(token) ?? getUniswapPrice(token)
+  const priceFormatted = convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)
 
   const onRemove = useCallback(() => {
     if (currencyId) {
@@ -139,7 +144,7 @@ function FavoriteTokenCard({
             </Flex>
             <Flex gap="$spacing2">
               <Text adjustsFontSizeToFit numberOfLines={1} variant="heading3">
-                {price}
+                {priceFormatted}
               </Text>
               <RelativeChange
                 arrowSize="$icon.16"
@@ -153,6 +158,31 @@ function FavoriteTokenCard({
       </ContextMenu>
     </AnimatedFlex>
   )
+}
+
+function getCoingeckoPrice(token?: FavoriteTokenCardQuery['token']): {
+  price: number | undefined
+  pricePercentChange: number | undefined
+} | null {
+  const market = token?.project?.markets?.[0]
+  if (!market?.price?.value || !market?.pricePercentChange24h?.value) {
+    return null
+  }
+
+  return {
+    price: market.price.value,
+    pricePercentChange: market.pricePercentChange24h.value,
+  }
+}
+
+function getUniswapPrice(token?: FavoriteTokenCardQuery['token']): {
+  price: number | undefined
+  pricePercentChange: number | undefined
+} {
+  return {
+    price: token?.market?.price?.value,
+    pricePercentChange: token?.market?.pricePercentChange?.value,
+  }
 }
 
 export default memo(FavoriteTokenCard)

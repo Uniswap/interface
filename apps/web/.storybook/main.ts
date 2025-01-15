@@ -24,6 +24,11 @@ const config: StorybookConfig = {
   },
   staticDirs: ['../public'],
   webpackFinal: (config) => {
+    // There are some conflicting ESLint rules that prevent storybook from building if this plugin is added to the Webpack configuration
+    if (config.plugins) {
+      config.plugins = config.plugins.filter((plugin) => plugin?.constructor.name !== 'ESLintWebpackPlugin')
+    }
+
     // This modifies the existing image rule to exclude `.svg` files
     // since we handle those with `@svgr/webpack`.
     const imageRule =

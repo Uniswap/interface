@@ -22,6 +22,7 @@ export enum DynamicConfigs {
   // Web
   QuickRouteChains = 'quick_route_chains',
   AstroChain = 'astro_chain',
+  BlockedNftCollections = 'blocked_nft_collections',
 }
 
 // Config values go here for easy access
@@ -80,6 +81,10 @@ export enum DatadogIgnoredErrorsConfigKey {
   Errors = 'errors',
 }
 
+export enum BlockedNftCollectionsConfigKey {
+  BlocklistedCollections = 'blocklistedCollections',
+}
+
 export type DatadogIgnoredErrorsValType = Array<{ messageContains: string; sampleRate: number }>
 
 export type GasStrategyType = 'general' | 'swap'
@@ -132,4 +137,5 @@ export type DynamicConfigKeys = {
   // Web
   [DynamicConfigs.QuickRouteChains]: QuickRouteChainsConfigKey
   [DynamicConfigs.AstroChain]: AstroChainConfigKey
+  [DynamicConfigs.BlockedNftCollections]: BlockedNftCollectionsConfigKey
 }

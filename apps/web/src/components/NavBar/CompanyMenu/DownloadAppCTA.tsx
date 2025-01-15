@@ -20,7 +20,7 @@ const HoverStyles = css`
 const DownloadCTA = styled(Row)<{ isMobile: boolean }>`
   cursor: pointer;
   padding: 12px ${DOWNLOAD_PADDING_X}px;
-  border-radius: 20px;
+  border-radius: 16px;
   transition: all 0.2s;
   box-sizing: content-box;
   transform: translateX(-${DOWNLOAD_PADDING_X}px);
@@ -57,7 +57,7 @@ export function DownloadApp({ onClick }: { onClick?: () => void }) {
       data-testid="nav-dropdown-download-app"
     >
       <MobileAppLogo width={41} height={41} />
-      <Flex gap="$spacing4">
+      <Flex>
         <Text lineHeight="20px">{t('common.downloadUniswap')}</Text>
         <ThemedText.LabelMicro lineHeight="18px" color="theme.accent1">
           {t('common.availableOnIOSAndroid')}

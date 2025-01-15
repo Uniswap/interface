@@ -34,7 +34,7 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { PositionField } from 'types/position'
-import { Button, Flex, Text, useMedia } from 'ui/src'
+import { DeprecatedButton, Flex, Text, useMedia } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
@@ -193,7 +193,7 @@ interface ResetProps {
 
 const ResetButton = ({ onClickReset, isDisabled }: ResetProps) => {
   return (
-    <Button
+    <DeprecatedButton
       theme="tertiary"
       py="10px"
       px="$spacing12"
@@ -210,7 +210,7 @@ const ResetButton = ({ onClickReset, isDisabled }: ResetProps) => {
       <Text variant="buttonLabel3" lineHeight="16px">
         <Trans i18nKey="common.button.reset" />
       </Text>
-    </Button>
+    </DeprecatedButton>
   )
 }
 

@@ -79,24 +79,3 @@ export const DoubleCurrencyLogo = memo(function DoubleCurrencyLogo({
     />
   )
 })
-
-const StyledLogoParentContainer = styled.div`
-  position: relative;
-  top: 0;
-  left: 0;
-`
-
-export function DoubleCurrencyAndChainLogo({
-  currencies,
-  size = 32,
-}: {
-  chainId: number
-  currencies: Array<Currency | undefined>
-  size?: number
-}) {
-  return (
-    <StyledLogoParentContainer>
-      <DoubleCurrencyLogo currencies={currencies} size={size} />
-    </StyledLogoParentContainer>
-  )
-}

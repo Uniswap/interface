@@ -16,7 +16,7 @@ import {
 } from 'tamagui'
 import type { IconProps } from 'ui/src/components/factories/createIcon'
 
-export type ButtonSize = 'small' | 'medium' | 'large'
+type DeprecatedButtonSize = 'small' | 'medium' | 'large'
 
 const ButtonNestingContext = createContext(false)
 
@@ -57,7 +57,7 @@ const CustomButtonFrame = styled(XStack, {
       },
       large: {
         padding: '$spacing18',
-        paddingVertical: '$spacing18',
+        paddingVertical: '$spacing16',
         borderRadius: '$rounded20',
         gap: '$spacing12',
       },
@@ -153,7 +153,7 @@ type CustomButtonProps = GetProps<typeof CustomButtonFrame>
 
 type IconProp = JSX.Element | FunctionComponent<IconProps> | null
 
-export type ButtonProps = CustomButtonProps &
+export type DeprecatedButtonProps = CustomButtonProps &
   TextParentStyles & {
     /**
      * add icon before, passes color and size automatically if Component
@@ -173,7 +173,7 @@ export type ButtonProps = CustomButtonProps &
     unstyled?: boolean
   }
 
-const ButtonComponent = CustomButtonFrame.styleable<ButtonProps>((props, ref) => {
+const ButtonComponent = CustomButtonFrame.styleable<DeprecatedButtonProps>((props, ref) => {
   const { props: buttonProps } = useButton(props)
   return (
     <CustomButtonFrame
@@ -188,11 +188,12 @@ ButtonComponent.defaultProps = {
   theme: 'primary',
 }
 
-export const Button = withStaticProperties(ButtonComponent, {
+/** @deprecated Please use `Button` from `ui/src` */
+export const DeprecatedButton = withStaticProperties(ButtonComponent, {
   Text: ButtonText,
 })
 
-const buttonToIconSize: Record<ButtonSize, SpecificTokens> = {
+const buttonToIconSize: Record<DeprecatedButtonSize, SpecificTokens> = {
   small: '$icon.12',
   medium: '$icon.20',
   large: '$icon.24',
@@ -202,7 +203,7 @@ const buttonToIconSize: Record<ButtonSize, SpecificTokens> = {
 // because its just too specific to maintain. we don't allow number sizes for example.
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function useButton<Props extends ButtonProps>(propsIn: Props) {
+function useButton<Props extends DeprecatedButtonProps>(propsIn: Props) {
   // careful not to desctructure and re-order props, order is important
   const {
     // not button frame props
@@ -216,7 +217,7 @@ function useButton<Props extends ButtonProps>(propsIn: Props) {
   } = propsIn
 
   const isNested = useContext(ButtonNestingContext)
-  const propsActive = useProps(propsIn) as unknown as ButtonProps
+  const propsActive = useProps(propsIn) as unknown as DeprecatedButtonProps
   const size = propsActive.size || 'medium'
   const iconSize = getTokenValue(buttonToIconSize[size])
   const getThemedIcon = useGetThemedIcon({ size: iconSize, color })

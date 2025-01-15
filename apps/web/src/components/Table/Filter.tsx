@@ -86,15 +86,11 @@ export function Filter<T extends string>({
             left={anchorRef.current.getBoundingClientRect().x}
           >
             {allFilters.map((filter) => (
-              <FilterRow key={filter}>
+              <FilterRow key={filter} onPress={() => handleFilterOptionClick(filter)} cursor="pointer">
                 <Text $short={{ variant: 'buttonLabel4' }} variant="subheading2">
                   {filter}
                 </Text>
-                <Checkbox
-                  checked={activeFilter.includes(filter)}
-                  variant="branded"
-                  onPress={() => handleFilterOptionClick(filter)}
-                />
+                <Checkbox checked={activeFilter.includes(filter)} variant="branded" />
               </FilterRow>
             ))}
           </FilterDropdown>

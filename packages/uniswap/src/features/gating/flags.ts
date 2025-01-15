@@ -6,6 +6,7 @@ import { isInterface } from 'utilities/src/platform'
 export enum FeatureFlags {
   // Shared
   Datadog,
+  EmbeddedWallet,
   ForAggregator,
   IndicativeSwapQuotes,
   InstantTokenBalanceUpdate,
@@ -26,7 +27,6 @@ export enum FeatureFlags {
   ExtensionPromotionGA,
   FeedTab,
   FiatOffRamp,
-  ForMonorepoMigration,
   OnboardingKeyring,
   OpenAIAssistant,
   PrivateRpc,
@@ -67,6 +67,7 @@ export enum FeatureFlags {
 // These names must match the gate name on statsig
 export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.Datadog, 'datadog'],
+  [FeatureFlags.EmbeddedWallet, 'embedded_wallet'],
   [FeatureFlags.IndicativeSwapQuotes, 'indicative-quotes'],
   [FeatureFlags.InstantTokenBalanceUpdate, 'instant-token-balance-update'],
   [FeatureFlags.MonadTestnet, 'monad_testnet'],
@@ -121,7 +122,6 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.FeedTab, 'feed-tab'],
   [FeatureFlags.FiatOffRamp, 'fiat-offramp'],
   [FeatureFlags.ForAggregator, 'for-aggregator'],
-  [FeatureFlags.ForMonorepoMigration, 'for-monorepo-migration'],
   [FeatureFlags.OnboardingKeyring, 'onboarding-keyring'],
   [FeatureFlags.OpenAIAssistant, 'openai-assistant'],
   [FeatureFlags.PrivateRpc, 'mev-blocker'],

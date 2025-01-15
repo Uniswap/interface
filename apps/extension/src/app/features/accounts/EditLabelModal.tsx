@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { focusOrCreateUnitagTab } from 'src/app/navigation/utils'
-import { Button, Flex, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Text } from 'ui/src'
 import { Person } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
@@ -100,12 +100,12 @@ export function EditLabelModal({ isOpen, address, onClose }: EditLabelModalProps
           </Text>
         </Flex>
         <Flex centered fill row gap="$spacing12" justifyContent="space-between" width="100%">
-          <Button color="$neutral1" flex={1} flexBasis={1} size="small" theme="secondary" onPress={onClose}>
+          <DeprecatedButton color="$neutral1" flex={1} flexBasis={1} size="small" theme="secondary" onPress={onClose}>
             {t('common.button.cancel')}
-          </Button>
-          <Button flex={1} flexBasis={1} size="small" theme="accentSecondary" onPress={onConfirm}>
+          </DeprecatedButton>
+          <DeprecatedButton flex={1} flexBasis={1} size="small" theme="accentSecondary" onPress={onConfirm}>
             {t('common.button.save')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

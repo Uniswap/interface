@@ -31,9 +31,14 @@ import {
 import { MAX_FIXTURE_TIMESTAMP, faker } from 'uniswap/src/test/shared'
 import { createFixture, randomChoice, randomEnumValue } from 'uniswap/src/test/utils'
 
-const benignProtectionInfo = {
+const benignProtectionInfo: ProtectionInfo = {
   result: ProtectionResult.Benign,
   attackTypes: [],
+  blockaidFees: {
+    buy: 0,
+    sell: 0,
+    transfer: 0,
+  },
 }
 
 /**

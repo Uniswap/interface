@@ -1,7 +1,7 @@
 import { providers } from 'ethers'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, FlexLoader, Separator, Skeleton, Text, isWeb } from 'ui/src'
+import { DeprecatedButton, Flex, FlexLoader, Separator, Skeleton, Text, isWeb } from 'ui/src'
 import { SlashCircle } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
@@ -95,10 +95,10 @@ export function CancelConfirmationView({
         )}
       </Flex>
       <Flex row gap="$spacing8" width="100%">
-        <Button fill size="small" theme="tertiary" width="50%" onPress={onBack}>
+        <DeprecatedButton fill size="small" theme="tertiary" width="50%" onPress={onBack}>
           {t('common.button.back')}
-        </Button>
-        <Button
+        </DeprecatedButton>
+        <DeprecatedButton
           fill
           disabled={disableConfirmationButton}
           size="small"
@@ -108,7 +108,7 @@ export function CancelConfirmationView({
           onPress={onPressCancel}
         >
           {t('common.button.confirm')}
-        </Button>
+        </DeprecatedButton>
       </Flex>
     </Flex>
   )

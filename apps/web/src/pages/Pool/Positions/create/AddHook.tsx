@@ -5,7 +5,7 @@ import { AdvancedButton } from 'pages/Pool/Positions/create/shared'
 import { DEFAULT_POSITION_STATE } from 'pages/Pool/Positions/create/types'
 import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Text, TouchableArea, styled } from 'ui/src'
+import { DeprecatedButton, Text, TouchableArea, styled } from 'ui/src'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
 import { X } from 'ui/src/components/icons/X'
 import { Flex } from 'ui/src/components/layout/Flex'
@@ -168,7 +168,7 @@ export function AddHook() {
               onChangeText={setHookValue}
               onFocus={() => handleFocus(true)}
             />
-            <Button
+            <DeprecatedButton
               theme="secondary"
               py="$spacing8"
               px="$spacing12"
@@ -180,7 +180,7 @@ export function AddHook() {
               }}
             >
               <X size="$icon.20" color="$neutral1" />
-            </Button>
+            </DeprecatedButton>
             {showFlyout && (
               <AutocompleteFlyout address={hookValue} handleSelectAddress={() => setHookModalOpen(true)} />
             )}

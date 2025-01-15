@@ -54,6 +54,7 @@ export const ProtocolPreference: SwapSettingConfig = {
     const { selectedProtocols, updateTransactionSettings, isOnlyV2Allowed } = useTransactionSettingsContext()
     const [isDefault, setIsDefault] = useState(isDefaultOptions(selectedProtocols))
     const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
+    const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
 
     const { chainId } = useSwapFormContext().derivedSwapInfo
     const chainName = getChainInfo(chainId).name
@@ -65,7 +66,13 @@ export const ProtocolPreference: SwapSettingConfig = {
     const onlyOneProtocolSelected = selectedProtocols.length === 1
 
     // We prevent the user from deselecting all on-chain protocols (AKA only selecting UniswapX)
-    const onlyOneClassicProtocolSelected = selectedProtocols.filter((p) => p !== ProtocolItems.UNISWAPX_V2).length === 1
+    const onlyOneClassicProtocolSelected =
+      selectedProtocols.filter((p) => {
+        if (!v4Enabled && p === ProtocolItems.V4) {
+          return false
+        }
+        return p !== ProtocolItems.UNISWAPX_V2
+      }).length === 1
 
     const toggleProtocol = useCallback(
       (protocol: FrontendSupportedProtocol) => {
@@ -77,8 +84,6 @@ export const ProtocolPreference: SwapSettingConfig = {
       },
       [updateTransactionSettings, selectedProtocols],
     )
-
-    const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
 
     const toggleDefault = useCallback(() => {
       setIsDefault(!isDefault)

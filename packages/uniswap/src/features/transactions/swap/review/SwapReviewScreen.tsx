@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Button, Flex, SpinningLoader, isWeb, useIsShortMobileDevice } from 'ui/src'
+import { DeprecatedButton, Flex, SpinningLoader, isWeb, useIsShortMobileDevice } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { iconSizes } from 'ui/src/theme'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
@@ -386,7 +386,7 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
         <TransactionModalFooterContainer>
           <Flex row gap="$spacing8">
             {!isWeb && !showUniswapXSubmittingUI && (
-              <Button
+              <DeprecatedButton
                 icon={<BackArrow />}
                 size={isShortMobileDevice ? 'medium' : 'large'}
                 theme="tertiary"

@@ -20,7 +20,7 @@ interface LiquidityPositionFeeStatsProps {
   totalApr?: string
   feeApr?: string
   priceOrdering: PriceOrdering
-  feeTier?: string
+  tickSpacing?: number
   tickLower?: string
   tickUpper?: string
   version: ProtocolVersion
@@ -90,7 +90,7 @@ export function LiquidityPositionFeeStats({
   priceOrdering,
   tickLower,
   tickUpper,
-  feeTier,
+  tickSpacing,
   version,
   apr,
   pricesInverted,
@@ -101,7 +101,7 @@ export function LiquidityPositionFeeStats({
 
   const { maxPrice, minPrice, tokenASymbol, tokenBSymbol, isFullRange } = useGetRangeDisplay({
     priceOrdering,
-    feeTier,
+    tickSpacing,
     tickLower,
     tickUpper,
     pricesInverted,

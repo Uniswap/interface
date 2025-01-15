@@ -7,7 +7,6 @@ import { FiatOnRampTransactionStatus, backendStatusToFiatOnRampStatus } from 'st
 import { useAppDispatch } from 'state/hooks'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useActivityWebLazyQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { objectToQueryString } from 'uniswap/src/data/utils'
 import { FOR_API_HEADERS } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORTransactionRequest } from 'uniswap/src/features/fiatOnRamp/types'
 import { FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
@@ -30,12 +29,11 @@ export default function Updater(): null {
           sessionId: transaction.externalSessionId,
           forceFetch: true,
         }
-        const result = await fetch(
-          `${uniswapUrls.fiatOnRampApiUrl}/transaction?${objectToQueryString(requestParams)}`,
-          {
-            headers: FOR_API_HEADERS,
-          },
-        )
+        const result = await fetch(`${uniswapUrls.forApiUrl}/Transaction`, {
+          headers: FOR_API_HEADERS,
+          method: 'POST',
+          body: JSON.stringify(requestParams),
+        })
         const data = await result.json()
         if (data?.transaction) {
           dispatch(updateFiatOnRampTransaction({ ...transaction, forceFetched: true }))

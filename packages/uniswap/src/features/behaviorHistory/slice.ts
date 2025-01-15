@@ -7,11 +7,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 export interface UniswapBehaviorHistoryState {
   hasViewedBridgingBanner?: boolean
   hasDismissedBridgingWarning?: boolean
+  hasDismissedLowNetworkTokenWarning?: boolean
 }
 
 export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
   hasViewedBridgingBanner: false,
   hasDismissedBridgingWarning: false,
+  hasDismissedLowNetworkTokenWarning: false,
 }
 
 const slice = createSlice({
@@ -24,6 +26,9 @@ const slice = createSlice({
     setHasDismissedBridgingWarning: (state, action: PayloadAction<boolean>) => {
       state.hasDismissedBridgingWarning = action.payload
     },
+    setHasDismissedLowNetworkTokenWarning: (state, action: PayloadAction<boolean>) => {
+      state.hasDismissedLowNetworkTokenWarning = action.payload
+    },
 
     // Should only be used for testing
     resetUniswapBehaviorHistory: (_state, _action: PayloadAction) => {
@@ -32,6 +37,11 @@ const slice = createSlice({
   },
 })
 
-export const { setHasViewedBridgingBanner, setHasDismissedBridgingWarning, resetUniswapBehaviorHistory } = slice.actions
+export const {
+  setHasViewedBridgingBanner,
+  setHasDismissedBridgingWarning,
+  setHasDismissedLowNetworkTokenWarning,
+  resetUniswapBehaviorHistory,
+} = slice.actions
 
 export const uniswapBehaviorHistoryReducer = slice.reducer

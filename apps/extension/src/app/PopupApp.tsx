@@ -14,7 +14,7 @@ import { DappContextProvider } from 'src/app/features/dapp/DappContext'
 import { SentryAppNameTag, initializeSentry, sentryCreateHashRouter } from 'src/app/sentry'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { getReduxPersistor, getReduxStore } from 'src/store/store'
-import { Button, Flex, Image, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Image, Text } from 'ui/src'
 import { CHROME_LOGO, UNISWAP_LOGO } from 'ui/src/assets'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
@@ -98,7 +98,7 @@ function PopupContent(): JSX.Element {
         <Flex fill />
 
         <Trace logPress element={ElementName.ExtensionPopupOpenButton}>
-          <Button
+          <DeprecatedButton
             theme="primary"
             width="100%"
             onPress={async () => {
@@ -110,7 +110,7 @@ function PopupContent(): JSX.Element {
             }}
           >
             {t('extension.popup.chrome.button')}
-          </Button>
+          </DeprecatedButton>
         </Trace>
       </Flex>
     </Trace>

@@ -204,7 +204,7 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
 
 .c9 {
   max-height: 84px;
-  max-width: 100%;
+  max-width: calc(100% - 43px);
   width: 43px;
   text-align: left;
   font-size: 70px;
@@ -1322,7 +1322,7 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
 
 .c9 {
   max-height: 84px;
-  max-width: 100%;
+  max-width: calc(100% - 43px);
   width: 43px;
   text-align: left;
   font-size: 70px;

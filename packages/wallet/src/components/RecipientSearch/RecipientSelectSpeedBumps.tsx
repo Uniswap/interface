@@ -56,18 +56,18 @@ export function RecipientSelectSpeedBumps({
     (props) => (
       <WarningModal
         isOpen
-        backgroundIconColor={colors.surface2.val}
+        backgroundIconColor={colors.surface3.val}
         caption={t('send.recipient.warning.viewOnly.message')}
         rejectText={t('common.button.goBack')}
         acknowledgeText={t('common.button.understand')}
-        icon={<Eye color="$neutral2" size={iconSizes.icon24} />}
+        icon={<Eye color="$neutral1" size={iconSizes.icon24} />}
         modalName={ModalName.RecipientSelectViewOnlyWarning}
         severity={WarningSeverity.High}
         title={t('send.recipient.warning.viewOnly.title')}
         {...props}
       />
     ),
-    [t, colors.surface2.val],
+    [t, colors.surface3.val],
   )
 
   const renderNewAddressWarning = useCallback<PaginatedModalRenderer>(

@@ -1,7 +1,7 @@
 import { Percent } from '@uniswap/sdk-core'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { Trans } from 'react-i18next'
-import { Button, Flex, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -44,7 +44,7 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
           </Flex>
         </Flex>
         <Flex row columnGap="$spacing8">
-          <Button // TODO: Replace with spore version when spore variant of secondary buttton is implemented
+          <DeprecatedButton // TODO: Replace with spore version when spore variant of secondary buttton is implemented
             flex={1}
             px={12}
             py={8}
@@ -63,8 +63,8 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
             <Text variant="buttonLabel2">
               <Trans i18nKey="common.button.cancel" />
             </Text>
-          </Button>
-          <Button // TODO: Replace with spore version when spore variant of critical buttton is implemented
+          </DeprecatedButton>
+          <DeprecatedButton // TODO: Replace with spore version when spore variant of critical buttton is implemented
             flex={1}
             px={12}
             py={8}
@@ -77,7 +77,7 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
             <Text variant="buttonLabel2">
               <Trans i18nKey="common.button.continue" />
             </Text>
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

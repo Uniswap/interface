@@ -55,12 +55,16 @@ function useTokenWarningOverrides(
     tokenProtectionWarning: tokenProtectionWarningOverride ?? TokenProtectionWarning.None,
   })
 
+  const displayedBuyFeePercent =
+    feeOnTransferOverride?.buyFeePercent ?? buyFeePercent ?? currencyInfo?.safetyInfo?.blockaidFees?.buyFeePercent
+  const displayedSellFeePercent =
+    feeOnTransferOverride?.sellFeePercent ?? sellFeePercent ?? currencyInfo?.safetyInfo?.blockaidFees?.sellFeePercent
   const descriptionOverride = getCardSubtitleText({
     t,
     tokenProtectionWarning: tokenProtectionWarningOverride ?? TokenProtectionWarning.None,
     tokenSymbol: currencyInfo?.currency.symbol,
-    buyFeePercent: feeOnTransferOverride?.buyFeePercent ?? buyFeePercent,
-    sellFeePercent: feeOnTransferOverride?.sellFeePercent ?? sellFeePercent,
+    buyFeePercent: displayedBuyFeePercent,
+    sellFeePercent: displayedSellFeePercent,
     formatPercent,
   })
 
@@ -100,8 +104,10 @@ export function TokenWarningCard({
     warningSeverity: WarningSeverity[severity],
     tokenProtectionWarning:
       TokenProtectionWarning[tokenProtectionWarningOverride ?? getTokenProtectionWarning(currencyInfo)],
-    buyFeePercent: feeOnTransferOverride?.buyFeePercent ?? buyFeePercent,
-    sellFeePercent: feeOnTransferOverride?.sellFeePercent ?? sellFeePercent,
+    buyFeePercent:
+      feeOnTransferOverride?.buyFeePercent ?? buyFeePercent ?? currencyInfo?.safetyInfo?.blockaidFees?.buyFeePercent,
+    sellFeePercent:
+      feeOnTransferOverride?.sellFeePercent ?? sellFeePercent ?? currencyInfo?.safetyInfo?.blockaidFees?.sellFeePercent,
     safetyInfo: currencyInfo.safetyInfo,
   }
 

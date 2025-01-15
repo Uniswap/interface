@@ -6,7 +6,7 @@ import { Action } from 'redux'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import { setCustomEndpoint } from 'src/features/tweaks/slice'
-import { Accordion, Button, Flex, Text } from 'ui/src'
+import { Accordion, DeprecatedButton, Flex, Text } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -78,13 +78,13 @@ export function ExperimentsModal(): JSX.Element {
               </Flex>
 
               <Flex grow row alignItems="center" gap="$spacing16">
-                <Button flex={1} size="small" onPress={setEndpoint}>
+                <DeprecatedButton flex={1} size="small" onPress={setEndpoint}>
                   Set
-                </Button>
+                </DeprecatedButton>
 
-                <Button flex={1} size="small" onPress={clearEndpoint}>
+                <DeprecatedButton flex={1} size="small" onPress={clearEndpoint}>
                   Clear
-                </Button>
+                </DeprecatedButton>
               </Flex>
             </Accordion.Content>
           </Accordion.Item>
@@ -93,9 +93,9 @@ export function ExperimentsModal(): JSX.Element {
             <AccordionHeader title="🚀 Apollo Cache" />
 
             <Accordion.Content>
-              <Button flex={1} size="small" onPress={async (): Promise<unknown> => await apollo.resetStore()}>
+              <DeprecatedButton flex={1} size="small" onPress={async (): Promise<unknown> => await apollo.resetStore()}>
                 Reset Cache
-              </Button>
+              </DeprecatedButton>
             </Accordion.Content>
           </Accordion.Item>
 

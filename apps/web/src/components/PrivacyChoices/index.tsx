@@ -5,7 +5,7 @@ import { atomWithStorage } from 'jotai/utils'
 import { useCallback, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
-import { Anchor, Button, Checkbox, Flex, Text, TouchableArea } from 'ui/src'
+import { Anchor, Checkbox, DeprecatedButton, Flex, Text, TouchableArea } from 'ui/src'
 import { Lock } from 'ui/src/components/icons/Lock'
 import { X } from 'ui/src/components/icons/X'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -85,9 +85,9 @@ export function PrivacyChoicesModal() {
           <Text variant="body4" color="$neutral2" fontSize={10}>
             {t('common.privacyChoices.disclaimer')}
           </Text>
-          <Button theme="secondary" onPress={handleSave}>
+          <DeprecatedButton theme="secondary" onPress={handleSave}>
             {t('common.button.save')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

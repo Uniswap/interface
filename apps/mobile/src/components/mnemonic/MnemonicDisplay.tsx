@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, StyleSheet, ViewProps, requireNativeComponent } from 'react-native'
 import { useNativeComponentKey } from 'src/app/hooks'
@@ -6,10 +6,19 @@ import { HiddenMnemonicWordView } from 'src/components/mnemonic/HiddenMnemonicWo
 import { Flex, HiddenFromScreenReaders, Text, flexStyles } from 'ui/src'
 import { GraduationCap } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
+import { logger } from 'utilities/src/logger/logger'
 import { isAndroid } from 'utilities/src/platform'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
+import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+
+const EMPTY_MNEMONIC_EVENT = 'Empty mnemonic'
 
 type HeightMeasuredEvent = {
   height: number
+}
+
+type EmptyMnemonicEvent = {
+  mnemonicId: string
 }
 
 interface NativeMnemonicDisplayProps {
@@ -18,6 +27,7 @@ interface NativeMnemonicDisplayProps {
   mnemonicId: string
 
   onHeightMeasured: (event: NativeSyntheticEvent<HeightMeasuredEvent>) => void
+  onEmptyMnemonic: (event: NativeSyntheticEvent<EmptyMnemonicEvent>) => void
 }
 
 const NativeMnemonicDisplay = requireNativeComponent<NativeMnemonicDisplayProps>('MnemonicDisplay')
@@ -45,6 +55,23 @@ export function MnemonicDisplay({
   const [revealPressed, setRevealPressed] = useState(false)
   const showMnemonicWithReveal = enableRevealButton ? revealPressed : showMnemonic
 
+  const signerMnemonicAccounts = useSignerAccounts()
+  const [keyringPrivateKeyAddresses, setKeyringPrivateKeyAddresses] = useState<string[]>([])
+  const [keyringMnemonicIds, setKeyringMnemonicIds] = useState<string[]>([])
+
+  useEffect(() => {
+    Keyring.getMnemonicIds()
+      .then(setKeyringMnemonicIds)
+      .catch(() => {
+        // no-op
+      })
+    Keyring.getAddressesForStoredPrivateKeys()
+      .then(setKeyringPrivateKeyAddresses)
+      .catch(() => {
+        // no-op
+      })
+  }, [])
+
   return (
     <HiddenFromScreenReaders style={{ ...flexStyles.fill, paddingHorizontal: spacing.spacing8 }}>
       {showMnemonicWithReveal ? (
@@ -56,6 +83,15 @@ export function MnemonicDisplay({
           onHeightMeasured={(e) => {
             // Round to limit state updates (was called with nearly the same value multiple times)
             setHeight(Math.round(e.nativeEvent.height))
+          }}
+          onEmptyMnemonic={(e) => {
+            logger.warn('MnemonicDisplay.tsx', 'onEmptyMnemonic', EMPTY_MNEMONIC_EVENT, {
+              mnemonicId: e.nativeEvent.mnemonicId,
+              keyringMnemonicIds,
+              keyringPrivateKeyAddresses,
+              signerMnemonicAccountAddresses: signerMnemonicAccounts.map((account) => account.address),
+              signerMnemonicAccountMnemonicIds: signerMnemonicAccounts.map((account) => account.mnemonicId),
+            })
           }}
           {...nativeComponentProps}
         />

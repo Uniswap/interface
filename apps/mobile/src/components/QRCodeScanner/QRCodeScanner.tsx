@@ -8,7 +8,7 @@ import { launchImageLibrary } from 'react-native-image-picker'
 
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Defs, LinearGradient, Path, Rect, Stop, Svg } from 'react-native-svg'
-import { Button, Flex, SpinningLoader, Text, ThemeName, TouchableArea, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, SpinningLoader, Text, ThemeName, TouchableArea, useSporeColors } from 'ui/src'
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
 import { Global, PhotoStacked } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
@@ -261,7 +261,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             </Flex>
 
             {isWalletConnectModal && props.numConnections > 0 && (
-              <Button
+              <DeprecatedButton
                 fontFamily="$body"
                 icon={<Global color={colors.neutral2.val} />}
                 backgroundColor={colors.surface3.val}
@@ -269,7 +269,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
                 onPress={props.onPressConnections}
               >
                 {t('qrScanner.button.connections', { count: props.numConnections })}
-              </Button>
+              </DeprecatedButton>
             )}
           </Flex>
         </Flex>

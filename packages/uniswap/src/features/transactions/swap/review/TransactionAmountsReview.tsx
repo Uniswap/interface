@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text, isWeb, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Text, isWeb, useSporeColors } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { X } from 'ui/src/components/icons/X'
 import { iconSizes, validColor } from 'ui/src/theme'
@@ -91,7 +91,7 @@ export function TransactionAmountsReview({
         </Flex>
         {isWeb && (
           <Flex row centered gap="$spacing12">
-            <Button
+            <DeprecatedButton
               backgroundColor="$transparent"
               color="$neutral2"
               icon={<X size="$icon.20" />}

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text, TouchableArea, isWeb } from 'ui/src'
+import { DeprecatedButton, Flex, Text, TouchableArea, isWeb } from 'ui/src'
 import { HelpCenter } from 'ui/src/components/icons/HelpCenter'
 import { X } from 'ui/src/components/icons/X'
 import { WarningModalContent } from 'uniswap/src/components/modals/WarningModal/WarningModal'
@@ -71,7 +71,7 @@ export function SwapErrorScreen({
                 </Text>
               </Flex>
             </TouchableArea>
-            <Button
+            <DeprecatedButton
               backgroundColor="$transparent"
               color="$neutral2"
               icon={<X size="$icon.20" />}

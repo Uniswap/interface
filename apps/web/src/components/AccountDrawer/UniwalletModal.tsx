@@ -4,7 +4,7 @@ import { useConnect } from 'hooks/useConnect'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CloseIcon } from 'theme/components'
-import { Button, Flex, Image, QRCodeDisplay, Separator, Text, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Image, QRCodeDisplay, Separator, Text, useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -80,13 +80,13 @@ export default function UniwalletModal() {
             </Text>
           </Flex>
 
-          <Button
+          <DeprecatedButton
             size="small"
             onPress={() => openDownloadApp({ element: InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON })}
             height="fit-content"
           >
             {t('common.download')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

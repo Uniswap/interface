@@ -3,7 +3,7 @@ import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { ThemeKeys, type ColorTokens } from 'ui/src/index'
 import { colorsLight } from 'ui/src/theme'
-import { ExtractedColors, getExtractedColors } from 'ui/src/utils/colors/getExtractedColors'
+import { ColorStrategy, ExtractedColors, getExtractedColors } from 'ui/src/utils/colors/getExtractedColors'
 import { isSVGUri } from 'utilities/src/format/urls'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { hex } from 'wcag-contrast'
@@ -93,15 +93,25 @@ const blackAndWhiteSpecialCase: Set<string> = new Set([
   'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x35bD01FC9d6D5D81CA9E055Db88Dc49aa2c699A8/logo.png',
 ])
 
+type ExtractedColorsOptions = {
+  fallback: ThemeKeys
+  cache?: boolean
+  colorStrategy?: ColorStrategy
+}
+
 export function useExtractedColors(
   imageUrl: Maybe<string>,
-  fallback: ThemeKeys = 'accent1',
-  cache = true,
+  options: ExtractedColorsOptions = { fallback: 'accent1', cache: true },
 ): { colors?: ExtractedColors; colorsLoading: boolean } {
   const sporeColors = useSporeColors()
   const getImageColors = useCallback(
-    async () => getExtractedColors(imageUrl, sporeColors[fallback].val, cache),
-    [imageUrl, fallback, cache, sporeColors],
+    async () =>
+      getExtractedColors(imageUrl, {
+        fallback: sporeColors[options.fallback].val,
+        cache: options.cache,
+        colorStrategy: options.colorStrategy,
+      }),
+    [imageUrl, options.fallback, options.cache, sporeColors, options.colorStrategy],
   )
 
   const { data: colors, isLoading: colorsLoading } = useAsyncData(getImageColors)
@@ -324,4 +334,8 @@ function pickContrastPassingTokenColor(extractedColors: ExtractedColors, backgro
   }
 
   return colorsLight.accent1
+}
+
+export function getHoverCssFilter(isDarkMode?: boolean): string {
+  return isDarkMode ? 'brightness(1.05)' : 'brightness(0.95)'
 }

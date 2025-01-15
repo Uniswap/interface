@@ -33,13 +33,18 @@ import {
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 
+export interface FoTPercent {
+  buyFeePercent?: number
+  sellFeePercent?: number
+}
+
 interface TokenWarningProps {
   currencyInfo0: CurrencyInfo // required, primary currency
   currencyInfo1?: CurrencyInfo // defined in case of 2-token warnings; i.e. possible on the web's Pool Details Page or prefilled via /swap?inputAddress=0x...&outputAddress=0x...
   isInfoOnlyWarning?: boolean // if this is an informational-only warning. Hides the Reject button
   shouldBeCombinedPlural?: boolean // some 2-token warnings will be combined into one plural modal (see `getShouldHaveCombinedPluralTreatment`)
   hasSecondWarning?: boolean // true if this is a 2-token warning with two separate warning screens
-  feeOnTransferOverride?: { buyFeePercent?: number; sellFeePercent?: number } // if defined, forces TokenWarningModal to display FOT content over any other warning content & overrides GQL fee info with TradingApi quote's fee info, which is more correct for dynamic FoT fees
+  feeOnTransferOverride?: FoTPercent // if defined, forces TokenWarningModal to display FOT content over any other warning content & overrides GQL fee info with TradingApi quote's fee info, which is more correct for dynamic FoT fees
 }
 
 interface TokenWarningModalContentProps extends TokenWarningProps {
@@ -57,6 +62,7 @@ export interface TokenWarningModalProps extends TokenWarningProps {
   onAcknowledge: () => void
 }
 
+// eslint-disable-next-line complexity
 function TokenWarningModalContent({
   currencyInfo0,
   currencyInfo1,
@@ -77,9 +83,26 @@ function TokenWarningModalContent({
       ? getFeeWarning(Math.max(feeOnTransferOverride.buyFeePercent ?? 0, feeOnTransferOverride.sellFeePercent ?? 0))
       : getTokenProtectionWarning(currencyInfo0)
   const severity = getSeverityFromTokenProtectionWarning(tokenProtectionWarning)
-  const { buyFeePercent, sellFeePercent } = getFeeOnTransfer(currencyInfo0.currency)
-  const isFeeRelatedWarning = getIsFeeRelatedWarning(tokenProtectionWarning)
   const tokenSymbol = currencyInfo0.currency.symbol
+
+  // If Blockaid marks the token as having high fees, but we don't have data on token fees, show Blockaid's fees data
+  const isFeeRelatedWarning = getIsFeeRelatedWarning(tokenProtectionWarning)
+  const { buyFeePercent, sellFeePercent } = getFeeOnTransfer(currencyInfo0.currency)
+  const blockaidFeesData = currencyInfo0.safetyInfo?.blockaidFees
+  const showBlockaidFeesData =
+    isFeeRelatedWarning &&
+    blockaidFeesData &&
+    ((blockaidFeesData.buyFeePercent && (feeOnTransferOverride?.buyFeePercent ?? buyFeePercent) === undefined) ||
+      (blockaidFeesData.sellFeePercent && (feeOnTransferOverride?.sellFeePercent ?? sellFeePercent) === undefined))
+  const displayedBuyFeePercent =
+    feeOnTransferOverride?.buyFeePercent ?? buyFeePercent ?? currencyInfo0.safetyInfo?.blockaidFees?.buyFeePercent
+  const displayedSellFeePercent =
+    feeOnTransferOverride?.sellFeePercent ?? sellFeePercent ?? currencyInfo0.safetyInfo?.blockaidFees?.sellFeePercent
+
+  const showBlockaidLogo =
+    (!isFeeRelatedWarning && severity !== WarningSeverity.Low && severity !== WarningSeverity.Blocked) ||
+    showBlockaidFeesData
+
   const titleText = getModalHeaderText({
     t,
     tokenSymbol0: tokenSymbol,
@@ -91,8 +114,8 @@ function TokenWarningModalContent({
     t,
     tokenProtectionWarning,
     tokenSymbol,
-    buyFeePercent: feeOnTransferOverride?.buyFeePercent ?? buyFeePercent,
-    sellFeePercent: feeOnTransferOverride?.sellFeePercent ?? sellFeePercent,
+    buyFeePercent: displayedBuyFeePercent,
+    sellFeePercent: displayedSellFeePercent,
     shouldHavePluralTreatment: shouldBeCombinedPlural,
     formatPercent,
   })
@@ -101,8 +124,6 @@ function TokenWarningModalContent({
   // Logic for "don't show again" dismissal of warnings
   const [dontShowAgain, setDontShowAgain] = useState<boolean>(false)
   const showCheckbox = !isInfoOnlyWarning && severity === WarningSeverity.Low
-  const showBlockaidLogo =
-    !isFeeRelatedWarning && severity !== WarningSeverity.Low && severity !== WarningSeverity.Blocked
 
   const onAcknowledge = (): void => {
     if (showCheckbox) {
@@ -134,8 +155,8 @@ function TokenWarningModalContent({
     tokenAddress1: currencyInfo1 && currencyIdToAddress(currencyInfo1.currencyId),
     warningSeverity: WarningSeverity[severity],
     tokenProtectionWarning: TokenProtectionWarning[tokenProtectionWarning],
-    buyFeePercent: feeOnTransferOverride?.buyFeePercent ?? buyFeePercent,
-    sellFeePercent: feeOnTransferOverride?.sellFeePercent ?? sellFeePercent,
+    buyFeePercent: displayedBuyFeePercent,
+    sellFeePercent: displayedSellFeePercent,
     safetyInfo: currencyInfo0.safetyInfo,
     ...(showCheckbox && { dismissTokenWarningCheckbox: dontShowAgain }),
   }

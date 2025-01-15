@@ -39,8 +39,13 @@ export function SpinningLoader({ size = 20, disabled, color }: SpinningLoaderPro
     return <EmptySpinner color="$neutral3" size={size} />
   }
 
+  /*
+   * We need to set the height and width of the AnimatedFlex to the icon's `size` prop because `CircleSpinner` is a SVG and doesn't perfectly respect the `size` prop if it's a float
+   * For example, if `size` is 20, the CircleSpinner will be 20x20
+   * But, if `size` is 20.x, the CircleSpinner will still be 20x20 (it always rounds down)
+   */
   return (
-    <AnimatedFlex sentry-label="SpinningLoader" style={[animatedStyles]}>
+    <AnimatedFlex sentry-label="SpinningLoader" style={animatedStyles} height={size} width={size}>
       <CircleSpinner color={color ?? '$neutral2'} size={size} />
     </AnimatedFlex>
   )

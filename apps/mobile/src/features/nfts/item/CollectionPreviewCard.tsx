@@ -42,7 +42,7 @@ export function CollectionPreviewCard({
       <Flex
         row
         alignItems="center"
-        backgroundColor="$surface3"
+        backgroundColor={colors.surface2.val}
         borderRadius="$rounded16"
         gap="$spacing8"
         justifyContent="space-between"
@@ -60,7 +60,7 @@ export function CollectionPreviewCard({
               {/* Width chosen to ensure truncation of collection name on both small
                 and large screens with sufficient padding */}
               <Flex shrink>
-                <Text color="$neutral1" numberOfLines={1} variant="body1">
+                <Text color={colors.neutral1.val} numberOfLines={1} variant="subheading2">
                   {collection?.name || fallbackData?.collectionName || '-'}
                 </Text>
               </Flex>

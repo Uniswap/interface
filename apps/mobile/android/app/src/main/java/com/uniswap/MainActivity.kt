@@ -11,6 +11,7 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnable
 import com.facebook.react.defaults.DefaultReactActivityDelegate
 import com.facebook.react.modules.i18nmanager.I18nUtil
 import expo.modules.ReactActivityDelegateWrapper
+import com.zoontek.rnbootsplash.RNBootSplash;
 
 
 class MainActivity : ReactActivity() {
@@ -25,6 +26,8 @@ class MainActivity : ReactActivity() {
 
   // Required for react-navigation to work on Android
   override fun onCreate(savedInstanceState: Bundle?) {
+    RNBootSplash.init(this, R.style.AppTheme)
+
     super.onCreate(null);
 
     window.navigationBarColor = Color.TRANSPARENT

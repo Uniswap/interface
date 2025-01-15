@@ -14,16 +14,25 @@ const NATIVE_CURRENCY_DECIMAL_OFFSET = NATIVE_CURRENCY_DECIMAL - 4
  * Given some token amount, return the max that can be spent of it
  * @param currencyAmount to return max of
  * @param transactionType to determine cost of transaction
+ * @param isExtraTx adds a gas buffer to cover one additional transaction
  */
-export function useMaxAmountSpend(
-  currencyAmount: Maybe<CurrencyAmount<Currency>>,
-  txType?: TransactionType,
-): Maybe<CurrencyAmount<Currency>> {
-  const minAmount = useGetMinAmount(currencyAmount?.currency.chainId, txType)
+export function useMaxAmountSpend({
+  currencyAmount,
+  txType,
+  isExtraTx = false,
+}: {
+  currencyAmount: Maybe<CurrencyAmount<Currency>>
+  txType?: TransactionType
+  isExtraTx?: boolean
+}): Maybe<CurrencyAmount<Currency>> {
+  const minAmountPerTx = useGetMinAmount(currencyAmount?.currency.chainId, txType)
 
-  if (!currencyAmount || !minAmount) {
+  if (!currencyAmount || !minAmountPerTx) {
     return undefined
   }
+
+  const minAmount = JSBI.multiply(minAmountPerTx, JSBI.BigInt(isExtraTx ? 2 : 1))
+
   if (!currencyAmount.currency.isNative) {
     return currencyAmount
   }

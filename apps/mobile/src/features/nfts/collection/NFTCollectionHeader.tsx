@@ -62,7 +62,7 @@ export function NFTCollectionHeader({
   const profileImageUrl = data?.image?.url
 
   // Extract profile image color as a fallback background color if no banner image.
-  const { colors: bannerColorsFallback } = useExtractedColors(profileImageUrl, 'surface2')
+  const { colors: bannerColorsFallback } = useExtractedColors(profileImageUrl, { fallback: 'surface2' })
 
   return (
     <>

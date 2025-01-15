@@ -86,7 +86,7 @@ export function getPositionUrl(position: PositionInfo): string {
   return `/positions/v4/${chainInfo.urlParam}/${position.tokenId}`
 }
 
-export function parseV3FeeTier(feeTier: string | undefined): FeeAmount | undefined {
+function parseV3FeeTier(feeTier: string | undefined): FeeAmount | undefined {
   const parsedFee = parseInt(feeTier || '')
 
   return parsedFee in FeeAmount ? parsedFee : undefined
@@ -250,6 +250,7 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       apr: v2PairPosition.apr,
       v4hook: undefined,
       feeTier: undefined,
+      owner: undefined,
     }
   } else if (position?.position.case === 'v3Position') {
     const v3Position = position.position.value
@@ -289,6 +290,7 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       currency1Amount: CurrencyAmount.fromRawAmount(token1, v3Position.amount1),
       apr: v3Position.apr,
       v4hook: undefined,
+      owner: v3Position.owner,
     }
   } else if (position?.position.case === 'v4Position') {
     const v4Position = position.position.value.poolPosition
@@ -329,6 +331,7 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       token1UncollectedFees: v4Position.token1UncollectedFees,
       liquidity: v4Position.liquidity,
       apr: v4Position.apr,
+      owner: v4Position.owner,
     }
   } else {
     return undefined

@@ -94,7 +94,6 @@ export interface PriceRangeState {
   // When these are undefined, LiquidityChartRangeInput will calculate and set reasonable default values.
   minPrice?: string
   maxPrice?: string
-  initialPriceInverted: boolean
   initialPrice: string
 }
 

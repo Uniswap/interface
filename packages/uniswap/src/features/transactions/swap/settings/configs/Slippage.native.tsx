@@ -1,8 +1,16 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ColorTokens, Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
-import { PlusMinusButton, PlusMinusButtonType } from 'ui/src/components/button/PlusMinusButton'
+import {
+  ColorTokens,
+  Flex,
+  PlusMinusButton,
+  PlusMinusButtonType,
+  Text,
+  TouchableArea,
+  isWeb,
+  useSporeColors,
+} from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'

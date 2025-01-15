@@ -11,6 +11,7 @@ export enum WalletEventName {
   DappRequestCardClosed = 'DappRequestCardClosed',
   GasEstimateAccuracy = 'Gas Estimate Accuracy',
   ExploreSearchCancel = 'Explore Search Cancel',
+  LowNetworkTokenInfoModalOpened = 'Low Network Token Info Modal Opened',
   ModalClosed = 'Modal Closed',
   NFTVisibilityChanged = 'NFT Visibility Changed',
   NFTsLoaded = 'NFTs Loaded',

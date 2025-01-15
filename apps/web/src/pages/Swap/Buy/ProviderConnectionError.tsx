@@ -1,6 +1,6 @@
 import { ConnectingViewWrapper } from 'pages/Swap/Buy/shared'
 import { Trans } from 'react-i18next'
-import { Button, Flex, Image, Text, useIsDarkMode } from 'ui/src'
+import { DeprecatedButton, Flex, Image, Text, useIsDarkMode } from 'ui/src'
 import { UNISWAP_LOGO_LARGE } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
@@ -41,7 +41,7 @@ export function ProviderConnectionError({ onBack, closeModal, selectedServicePro
             />
           </Text>
         </Flex>
-        <Button
+        <DeprecatedButton
           size="medium"
           backgroundColor="$accent3"
           color="$primary"
@@ -52,7 +52,7 @@ export function ProviderConnectionError({ onBack, closeModal, selectedServicePro
           onPress={onBack}
         >
           <Trans i18nKey="common.tryAgain.error" />
-        </Button>
+        </DeprecatedButton>
       </Flex>
     </ConnectingViewWrapper>
   )

@@ -2,8 +2,6 @@ import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioL
 import { AssetLogoBaseProps } from 'components/Logo/AssetLogo'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { GqlSearchToken } from 'graphql/data/SearchTokens'
-import { TokenQueryData } from 'graphql/data/Token'
-import { TopToken } from 'graphql/data/types'
 import { gqlToCurrency } from 'graphql/data/util'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useMemo } from 'react'
@@ -13,7 +11,7 @@ import { getChainIdFromChainUrlParam } from 'utils/chainParams'
 
 export default function QueryTokenLogo(
   props: AssetLogoBaseProps & {
-    token?: TopToken | TokenQueryData | GqlSearchToken | TokenStat
+    token?: GqlSearchToken | TokenStat
   },
 ) {
   const chainId = getChainIdFromChainUrlParam(props.token?.chain.toLowerCase()) ?? UniverseChainId.Mainnet

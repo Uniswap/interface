@@ -53,7 +53,7 @@ export function useNearestThemeColorFromImageUri(uri: string | undefined): {
   colorLight: string | undefined
 } {
   // extract color from image
-  const { colors: extractedImageColor } = useExtractedColors(uri)
+  const { colors: extractedImageColor } = useExtractedColors(uri, { colorStrategy: 'muted', fallback: 'accent1' })
 
   // find nearest theme color and convert to darkest version from theme
   return useMemo(() => {

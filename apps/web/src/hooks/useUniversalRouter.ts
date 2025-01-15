@@ -195,6 +195,7 @@ export function useUniversalRouterSwapCallback(
         }
       }),
     [
+      t,
       trade,
       chainId,
       getDeadline,

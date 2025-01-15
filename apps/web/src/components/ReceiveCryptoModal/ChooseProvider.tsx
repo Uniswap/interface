@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { useOpenModal, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { CopyToClipboard } from 'theme/components'
-import { Button, Flex, GeneratedIcon, HeightAnimator, Separator, Text, TouchableArea } from 'ui/src'
+import { DeprecatedButton, Flex, GeneratedIcon, HeightAnimator, Separator, Text, TouchableArea } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons/CopySheets'
 import { QrCode } from 'ui/src/components/icons/QrCode'
 import { iconSizes } from 'ui/src/theme'
@@ -24,7 +24,7 @@ function ActionIcon({ Icon }: { Icon: GeneratedIcon }) {
   const theme = useTheme()
   const activeStyle = { backgroundColor: theme.surface3 }
   return (
-    <Button
+    <DeprecatedButton
       backgroundColor="$surface3"
       hoverStyle={activeStyle}
       pressStyle={activeStyle}
@@ -34,7 +34,7 @@ function ActionIcon({ Icon }: { Icon: GeneratedIcon }) {
       p={0}
     >
       <Icon color="$neutral2" size={iconSizes.icon16} />
-    </Button>
+    </DeprecatedButton>
   )
 }
 

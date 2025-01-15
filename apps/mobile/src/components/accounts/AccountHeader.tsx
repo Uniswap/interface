@@ -7,7 +7,7 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, TouchableArea } from 'ui/src'
-import { CopyAlt, ScanHome, Settings } from 'ui/src/components/icons'
+import { CopyAlt, ScanHome, SettingsHome } from 'ui/src/components/icons'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
@@ -66,7 +66,7 @@ const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }):
   return (
     <GestureDetector gesture={tap}>
       <Animated.View style={animatedStyle}>
-        <Settings color="$neutral2" size="$icon.24" />
+        <SettingsHome color="$neutral2" size="$icon.28" />
       </Animated.View>
     </GestureDetector>
   )
@@ -118,7 +118,7 @@ export function AccountHeader(): JSX.Element {
     }
   }
   const onPressScan = useCallback(async () => {
-    // in case we received a pending session from a previous scan after closing modal
+    // in case we received a pending session from a previous scan after closing modal.
     dispatch(removePendingSession())
     dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.ScanQr }))
   }, [dispatch])
@@ -166,12 +166,7 @@ export function AccountHeader(): JSX.Element {
                   </TouchableArea>
                 </Flex>
               ) : (
-                <TouchableArea
-                  alignSelf="center"
-                  hitSlop={20}
-                  testID={TestID.AccountHeaderCopyAddress}
-                  onPress={onPressCopyAddress}
-                >
+                <TouchableArea hitSlop={20} testID={TestID.AccountHeaderCopyAddress} onPress={onPressCopyAddress}>
                   <Flex centered row shrink gap="$spacing4">
                     <Text adjustsFontSizeToFit color="$neutral1" numberOfLines={1} variant="subheading2">
                       {sanitizeAddressText(shortenAddress(activeAddress))}
@@ -181,9 +176,9 @@ export function AccountHeader(): JSX.Element {
                 </TouchableArea>
               )}
             </Flex>
-            <Flex row alignItems="flex-start" gap="$spacing16" pt="$spacing4">
+            <Flex row alignItems="flex-start" gap="$spacing16">
               <TouchableArea scaleTo={SCAN_ICON_ACTIVE_SCALE} activeOpacity={1} onPress={onPressScan}>
-                <ScanHome color="$neutral2" size="$icon.24" />
+                <ScanHome color="$neutral2" size="$icon.28" />
               </TouchableArea>
               <RotatingSettingsIcon onPressSettings={onPressSettings} />
             </Flex>

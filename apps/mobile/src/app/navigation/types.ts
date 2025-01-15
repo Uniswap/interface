@@ -62,6 +62,7 @@ export type SettingsStackParamList = {
   [MobileScreens.SettingsCloudBackupStatus]: { address: Address }
   [MobileScreens.SettingsHelpCenter]: undefined
   [MobileScreens.SettingsLanguage]: undefined
+  [MobileScreens.SettingsNotifications]: undefined
   [MobileScreens.SettingsPrivacy]: undefined
   [MobileScreens.SettingsViewSeedPhrase]: { address: Address; walletNeedsRestore?: boolean }
   [MobileScreens.SettingsWallet]: { address: Address }

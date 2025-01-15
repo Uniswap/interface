@@ -10,7 +10,7 @@ import { quickRouteApi } from 'state/routing/quickRouteSlice'
 import { routingApi } from 'state/routing/slice'
 import { rootWebSaga } from 'state/sagas/root'
 import { InterfaceState, interfacePersistedStateList, interfaceReducer } from 'state/webReducer'
-import { getFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
 
 const persistConfig: PersistConfig<InterfaceState> = {
@@ -66,7 +66,7 @@ export function createDefaultStore() {
       })
         .concat(routingApi.middleware)
         .concat(quickRouteApi.middleware)
-        .concat(getFiatOnRampAggregatorApi().middleware)
+        .concat(fiatOnRampAggregatorApi.middleware)
         .concat(sagaMiddleware),
   })
   sagaMiddleware.run(rootWebSaga)

@@ -12,7 +12,7 @@ import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Image, ImageProps, Text, TouchableArea, useMedia } from 'ui/src'
+import { DeprecatedButton, Flex, Image, ImageProps, Text, TouchableArea, useMedia } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -84,7 +84,7 @@ export function LaunchModal({
             </Flex>
             <Flex gap="$gap8" row>
               <Trace logPress element={InterfaceElementName.CLOSE_BUTTON}>
-                <Button
+                <DeprecatedButton
                   size="small"
                   theme="secondary"
                   fontSize="$micro"
@@ -93,12 +93,18 @@ export function LaunchModal({
                   onPress={() => setShowModal(false)}
                 >
                   {t('common.button.dismiss')}
-                </Button>
+                </DeprecatedButton>
               </Trace>
               <Trace logPress element={InterfaceElementName.LEARN_MORE_LINK}>
-                <Button size="small" fontSize="$micro" fill flexBasis={0} onPress={() => openUri(learnMoreUrl)}>
+                <DeprecatedButton
+                  size="small"
+                  fontSize="$micro"
+                  fill
+                  flexBasis={0}
+                  onPress={() => openUri(learnMoreUrl)}
+                >
                   {t('common.button.learn')}
-                </Button>
+                </DeprecatedButton>
               </Trace>
             </Flex>
           </Flex>

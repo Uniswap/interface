@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { UnitagStackScreenProp } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
-import { AnimatePresence, Button, Flex, Text } from 'ui/src'
+import { AnimatePresence, DeprecatedButton, Flex, Text } from 'ui/src'
 import { AnimateInOrder } from 'ui/src/animations'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
@@ -127,12 +127,12 @@ export function UnitagConfirmationScreen({
           </Text>
         </Flex>
         <Flex gap="$spacing12">
-          <Button size="medium" theme="primary" onPress={onPressDone}>
+          <DeprecatedButton size="medium" theme="primary" onPress={onPressDone}>
             {t('common.button.done')}
-          </Button>
-          <Button size="medium" theme="secondary" onPress={onPressCustomize}>
+          </DeprecatedButton>
+          <DeprecatedButton size="medium" theme="secondary" onPress={onPressCustomize}>
             {t('unitags.claim.confirmation.customize')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Screen>

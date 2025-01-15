@@ -1724,7 +1724,7 @@
   "settings.setting.wallet.editLabel.description": "Os rótulos não são públicos. Eles são armazenados localmente e visíveis apenas para você.",
   "settings.setting.wallet.editLabel.save": "Salvar alterações",
   "settings.setting.wallet.label": "Apelido",
-  "settings.setting.wallet.notifications.title": "Notificações",
+  "settings.setting.notifications.title": "Notificações",
   "settings.setting.wallet.preferences.title": "Preferências da carteira",
   "settings.setting.wallet.testnetMode.description": "Isso ativa testnets para que desenvolvedores possam testar recursos e transações sem usar ativos reais. Tokens em testnets não têm valor real.",
   "settings.setting.wallet.testnetMode.title": "Modo testnet",

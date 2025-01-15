@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Currency, Percent, Price } from '@uniswap/sdk-core'
-import { Position as V3Position } from '@uniswap/v3-sdk'
+import { FeeAmount, TICK_SPACINGS, Position as V3Position } from '@uniswap/v3-sdk'
 import { Position as V4Position } from '@uniswap/v4-sdk'
 import RangeBadge from 'components/Badge/RangeBadge'
 import HoverInlineText from 'components/HoverInlineText'
@@ -194,7 +194,7 @@ export default function PositionListItem({
     return undefined
   }, [liquidity, pool, tickLower, tickUpper])
 
-  const tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper)
+  const tickAtLimit = useIsTickAtLimit(TICK_SPACINGS[feeAmount as FeeAmount], tickLower, tickUpper)
 
   // prices
   const { priceLower, priceUpper, quote, base } = getPriceOrderingFromPositionForUI(position)

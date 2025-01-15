@@ -12,7 +12,10 @@ import { spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampConnectingView } from 'uniswap/src/features/fiatOnRamp/FiatOnRampConnectingView'
-import { fiatOnRampAggregatorApiV2, getFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import {
+  useFiatOnRampAggregatorOffRampWidgetQuery,
+  useFiatOnRampAggregatorWidgetQuery,
+} from 'uniswap/src/features/fiatOnRamp/api'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { useFiatOnRampTransactionCreator } from 'uniswap/src/features/fiatOnRamp/hooks'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
@@ -70,7 +73,6 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     navigation.goBack()
   }, [dispatch, navigation, t])
 
-  const { useFiatOnRampAggregatorWidgetQuery } = getFiatOnRampAggregatorApi()
   const {
     data: widgetData,
     isLoading: widgetLoading,
@@ -90,7 +92,6 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
       : skipToken,
   )
 
-  const { useFiatOnRampAggregatorOffRampWidgetQuery } = fiatOnRampAggregatorApiV2
   const {
     data: offRampWidgetData,
     isLoading: offRampWidgetLoading,

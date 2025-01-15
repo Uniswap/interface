@@ -8,7 +8,7 @@ import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
-import { Button, Flex, useIsDarkMode } from 'ui/src'
+import { DeprecatedButton, Flex, useIsDarkMode } from 'ui/src'
 import { ONBOARDING_NOTIFICATIONS_DARK, ONBOARDING_NOTIFICATIONS_LIGHT } from 'ui/src/assets'
 import { BellOn } from 'ui/src/components/icons'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -81,9 +81,9 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
         <NotificationsBackgroundImage />
       </Flex>
       <Trace logPress element={ElementName.Enable}>
-        <Button testID="turn-on-notifications" onPress={onPressEnableNotifications}>
+        <DeprecatedButton testID="turn-on-notifications" onPress={onPressEnableNotifications}>
           {t('common.button.enable')}
-        </Button>
+        </DeprecatedButton>
       </Trace>
     </OnboardingScreen>
   )

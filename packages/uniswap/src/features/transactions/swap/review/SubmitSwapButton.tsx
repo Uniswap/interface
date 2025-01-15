@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnimatePresence, Button, Flex, SpinningLoader, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
+import { AnimatePresence, DeprecatedButton, Flex, SpinningLoader, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes } from 'ui/src/theme'
 import { Warning, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -49,7 +49,7 @@ export function SubmitSwapButton({
   switch (true) {
     case indicative: {
       return (
-        <Button
+        <DeprecatedButton
           fill
           animation="fast"
           backgroundColor="$surface2"
@@ -62,12 +62,12 @@ export function SubmitSwapButton({
           <Text color="$neutral2" flex={1} textAlign="center" variant={SWAP_BUTTON_TEXT_VARIANT}>
             {t('swap.finalizingQuote')}
           </Text>
-        </Button>
+        </DeprecatedButton>
       )
     }
     case showUniswapXSubmittingUI: {
       return (
-        <Button
+        <DeprecatedButton
           fill
           animation="fast"
           backgroundColor="$accent2"
@@ -80,12 +80,12 @@ export function SubmitSwapButton({
           size={size}
         >
           <UniswapXSubmittingText />
-        </Button>
+        </DeprecatedButton>
       )
     }
     case isInterface && isSubmitting: {
       return (
-        <Button
+        <DeprecatedButton
           fill
           disabled
           animation="fast"
@@ -98,12 +98,12 @@ export function SubmitSwapButton({
           size={size}
         >
           <ConfirmInWalletText />
-        </Button>
+        </DeprecatedButton>
       )
     }
     case warning?.severity === WarningSeverity.High: {
       return (
-        <Button
+        <DeprecatedButton
           fill
           animation="fast"
           backgroundColor="$statusCritical"
@@ -120,7 +120,7 @@ export function SubmitSwapButton({
           <Text color="$white" variant={SWAP_BUTTON_TEXT_VARIANT}>
             {actionText}
           </Text>
-        </Button>
+        </DeprecatedButton>
       )
     }
     default: {
@@ -129,7 +129,7 @@ export function SubmitSwapButton({
       const biometricIcon = renderBiometricsIcon?.({ color: disabled ? '$neutral2' : '$white' })
 
       return (
-        <Button
+        <DeprecatedButton
           fill
           animation="fast"
           backgroundColor={backgroundColor}
@@ -145,7 +145,7 @@ export function SubmitSwapButton({
           <Text color={textColor} variant={SWAP_BUTTON_TEXT_VARIANT}>
             {actionText}
           </Text>
-        </Button>
+        </DeprecatedButton>
       )
     }
   }

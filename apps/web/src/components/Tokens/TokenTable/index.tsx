@@ -19,7 +19,7 @@ import {
 } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { SparklineMap, TopToken } from 'graphql/data/types'
+import { SparklineMap } from 'graphql/data/types'
 import { OrderDirection, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
 import useSimplePagination from 'hooks/useSimplePagination'
 import { useAtomValue } from 'jotai/utils'
@@ -72,7 +72,7 @@ interface TokenTableValue {
   linkState: { preloadedLogoSrc?: string }
 }
 
-function TokenDescription({ token }: { token: TopToken | TokenStat }) {
+function TokenDescription({ token }: { token: TokenStat }) {
   return (
     <Flex row gap="$gap8">
       <QueryTokenLogo token={token} size={28} />
@@ -152,7 +152,7 @@ function TokenTable({
   error,
   loadMore,
 }: {
-  tokens?: readonly TopToken[] | TokenStat[]
+  tokens?: readonly TokenStat[]
   tokenSortRank: Record<string, number>
   sparklines: SparklineMap
   loading: boolean
@@ -170,11 +170,8 @@ function TokenTable({
   const tokenTableValues: TokenTableValue[] | undefined = useMemo(
     () =>
       tokens?.map((token, i) => {
-        const isGqlToken = !!token && 'id' in token
-        const delta1hr = isGqlToken
-          ? token?.market?.pricePercentChange1Hour?.value
-          : token?.pricePercentChange1Hour?.value
-        const delta1d = isGqlToken ? token?.market?.pricePercentChange1Day?.value : token?.pricePercentChange1Day?.value
+        const delta1hr = token?.pricePercentChange1Hour?.value
+        const delta1d = token?.pricePercentChange1Day?.value
         const tokenSortIndex = tokenSortRank[token?.address ?? NATIVE_CHAIN_ID]
         const chainId = getChainIdFromChainUrlParam(token?.chain.toLowerCase())
         const unwrappedToken = chainId ? unwrapToken(chainId, token) : token
@@ -182,7 +179,7 @@ function TokenTable({
         return {
           index: tokenSortIndex,
           tokenDescription: <TokenDescription token={unwrappedToken} />,
-          price: isGqlToken ? token?.market?.price?.value ?? 0 : giveExploreStatDefaultValue(token?.price?.value),
+          price: giveExploreStatDefaultValue(token?.price?.value),
           testId: `token-table-row-${unwrappedToken?.address ?? NATIVE_CHAIN_ID}`,
           percentChange1hr: (
             <>
@@ -196,10 +193,8 @@ function TokenTable({
               <DeltaText delta={delta1d}>{formatDelta(delta1d)}</DeltaText>
             </>
           ),
-          fdv: isGqlToken
-            ? token?.project?.markets?.[0]?.fullyDilutedValuation?.value ?? 0
-            : giveExploreStatDefaultValue(token?.fullyDilutedValuation?.value),
-          volume: isGqlToken ? token?.market?.volume?.value ?? 0 : giveExploreStatDefaultValue(token?.volume?.value),
+          fdv: giveExploreStatDefaultValue(token?.fullyDilutedValuation?.value),
+          volume: giveExploreStatDefaultValue(token?.volume?.value),
           sparkline: (
             <SparklineContainer>
               <ParentSize>
@@ -209,9 +204,7 @@ function TokenTable({
                       width={width}
                       height={height}
                       tokenData={token}
-                      pricePercentChange={
-                        isGqlToken ? token?.market?.pricePercentChange?.value : token?.pricePercentChange1Day?.value
-                      }
+                      pricePercentChange={token?.pricePercentChange1Day?.value}
                       sparklineMap={sparklines}
                     />
                   )
@@ -236,7 +229,7 @@ function TokenTable({
               search_token_address_input: filterString,
             },
           },
-          linkState: { preloadedLogoSrc: isGqlToken ? token?.project?.logoUrl : token?.logo },
+          linkState: { preloadedLogoSrc: token?.logo },
         }
       }) ?? [],
     [defaultChainId, filterString, formatDelta, sparklines, timePeriod, tokenSortRank, tokens],

@@ -130,7 +130,7 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
         caption={t('walletConnect.request.warning.message')}
         rejectText={t('common.button.dismiss')}
         icon={
-          <EyeIcon color={colors.neutral2.get()} height={iconSizes.icon24} strokeWidth={1.5} width={iconSizes.icon24} />
+          <EyeIcon color={colors.neutral1.get()} height={iconSizes.icon24} strokeWidth={1.5} width={iconSizes.icon24} />
         }
         isOpen={!isRequestFromSignerAccount}
         modalName={ModalName.WCViewOnlyWarning}

@@ -1,53 +1,42 @@
-import React from 'react'
-import { IconPaths, Icons } from 'ui/src/components/Unicon/UniconSVGs'
+import React, { lazy, Suspense } from 'react'
 import { UniconProps } from 'ui/src/components/Unicon/types'
 import { getUniconColors, getUniconsDeterministicHash } from 'ui/src/components/Unicon/utils'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { isAddress } from 'utilities/src/addresses'
 
-const styles = { transformOrigin: 'center center' }
+// In test environments, import Icons synchronously
+const isTestEnv = process.env.NODE_ENV === 'test'
+const { Icons } = isTestEnv ? require('ui/src/components/Unicon/UniconSVGs') : { Icons: {} }
 
-export const Unicon: React.FC<UniconProps> = ({ address, size = 32 }) => {
+function UniconSVGInner({
+  address,
+  size = 32,
+  icons,
+}: UniconProps & { icons: typeof Icons }): React.ReactElement | null {
   const isDarkMode = useIsDarkMode()
-
   if (!address || !isAddress(address)) {
     return null
   }
 
   const hashValue = getUniconsDeterministicHash(address)
   const { color } = getUniconColors(address, isDarkMode)
-
-  const iconKeys = Object.keys(Icons)
-  if (iconKeys.length === 0) {
-    throw new Error('No icons available')
-  }
-
+  const iconKeys = Object.keys(icons)
   const iconIndex = Math.abs(Number(hashValue)) % iconKeys.length
-  const selectedIconKey = iconKeys[iconIndex] as keyof typeof Icons
-  const selectedIconPaths: IconPaths | undefined = Icons[selectedIconKey]
-
-  if (!selectedIconPaths) {
-    throw new Error(`No icon found for key: ${String(selectedIconKey)}`)
-  }
+  const selectedIconKey = iconKeys[iconIndex] as keyof typeof icons
+  const selectedIconPaths = icons[selectedIconKey]
 
   const ORIGINAL_CONTAINER_SIZE = 48
-
   const scaleValue = size / ORIGINAL_CONTAINER_SIZE / 1.5
   const scaledSVGSize = ORIGINAL_CONTAINER_SIZE * scaleValue
   const translateX = (size - scaledSVGSize) / 2
   const translateY = (size - scaledSVGSize) / 2
 
   return (
-    <svg
-      height={size} // Use the size prop to control SVG dimensions
-      viewBox={`0 0 ${size} ${size}`}
-      width={size}
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <g style={styles}>
+    <svg height={size} viewBox={`0 0 ${size} ${size}`} width={size} xmlns="http://www.w3.org/2000/svg">
+      <g style={{ transformOrigin: 'center center' }}>
         <circle cx={size / 2} cy={size / 2} fill={color + `${isDarkMode ? '29' : '1F'}`} r={size / 2} />
         <g transform={`translate(${translateX}, ${translateY}) scale(${scaleValue})`}>
-          {selectedIconPaths.map((pathData: string, index: number) => (
+          {selectedIconPaths?.map((pathData: string, index: number) => (
             <path key={index} clipRule="evenodd" d={pathData} fill={color} fillRule="evenodd" />
           ))}
         </g>
@@ -55,3 +44,20 @@ export const Unicon: React.FC<UniconProps> = ({ address, size = 32 }) => {
     </svg>
   )
 }
+
+const UniconSVGBase = (props: UniconProps): React.ReactElement | null => UniconSVGInner({ ...props, icons: Icons })
+
+const UniconSVGComponent = isTestEnv
+  ? UniconSVGBase
+  : lazy(async () => {
+      const { Icons: LazyIcons } = await import('ui/src/components/Unicon/UniconSVGs')
+      return {
+        default: (props: UniconProps): React.ReactElement | null => UniconSVGInner({ ...props, icons: LazyIcons }),
+      }
+    })
+
+export const Unicon: React.FC<UniconProps> = (props) => (
+  <Suspense fallback={<div style={{ width: props.size, height: props.size }} />}>
+    <UniconSVGComponent {...props} />
+  </Suspense>
+)

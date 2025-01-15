@@ -31,6 +31,9 @@
       android:name="com.onesignal.NotificationAccentColor.DEFAULT"
       android:value="@string/notification_accent_color" />
 
+    <meta-data android:name="com.onesignal.NotificationServiceExtension"
+      android:value="com.uniswap.notifications.NotificationExtension" />
+
     <activity
       android:name=".MainActivity"
       android:label="@string/app_name"

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Image, StyleSheet } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { Dispatch } from 'redux'
-import { Button, Flex, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Text } from 'ui/src'
 import { DEAD_LUNI } from 'ui/src/assets'
 import { pushNotification, resetNotifications } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
@@ -136,7 +136,7 @@ function ErrorScreen({ error }: { error: Error }): JSX.Element {
         {error.message && __DEV__ && <Text variant="body2">{error.message}</Text>}
       </Flex>
       <Flex alignSelf="stretch">
-        <Button onPress={restartApp}>{t('errors.crash.restart')}</Button>
+        <DeprecatedButton onPress={restartApp}>{t('errors.crash.restart')}</DeprecatedButton>
       </Flex>
     </Flex>
   )

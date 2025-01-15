@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 import { uniswapBehaviorHistoryReducer } from 'uniswap/src/features/behaviorHistory/slice'
 import { favoritesReducer } from 'uniswap/src/features/favorites/slice'
-import { getFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { notificationReducer } from 'uniswap/src/features/notifications/slice'
 import { portfolioReducer } from 'uniswap/src/features/portfolio/slice/slice'
 import { searchHistoryReducer } from 'uniswap/src/features/search/searchHistorySlice'
@@ -12,7 +12,7 @@ import { transactionSettingsReducer } from 'uniswap/src/features/transactions/se
 import { transactionReducer } from 'uniswap/src/features/transactions/slice'
 
 export const uniswapReducers = {
-  [getFiatOnRampAggregatorApi().reducerPath]: getFiatOnRampAggregatorApi().reducer,
+  [fiatOnRampAggregatorApi.reducerPath]: fiatOnRampAggregatorApi.reducer,
   favorites: favoritesReducer,
   notifications: notificationReducer,
   portfolio: portfolioReducer,

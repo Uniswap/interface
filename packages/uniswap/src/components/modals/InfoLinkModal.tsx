@@ -1,5 +1,5 @@
 import { ComponentProps, ReactNode } from 'react'
-import { Button, Flex, Text, TouchableArea, View, isWeb, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Text, TouchableArea, View, isWeb, useSporeColors } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { zIndices } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -79,11 +79,11 @@ export function InfoLinkModal({
             {description}
           </Text>
         </Flex>
-        <Button theme={buttonTheme} width="100%" onPress={onButtonPress}>
+        <DeprecatedButton theme={buttonTheme} width="100%" onPress={onButtonPress}>
           {buttonText}
-        </Button>
+        </DeprecatedButton>
         {linkText && linkUrl && (
-          <Button
+          <DeprecatedButton
             alignSelf="center"
             backgroundColor="transparent"
             borderRadius="$rounded12"
@@ -96,7 +96,7 @@ export function InfoLinkModal({
             onPress={openUniswapURL}
           >
             {linkText}
-          </Button>
+          </DeprecatedButton>
         )}
       </Flex>
     </Modal>

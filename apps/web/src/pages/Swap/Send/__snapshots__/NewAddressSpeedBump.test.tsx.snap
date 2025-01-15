@@ -60,7 +60,7 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   opacity: 0.4;
 }
 
-.c23 {
+.c20 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -74,7 +74,7 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   width: 100%;
 }
 
-.c20 {
+.c17 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -109,26 +109,26 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   user-select: none;
 }
 
-.c20:active .c22 {
+.c17:active .c19 {
   background-color: #B8C0DC3d;
 }
 
-.c20:focus .c22 {
+.c17:focus .c19 {
   background-color: #B8C0DC3d;
 }
 
-.c20:hover .c22 {
+.c17:hover .c19 {
   background-color: #98A1C014;
 }
 
-.c20:disabled {
+.c17:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c20:disabled:active .c22,
-.c20:disabled:focus .c22,
-.c20:disabled:hover .c22 {
+.c17:disabled:active .c19,
+.c17:disabled:focus .c19,
+.c17:disabled:hover .c19 {
   background-color: transparent;
 }
 
@@ -150,25 +150,7 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   gap: 4px;
 }
 
-.c18 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 4px;
-}
-
-.c19 {
+.c16 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -255,20 +237,6 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   gap: 8px;
 }
 
-.c16 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
 .c1 {
   width: 100%;
   -webkit-align-items: center;
@@ -321,7 +289,7 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   text-align: center;
 }
 
-.c21 {
+.c18 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -336,13 +304,6 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
 
 .c3 {
   padding: 4px 0px;
-}
-
-.c17 {
-  padding: 20px 16px;
-  border: 1px solid #22222212;
-  gap: 8px;
-  border-radius: 20px;
 }
 
 <body
@@ -506,36 +467,33 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
                           You haven’t transacted with this address before. Make sure it’s the correct address before continuing.
                         </div>
                         <div
-                          class="c16 c1 c17"
+                          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _pt-t-space-pad1331704900 _pb-t-space-pad1331704900 _width-10037 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                         >
-                          <div
-                            class="c6 c18"
+                          <span
+                            class="font_body _fontFamily-_sm_f-family _fontSize-_sm_f-size-micr111 _lineHeight-_sm_f-lineHeigh1263414315 _fontWeight-_sm_f-weight-bo3548 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                            data-disable-theme="true"
                           >
-                            <div
-                              class="c12 css-n8z49y"
-                            >
-                              0x9984b4b4E408e8D618A879e5315BD30952c89103
-                            </div>
-                          </div>
+                            0x9984b4b4E408e8D618A879e5315BD30952c89103
+                          </span>
                         </div>
                       </div>
                     </div>
                     <div
-                      class="c6 c19"
+                      class="c6 c16"
                     >
                       <button
-                        class="c20 c21"
+                        class="c17 c18"
                       >
                         <div
-                          class="c22 c23"
+                          class="c19 c20"
                         />
                         Cancel
                       </button>
                       <button
-                        class="c20 c21"
+                        class="c17 c18"
                       >
                         <div
-                          class="c22 c23"
+                          class="c19 c20"
                         />
                         Continue
                       </button>

@@ -290,7 +290,7 @@ export enum DappRequestCardLoggingName {
 }
 
 export type FORAmountEnteredProperties = ITraceContext & {
-  source: 'chip' | 'textInput' | 'changeAsset'
+  source: 'chip' | 'textInput' | 'changeAsset' | 'maxButton'
   amountUSD?: number
 }
 
@@ -800,6 +800,9 @@ export type UniverseEventProperties = {
     url: string
   }
   [WalletEventName.GasEstimateAccuracy]: GasEstimateAccuracyProperties
+  [WalletEventName.LowNetworkTokenInfoModalOpened]: {
+    location: 'send' | 'swap'
+  }
   [WalletEventName.PendingTransactionTimeout]: PendingTransactionTimeoutProperties
   [WalletEventName.TokenVisibilityChanged]: { currencyId: string; visible: boolean }
   [WalletEventName.TransferSubmitted]: TransferProperties

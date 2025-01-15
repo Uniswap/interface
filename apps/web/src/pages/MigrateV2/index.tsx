@@ -23,7 +23,7 @@ import { useNavigate, useNavigationType } from 'react-router-dom'
 import { Text } from 'rebass'
 import { toV2LiquidityToken, useTrackedTokenPairs } from 'state/user/hooks'
 import { BackArrowIcon, StyledInternalLink, ThemedText } from 'theme/components'
-import { Button } from 'ui/src'
+import { DeprecatedButton } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 
@@ -135,7 +135,7 @@ export default function MigrateV2() {
       <BodyWrapper style={{ padding: 24 }}>
         <AutoColumn gap="16px">
           <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
-            <Button
+            <DeprecatedButton
               theme="secondary"
               onPress={() => {
                 if (navigationType === 'POP') {
@@ -148,7 +148,7 @@ export default function MigrateV2() {
               size="small"
             >
               <BackArrowIcon />
-            </Button>
+            </DeprecatedButton>
             <MigrateHeader>
               <Trans i18nKey="migrate.v2Title" />
             </MigrateHeader>

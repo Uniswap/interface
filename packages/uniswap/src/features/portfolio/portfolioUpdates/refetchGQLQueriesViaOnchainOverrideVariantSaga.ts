@@ -67,18 +67,19 @@ export function* modifyLocalCache({
   ownerAddress: string
   currencyIds: Set<CurrencyId>
 }) {
+  logger.debug(
+    'refetchGQLQueriesViaOnchainOverrideVariantSaga.ts',
+    'modifyLocalCache',
+    `[ITBU] modifyLocalCache called with ${currencyIds.size} currencyIds`,
+    { currencyIds },
+  )
+
   yield* put(
     addTokensToBalanceOverride({
       ownerAddress,
       currencyIds: Array.from(currencyIds),
     }),
   )
-
-  const onchainBalancesByCurrencyId = yield* call(fetchOnChainBalances, {
-    apolloCache: apolloClient.cache,
-    accountAddress: ownerAddress,
-    currencyIds,
-  })
 
   const { gqlChains } = yield* call(getEnabledChainIdsSaga)
 
@@ -99,6 +100,13 @@ export function* modifyLocalCache({
     return
   }
 
+  const onchainBalancesByCurrencyId = yield* call(fetchOnChainBalances, {
+    apolloCache: apolloClient.cache,
+    cachedPortfolio,
+    accountAddress: ownerAddress,
+    currencyIds,
+  })
+
   apolloClient.cache.modify({
     id: apolloClient.cache.identify(cachedPortfolio),
     fields: {
@@ -114,11 +122,24 @@ export function* modifyLocalCache({
           const tokenAddress = chainId ? readField<Address>('address', tokenRef) ?? getNativeAddress(chainId) : null
 
           if (!tokenRef || !chainId || !tokenAddress) {
+            logger.error(new Error('Missing required value: `tokenRef`, `chainId` or `tokenAddress`'), {
+              tags: {
+                file: 'refetchGQLQueriesViaOnchainOverrideVariantSaga.ts',
+                function: 'modifyLocalCache',
+              },
+              extra: { tokenRef, chainId, tokenAddress },
+            })
             return
           }
 
           const currencyId = buildCurrencyId(chainId, tokenAddress).toLowerCase()
-          const onchainQuantity = onchainBalancesByCurrencyId.get(currencyId)?.quantity
+          const onchainBalance = onchainBalancesByCurrencyId.get(currencyId)
+
+          if (!onchainBalance) {
+            return
+          }
+
+          const onchainQuantity = onchainBalance.quantity
           onchainBalancesByCurrencyId.delete(currencyId)
 
           if (onchainQuantity === undefined) {
@@ -135,6 +156,13 @@ export function* modifyLocalCache({
 
           const cachedQuantity = readField<number>('quantity', tokenBalanceRef)
 
+          logger.debug(
+            'refetchGQLQueriesViaOnchainOverrideVariantSaga.ts',
+            'modifyLocalCache',
+            `[ITBU] Calling apolloClient.cache.modify for ${currencyId}`,
+            { tokenBalanceRef, id: apolloClient.cache.identify(tokenBalanceRef) },
+          )
+
           apolloClient.cache.modify({
             id: apolloClient.cache.identify(tokenBalanceRef),
             fields: {
@@ -143,6 +171,11 @@ export function* modifyLocalCache({
               },
               denominatedValue: (cachedDenominatedValue: Reference | AsStoreObject<Amount>) => {
                 if (!cachedQuantity) {
+                  logger.debug(
+                    'refetchGQLQueriesViaOnchainOverrideVariantSaga.ts',
+                    'modifyLocalCache',
+                    `[ITBU] No cachedQuantity found for ${currencyId}`,
+                  )
                   return cachedDenominatedValue
                 }
 
@@ -161,9 +194,17 @@ export function* modifyLocalCache({
                   return cachedDenominatedValue
                 }
 
+                const value = (cachedDenominatedValue.value * onchainQuantity) / cachedQuantity
+
+                logger.debug(
+                  'refetchGQLQueriesViaOnchainOverrideVariantSaga.ts',
+                  'modifyLocalCache',
+                  `[ITBU] Overriding ${currencyId} with ${value}`,
+                )
+
                 return {
                   ...cachedDenominatedValue,
-                  value: (cachedDenominatedValue.value * onchainQuantity) / cachedQuantity,
+                  value,
                 }
               },
             },
@@ -175,6 +216,7 @@ export function* modifyLocalCache({
 
         Array.from(onchainBalancesByCurrencyId).forEach(([currencyId]) => {
           const onchainBalanceQuantity = onchainBalancesByCurrencyId.get(currencyId)?.quantity
+          const denominatedValue = onchainBalancesByCurrencyId.get(currencyId)?.denominatedValue
 
           if (onchainBalanceQuantity === undefined) {
             logger.warn(
@@ -191,6 +233,7 @@ export function* modifyLocalCache({
             ownerAddress,
             currencyId,
             onchainBalanceQuantity,
+            denominatedValue: denominatedValue ?? null,
           })
 
           if (!newTokenBalanceRef) {

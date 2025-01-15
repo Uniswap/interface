@@ -1,13 +1,13 @@
-import { TextStyle } from '@tamagui/core'
+import { isTouchable, TextStyle } from '@tamagui/core'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { ReactComponent as TooltipTriangle } from 'assets/svg/tooltip_triangle.svg'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import styled, { css, keyframes } from 'lib/styled-components'
 import React, {
+  forwardRef,
   HTMLProps,
   PropsWithChildren,
   ReactNode,
-  forwardRef,
   useCallback,
   useImperativeHandle,
   useRef,
@@ -324,7 +324,7 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
 
     // Copy-helpers w/ left icon always show icon & display "Copied!" in copied state
     // Copy-helpers w/ right icon show icon on hover & do not change text
-    const showIcon = Boolean(iconPosition === 'left' || isHover || isCopied)
+    const showIcon = Boolean(iconPosition === 'left' || isHover || isTouchable || isCopied)
     const Icon = isCopied ? CopiedIcon : showIcon ? InitialIcon : null
     const offset = showIcon ? gap + iconSize : 0
     return (

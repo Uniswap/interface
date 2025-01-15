@@ -11,7 +11,7 @@ import { Delay } from 'src/components/layout/Delayed'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { Button, Flex, SpinningLoader, Text, ThemeKeys, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, SpinningLoader, Text, ThemeKeys, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, opacify } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -204,11 +204,11 @@ export function RemoveWalletModal(): JSX.Element | null {
               {inProgress ? (
                 <AnimatedFlex style={animatedCancelButtonSpanStyles} />
               ) : (
-                <Button fill disabled={inProgress} theme="outline" onPress={onClose}>
+                <DeprecatedButton fill disabled={inProgress} theme="outline" onPress={onClose}>
                   {t('common.button.cancel')}
-                </Button>
+                </DeprecatedButton>
               )}
-              <Button
+              <DeprecatedButton
                 fill
                 icon={inProgress ? <SpinningLoader color={`$${labelColor}`} /> : undefined}
                 testID={isRemovingRecoveryPhrase ? ElementName.Continue : ElementName.Remove}
@@ -217,7 +217,7 @@ export function RemoveWalletModal(): JSX.Element | null {
                 onPress={onPress}
               >
                 {inProgress ? undefined : actionButtonLabel}
-              </Button>
+              </DeprecatedButton>
             </Flex>
           )}
         </Flex>

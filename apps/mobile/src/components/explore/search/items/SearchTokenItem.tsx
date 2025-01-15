@@ -3,8 +3,9 @@ import ContextMenu from 'react-native-context-menu-view'
 import { useDispatch } from 'react-redux'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
+import { SEARCH_ITEM_ICON_SIZE, SEARCH_ITEM_PX, SEARCH_ITEM_PY } from 'src/components/explore/search/constants'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
@@ -18,6 +19,7 @@ import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
+import { shortenAddress } from 'utilities/src/addresses'
 
 type SearchTokenItemProps = {
   token: TokenSearchResult
@@ -25,6 +27,7 @@ type SearchTokenItemProps = {
 }
 
 export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps): JSX.Element {
+  const isDarkMode = useIsDarkMode()
   const dispatch = useDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
@@ -80,12 +83,18 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
         onLongPress={disableOnPress}
         onPress={onPress}
       >
-        <Flex row alignItems="center" gap="$spacing12" px="$spacing24" py="$spacing12">
-          <TokenLogo chainId={chainId} name={name} symbol={symbol} url={logoUrl ?? undefined} />
+        <Flex row alignItems="center" gap="$spacing12" px={SEARCH_ITEM_PX} py={SEARCH_ITEM_PY}>
+          <TokenLogo
+            chainId={chainId}
+            name={name}
+            symbol={symbol}
+            url={logoUrl ?? undefined}
+            size={SEARCH_ITEM_ICON_SIZE}
+          />
           <Flex shrink alignItems="flex-start">
             <Flex centered row gap="$spacing8">
               <Flex shrink>
-                <Text color="$neutral1" numberOfLines={1} variant="body1">
+                <Text color="$neutral1" numberOfLines={1} variant="subheading1">
                   {name}
                 </Text>
               </Flex>
@@ -94,9 +103,16 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
               )}
             </Flex>
             <Flex centered row gap="$spacing8">
-              <Text color="$neutral2" numberOfLines={1} variant="subheading2">
+              <Text color="$neutral2" numberOfLines={1} variant="body2">
                 {symbol}
               </Text>
+              {address && (
+                <Flex shrink>
+                  <Text color={isDarkMode ? '$neutral3' : '$neutral2'} numberOfLines={1} variant="body3">
+                    {shortenAddress(address)}
+                  </Text>
+                </Flex>
+              )}
             </Flex>
           </Flex>
         </Flex>

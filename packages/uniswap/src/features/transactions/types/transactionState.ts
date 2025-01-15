@@ -11,6 +11,7 @@ export interface TransactionState {
   [CurrencyField.OUTPUT]: TradeableAsset | null
   exactCurrencyField: CurrencyField
   exactAmountToken: string
+  isMax?: boolean
   exactAmountFiat?: string
   focusOnCurrencyField?: CurrencyField | null
   recipient?: string

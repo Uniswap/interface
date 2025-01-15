@@ -94,7 +94,7 @@ function useSwapInitialInputCurrency() {
 }
 
 function TDPSwapComponent() {
-  const { address, currency, currencyChainId, warning } = useTDPContext()
+  const { address, currency, currencyChainId, warning, tokenColor } = useTDPContext()
   const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
   const navigate = useNavigate()
 
@@ -153,6 +153,7 @@ function TDPSwapComponent() {
         initialInputCurrency={initialInputCurrency}
         initialOutputCurrency={currency}
         onCurrencyChange={handleCurrencyChange}
+        tokenColor={tokenColor}
         compact
       />
       {tokenProtectionEnabled ? (

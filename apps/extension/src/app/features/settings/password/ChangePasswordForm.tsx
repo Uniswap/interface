@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { PADDING_STRENGTH_INDICATOR, PasswordInput } from 'src/app/components/PasswordInput'
-import { Button, Flex, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Text } from 'ui/src'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
@@ -67,9 +67,9 @@ export function ChangePasswordForm({ onNext }: { onNext: () => void }): JSX.Elem
           {errorText || 'Placeholder text'}
         </Text>
       </Flex>
-      <Button disabled={!enableNext} theme="tertiary" onPress={onSubmit}>
+      <DeprecatedButton disabled={!enableNext} theme="tertiary" onPress={onSubmit}>
         {t('common.button.save')}
-      </Button>
+      </DeprecatedButton>
     </Flex>
   )
 }

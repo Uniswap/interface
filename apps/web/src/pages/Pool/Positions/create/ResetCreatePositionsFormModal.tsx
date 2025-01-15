@@ -2,7 +2,7 @@ import GetHelp from 'components/Button/GetHelp'
 import { HelpCircle } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { CloseIcon } from 'theme/components'
-import { Button, Flex, Text, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -53,12 +53,12 @@ export default function ResetCreatePositionFormModal({
           </Text>
         </Flex>
         <Flex row gap="$spacing8" width="100%" mt="$spacing8">
-          <Button theme="secondary" borderRadius="12px" py="$spacing8" flex={1} onPress={onClose}>
+          <DeprecatedButton theme="secondary" borderRadius="12px" py="$spacing8" flex={1} onPress={onClose}>
             <Text variant="buttonLabel3" color="$neutralContrast">
               <Trans i18nKey="common.button.cancel" />
             </Text>
-          </Button>
-          <Button
+          </DeprecatedButton>
+          <DeprecatedButton
             theme="tertiary"
             py="$spacing8"
             backgroundColor="$accent3"
@@ -76,7 +76,7 @@ export default function ResetCreatePositionFormModal({
             <Text variant="buttonLabel3" color="$surface1">
               <Trans i18nKey="common.button.reset" />
             </Text>
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

@@ -4,7 +4,16 @@ import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
 import { DappRequestStoreItem } from 'src/app/features/dappRequests/slice'
 import { DappRequestType } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { Anchor, AnimatePresence, Button, Flex, Text, UniversalImage, UniversalImageResizeMode, styled } from 'ui/src'
+import {
+  Anchor,
+  AnimatePresence,
+  DeprecatedButton,
+  Flex,
+  Text,
+  UniversalImage,
+  UniversalImageResizeMode,
+  styled,
+} from 'ui/src'
 import { borderRadii, iconSizes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -240,10 +249,10 @@ export function DappRequestFooter({
           px="$spacing8"
         />
         <Flex row gap="$spacing12" pt="$spacing8">
-          <Button flex={1} flexBasis={1} size="medium" theme="secondary" onPress={handleOnCancel}>
+          <DeprecatedButton flex={1} flexBasis={1} size="medium" theme="secondary" onPress={handleOnCancel}>
             {t('common.button.cancel')}
-          </Button>
-          <Button
+          </DeprecatedButton>
+          <DeprecatedButton
             disabled={!isConfirmEnabled}
             flex={1}
             flexBasis={1}
@@ -252,7 +261,7 @@ export function DappRequestFooter({
             onPress={handleOnConfirm}
           >
             {confirmText}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </>

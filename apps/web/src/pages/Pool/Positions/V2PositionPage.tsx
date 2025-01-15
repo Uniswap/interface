@@ -4,7 +4,7 @@ import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/Breadcrumb
 import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from 'components/Liquidity/LiquidityPositionInfo'
 import { useGetPoolTokenPercentage } from 'components/Liquidity/hooks'
 import { parseRestPosition } from 'components/Liquidity/utils'
-import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { usePositionOwnerV2 } from 'hooks/usePositionOwner'
 import NotFound from 'pages/NotFound'
@@ -19,7 +19,7 @@ import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
-import { Button, Circle, Flex, Main, Shine, Text, styled } from 'ui/src'
+import { Circle, DeprecatedButton, Flex, Main, Shine, Text, styled } from 'ui/src'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
@@ -122,7 +122,9 @@ function V2PositionPage() {
             </Text>
           </Flex>
         }
-        actionButton={<Button onPress={() => navigate('/positions')}>{t('common.backToPositions')}</Button>}
+        actionButton={
+          <DeprecatedButton onPress={() => navigate('/positions')}>{t('common.backToPositions')}</DeprecatedButton>
+        }
       />
     )
   }
@@ -226,11 +228,7 @@ function V2PositionPage() {
                     <Text variant="body2">
                       {formatCurrencyAmount({ value: liquidityAmount, type: NumberType.TokenNonTx })}
                     </Text>
-                    <DoubleCurrencyAndChainLogo
-                      chainId={currency0Amount.currency.chainId}
-                      currencies={[currency0Amount?.currency, currency1Amount?.currency]}
-                      size={24}
-                    />
+                    <DoubleCurrencyLogo currencies={[currency0Amount?.currency, currency1Amount?.currency]} size={24} />
                   </Flex>
                 </Flex>
                 <Flex row width="100%" justifyContent="space-between">
@@ -244,11 +242,7 @@ function V2PositionPage() {
                     <Text variant="body2">
                       {formatCurrencyAmount({ value: currency0Amount, type: NumberType.TokenNonTx })}
                     </Text>
-                    <DoubleCurrencyAndChainLogo
-                      chainId={currency0Amount?.currency.chainId}
-                      currencies={[currency0Amount?.currency]}
-                      size={24}
-                    />
+                    <DoubleCurrencyLogo currencies={[currency0Amount?.currency]} size={24} />
                   </Flex>
                 </Flex>
                 <Flex row width="100%" justifyContent="space-between">
@@ -262,11 +256,7 @@ function V2PositionPage() {
                     <Text variant="body2">
                       {formatCurrencyAmount({ value: currency1Amount, type: NumberType.TokenNonTx })}
                     </Text>
-                    <DoubleCurrencyAndChainLogo
-                      chainId={currency1Amount?.currency.chainId}
-                      currencies={[currency1Amount?.currency]}
-                      size={24}
-                    />
+                    <DoubleCurrencyLogo currencies={[currency1Amount?.currency]} size={24} />
                   </Flex>
                 </Flex>
                 <Flex row width="100%" justifyContent="space-between">

@@ -106,6 +106,19 @@ export function* sendTransaction(params: SendTransactionParams) {
       }
     }
 
+    unsubmittedTransaction = {
+      ...unsubmittedTransaction,
+      options: {
+        ...unsubmittedTransaction.options,
+        privateRpcProvider:
+          provider.constructor.name === 'FlashbotsRpcProvider'
+            ? 'flashbots'
+            : options.submitViaPrivateRpc
+              ? 'mevblocker'
+              : undefined,
+      },
+    }
+
     // Update the transaction with the hash and populated request
     yield* call(
       updateSubmittedTransaction,

@@ -21,7 +21,7 @@ interface LiquidityPositionPriceRangeTileProps {
   priceOrdering: PriceOrdering
   token0CurrentPrice: Price<Currency, Currency>
   token1CurrentPrice: Price<Currency, Currency>
-  feeTier?: string
+  tickSpacing?: number
   tickLower?: string
   tickUpper?: string
 }
@@ -31,7 +31,7 @@ export function LiquidityPositionPriceRangeTile({
   priceOrdering,
   token0CurrentPrice,
   token1CurrentPrice,
-  feeTier,
+  tickSpacing,
   tickLower,
   tickUpper,
 }: LiquidityPositionPriceRangeTileProps) {
@@ -60,7 +60,7 @@ export function LiquidityPositionPriceRangeTile({
 
   const { minPrice, maxPrice, tokenASymbol, tokenBSymbol } = useGetRangeDisplay({
     priceOrdering,
-    feeTier,
+    tickSpacing,
     tickLower,
     tickUpper,
     pricesInverted,

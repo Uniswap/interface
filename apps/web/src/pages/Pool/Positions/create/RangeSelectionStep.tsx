@@ -11,7 +11,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { useRangeHopCallbacks } from 'state/mint/v3/hooks'
-import { Button, Flex, FlexProps, SegmentedControl, Text, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, FlexProps, SegmentedControl, Text, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { fonts } from 'ui/src/theme'
 import { AmountInput, numericInputRegex } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
@@ -45,7 +45,7 @@ const InitialPriceInput = () => {
 
   const { derivedPositionInfo } = useCreatePositionContext()
   const {
-    priceRangeState: { initialPrice, initialPriceInverted },
+    priceRangeState: { initialPrice, priceInverted },
     setPriceRangeState,
     derivedPriceRangeInfo,
   } = usePriceRangeContext()
@@ -53,7 +53,7 @@ const InitialPriceInput = () => {
   const [token0, token1] = derivedPositionInfo.currencies
   const [initialPriceBaseToken, initialPriceQuoteToken] = getInvertedTuple(
     derivedPositionInfo.currencies,
-    initialPriceInverted,
+    priceInverted,
   )
   const price = derivedPriceRangeInfo.price
 
@@ -64,9 +64,9 @@ const InitialPriceInput = () => {
   const handleSelectInitialPriceBaseToken = useCallback(
     (option: string) => {
       if (option === token0?.symbol) {
-        setPriceRangeState((prevState) => ({ ...prevState, initialPriceInverted: false }))
+        setPriceRangeState((prevState) => ({ ...prevState, priceInverted: false }))
       } else {
-        setPriceRangeState((prevState) => ({ ...prevState, initialPriceInverted: true }))
+        setPriceRangeState((prevState) => ({ ...prevState, priceInverted: true }))
       }
     },
     [token0?.symbol, setPriceRangeState],
@@ -250,10 +250,10 @@ function RangeInput({
       </Flex>
       {showIncrementButtons && (
         <Flex gap={10}>
-          <Button theme="secondary" p="$spacing8" borderRadius="$roundedFull" onPress={handleIncrement}>
+          <DeprecatedButton theme="secondary" p="$spacing8" borderRadius="$roundedFull" onPress={handleIncrement}>
             <Plus size="16px" color={colors.neutral1.val} />
-          </Button>
-          <Button
+          </DeprecatedButton>
+          <DeprecatedButton
             theme="secondary"
             p="$spacing8"
             borderRadius="$roundedFull"
@@ -261,7 +261,7 @@ function RangeInput({
             onPress={handleDecrement}
           >
             <Minus size="16px" color={colors.neutral1.val} />
-          </Button>
+          </DeprecatedButton>
         </Flex>
       )}
     </Flex>
@@ -272,7 +272,7 @@ export const SelectPriceRangeStepV2 = ({ onContinue, ...rest }: { onContinue: ()
   return (
     <Container {...rest}>
       <InitialPriceInput />
-      <Button
+      <DeprecatedButton
         flex={1}
         py="$spacing16"
         px="$spacing20"
@@ -289,7 +289,7 @@ export const SelectPriceRangeStepV2 = ({ onContinue, ...rest }: { onContinue: ()
         <Text variant="buttonLabel1" color="$surface1">
           <Trans i18nKey="common.button.continue" />
         </Text>
-      </Button>
+      </DeprecatedButton>
     </Container>
   )
 }
@@ -329,21 +329,23 @@ export const SelectPriceRangeStep = ({
   )
 
   const price = derivedPriceRangeInfo.price
-  const { ticks, isSorted, prices, ticksAtLimit, pricesAtTicks, invalidPrice, invalidRange } = useMemo(() => {
-    if (derivedPriceRangeInfo.protocolVersion === ProtocolVersion.V2) {
-      return {
-        ticks: undefined,
-        isSorted: false,
-        prices: undefined,
-        pricesAtTicks: undefined,
-        ticksAtLimit: [false, false],
-        invalidPrice: false,
-        invalidRange: false,
+  const { ticks, isSorted, prices, ticksAtLimit, pricesAtTicks, invalidPrice, invalidRange, invertPrice } =
+    useMemo(() => {
+      if (derivedPriceRangeInfo.protocolVersion === ProtocolVersion.V2) {
+        return {
+          ticks: undefined,
+          isSorted: false,
+          prices: undefined,
+          pricesAtTicks: undefined,
+          ticksAtLimit: [false, false],
+          invalidPrice: false,
+          invalidRange: false,
+          invertPrice: false,
+        }
       }
-    }
 
-    return derivedPriceRangeInfo
-  }, [derivedPriceRangeInfo])
+      return derivedPriceRangeInfo
+    }, [derivedPriceRangeInfo])
   const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper } = useRangeHopCallbacks(
     derivedPositionInfo.protocolVersion === ProtocolVersion.V3
       ? {
@@ -406,9 +408,12 @@ export const SelectPriceRangeStep = ({
   ]
 
   const rangeSelectionInputValues = useMemo(() => {
+    const leftPrice = isSorted ? prices?.[0] : prices?.[1]?.invert()
+    const rightPrice = isSorted ? prices?.[1] : prices?.[0]?.invert()
+
     return [
-      ticksAtLimit[isSorted ? 0 : 1] ? '0' : prices?.[0]?.toSignificant(8) ?? '',
-      ticksAtLimit[isSorted ? 1 : 0] ? '∞' : prices?.[1]?.toSignificant(8) ?? '',
+      ticksAtLimit[isSorted ? 0 : 1] ? '0' : leftPrice?.toSignificant(8) ?? '',
+      ticksAtLimit[isSorted ? 1 : 0] ? '∞' : rightPrice?.toSignificant(8) ?? '',
     ]
   }, [isSorted, prices, ticksAtLimit])
 
@@ -436,7 +441,7 @@ export const SelectPriceRangeStep = ({
     return (
       <Container {...rest}>
         <InitialPriceInput />
-        <Button
+        <DeprecatedButton
           flex={1}
           py="$spacing16"
           px="$spacing20"
@@ -454,7 +459,7 @@ export const SelectPriceRangeStep = ({
           <Text variant="buttonLabel1" color="$surface1">
             <Trans i18nKey="common.button.continue" />
           </Text>
-        </Button>
+        </DeprecatedButton>
       </Container>
     )
   }
@@ -507,7 +512,7 @@ export const SelectPriceRangeStep = ({
                   LOWER: ticksAtLimit[0],
                   UPPER: ticksAtLimit[1],
                 }}
-                price={price ? parseFloat(price.toSignificant(8)) : undefined}
+                price={price ? parseFloat((invertPrice ? price.invert() : price).toSignificant(8)) : undefined}
                 priceLower={pricesAtTicks?.[0]}
                 priceUpper={pricesAtTicks?.[1]}
                 onLeftRangeInput={(text) => handleChartRangeInput(RangeSelectionInput.MIN, text)}
@@ -565,7 +570,7 @@ export const SelectPriceRangeStep = ({
           </Flex>
         )}
       </Flex>
-      <Button
+      <DeprecatedButton
         flex={1}
         py="$spacing16"
         px="$spacing20"
@@ -583,7 +588,7 @@ export const SelectPriceRangeStep = ({
         <Text variant="buttonLabel1" color="$surface1">
           {t(`common.button.continue`)}
         </Text>
-      </Button>
+      </DeprecatedButton>
     </Container>
   )
 }

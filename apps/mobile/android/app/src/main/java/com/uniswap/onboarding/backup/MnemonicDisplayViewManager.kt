@@ -54,6 +54,12 @@ class MnemonicDisplayViewManager : ViewGroupManager<ComposeView>() {
                 putDouble(FIELD_HEIGHT, it.toDouble())
               }
               sendEvent(id, EVENT_HEIGHT_MEASURED, bundle)
+            },
+            onEmptyMnemonic = {
+              val bundle = Arguments.createMap().apply {
+                putString("mnemonicId", it)
+              }
+              sendEvent(id, EVENT_EMPTY_MNEMONIC, bundle)
             }
           )
         }
@@ -74,6 +80,12 @@ class MnemonicDisplayViewManager : ViewGroupManager<ComposeView>() {
         "phasedRegistrationNames" to mapOf(
           "bubbled" to EVENT_HEIGHT_MEASURED,
           "captured" to EVENT_HEIGHT_MEASURED
+        )
+      ),
+      EVENT_EMPTY_MNEMONIC to mapOf(
+        "phasedRegistrationNames" to mapOf(
+          "bubbled" to EVENT_EMPTY_MNEMONIC,
+          "captured" to EVENT_EMPTY_MNEMONIC
         )
       )
     )
@@ -103,6 +115,7 @@ class MnemonicDisplayViewManager : ViewGroupManager<ComposeView>() {
   companion object {
     private const val REACT_CLASS = "MnemonicDisplay"
     private const val EVENT_HEIGHT_MEASURED = "onHeightMeasured"
+    private const val EVENT_EMPTY_MNEMONIC = "onEmptyMnemonic"
     private const val FIELD_HEIGHT = "height"
   }
 }

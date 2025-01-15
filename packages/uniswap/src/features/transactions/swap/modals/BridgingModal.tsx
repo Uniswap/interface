@@ -27,7 +27,7 @@ export function BridgingModal({
   const dispatch = useDispatch()
 
   const [doNotShowAgainSelected, setDoNotShowAgainSelected] = useState(true)
-  const onPressDoNotShowAgain = useCallback(() => {
+  const toggleDoNotShowAgain = useCallback(() => {
     setDoNotShowAgainSelected(!doNotShowAgainSelected)
   }, [doNotShowAgainSelected])
 
@@ -69,13 +69,13 @@ export function BridgingModal({
       onClose={onClose}
       onAcknowledge={onContinueWithDismiss}
     >
-      <TouchableArea onPress={onPressDoNotShowAgain}>
+      <TouchableArea onPress={toggleDoNotShowAgain}>
         <Flex row alignItems="center" gap="$spacing4">
           <Checkbox
             size="$icon.20"
             borderColor="$neutral2"
             checked={doNotShowAgainSelected}
-            onPress={onPressDoNotShowAgain}
+            onPress={toggleDoNotShowAgain}
           />
           <Text variant="body3" color="$neutral2" py="$spacing8">
             {t('common.dontShowAgain')}

@@ -1,7 +1,7 @@
 import { PropsWithChildren, ReactNode, useContext } from 'react'
 // eslint-disable-next-line no-restricted-imports -- type import is safe
 import type { ColorValue } from 'react-native'
-import { Button, Flex, Text, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { ThemeNames, opacify } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -66,7 +66,7 @@ export function WarningModalContent({
 }: PropsWithChildren<WarningModalContentProps>): JSX.Element {
   const colors = useSporeColors()
   const alertColor = getAlertColor(severity)
-  const alertColorValue = alertColor.text as keyof typeof colors
+  const alertColorValue = alertColor.headerText as keyof typeof colors
 
   return (
     <Flex
@@ -91,7 +91,7 @@ export function WarningModalContent({
                 }
           }
         >
-          {icon ?? <AlertTriangleFilled color={alertColor.text} size="$icon.24" />}
+          {icon ?? <AlertTriangleFilled color={alertColor.headerText} size="$icon.24" />}
         </Flex>
       )}
       {title && (
@@ -110,19 +110,19 @@ export function WarningModalContent({
       <Flex centered row gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'} width="100%">
         {rejectText && (
           <Trace logPress element={ElementName.BackButton} modal={modalName} properties={analyticsProperties}>
-            <Button
+            <DeprecatedButton
               flex={1}
               flexBasis={1}
               theme={rejectButtonTheme ?? 'secondary_Button'}
               onPress={onReject ?? onClose}
             >
               {rejectText}
-            </Button>
+            </DeprecatedButton>
           </Trace>
         )}
         {acknowledgeText && (
           <Trace logPress element={ElementName.Confirm} modal={modalName} properties={analyticsProperties}>
-            <Button
+            <DeprecatedButton
               flex={1}
               flexBasis={1}
               testID={TestID.Confirm}
@@ -130,7 +130,7 @@ export function WarningModalContent({
               onPress={onAcknowledge}
             >
               {acknowledgeText}
-            </Button>
+            </DeprecatedButton>
           </Trace>
         )}
       </Flex>

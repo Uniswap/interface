@@ -2,6 +2,7 @@ import { TokenRankingsStat } from '@uniswap/client-explore/dist/uniswap/explore/
 import React, { useMemo } from 'react'
 import { ListRenderItemInfo } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
+import { SEARCH_ITEM_PX, SEARCH_ITEM_PY } from 'src/components/explore/search/constants'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { getSearchResultId } from 'src/components/explore/search/utils'
 import { Flex, Loader } from 'ui/src'
@@ -60,7 +61,7 @@ export function SearchPopularTokens({ selectedChain }: { selectedChain: Universe
 
   if (isLoading) {
     return (
-      <Flex px="$spacing24" py="$spacing8">
+      <Flex px={SEARCH_ITEM_PX} py={SEARCH_ITEM_PY}>
         <Loader.Token repeat={2} />
       </Flex>
     )

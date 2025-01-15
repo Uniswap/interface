@@ -9,10 +9,10 @@ import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { Button, Flex, styled, Text } from 'ui/src'
+import { DeprecatedButton, Flex, styled, Text } from 'ui/src'
 import { getContrastPassingTextColor } from 'uniswap/src/utils/colors'
 
-const TDPActionPill = styled(Button, {
+const TDPActionPill = styled(DeprecatedButton, {
   size: 'medium',
   borderRadius: 50,
   flexGrow: 1,

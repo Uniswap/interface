@@ -8,6 +8,7 @@ import {
   BNB_LOGO,
   CELO_LOGO,
   ETHEREUM_LOGO,
+  ETH_LOGO,
   MONAD_LOGO,
   OPTIMISM_LOGO,
   POLYGON_LOGO,
@@ -77,6 +78,59 @@ export function getChainInfo(chainId: UniverseChainId): UniverseChainInfo {
   return UNIVERSE_CHAIN_INFO[chainId]
 }
 
+// Source: https://marketplace.quicknode.com/chains_and_networks
+export function getQuicknodeChainId(chainId: UniverseChainId): string {
+  switch (chainId) {
+    case UniverseChainId.Mainnet:
+      return ''
+    case UniverseChainId.ArbitrumOne:
+      return 'arbitrum-mainnet'
+    case UniverseChainId.Avalanche:
+      return 'avalanche-mainnet'
+    case UniverseChainId.Base:
+      return 'base-mainnet'
+    case UniverseChainId.Blast:
+      return 'blast-mainnet'
+    case UniverseChainId.Bnb:
+      return 'bsc'
+    case UniverseChainId.Celo:
+      return 'celo-mainnet'
+    case UniverseChainId.MonadTestnet:
+      return 'monad-testnet'
+    case UniverseChainId.Optimism:
+      return 'optimism'
+    case UniverseChainId.Polygon:
+      return 'matic'
+    case UniverseChainId.Sepolia:
+      return 'ethereum-sepolia'
+    case UniverseChainId.UnichainSepolia:
+      return 'unichain-sepolia'
+    case UniverseChainId.WorldChain:
+      return 'worldchain-mainnet'
+    case UniverseChainId.Zksync:
+      return 'zksync-mainnet'
+    case UniverseChainId.Zora:
+      return 'zora-mainnet'
+    default:
+      throw new Error(`Chain ${chainId} does not have a corresponding QuickNode chain ID`)
+  }
+}
+
+// If chain requires a path suffix
+export function getQuicknodeChainIdPathSuffix(chainId: UniverseChainId): string {
+  switch (chainId) {
+    case UniverseChainId.Avalanche:
+      return '/ext/bc/C/rpc' // https://www.quicknode.com/docs/avalanche#overview
+    default:
+      return ''
+  }
+}
+
+export function getQuicknodeEndpointUrl(chainId: UniverseChainId): string {
+  const quicknodeChainId = getQuicknodeChainId(chainId)
+  return `https://${config.quicknodeEndpointName}${quicknodeChainId ? `.${quicknodeChainId}` : ''}.quiknode.pro/${config.quicknodeEndpointToken}${getQuicknodeChainIdPathSuffix(chainId)}`
+}
+
 export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
   [UniverseChainId.Mainnet]: {
     ...mainnet,
@@ -112,7 +166,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
       explorerLink: 'https://etherscan.io/chart/etherprice',
-      logo: ETHEREUM_LOGO,
+      logo: ETH_LOGO,
     },
     networkLayer: NetworkLayer.L1,
     pendingTransactionsRetryOptions: undefined,
@@ -121,7 +175,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
         http: ['https://rpc.mevblocker.io/?referrer=uniswapwallet'],
       },
       [RPCType.Public]: {
-        http: [config.quicknodeMainnetRpcUrl],
+        http: [getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
       },
       [RPCType.Default]: {
         http: ['https://cloudflare-eth.com'],
@@ -130,7 +184,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
         http: ['https://rpc.ankr.com/eth', 'https://eth-mainnet.public.blastapi.io'],
       },
       [RPCType.Interface]: {
-        http: [`https://mainnet.infura.io/v3/${config.infuraKey}`, config.quicknodeMainnetRpcUrl],
+        http: [`https://mainnet.infura.io/v3/${config.infuraKey}`, getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
       },
     },
     urlParam: 'ethereum',
@@ -180,7 +234,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
       explorerLink: 'https://arbiscan.io/chart/etherprice',
-      logo: ETHEREUM_LOGO,
+      logo: ETH_LOGO,
     },
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
@@ -191,11 +245,14 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     supportsGasEstimates: true,
     urlParam: 'arbitrum',
     rpcUrls: {
-      [RPCType.Public]: { http: [config.quicknodeArbitrumRpcUrl] },
+      [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.ArbitrumOne)] },
       [RPCType.Default]: { http: ['https://arb1.arbitrum.io/rpc'] },
       [RPCType.Fallback]: { http: ['https://arbitrum.public-rpc.com'] },
       [RPCType.Interface]: {
-        http: [`https://arbitrum-mainnet.infura.io/v3/${config.infuraKey}`, config.quicknodeArbitrumRpcUrl],
+        http: [
+          `https://arbitrum-mainnet.infura.io/v3/${config.infuraKey}`,
+          getQuicknodeEndpointUrl(UniverseChainId.ArbitrumOne),
+        ],
       },
       [RPCType.PublicAlt]: { http: ['https://arb1.arbitrum.io/rpc'] },
     },
@@ -245,7 +302,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     networkLayer: NetworkLayer.L1,
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {
-      [RPCType.Public]: { http: [config.quicknodeAvaxRpcUrl] },
+      [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Avalanche)] },
       [RPCType.Default]: { http: ['https://api.avax.network/ext/bc/C/rpc'] },
       [RPCType.Interface]: { http: [`https://avalanche-mainnet.infura.io/v3/${config.infuraKey}`] },
     },
@@ -294,7 +351,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
       explorerLink: 'https://basescan.org/chart/etherprice',
-      logo: ETHEREUM_LOGO,
+      logo: ETH_LOGO,
     },
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
@@ -303,7 +360,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     supportsGasEstimates: true,
     urlParam: 'base',
     rpcUrls: {
-      [RPCType.Public]: { http: [config.quicknodeBaseRpcUrl] },
+      [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Base)] },
       [RPCType.Default]: { http: ['https://mainnet.base.org/'] },
       [RPCType.Fallback]: { http: ['https://1rpc.io/base', 'https://base.meowrpc.com'] },
       [RPCType.Interface]: { http: [`https://base-mainnet.infura.io/v3/${config.infuraKey}`] },
@@ -360,10 +417,10 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
-      logo: ETHEREUM_LOGO,
+      logo: ETH_LOGO,
     },
     rpcUrls: {
-      [RPCType.Public]: { http: [config.quicknodeBlastRpcUrl] },
+      [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Blast)] },
       [RPCType.Default]: { http: ['https://rpc.blast.io/'] },
       [RPCType.Interface]: { http: [`https://blast-mainnet.infura.io/v3/${config.infuraKey}`] },
     },
@@ -413,9 +470,9 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     networkLayer: NetworkLayer.L1,
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {
-      [RPCType.Public]: { http: [config.quicknodeBnbRpcUrl] },
+      [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Bnb)] },
       [RPCType.Default]: { http: ['https://bsc-dataseed1.bnbchain.org'] },
-      [RPCType.Interface]: { http: [config.quicknodeBnbRpcUrl] },
+      [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Bnb)] },
     },
     spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_BNB, 100e18),
     stablecoins: [USDC_BNB],
@@ -475,7 +532,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     supportsGasEstimates: true,
     urlParam: 'celo',
     rpcUrls: {
-      [RPCType.Public]: { http: [config.quicknodeCeloRpcUrl] },
+      [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Celo)] },
       [RPCType.Default]: { http: [`https://forno.celo.org`] },
       [RPCType.Interface]: { http: [`https://celo-mainnet.infura.io/v3/${config.infuraKey}`] },
     },
@@ -519,13 +576,13 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     urlParam: 'monad_testnet',
     rpcUrls: {
       [RPCType.Public]: {
-        http: [config.quicknodeMonadTestnetRpcUrl],
+        http: [getQuicknodeEndpointUrl(UniverseChainId.MonadTestnet)],
       },
       [RPCType.Default]: {
-        http: [config.quicknodeMonadTestnetRpcUrl],
+        http: [getQuicknodeEndpointUrl(UniverseChainId.MonadTestnet)],
       },
       [RPCType.Interface]: {
-        http: [config.quicknodeMonadTestnetRpcUrl],
+        http: [getQuicknodeEndpointUrl(UniverseChainId.MonadTestnet)],
       },
     },
     wrappedNativeCurrency: {
@@ -581,12 +638,12 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
       explorerLink: 'https://optimistic.etherscan.io/chart/etherprice',
-      logo: ETHEREUM_LOGO,
+      logo: ETH_LOGO,
     },
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
     rpcUrls: {
-      [RPCType.Public]: { http: [config.quicknodeOpRpcUrl] },
+      [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Optimism)] },
       [RPCType.PublicAlt]: { http: ['https://mainnet.optimism.io'] },
       [RPCType.Default]: { http: ['https://mainnet.optimism.io/'] },
       [RPCType.Fallback]: { http: ['https://rpc.ankr.com/optimism'] },
@@ -644,7 +701,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     networkLayer: NetworkLayer.L1,
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {
-      [RPCType.Public]: { http: [config.quicknodePolygonRpcUrl] },
+      [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Polygon)] },
       [RPCType.PublicAlt]: { http: ['https://polygon-rpc.com/'] },
       [RPCType.Default]: { http: ['https://polygon-rpc.com/'] },
       [RPCType.Interface]: { http: [`https://polygon-mainnet.infura.io/v3/${config.infuraKey}`] },
@@ -696,13 +753,13 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
       explorerLink: 'https://sepolia.etherscan.io/chart/etherprice',
-      logo: ETHEREUM_LOGO,
+      logo: ETH_LOGO,
     },
     networkLayer: NetworkLayer.L1,
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {
       [RPCType.Public]: {
-        http: [config.quicknodeSepoliaRpcUrl],
+        http: [getQuicknodeEndpointUrl(UniverseChainId.Sepolia)],
       },
       [RPCType.Default]: {
         http: ['https://rpc.sepolia.org/'],
@@ -766,19 +823,19 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
-      logo: ETHEREUM_LOGO,
+      logo: ETH_LOGO,
     },
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {
       [RPCType.Public]: {
-        http: [config.quicknodeUnichainSepoliaRpcUrl],
+        http: [getQuicknodeEndpointUrl(UniverseChainId.UnichainSepolia)],
       },
       [RPCType.Default]: {
-        http: [config.quicknodeUnichainSepoliaRpcUrl],
+        http: [getQuicknodeEndpointUrl(UniverseChainId.UnichainSepolia)],
       },
       [RPCType.Interface]: {
-        http: [config.quicknodeUnichainSepoliaRpcUrl],
+        http: [getQuicknodeEndpointUrl(UniverseChainId.UnichainSepolia)],
       },
     },
     spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_UNICHAIN_SEPOLIA, 10_000e6),
@@ -827,17 +884,17 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
-      logo: ETHEREUM_LOGO,
+      logo: ETH_LOGO,
     },
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {
       [RPCType.Public]: {
-        http: [config.quicknodeWorldChainRpcUrl],
+        http: [getQuicknodeEndpointUrl(UniverseChainId.WorldChain)],
       },
       [RPCType.Default]: { http: ['https://worldchain-mainnet.g.alchemy.com/public'] },
       [RPCType.Interface]: {
-        http: [config.quicknodeWorldChainRpcUrl],
+        http: [getQuicknodeEndpointUrl(UniverseChainId.WorldChain)],
       },
     },
     urlParam: 'worldchain',
@@ -886,14 +943,14 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
-      logo: ETHEREUM_LOGO,
+      logo: ETH_LOGO,
     },
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {
-      [RPCType.Public]: { http: [config.quicknodeZkSyncRpcUrl] },
+      [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Zksync)] },
       [RPCType.Default]: { http: ['https://mainnet.era.zksync.io/'] },
-      [RPCType.Interface]: { http: [config.quicknodeZkSyncRpcUrl] },
+      [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Zksync)] },
     },
     urlParam: 'zksync',
     statusPage: undefined,
@@ -941,13 +998,13 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
-      logo: ETHEREUM_LOGO,
+      logo: ETH_LOGO,
     },
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {
-      [RPCType.Public]: { http: [config.quicknodeZoraRpcUrl] },
+      [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Zora)] },
       [RPCType.Default]: { http: ['https://rpc.zora.energy/'] },
-      [RPCType.Interface]: { http: [config.quicknodeZoraRpcUrl] },
+      [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Zora)] },
     },
     spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_ZORA, 10_000e6),
     stablecoins: [USDC_ZORA],

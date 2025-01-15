@@ -9,7 +9,7 @@ import { useUpdateAtom } from 'jotai/utils'
 import { useTheme } from 'lib/styled-components'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Image, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Image, Text } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { ArrowRightToLine } from 'ui/src/components/icons/ArrowRightToLine'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -31,7 +31,7 @@ const UnreadIndicator = () => {
 
 const DeepLinkButton = ({ Icon, Label, onPress }: { Icon: JSX.Element; Label: string; onPress: () => void }) => {
   return (
-    <Button
+    <DeprecatedButton
       display="flex"
       alignItems="center"
       gap="$spacing12"
@@ -47,7 +47,7 @@ const DeepLinkButton = ({ Icon, Label, onPress }: { Icon: JSX.Element; Label: st
         {Label}
       </Text>
       <RotatableChevron width={iconSizes.icon20} height={iconSizes.icon20} color="$neutral3" direction="right" />
-    </Button>
+    </DeprecatedButton>
   )
 }
 

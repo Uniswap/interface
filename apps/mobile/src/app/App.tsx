@@ -1,11 +1,10 @@
 import { ApolloProvider } from '@apollo/client'
 import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev'
-import { DdRum, DdSdkReactNative } from '@datadog/mobile-react-native'
+import { DdRum, DdSdkReactNative, RumActionType } from '@datadog/mobile-react-native'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
 import { MMKVWrapper } from 'apollo3-cache-persist'
-import * as SplashScreen from 'expo-splash-screen'
-import { default as React, StrictMode, useCallback, useEffect } from 'react'
+import { default as React, StrictMode, useCallback, useEffect, useRef } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { LogBox, NativeModules, StatusBar } from 'react-native'
 import appsFlyer from 'react-native-appsflyer'
@@ -65,7 +64,7 @@ import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/conte
 import i18n from 'uniswap/src/i18n'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
-import { isDetoxBuild } from 'utilities/src/environment/constants'
+import { datadogEnabled, isDetoxBuild } from 'utilities/src/environment/constants'
 import { attachUnhandledRejectionHandler, setAttributesToDatadog } from 'utilities/src/logger/Datadog'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { logger } from 'utilities/src/logger/logger'
@@ -92,9 +91,6 @@ if (__DEV__) {
   loadDevMessages()
   loadErrorMessages()
 }
-
-// Keep the splash screen visible while we fetch resources until one of our landing pages loads
-SplashScreen.preventAutoHideAsync().catch(() => undefined)
 
 // Log boxes on simulators can block detox tap event when they cover buttons placed at
 // the bottom of the screen and cause tests to fail.
@@ -185,8 +181,26 @@ function AppOuter(): JSX.Element | null {
     customEndpoint,
     reduxStore: store,
   })
+  const jsBundleLoadedRef = useRef(false)
 
-  const onReportPrepared = useCallback((report: RenderPassReport) => {
+  /**
+   * Function called by the @shopify/react-native-performance PerformanceProfiler that returns a
+   * RenderPassReport. We then forward this report to Datadog, Amplitude, etc.
+   */
+  const onReportPrepared = useCallback(async (report: RenderPassReport) => {
+    if (datadogEnabled) {
+      const shouldLogJsBundleLoaded = report.timeToBootJsMillis && !jsBundleLoadedRef.current
+      if (shouldLogJsBundleLoaded) {
+        await DdRum.addAction(RumActionType.CUSTOM, 'application_start_js', {
+          loading_time: report.timeToBootJsMillis,
+        })
+        jsBundleLoadedRef.current = true
+      }
+      if (report.interactive) {
+        await DdRum.addTiming('screenInteractive')
+      }
+    }
+
     sendAnalyticsEvent(MobileEventName.PerformanceReport, report)
   }, [])
 

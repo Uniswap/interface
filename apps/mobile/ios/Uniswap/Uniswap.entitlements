@@ -27,8 +27,8 @@
 	</array>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.com.$(PRODUCT_NAME).onesignal</string>
 		<string>group.com.uniswap.widgets</string>
+		<string>group.com.uniswap.mobile.onesignal</string>
 	</array>
 </dict>
 </plist>

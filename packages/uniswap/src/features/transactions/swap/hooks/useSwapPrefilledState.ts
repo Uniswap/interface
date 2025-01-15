@@ -27,6 +27,7 @@ export function useSwapPrefilledState(initialState: TransactionState | undefined
             txId: initialState.txId,
             isFiatMode: false,
             isSubmitting: false,
+            isMax: false,
           }
         : undefined,
     [initialState],

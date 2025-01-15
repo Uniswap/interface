@@ -277,7 +277,7 @@ function NFTItemScreenContents({
                       variant="subheading1"
                     />
                   ) : displayCollectionName ? (
-                    <Text color="$neutral1" mt="$spacing4" numberOfLines={2} variant="subheading1">
+                    <Text color={colors.neutral1.val} mt="$spacing8" numberOfLines={2} variant="subheading1">
                       {displayCollectionName}
                     </Text>
                   ) : null}
@@ -311,7 +311,7 @@ function NFTItemScreenContents({
                         <PriceAmount
                           iconColor="$neutral1"
                           price={listingPrice}
-                          textColor="$neutral1"
+                          textColor={colors.neutral1.val}
                           textVariant="buttonLabel2"
                         />
                       }
@@ -319,11 +319,11 @@ function NFTItemScreenContents({
                   ) : null}
                   {chainId && (
                     <AssetMetadata
-                      color={accentTextColor}
+                      color={colors.neutral2.val}
                       title={t('tokens.nfts.details.network')}
                       valueComponent={
                         <Flex row alignItems="center" gap="$spacing8">
-                          <Text color="$neutral1" variant="buttonLabel2">
+                          <Text color={colors.neutral1.val} variant="buttonLabel2">
                             {getChainLabel(chainId)}
                           </Text>
                           <NetworkLogo chainId={chainId} shape="square" size={iconSizes.icon20} />
@@ -333,13 +333,13 @@ function NFTItemScreenContents({
                   )}
                   {lastSaleData?.price?.value ? (
                     <AssetMetadata
-                      color={accentTextColor}
+                      color={colors.neutral2.val}
                       title={t('tokens.nfts.details.recentPrice')}
                       valueComponent={
                         <PriceAmount
                           iconColor="$neutral1"
                           price={lastSaleData.price}
-                          textColor="$neutral1"
+                          textColor={colors.neutral1.val}
                           textVariant="buttonLabel2"
                         />
                       }
@@ -348,7 +348,7 @@ function NFTItemScreenContents({
 
                   {owner && (
                     <AssetMetadata
-                      color={accentTextColor}
+                      color={colors.neutral2.val}
                       title={t('tokens.nfts.details.owner')}
                       valueComponent={
                         <TouchableArea disabled={disableProfileNavigation} hitSlop={16} onPress={onPressOwner}>
@@ -357,7 +357,7 @@ function NFTItemScreenContents({
                             hideAddressInSubtitle={true}
                             horizontalGap="$spacing4"
                             size={iconSizes.icon20}
-                            textColor="$neutral1"
+                            textColor={colors.neutral1.val}
                             variant="buttonLabel2"
                           />
                         </TouchableArea>
@@ -369,10 +369,10 @@ function NFTItemScreenContents({
                 {/* Traits */}
                 {asset?.traits && asset?.traits?.length > 0 ? (
                   <Flex gap="$spacing12">
-                    <Text color="$neutral1" ml="$spacing24" variant="body2">
+                    <Text color={colors.neutral1.val} ml="$spacing24" variant="body2">
                       {t('tokens.nfts.details.traits')}
                     </Text>
-                    <NFTTraitList titleTextColor={accentTextColor} traits={asset.traits} />
+                    <NFTTraitList titleTextColor={colors.neutral2.val} traits={asset.traits} />
                   </Flex>
                 ) : null}
               </Flex>

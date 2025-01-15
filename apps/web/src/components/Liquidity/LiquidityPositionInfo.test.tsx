@@ -18,6 +18,7 @@ describe('LiquidityPositionInfo', () => {
       poolId: '1',
       tokenId: '1',
       v4hook: undefined,
+      owner: '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3',
     }
     const { getByText } = render(<LiquidityPositionInfo positionInfo={positionInfo} />)
     expect(getByText('In range')).toBeInTheDocument()
@@ -33,6 +34,7 @@ describe('LiquidityPositionInfo', () => {
       poolId: '1',
       tokenId: '4',
       v4hook: undefined,
+      owner: '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3',
     }
     const { getByText } = render(<LiquidityPositionInfo positionInfo={positionInfo} />)
     expect(getByText('Out of range')).toBeInTheDocument()
@@ -48,6 +50,7 @@ describe('LiquidityPositionInfo', () => {
       version: ProtocolVersion.V3,
       tokenId: '1',
       v4hook: undefined,
+      owner: '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3',
     }
     const { getByText } = render(<LiquidityPositionInfo positionInfo={positionInfo} />)
     expect(getByText('Closed')).toBeInTheDocument()

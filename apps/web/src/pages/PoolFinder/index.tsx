@@ -18,7 +18,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useTokenBalance } from 'state/connection/hooks'
 import { usePairAdder } from 'state/user/hooks'
 import { PositionField } from 'types/position'
-import { Button, Flex, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Text } from 'ui/src'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
@@ -150,11 +150,11 @@ export default function PoolFinder() {
             </Flex>
           )}
           {!account.isConnected ? (
-            <Button theme="secondary" mt="$gap32" onPress={accountDrawer.open}>
+            <DeprecatedButton theme="secondary" mt="$gap32" onPress={accountDrawer.open}>
               {t('common.connectWallet.button')}
-            </Button>
+            </DeprecatedButton>
           ) : (
-            <Button
+            <DeprecatedButton
               theme="secondary"
               mt="$gap32"
               disabled={!hasPosition || success}
@@ -169,7 +169,7 @@ export default function PoolFinder() {
               }}
             >
               {hasPosition ? (success ? t('pool.import.success') : t('pool.import')) : t('common.button.continue')}
-            </Button>
+            </DeprecatedButton>
           )}
         </Flex>
 

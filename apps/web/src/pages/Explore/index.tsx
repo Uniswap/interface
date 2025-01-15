@@ -17,7 +17,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ExploreContextProvider } from 'state/explore'
 import { TamaguiClickableStyle } from 'theme/components'
-import { Button, Flex, Text, styled as tamaguiStyled } from 'ui/src'
+import { DeprecatedButton, Flex, Text, styled as tamaguiStyled } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { isBackendSupportedChain } from 'uniswap/src/features/chains/utils'
@@ -202,7 +202,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
             </Flex>
             <Flex row gap="$spacing8" height="$spacing40" justifyContent="flex-start">
               {currentKey === ExploreTab.Pools && isLPRedesignEnabled && (
-                <Button
+                <DeprecatedButton
                   size="small"
                   backgroundColor="$accent3"
                   hoverStyle={{ backgroundColor: '$accent3', opacity: 0.6 }}
@@ -215,7 +215,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                       {t('common.addLiquidity')}
                     </Text>
                   </Flex>
-                </Button>
+                </DeprecatedButton>
               )}
               <TableNetworkFilter showMultichainOption={currentKey !== ExploreTab.Transactions} />
               {currentKey === ExploreTab.Tokens && <VolumeTimeFrameSelector />}

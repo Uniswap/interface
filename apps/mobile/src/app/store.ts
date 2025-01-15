@@ -4,7 +4,7 @@ import { Storage, persistReducer, persistStore } from 'redux-persist'
 import { MOBILE_STATE_VERSION, migrations } from 'src/app/migrations'
 import { MobileState, mobilePersistedStateList, mobileReducer } from 'src/app/mobileReducer'
 import { rootMobileSaga } from 'src/app/saga'
-import { getFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { isNonJestDev } from 'utilities/src/environment/constants'
 import { createDatadogReduxEnhancer } from 'utilities/src/logger/Datadog'
 import { createStore } from 'wallet/src/state'
@@ -51,7 +51,7 @@ if (isNonJestDev) {
   enhancers.push(reactotron.createEnhancer())
 }
 
-const middlewares: Middleware[] = [getFiatOnRampAggregatorApi().middleware]
+const middlewares: Middleware[] = [fiatOnRampAggregatorApi.middleware]
 
 export const setupStore = (
   preloadedState?: PreloadedState<MobileState>,

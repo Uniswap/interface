@@ -6,6 +6,7 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { OrderDirection, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import deprecatedStyled from 'lib/styled-components'
+import opacify from 'polished/lib/color/opacify'
 import { PropsWithChildren } from 'react'
 import { ArrowDown, CornerLeftUp, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { useTranslation } from 'react-i18next'
@@ -83,6 +84,7 @@ export const ReturnButton = deprecatedStyled(ButtonLight)`
   border-radius: 900px;
   width: fit-content;
   margin-top: 8px;
+  box-shadow: ${({ theme }) => `0px 10px 15px -3px ${opacify(54, theme.surface1)}, 0px 4px 6px -2px ${opacify(40, theme.surface1)}`};
 `
 
 export const ReturnIcon = deprecatedStyled(CornerLeftUp)`

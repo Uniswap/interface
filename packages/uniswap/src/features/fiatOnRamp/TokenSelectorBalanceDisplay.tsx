@@ -2,30 +2,56 @@ import { ComponentProps } from 'react'
 import { Flex, SpinningLoader, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { MaxAmountButton } from 'uniswap/src/components/CurrencyInputPanel/MaxAmountButton'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { useFormatExactCurrencyAmount } from 'uniswap/src/features/fiatOnRamp/hooks'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 interface TokenSelectorBalanceDisplayProps {
   onPress: () => void
+  onMaxPress: (amount: string) => void
   selectedCurrencyInfo: CurrencyInfo
-  formattedAmount?: string
   disabled?: boolean
   loading?: boolean
   chevronDirection?: ComponentProps<typeof RotatableChevron>['direction']
   testID?: TestIDType
+  isOffRamp?: boolean
+  portfolioBalance?: PortfolioBalance | null | undefined
+  tokenAmount?: number
 }
 
 export function TokenSelectorBalanceDisplay({
   selectedCurrencyInfo,
   onPress,
-  formattedAmount = '-',
   disabled,
   loading,
   chevronDirection = 'end',
   testID,
+  isOffRamp,
+  portfolioBalance,
+  onMaxPress,
+  tokenAmount,
 }: TokenSelectorBalanceDisplayProps): JSX.Element {
+  const balanceQuantity = portfolioBalance?.quantity.toString() || '0'
+  const formattedAmount = useFormatExactCurrencyAmount(balanceQuantity, selectedCurrencyInfo?.currency) || '-'
+
+  const currencyBalance = getCurrencyAmount({
+    value: balanceQuantity,
+    valueType: ValueType.Exact,
+    currency: selectedCurrencyInfo.currency,
+  })
+
+  const currencyAmount = getCurrencyAmount({
+    value: tokenAmount?.toString(),
+    valueType: ValueType.Exact,
+    currency: selectedCurrencyInfo.currency,
+  })
+
   return (
     <TouchableArea borderRadius="$roundedFull" disabled={disabled} testID={testID} onPress={onPress}>
       <Flex
@@ -60,6 +86,15 @@ export function TokenSelectorBalanceDisplay({
             {getSymbolDisplayText(selectedCurrencyInfo.currency.symbol)}
           </Text>
         </Flex>
+        {isOffRamp && (
+          <MaxAmountButton
+            currencyAmount={currencyAmount}
+            currencyBalance={currencyBalance}
+            currencyField={CurrencyField.INPUT}
+            transactionType={TransactionType.Send}
+            onSetMax={onMaxPress}
+          />
+        )}
         <RotatableChevron color="$neutral3" direction={chevronDirection} height={iconSizes.icon24} />
       </Flex>
     </TouchableArea>

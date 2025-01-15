@@ -54,7 +54,7 @@ export function useIsPoolOutOfSync(poolPrice?: Price<Currency, Currency>) {
     poolPrice
       .quote(
         CurrencyAmount.fromRawAmount(
-          poolPrice.baseCurrency?.wrapped,
+          poolPrice.baseCurrency,
           JSBI.BigInt(parseUnits('1', poolPrice.baseCurrency?.decimals)),
         ),
       )

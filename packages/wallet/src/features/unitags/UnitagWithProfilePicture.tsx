@@ -13,7 +13,7 @@ export const UnitagWithProfilePicture = ({
   profilePictureUri?: string
 }): JSX.Element => {
   return (
-    <Flex centered pb="$spacing28">
+    <Flex centered pb="$spacing28" position="relative" width="100%">
       <UnitagProfilePicture address={address} size={imageSizes.image100} unitagAvatarUri={profilePictureUri} />
       <Flex
         row
@@ -28,8 +28,9 @@ export const UnitagWithProfilePicture = ({
         shadowRadius="$spacing4"
         transform={[{ rotateZ: '-2deg' }]}
         zIndex="$popover"
+        alignSelf="center"
       >
-        <Text color="$accent1" variant="subheading1">
+        <Text color="$accent1" variant="subheading1" numberOfLines={1}>
           {unitag}
           <Text color="$neutral3" variant="subheading1">
             {UNITAG_SUFFIX}

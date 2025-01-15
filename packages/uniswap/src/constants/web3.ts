@@ -8,4 +8,5 @@ export const CONNECTION_PROVIDER_IDS = {
   METAMASK_RDNS: 'io.metamask',
   UNISWAP_EXTENSION_RDNS: 'org.uniswap.app',
   SAFE_CONNECTOR_ID: 'safe',
+  EMBEDDED_WALLET_CONNECTOR_ID: 'embeddedUniswapWalletConnector',
 } as const

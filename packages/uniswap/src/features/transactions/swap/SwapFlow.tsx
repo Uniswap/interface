@@ -38,6 +38,7 @@ export interface SwapFlowProps extends Omit<TransactionModalProps, 'fullscreen' 
   swapCallback: SwapCallback
   wrapCallback: WrapCallback
   onSubmitSwap?: () => Promise<void>
+  tokenColor?: string
 }
 
 export function SwapFlow({
@@ -45,6 +46,7 @@ export function SwapFlow({
   swapCallback,
   wrapCallback,
   onSubmitSwap,
+  tokenColor,
   ...transactionModalProps
 }: SwapFlowProps): JSX.Element {
   const swapFormContext = useSwapFormContext()
@@ -60,6 +62,7 @@ export function SwapFlow({
               settings={settings}
               swapCallback={swapCallback}
               wrapCallback={wrapCallback}
+              tokenColor={tokenColor}
               onSubmitSwap={onSubmitSwap}
             />
           </SwapTxContextProviderTradingApi>
@@ -74,11 +77,13 @@ function CurrentScreen({
   swapCallback,
   wrapCallback,
   onSubmitSwap,
+  tokenColor,
 }: {
   settings: SwapSettingConfig[]
   swapCallback: SwapCallback
   wrapCallback: WrapCallback
   onSubmitSwap?: () => Promise<void>
+  tokenColor?: string
 }): JSX.Element {
   const { screen, setScreen } = useTransactionModalContext()
 
@@ -86,7 +91,7 @@ function CurrentScreen({
     return (
       <>
         <Trace logImpression section={SectionName.SwapForm}>
-          <SwapFormScreen settings={settings} hideContent={false} wrapCallback={wrapCallback} />
+          <SwapFormScreen settings={settings} hideContent={false} wrapCallback={wrapCallback} tokenColor={tokenColor} />
         </Trace>
 
         {/*

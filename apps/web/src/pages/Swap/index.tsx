@@ -133,6 +133,7 @@ export function Swap({
   compact = false,
   syncTabToUrl,
   swapRedirectCallback,
+  tokenColor,
 }: {
   className?: string
   chainId?: UniverseChainId
@@ -148,6 +149,7 @@ export function Swap({
   hideHeader?: boolean
   hideFooter?: boolean
   swapRedirectCallback?: SwapRedirectFn
+  tokenColor?: string
 }) {
   const isDark = useIsDarkMode()
   const screenSize = useScreenSize()
@@ -197,6 +199,7 @@ export function Swap({
                     swapRedirectCallback={swapRedirectCallback}
                     onCurrencyChange={onCurrencyChange}
                     prefilledState={prefilledState}
+                    tokenColor={tokenColor}
                   />
                 </Flex>
               </SwapFormContextProvider>
@@ -263,6 +266,7 @@ function UniversalSwapFlow({
   prefilledState,
   onCurrencyChange,
   swapRedirectCallback,
+  tokenColor,
 }: {
   hideHeader?: boolean
   hideFooter?: boolean
@@ -271,6 +275,7 @@ function UniversalSwapFlow({
   prefilledState?: SwapFormState
   onCurrencyChange?: (selected: CurrencyState) => void
   swapRedirectCallback?: SwapRedirectFn
+  tokenColor?: string
 }) {
   const [currentTab, setCurrentTab] = useState(SwapTab.Swap)
   const { pathname } = useLocation()
@@ -340,6 +345,7 @@ function UniversalSwapFlow({
             swapCallback={swapCallback}
             wrapCallback={wrapCallback}
             prefilledState={prefilledState}
+            tokenColor={tokenColor}
           />
           <SwapBottomCard />
         </Flex>

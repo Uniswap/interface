@@ -30,7 +30,7 @@ import { Trans } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
-import { Button, Flex, Separator, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Separator, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -316,11 +316,17 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
                 </Text>
               </LoaderButton>
             ) : !isPoolOutOfSync || !txInfo?.action ? (
-              <Button flex={1} py="$spacing16" px="$spacing20" onPress={handleCreate} disabled={!txInfo?.action}>
+              <DeprecatedButton
+                flex={1}
+                py="$spacing16"
+                px="$spacing20"
+                onPress={handleCreate}
+                disabled={!txInfo?.action}
+              >
                 <Text variant="buttonLabel1" color="$neutralContrast">
                   <Trans i18nKey="common.button.create" />
                 </Text>
-              </Button>
+              </DeprecatedButton>
             ) : (
               <ButtonError error $borderRadius="20px" onClick={handleCreate}>
                 <Trans i18nKey="common.button.create" />

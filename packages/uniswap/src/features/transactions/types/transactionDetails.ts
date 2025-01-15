@@ -13,7 +13,6 @@ export type ChainIdToTxIdToDetails = Partial<Record<UniverseChainId, { [txId: st
 // Basic identifying info for a transaction
 export interface TransactionId {
   chainId: UniverseChainId
-  // moonpay externalTransactionId
   id: string
 }
 
@@ -159,6 +158,7 @@ export type TransactionOptions = {
   timeoutTimestampMs?: number
   timeoutLogged?: boolean
   submitViaPrivateRpc?: boolean
+  privateRpcProvider?: 'flashbots' | 'mevblocker'
 }
 
 export interface TransactionReceipt {

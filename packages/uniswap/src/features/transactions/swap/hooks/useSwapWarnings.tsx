@@ -17,7 +17,10 @@ import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { FetchError, isRateLimitFetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { Err404 } from 'uniswap/src/data/tradingApi/__generated__'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
-import { selectHasDismissedBridgingWarning } from 'uniswap/src/features/behaviorHistory/selectors'
+import {
+  selectHasDismissedBridgingWarning,
+  selectHasDismissedLowNetworkTokenWarning,
+} from 'uniswap/src/features/behaviorHistory/selectors'
 import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { useTransactionGasWarning } from 'uniswap/src/features/gas/hooks'
 import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -161,6 +164,18 @@ export function useNeedsBridgingWarning(derivedSwapInfo: DerivedSwapInfo): boole
   return isBridgeTrade && !hasDismissedBridgingWarning
 }
 
+export function useNeedsLowNativeBalanceWarning({
+  derivedSwapInfo,
+  isMax,
+}: {
+  derivedSwapInfo: DerivedSwapInfo
+  isMax: boolean
+}): boolean {
+  const needsLowNativeBalanceWarning = isMax && derivedSwapInfo.currencyAmounts[CurrencyField.INPUT]?.currency.isNative
+  const hasDismissedLowNetworkTokenWarning = useSelector(selectHasDismissedLowNetworkTokenWarning)
+  return !!needsLowNativeBalanceWarning && !hasDismissedLowNetworkTokenWarning
+}
+
 /*
  * Display token protection warning modal on swap button click.
  * For **interface use only**, where the swap component might be prefilled with a token that has a protection warning.
@@ -264,7 +279,7 @@ function getSwapWarningFromError(error: Error, t: TFunction): Warning {
     }
 
     // Map errorCode to Warning
-    switch (error.data.errorCode) {
+    switch (error.data?.errorCode) {
       case Err404.errorCode.QUOTE_AMOUNT_TOO_LOW_ERROR: {
         return {
           type: WarningLabel.EnterLargerAmount,

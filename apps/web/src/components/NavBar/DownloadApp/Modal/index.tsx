@@ -2,6 +2,7 @@ import { InterfaceModalName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { GetStarted } from 'components/NavBar/DownloadApp/Modal/GetStarted'
 import { GetTheApp } from 'components/NavBar/DownloadApp/Modal/GetTheApp'
+import { PasskeyGenerationModal } from 'components/NavBar/DownloadApp/Modal/PasskeyGeneration'
 import { useIsAccountCTAExperimentControl } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useCallback, useState } from 'react'
 import { ArrowLeft, X } from 'react-feather'
@@ -11,6 +12,8 @@ import { ClickableTamaguiStyle } from 'theme/components'
 import { AnimateTransition, Flex, styled as tamaguiStyled } from 'ui/src'
 import { iconSizes, zIndices } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
@@ -41,11 +44,13 @@ const CloseButton = tamaguiStyled(X, {
 
 const BackButton = tamaguiStyled(ArrowLeft, {
   ...HeaderActionIcon,
+  color: '$neutral3',
 })
 
-enum Page {
-  GetStarted = 'GetStarted',
-  GetApp = 'GetApp',
+export enum Page {
+  GetStarted,
+  GetApp,
+  PasskeyGeneration,
 }
 
 export function GetTheAppModal() {
@@ -60,6 +65,8 @@ export function GetTheAppModal() {
   const accountDrawer = useAccountDrawer()
 
   const { isControl: isAccountCTAExperimentControl } = useIsAccountCTAExperimentControl()
+  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
+  const isControl = isAccountCTAExperimentControl || isEmbeddedWalletEnabled
 
   return (
     <Trace modal={InterfaceModalName.GETTING_STARTED_MODAL}>
@@ -81,31 +88,32 @@ export function GetTheAppModal() {
           pr="$spacing24"
         >
           {showBackButton && <BackButton onClick={() => setPage(Page.GetStarted)} size={iconSizes.icon24} />}
-          <CloseButton
-            filled={!isAccountCTAExperimentControl && !showBackButton}
-            onClick={close}
-            data-testid="get-the-app-close-button"
-          />
+          {page !== Page.PasskeyGeneration && (
+            <CloseButton
+              filled={(!isAccountCTAExperimentControl || isEmbeddedWalletEnabled) && !showBackButton}
+              onClick={close}
+              data-testid="get-the-app-close-button"
+            />
+          )}
         </Flex>
         <Flex
           data-testid="download-uniswap-modal"
           position="relative"
           width="100%"
           userSelect="none"
-          height={isAccountCTAExperimentControl ? 'unset' : '520px'}
+          height={isControl ? 'unset' : '520px'}
         >
-          <AnimateTransition
-            currentIndex={page === Page.GetStarted ? 0 : 1}
-            animationType={page === Page.GetStarted ? 'forward' : 'backward'}
-          >
+          {/* The Page enum value corresponds to the modal page's index */}
+          <AnimateTransition currentIndex={page} animationType={page === Page.GetStarted ? 'forward' : 'backward'}>
             <GetStarted
-              toAppDownload={() => setPage(Page.GetApp)}
+              setPage={setPage}
               toConnectWalletDrawer={() => {
                 close()
                 accountDrawer.open()
               }}
             />
             <GetTheApp />
+            <PasskeyGenerationModal setPage={setPage} />
           </AnimateTransition>
         </Flex>
       </Modal>

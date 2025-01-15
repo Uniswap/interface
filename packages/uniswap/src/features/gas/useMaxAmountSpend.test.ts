@@ -19,13 +19,13 @@ jest.mock('uniswap/src/features/gating/hooks', () => {
 
 describe(useMaxAmountSpend, () => {
   it('handles undefined', () => {
-    expect(useMaxAmountSpend(undefined)).toEqual(undefined)
-    expect(useMaxAmountSpend(null)).toEqual(undefined)
+    expect(useMaxAmountSpend({ currencyAmount: undefined })).toEqual(undefined)
+    expect(useMaxAmountSpend({ currencyAmount: null })).toEqual(undefined)
   })
 
   it('handles token amounts', () => {
     const tokenAmount = CurrencyAmount.fromRawAmount(DAI, '100000000')
-    expect(useMaxAmountSpend(tokenAmount)).toBe(tokenAmount)
+    expect(useMaxAmountSpend({ currencyAmount: tokenAmount })).toBe(tokenAmount)
   })
 
   // ETH Mainnet
@@ -36,7 +36,7 @@ describe(useMaxAmountSpend, () => {
       MAINNET_CURRENCY,
       JSBI.add(JSBI.BigInt(99), JSBI.BigInt(MIN_ETH_FOR_GAS)),
     )
-    const amount1Spend = useMaxAmountSpend(amount)
+    const amount1Spend = useMaxAmountSpend({ currencyAmount: amount })
     expect(amount1Spend?.quotient.toString()).toEqual('99')
   })
 
@@ -46,7 +46,7 @@ describe(useMaxAmountSpend, () => {
       MAINNET_CURRENCY,
       JSBI.subtract(JSBI.BigInt(99), JSBI.BigInt(MIN_ETH_FOR_GAS)),
     )
-    const amount1Spend = useMaxAmountSpend(amount)
+    const amount1Spend = useMaxAmountSpend({ currencyAmount: amount })
     expect(amount1Spend?.quotient.toString()).toEqual('0')
   })
 
@@ -58,7 +58,7 @@ describe(useMaxAmountSpend, () => {
       POLYGON_CURRENCY,
       JSBI.add(JSBI.BigInt(99), JSBI.BigInt(MIN_POLYGON_FOR_GAS)),
     )
-    const amount1Spend = useMaxAmountSpend(amount)
+    const amount1Spend = useMaxAmountSpend({ currencyAmount: amount })
     expect(amount1Spend?.quotient.toString()).toEqual('99')
   })
 
@@ -68,7 +68,7 @@ describe(useMaxAmountSpend, () => {
       POLYGON_CURRENCY,
       JSBI.subtract(JSBI.BigInt(99), JSBI.BigInt(MIN_POLYGON_FOR_GAS)),
     )
-    const amount1Spend = useMaxAmountSpend(amount)
+    const amount1Spend = useMaxAmountSpend({ currencyAmount: amount })
     expect(amount1Spend?.quotient.toString()).toEqual('0')
   })
 
@@ -80,7 +80,7 @@ describe(useMaxAmountSpend, () => {
       ARBITRUM_CURRENCY,
       JSBI.add(JSBI.BigInt(99), JSBI.BigInt(MIN_ARBITRUM_FOR_GAS)),
     )
-    const amount1Spend = useMaxAmountSpend(amount)
+    const amount1Spend = useMaxAmountSpend({ currencyAmount: amount })
     expect(amount1Spend?.quotient.toString()).toEqual('99')
   })
 
@@ -90,7 +90,7 @@ describe(useMaxAmountSpend, () => {
       ARBITRUM_CURRENCY,
       JSBI.subtract(JSBI.BigInt(99), JSBI.BigInt(MIN_ARBITRUM_FOR_GAS)),
     )
-    const amount1Spend = useMaxAmountSpend(amount)
+    const amount1Spend = useMaxAmountSpend({ currencyAmount: amount })
     expect(amount1Spend?.quotient.toString()).toEqual('0')
   })
 
@@ -102,7 +102,7 @@ describe(useMaxAmountSpend, () => {
       OPTIMISM_CURRENCY,
       JSBI.add(JSBI.BigInt(99), JSBI.BigInt(MIN_OPTIMISM_FOR_GAS)),
     )
-    const amount1Spend = useMaxAmountSpend(amount)
+    const amount1Spend = useMaxAmountSpend({ currencyAmount: amount })
     expect(amount1Spend?.quotient.toString()).toEqual('99')
   })
 
@@ -112,7 +112,7 @@ describe(useMaxAmountSpend, () => {
       OPTIMISM_CURRENCY,
       JSBI.subtract(JSBI.BigInt(99), JSBI.BigInt(MIN_OPTIMISM_FOR_GAS)),
     )
-    const amount1Spend = useMaxAmountSpend(amount)
+    const amount1Spend = useMaxAmountSpend({ currencyAmount: amount })
     expect(amount1Spend?.quotient.toString()).toEqual('0')
   })
 })

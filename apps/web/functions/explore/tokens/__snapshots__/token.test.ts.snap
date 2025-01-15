@@ -99,19 +99,6 @@ exports[`should inject metadata for valid tokens 1`] = `
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
       }
 
-      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
-      #background-radial-gradient {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        pointer-events: none;
-        width: 200vw;
-        height: 200vh;
-        transform: translate(-50vw, -100vh);
-        z-index: -1;
-      }
-
       html,
       body,
       #root {
@@ -239,19 +226,6 @@ exports[`should inject metadata for valid tokens 2`] = `
         -webkit-font-smoothing: antialiased !important;
         -moz-osx-font-smoothing: grayscale;
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-      }
-
-      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
-      #background-radial-gradient {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        pointer-events: none;
-        width: 200vw;
-        height: 200vh;
-        transform: translate(-50vw, -100vh);
-        z-index: -1;
       }
 
       html,
@@ -383,19 +357,6 @@ exports[`should inject metadata for valid tokens 3`] = `
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
       }
 
-      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
-      #background-radial-gradient {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        pointer-events: none;
-        width: 200vw;
-        height: 200vh;
-        transform: translate(-50vw, -100vh);
-        z-index: -1;
-      }
-
       html,
       body,
       #root {
@@ -523,19 +484,6 @@ exports[`should inject metadata for valid tokens 4`] = `
         -webkit-font-smoothing: antialiased !important;
         -moz-osx-font-smoothing: grayscale;
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-      }
-
-      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
-      #background-radial-gradient {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        pointer-events: none;
-        width: 200vw;
-        height: 200vh;
-        transform: translate(-50vw, -100vh);
-        z-index: -1;
       }
 
       html,

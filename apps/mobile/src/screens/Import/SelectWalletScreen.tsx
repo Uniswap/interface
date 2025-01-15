@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
-import { Button, Flex, Loader, useLayoutAnimationOnChange } from 'ui/src'
+import { DeprecatedButton, Flex, Loader, useLayoutAnimationOnChange } from 'ui/src'
 import { WalletFilled } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -96,13 +96,13 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
           </ScrollView>
         )}
         <Flex opacity={showError ? 0 : 1} px="$spacing16">
-          <Button
+          <DeprecatedButton
             disabled={isLoading || !!showError || selectedAddresses.length === 0}
             testID={TestID.Next}
             onPress={onSubmit}
           >
             {t('common.button.continue')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </OnboardingScreen>
     </>

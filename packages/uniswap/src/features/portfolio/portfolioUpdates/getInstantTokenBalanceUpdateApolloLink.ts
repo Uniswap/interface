@@ -4,6 +4,7 @@ import { Reference, asyncMap } from '@apollo/client/utilities'
 import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import {
+  Amount,
   Currency,
   Portfolio,
   TokenBalance,
@@ -77,16 +78,10 @@ export function getInstantTokenBalanceUpdateApolloLink({ reduxStore }: { reduxSt
 
         const onchainBalancesByCurrencyId = await fetchOnChainBalances({
           apolloCache,
+          cachedPortfolio: data.portfolios[0],
           accountAddress: walletAddress,
           currencyIds: new Set(Object.keys(tokenBalanceOverrides)),
         })
-
-        logger.debug(
-          'getInstantTokenBalanceUpdateApolloLink.ts',
-          'getInstantTokenBalanceUpdateApolloLink',
-          '[ITBU] Onchain balances fetched',
-          { onchainBalancesByCurrencyId },
-        )
 
         const tokenBalanceAlreadyExists: Record<string, boolean> = {}
 
@@ -186,6 +181,7 @@ export function getInstantTokenBalanceUpdateApolloLink({ reduxStore }: { reduxSt
 
         missingTokenBalances.forEach((currencyId) => {
           const onchainBalanceQuantity = onchainBalancesByCurrencyId.get(currencyId)?.quantity
+          const denominatedValue = onchainBalancesByCurrencyId.get(currencyId)?.denominatedValue ?? null
 
           if (onchainBalanceQuantity === undefined) {
             logger.warn(
@@ -202,6 +198,7 @@ export function getInstantTokenBalanceUpdateApolloLink({ reduxStore }: { reduxSt
             ownerAddress: walletAddress,
             currencyId,
             onchainBalanceQuantity,
+            denominatedValue,
           })
 
           if (!newTokenBalance) {
@@ -232,11 +229,13 @@ export function createTokenBalanceRef({
   ownerAddress,
   currencyId,
   onchainBalanceQuantity,
+  denominatedValue,
 }: {
   apolloCache: ApolloCache<NormalizedCacheObject>
   ownerAddress: Address
   currencyId: CurrencyId
   onchainBalanceQuantity: number
+  denominatedValue: { value: number; currency: string } | null
 }): Reference | null {
   const token = apolloCache.readQuery<TokenQuery>({
     query: TokenDocument,
@@ -244,20 +243,37 @@ export function createTokenBalanceRef({
   })?.token
 
   if (!token) {
-    logger.warn('getInstantTokenBalanceUpdateApolloLink.ts', 'createTokenBalance', 'No `token` found', { currencyId })
+    logger.warn('getInstantTokenBalanceUpdateApolloLink.ts', 'createTokenBalance', '[ITBU] No `token` found', {
+      currencyId,
+    })
     return null
   }
 
   // This must match our graphql backend ID generation.
   const tokenBalanceId = generateEntityId('TokenBalance', [ownerAddress, token.id, Currency.Usd])
 
+  logger.debug(
+    'getInstantTokenBalanceUpdateApolloLink.ts',
+    'createTokenBalanceRef',
+    `Calling apolloCache.writeFragment for ${currencyId}`,
+    {
+      onchainBalanceQuantity,
+      denominatedValue,
+    },
+  )
+
   const newTokenBalanceRef = apolloCache.writeFragment({
     data: {
       __typename: 'TokenBalance' satisfies TokenBalance['__typename'],
       id: tokenBalanceId,
       quantity: onchainBalanceQuantity,
-      // TODO(WALL-5548): Fetch and calculate USD value for new tokens that are not already in the user's balance.
-      denominatedValue: null,
+      denominatedValue: denominatedValue
+        ? {
+            __typename: 'Amount' satisfies Amount['__typename'],
+            value: denominatedValue.value,
+            currency: denominatedValue.currency,
+          }
+        : null,
       isHidden: false,
       token,
       tokenProjectMarket: {
@@ -271,8 +287,8 @@ export function createTokenBalanceRef({
   if (!newTokenBalanceRef) {
     logger.warn(
       'getInstantTokenBalanceUpdateApolloLink.ts',
-      'createTokenBalance',
-      'Failed to write `newTokenBalanceRef`',
+      'createTokenBalanceRef',
+      '[ITBU] Failed to write `newTokenBalanceRef`',
       {
         tokenBalanceId,
         ownerAddress,
@@ -290,12 +306,14 @@ function createTokenBalance({
   ownerAddress,
   currencyId,
   onchainBalanceQuantity,
+  denominatedValue,
 }: Parameters<typeof createTokenBalanceRef>[0]): TokenBalance | null {
   const newTokenBalanceRef = createTokenBalanceRef({
     apolloCache,
     ownerAddress,
     currencyId,
     onchainBalanceQuantity,
+    denominatedValue,
   })
 
   if (!newTokenBalanceRef) {

@@ -7,7 +7,6 @@ import {
   calculateInvertedValues,
   getDefaultFeeTiersForChainWithDynamicFeeTier,
   mergeFeeTiers,
-  parseV3FeeTier,
 } from 'components/Liquidity/utils'
 import { PriceOrdering, getPriceOrderingFromPositionForUI } from 'components/PositionListItem'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -191,12 +190,12 @@ export function useV3OrV4PositionDerivedInfo(positionInfo?: PositionInfo) {
 export function useGetRangeDisplay({
   priceOrdering,
   pricesInverted,
-  feeTier,
+  tickSpacing,
   tickLower,
   tickUpper,
 }: {
   priceOrdering: PriceOrdering
-  feeTier?: string
+  tickSpacing?: number
   tickLower?: string
   tickUpper?: string
   pricesInverted: boolean
@@ -214,7 +213,7 @@ export function useGetRangeDisplay({
     invert: pricesInverted,
   })
 
-  const isTickAtLimit = useIsTickAtLimit(parseV3FeeTier(feeTier), Number(tickLower), Number(tickUpper))
+  const isTickAtLimit = useIsTickAtLimit(tickSpacing, Number(tickLower), Number(tickUpper))
 
   const minPrice = formatTickPrice({
     price: priceLower,

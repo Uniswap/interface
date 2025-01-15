@@ -32,9 +32,9 @@ function _AnimatedUnitagDisplayName({
   const [showUnitagSuffix, setShowUnitagSuffix] = useState(false)
   const isUnitag = displayName?.type === DisplayNameType.Unitag
 
-  const { width: nameTextWidth, onLayout: onNameTextLayout } = useInitialLayoutWidth()
-  const { width: unitagSuffixTextWidth, onLayout: onUnitagSuffixTextLayout } = useInitialLayoutWidth()
-  const { width: viewWidth, onLayout: onViewWidthLayout } = useInitialLayoutWidth()
+  const { width: nameTextWidth, onLayout: onNameTextLayout } = useLayoutWidth(showUnitagSuffix)
+  const { width: unitagSuffixTextWidth, onLayout: onUnitagSuffixTextLayout } = useLayoutWidth()
+  const { width: viewWidth, onLayout: onViewWidthLayout } = useLayoutWidth()
 
   const onPressUnitag = (): void => setShowUnitagSuffix(!showUnitagSuffix)
 
@@ -60,7 +60,7 @@ function _AnimatedUnitagDisplayName({
     [address, dispatch],
   )
 
-  const isLayoutReady = viewWidth > 0
+  const isLayoutReady = viewWidth > 0 && nameTextWidth > 0
 
   /**
    * We have two animation modes. If the name is too long the animation replaces the
@@ -85,19 +85,21 @@ function _AnimatedUnitagDisplayName({
 
   return (
     <Flex flexGrow={1} cursor="pointer" onPress={isUnitag ? onPressUnitag : undefined} onLayout={onViewWidthLayout}>
-      <Flex shrink row animation="simple" opacity={isLayoutReady ? 1 : 0}>
+      <Flex
+        row
+        width={viewWidth}
+        opacity={isLayoutReady ? 1 : 0}
+        animation="100ms"
+        enterStyle={{ opacity: 0 }}
+        exitStyle={{ opacity: 0 }}
+      >
         <Text
           zIndex={2}
+          flexShrink={1}
           backgroundColor="$background"
           color="$neutral1"
           numberOfLines={1}
           variant="subheading1"
-          width={
-            isLayoutReady
-              ? Math.min(nameTextWidth - slideConfig.paddingRight, viewWidth - slideConfig.paddingRight) -
-                slideConfig.widthAdjust
-              : undefined
-          }
           onLayout={onNameTextLayout}
         >
           {displayName?.name}
@@ -140,23 +142,31 @@ function _AnimatedUnitagDisplayName({
 
 /**
  * Returns a width and a callback to be used in a `onLayout` handler.
- * The width is set to the initial width only once if it's not already set.
  */
-export function useInitialLayoutWidth(initialWidth = 0): {
+export function useLayoutWidth(pause = false): {
   width: number
   onLayout: (event: LayoutChangeEvent) => void
+  remeasure: () => void
 } {
-  const [width, setWidth] = useState(initialWidth)
+  const [width, setWidth] = useState(0)
   const isWidthSet = useRef(false)
 
   const onLayout = (event: LayoutChangeEvent): void => {
-    if (!isWidthSet.current) {
-      setWidth(event.nativeEvent.layout.width)
+    if (pause) {
+      return
+    }
+    setWidth(event.nativeEvent.layout.width)
+    if (event.nativeEvent.layout.width > 0) {
       isWidthSet.current = true
     }
   }
 
-  return { width, onLayout }
+  const remeasure = useCallback(() => {
+    setWidth(0)
+    isWidthSet.current = false
+  }, [])
+
+  return { width, onLayout, remeasure }
 }
 
 export const AnimatedUnitagDisplayName = memo(_AnimatedUnitagDisplayName)

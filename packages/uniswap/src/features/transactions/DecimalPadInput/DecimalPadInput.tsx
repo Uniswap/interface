@@ -222,12 +222,21 @@ export const DecimalPadInput = memo(
       [updateValue, resetSelection, valueRef, getCurrentSelection],
     )
 
+    const isEntireTextSelected = (start: number, end: number, value: string): boolean =>
+      start === 0 && end === value.length
+
     const handleDelete = useCallback((): void => {
       const { start, end } = getCurrentSelection()
+      const currentValue = valueRef.current
+
       if (start === undefined || end === undefined) {
         resetSelection({ start: valueRef.current.length - 1, end: valueRef.current.length - 1 })
         // has no text selection, cursor is at the end of the text input
         updateValue(valueRef.current.slice(0, -1))
+      } else if (isEntireTextSelected(start, end, currentValue)) {
+        resetSelection({ start: 0, end: 0 })
+        // entire text is selected, clear the input
+        updateValue('')
       } else if (start < end) {
         resetSelection({ start, end: start })
         // has text part selected

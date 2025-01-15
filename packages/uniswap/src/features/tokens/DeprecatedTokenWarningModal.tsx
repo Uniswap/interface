@@ -4,7 +4,7 @@
  * TODO(WALL-4677): remove this file
  */
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text, isWeb } from 'ui/src'
+import { DeprecatedButton, Flex, Text, isWeb } from 'ui/src'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { imageSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
@@ -96,11 +96,11 @@ export default function DeprecatedTokenWarningModal({
           <LearnMoreLink url={uniswapUrls.helpArticleUrls.tokenWarning} />
         </Flex>
         <Flex centered row gap="$spacing12" mt="$spacing16" width="100%">
-          <Button flex={1} flexBasis={1} testID={TestID.Cancel} theme="tertiary" onPress={onClose}>
+          <DeprecatedButton flex={1} flexBasis={1} testID={TestID.Cancel} theme="tertiary" onPress={onClose}>
             {closeButtonText}
-          </Button>
+          </DeprecatedButton>
           {!hideAcceptButton && (
-            <Button
+            <DeprecatedButton
               color={buttonTextColor}
               flex={1}
               flexBasis={1}
@@ -109,7 +109,7 @@ export default function DeprecatedTokenWarningModal({
               onPress={onAccept}
             >
               {showWarningIcon ? t('common.button.understand') : t('common.button.continue')}
-            </Button>
+            </DeprecatedButton>
           )}
         </Flex>
       </Flex>
