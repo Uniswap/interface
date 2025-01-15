@@ -14,6 +14,9 @@ import { useAtomValue } from 'jotai/utils'
 import { useContext, useMemo } from 'react'
 import { ExploreContext, giveExploreStatDefaultValue } from 'state/explore'
 import { TokenStat } from 'state/explore/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { getChainIdFromChainUrlParam } from 'utils/chainParams'
 
 const TokenSortMethods = {
@@ -135,9 +138,10 @@ export function useTopTokens() {
         if (!cur?.address) {
           return acc
         }
+        const currCurrencyId = buildCurrencyId(fromGraphQLChain(cur.chain) ?? UniverseChainId.Mainnet, cur.address)
         return {
           ...acc,
-          [cur.address]: i + 1,
+          [currCurrencyId]: i + 1,
         }
       }, {}) ?? {},
     [sortedTokenStats],

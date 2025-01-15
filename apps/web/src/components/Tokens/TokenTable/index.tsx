@@ -18,7 +18,6 @@ import {
   useSetSortMethod,
 } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { SparklineMap } from 'graphql/data/types'
 import { OrderDirection, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
 import useSimplePagination from 'hooks/useSimplePagination'
@@ -30,7 +29,9 @@ import { useTopTokens as useRestTopTokens } from 'state/explore/topTokens'
 import { TokenStat } from 'state/explore/types'
 import { Flex, Text, styled } from 'ui/src'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { getChainIdFromChainUrlParam } from 'utils/chainParams'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -76,13 +77,13 @@ function TokenDescription({ token }: { token: TokenStat }) {
   return (
     <Flex row gap="$gap8">
       <QueryTokenLogo token={token} size={28} />
-      <EllipsisText data-testid="token-name">{token?.name ?? token?.project?.name}</EllipsisText>
+      <EllipsisText data-testid="token-name">{token.name ?? token.project?.name}</EllipsisText>
       <TokenTableText
         $platform-web={{
           minWidth: 'fit-content',
         }}
       >
-        {token?.symbol}
+        {token.symbol}
       </TokenTableText>
     </Flex>
   )
@@ -170,17 +171,18 @@ function TokenTable({
   const tokenTableValues: TokenTableValue[] | undefined = useMemo(
     () =>
       tokens?.map((token, i) => {
-        const delta1hr = token?.pricePercentChange1Hour?.value
-        const delta1d = token?.pricePercentChange1Day?.value
-        const tokenSortIndex = tokenSortRank[token?.address ?? NATIVE_CHAIN_ID]
-        const chainId = getChainIdFromChainUrlParam(token?.chain.toLowerCase())
+        const delta1hr = token.pricePercentChange1Hour?.value
+        const delta1d = token.pricePercentChange1Day?.value
+        const currCurrencyId = buildCurrencyId(fromGraphQLChain(token.chain) ?? UniverseChainId.Mainnet, token.address)
+        const tokenSortIndex = tokenSortRank[currCurrencyId]
+        const chainId = getChainIdFromChainUrlParam(token.chain.toLowerCase())
         const unwrappedToken = chainId ? unwrapToken(chainId, token) : token
 
         return {
           index: tokenSortIndex,
           tokenDescription: <TokenDescription token={unwrappedToken} />,
-          price: giveExploreStatDefaultValue(token?.price?.value),
-          testId: `token-table-row-${unwrappedToken?.address ?? NATIVE_CHAIN_ID}`,
+          price: giveExploreStatDefaultValue(token.price?.value),
+          testId: `token-table-row-${unwrappedToken.address}`,
           percentChange1hr: (
             <>
               <DeltaArrow delta={delta1hr} />
@@ -193,8 +195,8 @@ function TokenTable({
               <DeltaText delta={delta1d}>{formatDelta(delta1d)}</DeltaText>
             </>
           ),
-          fdv: giveExploreStatDefaultValue(token?.fullyDilutedValuation?.value),
-          volume: giveExploreStatDefaultValue(token?.volume?.value),
+          fdv: giveExploreStatDefaultValue(token.fullyDilutedValuation?.value),
+          volume: giveExploreStatDefaultValue(token.volume?.value),
           sparkline: (
             <SparklineContainer>
               <ParentSize>
@@ -204,7 +206,7 @@ function TokenTable({
                       width={width}
                       height={height}
                       tokenData={token}
-                      pricePercentChange={token?.pricePercentChange1Day?.value}
+                      pricePercentChange={token.pricePercentChange1Day?.value}
                       sparklineMap={sparklines}
                     />
                   )
@@ -213,15 +215,15 @@ function TokenTable({
             </SparklineContainer>
           ),
           link: getTokenDetailsURL({
-            address: unwrappedToken?.address,
+            address: unwrappedToken.address,
             chain: toGraphQLChain(chainId ?? defaultChainId),
           }),
           analytics: {
             elementName: InterfaceElementName.TOKENS_TABLE_ROW,
             properties: {
               chain_id: chainId,
-              token_address: token?.address,
-              token_symbol: token?.symbol,
+              token_address: token.address,
+              token_symbol: token.symbol,
               token_list_index: i,
               token_list_rank: tokenSortIndex,
               token_list_length: tokens.length,
@@ -229,7 +231,7 @@ function TokenTable({
               search_token_address_input: filterString,
             },
           },
-          linkState: { preloadedLogoSrc: token?.logo },
+          linkState: { preloadedLogoSrc: token.logo },
         }
       }) ?? [],
     [defaultChainId, filterString, formatDelta, sparklines, timePeriod, tokenSortRank, tokens],
