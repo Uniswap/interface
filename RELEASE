@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmNtGELVTA6qcn1ftK8VnJE1wz8yZdDQC89cs6dK6hHs1i`
-- CIDv1: `bafybeiaidevumwytkxmfm5otaerhlvgpiawod6owbx5wayykk5ghg5vj2e`
+- CIDv0: `QmSFSxn2NQ8LP2HZckSX6WkmwGz9SQudXWqsQ9ShJKRZSb`
+- CIDv1: `bafybeib2dgh2xulteyu7s2lwepf2oyuwf63k3cpxeb5ogcnemn3cdsmpjq`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiaidevumwytkxmfm5otaerhlvgpiawod6owbx5wayykk5ghg5vj2e.ipfs.dweb.link/
-- https://bafybeiaidevumwytkxmfm5otaerhlvgpiawod6owbx5wayykk5ghg5vj2e.ipfs.cf-ipfs.com/
-- [ipfs://QmNtGELVTA6qcn1ftK8VnJE1wz8yZdDQC89cs6dK6hHs1i/](ipfs://QmNtGELVTA6qcn1ftK8VnJE1wz8yZdDQC89cs6dK6hHs1i/)
+- https://bafybeib2dgh2xulteyu7s2lwepf2oyuwf63k3cpxeb5ogcnemn3cdsmpjq.ipfs.dweb.link/
+- https://bafybeib2dgh2xulteyu7s2lwepf2oyuwf63k3cpxeb5ogcnemn3cdsmpjq.ipfs.cf-ipfs.com/
+- [ipfs://QmSFSxn2NQ8LP2HZckSX6WkmwGz9SQudXWqsQ9ShJKRZSb/](ipfs://QmSFSxn2NQ8LP2HZckSX6WkmwGz9SQudXWqsQ9ShJKRZSb/)
 
-### 5.65.1 (2025-01-15)
+### 5.65.2 (2025-01-16)
 
 
 ### Bug Fixes
 
-* **web:** explore table should use chainId in ranking (#15144) 3834990
+* **web:** cherry-picks lping to reduce trading API errors (#15225) 1db3f5d
 
 

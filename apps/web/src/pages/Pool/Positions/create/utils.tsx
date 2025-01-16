@@ -566,11 +566,11 @@ export function getV3PriceRangeInfo({
   const { protocolVersion, currencies } = derivedPositionInfo
   const pool = derivedPositionInfo.pool
 
-  const sortedTokens = getSortedCurrenciesTuple(
-    getCurrencyWithWrap(currencies[0], protocolVersion),
-    getCurrencyWithWrap(currencies[1], protocolVersion),
-  )
+  const tokenA = getCurrencyWithWrap(currencies[0], protocolVersion)
+  const tokenB = getCurrencyWithWrap(currencies[1], protocolVersion)
+  const sortedTokens = getSortedCurrenciesTuple(tokenA, tokenB)
   const [sortedToken0, sortedToken1] = sortedTokens
+
   const [baseCurrency, quoteCurrency] = getInvertedTuple(currencies, state.priceInverted)
   const [baseToken, quoteToken] = [
     getCurrencyWithWrap(baseCurrency, protocolVersion),
@@ -656,21 +656,22 @@ export function getV3PriceRangeInfo({
     !invalidRange && price && prices[0] && prices[1] && (price.lessThan(prices[0]) || price.greaterThan(prices[1])),
   )
 
+  // This is in terms of the sorted tokens
   const deposit0Disabled = Boolean(upperTick && poolForPosition && poolForPosition.tickCurrent >= upperTick)
   const deposit1Disabled = Boolean(lowerTick && poolForPosition && poolForPosition.tickCurrent <= lowerTick)
 
   const depositADisabled =
     invalidRange ||
     Boolean(
-      (deposit0Disabled && poolForPosition && baseToken && poolForPosition.token0.equals(baseToken)) ||
-        (deposit1Disabled && poolForPosition && baseToken && poolForPosition.token1.equals(baseToken)),
+      (deposit0Disabled && poolForPosition && tokenA && poolForPosition.token0.equals(tokenA)) ||
+        (deposit1Disabled && poolForPosition && tokenA && poolForPosition.token1.equals(tokenA)),
     )
 
   const depositBDisabled =
     invalidRange ||
     Boolean(
-      (deposit0Disabled && poolForPosition && quoteToken && poolForPosition.token0.equals(quoteToken)) ||
-        (deposit1Disabled && poolForPosition && quoteToken && poolForPosition.token1.equals(quoteToken)),
+      (deposit0Disabled && poolForPosition && tokenB && poolForPosition.token0.equals(tokenB)) ||
+        (deposit1Disabled && poolForPosition && tokenB && poolForPosition.token1.equals(tokenB)),
     )
 
   return {
@@ -883,8 +884,8 @@ export function generateAddLiquidityApprovalParams({
     walletAddress: account.address,
     chainId: currencyAmounts.TOKEN0.currency.chainId,
     protocol: apiProtocolItems,
-    token0: getCurrencyAddressForTradingApi(currencies[0]),
-    token1: getCurrencyAddressForTradingApi(currencies[1]),
+    token0: getCurrencyAddressForTradingApi(getCurrencyWithWrap(currencies[0], positionState.protocolVersion)),
+    token1: getCurrencyAddressForTradingApi(getCurrencyWithWrap(currencies[1], positionState.protocolVersion)),
     amount0: currencyAmounts?.TOKEN0?.quotient.toString(),
     amount1: currencyAmounts?.TOKEN1?.quotient.toString(),
   } satisfies CheckApprovalLPRequest

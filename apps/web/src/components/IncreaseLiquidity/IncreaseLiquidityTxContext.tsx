@@ -5,6 +5,7 @@ import { useIncreaseLiquidityContext } from 'components/IncreaseLiquidity/Increa
 import { useModalLiquidityInitialState } from 'components/Liquidity/hooks'
 import { getProtocolItems } from 'components/Liquidity/utils'
 import { ZERO_ADDRESS } from 'constants/misc'
+import { getCurrencyAddressForTradingApi, getCurrencyWithWrap } from 'pages/Pool/Positions/create/utils'
 import { PropsWithChildren, createContext, useContext, useMemo } from 'react'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useIncreaseLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useIncreaseLpPositionCalldataQuery'
@@ -51,12 +52,12 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       walletAddress: account.address,
       chainId: positionInfo.currency0Amount.currency.chainId,
       protocol: getProtocolItems(positionInfo.version),
-      token0: positionInfo.currency0Amount.currency.isNative
-        ? ZERO_ADDRESS
-        : positionInfo.currency0Amount.currency.address,
-      token1: positionInfo.currency1Amount.currency.isNative
-        ? ZERO_ADDRESS
-        : positionInfo.currency1Amount.currency.address,
+      token0: getCurrencyAddressForTradingApi(
+        getCurrencyWithWrap(positionInfo.currency0Amount.currency, positionInfo.version),
+      ),
+      token1: getCurrencyAddressForTradingApi(
+        getCurrencyWithWrap(positionInfo.currency1Amount.currency, positionInfo.version),
+      ),
       amount0: currencyAmounts?.TOKEN0?.quotient.toString(),
       amount1: currencyAmounts?.TOKEN1?.quotient.toString(),
     }
