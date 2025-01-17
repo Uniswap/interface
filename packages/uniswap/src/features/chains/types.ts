@@ -26,6 +26,7 @@ export enum UniverseChainId {
   WorldChain = UniswapSDKChainId.WORLDCHAIN,
   Zksync = UniswapSDKChainId.ZKSYNC,
   Zora = UniswapSDKChainId.ZORA,
+  LensTestnet = 37111,
 }
 
 export const SUPPORTED_CHAIN_IDS: UniverseChainId[] = [
@@ -47,6 +48,7 @@ export const SUPPORTED_TESTNET_CHAIN_IDS: UniverseChainId[] = [
   UniverseChainId.Sepolia,
   UniverseChainId.UnichainSepolia,
   UniverseChainId.MonadTestnet,
+  37111,
 ]
 
 // This order is used as a fallback for chain ordering but will otherwise defer to useOrderedChainIds

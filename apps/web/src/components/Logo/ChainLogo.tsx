@@ -38,6 +38,12 @@ export function getChainUI(chainId: UniverseChainId, darkMode: boolean): ChainUI
         bgColor: '#9558FF33',
         textColor: '#9558FF',
       }
+    case 37111:
+      return {
+        symbol: ETHEREUM_LOGO,
+        bgColor: '#6B8AFF33',
+        textColor: '#6B8AFF',
+      }
     case UniverseChainId.ArbitrumOne:
       return {
         symbol: ARBITRUM_LOGO,

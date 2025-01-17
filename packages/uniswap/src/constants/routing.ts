@@ -121,6 +121,11 @@ export const COMMON_BASES: ChainCurrencyList = {
     WETH9[UniverseChainId.Optimism] as Token,
   ].map(buildPartialCurrencyInfo),
 
+  [37111]: [
+    nativeOnChain(3711),
+    WETH9[37111] as Token,
+  ].map(buildPartialCurrencyInfo),
+
   [UniverseChainId.Polygon]: [
     nativeOnChain(UniverseChainId.Polygon),
     WETH_POLYGON,

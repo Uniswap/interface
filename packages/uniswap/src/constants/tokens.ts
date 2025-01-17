@@ -380,6 +380,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
     'WETH',
     'Wrapped Ether',
   ),
+  [37111]: new Token(
+    37111,
+    '0xaA91D645D7a6C1aeaa5988e0547267B77d33fe16',
+    18,
+    'GRASS',
+    'GRASS',
+  ),
   [UniverseChainId.Avalanche]: new Token(
     UniverseChainId.Avalanche,
     '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7',
@@ -516,6 +523,32 @@ class PolygonNativeCurrency extends NativeCurrency {
   }
 }
 
+class LensTestnetNativeCurrency extends NativeCurrency {
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId
+  }
+
+  get wrapped(): Token {
+    if (!isLensTestnet(this.chainId)) {
+      throw new Error('Not Lens Testnet')
+    }
+    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
+    invariant(wrapped instanceof Token)
+    return wrapped
+  }
+
+  public constructor(chainId: number) {
+    if (!isLensTestnet(chainId)) {
+      throw new Error('Not Len Testnet')
+    }
+    super(chainId, 18, 'GRASS', 'GRASS')
+  }
+}
+
+export function isLensTestnet(chainId: number): chainId is 37111 {
+  return chainId === 37111
+}
+
 export function isBsc(chainId: number): chainId is UniverseChainId.Bnb {
   return chainId === UniverseChainId.Bnb
 }
@@ -635,6 +668,8 @@ export function nativeOnChain(chainId: number): NativeCurrency | Token {
     nativeCurrency = new AvaxNativeCurrency(chainId)
   } else if (isMonadTestnet(chainId)) {
     nativeCurrency = new MonadTestnetNativeCurrency(chainId)
+  } else if (isLensTestnet(chainId)) {
+    nativeCurrency = new LensTestnetNativeCurrency(chainId)
   } else {
     nativeCurrency = ExtendedEther.onChain(chainId)
   }

@@ -77,6 +77,12 @@ export const UNIVERSE_CHAIN_LOGO = {
       logoDark: EtherscanLogoDark,
     },
   } as const satisfies UniverseChainLogoInfo,
+  [37111]: {
+    explorer: {
+      logoLight: BlockExplorer,
+      logoDark: BlockExplorer,
+    },
+  } as const satisfies UniverseChainLogoInfo,
   [UniverseChainId.UnichainSepolia]: {
     explorer: {
       logoLight: BlockExplorer,
