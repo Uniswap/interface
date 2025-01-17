@@ -155,6 +155,20 @@ export function getCreatorSignatureAtom(account?: string) {
   return signatureAtoms['-']
 }
 
+const userSignatureAtoms: Record<string, PrimitiveAtom<string>> = {
+  '-': atomWithStorage<string>('ubestarter_creator_signature', ''),
+}
+export function getUserSignatureAtom(account?: string) {
+  if (account) {
+    account = account.toLowerCase()
+    if (!userSignatureAtoms[account]) {
+      userSignatureAtoms[account] = atomWithStorage<string>('ubestarter_user_signature_' + account, '')
+    }
+    return userSignatureAtoms[account]
+  }
+  return userSignatureAtoms['-']
+}
+
 const isValidUrl = (urlString: string) => {
   try {
     return Boolean(new URL(urlString))
@@ -163,12 +177,21 @@ const isValidUrl = (urlString: string) => {
   }
 }
 
-const HOUR = 60 * 60 * 1000
-const DAY = 24 * HOUR
-const MIN_START_DELAY = 1 * HOUR
-const MAX_START_DELAY = 10 * DAY
-const MIN_LAUNCHPAD_DURATION = 1 * HOUR
-const MAX_LAUNCHPAD_DURATION = 7 * DAY
+const hourSeconds = 60 * 60
+const hourMs = hourSeconds * 1000
+const daySeconds = hourSeconds //24 * hourSeconds;
+const dayMs = daySeconds * 1000
+
+const MIN_START_DELAY_DAY = 0
+const MAX_START_DELAY_DAY = 10
+const MIN_LAUNCHPAD_DURATION_DAY = 0
+const MAX_LAUNCHPAD_DURATION_DAY = 7
+const MIN_LOCK_DURATION_DAY = 30
+const MAX_LOCK_DURATION_DAY = 1000
+const MAX_VESTING_DAY = 365
+const MIN_INITIAL_RELEASE_RATE = 10
+const MIN_LIQUIDITY_RATE = 20
+//const INFO_CHANGE_DEADLINE_DAY = 1
 
 interface ValidationError {
   field: string
@@ -202,7 +225,6 @@ function _checkOptions(
   invariant(info.tokenomics.length > 0, 'tokenInfo.tokenomics | You should add at least 1 tokenomics item')
 
   const sale = options.tokenSale
-  const now = Date.now() + 10 * 60 * 60
 
   const hardCapAsQuote = parseFloat(sale.hardCapAsQuote)
   invariant(hardCapAsQuote > 0, 'tokenSale.hardCapAsQuote | Invalid value')
@@ -227,26 +249,29 @@ function _checkOptions(
   invariant(listingPrice > 0, 'liquidity.listingPrice | Invalid listing price')
   invariant(listingPrice > sellPrice, 'liquidity.listingPrice | Listing price must be bigger than sell price')
 
+  const now = Date.now() + hourMs
   const startDate = new Date(sale.startDate)
+
   invariant(
-    startDate.valueOf() >= now + MIN_START_DELAY,
-    'tokenSale.startDate | Start date cannot be earlier than 3 days later'
-  )
-  invariant(
-    startDate.valueOf() <= now + MAX_START_DELAY,
+    startDate.valueOf() <= now + MAX_START_DELAY_DAY * dayMs,
     'tokenSale.startDate | Start date cannot be later than 10 days later'
   )
 
   const durationDays = Math.floor(parseFloat(sale.durationDays))
   invariant(durationDays.toString() === sale.durationDays, 'tokenSale.durationDays | Value must be integer')
-  const durationMs = durationDays * DAY
-  invariant(durationMs >= MIN_LAUNCHPAD_DURATION, 'tokenSale.durationDays | Launchpad duration must be at least 1 day')
-  invariant(durationMs <= MAX_LAUNCHPAD_DURATION, 'tokenSale.durationDays | Launchpad duration must be at most 7 day')
+  invariant(
+    durationDays >= MIN_LAUNCHPAD_DURATION_DAY,
+    'tokenSale.durationDays | Launchpad duration must be at least 1 day'
+  )
+  invariant(
+    durationDays <= MAX_LAUNCHPAD_DURATION_DAY,
+    'tokenSale.durationDays | Launchpad duration must be at most 7 day'
+  )
 
   const initialReleaseRate = parseFloat(sale.initialReleaseRate)
   invariant(
-    initialReleaseRate >= 0 && initialReleaseRate <= 100,
-    'tokenSale.initialReleaseRate | Enter a valid percentage'
+    initialReleaseRate >= MIN_INITIAL_RELEASE_RATE && initialReleaseRate <= 100,
+    'tokenSale.initialReleaseRate | Value must be between 10 and 100'
   )
 
   const releaseDurationDays = Math.floor(parseFloat(sale.releaseDurationDays))
@@ -255,12 +280,15 @@ function _checkOptions(
     'tokenSale.releaseDurationDays | Value must be integer'
   )
   invariant(
-    releaseDurationDays >= 0 && releaseDurationDays <= 365,
-    'tokenSale.releaseDurationDays | Value must be between 1 and 365'
+    releaseDurationDays >= 0 && releaseDurationDays <= MAX_VESTING_DAY,
+    'tokenSale.releaseDurationDays | Value must be between 0 and 365'
   )
 
   const liquidityRate = parseFloat(options.liquidity.liquidityRate)
-  invariant(liquidityRate >= 20 && liquidityRate <= 100, 'liquidity.liquidityRate | Value must be between 20 and 100')
+  invariant(
+    liquidityRate >= MIN_LIQUIDITY_RATE && liquidityRate <= 100,
+    'liquidity.liquidityRate | Value must be between 20 and 100'
+  )
 
   if (options.liquidity.liquidityAction == 'LOCK') {
     const lockDurationDays = Math.floor(parseFloat(options.liquidity.lockDurationDays))
@@ -269,8 +297,8 @@ function _checkOptions(
       'liquidity.lockDurationDays | Value must be integer'
     )
     invariant(
-      lockDurationDays >= 7 && lockDurationDays <= 365,
-      'liquidity.lockDurationDays | Value must be between 7 and 365'
+      lockDurationDays >= MIN_LOCK_DURATION_DAY && lockDurationDays <= MAX_LOCK_DURATION_DAY,
+      'liquidity.lockDurationDays | Value must be between 30 and 1000'
     )
   }
 }

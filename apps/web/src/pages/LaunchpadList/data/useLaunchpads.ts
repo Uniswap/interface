@@ -52,7 +52,7 @@ interface BackendToken {
   symbol: string
   decimals: number
 }
-interface LaunchpadDetails {
+export interface LaunchpadDetails {
   options: LaunchpadOptions
   params: LaunchpadParamsStruct
   token: BackendToken
@@ -85,6 +85,9 @@ export function useLaunchpad(launchpadAddress?: string) {
     staleTime: 10_000,
     enabled: !!launchpadAddress,
   })
+  if (data) {
+    //data.stats.status = 'Active'
+  }
   return {
     launchpad: data,
     loading: isLoading,

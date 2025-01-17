@@ -4,6 +4,7 @@ import { DarkGrayCard } from 'components/Card'
 import { AutoColumn, Column } from 'components/Column'
 import Row, { RowBetween } from 'components/Row'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import TransactionConfirmationModal from 'components/TransactionConfirmationModal'
 import { useToken } from 'hooks/Tokens'
 import { Discord, Twitter } from 'pages/Landing/components/Icons'
 import { Wiggle } from 'pages/Landing/components/animations'
@@ -11,15 +12,16 @@ import SimpleTable from 'pages/LaunchpadCreate/SimpleTable'
 import { LaunchpadOptions } from 'pages/LaunchpadCreate/launchpad-state'
 import { LaunchpadStatus } from 'pages/LaunchpadList/data/useLaunchpads'
 import { transparentize } from 'polished'
-import { ReactNode, useMemo } from 'react'
+import { ReactNode, useCallback, useMemo } from 'react'
 import { Calendar, Globe, Square, Youtube } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
-import { ExternalLink, ThemedText } from 'theme/components'
+import { ButtonText, ExternalLink, ThemedText } from 'theme/components'
 import { ellipseMiddle, shortenAddress } from 'utilities/src/addresses'
 import { formatDateTime } from 'utilities/src/time/time'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import LaunchpadInfoTable from './LaunchpadInfoTable'
+import { useCancelCallback } from './launchpad-actions'
 
 const CalendarIcon = styled(Calendar)`
   color: ${({ theme }) => theme.neutral2};
@@ -191,16 +193,21 @@ export default function LaunchpadView({
   totalRaisedAsQuote,
   status,
   userTokens,
+  userClaimableTokens,
   userActionComponent,
+  launchpadAddress,
 }: {
   options: LaunchpadOptions
   participants: number
   totalRaisedAsQuote: number
   status: LaunchpadStatus
   userTokens: number
+  userClaimableTokens: number
   userActionComponent: () => ReactNode
+  launchpadAddress?: string
 }) {
   const { account } = useWeb3React()
+  const isOwner = account?.toLowerCase() === options.tokenSale.owner.toLowerCase()
 
   const theme = useTheme()
   const { formatPercent, formatNumber } = useFormatter()
@@ -287,6 +294,15 @@ export default function LaunchpadView({
     info.cliffInDays.toString(),
     info.vestingInDays.toString(),
   ])
+
+  const [cancelCallback, cancelTx, isCanceling] = useCancelCallback(launchpadAddress)
+  const onCancelAction = () => {
+    if (isCanceling == false) {
+      cancelCallback('invalid info')
+    }
+  }
+
+  const onDissmissConfirmationModal = useCallback(() => {}, [])
 
   return (
     <AutoColumn gap="lg" justify="center">
@@ -384,27 +400,49 @@ export default function LaunchpadView({
                     1 {token?.symbol} = {options.tokenSale.sellPrice} {quoteToken?.symbol}
                   </ThemedText.SubHeader>
                 </RowBetween>
-                <RowBetween>
-                  <ThemedText.BodySecondary>Duration</ThemedText.BodySecondary>
-                  <ThemedText.SubHeader>{options.tokenSale.durationDays} days</ThemedText.SubHeader>
-                </RowBetween>
+                {totalRaisedAsQuote > 0 ? (
+                  <RowBetween>
+                    <ThemedText.BodySecondary>Total Raised</ThemedText.BodySecondary>
+                    <ThemedText.SubHeader>
+                      {totalRaisedAsQuote} {quoteToken?.symbol}
+                    </ThemedText.SubHeader>
+                  </RowBetween>
+                ) : (
+                  <RowBetween>
+                    <ThemedText.BodySecondary>Duration</ThemedText.BodySecondary>
+                    <ThemedText.SubHeader>{options.tokenSale.durationDays} days</ThemedText.SubHeader>
+                  </RowBetween>
+                )}
+
                 {status !== 'Pending' && (
                   <>
-                    <RowBetween>
-                      <ThemedText.BodySecondary>Total Raised</ThemedText.BodySecondary>
-                      <ThemedText.SubHeader>
-                        {totalRaisedAsQuote} {quoteToken?.symbol}
-                      </ThemedText.SubHeader>
-                    </RowBetween>
                     <RowBetween>
                       <ThemedText.BodySecondary>Your Allocation</ThemedText.BodySecondary>
                       <ThemedText.SubHeader>
                         {userTokens} {token?.symbol}
                       </ThemedText.SubHeader>
                     </RowBetween>
+                    <RowBetween>
+                      <ThemedText.BodySecondary>Your Claimable Tokens</ThemedText.BodySecondary>
+                      <ThemedText.SubHeader>
+                        {userClaimableTokens} {token?.symbol}
+                      </ThemedText.SubHeader>
+                    </RowBetween>
                   </>
                 )}
               </TwoColumnAuto>
+              {isOwner && launchpadAddress && (
+                <DarkGrayCard marginTop="12px">
+                  <p>
+                    You are the owner of this launchpad. You can change the information or cancel. Information change
+                    can be done until one day earlier than the start date.
+                  </p>
+                  <Row gap="20px" justify="flex-ed">
+                    <ButtonText>Change Info</ButtonText>
+                    <ButtonText onClick={onCancelAction}>Cancel</ButtonText>
+                  </Row>
+                </DarkGrayCard>
+              )}
             </Column>
           </ResponsiveRow>
         </DarkGrayCard>
@@ -521,6 +559,14 @@ export default function LaunchpadView({
           </DarkGrayCard>
         </ResponsiveRow>
       </AutoColumn>
+      <TransactionConfirmationModal
+        isOpen={isCanceling}
+        attemptingTxn={isCanceling}
+        hash={cancelTx}
+        reviewContent={() => <div></div>}
+        onDismiss={onDissmissConfirmationModal}
+        pendingText="Launchpad is canceling"
+      />
     </AutoColumn>
   )
 }

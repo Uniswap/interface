@@ -5,10 +5,9 @@ import { useAtom } from 'jotai'
 import { useCallback, useState } from 'react'
 import { usePendingTransactions, useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
-import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { launchpadValidationResult } from './launchpad-state'
 
-export const UBESTARTER_FACTORY_ADDRESS = '0x4f3c58164a816A53e4cfDf4EAE9De84C6D3A87FC'
+export const UBESTARTER_FACTORY_ADDRESS = '0x5A07aF212669f43970A390D5f1606e75aB9C242E'
 
 export function useDeployLauchpadCallback(): [() => Promise<void>, string, boolean] {
   const { account } = useWeb3React()
@@ -58,7 +57,7 @@ export function useDeployLauchpadCallback(): [() => Promise<void>, string, boole
         validationResult.verifierSignature,
       ])
 
-      await factoryContract.estimateGas
+      await factoryContract
         .deployLaunchpad(
           validationResult.implementation,
           validationResult.params,
@@ -68,28 +67,13 @@ export function useDeployLauchpadCallback(): [() => Promise<void>, string, boole
           validationResult.creatorDisclaimerSignature,
           validationResult.verifierSignature
         )
-        .then((estimatedGasLimit) => {
-          return factoryContract
-            .deployLaunchpad(
-              validationResult.implementation,
-              validationResult.params,
-              '0x',
-              validationResult.infoCID,
-              validationResult.creatorDisclaimerHash,
-              validationResult.creatorDisclaimerSignature,
-              validationResult.verifierSignature,
-              {
-                gasLimit: calculateGasMargin(estimatedGasLimit),
-              }
-            )
-            .then((response: TransactionResponse) => {
-              setTxHash(response.hash)
-              addTransaction(response, {
-                type: TransactionType.CUSTOM,
-                summary: 'Creating Launchpad',
-              })
-              return response.wait(2)
-            })
+        .then((response: TransactionResponse) => {
+          setTxHash(response.hash)
+          addTransaction(response, {
+            type: TransactionType.CUSTOM,
+            summary: 'Creating Launchpad',
+          })
+          return response.wait(2)
         })
         .catch((error) => {
           console.error('Failed to send transaction', error)

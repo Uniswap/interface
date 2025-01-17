@@ -140,8 +140,11 @@ export default function FinalStep({ onBack }: { onBack: () => void }) {
   const onDissmissConfirmationModal = useCallback(() => {}, [])
   const [callDeploy, deployTxHash, isDeploying] = useDeployLauchpadCallback()
   const onDeploy = useCallback(() => {
+    console.log('onDeploy')
     if (isDeploying == false) {
+      console.log('isDeploying false')
       callDeploy().then(() => {
+        console.log('hello')
         localStorage.removeItem('ubestarter_options')
         setTimeout(() => navigate('/ubestarter'), 1000)
       })

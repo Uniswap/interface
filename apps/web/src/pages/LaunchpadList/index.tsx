@@ -194,7 +194,7 @@ const EarnPage = ({ initialTab }: { initialTab?: LaunchpadTab }) => {
           </TabBar>
         </NavWrapper>
         <Page />
-        <InfoBox message={t('You can create a launchpad easily')} />
+        {currentTab == 10 && <InfoBox message={t('You can create a launchpad easily')} />}
       </EarnContainer>
     </Trace>
   )

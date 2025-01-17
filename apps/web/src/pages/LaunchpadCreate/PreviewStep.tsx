@@ -32,6 +32,7 @@ export default function PreviewStep({ onNext, onBack }: { onNext: () => void; on
         totalRaisedAsQuote={0}
         status="Pending"
         userTokens={0}
+        userClaimableTokens={0}
         userActionComponent={() => <div />}
       />
       <Row gap="20px" marginTop="20px">
