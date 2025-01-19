@@ -1,4 +1,5 @@
 import { AddressDisplay } from 'components/AccountDetails/AddressDisplay'
+import Stats from 'components/AccountDrawer/Stats'
 import StatusIcon from 'components/Identicon/StatusIcon'
 import styled from 'lib/styled-components'
 import { CopyHelper, ThemedText } from 'theme/components'
@@ -45,6 +46,7 @@ export function Status({
             </Text>
           </CopyHelper>
         )}
+        <Stats account={account} />
       </Identifiers>
     </Container>
   )
