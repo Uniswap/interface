@@ -73,10 +73,15 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   })
 
   if (approvalError) {
-    logger.info('IncreaseLiquidityTxContext', 'IncreaseLiquidityTxContext', 'CheckLpApprovalQuery', {
-      error: JSON.stringify(approvalError),
-      increaseLiquidityApprovalParams: JSON.stringify(increaseLiquidityApprovalParams),
-    })
+    logger.info(
+      'IncreaseLiquidityTxContext',
+      'IncreaseLiquidityTxContext',
+      'CheckLpApprovalQuery',
+      JSON.stringify({
+        error: approvalError,
+        increaseLiquidityApprovalParams,
+      }),
+    )
   }
 
   const {

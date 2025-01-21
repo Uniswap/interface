@@ -78,10 +78,15 @@ export function MigrateV3PositionTxContextProvider({
   })
 
   if (approvalError) {
-    logger.info('MigrateV3LiquidityTxContext', 'MigrateV3LiquidityTxContext', 'CheckLpApprovalQuery', {
-      error: JSON.stringify(approvalError),
-      increaseLiquidityApprovalParams: JSON.stringify(increaseLiquidityApprovalParams),
-    })
+    logger.info(
+      'MigrateV3LiquidityTxContext',
+      'MigrateV3LiquidityTxContext',
+      'CheckLpApprovalQuery',
+      JSON.stringify({
+        error: approvalError,
+        increaseLiquidityApprovalParams,
+      }),
+    )
   }
 
   const migratePositionRequestArgs: MigrateLPPositionRequest | undefined = useMemo(() => {
@@ -181,10 +186,15 @@ export function MigrateV3PositionTxContextProvider({
   })
 
   if (migrateError) {
-    logger.info('MigrateV3LiquidityTxContext', 'MigrateV3LiquidityTxContext', 'MigrateLpPositionCalldataQuery', {
-      error: JSON.stringify(migrateError),
-      migrateCalldataQueryParams: JSON.stringify(migratePositionRequestArgs),
-    })
+    logger.info(
+      'MigrateV3LiquidityTxContext',
+      'MigrateV3LiquidityTxContext',
+      'MigrateLpPositionCalldataQuery',
+      JSON.stringify({
+        error: migrateError,
+        migrateCalldataQueryParams: JSON.stringify(migratePositionRequestArgs),
+      }),
+    )
   }
 
   const validatedValue: MigrateV3PositionTxAndGasInfo | undefined = useMemo(() => {

@@ -59,10 +59,15 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
   })
 
   if (approvalError) {
-    logger.info('RemoveLiquidityTxAndGasInfo', 'RemoveLiquidityTxAndGasInfo', 'CheckLpApprovalQuery', {
-      error: JSON.stringify(approvalError),
-      v2LpTokenApprovalQueryParams: JSON.stringify(v2LpTokenApprovalQueryParams),
-    })
+    logger.info(
+      'RemoveLiquidityTxAndGasInfo',
+      'RemoveLiquidityTxAndGasInfo',
+      'CheckLpApprovalQuery',
+      JSON.stringify({
+        error: approvalError,
+        v2LpTokenApprovalQueryParams,
+      }),
+    )
   }
 
   const v2ApprovalGasFeeUSD =
@@ -141,10 +146,15 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
   })
 
   if (calldataError) {
-    logger.info('RemoveLiquidityTxAndGasInfo', 'RemoveLiquidityTxAndGasInfo', 'DecreaseLpPositionCalldataQuery', {
-      error: JSON.stringify(calldataError),
-      decreaseCalldataQueryParams: JSON.stringify(decreaseCalldataQueryParams),
-    })
+    logger.info(
+      'RemoveLiquidityTxAndGasInfo',
+      'RemoveLiquidityTxAndGasInfo',
+      'DecreaseLpPositionCalldataQuery',
+      JSON.stringify({
+        error: calldataError,
+        decreaseCalldataQueryParams,
+      }),
+    )
   }
 
   const { value: estimatedGasFee } = useTransactionGasFee(decreaseCalldata?.decrease, !!decreaseCalldata?.gasFee)

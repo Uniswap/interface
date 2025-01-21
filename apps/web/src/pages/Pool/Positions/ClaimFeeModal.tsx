@@ -115,10 +115,15 @@ export function ClaimFeeModal() {
   })
 
   if (error) {
-    logger.info('ClaimFeeModal', 'ClaimFeeModal', 'ClaimLPFeesCalldataQuery', {
-      error: JSON.stringify(error),
-      claimLpFeesParams: JSON.stringify(claimLpFeesParams),
-    })
+    logger.info(
+      'ClaimFeeModal',
+      'ClaimFeeModal',
+      'ClaimLPFeesCalldataQuery',
+      JSON.stringify({
+        error,
+        claimLpFeesParams,
+      }),
+    )
   }
 
   const txInfo = useMemo(() => {

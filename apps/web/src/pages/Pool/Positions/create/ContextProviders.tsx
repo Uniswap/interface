@@ -172,10 +172,15 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   })
 
   if (approvalError) {
-    logger.info('CreateTxContextProvider', 'CreateTxContextProvider', 'CheckLpApprovalQuery', {
-      error: JSON.stringify(approvalError),
-      addLiquidityApprovalParams: JSON.stringify(addLiquidityApprovalParams),
-    })
+    logger.info(
+      'CreateTxContextProvider',
+      'CreateTxContextProvider',
+      'CheckLpApprovalQuery',
+      JSON.stringify({
+        error: approvalError,
+        addLiquidityApprovalParams,
+      }),
+    )
   }
 
   const gasFeeToken0USD = useUSDCurrencyAmountOfGasFee(
@@ -220,10 +225,15 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   })
 
   if (createError) {
-    logger.info('CreateTxContextProvider', 'CreateTxContextProvider', 'CreateLpPositionCalldataQuery', {
-      error: JSON.stringify(createError),
-      createCalldataQueryParams: JSON.stringify(createCalldataQueryParams),
-    })
+    logger.info(
+      'CreateTxContextProvider',
+      'CreateTxContextProvider',
+      'CreateLpPositionCalldataQuery',
+      JSON.stringify({
+        error: createError,
+        createCalldataQueryParams,
+      }),
+    )
   }
 
   const actualGasFee = createCalldata?.gasFee
