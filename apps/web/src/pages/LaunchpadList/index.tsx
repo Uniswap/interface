@@ -9,9 +9,14 @@ import styled, { useTheme } from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 import LaunchpadHeader from './LaunchpadHeader'
 
+import Row from 'components/Row'
+
 import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
 import { validateUrlChainParam } from 'graphql/data/util'
 import { useResetAtom } from 'jotai/utils'
+import { ArrowRightCircle } from 'react-feather'
+import { Link } from 'react-router-dom'
+import { ClickableStyle } from 'theme/components'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useLaunchpadParams } from './redirects'
 import { ActiveLaunchpadTable, CompletedLaunchpadTable } from './tables/FarmTable/index'
@@ -20,6 +25,7 @@ const EarnContainer = styled.div`
   width: 100%;
   min-width: 320px;
   padding: 0px 40px;
+  margin-bottom: 20px;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     padding: 0px 16px;
@@ -133,6 +139,42 @@ function InfoBox({ message }: { message?: ReactNode }) {
   )
 }
 
+const LearnMoreButton = styled(Link)`
+  display: flex;
+  width: 60%;
+  padding: 12px 16px;
+  border-radius: 24px;
+  border: 0;
+  background-color: ${({ theme }) => theme.surface2};
+  font-family: Basel;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 535;
+  line-height: 24px;
+  color: ${({ theme }) => theme.neutral1};
+  ${ClickableStyle}
+
+  @media only screen and (min-width: 767px) {
+    display: none;
+  }
+`
+const LearnMoreArrow = styled(ArrowRightCircle)`
+  size: 24px;
+  stroke: ${({ theme }) => theme.surface2};
+  fill: ${({ theme }) => theme.neutral1};
+`
+
+function LearnMore() {
+  return (
+    <LearnMoreButton to="/ubestarter/create">
+      <Row gap="sm" align="center">
+        <Trans>Create Launchpad</Trans>
+        <LearnMoreArrow />
+      </Row>
+    </LearnMoreButton>
+  )
+}
+
 const EarnPage = ({ initialTab }: { initialTab?: LaunchpadTab }) => {
   const tabNavRef = useRef<HTMLDivElement>(null)
   const resetManualOutage = useResetAtom(manualChainOutageAtom)
@@ -196,6 +238,7 @@ const EarnPage = ({ initialTab }: { initialTab?: LaunchpadTab }) => {
         <Page />
         <InfoBox message={t('You can create a launchpad easily')} />
       </EarnContainer>
+      <LearnMore />
     </Trace>
   )
 }
