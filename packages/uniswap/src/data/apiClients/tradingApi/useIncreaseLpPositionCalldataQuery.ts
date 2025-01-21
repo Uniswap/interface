@@ -1,4 +1,4 @@
-import { UseQueryResult, skipToken, useQuery } from '@tanstack/react-query'
+import { UseQueryResult, useQuery } from '@tanstack/react-query'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TRADING_API_CACHE_KEY, increaseLpPosition } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
@@ -19,9 +19,13 @@ export function useIncreaseLpPositionCalldataQuery({
   const paramsWithDeadline = { ...params, deadline }
   return useQuery<IncreaseLPPositionResponse>({
     queryKey,
-    queryFn: params
-      ? async (): ReturnType<typeof increaseLpPosition> => await increaseLpPosition(paramsWithDeadline)
-      : skipToken,
+    enabled: !!params,
+    queryFn: async () => {
+      if (!params) {
+        throw new Error('Params are required')
+      }
+      return await increaseLpPosition(paramsWithDeadline)
+    },
     ...rest,
   })
 }

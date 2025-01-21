@@ -18,6 +18,7 @@ import {
   MigrateV3PositionTxAndGasInfo,
 } from 'uniswap/src/features/transactions/liquidity/types'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
+import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useAccount } from 'wagmi'
 
@@ -75,6 +76,13 @@ export function MigrateV3PositionTxContextProvider({
     },
     staleTime: 5 * ONE_SECOND_MS,
   })
+
+  if (approvalError) {
+    logger.info('MigrateV3LiquidityTxContext', 'MigrateV3LiquidityTxContext', 'CheckLpApprovalQuery', {
+      error: JSON.stringify(approvalError),
+      increaseLiquidityApprovalParams: JSON.stringify(increaseLiquidityApprovalParams),
+    })
+  }
 
   const migratePositionRequestArgs: MigrateLPPositionRequest | undefined = useMemo(() => {
     if (
@@ -171,6 +179,13 @@ export function MigrateV3PositionTxContextProvider({
     params: migratePositionRequestArgs,
     staleTime: 5 * ONE_SECOND_MS,
   })
+
+  if (migrateError) {
+    logger.info('MigrateV3LiquidityTxContext', 'MigrateV3LiquidityTxContext', 'MigrateLpPositionCalldataQuery', {
+      error: JSON.stringify(migrateError),
+      migrateCalldataQueryParams: JSON.stringify(migratePositionRequestArgs),
+    })
+  }
 
   const validatedValue: MigrateV3PositionTxAndGasInfo | undefined = useMemo(() => {
     if (!migrateCalldata) {

@@ -1,7 +1,6 @@
 import { AddressDisplay } from 'components/AccountDetails/AddressDisplay'
 import Identicon from 'components/Identicon'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
-import useENSName from 'hooks/useENSName'
 import { useCallback } from 'react'
 import { Trans } from 'react-i18next'
 import { useModalIsOpen, useOpenModal, useToggleModal } from 'state/application/hooks'
@@ -13,6 +12,7 @@ import { NetworkLogos } from 'uniswap/src/components/network/NetworkLogos'
 import { useAddressColorProps } from 'uniswap/src/features/address/color'
 import { useOrderedChainIds } from 'uniswap/src/features/chains/hooks/useOrderedChainIds'
 import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
+import { useENSName } from 'uniswap/src/features/ens/api'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -25,7 +25,7 @@ export function AddressQRModal({ accountAddress }: { accountAddress: Address }) 
   const toggleModal = useToggleModal(ApplicationModal.RECEIVE_CRYPTO_QR)
   const isOpen = useModalIsOpen(ApplicationModal.RECEIVE_CRYPTO_QR)
   const openReceiveCryptoModal = useOpenModal({ name: ApplicationModal.RECEIVE_CRYPTO })
-  const { ENSName } = useENSName(accountAddress)
+  const { data: ENSName } = useENSName(accountAddress)
   const { unitag } = useUnitagByAddress(accountAddress)
   const hasSecondaryIdentifier = ENSName || unitag?.username
   const addressColor = useAddressColorProps(accountAddress)

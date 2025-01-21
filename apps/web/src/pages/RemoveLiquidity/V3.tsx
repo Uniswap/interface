@@ -45,6 +45,7 @@ import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupp
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -112,6 +113,10 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   const { onPercentSelect } = useBurnV3ActionHandlers()
 
   const removed = position?.liquidity?.eq(0)
+
+  // usd values
+  const removedLiquidity0Usd = useUSDCValue(liquidityValue0)
+  const removedLiquidity1Usd = useUSDCValue(liquidityValue1)
 
   // boilerplate for the slider
   const [percentForSlider, onPercentSelectForSlider] = useDebouncedChangeHandler(percent, onPercentSelect)
@@ -192,8 +197,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                   : undefined,
               currency0: liquidityValue0.currency,
               currency1: liquidityValue1.currency,
-              currency0AmountUsd: liquidityValue0,
-              currency1AmountUsd: liquidityValue1,
+              currency0AmountUsd: removedLiquidity0Usd,
+              currency1AmountUsd: removedLiquidity1Usd,
               version: ProtocolVersion.V3,
               chainId: account.chainId,
             }),
@@ -239,6 +244,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     feeValue1,
     trace,
     position,
+    removedLiquidity0Usd,
+    removedLiquidity1Usd,
     percent,
     addTransaction,
   ])

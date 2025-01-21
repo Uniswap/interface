@@ -15,9 +15,9 @@ import { logger } from 'utilities/src/logger/logger'
  * Opens swap modal with the provided swap link parameters; prompts testnet switch modal if necessary.
  *
  * Testing deep links:
- *  Testnet mode – https://uniswap.org/mobile-redirect?screen=swap&userAddress=<YOUR_WALET_ADDRESS>&inputCurrencyId=41454-0x93EACdB111FF98dE9a8Ac5823d357BBc4842aE63&outputCurrencyId=41454-0xF5A8061bB2C5D9Dc9bC9c5C633D870DAC7bD351e&currencyField=output&amount=100000
+ *  Testnet mode – https://uniswap.org/mobile-redirect?screen=swap&userAddress=<YOUR_WALET_ADDRESS>&inputCurrencyId=10143-0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701&outputCurrencyId=10143-0xF5A8061bB2C5D9Dc9bC9c5C633D870DAC7bD351e&currencyField=output&amount=100000
  *  Prod mode – https://uniswap.org/mobile-redirect?screen=swap&userAddress=<YOUR_WALET_ADDRESS>&inputCurrencyId=1-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee&outputCurrencyId=10-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee&currencyField=output&amount=100000
- *  Mixed – https://uniswap.org/mobile-redirect?screen=swap&userAddress=<YOUR_WALET_ADDRESS>&inputCurrencyId=1-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee&outputCurrencyId=41454-0xF5A8061bB2C5D9Dc9bC9c5C633D870DAC7bD351e&currencyField=output&amount=100000
+ *  Mixed – https://uniswap.org/mobile-redirect?screen=swap&userAddress=<YOUR_WALET_ADDRESS>&inputCurrencyId=1-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee&outputCurrencyId=10143-0xF5A8061bB2C5D9Dc9bC9c5C633D870DAC7bD351e&currencyField=output&amount=100000
  *
  * @param url - URL object containing the swap link
  */

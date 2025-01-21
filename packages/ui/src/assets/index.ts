@@ -12,11 +12,13 @@ export const CELO_LOGO = require('./logos/png/celo-logo.png')
 export const WORLD_CHAIN_LOGO = require('./logos/png/world-chain-logo.png')
 export const ZORA_LOGO = require('./logos/png/zora-logo.png')
 export const ZKSYNC_LOGO = require('./logos/png/zksync-logo.png')
+export const UNICHAIN_LOGO = require('./logos/png/unichain-logo.png')
 export const UNICHAIN_SEPOLIA_LOGO = require('./logos/png/unichain-sepolia-logo.png')
 export const UNISWAP_LOGO = require('./logos/png/uniswap-logo.png')
 export const UNISWAP_LOGO_LARGE = require('./logos/png/uniswap-logo-large.png')
 export const UNISWAP_MONO_LOGO_LARGE = require('./logos/png/uniswap-mono-logo-large.png')
 export const UNISWAP_APP_ICON = require('./logos/png/uniswap-app-icon.png')
+
 export const ONBOARDING_QR_ETCHING_VIDEO_LIGHT = require('./videos/light-etching.mp4')
 export const ONBOARDING_QR_ETCHING_VIDEO_DARK = require('./videos/dark-etching.mp4')
 export const AVATARS_LIGHT = require('./misc/avatars-light.png')
@@ -32,6 +34,10 @@ export const UNITAGS_INTRO_BANNER_LIGHT = require('./graphics/unitags-intro-bann
 export const UNITAGS_INTRO_BANNER_DARK = require('./graphics/unitags-intro-banner-dark.png')
 
 export const BRIDGING_BANNER = require('./graphics/bridging-banner.png')
+export const UNICHAIN_BANNER_COLD = require('./graphics/unichain-banner-cold.png')
+export const UNICHAIN_BANNER_WARM = require('./graphics/unichain-banner-warm.png')
+
+export const UNICHAIN_PROMO_MODAL_GIF = require('./graphics/unichain-modal.gif')
 
 export const DAI_LOGO = require('./logos/png/dai-logo.png')
 export const USDC_LOGO = require('./logos/png/usdc-logo.png')
@@ -39,7 +45,6 @@ export const ETH_LOGO = require('./logos/png/eth-logo.png')
 export const OPENSEA_LOGO = require('./logos/png/opensea-logo.png')
 export const ENS_LOGO = require('./logos/png/ens-logo.png')
 export const FROGGY = require('./graphics/froggy.png')
-export const UNICHAIN_LOGO = require('./logos/png/unichain-logo.png')
 
 export const CEX_TRANSFER_MODAL_BG_LIGHT = require('./graphics/cex-transfer-modal-bg-light.png')
 export const CEX_TRANSFER_MODAL_BG_DARK = require('./graphics/cex-transfer-modal-bg-dark.png')

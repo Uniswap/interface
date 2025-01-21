@@ -8,6 +8,7 @@ import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import styled from 'lib/styled-components'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { BREAKPOINTS } from 'theme'
 import { Flex, useSporeColors } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 const ICON_SIZE = '20px'
@@ -39,6 +40,14 @@ const SearchInput = styled.input<{ isOpen?: boolean }>`
   ::placeholder {
     color: ${({ theme }) => theme.neutral3};
   }
+
+  @supports (-webkit-touch-callout: none) {
+    @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+      min-width: 44px;
+      padding-left: ${({ isOpen }) => (isOpen ? '40px' : '36px')};
+    }
+  }
+
   ::-webkit-search-cancel-button {
     -webkit-appearance: none;
     appearance: none;

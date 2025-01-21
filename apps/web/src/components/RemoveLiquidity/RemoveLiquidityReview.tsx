@@ -67,7 +67,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
 
   const { feeValue0, feeValue1, fiatFeeValue0, fiatFeeValue1 } = useV3OrV4PositionDerivedInfo(positionInfo)
 
-  const { currency0Amount, currency1Amount, chainId } = positionInfo
+  const { currency0Amount, currency1Amount, chainId, feeTier, version, poolId } = positionInfo
 
   const currentPrice = usePositionCurrentPrice(positionInfo)
 
@@ -125,7 +125,6 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
     if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx || !positionInfo) {
       return
     }
-    const { feeTier, version, poolId, currency0Amount, currency1Amount } = positionInfo
     dispatch(
       liquiditySaga.actions.trigger({
         selectChain,
@@ -141,15 +140,15 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
             trace,
             fee: feeTier,
             poolId,
-            currency0: currency0Amount.currency,
-            currency1: currency1Amount.currency,
+            currency0: currency0Info.currency,
+            currency1: currency1Info.currency,
             currency0AmountUsd: currency0AmountToRemoveUSD,
             currency1AmountUsd: currency1AmountToRemoveUSD,
             version,
             chainId: startChainId,
           }),
-          expectedAmountBaseRaw: currency0AmountToRemoveUSD?.quotient.toString() ?? '0',
-          expectedAmountQuoteRaw: currency1AmountToRemoveUSD?.quotient.toString() ?? '0',
+          expectedAmountBaseRaw: unwrappedCurrency0AmountToRemove?.quotient.toString() ?? '-',
+          expectedAmountQuoteRaw: unwrappedCurrency1AmountToRemove?.quotient.toString() ?? '-',
           closePosition: percent === '100',
         },
       }),

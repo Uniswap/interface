@@ -1,5 +1,4 @@
 import { memo, useCallback, useMemo, useRef } from 'react'
-import { Flex } from 'ui/src'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { useCommonTokensOptionsWithFallback } from 'uniswap/src/components/TokenSelector/hooks/useCommonTokensOptionsWithFallback'
 import { useFavoriteTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useFavoriteTokensOptions'
@@ -17,11 +16,12 @@ import {
   tokenOptionDifference,
   useTokenOptionsSection,
 } from 'uniswap/src/components/TokenSelector/utils'
-import { NewTag } from 'uniswap/src/components/pill/NewTag'
 import { GqlResult } from 'uniswap/src/data/types'
 import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { isMobileApp } from 'utilities/src/platform'
 
 // eslint-disable-next-line complexity
@@ -30,6 +30,7 @@ function useTokenSectionsForSwapOutput({
   chainFilter,
   input,
 }: TokenSectionsHookProps): GqlResult<TokenSection[]> {
+  const isTokenSelectorTrendingTokensEnabled = useFeatureFlag(FeatureFlags.TokenSelectorTrendingTokens)
   const { defaultChainId, isTestnetModeEnabled } = useEnabledChains()
 
   const {
@@ -44,8 +45,7 @@ function useTokenSectionsForSwapOutput({
     error: popularTokenOptionsError,
     refetch: refetchPopularTokenOptions,
     loading: popularTokenOptionsLoading,
-    // if there is no chain filter then we show mainnet tokens
-  } = usePopularTokensOptions(activeAccountAddress, chainFilter ?? defaultChainId)
+  } = usePopularTokensOptions(activeAccountAddress, chainFilter)
 
   const {
     data: favoriteTokenOptions,
@@ -100,19 +100,6 @@ function useTokenSectionsForSwapOutput({
     refetchAllRef.current()
   }, [])
 
-  const newTag = useMemo(
-    () =>
-      isMobileApp ? (
-        // Hack for vertically centering the new tag with text
-        <Flex row pt={1}>
-          <NewTag />
-        </Flex>
-      ) : (
-        <NewTag />
-      ),
-    [],
-  )
-
   // we draw the Suggested pills as a single item of a section list, so `data` is TokenOption[][]
 
   const suggestedSectionOptions = useMemo(() => [commonTokenOptions ?? []], [commonTokenOptions])
@@ -139,8 +126,9 @@ function useTokenSectionsForSwapOutput({
     [popularTokenOptions, portfolioTokenOptions],
   )
   const popularSection = useTokenOptionsSection({
+    // TODO(WEB-5917): Rename to trendingTokens once feature flag is fully on
     sectionKey: TokenOptionSection.PopularTokens,
-    tokenOptions: popularMinusPortfolioTokens,
+    tokenOptions: isTokenSelectorTrendingTokensEnabled ? popularTokenOptions : popularMinusPortfolioTokens,
   })
 
   const bridgingSectionTokenOptions = useMemo(
@@ -150,7 +138,6 @@ function useTokenSectionsForSwapOutput({
   const bridgingSection = useTokenOptionsSection({
     sectionKey: TokenOptionSection.BridgingTokens,
     tokenOptions: bridgingSectionTokenOptions,
-    rightElement: newTag,
   })
 
   const sections = useMemo(() => {
@@ -216,6 +203,7 @@ function _TokenSelectorSwapOutputList({
   })
   return (
     <TokenSelectorList
+      showTokenAddress
       chainFilter={chainFilter}
       hasError={Boolean(error)}
       isKeyboardOpen={isKeyboardOpen}

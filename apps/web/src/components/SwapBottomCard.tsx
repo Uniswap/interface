@@ -1,41 +1,158 @@
-import { getChainUI } from 'components/Logo/ChainLogo'
+import { useCurrency } from 'hooks/Tokens'
 import { PageType, useIsPage } from 'hooks/useIsPage'
-import { useCallback } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { ArrowUpRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
+import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
 import { ClickableTamaguiStyle, ExternalLink, HideSmall } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { ElementAfterText, Flex, Text, TouchableArea, TouchableAreaEvent, useSporeColors } from 'ui/src'
-import { BRIDGING_BANNER } from 'ui/src/assets'
+import { BRIDGING_BANNER, UNICHAIN_BANNER_COLD, UNICHAIN_BANNER_WARM } from 'ui/src/assets'
 import { X } from 'ui/src/components/icons/X'
 import { opacify } from 'ui/src/theme'
 import { CardImage } from 'uniswap/src/components/cards/image'
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
+import { UnichainIntroModal } from 'uniswap/src/components/unichain/UnichainIntroModal'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { selectHasViewedBridgingBanner } from 'uniswap/src/features/behaviorHistory/selectors'
-import { setHasViewedBridgingBanner } from 'uniswap/src/features/behaviorHistory/slice'
+import {
+  setHasDismissedUnichainColdBanner,
+  setHasDismissedUnichainWarmBanner,
+  setHasViewedBridgingBanner,
+} from 'uniswap/src/features/behaviorHistory/slice'
 import { useIsBridgingChain, useNumBridgingChains } from 'uniswap/src/features/bridging/hooks/chains'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useUnichainBannerVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainBannerVisibility'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function SwapBottomCard() {
-  const dispatch = useAppDispatch()
-  const { t } = useTranslation()
-
   const { chainId: oldFlowChainId } = useMultichainContext()
-  const { swapInputChainId: newFlowChainId, setIsSwapTokenSelectorOpen } = useUniswapContext()
+  const { swapInputChainId: newFlowChainId, setIsSwapTokenSelectorOpen, setSwapOutputChainId } = useUniswapContext()
   const chainId = newFlowChainId ?? oldFlowChainId
 
   const isSupportedChain = useIsSupportedChainId(chainId)
 
   const hasViewedBridgingBanner = useSelector(selectHasViewedBridgingBanner)
   const isBridgingSupportedChain = useIsBridgingChain(chainId ?? UniverseChainId.Mainnet)
+  const isBridgingBannerChain = chainId === null || chainId === UniverseChainId.Mainnet || isBridgingSupportedChain
+  const shouldShowBridgingBanner = !hasViewedBridgingBanner && isBridgingBannerChain
+
+  const [showUnichainIntroModal, setShowUnichainIntroModal] = useState(false)
+  const { shouldShowUnichainBannerCold, shouldShowUnichainBannerWarm } = useUnichainBannerVisibility()
+
+  const isSwapPage = useIsPage(PageType.SWAP)
+  const isSendPage = useIsPage(PageType.SEND)
+
+  const hideCard = !isSupportedChain || !(isSwapPage || isSendPage)
+
+  const card = useMemo(() => {
+    if (hideCard) {
+      return null
+    }
+
+    if (shouldShowUnichainBannerCold) {
+      return <UnichainBannerCold showUnichainModal={() => setShowUnichainIntroModal(true)} />
+    } else if (shouldShowUnichainBannerWarm) {
+      return <UnichainBannerWarm />
+    } else if (shouldShowBridgingBanner) {
+      return <BridgingBanner />
+    } else if (!isBridgingSupportedChain) {
+      return <MaybeExternalBridgeCard chainId={chainId} />
+    } else {
+      return null
+    }
+  }, [
+    chainId,
+    hideCard,
+    isBridgingSupportedChain,
+    shouldShowBridgingBanner,
+    shouldShowUnichainBannerCold,
+    shouldShowUnichainBannerWarm,
+  ])
+
+  return (
+    <>
+      {card}
+      {showUnichainIntroModal && (
+        <UnichainIntroModal
+          openSwapFlow={() => {
+            setSwapOutputChainId(UniverseChainId.Unichain)
+            setIsSwapTokenSelectorOpen(true)
+          }}
+          onClose={() => setShowUnichainIntroModal(false)}
+        />
+      )}
+    </>
+  )
+}
+
+function UnichainBannerCold({ showUnichainModal }: { showUnichainModal: () => void }) {
+  const { t } = useTranslation()
+  const dispatch = useAppDispatch()
+
+  return (
+    <ImagePromoBanner
+      image={UNICHAIN_BANNER_COLD}
+      title={t('unichain.promotion.cold.title')}
+      onPress={showUnichainModal}
+      onDismiss={() => {
+        dispatch(setHasDismissedUnichainColdBanner(true))
+      }}
+      subtitle={t('unichain.promotion.cold.description')}
+      isNew
+    />
+  )
+}
+
+function UnichainBannerWarm() {
+  const { t } = useTranslation()
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const { setIsSwapTokenSelectorOpen, setSwapOutputChainId } = useUniswapContext()
+  const unichainCurrency = useCurrency('ETH', UniverseChainId.Unichain)
+
+  const openUnichainTokenSelector = useCallback(() => {
+    navigate(
+      `/swap${serializeSwapStateToURLParameters({
+        inputCurrency: unichainCurrency,
+        chainId: UniverseChainId.Unichain,
+      })}`,
+    )
+    setSwapOutputChainId(UniverseChainId.Unichain)
+    // Web specific override to open token selector
+    setIsSwapTokenSelectorOpen(true)
+    // delay this redux change to avoid any visible UI jank when clicking in
+    setTimeout((): void => {
+      dispatch(setHasDismissedUnichainWarmBanner(true))
+    }, ONE_SECOND_MS / 2)
+  }, [dispatch, navigate, setIsSwapTokenSelectorOpen, setSwapOutputChainId, unichainCurrency])
+
+  return (
+    <ImagePromoBanner
+      image={UNICHAIN_BANNER_WARM}
+      title={t('unichain.promotion.warm.title')}
+      onPress={openUnichainTokenSelector}
+      onDismiss={() => {
+        dispatch(setHasDismissedUnichainWarmBanner(true))
+      }}
+      subtitle={t('unichain.promotion.warm.description')}
+      isNew
+    />
+  )
+}
+
+function BridgingBanner() {
+  const { t } = useTranslation()
+  const dispatch = useAppDispatch()
   const numBridgingChains = useNumBridgingChains()
+  const { setIsSwapTokenSelectorOpen } = useUniswapContext()
+
   const handleBridgingDismiss = useCallback(
     (shouldNavigate: boolean) => {
       if (shouldNavigate) {
@@ -52,52 +169,101 @@ export function SwapBottomCard() {
     [dispatch, setIsSwapTokenSelectorOpen],
   )
 
-  const isSwapPage = useIsPage(PageType.SWAP)
-  const isSendPage = useIsPage(PageType.SEND)
-  if (!isSupportedChain || !(isSwapPage || isSendPage)) {
-    return null
-  }
-
-  const isBridgingBannerChain = chainId === null || chainId === UniverseChainId.Mainnet || isBridgingSupportedChain
-  const shouldShowBridgingBanner = !hasViewedBridgingBanner && isBridgingBannerChain
-
-  if (shouldShowBridgingBanner) {
-    return (
-      <TouchableArea {...ClickableTamaguiStyle} onPress={() => handleBridgingDismiss(true)}>
-        <CardInner
-          isAbsoluteImage
-          image={
-            <Flex height="100%">
-              <CardImage uri={BRIDGING_BANNER} />
-            </Flex>
-          }
-          title={t('swap.bridging.title')}
-          onDismiss={() => {
-            handleBridgingDismiss(false)
-          }}
-          subtitle={t('onboarding.home.intro.bridging.description', { count: numBridgingChains })}
-          isNew
-        />
-      </TouchableArea>
-    )
-  } else if (!isBridgingSupportedChain) {
-    return <NetworkAlert chainId={chainId} />
-  } else {
-    return null
-  }
+  return (
+    <ImagePromoBanner
+      image={BRIDGING_BANNER}
+      title={t('swap.bridging.title')}
+      onPress={() => handleBridgingDismiss(true)}
+      onDismiss={() => {
+        handleBridgingDismiss(false)
+      }}
+      subtitle={t('onboarding.home.intro.bridging.description', { count: numBridgingChains })}
+    />
+  )
 }
 
-function NetworkAlert({ chainId }: { chainId: UniverseChainId }) {
-  const darkMode = useIsDarkMode()
+function ImagePromoBanner({
+  title,
+  subtitle,
+  image,
+  isNew = false,
+  onDismiss,
+  onPress,
+}: {
+  title: string
+  subtitle: string
+  image: any
+  isNew?: boolean
+  onDismiss: () => void
+  onPress: () => void
+}): JSX.Element {
+  return (
+    <TouchableArea {...ClickableTamaguiStyle} onPress={onPress}>
+      <CardInner
+        isAbsoluteImage
+        image={
+          <Flex height="100%">
+            <CardImage uri={image} />
+          </Flex>
+        }
+        title={title}
+        onDismiss={onDismiss}
+        subtitle={subtitle}
+        isNew={isNew}
+      />
+    </TouchableArea>
+  )
+}
+
+interface ChainTheme {
+  bgColor: string
+  textColor: string
+}
+
+const CHAIN_THEME_LIGHT: Record<UniverseChainId, ChainTheme> = {
+  [UniverseChainId.Mainnet]: { bgColor: '#6B8AFF33', textColor: '#6B8AFF' },
+  [UniverseChainId.ArbitrumOne]: { bgColor: '#00A3FF33', textColor: '#00A3FF' },
+  [UniverseChainId.Avalanche]: { bgColor: '#E8414233', textColor: '#E84142' },
+  [UniverseChainId.Base]: { bgColor: '#0052FF33', textColor: '#0052FF' },
+  [UniverseChainId.Blast]: { bgColor: 'rgba(252, 252, 3, 0.16)', textColor: 'rgba(17, 20, 12, 1)' },
+  [UniverseChainId.Bnb]: { bgColor: '#EAB20033', textColor: '#EAB200' },
+  [UniverseChainId.Celo]: { bgColor: '#FCFF5233', textColor: '#FCFF52' },
+  [UniverseChainId.MonadTestnet]: { bgColor: '#200052', textColor: '#836EF9' },
+  [UniverseChainId.Optimism]: { bgColor: '#FF042033', textColor: '#FF0420' },
+  [UniverseChainId.Polygon]: { bgColor: '#9558FF33', textColor: '#9558FF' },
+  [UniverseChainId.Sepolia]: { bgColor: '#6B8AFF33', textColor: '#6B8AFF' },
+  [UniverseChainId.Unichain]: { bgColor: '#F50DB433', textColor: '#F50DB4' },
+  [UniverseChainId.UnichainSepolia]: { bgColor: '#F50DB433', textColor: '#F50DB4' },
+  [UniverseChainId.WorldChain]: { bgColor: 'rgba(0, 0, 0, 0.12)', textColor: '#000000' },
+  [UniverseChainId.Zksync]: { bgColor: 'rgba(54, 103, 246, 0.12)', textColor: '#3667F6' },
+  [UniverseChainId.Zora]: { bgColor: 'rgba(0, 0, 0, 0.12)', textColor: '#000000' },
+}
+
+const CHAIN_THEME_DARK: Record<UniverseChainId, ChainTheme> = {
+  ...CHAIN_THEME_LIGHT,
+  [UniverseChainId.Blast]: { bgColor: 'rgba(252, 252, 3, 0.12)', textColor: 'rgba(252, 252, 3, 1) ' },
+  [UniverseChainId.Celo]: { bgColor: '#FCFF5299', textColor: '#655947' },
+  [UniverseChainId.WorldChain]: { bgColor: 'rgba(255, 255, 255, 0.12)', textColor: '#FFFFFF' },
+  [UniverseChainId.Zksync]: { bgColor: 'rgba(97, 137, 255, 0.12)', textColor: '#6189FF' },
+  [UniverseChainId.Zora]: { bgColor: 'rgba(255, 255, 255, 0.12)', textColor: '#FFFFFF' },
+}
+
+function useChainTheme(chainId: UniverseChainId): ChainTheme {
+  const isDarkMode = useIsDarkMode()
+  return isDarkMode ? CHAIN_THEME_LIGHT[chainId] : CHAIN_THEME_DARK[chainId]
+}
+
+function MaybeExternalBridgeCard({ chainId }: { chainId: UniverseChainId }) {
   const { t } = useTranslation()
 
-  const { symbol, bgColor, textColor } = getChainUI(chainId, darkMode)
+  const { bgColor, textColor } = useChainTheme(chainId)
   const chainInfo = getChainInfo(chainId)
+  const logoUri = chainInfo.logo as string
 
   return chainInfo.bridge ? (
     <ExternalLink href={chainInfo.bridge}>
       <CardInner
-        image={symbol !== '' ? <img width="40px" height="40px" style={{ borderRadius: '12px' }} src={symbol} /> : null}
+        image={<img width="40px" height="40px" style={{ borderRadius: '12px' }} src={logoUri} />}
         title={t('token.bridge', { label: chainInfo.label })}
         subtitle={t('common.deposit.toNetwork', { label: chainInfo.label })}
         textColor={textColor}
@@ -107,7 +273,7 @@ function NetworkAlert({ chainId }: { chainId: UniverseChainId }) {
   ) : null
 }
 
-const ICON_SIZE = 24
+const ICON_SIZE = 20
 const ICON_SIZE_PX = `${ICON_SIZE}px`
 
 function CardInner({
@@ -161,6 +327,7 @@ function CardInner({
         </Flex>
         {onDismiss ? (
           <TouchableArea
+            alignSelf="flex-start"
             hitSlop={ICON_SIZE}
             onPress={(e: TouchableAreaEvent) => {
               e.stopPropagation()

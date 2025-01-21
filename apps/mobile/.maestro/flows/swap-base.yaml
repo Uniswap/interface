@@ -1,0 +1,41 @@
+appId: com.uniswap.mobile.dev
+env:
+  E2E_RECOVERY_PHRASE: ${E2E_RECOVERY_PHRASE}
+---
+- runFlow: subflows/start.yaml
+- runFlow: subflows/recover-fast.yaml
+# Start of swap flow
+- tapOn:
+    id: 'swap'
+- tapOn:
+    id: 'choose-output-token-label'
+- tapOn:
+    id: 'explore-search-input'
+- inputText: btc
+- tapOn:
+    id: 'token-option-8453-cbBTC'
+- tapOn: '0 cbBTC'
+- tapOn:
+    id: 'decimal-pad-0'
+- tapOn:
+    id: 'decimal-pad-decimal'
+- tapOn:
+    id: 'decimal-pad-0'
+- tapOn:
+    id: 'decimal-pad-0'
+- tapOn:
+    id: 'decimal-pad-0'
+- tapOn:
+    id: 'decimal-pad-0'
+- tapOn:
+    id: 'decimal-pad-0'
+- tapOn:
+    id: 'decimal-pad-1'
+- tapOn:
+    id: 'review-swap'
+- tapOn: Show more
+- tapOn:
+    id: 'swap'
+- extendedWaitUntil:
+    visible: 'Swapped'
+    timeout: 10000

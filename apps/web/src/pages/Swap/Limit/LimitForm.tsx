@@ -4,7 +4,6 @@ import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@uniswap/unive
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer'
 import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonError, ButtonLight } from 'components/Button/buttons'
 import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
 import { LimitPriceInputPanel } from 'components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
 import {
@@ -18,6 +17,7 @@ import Row from 'components/deprecated/Row'
 import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/styled'
 import { ZERO_PERCENT } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
+import { useIsUniswapXSupportedChain } from 'hooks/useIsUniswapXSupportedChain'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
@@ -36,7 +36,7 @@ import { LimitOrderTrade, TradeFillType } from 'state/routing/types'
 import { useSwapActionHandlers } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
-import { Anchor, Text, styled as tamaguiStyled } from 'ui/src'
+import { Anchor, DeprecatedButton, Text, styled as tamaguiStyled } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -470,50 +470,75 @@ function SubmitOrderButton({
   const accountDrawer = useAccountDrawer()
   const account = useAccount()
   const { chainId } = useMultichainContext()
+  const isUniswapXSupported = useIsUniswapXSupportedChain(chainId)
 
-  if (chainId && !LIMIT_SUPPORTED_CHAINS.includes(chainId)) {
-    return (
-      <ButtonError disabled>
-        <Trans i18nKey="limits.selectSupportedTokens" />
-      </ButtonError>
-    )
-  }
+  const buttonProps = useMemo(() => {
+    const submitButtonDisabled = !isUniswapXSupported || hasInsufficientFunds || !!limitPriceError || !trade
 
-  if (!account.isConnected) {
-    return (
-      <ButtonLight onClick={accountDrawer.open} fontWeight={535} $borderRadius="16px">
-        <ConnectWalletButtonText />
-      </ButtonLight>
-    )
-  }
+    const getButtonText = () => {
+      if (!isUniswapXSupported) {
+        return <Trans i18nKey="limits.selectSupportedTokens" />
+      }
+      if (!account.isConnected) {
+        return <ConnectWalletButtonText />
+      }
+      if (hasInsufficientFunds) {
+        return inputCurrency ? (
+          <Trans
+            i18nKey="common.insufficientTokenBalance.error.simple"
+            values={{ tokenSymbol: inputCurrency.symbol }}
+          />
+        ) : (
+          <Trans i18nKey="common.insufficientBalance.error" />
+        )
+      }
+      return <Trans i18nKey="common.confirm" />
+    }
 
-  if (hasInsufficientFunds) {
-    return (
-      <ButtonError disabled>
-        <Text fontSize={20}>
-          {inputCurrency ? (
-            <Trans i18nKey="common.insufficientTokenBalance.error" values={{ tokenSymbol: inputCurrency.symbol }} />
-          ) : (
-            <Trans i18nKey="common.insufficientBalance.error" />
-          )}
+    return {
+      animation: 'fast' as const,
+      borderRadius: '$rounded16',
+      size: 'large',
+      width: '100%',
+      pressStyle: { scale: 0.98 },
+      disabled: submitButtonDisabled && account.isConnected,
+      opacity: 1,
+      backgroundColor: !account.isConnected ? '$accent2' : submitButtonDisabled ? '$surface2' : '$accent1',
+      hoverStyle: {
+        backgroundColor: !account.isConnected
+          ? '$accent2Hovered'
+          : submitButtonDisabled
+            ? '$surface2'
+            : '$accent1Hovered',
+      },
+      onPress: !account.isConnected ? accountDrawer.open : handleContinueToReview,
+      ...(trade && {
+        id: 'submit-order-button',
+        'data-testid': 'submit-order-button',
+      }),
+      children: (
+        <Text
+          variant="buttonLabel1"
+          color={!account.isConnected ? '$accent1' : submitButtonDisabled ? '$neutral2' : '$white'}
+        >
+          {getButtonText()}
         </Text>
-      </ButtonError>
-    )
-  }
+      ),
+    } as const
+  }, [
+    isUniswapXSupported,
+    account.isConnected,
+    accountDrawer.open,
+    hasInsufficientFunds,
+    inputCurrency,
+    limitPriceError,
+    trade,
+    handleContinueToReview,
+  ])
 
-  const errorButtonDisabled = !!limitPriceError || !trade
   return (
     <Trace logPress element={ElementName.LimitOrderButton}>
-      <ButtonError
-        onClick={handleContinueToReview}
-        id="submit-order-button"
-        data-testid="submit-order-button"
-        disabled={errorButtonDisabled}
-      >
-        <Text color={errorButtonDisabled ? '$neutralContrast' : '$white'} fontSize={20}>
-          <Trans i18nKey="common.confirm" />
-        </Text>
-      </ButtonError>
+      <DeprecatedButton {...buttonProps} />
     </Trace>
   )
 }

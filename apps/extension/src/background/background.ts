@@ -2,7 +2,6 @@ import 'symbol-observable' // Needed by `reduxed-chrome-storage` as polyfill, or
 
 import { initStatSigForBrowserScripts } from 'src/app/StatsigProvider'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
-import { SentryAppNameTag, initSentryForBrowserScripts } from 'src/app/sentry'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { initMessageBridge } from 'src/background/backgroundDappRequests'
 import { backgroundStore } from 'src/background/backgroundStore'
@@ -10,7 +9,6 @@ import { backgroundToSidePanelMessageChannel } from 'src/background/messagePassi
 import { BackgroundToSidePanelRequestType } from 'src/background/messagePassing/types/requests'
 import { setSidePanelBehavior, setSidePanelOptions } from 'src/background/utils/chromeSidePanelUtils'
 import { readIsOnboardedFromStorage } from 'src/background/utils/persistedStateUtils'
-import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { logger } from 'utilities/src/logger/logger'
 
 export const EXTENSION_ID = chrome.runtime.id
@@ -18,8 +16,6 @@ export const EXTENSION_ID = chrome.runtime.id
 initMessageBridge()
 
 async function initApp(): Promise<void> {
-  const userId = await getUniqueId()
-  initSentryForBrowserScripts(SentryAppNameTag.Background, userId)
   await initStatSigForBrowserScripts()
   await initExtensionAnalytics()
 

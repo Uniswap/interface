@@ -2337,7 +2337,9 @@ PODS:
     - React
   - react-native-get-random-values (1.8.0):
     - React-Core
-  - react-native-image-picker (7.0.1):
+  - react-native-image-picker (7.2.3):
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
     - React-Core
   - react-native-mmkv (2.10.1):
     - MMKV (>= 1.2.13)
@@ -3081,7 +3083,7 @@ SPEC CHECKSUMS:
   react-native-compat: 100540c3cebb076da442cf058e375e8ca895ae28
   react-native-context-menu-view: dcec18eb8882e20596dbb75802e7d19cb87dac02
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
-  react-native-image-picker: 1569cfade34b3a011191ce262423e6ce2f8db5a1
+  react-native-image-picker: b049e0ea9d6b1b58c06262e19f8b66c87ac7b760
   react-native-mmkv: dea675cf9697ad35940f1687e98e133e1358ef9f
   react-native-netinfo: 129bd99f607a2dc5bb096168f3e5c150fd1f1c95
   react-native-onesignal: ab800900cffeca4d9db70a05244013fc8a36ceb8

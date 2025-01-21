@@ -3,8 +3,10 @@ import { parse } from 'qs'
 import { ReactNode } from 'react'
 import { queryParametersToCurrencyState, useInitialCurrencyState } from 'state/swap/hooks'
 import { ETH_MAINNET } from 'test-utils/constants'
+import { mocked } from 'test-utils/mocked'
 import { renderHook, waitFor } from 'test-utils/render'
 import { UNI, nativeOnChain } from 'uniswap/src/constants/tokens'
+import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { UrlContext } from 'uniswap/src/contexts/UrlContext'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
@@ -13,6 +15,8 @@ jest.mock('uniswap/src/features/gating/hooks', () => {
     useFeatureFlag: jest.fn(),
   }
 })
+
+jest.mock('uniswap/src/contexts/UniswapContext')
 
 function mockQueryStringInUrlProvider(
   qs: Record<string, any>,
@@ -95,6 +99,20 @@ describe('hooks', () => {
   })
 
   describe('#useInitialCurrencyState', () => {
+    beforeEach(() => {
+      return mocked(useUniswapContext).mockReturnValue({
+        swapInputChainId: undefined,
+        navigateToFiatOnRamp: () => {},
+        onSwapChainsChanged: () => {},
+        signer: undefined,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        useProviderHook: (_chainId: number) => undefined,
+        isSwapTokenSelectorOpen: false,
+        setIsSwapTokenSelectorOpen: () => {},
+        setSwapOutputChainId: () => {},
+      })
+    })
+
     describe('Disconnected wallet', () => {
       test('optimism output UNI', () => {
         jest.mock('uniswap/src/contexts/UrlContext', () => ({

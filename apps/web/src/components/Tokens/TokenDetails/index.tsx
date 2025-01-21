@@ -2,7 +2,6 @@ import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import { MobileBottomBar, TDPActionTabs } from 'components/NavBar/MobileBottomBar'
-import TokenSafetyMessage from 'components/TokenSafety/DeprecatedTokenSafetyMessage'
 import { ActivitySection } from 'components/Tokens/TokenDetails/ActivitySection'
 import BalanceSummary, { PageChainBalanceSummary } from 'components/Tokens/TokenDetails/BalanceSummary'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
@@ -29,8 +28,6 @@ import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { isUniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
@@ -94,8 +91,7 @@ function useSwapInitialInputCurrency() {
 }
 
 function TDPSwapComponent() {
-  const { address, currency, currencyChainId, warning, tokenColor } = useTDPContext()
-  const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
+  const { address, currency, currencyChainId, tokenColor } = useTDPContext()
   const navigate = useNavigate()
 
   const currencyInfo = useCurrencyInfo(currencyId(currency))
@@ -156,22 +152,16 @@ function TDPSwapComponent() {
         tokenColor={tokenColor}
         compact
       />
-      {tokenProtectionEnabled ? (
-        <>
-          <TokenWarningCard currencyInfo={currencyInfo} onPress={() => setShowWarningModal(true)} />
-          {currencyInfo && (
-            // Intentionally duplicative with the TokenWarningModal in the swap component; this one only displays when user clicks "i" Info button on the TokenWarningCard
-            <TokenWarningModal
-              currencyInfo0={currencyInfo}
-              isInfoOnlyWarning
-              isVisible={showWarningModal}
-              closeModalOnly={closeWarningModal}
-              onAcknowledge={closeWarningModal}
-            />
-          )}
-        </>
-      ) : (
-        warning && <TokenSafetyMessage tokenAddress={address} warning={warning} />
+      <TokenWarningCard currencyInfo={currencyInfo} onPress={() => setShowWarningModal(true)} />
+      {currencyInfo && (
+        // Intentionally duplicative with the TokenWarningModal in the swap component; this one only displays when user clicks "i" Info button on the TokenWarningCard
+        <TokenWarningModal
+          currencyInfo0={currencyInfo}
+          isInfoOnlyWarning
+          isVisible={showWarningModal}
+          closeModalOnly={closeWarningModal}
+          onAcknowledge={closeWarningModal}
+        />
       )}
     </Flex>
   )

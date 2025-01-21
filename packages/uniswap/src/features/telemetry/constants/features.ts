@@ -12,11 +12,12 @@ export enum UnitagEventName {
 export enum FiatOffRampEventName {
   FORBuySellToggled = 'Fiat OnRamp Buy Sell Toggled',
   FiatOffRampAmountEntered = 'Fiat OffRamp Amount Entered',
-  FiatOffRampTransactionUpdated = 'Fiat OffRamp Transaction Updated', // TODO: must implement
   FiatOffRampTokenSelected = 'Fiat OffRamp Token Selected',
+  FiatOffRampUnsupportedTokenBack = 'Fiat OffRamp Unsupported Token Modal Back Button Pressed',
+  FiatOffRampUnsupportedTokenSwap = 'Fiat OffRamp Unsupported Token Modal Swap Button Pressed',
   FiatOffRampWidgetOpened = 'Fiat OffRamp Widget Opened',
-  FiatOffRampWidgetCompleted = 'Fiat OffRamp Widget Completed', // TODO: must implement
-  FiatOffRampFundsSent = 'Fiat OffRamp Funds Sent', // TODO: must implement
+  FiatOffRampWidgetCompleted = 'Fiat OffRamp Widget Completed',
+  FiatOffRampFundsSent = 'Fiat OffRamp Funds Sent',
 }
 
 export enum FiatOnRampEventName {

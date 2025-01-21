@@ -14,9 +14,10 @@ import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, Position as V4Position } from '@uniswap/v4-sdk'
 import { defaultFeeTiers } from 'components/Liquidity/constants'
-import { FeeTierData, PositionInfo } from 'components/Liquidity/types'
+import { DepositInfo, FeeTierData, PositionInfo } from 'components/Liquidity/types'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { DYNAMIC_FEE_DATA, DynamicFeeData, FeeData } from 'pages/Pool/Positions/create/types'
+import { PositionField } from 'types/position'
 import { GeneratedIcon } from 'ui/src'
 import { Flag } from 'ui/src/components/icons/Flag'
 import { Pools } from 'ui/src/components/icons/Pools'
@@ -446,7 +447,7 @@ export function getFlagWarning(flag: HookFlag, t: AppTFunction): FlagWarning | u
     case HookFlag.AfterRemoveLiquidity:
       return {
         Icon: Flag,
-        name: t('common.flag'),
+        name: t('common.warning'),
         info: t('position.hook.removeWarning'),
         dangerous: true,
       }
@@ -591,4 +592,67 @@ export function isDynamicFeeTierAmount(
   }
 
   return feeAmountNumber === DYNAMIC_FEE_DATA.feeAmount
+}
+
+export function getDisplayedAmountsFromDependentAmount({
+  token0,
+  token1,
+  dependentAmount,
+  exactField,
+  currencyAmounts,
+  currencyAmountsUSDValue,
+  formattedAmounts,
+}: { token0?: Currency; token1?: Currency; dependentAmount?: string; exactField: PositionField } & Pick<
+  DepositInfo,
+  'currencyAmounts' | 'currencyAmountsUSDValue' | 'formattedAmounts'
+>): {
+  displayFormattedAmounts?: { [field in PositionField]?: string }
+  displayUSDAmounts?: { [field in PositionField]?: CurrencyAmount<Currency> }
+  displayCurrencyAmounts?: { [field in PositionField]?: CurrencyAmount<Currency> }
+} {
+  if (dependentAmount && exactField === PositionField.TOKEN1 && currencyAmounts?.TOKEN0?.greaterThan(0) && token0) {
+    const dependentAmount0 = CurrencyAmount.fromRawAmount(token0, dependentAmount)
+    const ratio = dependentAmount0.divide(currencyAmounts?.TOKEN0)
+    return {
+      displayFormattedAmounts: {
+        ...formattedAmounts,
+        TOKEN0: dependentAmount0?.toExact() ?? formattedAmounts?.TOKEN0,
+      },
+      displayUSDAmounts: {
+        ...currencyAmountsUSDValue,
+        TOKEN0: currencyAmountsUSDValue?.TOKEN0?.multiply(ratio),
+      },
+      displayCurrencyAmounts: {
+        ...currencyAmounts,
+        TOKEN0: dependentAmount0 ?? currencyAmounts?.TOKEN0,
+      },
+    }
+  } else if (
+    dependentAmount &&
+    exactField === PositionField.TOKEN0 &&
+    currencyAmounts?.TOKEN1?.greaterThan(0) &&
+    token1
+  ) {
+    const dependentAmount1 = CurrencyAmount.fromRawAmount(token1, dependentAmount)
+    const ratio = dependentAmount1.divide(currencyAmounts?.TOKEN1)
+    return {
+      displayFormattedAmounts: {
+        ...formattedAmounts,
+        TOKEN1: dependentAmount1?.toExact() ?? formattedAmounts?.TOKEN1,
+      },
+      displayUSDAmounts: {
+        ...currencyAmountsUSDValue,
+        TOKEN1: currencyAmountsUSDValue?.TOKEN1?.multiply(ratio),
+      },
+      displayCurrencyAmounts: {
+        ...currencyAmounts,
+        TOKEN1: dependentAmount1 ?? currencyAmounts?.TOKEN1,
+      },
+    }
+  }
+  return {
+    displayFormattedAmounts: formattedAmounts,
+    displayUSDAmounts: currencyAmountsUSDValue,
+    displayCurrencyAmounts: currencyAmounts,
+  }
 }

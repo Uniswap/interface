@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { LoaderButton } from 'components/Button/LoaderButton'
 import { LiquidityModalDetailRows } from 'components/Liquidity/LiquidityModalDetailRows'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
@@ -17,6 +19,11 @@ import { Flex, Switch, Text, useSporeColors } from 'ui/src'
 import { useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import useResizeObserver from 'use-resize-observer'
 
+const isValidPercentageInput = (value: string): boolean => {
+  const numValue = Number(value)
+  return !isNaN(numValue) && numValue <= 100
+}
+
 export function RemoveLiquidityForm() {
   const hiddenObserver = useResizeObserver<HTMLElement>()
   const { t } = useTranslation()
@@ -34,7 +41,7 @@ export function RemoveLiquidityForm() {
   const canUnwrap0 = useCanUnwrapCurrency(currency0Amount.currency)
   const canUnwrap1 = useCanUnwrapCurrency(currency1Amount.currency)
   const nativeCurrencyInfo = useNativeCurrencyInfo(positionInfo.chainId)
-  const canUnwrap = canUnwrap0 || canUnwrap1
+  const canUnwrap = (canUnwrap0 || canUnwrap1) && positionInfo.version !== ProtocolVersion.V4
 
   const unwrapUnderCard = useMemo(() => {
     if (!canUnwrap || !nativeCurrencyInfo) {
@@ -63,7 +70,7 @@ export function RemoveLiquidityForm() {
         />
       </Flex>
     )
-  }, [nativeCurrencyInfo, unwrapNativeCurrency, canUnwrap, setUnwrapNativeCurrency])
+  }, [canUnwrap, nativeCurrencyInfo, unwrapNativeCurrency, setUnwrapNativeCurrency])
 
   return (
     <Flex gap="$gap24">
@@ -90,12 +97,14 @@ export function RemoveLiquidityForm() {
               <StyledPercentInput
                 value={percent}
                 onUserInput={(value: string) => {
-                  setPercent(value)
+                  if (isValidPercentageInput(value)) {
+                    setPercent(value)
+                  }
                 }}
                 placeholder="0"
                 $width={percent && hiddenObserver.width ? hiddenObserver.width + 1 : undefined}
                 maxDecimals={1}
-                maxLength={2}
+                maxLength={3}
               />
               <NumericalInputSymbolContainer showPlaceholder={!percent}>%</NumericalInputSymbolContainer>
               <NumericalInputMimic ref={hiddenObserver.ref}>{percent}</NumericalInputMimic>

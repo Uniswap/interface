@@ -7,7 +7,6 @@ const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'
 const fs = require('fs')
 const DotenvPlugin = require('dotenv-webpack')
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
-const { sentryWebpackPlugin } = require('@sentry/webpack-plugin')
 
 const NODE_ENV = process.env.NODE_ENV || 'development'
 const POLL_ENV = process.env.WEBPACK_POLLING_INTERVAL
@@ -355,12 +354,6 @@ module.exports = (env) => {
             force: true,
           },
         ],
-      }),
-      sentryWebpackPlugin({
-        authToken: env.SENTRY_AUTH_TOKEN,
-        org: 'uniswap-labs',
-        project: 'extension-wallet',
-        telemetry: process.env.NODE_ENV === 'production',
       }),
     ],
     ...extras,

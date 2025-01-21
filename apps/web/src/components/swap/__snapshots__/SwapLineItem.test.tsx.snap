@@ -2029,7 +2029,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                     <div
                       class="c9 css-obwv3p"
                     >
-                      Best price route costs ~$1.00 in gas.  This route optimizes your total output by considering split routes, multiple hops, and the network costs of each step.
+                      Most efficient route is estimated to cost ~$1.00 in network costs.  This route considers split routes, multiple hops, and network costs of each step.
                     </div>
                   </div>
                 </div>
@@ -2736,7 +2736,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                     <div
                       class="c9 css-obwv3p"
                     >
-                      Best price route costs ~$1.00 in gas.  This route optimizes your total output by considering split routes, multiple hops, and the network costs of each step.
+                      Most efficient route is estimated to cost ~$1.00 in network costs.  This route considers split routes, multiple hops, and network costs of each step.
                     </div>
                   </div>
                 </div>
@@ -3487,7 +3487,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                     <div
                       class="c9 css-obwv3p"
                     >
-                      This route optimizes your total output by considering split routes, multiple hops, and the network costs of each step.
+                      This route considers split routes, multiple hops, and network costs of each step.
                     </div>
                   </div>
                 </div>
@@ -4251,7 +4251,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                     <div
                       class="c9 css-obwv3p"
                     >
-                      Best price route costs ~$1.00 in gas.  This route optimizes your total output by considering split routes, multiple hops, and the network costs of each step.
+                      Most efficient route is estimated to cost ~$1.00 in network costs.  This route considers split routes, multiple hops, and network costs of each step.
                     </div>
                   </div>
                 </div>
@@ -5015,7 +5015,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                     <div
                       class="c9 css-obwv3p"
                     >
-                      Best price route costs ~$1.00 in gas.  This route optimizes your total output by considering split routes, multiple hops, and the network costs of each step.
+                      Most efficient route is estimated to cost ~$1.00 in network costs.  This route considers split routes, multiple hops, and network costs of each step.
                     </div>
                   </div>
                 </div>

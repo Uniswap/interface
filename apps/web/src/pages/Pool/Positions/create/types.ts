@@ -51,6 +51,7 @@ type BaseCreatePositionInfo = {
   poolId?: string
   poolOrPairLoading?: boolean
   isPoolOutOfSync: boolean
+  refetchPoolData: () => void
 }
 
 export type CreateV4PositionInfo = BaseCreatePositionInfo & {

@@ -1,0 +1,9 @@
+appId: com.uniswap.mobile.dev
+---
+- extendedWaitUntil:
+    visible:
+      id: 'confirm'
+    timeout: 10000
+- tapOn:
+    id: 'confirm' # are you sure?
+- waitForAnimationToEnd

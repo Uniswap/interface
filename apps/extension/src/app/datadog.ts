@@ -1,77 +1,113 @@
 import { datadogLogs } from '@datadog/browser-logs'
-import { datadogRum } from '@datadog/browser-rum'
+import { RumEvent, datadogRum } from '@datadog/browser-rum'
 import { getDatadogEnvironment } from 'src/app/version'
 import { config } from 'uniswap/src/config'
 import {
   DatadogIgnoredErrorsConfigKey,
   DatadogIgnoredErrorsValType,
+  DatadogSessionSampleRateKey,
+  DatadogSessionSampleRateValType,
   DynamicConfigs,
 } from 'uniswap/src/features/gating/configs'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
-import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
+import { WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
 import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { getUniqueId } from 'utilities/src/device/getUniqueId'
+import { datadogEnabled, localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
 
-export async function initializeDatadog(appName: string): Promise<void> {
-  const datadogEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.Datadog))
-  logger.setWalletDatadogEnabled(datadogEnabled)
+// In case Statsig is not available
+const EXTENSION_DEFAULT_DATADOG_SESSION_SAMPLE_RATE = 10 // percent
 
+export const enum DatadogAppNameTag {
+  Sidebar = 'sidebar',
+  Onboarding = 'onboarding',
+  ContentScript = 'content-script',
+  Background = 'background',
+  Popup = 'popup',
+  UnitagClaim = 'unitag-claim',
+}
+
+function beforeSend(event: RumEvent): boolean {
+  // otherwise DataDog will ignore error events
+  event.view.url = event.view.url.replace(/^chrome-extension:\/\/[a-z]{32}\//i, '')
+  if (event.error && event.type === 'error') {
+    if (event.error.source === 'console') {
+      return false
+    }
+    const ignoredErrors = getDynamicConfigValue<
+      DynamicConfigs.DatadogIgnoredErrors,
+      DatadogIgnoredErrorsConfigKey,
+      DatadogIgnoredErrorsValType
+    >(DynamicConfigs.DatadogIgnoredErrors, DatadogIgnoredErrorsConfigKey.Errors, [])
+
+    const ignoredError = ignoredErrors.find(({ messageContains }) => event.error?.message.includes(messageContains))
+    if (ignoredError && Math.random() > ignoredError.sampleRate) {
+      return false
+    }
+
+    Object.defineProperty(event.error, 'stack', {
+      value: event.error.stack?.replace(/chrome-extension:\/\/[a-z]{32}/gi, ''),
+      writable: false,
+      configurable: true,
+    })
+  }
+
+  return true
+}
+
+export async function initializeDatadog(appName: string): Promise<void> {
   if (!datadogEnabled) {
     return
   }
+
+  const sessionSampleRate = getDynamicConfigValue<
+    DynamicConfigs.DatadogSessionSampleRate,
+    DatadogSessionSampleRateKey,
+    DatadogSessionSampleRateValType
+  >(
+    DynamicConfigs.DatadogSessionSampleRate,
+    DatadogSessionSampleRateKey.Rate,
+    EXTENSION_DEFAULT_DATADOG_SESSION_SAMPLE_RATE,
+  )
 
   const sharedDatadogConfig = {
     clientToken: config.datadogClientToken,
     service: `extension-${getDatadogEnvironment()}`,
     env: getDatadogEnvironment(),
     version: process.env.VERSION,
+    trackingConsent: undefined,
   }
 
   datadogRum.init({
     ...sharedDatadogConfig,
     applicationId: config.datadogProjectId,
-    sessionSampleRate: 100,
+    sessionSampleRate: localDevDatadogEnabled ? 100 : sessionSampleRate,
     sessionReplaySampleRate: 0,
     trackResources: true,
     trackLongTasks: true,
     trackUserInteractions: true,
     enablePrivacyForActionName: true,
-    beforeSend: (event) => {
-      // otherwise DataDog will ignore error events
-      event.view.url = event.view.url.replace(/^chrome-extension:\/\/[a-z]{32}\//i, '')
-      if (event.error && event.type === 'error') {
-        if (event.error.source === 'console') {
-          return false
-        }
-        const ignoredErrors = getDynamicConfigValue<
-          DynamicConfigs.DatadogIgnoredErrors,
-          DatadogIgnoredErrorsConfigKey,
-          DatadogIgnoredErrorsValType
-        >(DynamicConfigs.DatadogIgnoredErrors, DatadogIgnoredErrorsConfigKey.Errors, [])
-
-        const ignoredError = ignoredErrors.find(({ messageContains }) => event.error?.message.includes(messageContains))
-        if (ignoredError && Math.random() > ignoredError.sampleRate) {
-          return false
-        }
-
-        Object.defineProperty(event.error, 'stack', {
-          value: event.error.stack?.replace(/chrome-extension:\/\/[a-z]{32}/gi, ''),
-          writable: false,
-          configurable: true,
-        })
-      }
-
-      return true
-    },
+    beforeSend,
   })
 
-  datadogLogs.init({
-    ...sharedDatadogConfig,
-    site: 'datadoghq.com',
-    forwardErrorsToLogs: false,
-  })
+  // According to the Datadog RUM documentation:
+  // https://docs.datadoghq.com/real_user_monitoring/browser/setup/client?tab=rum#access-internal-context
+  // datadogRum.init() seems to be synchronous and internal context is immediately available.
+  // Local testing confirms this behavior, explaining why no "onInitialization" callback is needed.
+  const internalContext = datadogRum.getInternalContext()
+  const sessionIsSampled = internalContext?.session_id !== undefined
+
+  // we do not want to log anything if session is not sampled
+  if (sessionIsSampled) {
+    datadogLogs.init({
+      ...sharedDatadogConfig,
+      site: 'datadoghq.com',
+      forwardErrorsToLogs: false,
+    })
+    logger.setWalletDatadogEnabled(true)
+  }
 
   try {
     const userId = await getUniqueId()

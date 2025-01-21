@@ -81,17 +81,23 @@ export function formatPrices(
     return { formattedPrices: ['', ''], isFullRange: true }
   }
 
-  const { ticksAtLimit, isSorted, prices } = derivedPriceRangeInfo
+  const { ticksAtLimit, isSorted, prices, invertPrice } = derivedPriceRangeInfo
 
   const isLowerAtLimit = ticksAtLimit[isSorted ? 0 : 1]
   const lowerPriceFormatted = isLowerAtLimit
     ? '0'
-    : formatter({ value: prices?.[0]?.toSignificant(), type: NumberType.TokenTx })
+    : formatter({
+        value: (invertPrice ? prices?.[0]?.invert() : prices?.[0])?.toSignificant(),
+        type: NumberType.TokenTx,
+      })
 
   const isUpperAtLimit = ticksAtLimit[isSorted ? 1 : 0]
   const upperPriceFormatted = isUpperAtLimit
     ? '∞'
-    : formatter({ value: prices?.[1]?.toSignificant(), type: NumberType.TokenTx })
+    : formatter({
+        value: (invertPrice ? prices?.[1]?.invert() : prices?.[1])?.toSignificant(),
+        type: NumberType.TokenTx,
+      })
 
   return { formattedPrices: [lowerPriceFormatted, upperPriceFormatted], isFullRange: isLowerAtLimit && isUpperAtLimit }
 }

@@ -26,12 +26,18 @@ export function useMaxAmountSpend({
   isExtraTx?: boolean
 }): Maybe<CurrencyAmount<Currency>> {
   const minAmountPerTx = useGetMinAmount(currencyAmount?.currency.chainId, txType)
+  const multiplierAsPercent = useLowBalanceWarningGasPercentage()
 
   if (!currencyAmount || !minAmountPerTx) {
     return undefined
   }
 
-  const minAmount = JSBI.multiply(minAmountPerTx, JSBI.BigInt(isExtraTx ? 2 : 1))
+  // if isExtraTx: minAmountPerTx * multiplierAsPercent / 100%
+  // else: minAmountPerTx
+  const minAmount = JSBI.divide(
+    JSBI.multiply(minAmountPerTx, JSBI.BigInt(isExtraTx ? multiplierAsPercent : 100)),
+    JSBI.BigInt(100),
+  )
 
   if (!currencyAmount.currency.isNative) {
     return currencyAmount
@@ -82,6 +88,7 @@ function useGetMinAmount(chainId?: UniverseChainId, txType?: TransactionType): J
     case UniverseChainId.WorldChain:
     case UniverseChainId.Zora:
     case UniverseChainId.Zksync:
+    case UniverseChainId.Unichain:
     case UniverseChainId.UnichainSepolia:
       return MIN_L2_FOR_GAS
     default:
@@ -134,6 +141,10 @@ export function useMinGenericL2ForGas(txType?: TransactionType): JSBI {
     isSend(txType) ? SwapConfigKey.GenericL2SendMinGasAmount : SwapConfigKey.GenericL2SwapMinGasAmount,
     isSend(txType) ? 8 : 1, // .0008 and .0001 ETH
   )
+}
+
+export function useLowBalanceWarningGasPercentage(): number {
+  return useDynamicConfigValue(DynamicConfigs.Swap, SwapConfigKey.LowBalanceWarningGasPercentage, 100)
 }
 
 export function useCalculateMinForGas(amount: SwapConfigKey, defaultAmount: number): JSBI {

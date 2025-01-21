@@ -53,7 +53,7 @@ function TableBody<Data extends RowData>({
     // loading and error states
     return (
       <>
-        {Array.from({ length: 7 }, (_, rowIndex) => (
+        {Array.from({ length: 20 }, (_, rowIndex) => (
           <DataRow key={`skeleton-row-${rowIndex}`}>
             {table.getAllColumns().map((column, columnIndex) => (
               <CellContainer key={`skeleton-row-${rowIndex}-column-${columnIndex}`}>

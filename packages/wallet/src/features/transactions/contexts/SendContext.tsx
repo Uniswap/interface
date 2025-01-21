@@ -16,8 +16,6 @@ import { TransactionType } from 'uniswap/src/features/transactions/types/transac
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
-import { logger } from 'utilities/src/logger/logger'
-import { parseFloatWithThrow } from 'utilities/src/primitives/string'
 import { useDerivedSendInfo } from 'wallet/src/features/transactions/send/hooks/useDerivedSendInfo'
 import { useSendTransactionRequest } from 'wallet/src/features/transactions/send/hooks/useSendTransactionRequest'
 import { useSendWarnings } from 'wallet/src/features/transactions/send/hooks/useSendWarnings'
@@ -81,25 +79,15 @@ export function SendContextProvider({
       const isAmountSet = (newState.isFiatInput ? newState.exactAmountFiat : newState.exactAmountToken) !== undefined
 
       if (isAmountSet) {
-        try {
-          // for explicit "max" actions (eg max button clicked)
-          const isExplicitMax = !!newState.isMax
+        // for explicit "max" actions (eg max button clicked)
+        const isExplicitMax = !!newState.isMax
 
-          const isMaxTokenAmount =
-            maxInputAmount && newState.exactAmountToken
-              ? parseFloatWithThrow(maxInputAmount) <= parseFloatWithThrow(newState.exactAmountToken)
-              : isExplicitMax
+        const isMaxTokenAmount =
+          maxInputAmount && newState.exactAmountToken
+            ? parseFloat(maxInputAmount) <= parseFloat(newState.exactAmountToken)
+            : isExplicitMax
 
-          newState.isMax = isMaxTokenAmount
-        } catch (error) {
-          logger.error(error, {
-            tags: { file: 'SendContext.tsx', function: 'updateSendForm' },
-            extra: {
-              maxInputAmount,
-              exactAmountToken: newState.exactAmountToken,
-            },
-          })
-        }
+        newState.isMax = isMaxTokenAmount
       }
 
       setSendForm((prevState) => ({ ...prevState, ...newState }))

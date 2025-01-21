@@ -14,7 +14,6 @@ import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import ErrorIcon from 'components/Icons/Error'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
-import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import Column, { AutoColumn } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import PriceImpactModal from 'components/swap/PriceImpactModal'
@@ -52,8 +51,10 @@ import { Text } from 'ui/src'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -98,19 +99,19 @@ export function SwapForm({
   }, [])
 
   // dismiss warning if prefilled tokens don't have warnings
-  const prefilledTokensWithWarnings: { field: CurrencyField; token: Token }[] = useMemo(() => {
+  const prefilledCurrencyInfosWithWarnings: { field: CurrencyField; currencyInfo: CurrencyInfo }[] = useMemo(() => {
     const tokens = []
     if (
       prefilledInputCurrencyInfo?.currency.isToken &&
       prefilledInputCurrencyInfo.safetyLevel !== SafetyLevel.Verified
     ) {
-      tokens.push({ field: CurrencyField.INPUT, token: prefilledInputCurrencyInfo.currency as Token })
+      tokens.push({ field: CurrencyField.INPUT, currencyInfo: prefilledInputCurrencyInfo })
     }
     if (
       prefilledOutputCurrencyInfo?.currency.isToken &&
       prefilledOutputCurrencyInfo.safetyLevel !== SafetyLevel.Verified
     ) {
-      tokens.push({ field: CurrencyField.OUTPUT, token: prefilledOutputCurrencyInfo.currency as Token })
+      tokens.push({ field: CurrencyField.OUTPUT, currencyInfo: prefilledOutputCurrencyInfo })
     }
     return tokens
   }, [prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo])
@@ -476,11 +477,11 @@ export function SwapForm({
 
   return (
     <>
-      {prefilledTokensWithWarnings.length >= 1 && (
-        <TokenSafetyModal
-          isOpen={prefilledTokensWithWarnings.length >= 1 && !dismissTokenWarning}
-          token0={prefilledTokensWithWarnings[0].token}
-          token1={prefilledTokensWithWarnings[1]?.token}
+      {prefilledCurrencyInfosWithWarnings.length >= 1 && (
+        <TokenWarningModal
+          isVisible={prefilledCurrencyInfosWithWarnings.length >= 1 && !dismissTokenWarning}
+          currencyInfo0={prefilledCurrencyInfosWithWarnings[0].currencyInfo}
+          currencyInfo1={prefilledCurrencyInfosWithWarnings[1]?.currencyInfo ?? undefined}
           onAcknowledge={handleConfirmTokenWarning}
           onReject={() => {
             setDismissTokenWarning(true)
@@ -490,9 +491,8 @@ export function SwapForm({
           closeModalOnly={() => {
             setDismissTokenWarning(true)
           }}
-          onToken0BlockAcknowledged={() => onCurrencySelection(prefilledTokensWithWarnings[0].field, undefined)}
-          onToken1BlockAcknowledged={() => onCurrencySelection(prefilledTokensWithWarnings[1].field, undefined)}
-          showCancel={true}
+          onToken0BlockAcknowledged={() => onCurrencySelection(prefilledCurrencyInfosWithWarnings[0].field, undefined)}
+          onToken1BlockAcknowledged={() => onCurrencySelection(prefilledCurrencyInfosWithWarnings[1].field, undefined)}
         />
       )}
       {trade && showConfirm && (

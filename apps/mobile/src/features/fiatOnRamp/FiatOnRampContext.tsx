@@ -1,7 +1,7 @@
 /**
  * This context is used to persist Fiat On Ramp related data between Fiat On Ramp screens.
  */
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { SectionListData } from 'react-native'
 import { getCountry } from 'react-native-localize'
 import { useSelector } from 'react-redux'
@@ -82,11 +82,21 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
   const ethCurrencyInfo = useCurrencyInfo(
     buildCurrencyId(UniverseChainId.Mainnet, getNativeAddress(UniverseChainId.Mainnet)),
   )
-  const defaultCurrency: FiatOnRampCurrency = {
-    currencyInfo: ethCurrencyInfo,
-    meldCurrencyCode: 'ETH',
-  }
+  const defaultCurrency = useMemo(
+    () => ({
+      currencyInfo: ethCurrencyInfo,
+      meldCurrencyCode: 'ETH',
+    }),
+    [ethCurrencyInfo],
+  )
   const [quoteCurrency, setQuoteCurrency] = useState<FiatOnRampCurrency>(prefilledCurrency ?? defaultCurrency)
+
+  useEffect(() => {
+    // Addresses a race condition where the quoteCurrency could be set before ethCurrencyInfo is loaded
+    if (ethCurrencyInfo) {
+      setQuoteCurrency(defaultCurrency)
+    }
+  }, [ethCurrencyInfo, defaultCurrency])
 
   return (
     <FiatOnRampContext.Provider

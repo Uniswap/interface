@@ -8,8 +8,6 @@ import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/Progr
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
 import {
@@ -246,13 +244,12 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
     await onSubmitSwap?.()
   }, [authTrigger, onFailure, submitTransaction, updateSwapForm, onSubmitSwap])
 
-  const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
   const tokenWarningProps = getRelevantTokenWarningSeverity(acceptedDerivedSwapInfo)
   const { shouldDisplayTokenWarningCard } = getShouldDisplayTokenWarningCard({
     tokenWarningProps,
     feeOnTransferProps,
   })
-  const isTokenWarningBlocking = tokenProtectionEnabled && shouldDisplayTokenWarningCard && !tokenWarningChecked
+  const isTokenWarningBlocking = shouldDisplayTokenWarningCard && !tokenWarningChecked
   const submitButtonDisabled =
     (!validSwap && !isWrap) || !!blockingWarning || newTradeRequiresAcceptance || isSubmitting || isTokenWarningBlocking
 

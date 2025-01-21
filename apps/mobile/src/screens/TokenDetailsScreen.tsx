@@ -40,8 +40,6 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
 import { useIsSupportedFiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -392,10 +390,7 @@ const TokenBalancesWrapper = memo(function _TokenBalancesWrapper(): JSX.Element 
 })
 
 const TokenWarningCardWrapper = memo(function _TokenWarningCardWrapper(): JSX.Element | null {
-  const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
   const { currencyInfo, openTokenWarningModal } = useTokenDetailsContext()
 
-  return tokenProtectionEnabled ? (
-    <TokenWarningCard currencyInfo={currencyInfo} onPress={openTokenWarningModal} />
-  ) : null
+  return <TokenWarningCard currencyInfo={currencyInfo} onPress={openTokenWarningModal} />
 })

@@ -4,8 +4,6 @@ import { useWeb3React } from '@web3-react/core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
-import useENSAddress from 'hooks/useENSAddress'
-import useENSName from 'hooks/useENSName'
 import { GasFeeResult, GasSpeed, useTransactionGasFee } from 'hooks/useTransactionGasFee'
 import { useUSDTokenUpdater } from 'hooks/useUSDTokenUpdater'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
@@ -14,6 +12,7 @@ import { useMemo } from 'react'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { SendState } from 'state/send/SendContext'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { useAddressFromEns, useENSName } from 'uniswap/src/features/ens/api'
 import { useUnitagByAddress, useUnitagByName } from 'uniswap/src/features/unitags/hooks'
 import { isAddress } from 'utilities/src/addresses'
 import { useCreateTransferTransaction } from 'utils/transfer'
@@ -49,7 +48,7 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
   const { unitag: recipientInputUnitag } = useUnitagByName(validatedRecipientData ? undefined : recipient)
   const recipientInputUnitagUsername = validatedRecipientData?.unitag ?? recipientInputUnitag?.username
   const recipientInputUnitagAddress = recipientInputUnitag?.address?.address
-  const { address: recipientInputEnsAddress } = useENSAddress(validatedRecipientData ? undefined : recipient)
+  const { data: recipientInputEnsAddress } = useAddressFromEns(validatedRecipientData ? null : recipient)
   const validatedRecipientAddress = useMemo(() => {
     if (validatedRecipientData) {
       return validatedRecipientData.address
@@ -60,7 +59,7 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
   }, [recipient, recipientInputEnsAddress, recipientInputUnitagAddress, validatedRecipientData])
 
   const { unitag } = useUnitagByAddress(recipientInputUnitagUsername ? undefined : validatedRecipientAddress)
-  const { ENSName } = useENSName(validatedRecipientData?.ensName ? undefined : validatedRecipientAddress)
+  const { data: ENSName } = useENSName(validatedRecipientData?.ensName ? undefined : validatedRecipientAddress)
   const recipientData = useMemo(() => {
     if (validatedRecipientAddress) {
       return {

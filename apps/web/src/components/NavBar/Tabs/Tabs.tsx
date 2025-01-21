@@ -17,6 +17,7 @@ const ItemContainer = styled.div`
   border-radius: 12px;
   background: ${({ theme }) => theme.surface2};
   cursor: pointer;
+  height: 48px;
   :hover {
     background: ${({ theme }) => theme.surface3};
   }

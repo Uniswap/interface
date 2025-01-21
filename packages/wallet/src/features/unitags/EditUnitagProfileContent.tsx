@@ -16,7 +16,6 @@ import {
 import { Pen } from 'ui/src/components/icons'
 import { borderRadii, fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
@@ -121,7 +120,7 @@ export function EditUnitagProfileContent({
   }
 
   const isDarkMode = useIsDarkMode()
-  const { name: ensName } = useENS(UniverseChainId.Mainnet, address)
+  const { name: ensName } = useENS({ nameOrAddress: address, autocompleteDomain: true })
   const onSetTwitterInput = (input: string): void => {
     const normalizedInput = normalizeTwitterUsername(input)
     setTwitterInput(normalizedInput)

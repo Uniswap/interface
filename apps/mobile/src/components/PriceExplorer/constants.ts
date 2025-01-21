@@ -14,8 +14,7 @@ export const TIME_RANGES = [
   [HistoryDuration.Week, i18n.t('token.priceExplorer.timeRangeLabel.week'), ElementName.TimeFrame1W],
   [HistoryDuration.Month, i18n.t('token.priceExplorer.timeRangeLabel.month'), ElementName.TimeFrame1M],
   [HistoryDuration.Year, i18n.t('token.priceExplorer.timeRangeLabel.year'), ElementName.TimeFrame1Y],
-  // TODO (MOB-3585): fix performance issue with All time range and re-enable
-  // [HistoryDuration.Max, i18n.t('token.priceExplorer.timeRangeLabel.all'), ElementName.TimeFrameAll],
+  [HistoryDuration.Max, i18n.t('common.all'), ElementName.TimeFrameAll],
 ] as const
 
 export const NUM_GRAPHS = TIME_RANGES.length

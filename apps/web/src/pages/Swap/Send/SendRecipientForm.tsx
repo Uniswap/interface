@@ -3,7 +3,6 @@ import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import Column, { AutoColumn } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
-import useENSName from 'hooks/useENSName'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
@@ -18,6 +17,7 @@ import { AnimationType } from 'theme/components/FadePresence'
 import { capitalize } from 'tsafe'
 import { Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
+import { useENSName } from 'uniswap/src/features/ens/api'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 
@@ -124,7 +124,7 @@ const AutocompleteRow = ({
   const { t } = useTranslation()
   const account = useAccount()
   const { unitag } = useUnitagByAddress(address)
-  const { ENSName } = useENSName(address)
+  const { data: ENSName } = useENSName(address)
   const cachedEnsName = ENSName || validatedEnsName
   const formattedAddress = shortenAddress(address, 8)
   const shouldShowAddress = !unitag?.username && !cachedEnsName

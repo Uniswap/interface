@@ -24,8 +24,8 @@ export function getLPBaseAnalyticsProperties({
   fee?: number | string // denominated in hundredths of bips
   currency0: Currency
   currency1: Currency
-  currency0AmountUsd: Maybe<number | CurrencyAmount<Currency>>
-  currency1AmountUsd: Maybe<number | CurrencyAmount<Currency>>
+  currency0AmountUsd: Maybe<CurrencyAmount<Currency>>
+  currency1AmountUsd: Maybe<CurrencyAmount<Currency>>
   version: ProtocolVersion
   poolId?: string
   chainId?: UniverseChainId
@@ -39,16 +39,8 @@ export function getLPBaseAnalyticsProperties({
     chain_id: chainId,
     baseCurrencyId: currencyIdToAddress(currencyId(currency0)),
     quoteCurrencyId: currencyIdToAddress(currencyId(currency1)),
-    token0AmountUSD: currency0AmountUsd
-      ? currency0AmountUsd instanceof CurrencyAmount
-        ? parseFloat(currency0AmountUsd.quotient.toString())
-        : currency0AmountUsd
-      : 0,
-    token1AmountUSD: currency1AmountUsd
-      ? currency1AmountUsd instanceof CurrencyAmount
-        ? parseFloat(currency1AmountUsd.quotient.toString())
-        : currency1AmountUsd
-      : 0,
+    token0AmountUSD: currency0AmountUsd ? parseFloat(currency0AmountUsd.toExact()) : undefined,
+    token1AmountUSD: currency1AmountUsd ? parseFloat(currency1AmountUsd.toExact()) : undefined,
   }
 }
 

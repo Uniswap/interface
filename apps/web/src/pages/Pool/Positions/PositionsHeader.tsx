@@ -204,6 +204,7 @@ export function PositionsHeader({
                 internalMenuItems={<>{statusFilterOptions}</>}
                 dropdownStyle={{
                   width: 240,
+                  className: 'scrollbar-hidden',
                 }}
                 buttonStyle={StyledDropdownButton}
               />
@@ -214,6 +215,7 @@ export function PositionsHeader({
                 internalMenuItems={<>{versionFilterOptions}</>}
                 dropdownStyle={{
                   width: 160,
+                  className: 'scrollbar-hidden',
                 }}
                 buttonStyle={StyledDropdownButton}
               />

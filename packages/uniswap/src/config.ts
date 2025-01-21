@@ -15,6 +15,7 @@ import {
   OPENAI_API_KEY,
   QUICKNODE_ENDPOINT_NAME,
   QUICKNODE_ENDPOINT_TOKEN,
+  QUICKNODE_MONAD_TESTNET_RPC_URL,
   SCANTASTIC_API_URL_OVERRIDE,
   SENTRY_DSN,
   SIMPLEHASH_API_KEY,
@@ -54,6 +55,7 @@ export interface Config {
   openaiApiKey: string
   quicknodeEndpointName: string
   quicknodeEndpointToken: string
+  quicknodeMonadTestnetRpcUrl: string
   scantasticApiUrlOverride: string
   sentryDsn: string
   simpleHashApiKey: string
@@ -94,6 +96,10 @@ const _config: Config = {
     process.env.REACT_APP_QUICKNODE_ENDPOINT_NAME || process.env.QUICKNODE_ENDPOINT_NAME || QUICKNODE_ENDPOINT_NAME,
   quicknodeEndpointToken:
     process.env.REACT_APP_QUICKNODE_ENDPOINT_TOKEN || process.env.QUICKNODE_ENDPOINT_TOKEN || QUICKNODE_ENDPOINT_TOKEN,
+  quicknodeMonadTestnetRpcUrl:
+    process.env.REACT_APP_QUICKNODE_MONAD_TESTNET_RPC_URL ||
+    process.env.QUICKNODE_MONAD_TESTNET_RPC_URL ||
+    QUICKNODE_MONAD_TESTNET_RPC_URL,
   scantasticApiUrlOverride: process.env.SCANTASTIC_API_URL_OVERRIDE || SCANTASTIC_API_URL_OVERRIDE,
   sentryDsn: process.env.REACT_APP_SENTRY_DSN || process.env.SENTRY_DSN || SENTRY_DSN,
   simpleHashApiKey: process.env.SIMPLEHASH_API_KEY || SIMPLEHASH_API_KEY,

@@ -48,6 +48,23 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
     [navigate],
   )
 
+  const renderRiseInText = useMemo(() => {
+    return t('hero.swap.title')
+      .split(/(<br\/>)|\s+/)
+      .filter(Boolean) // splits the string by spaces but also captures "<br/>" as a separate element in the array
+      .map((word, index) => {
+        if (word === '<br/>') {
+          return <br key={`${index}-${word}-br`} />
+        } else {
+          return (
+            <Fragment key={`${index}-${word}`}>
+              <RiseInText delay={index * 0.1}>{word}</RiseInText>{' '}
+            </Fragment>
+          )
+        }
+      })
+  }, [t])
+
   return (
     <Flex
       position="relative"
@@ -87,20 +104,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
             $sm={{ variant: 'heading2', fontSize: 36 }}
             $short={{ variant: 'heading2', fontSize: 36 }}
           >
-            {t('hero.swap.title')
-              .split(/(<br\/>)|\s+/)
-              .filter(Boolean) // splits the string by spaces but also captures "<br/>" as a separate element in the array
-              .map((word, index) => {
-                if (word === '<br/>') {
-                  return <br key={`${word}-br`} />
-                } else {
-                  return (
-                    <Fragment key={`${word}-${index}`}>
-                      <RiseInText delay={index * 0.1}>{word}</RiseInText>{' '}
-                    </Fragment>
-                  )
-                }
-              })}
+            {renderRiseInText}
           </Text>
         </Flex>
 

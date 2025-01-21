@@ -6,12 +6,11 @@ import { useDispatch } from 'react-redux'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { useAnimatedCardDragStyle, useExploreTokenContextMenu } from 'src/components/explore/hooks'
-import { Loader } from 'src/components/loading/loaders'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
-import { AnimatedTouchableArea, Flex, Text, useIsDarkMode, useShadowPropsShort, useSporeColors } from 'ui/src'
+import { AnimatedTouchableArea, Flex, Loader, Text, useIsDarkMode, useShadowPropsShort, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { borderRadii, imageSizes, opacify } from 'ui/src/theme'
+import { borderRadii, fonts, imageSizes, opacify } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
@@ -103,9 +102,7 @@ function FavoriteTokenCard({
 
   const shadowProps = useShadowPropsShort()
 
-  if (isNonPollingRequestInFlight(networkStatus)) {
-    return <Loader.Favorite height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} />
-  }
+  const priceLoading = isNonPollingRequestInFlight(networkStatus)
 
   return (
     <AnimatedFlex borderRadius="$rounded16" style={animatedDragStyle}>
@@ -143,15 +140,31 @@ function FavoriteTokenCard({
               <RemoveButton visible={isEditing} onPress={onRemove} />
             </Flex>
             <Flex gap="$spacing2">
-              <Text adjustsFontSizeToFit numberOfLines={1} variant="heading3">
-                {priceFormatted}
-              </Text>
-              <RelativeChange
-                arrowSize="$icon.16"
-                change={pricePercentChange ?? undefined}
-                semanticColor={true}
-                variant="subheading2"
-              />
+              {priceLoading ? (
+                <Loader.Box
+                  height={fonts.heading3.lineHeight}
+                  width={fonts.heading3.lineHeight * 3}
+                  testID="loader/favorite/price"
+                />
+              ) : (
+                <Text adjustsFontSizeToFit numberOfLines={1} variant="heading3">
+                  {priceFormatted}
+                </Text>
+              )}
+              {priceLoading ? (
+                <Loader.Box
+                  height={fonts.subheading2.lineHeight}
+                  width={fonts.subheading2.lineHeight * 3}
+                  testID="loader/favorite/priceChange"
+                />
+              ) : (
+                <RelativeChange
+                  arrowSize="$icon.16"
+                  change={pricePercentChange ?? undefined}
+                  semanticColor={true}
+                  variant="subheading2"
+                />
+              )}
             </Flex>
           </Flex>
         </AnimatedTouchableArea>

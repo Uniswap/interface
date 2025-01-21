@@ -2,7 +2,6 @@ import { Status } from 'components/AccountDrawer/Status'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { ProviderOption } from 'components/ReceiveCryptoModal/ProviderOption'
 import { useAccount } from 'hooks/useAccount'
-import useENSName from 'hooks/useENSName'
 import { useTheme } from 'lib/styled-components'
 import { useTranslation } from 'react-i18next'
 import { useOpenModal, useToggleModal } from 'state/application/hooks'
@@ -13,6 +12,7 @@ import { CopySheets } from 'ui/src/components/icons/CopySheets'
 import { QrCode } from 'ui/src/components/icons/QrCode'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useENSName } from 'uniswap/src/features/ens/api'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
@@ -41,7 +41,7 @@ function ActionIcon({ Icon }: { Icon: GeneratedIcon }) {
 function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
   const account = useAccount()
   const { unitag } = useUnitagByAddress(account.address)
-  const { ENSName } = useENSName(account.address)
+  const { data: ENSName } = useENSName(account.address)
   const openAddressQRModal = useOpenModal({ name: ApplicationModal.RECEIVE_CRYPTO_QR })
 
   const onPressShowWalletQr = (): void => {

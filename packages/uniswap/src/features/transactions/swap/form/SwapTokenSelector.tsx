@@ -39,7 +39,7 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
   }
 
   const onHideTokenSelector = useCallback(() => {
-    updateSwapForm({ selectingCurrencyField: undefined })
+    updateSwapForm({ selectingCurrencyField: undefined, filteredChainIds: {} })
     setIsSwapTokenSelectorOpen(false) // resets force flag for web on close as cleanup
   }, [setIsSwapTokenSelectorOpen, updateSwapForm])
 

@@ -25,7 +25,7 @@ export function OffRampTransactionDetails({
 
   const { amount, value } = useFormattedCurrencyAmountAndUSDValue({
     currency: currencyInfo?.currency,
-    currencyAmountRaw: typeInfo.destinationTokenAmount?.toString(),
+    currencyAmountRaw: typeInfo.sourceAmount?.toString(),
     formatter,
     isApproximateAmount: false,
     valueType: ValueType.Exact,

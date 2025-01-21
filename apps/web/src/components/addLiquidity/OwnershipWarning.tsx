@@ -31,7 +31,7 @@ const OwnershipWarning = ({ ownerAddress }: OwnershipWarningProps) => (
     <TitleRow>
       <AlertTriangle style={{ marginRight: '8px' }} />
       <ThemedText.SubHeader color="deprecated_accentWarning">
-        <Trans i18nKey="token.safetyLevel.strong.header" />
+        <Trans i18nKey="common.warning" />
       </ThemedText.SubHeader>
     </TitleRow>
     <ExplainerText>

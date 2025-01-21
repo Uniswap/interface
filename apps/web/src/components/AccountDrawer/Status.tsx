@@ -27,7 +27,7 @@ export function Status({
   showAddressCopy = true,
 }: {
   account: string
-  ensUsername: string | null
+  ensUsername?: string | null
   uniswapUsername?: string
   showAddressCopy?: boolean
 }) {

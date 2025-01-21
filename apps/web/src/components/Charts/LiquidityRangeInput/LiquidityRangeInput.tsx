@@ -31,6 +31,8 @@ import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__gen
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { isMobileWeb } from 'utilities/src/platform'
 
+const MIN_DATA_POINTS = 25
+
 /**
  * Chart input for selecting the min/max prices for a liquidity position.
  * Note that the min value can be negative.
@@ -213,7 +215,9 @@ export function LiquidityRangeInput({
   const [createDropdownOpen, setCreateDropdownOpen] = useState(false)
 
   const showChartErrorView =
-    (!priceData.loading && priceData.entries.length === 0) || (!liquidityDataLoading && !sortedFormattedData)
+    (!priceData.loading && priceData.entries.length < MIN_DATA_POINTS) ||
+    (!liquidityDataLoading && !sortedFormattedData) ||
+    (!liquidityDataLoading && sortedFormattedData && sortedFormattedData.length < MIN_DATA_POINTS)
 
   useEffect(() => {
     const container = containerRef.current
@@ -308,48 +312,52 @@ export function LiquidityRangeInput({
               <HorizontalDensityChart color="$neutral2" size={sizes.chartHeight} />
             </Shine>
           )}
-          {sortedFormattedData && !liquidityDataLoading && !priceData.loading && boundaryPrices && (
-            <ActiveLiquidityChart2
-              data={{
-                series: sortedFormattedData,
-                current: priceData.entries[priceData.entries.length - 1]?.value,
-                min: boundaryPrices[0],
-                max: boundaryPrices[1],
-              }}
-              disableBrushInteraction={disableBrushInteraction}
-              showDiffIndicators={showDiffIndicators}
-              brushDomain={minPrice && maxPrice ? [minPrice, maxPrice] : undefined}
-              dimensions={{
-                width: sizes.chartContainerWidth,
-                height: sizes.chartHeight,
-                contentWidth: sizes.liquidityChartWidth,
-                axisLabelPaneWidth: sizes.rightAxisWidth,
-              }}
-              onBrushDomainChange={function (domain: [number, number], mode?: string): void {
-                // You can zoom out far enough to set an invalid range, so we prevent that here.
-                if (domain[0] < 0) {
-                  return
-                }
-                // While scrolling we receive updates to the range because the yScale changes,
-                // but we can filter them out because they have an undefined "mode".
-                // The initial range suggestion also comes with an undefined "mode", so we allow that here.
-                const hasValidRange =
-                  minPrice !== undefined &&
-                  maxPrice !== undefined &&
-                  minPrice < maxPrice &&
-                  minPrice >= 0 &&
-                  maxPrice >= 0
-                if (!mode && hasValidRange) {
-                  return
-                }
-                setMinPrice(domain[0])
-                setMaxPrice(domain[1])
-              }}
-              currency0={currency0}
-              currency1={currency1}
-              isMobile={isMobileWeb}
-            />
-          )}
+          {sortedFormattedData &&
+            !liquidityDataLoading &&
+            !priceData.loading &&
+            boundaryPrices &&
+            !showChartErrorView && (
+              <ActiveLiquidityChart2
+                data={{
+                  series: sortedFormattedData,
+                  current: priceData.entries[priceData.entries.length - 1]?.value,
+                  min: boundaryPrices[0],
+                  max: boundaryPrices[1],
+                }}
+                disableBrushInteraction={disableBrushInteraction}
+                showDiffIndicators={showDiffIndicators}
+                brushDomain={minPrice && maxPrice ? [minPrice, maxPrice] : undefined}
+                dimensions={{
+                  width: sizes.chartContainerWidth,
+                  height: sizes.chartHeight,
+                  contentWidth: sizes.liquidityChartWidth,
+                  axisLabelPaneWidth: sizes.rightAxisWidth,
+                }}
+                onBrushDomainChange={function (domain: [number, number], mode?: string): void {
+                  // You can zoom out far enough to set an invalid range, so we prevent that here.
+                  if (domain[0] < 0) {
+                    return
+                  }
+                  // While scrolling we receive updates to the range because the yScale changes,
+                  // but we can filter them out because they have an undefined "mode".
+                  // The initial range suggestion also comes with an undefined "mode", so we allow that here.
+                  const hasValidRange =
+                    minPrice !== undefined &&
+                    maxPrice !== undefined &&
+                    minPrice < maxPrice &&
+                    minPrice >= 0 &&
+                    maxPrice >= 0
+                  if (!mode && hasValidRange) {
+                    return
+                  }
+                  setMinPrice(domain[0])
+                  setMaxPrice(domain[1])
+                }}
+                currency0={currency0}
+                currency1={currency1}
+                isMobile={isMobileWeb}
+              />
+            )}
         </Flex>
       </Flex>
       <Flex row alignItems="center" gap="$gap8" $lg={{ justifyContent: 'space-between' }}>

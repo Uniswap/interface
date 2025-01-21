@@ -25,6 +25,7 @@ export const CreatePositionContext = React.createContext<CreatePositionContextTy
     protocolVersion: ProtocolVersion.V4,
     currencies: [undefined, undefined],
     isPoolOutOfSync: false,
+    refetchPoolData: () => undefined,
   },
   dynamicFeeTierSpeedbumpData: {
     open: false,

@@ -450,8 +450,8 @@ export function useInitialCurrencyState(): {
     hasCurrencyQueryParams,
     parsedCurrencyState.inputCurrencyId,
     parsedCurrencyState.outputCurrencyId,
-    defaultChainId,
     supportedChainId,
+    defaultChainId,
   ])
 
   const initialOutputCurrencyAddress = useMemo(

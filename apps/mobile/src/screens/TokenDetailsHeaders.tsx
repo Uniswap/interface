@@ -65,7 +65,7 @@ const TokenPrice = memo(function _TokenPrice(): JSX.Element {
   const onChainMarket = useTokenMarketPartsFragment({ currencyId }).data.market
   const offChainMarkets = useTokenProjectMarketsPartsFragment({ currencyId }).data?.project?.markets
 
-  const price = offChainMarkets?.[0]?.price?.value ?? onChainMarket?.price?.value
+  const price = offChainMarkets?.[0]?.price?.value || onChainMarket?.price?.value || undefined
 
   return (
     <Text color="$neutral1" variant="body1">

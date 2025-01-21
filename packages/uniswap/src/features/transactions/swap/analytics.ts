@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useEffect } from 'react'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
 import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -224,12 +225,13 @@ export function logSwapQuoteFetch({
   sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_FETCH, { chainId, isQuickRoute, ...performanceMetrics })
   logger.info('analytics', 'logSwapQuoteFetch', SwapEventName.SWAP_QUOTE_FETCH, {
     chainId,
+    // we explicitly log it here to show on Datadog dashboard
+    chainLabel: getChainLabel(chainId),
     isQuickRoute,
     ...performanceMetrics,
   })
 }
 
-// eslint-disable-next-line consistent-return
 export function tradeRoutingToFillType({
   routing,
   indicative,
@@ -254,5 +256,7 @@ export function tradeRoutingToFillType({
       return 'classic'
     case Routing.BRIDGE:
       return 'bridge'
+    default:
+      return 'none'
   }
 }

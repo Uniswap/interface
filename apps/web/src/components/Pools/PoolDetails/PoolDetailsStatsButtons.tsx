@@ -7,8 +7,6 @@ import Row from 'components/deprecated/Row'
 import { MobileBottomBar } from 'components/NavBar/MobileBottomBar'
 import { SwapWrapperOuter } from 'components/swap/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
-import TokenSafetyMessage from 'components/TokenSafety/DeprecatedTokenSafetyMessage'
-import { getPriorityWarning, StrongWarning, useTokenWarning } from 'constants/deprecatedTokenSafety'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { gqlToCurrency } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
@@ -202,11 +200,6 @@ export function PoolDetailsStatsButtons({
   const screenSizeLargerThanTablet = isScreenSize['lg']
   const isMobile = !isScreenSize['sm']
 
-  const token0Warning = useTokenWarning(token0?.address, chainId)
-  const token1Warning = useTokenWarning(token1?.address, chainId)
-  const priorityWarning = getPriorityWarning(token0Warning, token1Warning)
-
-  const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
   const [showWarningModal, setShowWarningModal] = useState(false)
   const closeWarningModal = useCallback(() => setShowWarningModal(false), [])
   const [warningModalCurrencyInfo, setWarningModalCurrencyInfo] = useState<Maybe<CurrencyInfo>>()
@@ -266,30 +259,17 @@ export function PoolDetailsStatsButtons({
           compact
           disableTokenInputs={chainId !== account.chainId}
         />
-        {tokenProtectionEnabled ? (
-          <>
-            <TokenWarningCard currencyInfo={currencyInfo0} onPress={() => onWarningCardCtaPressed(currencyInfo0)} />
-            <TokenWarningCard currencyInfo={currencyInfo1} onPress={() => onWarningCardCtaPressed(currencyInfo1)} />
-            {warningModalCurrencyInfo && (
-              // Intentionally duplicative with the TokenWarningModal in the swap component; this one only displays when user clicks "i" Info button on the TokenWarningCard
-              <TokenWarningModal
-                currencyInfo0={warningModalCurrencyInfo}
-                isInfoOnlyWarning
-                isVisible={showWarningModal}
-                closeModalOnly={closeWarningModal}
-                onAcknowledge={closeWarningModal}
-              />
-            )}
-          </>
-        ) : (
-          Boolean(priorityWarning) && (
-            <TokenSafetyMessage
-              tokenAddress={(priorityWarning === token0Warning ? token0?.address : token1?.address) ?? ''}
-              warning={priorityWarning ?? StrongWarning}
-              plural={Boolean(token0Warning && token1Warning)}
-              tokenSymbol={priorityWarning === token0Warning ? token0?.symbol : token1?.symbol}
-            />
-          )
+        <TokenWarningCard currencyInfo={currencyInfo0} onPress={() => onWarningCardCtaPressed(currencyInfo0)} />
+        <TokenWarningCard currencyInfo={currencyInfo1} onPress={() => onWarningCardCtaPressed(currencyInfo1)} />
+        {warningModalCurrencyInfo && (
+          // Intentionally duplicative with the TokenWarningModal in the swap component; this one only displays when user clicks "i" Info button on the TokenWarningCard
+          <TokenWarningModal
+            currencyInfo0={warningModalCurrencyInfo}
+            isInfoOnlyWarning
+            isVisible={showWarningModal}
+            closeModalOnly={closeWarningModal}
+            onAcknowledge={closeWarningModal}
+          />
         )}
       </SwapModalWrapper>
       <Scrim

@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmSFSxn2NQ8LP2HZckSX6WkmwGz9SQudXWqsQ9ShJKRZSb`
-- CIDv1: `bafybeib2dgh2xulteyu7s2lwepf2oyuwf63k3cpxeb5ogcnemn3cdsmpjq`
+- CIDv0: `QmQCnXjjekxSd3k2zzpWjh85rA7sgg1R3RiiiGMTpVgNE6`
+- CIDv1: `bafybeia3wojcisyfrr4bcavcvvrza2e2jxcoqo557gmewxmgx4gcv7msum`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,84 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeib2dgh2xulteyu7s2lwepf2oyuwf63k3cpxeb5ogcnemn3cdsmpjq.ipfs.dweb.link/
-- https://bafybeib2dgh2xulteyu7s2lwepf2oyuwf63k3cpxeb5ogcnemn3cdsmpjq.ipfs.cf-ipfs.com/
-- [ipfs://QmSFSxn2NQ8LP2HZckSX6WkmwGz9SQudXWqsQ9ShJKRZSb/](ipfs://QmSFSxn2NQ8LP2HZckSX6WkmwGz9SQudXWqsQ9ShJKRZSb/)
+- https://bafybeia3wojcisyfrr4bcavcvvrza2e2jxcoqo557gmewxmgx4gcv7msum.ipfs.dweb.link/
+- https://bafybeia3wojcisyfrr4bcavcvvrza2e2jxcoqo557gmewxmgx4gcv7msum.ipfs.cf-ipfs.com/
+- [ipfs://QmQCnXjjekxSd3k2zzpWjh85rA7sgg1R3RiiiGMTpVgNE6/](ipfs://QmQCnXjjekxSd3k2zzpWjh85rA7sgg1R3RiiiGMTpVgNE6/)
 
-### 5.65.2 (2025-01-16)
+## 5.66.0 (2025-01-21)
+
+
+### Features
+
+* **web:** add basic behavior history reset button (#14917) 80c38bf
+* **web:** align main CTA buttons in all swap forms (#14954) 4d9d0b7
+* **web:** design changes for pool out of sync state (#15178) 5b17719
+* **web:** display dependent amount from Trading API response in Increase LP flow (#15116) 3fb84dd
+* **web:** log sentry error for approve/increase/decrease/create/migrate [lp] (#15223) 6ee46f0
+* **web:** log sentry error for claim [lp] (#15218) 6a8e41b
+* **web:** unichain card (cold) (#14820) 56c5117
+* **web:** unichain card (warm) (#14822) 1b42422
+* **web:** update create trading api (#15159) 2d6e12e
 
 
 ### Bug Fixes
 
-* **web:** cherry-picks lping to reduce trading API errors (#15225) 1db3f5d
+* **mweb:** decimal separator on mweb (#15219) 2a75310
+* **web:** add settings context provider to migrate page (#15195) c703139
+* **web:** apply position list filters to saved pairs (#15050) 8463eef
+* **web:** approve the wrapped token for v2 + v3 (#15217) 140fca5
+* **web:** avoid showing incorrect Trading API error messages when skipping queries (#15038) ecfc228
+* **web:** broken link on v2 migrate page (#15156) a813623
+* **web:** disable range input when lacking data to visualize (#15067) 5ff362b
+* **web:** DoubleLogo networkLogo bug (#15154) e95a795
+* **web:** explore table should use chainId in ranking (#15103) b1c0e2e
+* **web:** fix analytics toggle setting flash (#15128) 07e954a
+* **web:** fix blocked token language (#15132) f6d06dd
+* **web:** fix infinite loop on analytics toggle (#15070) fd57c35
+* **web:** fix max token amount calc error (#15139) bb425a5
+* **web:** fix mweb navigation test (#15014) 6600909
+* **web:** fix numbers for LP flow analytics (#15140) 7fef11e
+* **web:** fix scroll persist on transactions table tab (#14795) 621dc15
+* **web:** fix the tokenA and tokenB deposit form for single-sided liquidity (#15174) 581d4d0
+* **web:** fix wrapping/unwrapping for v3 (#15263) f29bcb8
+* **web:** handle empty quotes array from new FOR service (#14955) ab29c6b
+* **web:** import esm version of connectrpc (#14998) 9d4409b
+* **web:** import esm version of i18next (#15006) 019c9c1
+* **web:** import v2 positions fixes (#15151) fd0d075
+* **web:** incorrect base/quote currency labels for price range on edit component (#15285) 88da0e4
+* **web:** price range input bug fix (#15228) b0ce03b
+* **web:** react key error in LP create flow (#15034) 01b6ab5
+* **web:** remove auto-wrapping option for v4 increase / decrease (#15232) 1e203d8
+* **web:** remove liquidity input 100 max (#14968) f96c4a5
+* **web:** remove unnecessary tooltip from v2 migration page (#15155) 70cce38
+* **web:** scroll on nav dropdown and adjust max height (#15087) c594c67
+* **web:** search input padding ui fix for mweb safari (#15039) 2b28393
+* **web:** single-sided liquidity crash (#15224) eecc9ab
+* **web:** UI fixes for v4 position cards (#15053) c1ca09c
+* **web:** unavailable price state for pool creation (#15071) eb19cbe
+* **web:** update calls to trading api after new schema change (#15095) 77391b5
+* **web:** update google conversion datetime format (#15021) 1cbb13f
+* **web:** update input to trading api fro v3 + v4 create (#15205) 382c928
+* **web:** use deeplink to default to unichain (#15318) 528b5f5
+* **web:** v4 bug bash fixes (#15212) 62d63a8
+* **web:** v4 hook flow fixes (#15052) 329f961
+* **web:** v4 UI nit fixes (#15051) e20b2c1
+
+
+### Styles
+
+* **web:** staging copy nav dropdown item style (#15322) 94fff89
+
+
+### Continuous Integration
+
+* **web:** update sitemaps 55b34d7
+
+
+### Code Refactoring
+
+* **web:** use universe ens address hook (#14669) 1c229db
+* **web:** use universe ens avatar hook (#14670) 7af231a
+* **web:** use universe ens name hook (#14667) ce789a4
 
 

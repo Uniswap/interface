@@ -96,10 +96,10 @@ export function FavoriteTokensGrid({ showLoading, ...rest }: FavoriteTokensGridP
 function FavoriteTokensGridLoader(): JSX.Element {
   return (
     <Flex row>
-      <Flex m="$spacing4" style={ITEM_FLEX}>
+      <Flex mx="$spacing4" style={ITEM_FLEX}>
         <Loader.Favorite contrast height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} />
       </Flex>
-      <Flex m="$spacing4" style={ITEM_FLEX}>
+      <Flex mx="$spacing4" style={ITEM_FLEX}>
         <Loader.Favorite contrast height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} />
       </Flex>
     </Flex>

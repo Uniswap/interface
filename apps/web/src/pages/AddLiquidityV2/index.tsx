@@ -123,8 +123,8 @@ export default function AddLiquidity() {
     [independentField]: typedValue,
     [dependentField]: noLiquidity ? otherTypedValue : parsedAmounts[dependentField]?.toSignificant(6) ?? '',
   }
-  const currency0AmountUsd = useUSDCValue(parsedAmounts[Field.CURRENCY_A])
-  const currency1AmountUsd = useUSDCValue(parsedAmounts[Field.CURRENCY_B])
+  const addedCurrency0AmountUsd = useUSDCValue(parsedAmounts[Field.CURRENCY_A])
+  const addedCurrency1AmountUsd = useUSDCValue(parsedAmounts[Field.CURRENCY_B])
 
   // get the max amounts user can add
   const maxAmounts: { [field in Field]?: CurrencyAmount<Currency> } = [Field.CURRENCY_A, Field.CURRENCY_B].reduce(
@@ -240,8 +240,8 @@ export default function AddLiquidity() {
               }),
               currency0: currencyA,
               currency1: currencyB,
-              currency0AmountUsd,
-              currency1AmountUsd,
+              currency0AmountUsd: addedCurrency0AmountUsd,
+              currency1AmountUsd: addedCurrency1AmountUsd,
               chainId: account.chainId,
             }),
             createPosition: false,

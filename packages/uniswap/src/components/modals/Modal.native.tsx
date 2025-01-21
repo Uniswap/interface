@@ -209,6 +209,8 @@ function BottomSheetModalContents({
       // When a sheet has too much content it can lag and take a while to begin opening, so we want to delay rendering some of the content until the sheet is ready.
       // We consider the sheet to be "ready" as soon as it starts animating from the bottom to the top.
       // We add a short delay given that this callback is called when the sheet is "about to" animate.
+      // Note: We tried to use BottomSheet.onChange but this caused some issues with the sheet not being
+      // scrollable sometimes.
       if (!isSheetReady && fromIndex === -1 && toIndex === 0) {
         setTimeout(() => setIsSheetReady(true), IS_SHEET_READY_DELAY)
       }

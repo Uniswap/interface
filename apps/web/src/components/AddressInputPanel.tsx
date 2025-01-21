@@ -1,12 +1,12 @@
 import { AutoColumn } from 'components/deprecated/Column'
 import { RowBetween } from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
-import useENS from 'hooks/useENS'
 import styled, { useTheme } from 'lib/styled-components'
 import { ChangeEvent, ReactNode, useCallback } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
+import { useENS } from 'uniswap/src/features/ens/useENS'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 const InputPanel = styled.div`
@@ -89,7 +89,7 @@ export default function AddressInputPanel({
   const { chainId } = useAccount()
   const theme = useTheme()
 
-  const { address, loading, name } = useENS(value)
+  const { address, loading, name } = useENS({ nameOrAddress: value })
 
   const handleInput = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {

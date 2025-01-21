@@ -12,8 +12,6 @@ import { TransactionType } from 'uniswap/src/features/transactions/types/transac
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logContextUpdate } from 'utilities/src/logger/contextEnhancer'
-import { logger } from 'utilities/src/logger/logger'
-import { parseFloatWithThrow } from 'utilities/src/primitives/string'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { useValueAsRef } from 'utilities/src/react/useValueAsRef'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
@@ -115,10 +113,11 @@ export function SwapFormContextProvider({
         return {
           ...oldVal,
           selectingCurrencyField: prefilledState?.selectingCurrencyField,
+          filteredChainIds: prefilledState.filteredChainIds,
         }
       })
     }
-  }, [prefilledState?.selectingCurrencyField])
+  }, [prefilledState?.selectingCurrencyField, prefilledState?.filteredChainIds])
 
   const [debouncedExactAmountToken, isDebouncingExactAmountToken] = useDebounceWithStatus(
     swapForm.exactAmountToken,
@@ -173,27 +172,14 @@ export function SwapFormContextProvider({
         const updatedState = { ...prevState, ...newState }
 
         if (isAmountUpdated) {
-          try {
-            const isMaxTokenAmount =
-              maxInputAmountAsRef.current &&
-              updatedState.exactAmountToken &&
-              parseFloatWithThrow(maxInputAmountAsRef.current) <= parseFloatWithThrow(updatedState.exactAmountToken)
+          const isMaxTokenAmount =
+            maxInputAmountAsRef.current &&
+            updatedState.exactAmountToken &&
+            parseFloat(maxInputAmountAsRef.current) <= parseFloat(updatedState.exactAmountToken)
 
-            // if max value is explicitly set, use that
-            // otherwise, check the token amount again the maxInputAmount
-            updatedState.isMax = newState.isMax ?? !!isMaxTokenAmount
-          } catch (error) {
-            logger.error(error, {
-              tags: {
-                file: 'SwapFormContext.tsx',
-                function: 'updateSwapForm',
-              },
-              extra: {
-                maxInputAmount: maxInputAmountAsRef.current,
-                exactAmountToken: updatedState.exactAmountToken,
-              },
-            })
-          }
+          // if max value is explicitly set, use that
+          // otherwise, check the token amount again the maxInputAmount
+          updatedState.isMax = newState.isMax ?? !!isMaxTokenAmount
         }
 
         logContextUpdate('SwapFormContext', updatedState, datadogEnabled)

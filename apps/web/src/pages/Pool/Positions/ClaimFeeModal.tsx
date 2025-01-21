@@ -31,6 +31,7 @@ import { LiquidityTransactionType, isValidLiquidityTxContext } from 'uniswap/src
 import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { NumberType } from 'utilities/src/format/types'
+import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 // eslint-disable-next-line import/no-unused-modules
@@ -112,6 +113,13 @@ export function ClaimFeeModal() {
   } = useClaimLpFeesCalldataQuery({
     params: claimLpFeesParams,
   })
+
+  if (error) {
+    logger.info('ClaimFeeModal', 'ClaimFeeModal', 'ClaimLPFeesCalldataQuery', {
+      error: JSON.stringify(error),
+      claimLpFeesParams: JSON.stringify(claimLpFeesParams),
+    })
+  }
 
   const txInfo = useMemo(() => {
     const validatedTxRequest = validateTransactionRequest(data?.claim)

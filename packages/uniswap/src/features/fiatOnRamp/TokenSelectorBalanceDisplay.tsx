@@ -57,7 +57,7 @@ export function TokenSelectorBalanceDisplay({
       <Flex
         row
         alignItems="center"
-        backgroundColor="$surface1"
+        backgroundColor="$surface2"
         borderColor="$surface3"
         borderRadius="$rounded20"
         borderWidth={1}

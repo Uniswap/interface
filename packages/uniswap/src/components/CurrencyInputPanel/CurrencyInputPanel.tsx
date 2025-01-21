@@ -25,7 +25,7 @@ import { TransactionType } from 'uniswap/src/features/transactions/types/transac
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
-import { isDetoxBuild } from 'utilities/src/environment/constants'
+import { isE2EMode } from 'utilities/src/environment/constants'
 import { NumberType } from 'utilities/src/format/types'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -453,8 +453,8 @@ function useRefetchAnimationStyle({
 
   const loadingFlexProgress = useSharedValue(1)
 
-  // disables looping animation during detox e2e tests which was preventing js thread from idle
-  if (!isDetoxBuild) {
+  // disables looping animation during e2e tests which was preventing js thread from idle
+  if (!isE2EMode) {
     loadingFlexProgress.value = withRepeat(
       withSequence(
         withTiming(0.4, { duration: 400, easing: Easing.ease }),

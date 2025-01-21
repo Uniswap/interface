@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { NetworkStatus, Reference, useApolloClient, WatchQueryFetchPolicy } from '@apollo/client'
+import { NetworkStatus, QueryHookOptions, Reference, useApolloClient, WatchQueryFetchPolicy } from '@apollo/client'
 import isEqual from 'lodash/isEqual'
 import { useCallback, useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
@@ -8,6 +8,7 @@ import {
   IAmount,
   PortfolioBalancesDocument,
   PortfolioBalancesQuery,
+  PortfolioBalancesQueryVariables,
   PortfolioValueModifier,
   usePortfolioBalancesQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -46,30 +47,26 @@ export type PortfolioCacheUpdater = (hidden: boolean, portfolioBalance?: Portfol
 /**
  * Returns all balances indexed by checksummed currencyId for a given address
  * @param address
- * @param pollInterval optional `PollingInterval` representing polling frequency.
+ * @param queryOptions.pollInterval optional `PollingInterval` representing polling frequency.
  *  If undefined, will query once and not poll.
  * NOTE:
  *  on TokenDetails, useBalances relies rely on usePortfolioBalances but don't need polling versions of it.
  *  Including polling was causing multiple polling intervals to be kicked off with usePortfolioBalances.
  *  Same with on Token Selector's TokenSearchResultList, since the home screen has a usePortfolioBalances polling hook,
  *  we don't need to duplicate the polling interval when token selector is open
- * @param onCompleted
- * @param fetchPolicy
+ * @param queryOptions - QueryHookOptions type for usePortfolioBalancesQuery to be set if not already set internally.
  */
 export function usePortfolioBalances({
   address,
-  pollInterval,
-  onCompleted,
-  fetchPolicy,
+  ...queryOptions
 }: {
   address?: Address
-  pollInterval?: PollingInterval
-  onCompleted?: () => void
-  fetchPolicy?: WatchQueryFetchPolicy
-}): GqlResult<Record<CurrencyId, PortfolioBalance>> & { networkStatus: NetworkStatus } {
+} & QueryHookOptions<PortfolioBalancesQuery, PortfolioBalancesQueryVariables>): GqlResult<
+  Record<CurrencyId, PortfolioBalance>
+> & { networkStatus: NetworkStatus } {
   const { fetchPolicy: internalFetchPolicy, pollInterval: internalPollInterval } = usePlatformBasedFetchPolicy({
-    fetchPolicy,
-    pollInterval,
+    fetchPolicy: queryOptions?.fetchPolicy,
+    pollInterval: queryOptions?.pollInterval,
   })
 
   const valueModifiers = usePortfolioValueModifiers(address)
@@ -82,12 +79,12 @@ export function usePortfolioBalances({
     refetch,
     error,
   } = usePortfolioBalancesQuery({
+    ...queryOptions,
     fetchPolicy: internalFetchPolicy,
     notifyOnNetworkStatusChange: true,
-    onCompleted,
     pollInterval: internalPollInterval,
     variables: address ? { ownerAddress: address, valueModifiers, chains: gqlChains } : undefined,
-    skip: !address,
+    skip: !address || queryOptions?.skip,
   })
 
   const persistedError = usePersistedError(loading, error)
@@ -379,7 +376,7 @@ export function useSortedPortfolioBalances({
   pollInterval,
   onCompleted,
 }: {
-  address: Address
+  address?: Address
   pollInterval?: PollingInterval
   onCompleted?: () => void
 }): GqlResult<SortedPortfolioBalances> & { networkStatus: NetworkStatus } {

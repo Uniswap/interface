@@ -19,6 +19,14 @@ export const USDC_SEPOLIA = new Token(
   'USD//C',
 )
 
+export const USDC_UNICHAIN = new Token(
+  UniverseChainId.Unichain,
+  '0x078D782b760474a361dDA0AF3839290b0EF57AD6',
+  6,
+  'USDC',
+  'USD//C',
+)
+
 export const USDC_UNICHAIN_SEPOLIA = new Token(
   UniverseChainId.UnichainSepolia,
   '0x31d0220469e10c4E71834a79b1f276d740d3768F',
@@ -417,10 +425,10 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
   ),
   [UniverseChainId.MonadTestnet]: new Token(
     UniverseChainId.MonadTestnet,
-    '0x93EACdB111FF98dE9a8Ac5823d357BBc4842aE63',
+    '0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701',
     18,
     'WMON',
-    'Wrapped MON',
+    'Wrapped Monad',
   ),
   [UniverseChainId.Optimism]: new Token(
     UniverseChainId.Optimism,
@@ -439,6 +447,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
   [UniverseChainId.Sepolia]: new Token(
     UniverseChainId.Sepolia,
     '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14',
+    18,
+    'WETH',
+    'Wrapped Ether',
+  ),
+  [UniverseChainId.Unichain]: new Token(
+    UniverseChainId.Unichain,
+    '0x4200000000000000000000000000000000000006',
     18,
     'WETH',
     'Wrapped Ether',

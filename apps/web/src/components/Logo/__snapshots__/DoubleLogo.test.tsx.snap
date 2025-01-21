@@ -211,6 +211,7 @@ exports[`DoubleLogo renders with two undefined currencies 1`] = `
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
+  position: relative;
 }
 
 <span

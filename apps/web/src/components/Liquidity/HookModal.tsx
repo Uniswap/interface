@@ -37,7 +37,7 @@ function HookWarnings({ flags, hasDangerous }: { flags: FlagWarning[]; hasDanger
           <Flex row flex={1} gap="$gap4" alignItems="center">
             <ContractInteraction color="$neutral2" size="$icon.16" />
             <Text variant="buttonLabel3" color="$neutral2">
-              {t('position.addingHook.viewProperties')}
+              {expandedProperties ? t('position.addingHook.hideProperties') : t('position.addingHook.viewProperties')}
             </Text>
           </Flex>
           <RotatableChevron direction={expandedProperties ? 'up' : 'down'} color="$neutral2" width={16} height={16} />
@@ -183,7 +183,7 @@ export function HookModal({
           </Flex>
 
           {hasDangerous && (
-            <Flex row alignItems="center" gap="$gap12" borderRadius="$rounded16" backgroundColor="$surface2" p="$gap12">
+            <Flex row alignItems="center" gap="$gap8" borderRadius="$rounded16" backgroundColor="$surface2" p="$gap12">
               <Checkbox size="$icon.16" checked={disclaimerChecked} onPress={onDisclaimerChecked} />
               <Text variant="buttonLabel4" color="$neutral2">
                 {t('position.hook.disclaimer')}

@@ -19,12 +19,15 @@ import {
 import { GqlResult } from 'uniswap/src/data/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { isMobileApp } from 'utilities/src/platform'
 
 function useTokenSectionsForSwapInput({
   activeAccountAddress,
   chainFilter,
 }: TokenSectionsHookProps): GqlResult<TokenSection[]> {
+  const isTokenSelectorTrendingTokensEnabled = useFeatureFlag(FeatureFlags.TokenSelectorTrendingTokens)
   const { defaultChainId, isTestnetModeEnabled } = useEnabledChains()
   const {
     data: portfolioTokenOptions,
@@ -38,8 +41,7 @@ function useTokenSectionsForSwapInput({
     error: popularTokenOptionsError,
     refetch: refetchPopularTokenOptions,
     loading: popularTokenOptionsLoading,
-    // if there is no chain filter then we show default chain tokens
-  } = usePopularTokensOptions(activeAccountAddress, chainFilter ?? defaultChainId)
+  } = usePopularTokensOptions(activeAccountAddress, chainFilter)
 
   const {
     data: favoriteTokenOptions,
@@ -89,8 +91,9 @@ function useTokenSectionsForSwapInput({
   })
   const popularMinusPortfolioTokens = tokenOptionDifference(popularTokenOptions, portfolioTokenOptions)
   const popularSection = useTokenOptionsSection({
+    // TODO(WEB-5917): Rename to trendingTokens once feature flag is fully on
     sectionKey: TokenOptionSection.PopularTokens,
-    tokenOptions: popularMinusPortfolioTokens,
+    tokenOptions: isTokenSelectorTrendingTokensEnabled ? popularTokenOptions : popularMinusPortfolioTokens,
   })
 
   const sections = useMemo(() => {
@@ -152,6 +155,7 @@ function _TokenSelectorSwapInputList({
 
   return (
     <TokenSelectorList
+      showTokenAddress
       chainFilter={chainFilter}
       hasError={Boolean(error)}
       isKeyboardOpen={isKeyboardOpen}

@@ -63,10 +63,10 @@ def reactNativeArchitectures() {
 }
 
 boolean isCI = System.getenv('CI') != null
-boolean isDetox = System.getenv('DETOX_MODE') != null
+boolean isE2E = System.getenv('E2E_MODE') != null
 boolean sentryPropertiesAvailable = System.getenv('SENTRY_AUTH_TOKEN') != null && System.getenv('SENTRY_PROJECT') != null && System.getenv('SENTRY_ORG') != null
 
-if (isCI && sentryPropertiesAvailable && !isDetox) {
+if (isCI && sentryPropertiesAvailable && !isE2E) {
   project.ext.sentryCli = [
     logLevel: "info",
   ]
@@ -85,13 +85,13 @@ if (isCI && sentryPropertiesAvailable && !isDetox) {
 
 boolean datadogPropertiesAvailable = System.getenv('DATADOG_API_KEY') != null
 
-if (isCI && datadogPropertiesAvailable && !isDetox) {
+if (isCI && datadogPropertiesAvailable && !isE2E) {
   apply from: "../../../../node_modules/@datadog/mobile-react-native/datadog-sourcemaps.gradle"
 }
 
-def devVersionName = "1.44"
-def betaVersionName = "1.44"
-def prodVersionName = "1.44"
+def devVersionName = "1.45"
+def betaVersionName = "1.45"
+def prodVersionName = "1.45"
 
 android {
     ndkVersion rootProject.ext.ndkVersion
@@ -104,8 +104,6 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-        testBuildType System.getProperty('testBuildType', 'debug')
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     splits {
         abi {
@@ -254,13 +252,16 @@ dependencies {
     implementation 'com.onesignal:OneSignal:4.8.9'
     implementation 'com.github.statsig-io:android-sdk:4.36.0'
 
+    // This is required for the backported AndroidX Photo Picker on versions of Android below 30
+    implementation("androidx.activity:activity:1.9.+")
+    
+    // For animated GIF support
+    implementation 'com.facebook.fresco:animated-gif:3.6.0'
+
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
-    }
-    androidTestImplementation('com.wix:detox:+') {
-      exclude module: "protobuf-lite"
     }
 }
 

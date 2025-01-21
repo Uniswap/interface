@@ -1,19 +1,19 @@
-import { TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+import { TokenRankingsResponse, TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItem, ListRenderItemInfo, StyleSheet } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
-import { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
+import { SharedValue, useSharedValue } from 'react-native-reanimated'
 import { useSelector } from 'react-redux'
 import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
 import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
 import { SortButton } from 'src/components/explore/SortButton'
 import { TokenItem } from 'src/components/explore/TokenItem'
 import { TokenItemData } from 'src/components/explore/TokenItemData'
-import { AnimatedBottomSheetFlatList } from 'src/components/layout/AnimatedFlatList'
 import { AutoScrollProps } from 'src/components/sortableGrid/types'
 import { getTokenMetadataDisplayType } from 'src/features/explore/utils'
 import { Flex, Loader, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedBottomSheetFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -28,8 +28,13 @@ import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
+import { DDRumManualTiming } from 'utilities/src/logger/datadogEvents'
+import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
 import { selectTokensOrderBy } from 'wallet/src/features/wallet/selectors'
-import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
+import { ExploreOrderBy, TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
+
+const TOKEN_ITEM_SIZE = 68
+const AMOUNT_TO_DRAW = 18
 
 type ExploreSectionsProps = {
   listRef: React.MutableRefObject<null>
@@ -53,29 +58,9 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
     chainId: selectedNetwork?.toString() ?? ALL_NETWORKS_ARG,
   })
 
-  const [topTokenItems, setTopTokenItems] = useState<TokenItemDataWithMetadata[] | undefined>(undefined)
-  useEffect(() => {
-    if (!data?.tokenRankings?.[orderBy]) {
-      setTopTokenItems(undefined)
-      return
-    }
+  const topTokenItems = useTokenItems(data, orderBy)
 
-    const tokenMetadataDisplayType = getTokenMetadataDisplayType(orderBy)
-    const topTokens: TokenItemDataWithMetadata[] | undefined = data.tokenRankings[orderBy]?.tokens?.reduce(
-      (acc: TokenItemDataWithMetadata[], tokenStat) => {
-        if (tokenStat) {
-          const tokenItemData = tokenStatsToTokenItemData(tokenStat)
-          if (tokenItemData) {
-            acc.push({ tokenItemData, tokenMetadataDisplayType })
-          }
-        }
-        return acc
-      },
-      [],
-    )
-
-    setTopTokenItems(topTokens)
-  }, [orderBy, data])
+  usePerformanceLogger(DDRumManualTiming.RenderExploreSections, [selectedNetwork, orderBy])
 
   const renderItem: ListRenderItem<TokenItemDataWithMetadata> = useCallback(
     ({ item: { tokenItemData, tokenMetadataDisplayType }, index }: ListRenderItemInfo<TokenItemDataWithMetadata>) => {
@@ -94,8 +79,6 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
   const onRetry = useCallback(async () => {
     await refetch()
   }, [refetch])
-
-  const scrollHandler = useAnimatedScrollHandler((e) => (scrollY.value = e.contentOffset.y), [scrollY])
 
   const onSelectNetwork = useCallback((network: UniverseChainId | null) => {
     sendAnalyticsEvent(MobileEventName.ExploreNetworkSelected, {
@@ -134,45 +117,30 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
         visibleListHeight.value = height
       }}
     >
-      <AnimatedBottomSheetFlatList
+      <AnimatedBottomSheetFlashList
         ref={listRef}
-        ListEmptyComponent={
-          <Flex mx="$spacing24" my="$spacing12">
-            <Loader.Token repeat={5} />
-          </Flex>
-        }
+        ListEmptyComponent={ListEmptyComponent}
         ListHeaderComponent={
-          <Flex>
-            <FavoritesSection
-              showLoading={false}
-              scrollY={scrollY}
-              scrollableRef={listRef}
-              visibleHeight={visibleListHeight}
-            />
-            <Flex row alignItems="center" justifyContent="space-between" px="$spacing20">
-              <Text color="$neutral2" flexShrink={0} paddingEnd="$spacing8" variant="subheading1">
-                {t('explore.tokens.top.title')}
-              </Text>
-              <Flex flexShrink={1}>
-                <SortButton orderBy={orderBy} />
-              </Flex>
-            </Flex>
-            <NetworkPillsRow
-              selectedNetwork={selectedNetwork}
-              onSelectNetwork={(network) => setImmediate(() => onSelectNetwork(network))}
-            />
-          </Flex>
+          <ListHeaderComponent
+            listRef={listRef}
+            orderBy={orderBy}
+            scrollY={scrollY}
+            selectedNetwork={selectedNetwork}
+            visibleListHeight={visibleListHeight}
+            onSelectNetwork={onSelectNetwork}
+          />
         }
         ListHeaderComponentStyle={styles.foreground}
         contentContainerStyle={{ paddingBottom: insets.bottom }}
         data={showFullScreenLoadingState ? undefined : topTokenItems}
         keyExtractor={tokenKey}
-        removeClippedSubviews={false}
         renderItem={renderItem}
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}
-        onScroll={scrollHandler}
+        estimatedItemSize={TOKEN_ITEM_SIZE}
+        // @ts-expect-error TODO: fix flashlist types
+        drawDistance={TOKEN_ITEM_SIZE * AMOUNT_TO_DRAW}
       />
     </Flex>
   )
@@ -188,8 +156,8 @@ function NetworkPillsRow({
   const colors = useSporeColors()
   const { chains } = useEnabledChains()
 
-  const renderItem: ListRenderItem<UniverseChainId> = useCallback(
-    ({ item }: ListRenderItemInfo<UniverseChainId>) => {
+  const renderItem = useCallback(
+    ({ item }: { item: UniverseChainId }) => {
       return (
         <TouchableArea onPress={() => onSelectNetwork(item)}>
           <NetworkPill
@@ -253,10 +221,12 @@ function AllNetworksPill({ onPress, selected }: { onPress: () => void; selected:
   )
 }
 
-const tokenKey = (token: TokenItemDataWithMetadata): string => {
-  return token.tokenItemData.address
-    ? buildCurrencyId(token.tokenItemData.chainId, token.tokenItemData.address)
-    : buildNativeCurrencyId(token.tokenItemData.chainId)
+const tokenKey = (token: TokenItemDataWithMetadata, index: number): string => {
+  return `${
+    token.tokenItemData.address
+      ? buildCurrencyId(token.tokenItemData.chainId, token.tokenItemData.address)
+      : buildNativeCurrencyId(token.tokenItemData.chainId)
+  }-${index}`
 }
 
 function tokenStatsToTokenItemData(tokenStat: TokenStats): TokenItemData | null {
@@ -305,3 +275,107 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
 })
+
+function useTokenItems(
+  data: TokenRankingsResponse | undefined,
+  orderBy: ExploreOrderBy,
+): TokenItemDataWithMetadata[] | undefined {
+  const [topTokenItems, setTopTokenItems] = useState<TokenItemDataWithMetadata[] | undefined>(undefined)
+
+  useEffect(() => {
+    if (!data?.tokenRankings?.[orderBy]) {
+      setTopTokenItems(undefined)
+      return
+    }
+
+    const tokenMetadataDisplayType = getTokenMetadataDisplayType(orderBy)
+    const topTokens: TokenItemDataWithMetadata[] | undefined = data.tokenRankings[orderBy]?.tokens?.reduce(
+      (acc: TokenItemDataWithMetadata[], tokenStat) => {
+        if (tokenStat) {
+          const tokenItemData = tokenStatsToTokenItemData(tokenStat)
+          if (tokenItemData) {
+            acc.push({ tokenItemData, tokenMetadataDisplayType })
+          }
+        }
+        return acc
+      },
+      [],
+    )
+
+    setTopTokenItems(topTokens)
+  }, [orderBy, data])
+  return topTokenItems
+}
+
+type ListHeaderProps = {
+  listRef: React.MutableRefObject<null>
+  scrollY: SharedValue<number>
+  visibleListHeight: SharedValue<number>
+  orderBy: ExploreOrderBy
+}
+
+const ListHeader = React.memo(function ListHeader({
+  listRef,
+  scrollY,
+  visibleListHeight,
+  orderBy,
+}: ListHeaderProps): JSX.Element {
+  const { t } = useTranslation()
+
+  return (
+    <Flex>
+      <FavoritesSection
+        showLoading={false}
+        scrollY={scrollY}
+        scrollableRef={listRef}
+        visibleHeight={visibleListHeight}
+      />
+      <Flex row alignItems="center" justifyContent="space-between" px="$spacing20">
+        <Text color="$neutral2" flexShrink={0} paddingEnd="$spacing8" variant="subheading1">
+          {t('explore.tokens.top.title')}
+        </Text>
+        <Flex flexShrink={1}>
+          <SortButton orderBy={orderBy} />
+        </Flex>
+      </Flex>
+    </Flex>
+  )
+})
+
+type NetworkPillsProps = {
+  selectedNetwork: UniverseChainId | null
+  onSelectNetwork: (chainId: UniverseChainId | null) => void
+}
+
+const NetworkPills = React.memo(function NetworkPills({ selectedNetwork, onSelectNetwork }: NetworkPillsProps) {
+  const handleOnSelectNetwork = useCallback(
+    (network: UniverseChainId | null) => {
+      setImmediate(() => onSelectNetwork(network))
+    },
+    [onSelectNetwork],
+  )
+
+  return <NetworkPillsRow selectedNetwork={selectedNetwork} onSelectNetwork={handleOnSelectNetwork} />
+})
+
+const ListHeaderComponent = ({
+  listRef,
+  onSelectNetwork,
+  orderBy,
+  scrollY,
+  selectedNetwork,
+  visibleListHeight,
+}: ListHeaderProps & NetworkPillsProps): JSX.Element => {
+  return (
+    <>
+      <ListHeader listRef={listRef} orderBy={orderBy} scrollY={scrollY} visibleListHeight={visibleListHeight} />
+      <NetworkPills selectedNetwork={selectedNetwork} onSelectNetwork={onSelectNetwork} />
+    </>
+  )
+}
+
+const ListEmptyComponent = (): JSX.Element => (
+  <Flex mx="$spacing24" my="$spacing12">
+    <Loader.Token repeat={5} />
+  </Flex>
+)

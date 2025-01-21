@@ -74,12 +74,12 @@ describe('FavoriteTokenCard', () => {
     it('renders loader', async () => {
       const { queryByTestId } = render(<FavoriteTokenCard {...defaultProps} />, { resolvers })
 
-      const loader = queryByTestId('loader/favorite')
+      const loaderPrice = queryByTestId('loader/favorite/price')
+      const loaderPriceChange = queryByTestId('loader/favorite/priceChange')
 
-      // loading
-      expect(loader).toBeTruthy()
+      expect(loaderPrice).toBeTruthy()
+      expect(loaderPriceChange).toBeTruthy()
 
-      // loading finished
       await waitFor(() => {
         expect(queryByTestId(touchableId)).toBeTruthy()
       })

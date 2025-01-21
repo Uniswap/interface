@@ -25,6 +25,7 @@ const MissingImageLogo = styled.div<{ $size?: string; $textColor: string; $backg
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 `
 
 function LogolessPlaceholder({ currency, size }: { currency?: Currency; size: number }) {

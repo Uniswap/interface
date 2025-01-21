@@ -56,6 +56,7 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -122,6 +123,10 @@ function RemoveLiquidity() {
   const [showConfirm, setShowConfirm] = useState<boolean>(false)
   const [showDetailed, setShowDetailed] = useState<boolean>(false)
   const [attemptingTxn, setAttemptingTxn] = useState(false) // clicked confirm
+
+  // usd values
+  const usdValueA = useUSDCValue(parsedAmounts[Field.CURRENCY_A])
+  const usdValueB = useUSDCValue(parsedAmounts[Field.CURRENCY_B])
 
   // txn values
   const [txHash, setTxHash] = useState<string>('')
@@ -356,8 +361,8 @@ function RemoveLiquidity() {
               fee: FeeAmount.MEDIUM,
               currency0: currencyA,
               currency1: currencyB,
-              currency0AmountUsd: parsedAmounts[Field.CURRENCY_A],
-              currency1AmountUsd: parsedAmounts[Field.CURRENCY_B],
+              currency0AmountUsd: usdValueA,
+              currency1AmountUsd: usdValueB,
               version: ProtocolVersion.V2,
               poolId: computePairAddress({
                 factoryAddress: V2_FACTORY_ADDRESSES[currencyA.chainId],

@@ -42,6 +42,7 @@ import {
   CheckApprovalLPResponse,
   CreateLPPositionRequest,
   CreateLPPositionResponse,
+  IndependentToken,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -884,11 +885,55 @@ export function generateAddLiquidityApprovalParams({
     walletAddress: account.address,
     chainId: currencyAmounts.TOKEN0.currency.chainId,
     protocol: apiProtocolItems,
-    token0: getCurrencyAddressForTradingApi(getCurrencyWithWrap(currencies[0], positionState.protocolVersion)),
-    token1: getCurrencyAddressForTradingApi(getCurrencyWithWrap(currencies[1], positionState.protocolVersion)),
+    token0: getCurrencyAddressForTradingApi(currencies[0]),
+    token1: getCurrencyAddressForTradingApi(currencies[1]),
     amount0: currencyAmounts?.TOKEN0?.quotient.toString(),
     amount1: currencyAmounts?.TOKEN1?.quotient.toString(),
   } satisfies CheckApprovalLPRequest
+}
+
+// Returns the sorted token that is independent.
+// For example if the top box on the deposit form corresponds to token0 (lower token sorted by address)
+// and the user types into that form then the independent token is token0.
+// Or if the top box corresponds to token1 (higher token sorted by address)
+// and the user types into that box then the independent token is token1
+// Also returns the index of token0 and token1 in relation to the unsortedCurrencies
+function getIndependentToken({
+  unsortedCurrencies,
+  sortedToken0,
+  sortedToken1,
+  independentField,
+  protocolVersion,
+}: {
+  unsortedCurrencies: [Currency, Currency]
+  sortedToken0: Currency
+  sortedToken1: Currency
+  independentField: PositionField
+  protocolVersion: ProtocolVersion
+}): {
+  independentToken: IndependentToken.TOKEN_0 | IndependentToken.TOKEN_1
+  token0Index: PositionField
+  token1Index: PositionField
+} {
+  const tokenA = getCurrencyWithWrap(unsortedCurrencies[0], protocolVersion)
+  const tokenB = getCurrencyWithWrap(unsortedCurrencies[1], protocolVersion)
+  const token0Index = tokenA && sortedToken0.equals(tokenA) ? PositionField.TOKEN0 : PositionField.TOKEN1
+  const token1Index = tokenB && sortedToken1.equals(tokenB) ? PositionField.TOKEN1 : PositionField.TOKEN0
+
+  const independentToken =
+    independentField === PositionField.TOKEN0
+      ? token0Index === PositionField.TOKEN0
+        ? IndependentToken.TOKEN_0
+        : IndependentToken.TOKEN_1
+      : token1Index === PositionField.TOKEN1
+        ? IndependentToken.TOKEN_1
+        : IndependentToken.TOKEN_0
+
+  return {
+    independentToken,
+    token0Index,
+    token1Index,
+  }
 }
 
 export function generateCreateCalldataQueryParams({
@@ -899,6 +944,7 @@ export function generateCreateCalldataQueryParams({
   priceRangeState,
   derivedPriceRangeInfo,
   derivedDepositInfo,
+  independentField,
 }: {
   account?: AccountMeta
   approvalCalldata?: CheckApprovalLPResponse
@@ -907,6 +953,7 @@ export function generateCreateCalldataQueryParams({
   priceRangeState: PriceRangeState
   derivedPriceRangeInfo: PriceRangeInfo
   derivedDepositInfo: DepositInfo
+  independentField: PositionField
 }): CreateLPPositionRequest | undefined {
   const apiProtocolItems = getProtocolItems(positionState.protocolVersion)
   const currencies = derivedPositionInfo.currencies
@@ -940,18 +987,25 @@ export function generateCreateCalldataQueryParams({
     const sortedToken0 = pair.token0
     const sortedToken1 = pair.token1
 
-    const token0 = getCurrencyWithWrap(currencies[0], derivedPositionInfo.protocolVersion)
-    const token1 = getCurrencyWithWrap(currencies[1], derivedPositionInfo.protocolVersion)
-    const token0Index = sortedToken0.equals(token0) ? 'TOKEN0' : 'TOKEN1'
-    const token1Index = sortedToken1.equals(token1) ? 'TOKEN1' : 'TOKEN0'
+    const { independentToken, token0Index, token1Index } = getIndependentToken({
+      unsortedCurrencies: currencies,
+      sortedToken0,
+      sortedToken1,
+      independentField,
+      protocolVersion: derivedPositionInfo.protocolVersion,
+    })
+    const dependentField = independentField === PositionField.TOKEN0 ? PositionField.TOKEN1 : PositionField.TOKEN0
+    const independentAmount = currencyAmounts[independentField]
+    const dependentAmount = currencyAmounts[dependentField]
 
     return {
       simulateTransaction: !(permitData || token0Approval || token1Approval || positionTokenApproval),
       protocol: apiProtocolItems,
       walletAddress: account.address,
       chainId: currencyAmounts.TOKEN0.currency.chainId,
-      amount0: currencyAmounts[token0Index]?.quotient.toString(),
-      amount1: currencyAmounts[token1Index]?.quotient.toString(),
+      independentAmount: independentAmount?.quotient.toString(),
+      independentToken,
+      defaultDependentAmount: dependentAmount?.quotient.toString(),
       position: {
         pool: {
           token0: getCurrencyAddressForTradingApi(currencyAmounts[token0Index]?.currency),
@@ -983,10 +1037,6 @@ export function generateCreateCalldataQueryParams({
 
   const creatingPool = derivedPositionInfo.creatingPoolOrPair
   const initialPrice = creatingPool ? pool.sqrtRatioX96.toString() : undefined
-
-  const poolLiquidity = creatingPool ? undefined : pool.liquidity.toString()
-  const currentTick = creatingPool ? undefined : pool.tickCurrent
-  const sqrtRatioX96 = creatingPool ? undefined : pool.sqrtRatioX96.toString()
   const tickSpacing = pool.tickSpacing
 
   // token0 and token1 from the sdk are automatically sorted and we need to ensure the values we send
@@ -994,21 +1044,25 @@ export function generateCreateCalldataQueryParams({
   const sortedToken0 = pool.token0
   const sortedToken1 = pool.token1
 
-  const token0 = getCurrencyWithWrap(currencies[0], derivedPositionInfo.protocolVersion)
-  const token1 = getCurrencyWithWrap(currencies[1], derivedPositionInfo.protocolVersion)
-  const token0Index = token0 && sortedToken0.equals(token0) ? 'TOKEN0' : 'TOKEN1'
-  const token1Index = token1 && sortedToken1.equals(token1) ? 'TOKEN1' : 'TOKEN0'
+  const { independentToken, token0Index, token1Index } = getIndependentToken({
+    sortedToken0,
+    sortedToken1,
+    unsortedCurrencies: currencies,
+    independentField,
+    protocolVersion: derivedPositionInfo.protocolVersion,
+  })
+  const dependentField = independentField === PositionField.TOKEN0 ? PositionField.TOKEN1 : PositionField.TOKEN0
+  const independentAmount = currencyAmounts[independentField]
+  const dependentAmount = currencyAmounts[dependentField]
 
   return {
     simulateTransaction: !(permitData || token0Approval || token1Approval || positionTokenApproval),
     protocol: apiProtocolItems,
     walletAddress: account.address,
     chainId: currencyAmounts.TOKEN0.currency.chainId,
-    amount0: currencyAmounts[token0Index]?.quotient.toString(),
-    amount1: currencyAmounts[token1Index]?.quotient.toString(),
-    poolLiquidity,
-    currentTick,
-    sqrtRatioX96,
+    independentAmount: independentAmount?.quotient.toString(),
+    independentToken,
+    initialDependentAmount: initialPrice && dependentAmount?.quotient?.toString(), // only set this if there is an initialPrice
     initialPrice,
     position: {
       tickLower,
@@ -1021,7 +1075,7 @@ export function generateCreateCalldataQueryParams({
         hooks: positionState.hook,
       },
     },
-  } satisfies CreateLPPositionRequest
+  }
 }
 
 export function generateCreatePositionTxRequest({
@@ -1088,6 +1142,7 @@ export function generateCreatePositionTxRequest({
     approvePositionTokenRequest: undefined,
     revocationTxRequest: undefined,
     permit: validatedPermitRequest,
+    dependentAmount: createCalldata.dependentAmount,
   } satisfies CreatePositionTxAndGasInfo
 }
 

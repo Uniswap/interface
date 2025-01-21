@@ -42,20 +42,3 @@ export function containsNonPrintableChars(msg: string): boolean {
 
   return false
 }
-
-/**
- * Wraps parseFloat with a throw if the value is not a number.
- *
- * This will throw if an empty string is passed.
- * @param value string to parse
- * @returns parsed number
- */
-export function parseFloatWithThrow(value: string): number {
-  const parsed = parseFloat(value)
-
-  if (Number.isNaN(parsed)) {
-    throw new Error('String is not a number')
-  }
-
-  return parsed
-}

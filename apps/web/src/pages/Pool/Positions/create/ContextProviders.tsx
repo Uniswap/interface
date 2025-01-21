@@ -30,11 +30,13 @@ import {
   generateCreatePositionTxRequest,
 } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { PositionField } from 'types/position'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function CreatePositionContextProvider({
@@ -121,6 +123,15 @@ export function DepositContextProvider({ children }: { children: React.ReactNode
   const [depositState, setDepositState] = useState<DepositState>(DEFAULT_DEPOSIT_STATE)
   const derivedDepositInfo = useDerivedDepositInfo(depositState)
 
+  const { derivedPriceRangeInfo } = usePriceRangeContext()
+  useEffect(() => {
+    if (derivedPriceRangeInfo.deposit1Disabled) {
+      setDepositState((prev) => ({ ...prev, exactField: PositionField.TOKEN0 }))
+    } else if (derivedPriceRangeInfo.deposit0Disabled) {
+      setDepositState((prev) => ({ ...prev, exactField: PositionField.TOKEN1 }))
+    }
+  }, [derivedPriceRangeInfo?.deposit0Disabled, derivedPriceRangeInfo?.deposit1Disabled])
+
   const reset = useCallback(() => {
     setDepositState(DEFAULT_DEPOSIT_STATE)
   }, [])
@@ -135,7 +146,7 @@ export function DepositContextProvider({ children }: { children: React.ReactNode
 export function CreateTxContextProvider({ children }: { children: React.ReactNode }) {
   const account = useAccountMeta()
   const { derivedPositionInfo, positionState } = useCreatePositionContext()
-  const { derivedDepositInfo } = useDepositContext()
+  const { derivedDepositInfo, depositState } = useDepositContext()
   const { priceRangeState, derivedPriceRangeInfo } = usePriceRangeContext()
   const swapSettings = useTransactionSettingsContext()
 
@@ -159,6 +170,14 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     staleTime: 5 * ONE_SECOND_MS,
     enabled: !hasError,
   })
+
+  if (approvalError) {
+    logger.info('CreateTxContextProvider', 'CreateTxContextProvider', 'CheckLpApprovalQuery', {
+      error: JSON.stringify(approvalError),
+      addLiquidityApprovalParams: JSON.stringify(addLiquidityApprovalParams),
+    })
+  }
+
   const gasFeeToken0USD = useUSDCurrencyAmountOfGasFee(
     derivedPositionInfo.currencies?.[0]?.chainId,
     approvalCalldata?.gasFeeToken0Approval,
@@ -177,6 +196,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
       priceRangeState,
       derivedPriceRangeInfo,
       derivedDepositInfo,
+      independentField: depositState.exactField,
     })
   }, [
     account,
@@ -186,6 +206,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     derivedPriceRangeInfo,
     positionState,
     priceRangeState,
+    depositState.exactField,
   ])
   const {
     data: createCalldata,
@@ -197,6 +218,13 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     refetchInterval: 5 * ONE_SECOND_MS,
     enabled: !hasError && !approvalLoading && !approvalError && Boolean(approvalCalldata),
   })
+
+  if (createError) {
+    logger.info('CreateTxContextProvider', 'CreateTxContextProvider', 'CreateLpPositionCalldataQuery', {
+      error: JSON.stringify(createError),
+      createCalldataQueryParams: JSON.stringify(createCalldataQueryParams),
+    })
+  }
 
   const actualGasFee = createCalldata?.gasFee
   const { value: calculatedGasFee } = useTransactionGasFee(createCalldata?.create, !!actualGasFee)

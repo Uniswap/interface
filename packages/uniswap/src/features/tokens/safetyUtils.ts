@@ -1,6 +1,5 @@
 /* eslint-disable consistent-return */
 import { Currency, NativeCurrency } from '@uniswap/sdk-core'
-import { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { ColorTokens } from 'ui/src'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
@@ -26,7 +25,7 @@ export enum TokenProtectionWarning {
 
 export const TOKEN_PROTECTION_FOT_HONEYPOT_BREAKPOINT = 100
 export const TOKEN_PROTECTION_FOT_HIGH_FEE_BREAKPOINT = 80
-export const TOKEN_PROTECTION_FOT_FEE_BREAKPOINT = 5
+export const TOKEN_PROTECTION_FOT_FEE_BREAKPOINT = 15
 
 // Gets the FoT percentages from Currency, populated by our internal fees DB
 export function getFeeOnTransfer(currency?: Currency): {
@@ -173,38 +172,24 @@ export function getShouldHaveCombinedPluralTreatment(
   return plural ?? false
 }
 
-export function useModalHeaderText(currencyInfo0: CurrencyInfo, currencyInfo1?: CurrencyInfo): string | null {
-  const shouldHavePluralTreatment = getShouldHaveCombinedPluralTreatment(currencyInfo0, currencyInfo1)
-  if (!shouldHavePluralTreatment && currencyInfo1) {
-    throw new Error('Should only combine into one plural-languaged modal if BOTH are low or BOTH are blocked')
-  }
-
-  const { t } = useTranslation()
-  const tokenProtectionWarning = getTokenProtectionWarning(currencyInfo0)
-  if (!tokenProtectionWarning) {
-    return null
-  }
-
-  const tokenSymbol0 = currencyInfo0.currency?.symbol
-  const tokenSymbol1 = currencyInfo1?.currency?.symbol
-  return getModalHeaderText({ t, tokenSymbol0, tokenSymbol1, tokenProtectionWarning, shouldHavePluralTreatment })
-}
-
-export function getModalHeaderText({
-  t,
+export function useModalHeaderText({
   tokenProtectionWarning,
   tokenSymbol0,
   tokenSymbol1,
   shouldHavePluralTreatment,
 }: {
-  t: TFunction
   tokenProtectionWarning?: TokenProtectionWarning
   tokenSymbol0?: string
   tokenSymbol1?: string
   shouldHavePluralTreatment?: boolean
 }): string | null {
+  const { t } = useTranslation()
+
   if (!tokenProtectionWarning) {
     return null
+  }
+  if (!shouldHavePluralTreatment && tokenSymbol1) {
+    throw new Error('Should only combine into one plural-languaged modal if BOTH are low or BOTH are blocked')
   }
   switch (tokenProtectionWarning) {
     case TokenProtectionWarning.Blocked:
@@ -235,78 +220,37 @@ export function getModalHeaderText({
   }
 }
 
-export function useModalSubtitleText(currencyInfo0: CurrencyInfo, currencyInfo1?: CurrencyInfo): string | null {
-  const shouldHavePluralTreatment = getShouldHaveCombinedPluralTreatment(currencyInfo0, currencyInfo1)
-  if (!shouldHavePluralTreatment && currencyInfo1) {
-    throw new Error('Should only combine into one plural-languaged modal if BOTH are low or BOTH are blocked')
-  }
-  const { t } = useTranslation()
-  const { formatPercent } = useLocalizationContext()
-  const tokenProtectionWarning = getTokenProtectionWarning(currencyInfo0)
-  const { buyFeePercent, sellFeePercent } = getFeeOnTransfer(currencyInfo0.currency)
-  return getModalSubtitleText({
-    t,
-    tokenProtectionWarning,
-    tokenSymbol: currencyInfo0.currency.symbol,
-    buyFeePercent,
-    sellFeePercent,
-    shouldHavePluralTreatment,
-    formatPercent,
-  })
-}
-
-export function getModalSubtitleText({
-  t,
+// eslint-disable-next-line complexity
+export function useModalSubtitleText({
   tokenProtectionWarning,
   tokenSymbol,
   buyFeePercent,
   sellFeePercent,
   shouldHavePluralTreatment,
-  formatPercent,
 }: {
-  t: TFunction
   tokenProtectionWarning: TokenProtectionWarning | undefined
   tokenSymbol?: string
   buyFeePercent?: number
   sellFeePercent?: number
   shouldHavePluralTreatment?: boolean
-  formatPercent: (value: Maybe<string | number>) => string
 }): string | null {
+  const { formatPercent } = useLocalizationContext()
+  const { t } = useTranslation()
+
   if (!tokenProtectionWarning) {
     return null
   }
 
   const formattedBuyFeePercent = buyFeePercent && buyFeePercent > 0 ? formatPercent(buyFeePercent) : undefined
   const formattedSellFeePercent = sellFeePercent && sellFeePercent > 0 ? formatPercent(sellFeePercent) : undefined
-  const warningCopy = getModalSubtitleTokenWarningText({
-    t,
-    tokenProtectionWarning,
-    tokenSymbol,
-    formattedBuyFeePercent,
-    formattedSellFeePercent,
-    shouldHavePluralTreatment,
-  })
-  return warningCopy
-}
 
-export function getModalSubtitleTokenWarningText({
-  t,
-  tokenProtectionWarning,
-  tokenSymbol,
-  formattedBuyFeePercent,
-  formattedSellFeePercent,
-  shouldHavePluralTreatment,
-}: {
-  t: TFunction
-  tokenProtectionWarning: TokenProtectionWarning
-  tokenSymbol?: string
-  formattedBuyFeePercent?: string
-  formattedSellFeePercent?: string
-  shouldHavePluralTreatment?: boolean
-}): string | null {
   switch (tokenProtectionWarning) {
     case TokenProtectionWarning.Blocked:
-      return t('token.safetyLevel.blocked.message')
+      return isInterface
+        ? shouldHavePluralTreatment
+          ? t('token.safety.warning.blocked.description.default_other')
+          : t('token.safety.warning.blocked.description.default_one')
+        : t('token.safetyLevel.blocked.message')
     case TokenProtectionWarning.MaliciousHoneypot:
       return t('token.safety.warning.honeypot.message', { tokenSymbol })
     case TokenProtectionWarning.MaliciousGeneral:
@@ -351,10 +295,9 @@ export function getModalSubtitleTokenWarningText({
       )
     }
     case TokenProtectionWarning.NonDefault:
-      if (shouldHavePluralTreatment) {
-        return t('token.safetyLevel.medium.message.plural')
-      }
-      return t('token.safety.warning.medium.heading.named', { tokenSymbol })
+      return shouldHavePluralTreatment
+        ? t('token.safetyLevel.medium.message.plural')
+        : t('token.safety.warning.medium.heading.named', { tokenSymbol })
     case TokenProtectionWarning.None:
       return null
   }
@@ -364,40 +307,37 @@ export function useTokenWarningCardText(currencyInfo: Maybe<CurrencyInfo>): {
   heading: string | null
   description: string | null
 } {
-  const { t } = useTranslation()
-  const { formatPercent } = useLocalizationContext()
-  if (!currencyInfo) {
+  const tokenProtectionWarning = getTokenProtectionWarning(currencyInfo)
+  const { buyFeePercent, sellFeePercent } = getFeeOnTransfer(currencyInfo?.currency)
+
+  // If our token fees DB does not have fees data but Blockaid does, display Blockaid's fees data
+  const displayedBuyFeePercent = buyFeePercent ?? currencyInfo?.safetyInfo?.blockaidFees?.buyFeePercent
+  const displayedSellFeePercent = sellFeePercent ?? currencyInfo?.safetyInfo?.blockaidFees?.sellFeePercent
+  const heading = useCardHeaderText({ tokenProtectionWarning })
+  const description = useCardSubtitleText({
+    tokenProtectionWarning,
+    tokenSymbol: currencyInfo?.currency.symbol,
+    buyFeePercent: displayedBuyFeePercent,
+    sellFeePercent: displayedSellFeePercent,
+  })
+  if (!currencyInfo || !currencyInfo?.safetyInfo) {
     return {
       heading: null,
       description: null,
     }
   }
-  const tokenProtectionWarning = getTokenProtectionWarning(currencyInfo)
-  const { buyFeePercent, sellFeePercent } = getFeeOnTransfer(currencyInfo.currency)
-
-  // If our token fees DB does not have fees data but Blockaid does, display Blockaid's fees data
-  const displayedBuyFeePercent = buyFeePercent ?? currencyInfo?.safetyInfo?.blockaidFees?.buyFeePercent
-  const displayedSellFeePercent = sellFeePercent ?? currencyInfo?.safetyInfo?.blockaidFees?.sellFeePercent
   return {
-    heading: getCardHeaderText({ t, tokenProtectionWarning }),
-    description: getCardSubtitleText({
-      t,
-      tokenProtectionWarning,
-      tokenSymbol: currencyInfo.currency.symbol,
-      buyFeePercent: displayedBuyFeePercent,
-      sellFeePercent: displayedSellFeePercent,
-      formatPercent,
-    }),
+    heading,
+    description,
   }
 }
 
-export function getCardHeaderText({
-  t,
+export function useCardHeaderText({
   tokenProtectionWarning,
 }: {
-  t: TFunction
   tokenProtectionWarning: TokenProtectionWarning
 }): string | null {
+  const { t } = useTranslation()
   switch (tokenProtectionWarning) {
     case TokenProtectionWarning.MaliciousHoneypot:
       return t('token.safety.warning.honeypot.title')
@@ -420,21 +360,20 @@ export function getCardHeaderText({
   }
 }
 
-export function getCardSubtitleText({
-  t,
+export function useCardSubtitleText({
   tokenProtectionWarning,
   tokenSymbol,
   buyFeePercent,
   sellFeePercent,
-  formatPercent,
 }: {
-  t: TFunction
   tokenProtectionWarning: TokenProtectionWarning
   tokenSymbol?: string
   buyFeePercent?: number
   sellFeePercent?: number
-  formatPercent: (value: Maybe<string | number>) => string
 }): string | null {
+  const { t } = useTranslation()
+  const { formatPercent } = useLocalizationContext()
+
   const formattedBuyFeePercent = buyFeePercent && buyFeePercent > 0 ? formatPercent(buyFeePercent) : undefined
   const formattedSellFeePercent = sellFeePercent && sellFeePercent > 0 ? formatPercent(sellFeePercent) : undefined
   switch (tokenProtectionWarning) {

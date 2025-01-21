@@ -4,12 +4,13 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Switch, Text, UniswapXText } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
+import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ElementNameType, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { UniswapXInfo } from 'uniswap/src/features/transactions/swap/modals/UniswapXInfo'
@@ -98,7 +99,7 @@ export const ProtocolPreference: SwapSettingConfig = {
           active={isDefault}
           description={<DefaultOptionDescription isDefault={isDefault} />}
           elementName={ElementName.SwapRoutingPreferenceDefault}
-          title={t('common.default')}
+          title={<DefaultOptionTitle />}
           cantDisable={false}
           disabled={isOnlyV2Allowed}
           onSelect={toggleDefault}
@@ -237,12 +238,12 @@ function DefaultOptionDescription({ isDefault }: { isDefault: boolean }): JSX.El
 
   const showIncludesUniswapX = uniswapXEnabled && isDefault
 
-  const cheapestRouteText = t('swap.settings.routingPreference.option.default.description')
-  const cheapestRouteTextV4 = t('swap.settings.routingPreference.option.default.description.v4')
+  const cheapestRouteText = t('swap.settings.routingPreference.option.default.description.preV4')
+  const cheapestRouteTextV4 = t('swap.settings.routingPreference.option.default.description')
 
   return (
     <Flex gap="$spacing4">
-      <Text color="$neutral2" variant="body3">
+      <Text color="$neutral2" variant="body3" textWrap="pretty">
         {v4Enabled ? cheapestRouteTextV4 : cheapestRouteText}
       </Text>
       {showIncludesUniswapX && (
@@ -253,13 +254,6 @@ function DefaultOptionDescription({ isDefault }: { isDefault: boolean }): JSX.El
                 components={{
                   icon: <UniswapX size="$icon.16" style={!isMobileApp && { transform: 'translateY(3px)' }} />,
                   gradient: <UniswapXText height={18} variant="body3" />,
-                  info: (
-                    <InfoCircleFilled
-                      color="$neutral3"
-                      size="$icon.16"
-                      style={!isMobileApp && { transform: 'translateY(3px)' }}
-                    />
-                  ),
                 }}
                 i18nKey="uniswapx.included"
               />
@@ -267,6 +261,38 @@ function DefaultOptionDescription({ isDefault }: { isDefault: boolean }): JSX.El
           }
         />
       )}
+    </Flex>
+  )
+}
+
+function DefaultOptionTitle(): JSX.Element {
+  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
+  const { t } = useTranslation()
+
+  if (!v4Enabled) {
+    return (
+      <Text color="$neutral1" variant="subheading2">
+        {t('common.default')}
+      </Text>
+    )
+  }
+
+  return (
+    <Flex row gap="$spacing4" alignItems="center">
+      <Text color="$neutral1" variant="subheading2">
+        {t('common.default')}
+      </Text>
+      <WarningInfo
+        modalProps={{
+          caption: t('swap.settings.routingPreference.option.default.tooltip'),
+          rejectText: t('common.button.close'),
+          modalName: ModalName.SwapSettingsDefaultRoutingInfo,
+        }}
+        tooltipProps={{
+          text: t('swap.settings.routingPreference.option.default.tooltip'),
+          placement: 'bottom',
+        }}
+      />
     </Flex>
   )
 }

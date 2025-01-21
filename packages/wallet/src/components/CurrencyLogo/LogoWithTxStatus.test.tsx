@@ -275,14 +275,14 @@ describe(DappLogoWithWCBadge, () => {
     it('renders dapp icon placeholder if dappImageUrl is not provided', () => {
       const { queryByTestId } = render(<DappLogoWithWCBadge {...props} dappImageUrl={undefined} />)
 
-      expect(queryByTestId('dapp-image')).toBeFalsy()
+      expect(queryByTestId('img-dapp-image')).toBeFalsy()
       expect(queryByTestId('dapp-icon-placeholder')).toBeTruthy()
     })
 
     it('renders dapp image if dappImageUrl is provided', () => {
       const { queryByTestId } = render(<DappLogoWithWCBadge {...props} />)
 
-      expect(queryByTestId('dapp-image')).toBeTruthy()
+      expect(queryByTestId('img-dapp-image')).toBeTruthy()
       expect(queryByTestId('dapp-icon-placeholder')).toBeFalsy()
     })
   })

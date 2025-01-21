@@ -483,6 +483,7 @@ query TokenProjectDescription(
   $includeFrench: Boolean = false
   $includeJapanese: Boolean = false
   $includePortuguese: Boolean = false
+  $includeVietnamese: Boolean = false
   $includeChineseSimplified: Boolean = false
   $includeChineseTraditional: Boolean = false
 ) {
@@ -497,6 +498,7 @@ query TokenProjectDescription(
         descriptionFrFr @include(if: $includeFrench)
         descriptionJaJp @include(if: $includeJapanese)
         descriptionPtPt @include(if: $includePortuguese)
+        descriptionViVn @include(if: $includeVietnamese)
         descriptionZhHans @include(if: $includeChineseSimplified)
         descriptionZhHant @include(if: $includeChineseTraditional)
       }

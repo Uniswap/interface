@@ -1,0 +1,12 @@
+appId: com.uniswap.mobile.dev
+---
+- runFlow: subflows/start.yaml
+- tapOn: 'Create a wallet'
+- waitForAnimationToEnd
+- tapOn: 'Skip' # unitag
+- waitForAnimationToEnd
+- tapOn: 'Skip' # notifications
+- waitForAnimationToEnd
+- tapOn: 'Skip' # faceid
+- runFlow: subflows/biometrics-confirm.yaml
+# home screen

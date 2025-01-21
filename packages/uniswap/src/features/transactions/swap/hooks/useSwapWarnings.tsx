@@ -286,7 +286,7 @@ function getSwapWarningFromError(error: Error, t: TFunction): Warning {
           severity: WarningSeverity.Low,
           action: WarningAction.DisableReview,
           title: t('swap.warning.enterLargerAmount.title'),
-          message: '',
+          message: undefined,
         }
       }
       case Err404.errorCode.RESOURCE_NOT_FOUND: {

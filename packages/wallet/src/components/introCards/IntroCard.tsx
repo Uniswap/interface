@@ -191,6 +191,7 @@ export function IntroCard({
         borderColor="$surface3"
         borderRadius="$rounded20"
         borderWidth={1}
+        flex={1}
         {...containerProps}
       >
         <Flex
@@ -203,6 +204,7 @@ export function IntroCard({
           pr={cardPadding}
           overflow="hidden"
           py={cardPadding}
+          flex={1}
         >
           {GraphicElement}
 

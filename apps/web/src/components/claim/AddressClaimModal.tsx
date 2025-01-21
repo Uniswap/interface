@@ -8,7 +8,6 @@ import { AutoColumn, ColumnCenter } from 'components/deprecated/Column'
 import { RowBetween } from 'components/deprecated/Row'
 import { Break, CardBGImage, CardBGImageSmaller, CardNoise, CardSection, DataCard } from 'components/earn/styled'
 import { useAccount } from 'hooks/useAccount'
-import useENS from 'hooks/useENS'
 import styled from 'lib/styled-components'
 import { useState } from 'react'
 import { useClaimCallback, useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
@@ -16,6 +15,7 @@ import { useIsTransactionPending } from 'state/transactions/hooks'
 import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText, UniTokenAnimated } from 'theme/components'
 import { Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { useENS } from 'uniswap/src/features/ens/useENS'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -53,7 +53,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
   }
 
   // monitor for third party recipient of claim
-  const { address: parsedAddress } = useENS(typed)
+  const { address: parsedAddress } = useENS({ nameOrAddress: typed })
 
   // used for UI loading states
   const [attempting, setAttempting] = useState<boolean>(false)

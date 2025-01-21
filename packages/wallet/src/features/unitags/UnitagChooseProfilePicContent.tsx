@@ -4,7 +4,6 @@ import { ActivityIndicator } from 'react-native'
 import { DeprecatedButton, Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import { Pen } from 'ui/src/components/icons'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { UnitagClaimSource } from 'uniswap/src/features/unitags/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -51,7 +50,7 @@ export function UnitagChooseProfilePicContent({
 }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const { data: ensName } = useENSName(address, UniverseChainId.Mainnet)
+  const { data: ensName } = useENSName(address)
   const claimUnitag = useClaimUnitag()
   const isDarkMode = useIsDarkMode()
 

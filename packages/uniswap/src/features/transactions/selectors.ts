@@ -55,6 +55,7 @@ export const makeSelectAddressTransactions = (): Selector<
 
       return unique(flattenObjectOfObjects(addressTransactions), (tx, _, self) => {
         // Remove dummy local FOR transactions from TransactionList, notification badge, etc.
+        // this is what prevents the local transactions from actually appearing in the activity tab.
         if (tx.typeInfo.type === TransactionType.LocalOnRamp || tx.typeInfo.type === TransactionType.LocalOffRamp) {
           return false
         }

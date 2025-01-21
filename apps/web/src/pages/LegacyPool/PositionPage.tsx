@@ -427,23 +427,25 @@ function PositionPageContent() {
   const { price: price0 } = useUSDCPrice(token0 ?? undefined)
   const { price: price1 } = useUSDCPrice(token1 ?? undefined)
 
-  const fiatValueOfFees: CurrencyAmount<Currency> | null = useMemo(() => {
-    if (!price0 || !price1 || !feeValue0 || !feeValue1) {
+  const feeValue0Usd = useMemo(() => {
+    if (!price0 || !feeValue0) {
       return null
     }
-
     // we wrap because it doesn't matter, the quote returns a USDC amount
-    const feeValue0Wrapped = feeValue0?.wrapped
-    const feeValue1Wrapped = feeValue1?.wrapped
+    const feeValue0Wrapped = feeValue0.wrapped
+    return price0.quote(feeValue0Wrapped)
+  }, [price0, feeValue0])
 
-    if (!feeValue0Wrapped || !feeValue1Wrapped) {
+  const feeValue1Usd = useMemo(() => {
+    if (!price1 || !feeValue1) {
       return null
     }
+    // we wrap because it doesn't matter, the quote returns a USDC amount
+    const feeValue1Wrapped = feeValue1.wrapped
+    return price1.quote(feeValue1Wrapped)
+  }, [price1, feeValue1])
 
-    const amount0 = price0.quote(feeValue0Wrapped)
-    const amount1 = price1.quote(feeValue1Wrapped)
-    return amount0.add(amount1)
-  }, [price0, price1, feeValue0, feeValue1])
+  const fiatValueOfTotalFees = feeValue0Usd && feeValue1Usd ? feeValue0Usd.add(feeValue1Usd) : null
 
   const fiatValueOfLiquidity: CurrencyAmount<Currency> | null = useMemo(() => {
     if (!price0 || !price1 || !position) {
@@ -512,8 +514,8 @@ function PositionPageContent() {
               version: ProtocolVersion.V3,
               poolId: poolAddress,
               chainId: account.chainId,
-              currency0AmountUsd: feeValue0 ?? CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0),
-              currency1AmountUsd: feeValue1 ?? CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0),
+              currency0AmountUsd: feeValue0Usd,
+              currency1AmountUsd: feeValue1Usd,
             }),
           })
 
@@ -553,6 +555,8 @@ function PositionPageContent() {
     trace,
     feeAmount,
     poolAddress,
+    feeValue0Usd,
+    feeValue1Usd,
     addTransaction,
   ])
 
@@ -821,9 +825,9 @@ function PositionPageContent() {
                           <Label>
                             <Trans i18nKey="pool.uncollectedFees" />
                           </Label>
-                          {fiatValueOfFees?.greaterThan(new Fraction(1, 100)) ? (
+                          {fiatValueOfTotalFees?.greaterThan(new Fraction(1, 100)) ? (
                             <ThemedText.DeprecatedLargeHeader color={theme.success} fontSize="36px" fontWeight={535}>
-                              {formatCurrencyAmount({ amount: fiatValueOfFees, type: NumberType.FiatTokenPrice })}
+                              {formatCurrencyAmount({ amount: fiatValueOfTotalFees, type: NumberType.FiatTokenPrice })}
                             </ThemedText.DeprecatedLargeHeader>
                           ) : (
                             <ThemedText.DeprecatedLargeHeader color={theme.neutral1} fontSize="36px" fontWeight={535}>

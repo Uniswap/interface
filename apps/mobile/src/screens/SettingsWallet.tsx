@@ -50,7 +50,7 @@ export function SettingsWallet({
   const addressToAccount = useAccounts()
   const { defaultChainId } = useEnabledChains()
   const currentAccount = addressToAccount[address]
-  const ensName = useENS(defaultChainId, address)?.name
+  const ensName = useENS({ nameOrAddress: address, chainId: defaultChainId })?.name
   const { unitag } = useUnitagByAddress(address)
   const readonly = currentAccount?.type === AccountType.Readonly
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
@@ -159,7 +159,7 @@ const renderItemSeparator = (): JSX.Element => <Flex pt="$spacing8" />
 function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
   const { t } = useTranslation()
   const { defaultChainId } = useEnabledChains()
-  const ensName = useENS(defaultChainId, address)?.name
+  const ensName = useENS({ nameOrAddress: address, chainId: defaultChainId })?.name
   const { unitag } = useUnitagByAddress(address)
 
   const onPressEditProfile = (): void => {

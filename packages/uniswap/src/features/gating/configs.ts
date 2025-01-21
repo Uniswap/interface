@@ -17,6 +17,7 @@ export enum DynamicConfigs {
   UwuLink = 'uwulink_config',
   GasStrategies = 'gas_strategy',
   MainnetPrivateRpc = 'mainnet_private_rpc',
+  DatadogSessionSampleRate = 'datadog_session_sample_rate',
   DatadogIgnoredErrors = 'datadog_ignored_errors',
 
   // Web
@@ -47,6 +48,8 @@ export enum SwapConfigKey {
   MonSendMinGasAmount = 'monSendMinGasAmount',
   GenericL2SwapMinGasAmount = 'genericL2SwapMinGasAmount',
   GenericL2SendMinGasAmount = 'genericL2SendMinGasAmount',
+
+  LowBalanceWarningGasPercentage = 'lowBalanceWarningGasPercentage',
 }
 
 export enum NetworkRequestsConfigKey {
@@ -81,11 +84,17 @@ export enum DatadogIgnoredErrorsConfigKey {
   Errors = 'errors',
 }
 
+export enum DatadogSessionSampleRateKey {
+  Rate = 'rate',
+}
+
 export enum BlockedNftCollectionsConfigKey {
   BlocklistedCollections = 'blocklistedCollections',
 }
 
 export type DatadogIgnoredErrorsValType = Array<{ messageContains: string; sampleRate: number }>
+
+export type DatadogSessionSampleRateValType = number
 
 export type GasStrategyType = 'general' | 'swap'
 
@@ -133,6 +142,7 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.UwuLink]: UwuLinkConfigKey
   [DynamicConfigs.MainnetPrivateRpc]: MainnetPrivateRpcConfigKey
   [DynamicConfigs.DatadogIgnoredErrors]: DatadogIgnoredErrorsConfigKey
+  [DynamicConfigs.DatadogSessionSampleRate]: DatadogSessionSampleRateKey
 
   // Web
   [DynamicConfigs.QuickRouteChains]: QuickRouteChainsConfigKey

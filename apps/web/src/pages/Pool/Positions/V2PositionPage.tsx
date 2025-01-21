@@ -7,6 +7,7 @@ import { parseRestPosition } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { usePositionOwnerV2 } from 'hooks/usePositionOwner'
+import { useV2Pair } from 'hooks/useV2Pairs'
 import NotFound from 'pages/NotFound'
 import { HeaderButton } from 'pages/Pool/Positions/PositionPage'
 import { TextLoader } from 'pages/Pool/Positions/shared'
@@ -16,9 +17,10 @@ import { Helmet } from 'react-helmet-async/lib/index'
 import { Trans, useTranslation } from 'react-i18next'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
-import { useAppDispatch } from 'state/hooks'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
+import { usePairAdder } from 'state/user/hooks'
 import { Circle, DeprecatedButton, Flex, Main, Shine, Text, styled } from 'ui/src'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -95,6 +97,10 @@ function V2PositionPage() {
   const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
   const { t } = useTranslation()
 
+  const savedSerializedPairs = useAppSelector(({ user: { pairs } }) => pairs)
+  const [, pair] = useV2Pair(positionInfo?.currency0Amount.currency, positionInfo?.currency1Amount.currency)
+  const addPair = usePairAdder()
+
   usePendingLPTransactionsChangeListener(refetch)
 
   const { value: lpRedesignEnabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.LPRedesign)
@@ -163,6 +169,9 @@ function V2PositionPage() {
                 disabled={positionLoading}
                 emphasis="secondary"
                 onPress={() => {
+                  if (pair && chainId && pairAddress && !savedSerializedPairs[chainId]?.[pairAddress]) {
+                    addPair(pair)
+                  }
                   navigate('/migrate/v2')
                 }}
               >

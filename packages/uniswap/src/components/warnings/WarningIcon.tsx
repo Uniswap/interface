@@ -6,8 +6,6 @@ import {
   safetyLevelToWarningSeverity,
 } from 'uniswap/src/components/warnings/utils'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 interface Props {
   // TODO (WALL-4626): remove SafetyLevel entirely
@@ -26,11 +24,10 @@ export default function WarningIcon({
   heroIcon,
   ...rest
 }: Props & IconProps): JSX.Element | null {
-  const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
   const severityToUse = severity ?? safetyLevelToWarningSeverity(safetyLevel)
   const { color: defaultIconColor, backgroundColor } = getWarningIconColors(severityToUse)
   const color = strokeColorOverride ?? defaultIconColor
-  const Icon = getWarningIcon(severityToUse, tokenProtectionEnabled)
+  const Icon = getWarningIcon(severityToUse)
   const icon = Icon ? <Icon color={color} {...rest} /> : null
   return heroIcon ? (
     <Flex borderRadius="$rounded12" p="$spacing12" backgroundColor={backgroundColor}>

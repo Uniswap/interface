@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { LoaderButton } from 'components/Button/LoaderButton'
 import {
@@ -8,6 +10,7 @@ import { useIncreaseLiquidityTxContext } from 'components/IncreaseLiquidity/Incr
 import { DepositInputForm } from 'components/Liquidity/DepositInputForm'
 import { LiquidityModalDetailRows } from 'components/Liquidity/LiquidityModalDetailRows'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
+import { getDisplayedAmountsFromDependentAmount } from 'components/Liquidity/utils'
 import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
 import { useCanUnwrapCurrency, useCurrencyInfoWithUnwrapForTradingApi } from 'pages/Pool/Positions/create/utils'
 import { useMemo } from 'react'
@@ -36,9 +39,10 @@ export function IncreaseLiquidityForm() {
     deposit1Disabled,
     error,
   } = derivedIncreaseLiquidityInfo
-  const { position } = increaseLiquidityState
+  const { position, exactField } = increaseLiquidityState
 
   const { gasFeeEstimateUSD, txInfo, error: dataFetchingError, refetch } = useIncreaseLiquidityTxContext()
+  const { dependentAmount } = txInfo || {}
 
   if (!position) {
     throw new Error('AddLiquidityModal must have an initial state when opening')
@@ -47,17 +51,17 @@ export function IncreaseLiquidityForm() {
   const { currency0Amount: initialCurrency0Amount, currency1Amount: initialCurrency1Amount } = position
   const currency0Info = useCurrencyInfoWithUnwrapForTradingApi({
     currency: initialCurrency0Amount.currency,
-    shouldUnwrap: unwrapNativeCurrency,
+    shouldUnwrap: unwrapNativeCurrency && position.version !== ProtocolVersion.V4,
   })
   const currency1Info = useCurrencyInfoWithUnwrapForTradingApi({
     currency: initialCurrency1Amount.currency,
-    shouldUnwrap: unwrapNativeCurrency,
+    shouldUnwrap: unwrapNativeCurrency && position.version !== ProtocolVersion.V4,
   })
 
   const token0 = currency0Info?.currency
   const token1 = currency1Info?.currency
-  const canUnwrap0 = useCanUnwrapCurrency(initialCurrency0Amount.currency)
-  const canUnwrap1 = useCanUnwrapCurrency(initialCurrency1Amount.currency)
+  const canUnwrap0 = useCanUnwrapCurrency(initialCurrency0Amount.currency) && position.version !== ProtocolVersion.V4
+  const canUnwrap1 = useCanUnwrapCurrency(initialCurrency1Amount.currency) && position.version !== ProtocolVersion.V4
   const nativeCurrencyInfo = useNativeCurrencyInfo(position.chainId)
 
   const currency0Amount = useMemo(() => {
@@ -73,6 +77,20 @@ export function IncreaseLiquidityForm() {
     }
     return initialCurrency1Amount
   }, [unwrapNativeCurrency, canUnwrap1, currency1Info, initialCurrency1Amount])
+
+  const { displayFormattedAmounts, displayUSDAmounts } = useMemo(
+    () =>
+      getDisplayedAmountsFromDependentAmount({
+        token0,
+        token1,
+        dependentAmount,
+        exactField,
+        currencyAmounts,
+        currencyAmountsUSDValue,
+        formattedAmounts,
+      }),
+    [dependentAmount, exactField, currencyAmounts, formattedAmounts, currencyAmountsUSDValue, token0, token1],
+  )
 
   const handleUserInput = (field: PositionField, newValue: string) => {
     setIncreaseLiquidityState((prev) => ({
@@ -116,6 +134,10 @@ export function IncreaseLiquidityForm() {
     )
   }, [nativeCurrencyInfo, t, unwrapNativeCurrency, setUnwrapNativeCurrency])
 
+  const requestLoading = Boolean(
+    !dataFetchingError && !error && currencyAmounts?.TOKEN0 && currencyAmounts.TOKEN1 && !txInfo?.txRequest,
+  )
+
   return (
     <Flex gap="$gap24">
       <Flex gap="$gap24">
@@ -123,14 +145,16 @@ export function IncreaseLiquidityForm() {
         <DepositInputForm
           token0={token0}
           token1={token1}
-          formattedAmounts={formattedAmounts}
+          formattedAmounts={displayFormattedAmounts}
           currencyAmounts={currencyAmounts}
-          currencyAmountsUSDValue={currencyAmountsUSDValue}
+          currencyAmountsUSDValue={displayUSDAmounts}
           currencyBalances={currencyBalances}
           onUserInput={handleUserInput}
           onSetMax={handleOnSetMax}
           deposit0Disabled={deposit0Disabled}
           deposit1Disabled={deposit1Disabled}
+          amount0Loading={requestLoading && exactField === PositionField.TOKEN1} // check isRefetching instead
+          amount1Loading={requestLoading && exactField === PositionField.TOKEN0}
           token0UnderCardComponent={canUnwrap0 ? UnwrapNativeCurrencyToggle : undefined}
           token1UnderCardComponent={canUnwrap1 ? UnwrapNativeCurrencyToggle : undefined}
         />
@@ -144,9 +168,7 @@ export function IncreaseLiquidityForm() {
       <LoaderButton
         disabled={Boolean(error) || !txInfo?.txRequest}
         onPress={handleOnContinue}
-        loading={Boolean(
-          !dataFetchingError && !error && currencyAmounts?.TOKEN0 && currencyAmounts.TOKEN1 && !txInfo?.txRequest,
-        )}
+        loading={requestLoading}
         buttonKey="IncreaseLiquidity-continue"
       >
         <Text variant="buttonLabel1" color="$white">
