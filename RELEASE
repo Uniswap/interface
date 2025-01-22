@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmXWLumHqg4tACWDxukPYbD43ZRiNSky6uxg6zfM3G3abs`
-- CIDv1: `bafybeieigtoxfjlgwe4hrnvsbldxzylo2govlsrd36ipkcl3bembqwbybi`
+- CIDv0: `QmcUczsWCfUaERJpptB48Rbmnnzg1Jagkhsd1DryHJy4jq`
+- CIDv1: `bafybeigsbzkda6qv7qqund7okatflwxyy24dqdoatcyyooibzm6xawwooa`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeieigtoxfjlgwe4hrnvsbldxzylo2govlsrd36ipkcl3bembqwbybi.ipfs.dweb.link/
-- https://bafybeieigtoxfjlgwe4hrnvsbldxzylo2govlsrd36ipkcl3bembqwbybi.ipfs.cf-ipfs.com/
-- [ipfs://QmXWLumHqg4tACWDxukPYbD43ZRiNSky6uxg6zfM3G3abs/](ipfs://QmXWLumHqg4tACWDxukPYbD43ZRiNSky6uxg6zfM3G3abs/)
+- https://bafybeigsbzkda6qv7qqund7okatflwxyy24dqdoatcyyooibzm6xawwooa.ipfs.dweb.link/
+- https://bafybeigsbzkda6qv7qqund7okatflwxyy24dqdoatcyyooibzm6xawwooa.ipfs.cf-ipfs.com/
+- [ipfs://QmcUczsWCfUaERJpptB48Rbmnnzg1Jagkhsd1DryHJy4jq/](ipfs://QmcUczsWCfUaERJpptB48Rbmnnzg1Jagkhsd1DryHJy4jq/)
 
-## 5.67.0 (2025-01-22)
+### 5.67.1 (2025-01-22)
 
 
-### Features
+### Bug Fixes
 
-* **web:** add flag to experiment with 2s l2 polling interval [prod] (#15385) 2398242
+* **web:** 2 sec poll flag fix (#15399) 955a354
 
 
