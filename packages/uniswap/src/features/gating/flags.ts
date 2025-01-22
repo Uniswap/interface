@@ -14,6 +14,7 @@ export enum FeatureFlags {
   PortionFields,
   SharedSwapArbitrumUniswapXExperiment,
   TokenSelectorTrendingTokens,
+  TwoSecondSwapQuotePollingInterval,
   Unichain,
   UnichainPromo,
   UniswapX,

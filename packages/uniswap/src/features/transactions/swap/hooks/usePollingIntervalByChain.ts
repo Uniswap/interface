@@ -1,7 +1,8 @@
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isMainnetChainId } from 'uniswap/src/features/chains/utils'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
-import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export const AVERAGE_L1_BLOCK_TIME_MS = 12 * ONE_SECOND_MS
@@ -20,5 +21,8 @@ export function usePollingIntervalByChain(chainId?: UniverseChainId): number {
     AVERAGE_L2_BLOCK_TIME_MS,
   )
 
-  return isMainnetChainId(chainId) ? averageL1BlockTimeMs : averageL2BlockTimeMs
+  const enableTwoSecondInterval = useFeatureFlag(FeatureFlags.TwoSecondSwapQuotePollingInterval)
+  const l2PollingInterval = enableTwoSecondInterval ? 2 * ONE_SECOND_MS : averageL2BlockTimeMs
+
+  return isMainnetChainId(chainId) ? averageL1BlockTimeMs : l2PollingInterval
 }
