@@ -6,7 +6,7 @@ import Row, { RowBetween } from 'components/Row'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import TransactionConfirmationModal from 'components/TransactionConfirmationModal'
 import { useToken } from 'hooks/Tokens'
-import { Discord, Twitter } from 'pages/Landing/components/Icons'
+import { Discord, Github, Twitter } from 'pages/Landing/components/Icons'
 import { Wiggle } from 'pages/Landing/components/animations'
 import SimpleTable from 'pages/LaunchpadCreate/SimpleTable'
 import { LaunchpadOptions } from 'pages/LaunchpadCreate/launchpad-state'
@@ -450,12 +450,38 @@ export default function LaunchpadView({
         <ResponsiveRow align="stretch" gap="md">
           <DarkGrayCard flex="1">
             <Column gap="16px">
-              <ThemedText.MediumHeader>Links</ThemedText.MediumHeader>
+              <ThemedText.MediumHeader>Useful Links</ThemedText.MediumHeader>
               <Row marginBottom="22px" gap="8px" align="center">
-                <WebsiteLink href={options.tokenInfo.website}>
-                  <Globe size={12} />
-                  Website
-                </WebsiteLink>
+                {options.tokenInfo.website && (
+                  <WebsiteLink href={options.tokenInfo.website}>
+                    <Globe size={12} />
+                    Website
+                  </WebsiteLink>
+                )}
+                {options.tokenInfo.presentationLink && (
+                  <WebsiteLink href={options.tokenInfo.presentationLink}>
+                    <Globe size={12} />
+                    Pitch Deck
+                  </WebsiteLink>
+                )}
+                {options.tokenInfo.whitepaperLink && (
+                  <WebsiteLink href={options.tokenInfo.whitepaperLink}>
+                    <Globe size={12} />
+                    Whitepaper
+                  </WebsiteLink>
+                )}
+              </Row>
+            </Column>
+            <Column gap="16px">
+              <ThemedText.MediumHeader>Community</ThemedText.MediumHeader>
+              <Row marginBottom="22px" gap="8px" align="center">
+                {options.tokenInfo.github && (
+                  <SocialIcon $hoverColor="#00C32B">
+                    <ExternalLink href={options.tokenInfo.github}>
+                      <Github size="32px" fill="inherit" />
+                    </ExternalLink>
+                  </SocialIcon>
+                )}
                 {options.tokenInfo.twitter && (
                   <SocialIcon $hoverColor="#20BAFF">
                     <ExternalLink href={options.tokenInfo.twitter}>
@@ -495,6 +521,13 @@ export default function LaunchpadView({
                   <SocialIcon $hoverColor="#5F51FF">
                     <ExternalLink href={options.tokenInfo.youtube}>
                       <Youtube size="32px" fill="inherit" />
+                    </ExternalLink>
+                  </SocialIcon>
+                )}
+                {options.tokenInfo.reddit && (
+                  <SocialIcon $hoverColor="#5F51FF">
+                    <ExternalLink href={options.tokenInfo.reddit}>
+                      <Square size="32px" fill="inherit" />
                     </ExternalLink>
                   </SocialIcon>
                 )}

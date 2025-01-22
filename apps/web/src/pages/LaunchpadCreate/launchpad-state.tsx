@@ -26,13 +26,17 @@ export interface ProjectTokenInfo {
   description: string
   auditLinks: string
   website: string
+  whitepaperLink: string
+  presentationLink: string
 
+  github: string
   twitter: string
   telegram: string
   discord: string
   medium: string
-  youtube: string
   farcaster: string
+  youtube: string
+  reddit: string
 
   tokenomics: TokenomicsTableValues[]
   teamMembers: TeamTableValues[]
@@ -47,6 +51,7 @@ export interface LaunchpadOptions {
     startDate: string
     durationDays: string
     sellPrice: string
+    releaseIntervalDays: string
     releaseDurationDays: string
     cliffDurationDays: string
     initialReleaseRate: string
@@ -106,12 +111,16 @@ const defaultState: LaunchpadOptions = {
     description: '',
     auditLinks: '',
     website: '',
+    whitepaperLink: '',
+    presentationLink: '',
+    github: '',
     twitter: '',
     telegram: '',
     discord: '',
     medium: '',
     youtube: '',
     farcaster: '',
+    reddit: '',
     tokenomics: [],
     teamMembers: [],
   },
@@ -121,9 +130,10 @@ const defaultState: LaunchpadOptions = {
     startDate: '',
     durationDays: '',
     sellPrice: '',
-    releaseDurationDays: '',
+    releaseIntervalDays: '1',
+    releaseDurationDays: '0',
     cliffDurationDays: '0',
-    initialReleaseRate: '',
+    initialReleaseRate: '100',
     cliffReleaseRate: '0',
     hardCapAsQuote: '',
     softCapAsQuote: '',
@@ -212,15 +222,24 @@ function _checkOptions(
   invariant(info.logoUrl.length > 0, 'tokenInfo.logoUrl | Enter logo url')
   invariant(isValidUrl(info.logoUrl), 'tokenInfo.logoUrl | Invalid logo url')
   invariant(info.description.length > 0, 'tokenInfo.description | Enter description')
-  invariant(info.website.length > 0, 'tokenInfo.website | Enter website url')
-  invariant(isValidUrl(info.website), 'tokenInfo.website | Invalid website url')
 
+  invariant(info.website.length == 0 || isValidUrl(info.website), 'tokenInfo.website | Invalid website url')
+  invariant(
+    info.whitepaperLink.length == 0 || isValidUrl(info.whitepaperLink),
+    'tokenInfo.whitepaperLink | Invalid url'
+  )
+  invariant(
+    info.presentationLink.length == 0 || isValidUrl(info.presentationLink),
+    'tokenInfo.presentationLink | Invalid url'
+  )
+  invariant(info.github.length == 0 || isValidUrl(info.github), 'tokenInfo.github | Invalid url')
   invariant(info.twitter.length == 0 || isValidUrl(info.twitter), 'tokenInfo.twitter | Invalid Twitter url')
   invariant(info.telegram.length == 0 || isValidUrl(info.telegram), 'tokenInfo.telegram | Invalid Telegram url')
   invariant(info.discord.length == 0 || isValidUrl(info.discord), 'tokenInfo.discord | Invalid Discord url')
+  invariant(info.farcaster.length == 0 || isValidUrl(info.farcaster), 'tokenInfo.farcaster | Invalid Farcaster url')
   invariant(info.medium.length == 0 || isValidUrl(info.medium), 'tokenInfo.medium | Invalid Medium url')
   invariant(info.youtube.length == 0 || isValidUrl(info.youtube), 'tokenInfo.youtube | Invalid Youtube url')
-  invariant(info.farcaster.length == 0 || isValidUrl(info.farcaster), 'tokenInfo.farcaster | Invalid Farcaster url')
+  invariant(info.reddit.length == 0 || isValidUrl(info.reddit), 'tokenInfo.reddit | Invalid url')
 
   invariant(info.tokenomics.length > 0, 'tokenInfo.tokenomics | You should add at least 1 tokenomics item')
 

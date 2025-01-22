@@ -30,6 +30,7 @@ import AddTeamMemberModal from './AddTeamMemberModal'
 import AddTokenomicsModal from './AddTokenomicsModal'
 import SimpleTable from './SimpleTable'
 import TextareaPanel from './TextareaPanel'
+import TokenDistributionModal, { TokenDistributionParams } from './TokenDistributionModal'
 import {
   LaunchpadValidationResult,
   TeamTableValues,
@@ -176,9 +177,6 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
     info.cliffInDays.toString(),
     info.vestingInDays.toString(),
   ])
-  const onAddTokenomics = () => {
-    setTokenomicsModalOpened(true)
-  }
   const addTokenomics = (tokenomicsInfo: TokenomicsTableValues) => {
     setOptions((oldVal) => {
       const newArray = [...oldVal.tokenInfo.tokenomics, tokenomicsInfo]
@@ -207,9 +205,6 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
     teamMember.position,
   ])
   const [teamModalOpened, setTeamModalOpened] = useState(false)
-  const onAddTeamMember = () => {
-    setTeamModalOpened(true)
-  }
   const addTeamMember = (tokenomicsInfo: TeamTableValues) => {
     setOptions((oldVal) => {
       const newArray = [...oldVal.tokenInfo.teamMembers, tokenomicsInfo]
@@ -226,6 +221,36 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
     })
     setTeamModalOpened(false)
   }
+  // ------
+
+  // ----- Token Distribution -----
+  const [tokenDistModalOpened, setTokenDistModalOpened] = useState(false)
+  const tokenDistHeaders = ['Unlocked at TGE', 'Cliff', 'Unlocked at Cliff', 'Vesting']
+  const tokenDistData = [
+    [
+      options.tokenSale.initialReleaseRate + '%',
+      options.tokenSale.cliffDurationDays + ' days',
+      options.tokenSale.cliffReleaseRate + '%',
+      options.tokenSale.releaseDurationDays + ' days',
+    ],
+  ]
+  const setTokenDistribution = (data: TokenDistributionParams) => {
+    options.tokenSale.initialReleaseRate = data.initialReleaseRate
+    options.tokenSale.releaseDurationDays = data.releaseDurationDays
+    options.tokenSale.releaseIntervalDays = data.releaseIntervalDays
+    options.tokenSale.cliffDurationDays = data.cliffDurationDays
+    options.tokenSale.cliffReleaseRate = data.cliffReleaseRate
+    setTokenDistModalOpened(false)
+  }
+  const initialTokenDistParams = useMemo(() => {
+    return {
+      initialReleaseRate: options.tokenSale.initialReleaseRate,
+      releaseDurationDays: options.tokenSale.releaseDurationDays,
+      releaseIntervalDays: options.tokenSale.releaseIntervalDays,
+      cliffDurationDays: options.tokenSale.cliffDurationDays,
+      cliffReleaseRate: options.tokenSale.cliffReleaseRate,
+    }
+  }, [options])
   // ------
 
   // CELO / UBE / USDT / USDC / cUSD / GLOUSD
@@ -452,8 +477,40 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
               errorMessage={validationError?.message}
             />
           </Row>
+          <Row gap="10px" marginBottom="12px">
+            <Column flex="1">
+              <TextInputPanel
+                label="Whitepaper"
+                placeholder="Whitepaper link"
+                value={options.tokenInfo.whitepaperLink}
+                onChange={(val) => setOptionsProp('tokenInfo.whitepaperLink', val)}
+                isError={isError('tokenInfo.whitepaperLink')}
+                errorMessage={validationError?.message}
+              />
+            </Column>
+            <Column flex="1">
+              <TextInputPanel
+                label="Pitch Deck / Presentation"
+                placeholder="Pitch Deck / Presentation link"
+                value={options.tokenInfo.presentationLink}
+                onChange={(val) => setOptionsProp('tokenInfo.presentationLink', val)}
+                isError={isError('tokenInfo.presentationLink')}
+                errorMessage={validationError?.message}
+              />
+            </Column>
+          </Row>
 
           <Row gap="10px" marginBottom="12px">
+            <Column flex="1">
+              <TextInputPanel
+                label="Github"
+                placeholder="Github page link"
+                value={options.tokenInfo.github}
+                onChange={(val) => setOptionsProp('tokenInfo.github', val)}
+                isError={isError('tokenInfo.github')}
+                errorMessage={validationError?.message}
+              />
+            </Column>
             <Column flex="1">
               <TextInputPanel
                 label="Twitter/X"
@@ -464,6 +521,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 errorMessage={validationError?.message}
               />
             </Column>
+          </Row>
+          <Row gap="10px" marginBottom="12px">
             <Column flex="1">
               <TextInputPanel
                 label="Telegram"
@@ -474,8 +533,6 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 errorMessage={validationError?.message}
               />
             </Column>
-          </Row>
-          <Row gap="10px" marginBottom="12px">
             <Column flex="1">
               <TextInputPanel
                 label="Discord"
@@ -483,6 +540,18 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 value={options.tokenInfo.discord}
                 onChange={(val) => setOptionsProp('tokenInfo.discord', val)}
                 isError={isError('tokenInfo.discord')}
+                errorMessage={validationError?.message}
+              />
+            </Column>
+          </Row>
+          <Row gap="10px" marginBottom="12px">
+            <Column flex="1">
+              <TextInputPanel
+                label="Farcaster"
+                placeholder="Farcaster link"
+                value={options.tokenInfo.farcaster}
+                onChange={(val) => setOptionsProp('tokenInfo.farcaster', val)}
+                isError={isError('tokenInfo.farcaster')}
                 errorMessage={validationError?.message}
               />
             </Column>
@@ -510,11 +579,11 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
             </Column>
             <Column flex="1">
               <TextInputPanel
-                label="Farcaster"
-                placeholder="Farcaster link"
-                value={options.tokenInfo.farcaster}
-                onChange={(val) => setOptionsProp('tokenInfo.farcaster', val)}
-                isError={isError('tokenInfo.farcaster')}
+                label="Reddit"
+                placeholder="Reddit page link"
+                value={options.tokenInfo.reddit}
+                onChange={(val) => setOptionsProp('tokenInfo.reddit', val)}
+                isError={isError('tokenInfo.reddit')}
                 errorMessage={validationError?.message}
               />
             </Column>
@@ -531,7 +600,7 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 width="fit-content"
                 style={{ borderRadius: '12px' }}
                 padding="1px 4px"
-                onClick={onAddTokenomics}
+                onClick={() => setTokenomicsModalOpened(true)}
               >
                 <ThemedText.DeprecatedMain color={theme.white}>
                   <Trans>Add Tokenomics Entry</Trans>
@@ -561,7 +630,7 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 width="fit-content"
                 style={{ borderRadius: '12px' }}
                 padding="1px 4px"
-                onClick={onAddTeamMember}
+                onClick={() => setTeamModalOpened(true)}
               >
                 <ThemedText.DeprecatedMain color={theme.white}>
                   <Trans>Add Team member</Trans>
@@ -654,28 +723,36 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
               />
             </Column>
           </Row>
-          <Row gap="10px" marginBottom="12px">
+          <Row marginBottom="8px" marginTop="12px" marginLeft="4px">
             <Column flex="1">
-              <NumericalInputPanel
-                label="Unlocked at TGE"
-                placeholder="Percentage of Unlocked Tokens on TGE"
-                value={options.tokenSale.initialReleaseRate}
-                onChange={(val) => setOptionsProp('tokenSale.initialReleaseRate', val)}
-                isError={isError('tokenSale.initialReleaseRate')}
-                errorMessage={validationError?.message}
-              />
+              <ThemedText.BodyPrimary>Token Distribution</ThemedText.BodyPrimary>
             </Column>
-            <Column flex="1">
-              <NumericalInputPanel
-                label="Vesting Duration"
-                placeholder="Vesting Duration in days"
-                value={options.tokenSale.releaseDurationDays}
-                onChange={(val) => setOptionsProp('tokenSale.releaseDurationDays', val)}
-                isError={isError('tokenSale.releaseDurationDays')}
-                errorMessage={validationError?.message}
-              />
+            <Column>
+              <SmallButtonPrimary
+                data-testid="add-team-button"
+                disabled={false}
+                width="fit-content"
+                style={{ borderRadius: '12px' }}
+                padding="1px 4px"
+                onClick={() => setTokenDistModalOpened(true)}
+              >
+                <ThemedText.DeprecatedMain color={theme.white}>
+                  <Trans>Set Distribution Params</Trans>
+                </ThemedText.DeprecatedMain>
+              </SmallButtonPrimary>
             </Column>
           </Row>
+          <TableWrapper data-testid="team-table">
+            <SimpleTable headers={tokenDistHeaders} data={tokenDistData} />
+          </TableWrapper>
+          {tokenDistModalOpened && (
+            <TokenDistributionModal
+              isOpen={true}
+              initialParams={initialTokenDistParams}
+              onDismiss={() => setTokenDistModalOpened(false)}
+              onSubmit={setTokenDistribution}
+            />
+          )}
 
           <Divider />
 

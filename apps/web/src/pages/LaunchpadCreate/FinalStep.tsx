@@ -305,7 +305,7 @@ export default function FinalStep({ onBack }: { onBack: () => void }) {
                 )}
               </ButtonConfirmed>
             ) : (
-              <ButtonPrimary onClick={onDeploy}>Create Launchpad</ButtonPrimary>
+              <ButtonPrimary onClick={onDeploy}>Create Launch</ButtonPrimary>
             )}
           </Row>
         </Column>
