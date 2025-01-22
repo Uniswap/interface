@@ -13,7 +13,6 @@ import { useIsPoolOutOfSync } from 'hooks/useIsPoolOutOfSync'
 import { PoolState, usePool } from 'hooks/usePools'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
 import { PairState, useV2Pair } from 'hooks/useV2Pairs'
-import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import {
@@ -53,6 +52,7 @@ import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { getParsedChainId } from 'utils/chainParams'
 
@@ -350,7 +350,8 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
   const { protocolVersion, address, token0, token1, exactField, exactAmounts, deposit0Disabled, deposit1Disabled } =
     state
 
-  const [token0Balance, token1Balance] = useCurrencyBalances(address, [token0, token1])
+  const { balance: token0Balance } = useOnChainCurrencyBalance(token0, address)
+  const { balance: token1Balance } = useOnChainCurrencyBalance(token1, address)
 
   const [independentToken, dependentToken] = exactField === PositionField.TOKEN0 ? [token0, token1] : [token1, token0]
   const independentAmount = tryParseCurrencyAmount(exactAmounts[exactField], independentToken)
