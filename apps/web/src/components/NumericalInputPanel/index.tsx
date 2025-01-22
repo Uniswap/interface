@@ -1,15 +1,25 @@
+import { MouseoverTooltip } from 'components/Tooltip'
 import { Trans } from 'i18n'
-// eslint-disable-next-line no-restricted-imports
-import { t } from 'i18n'
-import { ReactNode } from 'react'
+import { ChangeEvent, ReactNode, useCallback } from 'react'
+import { Info } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
+import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
-import { flexColumnNoWrap } from 'theme/styles'
-import { Input as NumericalInput } from '../NumericalInput'
-
+import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 
+const StyledTokenName = styled.span<{ active?: boolean }>`
+  ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
+  font-size: 20px;
+  white-space: nowrap;
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    font-size: 16px;
+  }
+`
+
+// Mevcut stil tanımlamaları
 const InputPanel = styled.div`
   ${flexColumnNoWrap};
   position: relative;
@@ -35,31 +45,26 @@ const InputContainer = styled.div`
   padding: 1rem;
 `
 
-const ErrorMessage = styled(ThemedText.BodySmall)`
-  color: ${({ theme }) => theme.critical};
-  margin-top: 8px;
-  margin-left: 4px;
+// index.tsx'ten alınan ve düzenlenen stiller
+const InputRow = styled.div<{ hasPostfix?: boolean }>`
+  ${flexRowNoWrap};
+  align-items: center;
+  padding: ${({ hasPostfix }) => (hasPostfix ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
 `
 
-const StyledInput = styled(NumericalInput)`
+const StyledInput = styled.input<{ error?: boolean }>`
+  font-size: 1.25rem;
+  outline: none;
+  border: none;
+  flex: 1 1 auto;
   background-color: ${({ theme }) => theme.surface1};
   transition: color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')};
   color: ${({ error, theme }) => (error ? theme.critical : theme.neutral1)};
-  font-size: 1.25rem;
-  font-weight: 535;
-  text-align: left;
-  width: 100%;
   overflow: hidden;
-
-  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
-    font-size: 16px;
-  `};
-
-  ::placeholder {
-    color: ${({ theme }) => theme.neutral3};
-  }
-
-  padding: 0px;
+  text-overflow: ellipsis;
+  font-weight: 535;
+  width: 100%;
+  padding: 0;
   -webkit-appearance: textfield;
 
   ::-webkit-search-decoration {
@@ -70,6 +75,30 @@ const StyledInput = styled(NumericalInput)`
   ::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
+
+  ::placeholder {
+    color: ${({ theme }) => theme.neutral3};
+  }
+`
+
+const Postfix = styled(StyledTokenName).attrs({ active: true })`
+  color: ${({ theme }) => theme.neutral2};
+  user-select: none;
+`
+
+const ErrorMessage = styled(ThemedText.BodySmall)`
+  color: ${({ theme }) => theme.critical};
+  margin-top: 8px;
+  margin-left: 4px;
+`
+
+const LabelRow = styled.div`
+  ${flexRowNoWrap};
+  align-items: center;
+  color: ${({ theme }) => theme.neutral2};
+  font-size: 0.75rem;
+  line-height: 1rem;
+  padding: 0.75rem 1rem 0 1rem;
 `
 
 export default function NumericalInputPanel({
@@ -81,6 +110,9 @@ export default function NumericalInputPanel({
   onChange,
   isError = false,
   errorMessage,
+  postfix,
+  showInfo = false,
+  infoTooltip = '',
 }: {
   id?: string
   className?: string
@@ -90,31 +122,61 @@ export default function NumericalInputPanel({
   onChange: (value: string) => void
   isError?: boolean
   errorMessage?: string
+  postfix?: string
+  showInfo?: boolean
+  infoTooltip?: string
 }) {
   const theme = useTheme()
+
+  const handleInput = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const input = event.target.value
+      onChange(input)
+    },
+    [onChange]
+  )
 
   return (
     <InputPanel id={id}>
       <ContainerRow error={isError}>
         <InputContainer>
           <AutoColumn gap="md">
-            <RowBetween>
-              <ThemedText.DeprecatedBlack color={theme.neutral2} fontWeight={535} fontSize={14}>
-                {label ?? <Trans>Recipient</Trans>}
-              </ThemedText.DeprecatedBlack>
-            </RowBetween>
-            <StyledInput
-              className={className}
-              type="text"
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck="false"
-              placeholder={placeholder ?? t`Enter the value`}
-              error={isError}
-              onUserInput={onChange}
-              value={value}
-            />
+            <LabelRow>
+              <RowBetween>
+                <ThemedText.DeprecatedBlack color={theme.neutral2} fontWeight={535} fontSize={14}>
+                  {label ?? <Trans>Input</Trans>}
+                  {showInfo && infoTooltip && (
+                    <MouseoverTooltip text={infoTooltip} placement="top">
+                      <Info
+                        size={15}
+                        // color="#6C5DD3"
+                        style={{
+                          marginLeft: '4px',
+                          marginBottom: '4px',
+                          verticalAlign: 'middle',
+                          cursor: 'pointer',
+                        }}
+                      />
+                    </MouseoverTooltip>
+                  )}
+                </ThemedText.DeprecatedBlack>
+              </RowBetween>
+            </LabelRow>
+            <InputRow hasPostfix={!!postfix}>
+              <StyledInput
+                className={className}
+                type="number"
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck="false"
+                placeholder={placeholder ?? '0.0'}
+                error={isError}
+                onChange={handleInput}
+                value={value}
+              />
+              {postfix && <Postfix>{postfix}</Postfix>}
+            </InputRow>
           </AutoColumn>
         </InputContainer>
       </ContainerRow>
