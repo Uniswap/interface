@@ -252,6 +252,12 @@ const LaunchpadInfoTable = ({
           )}
         </TD>
       </TR>
+      <TR>
+        <TD>
+          <ThemedText.BodyPrimary color="neutral2">Token Distribution</ThemedText.BodyPrimary>
+        </TD>
+        <TD></TD>
+      </TR>
     </SimpleTable>
   ) : (
     <SimpleTable>

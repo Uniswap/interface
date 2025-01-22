@@ -231,23 +231,33 @@ function UbeStats() {
     <Body1
       style={{
         backgroundColor: 'rgba(255, 255, 255, 0.1)',
-        padding: '36px',
+        padding: '24px',
         borderRadius: '12px',
         width: '100%',
-        marginBottom: '32px',
-        fontSize: '24px',
+        fontSize: '18px',
         opacity: 0.8,
+        gap: '10px',
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
-      <div style={{ marginBottom: '10px', display: 'flex', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div>UBE Price:</div> <div>{formatNumber({ input: data?.ubePrice ?? 0, type: NumberType.FiatTokenPrice })}</div>
       </div>
-      <div style={{ marginBottom: '10px', display: 'flex', justifyContent: 'space-between' }}>
-        <div>Market Cap:</div>{' '}
-        <div>{formatNumber({ input: data?.ubeMarketCap ?? 0, type: NumberType.FiatTokenStats })}</div>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div>Total Supply:</div>
+        <div>{formatNumber({ input: data?.ubeTotalSupply ?? 0, type: NumberType.TokenNonTx })}</div>
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div>FDV:</div> <div>{formatNumber({ input: data?.UbeFdv ?? 0, type: NumberType.FiatTokenStats })}</div>
+        <div>FDV:</div> <div>{formatNumber({ input: data?.ubeFdv ?? 0, type: NumberType.FiatTokenStats })}</div>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div>Circulating Supply:</div>
+        <div>{formatNumber({ input: data?.ubeCirculatingSupply ?? 0, type: NumberType.TokenNonTx })}</div>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div>Market Cap:</div>{' '}
+        <div>{formatNumber({ input: data?.ubeMarketCap ?? 0, type: NumberType.FiatTokenStats })}</div>
       </div>
     </Body1>
   )
@@ -281,7 +291,7 @@ function Cards({ inView }: { inView: boolean }) {
       <LeftTop>
         <StatCard
           title={t`TVL`}
-          value={formatNumber({ input: data?.totalTvl ?? 0, type: NumberType.FiatTokenStats })}
+          value={formatNumber({ input: data?.totalTvl ?? 0, type: NumberType.TokenNonTx })}
           delay={0}
           inView={inView}
           prefix="$"
@@ -290,7 +300,7 @@ function Cards({ inView }: { inView: boolean }) {
       <RightTop>
         <StatCard
           title={t`Volume (24h)`}
-          value={formatNumber({ input: data?.volume24h ?? 0, type: NumberType.FiatTokenStats })}
+          value={formatNumber({ input: data?.volume24h ?? 0, type: NumberType.TokenNonTx })}
           delay={0.2}
           inView={inView}
           prefix="$"
@@ -307,7 +317,7 @@ function Cards({ inView }: { inView: boolean }) {
       <RightBottom>
         <StatCard
           title={t`Volume To Date`}
-          value={formatNumber({ input: data?.totalVolume ?? 0, type: NumberType.FiatTokenStats })}
+          value={formatNumber({ input: data?.totalVolume ?? 0, type: NumberType.TokenNonTx })}
           delay={0.6}
           inView={inView}
           prefix="$"
@@ -325,24 +335,22 @@ export function Stats() {
   return (
     <Container>
       <SectionLayout ref={ref}>
-        {/* Masaüstü görünümü */}
         <HideWhenSmall>
           <Layout>
             <Left>
-              <Box direction="column" justify-content="space-between" height="100%">
-                <H2>
+              <Box direction="column" justify="space-between" height="100%">
+                {/* <H2>
                   <LogoContainer>
                     <img src="/images/192x192_App_Icon.png" alt="ubeswap" />
                     <Trans style={{ marginBottom: '50px' }}> Ubeswap</Trans>
                   </LogoContainer>
-                </H2>
-                <Box bottom="0" position="absolute" direction="column" maxWidth="480px" gap="24px">
-                  <UbeStats />
-                  <Body1>
-                    <ProtocolDescription />
-                  </Body1>
-                  <LearnMore />
-                </Box>
+                </H2> */}
+
+                <UbeStats />
+                <Body1>
+                  <ProtocolDescription />
+                </Body1>
+                <LearnMore />
               </Box>
             </Left>
             <Right>

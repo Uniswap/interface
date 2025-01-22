@@ -203,7 +203,7 @@ export function GainerTokenRow({
       <PortfolioLogo currencies={[currency]} chainId={ChainId.CELO} size={screenIsSmall ? '32px' : '32px'} />
       <Box justify="space-between" gap="16px">
         <Box width="auto" gap="8px" align="center" overflow="hidden">
-          <TokenName>{currency?.name}</TokenName>
+          {/* <TokenName>{currency?.name}</TokenName> */}
           <TokenTicker>{currency?.symbol}</TokenTicker>
         </Box>
         <Box width="auto" gap="8px" align="center">
@@ -280,7 +280,7 @@ export function EarnerTokenRow({ poolData }: { poolData: PoolData }) {
       />
       <Box justify="space-between" gap="16px" style={{ width: '100%' }}>
         <Box width="auto" gap="8px" align="center" overflow="hidden">
-          <TokenName>{`${token0?.symbol}-${token1?.symbol} Farm (v${poolData.protocolVersion})`}</TokenName>
+          <TokenName>{`${token0?.symbol}-${token1?.symbol} Farm`}</TokenName>
         </Box>
         <Box width="auto" gap="8px" align="center" style={{ flexShrink: 0, whiteSpace: 'nowrap' }}>
           <TokenPrice>

@@ -54,7 +54,7 @@ export const Body1 = styled.p`
   font-feature-settings: 'ss07' on;
   /* Body/1 */
   font-family: Basel;
-  font-size: 18px;
+  font-size: 20px;
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 133.333% */

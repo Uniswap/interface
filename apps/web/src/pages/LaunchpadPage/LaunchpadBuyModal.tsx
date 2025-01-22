@@ -234,7 +234,7 @@ export default function LaunchpadBuyModal({
                 <AutoColumn gap="8px" style={{ padding: '0 16px' }}>
                   <RowBetween align="center">
                     <Text fontWeight={800} fontSize={14} color={theme.text1}>
-                      Converted / Max:
+                      Bought / Max:
                     </Text>
                     <Text fontWeight={800} fontSize={14} color={theme.text1}>
                       {convertedAmountText}

@@ -60,7 +60,7 @@ const Container = styled.div<{ live?: boolean }>`
   border-radius: 20px;
   width: 100%;
   height: 100%;
-  max-height: 230px;
+  max-height: 200px;
   padding: 32px;
 
   // Live mod için yeşil tint, normal mod için surface2 rengi

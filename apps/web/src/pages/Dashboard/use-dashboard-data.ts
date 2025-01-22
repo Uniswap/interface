@@ -2,8 +2,10 @@ import { useQuery } from '@tanstack/react-query'
 
 export interface DashboardData {
   ubePrice: number
+  ubeCirculatingSupply: number
   ubeMarketCap: number
-  UbeFdv: number
+  ubeTotalSupply: number
+  ubeFdv: number
   totalTvl: number
   volume24h: number
   totalVolume: number

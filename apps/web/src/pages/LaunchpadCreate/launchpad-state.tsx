@@ -182,7 +182,7 @@ const hourMs = hourSeconds * 1000
 const daySeconds = hourSeconds //24 * hourSeconds;
 const dayMs = daySeconds * 1000
 
-const MIN_START_DELAY_DAY = 0
+//const MIN_START_DELAY_DAY = 0
 const MAX_START_DELAY_DAY = 10
 const MIN_LAUNCHPAD_DURATION_DAY = 0
 const MAX_LAUNCHPAD_DURATION_DAY = 7
