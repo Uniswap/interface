@@ -32,6 +32,8 @@ export const CreatePositionContext = React.createContext<CreatePositionContextTy
     wishFeeData: DEFAULT_POSITION_STATE.fee,
   },
   setDynamicFeeTierSpeedbumpData: () => undefined,
+  currentTransactionStep: undefined,
+  setCurrentTransactionStep: () => undefined,
 })
 
 export const useCreatePositionContext = () => {

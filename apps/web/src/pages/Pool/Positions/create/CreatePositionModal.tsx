@@ -50,6 +50,8 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
   const {
     positionState: { fee, hook },
     derivedPositionInfo,
+    currentTransactionStep,
+    setCurrentTransactionStep,
   } = useCreatePositionContext()
   const {
     derivedPriceRangeInfo,
@@ -75,7 +77,6 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
   const versionLabel = getProtocolVersionLabel(protocolVersion)
 
   const [steps, setSteps] = useState<TransactionStep[]>([])
-  const [currentStep, setCurrentStep] = useState<{ step: TransactionStep; accepted: boolean } | undefined>()
   const dispatch = useDispatch()
   const { txInfo, gasFeeEstimateUSD, error, refetch } = useCreateTxContext()
   const account = useAccountMeta()
@@ -85,12 +86,12 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
   const trace = useTrace()
 
   const onFailure = () => {
-    setCurrentStep(undefined)
+    setCurrentTransactionStep(undefined)
   }
 
   const onSuccess = useCallback(() => {
     setSteps([])
-    setCurrentStep(undefined)
+    setCurrentTransactionStep(undefined)
     onClose()
     navigate('/positions')
   }, [onClose, navigate])
@@ -122,7 +123,7 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
         startChainId,
         account,
         liquidityTxContext: txInfo,
-        setCurrentStep,
+        setCurrentStep: setCurrentTransactionStep,
         setSteps,
         onSuccess,
         onFailure,
@@ -299,8 +300,8 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
           {error && <TradingAPIError refetch={refetch} />}
           <PoolOutOfSyncError />
         </Flex>
-        {currentStep && steps.length > 1 ? (
-          <ProgressIndicator steps={steps} currentStep={currentStep} />
+        {currentTransactionStep && steps.length > 1 ? (
+          <ProgressIndicator steps={steps} currentStep={currentTransactionStep} />
         ) : (
           <>
             <Separator mx="$padding12" />
@@ -327,7 +328,7 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
                 }}
               />
             </Flex>
-            {currentStep ? (
+            {currentTransactionStep ? (
               <LoaderButton disabled={true} loading={true} buttonKey="create-position-confirm">
                 <Text variant="buttonLabel1" color="$white">
                   <Trans i18nKey="common.confirmWallet" />

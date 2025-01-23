@@ -21,6 +21,7 @@ import {
   LiquidityTransactionType,
 } from 'uniswap/src/features/transactions/liquidity/types'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -37,7 +38,7 @@ const IncreaseLiquidityTxContext = createContext<IncreasePositionContextType | u
 
 export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildren): JSX.Element {
   const positionInfo = useModalLiquidityInitialState()
-  const { derivedIncreaseLiquidityInfo, increaseLiquidityState } = useIncreaseLiquidityContext()
+  const { derivedIncreaseLiquidityInfo, increaseLiquidityState, currentTransactionStep } = useIncreaseLiquidityContext()
   const { customDeadline, customSlippageTolerance } = useTransactionSettingsContext()
 
   const { currencyAmounts, error } = derivedIncreaseLiquidityInfo
@@ -154,6 +155,10 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     }
   }, [account, positionInfo, currencyAmounts, approvalsNeeded, customSlippageTolerance, exactField])
 
+  const isUserCommittedToIncrease =
+    currentTransactionStep?.step.type === TransactionStepType.IncreasePositionTransaction ||
+    currentTransactionStep?.step.type === TransactionStepType.IncreasePositionTransactionAsync
+
   const {
     data: increaseCalldata,
     isLoading: isCalldataLoading,
@@ -163,7 +168,12 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     params: increaseCalldataQueryParams,
     deadlineInMinutes: customDeadline,
     refetchInterval: 5 * ONE_SECOND_MS,
-    enabled: !error && !approvalLoading && !approvalError && Boolean(increaseCalldataQueryParams),
+    enabled:
+      !isUserCommittedToIncrease &&
+      !error &&
+      !approvalLoading &&
+      !approvalError &&
+      Boolean(increaseCalldataQueryParams),
   })
   const { increase, gasFee: actualGasFee, dependentAmount } = increaseCalldata || {}
 

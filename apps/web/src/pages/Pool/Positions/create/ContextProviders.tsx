@@ -37,6 +37,7 @@ import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
@@ -49,6 +50,9 @@ export function CreatePositionContextProvider({
 }) {
   const [positionState, setPositionState] = useState<PositionState>({ ...DEFAULT_POSITION_STATE, ...initialState })
   const [step, setStep] = useState<PositionFlowStep>(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
+  const [currentTransactionStep, setCurrentTransactionStep] = useState<
+    { step: TransactionStep; accepted: boolean } | undefined
+  >()
   const derivedPositionInfo = useDerivedPositionInfo(positionState)
   const [feeTierSearchModalOpen, setFeeTierSearchModalOpen] = useState(false)
   const [dynamicFeeTierSpeedbumpData, setDynamicFeeTierSpeedbumpData] = useState<DynamicFeeTierSpeedbumpData>({
@@ -74,6 +78,8 @@ export function CreatePositionContextProvider({
         setPositionState,
         derivedPositionInfo,
         feeTierSearchModalOpen,
+        currentTransactionStep,
+        setCurrentTransactionStep,
         setFeeTierSearchModalOpen,
         dynamicFeeTierSpeedbumpData,
         setDynamicFeeTierSpeedbumpData,
@@ -146,7 +152,7 @@ export function DepositContextProvider({ children }: { children: React.ReactNode
 
 export function CreateTxContextProvider({ children }: { children: React.ReactNode }) {
   const account = useAccountMeta()
-  const { derivedPositionInfo, positionState } = useCreatePositionContext()
+  const { derivedPositionInfo, positionState, currentTransactionStep } = useCreatePositionContext()
   const { derivedDepositInfo, depositState } = useDepositContext()
   const { priceRangeState, derivedPriceRangeInfo } = usePriceRangeContext()
   const swapSettings = useTransactionSettingsContext()
@@ -214,6 +220,11 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     priceRangeState,
     depositState.exactField,
   ])
+
+  const isUserCommittedToCreate =
+    currentTransactionStep?.step.type === TransactionStepType.IncreasePositionTransaction ||
+    currentTransactionStep?.step.type === TransactionStepType.IncreasePositionTransactionAsync
+
   const {
     data: createCalldata,
     error: createError,
@@ -223,6 +234,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     deadlineInMinutes: swapSettings.customDeadline,
     refetchInterval: 5 * ONE_SECOND_MS,
     enabled:
+      !isUserCommittedToCreate &&
       !hasError &&
       !approvalLoading &&
       !approvalError &&

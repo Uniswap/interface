@@ -6,6 +6,7 @@ import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { Dispatch, SetStateAction } from 'react'
 import { PositionField } from 'types/position'
+import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 
 export type FeeData = {
   feeAmount: number
@@ -87,6 +88,8 @@ export type CreatePositionContextType = {
   setFeeTierSearchModalOpen: Dispatch<SetStateAction<boolean>>
   dynamicFeeTierSpeedbumpData: DynamicFeeTierSpeedbumpData
   setDynamicFeeTierSpeedbumpData: Dispatch<SetStateAction<DynamicFeeTierSpeedbumpData>>
+  currentTransactionStep?: { step: TransactionStep; accepted: boolean }
+  setCurrentTransactionStep: Dispatch<SetStateAction<{ step: TransactionStep; accepted: boolean } | undefined>>
 }
 
 export interface PriceRangeState {

@@ -36,7 +36,8 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
 
   const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
 
-  const { derivedIncreaseLiquidityInfo, increaseLiquidityState } = useIncreaseLiquidityContext()
+  const { derivedIncreaseLiquidityInfo, increaseLiquidityState, currentTransactionStep, setCurrentTransactionStep } =
+    useIncreaseLiquidityContext()
   const { txInfo, gasFeeEstimateUSD } = useIncreaseLiquidityTxContext()
   const { dependentAmount } = txInfo || {}
 
@@ -57,7 +58,6 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   )
 
   const [steps, setSteps] = useState<TransactionStep[]>([])
-  const [currentStep, setCurrentStep] = useState<{ step: TransactionStep; accepted: boolean } | undefined>()
 
   if (!increaseLiquidityState.position) {
     throw new Error('a position must be defined')
@@ -95,12 +95,12 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   const newToken1AmountUSD = useUSDCValue(newToken1Amount)
 
   const onFailure = () => {
-    setCurrentStep(undefined)
+    setCurrentTransactionStep(undefined)
   }
 
   const onSuccess = () => {
     setSteps([])
-    setCurrentStep(undefined)
+    setCurrentTransactionStep(undefined)
     onClose()
   }
 
@@ -123,7 +123,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
         startChainId,
         account,
         liquidityTxContext: txInfo,
-        setCurrentStep,
+        setCurrentStep: setCurrentTransactionStep,
         setSteps,
         onSuccess,
         onFailure,
@@ -156,8 +156,8 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
         </Text>
         <TokenInfo currencyAmount={displayCurrencyAmounts?.TOKEN1} currencyUSDAmount={displayUSDAmounts?.TOKEN1} />
       </Flex>
-      {currentStep ? (
-        <ProgressIndicator currentStep={currentStep} steps={steps} />
+      {currentTransactionStep ? (
+        <ProgressIndicator currentStep={currentTransactionStep} steps={steps} />
       ) : (
         <>
           <Separator mx="$padding16" />

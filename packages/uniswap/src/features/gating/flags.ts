@@ -78,6 +78,7 @@ export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.PortionFields, 'portion-fields'],
   [FeatureFlags.SharedSwapArbitrumUniswapXExperiment, 'shared_swap_arbitrum_uniswapx_experiment'],
   [FeatureFlags.TokenSelectorTrendingTokens, 'token_selector_trending_tokens'],
+  [FeatureFlags.TwoSecondSwapQuotePollingInterval, 'two_second_swap_quote_polling_interval'],
   [FeatureFlags.Unichain, 'unichain'],
   [FeatureFlags.UnichainPromo, 'unichain_promo'],
   [FeatureFlags.UniswapX, 'uniswapx'],
@@ -101,7 +102,6 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.LimitsFees, 'limits_fees'],
   [FeatureFlags.MultipleRoutingOptions, 'multiple_routing_options'],
   [FeatureFlags.NavigationHotkeys, 'navigation_hotkeys'],
-  [FeatureFlags.TwoSecondSwapQuotePollingInterval, 'two_second_swap_quote_polling_interval'],
   // TODO(WEB-3625): Remove these once we have a generalized system for outage banners.
   [FeatureFlags.OutageBannerArbitrum, 'outage_banner_feb_2024_arbitrum'],
   [FeatureFlags.OutageBannerOptimism, 'outage_banner_feb_2024_optimism'],

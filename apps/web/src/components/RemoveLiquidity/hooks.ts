@@ -17,11 +17,13 @@ import {
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }): RemoveLiquidityTxInfo {
-  const { positionInfo, percent, percentInvalid, unwrapNativeCurrency } = useRemoveLiquidityModalContext()
+  const { positionInfo, percent, percentInvalid, unwrapNativeCurrency, currentTransactionStep } =
+    useRemoveLiquidityModalContext()
   const { customDeadline, customSlippageTolerance } = useTransactionSettingsContext()
 
   const currency0Info = useCurrencyInfoWithUnwrapForTradingApi({
@@ -132,6 +134,9 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
     customSlippageTolerance,
   ])
 
+  const isUserCommittedToDecrease =
+    currentTransactionStep?.step.type === TransactionStepType.DecreasePositionTransaction
+
   const {
     data: decreaseCalldata,
     isLoading: decreaseCalldataLoading,
@@ -142,6 +147,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
     deadlineInMinutes: customDeadline,
     refetchInterval: 5 * ONE_SECOND_MS,
     enabled:
+      !isUserCommittedToDecrease &&
       !!decreaseCalldataQueryParams &&
       ((!percentInvalid && !v2LpTokenApprovalQueryParams) ||
         (!v2ApprovalLoading && !approvalError && Boolean(v2LpTokenApproval))),

@@ -36,11 +36,11 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
+  const { percent, positionInfo, unwrapNativeCurrency, currentTransactionStep, setCurrentTransactionStep } =
+    useRemoveLiquidityModalContext()
   const [steps, setSteps] = useState<TransactionStep[]>([])
-  const { percent, positionInfo, unwrapNativeCurrency } = useRemoveLiquidityModalContext()
   const removeLiquidityTxContext = useRemoveLiquidityTxContext()
   const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
-  const [currentStep, setCurrentStep] = useState<{ step: TransactionStep; accepted: boolean } | undefined>()
   const currency0FiatAmount = useUSDCValue(positionInfo?.currency0Amount) ?? undefined
   const currency1FiatAmount = useUSDCValue(positionInfo?.currency1Amount) ?? undefined
   const selectChain = useSelectChain()
@@ -53,12 +53,12 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
 
   const onSuccess = () => {
     setSteps([])
-    setCurrentStep(undefined)
+    setCurrentTransactionStep(undefined)
     onClose()
   }
 
   const onFailure = () => {
-    setCurrentStep(undefined)
+    setCurrentTransactionStep(undefined)
   }
 
   if (!positionInfo) {
@@ -131,7 +131,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
         startChainId,
         account,
         liquidityTxContext: txContext,
-        setCurrentStep,
+        setCurrentStep: setCurrentTransactionStep,
         setSteps,
         onSuccess,
         onFailure,
@@ -203,8 +203,8 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
           </Flex>
         )}
       </Flex>
-      {currentStep ? (
-        <ProgressIndicator steps={steps} currentStep={currentStep} />
+      {currentTransactionStep ? (
+        <ProgressIndicator steps={steps} currentStep={currentTransactionStep} />
       ) : (
         <>
           <Separator mx="$padding16" />
