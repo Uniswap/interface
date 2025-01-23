@@ -75,6 +75,12 @@ export function Web3ProviderUpdater() {
   useEffect(() => {
     const chainChanged = previousConnectedChainId && previousConnectedChainId !== account.chainId
     if (chainChanged) {
+      if (account.address && account.chainId) {
+        // Should also update user property for chain_id when user switches chains
+        setUserProperty(CustomUserProperties.CHAIN_ID, account.chainId)
+        setUserProperty(CustomUserProperties.ALL_WALLET_CHAIN_IDS, account.chainId, true)
+      }
+
       sendAnalyticsEvent(InterfaceEventName.CHAIN_CHANGED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: account.address,
@@ -90,6 +96,8 @@ export function Web3ProviderUpdater() {
   const previousAccount = usePrevious(account.address)
   const [connectedWallets, addConnectedWallet] = useConnectedWallets()
   useEffect(() => {
+    // User properties *must* be set before sending corresponding event properties,
+    // so that the event contains the correct and up-to-date user properties.
     if (account.address && account.address !== previousAccount) {
       const walletName = connector?.name ?? 'Network'
       const amplitudeWalletType = walletTypeToAmplitudeWalletType(connector?.type)
@@ -108,17 +116,10 @@ export function Web3ProviderUpdater() {
           logger.warn('Web3Provider', 'Updater', 'Failed to get client version', error)
         })
 
-      // User properties *must* be set before sending corresponding event properties,
-      // so that the event contains the correct and up-to-date user properties.
       setUserProperty(CustomUserProperties.WALLET_ADDRESS, account.address)
       setUserProperty(CustomUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account.address, true)
 
       setUserProperty(CustomUserProperties.WALLET_TYPE, amplitudeWalletType)
-
-      if (account.chainId) {
-        setUserProperty(CustomUserProperties.CHAIN_ID, account.chainId)
-        setUserProperty(CustomUserProperties.ALL_WALLET_CHAIN_IDS, account.chainId, true)
-      }
 
       const walletConnectedProperties = {
         result: WalletConnectionResult.SUCCEEDED,
@@ -167,11 +168,11 @@ export function Web3ProviderUpdater() {
     }
   }, [
     account.address,
-    addConnectedWallet,
-    currentPage,
     account.chainId,
+    addConnectedWallet,
     connectedWallets,
     connector,
+    currentPage,
     previousAccount,
     provider,
     trackConversions,
