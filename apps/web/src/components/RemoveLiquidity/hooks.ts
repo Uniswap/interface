@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
-import { getProtocolItems } from 'components/Liquidity/utils'
+import { getProtocolItems, parseErrorMessageTitle } from 'components/Liquidity/utils'
 import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { RemoveLiquidityTxInfo } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
 import { ZERO_ADDRESS } from 'constants/misc'
@@ -56,17 +56,18 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
   } = useCheckLpApprovalQuery({
     params: v2LpTokenApprovalQueryParams,
     staleTime: 5 * ONE_SECOND_MS,
+    enabled: Boolean(v2LpTokenApprovalQueryParams),
   })
 
   if (approvalError) {
     logger.info(
       'RemoveLiquidityTxAndGasInfo',
       'RemoveLiquidityTxAndGasInfo',
-      'CheckLpApprovalQuery',
-      JSON.stringify({
-        error: approvalError,
-        v2LpTokenApprovalQueryParams,
-      }),
+      parseErrorMessageTitle(approvalError, 'unkown CheckLpApprovalQuery'),
+      {
+        error: JSON.stringify(approvalError),
+        v2LpTokenApprovalQueryParams: JSON.stringify(v2LpTokenApprovalQueryParams),
+      },
     )
   }
 
@@ -141,19 +142,20 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
     deadlineInMinutes: customDeadline,
     refetchInterval: 5 * ONE_SECOND_MS,
     enabled:
-      (!percentInvalid && !v2LpTokenApprovalQueryParams) ||
-      (!v2ApprovalLoading && !approvalError && Boolean(v2LpTokenApproval)),
+      !!decreaseCalldataQueryParams &&
+      ((!percentInvalid && !v2LpTokenApprovalQueryParams) ||
+        (!v2ApprovalLoading && !approvalError && Boolean(v2LpTokenApproval))),
   })
 
   if (calldataError) {
     logger.info(
       'RemoveLiquidityTxAndGasInfo',
       'RemoveLiquidityTxAndGasInfo',
-      'DecreaseLpPositionCalldataQuery',
-      JSON.stringify({
-        error: calldataError,
-        decreaseCalldataQueryParams,
-      }),
+      parseErrorMessageTitle(calldataError, 'DecreaseLpPositionCalldataQuery'),
+      {
+        error: JSON.stringify(calldataError),
+        decreaseCalldataQueryParams: JSON.stringify(decreaseCalldataQueryParams),
+      },
     )
   }
 

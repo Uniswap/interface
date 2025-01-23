@@ -3,7 +3,7 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useIncreaseLiquidityContext } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
 import { useModalLiquidityInitialState } from 'components/Liquidity/hooks'
-import { getProtocolItems } from 'components/Liquidity/utils'
+import { getProtocolItems, parseErrorMessageTitle } from 'components/Liquidity/utils'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { getCurrencyAddressForTradingApi } from 'pages/Pool/Positions/create/utils'
 import { PropsWithChildren, createContext, useContext, useMemo } from 'react'
@@ -69,18 +69,18 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   } = useCheckLpApprovalQuery({
     params: increaseLiquidityApprovalParams,
     staleTime: 5 * ONE_SECOND_MS,
-    enabled: !error,
+    enabled: !!increaseLiquidityApprovalParams && !error,
   })
 
   if (approvalError) {
     logger.info(
       'IncreaseLiquidityTxContext',
       'IncreaseLiquidityTxContext',
-      'CheckLpApprovalQuery',
-      JSON.stringify({
-        error: approvalError,
-        increaseLiquidityApprovalParams,
-      }),
+      parseErrorMessageTitle(approvalError, 'unknown CheckLpApprovalQuery'),
+      {
+        error: JSON.stringify(approvalError),
+        increaseLiquidityApprovalParams: JSON.stringify(increaseLiquidityApprovalParams),
+      },
     )
   }
 
@@ -168,10 +168,15 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   const { increase, gasFee: actualGasFee, dependentAmount } = increaseCalldata || {}
 
   if (calldataError) {
-    logger.warn('IncreaseLiquidityTxContext', 'IncreaseLiquidityTxContext', 'IncreaseLpPositionCalldataQuery', {
-      error: JSON.stringify(calldataError),
-      increaseCalldataQueryParams: JSON.stringify(increaseCalldataQueryParams),
-    })
+    logger.info(
+      'IncreaseLiquidityTxContext',
+      'IncreaseLiquidityTxContext',
+      parseErrorMessageTitle(calldataError, 'unknown IncreaseLpPositionCalldataQuery'),
+      {
+        error: JSON.stringify(calldataError),
+        increaseCalldataQueryParams: JSON.stringify(increaseCalldataQueryParams),
+      },
+    )
   }
 
   const { value: calculatedGasFee } = useTransactionGasFee(increase, !!actualGasFee)

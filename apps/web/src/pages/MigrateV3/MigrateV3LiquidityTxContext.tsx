@@ -3,6 +3,7 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
 import { V3PositionInfo } from 'components/Liquidity/types'
+import { parseErrorMessageTitle } from 'components/Liquidity/utils'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { PropsWithChildren, createContext, useContext, useMemo } from 'react'
@@ -75,17 +76,18 @@ export function MigrateV3PositionTxContextProvider({
       'x-universal-router-version': '2.0',
     },
     staleTime: 5 * ONE_SECOND_MS,
+    enabled: Boolean(increaseLiquidityApprovalParams),
   })
 
   if (approvalError) {
     logger.info(
       'MigrateV3LiquidityTxContext',
       'MigrateV3LiquidityTxContext',
-      'CheckLpApprovalQuery',
-      JSON.stringify({
-        error: approvalError,
-        increaseLiquidityApprovalParams,
-      }),
+      parseErrorMessageTitle(approvalError, 'unknown CheckLpApprovalQuery'),
+      {
+        error: JSON.stringify(approvalError),
+        increaseLiquidityApprovalParams: JSON.stringify(increaseLiquidityApprovalParams),
+      },
     )
   }
 
@@ -189,11 +191,11 @@ export function MigrateV3PositionTxContextProvider({
     logger.info(
       'MigrateV3LiquidityTxContext',
       'MigrateV3LiquidityTxContext',
-      'MigrateLpPositionCalldataQuery',
-      JSON.stringify({
-        error: migrateError,
+      parseErrorMessageTitle(migrateError, 'unknown MigrateLpPositionCalldataQuery'),
+      {
+        error: JSON.stringify(migrateError),
         migrateCalldataQueryParams: JSON.stringify(migratePositionRequestArgs),
-      }),
+      },
     )
   }
 

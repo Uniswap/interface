@@ -1,5 +1,6 @@
 import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
 import { DepositState } from 'components/Liquidity/types'
+import { parseErrorMessageTitle } from 'components/Liquidity/utils'
 import {
   CreatePositionContext,
   CreateTxContext,
@@ -168,18 +169,18 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   } = useCheckLpApprovalQuery({
     params: addLiquidityApprovalParams,
     staleTime: 5 * ONE_SECOND_MS,
-    enabled: !hasError,
+    enabled: !!addLiquidityApprovalParams && !hasError,
   })
 
   if (approvalError) {
     logger.info(
       'CreateTxContextProvider',
       'CreateTxContextProvider',
-      'CheckLpApprovalQuery',
-      JSON.stringify({
-        error: approvalError,
-        addLiquidityApprovalParams,
-      }),
+      parseErrorMessageTitle(approvalError, 'unknown CheckLpApprovalQuery'),
+      {
+        error: JSON.stringify(approvalError),
+        addLiquidityApprovalParams: JSON.stringify(addLiquidityApprovalParams),
+      },
     )
   }
 
@@ -221,18 +222,23 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     params: createCalldataQueryParams,
     deadlineInMinutes: swapSettings.customDeadline,
     refetchInterval: 5 * ONE_SECOND_MS,
-    enabled: !hasError && !approvalLoading && !approvalError && Boolean(approvalCalldata),
+    enabled:
+      !hasError &&
+      !approvalLoading &&
+      !approvalError &&
+      Boolean(approvalCalldata) &&
+      Boolean(createCalldataQueryParams),
   })
 
   if (createError) {
     logger.info(
       'CreateTxContextProvider',
       'CreateTxContextProvider',
-      'CreateLpPositionCalldataQuery',
-      JSON.stringify({
-        error: createError,
-        createCalldataQueryParams,
-      }),
+      parseErrorMessageTitle(createError, 'unknown CreateLpPositionCalldataQuery'),
+      {
+        error: JSON.stringify(createError),
+        createCalldataQueryParams: JSON.stringify(createCalldataQueryParams),
+      },
     )
   }
 

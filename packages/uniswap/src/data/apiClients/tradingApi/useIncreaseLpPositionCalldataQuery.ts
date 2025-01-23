@@ -19,10 +19,9 @@ export function useIncreaseLpPositionCalldataQuery({
   const paramsWithDeadline = { ...params, deadline }
   return useQuery<IncreaseLPPositionResponse>({
     queryKey,
-    enabled: !!params,
     queryFn: async () => {
       if (!params) {
-        throw new Error('Params are required')
+        throw { name: 'Params are required' }
       }
       return await increaseLpPosition(paramsWithDeadline)
     },

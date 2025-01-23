@@ -656,3 +656,12 @@ export function getDisplayedAmountsFromDependentAmount({
     displayCurrencyAmounts: currencyAmounts,
   }
 }
+
+export function parseErrorMessageTitle(error: unknown, defaultTitle: string) {
+  if (!error) {
+    return defaultTitle
+  }
+
+  const errorWithData = error as { data?: { detail?: string }; name?: string }
+  return errorWithData.data?.detail || errorWithData.name || defaultTitle
+}
