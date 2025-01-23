@@ -34,6 +34,7 @@ import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { PositionDetails } from 'types/position'
 import { useMedia } from 'ui'
+import { formatRelativeTime } from 'utilities/src/time/time'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import PositionList from './PositionList'
 import {
@@ -267,28 +268,6 @@ function WrongNetworkCard() {
       <SwitchLocaleLink />
     </>
   )
-}
-
-export function getAbbreviatedTimeString(timestamp: number) {
-  const now = Date.now()
-  const timeSince = now - timestamp
-  const secondsPassed = Math.floor(timeSince / 1000)
-  const minutesPassed = Math.floor(secondsPassed / 60)
-  const hoursPassed = Math.floor(minutesPassed / 60)
-  const daysPassed = Math.floor(hoursPassed / 24)
-  const monthsPassed = Math.floor(daysPassed / 30)
-
-  if (monthsPassed > 0) {
-    return `${monthsPassed} months ago`
-  } else if (daysPassed > 0) {
-    return `${daysPassed} days ago`
-  } else if (hoursPassed > 0) {
-    return `${hoursPassed} hours ago`
-  } else if (minutesPassed > 0) {
-    return `${minutesPassed} minutes ago`
-  } else {
-    return `${secondsPassed} seconds ago`
-  }
 }
 
 export default function FarmV3() {
@@ -704,7 +683,7 @@ export default function FarmV3() {
                   'Last calculation time: ' +
                   new Date(metadata.timestamp * 1000).toISOString() +
                   ' (' +
-                  getAbbreviatedTimeString(metadata.timestamp * 1000) +
+                  formatRelativeTime(metadata.timestamp * 1000) +
                   ')'
                 }
                 desc="All the TVL calculations and reward distributions are done periodically, every half an hour."

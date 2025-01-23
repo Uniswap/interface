@@ -52,6 +52,8 @@ import {
   StakingRewards,
   UbeConvert,
   UbeToken,
+  UbestarterFactory,
+  UbestarterLaunchpadV1,
   UbeswapV3Farming,
   Weth,
 } from 'uniswap/src/abis/types'
@@ -59,6 +61,8 @@ import { NonfungiblePositionManager, UniswapInterfaceMulticall, UniswapV3Pool } 
 import { V3Migrator } from 'uniswap/src/abis/types/v3/V3Migrator'
 import UBE_CONVERT_ABI from 'uniswap/src/abis/ube-convert.json'
 import UBE_TOKEN_ABI from 'uniswap/src/abis/ube-token.json'
+import UBESTARTER_FACTORY_ABI from 'uniswap/src/abis/ubestarter-factory.json'
+import UBESTARTER_LAUNCHPAD_V1_ABI from 'uniswap/src/abis/ubestarter-launchpad-v1.json'
 import UBESWAP_V3_FARMING_ABI from 'uniswap/src/abis/ubeswap-v3-farming.json'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { getContract } from 'utilities/src/contracts/getContract'
@@ -243,4 +247,12 @@ export function usePoolContract(address?: string) {
 
 export function useUbeswapV3FarmingContract(address?: string) {
   return useContract<UbeswapV3Farming>(address, UBESWAP_V3_FARMING_ABI, true)
+}
+
+export function useUbestarterFactory(address?: string) {
+  return useContract<UbestarterFactory>(address, UBESTARTER_FACTORY_ABI, true)
+}
+
+export function useUbestarterLaunchpadV1(address?: string) {
+  return useContract<UbestarterLaunchpadV1>(address, UBESTARTER_LAUNCHPAD_V1_ABI, true)
 }

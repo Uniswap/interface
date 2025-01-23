@@ -1,32 +1,45 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { CurrencyAmount, Token } from '@ubeswap/sdk-core'
+import { formatUnits } from '@ethersproject/units'
+import { useWeb3React } from '@web3-react/core'
 import AddressInputPanel from 'components/AddressInputPanel'
 import { ButtonError, ButtonPrimary } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import Column, { AutoColumn } from 'components/Column'
+import Modal from 'components/Modal'
 import NumericalInputPanel from 'components/NumericalInputPanel'
-import Row from 'components/Row'
+import Row, { AutoRow } from 'components/Row'
 import TextInputPanel from 'components/TextInputPanel'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import { hashMessage } from 'ethers/lib/utils'
 import { useToken } from 'hooks/Tokens'
+import { useUbestarterFactory } from 'hooks/useContract'
 import { Trans } from 'i18n'
 import { useAtom } from 'jotai'
-import JSBI from 'jsbi'
-import { useCallback, useState } from 'react'
+import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
+import { Checkbox } from 'nft/components/layout/Checkbox'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Link } from 'react-router-dom'
-import { CreateProposalData, useCreateProposalCallback } from 'state/governance/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
+import Loader from '../../components-old/Loader'
+import AppBody from '../AppBody'
+import { Action, ActionSelector } from './ActionSelector'
 import AddTeamMemberModal from './AddTeamMemberModal'
 import AddTokenomicsModal from './AddTokenomicsModal'
 import SimpleTable from './SimpleTable'
 import TextareaPanel from './TextareaPanel'
-import { TeamTableValues, TokenomicsTableValues, launchpadParams } from './launchpad-state'
-
-import AppBody from '../AppBody'
-import { Action, ActionSelector } from './ActionSelector'
+import {
+  LaunchpadValidationResult,
+  TeamTableValues,
+  TokenomicsTableValues,
+  getCreatorSignatureAtom,
+  launchpadParams,
+  launchpadValidationResult,
+  validateOptions,
+} from './launchpad-state'
+import { UBESTARTER_FACTORY_ADDRESS } from './ubestarter-factory-actions'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;
@@ -70,59 +83,10 @@ export const SmallButtonPrimary = styled(ButtonPrimary)`
   border-radius: 4px;
 `
 
-const CreateProposalButton = ({
-  proposalThreshold,
-  hasActiveOrPendingProposal,
-  hasEnoughVote,
-  isFormInvalid,
-  handleCreateProposal,
-}: {
-  proposalThreshold?: CurrencyAmount<Token>
-  hasActiveOrPendingProposal: boolean
-  hasEnoughVote: boolean
-  isFormInvalid: boolean
-  handleCreateProposal: () => void
-}) => {
-  const formattedProposalThreshold = proposalThreshold
-    ? JSBI.divide(
-        proposalThreshold.quotient,
-        JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(proposalThreshold.currency.decimals))
-      ).toLocaleString()
-    : undefined
-
-  return (
-    <ButtonError
-      style={{ marginTop: '18px' }}
-      error={hasActiveOrPendingProposal || !hasEnoughVote}
-      disabled={isFormInvalid || hasActiveOrPendingProposal || !hasEnoughVote}
-      onClick={handleCreateProposal}
-    >
-      {hasActiveOrPendingProposal ? (
-        <Trans>You already have an active or pending proposal</Trans>
-      ) : !hasEnoughVote ? (
-        <>
-          {formattedProposalThreshold ? (
-            <Trans>You must have {{ formattedProposalThreshold }} votes to submit a proposal</Trans>
-          ) : (
-            <Trans>You don&apos;t have enough votes to submit a proposal</Trans>
-          )}
-        </>
-      ) : (
-        <Trans>Create proposal</Trans>
-      )}
-    </ButtonError>
-  )
-}
-
-const CreateProposalWrapper = styled.div`
+const OptionsWrapper = styled.div`
   padding: 20px;
   display: flex;
   flex-flow: column wrap;
-`
-
-const AutonomousProposalCTA = styled.div`
-  text-align: center;
-  margin-top: 10px;
 `
 
 const Divider = styled.div`
@@ -131,30 +95,75 @@ const Divider = styled.div`
   margin: 20px 0;
 `
 
-export default function OptionsStep({ onNext }: { onNext: () => void }) {
-  //const { account, chainId } = useWeb3React()
+const disclaimerMsg = `Ubestarter provides a platform for decentralized application (DApp) developers to launch new projects and for users to participate in these projects by purchasing tokens. The information provided on Ubestarter's website and through its services is for general informational purposes only and should not be considered financial, legal, or investment advice.
+Ubestarter does not guarantee the success of any project or the performance of any token issued through its platform. The success of blockchain projects and the utility of their tokens can be affected by a multitude of factors beyond our control.
+Projects are responsible for ensuring that their participation in token sales and their use of Ubestarter's services comply with laws and regulations in their jurisdiction, including but not limited to securities laws, anti-money laundering (AML) and know your customer (KYC) requirements.
+Ubestarter, its affiliates, and its service providers will not be liable for any loss or damage arising from your use of the platform, including, but not limited to, any losses, damages, or claims arising from: (a) user error, such as forgotten passwords or incorrectly construed smart contracts; (b) server failure or data loss; (c) unauthorized access or activities by third parties, including the use of viruses, phishing, brute-forcing, or other means of attack against the platform or cryptocurrency wallets.
+This disclaimer is subject to change at any time without notice. It is the project's responsibility to review it regularly to stay informed of any changes.
+By using the Ubestarter, you acknowledge that you have read this disclaimer, understand it, and agree to be bound by its terms.`
 
-  const proposalThreshold: CurrencyAmount<Token> | undefined = undefined
+export default function OptionsStep({ onNext }: { onNext: () => void }) {
+  const { account, provider } = useWeb3React()
 
   const theme = useTheme()
 
-  const [hash, setHash] = useState<string | undefined>()
   const [attempting, setAttempting] = useState(false)
 
-  const [options, setOptions] = useAtom(launchpadParams)
-  const setOptionsProp = (propName: string, value: string) => {
-    const path = propName.split('.')
-    setOptions((oldVal) => {
-      const newVal: any = { ...oldVal }
-      newVal[path[0]] = {
-        ...newVal[path[0]],
-        [path[1]]: value,
-      }
-      return newVal
-    })
+  const [signature, setSignature] = useAtom(getCreatorSignatureAtom(account))
+  const [isDisclaimerAccepted, setIsDisclaimerAccepted] = useState(false)
+
+  const showDisclaimer = useMemo(() => !(signature && signature.length > 5), [signature])
+  const handleCheckbox = () => {
+    setIsDisclaimerAccepted(!isDisclaimerAccepted)
+  }
+  const signDisclaimer = async () => {
+    const signature = await provider?.getSigner().signMessage('I accept the following disclaimer:\n' + disclaimerMsg)
+    if (signature && signature.length > 5) {
+      setSignature(signature)
+    }
   }
 
+  const [options, setOptions] = useAtom(launchpadParams)
+  const setOptionsProp = useCallback(
+    (propName: string, value: string) => {
+      const path = propName.split('.')
+      setOptions((oldVal) => {
+        const newVal: any = { ...oldVal }
+        newVal[path[0]] = {
+          ...newVal[path[0]],
+          [path[1]]: value,
+        }
+        return newVal
+      })
+    },
+    [setOptions]
+  )
+  useEffect(() => {
+    if (account) {
+      setOptionsProp('tokenSale.owner', account)
+    }
+  }, [account, setOptionsProp])
+
   const token = useToken(options.tokenInfo.tokenAddress)
+  const quoteToken = useToken(options.tokenSale.quoteToken)
+
+  const factoryContract = useUbestarterFactory(UBESTARTER_FACTORY_ADDRESS)
+  const { result: softCapInfo } = useSingleCallResult(
+    factoryContract,
+    'quoteTokens',
+    [options.tokenSale.quoteToken],
+    NEVER_RELOAD
+  ) as {
+    result?: Awaited<ReturnType<NonNullable<typeof factoryContract>['quoteTokens']>>
+  }
+  const minSoftCapBn = softCapInfo?.[0]
+  const maxSoftCapBn = softCapInfo?.[1]
+  const minSoftCap = quoteToken && minSoftCapBn ? parseFloat(formatUnits(minSoftCapBn, quoteToken.decimals)) : undefined
+  const maxSoftCap = quoteToken && maxSoftCapBn ? parseFloat(formatUnits(maxSoftCapBn, quoteToken.decimals)) : undefined
+
+  const [showErrors, setShowErrors] = useState(true)
+  const validationError = validateOptions(options, token?.symbol, minSoftCap, maxSoftCap)
+  const isError = (field: string) => validationError?.field == field && showErrors
 
   // ----- tokenomics -----
   const [tokenomicsModalOpened, setTokenomicsModalOpened] = useState(false)
@@ -296,50 +305,83 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
     },
   ]
 
-  const handleDismissSubmissionModal = useCallback(() => {
-    setHash(undefined)
-    setAttempting(false)
-  }, [setHash, setAttempting])
-
-  const isFormInvalid = true
-  const hasEnoughVote = true
-
-  const createProposalCallback = useCreateProposalCallback()
-
-  const handleCreateProposal = async () => {
+  const [_validationResult, seValidationResult] = useAtom(launchpadValidationResult)
+  const validateAndNext = async () => {
     setAttempting(true)
 
-    const createProposalData: CreateProposalData = {} as CreateProposalData
+    const disclaimer = 'I accept the following disclaimer:\n' + disclaimerMsg
 
-    // const tokenAmount = tryParseCurrencyAmount(amountValue, currencyValue)
-    // if (!tokenAmount) return
-
-    const hash = await createProposalCallback(createProposalData ?? undefined)?.catch(() => {
-      setAttempting(false)
+    const request = await fetch('https://interface-gateway.ubeswap.org/v1/ubestarter/validateAndSign', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        options,
+        disclaimer,
+        disclaimerHash: hashMessage(disclaimer),
+        disclaimerSignature: signature,
+      }),
     })
 
-    if (hash) setHash(hash)
+    if (request.ok) {
+      let result: LaunchpadValidationResult | null = null
+      try {
+        result = (await request.json()) as LaunchpadValidationResult
+      } catch (e) {
+        console.log('validation parse error', e)
+      }
+      seValidationResult(result)
+      onNext()
+    } else {
+      let message = 'Validation failed'
+      try {
+        message = (await request.json()).message
+      } catch (e) {
+        console.log('validation response error', e)
+      }
+      alert(message)
+    }
+    setAttempting(false)
   }
 
   return (
     <PageWrapper>
+      <Modal isOpen={showDisclaimer} $scrollOverlay={true} maxHeight={90}>
+        <div style={{ padding: '16px' }}>
+          <div>
+            {disclaimerMsg.split('\n').map((line, index) => (
+              <p key={index}>{line}</p>
+            ))}
+          </div>
+          <Checkbox checked={isDisclaimerAccepted} hovered={true} onChange={handleCheckbox}>
+            <div style={{ marginRight: '10px' }}>I accept this disclaimer</div>
+          </Checkbox>
+          <AutoColumn justify="center">
+            <ButtonPrimary
+              disabled={!isDisclaimerAccepted}
+              style={{ marginTop: '16px', width: 'fit-content', padding: '8px 20px' }}
+              onClick={signDisclaimer}
+            >
+              Sign With Wallet
+            </ButtonPrimary>
+          </AutoColumn>
+        </div>
+      </Modal>
       <AppBody $maxWidth="800px">
-        <Nav to="/vote">
+        <Nav to="/ubestarter">
           <BackArrow />
           <HeaderText>Launchpad Options</HeaderText>
         </Nav>
-        <CreateProposalWrapper>
+        <OptionsWrapper>
           <BlueCard>
             <AutoColumn gap="10px">
               <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
                 <Trans>
-                  <strong>Tip:</strong> Select an action and describe your proposal for the community. The proposal
-                  cannot be modified after submission, so please verify all information before submitting. The voting
-                  period will begin immediately and last for 7 days. To propose a custom action,{' '}
-                  <ExternalLink href="https://docs.uniswap.org/protocol/reference/Governance/governance-reference#propose">
-                    read the docs
-                  </ExternalLink>
-                  .
+                  <strong>Tip:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                  ullamco laboris nisi ut aliquip ex ea commodo consequat.,{' '}
+                  <ExternalLink href="https://docs.uniswap.org/">read the docs</ExternalLink>.
                 </Trans>
               </ThemedText.DeprecatedLink>
             </AutoColumn>
@@ -365,6 +407,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Token logo url must be 200x200 png image link."
                 value={options.tokenInfo.logoUrl}
                 onChange={(val) => setOptionsProp('tokenInfo.logoUrl', val)}
+                isError={isError('tokenInfo.logoUrl')}
+                errorMessage={validationError?.message}
               />
             </Column>
             {options.tokenInfo.logoUrl && (
@@ -382,6 +426,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
               placeholder="Project info"
               fontSize="1rem"
               minHeight="100px"
+              isError={isError('tokenInfo.description')}
+              errorMessage={validationError?.message}
             />
           </Row>
 
@@ -402,6 +448,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
               placeholder="Website link"
               value={options.tokenInfo.website}
               onChange={(val) => setOptionsProp('tokenInfo.website', val)}
+              isError={isError('tokenInfo.website')}
+              errorMessage={validationError?.message}
             />
           </Row>
 
@@ -412,6 +460,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Twitter page link"
                 value={options.tokenInfo.twitter}
                 onChange={(val) => setOptionsProp('tokenInfo.twitter', val)}
+                isError={isError('tokenInfo.twitter')}
+                errorMessage={validationError?.message}
               />
             </Column>
             <Column flex="1">
@@ -420,6 +470,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Telegram group link"
                 value={options.tokenInfo.telegram}
                 onChange={(val) => setOptionsProp('tokenInfo.telegram', val)}
+                isError={isError('tokenInfo.telegram')}
+                errorMessage={validationError?.message}
               />
             </Column>
           </Row>
@@ -430,6 +482,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Discord link"
                 value={options.tokenInfo.discord}
                 onChange={(val) => setOptionsProp('tokenInfo.discord', val)}
+                isError={isError('tokenInfo.discord')}
+                errorMessage={validationError?.message}
               />
             </Column>
             <Column flex="1">
@@ -438,6 +492,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Medium link"
                 value={options.tokenInfo.medium}
                 onChange={(val) => setOptionsProp('tokenInfo.medium', val)}
+                isError={isError('tokenInfo.medium')}
+                errorMessage={validationError?.message}
               />
             </Column>
           </Row>
@@ -448,6 +504,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Youtube link"
                 value={options.tokenInfo.youtube}
                 onChange={(val) => setOptionsProp('tokenInfo.youtube', val)}
+                isError={isError('tokenInfo.youtube')}
+                errorMessage={validationError?.message}
               />
             </Column>
             <Column flex="1">
@@ -456,6 +514,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Farcaster link"
                 value={options.tokenInfo.farcaster}
                 onChange={(val) => setOptionsProp('tokenInfo.farcaster', val)}
+                isError={isError('tokenInfo.farcaster')}
+                errorMessage={validationError?.message}
               />
             </Column>
           </Row>
@@ -531,18 +591,22 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
           <Row gap="10px" marginBottom="12px">
             <Column flex="1">
               <NumericalInputPanel
-                label="Total Token on Sale"
-                placeholder="Total Token on Sale"
+                label="Target Raise Amount (Hard Cap)"
+                placeholder=""
                 value={options.tokenSale.hardCapAsQuote}
                 onChange={(val) => setOptionsProp('tokenSale.hardCapAsQuote', val)}
+                isError={isError('tokenSale.hardCapAsQuote')}
+                errorMessage={validationError?.message}
               />
             </Column>
             <Column flex="1">
               <NumericalInputPanel
-                label="Soft Cap"
-                placeholder="Soft cap"
+                label="Min Raise Amount (Soft Cap)"
+                placeholder=""
                 value={options.tokenSale.softCapAsQuote}
                 onChange={(val) => setOptionsProp('tokenSale.softCapAsQuote', val)}
+                isError={isError('tokenSale.softCapAsQuote')}
+                errorMessage={validationError?.message}
               />
             </Column>
           </Row>
@@ -553,6 +617,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Sell Price"
                 value={options.tokenSale.sellPrice}
                 onChange={(val) => setOptionsProp('tokenSale.sellPrice', val)}
+                isError={isError('tokenSale.sellPrice')}
+                errorMessage={validationError?.message}
               />
             </Column>
             <Column flex="1">
@@ -561,6 +627,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Listing Price"
                 value={options.liquidity.listingPrice}
                 onChange={(val) => setOptionsProp('liquidity.listingPrice', val)}
+                isError={isError('liquidity.listingPrice')}
+                errorMessage={validationError?.message}
               />
             </Column>
           </Row>
@@ -571,6 +639,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="e.g. 2025-01-01 15:00:00"
                 value={options.tokenSale.startDate}
                 onChange={(val) => setOptionsProp('tokenSale.startDate', val)}
+                isError={isError('tokenSale.startDate')}
+                errorMessage={validationError?.message}
               />
             </Column>
             <Column flex="1">
@@ -579,6 +649,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Duration in days"
                 value={options.tokenSale.durationDays}
                 onChange={(val) => setOptionsProp('tokenSale.durationDays', val)}
+                isError={isError('tokenSale.durationDays')}
+                errorMessage={validationError?.message}
               />
             </Column>
           </Row>
@@ -589,6 +661,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Percentage of Unlocked Tokens on TGE"
                 value={options.tokenSale.initialReleaseRate}
                 onChange={(val) => setOptionsProp('tokenSale.initialReleaseRate', val)}
+                isError={isError('tokenSale.initialReleaseRate')}
+                errorMessage={validationError?.message}
               />
             </Column>
             <Column flex="1">
@@ -597,6 +671,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Vesting Duration in days"
                 value={options.tokenSale.releaseDurationDays}
                 onChange={(val) => setOptionsProp('tokenSale.releaseDurationDays', val)}
+                isError={isError('tokenSale.releaseDurationDays')}
+                errorMessage={validationError?.message}
               />
             </Column>
           </Row>
@@ -612,6 +688,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="How much amount of the raised tokend will be used as liquidity"
                 value={options.liquidity.liquidityRate}
                 onChange={(val) => setOptionsProp('liquidity.liquidityRate', val)}
+                isError={isError('liquidity.liquidityRate')}
+                errorMessage={validationError?.message}
               />
             </Column>
             <Column flex="1">
@@ -646,26 +724,27 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 placeholder="Locking period in days"
                 value={options.liquidity.lockDurationDays}
                 onChange={(val) => setOptionsProp('liquidity.lockDurationDays', val)}
+                isError={isError('liquidity.lockDurationDays')}
+                errorMessage={validationError?.message}
               />
             </Row>
           )}
 
-          <ButtonPrimary onClick={onNext}>Next</ButtonPrimary>
-
-          <CreateProposalButton
-            proposalThreshold={proposalThreshold}
-            hasActiveOrPendingProposal={false}
-            hasEnoughVote={hasEnoughVote}
-            isFormInvalid={isFormInvalid}
-            handleCreateProposal={handleCreateProposal}
-          />
-          {!hasEnoughVote ? (
-            <AutonomousProposalCTA>
-              Don’t have 2.5M votes? Anyone can create an autonomous proposal using{' '}
-              <ExternalLink href="https://fish.vote">fish.vote</ExternalLink>
-            </AutonomousProposalCTA>
-          ) : null}
-        </CreateProposalWrapper>
+          <ButtonError
+            style={{ marginTop: '18px' }}
+            error={!!validationError}
+            disabled={!!validationError || attempting}
+            onClick={validateAndNext}
+          >
+            {attempting ? (
+              <AutoRow gap="6px" justify="center">
+                Validating <Loader stroke="white" />
+              </AutoRow>
+            ) : (
+              <Trans>See Preview</Trans>
+            )}
+          </ButtonError>
+        </OptionsWrapper>
       </AppBody>
     </PageWrapper>
   )

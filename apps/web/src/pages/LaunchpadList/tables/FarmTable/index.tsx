@@ -14,7 +14,7 @@ import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { formatRemainingTime } from 'utilities/src/time/time'
-import { LaunchpadListItem, LaunchpadSatus, useLaunchpads } from '../../data/useLaunchpads'
+import { LaunchpadListItem, LaunchpadStatus, useLaunchpads } from '../../data/useLaunchpads'
 
 const TableWrapper = styled.div`
   margin: 0 auto;
@@ -68,6 +68,7 @@ interface ActiveTableValues {
   status: string
   targetAmount: string
   remainingTime: string
+  link: string
 }
 
 // Completed tablosu için değerler
@@ -78,6 +79,7 @@ interface CompletedTableValues {
   status: string
   raisedAmount: string
   endDate: string
+  link: string
 }
 
 // Tablo sütunlarını tanımlayan enum
@@ -93,16 +95,16 @@ export enum LaunchpadTableColumns {
 }
 
 // Status'e göre badge rengini belirleyen yardımcı fonksiyon
-function getStatusVariant(status: LaunchpadSatus): 'success' | 'warning' | 'error' | 'info' | 'accent' {
+function getStatusVariant(status: LaunchpadStatus): 'success' | 'warning' | 'error' | 'info' | 'accent' {
   switch (status) {
     case 'Pending':
-      return 'accent' // Mor renk
+      return 'accent'
     case 'Active':
     case 'Succeeded':
-      return 'success' // Yeşil renk
+      return 'success'
     case 'Failed':
     case 'Canceled':
-      return 'error' // Kırmızı renk
+      return 'error'
     default:
       return 'info'
   }
@@ -203,6 +205,7 @@ export function LaunchpadsTable<T extends ActiveTableValues | CompletedTableValu
             status: launchpad.status,
             targetAmount: `${launchpad.hardCapAsQuote} ${launchpad.quoteTokenSymbol}`,
             remainingTime: formatRemainingTime(launchpad.startDate),
+            link: '/ubestarter/details/' + launchpad.launchpadAddress,
           }))
         : [],
     [isCompleted, launchpads]
@@ -219,6 +222,7 @@ export function LaunchpadsTable<T extends ActiveTableValues | CompletedTableValu
             status: launchpad.status,
             raisedAmount: `${launchpad.totalRaised} / ${launchpad.hardCapAsQuote} ${launchpad.quoteTokenSymbol}`,
             endDate: formatDate(new Date(launchpad.endDate)),
+            link: '/ubestarter/details/' + launchpad.launchpadAddress,
           }))
         : [],
     [isCompleted, launchpads]
@@ -282,7 +286,7 @@ export function LaunchpadsTable<T extends ActiveTableValues | CompletedTableValu
         ),
         cell: (status) => (
           <Cell justifyContent="flex-start" loading={showLoadingSkeleton} minWidth={100}>
-            <StyledBadge variant={getStatusVariant(status.getValue?.() as LaunchpadSatus)}>
+            <StyledBadge variant={getStatusVariant(status.getValue?.() as LaunchpadStatus)}>
               {status.getValue?.()}
             </StyledBadge>
           </Cell>
@@ -379,7 +383,7 @@ export function LaunchpadsTable<T extends ActiveTableValues | CompletedTableValu
         ),
         cell: (status) => (
           <Cell justifyContent="flex-start" loading={showLoadingSkeleton} minWidth={100}>
-            <StyledBadge variant={getStatusVariant(status.getValue?.() as LaunchpadSatus)}>
+            <StyledBadge variant={getStatusVariant(status.getValue?.() as LaunchpadStatus)}>
               {status.getValue?.()}
             </StyledBadge>
           </Cell>

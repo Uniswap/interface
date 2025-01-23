@@ -166,17 +166,20 @@ export const PageTabs = () => {
       <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
         <Trans>Swap</Trans>
       </MenuItem>
-      <Box display={{ sm: 'flex', lg: 'none', xxl: 'flex' }} width="full">
-        <MenuItem href="/pool" dataTestId="pool-nav-link" isActive={isPoolActive}>
-          <Trans>Pool</Trans>
-        </MenuItem>
-      </Box>
+      <MenuItem href="/pool" dataTestId="pool-nav-link" isActive={isPoolActive}>
+        <Trans>Pool</Trans>
+      </MenuItem>
       <MenuItem href="/earn" isActive={pathname.startsWith('/earn')}>
         <Trans>Earn</Trans>
       </MenuItem>
-      <MenuItem href="/claim-new-ube" isActive={pathname.startsWith('/claim-new')}>
-        <Trans>Convert</Trans>
+      <MenuItem href="/ubestarter" isActive={pathname.startsWith('/ubestarter')}>
+        <Trans>Ubestarter</Trans>
       </MenuItem>
+      <Box display={{ sm: 'none', lg: 'flex', xxl: 'flex' }} width="full">
+        <MenuItem href="/claim-new-ube" isActive={pathname.startsWith('/claim-new')}>
+          <Trans>Convert</Trans>
+        </MenuItem>
+      </Box>
       {/*<MenuItem href="/stake" isActive={pathname.startsWith('/stake')}>
         <Trans>Stake</Trans>
       </MenuItem>

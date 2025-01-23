@@ -1,4 +1,6 @@
+import { ButtonOutlined, ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
+import Row from 'components/Row'
 import { useAtomValue } from 'jotai/utils'
 import LaunchpadView from 'pages/LaunchpadPage/LaunchpadView'
 import styled from 'styled-components'
@@ -24,9 +26,18 @@ export default function PreviewStep({ onNext, onBack }: { onNext: () => void; on
   const options = useAtomValue(launchpadParams)
   return (
     <PageWrapper>
-      <LaunchpadView options={options} participants={0} totalRaisedAsQuote={0} />
-      <button onClick={onBack}>Back</button>
-      <button onClick={onNext}>Next</button>
+      <LaunchpadView
+        options={options}
+        participants={0}
+        totalRaisedAsQuote={0}
+        status="Pending"
+        userTokens={0}
+        userActionComponent={() => <div />}
+      />
+      <Row gap="20px" marginTop="20px">
+        <ButtonOutlined onClick={onBack}>Back</ButtonOutlined>
+        <ButtonPrimary onClick={onNext}>Next</ButtonPrimary>
+      </Row>
     </PageWrapper>
   )
 }
