@@ -97,7 +97,7 @@ const HeaderDetails = styled.div`
 `
 const LearnMoreButton = styled(Link)`
   display: flex;
-  width: 70%;
+  width: 64%;
   padding: 12px 16px;
   border-radius: 24px;
   border: 0;
@@ -109,6 +109,10 @@ const LearnMoreButton = styled(Link)`
   line-height: 24px;
   color: ${({ theme }) => theme.neutral1};
   ${ClickableStyle}
+
+  @media only screen and (max-width: 767px) {
+    display: none;
+  }
 `
 const LearnMoreArrow = styled(ArrowRightCircle)`
   size: 24px;

@@ -1,8 +1,10 @@
 import { AutoColumn } from 'components/Column'
 import { RowBetween } from 'components/Row'
 import { ResizingTextArea } from 'components/TextInput'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { t } from 'i18n'
 import { ReactNode } from 'react'
+import { Info } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
@@ -49,6 +51,8 @@ export default function TextareaPanel({
   minHeight,
   isError = false,
   errorMessage,
+  showInfo = false, // Yeni prop
+  infoTooltip = '', // Yeni prop
 }: {
   id?: string
   className?: string
@@ -60,6 +64,8 @@ export default function TextareaPanel({
   onChange: (value: string) => void
   isError?: boolean
   errorMessage?: string
+  showInfo?: boolean
+  infoTooltip?: string
 }) {
   const theme = useTheme()
 
@@ -71,6 +77,19 @@ export default function TextareaPanel({
             <RowBetween>
               <ThemedText.DeprecatedBlack color={theme.neutral2} fontWeight={535} fontSize={14}>
                 {label}
+                {showInfo && infoTooltip && (
+                  <MouseoverTooltip text={infoTooltip} placement="top">
+                    <Info
+                      size={15}
+                      style={{
+                        marginLeft: '4px',
+                        marginBottom: '4px',
+                        verticalAlign: 'middle',
+                        cursor: 'pointer',
+                      }}
+                    />
+                  </MouseoverTooltip>
+                )}
               </ThemedText.DeprecatedBlack>
             </RowBetween>
             <ResizingTextArea

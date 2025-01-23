@@ -1,7 +1,9 @@
 import { Trans } from 'i18n'
 // eslint-disable-next-line no-restricted-imports
+import { MouseoverTooltip } from 'components/Tooltip'
 import { t } from 'i18n'
 import { ChangeEvent, ReactNode, useCallback } from 'react'
+import { Info } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
@@ -82,6 +84,8 @@ export default function TextInputPanel({
   onChange,
   isError = false,
   errorMessage,
+  showInfo = false, // Yeni prop
+  infoTooltip = '',
 }: {
   id?: string
   className?: string
@@ -91,6 +95,8 @@ export default function TextInputPanel({
   onChange: (value: string) => void
   isError?: boolean
   errorMessage?: string
+  showInfo?: boolean
+  infoTooltip?: string
 }) {
   const theme = useTheme()
 
@@ -110,6 +116,19 @@ export default function TextInputPanel({
             <RowBetween>
               <ThemedText.DeprecatedBlack color={theme.neutral2} fontWeight={535} fontSize={14}>
                 {label ?? <Trans>Recipient</Trans>}
+                {showInfo && infoTooltip && (
+                  <MouseoverTooltip text={infoTooltip} placement="top">
+                    <Info
+                      size={14}
+                      style={{
+                        marginLeft: '4px',
+                        marginBottom: '3px',
+                        verticalAlign: 'middle',
+                        cursor: 'pointer',
+                      }}
+                    />
+                  </MouseoverTooltip>
+                )}
               </ThemedText.DeprecatedBlack>
             </RowBetween>
             <Input
