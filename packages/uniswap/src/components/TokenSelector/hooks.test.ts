@@ -562,16 +562,6 @@ describe(usePortfolioTokenOptions, () => {
   })
 })
 
-// for usePopularTokensOptions, dummy placeholder implementation of useTokenRankingsQuery REST hook, which is used only if token_selector_trending_tokens feature flag is enabled
-// Test fails to compile if this is not mocked
-jest.mock('uniswap/src/data/rest/tokenRankings', () => ({
-  useTokenRankingsQuery: (): { data: undefined; isLoading: boolean; isError: boolean } => ({
-    data: undefined,
-    isLoading: true,
-    isError: false,
-  }),
-}))
-
 describe(usePopularTokensOptions, () => {
   const topTokens = createArray(3, token)
   const tokenBalances = topTokens.map((t) => tokenBalance({ token: t }))
@@ -591,7 +581,7 @@ describe(usePopularTokensOptions, () => {
       output: { data: expect.anything(), error: new ApolloError({ errorMessage: 'Test' }) },
     },
     {
-      test: 'returns error if topTokens query fails',
+      test: 'retruns error if topTokens query fails',
       input: { topTokens: new Error('Test'), portfolios },
       output: { error: new ApolloError({ errorMessage: 'Test' }) },
     },

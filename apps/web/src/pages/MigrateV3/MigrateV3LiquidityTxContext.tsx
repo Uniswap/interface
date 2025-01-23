@@ -3,7 +3,6 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
 import { V3PositionInfo } from 'components/Liquidity/types'
-import { parseErrorMessageTitle } from 'components/Liquidity/utils'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { PropsWithChildren, createContext, useContext, useMemo } from 'react'
@@ -19,7 +18,6 @@ import {
   MigrateV3PositionTxAndGasInfo,
 } from 'uniswap/src/features/transactions/liquidity/types'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
-import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useAccount } from 'wagmi'
 
@@ -76,20 +74,7 @@ export function MigrateV3PositionTxContextProvider({
       'x-universal-router-version': '2.0',
     },
     staleTime: 5 * ONE_SECOND_MS,
-    enabled: Boolean(increaseLiquidityApprovalParams),
   })
-
-  if (approvalError) {
-    logger.info(
-      'MigrateV3LiquidityTxContext',
-      'MigrateV3LiquidityTxContext',
-      parseErrorMessageTitle(approvalError, 'unknown CheckLpApprovalQuery'),
-      {
-        error: JSON.stringify(approvalError),
-        increaseLiquidityApprovalParams: JSON.stringify(increaseLiquidityApprovalParams),
-      },
-    )
-  }
 
   const migratePositionRequestArgs: MigrateLPPositionRequest | undefined = useMemo(() => {
     if (
@@ -186,18 +171,6 @@ export function MigrateV3PositionTxContextProvider({
     params: migratePositionRequestArgs,
     staleTime: 5 * ONE_SECOND_MS,
   })
-
-  if (migrateError) {
-    logger.info(
-      'MigrateV3LiquidityTxContext',
-      'MigrateV3LiquidityTxContext',
-      parseErrorMessageTitle(migrateError, 'unknown MigrateLpPositionCalldataQuery'),
-      {
-        error: JSON.stringify(migrateError),
-        migrateCalldataQueryParams: JSON.stringify(migratePositionRequestArgs),
-      },
-    )
-  }
 
   const validatedValue: MigrateV3PositionTxAndGasInfo | undefined = useMemo(() => {
     if (!migrateCalldata) {

@@ -18,8 +18,6 @@ interface UniswapContext {
     outputChainId?: UniverseChainId
   }) => void
   swapInputChainId?: UniverseChainId
-  setSwapOutputChainId: (chainId: UniverseChainId) => void
-  swapOutputChainId?: UniverseChainId
   signer: Signer | undefined
   useProviderHook: (chainId: number) => JsonRpcProvider | undefined
   // Used for triggering wallet connection on web
@@ -41,11 +39,8 @@ export function UniswapProvider({
   signer,
   useProviderHook,
   onConnectWallet,
-}: PropsWithChildren<
-  Omit<UniswapContext, 'isSwapTokenSelectorOpen' | 'setIsSwapTokenSelectorOpen' | 'setSwapOutputChainId'>
->): JSX.Element {
+}: PropsWithChildren<Omit<UniswapContext, 'isSwapTokenSelectorOpen' | 'setIsSwapTokenSelectorOpen'>>): JSX.Element {
   const [swapInputChainId, setSwapInputChainId] = useState<UniverseChainId>()
-  const [swapOutputChainId, setSwapOutputChainId] = useState<UniverseChainId>()
   const [isSwapTokenSelectorOpen, setIsSwapTokenSelectorOpen] = useState<boolean>(false)
 
   const value: UniswapContext = useMemo(
@@ -64,15 +59,12 @@ export function UniswapProvider({
       }): void => {
         onSwapChainsChanged({ chainId, prevChainId, outputChainId })
         setSwapInputChainId(chainId)
-        setSwapOutputChainId(outputChainId)
       },
       signer,
       useProviderHook,
       navigateToFiatOnRamp,
       onConnectWallet,
       swapInputChainId,
-      swapOutputChainId,
-      setSwapOutputChainId,
       isSwapTokenSelectorOpen,
       setIsSwapTokenSelectorOpen: (open: boolean) => setIsSwapTokenSelectorOpen(open),
     }),
@@ -85,7 +77,6 @@ export function UniswapProvider({
       navigateToFiatOnRamp,
       onConnectWallet,
       swapInputChainId,
-      swapOutputChainId,
       onSwapChainsChanged,
       isSwapTokenSelectorOpen,
       setIsSwapTokenSelectorOpen,

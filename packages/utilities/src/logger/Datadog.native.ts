@@ -59,7 +59,10 @@ export function logWarningToDatadog(
     functionName: string
   },
 ): void {
-  DdLogs.warn(message, options).catch(() => {})
+  DdLogs.warn(message, {
+    ...options,
+    reduxState,
+  }).catch(() => {})
 }
 
 export function logToDatadog(
@@ -74,7 +77,10 @@ export function logToDatadog(
     functionName: string
   },
 ): void {
-  DdLogs.info(message, options).catch(() => {})
+  DdLogs.info(message, {
+    ...options,
+    reduxState,
+  }).catch(() => {})
 }
 
 /*

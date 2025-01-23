@@ -28,14 +28,14 @@ export function useWalletSearchResults(
     address: dotEthAddress,
     name: dotEthName,
     loading: dotEthLoading,
-  } = useENS({ nameOrAddress: querySkippedIfValidAddress, autocompleteDomain: true })
+  } = useENS(UniverseChainId.Mainnet, querySkippedIfValidAddress, true)
 
   // Search for exact match for ENS if not a valid address
   const {
     address: ensAddress,
     name: ensName,
     loading: ensLoading,
-  } = useENS({ nameOrAddress: querySkippedIfValidAddress, autocompleteDomain: false })
+  } = useENS(UniverseChainId.Mainnet, querySkippedIfValidAddress, false)
 
   // Search for matching Unitag by name
   const { unitag: unitagByName, loading: unitagLoading } = useUnitagByName(query)

@@ -66,7 +66,7 @@ function TokenOptionItemWrapper({
       option={option}
       quantity={option.quantity}
       quantityFormatted={formatNumberOrString({ value: option.quantity, type: NumberType.TokenTx })}
-      showWarnings={false}
+      showWarnings={true}
       tokenWarningDismissed={tokenWarningDismissed}
       onPress={onPress}
     />

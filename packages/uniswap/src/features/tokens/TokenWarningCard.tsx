@@ -3,16 +3,17 @@ import { TouchableArea } from 'ui/src'
 import { InlineWarningCard } from 'uniswap/src/components/InlineWarningCard/InlineWarningCard'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import {
   TokenProtectionWarning,
+  getCardHeaderText,
+  getCardSubtitleText,
   getFeeOnTransfer,
   getSeverityFromTokenProtectionWarning,
   getTokenProtectionWarning,
   getTokenWarningSeverity,
-  useCardHeaderText,
-  useCardSubtitleText,
   useTokenWarningCardText,
 } from 'uniswap/src/features/tokens/safetyUtils'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
@@ -40,6 +41,8 @@ function useTokenWarningOverrides(
     sellFeePercent?: number
   },
 ): { severity: WarningSeverity; heading: string | null; description: string | null } {
+  const { t } = useTranslation()
+  const { formatPercent } = useLocalizationContext()
   const { heading: headingDefault, description: descriptionDefault } = useTokenWarningCardText(currencyInfo)
   const { buyFeePercent, sellFeePercent } = getFeeOnTransfer(currencyInfo?.currency)
 
@@ -47,7 +50,8 @@ function useTokenWarningOverrides(
     ? getSeverityFromTokenProtectionWarning(tokenProtectionWarningOverride)
     : getTokenWarningSeverity(currencyInfo)
 
-  const headingOverride = useCardHeaderText({
+  const headingOverride = getCardHeaderText({
+    t,
     tokenProtectionWarning: tokenProtectionWarningOverride ?? TokenProtectionWarning.None,
   })
 
@@ -55,11 +59,13 @@ function useTokenWarningOverrides(
     feeOnTransferOverride?.buyFeePercent ?? buyFeePercent ?? currencyInfo?.safetyInfo?.blockaidFees?.buyFeePercent
   const displayedSellFeePercent =
     feeOnTransferOverride?.sellFeePercent ?? sellFeePercent ?? currencyInfo?.safetyInfo?.blockaidFees?.sellFeePercent
-  const descriptionOverride = useCardSubtitleText({
+  const descriptionOverride = getCardSubtitleText({
+    t,
     tokenProtectionWarning: tokenProtectionWarningOverride ?? TokenProtectionWarning.None,
     tokenSymbol: currencyInfo?.currency.symbol,
     buyFeePercent: displayedBuyFeePercent,
     sellFeePercent: displayedSellFeePercent,
+    formatPercent,
   })
 
   const heading = tokenProtectionWarningOverride ? headingOverride : headingDefault

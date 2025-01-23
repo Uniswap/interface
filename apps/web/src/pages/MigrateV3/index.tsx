@@ -51,8 +51,6 @@ import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
-import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
@@ -102,7 +100,6 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   }
 
   const { currency0Amount, currency1Amount } = positionInfo
-
   const currency0FiatAmount = useUSDCValue(currency0Amount) ?? undefined
   const currency1FiatAmount = useUSDCValue(currency1Amount) ?? undefined
 
@@ -222,7 +219,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
                             currency0AmountUsd: currency0FiatAmount,
                             currency1AmountUsd: currency1FiatAmount,
                             poolId: positionInfo.poolId,
-                            version: ProtocolVersion.V3,
+                            version: protocolVersion,
                             chainId: startChainId,
                           }),
                           action: 'V3->V4',
@@ -315,24 +312,22 @@ export default function MigrateV3() {
         token1Address: currencyIdToAddress(currencyId(currency1Amount.currency)),
       }}
     >
-      <TransactionSettingsContextProvider settingKey={TransactionSettingKey.LP}>
-        <CreatePositionContextProvider
-          initialState={{
-            currencyInputs: {
-              [PositionField.TOKEN0]: currency0Amount.currency,
-              [PositionField.TOKEN1]: currency1Amount.currency,
-            },
-          }}
-        >
-          <PriceRangeContextProvider>
-            <DepositContextProvider>
-              <MigrateV3PositionTxContextProvider positionInfo={positionInfo}>
-                <MigrateV3Inner positionInfo={positionInfo} />
-              </MigrateV3PositionTxContextProvider>
-            </DepositContextProvider>
-          </PriceRangeContextProvider>
-        </CreatePositionContextProvider>
-      </TransactionSettingsContextProvider>
+      <CreatePositionContextProvider
+        initialState={{
+          currencyInputs: {
+            [PositionField.TOKEN0]: currency0Amount.currency,
+            [PositionField.TOKEN1]: currency1Amount.currency,
+          },
+        }}
+      >
+        <PriceRangeContextProvider>
+          <DepositContextProvider>
+            <MigrateV3PositionTxContextProvider positionInfo={positionInfo}>
+              <MigrateV3Inner positionInfo={positionInfo} />
+            </MigrateV3PositionTxContextProvider>
+          </DepositContextProvider>
+        </PriceRangeContextProvider>
+      </CreatePositionContextProvider>
     </Trace>
   )
 }

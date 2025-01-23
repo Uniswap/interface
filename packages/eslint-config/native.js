@@ -111,6 +111,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
   ],
   plugins: [
+    'detox',
     'jest',
     'no-relative-import-paths',
     'no-unsanitized',
@@ -288,6 +289,7 @@ module.exports = {
     {
       files: ['*.e2e.js'],
       env: {
+        'detox/detox': true,
         jest: true,
         'jest/globals': true,
       },

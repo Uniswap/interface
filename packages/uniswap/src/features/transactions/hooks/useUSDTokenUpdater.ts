@@ -1,6 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useEffect, useRef } from 'react'
-import { isUniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { STABLECOIN_AMOUNT_OUT, useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
@@ -35,7 +34,7 @@ export function useUSDTokenUpdater({
   }, [isFiatInput])
 
   useEffect(() => {
-    if (!currency || !price || !isUniverseChainId(currency.chainId)) {
+    if (!currency || !price) {
       return undefined
     }
 

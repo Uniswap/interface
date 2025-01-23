@@ -152,7 +152,7 @@ describe('Mobile navigation', () => {
   it('display settings are visible in mobile menu', () => {
     cy.get(getTestSelector('nav-company-menu')).should('be.visible').click()
     cy.contains('Display settings').should('be.visible').click()
-    const settings = ['Language', 'Currency']
+    const settings = ['Theme', 'Language', 'Currency']
     settings.forEach((label) => {
       cy.contains(label).should('be.visible')
     })

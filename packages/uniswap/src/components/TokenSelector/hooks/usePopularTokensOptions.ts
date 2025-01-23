@@ -1,23 +1,15 @@
 import { useCallback } from 'react'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
-import { useTrendingTokensCurrencyInfos } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensCurrencyInfos'
 import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
 import { GqlResult } from 'uniswap/src/data/types'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePopularTokens as usePopularTokensGql } from 'uniswap/src/features/dataApi/topTokens'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
-// TODO(WEB-5917): Rename to useTrendingTokensOptions once feature flag is fully on
 export function usePopularTokensOptions(
   address: Address | undefined,
-  chainFilter: Maybe<UniverseChainId>,
+  chainFilter: UniverseChainId,
 ): GqlResult<TokenOption[] | undefined> {
-  const isTokenSelectorTrendingTokensEnabled = useFeatureFlag(FeatureFlags.TokenSelectorTrendingTokens)
-  const { defaultChainId } = useEnabledChains()
-
   const {
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
@@ -26,42 +18,29 @@ export function usePopularTokensOptions(
   } = usePortfolioBalancesForAddressById(address)
 
   const {
-    data: trendingTokensRest,
-    error: trendingTokensRestError,
-    refetch: refetchTrendingTokensRest,
-    loading: loadingTrendingTokensRest,
-  } = useTrendingTokensCurrencyInfos(chainFilter)
+    data: popularTokens,
+    error: popularTokensError,
+    refetch: refetchPopularTokens,
+    loading: loadingPopularTokens,
+  } = usePopularTokensGql(chainFilter)
 
-  const {
-    data: popularTokensGql,
-    error: popularTokensGqlError,
-    refetch: refetchPopularTokensGql,
-    loading: loadingPopularTokensGql,
-    // if there is no chain filter then we show default chain tokens
-  } = usePopularTokensGql(chainFilter ?? defaultChainId, isTokenSelectorTrendingTokensEnabled)
-
-  const tokens = isTokenSelectorTrendingTokensEnabled ? trendingTokensRest : popularTokensGql
-  const tokensError = isTokenSelectorTrendingTokensEnabled ? trendingTokensRestError : popularTokensGqlError
-  const refetchTokens = isTokenSelectorTrendingTokensEnabled ? refetchTrendingTokensRest : refetchPopularTokensGql
-  const loadingTokens = isTokenSelectorTrendingTokensEnabled ? loadingTrendingTokensRest : loadingPopularTokensGql
-
-  const tokenOptions = useCurrencyInfosToTokenOptions({
-    currencyInfos: tokens,
+  const popularTokenOptions = useCurrencyInfosToTokenOptions({
+    currencyInfos: popularTokens,
     portfolioBalancesById,
-    sortAlphabetically: !isTokenSelectorTrendingTokensEnabled,
+    sortAlphabetically: true,
   })
 
   const refetch = useCallback(() => {
     portfolioBalancesByIdRefetch?.()
-    refetchTokens?.()
-  }, [portfolioBalancesByIdRefetch, refetchTokens])
+    refetchPopularTokens?.()
+  }, [portfolioBalancesByIdRefetch, refetchPopularTokens])
 
-  const error = (!portfolioBalancesById && portfolioBalancesByIdError) || (!tokenOptions && tokensError)
+  const error = (!portfolioBalancesById && portfolioBalancesByIdError) || (!popularTokenOptions && popularTokensError)
 
   return {
-    data: tokenOptions,
+    data: popularTokenOptions,
     refetch,
     error: error || undefined,
-    loading: loadingPorfolioBalancesById || loadingTokens,
+    loading: loadingPorfolioBalancesById || loadingPopularTokens,
   }
 }

@@ -27,7 +27,7 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
           </Flex>
           <Flex alignItems="center" rowGap="$spacing8">
             <Text variant="heading3">
-              <Trans i18nKey="common.warning" />
+              <Trans i18nKey="token.safetyLevel.strong.header" />
             </Text>
             <Text variant="body1" color="$neutral2" textAlign="center">
               <Trans

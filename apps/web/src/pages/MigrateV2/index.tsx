@@ -5,6 +5,7 @@ import { Pair } from '@uniswap/v2-sdk'
 import { LightCard } from 'components/Card/cards'
 import MigrateSushiPositionCard from 'components/PositionCard/Sushi'
 import MigrateV2PositionCard from 'components/PositionCard/V2'
+import QuestionHelper from 'components/QuestionHelper'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { AutoColumn } from 'components/deprecated/Column'
@@ -133,7 +134,7 @@ export default function MigrateV2() {
     <Trace logImpression page={InterfacePageNameLocal.MigrateV2}>
       <BodyWrapper style={{ padding: 24 }}>
         <AutoColumn gap="16px">
-          <AutoRow style={{ alignItems: 'center', justifyContent: 'center', position: 'relative' }} gap="8px">
+          <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
             <DeprecatedButton
               theme="secondary"
               onPress={() => {
@@ -145,13 +146,15 @@ export default function MigrateV2() {
               }}
               backgroundColor="$transparent"
               size="small"
-              style={{ position: 'absolute', left: 0 }}
             >
               <BackArrowIcon />
             </DeprecatedButton>
             <MigrateHeader>
               <Trans i18nKey="migrate.v2Title" />
             </MigrateHeader>
+            <div>
+              <QuestionHelper text={<Trans i18nKey="migrate.v2Subtitle" />} />
+            </div>
           </AutoRow>
 
           <ThemedText.DeprecatedBody style={{ marginBottom: 8, fontWeight: 485 }}>
@@ -200,7 +203,7 @@ export default function MigrateV2() {
               <Trans
                 i18nKey="migrate.missingV2Position"
                 components={{
-                  Link: <StyledInternalLink id="import-pool-link" to="/pools/v2/find" />,
+                  link: <StyledInternalLink id="import-pool-link" to="/pools/v2/find"></StyledInternalLink>,
                 }}
               />
             </Text>

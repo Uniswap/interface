@@ -1,4 +1,4 @@
-import { UseQueryResult, useQuery } from '@tanstack/react-query'
+import { UseQueryResult, skipToken, useQuery } from '@tanstack/react-query'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TRADING_API_CACHE_KEY, checkLpApproval } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
@@ -15,12 +15,9 @@ export function useCheckLpApprovalQuery({
 
   return useQuery<CheckApprovalLPResponse>({
     queryKey,
-    queryFn: async () => {
-      if (!params) {
-        throw { name: 'Params are required' }
-      }
-      return await checkLpApproval(params, headers)
-    },
+    queryFn: params
+      ? async (): ReturnType<typeof checkLpApproval> => await checkLpApproval(params, headers)
+      : skipToken,
     ...rest,
   })
 }

@@ -21,10 +21,14 @@ export function safetyLevelToWarningSeverity(safetyLevel: Maybe<SafetyLevel>): W
   }
 }
 
-export function getWarningIcon(severity: WarningSeverity): GeneratedIcon | null {
+// eslint-disable-next-line consistent-return
+export function getWarningIcon(
+  severity: WarningSeverity,
+  tokenProtectionEnabled: boolean = false,
+): GeneratedIcon | null {
   switch (severity) {
     case WarningSeverity.High:
-      return OctagonExclamation
+      return tokenProtectionEnabled ? OctagonExclamation : AlertTriangleFilled
     case WarningSeverity.Medium:
       return AlertTriangleFilled
     case WarningSeverity.Blocked:
@@ -32,7 +36,6 @@ export function getWarningIcon(severity: WarningSeverity): GeneratedIcon | null 
     case WarningSeverity.Low:
       return InfoCircleFilled
     case WarningSeverity.None:
-    default:
       return null
   }
 }

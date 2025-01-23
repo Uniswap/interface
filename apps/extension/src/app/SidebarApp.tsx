@@ -4,13 +4,12 @@ import 'src/app/Global.css'
 import { useEffect, useRef, useState } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { RouterProvider, createHashRouter } from 'react-router-dom'
+import { RouterProvider } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ExtensionStatsigProvider } from 'src/app/StatsigProvider'
 import { GraphqlProvider } from 'src/app/apollo'
 import { ErrorElement } from 'src/app/components/ErrorElement'
 import { TraceUserProperties } from 'src/app/components/Trace/TraceUserProperties'
-import { DatadogAppNameTag } from 'src/app/datadog'
 import { AccountSwitcherScreen } from 'src/app/features/accounts/AccountSwitcherScreen'
 import { DappContextProvider } from 'src/app/features/dapp/DappContext'
 import { addRequest } from 'src/app/features/dappRequests/saga'
@@ -30,6 +29,7 @@ import { useIsWalletUnlocked } from 'src/app/hooks/useIsWalletUnlocked'
 import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { MainContent, WebNavigation } from 'src/app/navigation/navigation'
 import { setRouter, setRouterState } from 'src/app/navigation/state'
+import { SentryAppNameTag, initializeSentry, sentryCreateHashRouter } from 'src/app/sentry'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import {
   DappBackgroundPortChannel,
@@ -47,6 +47,7 @@ import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagUpdaterContextProvider, useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n'
+import { getUniqueId } from 'utilities/src/device/getUniqueId'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -55,7 +56,17 @@ import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary
 import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
-const router = createHashRouter([
+getUniqueId()
+  .then((userId) => {
+    initializeSentry(SentryAppNameTag.Sidebar, userId)
+  })
+  .catch((error) => {
+    logger.error(error, {
+      tags: { file: 'SidebarApp.tsx', function: 'getUniqueId' },
+    })
+  })
+
+const router = sentryCreateHashRouter([
   {
     path: '',
     element: <SidebarWrapper />,
@@ -247,7 +258,7 @@ export default function SidebarApp(): JSX.Element {
   return (
     <Trace>
       <PersistGate persistor={getReduxPersistor()}>
-        <ExtensionStatsigProvider appName={DatadogAppNameTag.Sidebar}>
+        <ExtensionStatsigProvider appName={SentryAppNameTag.Sidebar}>
           <I18nextProvider i18n={i18n}>
             <SharedWalletProvider reduxStore={getReduxStore()}>
               <ErrorBoundary>

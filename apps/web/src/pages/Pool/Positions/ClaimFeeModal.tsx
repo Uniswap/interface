@@ -3,7 +3,7 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { LoaderButton } from 'components/Button/LoaderButton'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { useModalLiquidityInitialState, useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
-import { getProtocolItems, parseErrorMessageTitle } from 'components/Liquidity/utils'
+import { getProtocolItems } from 'components/Liquidity/utils'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
@@ -31,7 +31,6 @@ import { LiquidityTransactionType, isValidLiquidityTxContext } from 'uniswap/src
 import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { NumberType } from 'utilities/src/format/types'
-import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 // eslint-disable-next-line import/no-unused-modules
@@ -112,16 +111,7 @@ export function ClaimFeeModal() {
     refetch,
   } = useClaimLpFeesCalldataQuery({
     params: claimLpFeesParams,
-    enabled: Boolean(claimLpFeesParams),
   })
-
-  // prevent logging of the empty error object for now since those are burying signals
-  if (error && Object.keys(error).length > 0) {
-    logger.info('ClaimFeeModal', 'ClaimFeeModal', parseErrorMessageTitle(error, 'unknown ClaimLPFeesCalldataQuery'), {
-      error: JSON.stringify(error),
-      claimLpFeesParams: JSON.stringify(claimLpFeesParams),
-    })
-  }
 
   const txInfo = useMemo(() => {
     const validatedTxRequest = validateTransactionRequest(data?.claim)

@@ -1,10 +1,10 @@
+// eslint-disable-next-line no-restricted-imports
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { useIncreaseLiquidityContext } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
 import { useIncreaseLiquidityTxContext } from 'components/IncreaseLiquidity/IncreaseLiquidityTxContext'
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { useGetPoolTokenPercentage, usePositionCurrentPrice } from 'components/Liquidity/hooks'
-import { getDisplayedAmountsFromDependentAmount } from 'components/Liquidity/utils'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
@@ -36,71 +36,56 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
 
   const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
 
-  const { derivedIncreaseLiquidityInfo, increaseLiquidityState, currentTransactionStep, setCurrentTransactionStep } =
-    useIncreaseLiquidityContext()
+  const { derivedIncreaseLiquidityInfo, increaseLiquidityState } = useIncreaseLiquidityContext()
   const { txInfo, gasFeeEstimateUSD } = useIncreaseLiquidityTxContext()
-  const { dependentAmount } = txInfo || {}
 
-  const { exactField } = increaseLiquidityState
   const { currencyAmounts, currencyAmountsUSDValue } = derivedIncreaseLiquidityInfo
 
-  const { displayCurrencyAmounts, displayUSDAmounts } = useMemo(
-    () =>
-      getDisplayedAmountsFromDependentAmount({
-        token0: currencyAmounts?.TOKEN0?.currency,
-        token1: currencyAmounts?.TOKEN1?.currency,
-        dependentAmount,
-        exactField,
-        currencyAmounts,
-        currencyAmountsUSDValue,
-      }),
-    [dependentAmount, exactField, currencyAmounts, currencyAmountsUSDValue],
-  )
-
   const [steps, setSteps] = useState<TransactionStep[]>([])
+  const [currentStep, setCurrentStep] = useState<{ step: TransactionStep; accepted: boolean } | undefined>()
 
   if (!increaseLiquidityState.position) {
     throw new Error('a position must be defined')
   }
 
-  const { version, poolId, currency0Amount, currency1Amount, feeTier, chainId } = increaseLiquidityState.position
+  const { currency0Amount, currency1Amount, feeTier, chainId } = increaseLiquidityState.position
 
   const currentPrice = usePositionCurrentPrice(increaseLiquidityState.position)
   const poolTokenPercentage = useGetPoolTokenPercentage(increaseLiquidityState.position)
 
   const newToken0Amount = useMemo(() => {
-    if (!displayCurrencyAmounts?.TOKEN0) {
+    if (!currencyAmounts?.TOKEN0) {
       return undefined
     }
 
     const additionalToken0Amount = CurrencyAmount.fromRawAmount(
-      displayCurrencyAmounts?.TOKEN0?.currency,
+      currencyAmounts?.TOKEN0?.currency,
       currency0Amount.quotient,
     )
-    return displayCurrencyAmounts?.TOKEN0?.add(additionalToken0Amount)
-  }, [currency0Amount, displayCurrencyAmounts?.TOKEN0])
+    return currencyAmounts?.TOKEN0?.add(additionalToken0Amount)
+  }, [currency0Amount, currencyAmounts?.TOKEN0])
   const newToken0AmountUSD = useUSDCValue(newToken0Amount)
 
   const newToken1Amount = useMemo(() => {
-    if (!displayCurrencyAmounts?.TOKEN1) {
+    if (!currencyAmounts?.TOKEN1) {
       return undefined
     }
 
     const additionalToken1Amount = CurrencyAmount.fromRawAmount(
-      displayCurrencyAmounts?.TOKEN1?.currency,
+      currencyAmounts?.TOKEN1?.currency,
       currency1Amount.quotient,
     )
-    return displayCurrencyAmounts?.TOKEN1?.add(additionalToken1Amount)
-  }, [currency1Amount, displayCurrencyAmounts?.TOKEN1])
+    return currencyAmounts?.TOKEN1?.add(additionalToken1Amount)
+  }, [currency1Amount, currencyAmounts?.TOKEN1])
   const newToken1AmountUSD = useUSDCValue(newToken1Amount)
 
   const onFailure = () => {
-    setCurrentTransactionStep(undefined)
+    setCurrentStep(undefined)
   }
 
   const onSuccess = () => {
     setSteps([])
-    setCurrentTransactionStep(undefined)
+    setCurrentStep(undefined)
     onClose()
   }
 
@@ -117,13 +102,14 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
       return
     }
 
+    const { version, poolId, currency0Amount, currency1Amount } = increaseLiquidityState.position
     dispatch(
       liquiditySaga.actions.trigger({
         selectChain,
         startChainId,
         account,
         liquidityTxContext: txInfo,
-        setCurrentStep: setCurrentTransactionStep,
+        setCurrentStep,
         setSteps,
         onSuccess,
         onFailure,
@@ -139,8 +125,8 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
             currency1AmountUsd: currencyAmountsUSDValue?.TOKEN1,
             chainId: startChainId,
           }),
-          expectedAmountBaseRaw: currencyAmounts?.TOKEN0.quotient?.toString() ?? '-',
-          expectedAmountQuoteRaw: currencyAmounts?.TOKEN1.quotient?.toString() ?? '-',
+          expectedAmountBaseRaw: currency0Amount.quotient?.toString() ?? '0',
+          expectedAmountQuoteRaw: currency1Amount.quotient?.toString() ?? '0',
           createPosition: false,
         },
       }),
@@ -150,14 +136,14 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   return (
     <Flex gap="$gap12">
       <Flex gap="$gap16" px="$padding16" pt="$padding12">
-        <TokenInfo currencyAmount={displayCurrencyAmounts?.TOKEN0} currencyUSDAmount={displayUSDAmounts?.TOKEN0} />
+        <TokenInfo currencyAmount={currencyAmounts?.TOKEN0} currencyUSDAmount={currencyAmountsUSDValue?.TOKEN0} />
         <Text variant="body3" color="$neutral2">
           {t('common.and')}
         </Text>
-        <TokenInfo currencyAmount={displayCurrencyAmounts?.TOKEN1} currencyUSDAmount={displayUSDAmounts?.TOKEN1} />
+        <TokenInfo currencyAmount={currencyAmounts?.TOKEN1} currencyUSDAmount={currencyAmountsUSDValue?.TOKEN1} />
       </Flex>
-      {currentTransactionStep ? (
-        <ProgressIndicator currentStep={currentTransactionStep} steps={steps} />
+      {currentStep ? (
+        <ProgressIndicator currentStep={currentStep} steps={steps} />
       ) : (
         <>
           <Separator mx="$padding16" />

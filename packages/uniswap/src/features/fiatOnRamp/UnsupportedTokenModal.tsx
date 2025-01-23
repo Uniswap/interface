@@ -1,7 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { DeprecatedButton, Flex, Text, isWeb, useSporeColors } from 'ui/src'
+import { opacify } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
+import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 interface Props {
@@ -19,7 +21,7 @@ export default function UnsupportedTokenModal({ isVisible, onBack, onClose, onAc
   const colors = useSporeColors()
 
   return (
-    <Modal isModalOpen={isVisible} maxWidth={420} name={ModalName.FiatOffRampUnsupportedTokenModal} onClose={onClose}>
+    <Modal isModalOpen={isVisible} maxWidth={420} name={ModalName.TokenWarningModal} onClose={onClose}>
       <Flex
         centered
         gap="$spacing16"
@@ -33,10 +35,10 @@ export default function UnsupportedTokenModal({ isVisible, onBack, onClose, onAc
             borderRadius="$rounded12"
             p="$spacing12"
             style={{
-              backgroundColor: colors.statusWarning2.val,
+              backgroundColor: opacify(12, colors.DEP_accentWarning.val),
             }}
           >
-            <WarningIcon color={colors.DEP_accentWarning.val} size="$icon.24" />
+            <WarningIcon safetyLevel={SafetyLevel.MediumWarning} size="$icon.24" />
           </Flex>
           <Text variant="subheading1">{t('fiatOffRamp.unsupportedToken.title')}</Text>
         </Flex>

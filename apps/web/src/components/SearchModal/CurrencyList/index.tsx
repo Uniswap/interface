@@ -4,19 +4,17 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import Loader from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { MenuItem } from 'components/SearchModal/styled'
+import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { useTokenWarning } from 'constants/deprecatedTokenSafety'
 import { useAccount } from 'hooks/useAccount'
 import { useTokenBalances } from 'hooks/useTokenBalances'
 import { CSSProperties } from 'react'
 import { TokenFromList } from 'state/lists/tokenFromList'
 import { ThemedText } from 'theme/components'
 import { Flex, Text, styled } from 'ui/src'
-import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
-import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 import { currencyKey } from 'utils/currencyKey'
@@ -110,7 +108,7 @@ const RowWrapper = styled(Flex, {
 })
 
 export function CurrencyRow({
-  currencyInfo,
+  currency,
   onSelect,
   isSelected,
   otherSelected,
@@ -122,7 +120,7 @@ export function CurrencyRow({
   tooltip,
   showAddress,
 }: {
-  currencyInfo: CurrencyInfo
+  currency: Currency
   onSelect: (hasWarning: boolean) => void
   isSelected: boolean
   otherSelected: boolean
@@ -135,14 +133,11 @@ export function CurrencyRow({
   showAddress?: boolean
 }) {
   const account = useAccount()
-  const { currency } = currencyInfo
   const key = currencyListRowKey(currency)
-
   const { tokenWarningDismissed: customAdded } = useDismissedTokenWarnings(currency)
-  const warningSeverity = getTokenWarningSeverity(currencyInfo)
-  const isBlockedToken = warningSeverity === WarningSeverity.Blocked
+  const warning = useTokenWarning(currency?.isNative ? undefined : currency?.address, currency.chainId)
+  const isBlockedToken = !!warning && !warning.canProceed
   const blockedTokenOpacity = '0.6'
-
   const { balanceMap } = useTokenBalances({ cacheOnly: true })
   const balanceUSD = balanceMap[currencyKey(currency)]?.usdValue
 
@@ -166,8 +161,8 @@ export function CurrencyRow({
         <MenuItem
           tabIndex={0}
           className={`token-item-${key}`}
-          onKeyPress={(e) => (e.key === 'Enter' ? onSelect(warningSeverity === WarningSeverity.None) : null)}
-          onClick={() => onSelect(warningSeverity === WarningSeverity.None)}
+          onKeyPress={(e) => (e.key === 'Enter' ? onSelect(!!warning) : null)}
+          onClick={() => onSelect(!!warning)}
           selected={otherSelected || isSelected}
           dim={isBlockedToken}
           disabled={disabled}
@@ -177,7 +172,7 @@ export function CurrencyRow({
           <Flex style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }} gap="$spacing2">
             <Flex row alignItems="center" gap="$spacing4">
               <CurrencyName variant="body2">{currencyName}</CurrencyName>
-              <WarningIcon severity={warningSeverity} size="$icon.16" ml="$spacing4" />
+              <TokenSafetyIcon warning={warning} />
             </Flex>
             <Flex row alignItems="center" gap="$spacing8">
               <Text variant="body4" ml="0px" color="$neutral2">

@@ -8,11 +8,9 @@ import {
   BNB_LOGO,
   CELO_LOGO,
   ETHEREUM_LOGO,
-  ETH_LOGO,
   MONAD_LOGO,
   OPTIMISM_LOGO,
   POLYGON_LOGO,
-  UNICHAIN_LOGO,
   UNICHAIN_SEPOLIA_LOGO,
   WORLD_CHAIN_LOGO,
   ZKSYNC_LOGO,
@@ -35,7 +33,6 @@ import {
   USDC_OPTIMISM,
   USDC_POLYGON,
   USDC_SEPOLIA,
-  USDC_UNICHAIN,
   USDC_UNICHAIN_SEPOLIA,
   USDC_WORLD_CHAIN,
   USDC_ZKSYNC,
@@ -66,7 +63,6 @@ import {
   optimism,
   polygon,
   sepolia,
-  unichainSepolia,
   zkSync,
   zora,
 } from 'wagmi/chains'
@@ -106,8 +102,6 @@ export function getQuicknodeChainId(chainId: UniverseChainId): string {
       return 'matic'
     case UniverseChainId.Sepolia:
       return 'ethereum-sepolia'
-    case UniverseChainId.Unichain:
-      return 'unichain'
     case UniverseChainId.UnichainSepolia:
       return 'unichain-sepolia'
     case UniverseChainId.WorldChain:
@@ -133,12 +127,6 @@ export function getQuicknodeChainIdPathSuffix(chainId: UniverseChainId): string 
 
 export function getQuicknodeEndpointUrl(chainId: UniverseChainId): string {
   const quicknodeChainId = getQuicknodeChainId(chainId)
-
-  // TODO(WALL-5630): remove once Monad Testnet is supported by QuickNode Prism (ie GA release)
-  if (chainId === UniverseChainId.MonadTestnet) {
-    return config.quicknodeMonadTestnetRpcUrl
-  }
-
   return `https://${config.quicknodeEndpointName}${quicknodeChainId ? `.${quicknodeChainId}` : ''}.quiknode.pro/${config.quicknodeEndpointToken}${getQuicknodeChainIdPathSuffix(chainId)}`
 }
 
@@ -157,6 +145,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     blockPerMainnetEpochForChainId: 1,
     blockWaitMsBeforeWarning: isInterface ? DEFAULT_MS_BEFORE_WARNING : ONE_MINUTE_MS,
     bridge: undefined,
+    chainPriority: 0,
     docs: 'https://docs.uniswap.org/',
     elementName: ElementName.ChainEthereum,
     explorer: {
@@ -176,7 +165,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
       explorerLink: 'https://etherscan.io/chart/etherprice',
-      logo: ETH_LOGO,
+      logo: ETHEREUM_LOGO,
     },
     networkLayer: NetworkLayer.L1,
     pendingTransactionsRetryOptions: undefined,
@@ -224,6 +213,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     blockPerMainnetEpochForChainId: 46,
     blockWaitMsBeforeWarning: DEFAULT_MS_BEFORE_WARNING,
     bridge: 'https://bridge.arbitrum.io/',
+    chainPriority: 1,
     docs: 'https://offchainlabs.com/',
     elementName: ElementName.ChainArbitrum,
     explorer: {
@@ -243,7 +233,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
       explorerLink: 'https://arbiscan.io/chart/etherprice',
-      logo: ETH_LOGO,
+      logo: ETHEREUM_LOGO,
     },
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
@@ -286,6 +276,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     blockPerMainnetEpochForChainId: 6,
     blockWaitMsBeforeWarning: 600000,
     bridge: 'https://core.app/bridge/',
+    chainPriority: 6,
     docs: 'https://docs.avax.network/',
     elementName: ElementName.ChainAvalanche,
     explorer: {
@@ -340,6 +331,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     blockPerMainnetEpochForChainId: 6,
     blockWaitMsBeforeWarning: isInterface ? 1500000 : 600000,
     bridge: 'https://bridge.base.org/deposit',
+    chainPriority: 4,
     docs: 'https://docs.base.org/docs/',
     elementName: ElementName.ChainBase,
     explorer: {
@@ -358,7 +350,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
       explorerLink: 'https://basescan.org/chart/etherprice',
-      logo: ETH_LOGO,
+      logo: ETHEREUM_LOGO,
     },
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
@@ -397,6 +389,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     blockPerMainnetEpochForChainId: 1,
     blockWaitMsBeforeWarning: undefined,
     bridge: 'https://blast.io/bridge',
+    chainPriority: 8,
     docs: 'https://docs.blast.io',
     elementName: ElementName.ChainBlast,
     explorer: {
@@ -423,7 +416,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
-      logo: ETH_LOGO,
+      logo: ETHEREUM_LOGO,
     },
     rpcUrls: {
       [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Blast)] },
@@ -450,6 +443,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     blockPerMainnetEpochForChainId: 4,
     blockWaitMsBeforeWarning: 600000,
     bridge: 'https://cbridge.celer.network/1/56',
+    chainPriority: 5,
     docs: 'https://docs.bnbchain.org/',
     elementName: ElementName.ChainBNB,
     explorer: {
@@ -506,6 +500,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     blockPerMainnetEpochForChainId: 2,
     blockWaitMsBeforeWarning: 600000,
     bridge: 'https://www.portalbridge.com/#/transfer',
+    chainPriority: 7,
     docs: 'https://docs.celo.org/',
     elementName: ElementName.ChainCelo,
     explorer: {
@@ -559,6 +554,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       nativeTokenBackendAddress: undefined,
     },
     bridge: undefined,
+    chainPriority: 0,
     docs: 'https://docs.monad.xyz/',
     helpCenterUrl: undefined,
     label: 'Monad Testnet',
@@ -592,7 +588,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       name: 'Wrapped Monad',
       symbol: 'WMON',
       decimals: 18,
-      address: '0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701',
+      address: '0x93EACdB111FF98dE9a8Ac5823d357BBc4842aE63',
     },
     blockPerMainnetEpochForChainId: 1,
     blockWaitMsBeforeWarning: undefined,
@@ -621,6 +617,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     blockPerMainnetEpochForChainId: 6,
     blockWaitMsBeforeWarning: isInterface ? 1500000 : 1200000,
     bridge: 'https://app.optimism.io/bridge',
+    chainPriority: 2,
     docs: 'https://optimism.io/',
     elementName: ElementName.ChainOptimism,
     explorer: {
@@ -640,7 +637,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
       explorerLink: 'https://optimistic.etherscan.io/chart/etherprice',
-      logo: ETH_LOGO,
+      logo: ETHEREUM_LOGO,
     },
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
@@ -678,6 +675,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     },
     blockWaitMsBeforeWarning: 600000,
     bridge: 'https://portal.polygon.technology/bridge',
+    chainPriority: 3,
     docs: 'https://polygon.io/',
     elementName: ElementName.ChainPolygon,
     explorer: {
@@ -734,6 +732,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     blockPerMainnetEpochForChainId: 1,
     blockWaitMsBeforeWarning: undefined,
     bridge: undefined,
+    chainPriority: 0,
     docs: 'https://docs.uniswap.org/',
     elementName: ElementName.ChainSepolia,
     explorer: {
@@ -753,7 +752,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
       explorerLink: 'https://sepolia.etherscan.io/chart/etherprice',
-      logo: ETH_LOGO,
+      logo: ETHEREUM_LOGO,
     },
     networkLayer: NetworkLayer.L1,
     pendingTransactionsRetryOptions: undefined,
@@ -789,63 +788,8 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       address: '0xfff9976782d46cc05630d1f6ebab18b2324d6b14',
     },
   } as const satisfies UniverseChainInfo,
-  [UniverseChainId.Unichain]: {
-    // ...unichain, // TODO update once available from viem
-    name: 'Unichain',
-    id: UniverseChainId.Unichain,
-    sdkId: UniswapSDKChainId.UNICHAIN,
-    assetRepoNetworkName: 'unichain',
-    backendChain: {
-      chain: BackendChainId.Unichain as GqlChainId,
-      backendSupported: true,
-      isSecondaryChain: false,
-      nativeTokenBackendAddress: undefined,
-    },
-    blockPerMainnetEpochForChainId: 6, // TODO verify to complete WALL-5243
-    blockWaitMsBeforeWarning: undefined,
-    bridge: 'https://www.unichain.org/bridge',
-    docs: 'https://docs.unichain.org',
-    elementName: ElementName.ChainUnichain,
-    explorer: {
-      name: 'Uniscan',
-      url: 'https://uniscan.xyz/',
-    },
-    helpCenterUrl: undefined,
-    infoLink: 'https://app.uniswap.org/explore/tokens/unichain',
-    infuraPrefix: 'unichain',
-    interfaceName: 'unichain',
-    label: 'Unichain',
-    logo: UNICHAIN_LOGO,
-    nativeCurrency: {
-      name: 'Unichain ETH',
-      symbol: 'ETH',
-      decimals: 18,
-      address: DEFAULT_NATIVE_ADDRESS,
-      logo: ETHEREUM_LOGO,
-    },
-    networkLayer: NetworkLayer.L2,
-    pendingTransactionsRetryOptions: undefined,
-    // TODO verify any additional RPC's to complete WALL-5243
-    rpcUrls: {
-      [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Unichain)] },
-      [RPCType.Default]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Unichain)] },
-      [RPCType.Interface]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Unichain)] },
-    },
-    spotPriceStablecoinAmount: CurrencyAmount.fromRawAmount(USDC_UNICHAIN, 10_000e6),
-    stablecoins: [USDC_UNICHAIN],
-    statusPage: undefined,
-    supportsInterfaceClientSideRouting: true,
-    supportsGasEstimates: true,
-    urlParam: 'unichain',
-    wrappedNativeCurrency: {
-      name: 'Wrapped Ether',
-      symbol: 'WETH',
-      decimals: 18,
-      address: '0x4200000000000000000000000000000000000006',
-    },
-  } as const satisfies UniverseChainInfo,
   [UniverseChainId.UnichainSepolia]: {
-    ...unichainSepolia,
+    // ...astrochainSepolia,
     name: 'Unichain Sepolia',
     testnet: true,
     id: UniverseChainId.UnichainSepolia,
@@ -860,8 +804,9 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     blockPerMainnetEpochForChainId: 1,
     blockWaitMsBeforeWarning: undefined,
     bridge: undefined,
-    docs: 'https://docs.unichain.org/',
-    elementName: ElementName.ChainUnichainSepolia,
+    chainPriority: 0,
+    docs: 'https://docs.uniswap.org/', // need docs
+    elementName: ElementName.ChainSepolia,
     explorer: {
       name: 'Unichain Sepolia Explorer',
       url: 'https://unichain-sepolia.blockscout.com/',
@@ -877,7 +822,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
-      logo: ETH_LOGO,
+      logo: ETHEREUM_LOGO,
     },
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: undefined,
@@ -920,6 +865,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     blockPerMainnetEpochForChainId: 1, // TODO: verify
     blockWaitMsBeforeWarning: undefined,
     bridge: 'https://world-chain.superbridge.app/app',
+    chainPriority: 11,
     docs: 'https://docs.worldcoin.org/',
     elementName: ElementName.ChainWorldChain,
     explorer: {
@@ -937,7 +883,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
-      logo: ETH_LOGO,
+      logo: ETHEREUM_LOGO,
     },
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: undefined,
@@ -977,6 +923,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     blockPerMainnetEpochForChainId: 12,
     blockWaitMsBeforeWarning: 600000,
     bridge: 'https://portal.zksync.io/bridge/',
+    chainPriority: 10,
     docs: 'https://docs.zksync.io/',
     elementName: ElementName.ChainZkSync,
     explorer: {
@@ -995,7 +942,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
-      logo: ETH_LOGO,
+      logo: ETHEREUM_LOGO,
     },
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: undefined,
@@ -1031,6 +978,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     blockPerMainnetEpochForChainId: 1, // TODO: verify
     blockWaitMsBeforeWarning: 600000,
     bridge: 'https://bridge.zora.energy/',
+    chainPriority: 9,
     docs: 'https://docs.zora.co/',
     elementName: ElementName.ChainZora,
     explorer: {
@@ -1049,7 +997,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
-      logo: ETH_LOGO,
+      logo: ETHEREUM_LOGO,
     },
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {

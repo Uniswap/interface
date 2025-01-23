@@ -11,23 +11,27 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import DeprecatedTokenWarningModal from 'uniswap/src/features/tokens/DeprecatedTokenWarningModal'
 import { TokenWarningFlagsTable } from 'uniswap/src/features/tokens/TokenWarningFlagsTable'
 import {
   TokenProtectionWarning,
   getFeeOnTransfer,
   getFeeWarning,
   getIsFeeRelatedWarning,
+  getModalHeaderText,
+  getModalSubtitleText,
   getSeverityFromTokenProtectionWarning,
   getShouldHaveCombinedPluralTreatment,
   getTokenProtectionWarning,
   getTokenWarningSeverity,
-  useModalHeaderText,
-  useModalSubtitleText,
 } from 'uniswap/src/features/tokens/safetyUtils'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
-import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
+import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 
 export interface FoTPercent {
   buyFeePercent?: number
@@ -72,6 +76,7 @@ function TokenWarningModalContent({
   onDismissTokenWarning1,
 }: TokenWarningModalContentProps): JSX.Element | null {
   const { t } = useTranslation()
+  const { formatPercent } = useLocalizationContext()
 
   const tokenProtectionWarning =
     feeOnTransferOverride?.buyFeePercent || feeOnTransferOverride?.sellFeePercent
@@ -98,18 +103,21 @@ function TokenWarningModalContent({
     (!isFeeRelatedWarning && severity !== WarningSeverity.Low && severity !== WarningSeverity.Blocked) ||
     showBlockaidFeesData
 
-  const titleText = useModalHeaderText({
+  const titleText = getModalHeaderText({
+    t,
     tokenSymbol0: tokenSymbol,
     tokenSymbol1: currencyInfo1?.currency.symbol,
     tokenProtectionWarning,
     shouldHavePluralTreatment: shouldBeCombinedPlural,
   })
-  const subtitleText = useModalSubtitleText({
+  const subtitleText = getModalSubtitleText({
+    t,
     tokenProtectionWarning,
     tokenSymbol,
     buyFeePercent: displayedBuyFeePercent,
     sellFeePercent: displayedSellFeePercent,
     shouldHavePluralTreatment: shouldBeCombinedPlural,
+    formatPercent,
   })
   const { headerText: titleTextColor } = getAlertColor(severity)
 
@@ -275,6 +283,7 @@ export default function TokenWarningModal({
   onAcknowledge,
   closeModalOnly,
 }: TokenWarningModalProps): JSX.Element | null {
+  const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
   const colors = useSporeColors()
   const [warningIndex, setWarningIndex] = useState<0 | 1>(0)
 
@@ -292,7 +301,7 @@ export default function TokenWarningModal({
 
   const hasSecondWarning = Boolean(!combinedPlural && getTokenWarningSeverity(currencyInfo1) !== WarningSeverity.None)
 
-  return (
+  return tokenProtectionEnabled ? (
     <Modal
       backgroundColor={colors.surface1.val}
       isModalOpen={isVisible}
@@ -355,6 +364,16 @@ export default function TokenWarningModal({
         )}
       </AnimateTransition>
     </Modal>
+  ) : (
+    <DeprecatedTokenWarningModal
+      currencyId={currencyId(currencyInfo0.currency)}
+      disableAccept={isInfoOnlyWarning}
+      isVisible={isVisible}
+      safetyLevel={currencyInfo0.safetyLevel}
+      tokenLogoUrl={currencyInfo0?.logoUrl}
+      onAccept={onAcknowledge}
+      onClose={closeModalOnly}
+    />
   )
 }
 

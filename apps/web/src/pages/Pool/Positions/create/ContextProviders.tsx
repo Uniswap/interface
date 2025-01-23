@@ -1,6 +1,5 @@
 import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
 import { DepositState } from 'components/Liquidity/types'
-import { parseErrorMessageTitle } from 'components/Liquidity/utils'
 import {
   CreatePositionContext,
   CreateTxContext,
@@ -31,14 +30,11 @@ import {
   generateCreatePositionTxRequest,
 } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { PositionField } from 'types/position'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
-import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function CreatePositionContextProvider({
@@ -50,9 +46,6 @@ export function CreatePositionContextProvider({
 }) {
   const [positionState, setPositionState] = useState<PositionState>({ ...DEFAULT_POSITION_STATE, ...initialState })
   const [step, setStep] = useState<PositionFlowStep>(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
-  const [currentTransactionStep, setCurrentTransactionStep] = useState<
-    { step: TransactionStep; accepted: boolean } | undefined
-  >()
   const derivedPositionInfo = useDerivedPositionInfo(positionState)
   const [feeTierSearchModalOpen, setFeeTierSearchModalOpen] = useState(false)
   const [dynamicFeeTierSpeedbumpData, setDynamicFeeTierSpeedbumpData] = useState<DynamicFeeTierSpeedbumpData>({
@@ -78,8 +71,6 @@ export function CreatePositionContextProvider({
         setPositionState,
         derivedPositionInfo,
         feeTierSearchModalOpen,
-        currentTransactionStep,
-        setCurrentTransactionStep,
         setFeeTierSearchModalOpen,
         dynamicFeeTierSpeedbumpData,
         setDynamicFeeTierSpeedbumpData,
@@ -130,15 +121,6 @@ export function DepositContextProvider({ children }: { children: React.ReactNode
   const [depositState, setDepositState] = useState<DepositState>(DEFAULT_DEPOSIT_STATE)
   const derivedDepositInfo = useDerivedDepositInfo(depositState)
 
-  const { derivedPriceRangeInfo } = usePriceRangeContext()
-  useEffect(() => {
-    if (derivedPriceRangeInfo.deposit1Disabled) {
-      setDepositState((prev) => ({ ...prev, exactField: PositionField.TOKEN0 }))
-    } else if (derivedPriceRangeInfo.deposit0Disabled) {
-      setDepositState((prev) => ({ ...prev, exactField: PositionField.TOKEN1 }))
-    }
-  }, [derivedPriceRangeInfo?.deposit0Disabled, derivedPriceRangeInfo?.deposit1Disabled])
-
   const reset = useCallback(() => {
     setDepositState(DEFAULT_DEPOSIT_STATE)
   }, [])
@@ -152,8 +134,8 @@ export function DepositContextProvider({ children }: { children: React.ReactNode
 
 export function CreateTxContextProvider({ children }: { children: React.ReactNode }) {
   const account = useAccountMeta()
-  const { derivedPositionInfo, positionState, currentTransactionStep } = useCreatePositionContext()
-  const { derivedDepositInfo, depositState } = useDepositContext()
+  const { derivedPositionInfo, positionState } = useCreatePositionContext()
+  const { derivedDepositInfo } = useDepositContext()
   const { priceRangeState, derivedPriceRangeInfo } = usePriceRangeContext()
   const swapSettings = useTransactionSettingsContext()
 
@@ -175,21 +157,8 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
   } = useCheckLpApprovalQuery({
     params: addLiquidityApprovalParams,
     staleTime: 5 * ONE_SECOND_MS,
-    enabled: !!addLiquidityApprovalParams && !hasError,
+    enabled: !hasError,
   })
-
-  if (approvalError) {
-    logger.info(
-      'CreateTxContextProvider',
-      'CreateTxContextProvider',
-      parseErrorMessageTitle(approvalError, 'unknown CheckLpApprovalQuery'),
-      {
-        error: JSON.stringify(approvalError),
-        addLiquidityApprovalParams: JSON.stringify(addLiquidityApprovalParams),
-      },
-    )
-  }
-
   const gasFeeToken0USD = useUSDCurrencyAmountOfGasFee(
     derivedPositionInfo.currencies?.[0]?.chainId,
     approvalCalldata?.gasFeeToken0Approval,
@@ -208,7 +177,6 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
       priceRangeState,
       derivedPriceRangeInfo,
       derivedDepositInfo,
-      independentField: depositState.exactField,
     })
   }, [
     account,
@@ -218,13 +186,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     derivedPriceRangeInfo,
     positionState,
     priceRangeState,
-    depositState.exactField,
   ])
-
-  const isUserCommittedToCreate =
-    currentTransactionStep?.step.type === TransactionStepType.IncreasePositionTransaction ||
-    currentTransactionStep?.step.type === TransactionStepType.IncreasePositionTransactionAsync
-
   const {
     data: createCalldata,
     error: createError,
@@ -233,26 +195,8 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     params: createCalldataQueryParams,
     deadlineInMinutes: swapSettings.customDeadline,
     refetchInterval: 5 * ONE_SECOND_MS,
-    enabled:
-      !isUserCommittedToCreate &&
-      !hasError &&
-      !approvalLoading &&
-      !approvalError &&
-      Boolean(approvalCalldata) &&
-      Boolean(createCalldataQueryParams),
+    enabled: !hasError && !approvalLoading && !approvalError && Boolean(approvalCalldata),
   })
-
-  if (createError) {
-    logger.info(
-      'CreateTxContextProvider',
-      'CreateTxContextProvider',
-      parseErrorMessageTitle(createError, 'unknown CreateLpPositionCalldataQuery'),
-      {
-        error: JSON.stringify(createError),
-        createCalldataQueryParams: JSON.stringify(createCalldataQueryParams),
-      },
-    )
-  }
 
   const actualGasFee = createCalldata?.gasFee
   const { value: calculatedGasFee } = useTransactionGasFee(createCalldata?.create, !!actualGasFee)

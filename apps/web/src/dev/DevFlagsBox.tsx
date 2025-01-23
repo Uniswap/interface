@@ -1,16 +1,13 @@
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { ColumnCenter } from 'components/deprecated/Column'
 import { RowBetween } from 'components/deprecated/Row'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import styled from 'lib/styled-components'
 import { useState } from 'react'
 import { Flag, Settings } from 'react-feather'
-import { useDispatch } from 'react-redux'
 import { useCloseModal, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
-import { Button } from 'ui/src'
-import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 
@@ -65,12 +62,6 @@ export default function DevFlagsBox() {
   const toggleFeatureFlagsModal = useToggleModal(ApplicationModal.FEATURE_FLAGS)
   const closeFeatureFlagsModal = useCloseModal()
 
-  const dispatch = useDispatch()
-
-  const onPressReset = (): void => {
-    dispatch(resetUniswapBehaviorHistory())
-  }
-
   return (
     <Box
       onClick={() => {
@@ -103,11 +94,6 @@ export default function DevFlagsBox() {
       )}
 
       {isOpen && (hasOverrides ? overrides : <ThemedText.LabelSmall>No overrides</ThemedText.LabelSmall>)}
-      {isOpen && (
-        <Button variant="branded" emphasis="secondary" size="small" onPress={onPressReset} mt="$spacing8">
-          Reset behavior history
-        </Button>
-      )}
     </Box>
   )
 }

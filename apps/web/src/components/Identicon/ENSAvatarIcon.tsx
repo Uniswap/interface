@@ -1,6 +1,6 @@
+import useENSAvatar from 'hooks/useENSAvatar'
 import styled from 'lib/styled-components'
 import { useCallback, useState } from 'react'
-import { useENSAvatar } from 'uniswap/src/features/ens/api'
 
 const StyledAvatarIcon = styled.div<{ iconSize: number }>`
   height: ${({ iconSize }) => `${iconSize}px`};
@@ -17,7 +17,7 @@ const StyledAvatar = styled.img`
 `
 
 export default function ENSAvatarIcon({ account, size }: { account?: string; size?: number }) {
-  const { data: avatar } = useENSAvatar(account)
+  const { avatar } = useENSAvatar(account, false)
   const [fetchable, setFetchable] = useState(true)
   const iconSize = size ?? 24
 

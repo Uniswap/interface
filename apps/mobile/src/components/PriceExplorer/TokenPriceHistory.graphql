@@ -1,7 +1,6 @@
 query TokenPriceHistory(
   $contract: ContractInput!
   $duration: HistoryDuration = DAY
-  $maxHistoryLength: Int = 1000
 ) {
   tokenProjects(contracts: [$contract]) {
     id
@@ -14,7 +13,7 @@ query TokenPriceHistory(
       pricePercentChange24h {
         value
       }
-      priceHistory(duration: $duration, maxLength: $maxHistoryLength) {
+      priceHistory(duration: $duration) {
         timestamp
         value
       }
@@ -33,7 +32,7 @@ query TokenPriceHistory(
         pricePercentChange24h: pricePercentChange(duration: DAY) {
           value
         }
-        priceHistory(duration: $duration, maxLength: $maxHistoryLength) {
+        priceHistory(duration: $duration) {
           timestamp
           value
         }

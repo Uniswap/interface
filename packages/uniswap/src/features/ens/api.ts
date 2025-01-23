@@ -76,29 +76,32 @@ async function getOnChainEnsFetch(params: EnsLookupParams): Promise<string | nul
   }
 }
 
-function useEnsQuery(type: EnsLookupType, nameOrAddress?: string | null) {
+function useEnsQuery(
+  type: EnsLookupType,
+  nameOrAddress?: string | null,
+  chainId: UniverseChainId = UniverseChainId.Mainnet,
+) {
   return useQuery<string | null>({
-    queryKey: [ONCHAIN_ENS_CACHE_KEY, type, nameOrAddress],
+    queryKey: [ONCHAIN_ENS_CACHE_KEY, chainId, type, nameOrAddress],
     queryFn: nameOrAddress
-      ? async (): ReturnType<typeof getOnChainEnsFetch> =>
-          await getOnChainEnsFetch({ type, nameOrAddress, chainId: UniverseChainId.Mainnet })
+      ? async (): ReturnType<typeof getOnChainEnsFetch> => await getOnChainEnsFetch({ type, nameOrAddress, chainId })
       : skipToken,
     staleTime: 5 * ONE_MINUTE_MS,
   })
 }
 
-export function useENSName(address?: Address) {
-  return useEnsQuery(EnsLookupType.Name, address)
+export function useENSName(address?: Address, chainId: UniverseChainId = UniverseChainId.Mainnet) {
+  return useEnsQuery(EnsLookupType.Name, address, chainId)
 }
-export function useAddressFromEns(maybeName: string | null) {
-  return useEnsQuery(EnsLookupType.Address, maybeName)
+export function useAddressFromEns(maybeName: string | null, chainId: UniverseChainId = UniverseChainId.Mainnet) {
+  return useEnsQuery(EnsLookupType.Address, maybeName, chainId)
 }
-export function useENSAvatar(address?: string | null) {
-  return useEnsQuery(EnsLookupType.Avatar, address)
+export function useENSAvatar(address?: string | null, chainId: UniverseChainId = UniverseChainId.Mainnet) {
+  return useEnsQuery(EnsLookupType.Avatar, address, chainId)
 }
-export function useENSDescription(name?: string | null) {
-  return useEnsQuery(EnsLookupType.Description, name)
+export function useENSDescription(name?: string | null, chainId: UniverseChainId = UniverseChainId.Mainnet) {
+  return useEnsQuery(EnsLookupType.Description, name, chainId)
 }
-export function useENSTwitterUsername(name?: string | null) {
-  return useEnsQuery(EnsLookupType.TwitterUsername, name)
+export function useENSTwitterUsername(name?: string | null, chainId: UniverseChainId = UniverseChainId.Mainnet) {
+  return useEnsQuery(EnsLookupType.TwitterUsername, name, chainId)
 }

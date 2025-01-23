@@ -86,28 +86,25 @@ exports[`DappLogoWithWCBadge renders without error 1`] = `
       }
     }
   >
-    <View
-      style={
+    <Image
+      source={
         {
-          "flexDirection": "column",
+          "uri": "https://example.com/dapp.png",
         }
       }
-      testID="img-dapp-image"
-    >
-      <img
-        height={40}
-        onError={[Function]}
-        src="https://example.com/dapp.png"
-        style={
-          {
-            "aspectRatio": undefined,
-            "borderRadius": 4,
-            "objectFit": "contain",
-          }
+      style={
+        {
+          "aspectRatio": undefined,
+          "backgroundColor": undefined,
+          "borderRadius": 4,
+          "flex": undefined,
+          "height": 40,
+          "resizeMode": "contain",
+          "width": 40,
         }
-        width={40}
-      />
-    </View>
+      }
+      testID="dapp-image"
+    />
   </View>
   <View
     style={

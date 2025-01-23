@@ -17,6 +17,7 @@ const workspaceRoot = path.resolve(mobileRoot, '../..')
 
 const watchFolders = [mobileRoot, `${workspaceRoot}/node_modules`, `${workspaceRoot}/packages`]
 
+const detoxExtensions = process.env.DETOX_MODE === 'mocked' ? ['mock.tsx', 'mock.ts'] : []
 
 const defaultConfig = getDefaultConfig(__dirname)
 
@@ -28,7 +29,8 @@ const config = {
   resolver: {
     nodeModulesPaths: [`${workspaceRoot}/node_modules`],
     assetExts: assetExts.filter((ext) => ext !== 'svg'),
-    sourceExts: [...sourceExts, 'svg', 'cjs'],
+    // detox mocking works properly only being spreaded at the beginning of sourceExts array
+    sourceExts: [...detoxExtensions, ...sourceExts, 'svg', 'cjs'],
   },
   transformer: {
     getTransformOptions: async () => ({
@@ -48,14 +50,11 @@ const config = {
   watchFolders,
 }
 
-const IS_STORYBOOK_ENABLED = process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test'
-
 // Checkout more useful options in the docs: https://github.com/storybookjs/react-native?tab=readme-ov-file#options
 module.exports = withStorybook(mergeConfig(defaultConfig, config), {
   // Set to false to remove storybook specific options
   // you can also use a env variable to set this
-  enabled: IS_STORYBOOK_ENABLED,
-  onDisabledRemoveStorybook: true,
+  enabled: process.env.NODE_ENV !== 'production' && process.env.NODE_ENV !== 'test',
   // Path to your storybook config
   configPath: path.resolve(__dirname, './.storybook'),
 })

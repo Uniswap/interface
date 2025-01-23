@@ -1,23 +1,15 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import { BRIDGING_BANNER, UNICHAIN_BANNER_COLD, UNICHAIN_BANNER_WARM } from 'ui/src/assets'
+import { BRIDGING_BANNER } from 'ui/src/assets'
 import { Person } from 'ui/src/components/icons'
-import { PollingInterval } from 'uniswap/src/constants/misc'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { selectHasViewedBridgingBanner } from 'uniswap/src/features/behaviorHistory/selectors'
-import {
-  setHasDismissedUnichainColdBanner,
-  setHasDismissedUnichainWarmBanner,
-  setHasViewedBridgingBanner,
-} from 'uniswap/src/features/behaviorHistory/slice'
+import { setHasViewedBridgingBanner } from 'uniswap/src/features/behaviorHistory/slice'
 import { useNumBridgingChains } from 'uniswap/src/features/bridging/hooks/chains'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { OnboardingCardLoggingName } from 'uniswap/src/features/telemetry/types'
-import { useUnichainBannerVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainBannerVisibility'
 import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'uniswap/src/features/unitags/constants'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { CardType, IntroCardGraphicType, IntroCardProps } from 'wallet/src/components/introCards/IntroCard'
@@ -28,7 +20,7 @@ import { useUnitagClaimHandler } from 'wallet/src/features/unitags/useUnitagClai
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type SharedIntroCardsProps = {
-  showUnichainModal: () => void
+  hasTokens: boolean
   navigateToUnitagClaim: () => void
   navigateToUnitagIntro: () => void
 }
@@ -42,20 +34,13 @@ type SharedIntroCardReturn = {
 export function useSharedIntroCards({
   navigateToUnitagClaim,
   navigateToUnitagIntro,
-  showUnichainModal,
+  hasTokens,
 }: SharedIntroCardsProps): SharedIntroCardReturn {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const activeAccount = useActiveAccountWithThrow()
   const isSignerAccount = activeAccount.type === AccountType.SignerMnemonic
   const claimUnitagEnabled = useFeatureFlag(FeatureFlags.ExtensionClaimUnitag)
-
-  const { data: totalValueData } = usePortfolioTotalValue({
-    address: activeAccount.address,
-    // Not needed often given usage, and will get updated from other sources
-    pollInterval: PollingInterval.Slow,
-  })
-  const hasTokens = (totalValueData?.balanceUSD ?? 0) > 0
 
   const hasSkippedUnitagPrompt = useSelector(selectHasSkippedUnitagPrompt)
   const { canClaimUnitag } = useCanActiveAddressClaimUnitag()
@@ -86,6 +71,7 @@ export function useSharedIntroCards({
   const bridgingCard = useMemo(() => {
     return {
       loggingName: OnboardingCardLoggingName.BridgingBanner,
+      isNew: true,
       graphic: {
         type: IntroCardGraphicType.Image as const,
         image: BRIDGING_BANNER,
@@ -97,47 +83,6 @@ export function useSharedIntroCards({
       onClose: () => handleBridgingDismiss(false),
     }
   }, [handleBridgingDismiss, numBridgingChains, t])
-
-  const { shouldShowUnichainBannerCold, shouldShowUnichainBannerWarm } = useUnichainBannerVisibility()
-
-  const unichainBannerCold = useMemo(() => {
-    return {
-      loggingName: OnboardingCardLoggingName.UnichainBannerCold,
-      isNew: true,
-      graphic: {
-        type: IntroCardGraphicType.Image as const,
-        image: UNICHAIN_BANNER_COLD,
-      },
-      title: t('unichain.promotion.cold.title'),
-      description: t('unichain.promotion.cold.description'),
-      cardType: CardType.Dismissible,
-      onPress: showUnichainModal,
-      onClose: (): void => {
-        dispatch(setHasDismissedUnichainColdBanner(true))
-      },
-    }
-  }, [dispatch, showUnichainModal, t])
-
-  const unichainBannerWarm = useMemo(() => {
-    return {
-      loggingName: OnboardingCardLoggingName.UnichainBannerWarm,
-      isNew: true,
-      graphic: {
-        type: IntroCardGraphicType.Image as const,
-        image: UNICHAIN_BANNER_WARM,
-      },
-      title: t('unichain.promotion.warm.title'),
-      description: t('unichain.promotion.warm.description'),
-      cardType: CardType.Dismissible,
-      onPress: (): void => {
-        navigateToSwapFlow({ openTokenSelector: CurrencyField.OUTPUT, inputChainId: UniverseChainId.Unichain })
-        dispatch(setHasDismissedUnichainWarmBanner(true))
-      },
-      onClose: (): void => {
-        dispatch(setHasDismissedUnichainWarmBanner(true))
-      },
-    }
-  }, [dispatch, navigateToSwapFlow, t])
 
   return useMemo(() => {
     const output: IntroCardProps[] = []
@@ -159,14 +104,6 @@ export function useSharedIntroCards({
       })
     }
 
-    if (shouldShowUnichainBannerCold) {
-      output.push(unichainBannerCold)
-    }
-
-    if (shouldShowUnichainBannerWarm) {
-      output.push(unichainBannerWarm)
-    }
-
     if (shouldShowBridgingBanner) {
       output.push(bridgingCard)
     }
@@ -179,14 +116,10 @@ export function useSharedIntroCards({
   }, [
     shouldPromptUnitag,
     claimUnitagEnabled,
-    shouldShowUnichainBannerCold,
-    shouldShowUnichainBannerWarm,
     shouldShowBridgingBanner,
     t,
     handleUnitagClaim,
     handleUnitagDismiss,
-    unichainBannerCold,
-    unichainBannerWarm,
     bridgingCard,
   ])
 }

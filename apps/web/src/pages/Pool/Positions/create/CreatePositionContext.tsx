@@ -25,15 +25,12 @@ export const CreatePositionContext = React.createContext<CreatePositionContextTy
     protocolVersion: ProtocolVersion.V4,
     currencies: [undefined, undefined],
     isPoolOutOfSync: false,
-    refetchPoolData: () => undefined,
   },
   dynamicFeeTierSpeedbumpData: {
     open: false,
     wishFeeData: DEFAULT_POSITION_STATE.fee,
   },
   setDynamicFeeTierSpeedbumpData: () => undefined,
-  currentTransactionStep: undefined,
-  setCurrentTransactionStep: () => undefined,
 })
 
 export const useCreatePositionContext = () => {
@@ -46,6 +43,7 @@ export const DEFAULT_PRICE_RANGE_STATE: PriceRangeState = {
   minPrice: '',
   maxPrice: '',
   initialPrice: '',
+  initialPriceInverted: false,
 }
 
 export const PriceRangeContext = React.createContext<PriceRangeContextType>({

@@ -1,4 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
+import { ChainLogo } from 'components/Logo/ChainLogo'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import styled from 'lib/styled-components'
 import { memo } from 'react'
@@ -25,7 +26,6 @@ const MissingImageLogo = styled.div<{ $size?: string; $textColor: string; $backg
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
 `
 
 function LogolessPlaceholder({ currency, size }: { currency?: Currency; size: number }) {
@@ -80,3 +80,55 @@ export const DoubleCurrencyLogo = memo(function DoubleCurrencyLogo({
     />
   )
 })
+
+const StyledLogoParentContainer = styled.div`
+  position: relative;
+  top: 0;
+  left: 0;
+`
+
+const L2_LOGO_SIZE_FACTOR = 3 / 8
+
+const L2LogoContainer = styled.div<{ $size: number }>`
+  background-color: ${({ theme }) => theme.surface2};
+  border-radius: 2px;
+  width: ${({ $size }) => $size * L2_LOGO_SIZE_FACTOR}px;
+  height: ${({ $size }) => $size * L2_LOGO_SIZE_FACTOR}px;
+  left: 60%;
+  position: absolute;
+  top: 60%;
+  outline: 2px solid ${({ theme }) => theme.surface1};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: ${zIndices.mask};
+`
+
+function SquareL2Logo({ chainId, size }: { chainId: UniverseChainId; size: number }) {
+  if (chainId === UniverseChainId.Mainnet) {
+    return null
+  }
+
+  return (
+    <L2LogoContainer $size={size}>
+      <ChainLogo chainId={chainId} size={size * L2_LOGO_SIZE_FACTOR} />
+    </L2LogoContainer>
+  )
+}
+
+export function DoubleCurrencyAndChainLogo({
+  chainId,
+  currencies,
+  size = 32,
+}: {
+  chainId: number
+  currencies: Array<Currency | undefined>
+  size?: number
+}) {
+  return (
+    <StyledLogoParentContainer>
+      <DoubleCurrencyLogo currencies={currencies} size={size} />
+      <SquareL2Logo chainId={chainId} size={size} />
+    </StyledLogoParentContainer>
+  )
+}

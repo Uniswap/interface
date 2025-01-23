@@ -69,7 +69,7 @@ export function FiatOnRampCurrencyModal({
                     return (
                       <CurrencyRow
                         style={style}
-                        currencyInfo={currencyInfo}
+                        currency={currencyInfo.currency}
                         onSelect={() => {
                           onSelectCurrency(data[index])
                           onDismiss()

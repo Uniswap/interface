@@ -325,7 +325,7 @@ export function FeeTierSearchModal() {
                 }}
               />
             </Flex>
-            <Flex width="100%" gap="$gap4" maxHeight={350} overflow="scroll" className="scrollbar-hidden">
+            <Flex width="100%" gap="$gap4" maxHeight={350} overflow="scroll">
               {Object.values(feeTierData)
                 .filter((data) => data.formattedFee.includes(searchValue) || (data.id && searchValue.includes(data.id)))
                 .map((pool) => (
@@ -333,7 +333,7 @@ export function FeeTierSearchModal() {
                     row
                     alignItems="center"
                     gap="$spacing24"
-                    key={pool.id + pool.formattedFee}
+                    key={pool.id}
                     py="$padding12"
                     px="$padding16"
                     justifyContent="space-between"

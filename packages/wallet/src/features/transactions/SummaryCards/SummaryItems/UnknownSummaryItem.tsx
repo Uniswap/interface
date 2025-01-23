@@ -18,16 +18,10 @@ export function UnknownSummaryItem({
   const colors = useSporeColors()
 
   const caption = useMemo(() => {
-    if (transaction.typeInfo.dappInfo?.name) {
-      return transaction.typeInfo.dappInfo.name
-    }
-
-    if (transaction.typeInfo.tokenAddress && getValidAddress(transaction.typeInfo.tokenAddress)) {
-      return shortenAddress(transaction.typeInfo.tokenAddress)
-    }
-
-    return ''
-  }, [transaction.typeInfo.tokenAddress, transaction.typeInfo.dappInfo?.name])
+    return transaction.typeInfo.tokenAddress && getValidAddress(transaction.typeInfo.tokenAddress)
+      ? shortenAddress(transaction.typeInfo.tokenAddress)
+      : ''
+  }, [transaction.typeInfo.tokenAddress])
 
   const icon = useMemo(
     () =>

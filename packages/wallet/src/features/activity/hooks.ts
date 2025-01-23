@@ -1,11 +1,9 @@
-import { ApolloError, NetworkStatus, QueryHookOptions } from '@apollo/client'
+import { ApolloError, NetworkStatus } from '@apollo/client'
 import isEqual from 'lodash/isEqual'
 import { useCallback, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
-  TransactionListQuery,
-  TransactionListQueryVariables,
   useFeedTransactionListQuery,
   useTransactionListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -130,12 +128,11 @@ export function useFormattedTransactionDataForActivity({
   address,
   hideSpamTokens,
   pageSize,
-  ...queryOptions
 }: {
   address: Address
   hideSpamTokens: boolean
   pageSize?: number
-} & QueryHookOptions<TransactionListQuery, TransactionListQueryVariables>): {
+}): {
   hasData: boolean
   isLoading: boolean
   isError: ApolloError | undefined
@@ -152,7 +149,6 @@ export function useFormattedTransactionDataForActivity({
     data,
     error: requestError,
   } = useTransactionListQuery({
-    ...queryOptions,
     variables: { address, chains: gqlChains, pageSize },
     notifyOnNetworkStatusChange: true,
     // rely on TransactionHistoryUpdater for polling

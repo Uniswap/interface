@@ -1,5 +1,5 @@
 import { BigNumber } from 'ethers'
-import React, { PropsWithChildren } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { LinkButton } from 'src/components/buttons/LinkButton'
@@ -9,7 +9,7 @@ import { TextVariantTokens, iconSizes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { useENSName } from 'uniswap/src/features/ens/api'
+import { useENS } from 'uniswap/src/features/ens/useENS'
 import { EthMethod, EthTransaction } from 'uniswap/src/types/walletConnect'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
@@ -38,7 +38,7 @@ type AddressButtonProps = {
 }
 
 const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps): JSX.Element => {
-  const { data: name } = useENSName(address)
+  const { name } = useENS(chainId, address, false)
   const colors = useSporeColors()
   const { defaultChainId } = useEnabledChains()
   const supportedChainId = toSupportedChainId(chainId) ?? defaultChainId
@@ -55,23 +55,6 @@ const AddressButton = ({ address, chainId, ...rest }: AddressButtonProps): JSX.E
   )
 }
 
-type KeyValueRowProps = {
-  objKey: string
-} & PropsWithChildren
-
-const KeyValueRow = ({ objKey, children }: KeyValueRowProps): JSX.Element => {
-  return (
-    <Flex key={objKey} row alignItems="flex-start" gap="$spacing8">
-      <Text color="$neutral2" py="$spacing4" variant="body3">
-        {objKey}
-      </Text>
-      <Flex shrink gap="$spacing16" py="$spacing4">
-        {children}
-      </Flex>
-    </Flex>
-  )
-}
-
 const MAX_TYPED_DATA_PARSE_DEPTH = 3
 
 // recursively parses typed data objects and adds margin to left
@@ -81,31 +64,45 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): JSX.Eleme
     return <Text variant="body3">...</Text>
   }
 
-  if (Array.isArray(obj) || obj === null || obj === undefined || typeof obj !== 'object') {
-    return <Text variant="body3">{Array.isArray(obj) ? JSON.stringify(obj) : String(obj)}</Text>
-  }
-
   return (
     <Flex gap="$spacing4">
       {Object.keys(obj).map((objKey) => {
         const childValue = obj[objKey]
 
-        // Special case for address strings
-        if (typeof childValue === 'string' && getValidAddress(childValue, true)) {
+        if (typeof childValue === 'object') {
           return (
-            <KeyValueRow key={objKey} objKey={objKey}>
-              <Flex>
-                <AddressButton address={childValue} chainId={chainId} textVariant="body3" />
-              </Flex>
-            </KeyValueRow>
+            <Flex key={objKey} gap="$spacing4">
+              <Text color="$neutral2" variant="body3">
+                {objKey}
+              </Text>
+              {getParsedObjectDisplay(chainId, childValue, depth + 1)}
+            </Flex>
           )
         }
 
-        return (
-          <KeyValueRow key={objKey} objKey={objKey}>
-            {getParsedObjectDisplay(chainId, childValue, depth + 1)}
-          </KeyValueRow>
-        )
+        if (typeof childValue === 'string') {
+          return (
+            <Flex key={objKey} row alignItems="flex-start" gap="$spacing8">
+              <Text color="$neutral2" py="$spacing4" variant="body3">
+                {objKey}
+              </Text>
+              <Flex shrink gap="$spacing16">
+                {getValidAddress(childValue, true) ? (
+                  <Flex py="$spacing4">
+                    <AddressButton address={childValue} chainId={chainId} textVariant="body3" />
+                  </Flex>
+                ) : (
+                  <Text py="$spacing4" variant="body3">
+                    {childValue}
+                  </Text>
+                )}
+              </Flex>
+            </Flex>
+          )
+        }
+
+        // TODO: [MOB-216] handle array child types
+        return null
       })}
     </Flex>
   )

@@ -1,6 +1,8 @@
+import { useMainnetBlockNumber } from 'lib/hooks/useBlockNumber'
 import { useCallContext } from 'lib/hooks/useCallContext'
 import multicall from 'lib/state/multicall'
 import { SkipFirst } from 'types/tuple'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export { NEVER_RELOAD } from '@uniswap/redux-multicall' // re-export for convenience
 export type { CallStateResult } from '@uniswap/redux-multicall' // re-export for convenience
@@ -19,6 +21,11 @@ export function useMultipleContractSingleData(
 export function useSingleCallResult(...args: SkipFirstTwoParams<typeof multicall.hooks.useSingleCallResult>) {
   const { chainId, latestBlock } = useCallContext()
   return multicall.hooks.useSingleCallResult(chainId, latestBlock, ...args)
+}
+
+export function useMainnetSingleCallResult(...args: SkipFirstTwoParams<typeof multicall.hooks.useSingleCallResult>) {
+  const latestMainnetBlock = useMainnetBlockNumber()
+  return multicall.hooks.useSingleCallResult(UniverseChainId.Mainnet, latestMainnetBlock, ...args)
 }
 
 export function useSingleContractMultipleData(

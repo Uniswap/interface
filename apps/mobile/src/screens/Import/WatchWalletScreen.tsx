@@ -12,6 +12,7 @@ import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { DeprecatedButton, Flex, Text } from 'ui/src'
 import { Eye, GraduationCap } from 'ui/src/components/icons'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
 import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'
 import { useENS } from 'uniswap/src/features/ens/useENS'
@@ -86,10 +87,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
   // ENS and address parsing.
   const normalizedValue = normalizeTextInput(value ?? '')
   const hasSuffixIncluded = normalizedValue.includes('.')
-  const { address: resolvedAddress, name } = useENS({
-    nameOrAddress: normalizedValue,
-    autocompleteDomain: !hasSuffixIncluded,
-  })
+  const { address: resolvedAddress, name } = useENS(UniverseChainId.Mainnet, normalizedValue, !hasSuffixIncluded)
   const validAddress = getValidAddress(normalizedValue, true, false)
   const { isSmartContractAddress, loading } = useIsSmartContractAddress(
     (validAddress || resolvedAddress) ?? undefined,

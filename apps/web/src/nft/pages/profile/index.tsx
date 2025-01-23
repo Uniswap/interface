@@ -3,6 +3,7 @@ import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonPrimary } from 'components/Button/buttons'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useAccount } from 'hooks/useAccount'
+import useENSName from 'hooks/useENSName'
 import { TFunction } from 'i18next'
 import styled from 'lib/styled-components'
 import { XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
@@ -16,7 +17,6 @@ import { Helmet } from 'react-helmet-async/lib/index'
 import { Trans, useTranslation } from 'react-i18next'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
-import { useENSName } from 'uniswap/src/features/ens/api'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { shortenAddress } from 'utilities/src/addresses'
 
@@ -87,7 +87,7 @@ export default function Profile() {
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
 
   const account = useAccount()
-  const { data: ENSName } = useENSName(account.address)
+  const { ENSName } = useENSName(account.address)
   const accountRef = useRef(account.address)
   const accountDrawer = useAccountDrawer()
 

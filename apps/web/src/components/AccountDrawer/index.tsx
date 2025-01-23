@@ -1,11 +1,9 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import DefaultMenu from 'components/AccountDrawer/DefaultMenu'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { SignInModal } from 'components/AccountDrawer/SignInModal'
 import { ScrollBarStyles } from 'components/Common/styles'
 import { Web3StatusRef } from 'components/Web3Status'
 import { useWindowSize } from 'hooks/screenSize/useWindowSize'
-import { useAccount } from 'hooks/useAccount'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import usePrevious from 'hooks/usePrevious'
@@ -18,8 +16,6 @@ import { useGesture } from 'react-use-gesture'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 import { isMobileWeb } from 'utilities/src/platform'
@@ -206,8 +202,6 @@ function AccountDrawer() {
   const modalRef = useRef<HTMLDivElement>(null)
   const isUniExtensionAvailable = useIsUniExtensionAvailable()
   const [web3StatusRef] = useAtom(Web3StatusRef)
-  const account = useAccount()
-  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
 
   useOnClickOutside(
     modalRef,
@@ -291,7 +285,7 @@ function AccountDrawer() {
     },
   })
 
-  return account?.address || !isEmbeddedWalletEnabled ? (
+  return (
     <Container isUniExtensionAvailable={isUniExtensionAvailable} $open={accountDrawer.isOpen}>
       {accountDrawer.isOpen && !isUniExtensionAvailable && (
         <Trace logPress eventOnTrigger={InterfaceEventName.MINI_PORTFOLIO_TOGGLED} properties={{ type: 'close' }}>
@@ -319,8 +313,6 @@ function AccountDrawer() {
         </AccountDrawerScrollWrapper>
       </AccountDrawerWrapper>
     </Container>
-  ) : (
-    <SignInModal isOpen={accountDrawer.isOpen} close={accountDrawer.close} />
   )
 }
 

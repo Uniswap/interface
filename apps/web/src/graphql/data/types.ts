@@ -5,6 +5,7 @@ import {
   Token as GqlToken,
   ProtectionResult,
   SafetyLevel,
+  TopTokens100Query,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
@@ -83,3 +84,4 @@ export function meldSupportedCurrencyToCurrencyInfo(forCurrency: FORSupportedTok
 }
 
 export type SparklineMap = { [key: string]: PricePoint[] | undefined }
+export type TopToken = NonNullable<NonNullable<TopTokens100Query>['topTokens']>[number]

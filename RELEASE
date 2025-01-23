@@ -1,24 +1,12 @@
-IPFS hash of the deployment:
-- CIDv0: `QmeVXtPfnqJ2PeigSXgwizJDYf2EmwfVrCE4Qi3dXhAbdL`
-- CIDv1: `bafybeihqagapczekcmizn4zden7rrz6h4mfhtnd3dc3wa3wnatqc4eu6vm`
+We are back with some new updates! Here’s the latest:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Integrated Flashbots Protect: This is a private RPC provider that protects users from getting sandwiched on Mainnet.
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+Max Balance Education: Introduces copy to educate users on why the Max button is disabled when they don't have enough of the network token to cover gas costs.
 
-IPFS gateways:
-- https://bafybeihqagapczekcmizn4zden7rrz6h4mfhtnd3dc3wa3wnatqc4eu6vm.ipfs.dweb.link/
-- https://bafybeihqagapczekcmizn4zden7rrz6h4mfhtnd3dc3wa3wnatqc4eu6vm.ipfs.cf-ipfs.com/
-- [ipfs://QmeVXtPfnqJ2PeigSXgwizJDYf2EmwfVrCE4Qi3dXhAbdL/](ipfs://QmeVXtPfnqJ2PeigSXgwizJDYf2EmwfVrCE4Qi3dXhAbdL/)
+Other changes:
 
-### 5.67.4 (2025-01-23)
-
-
-### Bug Fixes
-
-* **web:** Phil/lp polling prod (#15462) 7533563
-
-
+- Improved readability and color extraction of NFT Detail pages
+- Improved fee detection of fee-on-transfer tokens
+- More concise context menu on token detail pages
+- Various bug fixes and performance improvements

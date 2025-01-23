@@ -13,7 +13,6 @@ export type ChainIdToTxIdToDetails = Partial<Record<UniverseChainId, { [txId: st
 // Basic identifying info for a transaction
 export interface TransactionId {
   chainId: UniverseChainId
-  // For FOR transactions, this is the externalSessionId
   id: string
 }
 
@@ -321,7 +320,6 @@ export interface LocalOffRampTransactionInfo extends BaseTransactionInfo {
 export interface OnRampTransactionInfo extends BaseTransactionInfo {
   type: TransactionType
   id: string
-  providerTransactionId?: string // surfaced to the user in the transaction details modal if they need to contact support
   destinationTokenSymbol: string
   destinationTokenAddress: string
   destinationTokenAmount?: number
@@ -388,7 +386,7 @@ export interface WCConfirmInfo extends BaseTransactionInfo {
 
 export interface DappInfoTransactionDetails {
   name?: string
-  address?: string
+  address: string
   icon?: string
 }
 

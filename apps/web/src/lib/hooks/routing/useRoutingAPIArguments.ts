@@ -13,7 +13,6 @@ import {
 } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useExperimentGroupName, useExperimentValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { useUniswapXPriorityOrderFlag } from 'uniswap/src/features/transactions/swap/utils/protocols'
 
 /**
  * Returns query arguments for the Routing API query or undefined if the
@@ -38,7 +37,7 @@ export function useRoutingAPIArguments({
   protocolPreferences?: Protocol[]
 }): GetQuoteArgs | SkipToken {
   const uniswapXForceSyntheticQuotes = useFeatureFlag(FeatureFlags.UniswapXSyntheticQuote)
-  const isPriorityOrdersEnabled = useUniswapXPriorityOrderFlag(tokenIn?.chainId)
+  const isPriorityOrdersEnabled = useFeatureFlag(FeatureFlags.UniswapXPriorityOrders)
   const isXv2 = useFeatureFlag(FeatureFlags.UniswapXv2)
   const xv2ArbitrumEnabled =
     useExperimentGroupName(Experiments.ArbitrumXV2OpenOrders) === ArbitrumXV2ExperimentGroup.Test
@@ -68,7 +67,8 @@ export function useRoutingAPIArguments({
 
   const chainId = tokenIn?.chainId
   const isUniswapXSupportedChain = useIsUniswapXSupportedChain(chainId)
-  const isPriorityOrder = routerPreference === RouterPreference.X && isPriorityOrdersEnabled
+  const isPriorityOrder =
+    routerPreference === RouterPreference.X && isPriorityOrdersEnabled && chainId === UniverseChainId.Base // UniswapX priority orders are only available on Base for now
 
   return useMemo(
     () =>

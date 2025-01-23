@@ -9,11 +9,9 @@ export function* getEnabledChainIdsSaga() {
   const isTestnetModeEnabled = yield* select(selectIsTestnetModeEnabled)
 
   const monadTestnetEnabled = getFeatureFlag(FeatureFlags.MonadTestnet)
-  const unichainEnabled = getFeatureFlag(FeatureFlags.Unichain)
 
   const featureFlaggedChainIds = filterChainIdsByFeatureFlag({
     [UniverseChainId.MonadTestnet]: monadTestnetEnabled,
-    [UniverseChainId.Unichain]: unichainEnabled,
   })
 
   return yield* call(getEnabledChains, {

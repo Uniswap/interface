@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
-import { getProtocolItems, parseErrorMessageTitle } from 'components/Liquidity/utils'
+import { getProtocolItems } from 'components/Liquidity/utils'
 import { useRemoveLiquidityModalContext } from 'components/RemoveLiquidity/RemoveLiquidityModalContext'
 import { RemoveLiquidityTxInfo } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
 import { ZERO_ADDRESS } from 'constants/misc'
@@ -17,23 +17,25 @@ import {
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
-import { TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
-import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }): RemoveLiquidityTxInfo {
-  const { positionInfo, percent, percentInvalid, unwrapNativeCurrency, currentTransactionStep } =
-    useRemoveLiquidityModalContext()
+  const { positionInfo, percent, percentInvalid, unwrapNativeCurrency } = useRemoveLiquidityModalContext()
   const { customDeadline, customSlippageTolerance } = useTransactionSettingsContext()
 
   const currency0Info = useCurrencyInfoWithUnwrapForTradingApi({
     currency: positionInfo?.currency0Amount.currency,
-    shouldUnwrap: unwrapNativeCurrency && positionInfo?.version !== ProtocolVersion.V4,
+    shouldUnwrap: unwrapNativeCurrency,
   })
   const currency1Info = useCurrencyInfoWithUnwrapForTradingApi({
     currency: positionInfo?.currency1Amount.currency,
-    shouldUnwrap: unwrapNativeCurrency && positionInfo?.version !== ProtocolVersion.V4,
+    shouldUnwrap: unwrapNativeCurrency,
   })
+
+  const pool =
+    positionInfo?.version === ProtocolVersion.V3 || positionInfo?.version === ProtocolVersion.V4
+      ? positionInfo.pool
+      : undefined
 
   const v2LpTokenApprovalQueryParams: CheckApprovalLPRequest | undefined = useMemo(() => {
     if (!positionInfo || !positionInfo.liquidityToken || percentInvalid || !positionInfo.liquidityAmount) {
@@ -58,21 +60,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
   } = useCheckLpApprovalQuery({
     params: v2LpTokenApprovalQueryParams,
     staleTime: 5 * ONE_SECOND_MS,
-    enabled: Boolean(v2LpTokenApprovalQueryParams),
   })
-
-  if (approvalError) {
-    logger.info(
-      'RemoveLiquidityTxAndGasInfo',
-      'RemoveLiquidityTxAndGasInfo',
-      parseErrorMessageTitle(approvalError, 'unkown CheckLpApprovalQuery'),
-      {
-        error: JSON.stringify(approvalError),
-        v2LpTokenApprovalQueryParams: JSON.stringify(v2LpTokenApprovalQueryParams),
-      },
-    )
-  }
-
   const v2ApprovalGasFeeUSD =
     useUSDCurrencyAmountOfGasFee(
       positionInfo?.liquidityToken?.chainId,
@@ -100,6 +88,9 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
         positionInfo.version === ProtocolVersion.V2 ? positionInfo.currency0Amount.quotient.toString() : undefined,
       liquidity1:
         positionInfo.version === ProtocolVersion.V2 ? positionInfo.currency1Amount.quotient.toString() : undefined,
+      poolLiquidity: pool?.liquidity.toString(),
+      currentTick: pool?.tickCurrent,
+      sqrtRatioX96: pool?.sqrtRatioX96.toString(),
       positionLiquidity:
         positionInfo.version === ProtocolVersion.V2
           ? positionInfo.liquidityAmount?.quotient.toString()
@@ -129,13 +120,13 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
     currency1Info,
     approvalsNeeded,
     percent,
+    pool?.liquidity,
+    pool?.tickCurrent,
+    pool?.sqrtRatioX96,
     feeValue0?.quotient,
     feeValue1?.quotient,
     customSlippageTolerance,
   ])
-
-  const isUserCommittedToDecrease =
-    currentTransactionStep?.step.type === TransactionStepType.DecreasePositionTransaction
 
   const {
     data: decreaseCalldata,
@@ -147,23 +138,9 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
     deadlineInMinutes: customDeadline,
     refetchInterval: 5 * ONE_SECOND_MS,
     enabled:
-      !isUserCommittedToDecrease &&
-      !!decreaseCalldataQueryParams &&
-      ((!percentInvalid && !v2LpTokenApprovalQueryParams) ||
-        (!v2ApprovalLoading && !approvalError && Boolean(v2LpTokenApproval))),
+      (!percentInvalid && !v2LpTokenApprovalQueryParams) ||
+      (!v2ApprovalLoading && !approvalError && Boolean(v2LpTokenApproval)),
   })
-
-  if (calldataError) {
-    logger.info(
-      'RemoveLiquidityTxAndGasInfo',
-      'RemoveLiquidityTxAndGasInfo',
-      parseErrorMessageTitle(calldataError, 'DecreaseLpPositionCalldataQuery'),
-      {
-        error: JSON.stringify(calldataError),
-        decreaseCalldataQueryParams: JSON.stringify(decreaseCalldataQueryParams),
-      },
-    )
-  }
 
   const { value: estimatedGasFee } = useTransactionGasFee(decreaseCalldata?.decrease, !!decreaseCalldata?.gasFee)
   const decreaseGasFeeUsd =

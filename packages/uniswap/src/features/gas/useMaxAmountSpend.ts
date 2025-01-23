@@ -88,7 +88,6 @@ function useGetMinAmount(chainId?: UniverseChainId, txType?: TransactionType): J
     case UniverseChainId.WorldChain:
     case UniverseChainId.Zora:
     case UniverseChainId.Zksync:
-    case UniverseChainId.Unichain:
     case UniverseChainId.UnichainSepolia:
       return MIN_L2_FOR_GAS
     default:

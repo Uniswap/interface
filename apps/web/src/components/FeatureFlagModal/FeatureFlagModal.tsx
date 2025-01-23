@@ -223,7 +223,6 @@ export default function FeatureFlagModal() {
           </CloseButton>
         </Header>
         <FlagsColumn>
-          <FeatureFlagOption flag={FeatureFlags.EmbeddedWallet} label="Add internal embedded wallet functionality" />
           <FeatureFlagOption flag={FeatureFlags.V4Swap} label="Enable v4 in the shared swap flow" />
           <FeatureFlagOption flag={FeatureFlags.UniversalSwap} label="Enable swap flow from the Uniswap Package" />
           <FeatureFlagOption flag={FeatureFlags.UniswapX} label="[Universal Swap Flow Only] Enable UniswapX" />
@@ -232,12 +231,8 @@ export default function FeatureFlagModal() {
             label="[Universal Swap Flow Only] Enable Quick Routes"
           />
           <FeatureFlagOption
-            flag={FeatureFlags.UniswapXPriorityOrdersBase}
-            label="UniswapX Priority Orders (on Base)"
-          />
-          <FeatureFlagOption
-            flag={FeatureFlags.UniswapXPriorityOrdersUnichain}
-            label="UniswapX Priority Orders (on Unichain)"
+            flag={FeatureFlags.UniswapXPriorityOrders}
+            label="UniswapX Priority Orders (on Base only)"
           />
           <FeatureFlagOption
             flag={FeatureFlags.SharedSwapArbitrumUniswapXExperiment}
@@ -254,13 +249,9 @@ export default function FeatureFlagModal() {
           <FeatureFlagOption flag={FeatureFlags.Realtime} label="Realtime activity updates" />
           <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
           <FeatureFlagOption flag={FeatureFlags.NavigationHotkeys} label="Navigation hotkeys" />
-          <FeatureFlagOption
-            flag={FeatureFlags.TokenSelectorTrendingTokens}
-            label="Enable 24h volume trending tokens in Token Selector"
-          />
+          <FeatureFlagOption flag={FeatureFlags.TokenProtection} label="Warning UX for scam/dangerous tokens" />
           <FeatureFlagGroup name="New Chains">
             <FeatureFlagOption flag={FeatureFlags.Zora} label="Enable Zora" />
-            <FeatureFlagOption flag={FeatureFlags.Unichain} label="Enable Unichain" />
             <FeatureFlagOption flag={FeatureFlags.UnichainPromo} label="Unichain In App Promotion" />
             <FeatureFlagOption flag={FeatureFlags.MonadTestnet} label="Enable Monad Testnet" />
           </FeatureFlagGroup>

@@ -6,17 +6,15 @@ import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { useDebounce } from 'utilities/src/time/timing'
 
-type UseENSParams = {
-  nameOrAddress?: string | null
-  chainId?: UniverseChainId
-  autocompleteDomain?: boolean
-}
-
 /**
  * Given a name or address, does a lookup to resolve to an address and name
  * @param nameOrAddress ENS name or address
  */
-export function useENS({ nameOrAddress, autocompleteDomain = false }: UseENSParams): {
+export function useENS(
+  chainId: UniverseChainId,
+  nameOrAddress?: string | null,
+  autocompleteDomain?: boolean,
+): {
   loading: boolean
   address?: string | null
   name: string | null
@@ -25,9 +23,10 @@ export function useENS({ nameOrAddress, autocompleteDomain = false }: UseENSPara
   const validAddress = getValidAddress(debouncedNameOrAddress, false, false)
   const maybeName = validAddress ? null : debouncedNameOrAddress // if it's a valid address then it's not a name
 
-  const { data: name, isLoading: nameFetching } = useENSName(validAddress ?? undefined)
+  const { data: name, isLoading: nameFetching } = useENSName(validAddress ?? undefined, chainId)
   const { data: address, isLoading: addressFetching } = useAddressFromEns(
     autocompleteDomain ? getCompletedENSName(maybeName) : maybeName,
+    chainId,
   )
 
   return {

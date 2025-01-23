@@ -303,11 +303,7 @@ export function SwapFormButton({
 
   return (
     <Flex alignItems="center" gap={isShortMobileDevice ? '$spacing8' : '$spacing16'}>
-      <Trace
-        logPress
-        element={ElementName.SwapReview}
-        properties={{ chainId, tokenAmount: exactAmountToken, fiatAmount: exactAmountFiat }}
-      >
+      <Trace logPress element={ElementName.SwapReview}>
         <LowNativeBalanceModal
           isOpen={showMaxNativeTransferModal}
           onClose={() => setShowMaxNativeTransferModal(false)}

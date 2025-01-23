@@ -84,7 +84,7 @@ const StyledBadge = styled(Badge)`
   padding: 1px 4px;
 `
 
-export const RecentBadge = () => (
+const RecentBadge = () => (
   <StyledBadge variant={BadgeVariant.SOFT}>
     <ThemedText.LabelMicro color="accent1">
       <Trans i18nKey="common.recent" />

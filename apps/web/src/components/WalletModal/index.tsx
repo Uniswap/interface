@@ -16,8 +16,7 @@ import { ClickableTamaguiStyle, ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
 import { Flex, Text } from 'ui/src'
 import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useExperimentGroupName, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 
 const Wrapper = styled.div<{ isUniExtensionAvailable?: boolean }>`
   ${flexColumnNoWrap};
@@ -72,27 +71,20 @@ export default function WalletModal() {
   const showMoonpayText = useShowMoonpayText()
   const connectors = useOrderedConnections()
   const isUniExtensionAvailable = useIsUniExtensionAvailable()
-  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
-  const [showOtherWallets, toggleShowOtherWallets] = useReducer((s) => !s, !isEmbeddedWalletEnabled)
+  const [showOtherWallets, toggleShowOtherWallets] = useReducer((s) => !s, true)
 
-  const isSignIn =
-    useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.SignInSignUp ||
-    isEmbeddedWalletEnabled
-  const isLogIn =
-    useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.LogInCreateAccount &&
-    !isEmbeddedWalletEnabled
+  const isSignIn = useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.SignInSignUp
+  const isLogIn = useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.LogInCreateAccount
 
   return (
     <Wrapper data-testid="wallet-modal" isUniExtensionAvailable={isUniExtensionAvailable}>
       <Flex />
       <ConnectionErrorView />
-      {isEmbeddedWalletEnabled ? null : (
-        <AutoRow justify="space-between" width="100%">
-          <Text variant="subheading2">
-            {isSignIn ? t('nav.signIn.button') : isLogIn ? t('nav.logIn.button') : t('common.connectAWallet.button')}
-          </Text>
-        </AutoRow>
-      )}
+      <AutoRow justify="space-between" width="100%">
+        <Text variant="subheading2">
+          {isSignIn ? t('nav.signIn.button') : isLogIn ? t('nav.logIn.button') : t('common.connectAWallet.button')}
+        </Text>
+      </AutoRow>
       <UniswapWalletOptions />
       <Flex
         row

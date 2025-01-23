@@ -19,7 +19,6 @@ buildscript {
   repositories {
     google()
     mavenCentral()
-    maven { url 'https://jitpack.io' }
   }
   dependencies {
     classpath("com.android.tools.build:gradle")
@@ -37,6 +36,11 @@ plugins {
 }
 
 allprojects {
+  repositories {
+    maven {
+      url = rootProject.file("../../../node_modules/detox/Detox-android")
+    }
+  }
   project.pluginManager.withPlugin("com.facebook.react") {
     react {
       reactNativeDir = rootProject.file("../../../node_modules/react-native/")

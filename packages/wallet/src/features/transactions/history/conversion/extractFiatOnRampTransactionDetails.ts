@@ -40,7 +40,6 @@ function parseFORTransaction(
     networkFee: transaction.cryptoDetails.networkFee,
     transactionFee: transaction.cryptoDetails.transactionFee,
     totalFee: transaction.cryptoDetails.totalFee,
-    providerTransactionId: transaction.id,
   }
 
   const typeInfo: OnRampPurchaseInfo | OnRampTransferInfo | OffRampSaleInfo =

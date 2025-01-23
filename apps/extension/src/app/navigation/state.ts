@@ -1,10 +1,7 @@
+import { RouterState } from '@sentry/react/types/types'
 import { useEffect, useState } from 'react'
-import { Location, NavigationType, Router, createHashRouter } from 'react-router-dom'
-
-interface RouterState {
-  historyAction: NavigationType
-  location: Location
-}
+import { Router } from 'react-router-dom'
+import { sentryCreateHashRouter } from 'src/app/sentry'
 
 /**
  * Note this file is separate from SidebarApp on purpose!
@@ -57,7 +54,7 @@ export function useRouterState(): RouterState | null {
 }
 
 // as far as i can tell, react-router-dom doesn't give us this type so have to work around
-type Router = ReturnType<typeof createHashRouter>
+type Router = ReturnType<typeof sentryCreateHashRouter>
 
 let router: Router | null = null
 

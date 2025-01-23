@@ -1,8 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { RankingType } from 'uniswap/src/data/types'
 import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
-import { ExploreOrderBy } from 'wallet/src/features/wallet/types'
+import { ExploreOrderBy, RankingType } from 'wallet/src/features/wallet/types'
 
 export enum SwapProtectionSetting {
   On = 'on',
@@ -135,13 +134,6 @@ const slice = createSlice({
     },
     resetWallet: () => initialWalletState,
     restoreMnemonicComplete: (state) => state,
-    setHasBalanceOrActivity: (state, action: PayloadAction<{ address: Address; hasBalanceOrActivity: boolean }>) => {
-      const { address, hasBalanceOrActivity } = action.payload
-      const account = state.accounts[address]
-      if (account) {
-        account.hasBalanceOrActivity = hasBalanceOrActivity
-      }
-    },
   },
 })
 
@@ -157,7 +149,6 @@ export const {
   restoreMnemonicComplete,
   setSwapProtectionSetting,
   setAppRating,
-  setHasBalanceOrActivity,
 } = slice.actions
 
 export const walletReducer = slice.reducer

@@ -20,6 +20,7 @@ import {
 } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { DepositStep } from 'pages/Pool/Positions/create/Deposit'
 import { EditRangeSelectionStep, EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
+import { PoolOutOfSyncError } from 'pages/Pool/Positions/create/PoolOutOfSyncError'
 import { SelectPriceRangeStep, SelectPriceRangeStepV2 } from 'pages/Pool/Positions/create/RangeSelectionStep'
 import ResetCreatePositionFormModal from 'pages/Pool/Positions/create/ResetCreatePositionsFormModal'
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
@@ -428,6 +429,7 @@ export default function CreatePosition() {
                       {!media.xl && <Sidebar />}
                       <Flex gap="$spacing24" flex={1} maxWidth={600} mb="$spacing28">
                         <CreatePositionInner />
+                        <PoolOutOfSyncError />
                       </Flex>
                     </Flex>
                   </Flex>
