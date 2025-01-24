@@ -163,25 +163,16 @@ const POLL_INTERVAL_MS = 4000
 const MAX_ATTEMPTS = (25 * 12000) / POLL_INTERVAL_MS // 25 blocks of 12 seconds, queried every 4 seconds
 
 /**
- * Waits for a Flashbots Protect transaction receipt by polling the Flashbots Protect API until a final status is reached or a timeout occurs.
+ * Waits for a Flashbots Protect transaction receipt by polling the Flashbots Protect API until a final status is reached or we reach the max attempts.
  * @param hash - The transaction hash to wait for.
- * @param timeoutTimestampMs - The Unix timestamp in milliseconds by which the polling should timeout.
  * @returns A promise that resolves to the final status of the transaction.
- * @throws Will throw an error if the polling exceeds the timeout, max attempts, or if there is an issue fetching the transaction status.
+ * @throws Will throw an error if the polling exceeds the max attempts or if there is an issue fetching the transaction status.
  */
-export async function waitForFlashbotsProtectReceipt(
-  hash: string,
-  timeoutTimestampMs: number | undefined,
-): Promise<FlashbotsReceipt> {
+export async function waitForFlashbotsProtectReceipt(hash: string): Promise<FlashbotsReceipt> {
   const url = `https://protect.flashbots.net/tx/${hash}`
   let attempt = 0
 
   while (true) {
-    const currentTime = Date.now()
-    if (timeoutTimestampMs && currentTime > timeoutTimestampMs) {
-      throw new Error(`Polling Flashbots Protect API for transaction ${hash} timed out after ${attempt} attempts`)
-    }
-
     if (attempt >= MAX_ATTEMPTS) {
       throw new Error(`Polling Flashbots Protect API for transaction ${hash} reached maximum ${MAX_ATTEMPTS} attempts`)
     }

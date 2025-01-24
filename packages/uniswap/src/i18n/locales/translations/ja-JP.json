@@ -2238,7 +2238,7 @@
   "transaction.warning.insufficientGas.modal.message": "このトランザクションのネットワークコストをカバーするには、{{tokenAmount}} {{tokenSymbol}}（<fiatTokenAmount/>）を {{networkName}} 上で増額する必要があります。",
   "transaction.warning.insufficientGas.modal.title.withNetwork": "{{networkName}} の {{tokenSymbol}} が十分ではありません",
   "transaction.warning.insufficientGas.modal.title.withoutNetwork": "{{tokenSymbol}} が十分ではありません",
-  "transaction.warning.maxNative.message": "You’re about to spend most of your network token balance. This will leave insufficient funds to cover future network costs.",
+  "transaction.warning.maxNative.message": "You’re about to spend most of your network token balance. This may leave insufficient funds to cover future network costs.",
   "transaction.warning.maxNative.title": "Low network token balance",
   "transaction.watcher.error.cancel": "トランザクションをキャンセルできません",
   "transaction.watcher.error.status": "トランザクションステータスの確認中にエラーが発生しました",

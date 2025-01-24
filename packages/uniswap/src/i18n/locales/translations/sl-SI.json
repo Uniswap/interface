@@ -2238,7 +2238,7 @@
   "transaction.warning.insufficientGas.modal.message": "Za kritje omrežnih stroškov te transakcije potrebujete ~{{tokenAmount}} {{tokenSymbol}} (<fiatTokenAmount/>) na {{networkName}} .",
   "transaction.warning.insufficientGas.modal.title.withNetwork": "Ni dovolj {{tokenSymbol}} na {{networkName}}",
   "transaction.warning.insufficientGas.modal.title.withoutNetwork": "Ni dovolj {{tokenSymbol}}",
-  "transaction.warning.maxNative.message": "Porabili boste večino stanja žetonov v omrežju. Zaradi tega ne bo dovolj sredstev za kritje prihodnjih stroškov omrežja.",
+  "transaction.warning.maxNative.message": "Porabili boste večino stanja žetonov v omrežju. Zaradi tega morda ne bo dovolj sredstev za kritje prihodnjih stroškov omrežja.",
   "transaction.warning.maxNative.title": "Nizko stanje omrežnih žetonov",
   "transaction.watcher.error.cancel": "Transakcije ni mogoče preklicati",
   "transaction.watcher.error.status": "Napaka pri preverjanju stanja transakcije",

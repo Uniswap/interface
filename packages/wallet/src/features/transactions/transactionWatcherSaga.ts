@@ -358,7 +358,7 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
       // Flashbots transactions won't return a receipt until they're included, and will fail silently.
       // We need to use Flashbots Protect API to get a status update until the tx is included or fails.
       // @see {@link https://protect.flashbots.net/tx/docs}
-      const flashbotsReceipt = yield* call(waitForFlashbotsProtectReceipt, hash, transaction.options.timeoutTimestampMs)
+      const flashbotsReceipt = yield* call(waitForFlashbotsProtectReceipt, hash)
 
       switch (flashbotsReceipt.status) {
         case 'FAILED':

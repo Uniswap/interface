@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useEffect } from 'react'
+import React, { memo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { SvgProps } from 'react-native-svg'
@@ -20,14 +20,17 @@ import {
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { openModal } from 'src/features/modals/modalSlice'
-import { DeprecatedButton, Flex, Text, useSporeColors } from 'ui/src'
+import { useNotificationToggle } from 'src/features/notifications/hooks/useNotificationsToggle'
+import { DeprecatedButton, Flex, Switch, Text, useSporeColors } from 'ui/src'
+import NotificationIcon from 'ui/src/assets/icons/bell.svg'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import TextEditIcon from 'ui/src/assets/icons/textEdit.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useENS } from 'uniswap/src/features/ens/useENS'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
@@ -35,6 +38,10 @@ import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, MobileScreens.SettingsWallet>
+
+const onPermissionChanged = (enabled: boolean): void => {
+  sendAnalyticsEvent(MobileEventName.NotificationsToggled, { enabled })
+}
 
 // Specific design request not in standard sizing type
 const UNICON_ICON_SIZE = 56
@@ -86,6 +93,11 @@ export function SettingsWallet({
       subTitle: t('settings.setting.wallet.preferences.title'),
       data: [
         ...(showEditProfile ? [] : [editNicknameSectionOption]),
+        {
+          action: <NotificationsSwitch address={address} />,
+          text: t('settings.setting.wallet.notifications.title'),
+          icon: <NotificationIcon {...iconProps} />,
+        },
         {
           screen: MobileScreens.SettingsWalletManageConnection,
           text: t('settings.setting.wallet.connections.title'),
@@ -201,3 +213,13 @@ function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
     </Flex>
   )
 }
+
+const NotificationsSwitch: React.FC<{ address: Address }> = memo(({ address }) => {
+  const { isEnabled, isPending, toggle } = useNotificationToggle({
+    address,
+    onPermissionChanged,
+  })
+  return <Switch checked={isEnabled} disabled={isPending} variant="branded" onCheckedChange={toggle} />
+})
+
+NotificationsSwitch.displayName = 'NotificationsSwitch'

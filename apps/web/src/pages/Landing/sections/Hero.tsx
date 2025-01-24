@@ -92,10 +92,10 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
               .filter(Boolean) // splits the string by spaces but also captures "<br/>" as a separate element in the array
               .map((word, index) => {
                 if (word === '<br/>') {
-                  return <br key={`${word}-br`} />
+                  return <br key={word} />
                 } else {
                   return (
-                    <Fragment key={`${word}-${index}`}>
+                    <Fragment key={word}>
                       <RiseInText delay={index * 0.1}>{word}</RiseInText>{' '}
                     </Fragment>
                   )

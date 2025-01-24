@@ -2238,7 +2238,7 @@
   "transaction.warning.insufficientGas.modal.message": "Χρειάζεστε ~{{tokenAmount}} {{tokenSymbol}} (<fiatTokenAmount/>) στις {{networkName}} για να καλύψετε το κόστος δικτύου αυτής της συναλλαγής.",
   "transaction.warning.insufficientGas.modal.title.withNetwork": "Δεν είναι αρκετό {{tokenSymbol}} στο {{networkName}}",
   "transaction.warning.insufficientGas.modal.title.withoutNetwork": "Δεν αρκεί {{tokenSymbol}}",
-  "transaction.warning.maxNative.message": "Πρόκειται να ξοδέψετε το μεγαλύτερο μέρος του υπολοίπου διακριτικού δικτύου σας. Αυτό θα αφήσει ανεπαρκή κονδύλια για την κάλυψη μελλοντικών δαπανών δικτύου.",
+  "transaction.warning.maxNative.message": "Πρόκειται να ξοδέψετε το μεγαλύτερο μέρος του υπολοίπου διακριτικού δικτύου σας. Αυτό μπορεί να αφήσει ανεπαρκή κεφάλαια για την κάλυψη μελλοντικών δαπανών δικτύου.",
   "transaction.warning.maxNative.title": "Χαμηλό υπόλοιπο διακριτικών δικτύου",
   "transaction.watcher.error.cancel": "Δεν είναι δυνατή η ακύρωση της συναλλαγής",
   "transaction.watcher.error.status": "Σφάλμα κατά τον έλεγχο της κατάστασης συναλλαγής",

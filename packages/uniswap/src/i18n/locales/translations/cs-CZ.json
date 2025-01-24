@@ -2238,7 +2238,7 @@
   "transaction.warning.insufficientGas.modal.message": "K pokrytí síťových nákladů této transakce potřebujete ~{{tokenAmount}} {{tokenSymbol}} (<fiatTokenAmount/>) na {{networkName}} .",
   "transaction.warning.insufficientGas.modal.title.withNetwork": "Nedostatek {{tokenSymbol}} na {{networkName}}",
   "transaction.warning.insufficientGas.modal.title.withoutNetwork": "Nestačí {{tokenSymbol}}",
-  "transaction.warning.maxNative.message": "Chystáte se utratit většinu svého zůstatku síťových tokenů. Zůstane tak nedostatek finančních prostředků na pokrytí budoucích síťových nákladů.",
+  "transaction.warning.maxNative.message": "Chystáte se utratit většinu svého zůstatku síťových tokenů. To může zanechat nedostatek finančních prostředků na pokrytí budoucích síťových nákladů.",
   "transaction.warning.maxNative.title": "Nízký zůstatek síťových tokenů",
   "transaction.watcher.error.cancel": "Transakci nelze zrušit",
   "transaction.watcher.error.status": "Chyba při kontrole stavu transakce",

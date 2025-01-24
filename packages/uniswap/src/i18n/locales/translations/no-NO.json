@@ -2238,7 +2238,7 @@
   "transaction.warning.insufficientGas.modal.message": "Du trenger ~{{tokenAmount}} {{tokenSymbol}} (<fiatTokenAmount/>) på {{networkName}} for å dekke denne transaksjonens nettverkskostnader.",
   "transaction.warning.insufficientGas.modal.title.withNetwork": "Ikke nok {{tokenSymbol}} på {{networkName}}",
   "transaction.warning.insufficientGas.modal.title.withoutNetwork": "Ikke nok {{tokenSymbol}}",
-  "transaction.warning.maxNative.message": "Du er i ferd med å bruke mesteparten av nettverkstoken-saldoen din. Dette vil etterlate utilstrekkelige midler til å dekke fremtidige nettkostnader.",
+  "transaction.warning.maxNative.message": "Du er i ferd med å bruke mesteparten av nettverkstoken-saldoen din. Dette kan etterlate utilstrekkelige midler til å dekke fremtidige nettverkskostnader.",
   "transaction.warning.maxNative.title": "Lav nettverkstokenbalanse",
   "transaction.watcher.error.cancel": "Kan ikke kansellere transaksjonen",
   "transaction.watcher.error.status": "Feil under kontroll av transaksjonsstatus",

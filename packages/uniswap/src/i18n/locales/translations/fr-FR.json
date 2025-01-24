@@ -2238,7 +2238,7 @@
   "transaction.warning.insufficientGas.modal.message": "Vous avez besoin d'environ {{tokenAmount}} {{tokenSymbol}} (<fiatTokenAmount/>) sur {{networkName}} pour couvrir les frais de réseau liés à cette transaction.",
   "transaction.warning.insufficientGas.modal.title.withNetwork": "Pas assez de {{tokenSymbol}} sur {{networkName}}",
   "transaction.warning.insufficientGas.modal.title.withoutNetwork": "Pas assez de {{tokenSymbol}}",
-  "transaction.warning.maxNative.message": "You’re about to spend most of your network token balance. This will leave insufficient funds to cover future network costs.",
+  "transaction.warning.maxNative.message": "You’re about to spend most of your network token balance. This may leave insufficient funds to cover future network costs.",
   "transaction.warning.maxNative.title": "Low network token balance",
   "transaction.watcher.error.cancel": "Impossible d'annuler la transaction",
   "transaction.watcher.error.status": "Erreur lors de la vérification du statut de la transaction",

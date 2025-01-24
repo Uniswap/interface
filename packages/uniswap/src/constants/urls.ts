@@ -91,12 +91,6 @@ export const uniswapUrls = {
   forApiUrl: config.forApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/FOR.v1.FORService`,
   tradingApiUrl: config.tradingApiUrlOverride || getCloudflareApiBaseUrl(TrafficFlows.TradingApi),
 
-  // Embedded Wallet URL's
-  // Totally fine that these are public
-  evervaultDevUrl: 'https://embedded-wallet-dev.app-907329d19a06.enclave.evervault.com',
-  evervaultStagingUrl: 'https://embedded-wallet-staging.app-907329d19a06.enclave.evervault.com',
-  evervaultProductionUrl: 'https://embedded-wallet.app-907329d19a06.enclave.evervault.com',
-
   // API Paths
   trmPath: '/v1/screen',
   gasServicePath: '/v1/gas-fee',

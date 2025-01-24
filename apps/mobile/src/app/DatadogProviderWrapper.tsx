@@ -2,6 +2,7 @@ import {
   BatchSize,
   DatadogProvider,
   DatadogProviderConfiguration,
+  DdRum,
   SdkVerbosity,
   TrackingConsent,
   UploadFrequency,
@@ -18,6 +19,8 @@ import {
 import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { datadogEnabled, isDetoxBuild, isJestRun, localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
+
+export const SESSION_SAMPLE_RATE = 10 // percent
 
 const datadogConfig = new DatadogProviderConfiguration(
   config.datadogClientToken,
@@ -48,6 +51,7 @@ Object.assign(datadogConfig, {
 
     return event
   },
+  sessionSampleRate: SESSION_SAMPLE_RATE,
 })
 
 if (localDevDatadogEnabled) {
@@ -65,10 +69,19 @@ if (localDevDatadogEnabled) {
  * specific configuration.
  */
 export function DatadogProviderWrapper({ children }: PropsWithChildren): JSX.Element {
-  logger.setWalletDatadogEnabled(true)
-
   if (isDetoxBuild || isJestRun) {
     return <>{children}</>
   }
-  return <DatadogProvider configuration={datadogConfig}>{children}</DatadogProvider>
+  return (
+    <DatadogProvider
+      configuration={datadogConfig}
+      onInitialization={async () => {
+        const sessionId = await DdRum.getCurrentSessionId()
+        // we do not want to log anything if session is not sampled
+        logger.setWalletDatadogEnabled(sessionId !== undefined)
+      }}
+    >
+      {children}
+    </DatadogProvider>
+  )
 }

@@ -2238,7 +2238,7 @@
   "transaction.warning.insufficientGas.modal.message": "A tranzakció hálózati költségeinek fedezéséhez ~{{tokenAmount}} {{tokenSymbol}} (<fiatTokenAmount/>) szükséges a {{networkName}} oldalon.",
   "transaction.warning.insufficientGas.modal.title.withNetwork": "Nem elég {{tokenSymbol}} a {{networkName}}-n",
   "transaction.warning.insufficientGas.modal.title.withoutNetwork": "Nem elég {{tokenSymbol}}",
-  "transaction.warning.maxNative.message": "Hamarosan elkölti hálózati token egyenlegének nagy részét. Ez nem hagy elegendő forrást a jövőbeli hálózati költségek fedezésére.",
+  "transaction.warning.maxNative.message": "Hamarosan elkölti hálózati token egyenlegének nagy részét. Ez nem hagyhat elegendő forrást a jövőbeli hálózati költségek fedezésére.",
   "transaction.warning.maxNative.title": "Alacsony hálózati token egyenleg",
   "transaction.watcher.error.cancel": "Nem lehet törölni a tranzakciót",
   "transaction.watcher.error.status": "Hiba a tranzakció állapotának ellenőrzése közben",

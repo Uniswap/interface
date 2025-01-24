@@ -2238,7 +2238,7 @@
   "transaction.warning.insufficientGas.modal.message": "इस लेनदेन की नेटवर्क लागत को कवर करने के लिए आपको ~{{tokenAmount}} {{tokenSymbol}} (<fiatTokenAmount/>) पर {{networkName}} की आवश्यकता है।",
   "transaction.warning.insufficientGas.modal.title.withNetwork": "{{networkName}}पर पर्याप्त {{tokenSymbol}} नहीं",
   "transaction.warning.insufficientGas.modal.title.withoutNetwork": "पर्याप्त नहीं {{tokenSymbol}}",
-  "transaction.warning.maxNative.message": "आप अपने नेटवर्क टोकन बैलेंस का ज़्यादातर हिस्सा खर्च करने वाले हैं। इससे भविष्य में नेटवर्क लागतों को कवर करने के लिए पर्याप्त धनराशि नहीं बचेगी।",
+  "transaction.warning.maxNative.message": "आप अपने नेटवर्क टोकन बैलेंस का ज़्यादातर हिस्सा खर्च करने वाले हैं। इससे भविष्य में नेटवर्क लागतों को कवर करने के लिए अपर्याप्त धनराशि बच सकती है।",
   "transaction.warning.maxNative.title": "नेटवर्क टोकन बैलेंस कम",
   "transaction.watcher.error.cancel": "लेनदेन रद्द करने में असमर्थ",
   "transaction.watcher.error.status": "लेन-देन की स्थिति जाँचते समय त्रुटि",

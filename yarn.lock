@@ -11193,22 +11193,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@simplewebauthn/browser@npm:11.0.0":
-  version: 11.0.0
-  resolution: "@simplewebauthn/browser@npm:11.0.0"
-  dependencies:
-    "@simplewebauthn/types": ^11.0.0
-  checksum: 0c1c7d24bb3cf074596591e023d08faa8f79d4a1875ef2a0279873014f3c5bc91b0def7d8670f237f9720cfd9833c87f5fafa5ab4c13e77f1854018930d1bef2
-  languageName: node
-  linkType: hard
-
-"@simplewebauthn/types@npm:11.0.0, @simplewebauthn/types@npm:^11.0.0":
-  version: 11.0.0
-  resolution: "@simplewebauthn/types@npm:11.0.0"
-  checksum: 6fec4393a15393e5c1dfe7e9f3c924143c0616b637dd25bfd70b59fb0f24f6f4e2c9822f588a15f4a3415d476c2e8f5a22969fa8223b5aabe938fb6c5fbf2808
-  languageName: node
-  linkType: hard
-
 "@sinclair/typebox@npm:^0.24.1":
   version: 0.24.51
   resolution: "@sinclair/typebox@npm:0.24.51"
@@ -17031,13 +17015,6 @@ __metadata:
     react: ^18.2.0
     react-dom: ^18.2.0
   checksum: b591c67323b849210a86c62978c686207160176a47ebe91b48ba22f38ce9b9f91cc275aa5103b4ab6528ed4d71d97ecff7cfbd1671c0aebeb850ebadc2acaf1b
-  languageName: node
-  linkType: hard
-
-"@uniswap/client-embeddedwallet@npm:0.0.13":
-  version: 0.0.13
-  resolution: "@uniswap/client-embeddedwallet@npm:0.0.13"
-  checksum: aaac81afa3351bbb11a694ba3b9cd25d13569dafcbb57bf5dca91bfefce9c9a83881e5c46f9af24c9c46f38f5c1d0978802acb788e4625883bcac2b872a725d1
   languageName: node
   linkType: hard
 
@@ -47929,8 +47906,6 @@ __metadata:
     "@react-native-async-storage/async-storage": 1.17.10
     "@react-native-community/netinfo": 9.3.0
     "@reduxjs/toolkit": 1.9.3
-    "@simplewebauthn/browser": 11.0.0
-    "@simplewebauthn/types": 11.0.0
     "@tanstack/query-async-storage-persister": 5.51.21
     "@tanstack/react-query": 5.51.16
     "@tanstack/react-query-persist-client": 5.51.23
@@ -47941,7 +47916,6 @@ __metadata:
     "@types/chrome": 0.0.254
     "@types/react-window": 1.8.2
     "@uniswap/analytics-events": 2.40.0
-    "@uniswap/client-embeddedwallet": 0.0.13
     "@uniswap/client-explore": 0.0.12
     "@uniswap/client-pools": 0.0.12
     "@uniswap/eslint-config": "workspace:^"
@@ -47954,7 +47928,6 @@ __metadata:
     "@uniswap/v4-sdk": 1.12.0
     apollo-link-rest: 0.9.0
     axios: 1.6.5
-    date-fns: 2.30.0
     dayjs: 1.11.7
     depcheck: 1.4.7
     es-toolkit: 1.10.0

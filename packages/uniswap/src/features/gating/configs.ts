@@ -47,6 +47,8 @@ export enum SwapConfigKey {
   MonSendMinGasAmount = 'monSendMinGasAmount',
   GenericL2SwapMinGasAmount = 'genericL2SwapMinGasAmount',
   GenericL2SendMinGasAmount = 'genericL2SendMinGasAmount',
+
+  LowBalanceWarningGasPercentage = 'lowBalanceWarningGasPercentage',
 }
 
 export enum NetworkRequestsConfigKey {

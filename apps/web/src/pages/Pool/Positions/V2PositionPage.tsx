@@ -4,7 +4,7 @@ import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/Breadcrumb
 import { LiquidityPositionInfo, LiquidityPositionInfoLoader } from 'components/Liquidity/LiquidityPositionInfo'
 import { useGetPoolTokenPercentage } from 'components/Liquidity/hooks'
 import { parseRestPosition } from 'components/Liquidity/utils'
-import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
+import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { usePositionOwnerV2 } from 'hooks/usePositionOwner'
 import NotFound from 'pages/NotFound'
@@ -228,7 +228,11 @@ function V2PositionPage() {
                     <Text variant="body2">
                       {formatCurrencyAmount({ value: liquidityAmount, type: NumberType.TokenNonTx })}
                     </Text>
-                    <DoubleCurrencyLogo currencies={[currency0Amount?.currency, currency1Amount?.currency]} size={24} />
+                    <DoubleCurrencyAndChainLogo
+                      chainId={currency0Amount.currency.chainId}
+                      currencies={[currency0Amount?.currency, currency1Amount?.currency]}
+                      size={24}
+                    />
                   </Flex>
                 </Flex>
                 <Flex row width="100%" justifyContent="space-between">
@@ -242,7 +246,11 @@ function V2PositionPage() {
                     <Text variant="body2">
                       {formatCurrencyAmount({ value: currency0Amount, type: NumberType.TokenNonTx })}
                     </Text>
-                    <DoubleCurrencyLogo currencies={[currency0Amount?.currency]} size={24} />
+                    <DoubleCurrencyAndChainLogo
+                      chainId={currency0Amount?.currency.chainId}
+                      currencies={[currency0Amount?.currency]}
+                      size={24}
+                    />
                   </Flex>
                 </Flex>
                 <Flex row width="100%" justifyContent="space-between">
@@ -256,7 +264,11 @@ function V2PositionPage() {
                     <Text variant="body2">
                       {formatCurrencyAmount({ value: currency1Amount, type: NumberType.TokenNonTx })}
                     </Text>
-                    <DoubleCurrencyLogo currencies={[currency1Amount?.currency]} size={24} />
+                    <DoubleCurrencyAndChainLogo
+                      chainId={currency1Amount?.currency.chainId}
+                      currencies={[currency1Amount?.currency]}
+                      size={24}
+                    />
                   </Flex>
                 </Flex>
                 <Flex row width="100%" justifyContent="space-between">

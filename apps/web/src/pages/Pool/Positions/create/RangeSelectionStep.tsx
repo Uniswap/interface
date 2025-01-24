@@ -45,7 +45,7 @@ const InitialPriceInput = () => {
 
   const { derivedPositionInfo } = useCreatePositionContext()
   const {
-    priceRangeState: { initialPrice, priceInverted },
+    priceRangeState: { initialPrice, initialPriceInverted },
     setPriceRangeState,
     derivedPriceRangeInfo,
   } = usePriceRangeContext()
@@ -53,7 +53,7 @@ const InitialPriceInput = () => {
   const [token0, token1] = derivedPositionInfo.currencies
   const [initialPriceBaseToken, initialPriceQuoteToken] = getInvertedTuple(
     derivedPositionInfo.currencies,
-    priceInverted,
+    initialPriceInverted,
   )
   const price = derivedPriceRangeInfo.price
 
@@ -64,9 +64,9 @@ const InitialPriceInput = () => {
   const handleSelectInitialPriceBaseToken = useCallback(
     (option: string) => {
       if (option === token0?.symbol) {
-        setPriceRangeState((prevState) => ({ ...prevState, priceInverted: false }))
+        setPriceRangeState((prevState) => ({ ...prevState, initialPriceInverted: false }))
       } else {
-        setPriceRangeState((prevState) => ({ ...prevState, priceInverted: true }))
+        setPriceRangeState((prevState) => ({ ...prevState, initialPriceInverted: true }))
       }
     },
     [token0?.symbol, setPriceRangeState],
@@ -329,23 +329,21 @@ export const SelectPriceRangeStep = ({
   )
 
   const price = derivedPriceRangeInfo.price
-  const { ticks, isSorted, prices, ticksAtLimit, pricesAtTicks, invalidPrice, invalidRange, invertPrice } =
-    useMemo(() => {
-      if (derivedPriceRangeInfo.protocolVersion === ProtocolVersion.V2) {
-        return {
-          ticks: undefined,
-          isSorted: false,
-          prices: undefined,
-          pricesAtTicks: undefined,
-          ticksAtLimit: [false, false],
-          invalidPrice: false,
-          invalidRange: false,
-          invertPrice: false,
-        }
+  const { ticks, isSorted, prices, ticksAtLimit, pricesAtTicks, invalidPrice, invalidRange } = useMemo(() => {
+    if (derivedPriceRangeInfo.protocolVersion === ProtocolVersion.V2) {
+      return {
+        ticks: undefined,
+        isSorted: false,
+        prices: undefined,
+        pricesAtTicks: undefined,
+        ticksAtLimit: [false, false],
+        invalidPrice: false,
+        invalidRange: false,
       }
+    }
 
-      return derivedPriceRangeInfo
-    }, [derivedPriceRangeInfo])
+    return derivedPriceRangeInfo
+  }, [derivedPriceRangeInfo])
   const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper } = useRangeHopCallbacks(
     derivedPositionInfo.protocolVersion === ProtocolVersion.V3
       ? {
@@ -408,12 +406,9 @@ export const SelectPriceRangeStep = ({
   ]
 
   const rangeSelectionInputValues = useMemo(() => {
-    const leftPrice = isSorted ? prices?.[0] : prices?.[1]?.invert()
-    const rightPrice = isSorted ? prices?.[1] : prices?.[0]?.invert()
-
     return [
-      ticksAtLimit[isSorted ? 0 : 1] ? '0' : leftPrice?.toSignificant(8) ?? '',
-      ticksAtLimit[isSorted ? 1 : 0] ? '∞' : rightPrice?.toSignificant(8) ?? '',
+      ticksAtLimit[isSorted ? 0 : 1] ? '0' : prices?.[0]?.toSignificant(8) ?? '',
+      ticksAtLimit[isSorted ? 1 : 0] ? '∞' : prices?.[1]?.toSignificant(8) ?? '',
     ]
   }, [isSorted, prices, ticksAtLimit])
 
@@ -512,7 +507,7 @@ export const SelectPriceRangeStep = ({
                   LOWER: ticksAtLimit[0],
                   UPPER: ticksAtLimit[1],
                 }}
-                price={price ? parseFloat((invertPrice ? price.invert() : price).toSignificant(8)) : undefined}
+                price={price ? parseFloat(price.toSignificant(8)) : undefined}
                 priceLower={pricesAtTicks?.[0]}
                 priceUpper={pricesAtTicks?.[1]}
                 onLeftRangeInput={(text) => handleChartRangeInput(RangeSelectionInput.MIN, text)}

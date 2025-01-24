@@ -243,12 +243,14 @@ export function getInvertedTuple<T extends OptionalCurrency>(tuple: [T, T], inve
 function getPrices<T extends Currency>({
   baseCurrency,
   quoteCurrency,
+  isSorted,
   pricesAtLimit,
   pricesAtTicks,
   state,
 }: {
   baseCurrency?: T
   quoteCurrency?: T
+  isSorted: boolean
   pricesAtLimit: (Price<T, T> | undefined)[]
   pricesAtTicks: (Price<T, T> | undefined)[]
   state: PriceRangeState
@@ -260,13 +262,12 @@ function getPrices<T extends Currency>({
   const lowerPrice = state.fullRange ? pricesAtLimit[0] : pricesAtTicks[0]
   const upperPrice = state.fullRange ? pricesAtLimit[1] : pricesAtTicks[1]
 
-  return [lowerPrice, upperPrice]
+  const minPrice = isSorted ? lowerPrice : upperPrice?.invert()
+  const maxPrice = isSorted ? upperPrice : lowerPrice?.invert()
+
+  return [minPrice, maxPrice]
 }
 
-/**
- * Pools and Pairs in all protocol versions require that [currency0, currency1] be sorted.
- * So, if the user-provided initial price is inverted w.r.t. the sorted order, we need to invert it again here.
- */
 function getInitialPrice({
   baseCurrency,
   sortedCurrencies,
@@ -293,25 +294,23 @@ function getInitialPrice({
   return invertPrice ? price?.invert() : price
 }
 
-function getPrice(
-  opts:
-    | {
-        type: ProtocolVersion.V4
-        pool?: V4Pool
-        currency0?: Currency
-      }
-    | {
-        type: ProtocolVersion.V3
-        pool?: V3Pool
-        currency0?: Token
-      },
-) {
-  const { type, pool, currency0 } = opts
-  if (!pool || !currency0) {
+function getPrice({
+  baseCurrency,
+  quoteCurrency,
+  pool,
+}: {
+  baseCurrency?: Currency
+  quoteCurrency?: Currency
+  pool?: V3Pool | V4Pool
+}) {
+  if (!pool || !baseCurrency || !quoteCurrency) {
     return undefined
   }
 
-  return type === ProtocolVersion.V4 ? pool.priceOf(currency0) : pool.priceOf(currency0)
+  const sortedCurrencies = getSortedCurrenciesTuple(baseCurrency, quoteCurrency)
+  const isSorted = sortedCurrencies[0] === baseCurrency
+
+  return isSorted ? pool.token0Price : pool.token1Price
 }
 
 function isInvalidPrice(price?: Price<Currency, Currency>) {
@@ -527,7 +526,7 @@ export function getV2PriceRangeInfo({
   derivedPositionInfo: CreateV2PositionInfo
 }): V2PriceRangeInfo {
   const { currencies } = derivedPositionInfo
-  const [baseCurrency] = getInvertedTuple(currencies, state.priceInverted)
+  const [baseCurrency] = getInvertedTuple(currencies, state.initialPriceInverted)
 
   const price = getInitialPrice({
     baseCurrency: getCurrencyWithWrap(baseCurrency, ProtocolVersion.V2),
@@ -566,11 +565,11 @@ export function getV3PriceRangeInfo({
   const { protocolVersion, currencies } = derivedPositionInfo
   const pool = derivedPositionInfo.pool
 
-  const tokenA = getCurrencyWithWrap(currencies[0], protocolVersion)
-  const tokenB = getCurrencyWithWrap(currencies[1], protocolVersion)
-  const sortedTokens = getSortedCurrenciesTuple(tokenA, tokenB)
+  const sortedTokens = getSortedCurrenciesTuple(
+    getCurrencyWithWrap(currencies[0], protocolVersion),
+    getCurrencyWithWrap(currencies[1], protocolVersion),
+  )
   const [sortedToken0, sortedToken1] = sortedTokens
-
   const [baseCurrency, quoteCurrency] = getInvertedTuple(currencies, state.priceInverted)
   const [baseToken, quoteToken] = [
     getCurrencyWithWrap(baseCurrency, protocolVersion),
@@ -579,7 +578,7 @@ export function getV3PriceRangeInfo({
 
   const initialPriceTokens = getInvertedTuple(
     [getCurrencyWithWrap(currencies[0], protocolVersion), getCurrencyWithWrap(currencies[1], protocolVersion)],
-    state.priceInverted,
+    state.initialPriceInverted,
   )
 
   const price = derivedPositionInfo.creatingPoolOrPair
@@ -589,9 +588,9 @@ export function getV3PriceRangeInfo({
         initialPrice: state.initialPrice,
       })
     : getPrice({
-        type: ProtocolVersion.V3,
+        baseCurrency: baseToken,
+        quoteCurrency: quoteToken,
         pool,
-        currency0: sortedToken0,
       })
   const invalidPrice = isInvalidPrice(price)
   const mockPool = createMockV3Pool({
@@ -647,6 +646,7 @@ export function getV3PriceRangeInfo({
   const prices = getPrices({
     baseCurrency: baseToken,
     quoteCurrency: quoteToken,
+    isSorted,
     pricesAtLimit,
     pricesAtTicks,
     state,
@@ -656,22 +656,21 @@ export function getV3PriceRangeInfo({
     !invalidRange && price && prices[0] && prices[1] && (price.lessThan(prices[0]) || price.greaterThan(prices[1])),
   )
 
-  // This is in terms of the sorted tokens
   const deposit0Disabled = Boolean(upperTick && poolForPosition && poolForPosition.tickCurrent >= upperTick)
   const deposit1Disabled = Boolean(lowerTick && poolForPosition && poolForPosition.tickCurrent <= lowerTick)
 
   const depositADisabled =
     invalidRange ||
     Boolean(
-      (deposit0Disabled && poolForPosition && tokenA && poolForPosition.token0.equals(tokenA)) ||
-        (deposit1Disabled && poolForPosition && tokenA && poolForPosition.token1.equals(tokenA)),
+      (deposit0Disabled && poolForPosition && baseToken && poolForPosition.token0.equals(baseToken)) ||
+        (deposit1Disabled && poolForPosition && baseToken && poolForPosition.token1.equals(baseToken)),
     )
 
   const depositBDisabled =
     invalidRange ||
     Boolean(
-      (deposit0Disabled && poolForPosition && tokenB && poolForPosition.token0.equals(tokenB)) ||
-        (deposit1Disabled && poolForPosition && tokenB && poolForPosition.token1.equals(tokenB)),
+      (deposit0Disabled && poolForPosition && quoteToken && poolForPosition.token0.equals(quoteToken)) ||
+        (deposit1Disabled && poolForPosition && quoteToken && poolForPosition.token1.equals(quoteToken)),
     )
 
   return {
@@ -743,7 +742,7 @@ export function getV4PriceRangeInfo({
   const sortedCurrencies = getSortedCurrenciesTuple(currencies[0], currencies[1])
   const [sortedCurrency0, sortedCurrency1] = sortedCurrencies
   const [baseCurrency, quoteCurrency] = getInvertedTuple(currencies, state.priceInverted)
-  const [initialPriceBaseCurrency] = getInvertedTuple(currencies, state.priceInverted)
+  const [initialPriceBaseCurrency] = getInvertedTuple(currencies, state.initialPriceInverted)
 
   const price = derivedPositionInfo.creatingPoolOrPair
     ? getInitialPrice({
@@ -752,9 +751,9 @@ export function getV4PriceRangeInfo({
         initialPrice: state.initialPrice,
       })
     : getPrice({
-        type: ProtocolVersion.V4,
+        baseCurrency,
+        quoteCurrency,
         pool,
-        currency0: sortedCurrency0,
       })
   const invalidPrice = isInvalidPrice(price)
   const mockPool = createMockV4Pool({
@@ -809,6 +808,7 @@ export function getV4PriceRangeInfo({
   const prices: [OptionalCurrencyPrice, OptionalCurrencyPrice] = getPrices({
     baseCurrency,
     quoteCurrency,
+    isSorted,
     pricesAtLimit,
     pricesAtTicks,
     state,
@@ -884,8 +884,8 @@ export function generateAddLiquidityApprovalParams({
     walletAddress: account.address,
     chainId: currencyAmounts.TOKEN0.currency.chainId,
     protocol: apiProtocolItems,
-    token0: getCurrencyAddressForTradingApi(getCurrencyWithWrap(currencies[0], positionState.protocolVersion)),
-    token1: getCurrencyAddressForTradingApi(getCurrencyWithWrap(currencies[1], positionState.protocolVersion)),
+    token0: getCurrencyAddressForTradingApi(currencies[0]),
+    token1: getCurrencyAddressForTradingApi(currencies[1]),
     amount0: currencyAmounts?.TOKEN0?.quotient.toString(),
     amount1: currencyAmounts?.TOKEN1?.quotient.toString(),
   } satisfies CheckApprovalLPRequest

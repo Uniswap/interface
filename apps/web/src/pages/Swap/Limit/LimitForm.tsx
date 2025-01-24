@@ -18,6 +18,7 @@ import Row from 'components/deprecated/Row'
 import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/styled'
 import { ZERO_PERCENT } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
+import { useIsUniswapXSupportedChain } from 'hooks/useIsUniswapXSupportedChain'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
@@ -42,7 +43,6 @@ import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Locale } from 'uniswap/src/features/language/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
@@ -53,8 +53,6 @@ import {
   useFormatter,
 } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
-
-const LIMIT_SUPPORTED_CHAINS = [UniverseChainId.Mainnet]
 
 const CustomHeightSwapSection = styled(SwapSection)`
   height: unset;
@@ -102,7 +100,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
     setCurrencyState,
   } = useSwapAndLimitContext()
   const isSupportedChain = useIsSupportedChainId(chainId)
-  const isLimitSupportedChain = chainId && LIMIT_SUPPORTED_CHAINS.includes(chainId)
+  const isUniswapXSupportedChain = useIsUniswapXSupportedChain(chainId)
 
   const { limitState, setLimitState, derivedLimitInfo } = useLimitContext()
   const { currencyBalances, parsedAmounts, parsedLimitPrice, limitOrderTrade, marketPrice } = derivedLimitInfo
@@ -372,7 +370,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         hasInsufficientFunds={hasInsufficientFunds}
         limitPriceError={priceError}
       />
-      {isLimitSupportedChain && !!priceError && inputCurrency && outputCurrency && limitOrderTrade && (
+      {isUniswapXSupportedChain && !!priceError && inputCurrency && outputCurrency && limitOrderTrade && (
         <LimitPriceError
           priceError={priceError}
           priceAdjustmentPercentage={currentPriceAdjustment}
@@ -382,9 +380,9 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         />
       )}
       <LimitDisclaimerContainer>
-        <StyledAlertIcon size={20} color={!isLimitSupportedChain ? theme.critical : theme.neutral2} />
+        <StyledAlertIcon size={20} color={!isUniswapXSupportedChain ? theme.critical : theme.neutral2} />
         <Text variant="body3">
-          {!isLimitSupportedChain ? (
+          {!isUniswapXSupportedChain ? (
             <Trans
               i18nKey="limits.form.disclaimer.mainnet"
               components={{
@@ -471,7 +469,7 @@ function SubmitOrderButton({
   const account = useAccount()
   const { chainId } = useMultichainContext()
 
-  if (chainId && !LIMIT_SUPPORTED_CHAINS.includes(chainId)) {
+  if (!useIsUniswapXSupportedChain(chainId)) {
     return (
       <ButtonError disabled>
         <Trans i18nKey="limits.selectSupportedTokens" />

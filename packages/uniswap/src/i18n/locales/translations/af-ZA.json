@@ -2238,7 +2238,7 @@
   "transaction.warning.insufficientGas.modal.message": "Jy benodig ~{{tokenAmount}} {{tokenSymbol}} (<fiatTokenAmount/>) op {{networkName}} om hierdie transaksie se netwerkkoste te dek.",
   "transaction.warning.insufficientGas.modal.title.withNetwork": "Nie genoeg {{tokenSymbol}} op {{networkName}}",
   "transaction.warning.insufficientGas.modal.title.withoutNetwork": "Nie genoeg {{tokenSymbol}}nie",
-  "transaction.warning.maxNative.message": "Jy gaan die meeste van jou netwerktokensaldo spandeer. Dit sal onvoldoende fondse laat om toekomstige netwerkkoste te dek.",
+  "transaction.warning.maxNative.message": "Jy gaan die meeste van jou netwerktokensaldo spandeer. Dit kan onvoldoende fondse laat om toekomstige netwerkkoste te dek.",
   "transaction.warning.maxNative.title": "Lae netwerktokenbalans",
   "transaction.watcher.error.cancel": "Kan nie transaksie kanselleer nie",
   "transaction.watcher.error.status": "Kon nie transaksiestatus nagaan nie",

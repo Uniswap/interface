@@ -17,7 +17,6 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import Column from 'components/deprecated/Column'
 import Row, { AutoRow } from 'components/deprecated/Row'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
-import { useAccount } from 'hooks/useAccount'
 import { useDisconnect } from 'hooks/useDisconnect'
 import useENSName from 'hooks/useENSName'
 import { useIsUniExtensionAvailable } from 'hooks/useUniswapWalletOptions'
@@ -32,8 +31,6 @@ import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/ho
 import { ThemedText } from 'theme/components'
 import { ArrowDownCircleFilled } from 'ui/src/components/icons/ArrowDownCircleFilled'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
-import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
-import { disconnectWallet } from 'uniswap/src/data/rest/embeddedWallet'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -109,8 +106,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const { formatNumber, formatDelta } = useFormatter()
   const isUniExtensionAvailable = useIsUniExtensionAvailable()
   const { isTestnetModeEnabled } = useEnabledChains()
-  const connectedWithEmbeddedWallet =
-    useAccount().connector?.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID
 
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
   const isUnclaimed = useUserHasAvailableClaim(account)
@@ -120,12 +115,9 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const dispatch = useDispatch()
 
   const handleDisconnect = useCallback(() => {
-    if (connectedWithEmbeddedWallet) {
-      disconnectWallet()
-    }
     dispatch(setIsTestnetModeEnabled(false))
     disconnect()
-  }, [connectedWithEmbeddedWallet, disconnect, dispatch])
+  }, [disconnect, dispatch])
 
   const handleBuyCryptoClick = useCallback(() => {
     accountDrawer.close()
@@ -162,7 +154,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
               onConfirm={handleDisconnect}
               onShowConfirm={setShowDisconnectConfirm}
               Icon={Power}
-              text={t('common.button.disconnect')}
+              text="Disconnect"
               dismissOnHoverOut
             />
           </Trace>

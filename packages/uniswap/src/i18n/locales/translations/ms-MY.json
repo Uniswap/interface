@@ -2238,7 +2238,7 @@
   "transaction.warning.insufficientGas.modal.message": "Anda memerlukan ~{{tokenAmount}} {{tokenSymbol}} (<fiatTokenAmount/>) pada {{networkName}} untuk menampung kos rangkaian transaksi ini.",
   "transaction.warning.insufficientGas.modal.title.withNetwork": "Tidak cukup {{tokenSymbol}} pada {{networkName}}",
   "transaction.warning.insufficientGas.modal.title.withoutNetwork": "Tidak cukup {{tokenSymbol}}",
-  "transaction.warning.maxNative.message": "Anda akan membelanjakan sebahagian besar baki token rangkaian anda. Ini akan meninggalkan dana yang tidak mencukupi untuk menampung kos rangkaian masa hadapan.",
+  "transaction.warning.maxNative.message": "Anda akan membelanjakan kebanyakan baki token rangkaian anda. Ini mungkin meninggalkan dana yang tidak mencukupi untuk menampung kos rangkaian masa hadapan.",
   "transaction.warning.maxNative.title": "Baki token rangkaian yang rendah",
   "transaction.watcher.error.cancel": "Tidak dapat membatalkan transaksi",
   "transaction.watcher.error.status": "Ralat semasa menyemak status transaksi",

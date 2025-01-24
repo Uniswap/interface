@@ -6,7 +6,6 @@ import { isInterface } from 'utilities/src/platform'
 export enum FeatureFlags {
   // Shared
   Datadog,
-  EmbeddedWallet,
   ForAggregator,
   IndicativeSwapQuotes,
   InstantTokenBalanceUpdate,
@@ -67,7 +66,6 @@ export enum FeatureFlags {
 // These names must match the gate name on statsig
 export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.Datadog, 'datadog'],
-  [FeatureFlags.EmbeddedWallet, 'embedded_wallet'],
   [FeatureFlags.IndicativeSwapQuotes, 'indicative-quotes'],
   [FeatureFlags.InstantTokenBalanceUpdate, 'instant-token-balance-update'],
   [FeatureFlags.MonadTestnet, 'monad_testnet'],

@@ -1,4 +1,4 @@
-import { ApolloClient, NormalizedCacheObject, ObservableQuery } from '@apollo/client'
+import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { call, delay, select } from 'typed-redux-saga'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import {
@@ -96,15 +96,6 @@ export function* refetchGQLQueriesViaBackendPollVariant({
     // We only want to refetch `PortfolioBalances`, as this is the only query needed to check the updated balances.
     yield* call([apolloClient, apolloClient.refetchQueries], {
       include: [GQLQueries.PortfolioBalances],
-      onQueryUpdated: (observableQuery: ObservableQuery<PortfolioBalancesQuery>) => {
-        logger.info('refetchGQLQueriesSaga', 'refetchGQLQueries', 'PortfolioBalances refetch', {
-          iteration: i,
-          queryName: observableQuery.queryName,
-          networkStatus: observableQuery.getCurrentResult().networkStatus,
-          error: observableQuery.getCurrentResult().error,
-        })
-        return true
-      },
     })
 
     freshnessLag += REFETCH_INTERVAL

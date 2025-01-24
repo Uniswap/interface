@@ -64,7 +64,6 @@ import { SettingsCloudBackupPasswordConfirmScreen } from 'src/screens/SettingsCl
 import { SettingsCloudBackupPasswordCreateScreen } from 'src/screens/SettingsCloudBackupPasswordCreateScreen'
 import { SettingsCloudBackupProcessingScreen } from 'src/screens/SettingsCloudBackupProcessingScreen'
 import { SettingsCloudBackupStatus } from 'src/screens/SettingsCloudBackupStatus'
-import { SettingsNotificationsScreen } from 'src/screens/SettingsNotificationsScreen'
 import { SettingsPrivacyScreen } from 'src/screens/SettingsPrivacyScreen'
 import { SettingsScreen } from 'src/screens/SettingsScreen'
 import { SettingsViewSeedPhraseScreen } from 'src/screens/SettingsViewSeedPhraseScreen'
@@ -134,7 +133,6 @@ function SettingsStackGroup(): JSX.Element {
       <SettingsStack.Screen component={SettingsCloudBackupStatus} name={MobileScreens.SettingsCloudBackupStatus} />
       <SettingsStack.Screen component={SettingsAppearanceScreen} name={MobileScreens.SettingsAppearance} />
       <SettingsStack.Screen component={SettingsPrivacyScreen} name={MobileScreens.SettingsPrivacy} />
-      <SettingsStack.Screen component={SettingsNotificationsScreen} name={MobileScreens.SettingsNotifications} />
     </SettingsStack.Navigator>
   )
 }

@@ -2238,7 +2238,7 @@
   "transaction.warning.insufficientGas.modal.message": "Aveți nevoie de ~{{tokenAmount}} {{tokenSymbol}} (<fiatTokenAmount/>) pe {{networkName}} pentru a acoperi costul rețelei acestei tranzacții.",
   "transaction.warning.insufficientGas.modal.title.withNetwork": "Nu este suficient {{tokenSymbol}} pe {{networkName}}",
   "transaction.warning.insufficientGas.modal.title.withoutNetwork": "Nu este suficient {{tokenSymbol}}",
-  "transaction.warning.maxNative.message": "Sunteți pe cale să cheltuiți cea mai mare parte din soldul de simboluri de rețea. Acest lucru va lăsa fonduri insuficiente pentru a acoperi costurile viitoare ale rețelei.",
+  "transaction.warning.maxNative.message": "Sunteți pe cale să cheltuiți cea mai mare parte din soldul de simboluri de rețea. Acest lucru poate lăsa fonduri insuficiente pentru a acoperi costurile viitoare ale rețelei.",
   "transaction.warning.maxNative.title": "Echilibrul jetoanelor de rețea scăzut",
   "transaction.watcher.error.cancel": "Nu se poate anula tranzacția",
   "transaction.watcher.error.status": "Eroare la verificarea stării tranzacției",

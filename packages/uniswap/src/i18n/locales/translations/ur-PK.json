@@ -2238,7 +2238,7 @@
   "transaction.warning.insufficientGas.modal.message": "اس ٹرانزیکشن کی نیٹ ورک لاگت کو پورا کرنے کے لیے آپ کو {{networkName}} پر ~{{tokenAmount}} {{tokenSymbol}} (<fiatTokenAmount/>) کی ضرورت ہے۔",
   "transaction.warning.insufficientGas.modal.title.withNetwork": "{{networkName}}پر {{tokenSymbol}} کافی نہیں ہے۔",
   "transaction.warning.insufficientGas.modal.title.withoutNetwork": "کافی نہیں {{tokenSymbol}}",
-  "transaction.warning.maxNative.message": "آپ اپنا زیادہ تر نیٹ ورک ٹوکن بیلنس خرچ کرنے والے ہیں۔ یہ مستقبل کے نیٹ ورک کے اخراجات کو پورا کرنے کے لیے ناکافی فنڈز چھوڑ دے گا۔",
+  "transaction.warning.maxNative.message": "آپ اپنا زیادہ تر نیٹ ورک ٹوکن بیلنس خرچ کرنے والے ہیں۔ یہ مستقبل کے نیٹ ورک کے اخراجات کو پورا کرنے کے لیے ناکافی فنڈز چھوڑ سکتا ہے۔",
   "transaction.warning.maxNative.title": "کم نیٹ ورک ٹوکن بیلنس",
   "transaction.watcher.error.cancel": "لین دین منسوخ کرنے سے قاصر",
   "transaction.watcher.error.status": "ٹرانزیکشن اسٹیٹس چیک کرتے وقت خرابی",

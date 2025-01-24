@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { DeprecatedButton, Flex, Text, isWeb, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Loader, Text, isWeb, useSporeColors } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { X } from 'ui/src/components/icons/X'
 import { iconSizes, validColor } from 'ui/src/theme'
@@ -19,6 +19,7 @@ import { useNetworkColors } from 'uniswap/src/utils/colors'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
+import { logger } from 'utilities/src/logger/logger'
 
 export function TransactionAmountsReview({
   acceptedDerivedSwapInfo,
@@ -77,8 +78,21 @@ export function TransactionAmountsReview({
   )
 
   if (!currencyInInfo || !currencyOutInfo) {
-    // This should never happen. It's just to keep TS happy.
-    throw new Error('Missing required props in `derivedSwapInfo` to render `TransactionAmountsReview` screen.')
+    // This should never happen given that all the data required to get these two objects should be readily available in the Review screen.
+    // This might be happening because the `Token` query is somehow not in the cache,
+    // which only started happening on mobile 1.43 and we don't know why.
+    // As a temporary fix, we've added a Skeleton UI to this component,
+    // but ideally this should not be necessary.
+    logger.warn(
+      'TransactionAmountsReview.tsx',
+      'TransactionAmountsReview',
+      'Missing required `currencyInInfo` or `currencyOutInfo` when rendering `TransactionAmountsReview`',
+      {
+        acceptedDerivedSwapInfo,
+        inputCurrencyAmount,
+        outputCurrencyAmount,
+      },
+    )
   }
 
   return (
@@ -103,27 +117,39 @@ export function TransactionAmountsReview({
         )}
       </Flex>
 
-      <CurrencyValueWithIcon
-        currencyInfo={currencyInInfo}
-        formattedFiatAmount={formattedFiatAmountIn}
-        formattedTokenAmount={formattedTokenAmountIn}
-        indicative={isInputIndicative}
-        shouldDim={shouldDimInput}
-        isBridgeTrade={isBridgeTrade}
-      />
+      {!currencyInInfo ? (
+        <CurrencyValueWithIconSkeleton />
+      ) : (
+        <CurrencyValueWithIcon
+          currencyInfo={currencyInInfo}
+          formattedFiatAmount={formattedFiatAmountIn}
+          formattedTokenAmount={formattedTokenAmountIn}
+          indicative={isInputIndicative}
+          shouldDim={shouldDimInput}
+          isBridgeTrade={isBridgeTrade}
+        />
+      )}
 
       <ArrowDown color={colors.neutral3.get()} size={20} />
 
-      <CurrencyValueWithIcon
-        currencyInfo={currencyOutInfo}
-        formattedFiatAmount={formattedFiatAmountOut}
-        formattedTokenAmount={formattedTokenAmountOut}
-        indicative={isOutputIndicative}
-        shouldDim={shouldDimOutput}
-        isBridgeTrade={isBridgeTrade}
-      />
+      {!currencyOutInfo ? (
+        <CurrencyValueWithIconSkeleton />
+      ) : (
+        <CurrencyValueWithIcon
+          currencyInfo={currencyOutInfo}
+          formattedFiatAmount={formattedFiatAmountOut}
+          formattedTokenAmount={formattedTokenAmountOut}
+          indicative={isOutputIndicative}
+          shouldDim={shouldDimOutput}
+          isBridgeTrade={isBridgeTrade}
+        />
+      )}
     </Flex>
   )
+}
+
+function CurrencyValueWithIconSkeleton(): JSX.Element {
+  return <Loader.Box height={60} />
 }
 
 function CurrencyValueWithIcon({
@@ -150,6 +176,7 @@ function CurrencyValueWithIcon({
   const networkLabel = getChainLabel(chainId)
   const networkColor = validColor(networkColors.foreground)
 
+  // If you modify this UI, make sure to also modify the height of `CurrencyValueWithIconSkeleton`.
   return (
     <Flex centered grow row>
       <Flex grow gap="$spacing4">

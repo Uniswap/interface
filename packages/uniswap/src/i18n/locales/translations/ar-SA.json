@@ -2238,7 +2238,7 @@
   "transaction.warning.insufficientGas.modal.message": "أنت بحاجة إلى ~{{tokenAmount}} {{tokenSymbol}} (<fiatTokenAmount/>) على {{networkName}} لتغطية تكلفة الشبكة لهذه المعاملة.",
   "transaction.warning.insufficientGas.modal.title.withNetwork": "لا يكفي {{tokenSymbol}} على {{networkName}}",
   "transaction.warning.insufficientGas.modal.title.withoutNetwork": "لا يكفي {{tokenSymbol}}",
-  "transaction.warning.maxNative.message": "أنت على وشك إنفاق معظم رصيد رمز الشبكة الخاص بك. وهذا لن يبقي لك أموالاً كافية لتغطية تكاليف الشبكة في المستقبل.",
+  "transaction.warning.maxNative.message": "أنت على وشك إنفاق معظم رصيد رمز الشبكة الخاص بك. وقد يؤدي هذا إلى عدم بقاء أموال كافية لتغطية تكاليف الشبكة في المستقبل.",
   "transaction.warning.maxNative.title": "رصيد رمز الشبكة منخفض",
   "transaction.watcher.error.cancel": "غير قادر على إلغاء المعاملة",
   "transaction.watcher.error.status": "حدث خطأ أثناء التحقق من حالة المعاملة",

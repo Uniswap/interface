@@ -2238,7 +2238,7 @@
   "transaction.warning.insufficientGas.modal.message": "אתה צריך ~{{tokenAmount}} {{tokenSymbol}} (<fiatTokenAmount/>) ב- {{networkName}} כדי לכסות את עלות הרשת של העסקה הזו.",
   "transaction.warning.insufficientGas.modal.title.withNetwork": "לא מספיק {{tokenSymbol}} על {{networkName}}",
   "transaction.warning.insufficientGas.modal.title.withoutNetwork": "לא מספיק {{tokenSymbol}}",
-  "transaction.warning.maxNative.message": "אתה עומד להוציא את רוב יתרת האסימון ברשת שלך. זה ישאיר לא מספיק כספים לכיסוי עלויות רשת עתידיות.",
+  "transaction.warning.maxNative.message": "אתה עומד להוציא את רוב יתרת האסימון ברשת שלך. זה עלול להשאיר לא מספיק כספים לכיסוי עלויות רשת עתידיות.",
   "transaction.warning.maxNative.title": "יתרת אסימון רשת נמוכה",
   "transaction.watcher.error.cancel": "לא ניתן לבטל את העסקה",
   "transaction.watcher.error.status": "שגיאה בעת בדיקת סטטוס העסקה",

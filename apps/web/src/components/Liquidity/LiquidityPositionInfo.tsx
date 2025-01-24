@@ -5,7 +5,7 @@ import {
 } from 'components/Liquidity/LiquidityPositionStatusIndicator'
 import { PositionInfo } from 'components/Liquidity/types'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils'
-import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
+import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
 import { TextLoader } from 'pages/Pool/Positions/shared'
 import { Circle, Flex, Text } from 'ui/src'
 
@@ -38,7 +38,11 @@ export function LiquidityPositionInfo({
   const versionLabel = getProtocolVersionLabel(version)
   return (
     <Flex row gap="$gap16" $md={{ width: '100%' }}>
-      <DoubleCurrencyLogo currencies={[currency0Amount?.currency, currency1Amount?.currency]} size={currencyLogoSize} />
+      <DoubleCurrencyAndChainLogo
+        chainId={currency0Amount?.currency.chainId}
+        currencies={[currency0Amount?.currency, currency1Amount?.currency]}
+        size={currencyLogoSize}
+      />
       <Flex grow $md={{ row: true, justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <Flex row gap="$gap16" $md={{ row: false, gap: '$gap4' }}>
           <Text variant="subheading1">
