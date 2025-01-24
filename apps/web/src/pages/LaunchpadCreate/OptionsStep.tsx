@@ -6,11 +6,13 @@ import AddressInputPanel from 'components/AddressInputPanel'
 import { ButtonError, ButtonPrimary } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import Column, { AutoColumn } from 'components/Column'
+import DatePickerPanel from 'components/DatePickerPanel'
 import Modal from 'components/Modal'
 import NumericalInputPanel from 'components/NumericalInputPanel'
 import Row, { AutoRow } from 'components/Row'
 import TextInputPanel from 'components/TextInputPanel'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { hashMessage } from 'ethers/lib/utils'
 import { useToken } from 'hooks/Tokens'
 import { useUbestarterFactory } from 'hooks/useContract'
@@ -19,10 +21,11 @@ import { useAtom } from 'jotai'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { Checkbox } from 'nft/components/layout/Checkbox'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { ArrowLeft } from 'react-feather'
+import { ArrowLeft, Info } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 import Loader from '../../components-old/Loader'
 import AppBody from '../AppBody'
 import { Action, ActionSelector } from './ActionSelector'
@@ -107,6 +110,7 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
   const { account, provider } = useWeb3React()
 
   const theme = useTheme()
+  const { formatNumber } = useFormatter()
 
   const [attempting, setAttempting] = useState(false)
 
@@ -168,14 +172,20 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
 
   // ----- tokenomics -----
   const [tokenomicsModalOpened, setTokenomicsModalOpened] = useState(false)
-  const tokenomicsHeaders = ['#', 'Type', 'Amount', 'Unlocked at TGE', 'Cliff', 'Vesting']
+  const tokenomicsHeaders = ['#', 'Allocation', 'Amount', 'Unlocked at TGE', 'Cliff', 'Vesting']
   const tokenomicsData = options.tokenInfo.tokenomics.map((info) => [
     info.index.toString(),
     info.name,
-    info.amount.toString(),
-    info.unlockedAmount.toString(),
-    info.cliffInDays.toString(),
-    info.vestingInDays.toString(),
+    formatNumber({
+      input: info.amount,
+      type: NumberType.TokenNonTx,
+    }),
+    formatNumber({
+      input: info.unlockedAmount,
+      type: NumberType.TokenNonTx,
+    }),
+    info.cliffInDays === 0 ? '-' : info.cliffInDays / 30 + ' months',
+    info.vestingInDays / 30 + ' months',
   ])
   const addTokenomics = (tokenomicsInfo: TokenomicsTableValues) => {
     setOptions((oldVal) => {
@@ -193,6 +203,32 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
     })
     setTokenomicsModalOpened(false)
   }
+  const removeTokenomics = (index: number) => {
+    setOptions((oldVal) => {
+      const newArray = oldVal.tokenInfo.tokenomics.filter((_, i) => i != index)
+      newArray.forEach((item, i) => {
+        item.index = i + 1
+      })
+      return {
+        ...oldVal,
+        tokenInfo: {
+          ...oldVal.tokenInfo,
+          tokenomics: newArray,
+        },
+      }
+    })
+  }
+  const initialCirculatinSupply = options.tokenInfo.tokenomics.reduce((acc, tokenomicsItem) => {
+    return acc + tokenomicsItem.unlockedAmount
+  }, 0)
+
+  const totalSupply = options.tokenInfo.tokenomics.reduce((acc, tokenomicsItem) => {
+    return acc + tokenomicsItem.amount
+  }, 0)
+
+  const sellPrice = parseFloat(options.tokenSale.sellPrice) || 0
+  const hardCapAsQuote = parseFloat(options.tokenSale.hardCapAsQuote) || 0
+  const tokensOffered = sellPrice == 0 ? 0 : Math.floor(hardCapAsQuote / sellPrice)
   // ------
 
   // ------ Team -------
@@ -220,6 +256,21 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
       }
     })
     setTeamModalOpened(false)
+  }
+  const removeTeamMember = (index: number) => {
+    setOptions((oldVal) => {
+      const newArray = oldVal.tokenInfo.teamMembers.filter((_, i) => i != index)
+      newArray.forEach((item, i) => {
+        item.index = i + 1
+      })
+      return {
+        ...oldVal,
+        tokenInfo: {
+          ...oldVal.tokenInfo,
+          teamMembers: newArray,
+        },
+      }
+    })
   }
   // ------
 
@@ -284,7 +335,7 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
   const liqActions: Action[] = [
     {
       id: 'BURN',
-      name: 'Burned',
+      name: 'Burned (sent to dead address)',
     },
     {
       id: 'LOCK',
@@ -329,6 +380,12 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
       name: 'Full Range',
     },
   ]
+  const range = options.liquidity.liquidityRange
+  const listingPrice = (options.liquidity.listingPrice && parseFloat(options.liquidity.listingPrice)) || 0
+  const minRangePrice =
+    range == 'NARROW' ? listingPrice / 3 : range == 'MEDIUM' ? listingPrice / 10 : listingPrice / 100
+  const maxRangePrice =
+    range == 'NARROW' ? listingPrice * 3 : range == 'MEDIUM' ? listingPrice * 10 : listingPrice * 100
 
   const [_validationResult, seValidationResult] = useAtom(launchpadValidationResult)
   const validateAndNext = async () => {
@@ -396,7 +453,7 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
       <AppBody $maxWidth="800px">
         <Nav to="/ubestarter">
           <BackArrow />
-          <HeaderText>Launchpad Options</HeaderText>
+          <HeaderText>Launchpad Options {validationError?.field}</HeaderText>
         </Nav>
         <OptionsWrapper>
           <BlueCard>
@@ -419,11 +476,15 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
             placeholder="Token Contact Address"
             value={options.tokenInfo.tokenAddress}
             onChange={(val) => setOptionsProp('tokenInfo.tokenAddress', val)}
+            isError={isError('tokenInfo.tokenAddress')}
+            errorMessage={validationError?.message}
           />
 
-          <ThemedText.SubHeaderSmall style={{ padding: '2px 0 12px 16px' }}>
-            {token ? `Name: ${token.name} \u00A0\u00A0\u00A0\u00A0 Symbol: ${token.symbol}` : 'Invalid token adress'}
-          </ThemedText.SubHeaderSmall>
+          {token && (
+            <ThemedText.SubHeaderSmall style={{ padding: '2px 0 12px 16px' }}>
+              Name: {token.name} {'\u00A0\u00A0\u00A0\u00A0'} Symbol: {token.symbol}
+            </ThemedText.SubHeaderSmall>
+          )}
 
           <Row gap="10px" marginBottom="12px">
             <Column flex="1">
@@ -457,6 +518,16 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
           </Row>
 
           <Row marginBottom="12px">
+            <TextInputPanel
+              label="Project Website"
+              placeholder="Website link"
+              value={options.tokenInfo.website}
+              onChange={(val) => setOptionsProp('tokenInfo.website', val)}
+              isError={isError('tokenInfo.website')}
+              errorMessage={validationError?.message}
+            />
+          </Row>
+          <Row marginBottom="12px">
             <TextareaPanel
               label="Audit Links"
               value={options.tokenInfo.auditLinks}
@@ -467,17 +538,7 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
             />
           </Row>
 
-          <Row marginBottom="12px">
-            <TextInputPanel
-              label="Project Website"
-              placeholder="Website link"
-              value={options.tokenInfo.website}
-              onChange={(val) => setOptionsProp('tokenInfo.website', val)}
-              isError={isError('tokenInfo.website')}
-              errorMessage={validationError?.message}
-            />
-          </Row>
-          <Row gap="10px" marginBottom="12px">
+          <Row gap="10px" marginBottom="12px" align="flex-start">
             <Column flex="1">
               <TextInputPanel
                 label="Whitepaper"
@@ -500,7 +561,7 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
             </Column>
           </Row>
 
-          <Row gap="10px" marginBottom="12px">
+          <Row gap="10px" marginBottom="12px" align="flex-start">
             <Column flex="1">
               <TextInputPanel
                 label="Github"
@@ -522,7 +583,7 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
               />
             </Column>
           </Row>
-          <Row gap="10px" marginBottom="12px">
+          <Row gap="10px" marginBottom="12px" align="flex-start">
             <Column flex="1">
               <TextInputPanel
                 label="Telegram"
@@ -544,7 +605,7 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
               />
             </Column>
           </Row>
-          <Row gap="10px" marginBottom="12px">
+          <Row gap="10px" marginBottom="12px" align="flex-start">
             <Column flex="1">
               <TextInputPanel
                 label="Farcaster"
@@ -566,7 +627,7 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
               />
             </Column>
           </Row>
-          <Row gap="10px" marginBottom="12px">
+          <Row gap="10px" marginBottom="12px" align="flex-start">
             <Column flex="1">
               <TextInputPanel
                 label="Youtube"
@@ -591,36 +652,6 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
 
           <Row marginBottom="8px" marginTop="12px" marginLeft="4px">
             <Column flex="1">
-              <ThemedText.BodyPrimary>Tokenomics</ThemedText.BodyPrimary>
-            </Column>
-            <Column>
-              <SmallButtonPrimary
-                data-testid="add-tokenomics-button"
-                disabled={false}
-                width="fit-content"
-                style={{ borderRadius: '12px' }}
-                padding="1px 4px"
-                onClick={() => setTokenomicsModalOpened(true)}
-              >
-                <ThemedText.DeprecatedMain color={theme.white}>
-                  <Trans>Add Tokenomics Entry</Trans>
-                </ThemedText.DeprecatedMain>
-              </SmallButtonPrimary>
-            </Column>
-          </Row>
-          <TableWrapper data-testid="tokenomics-table">
-            <SimpleTable headers={tokenomicsHeaders} data={tokenomicsData} />
-          </TableWrapper>
-          {tokenomicsModalOpened && (
-            <AddTokenomicsModal
-              isOpen={true}
-              onDismiss={() => setTokenomicsModalOpened(false)}
-              onSubmit={addTokenomics}
-            />
-          )}
-
-          <Row marginBottom="8px" marginTop="12px" marginLeft="4px">
-            <Column flex="1">
               <ThemedText.BodyPrimary>Team</ThemedText.BodyPrimary>
             </Column>
             <Column>
@@ -639,25 +670,103 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
             </Column>
           </Row>
           <TableWrapper data-testid="team-table">
-            <SimpleTable headers={teamColumnHeaders} data={teamMembersData} />
+            <SimpleTable
+              headers={teamColumnHeaders}
+              data={teamMembersData}
+              showRemoveButton
+              onRemove={removeTeamMember}
+            />
           </TableWrapper>
           {teamModalOpened && (
             <AddTeamMemberModal isOpen={true} onDismiss={() => setTeamModalOpened(false)} onSubmit={addTeamMember} />
           )}
 
+          <Row marginBottom="8px" marginTop="12px" marginLeft="4px">
+            <Column flex="1">
+              <Row>
+                <ThemedText.BodyPrimary>Tokenomics</ThemedText.BodyPrimary>
+                <MouseoverTooltip
+                  text="Be sure to enter the complete tokenomics as the circulating and total supply will be calculated from the information provided."
+                  placement="top"
+                >
+                  <Info
+                    size={14}
+                    style={{
+                      marginLeft: '4px',
+                      marginBottom: '3px',
+                      verticalAlign: 'middle',
+                      cursor: 'pointer',
+                    }}
+                  />
+                </MouseoverTooltip>
+              </Row>
+            </Column>
+            <Column>
+              <SmallButtonPrimary
+                data-testid="add-tokenomics-button"
+                disabled={false}
+                width="fit-content"
+                style={{ borderRadius: '12px' }}
+                padding="1px 4px"
+                onClick={() => setTokenomicsModalOpened(true)}
+              >
+                <ThemedText.DeprecatedMain color={theme.white}>
+                  <Trans>Add Tokenomics Entry</Trans>
+                </ThemedText.DeprecatedMain>
+              </SmallButtonPrimary>
+            </Column>
+          </Row>
+          <TableWrapper data-testid="tokenomics-table">
+            <SimpleTable
+              headers={tokenomicsHeaders}
+              data={tokenomicsData}
+              showRemoveButton
+              onRemove={removeTokenomics}
+            />
+          </TableWrapper>
+          <Row width="fit-content" gap="20px" marginTop="10px">
+            <Row width="fit-content" gap="8px" align="center">
+              <ThemedText.BodySecondary>Total Supply</ThemedText.BodySecondary>
+              <ThemedText.BodyPrimary>
+                {formatNumber({
+                  input: totalSupply,
+                  type: NumberType.TokenNonTx,
+                })}{' '}
+                {token?.symbol}
+              </ThemedText.BodyPrimary>
+            </Row>
+            <Row width="fit-content" gap="8px" align="center">
+              <ThemedText.BodySecondary>Unlocked at launch</ThemedText.BodySecondary>
+              <ThemedText.BodyPrimary>
+                {formatNumber({
+                  input: initialCirculatinSupply,
+                  type: NumberType.TokenNonTx,
+                })}{' '}
+                {token?.symbol}
+              </ThemedText.BodyPrimary>
+            </Row>
+          </Row>
+          {tokenomicsModalOpened && (
+            <AddTokenomicsModal
+              isOpen={true}
+              onDismiss={() => setTokenomicsModalOpened(false)}
+              onSubmit={addTokenomics}
+            />
+          )}
+
           <Divider />
 
-          <ThemedText.MediumHeader marginBottom="12px">Launchpad Settings</ThemedText.MediumHeader>
+          <ThemedText.MediumHeader marginBottom="12px">Launch Settings</ThemedText.MediumHeader>
 
           <Row marginBottom="12px">
             <ActionSelector
-              title="Select Payment Currency"
+              title="Select Funding Currency"
               items={quoteTokens}
               selectedAction={options.tokenSale.quoteToken}
               onActionSelect={(val) => setOptionsProp('tokenSale.quoteToken', val)}
             />
           </Row>
-          <Row gap="10px" marginBottom="12px">
+          <Row gap="10px" marginBottom="12px" align="flex-start">
             <Column flex="1">
               <NumericalInputPanel
                 label="Target Raise Amount (Hard Cap)"
@@ -666,6 +775,7 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 onChange={(val) => setOptionsProp('tokenSale.hardCapAsQuote', val)}
                 isError={isError('tokenSale.hardCapAsQuote')}
                 errorMessage={validationError?.message}
+                postfix={quoteToken?.symbol}
               />
             </Column>
             <Column flex="1">
@@ -676,10 +786,11 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 onChange={(val) => setOptionsProp('tokenSale.softCapAsQuote', val)}
                 isError={isError('tokenSale.softCapAsQuote')}
                 errorMessage={validationError?.message}
+                postfix={quoteToken?.symbol}
               />
             </Column>
           </Row>
-          <Row gap="10px" marginBottom="12px">
+          <Row gap="10px" marginBottom="12px" align="flex-start">
             <Column flex="1">
               <NumericalInputPanel
                 label="Sell Price"
@@ -688,7 +799,19 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 onChange={(val) => setOptionsProp('tokenSale.sellPrice', val)}
                 isError={isError('tokenSale.sellPrice')}
                 errorMessage={validationError?.message}
+                postfix={quoteToken?.symbol}
+                infoTooltip="This is the token sale price"
               />
+              <Row width="fit-content" gap="8px" align="center" marginTop="8px" marginLeft="12px">
+                <ThemedText.BodySecondary>Tokens Offered</ThemedText.BodySecondary>
+                <ThemedText.BodyPrimary>
+                  {formatNumber({
+                    input: tokensOffered,
+                    type: NumberType.TokenNonTx,
+                  })}{' '}
+                  {token?.symbol}
+                </ThemedText.BodyPrimary>
+              </Row>
             </Column>
             <Column flex="1">
               <NumericalInputPanel
@@ -698,18 +821,29 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 onChange={(val) => setOptionsProp('liquidity.listingPrice', val)}
                 isError={isError('liquidity.listingPrice')}
                 errorMessage={validationError?.message}
+                postfix={quoteToken?.symbol}
+                infoTooltip="This is the price the liquidity will be created at"
               />
             </Column>
           </Row>
           <Row gap="10px" marginBottom="12px">
             <Column flex="1">
-              <TextInputPanel
+              {/*<TextInputPanel
                 label="Start Date"
                 placeholder="e.g. 2025-01-01 15:00:00"
                 value={options.tokenSale.startDate}
                 onChange={(val) => setOptionsProp('tokenSale.startDate', val)}
                 isError={isError('tokenSale.startDate')}
                 errorMessage={validationError?.message}
+              />*/}
+              <DatePickerPanel
+                label="Start Date"
+                placeholder="Select start date and time"
+                selected={options.tokenSale.startDate ? new Date(options.tokenSale.startDate) : null}
+                onChange={(val) => setOptionsProp('tokenSale.startDate', val?.toJSON() || '')}
+                minDate={new Date()}
+                isError={false}
+                errorMessage="Please select a date"
               />
             </Column>
             <Column flex="1">
@@ -720,6 +854,7 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 onChange={(val) => setOptionsProp('tokenSale.durationDays', val)}
                 isError={isError('tokenSale.durationDays')}
                 errorMessage={validationError?.message}
+                postfix="days"
               />
             </Column>
           </Row>
@@ -758,27 +893,30 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
 
           <ThemedText.MediumHeader marginBottom="12px">Automoted Liquidity</ThemedText.MediumHeader>
 
-          <Row gap="10px" marginBottom="12px">
+          <Row gap="10px" marginBottom="12px" align="flex-start">
             <Column flex="1">
               <NumericalInputPanel
-                label="Liquidity Percentage (%)"
+                label="Liquidity Percentage"
                 placeholder="How much amount of the raised tokend will be used as liquidity"
                 value={options.liquidity.liquidityRate}
                 onChange={(val) => setOptionsProp('liquidity.liquidityRate', val)}
                 isError={isError('liquidity.liquidityRate')}
                 errorMessage={validationError?.message}
+                infoTooltip="% of raised amount which will be used to automatically create the liquidity  at the listing price"
+                postfix="%"
               />
             </Column>
             <Column flex="1">
               <ActionSelector
-                title="Fee amount of the liquidity pool"
+                title="Liquidity pool fee tier"
                 items={liqFees}
                 selectedAction={options.liquidity.liquidityFee}
                 onActionSelect={(val) => setOptionsProp('liquidity.liquidityFee', val)}
               />
             </Column>
           </Row>
-          <Row marginBottom="12px">
+
+          <Row marginBottom="10px">
             <ActionSelector
               title="Price Range for the liquidity"
               items={liqRanges}
@@ -786,6 +924,21 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
               onActionSelect={(val) => setOptionsProp('liquidity.liquidityRange', val)}
             />
           </Row>
+          <Row width="fit-content" gap="20px" marginBottom="10px" marginLeft="12px">
+            <Row width="fit-content" gap="8px" align="center">
+              <ThemedText.BodySecondary>Min Price</ThemedText.BodySecondary>
+              <ThemedText.BodyPrimary>
+                {range == 'FULL' ? '-∞' : minRangePrice} {quoteToken?.symbol}
+              </ThemedText.BodyPrimary>
+            </Row>
+            <Row width="fit-content" gap="8px" align="center">
+              <ThemedText.BodySecondary>Max Price</ThemedText.BodySecondary>
+              <ThemedText.BodyPrimary>
+                {range == 'FULL' ? '+∞' : maxRangePrice} {quoteToken?.symbol}
+              </ThemedText.BodyPrimary>
+            </Row>
+          </Row>
+
           <Row marginBottom="12px">
             <ActionSelector
               title="Liquidity Preference"
@@ -803,6 +956,7 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 onChange={(val) => setOptionsProp('liquidity.lockDurationDays', val)}
                 isError={isError('liquidity.lockDurationDays')}
                 errorMessage={validationError?.message}
+                postfix="days"
               />
             </Row>
           )}

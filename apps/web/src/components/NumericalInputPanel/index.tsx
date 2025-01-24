@@ -96,7 +96,6 @@ export default function NumericalInputPanel({
   isError = false,
   errorMessage,
   postfix,
-  showInfo = false,
   infoTooltip = '',
 }: {
   id?: string
@@ -108,7 +107,6 @@ export default function NumericalInputPanel({
   isError?: boolean
   errorMessage?: string
   postfix?: string
-  showInfo?: boolean
   infoTooltip?: string
 }) {
   const theme = useTheme()
@@ -121,7 +119,7 @@ export default function NumericalInputPanel({
             <RowBetween>
               <ThemedText.DeprecatedBlack color={theme.neutral2} fontWeight={535} fontSize={14}>
                 {label ?? <Trans>Input</Trans>}
-                {showInfo && infoTooltip && (
+                {infoTooltip && (
                   <MouseoverTooltip text={infoTooltip} placement="top">
                     <Info
                       size={15}

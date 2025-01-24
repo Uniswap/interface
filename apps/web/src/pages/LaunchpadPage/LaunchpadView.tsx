@@ -163,6 +163,54 @@ const LeftBorderedRow = styled(Row)`
   padding: 6px 0 12px 24px;
 `
 
+export const TeamMembersContainer = styled(Row)`
+  flex-wrap: wrap;
+  column-gap: 18px;
+  row-gap: 18px;
+  align-items: stretch;
+
+  & > * {
+    width: calc(33.33% - 12px);
+  }
+
+  @media screen and (max-width: ${BREAKPOINTS.lg}px) {
+    & > * {
+      width: calc(50% - 9px);
+    }
+  }
+
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    flex-direction: column;
+    & > * {
+      width: 100%;
+    }
+  }
+`
+
+const TeamMemberCard = styled(Column)`
+  border: 1px solid ${({ theme }) => theme.surface3};
+  padding: 12px;
+  border-radius: 12px;
+  align-items: center;
+  gap: 8px;
+  & > img {
+    width: 100%;
+    border-radius: 6px;
+    margin: 0 auto;
+    background-color: ${({ theme }) => theme.bg1};
+  }
+  @media screen and (max-width: ${BREAKPOINTS.lg}px) {
+    & > img {
+      width: 80%;
+    }
+  }
+  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    & > img {
+      width: 60%;
+    }
+  }
+`
+
 export function getCounterParts(timestamp: number) {
   const now = Date.now()
   const timeDiff = timestamp < now ? 0 : timestamp - now
@@ -291,9 +339,12 @@ export default function LaunchpadView({
       input: info.unlockedAmount,
       type: NumberType.TokenNonTx,
     }),
-    info.cliffInDays.toString(),
-    info.vestingInDays.toString(),
+    info.cliffInDays / 30 + ' months',
+    info.vestingInDays / 30 + ' months',
   ])
+
+  const defaultMemberImg =
+    'https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/no-profile-picture-icon.png'
 
   const [cancelCallback, cancelTx, isCanceling] = useCancelCallback(launchpadAddress)
   const onCancelAction = () => {
@@ -557,7 +608,7 @@ export default function LaunchpadView({
               <ThemedText.MediumHeader>{token?.name} Details</ThemedText.MediumHeader>
               <LaunchpadInfoTable options={options} />
               <ThemedText.MediumHeader>Project Description</ThemedText.MediumHeader>
-              <pre>{options.tokenInfo.description}</pre>
+              <ThemedText.BodyPrimary>{options.tokenInfo.description}</ThemedText.BodyPrimary>
               <ThemedText.MediumHeader>Tokenomics</ThemedText.MediumHeader>
               <TableWrapper data-testid="tokenomics-table">
                 <SimpleTable headers={tokenomicsHeaders} data={tokenomicsData} />
@@ -565,7 +616,31 @@ export default function LaunchpadView({
               {options.tokenInfo.teamMembers.length > 0 && (
                 <>
                   <ThemedText.MediumHeader>Team Members</ThemedText.MediumHeader>
-                  <TableWrapper data-testid="team-members"></TableWrapper>
+                  <TeamMembersContainer>
+                    {options.tokenInfo.teamMembers.map((member) => (
+                      <TeamMemberCard key={member.index}>
+                        <img src={member.imgUrl || defaultMemberImg} />
+                        <ThemedText.BodyPrimary textAlign="center">{member.name}</ThemedText.BodyPrimary>
+                        <ThemedText.BodySecondary textAlign="center">{member.position}</ThemedText.BodySecondary>
+                        <Row justify="center" marginBottom="-4px">
+                          {member.twitter && (
+                            <SocialIcon $hoverColor="#20BAFF">
+                              <ExternalLink href={member.twitter}>
+                                <Twitter size="20px" fill="inherit" />
+                              </ExternalLink>
+                            </SocialIcon>
+                          )}
+                          {member.linkedin && (
+                            <SocialIcon $hoverColor="#5F51FF">
+                              <ExternalLink href={member.linkedin}>
+                                <Square size="20px" fill="inherit" />
+                              </ExternalLink>
+                            </SocialIcon>
+                          )}
+                        </Row>
+                      </TeamMemberCard>
+                    ))}
+                  </TeamMembersContainer>
                 </>
               )}
               {options.tokenInfo.auditLinks.trim().length > 0 && (

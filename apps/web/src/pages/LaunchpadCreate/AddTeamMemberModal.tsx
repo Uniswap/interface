@@ -19,6 +19,14 @@ const HeaderRow = styled(RowBetween)`
   margin-bottom: 20px;
 `
 
+const isValidUrl = (urlString: string) => {
+  try {
+    return Boolean(new URL(urlString))
+  } catch (e) {
+    return false
+  }
+}
+
 export default function AddTeamMemberModal({
   isOpen,
   onDismiss,
@@ -45,24 +53,19 @@ export default function AddTeamMemberModal({
   const nameError = useMemo(() => name.trim().length === 0, [name])
   const positionError = useMemo(() => position.trim().length === 0, [position])
   const imgUrlError = useMemo(() => {
-    if (imgUrl.trim().length === 0) return true
-    try {
-      new URL(imgUrl)
-      return false
-    } catch {
-      return true
-    }
+    if (imgUrl.trim().length === 0) return false
+    return !isValidUrl(imgUrl)
   }, [imgUrl])
 
   // Optional fields validation (only if filled)
   const linkedinError = useMemo(() => {
     if (linkedin.trim().length === 0) return false // Optional field
-    return !linkedin.includes('linkedin.com')
+    return !isValidUrl(linkedin) || !linkedin.includes('linkedin.com')
   }, [linkedin])
 
   const twitterError = useMemo(() => {
     if (twitter.trim().length === 0) return false // Optional field
-    return !twitter.includes('twitter.com') && !twitter.includes('x.com')
+    return !isValidUrl(twitter) || (!twitter.includes('twitter.com') && !twitter.includes('x.com'))
   }, [twitter])
 
   // Check if form is valid
@@ -80,11 +83,11 @@ export default function AddTeamMemberModal({
     if (isFormValid) {
       onSubmit({
         index: 0,
-        name,
-        position,
-        imgUrl,
-        linkedin,
-        twitter,
+        name: name.trim(),
+        position: position.trim(),
+        imgUrl: imgUrl.trim(),
+        linkedin: linkedin.trim(),
+        twitter: twitter.trim(),
       })
     }
   }

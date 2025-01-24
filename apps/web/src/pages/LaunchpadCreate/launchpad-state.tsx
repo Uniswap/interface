@@ -192,11 +192,11 @@ const hourMs = hourSeconds * 1000
 const daySeconds = hourSeconds //24 * hourSeconds;
 const dayMs = daySeconds * 1000
 
-//const MIN_START_DELAY_DAY = 0
+const MIN_START_DELAY_DAY = 1 // 3
 const MAX_START_DELAY_DAY = 10
-const MIN_LAUNCHPAD_DURATION_DAY = 0
+const MIN_LAUNCHPAD_DURATION_DAY = 1
 const MAX_LAUNCHPAD_DURATION_DAY = 7
-const MIN_LOCK_DURATION_DAY = 30
+const MIN_LOCK_DURATION_DAY = 2 // 30
 const MAX_LOCK_DURATION_DAY = 1000
 const MAX_VESTING_DAY = 365
 const MIN_INITIAL_RELEASE_RATE = 10
@@ -271,6 +271,10 @@ function _checkOptions(
   const now = Date.now() + hourMs
   const startDate = new Date(sale.startDate)
 
+  invariant(
+    startDate.valueOf() >= now + MIN_START_DELAY_DAY * dayMs,
+    'tokenSale.startDate | Start date cannot be earlier than 3 days later'
+  )
   invariant(
     startDate.valueOf() <= now + MAX_START_DELAY_DAY * dayMs,
     'tokenSale.startDate | Start date cannot be later than 10 days later'

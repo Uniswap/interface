@@ -203,7 +203,7 @@ export default function TokenDistributionModal({
       <ModalWrapper>
         <HeaderRow>
           <ThemedText.SubHeader>
-            <Trans>Add Tokenomics Info</Trans>
+            <Trans>Token Distribution</Trans>
           </ThemedText.SubHeader>
           <CloseIcon onClick={onClose} />
         </HeaderRow>
@@ -216,6 +216,7 @@ export default function TokenDistributionModal({
               onChange={setInitialReleaseRate}
               isError={!!initialReleaseRateError}
               errorMessage={initialReleaseRateError}
+              postfix="%"
             />
           ) : (
             <div>Unlocked at TGE : {initialReleaseRate}%</div>
@@ -228,7 +229,7 @@ export default function TokenDistributionModal({
           <Toggle isActive={vestingEnabled} toggle={() => setVestingEnabled((val) => !val)} />
         </RowBetween>
         {vestingEnabled && (
-          <Row gap="10px">
+          <Row gap="10px" align="flex-start">
             <Column flex="1">
               <ActionSelector
                 title="Vesting Schedule"
@@ -245,6 +246,7 @@ export default function TokenDistributionModal({
                 onChange={(val) => setReleaseDuration(val)}
                 isError={!!releaseDurationError}
                 errorMessage={releaseDurationError}
+                postfix={releaseIntervalDays == '7' ? 'weeks' : releaseIntervalDays == '30' ? 'months' : 'days'}
               />
             </Column>
           </Row>
@@ -257,7 +259,7 @@ export default function TokenDistributionModal({
           <Toggle isActive={cliffEnabled} toggle={() => setCliffEnabled((val) => !val)} />
         </RowBetween>
         {cliffEnabled && (
-          <Row gap="10px">
+          <Row gap="10px" align="flex-start">
             <Column flex="1">
               <NumericalInputPanel
                 label="Cliff duration"
@@ -266,16 +268,18 @@ export default function TokenDistributionModal({
                 onChange={(val) => setCliffDurationDays(val)}
                 isError={!!cliffDurationDaysError}
                 errorMessage={cliffDurationDaysError}
+                postfix="days"
               />
             </Column>
             <Column flex="1">
               <NumericalInputPanel
-                label="Cliff Release Rate"
+                label="Released after cliff"
                 placeholder="Unlocked percentage at cliff end time"
                 value={cliffReleaseRate}
                 onChange={(val) => setCliffReleaseRate(val)}
                 isError={!!cliffReleaseRateError}
                 errorMessage={cliffReleaseRateError}
+                postfix="%"
               />
             </Column>
           </Row>
@@ -283,12 +287,12 @@ export default function TokenDistributionModal({
 
         <DarkGrayCard>
           {!vestingEnabled && !cliffEnabled ? (
-            <ThemedText.BodyPrimary>- All tokens will be released when launchpad ends</ThemedText.BodyPrimary>
+            <ThemedText.BodyPrimary>- All tokens will be released when launch ends</ThemedText.BodyPrimary>
           ) : (
             <>
               {initialReleaseRate !== '0' && (
                 <ThemedText.BodyPrimary>
-                  - {initialReleaseRate}% of tokens will be released when launchpad ends
+                  - {initialReleaseRate}% of tokens will be released when launch ends
                 </ThemedText.BodyPrimary>
               )}
               {cliffEnabled && (

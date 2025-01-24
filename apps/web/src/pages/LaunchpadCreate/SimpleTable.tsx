@@ -1,6 +1,7 @@
 import { HideScrollBarStyles } from 'components/Common'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { ReactNode } from 'react'
+import { XCircle } from 'react-feather'
 import styled from 'styled-components'
 
 const Table = styled.table`
@@ -48,7 +49,7 @@ const TH = styled.th`
 `
 
 const TD = styled.td`
-  color: ${({ theme }) => theme.neutral2};
+  color: ${({ theme }) => theme.neutral1};
   height: 56px;
   padding: 8px 0px;
   text-align: left;
@@ -61,6 +62,18 @@ const TD = styled.td`
   }
   &:last-child {
     padding-right: 22px;
+  }
+`
+
+const TDRemove = styled(TD)`
+  color: ${({ theme }) => theme.critical};
+  height: 56px;
+  padding: 0 12px 0 0;
+  width: 28px;
+  text-align: right;
+  vertical-align: center;
+  & > * {
+    cursor: pointer;
   }
 `
 
@@ -104,24 +117,39 @@ const SimpleTableComp = ({
   headers,
   data,
   loadingRowCount = 3,
+  noDataText = 'No Data',
+  showRemoveButton = false,
+  onRemove,
 }: {
   headers: string[]
   data?: ReactNode[][]
   loadingRowCount?: number
+  noDataText?: string
+  showRemoveButton?: boolean
+  onRemove?: (index: number) => void
 }) => {
+  const headersComp = showRemoveButton ? headers.concat('') : headers
   return data ? (
-    <SimpleTable headers={headers}>
+    <SimpleTable headers={headersComp}>
       {data.length == 0 ? (
         <TR key="empty">
-          <TD colSpan={headers.length} style={{ textAlign: 'center' }}>
-            No Data
+          <TD colSpan={headersComp.length} style={{ textAlign: 'center' }}>
+            {noDataText}
           </TD>
         </TR>
       ) : (
-        data.map((colums, index) => {
+        data.map((_colunms, index) => {
+          const columns = showRemoveButton ? _colunms.concat('--x--') : _colunms
           return (
             <TR key={index}>
-              {colums.map((col, colIndex) => {
+              {columns.map((col, colIndex) => {
+                if (col == '--x--') {
+                  return (
+                    <TDRemove key={`col-${index}-${colIndex}`}>
+                      <XCircle onClick={() => onRemove && onRemove(index)} />
+                    </TDRemove>
+                  )
+                }
                 return <TD key={`col-${index}-${colIndex}`}>{col}</TD>
               })}
             </TR>
@@ -130,11 +158,11 @@ const SimpleTableComp = ({
       )}
     </SimpleTable>
   ) : (
-    <SimpleTable headers={headers}>
+    <SimpleTable headers={headersComp}>
       {Array(loadingRowCount)
         .fill(null)
         .map((_, index) => {
-          return <LoadingSimpleTableRow key={index} cellCount={headers.length} />
+          return <LoadingSimpleTableRow key={index} cellCount={headersComp.length} />
         })}
     </SimpleTable>
   )

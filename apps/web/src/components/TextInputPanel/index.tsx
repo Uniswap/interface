@@ -84,7 +84,6 @@ export default function TextInputPanel({
   onChange,
   isError = false,
   errorMessage,
-  showInfo = false, // Yeni prop
   infoTooltip = '',
 }: {
   id?: string
@@ -95,7 +94,6 @@ export default function TextInputPanel({
   onChange: (value: string) => void
   isError?: boolean
   errorMessage?: string
-  showInfo?: boolean
   infoTooltip?: string
 }) {
   const theme = useTheme()
@@ -116,7 +114,7 @@ export default function TextInputPanel({
             <RowBetween>
               <ThemedText.DeprecatedBlack color={theme.neutral2} fontWeight={535} fontSize={14}>
                 {label ?? <Trans>Recipient</Trans>}
-                {showInfo && infoTooltip && (
+                {infoTooltip && (
                   <MouseoverTooltip text={infoTooltip} placement="top">
                     <Info
                       size={14}

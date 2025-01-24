@@ -74,8 +74,8 @@ export default function AddTokenomicsModal({
         name,
         amount: parseFloat(amount),
         unlockedAmount: parseFloat(unlockedAmount),
-        cliffInDays: parseFloat(cliff),
-        vestingInDays: parseFloat(vesting),
+        cliffInDays: parseFloat(cliff) * 30,
+        vestingInDays: parseFloat(vesting) * 30,
       })
     }
   }
@@ -91,12 +91,12 @@ export default function AddTokenomicsModal({
         </HeaderRow>
         <Row marginBottom="12px">
           <TextInputPanel
-            label="Tokenomics Type"
+            label="Allocation Name"
             placeholder="e.g. Treasury"
             value={name}
             onChange={setName}
             isError={nameError}
-            errorMessage="Tokenomics type is required"
+            errorMessage="Allocation is required"
           />
         </Row>
         <Row marginBottom="12px">
@@ -127,6 +127,7 @@ export default function AddTokenomicsModal({
             onChange={setCliff}
             isError={cliffError}
             errorMessage="Please enter a valid cliff period"
+            postfix="months"
           />
         </Row>
         <Row marginBottom="12px">
@@ -137,6 +138,7 @@ export default function AddTokenomicsModal({
             onChange={setVesting}
             isError={vestingError}
             errorMessage="Please enter a valid vesting period"
+            postfix="months"
           />
         </Row>
         <ButtonPrimary onClick={onClick} disabled={!isFormValid}>

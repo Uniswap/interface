@@ -51,8 +51,7 @@ export default function TextareaPanel({
   minHeight,
   isError = false,
   errorMessage,
-  showInfo = false, // Yeni prop
-  infoTooltip = '', // Yeni prop
+  infoTooltip = '',
 }: {
   id?: string
   className?: string
@@ -64,7 +63,6 @@ export default function TextareaPanel({
   onChange: (value: string) => void
   isError?: boolean
   errorMessage?: string
-  showInfo?: boolean
   infoTooltip?: string
 }) {
   const theme = useTheme()
@@ -77,7 +75,7 @@ export default function TextareaPanel({
             <RowBetween>
               <ThemedText.DeprecatedBlack color={theme.neutral2} fontWeight={535} fontSize={14}>
                 {label}
-                {showInfo && infoTooltip && (
+                {infoTooltip && (
                   <MouseoverTooltip text={infoTooltip} placement="top">
                     <Info
                       size={15}

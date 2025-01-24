@@ -133,6 +133,27 @@ const LaunchpadInfoTable = ({
     },
   ]
 
+  const releaseIntervals: Action[] = [
+    {
+      id: '1',
+      name: 'Daily',
+    },
+    {
+      id: '7',
+      name: 'Weekly',
+    },
+    {
+      id: '30',
+      name: 'Monthly',
+    },
+  ]
+  const vestingEnabled = options?.tokenSale.releaseDurationDays !== '0'
+  const cliffEnabled = options?.tokenSale.cliffDurationDays !== '0'
+  const releaseIntervalDays = options?.tokenSale.releaseIntervalDays || '1'
+  const releaseDuration = vestingEnabled
+    ? Math.floor(parseFloat(options?.tokenSale.releaseDurationDays || '0') / parseFloat(releaseIntervalDays)).toString()
+    : '0'
+
   return options ? (
     <SimpleTable>
       <TR>
@@ -256,7 +277,41 @@ const LaunchpadInfoTable = ({
         <TD>
           <ThemedText.BodyPrimary color="neutral2">Token Distribution</ThemedText.BodyPrimary>
         </TD>
-        <TD></TD>
+        <TD>
+          {!vestingEnabled && !cliffEnabled ? (
+            <ThemedText.BodyPrimary>- All tokens will be released when launch ends</ThemedText.BodyPrimary>
+          ) : (
+            <>
+              {options.tokenSale.initialReleaseRate !== '0' && (
+                <ThemedText.BodyPrimary>
+                  - {options.tokenSale.initialReleaseRate}% of tokens will be released when launch ends
+                </ThemedText.BodyPrimary>
+              )}
+              {cliffEnabled && (
+                <ThemedText.BodyPrimary>
+                  - There will be a cliff perid for {options.tokenSale.cliffDurationDays} days
+                </ThemedText.BodyPrimary>
+              )}
+              {options.tokenSale.cliffReleaseRate !== '0' && (
+                <ThemedText.BodyPrimary>
+                  - {options.tokenSale.cliffReleaseRate}% of tokens will be released at the end of cliff period
+                </ThemedText.BodyPrimary>
+              )}
+              {vestingEnabled && (
+                <ThemedText.BodyPrimary>
+                  - Remaining{' '}
+                  {100 -
+                    parseFloat(options.tokenSale.initialReleaseRate) -
+                    parseFloat(options.tokenSale.cliffReleaseRate)}
+                  % of tokens will be released{' '}
+                  {releaseIntervals.find((r) => r.id === releaseIntervalDays)?.name.toLowerCase() || ''} for{' '}
+                  {releaseDuration}{' '}
+                  {releaseIntervalDays == '7' ? 'weeks' : releaseIntervalDays == '30' ? 'months' : 'days'}
+                </ThemedText.BodyPrimary>
+              )}
+            </>
+          )}
+        </TD>
       </TR>
     </SimpleTable>
   ) : (
