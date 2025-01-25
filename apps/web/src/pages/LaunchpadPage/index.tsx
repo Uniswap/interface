@@ -30,7 +30,7 @@ import LaunchpadView from './LaunchpadView'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;
-  max-width: 960px;
+  max-width: 1000px;
   width: 100%;
 
   @media (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {

@@ -5,9 +5,8 @@ import { useAtom } from 'jotai'
 import { useCallback, useState } from 'react'
 import { usePendingTransactions, useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
+import { getFactoryAddress } from './launchpad-constants'
 import { launchpadValidationResult } from './launchpad-state'
-
-export const UBESTARTER_FACTORY_ADDRESS = '0x5A07aF212669f43970A390D5f1606e75aB9C242E'
 
 export function useDeployLauchpadCallback(): [() => Promise<void>, string, boolean] {
   const { account } = useWeb3React()
@@ -19,7 +18,7 @@ export function useDeployLauchpadCallback(): [() => Promise<void>, string, boole
   const [isPending, setIsPending] = useState(false)
   const [txHash, setTxHash] = useState<string>('')
 
-  const factoryContract = useUbestarterFactory(UBESTARTER_FACTORY_ADDRESS)
+  const factoryContract = useUbestarterFactory(getFactoryAddress())
 
   const cb = useCallback(async (): Promise<void> => {
     if (!account) {

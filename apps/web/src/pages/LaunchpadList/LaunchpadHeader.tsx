@@ -137,7 +137,7 @@ const LaunchpadHeader = () => {
       <BannerMainArea>
         <HeaderContainer>
           UbeStarter
-          <HeaderDetails>An amazing launchpad on Celo Network</HeaderDetails>
+          <HeaderDetails>Discover new tokens on Celo Network</HeaderDetails>
           <LearnMore />
         </HeaderContainer>
         <Image src={bannerUrl} />

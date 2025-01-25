@@ -101,6 +101,7 @@ function getStatusVariant(status: LaunchpadStatus): 'success' | 'warning' | 'err
       return 'accent'
     case 'Active':
     case 'Succeeded':
+    case 'Done':
       return 'success'
     case 'Failed':
     case 'Canceled':
@@ -204,7 +205,10 @@ export function LaunchpadsTable<T extends ActiveTableValues | CompletedTableValu
             symbol: launchpad.tokenSymbol,
             status: launchpad.status,
             targetAmount: `${launchpad.hardCapAsQuote} ${launchpad.quoteTokenSymbol}`,
-            remainingTime: formatRemainingTime(launchpad.startDate),
+            remainingTime:
+              Date.now() > new Date(launchpad.startDate).valueOf()
+                ? formatRemainingTime(launchpad.endDate)
+                : formatRemainingTime(launchpad.startDate),
             link: '/ubestarter/details/' + launchpad.launchpadAddress,
           }))
         : [],
@@ -284,13 +288,15 @@ export function LaunchpadsTable<T extends ActiveTableValues | CompletedTableValu
             </ThemedText.BodySecondary>
           </Cell>
         ),
-        cell: (status) => (
-          <Cell justifyContent="flex-start" loading={showLoadingSkeleton} minWidth={100}>
-            <StyledBadge variant={getStatusVariant(status.getValue?.() as LaunchpadStatus)}>
-              {status.getValue?.()}
-            </StyledBadge>
-          </Cell>
-        ),
+        cell: (status) => {
+          const s = status.getValue?.()
+          const statusText = s == 'Pending' ? 'Upcoming' : s == 'Done' ? 'Succeeded' : s
+          return (
+            <Cell justifyContent="flex-start" loading={showLoadingSkeleton} minWidth={100}>
+              <StyledBadge variant={getStatusVariant(status.getValue?.() as LaunchpadStatus)}>{statusText}</StyledBadge>
+            </Cell>
+          )
+        },
       }),
       columnHelper.accessor((row) => row.targetAmount, {
         id: 'targetAmount',
@@ -381,13 +387,15 @@ export function LaunchpadsTable<T extends ActiveTableValues | CompletedTableValu
             </ThemedText.BodySecondary>
           </Cell>
         ),
-        cell: (status) => (
-          <Cell justifyContent="flex-start" loading={showLoadingSkeleton} minWidth={100}>
-            <StyledBadge variant={getStatusVariant(status.getValue?.() as LaunchpadStatus)}>
-              {status.getValue?.()}
-            </StyledBadge>
-          </Cell>
-        ),
+        cell: (status) => {
+          const s = status.getValue?.()
+          const statusText = s == 'Pending' ? 'Upcoming' : s == 'Done' ? 'Succeeded' : s
+          return (
+            <Cell justifyContent="flex-start" loading={showLoadingSkeleton} minWidth={100}>
+              <StyledBadge variant={getStatusVariant(status.getValue?.() as LaunchpadStatus)}>{statusText}</StyledBadge>
+            </Cell>
+          )
+        },
       }),
       columnHelper.accessor((row) => row.raisedAmount, {
         id: 'raisedAmount',

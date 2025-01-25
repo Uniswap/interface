@@ -9,10 +9,11 @@ import { useToken } from 'hooks/Tokens'
 import { Discord, Github, Twitter } from 'pages/Landing/components/Icons'
 import { Wiggle } from 'pages/Landing/components/animations'
 import SimpleTable from 'pages/LaunchpadCreate/SimpleTable'
+import { getDaySeconds } from 'pages/LaunchpadCreate/launchpad-constants'
 import { LaunchpadOptions } from 'pages/LaunchpadCreate/launchpad-state'
 import { LaunchpadStatus } from 'pages/LaunchpadList/data/useLaunchpads'
 import { transparentize } from 'polished'
-import { ReactNode, useCallback, useMemo } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { Calendar, Globe, Square, Youtube } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
@@ -269,7 +270,7 @@ export default function LaunchpadView({
 
   const timeline: { time: number; items: string[] }[] = useMemo(() => {
     const startTime = new Date(options.tokenSale.startDate).valueOf()
-    const oneDay = 24 * 60 * 60 * 1000
+    const oneDay = getDaySeconds() * 1000
     let endDate = startTime + parseInt(options.tokenSale.durationDays) * oneDay
     const rt = [
       {
@@ -322,7 +323,16 @@ export default function LaunchpadView({
   }, [options])
 
   const startDate = new Date(options.tokenSale.startDate)
-  const counterParts = getCounterParts(startDate.valueOf())
+  const [counterParts, setCounterParts] = useState(getCounterParts(startDate.valueOf()))
+
+  useEffect(() => {
+    const interval = setInterval(() => setCounterParts(getCounterParts(startDate.valueOf())), 1000)
+    return () => {
+      clearInterval(interval)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const statusVariant =
     status == 'Pending' ? 'info' : status == 'Active' || status == 'Succeeded' || status == 'Done' ? 'success' : 'error'
   const statusText = status == 'Pending' ? 'Upcoming' : status == 'Done' ? 'Succeeded' : status
@@ -608,8 +618,10 @@ export default function LaunchpadView({
               <ThemedText.MediumHeader>{token?.name} Details</ThemedText.MediumHeader>
               <LaunchpadInfoTable options={options} />
               <ThemedText.MediumHeader>Project Description</ThemedText.MediumHeader>
-              <ThemedText.BodyPrimary>{options.tokenInfo.description}</ThemedText.BodyPrimary>
-              <ThemedText.MediumHeader>Tokenomics</ThemedText.MediumHeader>
+              {options.tokenInfo.description.split('\n').map((line, index) => (
+                <ThemedText.BodyPrimary key={index}>{line}</ThemedText.BodyPrimary>
+              ))}
+              <ThemedText.MediumHeader marginTop="12px">Tokenomics</ThemedText.MediumHeader>
               <TableWrapper data-testid="tokenomics-table">
                 <SimpleTable headers={tokenomicsHeaders} data={tokenomicsData} />
               </TableWrapper>

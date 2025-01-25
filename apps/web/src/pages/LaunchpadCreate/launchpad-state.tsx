@@ -2,6 +2,7 @@ import { BigNumberish } from '@ethersproject/bignumber'
 import { PrimitiveAtom, atom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import invariant from 'tiny-invariant'
+import { getDaySeconds, isTestMode } from './launchpad-constants'
 
 export interface TokenomicsTableValues {
   index: number
@@ -189,14 +190,14 @@ const isValidUrl = (urlString: string) => {
 
 const hourSeconds = 60 * 60
 const hourMs = hourSeconds * 1000
-const daySeconds = hourSeconds //24 * hourSeconds;
+const daySeconds = getDaySeconds()
 const dayMs = daySeconds * 1000
 
-const MIN_START_DELAY_DAY = 1 // 3
+const MIN_START_DELAY_DAY = isTestMode ? 1 : 3
 const MAX_START_DELAY_DAY = 10
 const MIN_LAUNCHPAD_DURATION_DAY = 1
 const MAX_LAUNCHPAD_DURATION_DAY = 7
-const MIN_LOCK_DURATION_DAY = 2 // 30
+const MIN_LOCK_DURATION_DAY = isTestMode ? 2 : 30
 const MAX_LOCK_DURATION_DAY = 1000
 const MAX_VESTING_DAY = 365
 const MIN_INITIAL_RELEASE_RATE = 10

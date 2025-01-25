@@ -34,6 +34,7 @@ import AddTokenomicsModal from './AddTokenomicsModal'
 import SimpleTable from './SimpleTable'
 import TextareaPanel from './TextareaPanel'
 import TokenDistributionModal, { TokenDistributionParams } from './TokenDistributionModal'
+import { getFactoryAddress } from './launchpad-constants'
 import {
   LaunchpadValidationResult,
   TeamTableValues,
@@ -43,7 +44,6 @@ import {
   launchpadValidationResult,
   validateOptions,
 } from './launchpad-state'
-import { UBESTARTER_FACTORY_ADDRESS } from './ubestarter-factory-actions'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;
@@ -152,7 +152,7 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
   const token = useToken(options.tokenInfo.tokenAddress)
   const quoteToken = useToken(options.tokenSale.quoteToken)
 
-  const factoryContract = useUbestarterFactory(UBESTARTER_FACTORY_ADDRESS)
+  const factoryContract = useUbestarterFactory(getFactoryAddress())
   const { result: softCapInfo } = useSingleCallResult(
     factoryContract,
     'quoteTokens',
@@ -453,16 +453,16 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
       <AppBody $maxWidth="800px">
         <Nav to="/ubestarter">
           <BackArrow />
-          <HeaderText>Launchpad Options {validationError?.field}</HeaderText>
+          <HeaderText>Launch Information</HeaderText>
         </Nav>
         <OptionsWrapper>
           <BlueCard>
             <AutoColumn gap="10px">
               <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
                 <Trans>
-                  <strong>Tip:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                  ullamco laboris nisi ut aliquip ex ea commodo consequat.,{' '}
+                  <strong>Tip:</strong> Creating a launch costs 10.000 UBE tokens which is automatically burned. You
+                  will need to provide project tokens for the presale and the automated liquidity. If the sale fails,
+                  these tokens will be returned to you.,{' '}
                   <ExternalLink href="https://docs.uniswap.org/">read the docs</ExternalLink>.
                 </Trans>
               </ThemedText.DeprecatedLink>

@@ -15,8 +15,9 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 import Loader from '../../components-old/Loader'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import AppBody from '../AppBody'
+import { getFactoryAddress } from './launchpad-constants'
 import { launchpadParams, launchpadValidationResult } from './launchpad-state'
-import { UBESTARTER_FACTORY_ADDRESS, useDeployLauchpadCallback } from './ubestarter-factory-actions'
+import { useDeployLauchpadCallback } from './ubestarter-factory-actions'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;
@@ -89,7 +90,7 @@ export default function FinalStep({ onBack }: { onBack: () => void }) {
 
   // UBE Approval process
   const ubeFeeAmount = CurrencyAmount.fromRawAmount(UBE[ChainId.CELO], validationResult?.feeAmountWei || 0)
-  const [ubeApproval, ubeApproveCallback] = useApproveCallback(ubeFeeAmount, UBESTARTER_FACTORY_ADDRESS)
+  const [ubeApproval, ubeApproveCallback] = useApproveCallback(ubeFeeAmount, getFactoryAddress())
   const [ubeApprovalSubmitted, setUbeApprovalSubmitted] = useState<boolean>(false)
   useEffect(() => {
     if (ubeApproval === ApprovalState.PENDING) {
@@ -115,7 +116,7 @@ export default function FinalStep({ onBack }: { onBack: () => void }) {
   const tokenAmountForLiq =
     token && validationResult ? CurrencyAmount.fromRawAmount(token, validationResult.tokensForLiquidityWei) : undefined
   const tokenAmount = tokenAmountForSale && tokenAmountForLiq ? tokenAmountForSale.add(tokenAmountForLiq) : undefined
-  const [tokenApproval, tokenApproveCallback] = useApproveCallback(tokenAmount, UBESTARTER_FACTORY_ADDRESS)
+  const [tokenApproval, tokenApproveCallback] = useApproveCallback(tokenAmount, getFactoryAddress())
   const [tokenApprovalSubmitted, setTokenApprovalSubmitted] = useState<boolean>(false)
   useEffect(() => {
     if (tokenApproval === ApprovalState.PENDING) {
