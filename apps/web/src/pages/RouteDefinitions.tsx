@@ -9,6 +9,7 @@ import { isBrowserRouterEnabled } from 'utils/env'
 import { getDefaultTokensTitle } from './getDefaultTokensTitle'
 import { getExploreTitle } from './getExploreTitle'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
+import Landing from './Landing'
 import Swap from './Swap'
 
 const NftExplore = lazy(() => import('nft/pages/explore'))
@@ -112,13 +113,13 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/',
     getTitle: () => t`Ubeswap | The native DeFi platfor on Celo`,
-    // getElement: (args) => {
-    //   return args.browserRouterEnabled && args.hash ? <Navigate to={args.hash.replace('#', '')} replace /> : <Landing />
-    // },
-    getElement: () => <Dashboard />,
+    getElement: (args) => {
+      return args.browserRouterEnabled && args.hash ? <Navigate to={args.hash.replace('#', '')} replace /> : <Landing />
+    },
+    //getElement: () => <Dashboard />,
   }),
   createRouteDefinition({
-    path: '/home',
+    path: '/dashboard',
     getTitle: () => t`Ubeswap | The native DeFi platfor on Celo`,
     getElement: () => <Dashboard />,
   }),
