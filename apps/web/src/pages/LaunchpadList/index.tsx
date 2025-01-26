@@ -168,7 +168,7 @@ function LearnMore() {
   return (
     <LearnMoreButton to="/ubestarter/create">
       <Row gap="sm" align="center">
-        <Trans>Create Launchpad</Trans>
+        <Trans>List Your Project</Trans>
         <LearnMoreArrow />
       </Row>
     </LearnMoreButton>

@@ -269,7 +269,7 @@ export function LaunchpadsTable<T extends ActiveTableValues | CompletedTableValu
         header: () => (
           <Cell justifyContent="flex-start" minWidth={100}>
             <ThemedText.BodySecondary>
-              <Trans>Symbol</Trans>
+              <Trans>Ticker</Trans>
             </ThemedText.BodySecondary>
           </Cell>
         ),
@@ -368,7 +368,7 @@ export function LaunchpadsTable<T extends ActiveTableValues | CompletedTableValu
         header: () => (
           <Cell justifyContent="flex-start" minWidth={100}>
             <ThemedText.BodySecondary>
-              <Trans>Symbol</Trans>
+              <Trans>Ticker</Trans>
             </ThemedText.BodySecondary>
           </Cell>
         ),
