@@ -1,11 +1,13 @@
+import { MouseoverTooltip } from 'components/Tooltip'
 import { Trans } from 'i18n'
 import { ReactNode, SyntheticEvent, forwardRef } from 'react'
 import DatePicker from 'react-datepicker'
+import { Info } from 'react-feather'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import 'react-datepicker/dist/react-datepicker.css'
 import styled, { createGlobalStyle, useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
-import { flexColumnNoWrap } from 'theme/styles'
+import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 
@@ -145,12 +147,24 @@ const InputContainer = styled.div`
   padding: 1rem;
 `
 
+const InputRow = styled.div`
+  ${flexRowNoWrap};
+  align-items: center;
+
+  // DatePicker'ın ana container'ı için stil
+  .react-datepicker-wrapper,
+  .react-datepicker__input-container {
+    display: flex;
+    width: 100%;
+    height: 1.25rem; // Input yüksekliği ile eşleştirildi
+  }
+`
+
 const CustomInput = styled.input<{ error?: boolean }>`
   font-size: 1.25rem;
   outline: none;
   border: none;
   flex: 1 1 auto;
-  width: 0;
   background-color: ${({ theme }) => theme.surface1};
   transition: color 300ms ${({ error }) => (error ? 'step-end' : 'step-start')};
   color: ${({ error, theme }) => (error ? theme.critical : theme.neutral1)};
@@ -158,25 +172,13 @@ const CustomInput = styled.input<{ error?: boolean }>`
   text-overflow: ellipsis;
   font-weight: 535;
   width: 100%;
+  height: 1.25rem;
+  line-height: 1.25rem;
   cursor: pointer;
   ::placeholder {
     color: ${({ theme }) => theme.neutral3};
   }
   padding: 0px;
-  -webkit-appearance: textfield;
-
-  ::-webkit-search-decoration {
-    -webkit-appearance: none;
-  }
-
-  ::-webkit-outer-spin-button,
-  ::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-  }
-
-  ::placeholder {
-    color: ${({ theme }) => theme.neutral3};
-  }
 `
 
 const ErrorMessage = styled(ThemedText.BodySmall)`
@@ -185,7 +187,6 @@ const ErrorMessage = styled(ThemedText.BodySmall)`
   margin-left: 4px;
 `
 
-// Özel input komponenti için type tanımlaması
 interface CustomInputProps {
   value?: string
   onClick?: () => void
@@ -195,7 +196,6 @@ interface CustomInputProps {
   className?: string
 }
 
-// DatePicker için özel input komponenti
 const CustomDateInput = forwardRef<HTMLInputElement, CustomInputProps>(
   ({ value, onClick, placeholder, error, className }, ref) => (
     <CustomInput
@@ -211,11 +211,8 @@ const CustomDateInput = forwardRef<HTMLInputElement, CustomInputProps>(
 )
 CustomDateInput.displayName = 'CustomDateInput'
 
-// Saat sınıfını belirleyen fonksiyon
+// Yarım saatlik aralıklar için helper fonksiyon
 const getTimeClassName = (time: Date) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const hours = time.getHours()
-  // Yarım saatlik aralıkları göster
   if (time.getMinutes() !== 0 && time.getMinutes() !== 30) return 'hidden'
   return ''
 }
@@ -230,7 +227,10 @@ export default function DatePickerPanel({
   isError = false,
   errorMessage,
   minDate,
+  maxDate,
   showTimeSelect = true,
+  showInfo = false,
+  infoTooltip = '',
 }: {
   id?: string
   className?: string
@@ -241,7 +241,10 @@ export default function DatePickerPanel({
   isError?: boolean
   errorMessage?: string
   minDate?: Date
+  maxDate?: Date
   showTimeSelect?: boolean
+  showInfo?: boolean
+  infoTooltip?: string
 }) {
   const theme = useTheme()
 
@@ -254,20 +257,35 @@ export default function DatePickerPanel({
             <RowBetween>
               <ThemedText.DeprecatedBlack color={theme.neutral2} fontWeight={535} fontSize={14}>
                 {label ?? <Trans>Select Date</Trans>}
+                {showInfo && infoTooltip && (
+                  <MouseoverTooltip text={infoTooltip} placement="top">
+                    <Info
+                      size={15}
+                      style={{
+                        marginLeft: '4px',
+                        verticalAlign: 'middle',
+                        cursor: 'pointer',
+                      }}
+                    />
+                  </MouseoverTooltip>
+                )}
               </ThemedText.DeprecatedBlack>
             </RowBetween>
-            <DatePicker
-              selected={selected}
-              onChange={onChange}
-              customInput={<CustomDateInput className={className} placeholder={placeholder} error={isError} />}
-              showTimeSelect={showTimeSelect}
-              timeFormat="HH:mm"
-              timeIntervals={30}
-              timeCaption="Time"
-              dateFormat="MM/dd/yyyy HH:mm"
-              minDate={minDate}
-              timeClassName={getTimeClassName}
-            />
+            <InputRow>
+              <DatePicker
+                selected={selected}
+                onChange={onChange}
+                customInput={<CustomDateInput className={className} placeholder={placeholder} error={isError} />}
+                showTimeSelect={showTimeSelect}
+                timeFormat="HH:mm"
+                timeIntervals={30}
+                timeCaption="Time"
+                dateFormat="MM/dd/yyyy HH:mm"
+                minDate={minDate}
+                maxDate={maxDate}
+                timeClassName={getTimeClassName}
+              />
+            </InputRow>
           </AutoColumn>
         </InputContainer>
       </ContainerRow>
