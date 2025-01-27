@@ -34,7 +34,7 @@ import AddTokenomicsModal from './AddTokenomicsModal'
 import SimpleTable from './SimpleTable'
 import TextareaPanel from './TextareaPanel'
 import TokenDistributionModal, { TokenDistributionParams } from './TokenDistributionModal'
-import { getFactoryAddress } from './launchpad-constants'
+import { getFactoryAddress, isTestMode } from './launchpad-constants'
 import {
   LaunchpadValidationResult,
   TeamTableValues,
@@ -393,18 +393,21 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
 
     const disclaimer = 'I accept the following disclaimer:\n' + disclaimerMsg
 
-    const request = await fetch('https://interface-gateway.ubeswap.org/v1/ubestarter/validateAndSign', {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        options,
-        disclaimer,
-        disclaimerHash: hashMessage(disclaimer),
-        disclaimerSignature: signature,
-      }),
-    })
+    const request = await fetch(
+      'https://interface-gateway.ubeswap.org/v1/ubestarter/validateAndSign' + (isTestMode ? '?test_mode=true' : ''),
+      {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          options,
+          disclaimer,
+          disclaimerHash: hashMessage(disclaimer),
+          disclaimerSignature: signature,
+        }),
+      }
+    )
 
     if (request.ok) {
       let result: LaunchpadValidationResult | null = null
