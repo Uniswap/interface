@@ -179,6 +179,15 @@ const CustomInput = styled.input<{ error?: boolean }>`
     color: ${({ theme }) => theme.neutral3};
   }
   padding: 0px;
+
+  &:placeholder-shown {
+    color: ${({ theme }) => theme.neutral3};
+  }
+
+  &::placeholder {
+    color: ${({ theme }) => theme.neutral3};
+    opacity: 1; // Placeholder opacity'sini artıralım
+  }
 `
 
 const ErrorMessage = styled(ThemedText.BodySmall)`
@@ -199,7 +208,7 @@ interface CustomInputProps {
 const CustomDateInput = forwardRef<HTMLInputElement, CustomInputProps>(
   ({ value, onClick, placeholder, error, className }, ref) => (
     <CustomInput
-      value={value}
+      value={value || ''}
       onClick={onClick}
       readOnly
       ref={ref}
@@ -284,6 +293,8 @@ export default function DatePickerPanel({
                 minDate={minDate}
                 maxDate={maxDate}
                 timeClassName={getTimeClassName}
+                isClearable={false}
+                placeholderText={placeholder}
               />
             </InputRow>
           </AutoColumn>
