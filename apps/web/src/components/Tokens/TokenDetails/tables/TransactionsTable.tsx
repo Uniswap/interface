@@ -136,7 +136,7 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: Univer
           <Cell minWidth={75} justifyContent="flex-start" grow>
             <FilterHeaderRow
               clickable={filterModalIsOpen}
-              onPress={toggleFilterModal}
+              onPress={filterModalIsOpen ? undefined : toggleFilterModal}
               alignItems="center"
               ref={filterAnchorRef}
             >

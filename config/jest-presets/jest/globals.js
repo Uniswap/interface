@@ -19,6 +19,7 @@ module.exports = {
     OPENAI_API_KEY: 'key',
     QUICKNODE_ENDPOINT_NAME: 'name',
     QUICKNODE_ENDPOINT_TOKEN: 'token',
+    QUICKNODE_MONAD_TESTNET_RPC_URL: 'https://rpc.testnet.monad.xyz',
     SCANTASTIC_API_URL_OVERRIDE: '',
     SENTRY_DSN: 'http://sentry.com',
     SHAKE_CLIENT_ID: 123,

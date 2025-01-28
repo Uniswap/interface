@@ -188,7 +188,7 @@ exports[`load popular tokens in searchbar should render popular tokens 1`] = `
                         <svg
                           fill="none"
                           stroke-width="8"
-                          style="color: rgb(191, 191, 191); width: 16px; height: 16px;"
+                          style="width: 16px; height: 16px; color: rgb(191, 191, 191);"
                           viewBox="0 0 16 16"
                         >
                           <path

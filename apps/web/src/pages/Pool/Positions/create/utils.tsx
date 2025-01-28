@@ -42,6 +42,7 @@ import {
   CheckApprovalLPResponse,
   CreateLPPositionRequest,
   CreateLPPositionResponse,
+  IndependentToken,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -243,14 +244,12 @@ export function getInvertedTuple<T extends OptionalCurrency>(tuple: [T, T], inve
 function getPrices<T extends Currency>({
   baseCurrency,
   quoteCurrency,
-  isSorted,
   pricesAtLimit,
   pricesAtTicks,
   state,
 }: {
   baseCurrency?: T
   quoteCurrency?: T
-  isSorted: boolean
   pricesAtLimit: (Price<T, T> | undefined)[]
   pricesAtTicks: (Price<T, T> | undefined)[]
   state: PriceRangeState
@@ -262,12 +261,13 @@ function getPrices<T extends Currency>({
   const lowerPrice = state.fullRange ? pricesAtLimit[0] : pricesAtTicks[0]
   const upperPrice = state.fullRange ? pricesAtLimit[1] : pricesAtTicks[1]
 
-  const minPrice = isSorted ? lowerPrice : upperPrice?.invert()
-  const maxPrice = isSorted ? upperPrice : lowerPrice?.invert()
-
-  return [minPrice, maxPrice]
+  return [lowerPrice, upperPrice]
 }
 
+/**
+ * Pools and Pairs in all protocol versions require that [currency0, currency1] be sorted.
+ * So, if the user-provided initial price is inverted w.r.t. the sorted order, we need to invert it again here.
+ */
 function getInitialPrice({
   baseCurrency,
   sortedCurrencies,
@@ -294,23 +294,25 @@ function getInitialPrice({
   return invertPrice ? price?.invert() : price
 }
 
-function getPrice({
-  baseCurrency,
-  quoteCurrency,
-  pool,
-}: {
-  baseCurrency?: Currency
-  quoteCurrency?: Currency
-  pool?: V3Pool | V4Pool
-}) {
-  if (!pool || !baseCurrency || !quoteCurrency) {
+function getPrice(
+  opts:
+    | {
+        type: ProtocolVersion.V4
+        pool?: V4Pool
+        currency0?: Currency
+      }
+    | {
+        type: ProtocolVersion.V3
+        pool?: V3Pool
+        currency0?: Token
+      },
+) {
+  const { type, pool, currency0 } = opts
+  if (!pool || !currency0) {
     return undefined
   }
 
-  const sortedCurrencies = getSortedCurrenciesTuple(baseCurrency, quoteCurrency)
-  const isSorted = sortedCurrencies[0] === baseCurrency
-
-  return isSorted ? pool.token0Price : pool.token1Price
+  return type === ProtocolVersion.V4 ? pool.priceOf(currency0) : pool.priceOf(currency0)
 }
 
 function isInvalidPrice(price?: Price<Currency, Currency>) {
@@ -526,7 +528,7 @@ export function getV2PriceRangeInfo({
   derivedPositionInfo: CreateV2PositionInfo
 }): V2PriceRangeInfo {
   const { currencies } = derivedPositionInfo
-  const [baseCurrency] = getInvertedTuple(currencies, state.initialPriceInverted)
+  const [baseCurrency] = getInvertedTuple(currencies, state.priceInverted)
 
   const price = getInitialPrice({
     baseCurrency: getCurrencyWithWrap(baseCurrency, ProtocolVersion.V2),
@@ -565,11 +567,11 @@ export function getV3PriceRangeInfo({
   const { protocolVersion, currencies } = derivedPositionInfo
   const pool = derivedPositionInfo.pool
 
-  const sortedTokens = getSortedCurrenciesTuple(
-    getCurrencyWithWrap(currencies[0], protocolVersion),
-    getCurrencyWithWrap(currencies[1], protocolVersion),
-  )
+  const tokenA = getCurrencyWithWrap(currencies[0], protocolVersion)
+  const tokenB = getCurrencyWithWrap(currencies[1], protocolVersion)
+  const sortedTokens = getSortedCurrenciesTuple(tokenA, tokenB)
   const [sortedToken0, sortedToken1] = sortedTokens
+
   const [baseCurrency, quoteCurrency] = getInvertedTuple(currencies, state.priceInverted)
   const [baseToken, quoteToken] = [
     getCurrencyWithWrap(baseCurrency, protocolVersion),
@@ -578,7 +580,7 @@ export function getV3PriceRangeInfo({
 
   const initialPriceTokens = getInvertedTuple(
     [getCurrencyWithWrap(currencies[0], protocolVersion), getCurrencyWithWrap(currencies[1], protocolVersion)],
-    state.initialPriceInverted,
+    state.priceInverted,
   )
 
   const price = derivedPositionInfo.creatingPoolOrPair
@@ -588,9 +590,9 @@ export function getV3PriceRangeInfo({
         initialPrice: state.initialPrice,
       })
     : getPrice({
-        baseCurrency: baseToken,
-        quoteCurrency: quoteToken,
+        type: ProtocolVersion.V3,
         pool,
+        currency0: sortedToken0,
       })
   const invalidPrice = isInvalidPrice(price)
   const mockPool = createMockV3Pool({
@@ -626,7 +628,7 @@ export function getV3PriceRangeInfo({
         : tryParseTick(sortedToken0, sortedToken1, fee.feeAmount, state.maxPrice)
 
   const ticks: [OptionalNumber, OptionalNumber] = [lowerTick, upperTick]
-  const invalidRange = Boolean(lowerTick && upperTick && lowerTick >= upperTick)
+  const invalidRange = Boolean(lowerTick !== undefined && upperTick !== undefined && lowerTick >= upperTick)
 
   const ticksAtLimit: [boolean, boolean] = state.fullRange
     ? [true, true]
@@ -646,7 +648,6 @@ export function getV3PriceRangeInfo({
   const prices = getPrices({
     baseCurrency: baseToken,
     quoteCurrency: quoteToken,
-    isSorted,
     pricesAtLimit,
     pricesAtTicks,
     state,
@@ -656,21 +657,26 @@ export function getV3PriceRangeInfo({
     !invalidRange && price && prices[0] && prices[1] && (price.lessThan(prices[0]) || price.greaterThan(prices[1])),
   )
 
-  const deposit0Disabled = Boolean(upperTick && poolForPosition && poolForPosition.tickCurrent >= upperTick)
-  const deposit1Disabled = Boolean(lowerTick && poolForPosition && poolForPosition.tickCurrent <= lowerTick)
+  // This is in terms of the sorted tokens
+  const deposit0Disabled = Boolean(
+    upperTick !== undefined && poolForPosition && poolForPosition.tickCurrent >= upperTick,
+  )
+  const deposit1Disabled = Boolean(
+    lowerTick !== undefined && poolForPosition && poolForPosition.tickCurrent <= lowerTick,
+  )
 
   const depositADisabled =
     invalidRange ||
     Boolean(
-      (deposit0Disabled && poolForPosition && baseToken && poolForPosition.token0.equals(baseToken)) ||
-        (deposit1Disabled && poolForPosition && baseToken && poolForPosition.token1.equals(baseToken)),
+      (deposit0Disabled && poolForPosition && tokenA && poolForPosition.token0.equals(tokenA)) ||
+        (deposit1Disabled && poolForPosition && tokenA && poolForPosition.token1.equals(tokenA)),
     )
 
   const depositBDisabled =
     invalidRange ||
     Boolean(
-      (deposit0Disabled && poolForPosition && quoteToken && poolForPosition.token0.equals(quoteToken)) ||
-        (deposit1Disabled && poolForPosition && quoteToken && poolForPosition.token1.equals(quoteToken)),
+      (deposit0Disabled && poolForPosition && tokenB && poolForPosition.token0.equals(tokenB)) ||
+        (deposit1Disabled && poolForPosition && tokenB && poolForPosition.token1.equals(tokenB)),
     )
 
   return {
@@ -742,7 +748,7 @@ export function getV4PriceRangeInfo({
   const sortedCurrencies = getSortedCurrenciesTuple(currencies[0], currencies[1])
   const [sortedCurrency0, sortedCurrency1] = sortedCurrencies
   const [baseCurrency, quoteCurrency] = getInvertedTuple(currencies, state.priceInverted)
-  const [initialPriceBaseCurrency] = getInvertedTuple(currencies, state.initialPriceInverted)
+  const [initialPriceBaseCurrency] = getInvertedTuple(currencies, state.priceInverted)
 
   const price = derivedPositionInfo.creatingPoolOrPair
     ? getInitialPrice({
@@ -751,9 +757,9 @@ export function getV4PriceRangeInfo({
         initialPrice: state.initialPrice,
       })
     : getPrice({
-        baseCurrency,
-        quoteCurrency,
+        type: ProtocolVersion.V4,
         pool,
+        currency0: sortedCurrency0,
       })
   const invalidPrice = isInvalidPrice(price)
   const mockPool = createMockV4Pool({
@@ -788,7 +794,7 @@ export function getV4PriceRangeInfo({
         ? tryParseV4Tick(sortedCurrency1, sortedCurrency0, state.minPrice, poolForPosition?.tickSpacing)
         : tryParseV4Tick(sortedCurrency0, sortedCurrency1, state.maxPrice, poolForPosition?.tickSpacing)
   const ticks: [OptionalNumber, OptionalNumber] = [lowerTick, upperTick]
-  const invalidRange = Boolean(lowerTick && upperTick && lowerTick >= upperTick)
+  const invalidRange = Boolean(lowerTick !== undefined && upperTick !== undefined && lowerTick >= upperTick)
 
   const ticksAtLimit: [boolean, boolean] = state.fullRange
     ? [true, true]
@@ -808,7 +814,6 @@ export function getV4PriceRangeInfo({
   const prices: [OptionalCurrencyPrice, OptionalCurrencyPrice] = getPrices({
     baseCurrency,
     quoteCurrency,
-    isSorted,
     pricesAtLimit,
     pricesAtTicks,
     state,
@@ -818,20 +823,25 @@ export function getV4PriceRangeInfo({
     !invalidRange && price && prices[0] && prices[1] && (price.lessThan(prices[0]) || price.greaterThan(prices[1])),
   )
 
-  const deposit0Disabled = Boolean(upperTick && poolForPosition && poolForPosition.tickCurrent >= upperTick)
-  const deposit1Disabled = Boolean(lowerTick && poolForPosition && poolForPosition.tickCurrent <= lowerTick)
+  // This is in terms of the sorted tokens
+  const deposit0Disabled = Boolean(
+    upperTick !== undefined && poolForPosition && poolForPosition.tickCurrent >= upperTick,
+  )
+  const deposit1Disabled = Boolean(
+    lowerTick !== undefined && poolForPosition && poolForPosition.tickCurrent <= lowerTick,
+  )
 
   const depositADisabled =
     invalidRange ||
     Boolean(
-      (deposit0Disabled && poolForPosition && baseCurrency && poolForPosition.token0.equals(baseCurrency)) ||
-        (deposit1Disabled && poolForPosition && baseCurrency && poolForPosition.token1.equals(baseCurrency)),
+      (deposit0Disabled && poolForPosition && currencies[0] && poolForPosition.token0.equals(currencies[0])) ||
+        (deposit1Disabled && poolForPosition && currencies[0] && poolForPosition.token1.equals(currencies[0])),
     )
   const depositBDisabled =
     invalidRange ||
     Boolean(
-      (deposit0Disabled && poolForPosition && quoteCurrency && poolForPosition.token0.equals(quoteCurrency)) ||
-        (deposit1Disabled && poolForPosition && quoteCurrency && poolForPosition.token1.equals(quoteCurrency)),
+      (deposit0Disabled && poolForPosition && currencies[1] && poolForPosition.token0.equals(currencies[1])) ||
+        (deposit1Disabled && poolForPosition && currencies[1] && poolForPosition.token1.equals(currencies[1])),
     )
 
   return {
@@ -891,6 +901,50 @@ export function generateAddLiquidityApprovalParams({
   } satisfies CheckApprovalLPRequest
 }
 
+// Returns the sorted token that is independent.
+// For example if the top box on the deposit form corresponds to token0 (lower token sorted by address)
+// and the user types into that form then the independent token is token0.
+// Or if the top box corresponds to token1 (higher token sorted by address)
+// and the user types into that box then the independent token is token1
+// Also returns the index of token0 and token1 in relation to the unsortedCurrencies
+function getIndependentToken({
+  unsortedCurrencies,
+  sortedToken0,
+  sortedToken1,
+  independentField,
+  protocolVersion,
+}: {
+  unsortedCurrencies: [Currency, Currency]
+  sortedToken0: Currency
+  sortedToken1: Currency
+  independentField: PositionField
+  protocolVersion: ProtocolVersion
+}): {
+  independentToken: IndependentToken.TOKEN_0 | IndependentToken.TOKEN_1
+  token0Index: PositionField
+  token1Index: PositionField
+} {
+  const tokenA = getCurrencyWithWrap(unsortedCurrencies[0], protocolVersion)
+  const tokenB = getCurrencyWithWrap(unsortedCurrencies[1], protocolVersion)
+  const token0Index = tokenA && sortedToken0.equals(tokenA) ? PositionField.TOKEN0 : PositionField.TOKEN1
+  const token1Index = tokenB && sortedToken1.equals(tokenB) ? PositionField.TOKEN1 : PositionField.TOKEN0
+
+  const independentToken =
+    independentField === PositionField.TOKEN0
+      ? token0Index === PositionField.TOKEN0
+        ? IndependentToken.TOKEN_0
+        : IndependentToken.TOKEN_1
+      : token1Index === PositionField.TOKEN1
+        ? IndependentToken.TOKEN_1
+        : IndependentToken.TOKEN_0
+
+  return {
+    independentToken,
+    token0Index,
+    token1Index,
+  }
+}
+
 export function generateCreateCalldataQueryParams({
   account,
   approvalCalldata,
@@ -899,6 +953,7 @@ export function generateCreateCalldataQueryParams({
   priceRangeState,
   derivedPriceRangeInfo,
   derivedDepositInfo,
+  independentField,
 }: {
   account?: AccountMeta
   approvalCalldata?: CheckApprovalLPResponse
@@ -907,6 +962,7 @@ export function generateCreateCalldataQueryParams({
   priceRangeState: PriceRangeState
   derivedPriceRangeInfo: PriceRangeInfo
   derivedDepositInfo: DepositInfo
+  independentField: PositionField
 }): CreateLPPositionRequest | undefined {
   const apiProtocolItems = getProtocolItems(positionState.protocolVersion)
   const currencies = derivedPositionInfo.currencies
@@ -940,18 +996,25 @@ export function generateCreateCalldataQueryParams({
     const sortedToken0 = pair.token0
     const sortedToken1 = pair.token1
 
-    const token0 = getCurrencyWithWrap(currencies[0], derivedPositionInfo.protocolVersion)
-    const token1 = getCurrencyWithWrap(currencies[1], derivedPositionInfo.protocolVersion)
-    const token0Index = sortedToken0.equals(token0) ? 'TOKEN0' : 'TOKEN1'
-    const token1Index = sortedToken1.equals(token1) ? 'TOKEN1' : 'TOKEN0'
+    const { independentToken, token0Index, token1Index } = getIndependentToken({
+      unsortedCurrencies: currencies,
+      sortedToken0,
+      sortedToken1,
+      independentField,
+      protocolVersion: derivedPositionInfo.protocolVersion,
+    })
+    const dependentField = independentField === PositionField.TOKEN0 ? PositionField.TOKEN1 : PositionField.TOKEN0
+    const independentAmount = currencyAmounts[independentField]
+    const dependentAmount = currencyAmounts[dependentField]
 
     return {
       simulateTransaction: !(permitData || token0Approval || token1Approval || positionTokenApproval),
       protocol: apiProtocolItems,
       walletAddress: account.address,
       chainId: currencyAmounts.TOKEN0.currency.chainId,
-      amount0: currencyAmounts[token0Index]?.quotient.toString(),
-      amount1: currencyAmounts[token1Index]?.quotient.toString(),
+      independentAmount: independentAmount?.quotient.toString(),
+      independentToken,
+      defaultDependentAmount: dependentAmount?.quotient.toString(),
       position: {
         pool: {
           token0: getCurrencyAddressForTradingApi(currencyAmounts[token0Index]?.currency),
@@ -977,16 +1040,12 @@ export function generateCreateCalldataQueryParams({
     ? derivedPriceRangeInfo.tickSpaceLimits[1]
     : derivedPriceRangeInfo.ticks?.[1]
 
-  if (!tickLower || !tickUpper) {
+  if (tickLower === undefined || tickUpper === undefined) {
     return undefined
   }
 
   const creatingPool = derivedPositionInfo.creatingPoolOrPair
   const initialPrice = creatingPool ? pool.sqrtRatioX96.toString() : undefined
-
-  const poolLiquidity = creatingPool ? undefined : pool.liquidity.toString()
-  const currentTick = creatingPool ? undefined : pool.tickCurrent
-  const sqrtRatioX96 = creatingPool ? undefined : pool.sqrtRatioX96.toString()
   const tickSpacing = pool.tickSpacing
 
   // token0 and token1 from the sdk are automatically sorted and we need to ensure the values we send
@@ -994,21 +1053,25 @@ export function generateCreateCalldataQueryParams({
   const sortedToken0 = pool.token0
   const sortedToken1 = pool.token1
 
-  const token0 = getCurrencyWithWrap(currencies[0], derivedPositionInfo.protocolVersion)
-  const token1 = getCurrencyWithWrap(currencies[1], derivedPositionInfo.protocolVersion)
-  const token0Index = token0 && sortedToken0.equals(token0) ? 'TOKEN0' : 'TOKEN1'
-  const token1Index = token1 && sortedToken1.equals(token1) ? 'TOKEN1' : 'TOKEN0'
+  const { independentToken, token0Index, token1Index } = getIndependentToken({
+    sortedToken0,
+    sortedToken1,
+    unsortedCurrencies: currencies,
+    independentField,
+    protocolVersion: derivedPositionInfo.protocolVersion,
+  })
+  const dependentField = independentField === PositionField.TOKEN0 ? PositionField.TOKEN1 : PositionField.TOKEN0
+  const independentAmount = currencyAmounts[independentField]
+  const dependentAmount = currencyAmounts[dependentField]
 
   return {
     simulateTransaction: !(permitData || token0Approval || token1Approval || positionTokenApproval),
     protocol: apiProtocolItems,
     walletAddress: account.address,
     chainId: currencyAmounts.TOKEN0.currency.chainId,
-    amount0: currencyAmounts[token0Index]?.quotient.toString(),
-    amount1: currencyAmounts[token1Index]?.quotient.toString(),
-    poolLiquidity,
-    currentTick,
-    sqrtRatioX96,
+    independentAmount: independentAmount?.quotient.toString(),
+    independentToken,
+    initialDependentAmount: initialPrice && dependentAmount?.quotient?.toString(), // only set this if there is an initialPrice
     initialPrice,
     position: {
       tickLower,
@@ -1021,7 +1084,7 @@ export function generateCreateCalldataQueryParams({
         hooks: positionState.hook,
       },
     },
-  } satisfies CreateLPPositionRequest
+  }
 }
 
 export function generateCreatePositionTxRequest({
@@ -1088,6 +1151,7 @@ export function generateCreatePositionTxRequest({
     approvePositionTokenRequest: undefined,
     revocationTxRequest: undefined,
     permit: validatedPermitRequest,
+    dependentAmount: createCalldata.dependentAmount,
   } satisfies CreatePositionTxAndGasInfo
 }
 

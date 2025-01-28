@@ -116,7 +116,7 @@ export default function AppRatingModal({ onClose }: AppRatingModalProps): JSX.El
   }, [dispatch])
 
   return (
-    <Modal isDismissible isModalOpen name={ModalName.TokenWarningModal} backgroundColor="$surface1" onClose={close}>
+    <Modal isDismissible isModalOpen name={ModalName.AppRatingModal} backgroundColor="$surface1" onClose={close}>
       <TouchableArea p="$spacing16" position="absolute" right={0} top={0} zIndex={zIndices.default} onPress={close}>
         <X color="$neutral2" size="$icon.20" />
       </TouchableArea>

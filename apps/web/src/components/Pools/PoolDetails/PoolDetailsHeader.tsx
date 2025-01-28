@@ -4,7 +4,7 @@ import { DropdownSelector } from 'components/DropdownSelector'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { DetailBubble } from 'components/Pools/PoolDetails/shared'
 import { PoolDetailsBadge } from 'components/Pools/PoolTable/PoolTable'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
@@ -16,6 +16,7 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import styled, { useTheme } from 'lib/styled-components'
+import { ReversedArrowsIcon } from 'nft/components/icons'
 import React, { useMemo, useState } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
@@ -30,7 +31,6 @@ import {
 } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { Flex, TouchableArea } from 'ui/src'
-import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -127,6 +127,7 @@ const PoolDetailsTitle = ({
   toggleReversed: React.DispatchWithoutAction
   hookAddress?: string
 }) => {
+  const theme = useTheme()
   const { formatPercent } = useFormatter()
   const { defaultChainId } = useEnabledChains()
   const graphQLChain = toGraphQLChain(chainId ?? defaultChainId)
@@ -171,14 +172,13 @@ const PoolDetailsTitle = ({
           </PoolDetailsBadge>
         )}
       </Flex>
-      <TouchableArea hoverStyle={{ opacity: 0.8 }} onPress={toggleReversed}>
-        <ArrowUpDown
-          {...ClickableTamaguiStyle}
-          size="$icon.20"
-          testID="toggle-tokens-reverse-arrows"
-          rotate="90deg"
-          color="$neutral2"
-        />
+      <TouchableArea
+        hoverable
+        {...ClickableTamaguiStyle}
+        onPress={toggleReversed}
+        testID="toggle-tokens-reverse-arrows"
+      >
+        <ReversedArrowsIcon size="20px" color={theme.neutral2} />
       </TouchableArea>
     </StyledPoolDetailsTitle>
   )
@@ -233,7 +233,7 @@ const ContractsDropdownRow = ({
       <ContractsDropdownRowContainer>
         <Row gap="sm">
           {isPool ? (
-            <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} size={24} />
+            <DoubleCurrencyLogo currencies={currencies} size={24} />
           ) : (
             <CurrencyLogo currency={currency} size={24} />
           )}
@@ -360,9 +360,7 @@ export function PoolDetailsHeader({
       {shouldColumnBreak ? (
         <Column gap="sm" style={{ width: '100%' }}>
           <Row gap="md" justify="space-between">
-            {chainId && (
-              <DoubleCurrencyAndChainLogo data-testid="double-token-logo" chainId={chainId} currencies={currencies} />
-            )}
+            <DoubleCurrencyLogo currencies={currencies} data-testid="double-token-logo" />
             <PoolDetailsHeaderActions
               chainId={chainId}
               poolAddress={poolAddress}
@@ -383,9 +381,7 @@ export function PoolDetailsHeader({
       ) : (
         <>
           <Row gap="md">
-            {chainId && (
-              <DoubleCurrencyAndChainLogo data-testid="double-token-logo" chainId={chainId} currencies={currencies} />
-            )}
+            <DoubleCurrencyLogo currencies={currencies} data-testid="double-token-logo" />
             <PoolDetailsTitle
               token0={token0}
               token1={token1}

@@ -1,9 +1,9 @@
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { DetailBubble, SmallDetailBubble } from 'components/Pools/PoolDetails/shared'
-import Tooltip, { TooltipSize } from 'components/Tooltip'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import Row from 'components/deprecated/Row'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
@@ -153,7 +153,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
         ref={onTextRender}
       >
         {isPool ? (
-          <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} size={20} />
+          <DoubleCurrencyLogo currencies={currencies} size={20} />
         ) : (
           <CurrencyLogo currency={currency} size={20} />
         )}
@@ -170,12 +170,18 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
       </TokenTextWrapper>
       <ButtonsRow>
         {!isNative && (
-          <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t('common.copied')}>
+          <MouseoverTooltip
+            disabled
+            forceShow={isCopied}
+            placement="bottom"
+            size={TooltipSize.Max}
+            text={t('common.copied')}
+          >
             <CopyAddress data-testid={`copy-address-${address}`} onClick={copy}>
               {shortenAddress(address, truncateAddress ? 2 : undefined, truncateAddress === 'both' ? 2 : undefined)}
               <StyledCopyIcon />
             </CopyAddress>
-          </Tooltip>
+          </MouseoverTooltip>
         )}
         {explorerUrl && (
           <ExternalLink href={explorerUrl} data-testid={`explorer-url-${explorerUrl}`}>

@@ -63,8 +63,8 @@ export const uniswapUrls = {
     unitagClaimPeriod: `${helpUrl}/articles/24009960408589`,
     unsupportedTokenPolicy: `${helpUrl}/articles/18783694078989-Unsupported-Token-Policy`,
     addingV4Hooks: `${helpUrl}/articles/32402040565133`,
+    routingSettings: `${helpUrl}/articles/27362707722637`,
     v4HooksInfo: `${helpUrl}/articles/30998263256717`,
-    v4RoutingInfo: `${helpUrl}/articles/32214043316109`,
     walletHelp: `${helpUrl}/categories/11301970439565-Uniswap-Wallet`,
     walletSecurityMeasures: `${helpUrl}/articles/28278904584077-Uniswap-Wallet-Security-Measures`,
     wethExplainer: `${helpUrl}/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH`,
@@ -90,6 +90,12 @@ export const uniswapUrls = {
     config.scantasticApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Scantastic)}/v2/scantastic`,
   forApiUrl: config.forApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/FOR.v1.FORService`,
   tradingApiUrl: config.tradingApiUrlOverride || getCloudflareApiBaseUrl(TrafficFlows.TradingApi),
+
+  // Embedded Wallet URL's
+  // Totally fine that these are public
+  evervaultDevUrl: 'https://embedded-wallet-dev.app-907329d19a06.enclave.evervault.com',
+  evervaultStagingUrl: 'https://embedded-wallet-staging.app-907329d19a06.enclave.evervault.com',
+  evervaultProductionUrl: 'https://embedded-wallet.app-907329d19a06.enclave.evervault.com',
 
   // API Paths
   trmPath: '/v1/screen',

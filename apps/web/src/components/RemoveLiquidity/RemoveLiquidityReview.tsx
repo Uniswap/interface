@@ -36,11 +36,11 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
+  const { percent, positionInfo, unwrapNativeCurrency, currentTransactionStep, setCurrentTransactionStep } =
+    useRemoveLiquidityModalContext()
   const [steps, setSteps] = useState<TransactionStep[]>([])
-  const { percent, positionInfo, unwrapNativeCurrency } = useRemoveLiquidityModalContext()
   const removeLiquidityTxContext = useRemoveLiquidityTxContext()
   const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
-  const [currentStep, setCurrentStep] = useState<{ step: TransactionStep; accepted: boolean } | undefined>()
   const currency0FiatAmount = useUSDCValue(positionInfo?.currency0Amount) ?? undefined
   const currency1FiatAmount = useUSDCValue(positionInfo?.currency1Amount) ?? undefined
   const selectChain = useSelectChain()
@@ -53,12 +53,12 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
 
   const onSuccess = () => {
     setSteps([])
-    setCurrentStep(undefined)
+    setCurrentTransactionStep(undefined)
     onClose()
   }
 
   const onFailure = () => {
-    setCurrentStep(undefined)
+    setCurrentTransactionStep(undefined)
   }
 
   if (!positionInfo) {
@@ -67,7 +67,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
 
   const { feeValue0, feeValue1, fiatFeeValue0, fiatFeeValue1 } = useV3OrV4PositionDerivedInfo(positionInfo)
 
-  const { currency0Amount, currency1Amount, chainId } = positionInfo
+  const { currency0Amount, currency1Amount, chainId, feeTier, version, poolId } = positionInfo
 
   const currentPrice = usePositionCurrentPrice(positionInfo)
 
@@ -125,14 +125,13 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
     if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx || !positionInfo) {
       return
     }
-    const { feeTier, version, poolId, currency0Amount, currency1Amount } = positionInfo
     dispatch(
       liquiditySaga.actions.trigger({
         selectChain,
         startChainId,
         account,
         liquidityTxContext: txContext,
-        setCurrentStep,
+        setCurrentStep: setCurrentTransactionStep,
         setSteps,
         onSuccess,
         onFailure,
@@ -141,15 +140,14 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
             trace,
             fee: feeTier,
             poolId,
-            currency0: currency0Amount.currency,
-            currency1: currency1Amount.currency,
+            currency0: currency0Info.currency,
+            currency1: currency1Info.currency,
             currency0AmountUsd: currency0AmountToRemoveUSD,
             currency1AmountUsd: currency1AmountToRemoveUSD,
             version,
-            chainId: startChainId,
           }),
-          expectedAmountBaseRaw: currency0AmountToRemoveUSD?.quotient.toString() ?? '0',
-          expectedAmountQuoteRaw: currency1AmountToRemoveUSD?.quotient.toString() ?? '0',
+          expectedAmountBaseRaw: unwrappedCurrency0AmountToRemove?.quotient.toString() ?? '-',
+          expectedAmountQuoteRaw: unwrappedCurrency1AmountToRemove?.quotient.toString() ?? '-',
           closePosition: percent === '100',
         },
       }),
@@ -204,8 +202,8 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
           </Flex>
         )}
       </Flex>
-      {currentStep ? (
-        <ProgressIndicator steps={steps} currentStep={currentStep} />
+      {currentTransactionStep ? (
+        <ProgressIndicator steps={steps} currentStep={currentTransactionStep} />
       ) : (
         <>
           <Separator mx="$padding16" />

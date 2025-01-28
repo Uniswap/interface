@@ -21,7 +21,7 @@ export type RemoveLiquidityTxInfo = {
   decreaseCalldataLoading: boolean
   approvalLoading: boolean
   txContext?: ValidatedDecreasePositionTxAndGasInfo
-  error?: boolean
+  error: boolean | string
   refetch?: () => void
 }
 

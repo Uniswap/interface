@@ -33,13 +33,13 @@ exports[`EmptyState renders without error 1`] = `
       }
     >
       <Text
-        allowFontScaling={false}
+        allowFontScaling={true}
         maxFontSizeMultiplier={1.4}
         style={
           {
             "color": "#9B9B9B",
             "fontFamily": "Basel Grotesk",
-            "fontSize": 16,
+            "fontSize": 17,
             "fontWeight": "400",
             "lineHeight": 24,
             "textAlign": "center",
@@ -100,13 +100,13 @@ exports[`ErrorState renders without error 1`] = `
       }
     >
       <Text
-        allowFontScaling={false}
+        allowFontScaling={true}
         maxFontSizeMultiplier={1.4}
         style={
           {
             "color": "#9B9B9B",
             "fontFamily": "Basel Grotesk",
-            "fontSize": 16,
+            "fontSize": 17,
             "fontWeight": "400",
             "lineHeight": 24,
             "textAlign": "center",
@@ -189,13 +189,13 @@ exports[`Header renders without error 1`] = `
         }
       >
         <Text
-          allowFontScaling={false}
+          allowFontScaling={true}
           maxFontSizeMultiplier={1.4}
           style={
             {
               "color": "#9B9B9B",
               "fontFamily": "Basel Grotesk",
-              "fontSize": 16,
+              "fontSize": 17,
               "fontWeight": "400",
               "lineHeight": 24,
             }
@@ -384,7 +384,7 @@ exports[`InlineErrorState renders without error 1`] = `
       </RNSVGGroup>
     </RNSVGSvgView>
     <Text
-      allowFontScaling={false}
+      allowFontScaling={true}
       ellipsizeMode="tail"
       maxFontSizeMultiplier={1.4}
       numberOfLines={1}
@@ -392,7 +392,7 @@ exports[`InlineErrorState renders without error 1`] = `
         {
           "color": "#FFFFFF",
           "fontFamily": "Basel Grotesk",
-          "fontSize": 16,
+          "fontSize": 17,
           "fontWeight": "400",
           "lineHeight": 24,
           "textAlign": "center",

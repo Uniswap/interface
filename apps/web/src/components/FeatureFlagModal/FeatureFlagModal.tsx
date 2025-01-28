@@ -223,6 +223,7 @@ export default function FeatureFlagModal() {
           </CloseButton>
         </Header>
         <FlagsColumn>
+          <FeatureFlagOption flag={FeatureFlags.EmbeddedWallet} label="Add internal embedded wallet functionality" />
           <FeatureFlagOption flag={FeatureFlags.V4Swap} label="Enable v4 in the shared swap flow" />
           <FeatureFlagOption flag={FeatureFlags.UniversalSwap} label="Enable swap flow from the Uniswap Package" />
           <FeatureFlagOption flag={FeatureFlags.UniswapX} label="[Universal Swap Flow Only] Enable UniswapX" />
@@ -231,8 +232,12 @@ export default function FeatureFlagModal() {
             label="[Universal Swap Flow Only] Enable Quick Routes"
           />
           <FeatureFlagOption
-            flag={FeatureFlags.UniswapXPriorityOrders}
-            label="UniswapX Priority Orders (on Base only)"
+            flag={FeatureFlags.UniswapXPriorityOrdersBase}
+            label="UniswapX Priority Orders (on Base)"
+          />
+          <FeatureFlagOption
+            flag={FeatureFlags.UniswapXPriorityOrdersUnichain}
+            label="UniswapX Priority Orders (on Unichain)"
           />
           <FeatureFlagOption
             flag={FeatureFlags.SharedSwapArbitrumUniswapXExperiment}
@@ -245,13 +250,18 @@ export default function FeatureFlagModal() {
           <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
           <FeatureFlagOption flag={FeatureFlags.LPRedesign} label="Enable LP flow redesign" />
           <FeatureFlagOption flag={FeatureFlags.V4Data} label="Enable v4 data" />
+          <FeatureFlagOption flag={FeatureFlags.MigrateV3ToV4} label="Enable migrate flow from v3 -> v4" />
           <FeatureFlagOption flag={FeatureFlags.PriceRangeInputV2} label="Enable Price Range Input V2" />
           <FeatureFlagOption flag={FeatureFlags.Realtime} label="Realtime activity updates" />
           <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
           <FeatureFlagOption flag={FeatureFlags.NavigationHotkeys} label="Navigation hotkeys" />
-          <FeatureFlagOption flag={FeatureFlags.TokenProtection} label="Warning UX for scam/dangerous tokens" />
+          <FeatureFlagOption
+            flag={FeatureFlags.TokenSelectorTrendingTokens}
+            label="Enable 24h volume trending tokens in Token Selector"
+          />
           <FeatureFlagGroup name="New Chains">
             <FeatureFlagOption flag={FeatureFlags.Zora} label="Enable Zora" />
+            <FeatureFlagOption flag={FeatureFlags.Unichain} label="Enable Unichain" />
             <FeatureFlagOption flag={FeatureFlags.UnichainPromo} label="Unichain In App Promotion" />
             <FeatureFlagOption flag={FeatureFlags.MonadTestnet} label="Enable Monad Testnet" />
           </FeatureFlagGroup>
@@ -280,11 +290,6 @@ export default function FeatureFlagModal() {
           <FeatureFlagGroup name="UniswapX Flags">
             <FeatureFlagOption flag={FeatureFlags.UniswapXSyntheticQuote} label="Force synthetic quotes for UniswapX" />
             <FeatureFlagOption flag={FeatureFlags.UniswapXv2} label="UniswapX v2" />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Outage Banners">
-            <FeatureFlagOption flag={FeatureFlags.OutageBannerArbitrum} label="Outage Banner for Arbitrum" />
-            <FeatureFlagOption flag={FeatureFlags.OutageBannerOptimism} label="Outage Banner for Optimism" />
-            <FeatureFlagOption flag={FeatureFlags.OutageBannerPolygon} label="Outage Banner for Polygon" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Debug">
             <FeatureFlagOption flag={FeatureFlags.TraceJsonRpc} label="Enables JSON-RPC tracing" />

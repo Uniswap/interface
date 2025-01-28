@@ -12,7 +12,7 @@ export function useCommonTokensOptionsWithFallback(
   const { data, error, refetch, loading } = useCommonTokensOptions(address, chainFilter)
   const commonBases = chainFilter ? currencyInfosToTokenOptions(COMMON_BASES[chainFilter]) : undefined
 
-  const shouldFallback = !loading && data?.length === 0 && commonBases?.length
+  const shouldFallback = data?.length === 0 && commonBases?.length
 
   return {
     data: shouldFallback ? commonBases : data,

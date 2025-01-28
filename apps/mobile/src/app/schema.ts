@@ -1,9 +1,9 @@
 /* eslint-disable max-lines */
+import { RankingType } from 'uniswap/src/data/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { RankingType } from 'wallet/src/features/wallet/types'
 
 // only add fields that are persisted
 export const initialSchema = {

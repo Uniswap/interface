@@ -1,8 +1,10 @@
 import type { PartialMessage } from '@bufbuild/protobuf'
+import { format } from 'date-fns'
 import ms from 'ms'
 import { ProxyRequest } from 'uniswap/src/data/rest/conversionTracking/api/api_pb'
 import {
   DEFAULT_HEADERS,
+  GOOGLE_CONVERSION_DATETIME_FORMAT,
   GOOGLE_CONVERSION_URL,
   PERSONAL3_CONVERSION_URL,
   REDDIT_CONVERSION_URL,
@@ -85,10 +87,11 @@ const buildGoogleProxyRequest = ({
   method: RequestType.POST,
   headers: DEFAULT_HEADERS,
   body: JSON.stringify({
+    partial_failure: true,
     conversions: [
       {
         gclid: lead.id,
-        conversionDateTime: addJitter(new Date()),
+        conversionDateTime: format(new Date(), GOOGLE_CONVERSION_DATETIME_FORMAT),
         conversionAction: eventId,
       },
     ],

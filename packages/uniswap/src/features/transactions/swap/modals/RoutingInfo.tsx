@@ -66,17 +66,6 @@ export function RoutingInfo({
       )
     }
 
-    const bestRouteText = gasFeeFormatted
-      ? t('swap.bestRoute.cost', {
-          gasPrice: gasFeeFormatted,
-        })
-      : undefined
-    const bestRouteTextV4 = gasFeeFormatted
-      ? t('swap.bestRoute.cost.v4', {
-          gasPrice: gasFeeFormatted,
-        })
-      : undefined
-
     if (isClassic(trade)) {
       return (
         <Flex gap="$spacing12">
@@ -88,14 +77,14 @@ export function RoutingInfo({
             />
           )}
           <Text variant={textVariant} textAlign={textAlign} color="$neutral2">
-            {isMaybeV4 ? bestRouteTextV4 : bestRouteText}
+            {gasFeeFormatted && t('swap.bestRoute.cost', { gasPrice: gasFeeFormatted })}
             {t('swap.route.optimizedGasCost')}
           </Text>
         </Flex>
       )
     }
     return null
-  }, [t, trade, routes, gasFeeFormatted, isMaybeV4])
+  }, [t, trade, routes, gasFeeFormatted])
 
   const InfoButton = useMemo(() => {
     if (!trade) {
@@ -107,7 +96,7 @@ export function RoutingInfo({
 
     const helpCenterUrl = isUniswapX(trade)
       ? uniswapUrls.helpArticleUrls.uniswapXInfo
-      : uniswapUrls.helpArticleUrls.v4RoutingInfo
+      : uniswapUrls.helpArticleUrls.routingSettings
 
     return (
       <TouchableArea

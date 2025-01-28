@@ -12,8 +12,6 @@ import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { FeeOnTransferFeeGroup } from 'uniswap/src/features/transactions/TransactionDetails/FeeOnTransferFee'
 import { SwapFee } from 'uniswap/src/features/transactions/TransactionDetails/SwapFee'
@@ -90,7 +88,6 @@ export function TransactionDetails({
   RateInfo,
 }: PropsWithChildren<TransactionDetailsProps>): JSX.Element {
   const { t } = useTranslation()
-  const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
   const [showChildren, setShowChildren] = useState(showExpandedChildren)
 
   const onPressToggleShowChildren = (): void => {
@@ -150,7 +147,7 @@ export function TransactionDetails({
             </AnimatePresence>
           ) : null}
         </Flex>
-        {tokenProtectionEnabled && setTokenWarningChecked && tokenWarningProps && (
+        {setTokenWarningChecked && tokenWarningProps && (
           <SwapReviewTokenWarningCard
             checked={!!tokenWarningChecked}
             setChecked={setTokenWarningChecked}

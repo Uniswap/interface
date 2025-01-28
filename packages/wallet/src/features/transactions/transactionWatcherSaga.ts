@@ -362,15 +362,11 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
 
       switch (flashbotsReceipt.status) {
         case 'FAILED':
-          logger.error(
-            new Error(`Flashbots Protect transaction failed with simulation error: ${flashbotsReceipt.simError}`),
-            {
-              tags: {
-                file: 'transactionWatcherSaga',
-                function: 'waitForRemoteUpdate',
-              },
-              extra: { transaction, flashbotsReceipt },
-            },
+          logger.warn(
+            'transactionWatcherSaga',
+            'waitForRemoteUpdate',
+            `Flashbots Protect transaction failed with simulation error: ${flashbotsReceipt.simError}`,
+            { transaction, flashbotsReceipt },
           )
           return { ...transaction, status: TransactionStatus.Failed }
         case 'CANCELLED':

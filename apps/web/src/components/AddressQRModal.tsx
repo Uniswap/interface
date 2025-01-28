@@ -1,21 +1,21 @@
 import { AddressDisplay } from 'components/AccountDetails/AddressDisplay'
-import { SecondaryIdentifiers } from 'components/AccountDrawer/Status'
 import Identicon from 'components/Identicon'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
-import useENSName from 'hooks/useENSName'
 import { useCallback } from 'react'
 import { Trans } from 'react-i18next'
 import { useModalIsOpen, useOpenModal, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { ThemedText } from 'theme/components'
+import { CopyHelper, ThemedText } from 'theme/components'
 import { Flex, QRCodeDisplay, Text, useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { NetworkLogos } from 'uniswap/src/components/network/NetworkLogos'
 import { useAddressColorProps } from 'uniswap/src/features/address/color'
 import { useOrderedChainIds } from 'uniswap/src/features/chains/hooks/useOrderedChainIds'
 import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
+import { useENSName } from 'uniswap/src/features/ens/api'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { shortenAddress } from 'utilities/src/addresses'
 
 const UNICON_SIZE = 50
 const QR_CODE_SIZE = 240
@@ -25,7 +25,7 @@ export function AddressQRModal({ accountAddress }: { accountAddress: Address }) 
   const toggleModal = useToggleModal(ApplicationModal.RECEIVE_CRYPTO_QR)
   const isOpen = useModalIsOpen(ApplicationModal.RECEIVE_CRYPTO_QR)
   const openReceiveCryptoModal = useOpenModal({ name: ApplicationModal.RECEIVE_CRYPTO })
-  const { ENSName } = useENSName(accountAddress)
+  const { data: ENSName } = useENSName(accountAddress)
   const { unitag } = useUnitagByAddress(accountAddress)
   const hasSecondaryIdentifier = ENSName || unitag?.username
   const addressColor = useAddressColorProps(accountAddress)
@@ -46,13 +46,11 @@ export function AddressQRModal({ accountAddress }: { accountAddress: Address }) 
               <AddressDisplay enableCopyAddress address={accountAddress} />
             </ThemedText.SubHeader>
             {hasSecondaryIdentifier && (
-              <Text variant="heading3">
-                <SecondaryIdentifiers
-                  account={accountAddress!}
-                  ensUsername={ENSName}
-                  uniswapUsername={unitag?.username}
-                />
-              </Text>
+              <CopyHelper iconSize={14} iconPosition="right" toCopy={accountAddress}>
+                <Text variant="body4" color="neutral2">
+                  {shortenAddress(accountAddress)}
+                </Text>
+              </CopyHelper>
             )}
           </Flex>
           <QRCodeDisplay

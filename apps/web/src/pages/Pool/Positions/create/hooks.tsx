@@ -13,7 +13,6 @@ import { useIsPoolOutOfSync } from 'hooks/useIsPoolOutOfSync'
 import { PoolState, usePool } from 'hooks/usePools'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
 import { PairState, useV2Pair } from 'hooks/useV2Pairs'
-import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import {
@@ -43,6 +42,7 @@ import {
   protocolShouldCalculateTaxes,
   validateCurrencyInput,
 } from 'pages/Pool/Positions/create/utils'
+import { ParsedQs } from 'qs'
 import { useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
@@ -53,7 +53,9 @@ import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { getParsedChainId } from 'utils/chainParams'
 
 /**
@@ -80,7 +82,11 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
   )
 
   const poolsQueryEnabled = poolEnabledProtocolVersion(protocolVersion) && validCurrencyInput
-  const { data: poolData, isLoading: poolIsLoading } = useGetPoolsByTokens(
+  const {
+    data: poolData,
+    isLoading: poolIsLoading,
+    refetch: refetchPoolData,
+  } = useGetPoolsByTokens(
     {
       fee: state.fee.feeAmount,
       chainId,
@@ -161,6 +167,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
         currencies,
         protocolVersion: ProtocolVersion.V4,
         isPoolOutOfSync: false,
+        refetchPoolData: () => undefined,
       }
     }
 
@@ -172,6 +179,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
         creatingPoolOrPair,
         poolOrPairLoading: pairIsLoading,
         isPoolOutOfSync,
+        refetchPoolData,
       } satisfies CreateV2PositionInfo
     }
 
@@ -184,6 +192,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
         poolOrPairLoading: poolIsLoading,
         isPoolOutOfSync,
         poolId: pool?.poolId,
+        refetchPoolData,
       } satisfies CreateV3PositionInfo
     }
 
@@ -195,6 +204,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
       poolOrPairLoading: poolIsLoading,
       isPoolOutOfSync,
       poolId: pool?.poolId,
+      refetchPoolData,
     } satisfies CreateV4PositionInfo
   }, [
     TOKEN0,
@@ -208,6 +218,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
     pair,
     pairIsLoading,
     v3Pool,
+    refetchPoolData,
   ])
 }
 
@@ -341,7 +352,8 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
   const { protocolVersion, address, token0, token1, exactField, exactAmounts, deposit0Disabled, deposit1Disabled } =
     state
 
-  const [token0Balance, token1Balance] = useCurrencyBalances(address, [token0, token1])
+  const { balance: token0Balance } = useOnChainCurrencyBalance(token0, address)
+  const { balance: token1Balance } = useOnChainCurrencyBalance(token1, address)
 
   const [independentToken, dependentToken] = exactField === PositionField.TOKEN0 ? [token0, token1] : [token1, token0]
   const independentAmount = tryParseCurrencyAmount(exactAmounts[exactField], independentToken)
@@ -483,13 +495,23 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
   )
 }
 
+function getParsedHookAddrParam(params: ParsedQs): string | undefined {
+  const hookAddr = params?.hook
+  if (!hookAddr || typeof hookAddr !== 'string') {
+    return undefined
+  }
+  const validAddress = getValidAddress(hookAddr)
+  return validAddress || undefined
+}
+
 // Prefill currency inputs from URL search params ?currencyA=ETH&currencyB=0x123...&chain=base
-export function useInitialCurrencyInputs() {
+export function useInitialPoolInputs() {
   const { defaultChainId } = useEnabledChains()
   const defaultInitialToken = nativeOnChain(defaultChainId)
 
   const { useParsedQueryString } = useUrlContext()
   const parsedQs = useParsedQueryString()
+  const hookAddress = getParsedHookAddrParam(parsedQs)
   const parsedChainId = getParsedChainId(parsedQs)
   const supportedChainId = useSupportedChainId(parsedChainId) ?? defaultChainId
 
@@ -517,6 +539,7 @@ export function useInitialCurrencyInputs() {
     return {
       [PositionField.TOKEN0]: currencyA ?? currencyB ?? defaultInitialToken,
       [PositionField.TOKEN1]: currencyA && currencyB ? currencyB : undefined,
+      hook: hookAddress,
     }
-  }, [currencyA, currencyB, defaultInitialToken])
+  }, [currencyA, currencyB, hookAddress, defaultInitialToken])
 }

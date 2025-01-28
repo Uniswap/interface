@@ -210,10 +210,30 @@ export default function Pool() {
   const isLoadingPositions = !!account.address && (isLoading || !data)
 
   const combinedPositions = useMemo(() => {
-    return [...loadedPositions, ...(savedPositions.map((p) => p.data?.position) ?? [])]
+    return [
+      ...loadedPositions,
+      ...(savedPositions
+        .filter((position) => {
+          const matchesChain = !chainFilter || position.data?.position?.chainId === chainFilter
+          const matchesStatus =
+            position.data?.position?.status && statusFilter.includes(position.data?.position?.status)
+          const matchesVersion =
+            position.data?.position?.protocolVersion && versionFilter.includes(position.data?.position?.protocolVersion)
+          return matchesChain && matchesStatus && matchesVersion
+        })
+        .map((p) => p.data?.position) ?? []),
+    ]
       .map(parseRestPosition)
       .filter((position): position is PositionInfo => !!position)
-  }, [loadedPositions, savedPositions])
+      .reduce<PositionInfo[]>((unique, position) => {
+        const positionId = `${position.poolId}-${position.tokenId}-${position.chainId}`
+        const exists = unique.some((p) => `${p.poolId}-${p.tokenId}-${p.chainId}` === positionId)
+        if (!exists) {
+          unique.push(position)
+        }
+        return unique
+      }, [])
+  }, [loadedPositions, savedPositions, chainFilter, statusFilter, versionFilter])
 
   usePendingLPTransactionsChangeListener(refetch)
 

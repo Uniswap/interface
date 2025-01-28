@@ -1,14 +1,13 @@
 import {
   BatchSize,
   DatadogProvider,
-  DatadogProviderConfiguration,
   DdRum,
   SdkVerbosity,
   TrackingConsent,
   UploadFrequency,
 } from '@datadog/mobile-react-native'
 import { ErrorEventMapper } from '@datadog/mobile-react-native/lib/typescript/rum/eventMappers/errorEventMapper'
-import { PropsWithChildren, default as React } from 'react'
+import { PropsWithChildren, default as React, useEffect } from 'react'
 import { getDatadogEnvironment } from 'src/utils/version'
 import { config } from 'uniswap/src/config'
 import {
@@ -17,64 +16,85 @@ import {
   DynamicConfigs,
 } from 'uniswap/src/features/gating/configs'
 import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
-import { datadogEnabled, isDetoxBuild, isJestRun, localDevDatadogEnabled } from 'utilities/src/environment/constants'
+import { datadogEnabled, isE2EMode, isJestRun, localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
 
-export const SESSION_SAMPLE_RATE = 10 // percent
+// In case Statsig is not available
+export const MOBILE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE = 10 // percent
 
-const datadogConfig = new DatadogProviderConfiguration(
-  config.datadogClientToken,
-  getDatadogEnvironment(),
-  config.datadogProjectId,
-  datadogEnabled, // trackInteractions
-  datadogEnabled, // trackResources
-  datadogEnabled, // trackErrors
-  localDevDatadogEnabled ? TrackingConsent.GRANTED : undefined,
-)
+// Configuration for Datadog's automatic monitoring features:
+// - Error tracking: Captures and reports application errors
+// - User interactions: Monitors user events and actions
+// - Resource tracking: Traces network requests and API calls
+// Note: Can buffer up to 100 RUM events before SDK initialization
+// https://docs.datadoghq.com/real_user_monitoring/mobile_and_tv_monitoring/react_native/advanced_configuration/#delaying-the-initialization
+const datadogAutoInstrumentation = {
+  trackErrors: datadogEnabled,
+  trackInteractions: datadogEnabled,
+  trackResources: datadogEnabled,
+}
 
-Object.assign(datadogConfig, {
-  site: 'US1',
-  longTaskThresholdMs: 100,
-  nativeCrashReportEnabled: true,
-  verbosity: SdkVerbosity.INFO,
-  errorEventMapper: (event: ReturnType<ErrorEventMapper>) => {
-    const ignoredErrors = getDynamicConfigValue<
-      DynamicConfigs.DatadogIgnoredErrors,
-      DatadogIgnoredErrorsConfigKey,
-      DatadogIgnoredErrorsValType
-    >(DynamicConfigs.DatadogIgnoredErrors, DatadogIgnoredErrorsConfigKey.Errors, [])
+async function initializeDatadog(sessionSamplingRate: number | undefined): Promise<void> {
+  const datadogConfig = {
+    clientToken: config.datadogClientToken,
+    env: getDatadogEnvironment(),
+    applicationId: config.datadogProjectId,
+    trackingConsent: undefined,
+    site: 'US1',
+    longTaskThresholdMs: 100,
+    nativeCrashReportEnabled: true,
+    verbosity: SdkVerbosity.INFO,
+    errorEventMapper: (event: ReturnType<ErrorEventMapper>): ReturnType<ErrorEventMapper> | null => {
+      const ignoredErrors = getDynamicConfigValue<
+        DynamicConfigs.DatadogIgnoredErrors,
+        DatadogIgnoredErrorsConfigKey,
+        DatadogIgnoredErrorsValType
+      >(DynamicConfigs.DatadogIgnoredErrors, DatadogIgnoredErrorsConfigKey.Errors, [])
 
-    const ignoredError = ignoredErrors.find(({ messageContains }) => event?.message.includes(messageContains))
-    if (ignoredError) {
-      return Math.random() < ignoredError.sampleRate ? event : null
-    }
+      const ignoredError = ignoredErrors.find(({ messageContains }) => event?.message.includes(messageContains))
+      if (ignoredError) {
+        return Math.random() < ignoredError.sampleRate ? event : null
+      }
 
-    return event
-  },
-  sessionSampleRate: SESSION_SAMPLE_RATE,
-})
+      return event
+    },
+    sessionSamplingRate,
+  }
 
-if (localDevDatadogEnabled) {
-  Object.assign(datadogConfig, {
-    sessionSamplingRate: 100,
-    resourceTracingSamplingRate: 100,
-    uploadFrequency: UploadFrequency.FREQUENT,
-    batchSize: BatchSize.SMALL,
-    verbosity: SdkVerbosity.DEBUG,
-  })
+  if (localDevDatadogEnabled) {
+    Object.assign(datadogConfig, {
+      sessionSamplingRate: 100,
+      uploadFrequency: UploadFrequency.FREQUENT,
+      batchSize: BatchSize.SMALL,
+      verbosity: SdkVerbosity.DEBUG,
+      trackingConsent: TrackingConsent.GRANTED,
+    })
+  }
+
+  await DatadogProvider.initialize(datadogConfig)
 }
 
 /**
  * Wrapper component to provide Datadog to the app with our mobile app's
  * specific configuration.
  */
-export function DatadogProviderWrapper({ children }: PropsWithChildren): JSX.Element {
-  if (isDetoxBuild || isJestRun) {
+export function DatadogProviderWrapper({
+  children,
+  sessionSampleRate,
+}: PropsWithChildren<{ sessionSampleRate: number | undefined }>): JSX.Element {
+  useEffect(() => {
+    if (datadogEnabled && sessionSampleRate !== undefined) {
+      initializeDatadog(sessionSampleRate).catch(() => undefined)
+    }
+  }, [sessionSampleRate])
+
+  if (isE2EMode || isJestRun) {
     return <>{children}</>
   }
+  logger.setWalletDatadogEnabled(true)
   return (
     <DatadogProvider
-      configuration={datadogConfig}
+      configuration={datadogAutoInstrumentation}
       onInitialization={async () => {
         const sessionId = await DdRum.getCurrentSessionId()
         // we do not want to log anything if session is not sampled

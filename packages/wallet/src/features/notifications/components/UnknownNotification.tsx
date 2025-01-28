@@ -16,7 +16,7 @@ export function UnknownTxNotification({
 }: {
   notification: TransactionNotificationBase
 }): JSX.Element {
-  const { name: ensName } = useENS(chainId, tokenAddress)
+  const { name: ensName } = useENS({ nameOrAddress: tokenAddress, chainId })
   const currencyInfo = useCurrencyInfo(tokenAddress ? buildCurrencyId(chainId, tokenAddress) : undefined)
   const title = formUnknownTxTitle(txStatus, tokenAddress, ensName)
   const icon = currencyInfo ? (

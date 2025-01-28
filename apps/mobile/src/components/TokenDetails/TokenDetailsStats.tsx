@@ -55,10 +55,17 @@ const TokenDetailsMarketData = memo(function _TokenDetailsMarketData(): JSX.Elem
   const tokenMarket = useTokenMarketPartsFragment({ currencyId }).data?.market
   const projectMarkets = useTokenProjectMarketsPartsFragment({ currencyId }).data.project?.markets
 
+  const price = projectMarkets?.[0]?.price?.value || tokenMarket?.price?.value || undefined
   const marketCap = projectMarkets?.[0]?.marketCap?.value
   const volume = tokenMarket?.volume?.value
-  const priceHight52W = projectMarkets?.[0]?.priceHigh52W?.value ?? tokenMarket?.priceHigh52W?.value
-  const priceLow52W = projectMarkets?.[0]?.priceLow52W?.value ?? tokenMarket?.priceLow52W?.value
+  const rawPriceHigh52W = projectMarkets?.[0]?.priceHigh52W?.value || tokenMarket?.priceHigh52W?.value || undefined
+  const rawPriceLow52W = projectMarkets?.[0]?.priceLow52W?.value || tokenMarket?.priceLow52W?.value || undefined
+
+  // Use current price for 52w high/low if it exceeds the bounds
+  const priceHight52W =
+    price !== undefined && rawPriceHigh52W !== undefined ? Math.max(price, rawPriceHigh52W) : rawPriceHigh52W
+  const priceLow52W =
+    price !== undefined && rawPriceLow52W !== undefined ? Math.min(price, rawPriceLow52W) : rawPriceLow52W
   const fullyDilutedValuation = projectMarkets?.[0]?.fullyDilutedValuation?.value
 
   return (
@@ -136,6 +143,7 @@ export const TokenDetailsStats = memo(function _TokenDetailsStats(): JSX.Element
       includeFrench: language === Language.French,
       includeJapanese: language === Language.Japanese,
       includePortuguese: language === Language.Portuguese,
+      includeVietnamese: language === Language.Vietnamese,
       includeChineseSimplified: language === Language.ChineseSimplified,
       includeChineseTraditional: language === Language.ChineseTraditional,
     },
@@ -150,6 +158,7 @@ export const TokenDetailsStats = memo(function _TokenDetailsStats(): JSX.Element
     descriptions?.descriptionTranslations?.descriptionFrFr ||
     descriptions?.descriptionTranslations?.descriptionJaJp ||
     descriptions?.descriptionTranslations?.descriptionPtPt ||
+    descriptions?.descriptionTranslations?.descriptionViVn ||
     descriptions?.descriptionTranslations?.descriptionZhHans ||
     descriptions?.descriptionTranslations?.descriptionZhHant
 

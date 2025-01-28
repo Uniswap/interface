@@ -113,7 +113,8 @@ export function useAllTransactions(
 
   return {
     transactions,
-    loading: loadingV2 || loadingV3,
+    // useIsWindowVisible briefly initializes as false, which skips the GQL transaction query, so the "no data found" state initially flashes
+    loading: loadingV2 || loadingV3 || !isWindowVisible,
     errorV2,
     errorV3,
     loadMore,

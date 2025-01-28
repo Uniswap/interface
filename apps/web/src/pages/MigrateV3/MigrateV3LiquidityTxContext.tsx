@@ -3,6 +3,7 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
 import { V3PositionInfo } from 'components/Liquidity/types'
+import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'components/Liquidity/utils'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { PropsWithChildren, createContext, useContext, useMemo } from 'react'
@@ -18,13 +19,14 @@ import {
   MigrateV3PositionTxAndGasInfo,
 } from 'uniswap/src/features/transactions/liquidity/types'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
+import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useAccount } from 'wagmi'
 
 interface MigrateV3PositionTxContextType {
   txInfo?: MigrateV3PositionTxAndGasInfo
   gasFeeEstimateUSD?: CurrencyAmount<Currency>
-  error?: boolean
+  error: boolean | string
   refetch?: () => void
 }
 
@@ -74,7 +76,20 @@ export function MigrateV3PositionTxContextProvider({
       'x-universal-router-version': '2.0',
     },
     staleTime: 5 * ONE_SECOND_MS,
+    enabled: Boolean(increaseLiquidityApprovalParams),
   })
+
+  if (approvalError) {
+    logger.info(
+      'MigrateV3LiquidityTxContext',
+      'MigrateV3LiquidityTxContext',
+      parseErrorMessageTitle(approvalError, 'unknown CheckLpApprovalQuery'),
+      {
+        error: JSON.stringify(approvalError),
+        increaseLiquidityApprovalParams: JSON.stringify(increaseLiquidityApprovalParams),
+      },
+    )
+  }
 
   const migratePositionRequestArgs: MigrateLPPositionRequest | undefined = useMemo(() => {
     if (
@@ -97,7 +112,7 @@ export function MigrateV3PositionTxContextProvider({
     const tickLower = fullRange ? derivedPriceRangeInfo.tickSpaceLimits[0] : derivedPriceRangeInfo.ticks?.[0]
     const tickUpper = fullRange ? derivedPriceRangeInfo.tickSpaceLimits[1] : derivedPriceRangeInfo.ticks?.[1]
 
-    if (!tickLower || !tickUpper || !positionInfo.pool || !positionInfo.liquidity) {
+    if (tickLower === undefined || tickUpper === undefined || !positionInfo.pool || !positionInfo.liquidity) {
       return undefined
     }
     return {
@@ -163,6 +178,11 @@ export function MigrateV3PositionTxContextProvider({
     feeValue1?.quotient,
   ])
 
+  const isRangeValid =
+    derivedPriceRangeInfo.protocolVersion !== ProtocolVersion.V2 &&
+    !derivedPriceRangeInfo.invalidPrice &&
+    !derivedPriceRangeInfo.invalidRange
+
   const {
     data: migrateCalldata,
     error: migrateError,
@@ -170,7 +190,20 @@ export function MigrateV3PositionTxContextProvider({
   } = useMigrateV3LpPositionCalldataQuery({
     params: migratePositionRequestArgs,
     staleTime: 5 * ONE_SECOND_MS,
+    enabled: isRangeValid && !!migratePositionRequestArgs,
   })
+
+  if (migrateError) {
+    logger.info(
+      'MigrateV3LiquidityTxContext',
+      'MigrateV3LiquidityTxContext',
+      parseErrorMessageTitle(migrateError, 'unknown MigrateLpPositionCalldataQuery'),
+      {
+        error: JSON.stringify(migrateError),
+        migrateCalldataQueryParams: JSON.stringify(migratePositionRequestArgs),
+      },
+    )
+  }
 
   const validatedValue: MigrateV3PositionTxAndGasInfo | undefined = useMemo(() => {
     if (!migrateCalldata) {
@@ -216,7 +249,7 @@ export function MigrateV3PositionTxContextProvider({
     <MigrateV3PositionTxContext.Provider
       value={{
         txInfo: validatedValue,
-        error: Boolean(approvalError || migrateError),
+        error: getErrorMessageToDisplay({ approvalError, calldataError: migrateError }),
         refetch: approvalError ? approvalRefetch : migrateError ? migrateRefetch : undefined,
       }}
     >

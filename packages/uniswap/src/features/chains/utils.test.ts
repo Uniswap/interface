@@ -116,11 +116,10 @@ describe('hexadecimalStringToInt', () => {
 
 describe('getEnabledChains', () => {
   it('returns all mainnet chains', () => {
-    const featureFlaggedChainIds = SUPPORTED_CHAIN_IDS.filter((chainId) => chainId !== UniverseChainId.WorldChain)
-
-    expect(getEnabledChains({ isTestnetModeEnabled: false, featureFlaggedChainIds })).toEqual({
+    expect(getEnabledChains({ isTestnetModeEnabled: false, featureFlaggedChainIds: SUPPORTED_CHAIN_IDS })).toEqual({
       chains: [
         UniverseChainId.Mainnet,
+        UniverseChainId.Unichain,
         UniverseChainId.Polygon,
         UniverseChainId.ArbitrumOne,
         UniverseChainId.Optimism,
@@ -129,6 +128,7 @@ describe('getEnabledChains', () => {
         UniverseChainId.Blast,
         UniverseChainId.Avalanche,
         UniverseChainId.Celo,
+        UniverseChainId.WorldChain,
         UniverseChainId.Zora,
         UniverseChainId.Zksync,
       ],
@@ -136,8 +136,10 @@ describe('getEnabledChains', () => {
         Chain.Ethereum,
         Chain.Optimism,
         Chain.Bnb,
+        Chain.Unichain,
         Chain.Polygon,
         Chain.Zksync,
+        Chain.Worldchain,
         Chain.Base,
         Chain.Arbitrum,
         Chain.Celo,

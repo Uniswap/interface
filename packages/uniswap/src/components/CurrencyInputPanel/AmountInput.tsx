@@ -7,6 +7,7 @@ import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { useOnMobileAppState } from 'utilities/src/device/appState'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
+import { isMobileWeb } from 'utilities/src/platform'
 import noop from 'utilities/src/react/noop'
 
 export const numericInputRegex = RegExp('^\\d*(\\.\\d*)?$') // Matches only numeric values without commas
@@ -58,6 +59,13 @@ export function parseValue({
   maxDecimals?: number
 }): string {
   let parsedValue = value?.trim() ?? ''
+
+  // TODO(WEB-6085): remove this temporary fix
+  // Temp fix is necessary for mweb because the native decimal separator is determined by the device's language settings (e.g., "." for English),
+  // while the native keyboard uses the region settings (e.g., "," in Europe). This mismatch causes inconsistencies in input handling.
+  if (isMobileWeb) {
+    parsedValue = parsedValue.replace(/,/g, '.')
+  }
 
   // Replace all non-numeric characters, leaving the decimal and thousand separators.
   parsedValue = parsedValue.replace(/[^0-9.,]/g, '')

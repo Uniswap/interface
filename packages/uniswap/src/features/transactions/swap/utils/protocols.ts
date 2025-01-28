@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { getFeatureFlag, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export const DEFAULT_PROTOCOL_OPTIONS = [
   // `as const` allows us to derive a type narrower than ProtocolItems, and the `...` spread removes readonly, allowing DEFAULT_PROTOCOL_OPTIONS to be passed around as an argument without `readonly`
@@ -18,7 +18,7 @@ export function useProtocolsForChain(
   chainId?: UniverseChainId,
 ): ProtocolItems[] {
   const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
-  const priorityOrdersAllowed = useFeatureFlag(FeatureFlags.UniswapXPriorityOrders) && chainId === UniverseChainId.Base
+  const priorityOrdersAllowed = useUniswapXPriorityOrderFlag(chainId)
   const arbUniswapXAllowed =
     useFeatureFlag(FeatureFlags.SharedSwapArbitrumUniswapXExperiment) && chainId === UniverseChainId.ArbitrumOne
 
@@ -40,4 +40,24 @@ export function useProtocolsForChain(
 
     return protocols
   }, [uniswapXAllowedForChain, uniswapXEnabled, userSelectedProtocols, v4SwapAllowed])
+}
+
+export function useUniswapXPriorityOrderFlag(chainId?: UniverseChainId): boolean {
+  if (!chainId) {
+    return false
+  }
+
+  const flagName = UNISWAP_PRIORITY_ORDERS_CHAIN_FLAG_MAP[chainId]
+  if (!flagName) {
+    return false
+  }
+
+  return getFeatureFlag(flagName)
+}
+
+// These are primarily OP stack chains, since only Priority Orders can only operate on chains with Priority Gas Auctions (PGA)
+const UNISWAP_PRIORITY_ORDERS_CHAIN_FLAG_MAP: Partial<Record<UniverseChainId, FeatureFlags>> = {
+  [UniverseChainId.Base]: FeatureFlags.UniswapXPriorityOrdersBase,
+  [UniverseChainId.Optimism]: FeatureFlags.UniswapXPriorityOrdersOptimism,
+  [UniverseChainId.Unichain]: FeatureFlags.UniswapXPriorityOrdersUnichain,
 }

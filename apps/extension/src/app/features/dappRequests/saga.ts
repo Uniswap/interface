@@ -251,6 +251,11 @@ export function* handleSendTransaction(
     options: { request: transactionRequest },
     typeInfo: transactionTypeInfo ?? {
       type: TransactionType.Unknown,
+      dappInfo: {
+        name: dappInfo.displayName,
+        address: request.transaction.to,
+        icon: dappInfo.iconUrl,
+      },
     },
     transactionOriginType: TransactionOriginType.External,
   }

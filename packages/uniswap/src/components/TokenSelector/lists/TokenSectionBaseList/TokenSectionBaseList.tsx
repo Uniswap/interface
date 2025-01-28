@@ -23,6 +23,7 @@ export interface TokenSectionBaseListProps {
   keyExtractor?: (item: TokenOption | TokenOption[], index: number) => string
   renderItem: (info: ItemRowInfo) => JSX.Element | null
   renderSectionHeader?: (info: SectionRowInfo) => JSX.Element
+  renderSectionFooter?: (info: SectionRowInfo) => JSX.Element
   sections: TokenSection[]
   expandedItems?: string[]
 }

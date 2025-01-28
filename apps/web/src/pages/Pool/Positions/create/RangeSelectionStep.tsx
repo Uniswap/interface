@@ -5,6 +5,7 @@ import { LiquidityRangeInput } from 'components/Charts/LiquidityRangeInput/Liqui
 import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
 import { BaseQuoteFiatAmount } from 'pages/Pool/Positions/create/BaseQuoteFiatAmount'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
+import { PoolOutOfSyncError } from 'pages/Pool/Positions/create/PoolOutOfSyncError'
 import { Container } from 'pages/Pool/Positions/create/shared'
 import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useMemo, useState } from 'react'
@@ -32,10 +33,18 @@ enum RangeSelection {
 function DisplayCurrentPrice({ price }: { price?: Price<Currency, Currency> }) {
   return (
     <Flex gap="$gap8" row alignItems="center" $md={{ row: false, alignItems: 'flex-start' }}>
-      <Text variant="body3" color="$neutral2">
-        <Trans i18nKey="common.currentPrice.label" />
-      </Text>
-      <BaseQuoteFiatAmount price={price} base={price?.baseCurrency} quote={price?.quoteCurrency} />
+      {price ? (
+        <>
+          <Text variant="body3" color="$neutral2">
+            <Trans i18nKey="common.currentPrice.label" />
+          </Text>
+          <BaseQuoteFiatAmount price={price} base={price?.baseCurrency} quote={price?.quoteCurrency} />
+        </>
+      ) : (
+        <Text variant="body3" color="$neutral2">
+          <Trans i18nKey="common.currentPrice.unavailable" />
+        </Text>
+      )}
     </Flex>
   )
 }
@@ -45,7 +54,7 @@ const InitialPriceInput = () => {
 
   const { derivedPositionInfo } = useCreatePositionContext()
   const {
-    priceRangeState: { initialPrice, initialPriceInverted },
+    priceRangeState: { initialPrice, priceInverted },
     setPriceRangeState,
     derivedPriceRangeInfo,
   } = usePriceRangeContext()
@@ -53,7 +62,7 @@ const InitialPriceInput = () => {
   const [token0, token1] = derivedPositionInfo.currencies
   const [initialPriceBaseToken, initialPriceQuoteToken] = getInvertedTuple(
     derivedPositionInfo.currencies,
-    initialPriceInverted,
+    priceInverted,
   )
   const price = derivedPriceRangeInfo.price
 
@@ -64,9 +73,9 @@ const InitialPriceInput = () => {
   const handleSelectInitialPriceBaseToken = useCallback(
     (option: string) => {
       if (option === token0?.symbol) {
-        setPriceRangeState((prevState) => ({ ...prevState, initialPriceInverted: false }))
+        setPriceRangeState((prevState) => ({ ...prevState, priceInverted: false }))
       } else {
-        setPriceRangeState((prevState) => ({ ...prevState, initialPriceInverted: true }))
+        setPriceRangeState((prevState) => ({ ...prevState, priceInverted: true }))
       }
     },
     [token0?.symbol, setPriceRangeState],
@@ -329,21 +338,23 @@ export const SelectPriceRangeStep = ({
   )
 
   const price = derivedPriceRangeInfo.price
-  const { ticks, isSorted, prices, ticksAtLimit, pricesAtTicks, invalidPrice, invalidRange } = useMemo(() => {
-    if (derivedPriceRangeInfo.protocolVersion === ProtocolVersion.V2) {
-      return {
-        ticks: undefined,
-        isSorted: false,
-        prices: undefined,
-        pricesAtTicks: undefined,
-        ticksAtLimit: [false, false],
-        invalidPrice: false,
-        invalidRange: false,
+  const { ticks, isSorted, prices, ticksAtLimit, pricesAtTicks, invalidPrice, invalidRange, invertPrice } =
+    useMemo(() => {
+      if (derivedPriceRangeInfo.protocolVersion === ProtocolVersion.V2) {
+        return {
+          ticks: undefined,
+          isSorted: false,
+          prices: undefined,
+          pricesAtTicks: undefined,
+          ticksAtLimit: [false, false],
+          invalidPrice: false,
+          invalidRange: false,
+          invertPrice: false,
+        }
       }
-    }
 
-    return derivedPriceRangeInfo
-  }, [derivedPriceRangeInfo])
+      return derivedPriceRangeInfo
+    }, [derivedPriceRangeInfo])
   const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper } = useRangeHopCallbacks(
     derivedPositionInfo.protocolVersion === ProtocolVersion.V3
       ? {
@@ -406,9 +417,11 @@ export const SelectPriceRangeStep = ({
   ]
 
   const rangeSelectionInputValues = useMemo(() => {
+    const leftPrice = isSorted ? prices?.[0] : prices?.[1]?.invert()
+    const rightPrice = isSorted ? prices?.[1] : prices?.[0]?.invert()
     return [
-      ticksAtLimit[isSorted ? 0 : 1] ? '0' : prices?.[0]?.toSignificant(8) ?? '',
-      ticksAtLimit[isSorted ? 1 : 0] ? '∞' : prices?.[1]?.toSignificant(8) ?? '',
+      ticksAtLimit[isSorted ? 0 : 1] ? '0' : leftPrice?.toSignificant(8) ?? '',
+      ticksAtLimit[isSorted ? 1 : 0] ? '∞' : rightPrice?.toSignificant(8) ?? '',
     ]
   }, [isSorted, prices, ticksAtLimit])
 
@@ -486,6 +499,7 @@ export const SelectPriceRangeStep = ({
             ? t('position.provide.liquidityDescription')
             : t('position.provide.liquidityDescription.custom')}
         </Text>
+        <PoolOutOfSyncError />
         <Flex gap="$gap4">
           <Flex
             backgroundColor="$surface2"
@@ -497,7 +511,7 @@ export const SelectPriceRangeStep = ({
               px: '$spacing8',
             }}
           >
-            <DisplayCurrentPrice price={price} />
+            <DisplayCurrentPrice price={priceRangeState.priceInverted ? price?.invert() : price} />
             {!creatingPoolOrPair && !isPriceRangeInputV2Enabled && (
               <LiquidityChartRangeInput
                 currencyA={baseCurrency ?? undefined}
@@ -507,7 +521,7 @@ export const SelectPriceRangeStep = ({
                   LOWER: ticksAtLimit[0],
                   UPPER: ticksAtLimit[1],
                 }}
-                price={price ? parseFloat(price.toSignificant(8)) : undefined}
+                price={price ? parseFloat((invertPrice ? price.invert() : price).toSignificant(8)) : undefined}
                 priceLower={pricesAtTicks?.[0]}
                 priceUpper={pricesAtTicks?.[1]}
                 onLeftRangeInput={(text) => handleChartRangeInput(RangeSelectionInput.MIN, text)}
@@ -526,8 +540,16 @@ export const SelectPriceRangeStep = ({
                 protocolVersion={derivedPositionInfo.protocolVersion}
                 poolId={derivedPositionInfo.poolId}
                 disableBrushInteraction={priceRangeState.fullRange}
-                minPrice={priceRangeState.fullRange ? undefined : parseFloat(prices?.[0]?.toSignificant(8) ?? '0')}
-                maxPrice={priceRangeState.fullRange ? undefined : parseFloat(prices?.[1]?.toSignificant(8) ?? '0')}
+                minPrice={
+                  priceRangeState.fullRange
+                    ? undefined
+                    : parseFloat((invertPrice ? prices?.[0]?.invert() : prices?.[0])?.toSignificant(8) ?? '0')
+                }
+                maxPrice={
+                  priceRangeState.fullRange
+                    ? undefined
+                    : parseFloat((invertPrice ? prices?.[1]?.invert() : prices?.[1])?.toSignificant(8) ?? '0')
+                }
                 setMinPrice={(minPrice?: number) => {
                   handleChartRangeInput(RangeSelectionInput.MIN, minPrice?.toString())
                 }}

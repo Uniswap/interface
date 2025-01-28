@@ -3,7 +3,7 @@ import LineChart from 'components/Charts/SparklineChart/LineChart'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { curveCardinal, scaleLinear } from 'd3'
-import { SparklineMap, TopToken } from 'graphql/data/types'
+import { SparklineMap } from 'graphql/data/types'
 import { PricePoint } from 'graphql/data/util'
 import styled, { useTheme } from 'lib/styled-components'
 import { memo } from 'react'
@@ -30,7 +30,7 @@ const SparkLineLoadingBubble = styled(LongLoadingBubble)`
 interface SparklineChartProps {
   width: number
   height: number
-  tokenData: TopToken | TokenStat
+  tokenData: TokenStat
   pricePercentChange?: number | null
   sparklineMap: SparklineMap
 }

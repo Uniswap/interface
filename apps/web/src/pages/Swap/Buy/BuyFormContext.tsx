@@ -149,8 +149,11 @@ function useDerivedBuyFormInfo(state: BuyFormState): BuyInfo {
       }
       return new BuyFormError(t('common.card.error.description'))
     }
+    if (quotes?.quotes && quotes.quotes.length === 0) {
+      return new BuyFormError(t('fiatOnRamp.noQuotes.error'))
+    }
     return undefined
-  }, [meldSupportedFiatCurrency, quotesError, t])
+  }, [meldSupportedFiatCurrency, quotes?.quotes, quotesError, t])
 
   return useMemo(
     () => ({

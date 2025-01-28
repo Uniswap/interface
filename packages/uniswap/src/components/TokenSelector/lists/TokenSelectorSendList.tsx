@@ -87,6 +87,7 @@ function _TokenSelectorSendList({
 
   return (
     <TokenSelectorList
+      showTokenAddress
       chainFilter={chainFilter}
       emptyElement={emptyElement}
       hasError={Boolean(error)}

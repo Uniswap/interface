@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { SearchableRecipient } from 'uniswap/src/features/address/types'
 import { uniqueAddressesOnly } from 'uniswap/src/features/address/utils'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { selectWatchedAddressSet } from 'uniswap/src/features/favorites/selectors'
 import { selectRecipientsByRecency } from 'uniswap/src/features/transactions/selectors'
@@ -38,9 +37,16 @@ function useValidatedSearchedAddress(
     loading: dotEthLoading,
     address: dotEthAddress,
     name: dotEthName,
-  } = useENS(UniverseChainId.Mainnet, searchTerm, true)
+  } = useENS({ nameOrAddress: searchTerm, autocompleteDomain: true })
 
-  const { loading: ensLoading, address: ensAddress, name: ensName } = useENS(UniverseChainId.Mainnet, searchTerm, false)
+  const {
+    loading: ensLoading,
+    address: ensAddress,
+    name: ensName,
+  } = useENS({
+    nameOrAddress: searchTerm,
+    autocompleteDomain: false,
+  })
 
   const { loading: unitagLoading, unitag } = useUnitagByName(searchTerm ?? undefined)
 

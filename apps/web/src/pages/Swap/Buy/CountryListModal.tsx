@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { CloseIcon } from 'theme/components'
-import { Flex, styled, useSporeColors } from 'ui/src'
+import { Flex, styled, useMedia, useSporeColors } from 'ui/src'
 import { Text } from 'ui/src/components/text/Text'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -64,11 +64,13 @@ export function CountryListModal({
     onDismiss()
   }, [onDismiss])
 
+  const sm = useMedia().sm
+
   return (
     <Modal
       name={ModalName.FiatOnRampCountryList}
       maxWidth={420}
-      height={700}
+      height={sm ? '100vh' : '100%'}
       maxHeight={700}
       isModalOpen={isOpen}
       onClose={onDismiss}

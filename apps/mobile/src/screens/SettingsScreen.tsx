@@ -18,6 +18,10 @@ import { WalletSettings } from 'src/components/Settings/WalletSettings'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricName, useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
+import {
+  NotificationPermission,
+  useNotificationOSPermissionsEnabled,
+} from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { useHapticFeedback } from 'src/utils/haptics/useHapticFeedback'
 import { Flex, IconProps, Text, useSporeColors } from 'ui/src'
@@ -29,6 +33,7 @@ import LockIcon from 'ui/src/assets/icons/lock.svg'
 import MessageQuestion from 'ui/src/assets/icons/message-question.svg'
 import UniswapIcon from 'ui/src/assets/icons/uniswap-logo.svg'
 import {
+  Bell,
   Chart,
   Coins,
   Feedback,
@@ -104,6 +109,8 @@ export function SettingsScreen(): JSX.Element {
   }, [setHapticsEnabled, hapticsEnabled])
 
   const [isTestnetModalOpen, setIsTestnetModalOpen] = useState(false)
+  const { notificationPermissionsEnabled: notificationOSPermission } = useNotificationOSPermissionsEnabled()
+
   const { isTestnetModeEnabled } = useEnabledChains()
   const handleTestnetModeToggle = useCallback((): void => {
     const newIsTestnetMode = !isTestnetModeEnabled
@@ -180,6 +187,18 @@ export function SettingsScreen(): JSX.Element {
             text: t('settings.setting.language.title'),
             currentSetting: currentLanguage,
             icon: <Language {...iconProps} />,
+          },
+          {
+            screen: MobileScreens.SettingsNotifications,
+            text: t('settings.setting.notifications.title'),
+            icon: <Bell {...iconProps} />,
+            checkIfCanProceed: (): boolean => {
+              if (notificationOSPermission === NotificationPermission.Enabled) {
+                return true
+              }
+              navigation.navigate(ModalName.NotificationsOSSettings)
+              return false
+            },
           },
           {
             text: t('settings.setting.smallBalances.title'),
@@ -339,6 +358,8 @@ export function SettingsScreen(): JSX.Element {
     hasCloudBackup,
     isTestnetModeEnabled,
     handleTestnetModeToggle,
+    notificationOSPermission,
+    navigation,
   ])
 
   const renderItem = ({
@@ -350,7 +371,9 @@ export function SettingsScreen(): JSX.Element {
     if ('component' in item) {
       return item.component
     }
-    return <SettingsRow key={item.screen} navigation={navigation} page={item} />
+    return (
+      <SettingsRow key={item.screen} navigation={navigation} page={item} checkIfCanProceed={item.checkIfCanProceed} />
+    )
   }
 
   const handleModalClose = useCallback(() => setIsTestnetModalOpen(false), [])
@@ -367,13 +390,17 @@ export function SettingsScreen(): JSX.Element {
           keyExtractor={(_item, index): string => 'settings' + index}
           renderItem={renderItem}
           renderSectionFooter={(): JSX.Element => <Flex pt="$spacing24" />}
-          renderSectionHeader={({ section: { subTitle } }): JSX.Element => (
-            <Flex backgroundColor="$surface1" py="$spacing12">
-              <Text color="$neutral2" variant="body1">
-                {subTitle}
-              </Text>
-            </Flex>
-          )}
+          renderSectionHeader={({ section: { subTitle } }): JSX.Element =>
+            subTitle ? (
+              <Flex backgroundColor="$surface1" py="$spacing12">
+                <Text color="$neutral2" variant="body1">
+                  {subTitle}
+                </Text>
+              </Flex>
+            ) : (
+              <></>
+            )
+          }
           sections={sections.filter((p) => !p.isHidden)}
           showsVerticalScrollIndicator={false}
         />

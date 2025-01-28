@@ -150,7 +150,7 @@ Note: If you are indeed using an Apple Silicon Mac, we recommend setting up your
 
 You should start with downloading Xcode if you don't already have it installed, since the file is so large. You can find it here: [developer.apple.com/xcode](https://developer.apple.com/xcode/)
 
-You must use **XCode 15** to compile the app. [Older versions of xCode can be found here](https://developer.apple.com/download/all/?q=xcode).
+You must use the [Required Xcode Version](https://github.com/Uniswap/universe/blob/main/apps/mobile/scripts/podinstall.sh#L5) to compile the app. [Older versions of xCode can be found here](https://developer.apple.com/download/all/?q=xcode).
 
 #### Add Xcode Command Line Tools
 

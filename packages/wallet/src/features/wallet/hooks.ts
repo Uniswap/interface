@@ -30,6 +30,29 @@ export function useAccounts(): Record<string, Account> {
   return useSelector(selectAccounts)
 }
 
+/**
+ * Hook used to get a list of all accounts
+ * @returns list of accounts, with signer accounts first sorted by derivation index then view only accounts sorted by time imported
+ */
+export function useAccountsList(): Account[] {
+  const addressToAccount = useAccounts()
+
+  return useMemo(() => {
+    const accounts = Object.values(addressToAccount)
+    const _mnemonicWallets = accounts
+      .filter((a): a is SignerMnemonicAccount => a.type === AccountType.SignerMnemonic)
+      .sort((a, b) => {
+        return a.derivationIndex - b.derivationIndex
+      })
+    const _viewOnlyWallets = accounts
+      .filter((a) => a.type === AccountType.Readonly)
+      .sort((a, b) => {
+        return a.timeImportedMs - b.timeImportedMs
+      })
+    return [..._mnemonicWallets, ..._viewOnlyWallets]
+  }, [addressToAccount])
+}
+
 export function useAccount(address: Address): Account {
   const account = useSelector(selectAccounts)[address]
   if (!account) {

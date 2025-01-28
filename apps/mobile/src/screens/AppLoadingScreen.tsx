@@ -40,7 +40,7 @@ function useFinishAutomatedRecovery(navigation: Props['navigation']): {
   const dispatch = useDispatch()
   const { setRecoveredImportedAccounts, finishOnboarding } = useOnboardingContext()
 
-  const notificationOSPermission = useNotificationOSPermissionsEnabled()
+  const { notificationPermissionsEnabled: notificationOSPermission } = useNotificationOSPermissionsEnabled()
   const hasAnyNotificationsEnabled = useSelector(selectAnyAddressHasNotificationsEnabled)
   const { deviceSupportsBiometrics } = useBiometricContext()
   const { requiredForTransactions: isBiometricAuthEnabled } = useBiometricAppSettings()

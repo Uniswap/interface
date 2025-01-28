@@ -6,17 +6,22 @@ import { isInterface } from 'utilities/src/platform'
 export enum FeatureFlags {
   // Shared
   Datadog,
+  EmbeddedWallet,
   ForAggregator,
   IndicativeSwapQuotes,
   InstantTokenBalanceUpdate,
   MonadTestnet,
   PortionFields,
   SharedSwapArbitrumUniswapXExperiment,
-  TokenProtection,
+  TokenSelectorTrendingTokens,
+  TwoSecondSwapQuotePollingInterval,
+  Unichain,
   UnichainPromo,
   UniswapX,
-  UniswapXPriorityOrders,
   V4Swap,
+  UniswapXPriorityOrdersBase,
+  UniswapXPriorityOrdersOptimism,
+  UniswapXPriorityOrdersUnichain,
 
   // Wallet
   DisableFiatOnRampKorea,
@@ -24,8 +29,8 @@ export enum FeatureFlags {
   ExtensionAutoConnect,
   ExtensionClaimUnitag,
   ExtensionPromotionGA,
-  FeedTab,
   FiatOffRamp,
+  NotificationPriceAlerts,
   OnboardingKeyring,
   OpenAIAssistant,
   PrivateRpc,
@@ -44,6 +49,7 @@ export enum FeatureFlags {
   L2NFTs,
   LimitsFees,
   LPRedesign,
+  MigrateV3ToV4,
   MultipleRoutingOptions,
   NavigationHotkeys,
   PriceRangeInputV2,
@@ -56,25 +62,25 @@ export enum FeatureFlags {
   UniversalSwap,
   V4Data,
   Zora,
-
-  // TODO(WEB-3625): Remove these once we have a generalized system for outage banners.
-  OutageBannerArbitrum,
-  OutageBannerOptimism,
-  OutageBannerPolygon,
 }
 
 // These names must match the gate name on statsig
 export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.Datadog, 'datadog'],
+  [FeatureFlags.EmbeddedWallet, 'embedded_wallet'],
   [FeatureFlags.IndicativeSwapQuotes, 'indicative-quotes'],
   [FeatureFlags.InstantTokenBalanceUpdate, 'instant-token-balance-update'],
   [FeatureFlags.MonadTestnet, 'monad_testnet'],
   [FeatureFlags.PortionFields, 'portion-fields'],
   [FeatureFlags.SharedSwapArbitrumUniswapXExperiment, 'shared_swap_arbitrum_uniswapx_experiment'],
-  [FeatureFlags.TokenProtection, 'token_protection'],
+  [FeatureFlags.TokenSelectorTrendingTokens, 'token_selector_trending_tokens'],
+  [FeatureFlags.TwoSecondSwapQuotePollingInterval, 'two_second_swap_quote_polling_interval'],
+  [FeatureFlags.Unichain, 'unichain'],
   [FeatureFlags.UnichainPromo, 'unichain_promo'],
   [FeatureFlags.UniswapX, 'uniswapx'],
-  [FeatureFlags.UniswapXPriorityOrders, 'uniswapx_priority_orders'],
+  [FeatureFlags.UniswapXPriorityOrdersBase, 'uniswapx_priority_orders_base'],
+  [FeatureFlags.UniswapXPriorityOrdersOptimism, 'uniswapx_priority_orders_optimism'],
+  [FeatureFlags.UniswapXPriorityOrdersUnichain, 'uniswapx_priority_orders_unichain'],
   [FeatureFlags.V4Swap, 'v4_swap'],
 ])
 
@@ -90,12 +96,9 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.L2NFTs, 'l2_nfts'],
   [FeatureFlags.LPRedesign, 'lp_redesign'],
   [FeatureFlags.LimitsFees, 'limits_fees'],
+  [FeatureFlags.MigrateV3ToV4, 'migrate-v3-to-v4'],
   [FeatureFlags.MultipleRoutingOptions, 'multiple_routing_options'],
   [FeatureFlags.NavigationHotkeys, 'navigation_hotkeys'],
-  // TODO(WEB-3625): Remove these once we have a generalized system for outage banners.
-  [FeatureFlags.OutageBannerArbitrum, 'outage_banner_feb_2024_arbitrum'],
-  [FeatureFlags.OutageBannerOptimism, 'outage_banner_feb_2024_optimism'],
-  [FeatureFlags.OutageBannerPolygon, 'outage_banner_feb_2024_polygon'],
 
   [FeatureFlags.PriceRangeInputV2, 'price_range_input_v2'],
   [FeatureFlags.QuickRouteMainnet, 'enable_quick_route_mainnet'],
@@ -117,9 +120,9 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.ExtensionAutoConnect, 'extension-auto-connect'],
   [FeatureFlags.ExtensionClaimUnitag, 'extension-claim-unitag'],
   [FeatureFlags.ExtensionPromotionGA, 'extension-promotion-ga'],
-  [FeatureFlags.FeedTab, 'feed-tab'],
   [FeatureFlags.FiatOffRamp, 'fiat-offramp'],
   [FeatureFlags.ForAggregator, 'for-aggregator'],
+  [FeatureFlags.NotificationPriceAlerts, 'notification_price_alerts'],
   [FeatureFlags.OnboardingKeyring, 'onboarding-keyring'],
   [FeatureFlags.OpenAIAssistant, 'openai-assistant'],
   [FeatureFlags.PrivateRpc, 'mev-blocker'],

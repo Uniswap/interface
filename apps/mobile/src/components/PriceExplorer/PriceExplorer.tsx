@@ -24,7 +24,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { isDetoxBuild } from 'utilities/src/environment/constants'
+import { isE2EMode } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { isAndroid } from 'utilities/src/platform'
 
@@ -126,7 +126,7 @@ export const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Eleme
   const { convertFiatAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount(1).amount
   const shouldShowAnimatedDot =
-    (selectedDuration === HistoryDuration.Day || selectedDuration === HistoryDuration.Hour) && !isDetoxBuild
+    (selectedDuration === HistoryDuration.Day || selectedDuration === HistoryDuration.Hour) && !isE2EMode
   const additionalPadding = shouldShowAnimatedDot ? 40 : 0
 
   const { lastPricePoint, convertedPriceHistory } = useMemo(() => {

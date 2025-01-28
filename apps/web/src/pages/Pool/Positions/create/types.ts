@@ -6,6 +6,7 @@ import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { Dispatch, SetStateAction } from 'react'
 import { PositionField } from 'types/position'
+import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 
 export type FeeData = {
   feeAmount: number
@@ -34,12 +35,14 @@ export interface PositionState {
   currencyInputs: { [field in PositionField]?: Currency }
   fee: FeeData
   hook?: string
+  userApprovedHook?: string // address of approved hook. If different from `hook`, user needs to reapprove the new hook
 }
 
 export const DEFAULT_POSITION_STATE: PositionState = {
   currencyInputs: {},
   fee: { feeAmount: FeeAmount.MEDIUM, tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM] },
   hook: undefined,
+  userApprovedHook: undefined,
   protocolVersion: ProtocolVersion.V4,
 }
 
@@ -51,6 +54,7 @@ type BaseCreatePositionInfo = {
   poolId?: string
   poolOrPairLoading?: boolean
   isPoolOutOfSync: boolean
+  refetchPoolData: () => void
 }
 
 export type CreateV4PositionInfo = BaseCreatePositionInfo & {
@@ -86,6 +90,8 @@ export type CreatePositionContextType = {
   setFeeTierSearchModalOpen: Dispatch<SetStateAction<boolean>>
   dynamicFeeTierSpeedbumpData: DynamicFeeTierSpeedbumpData
   setDynamicFeeTierSpeedbumpData: Dispatch<SetStateAction<DynamicFeeTierSpeedbumpData>>
+  currentTransactionStep?: { step: TransactionStep; accepted: boolean }
+  setCurrentTransactionStep: Dispatch<SetStateAction<{ step: TransactionStep; accepted: boolean } | undefined>>
 }
 
 export interface PriceRangeState {
@@ -94,7 +100,6 @@ export interface PriceRangeState {
   // When these are undefined, LiquidityChartRangeInput will calculate and set reasonable default values.
   minPrice?: string
   maxPrice?: string
-  initialPriceInverted: boolean
   initialPrice: string
 }
 

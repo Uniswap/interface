@@ -8,6 +8,7 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { DecimalPadProps, KeyAction, KeyLabel } from 'uniswap/src/features/transactions/DecimalPadInput/types'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const KEY_PRESS_ANIMATION_DURATION_MS = 150
 
@@ -15,6 +16,7 @@ type KeyProps = {
   action: KeyAction
   label: KeyLabel
   hidden?: boolean
+  testID?: string
 }
 
 type SizeMultiplier = {
@@ -51,36 +53,70 @@ export const DecimalPad = memo(function DecimalPad({
         {
           label: '1',
           action: KeyAction.Insert,
+          testID: TestID.DecimalPadNumber1,
         },
         {
           label: '2',
           action: KeyAction.Insert,
+          testID: TestID.DecimalPadNumber2,
         },
         {
           label: '3',
           action: KeyAction.Insert,
+          testID: TestID.DecimalPadNumber3,
         },
       ],
       [
-        { label: '4', action: KeyAction.Insert },
-        { label: '5', action: KeyAction.Insert },
-        { label: '6', action: KeyAction.Insert },
+        {
+          label: '4',
+          action: KeyAction.Insert,
+          testID: TestID.DecimalPadNumber4,
+        },
+        {
+          label: '5',
+          action: KeyAction.Insert,
+          testID: TestID.DecimalPadNumber5,
+        },
+        {
+          label: '6',
+          action: KeyAction.Insert,
+          testID: TestID.DecimalPadNumber6,
+        },
       ],
       [
-        { label: '7', action: KeyAction.Insert },
-        { label: '8', action: KeyAction.Insert },
-        { label: '9', action: KeyAction.Insert },
+        {
+          label: '7',
+          action: KeyAction.Insert,
+          testID: TestID.DecimalPadNumber7,
+        },
+        {
+          label: '8',
+          action: KeyAction.Insert,
+          testID: TestID.DecimalPadNumber8,
+        },
+        {
+          label: '9',
+          action: KeyAction.Insert,
+          testID: TestID.DecimalPadNumber9,
+        },
       ],
       [
         {
           label: '.',
           action: KeyAction.Insert,
           hidden: hideDecimal,
+          testID: TestID.DecimalPadDecimal,
         },
-        { label: '0', action: KeyAction.Insert, align: 'center' },
+        {
+          label: '0',
+          action: KeyAction.Insert,
+          testID: TestID.DecimalPadNumber0,
+          align: 'center',
+        },
         {
           label: 'backspace',
           action: KeyAction.Delete,
+          testID: TestID.DecimalPadBackspace,
         },
       ],
     ]
@@ -177,6 +213,7 @@ const KeyButton = memo(function KeyButton({
   onPress,
   onLongPressStart,
   onLongPressEnd,
+  testID,
 }: KeyButtonProps): JSX.Element {
   const { decimalSeparator } = useAppFiatCurrencyInfo()
 
@@ -228,6 +265,7 @@ const KeyButton = memo(function KeyButton({
         height="100%"
         px={spacing.spacing16 * sizeMultiplier.padding}
         py={spacing.spacing12 * sizeMultiplier.padding}
+        testID={testID || label}
       >
         <AnimatedFlex grow alignItems="center" style={animatedStyle}>
           {label === 'backspace' ? (

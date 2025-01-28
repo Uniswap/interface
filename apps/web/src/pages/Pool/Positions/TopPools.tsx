@@ -1,6 +1,6 @@
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { LoadingRows } from 'components/Loader/styled'
-import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { PoolSortFields } from 'graphql/data/pools/useTopPools'
 import { OrderDirection, gqlToCurrency, supportedChainIdFromGQLChain, unwrapToken } from 'graphql/data/util'
 import { ExternalArrowLink, LoadingRow } from 'pages/Pool/Positions/shared'
@@ -39,7 +39,7 @@ function TopPoolCard({ pool }: { pool: PoolStat }) {
       onPress={() => navigate(`/explore/pools/${toGraphQLChain(chainId ?? defaultChainId).toLowerCase()}/${pool.id}`)}
     >
       <Flex row gap="$gap16">
-        <DoubleCurrencyAndChainLogo chainId={chainId} currencies={[token0, token1]} size={44} />
+        <DoubleCurrencyLogo currencies={[token0, token1]} size={44} />
         <Flex gap="$gap4">
           <Text variant="subheading2">
             {token0?.symbol} / {token1?.symbol}

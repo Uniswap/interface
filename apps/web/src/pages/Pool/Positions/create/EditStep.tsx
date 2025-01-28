@@ -124,39 +124,47 @@ export const EditRangeSelectionStep = (props?: FlexProps) => {
 
   return (
     <EditStep onClick={handleEdit} {...props}>
-      <Flex grow flexBasis={1} row gap="$gap20" alignItems="center" $md={{ row: false, gap: 10 }}>
-        {!!liquidityRangeChartProps && (
-          <LiquidityPositionRangeChart grow={isMobile ? false : true} {...liquidityRangeChartProps} />
-        )}
+      <Flex
+        grow
+        flexBasis={1}
+        row
+        gap="$gap20"
+        alignItems="center"
+        justifyContent="space-between"
+        $md={{ row: false, gap: 10 }}
+      >
+        {!!liquidityRangeChartProps && <LiquidityPositionRangeChart grow={false} {...liquidityRangeChartProps} />}
         {isMobile ? (
           <Flex row gap={10} alignItems="center" alignSelf="flex-start">
             <Text variant="body4">{`${formattedPrices[0]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
             <ArrowsLeftRight size={iconSizes.icon16} color="$neutral2" />
             <Text variant="body4">{`${formattedPrices[1]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
           </Flex>
-        ) : (
-          <Flex row>
-            {!isFullRange ? (
-              <Flex gap="$gap4">
-                <Flex row gap={10}>
-                  <Text variant="body2" color="$neutral2">
-                    <Trans i18nKey="common.min" />
-                  </Text>
-                  <Text variant="body2">{`${formattedPrices[0]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
-                </Flex>
-                <Flex row gap={10}>
-                  <Text variant="body2" color="$neutral2">
-                    <Trans i18nKey="common.max" />
-                  </Text>
-                  <Text variant="body2">{`${formattedPrices[1]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
-                </Flex>
-              </Flex>
-            ) : (
+        ) : !isFullRange ? (
+          <Flex gap="$gap4" flex={1}>
+            <Flex row gap={10}>
               <Text variant="body2" color="$neutral2">
-                <Trans i18nKey="common.fullRange" />
+                <Trans i18nKey="common.min" />
               </Text>
-            )}
+              <Text
+                variant="body2"
+                ellipse
+              >{`${formattedPrices[0]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
+            </Flex>
+            <Flex row gap={10}>
+              <Text variant="body2" color="$neutral2">
+                <Trans i18nKey="common.max" />
+              </Text>
+              <Text
+                variant="body2"
+                ellipse
+              >{`${formattedPrices[1]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
+            </Flex>
           </Flex>
+        ) : (
+          <Text variant="body2" color="$neutral2">
+            <Trans i18nKey="common.fullRange" />
+          </Text>
         )}
       </Flex>
     </EditStep>

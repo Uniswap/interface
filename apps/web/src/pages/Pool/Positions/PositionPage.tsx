@@ -9,6 +9,7 @@ import { PositionNFT } from 'components/Liquidity/PositionNFT'
 import { useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
 import { parseRestPosition } from 'components/Liquidity/utils'
 import { LoadingFullscreen, LoadingRows } from 'components/Loader/styled'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
 import NotFound from 'pages/NotFound'
@@ -25,6 +26,7 @@ import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { DeprecatedButton, Flex, Main, Switch, Text, styled } from 'ui/src'
+import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -37,6 +39,7 @@ import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
 import { useAccount } from 'wagmi'
 
 const BodyWrapper = styled(Main, {
@@ -79,10 +82,10 @@ export const HeaderButton = styled(Flex, {
       true: {
         cursor: 'default',
         hoverStyle: {
-          opacity: 1,
+          opacity: 0.5,
         },
         pressStyle: {
-          opacity: 1,
+          opacity: 0.5,
         },
       },
     },
@@ -141,6 +144,7 @@ function PositionPage() {
 
   const { value: lpRedesignEnabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.LPRedesign)
   const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
+  const isMigrateEnabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
 
   const { formatCurrencyAmount } = useFormatter()
   const navigate = useNavigate()
@@ -209,6 +213,8 @@ function PositionPage() {
   const hasFees = feeValue0?.greaterThan(0) || feeValue1?.greaterThan(0) || false
   const isOwner = addressesAreEquivalent(positionInfo.owner, account?.address)
 
+  const showV4UnsupportedTooltip = isV4UnsupportedChain(positionInfo.chainId)
+
   return (
     <Trace
       logImpression
@@ -246,17 +252,24 @@ function PositionPage() {
             <LiquidityPositionInfo positionInfo={positionInfo} />
             {status !== PositionStatus.CLOSED && isOwner && (
               <Flex row gap="$gap12" alignItems="center" flexWrap="wrap">
-                {positionInfo.version === ProtocolVersion.V3 && isV4DataEnabled && (
-                  <HeaderButton
-                    emphasis="secondary"
-                    onPress={() => {
-                      navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenIdFromUrl}`)
-                    }}
+                {positionInfo.version === ProtocolVersion.V3 && isV4DataEnabled && isMigrateEnabled && (
+                  <MouseoverTooltip
+                    text={t('pool.migrateLiquidityDisabledTooltip')}
+                    disabled={!showV4UnsupportedTooltip}
                   >
-                    <Text variant="buttonLabel2" color="$neutral1">
-                      <Trans i18nKey="pool.migrateToV4" />
-                    </Text>
-                  </HeaderButton>
+                    <HeaderButton
+                      emphasis="secondary"
+                      disabled={showV4UnsupportedTooltip}
+                      opacity={showV4UnsupportedTooltip ? 0.5 : 1}
+                      onPress={() => {
+                        navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenIdFromUrl}`)
+                      }}
+                    >
+                      <Text variant="buttonLabel2" color="$neutral1">
+                        <Trans i18nKey="pool.migrateToV4" />
+                      </Text>
+                    </HeaderButton>
+                  </MouseoverTooltip>
                 )}
                 <HeaderButton
                   emphasis="secondary"
@@ -314,12 +327,21 @@ function PositionPage() {
                   <Trans i18nKey="common.liquidity" />
                 </Text>
                 <Text variant="heading2">
-                  {fiatValue0 && fiatValue1
-                    ? formatCurrencyAmount({
-                        amount: fiatValue0.add(fiatValue1),
-                        type: NumberType.FiatTokenPrice,
-                      })
-                    : '-'}
+                  {fiatValue0 && fiatValue1 ? (
+                    formatCurrencyAmount({
+                      amount: fiatValue0.add(fiatValue1),
+                      type: NumberType.FiatTokenPrice,
+                    })
+                  ) : (
+                    <MouseoverTooltip text={t('pool.positions.usdValueUnavailable.tooltip')} placement="right">
+                      <Flex alignItems="center" row gap="$gap8">
+                        <Text variant="body1" color="$neutral2">
+                          {t('pool.positions.usdValueUnavailable')}
+                        </Text>
+                        <InfoCircleFilled color="$neutral2" size="$icon.16" />
+                      </Flex>
+                    </MouseoverTooltip>
+                  )}
                 </Text>
               </Flex>
               <LiquidityPositionAmountsTile
@@ -355,12 +377,21 @@ function PositionPage() {
                 )}
               </Flex>
               <Text variant="heading2" mt="$spacing8" mb="$spacing16">
-                {fiatFeeValue0 && fiatFeeValue1
-                  ? formatCurrencyAmount({
-                      amount: fiatFeeValue0.add(fiatFeeValue1),
-                      type: NumberType.FiatTokenPrice,
-                    })
-                  : '-'}
+                {fiatFeeValue0 && fiatFeeValue1 ? (
+                  formatCurrencyAmount({
+                    amount: fiatFeeValue0.add(fiatFeeValue1),
+                    type: NumberType.FiatTokenPrice,
+                  })
+                ) : (
+                  <MouseoverTooltip text={t('pool.positions.usdValueUnavailable.tooltip')} placement="right">
+                    <Flex alignItems="center" row gap="$gap8">
+                      <Text variant="body1" color="$neutral2">
+                        {t('pool.positions.usdValueUnavailable')}
+                      </Text>
+                      <InfoCircleFilled color="$neutral2" size="$icon.16" />
+                    </Flex>
+                  </MouseoverTooltip>
+                )}
               </Text>
               {feeValue0 && feeValue1 && (
                 <LiquidityPositionAmountsTile

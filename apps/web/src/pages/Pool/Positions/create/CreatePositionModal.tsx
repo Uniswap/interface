@@ -1,14 +1,13 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { LoaderButton } from 'components/Button/LoaderButton'
-import { ButtonError } from 'components/Button/buttons'
 import {
   LiquidityPositionRangeChart,
   getLiquidityRangeChartProps,
 } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
-import { getProtocolVersionLabel } from 'components/Liquidity/utils'
+import { getDisplayedAmountsFromDependentAmount, getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
@@ -51,13 +50,18 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
   const {
     positionState: { fee, hook },
     derivedPositionInfo,
+    currentTransactionStep,
+    setCurrentTransactionStep,
   } = useCreatePositionContext()
   const {
     derivedPriceRangeInfo,
     priceRangeState: { priceInverted },
   } = usePriceRangeContext()
-  const { derivedDepositInfo } = useDepositContext()
-  const { currencies, protocolVersion, isPoolOutOfSync, creatingPoolOrPair } = derivedPositionInfo
+  const {
+    derivedDepositInfo,
+    depositState: { exactField },
+  } = useDepositContext()
+  const { currencies, protocolVersion, creatingPoolOrPair } = derivedPositionInfo
   const { formattedAmounts, currencyAmounts, currencyAmountsUSDValue } = derivedDepositInfo
 
   const token0CurrencyInfo = useCurrencyInfo(currencyAmounts?.TOKEN0?.currency)
@@ -73,7 +77,6 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
   const versionLabel = getProtocolVersionLabel(protocolVersion)
 
   const [steps, setSteps] = useState<TransactionStep[]>([])
-  const [currentStep, setCurrentStep] = useState<{ step: TransactionStep; accepted: boolean } | undefined>()
   const dispatch = useDispatch()
   const { txInfo, gasFeeEstimateUSD, error, refetch } = useCreateTxContext()
   const account = useAccountMeta()
@@ -82,16 +85,12 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
   const navigate = useNavigate()
   const trace = useTrace()
 
-  const onFailure = () => {
-    setCurrentStep(undefined)
-  }
-
   const onSuccess = useCallback(() => {
     setSteps([])
-    setCurrentStep(undefined)
+    setCurrentTransactionStep(undefined)
     onClose()
     navigate('/positions')
-  }, [onClose, navigate])
+  }, [setCurrentTransactionStep, onClose, navigate])
 
   const liquidityRangeChartProps = useMemo(
     () =>
@@ -120,10 +119,12 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
         startChainId,
         account,
         liquidityTxContext: txInfo,
-        setCurrentStep,
+        setCurrentStep: setCurrentTransactionStep,
         setSteps,
         onSuccess,
-        onFailure,
+        onFailure: () => {
+          setCurrentTransactionStep(undefined)
+        },
         analytics: {
           ...getLPBaseAnalyticsProperties({
             trace,
@@ -134,7 +135,6 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
             currency0AmountUsd: currencyAmountsUSDValue?.TOKEN0,
             currency1AmountUsd: currencyAmountsUSDValue?.TOKEN1,
             poolId: getPoolIdOrAddressFromCreatePositionInfo(derivedPositionInfo),
-            chainId: startChainId,
           }),
           expectedAmountBaseRaw: currencyAmounts.TOKEN0.quotient?.toString() ?? '0',
           expectedAmountQuoteRaw: currencyAmounts.TOKEN1.quotient?.toString() ?? '0',
@@ -151,15 +151,32 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
     dispatch,
     selectChain,
     startChainId,
+    setCurrentTransactionStep,
     onSuccess,
     trace,
     protocolVersion,
     fee.feeAmount,
     currencyAmountsUSDValue?.TOKEN0,
     currencyAmountsUSDValue?.TOKEN1,
-    creatingPoolOrPair,
     derivedPositionInfo,
+    creatingPoolOrPair,
   ])
+
+  const [token0, token1] = currencies
+  const dependentAmount = txInfo?.dependentAmount
+  const { displayFormattedAmounts, displayUSDAmounts } = useMemo(
+    () =>
+      getDisplayedAmountsFromDependentAmount({
+        token0,
+        token1,
+        dependentAmount,
+        exactField,
+        currencyAmounts,
+        currencyAmountsUSDValue,
+        formattedAmounts,
+      }),
+    [dependentAmount, exactField, currencyAmounts, formattedAmounts, currencyAmountsUSDValue, token0, token1],
+  )
 
   return (
     <Modal
@@ -244,11 +261,11 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
             <Flex row justifyContent="space-between">
               <Flex gap="$gap4">
                 <Flex row gap="$gap8">
-                  <Text variant="body1">{formattedAmounts?.TOKEN0}</Text>
+                  <Text variant="body1">{displayFormattedAmounts?.TOKEN0}</Text>
                   <Text variant="body1">{currencyAmounts?.TOKEN0?.currency.symbol}</Text>
                 </Flex>
                 <Text variant="body3" color="$neutral2">
-                  {formatCurrencyAmount({ value: currencyAmountsUSDValue?.TOKEN0, type: NumberType.FiatTokenPrice })}
+                  {formatCurrencyAmount({ value: displayUSDAmounts?.TOKEN0, type: NumberType.FiatTokenPrice })}
                 </Text>
               </Flex>
               <TokenLogo
@@ -262,11 +279,11 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
             <Flex row justifyContent="space-between">
               <Flex gap="$gap4">
                 <Flex row gap="$gap8">
-                  <Text variant="body1">{formattedAmounts?.TOKEN1}</Text>
+                  <Text variant="body1">{displayFormattedAmounts?.TOKEN1}</Text>
                   <Text variant="body1">{currencyAmounts?.TOKEN1?.currency.symbol}</Text>
                 </Flex>
                 <Text variant="body3" color="$neutral2">
-                  {formatCurrencyAmount({ value: currencyAmountsUSDValue?.TOKEN1, type: NumberType.FiatTokenPrice })}
+                  {formatCurrencyAmount({ value: displayUSDAmounts?.TOKEN1, type: NumberType.FiatTokenPrice })}
                 </Text>
               </Flex>
               <TokenLogo
@@ -278,11 +295,11 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
               />
             </Flex>
           </Flex>
-          {error && <TradingAPIError refetch={refetch} />}
+          <TradingAPIError errorMessage={error} refetch={refetch} />
           <PoolOutOfSyncError />
         </Flex>
-        {currentStep && steps.length > 1 ? (
-          <ProgressIndicator steps={steps} currentStep={currentStep} />
+        {currentTransactionStep && steps.length > 1 ? (
+          <ProgressIndicator steps={steps} currentStep={currentTransactionStep} />
         ) : (
           <>
             <Separator mx="$padding12" />
@@ -309,13 +326,13 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
                 }}
               />
             </Flex>
-            {currentStep ? (
+            {currentTransactionStep ? (
               <LoaderButton disabled={true} loading={true} buttonKey="create-position-confirm">
                 <Text variant="buttonLabel1" color="$white">
                   <Trans i18nKey="common.confirmWallet" />
                 </Text>
               </LoaderButton>
-            ) : !isPoolOutOfSync || !txInfo?.action ? (
+            ) : (
               <DeprecatedButton
                 flex={1}
                 py="$spacing16"
@@ -327,10 +344,6 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
                   <Trans i18nKey="common.button.create" />
                 </Text>
               </DeprecatedButton>
-            ) : (
-              <ButtonError error $borderRadius="20px" onClick={handleCreate}>
-                <Trans i18nKey="common.button.create" />
-              </ButtonError>
             )}
           </>
         )}

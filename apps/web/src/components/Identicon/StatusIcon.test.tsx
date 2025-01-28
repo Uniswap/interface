@@ -1,7 +1,7 @@
 import StatusIcon from 'components/Identicon/StatusIcon'
 import { useAccount } from 'hooks/useAccount'
 import { mocked } from 'test-utils/mocked'
-import { render, waitFor } from 'test-utils/render'
+import { render } from 'test-utils/render'
 
 const ACCOUNT = '0x0'
 
@@ -48,7 +48,6 @@ describe('StatusIcon', () => {
     } as unknown as ReturnType<typeof useAccount>)
 
     const component = render(<StatusIcon showMiniIcons={false} />)
-    await waitFor(() => expect(component.queryByTestId('IdenticonLoader')).not.toBeInTheDocument())
     expect(component.queryByTestId('MiniIcon')).not.toBeInTheDocument()
   })
 })

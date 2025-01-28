@@ -1,5 +1,6 @@
 import { SharedEventName, SwapEventName } from '@uniswap/analytics-events'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants/extension'
+import { UniswapEventName } from 'uniswap/src/features/telemetry/constants/uniswap'
 // eslint-disable-next-line no-restricted-imports
 import { TestnetModeConfig } from 'utilities/src/telemetry/analytics/analytics'
 
@@ -38,16 +39,18 @@ export enum WalletEventName {
 
 export const WALLET_TESTNET_CONFIG: TestnetModeConfig = {
   allowlistEvents: [
+    SharedEventName.PAGE_VIEWED,
+    UniswapEventName.TokenSelected,
     WalletEventName.NetworkFilterSelected,
+    WalletEventName.SwapSubmitted,
     WalletEventName.TransferCompleted,
     WalletEventName.TransferSubmitted,
-    SharedEventName.PAGE_VIEWED,
+    SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED,
     SwapEventName.SWAP_TRANSACTION_COMPLETED,
     SwapEventName.SWAP_TRANSACTION_FAILED,
+    SwapEventName.SWAP_QUOTE_RECEIVED,
+    ExtensionEventName.DappChangeChain,
     ExtensionEventName.DappRequest,
-    WalletEventName.SwapSubmitted,
-    WalletEventName.TransferSubmitted,
-    WalletEventName.TransferCompleted,
   ],
   passthroughAllowlistEvents: [
     ExtensionEventName.DappConnect,

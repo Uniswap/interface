@@ -166,7 +166,14 @@ async function getDenominatedValue({
     return undefined
   }
 
-  const stablecoinCurrency = STABLECOIN_AMOUNT_OUT[chainId]?.currency
+  const universeChainId = fromGraphQLChain(token.chain)
+
+  // Skip any unsupported chains
+  if (!universeChainId) {
+    return undefined
+  }
+
+  const stablecoinCurrency = STABLECOIN_AMOUNT_OUT[universeChainId]?.currency
 
   if (!stablecoinCurrency) {
     logger.error(new Error('[ITBU] No `stablecoinCurrency` found'), {

@@ -2,43 +2,396 @@
 
 exports[`FavoriteTokenCard renders without error 1`] = `
 <View
-  onLayout={[Function]}
-  style={
+  collapsable={false}
+  jestAnimatedStyle={
     {
-      "flexDirection": "column",
-      "opacity": 0,
+      "value": {
+        "opacity": 1,
+      },
     }
   }
-  testID="shimmer-placeholder"
+  style={
+    {
+      "borderBottomLeftRadius": 16,
+      "borderBottomRightRadius": 16,
+      "borderTopLeftRadius": 16,
+      "borderTopRightRadius": 16,
+      "flexDirection": "column",
+      "opacity": 1,
+    }
+  }
 >
   <View
-    sentry-label="FlexLoader"
+    actions={
+      [
+        {
+          "onPress": [Function],
+          "systemIcon": "heart",
+          "title": "Favorite token",
+        },
+        {
+          "onPress": [Function],
+          "systemIcon": "square.and.pencil",
+          "title": "Edit favorites",
+        },
+        {
+          "onPress": [Function],
+          "systemIcon": "arrow.2.squarepath",
+          "title": "Swap",
+        },
+        {
+          "onPress": [Function],
+          "systemIcon": "qrcode",
+          "title": "Receive",
+        },
+      ]
+    }
+    disabled={false}
+    onPress={[Function]}
     style={
       {
-        "flexDirection": "column",
+        "borderRadius": 16,
       }
     }
   >
     <View
+      collapsable={false}
+      hitSlop={
+        {
+          "bottom": 5,
+          "left": 5,
+          "right": 5,
+          "top": 5,
+        }
+      }
+      jestAnimatedStyle={
+        {
+          "value": {},
+        }
+      }
       style={
         {
           "backgroundColor": {
             "dynamic": {
-              "dark": "rgba(255,255,255,0.12)",
-              "light": "rgba(34,34,34,0.05)",
+              "dark": "#131313",
+              "light": "#FFFFFF",
             },
           },
+          "borderBottomColor": "rgba(34,34,34,0.05)",
           "borderBottomLeftRadius": 16,
           "borderBottomRightRadius": 16,
+          "borderBottomWidth": 1,
+          "borderLeftColor": "rgba(34,34,34,0.05)",
+          "borderLeftWidth": 1,
+          "borderRightColor": "rgba(34,34,34,0.05)",
+          "borderRightWidth": 1,
+          "borderStyle": "solid",
+          "borderTopColor": "rgba(34,34,34,0.05)",
           "borderTopLeftRadius": 16,
           "borderTopRightRadius": 16,
+          "borderTopWidth": 1,
           "flexDirection": "column",
-          "height": 114,
-          "width": "100%",
+          "marginBottom": 4,
+          "marginLeft": 4,
+          "marginRight": 4,
+          "marginTop": 4,
+          "opacity": 1,
+          "shadowColor": "rgb(0,0,0)",
+          "shadowOffset": {
+            "height": 1,
+            "width": 0,
+          },
+          "shadowOpacity": 0.0196078431372549,
+          "shadowRadius": 6,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
         }
       }
-      testID="loader/favorite"
-    />
+      testID="token-box-undefined"
+    >
+      <View
+        style={
+          {
+            "alignItems": "flex-start",
+            "flexDirection": "column",
+            "gap": 8,
+            "paddingBottom": 12,
+            "paddingLeft": 12,
+            "paddingRight": 12,
+            "paddingTop": 12,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "flexDirection": "row",
+              "gap": 4,
+              "justifyContent": "space-between",
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "flexGrow": 1,
+                "gap": 8,
+              }
+            }
+          >
+            <View
+              pointerEvents="auto"
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "column",
+                  "height": 20,
+                  "justifyContent": "center",
+                  "position": "relative",
+                  "width": 20,
+                }
+              }
+              testID="token-logo"
+            >
+              <View
+                style={
+                  {
+                    "backgroundColor": "#FFFFFF",
+                    "borderBottomLeftRadius": 10,
+                    "borderBottomRightRadius": 10,
+                    "borderTopLeftRadius": 10,
+                    "borderTopRightRadius": 10,
+                    "flexDirection": "column",
+                    "height": "96%",
+                    "left": "2%",
+                    "opacity": 0,
+                    "position": "absolute",
+                    "top": "2%",
+                    "width": "96%",
+                    "zIndex": 0,
+                  }
+                }
+              />
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "backgroundColor": "#FEF4FF",
+                    "borderBottomLeftRadius": 999999,
+                    "borderBottomRightRadius": 999999,
+                    "borderTopLeftRadius": 999999,
+                    "borderTopRightRadius": 999999,
+                    "flexDirection": "column",
+                    "height": 20,
+                    "justifyContent": "center",
+                    "paddingLeft": 8,
+                    "paddingRight": 8,
+                    "width": 20,
+                  }
+                }
+              >
+                <Text
+                  adjustsFontSizeToFit={true}
+                  allowFontScaling={false}
+                  maxFontSizeMultiplier={1.4}
+                  minimumFontScale={0.5}
+                  numberOfLines={1}
+                  style={
+                    {
+                      "color": "#FC74FE",
+                      "fontFamily": "Basel Grotesk",
+                      "fontSize": 17,
+                      "fontWeight": "500",
+                      "lineHeight": 14,
+                    }
+                  }
+                  suppressHighlighting={true}
+                />
+              </View>
+            </View>
+            <Text
+              allowFontScaling={true}
+              maxFontSizeMultiplier={1.4}
+              style={
+                {
+                  "color": {
+                    "dynamic": {
+                      "dark": "#FFFFFF",
+                      "light": "#222222",
+                    },
+                  },
+                  "fontFamily": "Basel Grotesk",
+                  "fontSize": 19,
+                  "fontWeight": "400",
+                  "lineHeight": 24,
+                }
+              }
+              suppressHighlighting={true}
+            />
+          </View>
+          <View
+            collapsable={false}
+            disabled={true}
+            hitSlop={
+              {
+                "bottom": 5,
+                "left": 5,
+                "right": 5,
+                "top": 5,
+              }
+            }
+            jestAnimatedStyle={
+              {
+                "value": {
+                  "opacity": 0,
+                },
+              }
+            }
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": {
+                  "dynamic": {
+                    "dark": "#5E5E5E",
+                    "light": "#BFBFBF",
+                  },
+                },
+                "borderBottomLeftRadius": 999999,
+                "borderBottomRightRadius": 999999,
+                "borderTopLeftRadius": 999999,
+                "borderTopRightRadius": 999999,
+                "flexDirection": "column",
+                "height": 24,
+                "justifyContent": "center",
+                "opacity": 0,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+                "width": 24,
+                "zIndex": 1080,
+              }
+            }
+            testID="explore/remove-button"
+          >
+            <View
+              style={
+                {
+                  "backgroundColor": {
+                    "dynamic": {
+                      "dark": "#131313",
+                      "light": "#FFFFFF",
+                    },
+                  },
+                  "borderBottomLeftRadius": 12,
+                  "borderBottomRightRadius": 12,
+                  "borderTopLeftRadius": 12,
+                  "borderTopRightRadius": 12,
+                  "flexDirection": "column",
+                  "height": 2,
+                  "width": 10,
+                }
+              }
+            />
+          </View>
+        </View>
+        <View
+          style={
+            {
+              "flexDirection": "column",
+              "gap": 2,
+            }
+          }
+        >
+          <View
+            onLayout={[Function]}
+            style={
+              {
+                "flexDirection": "column",
+                "opacity": 0,
+              }
+            }
+            testID="shimmer-placeholder"
+          >
+            <View
+              sentry-label="FlexLoader"
+              style={
+                {
+                  "flexDirection": "column",
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "backgroundColor": {
+                      "dynamic": {
+                        "dark": "#5E5E5E",
+                        "light": "#BFBFBF",
+                      },
+                    },
+                    "borderBottomLeftRadius": 12,
+                    "borderBottomRightRadius": 12,
+                    "borderTopLeftRadius": 12,
+                    "borderTopRightRadius": 12,
+                    "flexDirection": "column",
+                    "height": 32,
+                    "width": 96,
+                  }
+                }
+                testID="loader/favorite/price"
+              />
+            </View>
+          </View>
+          <View
+            onLayout={[Function]}
+            style={
+              {
+                "flexDirection": "column",
+                "opacity": 0,
+              }
+            }
+            testID="shimmer-placeholder"
+          >
+            <View
+              sentry-label="FlexLoader"
+              style={
+                {
+                  "flexDirection": "column",
+                }
+              }
+            >
+              <View
+                style={
+                  {
+                    "backgroundColor": {
+                      "dynamic": {
+                        "dark": "#5E5E5E",
+                        "light": "#BFBFBF",
+                      },
+                    },
+                    "borderBottomLeftRadius": 12,
+                    "borderBottomRightRadius": 12,
+                    "borderTopLeftRadius": 12,
+                    "borderTopRightRadius": 12,
+                    "flexDirection": "column",
+                    "height": 24,
+                    "width": 72,
+                  }
+                }
+                testID="loader/favorite/priceChange"
+              />
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
   </View>
 </View>
 `;

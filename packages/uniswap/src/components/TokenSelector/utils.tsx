@@ -209,12 +209,19 @@ export function useTokenOptionsSection({
   }, [name, rightElement, endElement, sectionKey, tokenOptions])
 }
 
-export function isSwapListLoading(
-  loading: boolean,
-  portfolioSection: TokenSection[] | undefined,
-  popularSection: TokenSection[] | undefined,
-): boolean {
-  return loading && (!portfolioSection || !popularSection)
+export function isSwapListLoading({
+  loading,
+  portfolioSection,
+  popularSection,
+  isTestnetModeEnabled,
+}: {
+  loading: boolean
+  portfolioSection: TokenSection[] | undefined
+  popularSection: TokenSection[] | undefined
+  isTestnetModeEnabled: boolean
+}): boolean {
+  // the popular section is not shown on testnet
+  return loading && (isTestnetModeEnabled ? !portfolioSection : !portfolioSection || !popularSection)
 }
 
 export function flowToModalName(flow: TokenSelectorFlow): ModalNameType | undefined {

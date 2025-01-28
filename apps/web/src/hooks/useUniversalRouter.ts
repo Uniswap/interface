@@ -195,8 +195,8 @@ export function useUniversalRouterSwapCallback(
         }
       }),
     [
-      t,
       trade,
+      t,
       chainId,
       getDeadline,
       options.slippageTolerance,

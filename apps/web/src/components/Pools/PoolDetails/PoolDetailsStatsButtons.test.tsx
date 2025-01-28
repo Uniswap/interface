@@ -47,6 +47,7 @@ describe('PoolDetailsStatsButton', () => {
     navigateToFiatOnRamp: () => {},
     onSwapChainsChanged: () => {},
     isSwapTokenSelectorOpen: false,
+    setSwapOutputChainId: () => {},
     setIsSwapTokenSelectorOpen: () => {},
     signer: undefined,
     useProviderHook: () => undefined,
@@ -91,13 +92,16 @@ describe('PoolDetailsStatsButton', () => {
     expect(screen.getByTestId('pdp-buttons-loading-skeleton')).toBeVisible()
   })
 
-  it('renders both buttons correctly', () => {
+  it('renders both buttons correctly', async () => {
+    jest.useFakeTimers()
     window.history.pushState({}, '', '/swap')
-    const { asFragment } = render(<PoolDetailsStatsButtons {...mockProps} />)
+    const { asFragment } = await act(() => render(<PoolDetailsStatsButtons {...mockProps} />))
+
     expect(asFragment()).toMatchSnapshot()
 
     expect(screen.getByTestId('pool-details-add-liquidity-button')).toBeVisible()
     expect(screen.getByTestId('pool-details-swap-button')).toBeVisible()
+    jest.useRealTimers()
   })
 
   it('clicking swap reveals swap modal', async () => {

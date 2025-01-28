@@ -50,6 +50,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { NumberType } from 'utilities/src/format/types'
+import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
 import { useAccount } from 'wagmi'
 
 function DropdownOptionRender({ children, Icon }: { children: React.ReactNode; Icon: GeneratedIcon }) {
@@ -105,6 +106,7 @@ export function LiquidityPositionCard({
   const colors = useSporeColors()
   const isTouchDevice = useIsTouchDevice()
   const isV4Enabled = useFeatureFlag(FeatureFlags.V4Data)
+  const isMigrateEnabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
   const [pricesInverted, setPricesInverted] = useState(false)
 
   const dispatch = useAppDispatch()
@@ -174,15 +176,17 @@ export function LiquidityPositionCard({
       return [...v2Options, migrateV2Option]
     }
 
-    const migrateV3Option = {
-      key: 'position-card-migrate',
-      onPress: () => {
-        navigate(`/migrate/v3/${chainInfo.urlParam}/${liquidityPosition.tokenId}`)
-      },
-      render: (): ReactNode => (
-        <DropdownOptionRender Icon={RightArrow}>{t('pool.migrateLiquidity')}</DropdownOptionRender>
-      ),
-    }
+    const migrateV3Option = isV4UnsupportedChain(liquidityPosition.chainId)
+      ? undefined
+      : {
+          key: 'position-card-migrate',
+          onPress: () => {
+            navigate(`/migrate/v3/${chainInfo.urlParam}/${liquidityPosition.tokenId}`)
+          },
+          render: (): ReactNode => (
+            <DropdownOptionRender Icon={RightArrow}>{t('pool.migrateLiquidity')}</DropdownOptionRender>
+          ),
+        }
 
     return [
       {
@@ -195,7 +199,7 @@ export function LiquidityPositionCard({
         render: (): ReactNode => <DropdownOptionRender Icon={Dollar}>{t('pool.collectFees')}</DropdownOptionRender>,
       },
       ...v2Options,
-      isV4Enabled ? migrateV3Option : undefined,
+      isV4Enabled && isMigrateEnabled && liquidityPosition.version !== ProtocolVersion.V4 ? migrateV3Option : undefined,
       {
         key: 'position-card-separator',
         onPress: () => null,
@@ -213,7 +217,7 @@ export function LiquidityPositionCard({
         render: (): ReactNode => <DropdownOptionRender Icon={InfoCircleFilled}>{t('pool.info')}</DropdownOptionRender>,
       },
     ].filter((option): option is MenuItemProp => option !== undefined)
-  }, [liquidityPosition, isV4Enabled, dispatch, t, account.chainId, navigate, switchChain])
+  }, [liquidityPosition, isV4Enabled, isMigrateEnabled, dispatch, t, account.chainId, navigate, switchChain])
 
   const priceOrderingForChart = useMemo(() => {
     if (

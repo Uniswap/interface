@@ -32,16 +32,21 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
   const { isTestnetModeEnabled, defaultChainId } = useEnabledChains()
   const { setIsSwapTokenSelectorOpen } = useUniswapContext()
 
-  const { updateSwapForm, selectingCurrencyField, output, input, filteredChainIds } = swapContext
+  const { updateSwapForm, selectingCurrencyField, output, input, filteredChainIds, isPrefilled } = swapContext
 
   if (isModalOpen && !selectingCurrencyField) {
     throw new Error('TokenSelector rendered without `selectingCurrencyField`')
   }
 
   const onHideTokenSelector = useCallback(() => {
-    updateSwapForm({ selectingCurrencyField: undefined })
+    updateSwapForm({
+      selectingCurrencyField: undefined,
+      isPrefilled: false,
+      // reset the filtered chain ids when coming back in from a prefill so it's not persisted forever
+      ...(isPrefilled ? { filteredChainIds: {} } : {}),
+    })
     setIsSwapTokenSelectorOpen(false) // resets force flag for web on close as cleanup
-  }, [setIsSwapTokenSelectorOpen, updateSwapForm])
+  }, [isPrefilled, setIsSwapTokenSelectorOpen, updateSwapForm])
 
   const inputTokenProjects = useTokenProjects(input ? [currencyId(input)] : [])
   const outputTokenProjects = useTokenProjects(output ? [currencyId(output)] : [])

@@ -45,14 +45,6 @@ export function FORQuoteItem({
       onPress={isLoading ? undefined : onPress}
     >
       <Flex
-        $theme-dark={{
-          shadowOpacity: 0.12,
-          shadowRadius: '$spacing4',
-        }}
-        $theme-light={{
-          shadowOpacity: 0.02,
-          shadowRadius: '$spacing8',
-        }}
         backgroundColor="$surface1"
         borderColor="$surface3"
         borderRadius="$rounded20"
@@ -61,8 +53,9 @@ export function FORQuoteItem({
         pl="$spacing16"
         pr="$spacing8"
         py="$spacing16"
-        // TODO(MOB-3699): replace with shadow preset once available.
-        shadowColor="$black"
+        shadowColor="$shadowColor"
+        shadowOpacity={0.03}
+        shadowRadius={4}
         shadowOffset={{ height: 1, width: 0 }}
         style={{ transition: 'background-color 0.2s ease-in-out' }}
       >

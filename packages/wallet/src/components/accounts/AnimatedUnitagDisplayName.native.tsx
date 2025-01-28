@@ -1,5 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { BaseSyntheticEvent, memo, useCallback, useMemo, useRef, useState } from 'react'
+import { BaseSyntheticEvent, memo, useCallback, useMemo, useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { AnimatePresence, Flex, Text, TouchableArea, getTokenValue } from 'ui/src'
@@ -89,7 +89,6 @@ function _AnimatedUnitagDisplayName({
         row
         width={viewWidth}
         opacity={isLayoutReady ? 1 : 0}
-        animation="100ms"
         enterStyle={{ opacity: 0 }}
         exitStyle={{ opacity: 0 }}
       >
@@ -146,27 +145,17 @@ function _AnimatedUnitagDisplayName({
 export function useLayoutWidth(pause = false): {
   width: number
   onLayout: (event: LayoutChangeEvent) => void
-  remeasure: () => void
 } {
   const [width, setWidth] = useState(0)
-  const isWidthSet = useRef(false)
 
   const onLayout = (event: LayoutChangeEvent): void => {
     if (pause) {
       return
     }
     setWidth(event.nativeEvent.layout.width)
-    if (event.nativeEvent.layout.width > 0) {
-      isWidthSet.current = true
-    }
   }
 
-  const remeasure = useCallback(() => {
-    setWidth(0)
-    isWidthSet.current = false
-  }, [])
-
-  return { width, onLayout, remeasure }
+  return { width, onLayout }
 }
 
 export const AnimatedUnitagDisplayName = memo(_AnimatedUnitagDisplayName)

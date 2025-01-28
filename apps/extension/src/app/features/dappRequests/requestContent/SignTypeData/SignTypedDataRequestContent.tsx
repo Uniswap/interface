@@ -66,6 +66,13 @@ export function SignTypedDataRequestContent({ dappRequest }: SignTypedDataReques
     message: EIP712Message | EIP712Message[keyof EIP712Message],
     i = 1,
   ): Maybe<JSX.Element | JSX.Element[]> => {
+    if (message === null || message === undefined) {
+      return (
+        <Text color="$neutral1" variant="body4">
+          {String(message)}
+        </Text>
+      )
+    }
     if (typeof message === 'string' && isAddress(message) && chainId) {
       const href = getExplorerLink(chainId, message, ExplorerDataType.ADDRESS)
       return <MaybeExplorerLinkedAddress address={message} link={href} />
@@ -74,6 +81,12 @@ export function SignTypedDataRequestContent({ dappRequest }: SignTypedDataReques
       return (
         <Text $platform-web={{ overflowWrap: 'anywhere' }} color="$neutral1" variant="body4">
           {message.toString()}
+        </Text>
+      )
+    } else if (Array.isArray(message)) {
+      return (
+        <Text $platform-web={{ overflowWrap: 'anywhere' }} color="$neutral1" variant="body4">
+          {JSON.stringify(message)}
         </Text>
       )
     } else if (typeof message === 'object') {

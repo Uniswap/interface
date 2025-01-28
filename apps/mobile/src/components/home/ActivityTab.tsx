@@ -12,9 +12,11 @@ import { Flex, useSporeColors } from 'ui/src'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
+import { DDRumManualTiming } from 'utilities/src/logger/datadogEvents'
+import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
 import { isAndroid } from 'utilities/src/platform'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { useActivityData } from 'wallet/src/features/activity/useActivityData'
+import { useActivityData } from 'wallet/src/features/activity/hooks/useActivityData'
 
 export const ACTIVITY_TAB_DATA_DEPENDENCIES = [GQLQueries.TransactionList]
 
@@ -56,6 +58,8 @@ export const ActivityTab = memo(
       emptyComponentStyle: containerProps?.emptyComponentStyle,
       onPressEmptyState: onPressReceive,
     })
+
+    usePerformanceLogger(DDRumManualTiming.RenderActivityTabList, [])
 
     const refreshControl = useMemo(() => {
       return (
