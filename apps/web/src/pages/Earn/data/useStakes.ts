@@ -126,6 +126,14 @@ export function useStakes(sortState: StakeTableSortState, chainId?: ChainId) {
       apr: 0,
       isActive: true,
     },
+    {
+      stakingRewardAddress: '0xfB8cA52748E70F887E9B8C5ffBb611D1eA4cC725',
+      stakingToken: '0x7b97031b6297bc8e030B07Bd84Ce92FEa1B00c3e',
+      rewardTokens: ['0x4F604735c1cF31399C6E711D5962b2B3E0225AD3'],
+      tvl: 0,
+      apr: 0,
+      isActive: true,
+    },
   ]
 
   const stakes = (stakesBackend || stakesFallback).map((stake) => ({

@@ -1,9 +1,10 @@
-import { CurrencyAmount, Fraction } from '@ubeswap/sdk-core'
+import { CurrencyAmount, Fraction, Percent } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { useToken } from 'hooks/Tokens'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import { useContract } from 'hooks/useContract'
+import { useUSDPrice } from 'hooks/useUSDPrice'
 import { t } from 'i18n'
 import JSBI from 'jsbi'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
@@ -17,6 +18,7 @@ import styled from 'styled-components'
 import { ExternalLink } from 'theme/components'
 import { VotableStakingRewards, VotableStakingRewards__factory } from 'uniswap/src/abis/types'
 import VOTABLE_STAKING_ABI from 'uniswap/src/abis/votable-staking-rewards.json'
+import { useFormatter } from 'utils/formatNumbers'
 import { ButtonEmpty, ButtonLight, ButtonPrimary, ButtonRadio } from '../../components-old/Button'
 import { AutoColumn } from '../../components-old/Column'
 import CurrencyLogo from '../../components-old/CurrencyLogo'
@@ -47,10 +49,13 @@ const Wrapper = styled.div({
 export const StakeCustom: React.FC = () => {
   const { account, chainId, provider } = useWeb3React()
   const { contractAddress } = useParams<{ contractAddress: string }>()
+  const { formatPercent } = useFormatter()
 
   const contract = useContract<VotableStakingRewards>(contractAddress, VOTABLE_STAKING_ABI, true)
   const tokenAddress = useSingleCallResult(contract, 'stakingToken', undefined, NEVER_RELOAD).result?.[0] as string
+  const rewardAddress = useSingleCallResult(contract, 'rewardsToken', undefined, NEVER_RELOAD).result?.[0] as string
   const token = useToken(tokenAddress, chainId)
+  const rewardToken = useToken(rewardAddress, chainId)
 
   const signer = provider?.getSigner()
   const [, toggleAccountDrawer] = useAccountDrawer()
@@ -69,21 +74,21 @@ export const StakeCustom: React.FC = () => {
 
   const _totalSupply = useSingleCallResult(contract, 'totalSupply', []).result?.[0] ?? 0
   const totalSupply = token ? CurrencyAmount.fromRawAmount(token, _totalSupply) : undefined
+  const { data: totalSupplyUsd } = useUSDPrice(totalSupply, token)
 
   const _rewardRate = useSingleCallResult(contract, 'rewardRate', []).result?.[0] ?? 0
-  const rewardRate = token ? CurrencyAmount.fromRawAmount(token, _rewardRate) : undefined
+  const rewardRate = rewardToken ? CurrencyAmount.fromRawAmount(rewardToken, _rewardRate) : undefined
+  const { data: yearlyRewardUsd } = useUSDPrice(rewardRate?.multiply(BIG_INT_SECONDS_IN_YEAR), rewardToken)
 
-  const apy =
-    rewardRate && totalSupply && totalSupply.greaterThan('0')
-      ? rewardRate.asFraction.multiply(BIG_INT_SECONDS_IN_YEAR).divide(totalSupply.asFraction)
-      : undefined
+  const _apy = yearlyRewardUsd && totalSupplyUsd ? (yearlyRewardUsd * 100) / totalSupplyUsd : undefined
+  const apy = _apy ? new Percent(Math.floor(_apy * 100), 10_000) : undefined
   const userRewardRate =
     rewardRate && stakeBalance && totalSupply && totalSupply?.greaterThan('0')
       ? JSBI.divide(JSBI.multiply(stakeBalance.quotient, rewardRate.quotient), totalSupply.quotient)
       : undefined
   const userWeeklyRewards =
-    userRewardRate && token
-      ? CurrencyAmount.fromRawAmount(token, JSBI.multiply(userRewardRate, BIG_INT_SECONDS_IN_WEEK))
+    userRewardRate && rewardToken
+      ? CurrencyAmount.fromRawAmount(rewardToken, JSBI.multiply(userRewardRate, BIG_INT_SECONDS_IN_WEEK))
       : undefined
 
   const onStakeClick = useCallback(async () => {
@@ -218,8 +223,8 @@ export const StakeCustom: React.FC = () => {
         {!(userRewardRate && JSBI.greaterThan(userRewardRate, JSBI.BigInt(0))) && (
           <Text fontSize={20} fontWeight={500} padding="0px 8px">
             {t('Your Weekly Rewards') + ' '}
-            {userWeeklyRewards ? userWeeklyRewards.toFixed(0, { groupSeparator: ',' }) : '--'} {token?.symbol} / week (
-            {apy?.multiply('100').toFixed(2, { groupSeparator: ',' }) ?? '--'}% APR)
+            {userWeeklyRewards ? userWeeklyRewards.toFixed(0, { groupSeparator: ',' }) : '--'} {rewardToken?.symbol} /
+            week ({apy ? formatPercent(apy) : '- %'} APR)
           </Text>
         )}
 
@@ -242,7 +247,7 @@ export const StakeCustom: React.FC = () => {
             </InformationWrapper>
             <InformationWrapper>
               <Text>{t('Annual Stake APR')}</Text>
-              <Text>{apy?.multiply('100').toFixed(2, { groupSeparator: ',' }) ?? '--'}% </Text>
+              <Text>{apy ? formatPercent(apy) : '- %'} </Text>
             </InformationWrapper>
             <ExternalLink
               style={{ textDecoration: 'underline', textAlign: 'left' }}
