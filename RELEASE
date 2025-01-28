@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmNtCo1PghM7VEpvqi9Fm1vuEmuTPeQWb5WsVeNnkKnjUJ`
-- CIDv1: `bafybeiaicvehxvmsqtyl4r2pd6unfxqvmsadic5jgjn6ah7ps3np47dw34`
+- CIDv0: `QmVMCxr4JM6EcWatYzVqT1163uUdieSY4N2ihU3Ndoeg2j`
+- CIDv1: `bafybeidiezdueocy7pfmfjajojabgmf56jtutg42i5hb5rtc7647y2blja`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,80 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiaicvehxvmsqtyl4r2pd6unfxqvmsadic5jgjn6ah7ps3np47dw34.ipfs.dweb.link/
-- [ipfs://QmNtCo1PghM7VEpvqi9Fm1vuEmuTPeQWb5WsVeNnkKnjUJ/](ipfs://QmNtCo1PghM7VEpvqi9Fm1vuEmuTPeQWb5WsVeNnkKnjUJ/)
+- https://bafybeidiezdueocy7pfmfjajojabgmf56jtutg42i5hb5rtc7647y2blja.ipfs.dweb.link/
+- [ipfs://QmVMCxr4JM6EcWatYzVqT1163uUdieSY4N2ihU3Ndoeg2j/](ipfs://QmVMCxr4JM6EcWatYzVqT1163uUdieSY4N2ihU3Ndoeg2j/)
 
-## 5.68.0 (2025-01-28)
-
-
-### Features
-
-* **web:** add additional error description to the trading api error (#15490) 37043c4
-* **web:** add bridging fallback for canonical bridge (#15434) b5d404d
-* **web:** add flag to experiment with 2s l2 polling interval (#15383) c1aa575
-* **web:** add hook url param for v4 positions (#15472) d6c3fa4
-* **web:** add script for finding&deleting unused assets (#15358) 6678a83
-* **web:** copy updates for v4 (#15389) 2b75dac
-* **web:** Handle unknown USD values in LP positions (#15295) c1d994d
-* **web:** prevent users from creating a pool with the wrapped native token (#15615) bf3b9eb
-* **web:** show unichain promo tooltip on network selector (#14805) 352d05b
-* **web:** unichain bridging tooltip + animation (#14842) e2536a5
+### 5.68.1 (2025-01-28)
 
 
 ### Bug Fixes
 
-* **web:** 2 sec polling flag (#15404) 8ea60ed
-* **web:** avoid precision error in parsing gql token balances (#15372) b4632cf
-* **web:** buy form modals too tall (#15511) c5be5ae
-* **web:** celo zksync v3 create staging (#15547) 685bf90
-* **web:** consolidate Mutable<T> defs (#15360) 2a78e7e
-* **web:** disable v4 LP creation for zksync and celo (#15393) 4a6f478
-* **web:** dont poll after committing to calldata - create (#15437) ae7801c
-* **web:** dont poll after committing to calldata - decrease (#15435) ceeae16
-* **web:** dont poll after committing to calldata - increase (#15436) dff928e
-* **web:** end holiday logo after Jan 7th (#15375) ea12101
-* **web:** fix inversion issue for v4 (#15519) 5ce6c04
-* **web:** fix migrate flow from the view positions page (#15338) c83f555
-* **web:** fix the claim success toast (#15326) e0badea
-* **web:** handle tick value of 0 (#15548) e04024b
-* **web:** improve lp logging (#15356) dd06b3f
-* **web:** layout of uniswapX routing settings labels (#15516) 7fc4f58
-* **web:** log previousConnectedChainId only if previously connected (#15508) d8be58d
-* **web:** LP create - dont refetch after error response (#15461) c4a5df3
-* **web:** lp create - error message for unsupported v4 chains (#15487) 7f1e405
-* **web:** LP event analytics chainId should not be connected chain (#15469) 17b3895
-* **web:** lp zksync/celo disable migration to v4 (#15488) 7c0fdfc
-* **web:** missing chart placeholder image for LP positions (#15513) 7a2b1a6
-* **web:** modal content is hidden and not scrollable (#15344) c159c82
-* **web:** move migrate flow behind a feature flag (#15578) 9ccaee2
-* **web:** prevent calls to approve when there are no params (#15381) d39b798
-* **web:** react hook errors in LP create flow (#15468) eae0c80
-* **web:** remove migrate from context menu for v4 positions (#15464) 33d02e5
-* **web:** remove reference to cf-ipfs from build workflow (#15363) 001965d
-* **web:** remove spacing between swap and banner when no quote is available but tokens selected (#15147) be58118
-* **web:** remove statsig-controlled outage banners (#15365) 01bf6e7
-* **web:** replace deprecated onKeyPress with onKeyDown (#15339) 5967037
-* **web:** replace tooltip with MouseOverTooltip (#15340) 62bec2f
-* **web:** send updated user property chainId (#15396) 8453e4a
-* **web:** should not unwrap currency info when v4 (#15495) 4fc68d9
-* **web:** simulate tx for claiming so we can better detect errors on the trading API. approvals are not needed so this should always be possible (#15349) cdd389c
-* **web:** update range overflow (#15567) 9d0e27d
-* **web:** update react-scroll-sync types (#15361) 3c41a07
-* **web:** update the message name being logged to sentry to more easily distinguish errors (#15420) 39fd2c4
-* **web:** update the settings cog size (#15503) 95090d2
-* **web:** use deeplink to default to unichain (#15316) 724b581
-* **web:** use on chain currency balance for increase, create (#15376) 0952fc5
-* **web:** v4 explore - volume query fix (#15611) 4d162f3
-* **web:** v4 PDP - use correct pool ID for price/volume queries (#15605) d22ae33
-
-
-### Continuous Integration
-
-* **web:** update sitemaps fbc557b
-
-
-### Styles
-
-* **web:** fix inconsistent sizing on nav dropdown items (#15313) a9f4e8b
+* **web:** update copy on native wrapped token (#15629) 4c844cc
 
 
