@@ -19,10 +19,11 @@ const DatePickerStyles = createGlobalStyle`
     border: 1px solid ${({ theme }) => theme.surface3};
     border-radius: 0.5rem;
     color: ${({ theme }) => theme.neutral1};
+    padding-right: 1px;
   }
 
   .react-datepicker__triangle {
-    display: none; // Üçgen işaretçiyi kaldırıyoruz çünkü tema ile uyumsuz görünüyor
+    display: none;
   }
 
   .react-datepicker__header {
@@ -73,7 +74,7 @@ const DatePickerStyles = createGlobalStyle`
   .react-datepicker__time-container,
   .react-datepicker__time-box {
     background-color: ${({ theme }) => theme.surface1} !important;
-    border-left-color: ${({ theme }) => theme.surface3} !important;
+    //border-left-color: ${({ theme }) => theme.surface3} !important;
   }
 
   .react-datepicker__time-list {
@@ -114,6 +115,7 @@ const DatePickerStyles = createGlobalStyle`
 
   .react-datepicker__time-list::-webkit-scrollbar-track {
     background: ${({ theme }) => theme.surface2};
+
   }
 
   .react-datepicker__time-list::-webkit-scrollbar-thumb {
