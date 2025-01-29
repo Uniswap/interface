@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import { isTestMode } from 'pages/LaunchpadCreate/launchpad-constants'
 import { LaunchpadOptions, LaunchpadParamsStruct } from 'pages/LaunchpadCreate/launchpad-state'
 
 export type LaunchpadStatus = 'Pending' | 'Active' | 'Succeeded' | 'Done' | 'Failed' | 'Canceled'
@@ -22,7 +23,9 @@ export interface LaunchpadListItem {
 
 async function fetchLaunchpads(listType: 'active' | 'completed'): Promise<LaunchpadListItem[]> {
   try {
-    const response = await fetch('https://interface-gateway.ubeswap.org/v1/ubestarter/list/' + listType)
+    const response = await fetch(
+      'https://interface-gateway.ubeswap.org/v1/ubestarter/list/' + listType + (isTestMode ? '?test_mode=true' : '')
+    )
     if (!response.ok) {
       throw new Error('Network response was not ok')
     }
@@ -66,7 +69,11 @@ export interface LaunchpadDetails {
 
 async function fetchLaunchpadDetails(launchpadAddress: string): Promise<LaunchpadDetails | null> {
   try {
-    const response = await fetch('https://interface-gateway.ubeswap.org/v1/ubestarter/details/' + launchpadAddress)
+    const response = await fetch(
+      'https://interface-gateway.ubeswap.org/v1/ubestarter/details/' +
+        launchpadAddress +
+        (isTestMode ? '?test_mode=true' : '')
+    )
     if (!response.ok) {
       throw new Error('Network response was not ok')
     }

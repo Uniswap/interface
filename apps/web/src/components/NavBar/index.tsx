@@ -175,11 +175,6 @@ export const PageTabs = () => {
       <MenuItem href="/ubestarter" isActive={pathname.startsWith('/ubestarter')}>
         <Trans>Ubestarter</Trans>
       </MenuItem>
-      <Box display={{ sm: 'none', lg: 'flex', xxl: 'flex' }} width="full">
-        <MenuItem href="/claim-new-ube" isActive={pathname.startsWith('/claim-new')}>
-          <Trans>Convert</Trans>
-        </MenuItem>
-      </Box>
       {/*<MenuItem href="/stake" isActive={pathname.startsWith('/stake')}>
         <Trans>Stake</Trans>
       </MenuItem>
