@@ -9,6 +9,7 @@ import { getDefaultFeeTiersWithData, isDynamicFeeTier } from 'components/Liquidi
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { SUPPORTED_V2POOL_CHAIN_IDS } from 'hooks/useNetworkSupportsV2'
@@ -243,6 +244,7 @@ export function SelectTokensStep({
     chainId: token0?.chainId,
     protocolVersion,
     currencies: derivedPositionInfo.currencies,
+    hook: hook ?? ZERO_ADDRESS,
   })
 
   const feeTiers = getDefaultFeeTiersWithData({ chainId: token0?.chainId, feeTierData, t })

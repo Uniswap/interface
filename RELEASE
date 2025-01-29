@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmQfE3pMVV1oR1B3nQddxPTEZBtyB4HPvAUHoKJRxYRaRT`
-- CIDv1: `bafybeibcpgdkbtvg5jux6wn55msnxuhlhswer4y5lashm6jltipdq3dtxy`
+- CIDv0: `QmZFXGq1NtaYzhf3RjWjaoTmr3ezXGMvLQjgudHxaofoNd`
+- CIDv1: `bafybeifcea7jfix5tqs6q65iuy2z2mano572wljjxqndobhh2qp7uwhnry`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeibcpgdkbtvg5jux6wn55msnxuhlhswer4y5lashm6jltipdq3dtxy.ipfs.dweb.link/
-- [ipfs://QmQfE3pMVV1oR1B3nQddxPTEZBtyB4HPvAUHoKJRxYRaRT/](ipfs://QmQfE3pMVV1oR1B3nQddxPTEZBtyB4HPvAUHoKJRxYRaRT/)
+- https://bafybeifcea7jfix5tqs6q65iuy2z2mano572wljjxqndobhh2qp7uwhnry.ipfs.dweb.link/
+- [ipfs://QmZFXGq1NtaYzhf3RjWjaoTmr3ezXGMvLQjgudHxaofoNd/](ipfs://QmZFXGq1NtaYzhf3RjWjaoTmr3ezXGMvLQjgudHxaofoNd/)
 
-### 5.68.2 (2025-01-29)
+### 5.68.3 (2025-01-29)
 
 
 ### Bug Fixes
 
-* **web:** use qn rpc for default and remove cloudflare eth (#15670) 14bd6aa
+* **web:** include correct hook filter on ListPools queries (#15669) 3828ffa
 
 

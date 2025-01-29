@@ -7,6 +7,7 @@ import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { DepositInfo, DepositState } from 'components/Liquidity/types'
 import { getPoolFromRest } from 'components/Liquidity/utils'
 import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { checkIsNative, useCurrency, useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useIsPoolOutOfSync } from 'hooks/useIsPoolOutOfSync'
@@ -93,7 +94,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
       protocolVersions: [protocolVersion],
       token0: getCurrencyAddressWithWrap(sortedCurrencies?.[0], protocolVersion),
       token1: getCurrencyAddressWithWrap(sortedCurrencies?.[1], protocolVersion),
-      hooks: state.hook?.toLowerCase(), // BE does not accept checksummed addresses
+      hooks: state.hook?.toLowerCase() ?? ZERO_ADDRESS, // BE does not accept checksummed addresses
     },
     poolsQueryEnabled,
   )

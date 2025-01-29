@@ -311,7 +311,7 @@ export const SelectPriceRangeStep = ({
   const { t } = useTranslation()
 
   const {
-    positionState: { fee },
+    positionState: { fee, hook },
     derivedPositionInfo,
   } = useCreatePositionContext()
   const { priceRangeState, setPriceRangeState, derivedPriceRangeInfo } = usePriceRangeContext()
@@ -517,6 +517,7 @@ export const SelectPriceRangeStep = ({
                 currencyA={baseCurrency ?? undefined}
                 currencyB={quoteCurrency ?? undefined}
                 feeAmount={fee.feeAmount}
+                hook={hook}
                 ticksAtLimit={{
                   LOWER: ticksAtLimit[0],
                   UPPER: ticksAtLimit[1],
@@ -536,6 +537,7 @@ export const SelectPriceRangeStep = ({
                 currency0={quoteCurrency}
                 currency1={baseCurrency}
                 feeTier={fee.feeAmount}
+                hook={hook}
                 tickSpacing={derivedPositionInfo.pool?.tickSpacing}
                 protocolVersion={derivedPositionInfo.protocolVersion}
                 poolId={derivedPositionInfo.poolId}
