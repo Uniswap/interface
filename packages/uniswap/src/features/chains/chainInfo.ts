@@ -188,7 +188,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
         http: [getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
       },
       [RPCType.Default]: {
-        http: ['https://cloudflare-eth.com'],
+        http: [getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
       },
       [RPCType.Fallback]: {
         http: ['https://rpc.ankr.com/eth', 'https://eth-mainnet.public.blastapi.io'],
