@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import {
   Flex,
-  FlexProps,
   Loader,
   Text,
   TouchableArea,
@@ -50,18 +49,16 @@ const UNISWAP_FEE = 0.0025
 export function TransactionDetailsInfoRows({
   transactionDetails,
   isShowingMore,
-  pt,
   onClose,
 }: {
   transactionDetails: TransactionDetails
   isShowingMore: boolean
-  pt?: FlexProps['pt']
   onClose: () => void
 }): JSX.Element {
   const rows = useTransactionDetailsInfoRows(transactionDetails, isShowingMore, onClose)
 
   return (
-    <Flex gap="$spacing8" px="$spacing8" pt={pt}>
+    <Flex gap="$spacing8" px="$spacing8">
       {rows}
     </Flex>
   )

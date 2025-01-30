@@ -1,8 +1,6 @@
-import { ReactComponent as WinterUni } from 'assets/svg/winter-uni.svg'
+import HolidayUniIcon from 'components/Logo/HolidayUniIcon'
 import { SVGProps } from 'components/Logo/UniIcon'
 import styled from 'lib/styled-components'
-import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 
 function Logo({ onClick }: { onClick?: () => void }) {
   return (
@@ -72,19 +70,8 @@ type NavIconProps = SVGProps & {
   onClick?: () => void
 }
 
-export const NavIcon = ({ clickable, onClick, ...props }: NavIconProps) => {
-  const { t } = useTranslation()
-  const showHolidayUni = useMemo(() => {
-    const date = new Date()
-    // months in javascript are 0 indexed...
-    const month = date.getMonth() + 1
-    const day = date.getDate()
-    return month === 12 || (month === 1 && day <= 7)
-  }, [])
-
-  return (
-    <Container clickable={clickable}>
-      {showHolidayUni ? <WinterUni title={t('common.happyHolidays')} {...props} /> : <Logo onClick={onClick} />}
-    </Container>
-  )
-}
+export const NavIcon = ({ clickable, onClick, ...props }: NavIconProps) => (
+  <Container clickable={clickable}>
+    {HolidayUniIcon(props) !== null ? <HolidayUniIcon {...props} /> : <Logo onClick={onClick} />}
+  </Container>
+)

@@ -1,5 +1,5 @@
 import { ComponentProps } from 'react'
-import { Flex, SpinningLoader, Text, TouchableArea, useIsDarkMode } from 'ui/src'
+import { Flex, SpinningLoader, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { MaxAmountButton } from 'uniswap/src/components/CurrencyInputPanel/MaxAmountButton'
@@ -39,7 +39,6 @@ export function TokenSelectorBalanceDisplay({
 }: TokenSelectorBalanceDisplayProps): JSX.Element {
   const balanceQuantity = portfolioBalance?.quantity.toString() || '0'
   const formattedAmount = useFormatExactCurrencyAmount(balanceQuantity, selectedCurrencyInfo?.currency) || '-'
-  const isDarkMode = useIsDarkMode()
 
   const currencyBalance = getCurrencyAmount({
     value: balanceQuantity,
@@ -58,7 +57,7 @@ export function TokenSelectorBalanceDisplay({
       <Flex
         row
         alignItems="center"
-        backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
+        backgroundColor="$surface2"
         borderColor="$surface3"
         borderRadius="$rounded20"
         borderWidth={1}

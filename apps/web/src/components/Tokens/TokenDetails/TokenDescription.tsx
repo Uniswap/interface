@@ -3,7 +3,7 @@ import { Globe } from 'components/Icons/Globe'
 import { TwitterXLogo } from 'components/Icons/TwitterX'
 import { FOTTooltipContent } from 'components/swap/SwapLineItem'
 import { NoInfoAvailable, truncateDescription } from 'components/Tokens/TokenDetails/shared'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import Tooltip, { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
 import { useTheme } from 'lib/styled-components'
@@ -114,18 +114,12 @@ export function TokenDescription() {
       </Text>
       <TokenButtonRow data-testid="token-details-info-links">
         {!currency.isNative && (
-          <MouseoverTooltip
-            disabled
-            placement="bottom"
-            size={TooltipSize.Max}
-            forceShow={isCopied}
-            text={t('common.copied')}
-          >
+          <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t('common.copied')}>
             <TokenInfoButton onPress={copy}>
               <Copy width="18px" height="18px" color={neutral1} />
               {shortenAddress(currency.address)}
             </TokenInfoButton>
-          </MouseoverTooltip>
+          </Tooltip>
         )}
         <ExternalLink href={explorerUrl}>
           <TokenInfoButton>

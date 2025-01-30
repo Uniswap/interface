@@ -24,7 +24,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { WalletType, getWalletMeta } from 'utils/walletMeta'
-import { WagmiProvider, useAccount as useAccountWagmi } from 'wagmi'
+import { WagmiProvider } from 'wagmi'
 
 export default function Web3Provider({ children }: { children: ReactNode }) {
   return (
@@ -71,34 +71,25 @@ export function Web3ProviderUpdater() {
     }
   }, [analyticsContext, networkProvider, provider, shouldTrace])
 
-  const accountWagmiChainId = useAccountWagmi().chainId // Direct using wagmi's account hook so we can log analytics for the user's wallet's chainId even if user is connected to unsupported chain
-  const previousConnectedChainId = usePrevious(account.isConnected ? accountWagmiChainId : undefined)
+  const previousConnectedChainId = usePrevious(account.chainId)
   useEffect(() => {
-    const chainChanged = previousConnectedChainId && previousConnectedChainId !== accountWagmiChainId
+    const chainChanged = previousConnectedChainId && previousConnectedChainId !== account.chainId
     if (chainChanged) {
-      if (account.address && accountWagmiChainId) {
-        // Should also update user property for chain_id when user switches chains
-        setUserProperty(CustomUserProperties.CHAIN_ID, accountWagmiChainId)
-        setUserProperty(CustomUserProperties.ALL_WALLET_CHAIN_IDS, accountWagmiChainId, true)
-      }
-
       sendAnalyticsEvent(InterfaceEventName.CHAIN_CHANGED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: account.address,
         wallet_type: connector?.name ?? 'Network',
-        chain_id: accountWagmiChainId,
+        chain_id: account.chainId,
         previousConnectedChainId,
         page: currentPage,
       })
     }
-  }, [account.address, accountWagmiChainId, connector?.name, currentPage, previousConnectedChainId])
+  }, [account.address, account.chainId, connector, currentPage, previousConnectedChainId])
 
   // Send analytics events when the active account changes.
   const previousAccount = usePrevious(account.address)
   const [connectedWallets, addConnectedWallet] = useConnectedWallets()
   useEffect(() => {
-    // User properties *must* be set before sending corresponding event properties,
-    // so that the event contains the correct and up-to-date user properties.
     if (account.address && account.address !== previousAccount) {
       const walletName = connector?.name ?? 'Network'
       const amplitudeWalletType = walletTypeToAmplitudeWalletType(connector?.type)
@@ -117,15 +108,17 @@ export function Web3ProviderUpdater() {
           logger.warn('Web3Provider', 'Updater', 'Failed to get client version', error)
         })
 
-      if (accountWagmiChainId) {
-        setUserProperty(CustomUserProperties.CHAIN_ID, accountWagmiChainId)
-        setUserProperty(CustomUserProperties.ALL_WALLET_CHAIN_IDS, accountWagmiChainId, true)
-      }
-
+      // User properties *must* be set before sending corresponding event properties,
+      // so that the event contains the correct and up-to-date user properties.
       setUserProperty(CustomUserProperties.WALLET_ADDRESS, account.address)
       setUserProperty(CustomUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account.address, true)
 
       setUserProperty(CustomUserProperties.WALLET_TYPE, amplitudeWalletType)
+
+      if (account.chainId) {
+        setUserProperty(CustomUserProperties.CHAIN_ID, account.chainId)
+        setUserProperty(CustomUserProperties.ALL_WALLET_CHAIN_IDS, account.chainId, true)
+      }
 
       const walletConnectedProperties = {
         result: WalletConnectionResult.SUCCEEDED,
@@ -174,11 +167,11 @@ export function Web3ProviderUpdater() {
     }
   }, [
     account.address,
-    accountWagmiChainId,
     addConnectedWallet,
+    currentPage,
+    account.chainId,
     connectedWallets,
     connector,
-    currentPage,
     previousAccount,
     provider,
     trackConversions,

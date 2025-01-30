@@ -1,10 +1,7 @@
 import { useSelector } from 'react-redux'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import {
-  selectHasDismissedUnichainColdBanner,
-  selectHasDismissedUnichainWarmBanner,
-} from 'uniswap/src/features/behaviorHistory/selectors'
+import { selectHasDismissedUnichainColdBanner } from 'uniswap/src/features/behaviorHistory/selectors'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSortedPortfolioBalances } from 'uniswap/src/features/dataApi/balances'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -22,7 +19,6 @@ export function useUnichainBannerVisibility(): {
   })
   const unichainPromoEnabled = useFeatureFlag(FeatureFlags.UnichainPromo)
   const hasDismissedUnichainColdBanner = useSelector(selectHasDismissedUnichainColdBanner)
-  const hasDismissedUnichainWarmBanner = useSelector(selectHasDismissedUnichainWarmBanner)
 
   const unichainVisibleBalances =
     sortedBalancesData?.balances.filter((b) => b.currencyInfo.currency.chainId === UniverseChainId.Unichain) ?? []
@@ -32,7 +28,6 @@ export function useUnichainBannerVisibility(): {
 
   return {
     shouldShowUnichainBannerCold: unichainPromoEnabled && !hasDismissedUnichainColdBanner && !hasUnichainBalance,
-    shouldShowUnichainBannerWarm:
-      unichainPromoEnabled && !hasDismissedUnichainWarmBanner && hasUnichainEth && !hasUnichainTokens,
+    shouldShowUnichainBannerWarm: unichainPromoEnabled && hasUnichainEth && !hasUnichainTokens,
   }
 }

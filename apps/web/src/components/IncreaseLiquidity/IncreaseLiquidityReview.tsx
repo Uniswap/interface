@@ -36,8 +36,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
 
   const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
 
-  const { derivedIncreaseLiquidityInfo, increaseLiquidityState, currentTransactionStep, setCurrentTransactionStep } =
-    useIncreaseLiquidityContext()
+  const { derivedIncreaseLiquidityInfo, increaseLiquidityState } = useIncreaseLiquidityContext()
   const { txInfo, gasFeeEstimateUSD } = useIncreaseLiquidityTxContext()
   const { dependentAmount } = txInfo || {}
 
@@ -58,12 +57,13 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   )
 
   const [steps, setSteps] = useState<TransactionStep[]>([])
+  const [currentStep, setCurrentStep] = useState<{ step: TransactionStep; accepted: boolean } | undefined>()
 
   if (!increaseLiquidityState.position) {
     throw new Error('a position must be defined')
   }
 
-  const { version, poolId, currency0Amount, currency1Amount, feeTier, chainId } = increaseLiquidityState.position
+  const { currency0Amount, currency1Amount, feeTier, chainId } = increaseLiquidityState.position
 
   const currentPrice = usePositionCurrentPrice(increaseLiquidityState.position)
   const poolTokenPercentage = useGetPoolTokenPercentage(increaseLiquidityState.position)
@@ -95,12 +95,12 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   const newToken1AmountUSD = useUSDCValue(newToken1Amount)
 
   const onFailure = () => {
-    setCurrentTransactionStep(undefined)
+    setCurrentStep(undefined)
   }
 
   const onSuccess = () => {
     setSteps([])
-    setCurrentTransactionStep(undefined)
+    setCurrentStep(undefined)
     onClose()
   }
 
@@ -117,13 +117,14 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
       return
     }
 
+    const { version, poolId, currency0Amount, currency1Amount } = increaseLiquidityState.position
     dispatch(
       liquiditySaga.actions.trigger({
         selectChain,
         startChainId,
         account,
         liquidityTxContext: txInfo,
-        setCurrentStep: setCurrentTransactionStep,
+        setCurrentStep,
         setSteps,
         onSuccess,
         onFailure,
@@ -137,9 +138,10 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
             currency1: currencyAmounts?.TOKEN1?.currency,
             currency0AmountUsd: currencyAmountsUSDValue?.TOKEN0,
             currency1AmountUsd: currencyAmountsUSDValue?.TOKEN1,
+            chainId: startChainId,
           }),
-          expectedAmountBaseRaw: currencyAmounts?.TOKEN0.quotient?.toString() ?? '-',
-          expectedAmountQuoteRaw: currencyAmounts?.TOKEN1.quotient?.toString() ?? '-',
+          expectedAmountBaseRaw: currency0Amount.quotient?.toString() ?? '0',
+          expectedAmountQuoteRaw: currency1Amount.quotient?.toString() ?? '0',
           createPosition: false,
         },
       }),
@@ -155,8 +157,8 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
         </Text>
         <TokenInfo currencyAmount={displayCurrencyAmounts?.TOKEN1} currencyUSDAmount={displayUSDAmounts?.TOKEN1} />
       </Flex>
-      {currentTransactionStep ? (
-        <ProgressIndicator currentStep={currentTransactionStep} steps={steps} />
+      {currentStep ? (
+        <ProgressIndicator currentStep={currentStep} steps={steps} />
       ) : (
         <>
           <Separator mx="$padding16" />

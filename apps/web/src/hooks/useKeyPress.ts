@@ -5,7 +5,7 @@ export enum KeyAction {
   DOWN = 'keydown',
 }
 
-export const useKeyDown = ({
+export const useKeyPress = ({
   callback,
   keys,
   keyAction,
@@ -22,7 +22,7 @@ export const useKeyDown = ({
     if (!keys || disabled) {
       return undefined
     }
-    const onKeyDown = (event: any) => {
+    const onKeyPress = (event: any) => {
       const wasAnyKeyPressed = keys.some((key) => event.key === key)
       // Do not prevent default if the target element is an input
       const targetWasNotAnInput = !['input', 'textarea'].includes(event.target.tagName.toLowerCase())
@@ -34,9 +34,9 @@ export const useKeyDown = ({
       }
     }
     const keyActionType = keyAction || KeyAction.DOWN
-    document.addEventListener(keyActionType, onKeyDown)
+    document.addEventListener(keyActionType, onKeyPress)
     return () => {
-      document.removeEventListener(keyActionType, onKeyDown)
+      document.removeEventListener(keyActionType, onKeyPress)
     }
   }, [callback, keys, keyAction, disabled, preventDefault])
 }

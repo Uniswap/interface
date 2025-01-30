@@ -1,23 +1,5 @@
-IPFS hash of the deployment:
-- CIDv0: `QmZFXGq1NtaYzhf3RjWjaoTmr3ezXGMvLQjgudHxaofoNd`
-- CIDv1: `bafybeifcea7jfix5tqs6q65iuy2z2mano572wljjxqndobhh2qp7uwhnry`
+We are back with some small updates! Here’s the latest:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
-
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
-
-IPFS gateways:
-- https://bafybeifcea7jfix5tqs6q65iuy2z2mano572wljjxqndobhh2qp7uwhnry.ipfs.dweb.link/
-- [ipfs://QmZFXGq1NtaYzhf3RjWjaoTmr3ezXGMvLQjgudHxaofoNd/](ipfs://QmZFXGq1NtaYzhf3RjWjaoTmr3ezXGMvLQjgudHxaofoNd/)
-
-### 5.68.3 (2025-01-29)
-
-
-### Bug Fixes
-
-* **web:** include correct hook filter on ListPools queries (#15669) 3828ffa
-
-
+- More robust dapp information on Activity screen
+- Improved volume-based sorting on our Explore page
+- Various bug fixes and performance improvements

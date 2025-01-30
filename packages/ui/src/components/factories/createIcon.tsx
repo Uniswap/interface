@@ -1,7 +1,7 @@
 import type { IconProps as TamaguiIconProps } from '@tamagui/helpers-icon'
-import { createElement, forwardRef, useState } from 'react'
+import { createElement, forwardRef } from 'react'
 import { Svg, SvgProps } from 'react-native-svg'
-import { ColorTokens, SpecificTokens, Stack, ThemeKeys, View, isWeb, styled, usePropsAndStyle } from 'tamagui'
+import { ColorTokens, SpecificTokens, Stack, ThemeKeys, isWeb, styled, usePropsAndStyle } from 'tamagui'
 import { withAnimated } from 'ui/src/components/factories/animated'
 import { DynamicColor } from 'ui/src/hooks/useSporeColors'
 import { IconSizeTokens } from 'ui/src/theme'
@@ -9,7 +9,7 @@ import { IconSizeTokens } from 'ui/src/theme'
 type SvgPropsWithRef = SvgProps & { ref: React.ForwardedRef<Svg>; style?: { color?: string } }
 
 export type IconProps = Omit<Omit<TamaguiIconProps, 'size' | 'width' | 'height'>, 'color'> & {
-  size?: IconSizeTokens | number | { width: number; height: number }
+  size?: IconSizeTokens | number
   // we need the string & {} to allow strings but not lose the intellisense autocomplete
   // eslint-disable-next-line @typescript-eslint/ban-types
   color?: (ColorTokens | ThemeKeys | (string & {})) | DynamicColor | null
@@ -30,8 +30,7 @@ const IconFrame = styled(Stack, {
   },
 })
 
-export type GeneratedIconProps = IconProps & { hoverColor?: IconProps['color'] }
-export type GeneratedIcon = React.ForwardRefExoticComponent<GeneratedIconProps & React.RefAttributes<Svg>>
+export type GeneratedIcon = React.ForwardRefExoticComponent<IconProps & React.RefAttributes<Svg>>
 
 export function createIcon({
   name,
@@ -42,17 +41,13 @@ export function createIcon({
   getIcon: (props: SvgPropsWithRef) => JSX.Element
   defaultFill?: string
 }): readonly [GeneratedIcon, GeneratedIcon] {
-  const Icon = forwardRef<Svg, GeneratedIconProps>(({ color, hoverColor: hoverColorProp, ...propsIn }, ref) => {
-    const [hover, setHover] = useState(false)
-    const renderColor = color ?? defaultFill ?? (isWeb ? 'currentColor' : undefined)
-    const hoverColor = hoverColorProp ?? renderColor
-
+  const Icon = forwardRef<Svg, IconProps>((propsIn, ref) => {
     const [props, style] = usePropsAndStyle(
       {
+        color: defaultFill ?? (isWeb ? 'currentColor' : undefined),
         size: '$icon.8',
         strokeWidth: 8,
         ...propsIn,
-        color: hover ? hoverColor : renderColor,
       },
       {
         resolveValues: 'value',
@@ -67,19 +62,11 @@ export function createIcon({
       style,
     }
 
-    const comp = props.Component ? createElement(props.Component, svgProps) : getIcon(svgProps)
-
-    // Only enabled on web because mobile doesn't support hover events
-    // It is also optional because it breaks some layouts
-    if (isWeb && hoverColorProp) {
-      return (
-        <View onHoverIn={() => setHover(true)} onHoverOut={() => setHover(false)}>
-          {comp}
-        </View>
-      )
+    if (props.Component) {
+      return createElement(props.Component, svgProps)
     }
 
-    return comp
+    return getIcon(svgProps)
   })
 
   Icon.displayName = name

@@ -98,15 +98,15 @@ exports[`SplitLogo inline renders inline button 1`] = `
       </RNSVGGroup>
     </RNSVGSvgView>
     <Text
-      allowFontScaling={true}
+      allowFontScaling={false}
       maxFontSizeMultiplier={1.2}
       style={
         {
           "color": "#9B9B9B",
           "fontFamily": "Basel Grotesk",
-          "fontSize": 17,
+          "fontSize": 16,
           "fontWeight": "500",
-          "lineHeight": 19.549999999999997,
+          "lineHeight": 18.4,
         }
       }
       suppressHighlighting={true}
@@ -163,15 +163,15 @@ exports[`SplitLogo renders without error 1`] = `
     }
   >
     <Text
-      allowFontScaling={true}
+      allowFontScaling={false}
       maxFontSizeMultiplier={1.2}
       style={
         {
           "color": "#FC72FF",
           "fontFamily": "Basel Grotesk",
-          "fontSize": 15,
+          "fontSize": 14,
           "fontWeight": "500",
-          "lineHeight": 17.25,
+          "lineHeight": 16.099999999999998,
         }
       }
       suppressHighlighting={true}

@@ -21,7 +21,8 @@ module.exports = {
   },
   haste: {
     defaultPlatform: 'ios',
-    platforms: ['ios', 'native'],
+    // avoid native because wallet tests assume no .native.ts
+    platforms: ['web', 'ios', 'android'],
   },
   setupFiles: [
     './jest-setup.js',
@@ -30,6 +31,5 @@ module.exports = {
   moduleNameMapper: {
     ...preset.moduleNameMapper,
     '@tamagui/core': '@tamagui/core/native-test',
-    '@tamagui/web': '@tamagui/core/native-test',
   },
 }

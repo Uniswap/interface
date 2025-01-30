@@ -5,7 +5,7 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useBlockExplorerLogo } from 'uniswap/src/features/chains/logos'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
-type IconComponentProps = SvgProps & { size?: IconSizeTokens | number | { width: number; height: number } }
+type IconComponentProps = SvgProps & { size?: IconSizeTokens | number }
 
 const iconsCache = new Map<UniverseChainId, React.FC<IconComponentProps>>()
 

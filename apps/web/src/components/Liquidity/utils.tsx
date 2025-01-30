@@ -451,14 +451,6 @@ export function getFlagWarning(flag: HookFlag, t: AppTFunction): FlagWarning | u
         info: t('position.hook.removeWarning'),
         dangerous: true,
       }
-    case HookFlag.BeforeDonate:
-    case HookFlag.AfterDonate:
-      return {
-        Icon: Flag,
-        name: t('common.donate'),
-        info: t('position.hook.donateWarning'),
-        dangerous: false,
-      }
     default:
       return undefined
   }
@@ -618,7 +610,7 @@ export function getDisplayedAmountsFromDependentAmount({
   displayUSDAmounts?: { [field in PositionField]?: CurrencyAmount<Currency> }
   displayCurrencyAmounts?: { [field in PositionField]?: CurrencyAmount<Currency> }
 } {
-  if (dependentAmount && exactField === PositionField.TOKEN1 && currencyAmounts?.TOKEN0?.greaterThan(0) && token0) {
+  if (dependentAmount && exactField === PositionField.TOKEN1 && currencyAmounts?.TOKEN0 && token0) {
     const dependentAmount0 = CurrencyAmount.fromRawAmount(token0, dependentAmount)
     const ratio = dependentAmount0.divide(currencyAmounts?.TOKEN0)
     return {
@@ -635,12 +627,7 @@ export function getDisplayedAmountsFromDependentAmount({
         TOKEN0: dependentAmount0 ?? currencyAmounts?.TOKEN0,
       },
     }
-  } else if (
-    dependentAmount &&
-    exactField === PositionField.TOKEN0 &&
-    currencyAmounts?.TOKEN1?.greaterThan(0) &&
-    token1
-  ) {
+  } else if (dependentAmount && exactField === PositionField.TOKEN0 && currencyAmounts?.TOKEN1 && token1) {
     const dependentAmount1 = CurrencyAmount.fromRawAmount(token1, dependentAmount)
     const ratio = dependentAmount1.divide(currencyAmounts?.TOKEN1)
     return {
@@ -663,38 +650,4 @@ export function getDisplayedAmountsFromDependentAmount({
     displayUSDAmounts: currencyAmountsUSDValue,
     displayCurrencyAmounts: currencyAmounts,
   }
-}
-
-// Takes the two potential errors from calls to the trading api and returns:
-//   - false if there is no error
-//   - a string with an error message if one can be parsed
-//   - true if there is an error but no message could be parsed
-// The calldata error takes precedence over the approval error for the message.
-export function getErrorMessageToDisplay({
-  calldataError,
-  approvalError,
-}: {
-  calldataError: unknown
-  approvalError?: unknown
-}): string | boolean {
-  if (calldataError) {
-    return parseErrorMessageTitle(calldataError) || true
-  }
-
-  if (approvalError) {
-    return parseErrorMessageTitle(approvalError) || true
-  }
-
-  return false
-}
-
-export function parseErrorMessageTitle(error: unknown, defaultTitle: string): string
-export function parseErrorMessageTitle(error: unknown): string | undefined
-export function parseErrorMessageTitle(error: unknown, defaultTitle?: string) {
-  if (!error) {
-    return defaultTitle
-  }
-
-  const errorWithData = error as { data?: { detail?: string }; name?: string }
-  return errorWithData.data?.detail || errorWithData.name || defaultTitle
 }

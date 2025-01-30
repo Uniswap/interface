@@ -264,37 +264,35 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
             <div
               class="c8"
             >
-              <div>
-                <div
-                  class="c0 c2 c9"
-                  data-testid="copy-address-0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
+              <div
+                class="c0 c2 c9"
+                data-testid="copy-address-0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
+              >
+                0x88e6...5640
+                <svg
+                  class="c10"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  0x88e6...5640
-                  <svg
-                    class="c10"
-                    fill="none"
-                    height="24"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    width="24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect
-                      height="13"
-                      rx="2"
-                      ry="2"
-                      width="13"
-                      x="9"
-                      y="9"
-                    />
-                    <path
-                      d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-                    />
-                  </svg>
-                </div>
+                  <rect
+                    height="13"
+                    rx="2"
+                    ry="2"
+                    width="13"
+                    x="9"
+                    y="9"
+                  />
+                  <path
+                    d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                  />
+                </svg>
               </div>
             </div>
             <a
@@ -596,37 +594,35 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
             <div
               class="c9"
             >
-              <div>
-                <div
-                  class="c0 c2 c10"
-                  data-testid="copy-address-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+              <div
+                class="c0 c2 c10"
+                data-testid="copy-address-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+              >
+                0xA0b8...eB48
+                <svg
+                  class="c11"
+                  fill="none"
+                  height="24"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  0xA0b8...eB48
-                  <svg
-                    class="c11"
-                    fill="none"
-                    height="24"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    width="24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect
-                      height="13"
-                      rx="2"
-                      ry="2"
-                      width="13"
-                      x="9"
-                      y="9"
-                    />
-                    <path
-                      d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-                    />
-                  </svg>
-                </div>
+                  <rect
+                    height="13"
+                    rx="2"
+                    ry="2"
+                    width="13"
+                    x="9"
+                    y="9"
+                  />
+                  <path
+                    d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                  />
+                </svg>
               </div>
             </div>
             <a

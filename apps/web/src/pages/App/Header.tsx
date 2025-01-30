@@ -9,7 +9,7 @@ import { memo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Z_INDEX } from 'theme/zIndex'
 import { useIsTouchDevice } from 'ui/src'
-import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
+import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 
 const AppHeader = styled.div`
   grid-area: ${GRID_AREAS.HEADER};

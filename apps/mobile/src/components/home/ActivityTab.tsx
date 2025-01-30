@@ -16,7 +16,7 @@ import { DDRumManualTiming } from 'utilities/src/logger/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
 import { isAndroid } from 'utilities/src/platform'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { useActivityData } from 'wallet/src/features/activity/hooks/useActivityData'
+import { useActivityData } from 'wallet/src/features/activity/useActivityData'
 
 export const ACTIVITY_TAB_DATA_DEPENDENCIES = [GQLQueries.TransactionList]
 

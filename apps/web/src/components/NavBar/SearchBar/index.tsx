@@ -7,7 +7,7 @@ import Row from 'components/deprecated/Row'
 import { useSearchTokens } from 'graphql/data/SearchTokens'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import useDebounce from 'hooks/useDebounce'
-import { KeyAction, useKeyDown } from 'hooks/useKeyPress'
+import { KeyAction, useKeyPress } from 'hooks/useKeyPress'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import styled, { css, useTheme } from 'lib/styled-components'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -182,13 +182,13 @@ export const SearchBar = ({
 
   useOnClickOutside(searchRef, () => isOpen && toggleOpen())
 
-  useKeyDown({
+  useKeyPress({
     callback: toggleOpen,
     keys: ['/'],
     disabled: isOpen,
     preventDefault: !isOpen,
   })
-  useKeyDown({
+  useKeyPress({
     callback: toggleOpen,
     keys: ['Escape'],
     keyAction: KeyAction.UP,

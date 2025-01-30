@@ -4,7 +4,6 @@ import { DEFAULT_INACTIVE_LIST_URLS } from 'constants/lists'
 import { updateVersion } from 'state/global/actions'
 import { acceptListUpdate, addList, fetchTokenList, removeList } from 'state/lists/actions'
 import { ListsState } from 'state/lists/types'
-import { Mutable } from 'types/mutable'
 
 type ListState = ListsState['byUrl'][string]
 
@@ -14,6 +13,8 @@ const NEW_LIST_STATE: ListState = {
   loadingRequestId: null,
   pendingUpdate: null,
 }
+
+type Mutable<T> = { -readonly [P in keyof T]: T[P] extends ReadonlyArray<infer U> ? U[] : T[P] }
 
 export const initialState: ListsState = {
   lastInitializedDefaultListOfLists: DEFAULT_INACTIVE_LIST_URLS,

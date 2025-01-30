@@ -345,8 +345,8 @@ export type LiquidityAnalyticsProperties = ITraceContext & {
   chain_id?: UniverseChainId
   baseCurrencyId: string
   quoteCurrencyId: string
-  token0AmountUSD?: number
-  token1AmountUSD?: number
+  token0AmountUSD: number
+  token1AmountUSD: number
   transaction_hash: string
 }
 

@@ -17,6 +17,7 @@ interface UniswapContext {
     prevChainId?: UniverseChainId
     outputChainId?: UniverseChainId
   }) => void
+  setSwapInputChainId: (chainId: UniverseChainId) => void
   swapInputChainId?: UniverseChainId
   setSwapOutputChainId: (chainId: UniverseChainId) => void
   swapOutputChainId?: UniverseChainId
@@ -42,7 +43,10 @@ export function UniswapProvider({
   useProviderHook,
   onConnectWallet,
 }: PropsWithChildren<
-  Omit<UniswapContext, 'isSwapTokenSelectorOpen' | 'setIsSwapTokenSelectorOpen' | 'setSwapOutputChainId'>
+  Omit<
+    UniswapContext,
+    'isSwapTokenSelectorOpen' | 'setIsSwapTokenSelectorOpen' | 'setSwapInputChainId' | 'setSwapOutputChainId'
+  >
 >): JSX.Element {
   const [swapInputChainId, setSwapInputChainId] = useState<UniverseChainId>()
   const [swapOutputChainId, setSwapOutputChainId] = useState<UniverseChainId>()
@@ -71,6 +75,7 @@ export function UniswapProvider({
       navigateToFiatOnRamp,
       onConnectWallet,
       swapInputChainId,
+      setSwapInputChainId,
       swapOutputChainId,
       setSwapOutputChainId,
       isSwapTokenSelectorOpen,

@@ -166,7 +166,7 @@ export function CurrencyRow({
         <MenuItem
           tabIndex={0}
           className={`token-item-${key}`}
-          onKeyDown={(e) => (e.key === 'Enter' ? onSelect(warningSeverity === WarningSeverity.None) : null)}
+          onKeyPress={(e) => (e.key === 'Enter' ? onSelect(warningSeverity === WarningSeverity.None) : null)}
           onClick={() => onSelect(warningSeverity === WarningSeverity.None)}
           selected={otherSelected || isSelected}
           dim={isBlockedToken}

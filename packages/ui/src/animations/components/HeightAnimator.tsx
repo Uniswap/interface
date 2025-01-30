@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { View, useEvent } from 'tamagui'
 
-export const HeightAnimator = View.styleable<{ open?: boolean; useInitialHeight?: boolean }>((props, ref) => {
-  const { open = true, children, useInitialHeight, ...rest } = props
-  const [visibleHeight, setVisibleHeight] = useState(useInitialHeight ? children.height : 0)
+export const HeightAnimator = View.styleable<{ open?: boolean }>((props, ref) => {
+  const { open = true, children, ...rest } = props
+  const [visibleHeight, setVisibleHeight] = useState(0)
 
   const onLayout = useEvent(({ nativeEvent }) => {
     if (nativeEvent.layout.height) {

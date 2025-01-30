@@ -2,7 +2,7 @@ import { Flex } from 'ui/src'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
-import { TradeInfoRow, useDebouncedGasInfo } from 'uniswap/src/features/transactions/swap/form/footer/TradeInfoRow'
+import { GasTradeRow, useDebouncedGasInfo } from 'uniswap/src/features/transactions/swap/form/footer/GasTradeRow'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 
@@ -40,7 +40,7 @@ export function GasAndWarningRows(): JSX.Element {
         )}
 
         <Flex gap="$spacing8" px="$spacing8" py="$spacing4">
-          <TradeInfoRow gasInfo={debouncedGasInfo} warning={inlineWarning} />
+          <GasTradeRow gasInfo={debouncedGasInfo} warning={inlineWarning} />
         </Flex>
 
         <InsufficientNativeTokenWarning flow="swap" gasFee={debouncedGasInfo.gasFee} warnings={warnings} />

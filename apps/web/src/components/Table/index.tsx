@@ -34,8 +34,8 @@ import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
 import { ThemedText } from 'theme/components'
 import { FadePresence } from 'theme/components/FadePresence'
 import { Z_INDEX } from 'theme/zIndex'
-import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 function TableBody<Data extends RowData>({

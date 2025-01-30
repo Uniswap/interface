@@ -255,7 +255,7 @@ exports[`UniswapWalletOptions Test Download wallet option should be visible if e
               <svg
                 fill="none"
                 stroke-width="8"
-                style="width: 32px; height: 32px; color: currentColor;"
+                style="color: currentColor; width: 32px; height: 32px;"
                 viewBox="0 0 48 48"
               >
                 <rect
@@ -295,7 +295,7 @@ exports[`UniswapWalletOptions Test Download wallet option should be visible if e
               <svg
                 fill="none"
                 stroke-width="8"
-                style="width: 32px; height: 32px; min-width: 32px; background-color: rgb(254, 244, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px; color: rgb(252, 114, 255);"
+                style="color: rgb(252, 114, 255); width: 32px; height: 32px; min-width: 32px; background-color: rgb(254, 244, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px;"
                 viewBox="0 0 22 22"
               >
                 <path
@@ -533,7 +533,7 @@ exports[`UniswapWalletOptions Test Extension connecter should be shown if detect
               <svg
                 fill="none"
                 stroke-width="8"
-                style="width: 40px; height: 40px; min-width: 40px; background-color: rgb(254, 244, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px; color: rgb(252, 114, 255);"
+                style="color: rgb(252, 114, 255); width: 40px; height: 40px; min-width: 40px; background-color: rgb(254, 244, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px;"
                 viewBox="0 0 22 22"
               >
                 <path

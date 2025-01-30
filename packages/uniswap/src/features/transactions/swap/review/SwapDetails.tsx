@@ -252,11 +252,7 @@ function HeightAnimatorWrapper({ children }: { children: React.ReactNode }): JSX
   if (isMobileApp || isMobileWeb) {
     return <>{children}</>
   } else {
-    return (
-      <HeightAnimator useInitialHeight animation="fast">
-        {children}
-      </HeightAnimator>
-    )
+    return <HeightAnimator animation="fast">{children}</HeightAnimator>
   }
 }
 

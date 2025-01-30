@@ -22,11 +22,11 @@ export function useDerivedIncreaseLiquidityInfo(
 
   const currency0Info = useCurrencyInfoWithUnwrapForTradingApi({
     currency: positionInfo.currency0Amount.currency,
-    shouldUnwrap: unwrapNativeCurrency && positionInfo.version !== ProtocolVersion.V4,
+    shouldUnwrap: unwrapNativeCurrency,
   })
   const currency1Info = useCurrencyInfoWithUnwrapForTradingApi({
     currency: positionInfo.currency1Amount.currency,
-    shouldUnwrap: unwrapNativeCurrency && positionInfo.version !== ProtocolVersion.V4,
+    shouldUnwrap: unwrapNativeCurrency,
   })
 
   const currency0 = currency0Info?.currency

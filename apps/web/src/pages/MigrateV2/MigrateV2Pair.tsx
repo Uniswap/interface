@@ -3,7 +3,7 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES, type Currency } from '@uniswap/sdk-core'
+import { CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position, TickMath, priceToClosestTick } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge/Badge'
 import { ButtonConfirmed } from 'components/Button/buttons'
@@ -18,7 +18,7 @@ import RateToggle from 'components/RateToggle'
 import SettingsTab from 'components/Settings'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { AutoColumn } from 'components/deprecated/Column'
-import { RowBetween } from 'components/deprecated/Row'
+import { AutoRow, RowBetween, RowFixed } from 'components/deprecated/Row'
 import { Dots } from 'components/swap/styled'
 import { useToken } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
@@ -33,10 +33,11 @@ import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import JSBI from 'jsbi'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { useTheme } from 'lib/styled-components'
+import { BodyWrapper } from 'pages/App/AppBody'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
-import { AlertCircle, AlertTriangle } from 'react-feather'
+import { AlertCircle, AlertTriangle, ArrowDown } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 import { useTokenBalance } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { Bound, resetMintState } from 'state/mint/v3/actions'
@@ -44,10 +45,8 @@ import { useRangeHopCallbacks, useV3DerivedMintInfo, useV3MintActionHandlers } f
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
-import { ExternalLink, ThemedText } from 'theme/components'
-import { Flex, Text, TouchableArea } from 'ui/src'
-import { Arrow } from 'ui/src/components/arrow/Arrow'
-import { iconSizes } from 'ui/src/theme'
+import { BackArrowLink, ExternalLink, ThemedText } from 'theme/components'
+import { Text } from 'ui/src'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -76,30 +75,6 @@ function EmptyState({ message }: { message: ReactNode }) {
   )
 }
 
-const TokenPairHeader = ({
-  children,
-  currency0,
-  currency1,
-  badgeText,
-}: {
-  children: React.ReactNode
-  currency0: Currency
-  currency1: Currency
-  badgeText: string
-}) => {
-  return (
-    <Flex row justifyContent="space-between">
-      <Flex row alignItems="center">
-        <DoubleCurrencyLogo currencies={[currency0, currency1]} size={iconSizes.icon20} />
-        <Text variant="subheading1" ml="$spacing8">
-          {children}
-        </Text>
-      </Flex>
-      <Badge>{badgeText}</Badge>
-    </Flex>
-  )
-}
-
 function LiquidityInfo({
   token0Amount,
   token1Amount,
@@ -107,33 +82,35 @@ function LiquidityInfo({
   token0Amount: CurrencyAmount<Token>
   token1Amount: CurrencyAmount<Token>
 }) {
-  const currencyPairs = [
-    {
-      currency: unwrappedToken(token0Amount.currency),
-      amount: token0Amount,
-    },
-    {
-      currency: unwrappedToken(token1Amount.currency),
-      amount: token1Amount,
-    },
-  ]
+  const currency0 = unwrappedToken(token0Amount.currency)
+  const currency1 = unwrappedToken(token1Amount.currency)
 
   return (
-    <Flex gap="$gap8">
-      {currencyPairs.map(({ currency, amount }) => (
-        <Flex key={currency.symbol} row justifyContent="space-between">
-          <Flex row>
-            <CurrencyLogo size={iconSizes.icon20} currency={currency} />
-            <Text variant="body3" ml="$spacing8">
-              {currency.symbol}
-            </Text>
-          </Flex>
-          <Text variant="body3">
-            <FormattedCurrencyAmount currencyAmount={amount} />
+    <AutoColumn gap="sm">
+      <RowBetween>
+        <RowFixed>
+          <CurrencyLogo size={20} style={{ marginRight: '8px' }} currency={currency0} />
+          <Text fontSize={16} fontWeight="$medium">
+            {currency0.symbol}
           </Text>
-        </Flex>
-      ))}
-    </Flex>
+        </RowFixed>
+        <Text fontSize={16} fontWeight="$medium">
+          <FormattedCurrencyAmount currencyAmount={token0Amount} />
+        </Text>
+      </RowBetween>
+      <RowBetween>
+        <RowFixed>
+          <CurrencyLogo size={20} style={{ marginRight: '8px' }} currency={currency1} />
+          <Text fontSize={16} fontWeight="$medium">
+            {currency1.symbol}
+          </Text>
+        </RowFixed>
+
+        <Text fontSize={16} fontWeight="$medium">
+          <FormattedCurrencyAmount currencyAmount={token1Amount} />
+        </Text>
+      </RowBetween>
+    </AutoColumn>
   )
 }
 
@@ -388,6 +365,7 @@ function V2PairMigration({
                 currency1: token1,
                 poolId: pair.address,
                 version: ProtocolVersion.V2,
+                chainId: pairBalance.currency.chainId,
                 currency0AmountUsd: token0USD,
                 currency1AmountUsd: token1USD,
               }),
@@ -442,8 +420,8 @@ function V2PairMigration({
   }
 
   return (
-    <Flex gap="$gap20">
-      <Text my="$spacing8" variant="body2" textAlign="center">
+    <AutoColumn gap="20px">
+      <ThemedText.DeprecatedBody my={9} style={{ fontWeight: 485, textAlign: 'center' }}>
         <Trans
           i18nKey="migrate.v2Description"
           values={{
@@ -464,38 +442,45 @@ function V2PairMigration({
           </ExternalLink>
         </Trans>
         .
-      </Text>
+      </ThemedText.DeprecatedBody>
 
       <LightCard>
-        <Flex gap="$spacing16">
-          <TokenPairHeader currency0={currency0} currency1={currency1} badgeText={isNotUniswap ? 'Sushi' : 'V2'}>
-            <Trans
-              i18nKey="migrate.lpTokens"
-              values={{
-                symA: currency0.symbol,
-                symB: currency1.symbol,
-              }}
-            />
-          </TokenPairHeader>
+        <AutoColumn gap="lg">
+          <RowBetween>
+            <RowFixed style={{ marginLeft: '8px' }}>
+              <DoubleCurrencyLogo currencies={[currency0, currency1]} size={20} />
+              <ThemedText.DeprecatedMediumHeader style={{ marginLeft: '8px' }}>
+                <Trans
+                  i18nKey="migrate.lpTokens"
+                  values={{
+                    symA: currency0.symbol,
+                    symB: currency1.symbol,
+                  }}
+                />
+              </ThemedText.DeprecatedMediumHeader>
+            </RowFixed>
+            <Badge>{isNotUniswap ? 'Sushi' : 'V2'}</Badge>
+          </RowBetween>
           <LiquidityInfo token0Amount={token0Value} token1Amount={token1Value} />
-        </Flex>
+        </AutoColumn>
       </LightCard>
 
-      <Flex row centered>
-        <Arrow direction="s" color="$neutral1" size={iconSizes.icon24} />
-      </Flex>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <ArrowDown size={24} />
+      </div>
 
       <LightCard>
-        <Flex gap="$spacing16">
-          <TokenPairHeader currency0={currency0} currency1={currency1} badgeText="v3">
-            <Trans
-              i18nKey="migrate.lpNFT"
-              values={{
-                symA: currency0.symbol,
-                symB: currency1.symbol,
-              }}
-            />
-          </TokenPairHeader>
+        <AutoColumn gap="lg">
+          <RowBetween>
+            <RowFixed style={{ marginLeft: '8px' }}>
+              <DoubleCurrencyLogo currencies={[currency0, currency1]} size={20} />
+              <ThemedText.DeprecatedMediumHeader style={{ marginLeft: '8px' }}>
+                <Trans i18nKey="migrate.lpNFT" values={{ symA: currency0.symbol, symB: currency1.symbol }} />
+              </ThemedText.DeprecatedMediumHeader>
+            </RowFixed>
+            <Badge>V3</Badge>
+          </RowBetween>
+
           <FeeSelector feeAmount={feeAmount} handleFeePoolSelect={setFeeAmount} />
           {noLiquidity && (
             <BlueCard style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -731,9 +716,9 @@ function V2PairMigration({
               </ButtonConfirmed>
             </AutoColumn>
           </AutoColumn>
-        </Flex>
+        </AutoColumn>
       </LightCard>
-    </Flex>
+    </AutoColumn>
   )
 }
 
@@ -741,7 +726,6 @@ export default function MigrateV2Pair() {
   const { address } = useParams<{ address: string }>()
   // reset mint state on component mount, and as a cleanup (on unmount)
   const dispatch = useAppDispatch()
-  const navigate = useNavigate()
   useEffect(() => {
     dispatch(resetMintState())
     return () => {
@@ -783,12 +767,6 @@ export default function MigrateV2Pair() {
     [token1, reserve1Raw],
   )
 
-  const MIGRATE_PAGE_URL = '/migrate/v2'
-
-  const handleNavigateBackToMigrate = useCallback(() => {
-    navigate(MIGRATE_PAGE_URL)
-  }, [navigate])
-
   // redirect for invalid url params
   if (
     !validatedAddress ||
@@ -804,7 +782,7 @@ export default function MigrateV2Pair() {
       token1Address,
       chainId: account.chainId,
     })
-    return <Navigate to={MIGRATE_PAGE_URL} replace />
+    return <Navigate to="/migrate/v2" replace />
   }
 
   return (
@@ -819,30 +797,10 @@ export default function MigrateV2Pair() {
         token1Address,
       }}
     >
-      <Flex
-        maxWidth={420}
-        width="100%"
-        backgroundColor="$surface1"
-        borderRadius="$rounded16"
-        borderWidth="$spacing1"
-        borderColor="$surface3"
-        mt="$spacing16"
-        mx="auto"
-        p="$spacing24"
-      >
-        <Flex gap="$gap16">
-          <Flex row alignItems="center" justifyContent="space-between" gap="$gap8">
-            <TouchableArea
-              p="$spacing6"
-              borderRadius="$rounded8"
-              onPress={handleNavigateBackToMigrate}
-              hoverable
-              hoverStyle={{
-                backgroundColor: '$backgroundHover',
-              }}
-            >
-              <Arrow direction="w" color="$neutral1" size={iconSizes.icon24} />
-            </TouchableArea>
+      <BodyWrapper style={{ padding: 24 }}>
+        <AutoColumn gap="16px">
+          <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
+            <BackArrowLink to="/migrate/v2" />
             <MigrateHeader>
               <Trans i18nKey="migrate.v2Title" />
             </MigrateHeader>
@@ -851,7 +809,7 @@ export default function MigrateV2Pair() {
               chainId={account.chainId}
               hideRoutingSettings
             />
-          </Flex>
+          </AutoRow>
 
           {!account.isConnected ? (
             <ThemedText.DeprecatedLargeHeader>
@@ -870,8 +828,8 @@ export default function MigrateV2Pair() {
           ) : (
             <EmptyState message={<Trans i18nKey="common.loading" />} />
           )}
-        </Flex>
-      </Flex>
+        </AutoColumn>
+      </BodyWrapper>
     </Trace>
   )
 }

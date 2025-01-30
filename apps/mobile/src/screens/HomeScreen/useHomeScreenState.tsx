@@ -3,7 +3,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
-import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks/useFormattedTransactionDataForActivity'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { logger } from 'utilities/src/logger/logger'
+import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectHasBalanceOrActivityForAddress } from 'wallet/src/features/wallet/selectors'
 import { setHasBalanceOrActivity } from 'wallet/src/features/wallet/slice'
@@ -57,7 +59,16 @@ export function useHomeScreenState(): {
 
   useEffect(() => {
     if (hasUsedWallet && !hasUsedWalletFromCache) {
-      dispatch(setHasBalanceOrActivity({ address, hasBalanceOrActivity: true }))
+      const validAddress = getValidAddress(address)
+      if (!validAddress) {
+        // do nothing. This will revert to the old logic to overfetch.
+        logger.error('Unexpected call to `setHasUsedWallet` with invalid `address`', {
+          extra: { payload: address },
+          tags: { file: 'behaviorHistory/slice.ts', function: 'setHasUsedWallet' },
+        })
+        return
+      }
+      dispatch(setHasBalanceOrActivity({ address: validAddress, hasBalanceOrActivity: true }))
     }
   }, [hasUsedWallet, dispatch, address, hasUsedWalletFromCache])
 

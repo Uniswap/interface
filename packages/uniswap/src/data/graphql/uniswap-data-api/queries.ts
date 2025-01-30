@@ -11,6 +11,7 @@ export enum GQLQueries {
   TokenPriceHistory = 'TokenPriceHistory',
   TokenProjects = 'TokenProjects',
   TransactionList = 'TransactionList',
+  FeedTransactionList = 'FeedTransactionList',
   TopTokens = 'TopTokens',
   SearchTokens = 'SearchTokens',
   ExploreSearch = 'ExploreSearch',

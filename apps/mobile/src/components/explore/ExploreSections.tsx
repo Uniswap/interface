@@ -1,4 +1,4 @@
-import { TokenRankingsResponse, TokenRankingsStat } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+import { TokenRankingsResponse, TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItem, ListRenderItemInfo, StyleSheet } from 'react-native'
@@ -229,24 +229,24 @@ const tokenKey = (token: TokenItemDataWithMetadata, index: number): string => {
   }-${index}`
 }
 
-function tokenRankingStatsToTokenItemData(tokenRankingStat: TokenRankingsStat): TokenItemData | null {
-  const formattedChain = fromGraphQLChain(tokenRankingStat.chain)
+function tokenStatsToTokenItemData(tokenStat: TokenStats): TokenItemData | null {
+  const formattedChain = fromGraphQLChain(tokenStat.chain)
 
   if (!formattedChain) {
     return null
   }
 
   return {
-    name: tokenRankingStat.name ?? '',
-    logoUrl: tokenRankingStat.logo ?? '',
+    name: tokenStat.name ?? '',
+    logoUrl: tokenStat.logo ?? '',
     chainId: formattedChain,
-    address: tokenRankingStat.address,
-    symbol: tokenRankingStat.symbol ?? '',
-    price: tokenRankingStat.price?.value,
-    marketCap: tokenRankingStat.fullyDilutedValuation?.value,
-    pricePercentChange24h: tokenRankingStat.pricePercentChange1Day?.value,
-    volume24h: tokenRankingStat.volume1Day?.value,
-    totalValueLocked: tokenRankingStat.totalValueLocked?.value,
+    address: tokenStat.address,
+    symbol: tokenStat.symbol ?? '',
+    price: tokenStat.price?.value,
+    marketCap: tokenStat.fullyDilutedValuation?.value,
+    pricePercentChange24h: tokenStat.pricePercentChange1Day?.value,
+    volume24h: tokenStat.volume1Day?.value,
+    totalValueLocked: tokenStat.volume1Day?.value,
   }
 }
 
@@ -290,9 +290,9 @@ function useTokenItems(
 
     const tokenMetadataDisplayType = getTokenMetadataDisplayType(orderBy)
     const topTokens: TokenItemDataWithMetadata[] | undefined = data.tokenRankings[orderBy]?.tokens?.reduce(
-      (acc: TokenItemDataWithMetadata[], tokenRankingStat) => {
-        if (tokenRankingStat) {
-          const tokenItemData = tokenRankingStatsToTokenItemData(tokenRankingStat)
+      (acc: TokenItemDataWithMetadata[], tokenStat) => {
+        if (tokenStat) {
+          const tokenItemData = tokenStatsToTokenItemData(tokenStat)
           if (tokenItemData) {
             acc.push({ tokenItemData, tokenMetadataDisplayType })
           }

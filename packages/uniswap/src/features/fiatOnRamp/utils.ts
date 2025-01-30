@@ -35,7 +35,6 @@ export interface InvalidRequestAmountTooLow extends FORApiError {
     errorName: 'InvalidRequestAmountTooLow'
     context: {
       minimumAllowed: number
-      unit?: 'token' | 'fiat'
     }
   }
 }
@@ -55,7 +54,6 @@ export interface InvalidRequestAmountTooHigh extends FORApiError {
     errorName: 'InvalidRequestAmountTooHigh'
     context: {
       maximumAllowed: number
-      unit?: 'token' | 'fiat'
     }
   }
 }

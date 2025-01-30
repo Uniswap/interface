@@ -9,7 +9,6 @@ import { useMemo } from 'react'
 import ERC20ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20Interface } from 'uniswap/src/abis/types/Erc20'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { isAddress } from 'utilities/src/addresses'
 import { currencyKey } from 'utils/currencyKey'
 
@@ -162,15 +161,8 @@ function useGqlCurrencyBalances(
       const balance = balanceMap[key]
 
       if (balance) {
-        const currencyAmount = getCurrencyAmount({
-          value: balance.balance.toString(),
-          valueType: ValueType.Exact,
-          currency,
-        })
-        if (!currencyAmount) {
-          return undefined
-        }
-        return currencyAmount
+        const balanceQuantityRaw = JSBI.BigInt(Math.floor(balance.balance * Math.pow(10, currency.decimals ?? 18)))
+        return CurrencyAmount.fromRawAmount(currency, balanceQuantityRaw)
       } else {
         return CurrencyAmount.fromRawAmount(currency, 0)
       }

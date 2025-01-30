@@ -10,9 +10,9 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
 import { Flex, Text, useMedia } from 'ui/src'
-import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SwapRedirectFn } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 
 interface HeroProps {
   scrollToRef: () => void

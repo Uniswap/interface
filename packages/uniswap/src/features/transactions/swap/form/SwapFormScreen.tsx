@@ -563,9 +563,8 @@ function SwapFormContent({
   const isBlockedTokens =
     getTokenWarningSeverity(currencies.input) === WarningSeverity.Blocked ||
     getTokenWarningSeverity(currencies.output) === WarningSeverity.Blocked
-
   // We *always* want to show the footer on native mobile because it's used to calculate the available space for the `DecimalPad`.
-  const showFooter = Boolean(!hideFooter && (isMobileApp || (!isBlockedTokens && input && output && exactAmountToken)))
+  const showFooter = Boolean(!hideFooter && (isMobileApp || (!isBlockedTokens && input && output)))
 
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">

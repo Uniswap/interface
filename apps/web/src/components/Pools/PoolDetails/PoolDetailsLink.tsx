@@ -3,7 +3,7 @@ import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { DetailBubble, SmallDetailBubble } from 'components/Pools/PoolDetails/shared'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import Tooltip, { TooltipSize } from 'components/Tooltip'
 import Row from 'components/deprecated/Row'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
@@ -170,18 +170,12 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
       </TokenTextWrapper>
       <ButtonsRow>
         {!isNative && (
-          <MouseoverTooltip
-            disabled
-            forceShow={isCopied}
-            placement="bottom"
-            size={TooltipSize.Max}
-            text={t('common.copied')}
-          >
+          <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t('common.copied')}>
             <CopyAddress data-testid={`copy-address-${address}`} onClick={copy}>
               {shortenAddress(address, truncateAddress ? 2 : undefined, truncateAddress === 'both' ? 2 : undefined)}
               <StyledCopyIcon />
             </CopyAddress>
-          </MouseoverTooltip>
+          </Tooltip>
         )}
         {explorerUrl && (
           <ExternalLink href={explorerUrl} data-testid={`explorer-url-${explorerUrl}`}>

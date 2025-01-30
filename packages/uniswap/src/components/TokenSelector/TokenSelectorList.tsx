@@ -5,7 +5,6 @@ import { fonts } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/constants'
 import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/items/TokenOptionItem'
-import { SectionFooter, TokenSectionFooterProps } from 'uniswap/src/components/TokenSelector/items/TokenSectionFooter'
 import { SectionHeader, TokenSectionHeaderProps } from 'uniswap/src/components/TokenSelector/items/TokenSectionHeader'
 import { HorizontalTokenList } from 'uniswap/src/components/TokenSelector/lists/HorizontalTokenList/HorizontalTokenList'
 import {
@@ -184,22 +183,9 @@ function _TokenSelectorList({
         endElement={section.endElement}
         sectionKey={section.sectionKey}
         name={section.name}
-        chainId={chainFilter}
       />
     ),
-    [chainFilter],
-  )
-
-  const renderSectionFooter = useCallback(
-    ({ section }: { section: TokenSectionFooterProps }): JSX.Element => (
-      <SectionFooter
-        rightElement={section.rightElement}
-        sectionKey={section.sectionKey}
-        name={section.name}
-        chainId={chainFilter}
-      />
-    ),
-    [chainFilter],
+    [],
   )
 
   if (hasError) {
@@ -237,7 +223,6 @@ function _TokenSelectorList({
         keyExtractor={key}
         renderItem={renderItem}
         renderSectionHeader={renderSectionHeader}
-        renderSectionFooter={renderSectionFooter}
         sectionListRef={sectionListRef}
         sections={sections ?? []}
         expandedItems={expandedItems}

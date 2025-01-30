@@ -628,7 +628,7 @@ export function getV3PriceRangeInfo({
         : tryParseTick(sortedToken0, sortedToken1, fee.feeAmount, state.maxPrice)
 
   const ticks: [OptionalNumber, OptionalNumber] = [lowerTick, upperTick]
-  const invalidRange = Boolean(lowerTick !== undefined && upperTick !== undefined && lowerTick >= upperTick)
+  const invalidRange = Boolean(lowerTick && upperTick && lowerTick >= upperTick)
 
   const ticksAtLimit: [boolean, boolean] = state.fullRange
     ? [true, true]
@@ -658,12 +658,8 @@ export function getV3PriceRangeInfo({
   )
 
   // This is in terms of the sorted tokens
-  const deposit0Disabled = Boolean(
-    upperTick !== undefined && poolForPosition && poolForPosition.tickCurrent >= upperTick,
-  )
-  const deposit1Disabled = Boolean(
-    lowerTick !== undefined && poolForPosition && poolForPosition.tickCurrent <= lowerTick,
-  )
+  const deposit0Disabled = Boolean(upperTick && poolForPosition && poolForPosition.tickCurrent >= upperTick)
+  const deposit1Disabled = Boolean(lowerTick && poolForPosition && poolForPosition.tickCurrent <= lowerTick)
 
   const depositADisabled =
     invalidRange ||
@@ -794,7 +790,7 @@ export function getV4PriceRangeInfo({
         ? tryParseV4Tick(sortedCurrency1, sortedCurrency0, state.minPrice, poolForPosition?.tickSpacing)
         : tryParseV4Tick(sortedCurrency0, sortedCurrency1, state.maxPrice, poolForPosition?.tickSpacing)
   const ticks: [OptionalNumber, OptionalNumber] = [lowerTick, upperTick]
-  const invalidRange = Boolean(lowerTick !== undefined && upperTick !== undefined && lowerTick >= upperTick)
+  const invalidRange = Boolean(lowerTick && upperTick && lowerTick >= upperTick)
 
   const ticksAtLimit: [boolean, boolean] = state.fullRange
     ? [true, true]
@@ -823,25 +819,20 @@ export function getV4PriceRangeInfo({
     !invalidRange && price && prices[0] && prices[1] && (price.lessThan(prices[0]) || price.greaterThan(prices[1])),
   )
 
-  // This is in terms of the sorted tokens
-  const deposit0Disabled = Boolean(
-    upperTick !== undefined && poolForPosition && poolForPosition.tickCurrent >= upperTick,
-  )
-  const deposit1Disabled = Boolean(
-    lowerTick !== undefined && poolForPosition && poolForPosition.tickCurrent <= lowerTick,
-  )
+  const deposit0Disabled = Boolean(upperTick && poolForPosition && poolForPosition.tickCurrent >= upperTick)
+  const deposit1Disabled = Boolean(lowerTick && poolForPosition && poolForPosition.tickCurrent <= lowerTick)
 
   const depositADisabled =
     invalidRange ||
     Boolean(
-      (deposit0Disabled && poolForPosition && currencies[0] && poolForPosition.token0.equals(currencies[0])) ||
-        (deposit1Disabled && poolForPosition && currencies[0] && poolForPosition.token1.equals(currencies[0])),
+      (deposit0Disabled && poolForPosition && baseCurrency && poolForPosition.token0.equals(baseCurrency)) ||
+        (deposit1Disabled && poolForPosition && baseCurrency && poolForPosition.token1.equals(baseCurrency)),
     )
   const depositBDisabled =
     invalidRange ||
     Boolean(
-      (deposit0Disabled && poolForPosition && currencies[1] && poolForPosition.token0.equals(currencies[1])) ||
-        (deposit1Disabled && poolForPosition && currencies[1] && poolForPosition.token1.equals(currencies[1])),
+      (deposit0Disabled && poolForPosition && quoteCurrency && poolForPosition.token0.equals(quoteCurrency)) ||
+        (deposit1Disabled && poolForPosition && quoteCurrency && poolForPosition.token1.equals(quoteCurrency)),
     )
 
   return {
@@ -1040,7 +1031,7 @@ export function generateCreateCalldataQueryParams({
     ? derivedPriceRangeInfo.tickSpaceLimits[1]
     : derivedPriceRangeInfo.ticks?.[1]
 
-  if (tickLower === undefined || tickUpper === undefined) {
+  if (!tickLower || !tickUpper) {
     return undefined
   }
 

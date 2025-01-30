@@ -4,12 +4,8 @@ import { Flex, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 
-export function TradingAPIError({ errorMessage, refetch }: { errorMessage: boolean | string; refetch?: () => void }) {
+export function TradingAPIError({ refetch }: { refetch?: () => void }) {
   const { t } = useTranslation()
-
-  if (!errorMessage) {
-    return null
-  }
 
   return (
     <Flex row gap="$spacing12" backgroundColor="$surface2" borderRadius="$rounded16" p="$padding12">
@@ -23,12 +19,6 @@ export function TradingAPIError({ errorMessage, refetch }: { errorMessage: boole
         <Text variant="body3" color="$neutral2">
           {t('pool.liquidity.data.error.message')}
         </Text>
-        {/* the error message will be of type true or a string. True means there was an error but the message is unknown. */}
-        {errorMessage !== true && (
-          <Text variant="body3" color="$neutral3">
-            {t('common.error.label')}: {errorMessage}
-          </Text>
-        )}
         {Boolean(refetch) && (
           <TouchableArea {...ClickableTamaguiStyle} onPress={refetch} mt="$spacing2">
             <Flex row gap="$gap4">

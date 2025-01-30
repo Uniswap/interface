@@ -6,23 +6,6 @@ export const animations = createAnimations({
     type: 'timing',
     duration: 100,
   },
-  '125ms': {
-    type: 'timing',
-    duration: 125,
-    easing: Easing.inOut(Easing.quad),
-  },
-  '125msDelayed': {
-    type: 'timing',
-    duration: 125,
-    easing: Easing.inOut(Easing.quad),
-    delay: 250,
-  },
-  '125msDelayedLong': {
-    type: 'timing',
-    duration: 125,
-    easing: Easing.inOut(Easing.quad),
-    delay: 2000,
-  },
   '200ms': {
     type: 'timing',
     duration: 200,

@@ -1,4 +1,5 @@
 import { LoaderButton } from 'components/Button/LoaderButton'
+import { ButtonError } from 'components/Button/buttons'
 import { DepositInputForm } from 'components/Liquidity/DepositInputForm'
 import { getDisplayedAmountsFromDependentAmount } from 'components/Liquidity/utils'
 import {
@@ -16,7 +17,7 @@ import { Flex, FlexProps, Text } from 'ui/src'
 
 export const DepositStep = ({ ...rest }: FlexProps) => {
   const {
-    derivedPositionInfo: { currencies },
+    derivedPositionInfo: { currencies, isPoolOutOfSync },
   } = useCreatePositionContext()
   const { derivedPriceRangeInfo } = usePriceRangeContext()
   const {
@@ -113,19 +114,25 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
           amount0Loading={requestLoading && exactField === PositionField.TOKEN1}
           amount1Loading={requestLoading && exactField === PositionField.TOKEN0}
         />
-        <LoaderButton
-          flex={1}
-          py="$spacing16"
-          px="$spacing20"
-          onPress={handleReview}
-          disabled={disabled}
-          buttonKey="Position-Create-DepositButton"
-          loading={requestLoading}
-        >
-          <Text variant="buttonLabel1" color="$neutralContrast">
-            {inputError ? inputError : <Trans i18nKey="swap.button.review" />}
-          </Text>
-        </LoaderButton>
+        {!isPoolOutOfSync || disabled ? (
+          <LoaderButton
+            flex={1}
+            py="$spacing16"
+            px="$spacing20"
+            onPress={handleReview}
+            disabled={disabled}
+            buttonKey="Position-Create-DepositButton"
+            loading={requestLoading}
+          >
+            <Text variant="buttonLabel1" color="$neutralContrast">
+              {inputError ? inputError : <Trans i18nKey="swap.button.review" />}
+            </Text>
+          </LoaderButton>
+        ) : (
+          <ButtonError error $borderRadius="20px" onClick={handleReview} color="white">
+            <Trans i18nKey="swap.button.review" />
+          </ButtonError>
+        )}
       </Container>
       <CreatePositionModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
     </>

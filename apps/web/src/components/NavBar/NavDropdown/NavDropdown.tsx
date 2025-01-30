@@ -1,6 +1,6 @@
 import { ReactNode, RefObject } from 'react'
 import { Flex, Popover, WebBottomSheet, styled, useScrollbarStyles, useShadowPropsMedium } from 'ui/src'
-import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
+import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 
 const NavDropdownContent = styled(Flex, {
   borderRadius: '$rounded16',

@@ -26,18 +26,15 @@ export function usePDPPriceChartData(
 export function usePDPVolumeChartData(
   variables: PDPChartQueryVars,
 ): ChartQueryResult<SingleHistogramData, ChartType.VOLUME> {
-  const { data, loading } = usePoolVolumeHistoryQuery({
-    variables,
-    skip: !variables.addressOrId || variables.addressOrId === '',
-  })
+  const { data, loading } = usePoolVolumeHistoryQuery({ variables })
 
   return useMemo(() => {
-    const { historicalVolume } = data?.v2Pair ?? data?.v3Pool ?? data?.v4Pool ?? {}
+    const { historicalVolume } = data?.v2Pair ?? data?.v3Pool ?? {}
     const entries =
       historicalVolume?.filter((amt): amt is TimestampedAmount => amt !== null).map(withUTCTimestamp) ?? []
 
     const dataQuality = checkDataQuality(entries, ChartType.VOLUME, variables.duration)
 
     return { chartType: ChartType.VOLUME, entries, loading, dataQuality }
-  }, [data?.v2Pair, data?.v3Pool, data?.v4Pool, loading, variables.duration])
+  }, [data?.v2Pair, data?.v3Pool, loading, variables.duration])
 }

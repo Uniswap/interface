@@ -1,12 +1,9 @@
-// eslint-disable-next-line no-restricted-imports
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { HookModal } from 'components/Liquidity/HookModal'
 import { isDynamicFeeTier } from 'components/Liquidity/utils'
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
-import { useInitialPoolInputs } from 'pages/Pool/Positions/create/hooks'
 import { AdvancedButton } from 'pages/Pool/Positions/create/shared'
 import { DEFAULT_POSITION_STATE } from 'pages/Pool/Positions/create/types'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DeprecatedButton, Text, TouchableArea, styled } from 'ui/src'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
@@ -17,7 +14,7 @@ import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
-import { useOnClickOutside, usePrevious } from 'utilities/src/react/hooks'
+import { useOnClickOutside } from 'utilities/src/react/hooks'
 
 const MenuFlyout = styled(Flex, {
   animation: 'fastHeavy',
@@ -69,36 +66,21 @@ export function AddHook() {
 
   const [hookModalOpen, setHookModalOpen] = useState(false)
 
-  const { hook: initialHook } = useInitialPoolInputs()
   const {
-    positionState: { hook, fee, protocolVersion },
+    positionState: { hook, fee },
     setPositionState,
   } = useCreatePositionContext()
   const [hookInputEnabled, setHookInputEnabled] = useState(!!hook)
   const [hookValue, setHookValue] = useState(hook ?? '')
 
-  const onSelectHook = useCallback(
-    (value: string | undefined) => {
-      setPositionState((state) => ({
-        ...state,
-        hook: value,
-        userApprovedHook: value,
-      }))
-    },
-    [setPositionState],
-  )
+  const onSelectHook = (value: string | undefined) => {
+    setPositionState((state) => ({
+      ...state,
+      hook: value,
+    }))
+  }
 
-  useEffect(() => {
-    if (initialHook && protocolVersion === ProtocolVersion.V4) {
-      setPositionState((state) => ({
-        ...state,
-        hook: initialHook,
-      }))
-      setHookInputEnabled(true)
-    }
-  }, [initialHook, protocolVersion, setPositionState])
-
-  const onClearHook = useCallback(() => {
+  const onClearHook = () => {
     if (isDynamicFeeTier(fee)) {
       setPositionState((state) => ({
         ...state,
@@ -109,16 +91,7 @@ export function AddHook() {
     setHookInputEnabled(false)
     setHookValue('')
     onSelectHook(undefined)
-  }, [fee, onSelectHook, setPositionState])
-
-  // In the case that the user clears a hook that was filled in from a url
-  // this ensures the input is cleared again
-  const previousHook = usePrevious(hook)
-  useEffect(() => {
-    if (previousHook && !hook) {
-      onClearHook()
-    }
-  }, [hook, onClearHook, previousHook])
+  }
 
   if (hookInputEnabled) {
     const showFlyout = isFocusing && hookValue
@@ -169,7 +142,7 @@ export function AddHook() {
           <Flex ref={inputWrapperNode} row gap="$spacing4">
             <TextInput
               autoFocus
-              placeholder={t('liquidity.hooks.address.input')}
+              placeholder="Enter hook address"
               autoCapitalize="none"
               color="$neutral1"
               fontFamily="$subHeading"

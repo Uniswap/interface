@@ -11,7 +11,6 @@ import { PriceChartType } from 'components/Charts/utils'
 import { DropdownSelector } from 'components/DropdownSelector'
 import { useDensityChartData } from 'components/LiquidityChartRangeInput/hooks'
 import { DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
-import { ZERO_ADDRESS } from 'constants/misc'
 import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
 import {
   getCurrencyAddressWithWrap,
@@ -45,7 +44,6 @@ export function LiquidityRangeInput({
   tickSpacing,
   protocolVersion,
   poolId,
-  hook,
   minPrice,
   maxPrice,
   setMinPrice,
@@ -58,7 +56,6 @@ export function LiquidityRangeInput({
   tickSpacing?: number
   protocolVersion: ProtocolVersion
   poolId: string
-  hook?: string
   minPrice?: number
   maxPrice?: number
   disableBrushInteraction?: boolean
@@ -176,7 +173,6 @@ export function LiquidityRangeInput({
     version: protocolVersion,
     feeAmount: Number(feeTier),
     tickSpacing,
-    hooks: hook ?? ZERO_ADDRESS,
   })
 
   const sortedFormattedData = useMemo(() => {

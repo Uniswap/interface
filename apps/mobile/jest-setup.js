@@ -61,6 +61,12 @@ jest.mock('react-native', () => {
   return RN
 })
 
+jest.mock('react-native-safe-area-context', () => ({
+  useSafeAreaInsets: jest.fn().mockImplementation(() => ({})),
+  useSafeAreaFrame: jest.fn().mockImplementation(() => ({})),
+  SafeAreaProvider: jest.fn(({ children }) => children),
+}))
+
 jest.mock('@react-navigation/elements', () => ({
   useHeaderHeight: jest.fn().mockImplementation(() => 200),
 }))

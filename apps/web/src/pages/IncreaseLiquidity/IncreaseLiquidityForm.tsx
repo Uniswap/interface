@@ -1,5 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { LoaderButton } from 'components/Button/LoaderButton'
 import {
@@ -51,17 +49,17 @@ export function IncreaseLiquidityForm() {
   const { currency0Amount: initialCurrency0Amount, currency1Amount: initialCurrency1Amount } = position
   const currency0Info = useCurrencyInfoWithUnwrapForTradingApi({
     currency: initialCurrency0Amount.currency,
-    shouldUnwrap: unwrapNativeCurrency && position.version !== ProtocolVersion.V4,
+    shouldUnwrap: unwrapNativeCurrency,
   })
   const currency1Info = useCurrencyInfoWithUnwrapForTradingApi({
     currency: initialCurrency1Amount.currency,
-    shouldUnwrap: unwrapNativeCurrency && position.version !== ProtocolVersion.V4,
+    shouldUnwrap: unwrapNativeCurrency,
   })
 
   const token0 = currency0Info?.currency
   const token1 = currency1Info?.currency
-  const canUnwrap0 = useCanUnwrapCurrency(initialCurrency0Amount.currency) && position.version !== ProtocolVersion.V4
-  const canUnwrap1 = useCanUnwrapCurrency(initialCurrency1Amount.currency) && position.version !== ProtocolVersion.V4
+  const canUnwrap0 = useCanUnwrapCurrency(initialCurrency0Amount.currency)
+  const canUnwrap1 = useCanUnwrapCurrency(initialCurrency1Amount.currency)
   const nativeCurrencyInfo = useNativeCurrencyInfo(position.chainId)
 
   const currency0Amount = useMemo(() => {
@@ -164,7 +162,7 @@ export function IncreaseLiquidityForm() {
         currency1Amount={currency1Amount}
         networkCost={gasFeeEstimateUSD}
       />
-      <TradingAPIError errorMessage={dataFetchingError} refetch={refetch} />
+      {dataFetchingError && <TradingAPIError refetch={refetch} />}
       <LoaderButton
         disabled={Boolean(error) || !txInfo?.txRequest}
         onPress={handleOnContinue}

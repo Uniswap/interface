@@ -4,7 +4,6 @@ import { DepositInfo } from 'components/Liquidity/types'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
 import { LiquidityModalInitialState } from 'state/application/reducer'
 import { PositionField } from 'types/position'
-import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 
 export enum IncreaseLiquidityStep {
   Input,
@@ -36,8 +35,6 @@ interface IncreaseLiquidityContextType {
   setIncreaseLiquidityState: Dispatch<SetStateAction<IncreaseLiquidityState>>
   unwrapNativeCurrency: boolean
   setUnwrapNativeCurrency: Dispatch<SetStateAction<boolean>>
-  currentTransactionStep?: { step: TransactionStep; accepted: boolean }
-  setCurrentTransactionStep: Dispatch<SetStateAction<{ step: TransactionStep; accepted: boolean } | undefined>>
 }
 
 const IncreaseLiquidityContext = createContext<IncreaseLiquidityContextType>({
@@ -48,8 +45,6 @@ const IncreaseLiquidityContext = createContext<IncreaseLiquidityContextType>({
   setIncreaseLiquidityState: () => undefined,
   unwrapNativeCurrency: true,
   setUnwrapNativeCurrency: () => undefined,
-  currentTransactionStep: undefined,
-  setCurrentTransactionStep: () => undefined,
 })
 
 export function useIncreaseLiquidityContext() {
@@ -65,9 +60,6 @@ export function IncreaseLiquidityContextProvider({ children }: PropsWithChildren
     ...DEFAULT_INCREASE_LIQUIDITY_STATE,
     position: positionInfo,
   })
-  const [currentTransactionStep, setCurrentTransactionStep] = useState<
-    { step: TransactionStep; accepted: boolean } | undefined
-  >()
 
   const derivedIncreaseLiquidityInfo = useDerivedIncreaseLiquidityInfo(increaseLiquidityState, unwrapNativeCurrency)
 
@@ -80,10 +72,8 @@ export function IncreaseLiquidityContextProvider({ children }: PropsWithChildren
       derivedIncreaseLiquidityInfo,
       unwrapNativeCurrency,
       setUnwrapNativeCurrency,
-      currentTransactionStep,
-      setCurrentTransactionStep,
     }),
-    [increaseLiquidityState, derivedIncreaseLiquidityInfo, step, unwrapNativeCurrency, currentTransactionStep],
+    [increaseLiquidityState, derivedIncreaseLiquidityInfo, step, unwrapNativeCurrency],
   )
 
   return <IncreaseLiquidityContext.Provider value={value}>{children}</IncreaseLiquidityContext.Provider>

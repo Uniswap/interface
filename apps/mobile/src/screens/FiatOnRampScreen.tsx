@@ -398,13 +398,12 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
 
   const notAvailableInThisRegion = supportedFiatCurrencies?.length === 0
 
-  const { errorText } = useParseFiatOnRampError({
-    error: !notAvailableInThisRegion && quotesError,
-    currencyCode: meldSupportedFiatCurrency.code,
-    tokenCode: quoteCurrency.currencyInfo?.currency.symbol,
-    balanceError: exceedsBalanceError,
-    noQuotesReturned: quotes?.length === 0,
-  })
+  const { errorText } = useParseFiatOnRampError(
+    !notAvailableInThisRegion && quotesError,
+    meldSupportedFiatCurrency.code,
+    exceedsBalanceError,
+    quotes?.length === 0,
+  )
 
   const onSelectionChange = useCallback(
     (start: number, end: number) => {

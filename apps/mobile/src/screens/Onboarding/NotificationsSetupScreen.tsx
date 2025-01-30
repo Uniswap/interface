@@ -1,15 +1,15 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert } from 'react-native'
+import { Alert, Image, Platform, StyleSheet } from 'react-native'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { NotificationsBackgroundImage } from 'src/components/notifications/NotificationsBGImage'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
-import { DeprecatedButton, Flex } from 'ui/src'
+import { DeprecatedButton, Flex, useIsDarkMode } from 'ui/src'
+import { ONBOARDING_NOTIFICATIONS_DARK, ONBOARDING_NOTIFICATIONS_LIGHT } from 'ui/src/assets'
 import { BellOn } from 'ui/src/components/icons'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -77,7 +77,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
       title={t('onboarding.notification.title')}
       onSkip={navigateToNextScreen}
     >
-      <Flex fill centered shrink>
+      <Flex centered shrink>
         <NotificationsBackgroundImage />
       </Flex>
       <Trace logPress element={ElementName.Enable}>
@@ -88,3 +88,23 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
     </OnboardingScreen>
   )
 }
+
+const NotificationsBackgroundImage = (): JSX.Element => {
+  const isDarkMode = useIsDarkMode()
+  return (
+    <Image
+      resizeMode="contain"
+      source={
+        isDarkMode ? Platform.select(ONBOARDING_NOTIFICATIONS_DARK) : Platform.select(ONBOARDING_NOTIFICATIONS_LIGHT)
+      }
+      style={styles.image}
+    />
+  )
+}
+
+const styles = StyleSheet.create({
+  image: {
+    height: '100%',
+    width: '100%',
+  },
+})

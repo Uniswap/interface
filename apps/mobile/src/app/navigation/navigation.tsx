@@ -5,13 +5,12 @@ import {
   NavigationState,
   createNavigationContainerRef,
 } from '@react-navigation/native'
-import { NativeStackNavigationOptions, createNativeStackNavigator } from '@react-navigation/native-stack'
-import { StackNavigationOptions, TransitionPresets, createStackNavigator } from '@react-navigation/stack'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { TransitionPresets, createStackNavigator } from '@react-navigation/stack'
 import React, { useEffect } from 'react'
 import { DevSettings } from 'react-native'
 import { useSelector } from 'react-redux'
 import StorybookUIRoot from 'src/../.storybook'
-import { NotificationsOSSettingsModal } from 'src/app/modals/NotificationsOSSettingsModal'
 import { renderHeaderBackButton, renderHeaderBackImage } from 'src/app/navigation/components'
 import { navigationRef } from 'src/app/navigation/navigationRef'
 import {
@@ -78,7 +77,6 @@ import { useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import {
@@ -105,7 +103,7 @@ function SettingsStackGroup(): JSX.Element {
   return (
     <SettingsStack.Navigator
       screenOptions={{
-        ...navNativeStackOptions.noHeader,
+        ...navOptions.noHeader,
         fullScreenGestureEnabled: true,
         animation: 'slide_from_right',
       }}
@@ -137,9 +135,6 @@ function SettingsStackGroup(): JSX.Element {
       <SettingsStack.Screen component={SettingsAppearanceScreen} name={MobileScreens.SettingsAppearance} />
       <SettingsStack.Screen component={SettingsPrivacyScreen} name={MobileScreens.SettingsPrivacy} />
       <SettingsStack.Screen component={SettingsNotificationsScreen} name={MobileScreens.SettingsNotifications} />
-      <SettingsStack.Group screenOptions={navNativeStackOptions.presentationBottomSheet}>
-        <SettingsStack.Screen component={NotificationsOSSettingsModal} name={ModalName.NotificationsOSSettings} />
-      </SettingsStack.Group>
     </SettingsStack.Navigator>
   )
 }
@@ -217,7 +212,7 @@ export function ExploreStackNavigator(): JSX.Element {
       <ExploreStack.Navigator
         initialRouteName={MobileScreens.Explore}
         screenOptions={{
-          ...navNativeStackOptions.noHeader,
+          ...navOptions.noHeader,
           fullScreenGestureEnabled: true,
           gestureEnabled: true,
           animation: 'slide_from_right',
@@ -252,7 +247,7 @@ export function FiatOnRampStackNavigator(): JSX.Element {
         <FiatOnRampStack.Navigator
           initialRouteName={FiatOnRampScreens.AmountInput}
           screenOptions={{
-            ...navNativeStackOptions.noHeader,
+            ...navOptions.noHeader,
             fullScreenGestureEnabled: true,
             gestureEnabled: true,
             animation: 'slide_from_right',
@@ -293,13 +288,13 @@ export function OnboardingStackNavigator(): JSX.Element {
             <OnboardingStack.Screen
               component={AppLoadingScreen}
               name={OnboardingScreens.AppLoading}
-              options={navNativeStackOptions.noHeader}
+              options={navOptions.noHeader}
             />
           )}
           <OnboardingStack.Screen
             component={LandingScreen}
             name={OnboardingScreens.Landing}
-            options={navNativeStackOptions.noHeader}
+            options={navOptions.noHeader}
           />
           <OnboardingStack.Screen component={ClaimUnitagScreen} name={UnitagScreens.ClaimUnitag} />
           <OnboardingStack.Screen
@@ -328,12 +323,12 @@ export function OnboardingStackNavigator(): JSX.Element {
           <OnboardingStack.Screen
             component={OnDeviceRecoveryScreen}
             name={OnboardingScreens.OnDeviceRecovery}
-            options={navNativeStackOptions.noHeader}
+            options={navOptions.noHeader}
           />
           <OnboardingStack.Screen
             component={OnDeviceRecoveryViewSeedPhraseScreen}
             name={OnboardingScreens.OnDeviceRecoveryViewSeedPhrase}
-            options={navNativeStackOptions.noHeader}
+            options={navOptions.noHeader}
           />
           <OnboardingStack.Screen
             component={RestoreCloudBackupLoadingScreen}
@@ -382,12 +377,12 @@ export function UnitagStackNavigator(): JSX.Element {
         <UnitagStack.Screen
           component={UnitagConfirmationScreen}
           name={UnitagScreens.UnitagConfirmation}
-          options={{ ...navStackOptions.noHeader, gestureEnabled: false }}
+          options={{ ...navOptions.noHeader, gestureEnabled: false }}
         />
         <UnitagStack.Screen
           component={EditUnitagProfileScreen}
           name={UnitagScreens.EditProfile}
-          options={{ ...navStackOptions.noHeader, gestureEnabled: false }}
+          options={{ ...navOptions.noHeader, gestureEnabled: false }}
         />
       </UnitagStack.Group>
     </UnitagStack.Navigator>
@@ -415,7 +410,7 @@ export function AppStackNavigator(): JSX.Element {
   return (
     <AppStack.Navigator
       screenOptions={{
-        ...navNativeStackOptions.noHeader,
+        ...navOptions.noHeader,
         fullScreenGestureEnabled: true,
         gestureEnabled: true,
         animation: 'slide_from_right',
@@ -438,7 +433,7 @@ export function AppStackNavigator(): JSX.Element {
       <AppStack.Screen component={NFTCollectionScreen} name={MobileScreens.NFTCollection} />
       <AppStack.Screen component={WebViewScreen} name={MobileScreens.WebView} />
       <AppStack.Screen component={SettingsStackGroup} name={MobileScreens.SettingsStack} />
-      <AppStack.Group screenOptions={navNativeStackOptions.presentationModal}>
+      <AppStack.Group screenOptions={navOptions.presentationModal}>
         <AppStack.Screen component={EducationScreen} name={MobileScreens.Education} />
       </AppStack.Group>
       {isDevEnv() && <AppStack.Screen component={StorybookUIRoot} name={MobileScreens.Storybook} />}
@@ -446,17 +441,7 @@ export function AppStackNavigator(): JSX.Element {
   )
 }
 
-const navNativeStackOptions: Record<string, NativeStackNavigationOptions> = {
+const navOptions = {
   noHeader: { headerShown: false },
   presentationModal: { presentation: 'modal' },
-  presentationBottomSheet: {
-    presentation: 'containedTransparentModal',
-    animation: 'none',
-    animationDuration: 0,
-    contentStyle: { backgroundColor: 'transparent' },
-  },
-}
-
-const navStackOptions: Record<string, StackNavigationOptions> = {
-  noHeader: { headerShown: false },
-}
+} as const

@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Flex, Text, TouchableArea, UnichainAnimatedText, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
@@ -9,11 +8,6 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { selectHasSeenUnichainPromotionBridgingTooltip } from 'uniswap/src/features/behaviorHistory/selectors'
-import { setHasSeenBridgingTooltip } from 'uniswap/src/features/behaviorHistory/slice'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
@@ -60,19 +54,12 @@ function _TokenOptionItem({
   const { colorSecondary: warningIconColor } = getWarningIconColors(severity)
   const shouldShowWarningModalOnPress = isBlocked || (severity !== WarningSeverity.None && !tokenWarningDismissed)
 
-  const hasSeenUnichainPromotionBridgingTooltip = useSelector(selectHasSeenUnichainPromotionBridgingTooltip)
-  const isUnichainPromoEnabled = useFeatureFlag(FeatureFlags.UnichainPromo)
-  const dispatch = useDispatch()
-  const isUnichainEth = currency.isNative && currency.chainId === UniverseChainId.Unichain
-  const showUnichainPromoAnimation = isUnichainPromoEnabled && !hasSeenUnichainPromotionBridgingTooltip && isUnichainEth
-
   const handleShowWarningModal = useCallback((): void => {
     dismissNativeKeyboard()
     setShowWarningModal(true)
   }, [setShowWarningModal])
 
   const onPressTokenOption = useCallback(() => {
-    dispatch(setHasSeenBridgingTooltip(true))
     if (showWarnings && shouldShowWarningModalOnPress) {
       // On mobile web we need to wait for the keyboard to hide
       // before showing the modal to avoid height issues
@@ -87,7 +74,7 @@ function _TokenOptionItem({
     }
 
     onPress()
-  }, [dispatch, showWarnings, shouldShowWarningModalOnPress, onPress, isKeyboardOpen, handleShowWarningModal])
+  }, [showWarnings, shouldShowWarningModalOnPress, onPress, isKeyboardOpen, handleShowWarningModal])
 
   const onAcceptTokenWarning = useCallback(() => {
     setShowWarningModal(false)
@@ -124,16 +111,9 @@ function _TokenOptionItem({
             />
             <Flex shrink>
               <Flex row alignItems="center" gap="$spacing8">
-                <UnichainAnimatedText
-                  color="$neutral1"
-                  gradientTextColor={colors.neutral1.get().toString()}
-                  delayMs={800}
-                  enabled={showUnichainPromoAnimation}
-                  numberOfLines={1}
-                  variant="body1"
-                >
+                <Text color="$neutral1" numberOfLines={1} variant="body1">
                   {currency.name}
-                </UnichainAnimatedText>
+                </Text>
                 {warningIconColor && (
                   <Flex>
                     <WarningIcon severity={severity} size="$icon.16" strokeColorOverride={warningIconColor} />

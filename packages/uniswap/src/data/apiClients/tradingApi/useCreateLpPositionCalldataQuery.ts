@@ -18,9 +18,10 @@ export function useCreateLpPositionCalldataQuery({
 
   return useQuery<CreateLPPositionResponse>({
     queryKey,
+    enabled: !!params,
     queryFn: async () => {
       if (!params) {
-        throw { name: 'Params are required' }
+        throw new Error('Params are required')
       }
       return await createLpPosition(paramsWithDeadline)
     },

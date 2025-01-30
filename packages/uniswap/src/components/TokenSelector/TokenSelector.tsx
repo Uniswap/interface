@@ -3,7 +3,6 @@ import { Currency } from '@uniswap/sdk-core'
 import { hasStringAsync } from 'expo-clipboard'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
 import { Flex, Text, TouchableArea, isWeb, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { X } from 'ui/src/components/icons/X'
@@ -22,7 +21,6 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
-import { selectHasSeenUnichainPromotionNetworkSelectorTooltip } from 'uniswap/src/features/behaviorHistory/selectors'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -89,9 +87,6 @@ export function TokenSelectorContent({
   const scrollbarStyles = useScrollbarStyles()
   const isKeyboardOpen = useIsKeyboardOpen()
   const { navigateToBuyOrReceiveWithEmptyWallet } = useUniswapContext()
-  const hasSeenUnichainPromotionNetworkSelectorTooltip = useSelector(
-    selectHasSeenUnichainPromotionNetworkSelectorTooltip,
-  )
 
   const media = useMedia()
   const isSmallScreen = (media.sm && isInterface) || isMobileApp || isMobileWeb
@@ -243,9 +238,9 @@ export function TokenSelectorContent({
             onSelectCurrency={onSelectCurrencyCallback}
           />
         )
-      default:
-        return undefined
     }
+
+    return undefined
   }, [
     searchInFocus,
     searchFilter,
@@ -284,9 +279,7 @@ export function TokenSelectorContent({
               backgroundColor="$surface2"
               endAdornment={
                 <Flex row alignItems="center">
-                  {hasClipboardString && hasSeenUnichainPromotionNetworkSelectorTooltip && (
-                    <PasteButton inline textVariant="buttonLabel3" onPress={handlePaste} />
-                  )}
+                  {hasClipboardString && <PasteButton inline textVariant="buttonLabel3" onPress={handlePaste} />}
                   <NetworkFilter
                     includeAllNetworks={!isTestnetModeEnabled}
                     chainIds={chainIds || enabledChains}

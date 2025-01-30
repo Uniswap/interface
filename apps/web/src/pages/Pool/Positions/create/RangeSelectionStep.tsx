@@ -311,7 +311,7 @@ export const SelectPriceRangeStep = ({
   const { t } = useTranslation()
 
   const {
-    positionState: { fee, hook },
+    positionState: { fee },
     derivedPositionInfo,
   } = useCreatePositionContext()
   const { priceRangeState, setPriceRangeState, derivedPriceRangeInfo } = usePriceRangeContext()
@@ -419,6 +419,7 @@ export const SelectPriceRangeStep = ({
   const rangeSelectionInputValues = useMemo(() => {
     const leftPrice = isSorted ? prices?.[0] : prices?.[1]?.invert()
     const rightPrice = isSorted ? prices?.[1] : prices?.[0]?.invert()
+
     return [
       ticksAtLimit[isSorted ? 0 : 1] ? '0' : leftPrice?.toSignificant(8) ?? '',
       ticksAtLimit[isSorted ? 1 : 0] ? '∞' : rightPrice?.toSignificant(8) ?? '',
@@ -511,13 +512,12 @@ export const SelectPriceRangeStep = ({
               px: '$spacing8',
             }}
           >
-            <DisplayCurrentPrice price={priceRangeState.priceInverted ? price?.invert() : price} />
+            <DisplayCurrentPrice price={price} />
             {!creatingPoolOrPair && !isPriceRangeInputV2Enabled && (
               <LiquidityChartRangeInput
                 currencyA={baseCurrency ?? undefined}
                 currencyB={quoteCurrency ?? undefined}
                 feeAmount={fee.feeAmount}
-                hook={hook}
                 ticksAtLimit={{
                   LOWER: ticksAtLimit[0],
                   UPPER: ticksAtLimit[1],
@@ -537,21 +537,12 @@ export const SelectPriceRangeStep = ({
                 currency0={quoteCurrency}
                 currency1={baseCurrency}
                 feeTier={fee.feeAmount}
-                hook={hook}
                 tickSpacing={derivedPositionInfo.pool?.tickSpacing}
                 protocolVersion={derivedPositionInfo.protocolVersion}
                 poolId={derivedPositionInfo.poolId}
                 disableBrushInteraction={priceRangeState.fullRange}
-                minPrice={
-                  priceRangeState.fullRange
-                    ? undefined
-                    : parseFloat((invertPrice ? prices?.[0]?.invert() : prices?.[0])?.toSignificant(8) ?? '0')
-                }
-                maxPrice={
-                  priceRangeState.fullRange
-                    ? undefined
-                    : parseFloat((invertPrice ? prices?.[1]?.invert() : prices?.[1])?.toSignificant(8) ?? '0')
-                }
+                minPrice={priceRangeState.fullRange ? undefined : parseFloat(prices?.[0]?.toSignificant(8) ?? '0')}
+                maxPrice={priceRangeState.fullRange ? undefined : parseFloat(prices?.[1]?.toSignificant(8) ?? '0')}
                 setMinPrice={(minPrice?: number) => {
                   handleChartRangeInput(RangeSelectionInput.MIN, minPrice?.toString())
                 }}

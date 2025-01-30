@@ -1211,7 +1211,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
                       <svg
                         fill="none"
                         stroke-width="8"
-                        style="width: 20px; height: 20px; color: currentColor;"
+                        style="width: 20px; height: 20px;"
                         viewBox="0 0 24 24"
                       >
                         <path

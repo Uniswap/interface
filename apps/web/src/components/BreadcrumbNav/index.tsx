@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import Tooltip, { TooltipSize } from 'components/Tooltip'
 import Row from 'components/deprecated/Row'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import useCopyClipboard from 'hooks/useCopyClipboard'
@@ -99,15 +99,9 @@ export const CurrentPageBreadcrumb = ({
           isDisabled={!shouldEnableCopy}
           onClick={shouldEnableCopy ? copy : undefined}
         >
-          <MouseoverTooltip
-            placement="bottom"
-            size={TooltipSize.Max}
-            forceShow={isCopied}
-            text={t('common.copied')}
-            disabled
-          >
+          <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t('common.copied')}>
             {shortenAddress(address)}
-          </MouseoverTooltip>
+          </Tooltip>
           {shouldShowActions && (
             <CopyIcon data-testid="breadcrumb-hover-copy" width={16} height={16} color={neutral2} />
           )}

@@ -140,31 +140,29 @@ export const EditRangeSelectionStep = (props?: FlexProps) => {
             <ArrowsLeftRight size={iconSizes.icon16} color="$neutral2" />
             <Text variant="body4">{`${formattedPrices[1]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
           </Flex>
-        ) : !isFullRange ? (
-          <Flex gap="$gap4" flex={1}>
-            <Flex row gap={10}>
-              <Text variant="body2" color="$neutral2">
-                <Trans i18nKey="common.min" />
-              </Text>
-              <Text
-                variant="body2"
-                ellipse
-              >{`${formattedPrices[0]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
-            </Flex>
-            <Flex row gap={10}>
-              <Text variant="body2" color="$neutral2">
-                <Trans i18nKey="common.max" />
-              </Text>
-              <Text
-                variant="body2"
-                ellipse
-              >{`${formattedPrices[1]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
-            </Flex>
-          </Flex>
         ) : (
-          <Text variant="body2" color="$neutral2">
-            <Trans i18nKey="common.fullRange" />
-          </Text>
+          <Flex row>
+            {!isFullRange ? (
+              <Flex gap="$gap4">
+                <Flex row gap={10}>
+                  <Text variant="body2" color="$neutral2">
+                    <Trans i18nKey="common.min" />
+                  </Text>
+                  <Text variant="body2">{`${formattedPrices[0]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
+                </Flex>
+                <Flex row gap={10}>
+                  <Text variant="body2" color="$neutral2">
+                    <Trans i18nKey="common.max" />
+                  </Text>
+                  <Text variant="body2">{`${formattedPrices[1]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
+                </Flex>
+              </Flex>
+            ) : (
+              <Text variant="body2" color="$neutral2">
+                <Trans i18nKey="common.fullRange" />
+              </Text>
+            )}
+          </Flex>
         )}
       </Flex>
     </EditStep>

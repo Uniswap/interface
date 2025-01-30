@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { RankingType } from 'uniswap/src/data/types'
 import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
-import { logger } from 'utilities/src/logger/logger'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { ExploreOrderBy } from 'wallet/src/features/wallet/types'
 
@@ -138,15 +137,7 @@ const slice = createSlice({
     restoreMnemonicComplete: (state) => state,
     setHasBalanceOrActivity: (state, action: PayloadAction<{ address: Address; hasBalanceOrActivity: boolean }>) => {
       const { address, hasBalanceOrActivity } = action.payload
-      const id = getValidAddress(address, true)
-      if (!id) {
-        logger.error('Unexpected call to `setHasBalanceOrActivity` with invalid `address`', {
-          extra: { payload: action.payload },
-          tags: { file: 'wallet/slice.ts', function: 'setHasBalanceOrActivity' },
-        })
-        return
-      }
-      const account = state.accounts[id]
+      const account = state.accounts[address]
       if (account) {
         account.hasBalanceOrActivity = hasBalanceOrActivity
       }

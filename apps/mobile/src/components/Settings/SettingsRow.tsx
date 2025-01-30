@@ -18,7 +18,7 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { openUri } from 'uniswap/src/utils/linking'
 
 export interface SettingsSection {
-  subTitle?: string
+  subTitle: string
   data: (SettingsSectionItem | SettingsSectionItemComponent)[]
   isHidden?: boolean
 }
@@ -43,17 +43,11 @@ export interface SettingsSectionItem {
   currentSetting?: string
   onToggle?: () => void
   isToggleEnabled?: boolean
-  checkIfCanProceed?: () => boolean
-  /**
-   * Number to display in the right of the body. Ex: Used for displaying the number of connections
-   */
-  count?: number
 }
 
 interface SettingsRowProps {
   page: SettingsSectionItem
   navigation: SettingsStackNavigationProp & OnboardingStackNavigationProp
-  checkIfCanProceed?: SettingsSectionItem['checkIfCanProceed']
 }
 
 export function SettingsRow({
@@ -70,19 +64,13 @@ export function SettingsRow({
     currentSetting,
     onToggle,
     isToggleEnabled,
-    count,
   },
   navigation,
-  checkIfCanProceed,
 }: SettingsRowProps): JSX.Element {
   const colors = useSporeColors()
   const dispatch = useDispatch()
 
   const handleRow = async (): Promise<void> => {
-    if (checkIfCanProceed && !checkIfCanProceed()) {
-      return
-    }
-
     if (onToggle) {
       return
     } else if (screen) {
@@ -100,7 +88,7 @@ export function SettingsRow({
 
   return (
     <TouchableArea disabled={Boolean(action)} onPress={handleRow}>
-      <Flex grow row alignItems="center" gap="$spacing12" minHeight={40}>
+      <Flex grow row alignItems="center" gap="$spacing16" minHeight={40}>
         <Flex grow row alignItems={subText ? 'flex-start' : 'center'} flexBasis={0} gap="$spacing12">
           <Flex centered height={32} width={32}>
             {icon}
@@ -116,11 +104,6 @@ export function SettingsRow({
             )}
           </Flex>
         </Flex>
-        {count !== undefined && (
-          <Text color="$neutral2" variant="body3">
-            {count}
-          </Text>
-        )}
         {onToggle && typeof isToggleEnabled === 'boolean' ? (
           <Switch checked={isToggleEnabled} variant="branded" disabled={disabled} onCheckedChange={onToggle} />
         ) : screen || modal ? (

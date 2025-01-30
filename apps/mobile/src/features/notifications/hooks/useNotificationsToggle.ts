@@ -6,7 +6,6 @@ import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
-import { NotifSettingType, getNotifSetting, handleNotifSettingToggled } from 'src/features/notifications/settings'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useSelectAccountNotificationSetting } from 'wallet/src/features/wallet/hooks'
@@ -19,60 +18,6 @@ const waitFrame = async (): Promise<void> => {
 
 enum NotificationError {
   OsPermissionDenied = 'OS_PERMISSION_DENIED',
-}
-
-export function useAddressNotificationToggle({
-  address,
-  onToggle,
-}: {
-  address: string
-  onToggle?: (enabled: boolean) => void
-}): ReturnType<typeof useBaseNotificationToggle> {
-  const dispatch = useDispatch()
-  const isAppPermissionEnabled = useSelectAccountNotificationSetting(address)
-
-  const handleToggle = useCallback(
-    (enabled: boolean) => {
-      dispatch(
-        editAccountActions.trigger({
-          type: EditAccountAction.TogglePushNotification,
-          enabled,
-          address,
-        }),
-      )
-      onToggle?.(enabled)
-    },
-    [address, dispatch, onToggle],
-  )
-
-  return useBaseNotificationToggle({ isAppPermissionEnabled, onToggle: handleToggle })
-}
-
-export function useSettingNotificationToggle({
-  type,
-  onToggle,
-}: {
-  type: NotifSettingType
-  onToggle?: (enabled: boolean) => void
-}): ReturnType<typeof useBaseNotificationToggle> {
-  const [isAppPermissionEnabled, setAppPermissionEnabled] = useState(false)
-
-  useEffect(() => {
-    getNotifSetting(type)
-      .then(setAppPermissionEnabled)
-      .catch(() => {})
-  }, [type])
-
-  const handleToggle = useCallback(
-    (enabled: boolean) => {
-      handleNotifSettingToggled(type, enabled)
-      setAppPermissionEnabled(enabled)
-      onToggle?.(enabled)
-    },
-    [onToggle, type],
-  )
-
-  return useBaseNotificationToggle({ isAppPermissionEnabled, onToggle: handleToggle })
 }
 
 /**
@@ -119,23 +64,20 @@ export function useSettingNotificationToggle({
  * - Normal OS permission flow resumes
  */
 
-function useBaseNotificationToggle({
-  isAppPermissionEnabled,
-  onToggle,
-}: {
-  isAppPermissionEnabled: boolean
-  onToggle: (enabled: boolean) => void
-}): {
+export function useNotificationToggle(props: { address: string; onPermissionChanged?: (enabled: boolean) => void }): {
   isEnabled: boolean
   isPending: boolean
   toggle: () => void
 } {
+  const dispatch = useDispatch()
+
   // Get real states from different systems
-  const { notificationPermissionsEnabled: osPermissionStatus } = useNotificationOSPermissionsEnabled()
+  const osPermissionStatus = useNotificationOSPermissionsEnabled()
+  const reduxPushNotificationsEnabled = useSelectAccountNotificationSetting(props.address)
   const isOSPermissionEnabled = osPermissionStatus === NotificationPermission.Enabled
 
   // Derive real enabled state - only true if both systems are enabled
-  const isEnabled = isOSPermissionEnabled && isAppPermissionEnabled
+  const isEnabled = isOSPermissionEnabled && reduxPushNotificationsEnabled
 
   // Optimistic UI state
   const [optimisticEnabled, setOptimisticEnabled] = useState<boolean>(isEnabled)
@@ -144,14 +86,23 @@ function useBaseNotificationToggle({
   const requestOSPermissions = useCallback(async (): Promise<true> => {
     const granted = await promptPushPermission()
     if (!granted) {
-      // Keep app permissions enabled for when OS permissions are restored
-      onToggle(true)
+      // first let's enable the redux state (firebase)
+      // this will ensure that when the user goes to settings and enables notifications
+      // we're not stuck in a state where notifications are disabled
+      // and the user has to hit the toggle again
+      dispatch(
+        editAccountActions.trigger({
+          type: EditAccountAction.TogglePushNotification,
+          enabled: true,
+          address: props.address,
+        }),
+      )
       // this means the user denied the permission at the system level
       // and needs to go to settings to re-enable (boo)
       throw new Error(NotificationError.OsPermissionDenied)
     }
     return true
-  }, [onToggle])
+  }, [dispatch, props.address])
 
   // Reset optimistic state if real state changes
   useEffect(() => {
@@ -173,7 +124,15 @@ function useBaseNotificationToggle({
       // After this point, we're guaranteed to have requested OS permissions
       // If we just obtained permissions, we want to enable notifications
       // Otherwise, we're toggling the current redux state
-      const shouldEnable = isOsEnabled ? !isAppPermissionEnabled : true
+      const shouldEnable = isOsEnabled ? !reduxPushNotificationsEnabled : true
+
+      dispatch(
+        editAccountActions.trigger({
+          type: EditAccountAction.TogglePushNotification,
+          enabled: shouldEnable,
+          address: props.address,
+        }),
+      )
       return shouldEnable
     },
     onError: (error) => {
@@ -188,7 +147,7 @@ function useBaseNotificationToggle({
       // setState will bail if the value is the same as the current state
       // so we can safely call it without conditionals
       setOptimisticEnabled(enabled)
-      onToggle(enabled)
+      props.onPermissionChanged?.(enabled)
     },
   })
 

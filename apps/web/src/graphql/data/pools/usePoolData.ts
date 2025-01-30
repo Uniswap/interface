@@ -116,7 +116,7 @@ export function usePoolData(
 
     const pool = dataV4?.v4Pool ?? dataV3?.v3Pool ?? dataV2?.v2Pair ?? undefined
     const feeTier = dataV4?.v4Pool?.feeTier ?? dataV3?.v3Pool?.feeTier ?? V2_BIPS
-    const poolId = dataV4?.v4Pool?.poolId ?? dataV3?.v3Pool?.address ?? dataV2?.v2Pair?.address ?? poolIdOrAddress
+    const poolId = dataV4?.v4Pool?.id ?? dataV3?.v3Pool?.address ?? dataV2?.v2Pair?.address ?? poolIdOrAddress
 
     return {
       data: pool

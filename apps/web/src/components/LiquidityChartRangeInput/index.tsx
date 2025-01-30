@@ -6,7 +6,6 @@ import { Chart } from 'components/LiquidityChartRangeInput/Chart'
 import { useDensityChartData } from 'components/LiquidityChartRangeInput/hooks'
 import { ZoomLevels } from 'components/LiquidityChartRangeInput/types'
 import { AutoColumn, ColumnCenter } from 'components/deprecated/Column'
-import { ZERO_ADDRESS } from 'constants/misc'
 import { useColor } from 'hooks/useColor'
 import styled, { useTheme } from 'lib/styled-components'
 import { saturate } from 'polished'
@@ -87,7 +86,6 @@ export default function LiquidityChartRangeInput({
   currencyB,
   feeAmount,
   tickSpacing,
-  hook,
   poolId,
   protocolVersion,
   ticksAtLimit,
@@ -102,7 +100,6 @@ export default function LiquidityChartRangeInput({
   currencyB?: Currency
   feeAmount?: FeeAmount
   tickSpacing?: number
-  hook?: string
   poolId?: string
   protocolVersion: ProtocolVersion
   ticksAtLimit: { [bound in Bound]?: boolean | undefined }
@@ -127,7 +124,6 @@ export default function LiquidityChartRangeInput({
     version: protocolVersion,
     poolId,
     tickSpacing,
-    hooks: hook ?? ZERO_ADDRESS,
   })
 
   const onBrushDomainChangeEnded = useCallback(

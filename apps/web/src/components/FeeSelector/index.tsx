@@ -6,6 +6,8 @@ import Card from 'components/Card/cards'
 import { FeeOption } from 'components/FeeSelector/FeeOption'
 import { FeeTierPercentageBadge } from 'components/FeeSelector/FeeTierPercentageBadge'
 import { FEE_AMOUNT_DETAIL } from 'components/FeeSelector/shared'
+import { AutoColumn } from 'components/deprecated/Column'
+import { RowBetween } from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState, usePools } from 'hooks/usePools'
@@ -14,7 +16,9 @@ import styled, { keyframes } from 'lib/styled-components'
 import { DynamicSection } from 'pages/AddLiquidityV3/styled'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
-import { Flex, RadioButtonGroup, Text } from 'ui/src'
+import { Box } from 'rebass'
+import { ThemedText } from 'theme/components'
+import { RadioButtonGroup } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -42,7 +46,7 @@ const FocusedOutlineCard = styled(Card)<{ pulsing: boolean }>`
 const Select = styled.div`
   align-items: flex-start;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-gap: 8px;
   width: 100%;
 `
@@ -156,45 +160,45 @@ export default function FeeSelector({
   }, [previousFeeAmount, feeAmount])
 
   return (
-    <Flex gap="$gap16">
+    <AutoColumn gap="16px">
       <DynamicSection gap="md" disabled={disabled}>
         <FocusedOutlineCard pulsing={pulsing} onAnimationEnd={() => setPulsing(false)}>
-          <Flex row justifyContent="space-between" alignItems="center">
-            <Flex id="add-liquidity-selected-fee">
+          <RowBetween>
+            <AutoColumn id="add-liquidity-selected-fee">
               {!feeAmount ? (
                 <>
-                  <Text>
+                  <ThemedText.DeprecatedLabel>
                     <Trans i18nKey="fee.tier" />
-                  </Text>
-                  <Text variant="body3" color="$neutral2">
+                  </ThemedText.DeprecatedLabel>
+                  <ThemedText.DeprecatedMain fontWeight={485} fontSize="12px" textAlign="left">
                     <Trans i18nKey="fee.percentEarned" />
-                  </Text>
+                  </ThemedText.DeprecatedMain>
                 </>
               ) : (
                 <>
-                  <Text className="selected-fee-label">
+                  <ThemedText.DeprecatedLabel className="selected-fee-label">
                     <Trans
                       i18nKey="fee.tierExact"
                       values={{ fee: formatDelta(parseFloat(FEE_AMOUNT_DETAIL[feeAmount].label)) }}
                     />
-                  </Text>
+                  </ThemedText.DeprecatedLabel>
                   {distributions && (
-                    <Flex row className="selected-fee-percentage">
+                    <Box style={{ width: 'fit-content', marginTop: '8px' }} className="selected-fee-percentage">
                       <FeeTierPercentageBadge
                         distributions={distributions}
                         feeAmount={feeAmount}
                         poolState={poolsByFeeTier[feeAmount]}
                       />
-                    </Flex>
+                    </Box>
                   )}
                 </>
               )}
-            </Flex>
+            </AutoColumn>
 
             <ButtonGray onClick={() => setShowOptions(!showOptions)} width="auto" padding="4px" $borderRadius="6px">
               {showOptions ? <Trans i18nKey="common.hide.button" /> : <Trans i18nKey="common.edit.button" />}
             </ButtonGray>
-          </Flex>
+          </RowBetween>
         </FocusedOutlineCard>
 
         {chainId && showOptions && (
@@ -233,6 +237,6 @@ export default function FeeSelector({
           </RadioButtonGroup>
         )}
       </DynamicSection>
-    </Flex>
+    </AutoColumn>
   )
 }

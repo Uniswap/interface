@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 // eslint-disable-next-line no-restricted-imports
 import { AdaptiveWebModal, WebModalWithBottomAttachment } from 'ui/src/components/modal/AdaptiveWebModal'
-import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 import { isExtension, isInterface } from 'utilities/src/platform'
 
 const ANIMATION_MS = 200
@@ -50,6 +50,9 @@ export function Modal({
     return undefined
   }, [isModalOpen])
 
+  const isTopAligned = alignment === 'top'
+  const justifyContent = isTopAligned ? 'flex-start' : undefined
+
   const ModalComponent = bottomAttachment ? WebModalWithBottomAttachment : AdaptiveWebModal
 
   return (
@@ -64,6 +67,7 @@ export function Modal({
           backgroundColor={backgroundColor}
           height={height ?? (fullScreen ? '100%' : undefined)}
           isOpen={isModalOpen}
+          justifyContent={justifyContent}
           m="$none"
           maxWidth={maxWidth}
           maxHeight={maxHeight}
@@ -80,6 +84,8 @@ export function Modal({
           px={paddingX}
           py={paddingY}
           flex={flex}
+          position={isTopAligned ? 'absolute' : undefined}
+          top={isTopAligned ? '$spacing16' : undefined}
           onClose={isDismissible ? onClose : undefined}
         >
           {/*

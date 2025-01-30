@@ -47,6 +47,7 @@ describe('PoolDetailsStatsButton', () => {
     navigateToFiatOnRamp: () => {},
     onSwapChainsChanged: () => {},
     isSwapTokenSelectorOpen: false,
+    setSwapInputChainId: () => {},
     setSwapOutputChainId: () => {},
     setIsSwapTokenSelectorOpen: () => {},
     signer: undefined,

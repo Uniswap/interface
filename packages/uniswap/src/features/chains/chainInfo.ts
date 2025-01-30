@@ -107,7 +107,7 @@ export function getQuicknodeChainId(chainId: UniverseChainId): string {
     case UniverseChainId.Sepolia:
       return 'ethereum-sepolia'
     case UniverseChainId.Unichain:
-      return 'unichain-mainnet'
+      return 'unichain'
     case UniverseChainId.UnichainSepolia:
       return 'unichain-sepolia'
     case UniverseChainId.WorldChain:
@@ -188,7 +188,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
         http: [getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
       },
       [RPCType.Default]: {
-        http: [getQuicknodeEndpointUrl(UniverseChainId.Mainnet)],
+        http: ['https://cloudflare-eth.com'],
       },
       [RPCType.Fallback]: {
         http: ['https://rpc.ankr.com/eth', 'https://eth-mainnet.public.blastapi.io'],

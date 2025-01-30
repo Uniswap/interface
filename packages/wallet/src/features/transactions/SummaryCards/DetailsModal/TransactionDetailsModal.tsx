@@ -219,7 +219,6 @@ export function TransactionDetailsModal({
           <TransactionDetailsInfoRows
             isShowingMore={isShowingMore}
             transactionDetails={transactionDetails}
-            pt={!hideBottomSeparator && !hasMoreInfoRows ? '$spacing8' : undefined}
             onClose={onClose}
           />
           {buttons.length > 0 && (
