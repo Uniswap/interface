@@ -23,7 +23,6 @@ const Mask = motion(styled.div`
 
 // Her bir karakterin stil ve boyut ayarları
 const Char = motion(styled.div<{ color: string }>`
-  // Sayıların eşit genişlikte görünmesini sağlayan özellikler
   font-variant-numeric: lining-nums tabular-nums;
   font-family: Basel;
   font-size: 52px;
@@ -32,7 +31,6 @@ const Char = motion(styled.div<{ color: string }>`
   color: ${({ color }) => color};
   line-height: 52px;
 
-  // Responsive tasarım için medya sorguları
   @media (max-width: 1280px) {
     font-size: 40px;
     line-height: 40px;
@@ -57,21 +55,23 @@ const Container = styled.div<{ live?: boolean }>`
   flex-direction: column;
   align-items: flex-start;
   justify-content: space-between;
+  gap: 32px;
   border-radius: 20px;
   width: 100%;
   height: 100%;
-  max-height: 200px;
-  padding: 32px;
+  max-height: 180px;
+  padding: 28px 32px;
 
-  // Live mod için yeşil tint, normal mod için surface2 rengi
   background-color: ${({ theme, live }) => (live ? '#2FBA610A' : theme.surface2)};
   overflow: hidden;
 
   @media (max-width: 1024px) {
     padding: 24px;
   }
+  @media (max-width: 768px) {
+    max-height: 134px;
+  }
 
-  // Noktalı arka plan deseni
   background-image: radial-gradient(rgba(${({ theme }) => {
     const { red, green, blue } = parseToRgb(theme.neutral2)
     return `${red}, ${green}, ${blue}`
@@ -119,7 +119,7 @@ const Title = styled.h3<{ color: string }>`
   padding: 0;
   margin: 0;
   font-family: Basel;
-  font-size: 24px;
+  font-size: 22px;
   font-style: normal;
   font-weight: 535;
   line-height: 32px;
@@ -217,7 +217,7 @@ function NumberSprite({ char, charset, color }: { char: string; charset: string[
   // Animasyon varyantları
   const variants = {
     initial: {
-      y: idx + 3 * -height,
+      y: (idx + 3) * -height,
     },
     animate: {
       y: idx * -height,
@@ -227,6 +227,7 @@ function NumberSprite({ char, charset, color }: { char: string; charset: string[
       },
     },
   }
+  console.log(chars, char)
 
   return (
     <SpriteContainer variants={variants}>

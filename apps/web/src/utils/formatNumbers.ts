@@ -222,9 +222,10 @@ type FormatterRule = (FormatterExactRule | FormatterUpperBoundRule) & { hardCode
 const tokenNonTxFormatter: FormatterRule[] = [
   { exact: 0, formatterOptions: NO_DECIMALS },
   { upperBound: 0.001, hardCodedInput: { input: 0.001, prefix: '<' }, formatterOptions: THREE_DECIMALS },
-  { upperBound: 1, formatterOptions: THREE_DECIMALS },
-  { upperBound: 1e6, formatterOptions: TWO_DECIMALS },
+  { upperBound: 1, formatterOptions: THREE_DECIMALS_NO_TRAILING_ZEROS },
+  { upperBound: 1e5, formatterOptions: TWO_DECIMALS_NO_TRAILING_ZEROS },
   { upperBound: 1e15, formatterOptions: SHORTHAND_TWO_DECIMALS },
+  //{ upperBound: 1e15, formatterOptions: SHORTHAND_TWO_DECIMALS },
   {
     upperBound: Infinity,
     hardCodedInput: { input: 999_000_000_000_000, prefix: '>' },

@@ -22,7 +22,7 @@ export const logoContainer = style([
 export const logo = style([
   sprinkles({
     display: 'block',
-    color: 'accent1',
+    color: 'neutral1',
   }),
 ])
 

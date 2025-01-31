@@ -11,7 +11,6 @@ import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
-import { Text } from 'rebass'
 // import { GetTheAppButton } from 'pages/Landing/components/DownloadApp/GetTheAppButton'
 import { ReactNode, useState } from 'react'
 import { Link, NavLink, NavLinkProps, useLocation } from 'react-router-dom'
@@ -236,12 +235,12 @@ const Navbar = ({ blur }: { blur: boolean }) => {
                     alt="Ubestarter Logo"
                   />
                 ) : (
-                  <UniIcon width="28" height="28" clickable data-testid="uniswap-logo" className={styles.logo} />
+                  <UniIcon width="28" height="28" clickable data-testid="ubeswap-logo" className={styles.logo} />
                 )}
 
-                <Text fontSize={24} marginTop={-1}>
+                <ThemedText.H1Medium style={{ marginLeft: '4px' }}>
                   {isUbestarterPage ? 'UbeStarter' : 'Ubeswap'}
-                </Text>
+                </ThemedText.H1Medium>
               </Link>
             </Box>
             {!isNftPage && (

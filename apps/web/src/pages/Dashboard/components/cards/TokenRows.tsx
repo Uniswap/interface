@@ -9,13 +9,11 @@ import styled from 'styled-components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { Box } from '../Generics'
 
-// Her bir token satırı için temel konteyner stili
 const TokenRow = styled.div`
   width: 100%;
-  height: 72px;
+  height: 64px;
   overflow: hidden;
   padding: 16px;
-  padding-right: 24px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -26,17 +24,16 @@ const TokenRow = styled.div`
 
   @media (max-width: 1024px) {
     height: 64px;
-    padding-right: 16px;
   }
 
   @media (max-width: 768px) {
     height: 56px;
-    padding-right: 16px;
+    padding: 12px;
   }
 
   @media (max-width: 468px) {
     height: 48px;
-    padding: 12px;
+    padding: 8px;
     border-radius: 16px;
   }
 
@@ -47,12 +44,11 @@ const TokenRow = styled.div`
   }
 `
 
-// Token adı için stil
 const TokenName = styled.h3`
   padding: 0;
   margin: 0;
   font-family: Basel;
-  font-size: 24px;
+  font-size: 18px;
   font-style: normal;
   font-weight: 500;
   line-height: 32px;
@@ -72,23 +68,22 @@ const TokenName = styled.h3`
   }
 `
 
-// Token sembolü için stil
 const TokenTicker = styled.h3`
   padding: 0;
   margin: 0;
   font-family: Basel;
-  font-size: 24px;
+  font-size: 18px;
   font-style: normal;
   font-weight: 500;
   line-height: 32px;
-  color: ${(props) => props.color || props.theme.neutral2};
+  color: ${(props) => props.color || props.theme.neutral1};
 
   white-space: nowrap; // Metin tek satırda kalacak
   overflow: hidden;
   text-overflow: ellipsis; // Taşan kısım ... ile gösterilecek
 
   @media (max-width: 1024px) {
-    font-size: 18px;
+    font-size: 16px;
     line-height: 24px;
   }
 
@@ -102,12 +97,11 @@ const TokenTicker = styled.h3`
   }
 `
 
-// Token fiyatı için stil
 const TokenPrice = styled.h3`
   padding: 0;
   margin: 0;
   font-family: Basel;
-  font-size: 24px;
+  font-size: 18px;
   font-style: normal;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
@@ -115,7 +109,7 @@ const TokenPrice = styled.h3`
   color: ${(props) => props.color || props.theme.neutral1};
 
   @media (max-width: 1024px) {
-    font-size: 18px;
+    font-size: 16px;
     line-height: 24px;
   }
 
@@ -125,13 +119,12 @@ const TokenPrice = styled.h3`
   }
 `
 
-// Değişim yüzdesi için stil
 const DeltaText = styled.h3`
   text-align: right;
   padding: 0;
   margin: 0;
   font-family: Basel;
-  font-size: 24px;
+  font-size: 18px;
   font-style: normal;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
@@ -139,7 +132,7 @@ const DeltaText = styled.h3`
   color: ${(props) => (props.color === 'red' ? props.theme.critical : props.theme.success)};
 
   @media (max-width: 1024px) {
-    font-size: 18px;
+    font-size: 16px;
     line-height: 24px;
     width: 50px;
   }
@@ -151,7 +144,6 @@ const DeltaText = styled.h3`
   }
 `
 
-// Delta container için stil
 const DeltaContainer = styled(Box)`
   @media (min-width: 1030px) and (max-width: 1150px) {
     display: none;
@@ -161,7 +153,6 @@ const DeltaContainer = styled(Box)`
   }
 `
 
-// Pool verisi için tip
 type PoolData = {
   type: 'stake' | 'farm'
   contractAddress: string
@@ -174,7 +165,6 @@ type PoolData = {
   poolAddress?: string
 }
 
-// Top Gainers için token satırı bileşeni
 export function GainerTokenRow({
   tokenAddress,
   price,
@@ -233,15 +223,12 @@ export function EarnerTokenRow({ poolData }: { poolData: PoolData }) {
   const token0 = useCurrency(poolData.token0, ChainId.CELO)
   const token1 = useCurrency(poolData.token1, ChainId.CELO)
 
-  // Logo boyutunu tek bir değişkende
   const logoSize = '32px'
 
-  // URL yönlendirmesi için tek bir fonksiyon
   const handleClick = () => {
     navigate(poolData.url)
   }
 
-  // Stake durumu için render
   if (poolData.type === 'stake') {
     return (
       <TokenRow onClick={handleClick}>
@@ -261,7 +248,7 @@ export function EarnerTokenRow({ poolData }: { poolData: PoolData }) {
                 input: poolData.apr,
                 type: NumberType.TokenNonTx,
               })}
-              % APR
+              %
             </TokenPrice>
           </Box>
         </Box>
@@ -269,7 +256,6 @@ export function EarnerTokenRow({ poolData }: { poolData: PoolData }) {
     )
   }
 
-  // Farm durumu için render
   return (
     <TokenRow onClick={handleClick}>
       <PortfolioLogo
@@ -288,9 +274,26 @@ export function EarnerTokenRow({ poolData }: { poolData: PoolData }) {
               input: poolData.apr,
               type: NumberType.TokenNonTx,
             })}
-            % APR
+            %
           </TokenPrice>
         </Box>
+      </Box>
+    </TokenRow>
+  )
+}
+
+export function LaunchpadRow() {
+  // const screenIsSmall = useScreenSize()['sm']
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    navigate('')
+  }
+
+  return (
+    <TokenRow onClick={handleClick} style={{ height: '204px' }}>
+      <Box justify="space-between" gap="16px" style={{ width: '100%' }}>
+        <TokenName style={{ width: '100%', textAlign: 'center' }}>No Active Projects</TokenName>
       </Box>
     </TokenRow>
   )
