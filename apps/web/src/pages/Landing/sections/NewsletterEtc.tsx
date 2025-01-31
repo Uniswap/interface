@@ -143,7 +143,7 @@ export function NewsletterEtc() {
             </SquareCard>
             <RectCard
               group="card"
-              href="https://twitter.com/Uniswap/"
+              href="https://x.com/Uniswap/"
               target="_blank"
               rel="noopener noreferrer"
               backgroundColor="$accent2"

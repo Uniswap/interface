@@ -79,5 +79,5 @@ export function getTokenUrl(currencyId: string, addMobileUTMTags: boolean = fals
 }
 
 export function getTwitterLink(twitterName: string): string {
-  return `https://twitter.com/${twitterName}`
+  return `https://x.com/${twitterName}`
 }

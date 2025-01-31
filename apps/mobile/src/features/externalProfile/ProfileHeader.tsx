@@ -116,7 +116,7 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
 
   const onPressTwitter = useCallback(async () => {
     if (twitter) {
-      await openUri(`https://twitter.com/${twitter}`)
+      await openUri(`https://x.com/${twitter}`)
     }
   }, [twitter])
 

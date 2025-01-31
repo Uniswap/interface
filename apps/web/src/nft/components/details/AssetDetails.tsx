@@ -437,7 +437,7 @@ export const AssetDetails = ({ asset, collection }: AssetDetailsProps) => {
           </DescriptionText>
           <SocialsContainer>
             {collection.externalUrl && <Resource name="Website" link={`${collection.externalUrl}`} />}
-            {collection.twitterUrl && <Resource name="Twitter" link={`https://twitter.com/${collection.twitterUrl}`} />}
+            {collection.twitterUrl && <Resource name="Twitter" link={`https://x.com/${collection.twitterUrl}`} />}
             {collection.discordUrl && <Resource name="Discord" link={collection.discordUrl} />}
           </SocialsContainer>
         </>
