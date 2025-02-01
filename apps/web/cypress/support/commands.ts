@@ -160,7 +160,7 @@ export function registerCommands() {
   })
 
   Cypress.Commands.add('interceptQuoteRequest', (fixturePath) => {
-    return cy.intercept(/(?:interface|beta).gateway.uniswap.org\/v2\/quote/, (req) => {
+    return cy.intercept(/(?:interface|beta)\.gateway\.uniswap\.org\/v2\/quote/, (req) => {
       req.headers['origin'] = 'https://app.uniswap.org'
       req.reply({ fixture: fixturePath })
     })
