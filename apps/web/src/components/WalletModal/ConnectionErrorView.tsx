@@ -39,7 +39,7 @@ export default function ConnectionErrorView() {
     connection?.connect({ connector })
   }, [connection])
 
-  return (
+  return connection?.error ? (
     <Modal
       name={ModalName.ConnectionError}
       isModalOpen={Boolean(connection?.error)}
@@ -64,5 +64,5 @@ export default function ConnectionErrorView() {
         </ButtonEmpty>
       </Wrapper>
     </Modal>
-  )
+  ) : null
 }

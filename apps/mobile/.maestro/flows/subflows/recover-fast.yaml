@@ -1,0 +1,18 @@
+appId: com.uniswap.mobile.dev
+env:
+  E2E_RECOVERY_PHRASE: ${E2E_RECOVERY_PHRASE}
+---
+- tapOn: 'Add an existing wallet'
+- waitForAnimationToEnd
+- tapOn: 'Import a wallet'
+- waitForAnimationToEnd
+- inputText: ${E2E_RECOVERY_PHRASE}
+- waitForAnimationToEnd
+- tapOn: 'Continue'
+- waitForAnimationToEnd
+- tapOn: 'Continue'
+- tapOn: 'Skip'
+- tapOn: 'Skip'
+- tapOn: 'Skip'
+- runFlow: biometrics-confirm.yaml
+- waitForAnimationToEnd

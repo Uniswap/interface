@@ -6,17 +6,21 @@ import { isInterface } from 'utilities/src/platform'
 export enum FeatureFlags {
   // Shared
   Datadog,
+  EmbeddedWallet,
   ForAggregator,
   IndicativeSwapQuotes,
   InstantTokenBalanceUpdate,
   MonadTestnet,
   PortionFields,
   SharedSwapArbitrumUniswapXExperiment,
-  TokenProtection,
+  TokenSelectorTrendingTokens,
+  Unichain,
   UnichainPromo,
   UniswapX,
-  UniswapXPriorityOrders,
   V4Swap,
+  UniswapXPriorityOrdersBase,
+  UniswapXPriorityOrdersOptimism,
+  UniswapXPriorityOrdersUnichain,
 
   // Wallet
   DisableFiatOnRampKorea,
@@ -66,15 +70,19 @@ export enum FeatureFlags {
 // These names must match the gate name on statsig
 export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.Datadog, 'datadog'],
+  [FeatureFlags.EmbeddedWallet, 'embedded_wallet'],
   [FeatureFlags.IndicativeSwapQuotes, 'indicative-quotes'],
   [FeatureFlags.InstantTokenBalanceUpdate, 'instant-token-balance-update'],
   [FeatureFlags.MonadTestnet, 'monad_testnet'],
   [FeatureFlags.PortionFields, 'portion-fields'],
   [FeatureFlags.SharedSwapArbitrumUniswapXExperiment, 'shared_swap_arbitrum_uniswapx_experiment'],
-  [FeatureFlags.TokenProtection, 'token_protection'],
+  [FeatureFlags.TokenSelectorTrendingTokens, 'token_selector_trending_tokens'],
+  [FeatureFlags.Unichain, 'unichain'],
   [FeatureFlags.UnichainPromo, 'unichain_promo'],
   [FeatureFlags.UniswapX, 'uniswapx'],
-  [FeatureFlags.UniswapXPriorityOrders, 'uniswapx_priority_orders'],
+  [FeatureFlags.UniswapXPriorityOrdersBase, 'uniswapx_priority_orders_base'],
+  [FeatureFlags.UniswapXPriorityOrdersOptimism, 'uniswapx_priority_orders_optimism'],
+  [FeatureFlags.UniswapXPriorityOrdersUnichain, 'uniswapx_priority_orders_unichain'],
   [FeatureFlags.V4Swap, 'v4_swap'],
 ])
 

@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { ElementAfterText } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons'
 import { AssetType } from 'uniswap/src/entities/assets'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -83,7 +82,7 @@ export function TransferTokenSummaryItem({
   ])
 
   // Search for matching ENS
-  const { name: ensName } = useENS(UniverseChainId.Mainnet, otherAddress, true)
+  const { name: ensName } = useENS({ nameOrAddress: otherAddress, autocompleteDomain: true })
   const { unitag } = useUnitagByAddress(otherAddress)
   const personDisplayName = unitag?.username ?? ensName ?? shortenAddress(otherAddress)
 

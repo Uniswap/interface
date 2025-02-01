@@ -74,6 +74,7 @@ type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.
 
 const ON_SELECTION_CHANGE_WAIT_TIME_MS = 500
 const MAX_TOKEN_DECIMALS = 9 // limited for design purposes
+const MAX_INPUT_LENGTH = MAX_TOKEN_DECIMALS + 2
 
 function preloadServiceProviderLogos(serviceProviders: FORServiceProvider[], isDarkMode: boolean): void {
   FastImage.preload(
@@ -327,9 +328,14 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     const tokenAmountFromQuote = isOffRamp ? sourceAmount : destinationAmount
     const newAmount = (isTokenInputMode ? fiatAmountFromQuote : tokenAmountFromQuote)?.toString() ?? ''
 
+    const truncatedNewAmount = truncateToMaxDecimals({
+      value: newAmount,
+      maxDecimals: isTokenInputMode ? MAX_FIAT_INPUT_DECIMALS : MAX_TOKEN_DECIMALS,
+    })
+
     // update values
-    valueRef.current = newAmount
-    setValue(newAmount)
+    valueRef.current = truncatedNewAmount
+    setValue(truncatedNewAmount)
 
     // update cursor position and decimal pad disabled keys
     resetSelection({ start: valueRef.current.length, end: valueRef.current.length })
@@ -396,6 +402,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     !notAvailableInThisRegion && quotesError,
     meldSupportedFiatCurrency.code,
     exceedsBalanceError,
+    quotes?.length === 0,
   )
 
   const onSelectionChange = useCallback(
@@ -419,6 +426,10 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     setShowUnsupportedTokenModal(false)
 
     if (unsupportedCurrency?.currencyInfo) {
+      sendAnalyticsEvent(FiatOffRampEventName.FiatOffRampUnsupportedTokenSwap, {
+        token: unsupportedCurrency.currencyInfo.currency.symbol,
+      })
+
       navigateToSwapFlow({
         currencyField: CurrencyField.INPUT,
         currencyAddress: currencyIdToAddress(unsupportedCurrency.currencyInfo?.currencyId),
@@ -566,6 +577,10 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
                   resetSelection={resetSelection}
                   selectionRef={selectionRef}
                   setValue={(newValue: string): void => {
+                    if (newValue.length > MAX_INPUT_LENGTH) {
+                      onDecimalPadTriggerInputShake()
+                      return
+                    }
                     onChangeValue(newValue, 'textInput')
                   }}
                   valueRef={valueRef}
@@ -613,6 +628,9 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
           onBack={(): void => {
             setShowUnsupportedTokenModal(false)
             setShowTokenSelector(true)
+            sendAnalyticsEvent(FiatOffRampEventName.FiatOffRampUnsupportedTokenBack, {
+              token: unsupportedCurrency?.currencyInfo?.currency.symbol,
+            })
           }}
           onClose={(): void => {
             setShowUnsupportedTokenModal(false)

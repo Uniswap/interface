@@ -277,6 +277,7 @@ export function useParseFiatOnRampError(
   error: unknown,
   currencyCode: string,
   balanceError: boolean,
+  noQuotesReturned: boolean,
 ): {
   errorText: string | undefined
 } {
@@ -293,7 +294,7 @@ export function useParseFiatOnRampError(
     return { errorText }
   }
 
-  errorText = t('fiatOnRamp.error.default')
+  errorText = noQuotesReturned ? t('fiatOnRamp.error.noQuotes') : t('fiatOnRamp.error.default')
 
   if (isFiatOnRampApiError(error)) {
     if (isInvalidRequestAmountTooLow(error)) {

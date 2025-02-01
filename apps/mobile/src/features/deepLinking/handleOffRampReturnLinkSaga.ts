@@ -4,7 +4,8 @@ import { call, put } from 'typed-redux-saga'
 import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOffRampMetaData, OffRampTransferDetailsResponse } from 'uniswap/src/features/fiatOnRamp/types'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { FiatOffRampEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TransactionScreen } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { forceFetchFiatOnRampTransactions } from 'uniswap/src/features/transactions/slice'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -26,15 +27,27 @@ export function* handleOffRampReturnLink(url: URL) {
 
 function* _handleOffRampReturnLink(url: URL) {
   const externalTransactionId = url.searchParams.get('externalTransactionId')
+  const currencyCode = url.searchParams.get('baseCurrencyCode')
+  const currencyAmount = url.searchParams.get('baseCurrencyAmount')
+  const walletAddress = url.searchParams.get('depositWalletAddress')
 
-  if (!externalTransactionId) {
-    throw new Error('Missing externalTransactionId in fiat offramp deep link')
+  const hasValidMoonpayData = currencyCode && currencyAmount && walletAddress
+  if (!externalTransactionId && !hasValidMoonpayData) {
+    throw new Error('Missing externalTransactionId or moonpay data in fiat offramp deep link')
   }
+
+  sendAnalyticsEvent(FiatOffRampEventName.FiatOffRampWidgetCompleted, { externalTransactionId })
 
   let offRampTransferDetails: OffRampTransferDetailsResponse | undefined
 
   try {
-    offRampTransferDetails = yield* call(fetchOffRampTransferDetails, externalTransactionId)
+    offRampTransferDetails = yield* call(
+      fetchOffRampTransferDetails,
+      externalTransactionId,
+      currencyCode,
+      Number(currencyAmount),
+      walletAddress,
+    )
   } catch (error) {
     logger.error(error, {
       tags: { file: 'handleOffRampReturnLinkSaga', function: 'handleOffRampReturnLink' },
@@ -58,8 +71,15 @@ function* _handleOffRampReturnLink(url: URL) {
   const fiatOffRampMetaData: FiatOffRampMetaData = {
     name: provider,
     logoUrl: logos.lightLogo,
-    // TODO: update activity feed once transaction is submitted
-    onSubmitCallback: () => {},
+    onSubmitCallback: () => {
+      sendAnalyticsEvent(FiatOffRampEventName.FiatOffRampFundsSent, {
+        cryptoCurrency: baseCurrencyCode,
+        currencyAmount: baseCurrencyAmount,
+        serviceProvider: provider,
+        chainId,
+        externalTransactionId,
+      })
+    },
     moonpayCurrencyCode: baseCurrencyCode,
     meldCurrencyCode: baseCurrencyCode,
   }

@@ -51,6 +51,7 @@ type BaseCreatePositionInfo = {
   poolId?: string
   poolOrPairLoading?: boolean
   isPoolOutOfSync: boolean
+  refetchPoolData: () => void
 }
 
 export type CreateV4PositionInfo = BaseCreatePositionInfo & {
@@ -94,7 +95,6 @@ export interface PriceRangeState {
   // When these are undefined, LiquidityChartRangeInput will calculate and set reasonable default values.
   minPrice?: string
   maxPrice?: string
-  initialPriceInverted: boolean
   initialPrice: string
 }
 

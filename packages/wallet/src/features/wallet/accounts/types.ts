@@ -15,6 +15,7 @@ export interface WalletAccountFields {
   backups?: BackupType[]
   timeImportedMs: number
   pushNotificationsEnabled?: boolean
+  hasBalanceOrActivity?: boolean
 }
 
 export interface SignerMnemonicAccount extends WalletAccountFields, SignerMnemonicAccountMeta {

@@ -64,14 +64,14 @@ export function AddHook() {
   const inputWrapperNode = useRef<HTMLDivElement | null>(null)
   useOnClickOutside(inputWrapperNode, isFocusing ? () => handleFocus(false) : undefined)
 
-  const [hookInputEnabled, setHookInputEnabled] = useState(false)
   const [hookModalOpen, setHookModalOpen] = useState(false)
 
-  const [hookValue, setHookValue] = useState('')
   const {
     positionState: { hook, fee },
     setPositionState,
   } = useCreatePositionContext()
+  const [hookInputEnabled, setHookInputEnabled] = useState(!!hook)
+  const [hookValue, setHookValue] = useState(hook ?? '')
 
   const onSelectHook = (value: string | undefined) => {
     setPositionState((state) => ({

@@ -6,15 +6,17 @@ import { useDispatch } from 'react-redux'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { useAnimatedCardDragStyle, useExploreTokenContextMenu } from 'src/components/explore/hooks'
-import { Loader } from 'src/components/loading/loaders'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
-import { AnimatedTouchableArea, Flex, Text, useIsDarkMode, useShadowPropsShort, useSporeColors } from 'ui/src'
+import { AnimatedTouchableArea, Flex, Loader, Text, useIsDarkMode, useShadowPropsShort, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { borderRadii, imageSizes, opacify } from 'ui/src/theme'
+import { borderRadii, fonts, imageSizes, opacify } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { useFavoriteTokenCardQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import {
+  FavoriteTokenCardQuery,
+  useFavoriteTokenCardQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
@@ -66,8 +68,10 @@ function FavoriteTokenCard({
   // Mirror behavior in top tokens list, use first chain the token is on for the symbol
   const chainId = fromGraphQLChain(token?.chain) ?? defaultChainId
 
-  const price = convertFiatAmountFormatted(token?.market?.price?.value, NumberType.FiatTokenPrice)
-  const pricePercentChange = token?.market?.pricePercentChange?.value
+  // Coingecko price is more accurate but lacks long tail tokens
+  // Uniswap price comes from Uniswap pools, which may be updated less frequently
+  const { price, pricePercentChange } = getCoingeckoPrice(token) ?? getUniswapPrice(token)
+  const priceFormatted = convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)
 
   const onRemove = useCallback(() => {
     if (currencyId) {
@@ -98,9 +102,7 @@ function FavoriteTokenCard({
 
   const shadowProps = useShadowPropsShort()
 
-  if (isNonPollingRequestInFlight(networkStatus)) {
-    return <Loader.Favorite height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} />
-  }
+  const priceLoading = isNonPollingRequestInFlight(networkStatus)
 
   return (
     <AnimatedFlex borderRadius="$rounded16" style={animatedDragStyle}>
@@ -138,21 +140,62 @@ function FavoriteTokenCard({
               <RemoveButton visible={isEditing} onPress={onRemove} />
             </Flex>
             <Flex gap="$spacing2">
-              <Text adjustsFontSizeToFit numberOfLines={1} variant="heading3">
-                {price}
-              </Text>
-              <RelativeChange
-                arrowSize="$icon.16"
-                change={pricePercentChange ?? undefined}
-                semanticColor={true}
-                variant="subheading2"
-              />
+              {priceLoading ? (
+                <Loader.Box
+                  height={fonts.heading3.lineHeight}
+                  width={fonts.heading3.lineHeight * 3}
+                  testID="loader/favorite/price"
+                />
+              ) : (
+                <Text adjustsFontSizeToFit numberOfLines={1} variant="heading3">
+                  {priceFormatted}
+                </Text>
+              )}
+              {priceLoading ? (
+                <Loader.Box
+                  height={fonts.subheading2.lineHeight}
+                  width={fonts.subheading2.lineHeight * 3}
+                  testID="loader/favorite/priceChange"
+                />
+              ) : (
+                <RelativeChange
+                  arrowSize="$icon.16"
+                  change={pricePercentChange ?? undefined}
+                  semanticColor={true}
+                  variant="subheading2"
+                />
+              )}
             </Flex>
           </Flex>
         </AnimatedTouchableArea>
       </ContextMenu>
     </AnimatedFlex>
   )
+}
+
+function getCoingeckoPrice(token?: FavoriteTokenCardQuery['token']): {
+  price: number | undefined
+  pricePercentChange: number | undefined
+} | null {
+  const market = token?.project?.markets?.[0]
+  if (!market?.price?.value || !market?.pricePercentChange24h?.value) {
+    return null
+  }
+
+  return {
+    price: market.price.value,
+    pricePercentChange: market.pricePercentChange24h.value,
+  }
+}
+
+function getUniswapPrice(token?: FavoriteTokenCardQuery['token']): {
+  price: number | undefined
+  pricePercentChange: number | undefined
+} {
+  return {
+    price: token?.market?.price?.value,
+    pricePercentChange: token?.market?.pricePercentChange?.value,
+  }
 }
 
 export default memo(FavoriteTokenCard)

@@ -8,6 +8,7 @@ import { useIncreaseLiquidityTxContext } from 'components/IncreaseLiquidity/Incr
 import { DepositInputForm } from 'components/Liquidity/DepositInputForm'
 import { LiquidityModalDetailRows } from 'components/Liquidity/LiquidityModalDetailRows'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
+import { getDisplayedAmountsFromDependentAmount } from 'components/Liquidity/utils'
 import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
 import { useCanUnwrapCurrency, useCurrencyInfoWithUnwrapForTradingApi } from 'pages/Pool/Positions/create/utils'
 import { useMemo } from 'react'
@@ -36,9 +37,10 @@ export function IncreaseLiquidityForm() {
     deposit1Disabled,
     error,
   } = derivedIncreaseLiquidityInfo
-  const { position } = increaseLiquidityState
+  const { position, exactField } = increaseLiquidityState
 
   const { gasFeeEstimateUSD, txInfo, error: dataFetchingError, refetch } = useIncreaseLiquidityTxContext()
+  const { dependentAmount } = txInfo || {}
 
   if (!position) {
     throw new Error('AddLiquidityModal must have an initial state when opening')
@@ -73,6 +75,20 @@ export function IncreaseLiquidityForm() {
     }
     return initialCurrency1Amount
   }, [unwrapNativeCurrency, canUnwrap1, currency1Info, initialCurrency1Amount])
+
+  const { displayFormattedAmounts, displayUSDAmounts } = useMemo(
+    () =>
+      getDisplayedAmountsFromDependentAmount({
+        token0,
+        token1,
+        dependentAmount,
+        exactField,
+        currencyAmounts,
+        currencyAmountsUSDValue,
+        formattedAmounts,
+      }),
+    [dependentAmount, exactField, currencyAmounts, formattedAmounts, currencyAmountsUSDValue, token0, token1],
+  )
 
   const handleUserInput = (field: PositionField, newValue: string) => {
     setIncreaseLiquidityState((prev) => ({
@@ -116,6 +132,10 @@ export function IncreaseLiquidityForm() {
     )
   }, [nativeCurrencyInfo, t, unwrapNativeCurrency, setUnwrapNativeCurrency])
 
+  const requestLoading = Boolean(
+    !dataFetchingError && !error && currencyAmounts?.TOKEN0 && currencyAmounts.TOKEN1 && !txInfo?.txRequest,
+  )
+
   return (
     <Flex gap="$gap24">
       <Flex gap="$gap24">
@@ -123,14 +143,16 @@ export function IncreaseLiquidityForm() {
         <DepositInputForm
           token0={token0}
           token1={token1}
-          formattedAmounts={formattedAmounts}
+          formattedAmounts={displayFormattedAmounts}
           currencyAmounts={currencyAmounts}
-          currencyAmountsUSDValue={currencyAmountsUSDValue}
+          currencyAmountsUSDValue={displayUSDAmounts}
           currencyBalances={currencyBalances}
           onUserInput={handleUserInput}
           onSetMax={handleOnSetMax}
           deposit0Disabled={deposit0Disabled}
           deposit1Disabled={deposit1Disabled}
+          amount0Loading={requestLoading && exactField === PositionField.TOKEN1} // check isRefetching instead
+          amount1Loading={requestLoading && exactField === PositionField.TOKEN0}
           token0UnderCardComponent={canUnwrap0 ? UnwrapNativeCurrencyToggle : undefined}
           token1UnderCardComponent={canUnwrap1 ? UnwrapNativeCurrencyToggle : undefined}
         />
@@ -144,9 +166,7 @@ export function IncreaseLiquidityForm() {
       <LoaderButton
         disabled={Boolean(error) || !txInfo?.txRequest}
         onPress={handleOnContinue}
-        loading={Boolean(
-          !dataFetchingError && !error && currencyAmounts?.TOKEN0 && currencyAmounts.TOKEN1 && !txInfo?.txRequest,
-        )}
+        loading={requestLoading}
         buttonKey="IncreaseLiquidity-continue"
       >
         <Text variant="buttonLabel1" color="$white">

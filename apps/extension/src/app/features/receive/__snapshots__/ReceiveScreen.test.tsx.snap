@@ -6004,7 +6004,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                     class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _lineHeight-f-lineHeigh1263414315 _textAlign-center _fontSize-f-size-micr111 _fontWeight-f-weight-bo3548"
                     data-disable-theme="true"
                   >
-                    You can send and receive tokens and NFTs on all of our 12 supported networks.
+                    You can send and receive tokens and NFTs on all of our 13 supported networks.
                   </span>
                   <span
                     class="t_sub_theme t_primary_Button _dsp_contents is_Theme"
@@ -12040,7 +12040,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                   class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _lineHeight-f-lineHeigh1263414315 _textAlign-center _fontSize-f-size-micr111 _fontWeight-f-weight-bo3548"
                   data-disable-theme="true"
                 >
-                  You can send and receive tokens and NFTs on all of our 12 supported networks.
+                  You can send and receive tokens and NFTs on all of our 13 supported networks.
                 </span>
                 <span
                   class="t_sub_theme t_primary_Button _dsp_contents is_Theme"

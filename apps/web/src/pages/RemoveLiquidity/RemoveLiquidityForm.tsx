@@ -17,6 +17,11 @@ import { Flex, Switch, Text, useSporeColors } from 'ui/src'
 import { useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import useResizeObserver from 'use-resize-observer'
 
+const isValidPercentageInput = (value: string): boolean => {
+  const numValue = Number(value)
+  return !isNaN(numValue) && numValue <= 100
+}
+
 export function RemoveLiquidityForm() {
   const hiddenObserver = useResizeObserver<HTMLElement>()
   const { t } = useTranslation()
@@ -90,12 +95,14 @@ export function RemoveLiquidityForm() {
               <StyledPercentInput
                 value={percent}
                 onUserInput={(value: string) => {
-                  setPercent(value)
+                  if (isValidPercentageInput(value)) {
+                    setPercent(value)
+                  }
                 }}
                 placeholder="0"
                 $width={percent && hiddenObserver.width ? hiddenObserver.width + 1 : undefined}
                 maxDecimals={1}
-                maxLength={2}
+                maxLength={3}
               />
               <NumericalInputSymbolContainer showPlaceholder={!percent}>%</NumericalInputSymbolContainer>
               <NumericalInputMimic ref={hiddenObserver.ref}>{percent}</NumericalInputMimic>

@@ -30,6 +30,8 @@ type InputFormProps = {
   deposit1Disabled?: boolean
   token0UnderCardComponent?: ReactNode
   token1UnderCardComponent?: ReactNode
+  amount0Loading: boolean
+  amount1Loading: boolean
 } & DepositInfo
 
 export function DepositInputForm({
@@ -45,6 +47,8 @@ export function DepositInputForm({
   deposit1Disabled,
   token0UnderCardComponent,
   token1UnderCardComponent,
+  amount0Loading,
+  amount1Loading,
 }: InputFormProps) {
   const [focusedInputField, setFocusedInputField] = useState(PositionField.TOKEN0)
 
@@ -86,6 +90,7 @@ export function DepositInputForm({
             onSetMax={handleOnSetMax(PositionField.TOKEN0)}
             value={formattedAmounts?.[PositionField.TOKEN0]}
             onPressIn={() => setFocusedInputField(PositionField.TOKEN0)}
+            isLoading={amount0Loading}
           />
           {token0UnderCardComponent && <UnderCardComponent>{token0UnderCardComponent}</UnderCardComponent>}
         </Flex>
@@ -111,6 +116,7 @@ export function DepositInputForm({
             onSetMax={handleOnSetMax(PositionField.TOKEN1)}
             value={formattedAmounts?.[PositionField.TOKEN1]}
             onPressIn={() => setFocusedInputField(PositionField.TOKEN1)}
+            isLoading={amount1Loading}
           />
           {token1UnderCardComponent && <UnderCardComponent>{token1UnderCardComponent}</UnderCardComponent>}
         </Flex>

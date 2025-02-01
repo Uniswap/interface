@@ -1335,20 +1335,6 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                           data-disable-theme="true"
                         >
                           Swapping across networks
-                          <div
-                            class="_alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _pt-t-space-spa94665587 _display-inline-flex"
-                          >
-                            <div
-                              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _ml-t-space-spa94665591 _pr-t-space-spa94665589 _pl-t-space-spa94665589 _pb-t-space-spa94665587 _pt-3px _backgroundColor-accent2Hove112785 _borderTopLeftRadius-t-radius-ro840690004 _borderTopRightRadius-t-radius-ro840690004 _borderBottomRightRadius-t-radius-ro840690004 _borderBottomLeftRadius-t-radius-ro840690004 _alignItems-center"
-                            >
-                              <span
-                                class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1Hove112785 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-me3083741"
-                                data-disable-theme="true"
-                              >
-                                New
-                              </span>
-                            </div>
-                          </div>
                         </span>
                       </div>
                       <span
@@ -1363,12 +1349,12 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                       </span>
                     </div>
                     <div
-                      class="_opacity-0active-0--75 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
+                      class="_opacity-0active-0--75 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer _alignSelf-flex-start"
                     >
                       <svg
                         fill="none"
                         stroke-width="8"
-                        style="color: rgb(191, 191, 191); width: 24px; height: 24px;"
+                        style="color: rgb(191, 191, 191); width: 20px; height: 20px;"
                         viewBox="0 0 16 16"
                       >
                         <path

@@ -21,7 +21,8 @@ import { flexRowNoWrap } from 'theme/styles'
 import { Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
-import { useExperimentGroupNameWithLoading } from 'uniswap/src/features/gating/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useExperimentGroupNameWithLoading, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isIFramed } from 'utils/isIFramed'
@@ -136,8 +137,10 @@ function ExistingUserCTAButton() {
   const { t } = useTranslation()
 
   const { value: accountsCTAExperimentGroup } = useExperimentGroupNameWithLoading(Experiments.AccountCTAs)
-  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
-  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
+  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
+  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp || isEmbeddedWalletEnabled
+  const isLogIn =
+    accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount && !isEmbeddedWalletEnabled
 
   return (
     <StyledConnectButton tabIndex={-1} data-testid="navbar-connect-wallet">

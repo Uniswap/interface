@@ -17,6 +17,7 @@ export interface TransactionState {
   recipient?: string
   isFiatInput?: boolean
   selectingCurrencyField?: CurrencyField
+  selectingCurrencyChainId?: UniverseChainId
   showRecipientSelector?: boolean
   customSlippageTolerance?: number
   customDeadline?: number

@@ -8,6 +8,7 @@ import { GetTheAppModal } from 'components/NavBar/DownloadApp/Modal'
 import { PrivacyChoicesModal } from 'components/PrivacyChoices'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
 import { ReceiveCryptoModal } from 'components/ReceiveCryptoModal'
+import { RecoveryPhraseModal } from 'components/RecoveryPhrase/Modal'
 import { UkDisclaimerModal } from 'components/TopLevelModals/UkDisclaimerModal'
 import AddressClaimModal from 'components/claim/AddressClaimModal'
 import DevFlagsBox from 'dev/DevFlagsBox'
@@ -81,6 +82,7 @@ export default function TopLevelModals() {
       {isAddLiquidityModalOpen && <IncreaseLiquidityModal />}
       {isRemoveLiquidityModalOpen && <RemoveLiquidityModal />}
       {isClaimFeeModalOpen && <ClaimFeeModal />}
+      <RecoveryPhraseModal />
     </>
   )
 }

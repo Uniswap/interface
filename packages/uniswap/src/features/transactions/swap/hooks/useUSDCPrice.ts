@@ -12,20 +12,21 @@ import {
   USDC_OPTIMISM,
   USDC_POLYGON,
   USDC_SEPOLIA,
+  USDC_UNICHAIN,
   USDC_UNICHAIN_SEPOLIA,
   USDC_WORLD_CHAIN,
   USDC_ZKSYNC,
   USDC_ZORA,
   USDT_MONAD_TESTNET,
 } from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
-export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> } = {
+export const STABLECOIN_AMOUNT_OUT: Record<UniverseChainId, CurrencyAmount<Token>> = {
   [UniverseChainId.Mainnet]: CurrencyAmount.fromRawAmount(USDC, 100_000e6),
   [UniverseChainId.ArbitrumOne]: CurrencyAmount.fromRawAmount(USDC_ARBITRUM, 10_000e6),
   [UniverseChainId.Avalanche]: CurrencyAmount.fromRawAmount(USDC_AVALANCHE, 10_000e6),
@@ -37,6 +38,7 @@ export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> }
   [UniverseChainId.Optimism]: CurrencyAmount.fromRawAmount(USDC_OPTIMISM, 10_000e6),
   [UniverseChainId.Polygon]: CurrencyAmount.fromRawAmount(USDC_POLYGON, 10_000e6),
   [UniverseChainId.Sepolia]: CurrencyAmount.fromRawAmount(USDC_SEPOLIA, 100_000e6),
+  [UniverseChainId.Unichain]: CurrencyAmount.fromRawAmount(USDC_UNICHAIN, 10_000e6),
   [UniverseChainId.UnichainSepolia]: CurrencyAmount.fromRawAmount(USDC_UNICHAIN_SEPOLIA, 10_000e6),
   [UniverseChainId.WorldChain]: CurrencyAmount.fromRawAmount(USDC_WORLD_CHAIN, 10_000e6),
   [UniverseChainId.Zksync]: CurrencyAmount.fromRawAmount(USDC_ZKSYNC, 10_000e6),
@@ -53,7 +55,7 @@ export function useUSDCPrice(currency?: Currency): {
 } {
   const chainId = currency?.chainId
 
-  const quoteAmount = chainId ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
+  const quoteAmount = isUniverseChainId(chainId) ? STABLECOIN_AMOUNT_OUT[chainId] : undefined
   const stablecoin = quoteAmount?.currency
 
   // avoid requesting quotes for stablecoin input

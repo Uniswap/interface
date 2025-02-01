@@ -1,12 +1,5 @@
-We are back with some new updates! Here’s the latest:
+We are back with some small updates! Here’s the latest:
 
-Integrated Flashbots Protect: This is a private RPC provider that protects users from getting sandwiched on Mainnet.
-
-Max Balance Education: Introduces copy to educate users on why the Max button is disabled when they don't have enough of the network token to cover gas costs.
-
-Other changes:
-
-- Improved readability and color extraction of NFT Detail pages
-- Improved fee detection of fee-on-transfer tokens
-- More concise context menu on token detail pages
+- More robust dapp information on Activity screen
+- Improved volume-based sorting on our Explore page
 - Various bug fixes and performance improvements

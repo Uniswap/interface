@@ -20,13 +20,13 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { usePrevious } from 'utilities/src/react/hooks'
 import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 
-const MAX_INPUT_FONT_SIZE = 56
+const MAX_INPUT_FONT_SIZE = 52
 const MIN_INPUT_FONT_SIZE = 32
 const MIN_SCREEN_HEIGHT = 667 // iPhone SE 3rd Gen
 
 // if font changes from `fontFamily.sansSerif.regular` or `MAX_INPUT_FONT_SIZE`
-// changes from 36 then width value must be adjusted
-const MAX_CHAR_PIXEL_WIDTH = 44
+// changes from 46 then width value must be adjusted
+const MAX_CHAR_PIXEL_WIDTH = 46
 
 const PREDEFINED_ONRAMP_AMOUNTS = [100, 300, 1000]
 const PREDEFINED_OFFRAMP_PERCENTAGES = [25, 50, 75]
@@ -226,7 +226,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
               height={fontSize}
               lineHeight={fontSize}
             >
-              {isTokenInputMode ? currency.currencyInfo?.currency.symbol : fiatCurrencyInfo.symbol}
+              {isTokenInputMode ? ' ' + currency.currencyInfo?.currency.symbol : fiatCurrencyInfo.symbol}
             </Text>
             <AmountInput
               ref={inputRef}
@@ -251,7 +251,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
               minWidth={calculatedInputWidth}
               returnKeyType={undefined}
               showSoftInputOnFocus={false}
-              textAlign="left"
+              textAlign={isTokenInputMode ? 'right' : 'left'}
               value={value}
               onChangeText={onEnterAmount}
               onSelectionChange={onSelectionChange}

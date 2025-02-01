@@ -124,10 +124,16 @@ export const EditRangeSelectionStep = (props?: FlexProps) => {
 
   return (
     <EditStep onClick={handleEdit} {...props}>
-      <Flex grow flexBasis={1} row gap="$gap20" alignItems="center" $md={{ row: false, gap: 10 }}>
-        {!!liquidityRangeChartProps && (
-          <LiquidityPositionRangeChart grow={isMobile ? false : true} {...liquidityRangeChartProps} />
-        )}
+      <Flex
+        grow
+        flexBasis={1}
+        row
+        gap="$gap20"
+        alignItems="center"
+        justifyContent="space-between"
+        $md={{ row: false, gap: 10 }}
+      >
+        {!!liquidityRangeChartProps && <LiquidityPositionRangeChart grow={false} {...liquidityRangeChartProps} />}
         {isMobile ? (
           <Flex row gap={10} alignItems="center" alignSelf="flex-start">
             <Text variant="body4">{`${formattedPrices[0]} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>

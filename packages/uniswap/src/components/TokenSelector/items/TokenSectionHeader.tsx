@@ -8,6 +8,8 @@ import { Search } from 'ui/src/components/icons/Search'
 import { Shuffle } from 'ui/src/components/icons/Shuffle'
 import { Star } from 'ui/src/components/icons/Star'
 import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export type TokenSectionHeaderProps = {
   sectionKey: TokenOptionSection
@@ -47,13 +49,15 @@ export const SectionHeader = memo(function _SectionHeader({
 
 export function useTokenOptionsSectionTitle(section: TokenOptionSection): string {
   const { t } = useTranslation()
+  const isTokenSelectorTrendingTokensEnabled = useFeatureFlag(FeatureFlags.TokenSelectorTrendingTokens)
+
   switch (section) {
     case TokenOptionSection.BridgingTokens:
       return t('tokens.selector.section.bridging')
     case TokenOptionSection.YourTokens:
       return t('tokens.selector.section.yours')
-    case TokenOptionSection.PopularTokens:
-      return t('common.tokens')
+    case TokenOptionSection.PopularTokens: // TODO(WEB-5917): Rename section to TrendingTokens once feature flag is fully on
+      return isTokenSelectorTrendingTokensEnabled ? t('tokens.selector.section.trending') : t('common.tokens')
     case TokenOptionSection.RecentTokens:
       return t('tokens.selector.section.recent')
     case TokenOptionSection.FavoriteTokens:

@@ -11,6 +11,7 @@ import {
   TransactionFailureReason,
 } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import {
   convertGasFeeToDisplayValue,
   useActiveGasStrategy,
@@ -39,9 +40,9 @@ import {
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { isDetoxBuild } from 'utilities/src/environment/constants'
+import { isE2EMode } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
-import { isInterface, isMobileApp } from 'utilities/src/platform'
+import { isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
@@ -181,7 +182,7 @@ export function useTransactionRequestInfo({
   } = useTradingApiSwapQuery({
     params: skipTransactionRequest ? undefined : swapRequestArgs,
     // Disable polling during e2e testing because it was preventing js thread from going idle
-    refetchInterval: isDetoxBuild ? undefined : tradingApiSwapRequestMs,
+    refetchInterval: isE2EMode ? undefined : tradingApiSwapRequestMs,
     staleTime: tradingApiSwapRequestMs,
     // We add a small buffer in case connection is too slow
     immediateGcTime: tradingApiSwapRequestMs + ONE_SECOND_MS * 5,
@@ -239,12 +240,14 @@ export function useTransactionRequestInfo({
     if (gasEstimateError) {
       logger.warn('useTransactionRequestInfo', 'useTransactionRequestInfo', UNKNOWN_SIM_ERROR, {
         ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, transactionSettings, formatter, trace }),
+        // we explicitly log it here to show on Datadog dashboard
+        chainLabel: getChainLabel(derivedSwapInfo.chainId),
         error: gasEstimateError,
         simulationFailureReasons: isClassicQuote(swapQuote) ? swapQuote?.txFailureReasons : undefined,
         txRequest: data?.swap,
       })
 
-      if (!isMobileApp) {
+      if (!(isMobileApp || isExtension)) {
         sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
           ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, transactionSettings, formatter, trace }),
           error: gasEstimateError,

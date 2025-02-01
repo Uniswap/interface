@@ -163,7 +163,7 @@ export function Swap({
   const input = currencyToAsset(initialInputCurrency)
   const output = currencyToAsset(initialOutputCurrency)
 
-  const { isSwapTokenSelectorOpen } = useUniswapContext()
+  const { isSwapTokenSelectorOpen, swapOutputChainId } = useUniswapContext()
 
   const prefilledState = useSwapPrefilledState({
     input,
@@ -171,6 +171,7 @@ export function Swap({
     exactAmountToken: initialTypedValue ?? '',
     exactCurrencyField: initialIndependentField ?? CurrencyField.INPUT,
     selectingCurrencyField: isSwapTokenSelectorOpen ? CurrencyField.OUTPUT : undefined,
+    selectingCurrencyChainId: swapOutputChainId,
   })
 
   // TODO(WEB-5078): Remove this once we upgrade swap e2e tests to use the new swap flow

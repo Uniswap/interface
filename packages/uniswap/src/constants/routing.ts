@@ -24,6 +24,7 @@ import {
   USDC_OPTIMISM,
   USDC_POLYGON,
   USDC_SEPOLIA,
+  USDC_UNICHAIN,
   USDC_WORLD_CHAIN,
   USDC_ZKSYNC,
   USDC_ZORA,
@@ -137,11 +138,17 @@ export const COMMON_BASES: ChainCurrencyList = {
     UNI[UniverseChainId.Sepolia],
   ].map(buildPartialCurrencyInfo),
 
+  [UniverseChainId.Unichain]: [
+    nativeOnChain(UniverseChainId.Unichain),
+    WRAPPED_NATIVE_CURRENCY[UniverseChainId.Unichain] as Token,
+    USDC_UNICHAIN,
+  ].map(buildPartialCurrencyInfo),
+
   [UniverseChainId.UnichainSepolia]: [
     nativeOnChain(UniverseChainId.UnichainSepolia),
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.UnichainSepolia] as Token,
     // TODO(WEB-5160): re-add usdc sepolia
-    // USDC_ASTROCHAIN_SEPOLIA,
+    // USDC_UNICHAIN_SEPOLIA,
   ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.WorldChain]: [

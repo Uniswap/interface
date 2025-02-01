@@ -8,7 +8,7 @@ import {
 } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
-import { getProtocolVersionLabel } from 'components/Liquidity/utils'
+import { getDisplayedAmountsFromDependentAmount, getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
@@ -56,7 +56,10 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
     derivedPriceRangeInfo,
     priceRangeState: { priceInverted },
   } = usePriceRangeContext()
-  const { derivedDepositInfo } = useDepositContext()
+  const {
+    derivedDepositInfo,
+    depositState: { exactField },
+  } = useDepositContext()
   const { currencies, protocolVersion, isPoolOutOfSync, creatingPoolOrPair } = derivedPositionInfo
   const { formattedAmounts, currencyAmounts, currencyAmountsUSDValue } = derivedDepositInfo
 
@@ -161,6 +164,22 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
     derivedPositionInfo,
   ])
 
+  const [token0, token1] = currencies
+  const dependentAmount = txInfo?.dependentAmount
+  const { displayFormattedAmounts, displayUSDAmounts } = useMemo(
+    () =>
+      getDisplayedAmountsFromDependentAmount({
+        token0,
+        token1,
+        dependentAmount,
+        exactField,
+        currencyAmounts,
+        currencyAmountsUSDValue,
+        formattedAmounts,
+      }),
+    [dependentAmount, exactField, currencyAmounts, formattedAmounts, currencyAmountsUSDValue, token0, token1],
+  )
+
   return (
     <Modal
       name={ModalName.CreatePosition}
@@ -244,11 +263,11 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
             <Flex row justifyContent="space-between">
               <Flex gap="$gap4">
                 <Flex row gap="$gap8">
-                  <Text variant="body1">{formattedAmounts?.TOKEN0}</Text>
+                  <Text variant="body1">{displayFormattedAmounts?.TOKEN0}</Text>
                   <Text variant="body1">{currencyAmounts?.TOKEN0?.currency.symbol}</Text>
                 </Flex>
                 <Text variant="body3" color="$neutral2">
-                  {formatCurrencyAmount({ value: currencyAmountsUSDValue?.TOKEN0, type: NumberType.FiatTokenPrice })}
+                  {formatCurrencyAmount({ value: displayUSDAmounts?.TOKEN0, type: NumberType.FiatTokenPrice })}
                 </Text>
               </Flex>
               <TokenLogo
@@ -262,11 +281,11 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
             <Flex row justifyContent="space-between">
               <Flex gap="$gap4">
                 <Flex row gap="$gap8">
-                  <Text variant="body1">{formattedAmounts?.TOKEN1}</Text>
+                  <Text variant="body1">{displayFormattedAmounts?.TOKEN1}</Text>
                   <Text variant="body1">{currencyAmounts?.TOKEN1?.currency.symbol}</Text>
                 </Flex>
                 <Text variant="body3" color="$neutral2">
-                  {formatCurrencyAmount({ value: currencyAmountsUSDValue?.TOKEN1, type: NumberType.FiatTokenPrice })}
+                  {formatCurrencyAmount({ value: displayUSDAmounts?.TOKEN1, type: NumberType.FiatTokenPrice })}
                 </Text>
               </Flex>
               <TokenLogo

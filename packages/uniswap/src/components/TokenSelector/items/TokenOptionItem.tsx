@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
-import { Flex, Text, TouchableArea } from 'ui/src'
-import { Check } from 'ui/src/components/icons/Check'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import Check from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
@@ -8,9 +8,6 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
@@ -34,25 +31,6 @@ interface OptionProps {
   isSelected?: boolean
 }
 
-function getTokenWarningDetails(currencyInfo: CurrencyInfo): {
-  severity: WarningSeverity
-  isNonDefaultList: boolean
-  isBlocked: boolean
-} {
-  const { safetyLevel, safetyInfo } = currencyInfo
-  const severity = getTokenWarningSeverity(currencyInfo)
-  const isNonDefaultList =
-    safetyLevel === SafetyLevel.MediumWarning ||
-    safetyLevel === SafetyLevel.StrongWarning ||
-    safetyInfo?.tokenList === TokenList.NonDefault
-  const isBlocked = severity === WarningSeverity.Blocked || safetyLevel === SafetyLevel.Blocked
-  return {
-    severity,
-    isNonDefaultList,
-    isBlocked,
-  }
-}
-
 function _TokenOptionItem({
   option,
   showWarnings,
@@ -66,16 +44,15 @@ function _TokenOptionItem({
   isSelected,
 }: OptionProps): JSX.Element {
   const { currencyInfo, isUnsupported } = option
-  const { currency } = currencyInfo
+  const { currency, safetyLevel } = currencyInfo
   const [showWarningModal, setShowWarningModal] = useState(false)
-  const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
+  const colors = useSporeColors()
 
-  const { severity, isBlocked, isNonDefaultList } = getTokenWarningDetails(currencyInfo)
+  const severity = getTokenWarningSeverity(currencyInfo)
+  const isBlocked = severity === WarningSeverity.Blocked || safetyLevel === SafetyLevel.Blocked
   // in token selector, we only show the warning icon if token is >=Medium severity
   const { colorSecondary: warningIconColor } = getWarningIconColors(severity)
-  const shouldShowWarningModalOnPress = !tokenProtectionEnabled
-    ? isBlocked || (isNonDefaultList && !tokenWarningDismissed)
-    : isBlocked || (severity !== WarningSeverity.None && !tokenWarningDismissed)
+  const shouldShowWarningModalOnPress = isBlocked || (severity !== WarningSeverity.None && !tokenWarningDismissed)
 
   const handleShowWarningModal = useCallback((): void => {
     dismissNativeKeyboard()
@@ -160,7 +137,7 @@ function _TokenOptionItem({
 
           {isSelected && (
             <Flex grow alignItems="flex-end" justifyContent="center">
-              <Check color="$accent1" size={iconSizes.icon20} />
+              <Check color={colors.accent1.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
             </Flex>
           )}
 

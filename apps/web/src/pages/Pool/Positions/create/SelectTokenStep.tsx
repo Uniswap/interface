@@ -5,7 +5,7 @@ import { Currency, Percent } from '@uniswap/sdk-core'
 import { LoaderButton } from 'components/Button/LoaderButton'
 import { useAllFeeTierPoolData } from 'components/Liquidity/hooks'
 import { getDefaultFeeTiersWithData, isDynamicFeeTier } from 'components/Liquidity/utils'
-import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
@@ -282,7 +282,7 @@ export function SelectTokensStep({
             </Flex>
             {tokensLocked && token0 && token1 ? (
               <Flex row gap="$gap16" py="$spacing4" alignItems="center">
-                <DoubleCurrencyAndChainLogo chainId={token0.chainId} currencies={[token0, token1]} size={44} />
+                <DoubleCurrencyLogo currencies={[token0, token1]} size={44} />
                 <Flex grow>
                   <Text variant="heading3">
                     {token0.symbol} / {token1.symbol}

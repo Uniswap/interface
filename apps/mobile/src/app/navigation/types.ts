@@ -5,7 +5,7 @@ import {
   useNavigation,
 } from '@react-navigation/native'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
-import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
+import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import {
   FiatOnRampScreens,
@@ -62,6 +62,7 @@ export type SettingsStackParamList = {
   [MobileScreens.SettingsCloudBackupStatus]: { address: Address }
   [MobileScreens.SettingsHelpCenter]: undefined
   [MobileScreens.SettingsLanguage]: undefined
+  [MobileScreens.SettingsNotifications]: undefined
   [MobileScreens.SettingsPrivacy]: undefined
   [MobileScreens.SettingsViewSeedPhrase]: { address: Address; walletNeedsRestore?: boolean }
   [MobileScreens.SettingsWallet]: { address: Address }

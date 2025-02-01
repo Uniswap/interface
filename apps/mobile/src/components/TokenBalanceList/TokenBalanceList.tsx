@@ -21,6 +21,8 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { DDRumManualTiming } from 'utilities/src/logger/datadogEvents'
+import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
 import { isAndroid } from 'utilities/src/platform'
 import { useValueAsRef } from 'utilities/src/react/useValueAsRef'
 import { InformationBanner } from 'wallet/src/components/banners/InformationBanner'
@@ -75,6 +77,8 @@ export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, T
   ) {
     const colors = useSporeColors()
     const insets = useAppInsets()
+
+    usePerformanceLogger(DDRumManualTiming.RenderTokenBalanceList, [])
 
     const { rows, balancesById } = useTokenBalanceListContext()
 

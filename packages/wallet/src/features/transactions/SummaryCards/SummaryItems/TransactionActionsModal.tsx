@@ -155,8 +155,9 @@ export function getTransactionId(transactionDetails: TransactionDetails): string
   switch (transactionDetails.typeInfo.type) {
     case TransactionType.OnRampPurchase:
     case TransactionType.OnRampTransfer:
-    case TransactionType.OffRampSale:
       return transactionDetails.typeInfo.id
+    case TransactionType.OffRampSale:
+      return transactionDetails.typeInfo.providerTransactionId
     default:
       return transactionDetails.hash
   }

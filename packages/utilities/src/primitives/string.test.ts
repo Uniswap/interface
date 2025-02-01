@@ -1,10 +1,4 @@
-import {
-  concatStrings,
-  escapeRegExp,
-  normalizeTextInput,
-  parseFloatWithThrow,
-  trimToLength,
-} from 'utilities/src/primitives/string'
+import { concatStrings, escapeRegExp, normalizeTextInput, trimToLength } from 'utilities/src/primitives/string'
 
 describe(trimToLength, () => {
   it('handles empty string', () => {
@@ -75,39 +69,5 @@ describe(concatStrings, () => {
 
   it('formats more than 3 accounts', () => {
     expect(concatStrings(['1', '2', '3', '4'], 'and')).toEqual('1, 2, 3 and 4')
-  })
-})
-
-describe(parseFloatWithThrow, () => {
-  it('should parse a valid number string', () => {
-    expect(parseFloatWithThrow('123.45')).toBe(123.45)
-  })
-
-  it('should parse a valid integer string', () => {
-    expect(parseFloatWithThrow('123')).toBe(123)
-  })
-
-  it('should parse a valid number with a trailing dot', () => {
-    expect(parseFloatWithThrow('123.')).toBe(123)
-  })
-
-  it('should parse a valid number string with leading and trailing spaces', () => {
-    expect(parseFloatWithThrow('  123.45  ')).toBe(123.45)
-  })
-
-  it('should throw an error for an invalid number string', () => {
-    expect(() => parseFloatWithThrow('abc')).toThrow('String is not a number')
-  })
-
-  it('should throw an error for an empty string', () => {
-    expect(() => parseFloatWithThrow('')).toThrow('String is not a number')
-  })
-
-  it('should throw an error for a string with only spaces', () => {
-    expect(() => parseFloatWithThrow('   ')).toThrow('String is not a number')
-  })
-
-  it('should parse a valid number string with scientific notation', () => {
-    expect(parseFloatWithThrow('1.23e4')).toBe(12300)
   })
 })

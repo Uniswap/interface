@@ -29,6 +29,7 @@ import LockIcon from 'ui/src/assets/icons/lock.svg'
 import MessageQuestion from 'ui/src/assets/icons/message-question.svg'
 import UniswapIcon from 'ui/src/assets/icons/uniswap-logo.svg'
 import {
+  Bell,
   Chart,
   Coins,
   Feedback,
@@ -180,6 +181,11 @@ export function SettingsScreen(): JSX.Element {
             text: t('settings.setting.language.title'),
             currentSetting: currentLanguage,
             icon: <Language {...iconProps} />,
+          },
+          {
+            screen: MobileScreens.SettingsNotifications,
+            text: t('settings.setting.notifications.title'),
+            icon: <Bell {...iconProps} />,
           },
           {
             text: t('settings.setting.smallBalances.title'),

@@ -53,6 +53,7 @@ export const WALLET_SUPPORTED_LANGUAGES: Language[] = [
   Language.SpanishSpain,
   Language.SpanishLatam,
   Language.SpanishUnitedStates,
+  Language.Vietnamese,
 ]
 
 // Web's supported Languages

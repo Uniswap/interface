@@ -1,5 +1,6 @@
 /* eslint-disable complexity */
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import {
   Flex,
   Loader,
@@ -10,10 +11,12 @@ import {
   UniversalImageResizeMode,
   useIsDarkMode,
 } from 'ui/src'
-import { ExternalLink, UniswapX } from 'ui/src/components/icons'
+import { CopyAlt, ExternalLink, UniswapX } from 'ui/src/components/icons'
 import { borderRadii, fonts, iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -25,6 +28,7 @@ import {
   TransactionDetails,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
@@ -114,6 +118,7 @@ export function useTransactionDetailsInfoRows(
       specificRows.push(<FORProviderRow key="forProvider" isDarkMode={isDarkMode} typeInfo={typeInfo} />)
       break
     case TransactionType.OffRampSale:
+      specificRows.push(<FORProviderRow key="forProvider" isDarkMode={isDarkMode} typeInfo={typeInfo} />)
       specificRows.push(
         <InfoRow key="forFee" label={t('transaction.details.providerFee')}>
           <Text variant="body3">
@@ -121,7 +126,7 @@ export function useTransactionDetailsInfoRows(
           </Text>
         </InfoRow>,
       )
-      specificRows.push(<FORProviderRow key="forProvider" isDarkMode={isDarkMode} typeInfo={typeInfo} />)
+      specificRows.push(<TransactionOfframpRow transactionId={typeInfo.providerTransactionId} />)
       break
     case TransactionType.Bridge:
       if (isShowingMore) {
@@ -169,22 +174,21 @@ export function useTransactionDetailsInfoRows(
             />,
           )
         }
-        specificRows.push(
-          <InfoRow key="contract" label={t('common.text.contract')}>
-            <Text variant="body3">{shortenAddress(typeInfo.dappInfo.address)}</Text>
-            <TouchableArea
-              onPress={async (): Promise<void> => {
-                if (typeInfo.dappInfo?.address) {
-                  await openUri(
-                    getExplorerLink(transactionDetails.chainId, typeInfo.dappInfo.address, ExplorerDataType.ADDRESS),
-                  )
-                }
-              }}
-            >
-              <ExternalLink color="$neutral3" size="$icon.16" />
-            </TouchableArea>
-          </InfoRow>,
-        )
+        const address = typeInfo.dappInfo?.address
+        if (address) {
+          specificRows.push(
+            <InfoRow key="contract" label={t('common.text.contract')}>
+              <Text variant="body3">{shortenAddress(address)}</Text>
+              <TouchableArea
+                onPress={async (): Promise<void> => {
+                  await openUri(getExplorerLink(transactionDetails.chainId, address, ExplorerDataType.ADDRESS))
+                }}
+              >
+                <ExternalLink color="$neutral3" size="$icon.16" />
+              </TouchableArea>
+            </InfoRow>,
+          )
+        }
       }
       break
     default:
@@ -234,6 +238,38 @@ function TransactionHashRow({ transactionDetails }: { transactionDetails: Transa
       >
         <Text variant="body3">{shortenHash(hash)}</Text>
         <ExternalLink color="$neutral3" size="$icon.16" />
+      </TouchableArea>
+    </InfoRow>
+  )
+}
+
+function TransactionOfframpRow({ transactionId }: { transactionId?: string }): JSX.Element | null {
+  const dispatch = useDispatch()
+  const { t } = useTranslation()
+
+  if (!transactionId) {
+    return null
+  }
+
+  return (
+    <InfoRow key="forTransactionId" label={t('common.transactionId')}>
+      <TouchableArea
+        alignItems="center"
+        flexDirection="row"
+        gap="$spacing6"
+        justifyContent="center"
+        onPress={async (): Promise<void> => {
+          await setClipboard(transactionId)
+          dispatch(
+            pushNotification({
+              type: AppNotificationType.Copied,
+              copyType: CopyNotificationType.TransactionId,
+            }),
+          )
+        }}
+      >
+        <Text variant="body3">{shortenHash(transactionId)}</Text>
+        <CopyAlt color="$neutral3" size="$icon.16" />
       </TouchableArea>
     </InfoRow>
   )

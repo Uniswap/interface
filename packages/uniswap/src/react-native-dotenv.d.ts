@@ -16,6 +16,7 @@ declare module 'react-native-dotenv' {
   export const WALLETCONNECT_PROJECT_ID: string
   export const QUICKNODE_ENDPOINT_NAME: string
   export const QUICKNODE_ENDPOINT_TOKEN: string
+  export const QUICKNODE_MONAD_TESTNET_RPC_URL: string
   export const TRADING_API_KEY: string
   export const FIREBASE_APP_CHECK_DEBUG_TOKEN: string
   export const AMPLITUDE_PROXY_URL_OVERRIDE: string

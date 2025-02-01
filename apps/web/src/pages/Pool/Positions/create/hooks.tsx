@@ -80,7 +80,11 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
   )
 
   const poolsQueryEnabled = poolEnabledProtocolVersion(protocolVersion) && validCurrencyInput
-  const { data: poolData, isLoading: poolIsLoading } = useGetPoolsByTokens(
+  const {
+    data: poolData,
+    isLoading: poolIsLoading,
+    refetch: refetchPoolData,
+  } = useGetPoolsByTokens(
     {
       fee: state.fee.feeAmount,
       chainId,
@@ -161,6 +165,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
         currencies,
         protocolVersion: ProtocolVersion.V4,
         isPoolOutOfSync: false,
+        refetchPoolData: () => undefined,
       }
     }
 
@@ -172,6 +177,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
         creatingPoolOrPair,
         poolOrPairLoading: pairIsLoading,
         isPoolOutOfSync,
+        refetchPoolData,
       } satisfies CreateV2PositionInfo
     }
 
@@ -184,6 +190,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
         poolOrPairLoading: poolIsLoading,
         isPoolOutOfSync,
         poolId: pool?.poolId,
+        refetchPoolData,
       } satisfies CreateV3PositionInfo
     }
 
@@ -195,6 +202,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
       poolOrPairLoading: poolIsLoading,
       isPoolOutOfSync,
       poolId: pool?.poolId,
+      refetchPoolData,
     } satisfies CreateV4PositionInfo
   }, [
     TOKEN0,
@@ -208,6 +216,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
     pair,
     pairIsLoading,
     v3Pool,
+    refetchPoolData,
   ])
 }
 

@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-lines */
 import { USDC } from 'uniswap/src/constants/tokens'
+import { RankingType } from 'uniswap/src/data/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
-import { RankingType } from 'wallet/src/features/wallet/types'
 
 export function testActivatePendingAccounts(migration: (state: any) => any, prevSchema: any): void {
   // all accounts active

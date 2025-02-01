@@ -1,7 +1,6 @@
 import { Fraction, TradeType } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers/lib/ethers'
 import { useCurrency, useToken } from 'hooks/Tokens'
-import useENSName from 'hooks/useENSName'
 import JSBI from 'jsbi'
 import { Trans } from 'react-i18next'
 import { VoteOption } from 'state/governance/types'
@@ -28,6 +27,7 @@ import {
   WrapTransactionInfo,
 } from 'state/transactions/types'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { useENSName } from 'uniswap/src/features/ens/api'
 
 function formatAmount(amountRaw: string, decimals: number, sigFigs: number): string {
   return new Fraction(amountRaw, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toSignificant(sigFigs)
@@ -72,7 +72,7 @@ function FormattedCurrencyAmountManaged({
 }
 
 function ClaimSummary({ info: { recipient, uniAmountRaw } }: { info: ClaimTransactionInfo }) {
-  const { ENSName } = useENSName()
+  const { data: ENSName } = useENSName()
   const username = ENSName ?? recipient
   return typeof uniAmountRaw === 'string' ? (
     <Trans
@@ -141,7 +141,7 @@ function ExecuteSummary({ info }: { info: ExecuteTransactionInfo }) {
 }
 
 function DelegateSummary({ info: { delegatee } }: { info: DelegateTransactionInfo }) {
-  const { ENSName } = useENSName(delegatee)
+  const { data: ENSName } = useENSName(delegatee)
   const username = ENSName ?? delegatee
   return <Trans i18nKey="account.transactionSummary.delegateSummary" values={{ username }} />
 }
