@@ -3,6 +3,7 @@ import { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swa
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyField, CurrencyId } from 'uniswap/src/types/currency'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
+import { FiatOffRampMetaData } from 'uniswap/src/features/fiatOnRamp/types'
 
 export interface TransactionState {
   txId?: string
@@ -10,15 +11,18 @@ export interface TransactionState {
   [CurrencyField.OUTPUT]: TradeableAsset | null
   exactCurrencyField: CurrencyField
   exactAmountToken: string
+  isMax?: boolean
   exactAmountFiat?: string
   focusOnCurrencyField?: CurrencyField | null
   recipient?: string
   isFiatInput?: boolean
   selectingCurrencyField?: CurrencyField
+  selectingCurrencyChainId?: UniverseChainId
   showRecipientSelector?: boolean
   customSlippageTolerance?: number
   customDeadline?: number
   selectedProtocols?: FrontendSupportedProtocol[]
+  fiatOffRampMetaData?: FiatOffRampMetaData
 }
 
 export const prepareSwapFormState = ({

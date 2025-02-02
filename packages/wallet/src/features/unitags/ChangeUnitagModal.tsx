@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { Button, Flex, Text, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled, Person } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
@@ -12,6 +12,7 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { UnitagErrorCodes } from 'uniswap/src/features/unitags/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -23,7 +24,6 @@ import { useAsyncData } from 'utilities/src/react/hooks'
 import { ModalBackButton } from 'wallet/src/components/modals/ModalBackButton'
 import { UnitagName } from 'wallet/src/features/unitags/UnitagName'
 import { changeUnitag } from 'wallet/src/features/unitags/api'
-import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 import { useCanAddressClaimUnitag, useCanClaimUnitagName } from 'wallet/src/features/unitags/hooks'
 import { parseUnitagErrorCode } from 'wallet/src/features/unitags/utils'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
@@ -97,7 +97,7 @@ export function ChangeUnitagModal({
       logger.error(new Error('DeviceId is undefined'), {
         tags: { file: 'ChangeUnitagModal', function: 'onChangeSubmit' },
       })
-      return // Should never hit this condition. Button is disabled if deviceId is undefined
+      return // Should never hit this condition. DeprecatedButton is disabled if deviceId is undefined
     }
 
     onFinishEditing()
@@ -256,7 +256,7 @@ export function ChangeUnitagModal({
             )}
           </Flex>
           <Flex centered row pt="$spacing4" width="100%">
-            <Button
+            <DeprecatedButton
               fill
               disabled={isSubmitButtonDisabled}
               testID={TestID.Confirm}
@@ -270,7 +270,7 @@ export function ChangeUnitagModal({
               ) : (
                 t('common.button.save')
               )}
-            </Button>
+            </DeprecatedButton>
           </Flex>
         </Flex>
       </Modal>
@@ -313,13 +313,13 @@ function ChangeUnitagConfirmModal({
         </Flex>
         <Flex centered row gap="$spacing12" width="100%">
           {isMobileApp && (
-            <Button fill testID={TestID.Remove} theme="secondary" onPress={onClose}>
+            <DeprecatedButton fill testID={TestID.Remove} theme="secondary" onPress={onClose}>
               {t('common.button.back')}
-            </Button>
+            </DeprecatedButton>
           )}
-          <Button fill testID={TestID.Remove} theme="detrimental" onPress={onChangeSubmit}>
+          <DeprecatedButton fill testID={TestID.Remove} theme="detrimental" onPress={onChangeSubmit}>
             {t('common.button.confirm')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

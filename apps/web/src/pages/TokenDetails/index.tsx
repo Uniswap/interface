@@ -2,7 +2,6 @@ import TokenDetails from 'components/Tokens/TokenDetails'
 import { useCreateTDPChartState } from 'components/Tokens/TokenDetails/ChartSection'
 import InvalidTokenDetails from 'components/Tokens/TokenDetails/InvalidTokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
-import { useTokenWarning } from 'constants/deprecatedTokenSafety'
 import { NATIVE_CHAIN_ID, UNKNOWN_TOKEN_SYMBOL } from 'constants/tokens'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { gqlToCurrency } from 'graphql/data/util'
@@ -15,6 +14,7 @@ import { getTokenPageDescription, getTokenPageTitle } from 'pages/TokenDetails/u
 import { useDynamicMetatags } from 'pages/metatags'
 import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
+import { useTranslation } from 'react-i18next'
 import { useLocation, useParams } from 'react-router-dom'
 import { formatTokenMetatagTitleName } from 'shared-cloud/metatags'
 import { ThemeProvider } from 'theme'
@@ -116,8 +116,6 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
     isNative,
   )
 
-  const warning = useTokenWarning(tokenAddress, currencyChainInfo.id)
-
   // Extract color for page usage
   const theme = useTheme()
   const { preloadedLogoSrc } = (useLocation().state as { preloadedLogoSrc?: string }) ?? {}
@@ -139,7 +137,6 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
       currencyWasFetchedOnChain,
       tokenQuery,
       chartState,
-      warning,
       multiChainMap,
       tokenColor,
     }
@@ -151,13 +148,13 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
     currencyWasFetchedOnChain,
     tokenQuery,
     chartState,
-    warning,
     multiChainMap,
     tokenColor,
   ])
 }
 
 export default function TokenDetailsPage() {
+  const { t } = useTranslation()
   const account = useAccount()
   const pageChainId = account.chainId ?? UniverseChainId.Mainnet
   const contextValue = useCreateTDPContext()
@@ -182,7 +179,7 @@ export default function TokenDetailsPage() {
   return (
     <ThemeProvider accent1={tokenColor ?? undefined}>
       <Helmet>
-        <title>{getTokenPageTitle(currency, currencyChainId)}</title>
+        <title>{getTokenPageTitle(t, currency, currencyChainId)}</title>
         {metatags.map((tag, index) => (
           <meta key={index} {...tag} />
         ))}

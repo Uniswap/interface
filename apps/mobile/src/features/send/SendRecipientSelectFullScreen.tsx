@@ -18,7 +18,7 @@ export function SendRecipientSelectFullScreen(): JSX.Element {
 
 function SendRecipientSelectFullScreenContent({ hideContent }: { hideContent: boolean }): JSX.Element {
   const { bottomSheetViewStyles } = useTransactionModalContext()
-  const { showRecipientSelector, recipient, derivedSendInfo, updateSendForm } = useSendContext()
+  const { recipient, derivedSendInfo, updateSendForm } = useSendContext()
 
   const onSelectRecipient = useCallback(
     (newRecipient: string) => {
@@ -36,7 +36,6 @@ function SendRecipientSelectFullScreenContent({ hideContent }: { hideContent: bo
       {!hideContent && (
         <RecipientSelect
           chainId={derivedSendInfo.chainId as UniverseChainId}
-          focusInput={showRecipientSelector}
           recipient={recipient}
           onHideRecipientSelector={onHideRecipientSelector}
           onSelectRecipient={onSelectRecipient}

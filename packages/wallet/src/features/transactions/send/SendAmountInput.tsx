@@ -6,12 +6,11 @@ import { ArrowUpDown } from 'ui/src/components/icons'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { fonts } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
-import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { ParsedWarnings, WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useTokenAndFiatDisplayAmounts } from 'uniswap/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
-import { ParsedWarnings } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 type SendAmountInputProps = {
   currencyInfo: Maybe<CurrencyInfo>

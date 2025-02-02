@@ -5,8 +5,8 @@ import { BelowFloorWarningModal } from 'nft/components/profile/list/Modal/BelowF
 import { findListingIssues } from 'nft/components/profile/list/utils'
 import { useSellAsset } from 'nft/hooks'
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { BREAKPOINTS } from 'theme'
-import { Plural, Trans, t } from 'uniswap/src/i18n'
 
 const StyledListingButton = styled(BaseButton)<{ showResolveIssues: boolean; missingPrices: boolean }>`
   background: ${({ showResolveIssues, theme }) => (showResolveIssues ? theme.critical : theme.accent1)};
@@ -29,6 +29,7 @@ const StyledListingButton = styled(BaseButton)<{ showResolveIssues: boolean; mis
 `
 
 export const ListingButton = ({ onClick }: { onClick: () => void }) => {
+  const { t } = useTranslation()
   const { sellAssets, showResolveIssues, toggleShowResolveIssues, issues, setIssues } = useSellAsset(
     ({ sellAssets, showResolveIssues, toggleShowResolveIssues, issues, setIssues }) => ({
       sellAssets,
@@ -84,17 +85,11 @@ export const ListingButton = ({ onClick }: { onClick: () => void }) => {
         missingPrices={!!listingsMissingPrice.length}
         showResolveIssues={showResolveIssues}
       >
-        {showResolveIssues ? (
-          <Plural
-            value={issues !== 1 ? 2 : 1}
-            one={t('common.resolveIssue')}
-            other={t('common.resolveIssues', { issues })}
-          />
-        ) : listingsMissingPrice.length && !isMobile ? (
-          <Trans i18nKey="nft.setPrices" />
-        ) : (
-          <Trans i18nKey="nft.startListing" />
-        )}
+        {showResolveIssues
+          ? t('common.resolveIssues', { count: issues })
+          : listingsMissingPrice.length && !isMobile
+            ? t('nft.setPrices')
+            : t('nft.startListing')}
       </StyledListingButton>
 
       {showWarning && (

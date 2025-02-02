@@ -1,10 +1,11 @@
 import Row from 'components/deprecated/Row'
+import { TFunction } from 'i18next'
 import styled from 'lib/styled-components'
+import { Trans, useTranslation } from 'react-i18next'
 import { useLimitContext } from 'state/limit/LimitContext'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Trans, t } from 'uniswap/src/i18n'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 
 const ExpirySection = styled(Row)`
@@ -30,7 +31,7 @@ const LimitExpiryButton = styled.button<{ $selected: boolean }>`
 const EXPIRY_OPTIONS = [LimitsExpiry.Day, LimitsExpiry.Week, LimitsExpiry.Month, LimitsExpiry.Year]
 
 // eslint-disable-next-line consistent-return
-function getExpiryLabelText(expiry: LimitsExpiry): string {
+function getExpiryLabelText(t: TFunction, expiry: LimitsExpiry): string {
   switch (expiry) {
     case LimitsExpiry.Day:
       return t('common.oneDay')
@@ -44,6 +45,7 @@ function getExpiryLabelText(expiry: LimitsExpiry): string {
 }
 
 export function LimitExpirySection() {
+  const { t } = useTranslation()
   const { limitState, setLimitState } = useLimitContext()
 
   return (
@@ -70,7 +72,7 @@ export function LimitExpirySection() {
             }}
           >
             <ThemedText.LabelSmall color="inherit" fontWeight={535}>
-              {getExpiryLabelText(expiry)}
+              {getExpiryLabelText(t, expiry)}
             </ThemedText.LabelSmall>
           </LimitExpiryButton>
         ))}

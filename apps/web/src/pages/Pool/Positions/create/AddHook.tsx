@@ -4,14 +4,16 @@ import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePosi
 import { AdvancedButton } from 'pages/Pool/Positions/create/shared'
 import { DEFAULT_POSITION_STATE } from 'pages/Pool/Positions/create/types'
 import { useCallback, useRef, useState } from 'react'
-import { Button, Text, TouchableArea, styled } from 'ui/src'
+import { useTranslation } from 'react-i18next'
+import { DeprecatedButton, Text, TouchableArea, styled } from 'ui/src'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
 import { X } from 'ui/src/components/icons/X'
 import { Flex } from 'ui/src/components/layout/Flex'
 import { fonts } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
-import { useTranslation } from 'uniswap/src/i18n'
-import { getValidAddress, shortenAddress } from 'uniswap/src/utils/addresses'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
 import { useOnClickOutside } from 'utilities/src/react/hooks'
 
 const MenuFlyout = styled(Flex, {
@@ -62,14 +64,14 @@ export function AddHook() {
   const inputWrapperNode = useRef<HTMLDivElement | null>(null)
   useOnClickOutside(inputWrapperNode, isFocusing ? () => handleFocus(false) : undefined)
 
-  const [hookInputEnabled, setHookInputEnabled] = useState(false)
   const [hookModalOpen, setHookModalOpen] = useState(false)
 
-  const [hookValue, setHookValue] = useState('')
   const {
     positionState: { hook, fee },
     setPositionState,
   } = useCreatePositionContext()
+  const [hookInputEnabled, setHookInputEnabled] = useState(!!hook)
+  const [hookValue, setHookValue] = useState(hook ?? '')
 
   const onSelectHook = (value: string | undefined) => {
     setPositionState((state) => ({
@@ -166,18 +168,19 @@ export function AddHook() {
               onChangeText={setHookValue}
               onFocus={() => handleFocus(true)}
             />
-            <Button
+            <DeprecatedButton
               theme="secondary"
               py="$spacing8"
               px="$spacing12"
               borderWidth={0}
+              borderRadius="$rounded12"
               onPress={() => {
                 setHookInputEnabled(false)
                 setHookValue('')
               }}
             >
               <X size="$icon.20" color="$neutral1" />
-            </Button>
+            </DeprecatedButton>
             {showFlyout && (
               <AutocompleteFlyout address={hookValue} handleSelectAddress={() => setHookModalOpen(true)} />
             )}
@@ -193,6 +196,7 @@ export function AddHook() {
       Icon={DocumentList}
       onPress={() => setHookInputEnabled(true)}
       tooltipText={t('position.addHook.tooltip')}
+      elementName={ElementName.AddHook}
     />
   )
 }

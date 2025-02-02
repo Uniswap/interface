@@ -4,7 +4,7 @@ import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingStepsC
 import { Terms } from 'src/app/features/onboarding/Terms'
 import { UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { Button, Flex, GeneratedIcon, Text } from 'ui/src'
+import { DeprecatedButton, Flex, GeneratedIcon, Text } from 'ui/src'
 import { Bolt, Coupon, UserSquare } from 'ui/src/components/icons'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { useAccountAddressFromUrlWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -46,9 +46,9 @@ export function UnitagIntroScreen(): JSX.Element {
           </Flex>
 
           <Flex gap="$spacing24">
-            <Button size="large" onPress={() => goToNextStep()}>
+            <DeprecatedButton size="large" onPress={() => goToNextStep()}>
               {t('unitags.extension.intro.buttton')}
-            </Button>
+            </DeprecatedButton>
             <Flex width={TERMS_WIDTH} alignSelf="center">
               <Terms />
             </Flex>

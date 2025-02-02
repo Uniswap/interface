@@ -27,6 +27,8 @@ Testing is done utilizing a custom jest environment as well as Cloudflare's loca
 - Manually run `yarn start:cloud` to setup wrangler on `localhost:3000` and proxy on `localhost:3001`
 - Run unit tests with `yarn test:cloud`
 
+TODO(WEB-5914): as of 12/19/24, tests pass locally but fail on CI. Notes on investigation in issue
+
 ## Deployment
 
 Functions will be deployed to Cloudflare where they will be ran automatically when the appropriate route is hit.

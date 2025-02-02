@@ -27,27 +27,29 @@ export function InfoTooltip({
         restMs={TOOLTIP_REST_MS}
       >
         <Tooltip.Trigger>{trigger}</Tooltip.Trigger>
-        <Tooltip.Content maxWidth={maxWidth ?? (isWeb ? 280 : '100%')} mx="$spacing24">
-          <Flex row alignItems="center" gap="$spacing8">
-            <Flex grow>{icon}</Flex>
-            <Flex shrink gap="$spacing4">
-              {title && (
-                <Text alignSelf="flex-start" variant="body4">
-                  {title}
+        {text && (
+          <Tooltip.Content maxWidth={maxWidth ?? (isWeb ? 280 : '100%')} mx="$spacing24">
+            <Flex row alignItems="center" gap="$spacing8">
+              <Flex grow>{icon}</Flex>
+              <Flex shrink gap="$spacing4">
+                {title && (
+                  <Text alignSelf="flex-start" variant="body4">
+                    {title}
+                  </Text>
+                )}
+                <Text color="$neutral2" variant="body4">
+                  {text}
                 </Text>
-              )}
-              <Text color="$neutral2" variant="body4">
-                {text}
-              </Text>
-              {button && (
-                <Flex alignSelf="flex-start" width="100%">
-                  {button}
-                </Flex>
-              )}
+                {button && (
+                  <Flex alignSelf="flex-start" width="100%">
+                    {button}
+                  </Flex>
+                )}
+              </Flex>
             </Flex>
-          </Flex>
-          <Tooltip.Arrow />
-        </Tooltip.Content>
+            <Tooltip.Arrow />
+          </Tooltip.Content>
+        )}
       </Tooltip>
       {triggerPlacement === 'start' && children}
     </Flex>

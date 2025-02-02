@@ -29,11 +29,17 @@ export function NFTTraitCard({
   const colors = useSporeColors()
 
   return (
-    <Flex backgroundColor="$surface3" borderRadius="$rounded16" gap="$spacing4" px="$spacing16" py="$spacing12">
-      <Text fontSize={14} style={{ color: titleTextColor ?? colors.neutral2.get() }} variant="buttonLabel2">
-        {trait.name}
+    <Flex
+      backgroundColor={colors.surface2.val}
+      borderRadius="$rounded16"
+      gap="$spacing4"
+      px="$spacing16"
+      py="$spacing12"
+    >
+      <Text style={{ color: titleTextColor ?? colors.neutral2.get() }} variant="body3">
+        {trait.name && trait.name.charAt(0).toUpperCase() + trait.name.slice(1).toLowerCase()}
       </Text>
-      <Text color="$neutral1" variant="subheading2">
+      <Text color={colors.neutral1.val} variant="subheading2">
         {formatTraitValue(trait)}
       </Text>
     </Flex>

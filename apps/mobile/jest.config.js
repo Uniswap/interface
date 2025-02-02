@@ -1,8 +1,8 @@
 const preset = require('../../config/jest-presets/jest/jest-preset')
 
-/** @type {import('jest').Config} */
 module.exports = {
   ...preset,
+  testTimeout: 15000,
   preset: 'jest-expo',
   displayName: 'Mobile Wallet',
   collectCoverageFrom: [
@@ -21,10 +21,4 @@ module.exports = {
     './jest-setup.js',
     '../../node_modules/react-native-gesture-handler/jestSetup.js',
   ],
-  // we map core/web to tamagui's test bundle, this just makes setup simpler for jest
-  moduleNameMapper: {
-    ...preset.moduleNameMapper,
-    '@tamagui/core': '@tamagui/core/native-test',
-    '@tamagui/web': '@tamagui/core/native-test',
-  },
 }

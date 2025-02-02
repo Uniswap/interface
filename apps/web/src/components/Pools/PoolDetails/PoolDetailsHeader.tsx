@@ -4,7 +4,7 @@ import { DropdownSelector } from 'components/DropdownSelector'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { DetailBubble } from 'components/Pools/PoolDetails/shared'
 import { PoolDetailsBadge } from 'components/Pools/PoolTable/PoolTable'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
@@ -16,19 +16,26 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import styled, { useTheme } from 'lib/styled-components'
+import { ReversedArrowsIcon } from 'nft/components/icons'
 import React, { useMemo, useState } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { ClickableStyle, ClickableTamaguiStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
+import {
+  ClickableStyle,
+  ClickableTamaguiStyle,
+  EllipsisStyle,
+  ExternalLink,
+  TamaguiClickableStyle,
+  ThemedText,
+} from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { Flex, TouchableArea } from 'ui/src'
-import { ArrowUpDown } from 'ui/src/components/icons/ArrowUpDown'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { Trans, t } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
@@ -110,6 +117,7 @@ const PoolDetailsTitle = ({
   feeTier,
   protocolVersion,
   toggleReversed,
+  hookAddress,
 }: {
   token0?: Token
   token1?: Token
@@ -117,7 +125,9 @@ const PoolDetailsTitle = ({
   feeTier?: number
   protocolVersion?: ProtocolVersion
   toggleReversed: React.DispatchWithoutAction
+  hookAddress?: string
 }) => {
+  const theme = useTheme()
   const { formatPercent } = useFormatter()
   const { defaultChainId } = useEnabledChains()
   const graphQLChain = toGraphQLChain(chainId ?? defaultChainId)
@@ -149,21 +159,26 @@ const PoolDetailsTitle = ({
         <PoolDetailsBadge variant="body3" $position="left">
           {protocolVersion?.toLowerCase()}
         </PoolDetailsBadge>
-        {/* TODO(WEB-5364): add hook badge when data available, it should have a hover state and link out to the explorer */}
+        {hookAddress && (
+          <ExternalLink href={getExplorerLink(chainId ?? defaultChainId, hookAddress, ExplorerDataType.ADDRESS)}>
+            <PoolDetailsBadge variant="body3" {...TamaguiClickableStyle}>
+              {shortenAddress(hookAddress, 0)}
+            </PoolDetailsBadge>
+          </ExternalLink>
+        )}
         {!!feePercent && (
           <PoolDetailsBadge variant="body3" $position="right">
             {feePercent}
           </PoolDetailsBadge>
         )}
       </Flex>
-      <TouchableArea hoverStyle={{ opacity: 0.8 }} onPress={toggleReversed}>
-        <ArrowUpDown
-          {...ClickableTamaguiStyle}
-          size="$icon.20"
-          testID="toggle-tokens-reverse-arrows"
-          rotate="90deg"
-          color="$neutral2"
-        />
+      <TouchableArea
+        hoverable
+        {...ClickableTamaguiStyle}
+        onPress={toggleReversed}
+        testID="toggle-tokens-reverse-arrows"
+      >
+        <ReversedArrowsIcon size="20px" color={theme.neutral2} />
       </TouchableArea>
     </StyledPoolDetailsTitle>
   )
@@ -218,7 +233,7 @@ const ContractsDropdownRow = ({
       <ContractsDropdownRowContainer>
         <Row gap="sm">
           {isPool ? (
-            <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} size={24} />
+            <DoubleCurrencyLogo currencies={currencies} size={24} />
           ) : (
             <CurrencyLogo currency={currency} size={24} />
           )}
@@ -252,6 +267,7 @@ const PoolDetailsHeaderActions = ({
   token0?: Token
   token1?: Token
 }) => {
+  const { t } = useTranslation()
   const theme = useTheme()
   const [contractsModalIsOpen, toggleContractsModal] = useState(false)
 
@@ -300,6 +316,7 @@ interface PoolDetailsHeaderProps {
   protocolVersion?: ProtocolVersion
   toggleReversed: React.DispatchWithoutAction
   loading?: boolean
+  hookAddress?: string
 }
 
 export function PoolDetailsHeader({
@@ -309,6 +326,7 @@ export function PoolDetailsHeader({
   token1,
   feeTier,
   protocolVersion,
+  hookAddress,
   toggleReversed,
   loading,
 }: PoolDetailsHeaderProps) {
@@ -342,9 +360,7 @@ export function PoolDetailsHeader({
       {shouldColumnBreak ? (
         <Column gap="sm" style={{ width: '100%' }}>
           <Row gap="md" justify="space-between">
-            {chainId && (
-              <DoubleCurrencyAndChainLogo data-testid="double-token-logo" chainId={chainId} currencies={currencies} />
-            )}
+            <DoubleCurrencyLogo currencies={currencies} data-testid="double-token-logo" />
             <PoolDetailsHeaderActions
               chainId={chainId}
               poolAddress={poolAddress}
@@ -365,9 +381,7 @@ export function PoolDetailsHeader({
       ) : (
         <>
           <Row gap="md">
-            {chainId && (
-              <DoubleCurrencyAndChainLogo data-testid="double-token-logo" chainId={chainId} currencies={currencies} />
-            )}
+            <DoubleCurrencyLogo currencies={currencies} data-testid="double-token-logo" />
             <PoolDetailsTitle
               token0={token0}
               token1={token1}
@@ -375,6 +389,7 @@ export function PoolDetailsHeader({
               feeTier={feeTier}
               protocolVersion={protocolVersion}
               toggleReversed={toggleReversed}
+              hookAddress={hookAddress}
             />
           </Row>
           <PoolDetailsHeaderActions

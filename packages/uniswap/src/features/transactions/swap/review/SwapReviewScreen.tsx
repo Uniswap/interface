@@ -1,17 +1,13 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FadeIn } from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
-import { Button, Flex, SpinningLoader, isWeb, useHapticFeedback, useIsShortMobileDevice } from 'ui/src'
+import { DeprecatedButton, Flex, SpinningLoader, isWeb, useIsShortMobileDevice } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
 import {
@@ -26,6 +22,7 @@ import {
   TransactionScreen,
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
 import { useAcceptedTrade } from 'uniswap/src/features/transactions/swap/hooks/useAcceptedTrade'
@@ -39,7 +36,7 @@ import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/st
 import { SwapCallback } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { isValidSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { WrapCallback } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
-import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { isWrapAction } from 'uniswap/src/features/transactions/swap/utils/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
@@ -50,11 +47,12 @@ interface SwapReviewScreenProps {
   hideContent: boolean
   swapCallback: SwapCallback
   wrapCallback: WrapCallback
+  onSubmitSwap?: () => Promise<void>
 }
 
 // eslint-disable-next-line complexity
 export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | null {
-  const { hideContent, swapCallback, wrapCallback } = props
+  const { hideContent, swapCallback, wrapCallback, onSubmitSwap } = props
 
   const dispatch = useDispatch()
   const { t } = useTranslation()
@@ -78,7 +76,6 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
   const swapTxContext = useSwapTxContext()
   const { gasFee } = swapTxContext
   const uniswapXGasBreakdown = isUniswapX(swapTxContext) ? swapTxContext.gasFeeBreakdown : undefined
-  const { hapticFeedback } = useHapticFeedback()
 
   const {
     derivedSwapInfo,
@@ -88,6 +85,8 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
     updateSwapForm,
     isFiatMode,
   } = useSwapFormContext()
+
+  const { autoSlippageTolerance, customSlippageTolerance } = useTransactionSettingsContext()
 
   const onSuccess = useCallback(() => {
     // On interface, the swap component stays mounted; after swap we reset the form to avoid showing the previous values.
@@ -99,20 +98,25 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
   }, [onClose, setScreen, updateSwapForm])
 
   const {
-    autoSlippageTolerance,
     chainId,
     currencies,
     currencyAmounts,
     currencyAmountsUSDValue,
-    customSlippageTolerance,
     txId,
     wrapType,
-    trade: { trade, indicativeTrade },
+    trade: { trade, indicativeTrade }, // TODO(WEB-5823): rm indicative trade usage from review screen
   } = derivedSwapInfo
 
   const isWrap = isWrapAction(wrapType)
 
   const { blockingWarning, reviewScreenWarning } = useParsedSwapWarnings()
+  const txSimulationErrors = useMemo(() => {
+    if (!trade || !isClassic(trade)) {
+      return undefined
+    }
+
+    return trade.quote?.quote.txFailureReasons
+  }, [trade])
 
   const {
     onAcceptTrade,
@@ -229,8 +233,6 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
   const onSwapButtonClick = useCallback(async () => {
     updateSwapForm({ isSubmitting: true })
 
-    await hapticFeedback.success()
-
     if (authTrigger) {
       await authTrigger({
         successCallback: submitTransaction,
@@ -239,15 +241,15 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
     } else {
       submitTransaction()
     }
-  }, [authTrigger, hapticFeedback, onFailure, submitTransaction, updateSwapForm])
+    await onSubmitSwap?.()
+  }, [authTrigger, onFailure, submitTransaction, updateSwapForm, onSubmitSwap])
 
-  const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
   const tokenWarningProps = getRelevantTokenWarningSeverity(acceptedDerivedSwapInfo)
   const { shouldDisplayTokenWarningCard } = getShouldDisplayTokenWarningCard({
     tokenWarningProps,
     feeOnTransferProps,
   })
-  const isTokenWarningBlocking = tokenProtectionEnabled && shouldDisplayTokenWarningCard && !tokenWarningChecked
+  const isTokenWarningBlocking = shouldDisplayTokenWarningCard && !tokenWarningChecked
   const submitButtonDisabled =
     (!validSwap && !isWrap) || !!blockingWarning || newTradeRequiresAcceptance || isSubmitting || isTokenWarningBlocking
 
@@ -280,15 +282,16 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
     setShowWarningModal(false)
   }, [])
 
-  if (hideContent || !acceptedDerivedSwapInfo || (!isWrap && !indicativeTrade && (!acceptedTrade || !trade))) {
-    // We forcefully hide the content via `hideContent` to allow the bottom sheet to animate faster while still allowing all API requests to trigger ASAP.
+  if (!acceptedDerivedSwapInfo || (!isWrap && !indicativeTrade && (!acceptedTrade || !trade))) {
     // A missing `acceptedTrade` or `trade` can happen when the user leaves the app and comes back to the review screen after 1 minute when the TTL for the quote has expired.
     // When that happens, we remove the quote from the cache before refetching, so there's no `trade`.
     return (
-      // The value of `height + mb` must be equal to the height of the fully rendered component to avoid any jumps.
-      <Flex centered height={377} mb="$spacing28">
-        {!hideContent && <SpinningLoader size={iconSizes.icon40} />}
-      </Flex>
+      <TransactionModalInnerContainer bottomSheetViewStyles={bottomSheetViewStyles} fullscreen={false}>
+        {/* The value of `height + mb` must be equal to the height of the fully rendered component to avoid any jumps. */}
+        <Flex centered height={377} mb="$spacing28">
+          <SpinningLoader size={iconSizes.icon40} />
+        </Flex>
+      </TransactionModalInnerContainer>
     )
   }
 
@@ -336,49 +339,51 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
           />
         )}
 
-        <>
-          <AnimatedFlex entering={FadeIn} gap="$spacing16" pt={isWeb ? '$spacing8' : undefined}>
-            <TransactionAmountsReview
-              acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
-              newTradeRequiresAcceptance={newTradeRequiresAcceptance}
-              onClose={onPrev}
-            />
+        {/* We hide the content via `hideContent` to allow the bottom sheet to animate properly while still rendering the components to allow the sheet to calculate its height. */}
+        <Flex animation="quick" opacity={hideContent ? 0 : 1} gap="$spacing16" pt={isWeb ? '$spacing8' : undefined}>
+          <TransactionAmountsReview
+            acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
+            newTradeRequiresAcceptance={newTradeRequiresAcceptance}
+            onClose={onPrev}
+          />
 
-            {showInterfaceReviewSteps ? (
-              <ProgressIndicator currentStep={currentStep} steps={steps} />
-            ) : isWrap ? (
-              <TransactionDetails
-                chainId={chainId}
-                gasFee={gasFee}
-                warning={reviewScreenWarning?.warning}
-                onShowWarning={onShowWarning}
-              />
-            ) : (
-              <SwapDetails
-                acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
-                autoSlippageTolerance={autoSlippageTolerance}
-                customSlippageTolerance={customSlippageTolerance}
-                derivedSwapInfo={derivedSwapInfo}
-                feeOnTransferProps={feeOnTransferProps}
-                tokenWarningProps={tokenWarningProps}
-                tokenWarningChecked={tokenWarningChecked}
-                setTokenWarningChecked={setTokenWarningChecked}
-                gasFee={gasFee}
-                newTradeRequiresAcceptance={newTradeRequiresAcceptance}
-                uniswapXGasBreakdown={uniswapXGasBreakdown}
-                warning={reviewScreenWarning?.warning}
-                onAcceptTrade={onAcceptTrade}
-                onShowWarning={onShowWarning}
-              />
-            )}
-          </AnimatedFlex>
-        </>
+          {showInterfaceReviewSteps ? (
+            <ProgressIndicator currentStep={currentStep} steps={steps} />
+          ) : isWrap ? (
+            <TransactionDetails
+              chainId={chainId}
+              gasFee={gasFee}
+              warning={reviewScreenWarning?.warning}
+              txSimulationErrors={txSimulationErrors}
+              onShowWarning={onShowWarning}
+            />
+          ) : (
+            <SwapDetails
+              acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
+              autoSlippageTolerance={autoSlippageTolerance}
+              customSlippageTolerance={customSlippageTolerance}
+              derivedSwapInfo={derivedSwapInfo}
+              feeOnTransferProps={feeOnTransferProps}
+              tokenWarningProps={tokenWarningProps}
+              tokenWarningChecked={tokenWarningChecked}
+              setTokenWarningChecked={setTokenWarningChecked}
+              gasFee={gasFee}
+              newTradeRequiresAcceptance={newTradeRequiresAcceptance}
+              uniswapXGasBreakdown={uniswapXGasBreakdown}
+              warning={reviewScreenWarning?.warning}
+              txSimulationErrors={txSimulationErrors}
+              onAcceptTrade={onAcceptTrade}
+              onShowWarning={onShowWarning}
+            />
+          )}
+        </Flex>
       </TransactionModalInnerContainer>
+
       {!showInterfaceReviewSteps && (
         <TransactionModalFooterContainer>
           <Flex row gap="$spacing8">
             {!isWeb && !showUniswapXSubmittingUI && (
-              <Button
+              <DeprecatedButton
                 icon={<BackArrow />}
                 size={isShortMobileDevice ? 'medium' : 'large'}
                 theme="tertiary"

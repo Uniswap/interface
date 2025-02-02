@@ -3,6 +3,7 @@ import { useUSDTokenUpdater } from 'hooks/useUSDTokenUpdater'
 import { useFiatOnRampSupportedTokens, useMeldFiatCurrencyInfo } from 'pages/Swap/Buy/hooks'
 import { formatFiatOnRampFiatAmount } from 'pages/Swap/Buy/shared'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { buildPartialCurrencyInfo } from 'uniswap/src/constants/routing'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -24,7 +25,6 @@ import {
   isInvalidRequestAmountTooHigh,
   isInvalidRequestAmountTooLow,
 } from 'uniswap/src/features/fiatOnRamp/utils'
-import { t } from 'uniswap/src/i18n'
 import { useAccount } from 'wagmi'
 
 class BuyFormError extends Error {
@@ -35,7 +35,7 @@ class BuyFormError extends Error {
 
 type BuyFormState = {
   readonly inputAmount: string
-  readonly quoteCurrency: FiatOnRampCurrency
+  readonly quoteCurrency: Maybe<FiatOnRampCurrency>
   readonly selectedCountry?: FORCountry
   readonly countryModalOpen: boolean
   readonly currencyModalOpen: boolean
@@ -63,10 +63,7 @@ type BuyFormContextType = {
 export const ethCurrencyInfo = buildPartialCurrencyInfo(nativeOnChain(UniverseChainId.Mainnet))
 const DEFAULT_BUY_FORM_STATE: BuyFormState = {
   inputAmount: '',
-  quoteCurrency: {
-    currencyInfo: ethCurrencyInfo,
-    meldCurrencyCode: 'ETH',
-  },
+  quoteCurrency: undefined,
   selectedCountry: undefined,
   countryModalOpen: false,
   currencyModalOpen: false,
@@ -94,6 +91,7 @@ export function useBuyFormContext() {
 }
 
 function useDerivedBuyFormInfo(state: BuyFormState): BuyInfo {
+  const { t } = useTranslation()
   const account = useAccount()
   const { formattedAmount: amountOut, loading: amountOutLoading } = useUSDTokenUpdater(
     true /* inputInFiat */,
@@ -151,8 +149,11 @@ function useDerivedBuyFormInfo(state: BuyFormState): BuyInfo {
       }
       return new BuyFormError(t('common.card.error.description'))
     }
+    if (quotes?.quotes && quotes.quotes.length === 0) {
+      return new BuyFormError(t('fiatOnRamp.noQuotes.error'))
+    }
     return undefined
-  }, [meldSupportedFiatCurrency, quotesError])
+  }, [meldSupportedFiatCurrency, quotes?.quotes, quotesError, t])
 
   return useMemo(
     () => ({

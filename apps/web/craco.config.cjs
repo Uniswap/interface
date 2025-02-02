@@ -5,7 +5,7 @@ const { execSync } = require('child_process')
 const { readFileSync } = require('fs')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
-const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
+const ModuleScopePlugin = require(path.resolve(__dirname, '..', '..','node_modules/react-scripts/node_modules/react-dev-utils/ModuleScopePlugin'))
 const { IgnorePlugin, ProvidePlugin, DefinePlugin } = require('webpack')
 const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
@@ -62,6 +62,7 @@ module.exports = {
         globals: {
           __DEV__: true,
         },
+        testTimeout: 15000,
         cacheDirectory: getCacheDirectory('jest'),
         transform: {
           ...Object.entries(jestConfig.transform).reduce((transform, [key, value]) => {
@@ -110,14 +111,34 @@ module.exports = {
       webpackConfig.resolve.extensions.unshift('.web.tsx')
       webpackConfig.resolve.extensions.unshift('.web.ts')
       webpackConfig.resolve.extensions.unshift('.web.js')
-      
-      if (isProduction || process.env.UNISWAP_ANALYZE_BUNDLE_SIZE) {
-        // do bundle analysis
-        webpackConfig.plugins.push(
-          new BundleAnalyzerPlugin({
-            analyzerMode: 'json',
+
+      if (isProduction) {
+        // Configure bundle analysis based on environment variable
+        const analyzerMode = process.env.UNISWAP_ANALYZE_BUNDLE_SIZE === 'static' ? 'static' : 'json'
+        const analyzerConfig = {
+          analyzerMode,
+          ...(analyzerMode === 'static' && {
+            reportFilename: 'report.html',
+            openAnalyzer: true,
+            generateStatsFile: true,
+            statsFilename: 'webpack-stats.json'
           })
-        )
+        }
+        
+        webpackConfig.plugins.push(new BundleAnalyzerPlugin(analyzerConfig))
+
+        // Only include stats configuration if not in static analyzer mode
+        if (process.env.UNISWAP_ANALYZE_BUNDLE_SIZE !== 'static') {
+          webpackConfig.profile = true
+          webpackConfig.stats = {
+            usedExports: true,
+            optimizationBailout: true,
+            moduleTrace: true,
+            reasons: true,
+            chunks: true,
+            modules: true,
+          }
+        }
       }
 
       // Configure webpack plugins:
@@ -245,6 +266,15 @@ module.exports = {
       webpackConfig.module.rules[1].oneOf.unshift({
         loader: 'babel-loader',
         include: (path) => /uniswap\/src.*\.(js|ts)x?$/.test(path),
+        // Babel transpiles to cjs so any code that requires tree-shaking of it's dependencies
+        // must be excluded here and processed by swc instead.
+        // The downstream dependency that we need to be tree-shaken is listed next to each exclude.
+        exclude: (path) => [
+          'chains', // viem chains
+          'transactions/swap/types', // uniswap sdks
+          'data/rest', // connectrpc
+          'i18n' // i18next
+        ].some(p => path.includes(p)),
         options: {
           presets: ['module:@react-native/babel-preset'],
           plugins: [
@@ -278,7 +308,10 @@ module.exports = {
         enforce: 'post',
         test: /node_modules.*\.(js)$/,
         loader: path.join(__dirname, 'scripts/terser-loader.js'),
-        options: { compress: true, mangle: false },
+        options: { 
+          compress: true,
+          mangle: false,
+        },
       })
 
       // Configure webpack optimization:
@@ -286,11 +319,17 @@ module.exports = {
         webpackConfig.optimization,
         isProduction
           ? {
+              usedExports: true,
+              sideEffects: true,
               // Optimize over all chunks, instead of async chunks (the default), so that initial chunks are also included.
               splitChunks: { chunks: 'all' },
             }
           : {}
       )
+
+      if (isProduction) {
+        webpackConfig.mode = 'production'
+      }
 
       // Configure webpack resolution. webpackConfig.cache is unused with swc-loader, but the resolver can still cache:
       webpackConfig.resolve = Object.assign(webpackConfig.resolve, { unsafeCache: true })

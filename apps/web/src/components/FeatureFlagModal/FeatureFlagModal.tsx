@@ -1,5 +1,4 @@
 import { SmallButtonPrimary } from 'components/Button/buttons'
-import Modal from 'components/Modal'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
@@ -9,11 +8,18 @@ import { X } from 'react-feather'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { BREAKPOINTS } from 'theme'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
-import { DynamicConfigKeys, DynamicConfigs, QuickRouteChainsConfigKey } from 'uniswap/src/features/gating/configs'
+import {
+  DynamicConfigKeys,
+  DynamicConfigs,
+  NetworkRequestsConfigKey,
+  QuickRouteChainsConfigKey,
+} from 'uniswap/src/features/gating/configs'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 const Wrapper = styled(Column)`
   padding: 20px 16px;
@@ -159,14 +165,14 @@ function DynamicConfigDropdown<
   Key extends DynamicConfigKeys[Conf],
 >({
   config,
-  key,
+  configKey,
   label,
   options,
   selected,
   parser,
 }: {
   config: Conf
-  key: Key
+  configKey: Key
   label: string
   options: any[]
   selected: any[]
@@ -174,7 +180,7 @@ function DynamicConfigDropdown<
 }) {
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValues = Array.from(e.target.selectedOptions, (opt) => parser(opt.value))
-    Statsig.overrideConfig(config, { [key]: selectedValues })
+    Statsig.overrideConfig(config, { [configKey]: selectedValues })
   }
   return (
     <CenteredRow key={config}>
@@ -198,7 +204,7 @@ export default function FeatureFlagModal() {
   const closeModal = useCloseModal()
 
   return (
-    <Modal isOpen={open} onDismiss={closeModal}>
+    <Modal name={ModalName.FeatureFlags} isModalOpen={open} onClose={closeModal} padding={0}>
       <Wrapper>
         <Header>
           <Row width="100%" justify="space-between">
@@ -217,6 +223,7 @@ export default function FeatureFlagModal() {
           </CloseButton>
         </Header>
         <FlagsColumn>
+          <FeatureFlagOption flag={FeatureFlags.EmbeddedWallet} label="Add internal embedded wallet functionality" />
           <FeatureFlagOption flag={FeatureFlags.V4Swap} label="Enable v4 in the shared swap flow" />
           <FeatureFlagOption flag={FeatureFlags.UniversalSwap} label="Enable swap flow from the Uniswap Package" />
           <FeatureFlagOption flag={FeatureFlags.UniswapX} label="[Universal Swap Flow Only] Enable UniswapX" />
@@ -225,8 +232,12 @@ export default function FeatureFlagModal() {
             label="[Universal Swap Flow Only] Enable Quick Routes"
           />
           <FeatureFlagOption
-            flag={FeatureFlags.UniswapXPriorityOrders}
-            label="UniswapX Priority Orders (on Base only)"
+            flag={FeatureFlags.UniswapXPriorityOrdersBase}
+            label="UniswapX Priority Orders (on Base)"
+          />
+          <FeatureFlagOption
+            flag={FeatureFlags.UniswapXPriorityOrdersUnichain}
+            label="UniswapX Priority Orders (on Unichain)"
           />
           <FeatureFlagOption
             flag={FeatureFlags.SharedSwapArbitrumUniswapXExperiment}
@@ -237,13 +248,21 @@ export default function FeatureFlagModal() {
             label="Enable EIP-6963: Multi Injected Provider Discovery"
           />
           <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
-          <FeatureFlagOption flag={FeatureFlags.V4Everywhere} label="Enable V4 Everywhere" />
+          <FeatureFlagOption flag={FeatureFlags.LPRedesign} label="Enable LP flow redesign" />
+          <FeatureFlagOption flag={FeatureFlags.V4Data} label="Enable v4 data" />
+          <FeatureFlagOption flag={FeatureFlags.PriceRangeInputV2} label="Enable Price Range Input V2" />
           <FeatureFlagOption flag={FeatureFlags.Realtime} label="Realtime activity updates" />
           <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
           <FeatureFlagOption flag={FeatureFlags.NavigationHotkeys} label="Navigation hotkeys" />
-          <FeatureFlagOption flag={FeatureFlags.TokenProtection} label="Warning UX for scam/dangerous tokens" />
+          <FeatureFlagOption
+            flag={FeatureFlags.TokenSelectorTrendingTokens}
+            label="Enable 24h volume trending tokens in Token Selector"
+          />
           <FeatureFlagGroup name="New Chains">
             <FeatureFlagOption flag={FeatureFlags.Zora} label="Enable Zora" />
+            <FeatureFlagOption flag={FeatureFlags.Unichain} label="Enable Unichain" />
+            <FeatureFlagOption flag={FeatureFlags.UnichainPromo} label="Unichain In App Promotion" />
+            <FeatureFlagOption flag={FeatureFlags.MonadTestnet} label="Enable Monad Testnet" />
           </FeatureFlagGroup>
           <FeatureFlagOption flag={FeatureFlags.L2NFTs} label="L2 NFTs" />
           <FeatureFlagGroup name="Quick routes">
@@ -253,8 +272,18 @@ export default function FeatureFlagModal() {
               options={SUPPORTED_CHAIN_IDS}
               parser={Number.parseInt}
               config={DynamicConfigs.QuickRouteChains}
-              key={QuickRouteChainsConfigKey.Chains}
+              configKey={QuickRouteChainsConfigKey.Chains}
               label="Enable quick routes for these chains"
+            />
+          </FeatureFlagGroup>
+          <FeatureFlagGroup name="Network Requests">
+            <DynamicConfigDropdown
+              selected={[30]}
+              options={[1, 10, 20, 30]}
+              parser={Number.parseInt}
+              config={DynamicConfigs.NetworkRequests}
+              configKey={NetworkRequestsConfigKey.BalanceMaxRefetchAttempts}
+              label="Max refetch attempts"
             />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="UniswapX Flags">

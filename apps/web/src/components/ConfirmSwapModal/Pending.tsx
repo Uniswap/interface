@@ -12,8 +12,10 @@ import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
+import { TFunction } from 'i18next'
 import styled, { css } from 'lib/styled-components'
 import { ReactNode, useMemo, useRef } from 'react'
+import { Trans, useTranslation } from 'react-i18next'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isLimitTrade, isUniswapXTradeType } from 'state/routing/utils'
 import { useOrder } from 'state/signatures/hooks'
@@ -25,7 +27,6 @@ import { UniswapXOrderStatus } from 'types/uniswapx'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Trans, t } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 const Container = styled(ColumnCenter)`
@@ -63,10 +64,12 @@ const StepTitleAnimationContainer = styled(Column)<{ disableEntranceAnimation?: 
 `
 
 function getTitle({
+  t,
   trade,
   swapPending,
   swapConfirmed,
 }: {
+  t: TFunction
   trade?: InterfaceTrade
   swapPending: boolean
   swapConfirmed: boolean
@@ -111,6 +114,7 @@ export function Pending({
   // TODO(WEB-3854): Stop requesting new swap quotes after the user submits the transaction.
   const initialTrade = useRef(trade).current
   const { chainId } = useAccount()
+  const { t } = useTranslation()
 
   const swapStatus = useSwapTransactionStatus(swapResult)
   const uniswapXOrder = useOrder(isUniswapXTradeType(swapResult?.type) ? swapResult.response.orderHash : '')
@@ -166,7 +170,7 @@ export function Pending({
         <AnimationWrapper>
           <StepTitleAnimationContainer gap="md" ref={currentStepContainerRef} disableEntranceAnimation>
             <ThemedText.SubHeader width="100%" textAlign="center" data-testid="pending-modal-content-title">
-              {getTitle({ trade: initialTrade, swapPending, swapConfirmed })}
+              {getTitle({ t, trade: initialTrade, swapPending, swapConfirmed })}
             </ThemedText.SubHeader>
             {initialTrade && (
               <ThemedText.LabelSmall textAlign="center">

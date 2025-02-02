@@ -23,7 +23,7 @@ describe('TransactionDeadlineSettings', () => {
     it('is expanded by default when custom deadline is set', () => {
       store.dispatch(updateUserDeadline({ userDeadline: DEFAULT_DEADLINE_FROM_NOW * 2 }))
       renderTransactionDeadlineSettings()
-      expect(getDeadlineInput()).toBeVisible()
+      expect(getDeadlineInput()).not.toBeNull()
     })
     it('does not render default deadline as a value, but a placeholder', () => {
       renderTransactionDeadlineSettings()

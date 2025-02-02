@@ -1,6 +1,6 @@
 import { memo, useState } from 'react'
 import { Flex, Text, UniversalImage, useColorSchemeFromSeed, useSporeColors } from 'ui/src'
-import { iconSizes, validColor } from 'ui/src/theme'
+import { iconSizes, validColor, zIndices } from 'ui/src/theme'
 import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -85,6 +85,7 @@ export const TokenLogo = memo(function _TokenLogo({
       style={{
         image: {
           borderRadius: size / 2,
+          zIndex: zIndices.default,
         },
       }}
       testID="token-image"
@@ -99,6 +100,7 @@ export const TokenLogo = memo(function _TokenLogo({
       height={size}
       justifyContent="center"
       testID="token-logo"
+      pointerEvents="auto"
       width={size}
       position="relative"
     >
@@ -107,7 +109,7 @@ export const TokenLogo = memo(function _TokenLogo({
           opacity={showBackground ? 1 : 0}
           height="96%"
           width="96%"
-          zIndex={-1}
+          zIndex={zIndices.background}
           backgroundColor={colors.white.val}
           position="absolute"
           top="2%"
@@ -129,7 +131,7 @@ export const TokenLogo = memo(function _TokenLogo({
         />
       )}
       {showNetworkLogo && (
-        <Flex bottom={-2} position="absolute" right={-3}>
+        <Flex bottom={-2} position="absolute" right={-3} zIndex={zIndices.mask}>
           <NetworkLogo borderWidth={networkLogoBorderWidth} chainId={chainId} size={networkLogoSize} />
         </Flex>
       )}

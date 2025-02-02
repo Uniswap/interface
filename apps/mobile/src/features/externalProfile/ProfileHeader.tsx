@@ -213,7 +213,6 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
         <Flex position="absolute" px="$spacing24" right={0}>
           <Flex centered row gap="$spacing8" mt="$spacing12">
             <TouchableArea
-              hapticFeedback
               activeOpacity={1}
               backgroundColor="$surface1"
               borderColor="$surface3"
@@ -229,7 +228,6 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
               <Favorite isFavorited={isFavorited} size={iconSizes.icon20} />
             </TouchableArea>
             <TouchableArea
-              hapticFeedback
               activeOpacity={1}
               backgroundColor="$surface1"
               borderColor="$surface3"

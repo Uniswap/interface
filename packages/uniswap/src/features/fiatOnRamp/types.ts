@@ -1,6 +1,8 @@
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import {
+  LocalOffRampTransactionInfo,
   LocalOnRampTransactionInfo,
+  OffRampSaleInfo,
   OnRampPurchaseInfo,
   OnRampTransferInfo,
   TransactionDetails,
@@ -13,6 +15,12 @@ import { FiatCurrencyComponents } from 'utilities/src/format/localeBased'
 export type FiatOnRampTransactionDetails = TransactionDetails & {
   typeInfo: LocalOnRampTransactionInfo | OnRampPurchaseInfo | OnRampTransferInfo
 }
+
+export type FiatOffRampTransactionDetails = TransactionDetails & {
+  typeInfo: LocalOffRampTransactionInfo | OffRampSaleInfo
+}
+
+export type FORTransactionDetails = FiatOnRampTransactionDetails | FiatOffRampTransactionDetails
 
 export type FORCountry = {
   countryCode: string
@@ -165,38 +173,37 @@ export type FORTransferWidgetUrlRequest = {
 
 // /offramp-transfer-details
 
-export type OffRampTransferDetailsRequest = {
-  requestSource?: string
-  transferProviderDetails:
-    | {
-        value: MoonpayOffRampTransferDetailsRequest
-        case: 'moonpayDetails'
-      }
-    | {
-        value: MeldOffRampTransferDetailsRequest
-        case: 'meldDetails'
-      }
-    | {
-        case: undefined
-        value?: undefined
-      }
-}
+export type OffRampTransferDetailsRequest = MoonpayOffRampTransferDetailsRequest | MeldOffRampTransferDetailsRequest
 
+// TODO: verify that this is needed and BE cannot also use a sessionId
 type MoonpayOffRampTransferDetailsRequest = {
-  baseCurrencyCode: string
-  baseCurrencyAmount: number
-  depositWalletAddress: string
-  depositWalletAddressTag?: string
+  moonpayDetails: {
+    baseCurrencyCode: string
+    baseCurrencyAmount: number
+    depositWalletAddress: string
+    depositWalletAddressTag?: string
+  }
 }
 
 type MeldOffRampTransferDetailsRequest = {
-  sessionId: string
+  meldDetails: {
+    sessionId: string
+  }
 }
 
 export type OffRampTransferDetailsResponse = {
+  chainId: string
+  provider: string
+  tokenAddress: string
   baseCurrencyCode: string
   baseCurrencyAmount: number
   depositWalletAddress: string
+  logos: {
+    darkLogo: string
+    lightLogo: string
+    darkFullLogo: string
+    lightFullLogo: string
+  }
   depositWalletAddressTag?: string
 }
 
@@ -239,6 +246,14 @@ export type FiatOnRampCurrency = {
   currencyInfo: Maybe<CurrencyInfo>
   moonpayCurrencyCode?: string
   meldCurrencyCode?: string
+}
+
+export interface FiatOffRampMetaData {
+  name: string
+  logoUrl: string
+  onSubmitCallback: () => void
+  meldCurrencyCode?: string
+  moonpayCurrencyCode?: string
 }
 
 export enum InitialQuoteSelection {

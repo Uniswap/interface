@@ -4,11 +4,12 @@ import 'symbol-observable' // Needed by `reduxed-chrome-storage` as polyfill, or
 
 import { useEffect } from 'react'
 import { I18nextProvider } from 'react-i18next'
-import { RouteObject, RouterProvider } from 'react-router-dom'
+import { RouteObject, RouterProvider, createHashRouter } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ExtensionStatsigProvider } from 'src/app/StatsigProvider'
 import { GraphqlProvider } from 'src/app/apollo'
 import { ErrorElement } from 'src/app/components/ErrorElement'
+import { DatadogAppNameTag } from 'src/app/datadog'
 import { ClaimUnitagScreen } from 'src/app/features/onboarding/ClaimUnitagScreen'
 import { Complete } from 'src/app/features/onboarding/Complete'
 import {
@@ -34,17 +35,17 @@ import { ScanToOnboard } from 'src/app/features/onboarding/scan/ScanToOnboard'
 import { ScantasticContextProvider } from 'src/app/features/onboarding/scan/ScantasticContextProvider'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { setRouter, setRouterState } from 'src/app/navigation/state'
-import { SentryAppNameTag, sentryCreateHashRouter } from 'src/app/sentry'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { checksIfSupportsSidePanel } from 'src/app/utils/chrome'
 import { PrimaryAppInstanceDebuggerLazy } from 'src/store/PrimaryAppInstanceDebuggerLazy'
 import { getReduxPersistor, getReduxStore } from 'src/store/store'
+import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
-import i18n from 'uniswap/src/i18n/i18n'
+import i18n from 'uniswap/src/i18n'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
@@ -134,7 +135,7 @@ const allRoutes = [
   },
 ]
 
-const router = sentryCreateHashRouter([
+const router = createHashRouter([
   {
     path: `/${TopLevelRoutes.Onboarding}`,
     element: <OnboardingWrapper />,
@@ -187,17 +188,19 @@ export default function OnboardingApp(): JSX.Element {
   return (
     <Trace>
       <PersistGate persistor={getReduxPersistor()}>
-        <ExtensionStatsigProvider appName={SentryAppNameTag.Onboarding}>
+        <ExtensionStatsigProvider appName={DatadogAppNameTag.Onboarding}>
           <I18nextProvider i18n={i18n}>
             <SharedWalletProvider reduxStore={getReduxStore()}>
               <ErrorBoundary>
                 <GraphqlProvider>
-                  <LocalizationContextProvider>
-                    <UnitagUpdaterContextProvider>
-                      <PrimaryAppInstanceDebuggerLazy />
-                      <RouterProvider router={router} />
-                    </UnitagUpdaterContextProvider>
-                  </LocalizationContextProvider>
+                  <BlankUrlProvider>
+                    <LocalizationContextProvider>
+                      <UnitagUpdaterContextProvider>
+                        <PrimaryAppInstanceDebuggerLazy />
+                        <RouterProvider router={router} />
+                      </UnitagUpdaterContextProvider>
+                    </LocalizationContextProvider>
+                  </BlankUrlProvider>
                 </GraphqlProvider>
               </ErrorBoundary>
             </SharedWalletProvider>

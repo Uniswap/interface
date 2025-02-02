@@ -1,7 +1,8 @@
+/* eslint-disable complexity */
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Button, Flex, Separator, Text, TouchableArea, isWeb, useHapticFeedback, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Separator, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { BackArrow, X } from 'ui/src/components/icons'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
@@ -28,6 +29,7 @@ import {
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
+import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
@@ -42,23 +44,24 @@ export function SendReviewDetails({
   authTrigger,
   ButtonAuthIcon,
   onCloseModal,
+  onSubmitSend,
 }: {
   authTrigger?: AuthTrigger
   ButtonAuthIcon?: JSX.Element | null
   onCloseModal?: () => void
+  onSubmitSend?: () => void
 }): JSX.Element | null {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const dispatch = useDispatch()
   const { fullHeight } = useDeviceDimensions()
   const account = useActiveAccountWithThrow()
-  const { hapticFeedback } = useHapticFeedback()
 
   const { formatCurrencyAmount, formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
   const { navigateToAccountActivityList } = useWalletNavigation()
 
   const { setScreen } = useTransactionModalContext()
-  const { derivedSendInfo, warnings, txRequest, gasFee, isFiatInput } = useSendContext()
+  const { derivedSendInfo, warnings, txRequest, gasFee, isFiatInput, fiatOffRampMetaData } = useSendContext()
   const { txId, chainId, recipient, currencyInInfo, currencyAmounts, nftIn, exactAmountFiat } = derivedSendInfo
 
   const { avatar } = useAvatar(recipient)
@@ -121,8 +124,6 @@ export function SendReviewDetails({
   }, [nftIn, transferERC20Callback, transferNFTCallback])
 
   const onSubmitButtonPress = useCallback(async () => {
-    await hapticFeedback.success()
-
     if (authTrigger) {
       await authTrigger({
         successCallback: submitTranaction,
@@ -133,7 +134,9 @@ export function SendReviewDetails({
     } else {
       submitTranaction()
     }
-  }, [authTrigger, hapticFeedback, setScreen, submitTranaction])
+
+    await onSubmitSend?.()
+  }, [authTrigger, setScreen, submitTranaction, onSubmitSend])
 
   const { blockingWarning } = warnings
   const transferWarning = warnings.warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
@@ -173,7 +176,19 @@ export function SendReviewDetails({
     NumberType.FiatTokenQuantity,
   )
 
+  const { navigateToFiatOnRamp } = useWalletNavigation()
+
   const onPrev = (): void => {
+    if (fiatOffRampMetaData) {
+      onCloseModal?.()
+      navigateToFiatOnRamp({
+        prefilledCurrency: {
+          currencyInfo: currencyInInfo,
+          moonpayCurrencyCode: fiatOffRampMetaData.moonpayCurrencyCode,
+          meldCurrencyCode: fiatOffRampMetaData.meldCurrencyCode,
+        },
+      })
+    }
     setScreen(TransactionScreen.Form)
   }
 
@@ -244,14 +259,29 @@ export function SendReviewDetails({
         </Flex>
         {recipient && (
           <Flex centered row justifyContent="space-between">
-            <AddressDisplay
+            {fiatOffRampMetaData ? (
+              <Flex>
+                <Text color="$neutral1" variant="heading3">
+                  {fiatOffRampMetaData.name}
+                </Text>
+                <Text color="$neutral2" variant="body4">
+                  {shortenAddress(recipient)}
+                </Text>
+              </Flex>
+            ) : (
+              <AddressDisplay
+                address={recipient}
+                captionVariant="body3"
+                showAccountIcon={false}
+                textAlign="flex-start"
+                variant="heading3"
+              />
+            )}
+            <AccountIcon
               address={recipient}
-              captionVariant="body3"
-              showAccountIcon={false}
-              textAlign="flex-start"
-              variant="heading3"
+              avatarUri={fiatOffRampMetaData?.logoUrl || avatar}
+              size={iconSizes.icon40}
             />
-            <AccountIcon address={recipient} avatarUri={avatar} size={iconSizes.icon40} />
           </Flex>
         )}
       </Flex>
@@ -281,8 +311,8 @@ export function SendReviewDetails({
 
       <TransactionModalFooterContainer>
         <Flex row gap="$spacing8">
-          {!isWeb && <Button icon={<BackArrow />} size="large" theme="tertiary" onPress={onPrev} />}
-          <Button
+          {!isWeb && <DeprecatedButton icon={<BackArrow />} size="large" theme="tertiary" onPress={onPrev} />}
+          <DeprecatedButton
             fill
             disabled={actionButtonProps.disabled}
             icon={ButtonAuthIcon}
@@ -291,7 +321,7 @@ export function SendReviewDetails({
             onPress={actionButtonProps.onPress}
           >
             {actionButtonProps.label}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </TransactionModalFooterContainer>
     </Trace>

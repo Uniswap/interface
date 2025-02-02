@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  Button,
+  DeprecatedButton,
   Flex,
   Image,
   Text,
@@ -76,7 +76,7 @@ export function NetworkLogos({ chains }: NetworkLogosProps): JSX.Element {
   return (
     <>
       {/* TRIGGER BUTTON */}
-      <Button
+      <DeprecatedButton
         backgroundColor="$surface2"
         alignSelf="center"
         borderRadius="$rounded16"
@@ -99,7 +99,7 @@ export function NetworkLogos({ chains }: NetworkLogosProps): JSX.Element {
         <Text color="$neutral2" variant="buttonLabel4">
           {t('extension.connection.networks')}
         </Text>
-      </Button>
+      </DeprecatedButton>
       {/* SHEET/MODAL */}
       <Modal name={ModalName.QRCodeNetworkInfo} isModalOpen={isShowingModal} onClose={closeModal}>
         <Flex gap="$spacing12" px="$padding16" pb="$spacing4" alignItems="center" mt="$gap12">
@@ -125,9 +125,9 @@ export function NetworkLogos({ chains }: NetworkLogosProps): JSX.Element {
             url={uniswapUrls.helpArticleUrls.supportedNetworks}
           />
 
-          <Button width="100%" color="$neutral1" mt="$spacing12" theme="secondary" onPress={closeModal}>
+          <DeprecatedButton width="100%" color="$neutral1" mt="$spacing12" theme="secondary" onPress={closeModal}>
             {t('common.button.close')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Modal>
     </>

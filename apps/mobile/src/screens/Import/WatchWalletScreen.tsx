@@ -9,11 +9,11 @@ import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
-import { Button, Flex, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Text } from 'ui/src'
 import { Eye, GraduationCap } from 'ui/src/components/icons'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
+import { ENS_SUFFIX } from 'uniswap/src/features/ens/constants'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -86,7 +86,10 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
   // ENS and address parsing.
   const normalizedValue = normalizeTextInput(value ?? '')
   const hasSuffixIncluded = normalizedValue.includes('.')
-  const { address: resolvedAddress, name } = useENS(UniverseChainId.Mainnet, normalizedValue, !hasSuffixIncluded)
+  const { address: resolvedAddress, name } = useENS({
+    nameOrAddress: normalizedValue,
+    autocompleteDomain: !hasSuffixIncluded,
+  })
   const validAddress = getValidAddress(normalizedValue, true, false)
   const { isSmartContractAddress, loading } = useIsSmartContractAddress(
     (validAddress || resolvedAddress) ?? undefined,
@@ -162,7 +165,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           blurOnSubmit
           errorMessage={errorText}
           inputAlignment="flex-start"
-          inputSuffix={validAddress || hasSuffixIncluded ? undefined : '.eth'}
+          inputSuffix={validAddress || hasSuffixIncluded ? undefined : ENS_SUFFIX}
           liveCheck={showLiveCheck}
           placeholderLabel={t('account.wallet.watch.placeholder')}
           shouldUseMinHeight={false}
@@ -190,9 +193,9 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           </Text>
         </Flex>
       </Flex>
-      <Button disabled={!isValid} mt="$spacing24" testID={TestID.Next} onPress={onSubmit}>
+      <DeprecatedButton disabled={!isValid} mt="$spacing24" testID={TestID.Next} onPress={onSubmit}>
         {t('common.button.continue')}
-      </Button>
+      </DeprecatedButton>
     </SafeKeyboardOnboardingScreen>
   )
 }

@@ -160,11 +160,18 @@ export const parseTransactionRequest = (
 }
 
 export function decodeMessage(value: string): string {
-  if (utils.isHexString(value)) {
-    return utils.toUtf8String(value)
-  }
+  try {
+    if (utils.isHexString(value)) {
+      const decoded = utils.toUtf8String(value)
+      if (decoded?.trim()) {
+        return decoded
+      }
+    }
 
-  return value
+    return value
+  } catch {
+    return value
+  }
 }
 
 /**

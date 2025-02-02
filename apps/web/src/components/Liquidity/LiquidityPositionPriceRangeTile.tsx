@@ -3,8 +3,8 @@ import { Currency, Price } from '@uniswap/sdk-core'
 import { useGetRangeDisplay } from 'components/Liquidity/hooks'
 import { PriceOrdering } from 'components/PositionListItem'
 import { useMemo, useState } from 'react'
+import { Trans } from 'react-i18next'
 import { Flex, SegmentedControl, SegmentedControlOption, Text, styled } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const InnerTile = styled(Flex, {
@@ -17,19 +17,21 @@ const InnerTile = styled(Flex, {
 })
 
 interface LiquidityPositionPriceRangeTileProps {
+  token1: Currency
   priceOrdering: PriceOrdering
   token0CurrentPrice: Price<Currency, Currency>
   token1CurrentPrice: Price<Currency, Currency>
-  feeTier?: string
+  tickSpacing?: number
   tickLower?: string
   tickUpper?: string
 }
 
 export function LiquidityPositionPriceRangeTile({
+  token1,
   priceOrdering,
   token0CurrentPrice,
   token1CurrentPrice,
-  feeTier,
+  tickSpacing,
   tickLower,
   tickUpper,
 }: LiquidityPositionPriceRangeTileProps) {
@@ -56,15 +58,26 @@ export function LiquidityPositionPriceRangeTile({
     throw new Error('LiquidityPositionPriceRangeTile: Currency symbols are required')
   }
 
-  const { minPrice, maxPrice, currentPrice, tokenASymbol, tokenBSymbol } = useGetRangeDisplay({
-    token0CurrentPrice,
-    token1CurrentPrice,
+  const { minPrice, maxPrice, tokenASymbol, tokenBSymbol } = useGetRangeDisplay({
     priceOrdering,
-    feeTier,
+    tickSpacing,
     tickLower,
     tickUpper,
     pricesInverted,
   })
+
+  const currentPrice = useMemo(() => {
+    const { base } = priceOrdering
+    if (!base) {
+      return undefined
+    }
+
+    if (!pricesInverted) {
+      return base?.equals(token1) ? token1CurrentPrice : token0CurrentPrice
+    }
+
+    return base?.equals(token1) ? token0CurrentPrice : token1CurrentPrice
+  }, [priceOrdering, token0CurrentPrice, token1CurrentPrice, token1, pricesInverted])
 
   return (
     <Flex backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12" width="100%" gap="$gap12">
@@ -75,6 +88,7 @@ export function LiquidityPositionPriceRangeTile({
           </Text>
         </Flex>
         <SegmentedControl
+          size="large"
           options={controlOptions}
           selectedOption={pricesInverted ? currencyBSymbol : currencyASymbol}
           onSelectOption={(selected) => {

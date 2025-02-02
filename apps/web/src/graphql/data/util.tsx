@@ -125,13 +125,15 @@ export function getTokenExploreURL({ tab, chain }: { tab: ExploreTab; chain?: Ch
 export function getTokenDetailsURL({
   address,
   chain,
+  chainUrlParam,
   inputAddress,
 }: {
   address?: string | null
-  chain: Chain
+  chain?: Chain
+  chainUrlParam?: string
   inputAddress?: string | null
 }) {
-  const chainName = chain.toLowerCase()
+  const chainName = chainUrlParam || chain?.toLowerCase() || Chain.Ethereum.toLowerCase()
   const tokenAddress = address ?? NATIVE_CHAIN_ID
   const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
   return `/explore/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`

@@ -42,6 +42,7 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
       feeUsd: analytics.fee_usd,
     },
     portfolioBalanceUsd: analytics.total_balances_usd,
+    trace: { ...analytics },
   }
 
   sendAnalyticsEvent(
@@ -67,6 +68,7 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
         feeUsd: analytics.fee_usd,
       },
       portfolioBalanceUsd: analytics.total_balances_usd,
+      trace: { ...analytics },
     }),
   )
 

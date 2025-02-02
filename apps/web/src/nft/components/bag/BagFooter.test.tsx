@@ -41,6 +41,14 @@ jest.mock('graphql/data/nft/NftUniversalRouterAddress', () => {
 })
 jest.mock('hooks/usePermit2Allowance')
 jest.mock('nft/hooks/usePriceImpact')
+jest.mock('utilities/src/logger/logger', () => ({
+  logger: {
+    error: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+  },
+}))
 
 const renderBagFooter = () => {
   render(<BagFooter setModalIsOpen={() => undefined} eventProperties={{}} />)

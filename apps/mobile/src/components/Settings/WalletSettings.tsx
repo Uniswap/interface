@@ -1,37 +1,21 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSettingsStackNavigation } from 'src/app/navigation/types'
-import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { DeprecatedButton, Flex, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
-import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import { useAccountsList } from 'wallet/src/features/wallet/hooks'
 
 const DEFAULT_ACCOUNTS_TO_DISPLAY = 6
 
 export function WalletSettings(): JSX.Element {
   const { t } = useTranslation()
   const navigation = useSettingsStackNavigation()
-  const addressToAccount = useAccounts()
+  const allAccounts = useAccountsList()
   const [showAll, setShowAll] = useState(false)
-
-  const allAccounts = useMemo(() => {
-    const accounts = Object.values(addressToAccount)
-    const _mnemonicWallets = accounts
-      .filter((a): a is SignerMnemonicAccount => a.type === AccountType.SignerMnemonic)
-      .sort((a, b) => {
-        return a.derivationIndex - b.derivationIndex
-      })
-    const _viewOnlyWallets = accounts
-      .filter((a) => a.type === AccountType.Readonly)
-      .sort((a, b) => {
-        return a.timeImportedMs - b.timeImportedMs
-      })
-    return [..._mnemonicWallets, ..._viewOnlyWallets]
-  }, [addressToAccount])
 
   const toggleViewAll = (): void => {
     setShowAll(!showAll)
@@ -74,11 +58,11 @@ export function WalletSettings(): JSX.Element {
         )
       })}
       {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
-        <Button theme="tertiary" onPress={toggleViewAll}>
+        <DeprecatedButton theme="tertiary" onPress={toggleViewAll}>
           <Text color="$neutral1" variant="buttonLabel2">
             {showAll ? t('settings.section.wallet.button.viewLess') : t('settings.section.wallet.button.viewAll')}
           </Text>
-        </Button>
+        </DeprecatedButton>
       )}
     </Flex>
   )

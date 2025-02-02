@@ -8,13 +8,7 @@ type InformationBannerProps = {
 
 export function InformationBanner({ infoText, onPress }: InformationBannerProps): JSX.Element {
   return (
-    <TouchableArea
-      hapticFeedback
-      backgroundColor="$surface2"
-      borderRadius="$rounded16"
-      my="$padding8"
-      onPress={onPress}
-    >
+    <TouchableArea backgroundColor="$surface2" borderRadius="$rounded16" my="$padding8" onPress={onPress}>
       <Flex row alignItems="center" px="$spacing12" py="$spacing12">
         <QuestionInCircleFilled color="$neutral2" size="$icon.20" />
         <Flex pl="$spacing8">

@@ -1,4 +1,3 @@
-import searchIcon from 'assets/svg/search.svg'
 import { RowBetween } from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 
@@ -17,12 +16,6 @@ export const MenuItem = styled(RowBetween)<{ dim?: boolean }>`
 `
 
 export const SearchInput = styled.input`
-  background: no-repeat scroll 7px 7px;
-  background-image: url(${searchIcon});
-  background-size: 20px 20px;
-  background-position: 12px center;
-  position: relative;
-  display: flex;
   padding: 16px;
   padding-left: 40px;
   height: 40px;

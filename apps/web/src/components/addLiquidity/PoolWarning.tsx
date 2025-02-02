@@ -2,11 +2,11 @@ import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
+import { Trans } from 'react-i18next'
 import { ExternalLink } from 'theme/components'
 import { Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { iconSizes } from 'ui/src/theme'
-import { Trans } from 'uniswap/src/i18n'
 
 const Container = styled.div`
   height: 100%;

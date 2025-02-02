@@ -8,7 +8,16 @@ import {
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { ValidatedPermit, ValidatedTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 
+export enum LiquidityTransactionType {
+  Create = 'create',
+  Increase = 'increase',
+  Decrease = 'decrease',
+  Migrate = 'migrate',
+  Collect = 'collect',
+}
+
 export interface LiquidityAction {
+  type: LiquidityTransactionType
   currency0Amount: CurrencyAmount<Currency>
   currency1Amount: CurrencyAmount<Currency>
   liquidityToken?: Token
@@ -19,11 +28,13 @@ export type LiquidityTxAndGasInfo =
   | DecreasePositionTxAndGasInfo
   | CreatePositionTxAndGasInfo
   | MigrateV3PositionTxAndGasInfo
+  | CollectFeesTxAndGasInfo
 export type ValidatedLiquidityTxContext =
   | ValidatedIncreasePositionTxAndGasInfo
   | ValidatedDecreasePositionTxAndGasInfo
   | ValidatedCreatePositionTxAndGasInfo
   | ValidatedMigrateV3PositionTxAndGasInfo
+  | ValidatedCollectFeesTxAndGasInfo
 
 export function isValidLiquidityTxContext(
   liquidityTxContext: LiquidityTxAndGasInfo | unknown,
@@ -44,24 +55,33 @@ interface BaseLiquidityTxAndGasInfo {
 }
 
 export interface IncreasePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
-  type: 'increase'
+  type: LiquidityTransactionType.Increase
   unsigned: boolean
   increasePositionRequestArgs: IncreaseLPPositionRequest | undefined
+  dependentAmount: string | undefined
 }
 
 export interface DecreasePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
-  type: 'decrease'
+  type: LiquidityTransactionType.Decrease
 }
 
 export interface CreatePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
-  type: 'create'
+  type: LiquidityTransactionType.Create
   unsigned: boolean
   createPositionRequestArgs: CreateLPPositionRequest | undefined
+  dependentAmount: string | undefined
 }
 
 export interface MigrateV3PositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
-  type: 'migrate'
+  type: LiquidityTransactionType.Migrate
   migratePositionRequestArgs: MigrateLPPositionRequest | undefined
+}
+
+export interface CollectFeesTxAndGasInfo {
+  type: LiquidityTransactionType.Collect
+  protocolVersion: ProtocolVersion
+  action: LiquidityAction
+  txRequest: ValidatedTransactionRequest | undefined
 }
 
 export type ValidatedIncreasePositionTxAndGasInfo = Required<IncreasePositionTxAndGasInfo> &
@@ -110,10 +130,22 @@ export type ValidatedMigrateV3PositionTxAndGasInfo = Required<MigrateV3PositionT
       }
   )
 
+export type ValidatedCollectFeesTxAndGasInfo = CollectFeesTxAndGasInfo & {
+  txRequest: ValidatedTransactionRequest
+}
+
 function validateLiquidityTxContext(
   liquidityTxContext: LiquidityTxAndGasInfo | unknown,
 ): ValidatedLiquidityTxContext | undefined {
   if (!isLiquidityTx(liquidityTxContext)) {
+    return undefined
+  }
+
+  if (liquidityTxContext.type === LiquidityTransactionType.Collect) {
+    if (liquidityTxContext.txRequest) {
+      return { ...liquidityTxContext, txRequest: liquidityTxContext.txRequest }
+    }
+
     return undefined
   }
 

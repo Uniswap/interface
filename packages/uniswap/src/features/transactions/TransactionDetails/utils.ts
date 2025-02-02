@@ -10,6 +10,7 @@ import {
 } from 'uniswap/src/features/tokens/safetyUtils'
 import {
   FeeOnTransferFeeGroupProps,
+  FoTFeeType,
   TokenFeeInfo,
   TokenWarningProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
@@ -21,7 +22,7 @@ export function getFeeSeverity(fee: Percent): {
 } {
   // WarningSeverity for styling. Same logic as getTokenWarningSeverity but without non-fee-related cases.
   // If fee >= 5% then HIGH, else 0% < fee < 5% then MEDIUM, else NONE
-  const tokenProtectionWarning = getFeeWarning(fee)
+  const tokenProtectionWarning = getFeeWarning(parseFloat(fee.toFixed()))
   const severity = getSeverityFromTokenProtectionWarning(tokenProtectionWarning)
   return { severity, tokenProtectionWarning }
 }
@@ -30,6 +31,7 @@ export function getHighestFeeSeverity(feeOnTransferProps: FeeOnTransferFeeGroupP
   highestFeeTokenInfo?: TokenFeeInfo
   tokenProtectionWarning: TokenProtectionWarning
   severity: WarningSeverity
+  feeType?: FoTFeeType
 } {
   if (!feeOnTransferProps) {
     return { severity: WarningSeverity.None, tokenProtectionWarning: TokenProtectionWarning.None }
@@ -40,8 +42,10 @@ export function getHighestFeeSeverity(feeOnTransferProps: FeeOnTransferFeeGroupP
     return { severity: WarningSeverity.None, tokenProtectionWarning: TokenProtectionWarning.None }
   }
 
-  const highestFeeTokenInfo = inputTokenInfo.fee.greaterThan(outputTokenInfo.fee) ? inputTokenInfo : outputTokenInfo
-  return { highestFeeTokenInfo, ...getFeeSeverity(highestFeeTokenInfo.fee) }
+  const isInputFeeHigher = inputTokenInfo.fee.greaterThan(outputTokenInfo.fee)
+  const feeType = isInputFeeHigher ? 'sell' : 'buy'
+  const highestFeeTokenInfo = isInputFeeHigher ? inputTokenInfo : outputTokenInfo
+  return { feeType, highestFeeTokenInfo, ...getFeeSeverity(highestFeeTokenInfo.fee) }
 }
 
 export function getShouldDisplayTokenWarningCard({
@@ -52,9 +56,10 @@ export function getShouldDisplayTokenWarningCard({
   feeOnTransferProps?: FeeOnTransferFeeGroupProps
 }): {
   shouldDisplayTokenWarningCard: boolean
-  severityToDisplay: WarningSeverity
   tokenProtectionWarningToDisplay: TokenProtectionWarning
   feePercent: number | undefined
+  feeType: FoTFeeType | undefined
+  tokenFeeInfo: TokenFeeInfo | undefined
   currencyInfoToDisplay: Maybe<CurrencyInfo>
   showFeeSeverityWarning: boolean
 } {
@@ -64,6 +69,7 @@ export function getShouldDisplayTokenWarningCard({
     severity: feeSeverity,
     tokenProtectionWarning: feeWarning,
     highestFeeTokenInfo,
+    feeType,
   } = getHighestFeeSeverity(feeOnTransferProps)
   const feePercent = highestFeeTokenInfo ? parseFloat(highestFeeTokenInfo.fee.toFixed()) : undefined
 
@@ -81,9 +87,10 @@ export function getShouldDisplayTokenWarningCard({
   const currencyInfoToDisplay = showFeeSeverityWarning ? highestFeeTokenInfo?.currencyInfo : currencyInfo
   return {
     shouldDisplayTokenWarningCard: severityToDisplay === WarningSeverity.High,
-    severityToDisplay,
     tokenProtectionWarningToDisplay,
     feePercent,
+    feeType,
+    tokenFeeInfo: highestFeeTokenInfo,
     currencyInfoToDisplay,
     showFeeSeverityWarning,
   }

@@ -8,12 +8,12 @@ import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
-import { Button, Flex, useIsDarkMode } from 'ui/src'
+import { DeprecatedButton, Flex, useIsDarkMode } from 'ui/src'
 import { ONBOARDING_NOTIFICATIONS_DARK, ONBOARDING_NOTIFICATIONS_LIGHT } from 'ui/src/assets'
 import { BellOn } from 'ui/src/components/icons'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import i18n from 'uniswap/src/i18n/i18n'
+import i18n from 'uniswap/src/i18n'
 import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
@@ -58,9 +58,13 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
   }, [deviceSupportsBiometrics, hasSeedPhrase, isBiometricAuthEnabled, navigation, onCompleteOnboarding, params])
 
   const onPressEnableNotifications = useCallback(async () => {
-    promptPushPermission(() => {
+    const arePushNotificationsEnabled = await promptPushPermission()
+
+    if (arePushNotificationsEnabled) {
       enableNotifications()
-    }, showNotificationSettingsAlert)
+    } else {
+      showNotificationSettingsAlert()
+    }
 
     await navigateToNextScreen()
   }, [enableNotifications, navigateToNextScreen])
@@ -77,9 +81,9 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
         <NotificationsBackgroundImage />
       </Flex>
       <Trace logPress element={ElementName.Enable}>
-        <Button testID="turn-on-notifications" onPress={onPressEnableNotifications}>
+        <DeprecatedButton testID="turn-on-notifications" onPress={onPressEnableNotifications}>
           {t('common.button.enable')}
-        </Button>
+        </DeprecatedButton>
       </Trace>
     </OnboardingScreen>
   )

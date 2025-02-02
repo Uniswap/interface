@@ -12,7 +12,10 @@ import { spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampConnectingView } from 'uniswap/src/features/fiatOnRamp/FiatOnRampConnectingView'
-import { fiatOnRampAggregatorApiV2, getFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import {
+  useFiatOnRampAggregatorOffRampWidgetQuery,
+  useFiatOnRampAggregatorWidgetQuery,
+} from 'uniswap/src/features/fiatOnRamp/api'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { useFiatOnRampTransactionCreator } from 'uniswap/src/features/fiatOnRamp/hooks'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
@@ -49,7 +52,8 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     countryState,
     baseCurrencyInfo,
     quoteCurrency,
-    amount,
+    fiatAmount,
+    tokenAmount,
   } = useFiatOnRampContext()
   const serviceProvider = selectedQuote?.serviceProviderDetails
 
@@ -69,18 +73,17 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     navigation.goBack()
   }, [dispatch, navigation, t])
 
-  const { useFiatOnRampAggregatorWidgetQuery } = getFiatOnRampAggregatorApi()
   const {
     data: widgetData,
     isLoading: widgetLoading,
     error: widgetError,
   } = useFiatOnRampAggregatorWidgetQuery(
-    !isOffRamp && serviceProvider && quoteCurrency.meldCurrencyCode && baseCurrencyInfo && amount
+    !isOffRamp && serviceProvider && quoteCurrency.meldCurrencyCode && baseCurrencyInfo && fiatAmount
       ? {
           serviceProvider: serviceProvider.serviceProvider,
           countryCode,
           destinationCurrencyCode: quoteCurrency.meldCurrencyCode,
-          sourceAmount: amount,
+          sourceAmount: fiatAmount,
           sourceCurrencyCode: baseCurrencyInfo.code,
           walletAddress: activeAccountAddress,
           externalSessionId: externalTransactionId,
@@ -89,23 +92,22 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
       : skipToken,
   )
 
-  const { useFiatOnRampAggregatorOffRampWidgetQuery } = fiatOnRampAggregatorApiV2
   const {
     data: offRampWidgetData,
     isLoading: offRampWidgetLoading,
     error: offRampWidgetError,
   } = useFiatOnRampAggregatorOffRampWidgetQuery(
-    isOffRamp && serviceProvider && quoteCurrency.meldCurrencyCode && baseCurrencyInfo && amount
+    isOffRamp && serviceProvider && quoteCurrency.meldCurrencyCode && baseCurrencyInfo && tokenAmount
       ? {
           serviceProvider: serviceProvider.serviceProvider,
           countryCode,
           baseCurrencyCode: quoteCurrency.meldCurrencyCode,
-          sourceAmount: amount,
+          sourceAmount: tokenAmount,
           quoteCurrencyCode: baseCurrencyInfo.code,
           refundWalletAddress: activeAccountAddress,
           externalCustomerId: activeAccountAddress,
           externalSessionId: externalTransactionId,
-          redirectUrl: `${uniswapUrls.redirectUrlBase}?screen=transaction&fiatOffRamp=true&userAddress=${activeAccountAddress}`,
+          redirectUrl: `${uniswapUrls.redirectUrlBase}?screen=transaction&fiatOffRamp=true&userAddress=${activeAccountAddress}&externalTransactionId=${externalTransactionId}`,
         }
       : skipToken,
   )
@@ -134,7 +136,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
           },
         )
       }
-      dispatchAddTransaction()
+      dispatchAddTransaction({ isOffRamp })
       await openUri(widgetUrl).catch(onError)
       dispatch(forceFetchFiatOnRampTransactions())
     }
@@ -177,7 +179,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
         <>
           <FiatOnRampConnectingView
             amount={addFiatSymbolToNumber({
-              value: amount,
+              value: fiatAmount,
               currencyCode: baseCurrencyInfo?.code,
               currencySymbol: baseCurrencyInfo?.symbol,
             })}

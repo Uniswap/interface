@@ -25,9 +25,9 @@ export function getAlertColor(severity?: WarningSeverity): WarningColor {
       }
     case WarningSeverity.Medium:
       return {
-        text: '$DEP_accentWarning',
-        headerText: '$DEP_accentWarning',
-        background: '$DEP_accentWarningSoft',
+        text: '$statusWarning',
+        headerText: '$statusWarning',
+        background: '$statusWarning2',
         buttonTheme: 'warning',
       }
     case WarningSeverity.Blocked:

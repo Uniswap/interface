@@ -1,4 +1,4 @@
-import i18n from 'uniswap/src/i18n/i18n'
+import i18n from 'uniswap/src/i18n'
 import { getDurationRemaining } from 'utilities/src/time/duration'
 
 export function getOtpDurationString(expirationTime: number): string {

@@ -7,11 +7,17 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 export interface UniswapBehaviorHistoryState {
   hasViewedBridgingBanner?: boolean
   hasDismissedBridgingWarning?: boolean
+  hasDismissedLowNetworkTokenWarning?: boolean
+  unichainPromotion?: {
+    coldBannerDismissed?: boolean
+    warmBannerDismissed?: boolean
+  }
 }
 
 export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
   hasViewedBridgingBanner: false,
   hasDismissedBridgingWarning: false,
+  hasDismissedLowNetworkTokenWarning: false,
 }
 
 const slice = createSlice({
@@ -24,6 +30,17 @@ const slice = createSlice({
     setHasDismissedBridgingWarning: (state, action: PayloadAction<boolean>) => {
       state.hasDismissedBridgingWarning = action.payload
     },
+    setHasDismissedLowNetworkTokenWarning: (state, action: PayloadAction<boolean>) => {
+      state.hasDismissedLowNetworkTokenWarning = action.payload
+    },
+    setHasDismissedUnichainColdBanner: (state, action: PayloadAction<boolean>) => {
+      state.unichainPromotion ??= {}
+      state.unichainPromotion.coldBannerDismissed = action.payload
+    },
+    setHasDismissedUnichainWarmBanner: (state, action: PayloadAction<boolean>) => {
+      state.unichainPromotion ??= {}
+      state.unichainPromotion.warmBannerDismissed = action.payload
+    },
 
     // Should only be used for testing
     resetUniswapBehaviorHistory: (_state, _action: PayloadAction) => {
@@ -32,6 +49,13 @@ const slice = createSlice({
   },
 })
 
-export const { setHasViewedBridgingBanner, setHasDismissedBridgingWarning, resetUniswapBehaviorHistory } = slice.actions
+export const {
+  setHasViewedBridgingBanner,
+  setHasDismissedBridgingWarning,
+  setHasDismissedLowNetworkTokenWarning,
+  setHasDismissedUnichainColdBanner,
+  setHasDismissedUnichainWarmBanner,
+  resetUniswapBehaviorHistory,
+} = slice.actions
 
 export const uniswapBehaviorHistoryReducer = slice.reducer

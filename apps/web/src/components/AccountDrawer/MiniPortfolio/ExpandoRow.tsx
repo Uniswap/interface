@@ -3,8 +3,8 @@ import Row from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
 import { ChevronDown } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { t } from 'uniswap/src/i18n'
 
 const ExpandIcon = styled(ChevronDown)<{ $expanded: boolean }>`
   color: ${({ theme }) => theme.neutral2};
@@ -24,15 +24,17 @@ const ToggleButton = styled(Row)`
   }
 `
 
-const Wrapper = styled(Column)<{ numItems: number; isExpanded: boolean }>`
-  height: ${({ numItems, isExpanded }) => (isExpanded ? numItems * 68 + 'px' : 0)};
+const Wrapper = styled(Column)<{ isExpanded: boolean }>`
+  height: ${({ isExpanded }) => (isExpanded ? '100%' : 0)};
   transition: ${({ theme }) => `height ${theme.transition.duration.medium} ease-in-out`};
   overflow: hidden;
 `
 
 // TODO(WEB-1982): Replace this component to use `components/Expand` under the hood
 type ExpandoRowProps = PropsWithChildren<{ title?: string; numItems: number; isExpanded: boolean; toggle: () => void }>
-export function ExpandoRow({ title = t('common.hidden'), numItems, isExpanded, toggle, children }: ExpandoRowProps) {
+export function ExpandoRow({ title, numItems, isExpanded, toggle, children }: ExpandoRowProps) {
+  const { t } = useTranslation()
+  const titleWithFallback = title ?? t('common.hidden')
   if (numItems === 0) {
     return null
   }
@@ -40,7 +42,7 @@ export function ExpandoRow({ title = t('common.hidden'), numItems, isExpanded, t
     <>
       <Row align="center" justify="space-between" padding="16px">
         <ThemedText.SubHeader color="neutral2" variant="subheadSmall">
-          {`${title} (${numItems})`}
+          {`${titleWithFallback} (${numItems})`}
         </ThemedText.SubHeader>
         <ToggleButton align="center" onClick={toggle}>
           <ThemedText.LabelSmall color="neutral2" variant="buttonLabelSmall">
@@ -49,9 +51,7 @@ export function ExpandoRow({ title = t('common.hidden'), numItems, isExpanded, t
           <ExpandIcon $expanded={isExpanded} />
         </ToggleButton>
       </Row>
-      <Wrapper numItems={numItems} isExpanded={isExpanded}>
-        {children}
-      </Wrapper>
+      <Wrapper isExpanded={isExpanded}>{children}</Wrapper>
     </>
   )
 }

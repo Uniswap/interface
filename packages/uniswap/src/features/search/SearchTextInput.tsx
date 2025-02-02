@@ -9,7 +9,7 @@ import type {
 } from 'react-native'
 import {
   AnimatePresence,
-  Button,
+  DeprecatedButton,
   Flex,
   Input,
   InputProps,
@@ -186,7 +186,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
                 outlineWidth={0}
                 p="$none"
                 placeholder={placeholder}
-                placeholderTextColor="$neutral3"
+                placeholderTextColor="$neutral2"
                 position="absolute"
                 returnKeyType="done"
                 testID={TestID.ExploreSearchInput}
@@ -216,7 +216,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           <AnimatePresence>{endAdornment ? <Flex animation="quick">{endAdornment}</Flex> : null}</AnimatePresence>
           <AnimatePresence>
             {showCloseButton && (
-              <Button
+              <DeprecatedButton
                 animation="quick"
                 backgroundColor={backgroundColor}
                 enterStyle={{ opacity: 0, scale: 0 }}

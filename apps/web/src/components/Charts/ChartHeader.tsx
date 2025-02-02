@@ -5,7 +5,6 @@ import { useTheme } from 'lib/styled-components'
 import { UTCTimestamp } from 'lightweight-charts'
 import { ReactElement, ReactNode } from 'react'
 import { EllipsisTamaguiStyle } from 'theme/components'
-import { ThemedText } from 'theme/components/text'
 import { Flex, Text, styled } from 'ui/src'
 import { PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -100,7 +99,9 @@ interface HeaderTimeDisplayProps {
 function HeaderTimeDisplay({ time, timePlaceholder }: HeaderTimeDisplayProps) {
   const headerDateFormatter = useHeaderDateFormatter()
   return (
-    <ThemedText.SubHeader color="neutral2">{time ? headerDateFormatter(time) : timePlaceholder}</ThemedText.SubHeader>
+    <Text variant="subheading2" display="flex" alignItems="center" color="neutral2">
+      {time ? headerDateFormatter(time) : timePlaceholder}
+    </Text>
   )
 }
 
@@ -129,7 +130,7 @@ export function ChartHeader({
       zIndex="$tooltip"
       id="chart-header"
     >
-      <Flex position="absolute" gap="$gap4" pb={14} pointerEvents="none" width="70%">
+      <Flex position="absolute" gap="$gap4" pb={14} pointerEvents="none" width="80%">
         <HeaderValueDisplay value={value} valueFormatterType={valueFormatterType} />
         <Flex row gap="$gap8" {...EllipsisTamaguiStyle}>
           {additionalFields}

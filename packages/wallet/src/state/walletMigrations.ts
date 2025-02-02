@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { RankingType } from 'uniswap/src/data/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
@@ -9,7 +10,6 @@ import { CurrencyId } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
-import { RankingType } from 'wallet/src/features/wallet/types'
 
 // Mobile: 63
 // Extension: 0

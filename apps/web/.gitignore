@@ -54,3 +54,5 @@ cypress/screenshots
 .vercel
 
 .wrangler
+
+*storybook.log

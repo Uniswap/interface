@@ -4,18 +4,19 @@ import Circle from 'assets/images/blue-loader.svg'
 import tokenLogo from 'assets/images/token-logo.png'
 import AddressInputPanel from 'components/AddressInputPanel'
 import { ButtonPrimary } from 'components/Button/buttons'
-import Modal from 'components/Modal'
 import { AutoColumn, ColumnCenter } from 'components/deprecated/Column'
 import { RowBetween } from 'components/deprecated/Row'
 import { Break, CardBGImage, CardBGImageSmaller, CardNoise, CardSection, DataCard } from 'components/earn/styled'
 import { useAccount } from 'hooks/useAccount'
-import useENS from 'hooks/useENS'
 import styled from 'lib/styled-components'
 import { useState } from 'react'
 import { useClaimCallback, useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
 import { useIsTransactionPending } from 'state/transactions/hooks'
 import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText, UniTokenAnimated } from 'theme/components'
 import { Text } from 'ui/src'
+import { Modal } from 'uniswap/src/components/modals/Modal'
+import { useENS } from 'uniswap/src/features/ens/useENS'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -52,7 +53,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
   }
 
   // monitor for third party recipient of claim
-  const { address: parsedAddress } = useENS(typed)
+  const { address: parsedAddress } = useENS({ nameOrAddress: typed })
 
   // used for UI loading states
   const [attempting, setAttempting] = useState<boolean>(false)
@@ -98,7 +99,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
   // Avoiding translating because the structure for "Claiming UNI for address" is wrong but this modal is rarely used
   // and ran into difficulties with testing it
   return (
-    <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight="90vh">
+    <Modal name={ModalName.AddressClaim} isModalOpen={isOpen} onClose={wrappedOnDismiss} maxHeight="90vh" padding={0}>
       {!attempting && (
         <ContentWrapper gap="lg">
           <ModalUpper>

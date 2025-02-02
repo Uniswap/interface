@@ -1,4 +1,4 @@
-import { Flex } from 'ui/src/components/layout'
+import { Flex, FlexProps } from 'ui/src/components/layout'
 import { ShineProps } from 'ui/src/loading/ShineProps'
 
 const shineKeyframe = `
@@ -12,11 +12,12 @@ const shineKeyframe = `
   }
 `
 
-export function Shine({ children, disabled }: ShineProps): JSX.Element {
+export function Shine({ children, disabled, ...rest }: ShineProps & FlexProps): JSX.Element {
   return (
     <>
       <style>{shineKeyframe}</style>
       <Flex
+        {...rest}
         style={
           disabled
             ? undefined

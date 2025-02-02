@@ -14,10 +14,10 @@ import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import styled, { useTheme } from 'lib/styled-components'
 import { useMemo, useState } from 'react'
 import { ArrowRight } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { Checkbox } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 
 const StyledPortfolioRow = styled(PortfolioRow)`

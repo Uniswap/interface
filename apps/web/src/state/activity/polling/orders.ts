@@ -127,7 +127,7 @@ export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
       } catch (e) {
         logger.debug('usePollPendingOrders', 'getOrderStatuses', 'Failed to fetch order statuses', e)
       }
-      setCurrentDelay((currentDelay) => Math.min(currentDelay * 2, ms('30s')))
+      setCurrentDelay((currentDelay) => Math.min(currentDelay * 1.5, ms('30s')))
       timeout = setTimeout(getOrderStatuses, currentDelay)
     }
 

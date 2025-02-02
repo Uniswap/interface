@@ -1,13 +1,12 @@
-import { navigatorLocale, useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import { useMemo } from 'react'
+import { Trans } from 'react-i18next'
 import { useAppDispatch } from 'state/hooks'
 import { StyledInternalLink } from 'theme/components'
 import { Text } from 'ui/src'
 import { DEFAULT_LOCALE, Language, Locale, mapLocaleToLanguage } from 'uniswap/src/features/language/constants'
-import { useLanguageInfo } from 'uniswap/src/features/language/hooks'
+import { navigatorLocale, useCurrentLocale, useLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { setCurrentLanguage } from 'uniswap/src/features/settings/slice'
-import { Trans } from 'uniswap/src/i18n'
 
 const useTargetLocale = (activeLocale: Locale) => {
   const browserLocale = useMemo(() => navigatorLocale(), [])
@@ -23,7 +22,7 @@ const useTargetLocale = (activeLocale: Locale) => {
 }
 
 export function SwitchLocaleLink() {
-  const activeLocale = useActiveLocale()
+  const activeLocale = useCurrentLocale()
   const targetLocale = useTargetLocale(activeLocale)
   const targetLanguageInfo = useLanguageInfo(targetLocale ? mapLocaleToLanguage[targetLocale] : Language.English)
   const dispatch = useAppDispatch()

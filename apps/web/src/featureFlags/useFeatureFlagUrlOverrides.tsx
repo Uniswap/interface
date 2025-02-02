@@ -1,9 +1,10 @@
-import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useContext, useEffect } from 'react'
+import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { Statsig, StatsigContext } from 'uniswap/src/features/gating/sdk/statsig'
 import { isProdEnv } from 'utilities/src/environment/env'
 
 export function useFeatureFlagUrlOverrides() {
+  const { useParsedQueryString } = useUrlContext()
   const parsedQs = useParsedQueryString()
   const statsigContext = useContext(StatsigContext)
   const isProduction = isProdEnv() && window.location.hostname !== 'localhost'

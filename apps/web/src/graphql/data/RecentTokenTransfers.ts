@@ -5,7 +5,7 @@ import {
   TransactionType,
   useRecentTokenTransfersQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 
 export function useRecentTokenTransfers(address?: string) {
   const { gqlChains } = useEnabledChains()

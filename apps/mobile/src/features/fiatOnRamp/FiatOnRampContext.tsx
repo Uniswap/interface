@@ -1,7 +1,7 @@
 /**
  * This context is used to persist Fiat On Ramp related data between Fiat On Ramp screens.
  */
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { SectionListData } from 'react-native'
 import { getCountry } from 'react-native-localize'
 import { useSelector } from 'react-redux'
@@ -27,10 +27,14 @@ interface FiatOnRampContextType {
   quoteCurrency: FiatOnRampCurrency
   defaultCurrency: FiatOnRampCurrency
   setQuoteCurrency: (quoteCurrency: FiatOnRampCurrency) => void
-  amount?: number
-  setAmount: (amount: number | undefined) => void
+  fiatAmount: number | undefined
+  tokenAmount: number | undefined
+  setFiatAmount: (fiatAmount: number | undefined) => void
+  setTokenAmount: (tokenAmount: number | undefined) => void
   isOffRamp: boolean
   setIsOffRamp: (isOffRamp: boolean) => void
+  isTokenInputMode: boolean
+  setIsTokenInputMode: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const initialState: FiatOnRampContextType = {
@@ -40,13 +44,18 @@ const initialState: FiatOnRampContextType = {
   setCountryState: () => undefined,
   setBaseCurrencyInfo: () => undefined,
   setQuoteCurrency: () => undefined,
-  setAmount: () => undefined,
+  setFiatAmount: () => undefined,
+  setTokenAmount: () => undefined,
+  fiatAmount: undefined,
+  tokenAmount: undefined,
   countryCode: '',
   countryState: undefined,
   quoteCurrency: { currencyInfo: undefined },
   defaultCurrency: { currencyInfo: undefined },
   isOffRamp: false,
   setIsOffRamp: () => undefined,
+  isTokenInputMode: false,
+  setIsTokenInputMode: () => undefined,
 }
 
 const FiatOnRampContext = createContext<FiatOnRampContextType>(initialState)
@@ -61,8 +70,10 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
   const [countryCode, setCountryCode] = useState<string>(getCountry())
   const [countryState, setCountryState] = useState<string | undefined>()
   const [baseCurrencyInfo, setBaseCurrencyInfo] = useState<FiatCurrencyInfo>()
-  const [amount, setAmount] = useState<number>()
   const [isOffRamp, setIsOffRamp] = useState<boolean>(false)
+  const [isTokenInputMode, setIsTokenInputMode] = useState<boolean>(false)
+  const [fiatAmount, setFiatAmount] = useState<number | undefined>()
+  const [tokenAmount, setTokenAmount] = useState<number | undefined>()
 
   const { initialState: initialModalState } = useSelector(selectModalState(ModalName.FiatOnRampAggregator))
   const prefilledCurrency = initialModalState?.prefilledCurrency
@@ -71,11 +82,21 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
   const ethCurrencyInfo = useCurrencyInfo(
     buildCurrencyId(UniverseChainId.Mainnet, getNativeAddress(UniverseChainId.Mainnet)),
   )
-  const defaultCurrency: FiatOnRampCurrency = {
-    currencyInfo: ethCurrencyInfo,
-    meldCurrencyCode: 'ETH',
-  }
+  const defaultCurrency = useMemo(
+    () => ({
+      currencyInfo: ethCurrencyInfo,
+      meldCurrencyCode: 'ETH',
+    }),
+    [ethCurrencyInfo],
+  )
   const [quoteCurrency, setQuoteCurrency] = useState<FiatOnRampCurrency>(prefilledCurrency ?? defaultCurrency)
+
+  useEffect(() => {
+    // Addresses a race condition where the quoteCurrency could be set before ethCurrencyInfo is loaded
+    if (ethCurrencyInfo) {
+      setQuoteCurrency(defaultCurrency)
+    }
+  }, [ethCurrencyInfo, defaultCurrency])
 
   return (
     <FiatOnRampContext.Provider
@@ -93,10 +114,14 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
         quoteCurrency,
         defaultCurrency,
         setQuoteCurrency,
-        amount,
-        setAmount,
+        fiatAmount,
+        setFiatAmount,
+        tokenAmount,
+        setTokenAmount,
         isOffRamp,
         setIsOffRamp,
+        isTokenInputMode,
+        setIsTokenInputMode,
       }}
     >
       {children}

@@ -1,7 +1,6 @@
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Dispatch, ReactNode, SetStateAction, createContext } from 'react'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
@@ -59,22 +58,9 @@ type SwapAndLimitContextType = {
     inputCurrency?: Currency
     outputCurrency?: Currency
   }
-  setSelectedChainId: Dispatch<SetStateAction<UniverseChainId | undefined | null>>
-  isUserSelectedToken: boolean
-  setIsUserSelectedToken: Dispatch<SetStateAction<boolean>>
   setCurrencyState: Dispatch<SetStateAction<CurrencyState>>
   currentTab: SwapTab
   setCurrentTab: Dispatch<SetStateAction<SwapTab>>
-  // The chainId of the context - can be different from the connected Chain ID
-  // if multichain UX is enabled, otherwise it will be the same as the connected chain ID
-  chainId?: UniverseChainId
-  // The initial chain ID - used by TDP and PDP pages to keep swap scoped to the initial chain
-  initialChainId?: UniverseChainId
-  multichainUXEnabled?: boolean
-  // Components may use swap and limit context while outside of the context
-  // this flag is used to determine if we should fallback to account.chainId
-  // instead of using the context chainId
-  isSwapAndLimitContext: boolean
 }
 
 export const SwapAndLimitContext = createContext<SwapAndLimitContextType>({
@@ -83,19 +69,12 @@ export const SwapAndLimitContext = createContext<SwapAndLimitContextType>({
     outputCurrency: undefined,
   },
   setCurrencyState: () => undefined,
-  setSelectedChainId: () => undefined,
-  isUserSelectedToken: false,
-  setIsUserSelectedToken: () => undefined,
   prefilledState: {
     inputCurrency: undefined,
     outputCurrency: undefined,
   },
-  chainId: UniverseChainId.Mainnet,
-  initialChainId: UniverseChainId.Mainnet,
   currentTab: SwapTab.Swap,
   setCurrentTab: () => undefined,
-  multichainUXEnabled: false,
-  isSwapAndLimitContext: false,
 })
 
 export interface SerializedCurrencyState {

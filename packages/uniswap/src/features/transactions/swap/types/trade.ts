@@ -18,6 +18,7 @@ import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
+import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 
 export type UniswapXTrade = UniswapXV2Trade | PriorityOrderTrade
 export class UniswapXV2Trade extends V2DutchOrderTrade<Currency, Currency, TradeType> {
@@ -85,7 +86,11 @@ export class PriorityOrderTrade extends IPriorityOrderTrade<Currency, Currency, 
     tradeType: TradeType
   }) {
     const orderInfo = transformToPriorityOrderInfo(quote.quote.orderInfo)
-    super({ currencyIn, currenciesOut: [currencyOut], orderInfo, tradeType })
+    const { expectedAmountIn, expectedAmountOut} = quote.quote
+    const expectedAmounts = expectedAmountIn && expectedAmountOut ? { expectedAmountIn, expectedAmountOut  } : undefined
+
+    super({ currencyIn, currenciesOut: [currencyOut], orderInfo, tradeType, expectedAmounts })
+    
     this.quote = quote
     this.slippageTolerance = this.quote.quote.slippageTolerance ?? 0
     this.swapFee = getSwapFee(quote)
@@ -128,12 +133,10 @@ export class ClassicTrade<
   constructor({
     quote,
     deadline,
-    slippageTolerance,
     ...routes
   }: {
     readonly quote?: ClassicQuoteResponse
     readonly deadline: number
-    readonly slippageTolerance: number
     readonly v2Routes: {
       routev2: V2RouteSDK<TInput, TOutput>
       inputAmount: CurrencyAmount<TInput>
@@ -159,7 +162,7 @@ export class ClassicTrade<
     super(routes)
     this.quote = quote
     this.deadline = deadline
-    this.slippageTolerance = slippageTolerance
+    this.slippageTolerance = quote?.quote.slippage ?? MAX_AUTO_SLIPPAGE_TOLERANCE
     this.swapFee = getSwapFee(quote)
   }
 }

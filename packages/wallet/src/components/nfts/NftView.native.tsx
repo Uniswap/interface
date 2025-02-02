@@ -1,4 +1,4 @@
-import { Flex, ImpactFeedbackStyle, TouchableArea } from 'ui/src'
+import { Flex, TouchableArea } from 'ui/src'
 import noop from 'utilities/src/react/noop'
 import { NftViewProps } from 'wallet/src/components/nfts/NftViewProps'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
@@ -9,9 +9,7 @@ export function NftView({ item, onPress, index }: NftViewProps): JSX.Element {
   return (
     <Flex>
       <TouchableArea
-        hapticFeedback
         activeOpacity={1}
-        hapticStyle={ImpactFeedbackStyle.Light}
         testID={`nfts-list-item-${index ?? 0}`}
         // Needed to fix long press issue with context menu on Android
         onLongPress={noop}

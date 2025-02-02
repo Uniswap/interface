@@ -2,7 +2,7 @@ import { useOpenLimitOrders } from 'components/AccountDrawer/MiniPortfolio/Activ
 import { TabButton } from 'components/AccountDrawer/MiniPortfolio/shared'
 import { useTheme } from 'lib/styled-components'
 import { Clock } from 'react-feather'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { Trans, useTranslation } from 'react-i18next'
 
 function getExtraWarning(openLimitOrders: any[]) {
   if (openLimitOrders.length >= 100) {

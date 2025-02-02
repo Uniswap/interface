@@ -27,6 +27,7 @@ describe('TDPPoolTable', () => {
   it('renders loading state', () => {
     mocked(usePoolsFromTokenAddress).mockReturnValue({
       loading: true,
+      errorV4: undefined,
       errorV3: undefined,
       errorV2: undefined,
       pools: [],
@@ -43,6 +44,7 @@ describe('TDPPoolTable', () => {
   it('renders error state', () => {
     mocked(usePoolsFromTokenAddress).mockReturnValue({
       loading: false,
+      errorV4: new ApolloError({ errorMessage: 'error fetching data' }),
       errorV3: new ApolloError({ errorMessage: 'error fetching data' }),
       errorV2: new ApolloError({ errorMessage: 'error fetching data' }),
       pools: [],
@@ -66,7 +68,7 @@ describe('TDPPoolTable', () => {
         txCount: 200,
         tvl: 300,
         volume24h: 400,
-        volumeWeek: 500,
+        volume30d: 500,
         volOverTvl: 1.84,
         apr: new Percent(6, 100),
         protocolVersion: ProtocolVersion.V3,
@@ -75,6 +77,7 @@ describe('TDPPoolTable', () => {
     mocked(usePoolsFromTokenAddress).mockReturnValue({
       pools: mockData,
       loading: false,
+      errorV4: undefined,
       errorV3: undefined,
       errorV2: undefined,
       loadMore: jest.fn(),

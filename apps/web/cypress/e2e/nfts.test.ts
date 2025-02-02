@@ -47,6 +47,7 @@ describe('Testing nfts', () => {
   // })
 
   it('should navigate to and from the owned nfts page', () => {
+    cy.interceptGraphqlOperation('NftBalance', 'mini-portfolio/nfts')
     cy.visit('/')
     cy.get(getTestSelector('web3-status-connected')).click()
     cy.get(getTestSelector('mini-portfolio-navbar')).contains('NFTs').click()

@@ -21,6 +21,7 @@ An open source repository for all Uniswap front end interfaces maintained by Uni
 
 ## Whitepapers
 
+- [V4](https://uniswap.org/whitepaper-v4.pdf)
 - [V3](https://uniswap.org/whitepaper-v3.pdf)
 - [V2](https://uniswap.org/whitepaper.pdf)
 - [V1](https://hackmd.io/C-DvwDSfSxuh-Gd4WKE_ig)

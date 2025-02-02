@@ -25,6 +25,7 @@ import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useU
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
 import { SwapArrowButton } from 'uniswap/src/features/transactions/swap/form/SwapArrowButton'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
@@ -163,7 +164,7 @@ export function SendTokenForm(): JSX.Element {
   const onSetMax = useCallback(
     (amount: string) => {
       exactAmountTokenRef.current = amount
-      updateSendForm({ exactAmountToken: amount, isFiatInput: false, focusOnCurrencyField: null })
+      updateSendForm({ exactAmountToken: amount, isMax: true, isFiatInput: false, focusOnCurrencyField: null })
 
       // We want this update to happen on the next tick, after the input value is updated.
       setTimeout(() => {
@@ -268,6 +269,7 @@ export function SendTokenForm(): JSX.Element {
                 showSoftInputOnFocus={false}
                 usdValue={inputCurrencyUSDValue}
                 value={isFiatInput ? exactAmountFiat : exactAmountToken}
+                transactionType={TransactionType.Send}
                 onPressIn={(): void => setCurrencyFieldFocused(true)}
                 onSelectionChange={onInputSelectionChange}
                 onSetExactAmount={onSetExactAmount}

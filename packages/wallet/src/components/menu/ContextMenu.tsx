@@ -7,6 +7,8 @@ import { usePrevious } from 'utilities/src/react/hooks'
 import { MenuContent } from 'wallet/src/components/menu/MenuContent'
 import { MenuContentItem } from 'wallet/src/components/menu/types'
 
+const DEFAULT_OFFSET_TOKEN_BALANCE_HEIGHT = 60
+
 type ContextMenuProps = {
   menuOptions: MenuContentItem[]
   itemId: string
@@ -52,10 +54,12 @@ export function ContextMenu({
   // Ignore if any values besides default are passed
   const triggerContainerRef = useRef<HTMLDivElement>(null)
   const { offset: customOffset, placement } = rest
-  const offset =
-    customOffset || (placement && placement !== 'bottom-end')
-      ? customOffset
-      : -(triggerContainerRef.current?.offsetHeight ?? 0)
+  const isOffsetProvided = customOffset || (placement !== 'bottom-end' && placement)
+  const triggerOffsetHeight = triggerContainerRef.current?.offsetHeight ?? 0
+  const triggerBottomPosition = triggerContainerRef.current?.getBoundingClientRect().bottom ?? 0
+  const isTriggerBelowViewport = window.innerHeight - triggerBottomPosition < 0
+  const fallbackOffset = -triggerOffsetHeight + (triggerOffsetHeight || DEFAULT_OFFSET_TOKEN_BALANCE_HEIGHT)
+  const offset = isOffsetProvided ? customOffset : isTriggerBelowViewport ? fallbackOffset : -triggerOffsetHeight
 
   const contentShadowProps = {
     shadowColor: colors.shadowColor.val,

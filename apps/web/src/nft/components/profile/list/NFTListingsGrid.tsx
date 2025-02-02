@@ -9,8 +9,8 @@ import { useSellAsset } from 'nft/hooks'
 import { DropDownOption, ListingMarket } from 'nft/types'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { ChevronDown } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { BREAKPOINTS } from 'theme'
-import { Trans } from 'uniswap/src/i18n'
 
 const TableHeader = styled.div`
   display: flex;

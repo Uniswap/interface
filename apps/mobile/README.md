@@ -4,6 +4,32 @@
 
 If you have suggestions on how we can improve the app, or would like to report a bug or a problem, check out the [Uniswap Help Center](https://support.uniswap.org/).
 
+## Table of contents
+
+- [Setup](#setup)
+ - [Packages and Software](#packages-and-software)
+ - [iOS Setup](#ios-setup)
+   - [Xcode](#xcode)
+   - [Add Xcode Command Line Tools](#add-xcode-command-line-tools)
+ - [Android Setup](#android-setup)
+   - [Deploying to Physical Android Device](#deploying-to-physical-android-device)
+- [Development](#development)
+ - [Environment variables](#environment-variables)
+ - [Compile contract ABI types](#compile-contract-abi-types) 
+ - [Run the app](#run-the-app)
+ - [Using Radon IDE](#using-radon-ide-vscodecursor-extension)
+   - [Running on a Physical iOS Device](#running-on-a-physical-ios-device)
+- [Important Libraries and Tools](#important-libraries-and-tools)
+- [Migrations](#migrations)
+- [Testing & Performance](#testing--performance)
+ - [Build local app files](./docs/build-app-files.md)
+ - [E2E testing](./docs/e2e-testing.md)
+ - [Performance monitoring](./docs/perf-monitoring.md)
+- [Troubleshooting](#troubleshooting)
+ - [Common issues](#common-issues)
+ - [Common fixes](#common-fixes)
+ - [Shell profile setup](#shell-profile-setup)
+
 ## Setup
 
 This guide assumes that:
@@ -124,7 +150,7 @@ Note: If you are indeed using an Apple Silicon Mac, we recommend setting up your
 
 You should start with downloading Xcode if you don't already have it installed, since the file is so large. You can find it here: [developer.apple.com/xcode](https://developer.apple.com/xcode/)
 
-You must use **XCode 15** to compile the app. [Older versions of xCode can be found here](https://developer.apple.com/download/all/?q=xcode).
+You must use the [Required Xcode Version](https://github.com/Uniswap/universe/blob/main/apps/mobile/scripts/podinstall.sh#L5) to compile the app. [Older versions of xCode can be found here](https://developer.apple.com/download/all/?q=xcode).
 
 #### Add Xcode Command Line Tools
 
@@ -218,6 +244,20 @@ You can also run the app from Xcode, which is necessary for any Swift related ch
 
 Hopefully you now (after a few minutes) see the Uniswap Wallet running in the iOS Simulator!
 
+### Using Radon IDE (VSCode/Cursor Extension)
+
+[Radon IDE](https://marketplace.visualstudio.com/items?itemName=swmansion.react-native-ide&ssr=false#review-details) is a relatively new VSCode extension build by Software Mansion. TLDR; its tagline is
+
+> A better developer experience for React Native developers
+
+It's not perfect, but it's great to have in the toolbox. One noteworthy feature is the ability to click on any piece of UI and be able to inspect the component hierarchy + jump straight into the relevant code. There's also support for breakpoints in VSCode/Cursor, better logging, instant replay of your session, and the ability to adjust common device settings on the fly.
+
+To get started, you should already be able to build the iOS app (either in XCode or via the cli). Install the extension, open it, and follow the onboarding instructions.
+
+One you have a device configured, it will start to build. If/when successful, you'll see the device simulator/emulator in the sidebar.
+
+In `.vscode/launch.json`, you will see configurations for each platform. This is where you can specify the fingerprint command. The fingerprint is a hash of the build environment, and Radon uses it to determine if the build has changed so that it knows when to re-run the build process (i.e. only on native code changes). See `getFingerprintForRadonIDE.js` for more details. There are more complex implementations of this, but this is a simple first step.
+
 #### Running on a Physical iOS Device
 
 1. Follow all steps listed above.
@@ -225,17 +265,6 @@ Hopefully you now (after a few minutes) see the Uniswap Wallet running in the iO
 3. Connect your iOS device + follow the on-screen prompts to trust your computer
 4. Select the Uniswap target + your connect device, then `Cmd + R` or use the ▶️ button the start the build
 5. You may get an error about your device not yet being added to the Uniswap Apple Developer account; if so, click `Register` and restart the build
-
-### Enabling Flipper
-
-We do not check Flipper into source. To prevent `pod install` from adding Flipper, set an environment variable in your `.bash_profile` or `.zshrc` or `.zprofile`:
-
-```bash
-# To enable flipper inclusion (optional)
-export USE_FLIPPER=1
-```
-
-Note: To disable Flipper, the whole line should be commented out, as setting this value to 0 will not disable Flipper.
 
 ## Important Libraries and Tools
 
@@ -251,6 +280,13 @@ These are some tools you might want to familiarize yourself with to understand t
 ## Migrations
 
 We use `redux-persist` to persist the Redux state between user sessions. Most of this state is shared between the mobile app and the extension. Please review the [Wallet Migrations README](../../packages/wallet/src/state//README.md) for details on how to write migrations when you add or remove anything from the Redux state structure.
+
+## Testing & Performance
+
+- [Build local app files](./docs/build-app-files.md)
+- [E2E testing](./docs/e2e-testing.md)
+- [Performance monitoring](./docs/perf-monitoring.md)
+
 
 ## Troubleshooting
 
@@ -311,7 +347,3 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
-# To enable flipper inclusion (optional)
-export USE_FLIPPER=1
-export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
-```

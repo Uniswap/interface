@@ -75,7 +75,10 @@ export function useActivityData({
     return generateActivityItemRenderer(<Loader.Transaction />, SectionTitle, swapCallbacks, authTrigger)
   }, [swapCallbacks, authTrigger])
 
-  const { onRetry, isError, sectionData, keyExtractor } = useFormattedTransactionDataForActivity(owner, hideSpamTokens)
+  const { onRetry, isError, sectionData, keyExtractor } = useFormattedTransactionDataForActivity({
+    address: owner,
+    hideSpamTokens,
+  })
 
   const errorCard = useMemo(
     () => (
@@ -92,7 +95,7 @@ export function useActivityData({
 
   const emptyListView = useMemo(
     () => (
-      <Flex centered grow pt="$spacing48" px="$spacing36">
+      <Flex centered pt="$spacing48" px="$spacing36">
         <BaseCard.EmptyState
           buttonLabel={isExternalProfile || !onPressEmptyState ? undefined : t('home.activity.empty.button')}
           description={

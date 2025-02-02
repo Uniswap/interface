@@ -17,6 +17,7 @@ export enum TransactionStepType {
   DecreasePositionTransaction = 'DecreasePositionTransaction',
   MigratePositionTransactionStep = 'MigratePositionTransaction',
   MigratePositionTransactionStepAsync = 'MigratePositionTransactionAsync',
+  CollectFeesTransactionStep = 'CollectFeesTransaction',
 }
 
 export type UniswapXSwapSteps =
@@ -42,8 +43,10 @@ export type DecreasePositionSteps = TokenApprovalTransactionStep | DecreasePosit
 
 export type MigratePositionSteps = Permit2SignatureStep | MigratePositionTransactionStep | MigratePositionTransactionStepAsync
 
+export type CollectFeesSteps = CollectFeesTransactionStep
+
 // TODO: add v4 lp flow
-export type TransactionStep = ClassicSwapSteps | UniswapXSwapSteps | IncreasePositionSteps | DecreasePositionSteps | MigratePositionSteps
+export type TransactionStep = ClassicSwapSteps | UniswapXSwapSteps | IncreasePositionSteps | DecreasePositionSteps | MigratePositionSteps | CollectFeesSteps
 export type OnChainTransactionStep = TransactionStep & OnChainTransactionFields
 export type SignatureTransactionStep = TransactionStep & SignTypedDataStepFields
 
@@ -116,6 +119,10 @@ export interface MigratePositionTransactionStepAsync {
   // Requires permit
   type: TransactionStepType.MigratePositionTransactionStepAsync
   getTxRequest(signature: string): Promise<ValidatedTransactionRequest | undefined> // fetches tx request from trading api with signature
+}
+
+export interface CollectFeesTransactionStep extends OnChainTransactionFields {
+  type: TransactionStepType.CollectFeesTransactionStep
 }
 
 export type ClassicSwapFlow =

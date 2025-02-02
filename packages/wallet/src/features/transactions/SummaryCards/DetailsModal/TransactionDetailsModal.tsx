@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Separator, Text, TouchableArea, isWeb } from 'ui/src'
+import { DeprecatedButton, Flex, Separator, Text, TouchableArea, isWeb } from 'ui/src'
 import { AnglesDownUp, Ellipsis, SortVertical, UniswapX } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
@@ -20,6 +20,7 @@ import { ApproveTransactionDetails } from 'wallet/src/features/transactions/Summ
 import { BridgeTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/BridgeTransactionDetails'
 import { HeaderLogo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/HeaderLogo'
 import { NftTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/NftTransactionDetails'
+import { OffRampTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/OffRampTransactionDetails'
 import { OnRampTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/OnRampTransactionDetails'
 import { SwapTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/SwapTransactionDetails'
 import { TransactionDetailsInfoRows } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsInfoRows'
@@ -31,6 +32,7 @@ import {
   isNFTApproveTransactionInfo,
   isNFTMintTransactionInfo,
   isNFTTradeTransactionInfo,
+  isOffRampSaleTransactionInfo,
   isOnRampPurchaseTransactionInfo,
   isOnRampTransferTransactionInfo,
   isReceiveTokenTransactionInfo,
@@ -80,17 +82,19 @@ export function TransactionDetailsHeader({
           </Text>
         </Flex>
       </Flex>
-      {isWeb ? (
-        <ContextMenu closeOnClick itemId={transactionDetails.id} menuOptions={menuItems} onLeftClick>
-          <TouchableArea hoverable borderRadius="$roundedFull" p="$spacing4">
+      {menuItems.length > 0 ? (
+        isWeb ? (
+          <ContextMenu closeOnClick itemId={transactionDetails.id} menuOptions={menuItems} onLeftClick>
+            <TouchableArea hoverable borderRadius="$roundedFull" p="$spacing4">
+              <Ellipsis color="$neutral2" size="$icon.20" />
+            </TouchableArea>
+          </ContextMenu>
+        ) : (
+          <TouchableArea onPress={openActionsModal}>
             <Ellipsis color="$neutral2" size="$icon.20" />
           </TouchableArea>
-        </ContextMenu>
-      ) : (
-        <TouchableArea onPress={openActionsModal}>
-          <Ellipsis color="$neutral2" size="$icon.20" />
-        </TouchableArea>
-      )}
+        )
+      ) : null}
     </Flex>
   )
 }
@@ -127,6 +131,8 @@ export function TransactionDetailsContent({
       return <WrapTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
     } else if (isOnRampPurchaseTransactionInfo(typeInfo) || isOnRampTransferTransactionInfo(typeInfo)) {
       return <OnRampTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
+    } else if (isOffRampSaleTransactionInfo(typeInfo)) {
+      return <OffRampTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
     } else {
       return null
     }
@@ -180,7 +186,7 @@ export function TransactionDetailsModal({
   const buttons: JSX.Element[] = []
   if (isCancelable) {
     buttons.push(
-      <Button
+      <DeprecatedButton
         backgroundColor="$DEP_accentCriticalSoft"
         color="$statusCritical"
         size="small"
@@ -188,14 +194,14 @@ export function TransactionDetailsModal({
         onPress={openCancelModal}
       >
         {t('transaction.action.cancel.button')}
-      </Button>,
+      </DeprecatedButton>,
     )
   }
   if (isWeb) {
     buttons.push(
-      <Button size="small" theme="secondary" onPress={onClose}>
+      <DeprecatedButton size="small" theme="secondary" onPress={onClose}>
         {t('common.button.close')}
-      </Button>,
+      </DeprecatedButton>,
     )
   }
 

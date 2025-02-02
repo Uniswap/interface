@@ -3,9 +3,9 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/deprecated/Row'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import styled from 'lib/styled-components'
+import { Trans } from 'react-i18next'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
 
 const CurrencySymbolContainer = styled.span`
   display: inline-block;

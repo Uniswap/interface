@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableWithoutFeedback } from 'react-native'
 import Animated from 'react-native-reanimated'
@@ -21,10 +21,25 @@ import {
   TransactionModalFooterContainer,
   TransactionModalInnerContainer,
 } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
-import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+import {
+  TransactionScreen,
+  useTransactionModalContext,
+} from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/swap/modals/LowNativeBalanceModal'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+
+function useGoToReviewScreen(): () => void {
+  const { updateSendForm } = useSendContext()
+  const { setScreen } = useTransactionModalContext()
+  return useCallback(() => {
+    const txId = createTransactionId()
+    updateSendForm({ txId })
+    setScreen(TransactionScreen.Review)
+  }, [setScreen, updateSendForm])
+}
 
 export function SendFormScreen(): JSX.Element {
   const [hideContent, setHideContent] = useState(true)
@@ -41,6 +56,7 @@ function SendFormScreenContent({ hideContent }: { hideContent: boolean }): JSX.E
   const { bottomSheetViewStyles } = useTransactionModalContext()
   const { showRecipientSelector, recipient, derivedSendInfo, updateSendForm } = useSendContext()
   const [showViewOnlyModal, setShowViewOnlyModal] = useState(false)
+  const [showMaxTransferModal, setShowMaxTransferModal] = useState(false)
 
   const onSelectRecipient = useCallback(
     (newRecipient: string) => {
@@ -52,6 +68,16 @@ function SendFormScreenContent({ hideContent }: { hideContent: boolean }): JSX.E
   const onHideRecipientSelector = useCallback(() => {
     updateSendForm({ showRecipientSelector: false })
   }, [updateSendForm])
+
+  const hideLowNetworkTokenWarning = useCallback(() => {
+    setShowMaxTransferModal(false)
+  }, [setShowMaxTransferModal])
+
+  const hideViewOnlyModal = useCallback(() => {
+    setShowViewOnlyModal(false)
+  }, [setShowViewOnlyModal])
+
+  const goToReviewScreen = useGoToReviewScreen()
 
   // Renders recipient select within a bottom sheet, only used when a recipient already exists. If no recipient
   // a full screen select view is rendered within `SendFlow`
@@ -71,7 +97,6 @@ function SendFormScreenContent({ hideContent }: { hideContent: boolean }): JSX.E
             <Flex fill px="$spacing16">
               <RecipientSelect
                 chainId={derivedSendInfo.chainId as UniverseChainId}
-                focusInput={showRecipientSelector}
                 hideBackButton={true}
                 recipient={recipient}
                 renderedInModal={true}
@@ -85,12 +110,21 @@ function SendFormScreenContent({ hideContent }: { hideContent: boolean }): JSX.E
         {!hideContent && (
           <>
             <SendHeader flowName={t('send.title')} setShowViewOnlyModal={setShowViewOnlyModal} />
-            <SendFormContent setShowViewOnlyModal={setShowViewOnlyModal} showViewOnlyModal={showViewOnlyModal} />
+            <SendFormContent
+              showLowNetworkTokenWarning={showMaxTransferModal}
+              showViewOnlyModal={showViewOnlyModal}
+              hideLowNetworkTokenWarning={hideLowNetworkTokenWarning}
+              hideViewOnlyModal={hideViewOnlyModal}
+            />
           </>
         )}
       </TransactionModalInnerContainer>
       <TransactionModalFooterContainer>
-        <SendFormButton setShowViewOnlyModal={setShowViewOnlyModal} />
+        <SendFormButton
+          goToReviewScreen={goToReviewScreen}
+          setShowViewOnlyModal={setShowViewOnlyModal}
+          setShowMaxTransferModal={setShowMaxTransferModal}
+        />
       </TransactionModalFooterContainer>
     </>
   )
@@ -98,13 +132,19 @@ function SendFormScreenContent({ hideContent }: { hideContent: boolean }): JSX.E
 
 export function SendFormContent({
   showViewOnlyModal,
-  setShowViewOnlyModal,
+  hideViewOnlyModal,
+  showLowNetworkTokenWarning,
+  hideLowNetworkTokenWarning,
 }: {
   showViewOnlyModal: boolean
-  setShowViewOnlyModal: Dispatch<SetStateAction<boolean>>
+  hideViewOnlyModal: () => void
+  showLowNetworkTokenWarning: boolean
+  hideLowNetworkTokenWarning: () => void
 }): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
+
+  const goToReviewScreen = useGoToReviewScreen()
 
   const activeAccountAddress = useActiveAccountAddressWithThrow()
 
@@ -114,18 +154,34 @@ export function SendFormContent({
     updateSendForm({ selectingCurrencyField: undefined })
   }, [updateSendForm])
 
+  const onCloseLowNativeBalanceWarning = useCallback(() => {
+    hideViewOnlyModal()
+    hideLowNetworkTokenWarning()
+  }, [hideViewOnlyModal, hideLowNetworkTokenWarning])
+
+  const onAcknowledgeLowNativeBalanceWarning = useCallback(() => {
+    hideLowNetworkTokenWarning()
+    goToReviewScreen()
+  }, [hideLowNetworkTokenWarning, goToReviewScreen])
+
   return (
     <>
       <WarningModal
         caption={t('send.warning.viewOnly.message')}
         acknowledgeText={t('common.button.dismiss')}
-        icon={<EyeIcon color={colors.neutral2.get()} height={iconSizes.icon24} width={iconSizes.icon24} />}
+        icon={<EyeIcon color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />}
         isOpen={showViewOnlyModal}
         modalName={ModalName.SwapWarning}
         severity={WarningSeverity.Low}
         title={t('send.warning.viewOnly.title')}
-        onClose={(): void => setShowViewOnlyModal(false)}
-        onAcknowledge={(): void => setShowViewOnlyModal(false)}
+        onClose={hideViewOnlyModal}
+        onAcknowledge={hideViewOnlyModal}
+      />
+
+      <LowNativeBalanceModal
+        isOpen={showLowNetworkTokenWarning}
+        onClose={onCloseLowNativeBalanceWarning}
+        onAcknowledge={onAcknowledgeLowNativeBalanceWarning}
       />
 
       <TouchableWithoutFeedback>

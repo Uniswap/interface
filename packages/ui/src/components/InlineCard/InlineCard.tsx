@@ -8,6 +8,7 @@ type InlineCardProps = {
   Icon: GeneratedIcon | ((props: IconProps) => JSX.Element)
   iconColor?: ColorTokens
   color: ColorTokens
+  backgroundColor?: ColorTokens
   description: string | JSX.Element
   iconBackgroundColor?: ColorTokens
   heading?: string | JSX.Element
@@ -19,6 +20,7 @@ export function InlineCard({
   Icon,
   iconColor,
   color,
+  backgroundColor = '$surface2',
   iconBackgroundColor,
   heading,
   description,
@@ -53,7 +55,7 @@ export function InlineCard({
     )
 
   return (
-    <Flex row backgroundColor="$surface3" borderRadius="$rounded16" gap="$spacing12" p="$spacing12">
+    <Flex row backgroundColor={backgroundColor} borderRadius="$rounded16" gap="$spacing12" p="$spacing12">
       <Flex>{iconElement}</Flex>
       <Flex fill grow row gap="$spacing4" justifyContent="space-between">
         <Flex fill grow gap="$spacing2">

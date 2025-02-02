@@ -12,6 +12,7 @@ import {
   v14Schema,
   v15Schema,
   v16Schema,
+  v17Schema,
   v1Schema,
   v2Schema,
   v3Schema,
@@ -48,6 +49,7 @@ import {
   testMovedUserSettings,
   testRemoveCreatedOnboardingRedesignAccount,
   testRemoveHoldToSwap,
+  testUnchecksumDismissedTokenWarningKeys,
   testUpdateExploreOrderByType,
 } from 'wallet/src/state/walletMigrationsTests'
 
@@ -273,5 +275,9 @@ describe('Redux state migrations', () => {
 
   it('migrates from v16 to v17', async () => {
     testRemoveCreatedOnboardingRedesignAccount(migrations[17], v16Schema)
+  })
+
+  it('migrates from v17 to v18', () => {
+    testUnchecksumDismissedTokenWarningKeys(migrations[18], v17Schema)
   })
 })

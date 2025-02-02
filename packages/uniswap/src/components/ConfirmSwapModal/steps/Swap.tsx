@@ -15,7 +15,7 @@ import noop from 'utilities/src/react/noop'
 
 const SwapIcon = (): JSX.Element => (
   <Flex centered width="$spacing24" height="$spacing24" borderRadius="$roundedFull" backgroundColor="$DEP_blue400">
-    <Swap color="$neutral1" size="$icon.12" />
+    <Swap color="$white" size="$icon.12" />
   </Flex>
 )
 

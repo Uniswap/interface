@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { PortfolioBalancesQueryResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { logger } from 'utilities/src/logger/logger'
 
 /**

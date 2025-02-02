@@ -17,17 +17,15 @@ import { UnavailableCollectionPage } from 'nft/components/collection/Unavailable
 import { BagCloseIcon } from 'nft/components/icons'
 import { useBag, useCollectionFilters, useFiltersExpanded } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
-import { blocklistedCollections } from 'nft/utils'
+import { useDynamicBlocklistedNftCollections } from 'nft/utils'
 import { useDynamicMetatags } from 'pages/metatags'
 import { Suspense, useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
+import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
-import { animated, easings, useSpring } from 'react-spring'
 import { ThemedText } from 'theme/components'
-import { TRANSITION_DURATIONS } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { t } from 'uniswap/src/i18n'
 
 const FILTER_WIDTH = 332
 const EMPTY_TRAIT_OBJ = {}
@@ -48,13 +46,9 @@ const CollectionContainer = styled(Column)`
   will-change: width;
 `
 
-const AnimatedCollectionContainer = animated(CollectionContainer)
-
 const CollectionAssetsContainer = styled.div<{ hideUnderneath: boolean }>`
   position: ${({ hideUnderneath }) => (hideUnderneath ? 'fixed' : 'static')};
 `
-
-const AnimatedCollectionAssetsContainer = animated(CollectionAssetsContainer)
 
 export const BannerWrapper = styled.div`
   height: 100px;
@@ -126,6 +120,7 @@ const IconWrapper = styled.button`
 `
 
 const Collection = () => {
+  const { t } = useTranslation()
   const { contractAddress } = useParams()
   const isMobile = useIsMobile()
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
@@ -139,23 +134,6 @@ const Collection = () => {
   const screenSize = useScreenSize()
 
   const { data: collectionStats, loading } = useCollection(contractAddress as string)
-
-  const { CollectionContainerWidthChange } = useSpring({
-    CollectionContainerWidthChange:
-      isBagExpanded && !isMobile ? (screenSize['xxxl'] ? XXXL_BAG_WIDTH : BAG_WIDTH) + 16 : 0,
-    config: {
-      duration: TRANSITION_DURATIONS.medium,
-      easing: easings.easeOutSine,
-    },
-  })
-
-  const { gridWidthOffset } = useSpring({
-    gridWidthOffset: isFiltersExpanded && !isMobile ? FILTER_WIDTH : 0,
-    config: {
-      duration: TRANSITION_DURATIONS.medium,
-      easing: easings.easeOutSine,
-    },
-  })
 
   const metaTagProperties = useMemo(() => {
     return {
@@ -186,6 +164,8 @@ const Collection = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const blocklistedCollections = useDynamicBlocklistedNftCollections()
+
   if (loading) {
     return <CollectionPageSkeleton />
   }
@@ -215,9 +195,9 @@ const Collection = () => {
         page={InterfacePageName.NFT_COLLECTION_PAGE}
         properties={{ collection_address: contractAddress, chain_id: chainId, is_activity_view: isActivityToggled }}
       >
-        <AnimatedCollectionContainer
+        <CollectionContainer
           style={{
-            width: CollectionContainerWidthChange.to((x) => `calc(100% - ${x as number}px)`),
+            width: `calc(100% - ${isBagExpanded && !isMobile ? (screenSize['xxxl'] ? XXXL_BAG_WIDTH : BAG_WIDTH) + 16 : 0}px)`,
           }}
         >
           {contractAddress && !blocklistedCollections.includes(contractAddress) ? (
@@ -257,11 +237,11 @@ const Collection = () => {
                   )}
                 </FiltersContainer>
 
-                <AnimatedCollectionAssetsContainer
+                <CollectionAssetsContainer
                   hideUnderneath={isMobile && (isFiltersExpanded || isBagExpanded)}
                   style={{
-                    transform: gridWidthOffset.to((x) => `translate(${x as number}px)`),
-                    width: gridWidthOffset.to((x) => `calc(100% - ${x as number}px)`),
+                    transform: `translate(${isFiltersExpanded && !isMobile ? FILTER_WIDTH : 0}px)`,
+                    width: `calc(100% - ${isFiltersExpanded && !isMobile ? FILTER_WIDTH : 0}px)`,
                   }}
                 >
                   {isActivityToggled
@@ -283,13 +263,13 @@ const Collection = () => {
                           />
                         </Suspense>
                       )}
-                </AnimatedCollectionAssetsContainer>
+                </CollectionAssetsContainer>
               </CollectionDisplaySection>
             </>
           ) : (
             <UnavailableCollectionPage isBlocked />
           )}
-        </AnimatedCollectionContainer>
+        </CollectionContainer>
       </Trace>
       <MobileHoverBag />
     </>

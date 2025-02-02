@@ -15,13 +15,13 @@ import {
 import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { TokenTransactionType, useTokenTransactions } from 'graphql/data/useTokenTransactions'
 import { OrderDirection, unwrapToken } from 'graphql/data/util'
-import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useMemo, useReducer, useRef, useState } from 'react'
+import { Trans } from 'react-i18next'
 import { EllipsisTamaguiStyle } from 'theme/components'
 import { Flex, Text, styled } from 'ui/src'
 import { Token as GQLToken } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Trans } from 'uniswap/src/i18n'
+import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
@@ -56,7 +56,7 @@ interface SwapLeg {
 }
 
 export function TransactionsTable({ chainId, referenceToken }: { chainId: UniverseChainId; referenceToken: Token }) {
-  const activeLocalCurrency = useActiveLocalCurrency()
+  const activeLocalCurrency = useAppFiatCurrency()
   const { formatNumber, formatFiatPrice } = useFormatter()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
   const filterAnchorRef = useRef<HTMLDivElement>(null)
@@ -136,7 +136,7 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: Univer
           <Cell minWidth={75} justifyContent="flex-start" grow>
             <FilterHeaderRow
               clickable={filterModalIsOpen}
-              onPress={toggleFilterModal}
+              onPress={filterModalIsOpen ? undefined : toggleFilterModal}
               alignItems="center"
               ref={filterAnchorRef}
             >

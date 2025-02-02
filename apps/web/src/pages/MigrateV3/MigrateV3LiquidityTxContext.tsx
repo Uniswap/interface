@@ -13,14 +13,20 @@ import {
   MigrateLPPositionRequest,
   ProtocolItems,
 } from 'uniswap/src/data/tradingApi/__generated__'
-import { MigrateV3PositionTxAndGasInfo } from 'uniswap/src/features/transactions/liquidity/types'
+import {
+  LiquidityTransactionType,
+  MigrateV3PositionTxAndGasInfo,
+} from 'uniswap/src/features/transactions/liquidity/types'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
+import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useAccount } from 'wagmi'
 
 interface MigrateV3PositionTxContextType {
   txInfo?: MigrateV3PositionTxAndGasInfo
   gasFeeEstimateUSD?: CurrencyAmount<Currency>
+  error?: boolean
+  refetch?: () => void
 }
 
 const MigrateV3PositionTxContext = createContext<MigrateV3PositionTxContextType | undefined>(undefined)
@@ -59,13 +65,24 @@ export function MigrateV3PositionTxContextProvider({
     }
   }, [positionInfo, account.address])
 
-  const { data: migrateTokenApprovals } = useCheckLpApprovalQuery({
+  const {
+    data: migrateTokenApprovals,
+    error: approvalError,
+    refetch: approvalRefetch,
+  } = useCheckLpApprovalQuery({
     params: increaseLiquidityApprovalParams,
     headers: {
       'x-universal-router-version': '2.0',
     },
     staleTime: 5 * ONE_SECOND_MS,
   })
+
+  if (approvalError) {
+    logger.info('MigrateV3LiquidityTxContext', 'MigrateV3LiquidityTxContext', 'CheckLpApprovalQuery', {
+      error: JSON.stringify(approvalError),
+      increaseLiquidityApprovalParams: JSON.stringify(increaseLiquidityApprovalParams),
+    })
+  }
 
   const migratePositionRequestArgs: MigrateLPPositionRequest | undefined = useMemo(() => {
     if (
@@ -154,10 +171,21 @@ export function MigrateV3PositionTxContextProvider({
     feeValue1?.quotient,
   ])
 
-  const { data: migrateCalldata } = useMigrateV3LpPositionCalldataQuery({
+  const {
+    data: migrateCalldata,
+    error: migrateError,
+    refetch: migrateRefetch,
+  } = useMigrateV3LpPositionCalldataQuery({
     params: migratePositionRequestArgs,
     staleTime: 5 * ONE_SECOND_MS,
   })
+
+  if (migrateError) {
+    logger.info('MigrateV3LiquidityTxContext', 'MigrateV3LiquidityTxContext', 'MigrateLpPositionCalldataQuery', {
+      error: JSON.stringify(migrateError),
+      migrateCalldataQueryParams: JSON.stringify(migratePositionRequestArgs),
+    })
+  }
 
   const validatedValue: MigrateV3PositionTxAndGasInfo | undefined = useMemo(() => {
     if (!migrateCalldata) {
@@ -175,7 +203,7 @@ export function MigrateV3PositionTxContextProvider({
     }
 
     return {
-      type: 'migrate',
+      type: LiquidityTransactionType.Migrate,
       unsigned: Boolean(migrateTokenApprovals?.permitData),
       migratePositionRequestArgs,
       approveToken0Request: undefined,
@@ -186,6 +214,7 @@ export function MigrateV3PositionTxContextProvider({
       revocationTxRequest: undefined,
       txRequest,
       action: {
+        type: LiquidityTransactionType.Migrate,
         currency0Amount: positionInfo.currency0Amount,
         currency1Amount: positionInfo.currency1Amount,
       },
@@ -199,7 +228,13 @@ export function MigrateV3PositionTxContextProvider({
   ])
 
   return (
-    <MigrateV3PositionTxContext.Provider value={{ txInfo: validatedValue }}>
+    <MigrateV3PositionTxContext.Provider
+      value={{
+        txInfo: validatedValue,
+        error: Boolean(approvalError || migrateError),
+        refetch: approvalError ? approvalRefetch : migrateError ? migrateRefetch : undefined,
+      }}
+    >
       {children}
     </MigrateV3PositionTxContext.Provider>
   )

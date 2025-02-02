@@ -1,6 +1,6 @@
-import { useFocusEffect, useNavigation } from '@react-navigation/core'
+import { useNavigation } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { SvgProps } from 'react-native-svg'
@@ -20,28 +20,19 @@ import {
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { openModal } from 'src/features/modals/modalSlice'
-import { promptPushPermission } from 'src/features/notifications/Onesignal'
-import {
-  NotificationPermission,
-  useNotificationOSPermissionsEnabled,
-} from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
-import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
-import { Button, Flex, Switch, Text, useSporeColors } from 'ui/src'
-import NotificationIcon from 'ui/src/assets/icons/bell.svg'
+import { DeprecatedButton, Flex, Text, useSporeColors } from 'ui/src'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import TextEditIcon from 'ui/src/assets/icons/textEdit.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useENS } from 'uniswap/src/features/ens/useENS'
-import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
-import { useAccounts, useSelectAccountNotificationSetting } from 'wallet/src/features/wallet/hooks'
+import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, MobileScreens.SettingsWallet>
 
@@ -59,14 +50,10 @@ export function SettingsWallet({
   const addressToAccount = useAccounts()
   const { defaultChainId } = useEnabledChains()
   const currentAccount = addressToAccount[address]
-  const ensName = useENS(defaultChainId, address)?.name
+  const ensName = useENS({ nameOrAddress: address, chainId: defaultChainId })?.name
   const { unitag } = useUnitagByAddress(address)
   const readonly = currentAccount?.type === AccountType.Readonly
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
-
-  const notificationOSPermission = useNotificationOSPermissionsEnabled()
-  const notificationsEnabledOnFirebase = useSelectAccountNotificationSetting(address)
-  const [notificationSwitchEnabled, setNotificationSwitchEnabled] = useState<boolean>(notificationsEnabledOnFirebase)
 
   const showEditProfile = !readonly
 
@@ -76,42 +63,6 @@ export function SettingsWallet({
       navigation.goBack()
     }
   }, [currentAccount, navigation])
-
-  // Need to trigger a state update when the user backgrounds the app to enable notifications and then returns to this screen
-  useFocusEffect(
-    useCallback(
-      () =>
-        setNotificationSwitchEnabled(
-          notificationsEnabledOnFirebase && notificationOSPermission === NotificationPermission.Enabled,
-        ),
-      [notificationOSPermission, notificationsEnabledOnFirebase],
-    ),
-  )
-
-  const onChangeNotificationSettings = (enabled: boolean): void => {
-    sendAnalyticsEvent(MobileEventName.NotificationsToggled, { enabled })
-    if (notificationOSPermission === NotificationPermission.Enabled) {
-      dispatch(
-        editAccountActions.trigger({
-          type: EditAccountAction.TogglePushNotification,
-          enabled,
-          address,
-        }),
-      )
-      setNotificationSwitchEnabled(enabled)
-    } else {
-      promptPushPermission(() => {
-        dispatch(
-          editAccountActions.trigger({
-            type: EditAccountAction.TogglePushNotification,
-            enabled: true,
-            address,
-          }),
-        )
-        setNotificationSwitchEnabled(enabled)
-      }, showNotificationSettingsAlert)
-    }
-  }
 
   const iconProps: SvgProps = {
     color: colors.neutral2.get(),
@@ -135,18 +86,6 @@ export function SettingsWallet({
       subTitle: t('settings.setting.wallet.preferences.title'),
       data: [
         ...(showEditProfile ? [] : [editNicknameSectionOption]),
-        {
-          action: (
-            <Switch
-              checked={notificationSwitchEnabled}
-              disabled={notificationOSPermission === NotificationPermission.Loading}
-              variant="branded"
-              onCheckedChange={onChangeNotificationSettings}
-            />
-          ),
-          text: t('settings.setting.wallet.notifications.title'),
-          icon: <NotificationIcon {...iconProps} />,
-        },
         {
           screen: MobileScreens.SettingsWalletManageConnection,
           text: t('settings.setting.wallet.connections.title'),
@@ -207,9 +146,9 @@ export function SettingsWallet({
             stickySectionHeadersEnabled={false}
           />
         </Flex>
-        <Button testID={TestID.Remove} theme="detrimental" onPress={onRemoveWallet}>
+        <DeprecatedButton testID={TestID.Remove} theme="detrimental" onPress={onRemoveWallet}>
           {t('settings.setting.wallet.action.remove')}
-        </Button>
+        </DeprecatedButton>
       </Flex>
     </Screen>
   )
@@ -220,7 +159,7 @@ const renderItemSeparator = (): JSX.Element => <Flex pt="$spacing8" />
 function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
   const { t } = useTranslation()
   const { defaultChainId } = useEnabledChains()
-  const ensName = useENS(defaultChainId, address)?.name
+  const ensName = useENS({ nameOrAddress: address, chainId: defaultChainId })?.name
   const { unitag } = useUnitagByAddress(address)
 
   const onPressEditProfile = (): void => {
@@ -253,11 +192,11 @@ function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
         />
       </Flex>
       {(!ensName || !!unitag) && (
-        <Button color="$neutral1" size="medium" theme="secondary_Button" onPress={onPressEditProfile}>
+        <DeprecatedButton color="$neutral1" size="medium" theme="secondary_Button" onPress={onPressEditProfile}>
           {unitag?.username
             ? t('settings.setting.wallet.action.editProfile')
             : t('settings.setting.wallet.action.editLabel')}
-        </Button>
+        </DeprecatedButton>
       )}
     </Flex>
   )

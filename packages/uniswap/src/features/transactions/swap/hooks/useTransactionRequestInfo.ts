@@ -3,6 +3,7 @@ import { providers } from 'ethers/lib/ethers'
 import { useEffect, useMemo, useRef } from 'react'
 import { WithV4Flag } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { useTradingApiSwapQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery'
+import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
 import {
   CreateSwapRequest,
   NullablePermit,
@@ -10,13 +11,20 @@ import {
   TransactionFailureReason,
 } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
-import { useActiveGasStrategy, useShadowGasStrategies, useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
+import {
+  convertGasFeeToDisplayValue,
+  useActiveGasStrategy,
+  useShadowGasStrategies,
+  useTransactionGasFee,
+} from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult, areEqualGasStrategies } from 'uniswap/src/features/gas/types'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { getBaseTradeAnalyticsPropertiesFromSwapInfo } from 'uniswap/src/features/transactions/swap/analytics'
 import { usePermit2SignatureWithData } from 'uniswap/src/features/transactions/swap/hooks/usePermit2Signature'
 import { useWrapTransactionRequest } from 'uniswap/src/features/transactions/swap/hooks/useWrapTransactionRequest'
@@ -32,9 +40,10 @@ import {
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { isDetoxBuild } from 'utilities/src/environment/constants'
+import { isE2EMode } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
-import { isInterface, isMobileApp } from 'utilities/src/platform'
+import { isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export const UNKNOWN_SIM_ERROR = 'Unknown gas simulation error'
@@ -51,6 +60,7 @@ export interface TransactionRequestInfo {
   gasFeeResult: GasFeeResult
   gasEstimate: SwapGasFeeEstimation
   swapRequestArgs: CreateSwapRequest | undefined
+  simulationFailureReasons?: TransactionFailureReason[]
 }
 
 export function useTransactionRequestInfo({
@@ -65,11 +75,13 @@ export function useTransactionRequestInfo({
   skip: boolean
 }): TransactionRequestInfo {
   const formatter = useLocalizationContext()
+  const trace = useTrace()
   const activeGasStrategy = useActiveGasStrategy(derivedSwapInfo.chainId, 'general')
   const shadowGasStrategies = useShadowGasStrategies(derivedSwapInfo.chainId, 'general')
   const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
+  const transactionSettings = useTransactionSettingsContext()
 
-  const { trade: tradeWithStatus, customDeadline } = derivedSwapInfo
+  const { trade: tradeWithStatus } = derivedSwapInfo
   const { trade } = tradeWithStatus || { trade: undefined }
 
   const isBridgeTrade = trade?.routing === Routing.BRIDGE
@@ -97,23 +109,11 @@ export function useTransactionRequestInfo({
     if (!swapQuote) {
       return undefined
     }
-    // We cant get correct calldata from /swap if we dont have a valid slippage tolerance
-    if (tradeWithStatus.trade?.slippageTolerance === undefined && !isBridgeTrade) {
-      return undefined
-    }
-    // TODO: update this when api does slippage calculation for us
-    // https://linear.app/uniswap/issue/MOB-2581/remove-slippage-adjustment-in-swap-request
-    const quote = {
-      ...swapQuote,
-      slippage: tradeWithStatus.trade?.slippageTolerance,
-    }
 
-    // if custom deadline is set (in minutes), convert to unix timestamp format from now
-    const deadlineSeconds = (customDeadline ?? 0) * 60
-    const deadline = customDeadline ? Math.floor(Date.now() / 1000) + deadlineSeconds : undefined
+    const deadline = getTradeSettingsDeadline(transactionSettings.customDeadline)
 
     const swapArgs: WithV4Flag<CreateSwapRequest> = {
-      quote,
+      quote: swapQuote,
       permitData: permitData ?? undefined,
       signature: signatureInfo.signature,
       simulateTransaction: shouldSimulateTxn,
@@ -127,14 +127,12 @@ export function useTransactionRequestInfo({
     return swapArgs
   }, [
     activeGasStrategy,
-    customDeadline,
-    isBridgeTrade,
+    transactionSettings.customDeadline,
     permitData,
     shadowGasStrategies,
     shouldSimulateTxn,
     signatureInfo.signature,
     swapQuote,
-    tradeWithStatus,
     v4Enabled,
   ])
 
@@ -156,7 +154,11 @@ export function useTransactionRequestInfo({
 
   // Wrap gas cost should not change significantly between trades, so we can use the last value if current is unavailable.
   const wrapGasFee: GasFeeResult = useMemo(
-    () => ({ ...currentWrapGasFee, value: currentWrapGasFee.value ?? wrapGasFeeRef.current.value }),
+    () => ({
+      ...currentWrapGasFee,
+      value: currentWrapGasFee.value ?? wrapGasFeeRef.current.value,
+      displayValue: currentWrapGasFee.displayValue ?? wrapGasFeeRef.current.displayValue,
+    }),
     [currentWrapGasFee],
   )
 
@@ -180,18 +182,27 @@ export function useTransactionRequestInfo({
   } = useTradingApiSwapQuery({
     params: skipTransactionRequest ? undefined : swapRequestArgs,
     // Disable polling during e2e testing because it was preventing js thread from going idle
-    refetchInterval: isDetoxBuild ? undefined : tradingApiSwapRequestMs,
+    refetchInterval: isE2EMode ? undefined : tradingApiSwapRequestMs,
     staleTime: tradingApiSwapRequestMs,
     // We add a small buffer in case connection is too slow
     immediateGcTime: tradingApiSwapRequestMs + ONE_SECOND_MS * 5,
   })
 
   // We use the gasFee estimate from quote, as its more accurate
-  const swapGasFee = swapQuote?.gasFee
+  const swapGasFee = useMemo(
+    () => ({
+      value: swapQuote?.gasFee,
+      displayValue: convertGasFeeToDisplayValue(swapQuote?.gasFee, activeGasStrategy),
+    }),
+    [swapQuote?.gasFee, activeGasStrategy],
+  )
 
   // This is a case where simulation fails on backend, meaning txn is expected to fail
+  const simulationFailureReasons = isClassicQuote(swapQuote) ? swapQuote?.txFailureReasons : undefined
   const simulationError =
-    isClassicQuote(swapQuote) && swapQuote?.txFailureReasons?.includes(TransactionFailureReason.SIMULATION_ERROR)
+    simulationFailureReasons?.includes(TransactionFailureReason.SIMULATION_ERROR) ||
+    simulationFailureReasons?.includes(TransactionFailureReason.SLIPPAGE_TOO_LOW)
+
   const gasEstimateError = useMemo(
     () => (simulationError ? new Error(UNKNOWN_SIM_ERROR) : error),
     [simulationError, error],
@@ -199,7 +210,8 @@ export function useTransactionRequestInfo({
 
   const gasFeeResult = useMemo(
     () => ({
-      value: isWrapApplicable ? wrapGasFee.value : swapGasFee,
+      value: isWrapApplicable ? wrapGasFee.value : swapGasFee.value,
+      displayValue: isWrapApplicable ? wrapGasFee.displayValue : swapGasFee.displayValue,
       isLoading: isWrapApplicable ? wrapGasFee.isLoading : isSwapLoading,
       error: isWrapApplicable ? wrapGasFee.error : gasEstimateError,
     }),
@@ -227,20 +239,34 @@ export function useTransactionRequestInfo({
 
     if (gasEstimateError) {
       logger.warn('useTransactionRequestInfo', 'useTransactionRequestInfo', UNKNOWN_SIM_ERROR, {
-        ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter }),
+        ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, transactionSettings, formatter, trace }),
+        // we explicitly log it here to show on Datadog dashboard
+        chainLabel: getChainLabel(derivedSwapInfo.chainId),
         error: gasEstimateError,
+        simulationFailureReasons: isClassicQuote(swapQuote) ? swapQuote?.txFailureReasons : undefined,
         txRequest: data?.swap,
       })
 
-      if (!isMobileApp) {
+      if (!(isMobileApp || isExtension)) {
         sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
-          ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter }),
+          ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, transactionSettings, formatter, trace }),
           error: gasEstimateError,
           txRequest: data?.swap,
+          simulationFailureReasons: isClassicQuote(swapQuote) ? swapQuote?.txFailureReasons : undefined,
         })
       }
     }
-  }, [data?.swap, derivedSwapInfo, formatter, gasEstimateError, swapRequestArgs, trade])
+  }, [
+    data?.swap,
+    transactionSettings,
+    derivedSwapInfo,
+    formatter,
+    gasEstimateError,
+    swapRequestArgs,
+    trade,
+    trace,
+    swapQuote,
+  ])
 
   const gasEstimate: SwapGasFeeEstimation = useMemo(() => {
     const activeGasEstimate = data?.gasEstimates?.find((e) => areEqualGasStrategies(e.strategy, activeGasStrategy))
@@ -264,5 +290,6 @@ export function useTransactionRequestInfo({
     permitData,
     gasEstimate,
     swapRequestArgs,
+    simulationFailureReasons,
   }
 }

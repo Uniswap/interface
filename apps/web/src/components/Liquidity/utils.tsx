@@ -14,9 +14,10 @@ import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, Position as V4Position } from '@uniswap/v4-sdk'
 import { defaultFeeTiers } from 'components/Liquidity/constants'
-import { FeeTierData, PositionInfo } from 'components/Liquidity/types'
+import { DepositInfo, FeeTierData, PositionInfo } from 'components/Liquidity/types'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { DYNAMIC_FEE_DATA, DynamicFeeData, FeeData } from 'pages/Pool/Positions/create/types'
+import { PositionField } from 'types/position'
 import { GeneratedIcon } from 'ui/src'
 import { Flag } from 'ui/src/components/icons/Flag'
 import { Pools } from 'ui/src/components/icons/Pools'
@@ -24,16 +25,17 @@ import { SwapCoin } from 'ui/src/components/icons/SwapCoin'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export function getProtocolVersionLabel(version: ProtocolVersion): string | undefined {
   switch (version) {
     case ProtocolVersion.V2:
-      return 'V2'
+      return 'v2'
     case ProtocolVersion.V3:
-      return 'V3'
+      return 'v3'
     case ProtocolVersion.V4:
-      return 'V4'
+      return 'v4'
   }
   return undefined
 }
@@ -75,7 +77,17 @@ export function parseProtocolVersion(version: string | undefined): ProtocolVersi
   }
 }
 
-export function parseV3FeeTier(feeTier: string | undefined): FeeAmount | undefined {
+export function getPositionUrl(position: PositionInfo): string {
+  const chainInfo = getChainInfo(position.chainId)
+  if (position.version === ProtocolVersion.V2) {
+    return `/positions/v2/${chainInfo.urlParam}/${position.liquidityToken.address}`
+  } else if (position.version === ProtocolVersion.V3) {
+    return `/positions/v3/${chainInfo.urlParam}/${position.tokenId}`
+  }
+  return `/positions/v4/${chainInfo.urlParam}/${position.tokenId}`
+}
+
+function parseV3FeeTier(feeTier: string | undefined): FeeAmount | undefined {
   const parsedFee = parseInt(feeTier || '')
 
   return parsedFee in FeeAmount ? parsedFee : undefined
@@ -190,7 +202,7 @@ function parseRestToken<T extends Currency>(token: RestToken | undefined): T | u
   return new Token(token.chainId, token.address, token.decimals, token.symbol) as T
 }
 
-export function getPairFromRest({
+function getPairFromRest({
   pair,
   token0,
   token1,
@@ -230,12 +242,16 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       version: ProtocolVersion.V2,
       pair,
       liquidityToken,
+      chainId: token0.chainId,
+      poolId: liquidityToken.address,
       currency0Amount: CurrencyAmount.fromRawAmount(token0, v2PairPosition.liquidity0),
       currency1Amount: CurrencyAmount.fromRawAmount(token1, v2PairPosition.liquidity1),
       totalSupply: CurrencyAmount.fromRawAmount(liquidityToken, v2PairPosition.totalSupply),
       liquidityAmount: CurrencyAmount.fromRawAmount(liquidityToken, v2PairPosition.liquidity),
+      apr: v2PairPosition.apr,
       v4hook: undefined,
       feeTier: undefined,
+      owner: undefined,
     }
   } else if (position?.position.case === 'v3Position') {
     const v3Position = position.position.value
@@ -260,6 +276,7 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       status: position.status,
       feeTier: parseV3FeeTier(v3Position.feeTier),
       version: ProtocolVersion.V3,
+      chainId: token0.chainId,
       pool,
       poolId: position.position.value.poolId,
       position: sdkPosition,
@@ -272,7 +289,9 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       token1UncollectedFees: v3Position.token1UncollectedFees,
       currency0Amount: CurrencyAmount.fromRawAmount(token0, v3Position.amount0),
       currency1Amount: CurrencyAmount.fromRawAmount(token1, v3Position.amount1),
+      apr: v3Position.apr,
       v4hook: undefined,
+      owner: v3Position.owner,
     }
   } else if (position?.position.case === 'v4Position') {
     const v4Position = position.position.value.poolPosition
@@ -299,6 +318,7 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       feeTier: v4Position.feeTier,
       version: ProtocolVersion.V4,
       position: sdkPosition,
+      chainId: token0.chainId,
       pool,
       poolId,
       v4hook: hook,
@@ -311,6 +331,8 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       token0UncollectedFees: v4Position.token0UncollectedFees,
       token1UncollectedFees: v4Position.token1UncollectedFees,
       liquidity: v4Position.liquidity,
+      apr: v4Position.apr,
+      owner: v4Position.owner,
     }
   } else {
     return undefined
@@ -318,30 +340,24 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
 }
 
 export function calculateInvertedValues({
-  token0CurrentPrice,
-  token1CurrentPrice,
   priceLower,
   priceUpper,
   quote,
   base,
   invert,
 }: {
-  token0CurrentPrice?: Price<Currency, Currency>
-  token1CurrentPrice?: Price<Currency, Currency>
   priceLower?: Price<Currency, Currency>
   priceUpper?: Price<Currency, Currency>
   quote?: Currency
   base?: Currency
   invert?: boolean
 }): {
-  currentPrice?: Price<Currency, Currency>
   priceLower?: Price<Currency, Currency>
   priceUpper?: Price<Currency, Currency>
   quote?: Currency
   base?: Currency
 } {
   return {
-    currentPrice: invert ? token1CurrentPrice : token0CurrentPrice,
     priceUpper: invert ? priceLower?.invert() : priceUpper,
     priceLower: invert ? priceUpper?.invert() : priceLower,
     quote: invert ? base : quote,
@@ -351,16 +367,6 @@ export function calculateInvertedValues({
 
 export function calculateTickSpacingFromFeeAmount(feeAmount: number): number {
   return (2 * feeAmount) / 100
-}
-
-export function calculateInvertedPrice({ price, invert }: { price?: Price<Currency, Currency>; invert: boolean }) {
-  const currentPrice = invert ? price?.invert() : price
-
-  return {
-    price: currentPrice,
-    quote: currentPrice?.quoteCurrency,
-    base: currentPrice?.baseCurrency,
-  }
 }
 
 export enum HookFlag {
@@ -441,7 +447,7 @@ export function getFlagWarning(flag: HookFlag, t: AppTFunction): FlagWarning | u
     case HookFlag.AfterRemoveLiquidity:
       return {
         Icon: Flag,
-        name: t('common.flag'),
+        name: t('common.warning'),
         info: t('position.hook.removeWarning'),
         dangerous: true,
       }
@@ -466,6 +472,7 @@ export function mergeFeeTiers(
       totalLiquidityUsd: 0,
       percentage: new Percent(0, 100),
       created: false,
+      tvl: '0',
     } satisfies FeeTierData
   }
 
@@ -519,42 +526,49 @@ export function getDefaultFeeTiersWithData({
       value: defaultFeeTiersForChain[FeeAmount.LOWEST],
       title: t(`fee.bestForVeryStable`),
       selectionPercent: feeTierData[FeeAmount.LOWEST]?.percentage,
+      tvl: feeTierData[FeeAmount.LOWEST]?.tvl,
     },
     {
       tier: FeeAmount.LOW_200,
       value: defaultFeeTiersForChain[FeeAmount.LOW_200],
       title: '',
       selectionPercent: feeTierData[FeeAmount.LOW_200]?.percentage,
+      tvl: feeTierData[FeeAmount.LOW_200]?.tvl,
     },
     {
       tier: FeeAmount.LOW_300,
       value: defaultFeeTiersForChain[FeeAmount.LOW_300],
       title: '',
       selectionPercent: feeTierData[FeeAmount.LOW_300]?.percentage,
+      tvl: feeTierData[FeeAmount.LOW_300]?.tvl,
     },
     {
       tier: FeeAmount.LOW_400,
       value: defaultFeeTiersForChain[FeeAmount.LOW_400],
       title: '',
       selectionPercent: feeTierData[FeeAmount.LOW_400]?.percentage,
+      tvl: feeTierData[FeeAmount.LOW_400]?.tvl,
     },
     {
       tier: FeeAmount.LOW,
       value: defaultFeeTiersForChain[FeeAmount.LOW],
       title: t(`fee.bestForStablePairs`),
       selectionPercent: feeTierData[FeeAmount.LOW]?.percentage,
+      tvl: feeTierData[FeeAmount.LOW]?.tvl,
     },
     {
       tier: FeeAmount.MEDIUM,
       value: defaultFeeTiersForChain[FeeAmount.MEDIUM],
       title: t(`fee.bestForMost`),
       selectionPercent: feeTierData[FeeAmount.MEDIUM]?.percentage,
+      tvl: feeTierData[FeeAmount.MEDIUM]?.tvl,
     },
     {
       tier: FeeAmount.HIGH,
       value: defaultFeeTiersForChain[FeeAmount.HIGH],
       title: t(`fee.bestForExotic`),
       selectionPercent: feeTierData[FeeAmount.HIGH]?.percentage,
+      tvl: feeTierData[FeeAmount.HIGH]?.tvl,
     },
   ] as const
 
@@ -578,4 +592,62 @@ export function isDynamicFeeTierAmount(
   }
 
   return feeAmountNumber === DYNAMIC_FEE_DATA.feeAmount
+}
+
+export function getDisplayedAmountsFromDependentAmount({
+  token0,
+  token1,
+  dependentAmount,
+  exactField,
+  currencyAmounts,
+  currencyAmountsUSDValue,
+  formattedAmounts,
+}: { token0?: Currency; token1?: Currency; dependentAmount?: string; exactField: PositionField } & Pick<
+  DepositInfo,
+  'currencyAmounts' | 'currencyAmountsUSDValue' | 'formattedAmounts'
+>): {
+  displayFormattedAmounts?: { [field in PositionField]?: string }
+  displayUSDAmounts?: { [field in PositionField]?: CurrencyAmount<Currency> }
+  displayCurrencyAmounts?: { [field in PositionField]?: CurrencyAmount<Currency> }
+} {
+  if (dependentAmount && exactField === PositionField.TOKEN1 && currencyAmounts?.TOKEN0 && token0) {
+    const dependentAmount0 = CurrencyAmount.fromRawAmount(token0, dependentAmount)
+    const ratio = dependentAmount0.divide(currencyAmounts?.TOKEN0)
+    return {
+      displayFormattedAmounts: {
+        ...formattedAmounts,
+        TOKEN0: dependentAmount0?.toExact() ?? formattedAmounts?.TOKEN0,
+      },
+      displayUSDAmounts: {
+        ...currencyAmountsUSDValue,
+        TOKEN0: currencyAmountsUSDValue?.TOKEN0?.multiply(ratio),
+      },
+      displayCurrencyAmounts: {
+        ...currencyAmounts,
+        TOKEN0: dependentAmount0 ?? currencyAmounts?.TOKEN0,
+      },
+    }
+  } else if (dependentAmount && exactField === PositionField.TOKEN0 && currencyAmounts?.TOKEN1 && token1) {
+    const dependentAmount1 = CurrencyAmount.fromRawAmount(token1, dependentAmount)
+    const ratio = dependentAmount1.divide(currencyAmounts?.TOKEN1)
+    return {
+      displayFormattedAmounts: {
+        ...formattedAmounts,
+        TOKEN1: dependentAmount1?.toExact() ?? formattedAmounts?.TOKEN1,
+      },
+      displayUSDAmounts: {
+        ...currencyAmountsUSDValue,
+        TOKEN1: currencyAmountsUSDValue?.TOKEN1?.multiply(ratio),
+      },
+      displayCurrencyAmounts: {
+        ...currencyAmounts,
+        TOKEN1: dependentAmount1 ?? currencyAmounts?.TOKEN1,
+      },
+    }
+  }
+  return {
+    displayFormattedAmounts: formattedAmounts,
+    displayUSDAmounts: currencyAmountsUSDValue,
+    displayCurrencyAmounts: currencyAmounts,
+  }
 }

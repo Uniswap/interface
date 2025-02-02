@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text, TouchableArea, isWeb } from 'ui/src'
+import { DeprecatedButton, Flex, Text, TouchableArea, isWeb } from 'ui/src'
 import { HelpCenter } from 'ui/src/components/icons/HelpCenter'
 import { X } from 'ui/src/components/icons/X'
 import { WarningModalContent } from 'uniswap/src/components/modals/WarningModal/WarningModal'
@@ -10,7 +10,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { TransactionStepFailedError, getErrorContent } from 'uniswap/src/features/transactions/errors'
-import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
 import { openUri } from 'uniswap/src/utils/linking'
 
@@ -27,7 +27,7 @@ export function SwapErrorScreen({
 }): JSX.Element {
   const { t } = useTranslation()
   const { bottomSheetViewStyles } = useTransactionModalContext()
-  const { updateSwapForm, selectedProtocols } = useSwapFormContext()
+  const { updateTransactionSettings, selectedProtocols } = useTransactionSettingsContext()
 
   const { title, message, supportArticleURL } = getErrorContent(t, submissionError)
 
@@ -40,7 +40,7 @@ export function SwapErrorScreen({
     if (isUniswapXBackendError) {
       // Update swap preferences for this session to exclude UniswapX if Uniswap x failed
       const updatedProtocols = selectedProtocols.filter((protocol) => protocol !== ProtocolItems.UNISWAPX_V2)
-      updateSwapForm({ selectedProtocols: updatedProtocols })
+      updateTransactionSettings({ selectedProtocols: updatedProtocols })
     } else {
       resubmitSwap()
     }
@@ -71,7 +71,7 @@ export function SwapErrorScreen({
                 </Text>
               </Flex>
             </TouchableArea>
-            <Button
+            <DeprecatedButton
               backgroundColor="$transparent"
               color="$neutral2"
               icon={<X size="$icon.20" />}

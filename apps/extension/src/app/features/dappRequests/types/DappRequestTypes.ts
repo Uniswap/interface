@@ -384,3 +384,12 @@ export function isRequestAccountRequest(request: DappRequest): request is Reques
 export function isRequestPermissionsRequest(request: DappRequest): request is RequestPermissionsRequest {
   return RequestPermissionsRequestSchema.safeParse(request).success
 }
+
+export function isConnectionRequest(request: DappRequest): boolean {
+  return (
+    isGetAccountRequest(request) ||
+    isRequestAccountRequest(request) ||
+    isRequestPermissionsRequest(request)
+  )
+}
+

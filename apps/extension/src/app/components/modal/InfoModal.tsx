@@ -1,5 +1,5 @@
 import { ReactNode } from 'react'
-import { Anchor, Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Anchor, DeprecatedButton, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { X } from 'ui/src/components/icons'
 import { zIndices } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -60,9 +60,9 @@ export function InfoModal({
             {description}
           </Text>
         </Flex>
-        <Button size="medium" theme={buttonTheme} width="100%" onPress={onButtonPress}>
+        <DeprecatedButton size="medium" theme={buttonTheme} width="100%" onPress={onButtonPress}>
           {buttonText}
-        </Button>
+        </DeprecatedButton>
         {linkText && linkUrl && (
           <Anchor href={linkUrl} lineHeight={16} p="$spacing12" target="_blank" textDecorationLine="none">
             <Text color="$neutral2" textAlign="center" variant="buttonLabel3">

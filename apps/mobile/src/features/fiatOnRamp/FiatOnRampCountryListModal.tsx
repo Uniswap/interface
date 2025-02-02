@@ -13,7 +13,7 @@ import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
-import { getFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { useFiatOnRampAggregatorCountryListQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import { FOR_MODAL_SNAP_POINTS } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORCountry, RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import { getCountryFlagSvgUrl } from 'uniswap/src/features/fiatOnRamp/utils'
@@ -41,7 +41,6 @@ function CountrySelectorContent({ onSelectCountry, countryCode }: CountrySelecto
 
   const { isOffRamp } = useFiatOnRampContext()
 
-  const { useFiatOnRampAggregatorCountryListQuery } = getFiatOnRampAggregatorApi()
   const { data, isLoading } = useFiatOnRampAggregatorCountryListQuery({
     rampDirection: isOffRamp ? RampDirection.OFFRAMP : RampDirection.ONRAMP,
   })

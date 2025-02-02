@@ -1,9 +1,9 @@
 import { Currency } from '@uniswap/sdk-core'
+import { TFunction } from 'i18next'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { t } from 'uniswap/src/i18n'
 
-export const getTokenPageTitle = (currency?: Currency, chainId?: UniverseChainId) => {
+export function getTokenPageTitle(t: TFunction, currency?: Currency, chainId?: UniverseChainId) {
   const tokenName = currency?.name
   const tokenSymbol = currency?.symbol
   const baseTitle = t('common.buyAndSell')

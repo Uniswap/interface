@@ -1,7 +1,7 @@
 import React from 'react'
 import { Flex, FlexProps, Image, useSporeColors } from 'ui/src'
 import { ALL_NETWORKS_LOGO } from 'ui/src/assets'
-import { iconSizes } from 'ui/src/theme'
+import { iconSizes, zIndices } from 'ui/src/theme'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
@@ -53,7 +53,7 @@ function _NetworkLogo({
   const imageSize = size - borderWidth * 2 // this prevents the border from cutting off the logo
 
   return logo ? (
-    <Flex testID="network-logo" overflow="hidden" style={imageStyle}>
+    <Flex testID="network-logo" overflow="hidden" style={imageStyle} zIndex={zIndices.mask}>
       <Image resizeMode="contain" source={logo} width={imageSize} height={imageSize} />
     </Flex>
   ) : null

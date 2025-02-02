@@ -24,7 +24,7 @@ export enum TransactionType {
   CREATE_V3_POOL,
   ADD_LIQUIDITY_V3_POOL,
   ADD_LIQUIDITY_V2_POOL,
-  MIGRATE_LIQUIDITY_V3,
+  MIGRATE_LIQUIDITY_V2_TO_V3,
   COLLECT_FEES,
   REMOVE_LIQUIDITY_V3,
   SUBMIT_PROPOSAL,
@@ -43,6 +43,8 @@ export enum TransactionType {
   INCREASE_LIQUIDITY,
   DECREASE_LIQUIDITY,
   BRIDGE,
+  CREATE_POSITION,
+  MIGRATE_LIQUIDITY_V3_TO_V4,
   // Always add to the bottom of this enum
 }
 
@@ -163,6 +165,30 @@ export interface DecreaseLiquidityTransactionInfo {
   token1CurrencyAmountRaw: string
 }
 
+export interface CreatePositionTransactionInfo {
+  type: TransactionType.CREATE_POSITION
+  token0CurrencyId: string
+  token1CurrencyId: string
+  token0CurrencyAmountRaw: string
+  token1CurrencyAmountRaw: string
+}
+
+export interface CollectFeesTransactionInfo {
+  type: TransactionType.COLLECT_FEES
+  token0CurrencyId: string
+  token1CurrencyId: string
+  token0CurrencyAmountRaw: string
+  token1CurrencyAmountRaw: string
+}
+
+export interface MigrateV3LiquidityToV4TransactionInfo {
+  type: TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4
+  token0CurrencyId: string
+  token1CurrencyId: string
+  token0CurrencyAmountRaw: string
+  token1CurrencyAmountRaw: string
+}
+
 export interface AddLiquidityV3PoolTransactionInfo {
   type: TransactionType.ADD_LIQUIDITY_V3_POOL
   createPool: boolean
@@ -182,18 +208,10 @@ export interface AddLiquidityV2PoolTransactionInfo {
 }
 
 export interface MigrateV2LiquidityToV3TransactionInfo {
-  type: TransactionType.MIGRATE_LIQUIDITY_V3
+  type: TransactionType.MIGRATE_LIQUIDITY_V2_TO_V3
   baseCurrencyId: string
   quoteCurrencyId: string
   isFork: boolean
-}
-
-export interface CollectFeesTransactionInfo {
-  type: TransactionType.COLLECT_FEES
-  currencyId0: string
-  currencyId1: string
-  expectedCurrencyOwed0: string
-  expectedCurrencyOwed1: string
 }
 
 export interface RemoveLiquidityV3TransactionInfo {
@@ -238,6 +256,8 @@ export type TransactionInfo =
   | IncreaseLiquidityTransactionInfo
   | DecreaseLiquidityTransactionInfo
   | BridgeTransactionInfo
+  | CreatePositionTransactionInfo
+  | MigrateV3LiquidityToV4TransactionInfo
 
 interface BaseTransactionDetails {
   status: TransactionStatus

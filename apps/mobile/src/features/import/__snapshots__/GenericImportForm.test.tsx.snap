@@ -14,17 +14,42 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
   <View
     style={
       {
-        "backgroundColor": "#FFFFFF",
-        "borderBottomColor": "rgba(34,34,34,0.05)",
+        "backgroundColor": {
+          "dynamic": {
+            "dark": "#131313",
+            "light": "#FFFFFF",
+          },
+        },
+        "borderBottomColor": {
+          "dynamic": {
+            "dark": "rgba(255,255,255,0.12)",
+            "light": "rgba(34,34,34,0.05)",
+          },
+        },
         "borderBottomLeftRadius": 20,
         "borderBottomRightRadius": 20,
         "borderBottomWidth": 1,
-        "borderLeftColor": "rgba(34,34,34,0.05)",
+        "borderLeftColor": {
+          "dynamic": {
+            "dark": "rgba(255,255,255,0.12)",
+            "light": "rgba(34,34,34,0.05)",
+          },
+        },
         "borderLeftWidth": 1,
-        "borderRightColor": "rgba(34,34,34,0.05)",
+        "borderRightColor": {
+          "dynamic": {
+            "dark": "rgba(255,255,255,0.12)",
+            "light": "rgba(34,34,34,0.05)",
+          },
+        },
         "borderRightWidth": 1,
         "borderStyle": "solid",
-        "borderTopColor": "rgba(34,34,34,0.05)",
+        "borderTopColor": {
+          "dynamic": {
+            "dark": "rgba(255,255,255,0.12)",
+            "light": "rgba(34,34,34,0.05)",
+          },
+        },
         "borderTopLeftRadius": 20,
         "borderTopRightRadius": 20,
         "borderTopWidth": 1,
@@ -58,32 +83,67 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         focusable={true}
         maxFontSizeMultiplier={1.4}
         multiline={true}
-        onBlur={[Function]}
         onChangeText={[Function]}
-        onFocus={[Function]}
         onSubmitEditing={[Function]}
-        placeholderTextColor="#BFBFBF"
+        placeholderTextColor={
+          {
+            "dynamic": {
+              "dark": "#5E5E5E",
+              "light": "#BFBFBF",
+            },
+          }
+        }
         returnKeyType="done"
         scrollEnabled={false}
         selectionColor="#BFBFBF"
         spellCheck={false}
         style={
           {
-            "backgroundColor": "transparent",
-            "borderBottomColor": "transparent",
+            "backgroundColor": {
+              "dynamic": {
+                "dark": "transparent",
+                "light": "transparent",
+              },
+            },
+            "borderBottomColor": {
+              "dynamic": {
+                "dark": "transparent",
+                "light": "transparent",
+              },
+            },
             "borderBottomLeftRadius": 12,
             "borderBottomRightRadius": 12,
             "borderBottomWidth": 1,
-            "borderLeftColor": "transparent",
+            "borderLeftColor": {
+              "dynamic": {
+                "dark": "transparent",
+                "light": "transparent",
+              },
+            },
             "borderLeftWidth": 1,
-            "borderRightColor": "transparent",
+            "borderRightColor": {
+              "dynamic": {
+                "dark": "transparent",
+                "light": "transparent",
+              },
+            },
             "borderRightWidth": 1,
             "borderStyle": "solid",
-            "borderTopColor": "transparent",
+            "borderTopColor": {
+              "dynamic": {
+                "dark": "transparent",
+                "light": "transparent",
+              },
+            },
             "borderTopLeftRadius": 12,
             "borderTopRightRadius": 12,
             "borderTopWidth": 1,
-            "color": "#222222",
+            "color": {
+              "dynamic": {
+                "dark": "#FFFFFF",
+                "light": "#222222",
+              },
+            },
             "flexShrink": 1,
             "fontFamily": "Basel Grotesk",
             "fontSize": 17,
@@ -121,7 +181,12 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         pointerEvents="none"
         style={
           {
-            "color": "#7D7D7D",
+            "color": {
+              "dynamic": {
+                "dark": "#9B9B9B",
+                "light": "#7D7D7D",
+              },
+            },
             "fontFamily": "Basel Grotesk",
             "fontSize": 17,
             "fontWeight": "400",
@@ -156,21 +221,22 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         }
       >
         <View
-          cancelable={true}
-          disabled={false}
-          focusable={true}
-          hitSlop={[Function]}
-          minPressDuration={0}
-          onBlur={[Function]}
-          onFocus={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
-          onPress={[Function]}
-          onPressIn={[Function]}
-          onPressOut={[Function]}
+          hitSlop={
+            {
+              "bottom": 5,
+              "left": 5,
+              "right": 5,
+              "top": 5,
+            }
+          }
           style={
             {
-              "backgroundColor": "#FEF4FF",
+              "backgroundColor": {
+                "dynamic": {
+                  "dark": "#361A37",
+                  "light": "#FEF4FF",
+                },
+              },
               "borderBottomLeftRadius": 12,
               "borderBottomRightRadius": 12,
               "borderTopLeftRadius": 12,
@@ -204,7 +270,12 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
               maxFontSizeMultiplier={1.2}
               style={
                 {
-                  "color": "#FC72FF",
+                  "color": {
+                    "dynamic": {
+                      "dark": "#FC72FF",
+                      "light": "#FC72FF",
+                    },
+                  },
                   "fontFamily": "Basel Grotesk",
                   "fontSize": 15,
                   "fontWeight": "500",

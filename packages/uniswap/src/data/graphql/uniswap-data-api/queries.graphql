@@ -323,6 +323,14 @@ fragment TokenBalanceQuantityParts on TokenBalance {
   quantity
 }
 
+fragment TokenBalanceParts on TokenBalance {
+  ...TokenBalanceMainParts
+  isHidden
+  token {
+    ...TokenParts
+  }
+}
+
 query PortfolioBalances(
   $ownerAddress: String!
   $valueModifiers: [PortfolioValueModifier!]
@@ -349,33 +357,7 @@ query PortfolioBalances(
 
     # Individual portfolio token balances
     tokenBalances {
-      ...TokenBalanceMainParts
-      isHidden
-      token {
-        id
-        address
-        chain
-        decimals
-        name
-        standard
-        symbol
-        project {
-          id
-          isSpam
-          logoUrl
-          name
-          safetyLevel
-          spamCode
-        }
-        feeData {
-          buyFeeBps
-          sellFeeBps
-        }
-        protectionInfo {
-          result
-          attackTypes
-        }
-      }
+      ...TokenBalanceParts
     }
   }
 }
@@ -415,17 +397,8 @@ query MultiplePortfolioBalances(
         value
       }
       token {
-        chain
-        address
-        symbol
-        decimals
-        name
-        project {
-          id
-          logoUrl
-          safetyLevel
-          isSpam
-        }
+        ...TokenBasicInfoParts
+        ...TokenBasicProjectParts
       }
       tokenProjectMarket {
         relativeChange24: pricePercentChange(duration: DAY) {
@@ -486,108 +459,49 @@ query TransactionHistoryUpdater(
 
 query Token($chain: Chain!, $address: String) {
   token(chain: $chain, address: $address) {
-    id
-    address
-    chain
-    decimals
-    name
-    standard
-    symbol
-    project {
-      id
-      isSpam
-      logoUrl
-      name
-      safetyLevel
-    }
-    feeData {
-      buyFeeBps
-      sellFeeBps
-    }
-    protectionInfo {
-      result
-      attackTypes
-    }
+    ...TokenParts
   }
 }
 
 query TokenDetailsScreen(
   $chain: Chain!
   $address: String
+) {
+  token(chain: $chain, address: $address) {
+    ...TokenParts
+    ...TokenMarketParts
+    ...TokenBasicProjectParts
+    ...TokenProjectUrlsParts
+    ...TokenProjectMarketsParts
+  }
+}
+
+query TokenProjectDescription(
+  $chain: Chain!
+  $address: String
   $includeSpanish: Boolean = false
   $includeFrench: Boolean = false
   $includeJapanese: Boolean = false
   $includePortuguese: Boolean = false
+  $includeVietnamese: Boolean = false
   $includeChineseSimplified: Boolean = false
   $includeChineseTraditional: Boolean = false
 ) {
   token(chain: $chain, address: $address) {
-    id
-    address
     chain
-    symbol
-    name
-    market(currency: USD) {
-      id
-      volume(duration: DAY) {
-        value
-      }
-      price {
-        value
-      }
-      priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
-        value
-      }
-      priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
-        value
-      }
-    }
+    address
     project {
       id
-      name
       description
       descriptionTranslations {
         descriptionEsEs @include(if: $includeSpanish)
         descriptionFrFr @include(if: $includeFrench)
         descriptionJaJp @include(if: $includeJapanese)
         descriptionPtPt @include(if: $includePortuguese)
+        descriptionViVn @include(if: $includeVietnamese)
         descriptionZhHans @include(if: $includeChineseSimplified)
         descriptionZhHant @include(if: $includeChineseTraditional)
       }
-      homepageUrl
-      twitterName
-      safetyLevel
-      logoUrl
-      markets(currencies: [USD]) {
-        id
-        price {
-          value
-        }
-        marketCap {
-          value
-        }
-        fullyDilutedValuation {
-          value
-        }
-        priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
-          value
-        }
-        priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
-          value
-        }
-      }
-      tokens {
-        chain
-        address
-      }
-    }
-    feeData {
-      buyFeeBps
-      sellFeeBps
-    }
-    protectionInfo {
-      result
-      attackTypes
     }
   }
 }
@@ -598,31 +512,22 @@ query TokenProjects($contracts: [ContractInput!]!) {
     logoUrl
     safetyLevel
     tokens {
-      name
-      chain
-      address
-      decimals
-      symbol
-      feeData {
-        buyFeeBps
-        sellFeeBps
-      }
-      protectionInfo {
-        result
-        attackTypes
-      }
+      ...TokenBasicInfoParts
+      ...TokenFeeDataParts
+      ...TokenProtectionInfoParts
     }
   }
 }
 
-query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth, $chains: [Chain!]!) {
+# TODO: WALL-5532 - Add support for offramp transactions on the graphql service
+query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth, $chains: [Chain!]!, $pageSize: Int = 100) {
   portfolios(
     ownerAddresses: [$address]
     chains: $chains
   ) {
     id
     assetActivities(
-      pageSize: 100
+      pageSize: $pageSize
       page: 1
       includeOffChain: true
       includeBridging: true
@@ -642,16 +547,8 @@ query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth, $c
             transactionReferenceId
             externalSessionId
             token {
-              id
-              symbol
-              address
-              decimals
-              chain
-              project {
-                id
-                isSpam
-                spamCode
-              }
+              ...TokenBasicInfoParts
+              ...TokenBasicProjectParts
             }
             tokenStandard
             amount
@@ -742,16 +639,8 @@ query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth, $c
               transactionReferenceId
               externalSessionId
               token {
-                id
-                symbol
-                address
-                decimals
-                chain
-                project {
-                  id
-                  isSpam
-                  spamCode
-                }
+                ...TokenBasicInfoParts
+                ...TokenBasicProjectParts
               }
               tokenStandard
               amount
@@ -928,56 +817,13 @@ query TopTokens(
     pageSize: $pageSize
     orderBy: $orderBy
   ) {
-    id
-    address
-    chain
-    symbol
-    name
-    decimals
-    standard
-    project {
-      id
-      name
-      logo {
-        id
-        url
-      }
-      safetyLevel
-      logoUrl
-      isSpam
-    }
-    feeData {
-      buyFeeBps
-      sellFeeBps
-    }
-    protectionInfo {
-      result
-      attackTypes
-    }
+    ...TokenParts
   }
 }
 
 query SearchTokens($searchQuery: String!, $chains: [Chain!]!) {
   searchTokens(searchQuery: $searchQuery, chains: $chains) {
-    id
-    chain
-    address
-    decimals
-    symbol
-    name
-    project {
-      id
-      logoUrl
-      safetyLevel
-    }
-    feeData {
-      buyFeeBps
-      sellFeeBps
-    }
-    protectionInfo {
-      result
-      attackTypes
-    }
+    ...TokenParts
   }
 }
 
@@ -1005,6 +851,11 @@ query ExploreSearch(
     protectionInfo {
       result
       attackTypes
+      blockaidFees {
+        buy
+        sell
+        transfer
+      }
     }
     feeData {
       buyFeeBps
@@ -1032,10 +883,110 @@ query ExploreSearch(
   }
 }
 
-fragment TopTokenParts on Token {
-  symbol
-  chain
+fragment TokenParts on Token {
+  ...TokenBasicInfoParts
+  ...TokenBasicProjectParts
+  ...TokenFeeDataParts
+  ...TokenProtectionInfoParts
+}
+
+fragment TokenBasicInfoParts on Token {
+  id
   address
+  chain
+  decimals
+  name
+  standard
+  symbol
+}
+
+fragment TokenBasicProjectParts on Token {
+  project {
+    id
+    isSpam
+    logoUrl
+    name
+    safetyLevel
+    spamCode
+    tokens {
+      chain
+      address
+    }
+  }
+}
+
+fragment TokenProjectUrlsParts on Token {
+  project {
+    homepageUrl
+    twitterName
+  }
+}
+
+fragment TokenProjectMarketsParts on Token {
+  project {
+    markets(currencies: [USD]) {
+      id
+      price {
+        value
+      }
+      marketCap {
+        value
+      }
+      fullyDilutedValuation {
+        value
+      }
+      priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
+        value
+      }
+      priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
+        value
+      }
+      pricePercentChange24h {
+        value
+      }
+    }
+  }
+}
+
+fragment TokenMarketParts on Token {
+  market(currency: USD) {
+    id
+    volume(duration: DAY) {
+      value
+    }
+    price {
+      value
+    }
+    priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
+      value
+    }
+    priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
+      value
+    }
+  }
+}
+
+fragment TokenFeeDataParts on Token {
+  feeData {
+    buyFeeBps
+    sellFeeBps
+  }
+}
+
+fragment TokenProtectionInfoParts on Token {
+  protectionInfo {
+    result
+    attackTypes
+    blockaidFees {
+      buy
+      sell
+      transfer
+    }
+  }
+}
+
+fragment TopTokenParts on Token {
+  ...TokenBasicInfoParts
   market {
     id
     totalValueLocked {
@@ -1045,7 +996,6 @@ fragment TopTokenParts on Token {
       value
     }
   }
-  name
   project {
     id
     logoUrl
@@ -1120,10 +1070,7 @@ query AITopTokens($topTokensOrderBy: TokenSortableField!, $chain: Chain!, $pageS
 }
 
 fragment HomeScreenTokenParts on Token {
-  symbol
-  chain
-  address
-  name
+  ...TokenBasicInfoParts
   project {
     id
     logoUrl
@@ -1150,11 +1097,9 @@ query HomeScreenTokens($contracts: [ContractInput!]!, $chain: Chain!) {
 
 query FavoriteTokenCard($chain: Chain!, $address: String) {
   token(chain: $chain, address: $address) {
-    id
-    address
-    chain
-    symbol
-    name
+    ...TokenBasicInfoParts
+    ...TokenBasicProjectParts
+    ...TokenProjectMarketsParts
     market(currency: USD) {
       id
       price {
@@ -1164,13 +1109,10 @@ query FavoriteTokenCard($chain: Chain!, $address: String) {
         value
       }
     }
-    project {
-      id
-      logoUrl
-    }
   }
 }
 
+# Currently used in Swift code only.
 query Tokens($contracts: [ContractInput!]!) {
   tokens(contracts: $contracts) {
     symbol

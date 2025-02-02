@@ -1,8 +1,8 @@
 import { H2, H3 } from 'pages/Landing/components/Generics'
 import { BookOpen, ChatBubbles, HelpCircle } from 'pages/Landing/components/Icons'
 import { PillButton } from 'pages/Landing/components/cards/PillButton'
+import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text, styled, useSporeColors } from 'ui/src'
-import { Trans, t } from 'uniswap/src/i18n'
 
 const SectionLayout = styled(Flex, {
   width: '100%',
@@ -100,6 +100,7 @@ const helpPrimary = '#FF4D00'
 const blogPrimary = '#8E8767'
 
 export function NewsletterEtc() {
+  const { t } = useTranslation()
   const theme = useSporeColors()
 
   return (

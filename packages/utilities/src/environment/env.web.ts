@@ -57,3 +57,7 @@ function createAndLogError(funcName: string): Error {
   })
   return e
 }
+
+export function isRNDev(): boolean {
+  return false
+}

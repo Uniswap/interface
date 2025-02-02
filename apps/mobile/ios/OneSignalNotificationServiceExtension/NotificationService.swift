@@ -1,38 +1,92 @@
-// File copied from Onesignal docs: https://documentation.onesignal.com/docs/react-native-sdk-setup
 import UserNotifications
-
 import OneSignalExtension
+import Statsig
 
 class NotificationService: UNNotificationServiceExtension {
-
-    var contentHandler: ((UNNotificationContent) -> Void)?
-    var receivedRequest: UNNotificationRequest!
-    var bestAttemptContent: UNMutableNotificationContent?
-
-    override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
-        self.receivedRequest = request
-        self.contentHandler = contentHandler
-        self.bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
-
-        if let bestAttemptContent = bestAttemptContent {
-            /* DEBUGGING: Uncomment the 2 lines below to check this extension is executing
-                          Note, this extension only runs when mutable-content is set
-                          Setting an attachment or action buttons automatically adds this */
-            #if DEBUG
-              print("Running NotificationServiceExtension")
-              bestAttemptContent.body = "[Modified] " + bestAttemptContent.body
-            #endif
-
-            OneSignalExtension.didReceiveNotificationExtensionRequest(self.receivedRequest, with: bestAttemptContent, withContentHandler: self.contentHandler)
-        }
+    
+  override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
+    let bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
+    
+    let userInfo = request.content.userInfo
+    
+    // Fields per OneSignal docs
+    let custom = userInfo["custom"] as? [String: Any]
+    let additionalData = custom?["a"] as? [String: Any]
+    
+    let notificationType = additionalData?[Constants.fieldNotificationType] as? String
+    let isGatedNotification = notificationType == Constants.typeUnfundedWallet
+      || notificationType == Constants.typePriceAlert
+    
+    if (!isGatedNotification) {
+      OneSignalExtension.didReceiveNotificationExtensionRequest(request, with: bestAttemptContent, withContentHandler: contentHandler)
+      return
     }
-
-    override func serviceExtensionTimeWillExpire() {
-        // Called just before the extension will be terminated by the system.
-        // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
-        if let contentHandler = contentHandler, let bestAttemptContent =  bestAttemptContent {
-            OneSignalExtension.serviceExtensionTimeWillExpireRequest(self.receivedRequest, with: self.bestAttemptContent)
-            contentHandler(bestAttemptContent)
-        }
+    
+    func handleGatedNotification() {
+      let enabled: Bool
+      switch notificationType {
+        case Constants.typeUnfundedWallet:
+          enabled = Statsig.checkGate(Constants.gateUnfundedWallet)
+        case Constants.typePriceAlert:
+          enabled = Statsig.checkGate(Constants.gatePriceAlert)
+        default:
+          enabled = true
+      }
+      
+      // Passing in empty notification content will skip the notif
+      OneSignalExtension.didReceiveNotificationExtensionRequest(
+        request,
+        with: enabled ? bestAttemptContent : UNMutableNotificationContent(),
+        withContentHandler: contentHandler)
     }
+    
+    if (!Statsig.isInitialized()) {
+      // The real sdk key is needed on iOS even though it's substituted in proxy
+      // Because the key is used to hash the feature gate names and wouldn't work properly otherwise
+      let statsigSdkKey = Bundle.main.object(forInfoDictionaryKey: "STATSIG_SDK_KEY") as? String ?? ""
+      let statsigUser = StatsigUser(
+        userID: UIDevice.current.identifierForVendor?.uuidString,
+        custom: [
+          "app": "mobile"
+        ])
+      
+      Statsig.initialize(
+        sdkKey: statsigSdkKey,
+        user: statsigUser,
+        options: StatsigOptions(
+          environment: StatsigEnvironment(tier: getStatsigEnvironemntTier()),
+          initializationURL: URL(string: "\(Constants.statsigProxyHost)/v1/statsig-proxy/initialize"),
+          eventLoggingURL: URL(string: "\(Constants.statsigProxyHost)/v1/statsig-proxy/rgstr")
+      )) { _errorMessage in
+        handleGatedNotification()
+      }
+    } else {
+      handleGatedNotification()
+    }
+  }
+  
+  func getStatsigEnvironemntTier() -> String {
+    let bundleSuffix = Bundle.main.object(forInfoDictionaryKey: "BUNDLE_ID_SUFFIX") as? String
+    
+    switch bundleSuffix {
+    case ".dev":
+      return "development"
+    case ".beta":
+      return "beta"
+    default:
+      return "production"
+    }
+  }
+}
+
+struct Constants {
+  static let statsigProxyHost = "https://gating.ios.wallet.gateway.uniswap.org"
+  
+  static let fieldNotificationType = "notification_type"
+  
+  static let typeUnfundedWallet = "unfunded_wallet_reminder"
+  static let typePriceAlert = "price_alert"
+  
+  static let gateUnfundedWallet = "notification_unfunded_wallet"
+  static let gatePriceAlert = "notification_price_alert"
 }

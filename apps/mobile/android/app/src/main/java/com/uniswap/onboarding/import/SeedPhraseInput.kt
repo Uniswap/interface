@@ -24,14 +24,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -39,6 +40,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.focus.focusRequester
 import com.uniswap.R
 import com.uniswap.onboarding.import.SeedPhraseInputViewModel.MnemonicError.InvalidPhrase
 import com.uniswap.onboarding.import.SeedPhraseInputViewModel.MnemonicError.InvalidWord
@@ -52,6 +54,7 @@ import com.uniswap.theme.UniswapTheme
 import com.uniswap.theme.relativeOffset
 import kotlin.math.abs
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SeedPhraseInput(
   viewModel: SeedPhraseInputViewModel
@@ -59,9 +62,15 @@ fun SeedPhraseInput(
   val focusRequester = remember { FocusRequester() }
   val density = LocalDensity.current.density
   var buttonOffset by remember { mutableStateOf(20.dp) }
+  val keyboardController = LocalSoftwareKeyboardController.current
 
-  LaunchedEffect(Unit) {
-    focusRequester.requestFocus()
+  LaunchedEffect(viewModel.isFocused) {
+    if (viewModel.isFocused) {
+      focusRequester.requestFocus()
+    } else {
+      focusRequester.freeFocus()
+      keyboardController?.hide()
+    }
   }
 
   Column(

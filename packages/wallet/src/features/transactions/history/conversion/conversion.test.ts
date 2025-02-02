@@ -553,6 +553,7 @@ const MOCK_ONRAMP_PURCHASE: TransactionListQueryResponse = {
   },
 }
 
+// TODO: WALL-5532 - Add equivalent tests for offramp transactions
 describe(parseOnRampTransaction, () => {
   it('OnRampTransfer : handle empty asset changes', () => {
     expect(parseOnRampTransaction(RESPONSE_BASE)).toBeUndefined()
@@ -675,6 +676,7 @@ const RESPONSE_PENDING_ONRAMP_PURCHASE = {
   },
 }
 
+// TODO: WALL-5532 - Add equivalent tests for offramp transactions
 describe(extractOnRampTransactionDetails, () => {
   it('Empty transaction', () => {
     expect(extractOnRampTransactionDetails(undefined)).toEqual(null)

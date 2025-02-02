@@ -1,4 +1,4 @@
-import { Routing, CreateSwapRequest } from "uniswap/src/data/tradingApi/__generated__/index"
+import { Routing, CreateSwapRequest, TransactionFailureReason } from "uniswap/src/data/tradingApi/__generated__/index"
 import { GasFeeResult, ValidatedGasFeeResult, validateGasFeeResult } from "uniswap/src/features/gas/types"
 import { BridgeTrade, ClassicTrade, IndicativeTrade, UniswapXTrade } from "uniswap/src/features/transactions/swap/types/trade"
 import { isBridge, isClassic, isUniswapX } from "uniswap/src/features/transactions/swap/utils/routing"
@@ -42,7 +42,7 @@ export interface ClassicSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
   routing: Routing.CLASSIC
   trade?: ClassicTrade
   swapRequestArgs: CreateSwapRequest | undefined
-
+  simulationErrors?: TransactionFailureReason[]
   /**
    * `unsigned` is true if `txRequest` is undefined due to a permit signature needing to be signed first.
    * This occurs on interface where the user must be prompted to sign a permit before txRequest can be fetched.
@@ -77,7 +77,9 @@ interface BaseRequiredSwapTxContextFields {
   gasFee: ValidatedGasFeeResult
 }
 
-export type ValidatedClassicSwapTxAndGasInfo = Required<ClassicSwapTxAndGasInfo> & BaseRequiredSwapTxContextFields & ({
+export type ValidatedClassicSwapTxAndGasInfo = Omit<Required<ClassicSwapTxAndGasInfo>, 'simulationErrors'> & {
+  simulationErrors?: ClassicSwapTxAndGasInfo['simulationErrors']
+} & BaseRequiredSwapTxContextFields & ({
   unsigned: true
   permit: ValidatedPermit
   txRequest: undefined
@@ -123,7 +125,7 @@ function validateSwapTxContext(swapTxContext: SwapTxAndGasInfo | unknown): Valid
         }
         return { ...swapTxContext, trade, gasFee, unsigned, txRequest: undefined, permit }
       } else if (txRequest) {
-        return { ...swapTxContext, trade, gasFee, unsigned, txRequest, permit: undefined }
+        return { ...swapTxContext, trade, gasFee, unsigned, txRequest, permit: undefined, }
       }
 
     } else if (isBridge(swapTxContext)  && swapTxContext.txRequest) {

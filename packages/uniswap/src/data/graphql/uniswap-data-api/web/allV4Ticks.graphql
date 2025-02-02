@@ -1,0 +1,11 @@
+query AllV4Ticks ($chain: Chain!, $poolId: String!, $skip: Int, $first: Int) {
+  v4Pool(chain: $chain, poolId: $poolId) {
+    id
+    ticks(skip: $skip, first: $first) {
+      tick: tickIdx
+      liquidityNet
+      price0
+      price1
+    }
+  }
+}

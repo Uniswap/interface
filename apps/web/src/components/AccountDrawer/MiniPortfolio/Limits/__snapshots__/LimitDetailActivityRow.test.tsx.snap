@@ -7,6 +7,29 @@ exports[`LimitDetailActivityRow should render with valid details 1`] = `
   min-width: 0;
 }
 
+.c5 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c10 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c11 {
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c1 {
   width: 100%;
   display: -webkit-box;
@@ -40,29 +63,6 @@ exports[`LimitDetailActivityRow should render with valid details 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 4px;
-}
-
-.c5 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c10 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c11 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c6 {
@@ -205,7 +205,7 @@ exports[`LimitDetailActivityRow should render with valid details 1`] = `
           </div>
         </div>
         <div
-          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-1307609936 _borderTopRightRadius-1307609936 _borderBottomRightRadius-1307609936 _borderBottomLeftRadius-1307609936 _borderTopWidth-1481558369 _borderRightWidth-1481558369 _borderBottomWidth-1481558369 _borderLeftWidth-1481558369 _height-23px _justifyContent-center _width-23px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro840690004 _borderTopRightRadius-t-radius-ro840690004 _borderBottomRightRadius-t-radius-ro840690004 _borderBottomLeftRadius-t-radius-ro840690004 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _height-23px _justifyContent-center _width-23px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
         >
           <div
             aria-checked="false"

@@ -1,13 +1,16 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { InterfacePageName, LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
+import { InterfacePageName, LiquidityEventName } from '@uniswap/analytics-events'
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
-import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
+import { FeeAmount, NonfungiblePositionManager, Pool, Position, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge/Badge'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonConfirmed, ButtonGray, ButtonPrimary, SmallButtonPrimary } from 'components/Button/buttons'
 import { DarkCard, LightCard } from 'components/Card/cards'
 import { PositionNFT } from 'components/Liquidity/PositionNFT'
+import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { LoadingFullscreen } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
@@ -26,7 +29,6 @@ import { useEthersSigner } from 'hooks/useEthersSigner'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { PoolState, usePool } from 'hooks/usePools'
 import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
-import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useSingleCallResult } from 'lib/hooks/multicall'
@@ -35,20 +37,23 @@ import styled, { useTheme } from 'lib/styled-components'
 import { LoadingRows } from 'pages/LegacyPool/styled'
 import { PropsWithChildren, useCallback, useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
+import { Trans, useTranslation } from 'react-i18next'
 import { Link, useParams } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { ClickableStyle, ExternalLink, HideExtraSmall, HideSmall, StyledRouterLink, ThemedText } from 'theme/components'
 import { Switch, Text } from 'ui/src'
-import { useEnabledChains, useIsSupportedChainId, useSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useIsSupportedChainId, useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Trans, t } from 'uniswap/src/i18n'
+import { useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { currencyId } from 'utils/currencyId'
 import { WrongChainError } from 'utils/errors'
@@ -327,6 +332,8 @@ function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
 }
 
 function PositionPageContent() {
+  const { t } = useTranslation()
+  const trace = useTrace()
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
   const account = useAccount()
   const supportedChain = useSupportedChainId(account.chainId)
@@ -376,7 +383,7 @@ function PositionPageContent() {
     return undefined
   }, [liquidity, pool, tickLower, tickUpper])
 
-  const tickAtLimit = useIsTickAtLimit(feeAmount, tickLower, tickUpper)
+  const tickAtLimit = useIsTickAtLimit(TICK_SPACINGS[feeAmount as FeeAmount], tickLower, tickUpper)
 
   const pricesFromPosition = getPriceOrderingFromPositionForUI(position)
   const [manuallyInverted, setManuallyInverted] = useState(false)
@@ -417,8 +424,8 @@ function PositionPageContent() {
   const [showConfirm, setShowConfirm] = useState(false)
 
   // usdc prices always in terms of tokens
-  const { price: price0 } = useStablecoinPrice(token0 ?? undefined)
-  const { price: price1 } = useStablecoinPrice(token1 ?? undefined)
+  const { price: price0 } = useUSDCPrice(token0 ?? undefined)
+  const { price: price1 } = useUSDCPrice(token1 ?? undefined)
 
   const fiatValueOfFees: CurrencyAmount<Currency> | null = useMemo(() => {
     if (!price0 || !price1 || !feeValue0 || !feeValue1) {
@@ -438,7 +445,7 @@ function PositionPageContent() {
     return amount0.add(amount1)
   }, [price0, price1, feeValue0, feeValue1])
 
-  const fiatValueOfLiquidity: CurrencyAmount<Token> | null = useMemo(() => {
+  const fiatValueOfLiquidity: CurrencyAmount<Currency> | null = useMemo(() => {
     if (!price0 || !price1 || !position) {
       return null
     }
@@ -496,20 +503,28 @@ function PositionPageContent() {
           setCollecting(false)
 
           sendAnalyticsEvent(LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED, {
-            source: LiquiditySource.V3,
-            label: [currency0ForFeeCollectionPurposes.symbol, currency1ForFeeCollectionPurposes.symbol].join('/'),
-            type: LiquiditySource.V3,
-            fee_tier: feeAmount,
+            transaction_hash: response.hash,
+            ...getLPBaseAnalyticsProperties({
+              trace,
+              fee: feeAmount,
+              currency0: currency0ForFeeCollectionPurposes,
+              currency1: currency1ForFeeCollectionPurposes,
+              version: ProtocolVersion.V3,
+              poolId: poolAddress,
+              chainId: account.chainId,
+              currency0AmountUsd: feeValue0 ?? CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0),
+              currency1AmountUsd: feeValue1 ?? CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0),
+            }),
           })
 
           addTransaction(response, {
             type: TransactionType.COLLECT_FEES,
-            currencyId0: currencyId(currency0ForFeeCollectionPurposes),
-            currencyId1: currencyId(currency1ForFeeCollectionPurposes),
-            expectedCurrencyOwed0:
+            token0CurrencyId: currencyId(currency0ForFeeCollectionPurposes),
+            token1CurrencyId: currencyId(currency1ForFeeCollectionPurposes),
+            token0CurrencyAmountRaw:
               feeValue0?.quotient.toString() ??
               CurrencyAmount.fromRawAmount(currency0ForFeeCollectionPurposes, 0).toExact(),
-            expectedCurrencyOwed1:
+            token1CurrencyAmountRaw:
               feeValue1?.quotient.toString() ??
               CurrencyAmount.fromRawAmount(currency1ForFeeCollectionPurposes, 0).toExact(),
           })
@@ -535,7 +550,9 @@ function PositionPageContent() {
     signer,
     feeValue0,
     feeValue1,
+    trace,
     feeAmount,
+    poolAddress,
     addTransaction,
   ])
 

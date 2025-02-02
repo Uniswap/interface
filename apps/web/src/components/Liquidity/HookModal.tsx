@@ -1,8 +1,9 @@
-import { FlagWarning, getFlagsFromContractAddress, getFlagWarning } from 'components/Liquidity/utils'
+import { FlagWarning, getFlagWarning, getFlagsFromContractAddress } from 'components/Liquidity/utils'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { CopyHelper } from 'theme/components'
-import { Button, Checkbox, Flex, HeightAnimator, Separator, Text, TouchableArea } from 'ui/src'
+import { Checkbox, DeprecatedButton, Flex, HeightAnimator, Separator, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { ContractInteraction } from 'ui/src/components/icons/ContractInteraction'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
@@ -11,9 +12,9 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useTranslation } from 'uniswap/src/i18n'
-import { shortenAddress } from 'uniswap/src/utils/addresses'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { shortenAddress } from 'utilities/src/addresses'
 
 function HookWarnings({ flags, hasDangerous }: { flags: FlagWarning[]; hasDangerous: boolean }) {
   const { t } = useTranslation()
@@ -36,7 +37,7 @@ function HookWarnings({ flags, hasDangerous }: { flags: FlagWarning[]; hasDanger
           <Flex row flex={1} gap="$gap4" alignItems="center">
             <ContractInteraction color="$neutral2" size="$icon.16" />
             <Text variant="buttonLabel3" color="$neutral2">
-              {t('position.addingHook.viewProperties')}
+              {expandedProperties ? t('position.addingHook.hideProperties') : t('position.addingHook.viewProperties')}
             </Text>
           </Flex>
           <RotatableChevron direction={expandedProperties ? 'up' : 'down'} color="$neutral2" width={16} height={16} />
@@ -132,7 +133,12 @@ export function HookModal({
 
   // TODO(WEB-5289): match entrance/exit animations with the currency selector
   return (
-    <Modal name={ModalName.Hook} onClose={onClose} isModalOpen={isOpen}>
+    <Modal
+      name={ModalName.Hook}
+      onClose={onClose}
+      isModalOpen={isOpen}
+      analyticsProperties={{ hook_address: address, hasDangerous }}
+    >
       <HeightAnimator animation="fast">
         <Flex gap="$spacing24">
           <GetHelpHeader closeModal={onClose} />
@@ -156,7 +162,7 @@ export function HookModal({
             <Text variant="body2" color="$neutral2" textAlign="center" my="$padding8">
               {hasDangerous ? t('position.hook.warningInfo') : t('position.addingHook.disclaimer')}
             </Text>
-            <LearnMoreLink centered url={uniswapUrls.helpArticleUrls.v4HooksInfo} textVariant="buttonLabel3" />
+            <LearnMoreLink centered url={uniswapUrls.helpArticleUrls.addingV4Hooks} textVariant="buttonLabel3" />
           </Flex>
 
           <Flex borderRadius="$rounded16" backgroundColor="$surface2" py="$gap12" px="$gap16">
@@ -177,7 +183,7 @@ export function HookModal({
           </Flex>
 
           {hasDangerous && (
-            <Flex row alignItems="center" gap="$gap12" borderRadius="$rounded16" backgroundColor="$surface2" p="$gap12">
+            <Flex row alignItems="center" gap="$gap8" borderRadius="$rounded16" backgroundColor="$surface2" p="$gap12">
               <Checkbox size="$icon.16" checked={disclaimerChecked} onPress={onDisclaimerChecked} />
               <Text variant="buttonLabel4" color="$neutral2">
                 {t('position.hook.disclaimer')}
@@ -186,12 +192,22 @@ export function HookModal({
           )}
 
           <Flex row gap="$gap8">
-            <Button size="small" theme="secondary" width="49%" onPress={handleClearHook}>
-              {t('position.removeHook')}
-            </Button>
-            <Button disabled={!canContinue} size="small" theme="primary" width="49%" onPress={handleContinue}>
-              {t('common.button.continue')}
-            </Button>
+            <Trace logPress element={ElementName.Cancel}>
+              <DeprecatedButton size="small" theme="secondary" width="49%" onPress={handleClearHook}>
+                {t('position.removeHook')}
+              </DeprecatedButton>
+            </Trace>
+            <Trace logPress element={ElementName.Continue}>
+              <DeprecatedButton
+                disabled={!canContinue}
+                size="small"
+                theme="primary"
+                width="49%"
+                onPress={handleContinue}
+              >
+                {t('common.button.continue')}
+              </DeprecatedButton>
+            </Trace>
           </Flex>
         </Flex>
       </HeightAnimator>

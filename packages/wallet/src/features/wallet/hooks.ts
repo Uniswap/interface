@@ -2,12 +2,13 @@ import { useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useENSName } from 'uniswap/src/features/ens/api'
+import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import { getValidAddress, sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
+import { getValidAddress, sanitizeAddressText } from 'uniswap/src/utils/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
 import { trimToLength } from 'utilities/src/primitives/string'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import {
   makeSelectAccountNotificationSetting,
@@ -27,6 +28,29 @@ const ENS_TRIM_LENGTH = 8
 
 export function useAccounts(): Record<string, Account> {
   return useSelector(selectAccounts)
+}
+
+/**
+ * Hook used to get a list of all accounts
+ * @returns list of accounts, with signer accounts first sorted by derivation index then view only accounts sorted by time imported
+ */
+export function useAccountsList(): Account[] {
+  const addressToAccount = useAccounts()
+
+  return useMemo(() => {
+    const accounts = Object.values(addressToAccount)
+    const _mnemonicWallets = accounts
+      .filter((a): a is SignerMnemonicAccount => a.type === AccountType.SignerMnemonic)
+      .sort((a, b) => {
+        return a.derivationIndex - b.derivationIndex
+      })
+    const _viewOnlyWallets = accounts
+      .filter((a) => a.type === AccountType.Readonly)
+      .sort((a, b) => {
+        return a.timeImportedMs - b.timeImportedMs
+      })
+    return [..._mnemonicWallets, ..._viewOnlyWallets]
+  }, [addressToAccount])
 }
 
 export function useAccount(address: Address): Account {

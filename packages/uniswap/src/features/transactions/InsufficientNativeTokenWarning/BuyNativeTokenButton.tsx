@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
-import { Button, isWeb } from 'ui/src'
+import { DeprecatedButton, isWeb } from 'ui/src'
 import { opacify, validColor } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useIsSupportedFiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -32,7 +32,7 @@ export function BuyNativeTokenButton({
 
   return (
     <Trace logPress element={ElementName.BuyNativeTokenButton}>
-      <Button
+      <DeprecatedButton
         {...(canBridge
           ? undefined
           : {
@@ -48,7 +48,7 @@ export function BuyNativeTokenButton({
         {canBridge
           ? t('swap.warning.insufficientGas.button.buyWithCard')
           : t('swap.warning.insufficientGas.button.buy', { tokenSymbol: nativeCurrencyInfo.currency.symbol })}
-      </Button>
+      </DeprecatedButton>
     </Trace>
   )
 }

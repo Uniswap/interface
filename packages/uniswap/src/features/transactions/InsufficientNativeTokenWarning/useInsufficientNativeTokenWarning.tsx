@@ -3,7 +3,7 @@ import { ComponentProps, useMemo } from 'react'
 import { Trans } from 'react-i18next'
 import { Text } from 'ui/src'
 import { Warning, WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { getChainLabel, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -15,6 +15,7 @@ import { INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT } from 'uniswap/src/features/tra
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { useNetworkColors } from 'uniswap/src/utils/colors'
 import { NumberType } from 'utilities/src/format/types'
+import { logger } from 'utilities/src/logger/logger'
 
 export function useInsufficientNativeTokenWarning({
   flow,
@@ -59,10 +60,25 @@ export function useInsufficientNativeTokenWarning({
     return null
   }
 
-  const supportedChainId = toSupportedChainId(nativeCurrency?.chainId)
+  if (!gasAmount) {
+    logger.warn(
+      'useInsufficientNativeTokenWarning',
+      'useInsufficientNativeTokenWarning',
+      'No `gasAmount` found when trying to render `InsufficientNativeTokenWarning`',
+      {
+        warning,
+        gasFee,
+        nativeCurrency,
+        nativeCurrencyInfo,
+      },
+    )
+    return null
+  }
+
+  const supportedChainId = toSupportedChainId(nativeCurrency.chainId)
 
   if (!supportedChainId) {
-    throw new Error(`Unsupported chain ID: ${nativeCurrency?.chainId}`)
+    throw new Error(`Unsupported chain ID: ${nativeCurrency.chainId}`)
   }
 
   const networkName = getChainLabel(supportedChainId)
@@ -70,7 +86,7 @@ export function useInsufficientNativeTokenWarning({
   const modalOrTooltipMainMessage = (
     <Trans
       components={{
-        // TODO(EXT-1269): move this to `value` once the bug in i18next is fixed.
+        // TODO(WALL-3901): move this to `value` once the bug in i18next is fixed.
         // We need to pass this as a `component` instead of a `value` because there seems to be a bug in i18next
         // which causes the value `<$0.01` to be incorrectly escaped.
         fiatTokenAmount: (
@@ -82,8 +98,8 @@ export function useInsufficientNativeTokenWarning({
       i18nKey="transaction.warning.insufficientGas.modal.message"
       values={{
         networkName,
-        tokenSymbol: nativeCurrency?.symbol,
-        tokenAmount: gasAmount?.toSignificant(2),
+        tokenSymbol: nativeCurrency.symbol,
+        tokenAmount: gasAmount.toSignificant(2),
       }}
     />
   )

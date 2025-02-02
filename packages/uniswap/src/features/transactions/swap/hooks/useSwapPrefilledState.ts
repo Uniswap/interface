@@ -9,27 +9,38 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 
 export function useSwapPrefilledState(initialState: TransactionState | undefined): SwapFormState | undefined {
-  const swapPrefilledState = useMemo(
-    (): SwapFormState | undefined =>
-      initialState
-        ? {
-            customSlippageTolerance: initialState.customSlippageTolerance,
-            exactAmountFiat: initialState.exactAmountFiat,
-            exactAmountToken: initialState.exactAmountToken,
-            exactCurrencyField: initialState.exactCurrencyField,
-            filteredChainIds: {},
-            focusOnCurrencyField: getFocusOnCurrencyFieldFromInitialState(initialState),
-            input: initialState.input ?? undefined,
-            output: initialState.output ?? undefined,
-            selectingCurrencyField: initialState.selectingCurrencyField,
-            txId: initialState.txId,
-            isFiatMode: false,
-            isSubmitting: false,
-            selectedProtocols: initialState.selectedProtocols ?? DEFAULT_PROTOCOL_OPTIONS,
-          }
-        : undefined,
-    [initialState],
-  )
+  const swapPrefilledState = useMemo((): SwapFormState | undefined => {
+    if (!initialState) {
+      return undefined
+    }
+
+    const inputChainFilterOverride =
+      initialState?.selectingCurrencyField === CurrencyField.INPUT && initialState?.selectingCurrencyChainId
+        ? initialState?.selectingCurrencyChainId
+        : undefined
+    const outputChainFilterOverride =
+      initialState?.selectingCurrencyField === CurrencyField.OUTPUT && initialState?.selectingCurrencyChainId
+        ? initialState?.selectingCurrencyChainId
+        : undefined
+
+    return {
+      exactAmountFiat: initialState.exactAmountFiat,
+      exactAmountToken: initialState.exactAmountToken,
+      exactCurrencyField: initialState.exactCurrencyField,
+      filteredChainIds: {
+        [CurrencyField.INPUT]: inputChainFilterOverride ?? initialState.output?.chainId,
+        [CurrencyField.OUTPUT]: outputChainFilterOverride ?? initialState.input?.chainId,
+      },
+      focusOnCurrencyField: getFocusOnCurrencyFieldFromInitialState(initialState),
+      input: initialState.input ?? undefined,
+      output: initialState.output ?? undefined,
+      selectingCurrencyField: initialState.selectingCurrencyField,
+      txId: initialState.txId,
+      isFiatMode: false,
+      isSubmitting: false,
+      isMax: false,
+    }
+  }, [initialState])
 
   return swapPrefilledState
 }

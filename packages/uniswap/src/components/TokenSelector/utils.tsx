@@ -1,9 +1,15 @@
 import { useMemo } from 'react'
-import { TokenOption, TokenOptionSection, TokenSection } from 'uniswap/src/components/TokenSelector/types'
+import {
+  TokenOption,
+  TokenOptionSection,
+  TokenSection,
+  TokenSelectorFlow,
+} from 'uniswap/src/components/TokenSelector/types'
 import { tradingApiSwappableTokenToCurrencyInfo } from 'uniswap/src/data/apiClients/tradingApi/utils/tradingApiSwappableTokenToCurrencyInfo'
 import { SafetyLevel as GqlSafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GetSwappableTokensResponse, SafetyLevel } from 'uniswap/src/data/tradingApi/__generated__'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { areCurrencyIdsEqual } from 'uniswap/src/utils/currencyId'
 import { differenceWith } from 'utilities/src/primitives/array'
 
@@ -203,10 +209,28 @@ export function useTokenOptionsSection({
   }, [name, rightElement, endElement, sectionKey, tokenOptions])
 }
 
-export function isSwapListLoading(
-  loading: boolean,
-  portfolioSection: TokenSection[] | undefined,
-  popularSection: TokenSection[] | undefined,
-): boolean {
-  return loading && (!portfolioSection || !popularSection)
+export function isSwapListLoading({
+  loading,
+  portfolioSection,
+  popularSection,
+  isTestnetModeEnabled,
+}: {
+  loading: boolean
+  portfolioSection: TokenSection[] | undefined
+  popularSection: TokenSection[] | undefined
+  isTestnetModeEnabled: boolean
+}): boolean {
+  // the popular section is not shown on testnet
+  return loading && (isTestnetModeEnabled ? !portfolioSection : !portfolioSection || !popularSection)
+}
+
+export function flowToModalName(flow: TokenSelectorFlow): ModalNameType | undefined {
+  switch (flow) {
+    case TokenSelectorFlow.Swap:
+      return ModalName.Swap
+    case TokenSelectorFlow.Send:
+      return ModalName.Send
+    default:
+      return undefined
+  }
 }

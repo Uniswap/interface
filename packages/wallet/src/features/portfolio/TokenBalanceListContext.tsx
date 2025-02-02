@@ -11,7 +11,7 @@ import {
   useState,
 } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
   sortPortfolioBalances,
   usePortfolioBalances,

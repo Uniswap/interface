@@ -13,10 +13,11 @@ import { BackHandler, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { Flex, useIsDarkMode, useMedia, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { borderRadii, spacing } from 'ui/src/theme'
+import { borderRadii, spacing, zIndices } from 'ui/src/theme'
 import { BottomSheetContextProvider } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
+import { BSM_ANIMATION_CONFIGS, IS_SHEET_READY_DELAY } from 'uniswap/src/components/modals/modalConstants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { useKeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'
@@ -52,6 +53,7 @@ const Backdrop = (props: BottomSheetBackdropProps): JSX.Element => {
   return (
     <BottomSheetBackdrop
       {...props}
+      style={[props.style, { zIndex: zIndices.popoverBackdrop }]}
       appearsOnIndex={BACKDROP_APPEARS_ON_INDEX}
       disappearsOnIndex={DISAPPEARS_ON_INDEX}
       opacity={0.4}
@@ -79,6 +81,7 @@ function BottomSheetModalContents({
   fullScreen,
   hideHandlebar,
   backgroundColor,
+  handlebarColor,
   // defaults to true if snapPoints/fullScreen are not provided and false otherwise
   enableDynamicSizing,
   blurredBackground = false,
@@ -93,6 +96,8 @@ function BottomSheetModalContents({
   // probably it requires usage of <BottomSheetTextInput>
   extendOnKeyboardVisible = false,
   hideScrim = false,
+  analyticsProperties,
+  skipLogImpression,
 }: ModalProps): JSX.Element {
   const dimensions = useDeviceDimensions()
   const insets = useAppInsets()
@@ -132,13 +137,14 @@ function BottomSheetModalContents({
     (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop
         {...props}
+        style={[props.style, { zIndex: fullScreen ? undefined : zIndices.modalBackdrop }]}
         appearsOnIndex={BACKDROP_APPEARS_ON_INDEX}
         disappearsOnIndex={DISAPPEARS_ON_INDEX}
         opacity={hideScrim ? 0 : blurredBackground ? 0.2 : 0.4}
         pressBehavior={isDismissible ? 'close' : 'none'}
       />
     ),
-    [blurredBackground, hideScrim, isDismissible],
+    [blurredBackground, hideScrim, isDismissible, fullScreen],
   )
 
   const renderHandleBar = useCallback(
@@ -147,9 +153,11 @@ function BottomSheetModalContents({
       if (renderBehindTopInset && hideHandlebar) {
         return null
       }
+
       return (
         <HandleBar
           {...props}
+          indicatorColor={handlebarColor}
           backgroundColor={backgroundColorValue}
           containerFlexStyles={{
             paddingBottom: spacing.spacing12,
@@ -159,7 +167,7 @@ function BottomSheetModalContents({
         />
       )
     },
-    [backgroundColorValue, hideHandlebar, renderBehindTopInset],
+    [backgroundColorValue, handlebarColor, hideHandlebar, renderBehindTopInset],
   )
 
   const animatedBorderRadius = useAnimatedStyle(() => {
@@ -201,8 +209,10 @@ function BottomSheetModalContents({
       // When a sheet has too much content it can lag and take a while to begin opening, so we want to delay rendering some of the content until the sheet is ready.
       // We consider the sheet to be "ready" as soon as it starts animating from the bottom to the top.
       // We add a short delay given that this callback is called when the sheet is "about to" animate.
+      // Note: We tried to use BottomSheet.onChange but this caused some issues with the sheet not being
+      // scrollable sometimes.
       if (!isSheetReady && fromIndex === -1 && toIndex === 0) {
-        setTimeout(() => setIsSheetReady(true), 50)
+        setTimeout(() => setIsSheetReady(true), IS_SHEET_READY_DELAY)
       }
     },
     [hideKeyboardOnDismiss, hideKeyboardOnSwipeDown, isSheetReady],
@@ -254,6 +264,7 @@ function BottomSheetModalContents({
       animatedPosition={animatedPosition}
       backgroundStyle={backgroundStyle}
       containerComponent={containerComponent}
+      containerStyle={{ zIndex: fullScreen ? undefined : zIndices.modal }}
       enableContentPanningGesture={isDismissible}
       enableDynamicSizing={!snapPoints || enableDynamicSizing}
       enableHandlePanningGesture={isDismissible}
@@ -262,10 +273,11 @@ function BottomSheetModalContents({
       snapPoints={snapPoints}
       stackBehavior={stackBehavior}
       topInset={renderBehindTopInset ? 0 : insets.top}
+      animationConfigs={BSM_ANIMATION_CONFIGS}
       onAnimate={onAnimate}
       onDismiss={onClose}
     >
-      <Trace logImpression modal={name}>
+      <Trace logImpression={!skipLogImpression} modal={name} properties={analyticsProperties}>
         <BottomSheetContextProvider isSheetReady={isSheetReady}>
           {overrideInnerContainer ? (
             children
@@ -289,6 +301,7 @@ export function BottomSheetDetachedModal({
   fullScreen,
   hideHandlebar,
   backgroundColor,
+  analyticsProperties,
 }: ModalProps): JSX.Element {
   const insets = useAppInsets()
   const dimensions = useDeviceDimensions()
@@ -324,6 +337,7 @@ export function BottomSheetDetachedModal({
       backdropComponent={Backdrop}
       backgroundStyle={backgroundStyle}
       bottomInset={insets.bottom}
+      containerStyle={{ zIndex: zIndices.popover }}
       detached={true}
       enableContentPanningGesture={isDismissible}
       enableDynamicSizing={!snapPoints}
@@ -334,7 +348,7 @@ export function BottomSheetDetachedModal({
       topInset={insets.top}
       onDismiss={onClose}
     >
-      <Trace logImpression modal={name}>
+      <Trace logImpression modal={name} properties={analyticsProperties}>
         <BottomSheetView style={fullScreen ? { height: fullContentHeight } : undefined}>{children}</BottomSheetView>
       </Trace>
     </BaseModal>

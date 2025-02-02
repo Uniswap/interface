@@ -1,7 +1,10 @@
 import { Signer } from '@ethersproject/abstract-signer'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { ConnectionInfo } from '@ethersproject/web'
-import { FlashbotsRpcProvider } from 'uniswap/src/features/providers/FlashbotsRpcProvider'
+import {
+  FLASHBOTS_DEFAULT_BLOCK_RANGE,
+  FlashbotsRpcProvider,
+} from 'uniswap/src/features/providers/FlashbotsRpcProvider'
 
 jest.mock('@ethersproject/web')
 const testAddress = '0xF570F45f598fD48AF83FABD692629a2caFe899ec'
@@ -18,7 +21,7 @@ describe('FlashbotsRpcProvider', () => {
       getAddress: jest.fn().mockResolvedValue(testAddress),
       signMessage: jest.fn().mockResolvedValue('0xsignature'),
     } as unknown as jest.Mocked<Signer>
-    provider = new FlashbotsRpcProvider(mockSigner)
+    provider = new FlashbotsRpcProvider(FLASHBOTS_DEFAULT_BLOCK_RANGE, mockSigner)
   })
 
   afterEach(() => {

@@ -41,6 +41,15 @@ jest.mock('components/AccountDrawer/MiniPortfolio/Activity/utils', () => ({
   useCreateCancelTransactionRequest: jest.fn(),
 }))
 
+jest.mock('utilities/src/logger/logger', () => ({
+  logger: {
+    error: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn(),
+    debug: jest.fn(),
+  },
+}))
+
 describe('CancelOrdersDialog', () => {
   it('should render order cancel correctly', async () => {
     const mockOnCancel = jest.fn()

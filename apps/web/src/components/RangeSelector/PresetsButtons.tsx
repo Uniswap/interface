@@ -1,8 +1,8 @@
 import { ButtonOutlined } from 'components/Button/buttons'
 import { AutoRow } from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
 
 const Button = styled(ButtonOutlined).attrs(() => ({
   padding: '6px',

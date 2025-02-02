@@ -8,8 +8,8 @@ import { SettingsItemWithDropdown } from 'src/app/features/settings/SettingsItem
 import { AppRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import {
-  Button,
   ColorTokens,
+  DeprecatedButton,
   Flex,
   GeneratedIcon,
   ScrollView,
@@ -32,11 +32,12 @@ import {
   RotatableChevron,
   Settings,
   ShieldQuestion,
+  Wrench,
 } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
 import { getFiatCurrencyName, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
@@ -91,6 +92,7 @@ export function SettingsScreen(): JSX.Element {
     const fireAnalytic = (): void => {
       sendAnalyticsEvent(WalletEventName.TestnetModeToggled, {
         enabled: isChecked,
+        location: 'settings',
       })
     }
 
@@ -191,7 +193,7 @@ export function SettingsScreen(): JSX.Element {
               onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.Privacy}`)}
             />
             <SettingsToggleRow
-              Icon={ShieldQuestion}
+              Icon={Wrench}
               checked={isTestnetModeEnabled}
               title={t('settings.setting.wallet.testnetMode.title')}
               onCheckedChange={handleTestnetModeToggle}
@@ -220,9 +222,9 @@ export function SettingsScreen(): JSX.Element {
             <Text color="$neutral3" px="$spacing12" py="$spacing4" variant="body4">{`Version ${manifestVersion}`}</Text>
           </SettingsSection>
         </ScrollView>
-        <Button icon={<Lock />} theme="secondary" onPress={onPressLockWallet}>
+        <DeprecatedButton icon={<Lock />} theme="secondary" onPress={onPressLockWallet}>
           {t('settings.action.lock')}
-        </Button>
+        </DeprecatedButton>
       </Flex>
     </>
   )

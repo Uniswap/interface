@@ -13,7 +13,7 @@ import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
 import { SyncFromPhoneButton } from 'src/app/features/onboarding/SyncFromPhoneButton'
 import { TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { Button, Flex, FlexProps, Input, Square, Text, inputStyles } from 'ui/src'
+import { DeprecatedButton, Flex, FlexProps, Input, Square, Text, inputStyles } from 'ui/src'
 import { FileListLock, RotatableChevron } from 'ui/src/components/icons'
 import { fonts, iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -247,7 +247,7 @@ export function ImportMnemonic(): JSX.Element {
                     ),
                 )}
               </Flex>
-              <Button
+              <DeprecatedButton
                 backgroundColor="$transparent"
                 gap="$spacing4"
                 hoverStyle={{ backgroundColor: 'transparent' } as FlexProps}
@@ -262,7 +262,7 @@ export function ImportMnemonic(): JSX.Element {
                     : t('onboarding.importMnemonic.button.longPhrase')}
                 </Text>
                 <RotatableChevron color="$neutral3" direction={expanded ? 'up' : 'down'} width={iconSizes.icon20} />
-              </Button>
+              </DeprecatedButton>
             </Flex>
           </>
         </OnboardingScreen>

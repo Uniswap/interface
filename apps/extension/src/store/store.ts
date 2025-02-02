@@ -1,4 +1,3 @@
-import { createReduxEnhancer } from '@sentry/react'
 import { PreloadedState } from 'redux'
 import { persistReducer, persistStore } from 'redux-persist'
 import { localStorage } from 'redux-persist-webextension-storage'
@@ -12,7 +11,7 @@ import {
   deleteDeprecatedReduxedChromeStorage,
   readDeprecatedReduxedChromeStorage,
 } from 'src/store/reduxedChromeStorageToReduxPersistMigration'
-import { getFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { createDatadogReduxEnhancer } from 'utilities/src/logger/Datadog'
 import { createStore } from 'wallet/src/state'
 import { createMigrate } from 'wallet/src/state/createMigrate'
@@ -27,18 +26,6 @@ const persistConfig = {
 
 const persistedReducer = enhancePersistReducer(persistReducer(persistConfig, extensionReducer))
 
-const sentryReduxEnhancer = createReduxEnhancer({
-  // TODO(EXT-1022): uncomment this once we add an analytics opt-out setting.
-  // stateTransformer: (state: WebState): Maybe<WebState> => {
-  // Do not log the state if a user has opted out of analytics.
-  // if (state.telemetry.allowAnalytics) {
-  //   return state
-  // } else {
-  //   return null
-  // }
-  // },
-})
-
 const dataDogReduxEnhancer = createDatadogReduxEnhancer({
   shouldLogReduxState: (state: ExtensionState): boolean => {
     // Do not log the state if a user has opted out of analytics.
@@ -52,8 +39,8 @@ const setupStore = (preloadedState?: PreloadedState<ExtensionState>): ReturnType
     preloadedState,
     additionalSagas: [rootExtensionSaga],
     middlewareBefore: __DEV__ ? [loggerMiddleware] : [],
-    middlewareAfter: [getFiatOnRampAggregatorApi().middleware],
-    enhancers: [sentryReduxEnhancer, dataDogReduxEnhancer],
+    middlewareAfter: [fiatOnRampAggregatorApi.middleware],
+    enhancers: [dataDogReduxEnhancer],
   })
 }
 

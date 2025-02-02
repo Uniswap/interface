@@ -1,5 +1,6 @@
 import { Percent } from '@uniswap/sdk-core'
 import { SwapForm } from 'pages/Swap/SwapForm'
+import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { SwapAndLimitContextProvider, SwapContextProvider } from 'state/swap/SwapContext'
 import { SwapAndLimitContext, SwapInfo } from 'state/swap/types'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
@@ -70,30 +71,27 @@ describe('SwapAndLimitContext', () => {
     }
 
     render(
-      <SwapAndLimitContextProvider>
-        <TestComponent />
-      </SwapAndLimitContextProvider>,
+      <MultichainContextProvider>
+        <SwapAndLimitContextProvider>
+          <TestComponent />
+        </SwapAndLimitContextProvider>
+        ,
+      </MultichainContextProvider>,
     )
 
     expect(swapAndLimitContext).toEqual({
       currencyState: {
-        inputCurrencyId: undefined,
-        outputCurrencyId: undefined,
+        inputCurrency: undefined,
+        outputCurrency: undefined,
       },
       prefilledState: {
-        inputCurrencyId: undefined,
-        outputCurrencyId: undefined,
+        inputCurrency: undefined,
+        outputCurrency: undefined,
       },
-      multichainUXEnabled: undefined,
-      setSelectedChainId: expect.any(Function),
       setCurrencyState: expect.any(Function),
-      setIsUserSelectedToken: expect.any(Function),
       currentTab: SwapTab.Swap,
       setCurrentTab: expect.any(Function),
-      chainId: 1,
-      pageChainId: undefined,
       isSwapAndLimitContext: true,
-      isUserSelectedToken: false,
     })
   })
 
@@ -102,20 +100,13 @@ describe('SwapAndLimitContext', () => {
       window.history.pushState({}, '', '/swap')
     })
 
-    test('multichain ux disabled', () => {
-      render(
-        <SwapAndLimitContextProvider initialChainId={UniverseChainId.Optimism}>
-          <SwapForm />
-        </SwapAndLimitContextProvider>,
-      )
-      expect(screen.getByText('Connect to Optimism')).toBeInTheDocument()
-    })
-
     test('multichain ux enabled', () => {
       render(
-        <SwapAndLimitContextProvider multichainUXEnabled initialChainId={UniverseChainId.Optimism}>
-          <SwapForm />
-        </SwapAndLimitContextProvider>,
+        <MultichainContextProvider initialChainId={UniverseChainId.Optimism}>
+          <SwapAndLimitContextProvider>
+            <SwapForm />
+          </SwapAndLimitContextProvider>
+        </MultichainContextProvider>,
       )
       expect(screen.getByTestId('swap-button')).toBeInTheDocument()
     })
@@ -143,13 +134,8 @@ describe('Combined contexts', () => {
             outputCurrency: undefined,
           },
           setCurrencyState: expect.any(Function),
-          setSelectedChainId: jest.fn(),
-          setIsUserSelectedToken: jest.fn(),
-          chainId: UniverseChainId.Mainnet,
           currentTab: SwapTab.Swap,
           setCurrentTab: expect.any(Function),
-          isSwapAndLimitContext: true,
-          isUserSelectedToken: false,
         }}
       >
         <SwapContextProvider>

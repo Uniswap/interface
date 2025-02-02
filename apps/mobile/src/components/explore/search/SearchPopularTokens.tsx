@@ -2,17 +2,18 @@ import { TokenRankingsStat } from '@uniswap/client-explore/dist/uniswap/explore/
 import React, { useMemo } from 'react'
 import { ListRenderItemInfo } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
+import { SEARCH_ITEM_PX, SEARCH_ITEM_PY } from 'src/components/explore/search/constants'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { getSearchResultId } from 'src/components/explore/search/utils'
 import { Flex, Loader } from 'ui/src'
 import { ProtectionResult, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
 import { useTokenRankingsQuery } from 'uniswap/src/data/rest/tokenRankings'
+import { RankingType } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
-import { RankingType } from 'wallet/src/features/wallet/types'
 
 const MAX_TOKEN_RESULTS_AMOUNT = 8
 
@@ -60,7 +61,7 @@ export function SearchPopularTokens({ selectedChain }: { selectedChain: Universe
 
   if (isLoading) {
     return (
-      <Flex px="$spacing24" py="$spacing8">
+      <Flex px={SEARCH_ITEM_PX} py={SEARCH_ITEM_PY}>
         <Loader.Token repeat={2} />
       </Flex>
     )

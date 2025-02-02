@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { iconSizes } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { ParsedWarnings } from 'uniswap/src/components/modals/WarningModal/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { ParsedWarnings } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export function SwapWarningModal({
   isOpen,

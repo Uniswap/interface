@@ -10,9 +10,9 @@ import { useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { Dispatch, useRef, useState } from 'react'
 import { AlertTriangle, Link } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { BREAKPOINTS } from 'theme'
 import { colors } from 'theme/colors'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const PriceTextInputWrapper = styled(Column)`

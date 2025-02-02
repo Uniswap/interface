@@ -1,3 +1,4 @@
+import { INVALID_ADDRESS_TOO_LONG, INVALID_ADDRESS_TOO_SHORT } from 'utilities/src/test/fixtures'
 import { isAddress, shortenAddress } from '.'
 
 describe('utils', () => {
@@ -22,31 +23,37 @@ describe('utils', () => {
   })
 
   describe('#shortenAddress', () => {
-    it('doesnt throw on invalid address', () => {
-      expect(shortenAddress('abc123')).toEqual('')
-    })
-
-    it('truncates middle characters', () => {
-      expect(shortenAddress('0xf164fc0ec4e93095b804a4795bbe1e041497b92a')).toBe('0xf164...b92a')
-    })
-
-    it('truncates middle characters even without prefix', () => {
-      expect(shortenAddress('f164fc0ec4e93095b804a4795bbe1e041497b92a')).toBe('0xf164...b92a')
-    })
-
-    it('renders checksummed address', () => {
-      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC'.toLowerCase())).toBe('0x2E1b...54CC')
-    })
-
-    it('allows undefined', () => {
-      expect(shortenAddress()).toBe('')
+    it.each`
+      input                                           | expected           | desc
+      ${INVALID_ADDRESS_TOO_SHORT}                    | ${''}              | ${'doesnt throw on invalid address'}
+      ${INVALID_ADDRESS_TOO_LONG}                     | ${''}              | ${'doesnt throw on invalid address'}
+      ${'0xf164fc0ec4e93095b804a4795bbe1e041497b92a'} | ${'0xf164...b92a'} | ${'returns the truncated address'}
+      ${'f164fc0ec4e93095b804a4795bbe1e041497b92a'}   | ${'0xf164...b92a'} | ${'returns the truncated address without prefix'}
+      ${'0x2E1b342132A67Ea578e4E3B814bae2107dc254CC'} | ${'0x2E1b...54CC'} | ${'renders checksummed address'}
+      ${undefined}                                    | ${''}              | ${'allows undefined'}
+      ${false}                                        | ${''}              | ${'doesnt error on boolean'}
+      ${null}                                         | ${''}              | ${'doesnt error on null'}
+      ${'0x'}                                         | ${''}              | ${'doesnt error on 0x prefix'}
+    `('$desc for shortenAddress($input) should return $expected', async ({ input, expected }) => {
+      expect(shortenAddress(input)).toEqual(expected)
     })
 
     it('allows custom amounts of start/end chars', () => {
-      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 2)).toBe('0x2E...54CC')
-      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 6)).toBe('0x2E1b34...54CC')
+      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 2)).toBe('0x2E...CC')
+      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 6)).toBe('0x2E1b34...c254CC')
       expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 2, 2)).toBe('0x2E...CC')
       expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 2, 6)).toBe('0x2E...c254CC')
+      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 0, 4)).toBe('0x...54CC')
+      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 0)).toBe('0x...')
+      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 44)).toBe(
+        '0x2E1b342132A67Ea578e4E3B814bae2107dc254CC',
+      )
+      expect(shortenAddress('2E1b342132A67Ea578e4E3B814bae2107dc254CC', 43)).toBe(
+        '0x2E1b342132A67Ea578e4E3B814bae2107dc254CC',
+      )
+      expect(shortenAddress('2E1b342132A67Ea578e4E3B814bae2107dc254CC', 1, 55)).toBe(
+        '0x2E1b342132A67Ea578e4E3B814bae2107dc254CC',
+      )
     })
   })
 })

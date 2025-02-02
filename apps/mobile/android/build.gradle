@@ -15,11 +15,11 @@ buildscript {
     flowlayout = "0.23.1"
     kotlinSerialization = "1.5.1"
     lifecycle = "2.5.1"
-    multidexVersion = "2.0.1"
   }
   repositories {
     google()
     mavenCentral()
+    maven { url 'https://jitpack.io' }
   }
   dependencies {
     classpath("com.android.tools.build:gradle")
@@ -37,11 +37,6 @@ plugins {
 }
 
 allprojects {
-  repositories {
-    maven {
-      url = rootProject.file("../../../node_modules/detox/Detox-android")
-    }
-  }
   project.pluginManager.withPlugin("com.facebook.react") {
     react {
       reactNativeDir = rootProject.file("../../../node_modules/react-native/")

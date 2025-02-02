@@ -11,6 +11,7 @@ import { SwapResult } from 'hooks/useSwapCallback'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import styled, { useTheme } from 'lib/styled-components'
 import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { InterfaceTrade } from 'state/routing/types'
 import { isLimitTrade, isUniswapXSwapTrade, isUniswapXTradeType } from 'state/routing/utils'
 import { useOrder } from 'state/signatures/hooks'
@@ -21,7 +22,6 @@ import { UniswapXOrderStatus } from 'types/uniswapx'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { t } from 'uniswap/src/i18n'
 import { SignatureExpiredError } from 'utils/errors'
 
 const DividerContainer = styled(Column)`
@@ -64,6 +64,7 @@ export default function ProgressIndicator({
   swapError?: Error | string
   onRetryUniswapXSignature?: () => void
 }) {
+  const { t } = useTranslation()
   const { chainId } = useAccount()
   const nativeCurrency = useNativeCurrency(chainId)
   const inputTokenColor = useColor(trade?.inputAmount.currency.wrapped)
@@ -164,7 +165,7 @@ export default function ProgressIndicator({
           : uniswapUrls.helpArticleUrls.howToSwapTokens,
       },
     }),
-    [inputTokenColor, nativeCurrency.symbol, trade, theme.accent1],
+    [trade, inputTokenColor, t, nativeCurrency.symbol, theme.accent1],
   )
 
   if (steps.length === 0) {

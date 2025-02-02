@@ -1,6 +1,6 @@
 import { ProtectionResult, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
+import { CurrencyInfo, SafetyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { faker } from 'uniswap/src/test/shared'
 import { createFixture } from 'uniswap/src/test/utils'
@@ -9,6 +9,7 @@ import { currencyId } from 'uniswap/src/utils/currencyId'
 export const MAINNET_CURRENCY = NativeCurrency.onChain(UniverseChainId.Mainnet)
 export const BASE_CURRENCY = NativeCurrency.onChain(UniverseChainId.Base)
 export const ARBITRUM_CURRENCY = NativeCurrency.onChain(UniverseChainId.ArbitrumOne)
+export const MONAD_TESTNET_CURRENCY = NativeCurrency.onChain(UniverseChainId.MonadTestnet)
 export const OPTIMISM_CURRENCY = NativeCurrency.onChain(UniverseChainId.Optimism)
 export const POLYGON_CURRENCY = NativeCurrency.onChain(UniverseChainId.Polygon)
 export const CELO_CURRENCY = NativeCurrency.onChain(UniverseChainId.Celo)
@@ -21,9 +22,13 @@ type CurrencyInfoOptions = {
   nativeCurrency: NativeCurrency
 }
 
-export const benignSafetyInfo = {
+export const benignSafetyInfo: SafetyInfo = {
   tokenList: TokenList.Default,
   protectionResult: ProtectionResult.Benign,
+  blockaidFees: {
+    buyFeePercent: 0,
+    sellFeePercent: 0,
+  },
 }
 
 export const currencyInfo = createFixture<CurrencyInfo, CurrencyInfoOptions>({

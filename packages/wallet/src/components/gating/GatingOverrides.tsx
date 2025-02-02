@@ -1,5 +1,5 @@
 import React from 'react'
-import { Accordion, Button, Flex, Input, Separator, Switch, Text } from 'ui/src'
+import { Accordion, DeprecatedButton, Flex, Input, Separator, Switch, Text } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
@@ -25,9 +25,9 @@ export function GatingOverrides(): JSX.Element {
         <AccordionHeader title="⛳️ Feature Flags" />
 
         <Accordion.Content>
-          <Button p="$spacing4" theme="tertiary" onPress={() => Statsig.removeGateOverride()}>
+          <DeprecatedButton p="$spacing4" theme="tertiary" onPress={() => Statsig.removeGateOverride()}>
             <Text variant="body2">Clear all local feature gate overrides</Text>
-          </Button>
+          </DeprecatedButton>
 
           <Flex gap="$spacing12" mt="$spacing12">
             {featureFlagRows}
@@ -38,9 +38,9 @@ export function GatingOverrides(): JSX.Element {
         <AccordionHeader title="🔬 Experiments" />
 
         <Accordion.Content>
-          <Button p="$spacing4" theme="tertiary" onPress={() => Statsig.removeConfigOverride()}>
+          <DeprecatedButton p="$spacing4" theme="tertiary" onPress={() => Statsig.removeConfigOverride()}>
             <Text variant="body2">Clear all local experiment/config overrides</Text>
-          </Button>
+          </DeprecatedButton>
 
           <Flex gap="$spacing12" mt="$spacing12">
             {experimentRows}
@@ -48,7 +48,7 @@ export function GatingOverrides(): JSX.Element {
         </Accordion.Content>
       </Accordion.Item>
 
-      <Button
+      <DeprecatedButton
         mt="$spacing12"
         p="$spacing4"
         theme="tertiary"
@@ -59,7 +59,7 @@ export function GatingOverrides(): JSX.Element {
         }}
       >
         <Text variant="body2">Clear all gating overrides</Text>
-      </Button>
+      </DeprecatedButton>
     </>
   )
 }

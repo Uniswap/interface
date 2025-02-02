@@ -3,27 +3,23 @@ import { ConfirmedIcon, LogoContainer, SubmittedIcon } from 'components/AccountD
 import { useCancelOrdersGasEstimate } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { Container, Dialog, DialogButtonType, DialogProps } from 'components/Dialog/Dialog'
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
-import Modal from 'components/Modal'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
-import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
-import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import styled, { useTheme } from 'lib/styled-components'
 import { Slash } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { ExternalLink, ThemedText } from 'theme/components'
+import { Flex, Text } from 'ui/src'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Plural, Trans, t } from 'uniswap/src/i18n'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-const GasEstimateContainer = styled(Row)`
-  border-top: 1px solid ${({ theme }) => theme.surface3};
-  margin-top: 16px;
-  padding-top: 16px;
-`
 const ModalHeader = styled(GetHelpHeader)`
   padding: 4px 0px;
 `
@@ -86,6 +82,7 @@ export function CancelOrdersDialog(
     onConfirm: () => void
   },
 ) {
+  const { t } = useTranslation()
   const { orders, cancelState, cancelTxHash, onConfirm, onCancel } = props
 
   const { title, icon } = useCancelOrdersDialogContent(cancelState, orders)
@@ -100,7 +97,7 @@ export function CancelOrdersDialog(
       (cancelState === CancellationState.CANCELLED || cancelState === CancellationState.PENDING_CONFIRMATION) &&
       cancelTxHash
     return (
-      <Modal isOpen $scrollOverlay onDismiss={onCancel} maxHeight="90vh">
+      <Modal name={ModalName.CancelOrders} isModalOpen onClose={onCancel} maxHeight="90vh" padding={0}>
         <Container gap="lg">
           <ModalHeader closeModal={onCancel} />
           <LogoContainer>{icon}</LogoContainer>
@@ -131,14 +128,10 @@ export function CancelOrdersDialog(
         icon={icon}
         title={title}
         description={
-          <Column>
-            <Plural
-              value={orders.length}
-              one={t('swap.cancel.cannotExecute')}
-              other={t('swap.cancel.cannotExecute.plural')}
-            />
+          <Flex width="100%">
+            <Text>{t('swap.cancel.cannotExecute', { count: orders.length })}</Text>
             <GasEstimateDisplay chainId={orders[0].chainId} gasEstimateValue={gasEstimate?.value} />
-          </Column>
+          </Flex>
         }
         buttonsConfig={{
           left: {
@@ -164,20 +157,21 @@ export function CancelOrdersDialog(
 
 function GasEstimateDisplay({ gasEstimateValue, chainId }: { gasEstimateValue?: string; chainId: UniverseChainId }) {
   const gasFeeCurrencyAmount = CurrencyAmount.fromRawAmount(nativeOnChain(chainId), gasEstimateValue ?? '0')
-  const gasFeeUSD = useStablecoinValue(gasFeeCurrencyAmount)
+  const gasFeeUSD = useUSDCValue(gasFeeCurrencyAmount)
   const { formatCurrencyAmount } = useFormatter()
   const gasFeeFormatted = formatCurrencyAmount({
     amount: gasFeeUSD,
     type: NumberType.PortfolioBalance,
   })
+
   return (
-    <GasEstimateContainer>
+    <Flex row mt={16} pt={16} borderColor="$transparent" borderTopColor="$surface3" borderWidth={1} width="100%">
       <DetailLineItem
         LineItem={{
           Label: () => <Trans i18nKey="common.networkCost" />,
           Value: () => <span>{gasEstimateValue ? gasFeeFormatted : '-'}</span>,
         }}
       />
-    </GasEstimateContainer>
+    </Flex>
   )
 }

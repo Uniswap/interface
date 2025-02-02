@@ -5,8 +5,7 @@ import { getDeviceId } from '@amplitude/analytics-browser'
 import { ApolloProvider } from '@apollo/client'
 import { PortalProvider } from '@tamagui/portal'
 import { QueryClientProvider } from '@tanstack/react-query'
-import { MiniKit } from '@worldcoin/minikit-js'
-import Web3Provider from 'components/Web3Provider'
+import Web3Provider, { Web3ProviderUpdater } from 'components/Web3Provider'
 import { WebUniswapProvider } from 'components/Web3Provider/WebUniswapContext'
 import { AssetActivityProvider } from 'graphql/data/apollo/AssetActivityProvider'
 import { TokenBalancesProvider } from 'graphql/data/apollo/TokenBalancesProvider'
@@ -16,9 +15,10 @@ import { LanguageProvider } from 'i18n/LanguageProvider'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
 import App from 'pages/App'
-import { PropsWithChildren, StrictMode, useEffect, useMemo } from 'react'
+import { PropsWithChildren, StrictMode, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Helmet, HelmetProvider } from 'react-helmet-async/lib/index'
+import { I18nextProvider } from 'react-i18next'
 import { Provider } from 'react-redux'
 import { BrowserRouter, HashRouter, useLocation } from 'react-router-dom'
 import store from 'state'
@@ -29,14 +29,15 @@ import ListsUpdater from 'state/lists/updater'
 import LogsUpdater from 'state/logs/updater'
 import { StatsigProvider as BaseStatsigProvider, StatsigUser } from 'statsig-react'
 import { ThemeProvider, ThemedGlobalStyle } from 'theme'
-import RadialGradientByChainUpdater from 'theme/components/RadialGradientByChainUpdater'
 import { SystemThemeUpdater, ThemeColorMetaUpdater } from 'theme/components/ThemeToggle'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
 import { getEnvName } from 'tracing/env'
+import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
 import { DUMMY_STATSIG_SDK_KEY } from 'uniswap/src/features/gating/constants'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
+import i18n from 'uniswap/src/i18n'
 import { isBrowserRouterEnabled } from 'utils/env'
 import { unregister as unregisterServiceWorker } from 'utils/serviceWorker'
 import { getCanonicalUrl } from 'utils/urlRoutes'
@@ -53,7 +54,6 @@ function Updaters() {
       <Helmet>
         <link rel="canonical" href={getCanonicalUrl(location.pathname)} />
       </Helmet>
-      <RadialGradientByChainUpdater />
       <ListsUpdater />
       <SystemThemeUpdater />
       <ThemeColorMetaUpdater />
@@ -62,6 +62,7 @@ function Updaters() {
       <MulticallUpdater />
       <LogsUpdater />
       <FiatOnRampTransactionsUpdater />
+      <Web3ProviderUpdater />
     </>
   )
 }
@@ -101,14 +102,6 @@ function StatsigProvider({ children }: PropsWithChildren) {
   )
 }
 
-function MiniKitProvider({ children }: PropsWithChildren) {
-  useEffect(() => {
-    MiniKit.install()
-  }, [])
-
-  return <>{children}</>
-}
-
 const container = document.getElementById('root') as HTMLElement
 
 const Router = isBrowserRouterEnabled() ? BrowserRouter : HashRouter
@@ -116,39 +109,41 @@ const Router = isBrowserRouterEnabled() ? BrowserRouter : HashRouter
 createRoot(container).render(
   <StrictMode>
     <HelmetProvider>
-      <Provider store={store}>
-        <QueryClientProvider client={SharedQueryClient}>
-          <Router>
-            <LanguageProvider>
-              <Web3Provider>
-                <StatsigProvider>
-                  <WebUniswapProvider>
-                    <GraphqlProviders>
-                      <LocalizationContextProvider>
-                        <BlockNumberProvider>
-                          <UnitagUpdaterContextProvider>
-                            <Updaters />
-                            <ThemeProvider>
-                              <TamaguiProvider>
-                                <PortalProvider>
-                                  <ThemedGlobalStyle />
-                                  <MiniKitProvider>
-                                    <App />
-                                  </MiniKitProvider>
-                                </PortalProvider>
-                              </TamaguiProvider>
-                            </ThemeProvider>
-                          </UnitagUpdaterContextProvider>
-                        </BlockNumberProvider>
-                      </LocalizationContextProvider>
-                    </GraphqlProviders>
-                  </WebUniswapProvider>
-                </StatsigProvider>
-              </Web3Provider>
-            </LanguageProvider>
-          </Router>
-        </QueryClientProvider>
-      </Provider>
+      <ReactRouterUrlProvider>
+        <Provider store={store}>
+          <QueryClientProvider client={SharedQueryClient}>
+            <Router>
+              <I18nextProvider i18n={i18n}>
+                <LanguageProvider>
+                  <Web3Provider>
+                    <StatsigProvider>
+                      <WebUniswapProvider>
+                        <GraphqlProviders>
+                          <LocalizationContextProvider>
+                            <BlockNumberProvider>
+                              <UnitagUpdaterContextProvider>
+                                <Updaters />
+                                <ThemeProvider>
+                                  <TamaguiProvider>
+                                    <PortalProvider>
+                                      <ThemedGlobalStyle />
+                                      <App />
+                                    </PortalProvider>
+                                  </TamaguiProvider>
+                                </ThemeProvider>
+                              </UnitagUpdaterContextProvider>
+                            </BlockNumberProvider>
+                          </LocalizationContextProvider>
+                        </GraphqlProviders>
+                      </WebUniswapProvider>
+                    </StatsigProvider>
+                  </Web3Provider>
+                </LanguageProvider>
+              </I18nextProvider>
+            </Router>
+          </QueryClientProvider>
+        </Provider>
+      </ReactRouterUrlProvider>
     </HelmetProvider>
   </StrictMode>,
 )

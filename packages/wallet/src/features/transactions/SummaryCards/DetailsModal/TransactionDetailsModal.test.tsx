@@ -95,7 +95,12 @@ describe('TransactionDetails Components', () => {
       openActionsModal: jest.fn(),
       openCancelModal: jest.fn(),
       renderModals: jest.fn(),
-      menuItems: [],
+      menuItems: [
+        {
+          label: 'Cancel',
+          onPress: jest.fn(),
+        },
+      ],
     }
 
     const tree = render(

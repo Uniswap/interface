@@ -4,14 +4,14 @@ import styled from 'lib/styled-components'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
-import { blocklistedCollections } from 'nft/utils'
+import { useDynamicBlocklistedNftCollections } from 'nft/utils'
 import { useDynamicMetatags } from 'pages/metatags'
 import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
+import { useTranslation } from 'react-i18next'
 import { Navigate, useParams } from 'react-router-dom'
 import { formatNFTAssetMetatagTitleName } from 'shared-cloud/metatags'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { t } from 'uniswap/src/i18n'
 import { isIFramed } from 'utils/isIFramed'
 
 const AssetContainer = styled.div`
@@ -42,6 +42,7 @@ const AssetPriceDetailsContainer = styled.div`
 `
 
 const AssetPage = () => {
+  const { t } = useTranslation()
   const { tokenId = '', contractAddress = '' } = useParams()
   const { data, loading } = useNftAssetDetails(contractAddress, tokenId)
 
@@ -59,7 +60,7 @@ const AssetPage = () => {
     [asset.name, collection.collectionDescription, collection.collectionName, contractAddress, tokenId],
   )
   const metaTags = useDynamicMetatags(metaTagProperties)
-
+  const blocklistedCollections = useDynamicBlocklistedNftCollections()
   // Don't allow iFraming of this page. isIFramed(true) busts out of the iFrame by redirecting main page to current iFrame url
   // https://www.notion.so/uniswaplabs/What-is-not-allowed-to-be-iFramed-Clickjacking-protections-874f85f066c648afa0eb3480b3f47b5c#d0ebf1846c83475a86342a594f77eae5
   if (blocklistedCollections.includes(contractAddress) || isIFramed(true)) {

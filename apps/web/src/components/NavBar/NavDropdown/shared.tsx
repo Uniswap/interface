@@ -4,7 +4,6 @@ import styled from 'lib/styled-components'
 
 export const NavDropdownDefaultWrapper = styled(Column)`
   width: 100%;
-  padding: 12px 16px;
   align-items: center;
   gap: 2px;
   @media screen and (max-width: ${NAV_BREAKPOINT.isMobileDrawer}px) {
@@ -13,6 +12,8 @@ export const NavDropdownDefaultWrapper = styled(Column)`
     border-bottom-right-radius: 0px;
     border-bottom: none;
   }
+  max-height: inherit;
+  overflow-y: auto;
 `
 export const NavDropdownTabWrapper = styled(Column)`
   min-width: 180px;

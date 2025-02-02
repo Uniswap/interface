@@ -1,11 +1,11 @@
 import { Percent } from '@uniswap/sdk-core'
-import Row from 'components/deprecated/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
+import Row from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { useMemo } from 'react'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { warningSeverity } from 'utils/prices'
 

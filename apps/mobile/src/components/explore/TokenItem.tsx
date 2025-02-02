@@ -8,7 +8,7 @@ import { TokenItemData } from 'src/components/explore/TokenItemData'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, ImpactFeedbackStyle, Text, TouchableArea, ViewProps } from 'ui/src'
+import { Flex, Text, TouchableArea, ViewProps } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { spacing } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
@@ -107,13 +107,7 @@ export const TokenItem = memo(function _TokenItem({
 
   return (
     <ContextMenu actions={menuActions} onPress={onContextMenuPress}>
-      <TouchableArea
-        hapticFeedback
-        hapticStyle={ImpactFeedbackStyle.Light}
-        testID={`token-item-${name}`}
-        onLongPress={disableOnPress}
-        onPress={onPress}
-      >
+      <TouchableArea testID={`token-item-${name}`} onLongPress={disableOnPress} onPress={onPress}>
         {overlay}
         <AnimatedFlex grow row alignItems="center" gap="$spacing12" px="$spacing24" py="$spacing8" {...containerProps}>
           <Flex centered row gap="$spacing4">

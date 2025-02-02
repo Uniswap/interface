@@ -1,3 +1,4 @@
+import { USDT_ARBITRUM_ONE } from 'uniswap/src/constants/tokens'
 import { getTestSelector, getTestSelectorStartsWith } from '../utils'
 
 describe('Token explore', () => {
@@ -61,4 +62,15 @@ describe('Token explore', () => {
     cy.get(getTestSelector('tokens-network-filter-option-optimism')).first().click()
     cy.get(getTestSelector('tokens-network-filter-selected')).invoke('attr', 'alt').should('eq', `Optimism logo`)
   })
+
+  it('should show a L2 token even if the user is connected to a different network', () => {
+    cy.viewport(1200, 800)
+    cy.visit('/explore/tokens/ethereum')
+    cy.get(getTestSelector('tokens-network-filter-selected')).click()
+    cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).first().click()
+    cy.get(getTestSelector('tokens-network-filter-selected')).invoke('attr', 'alt').should('eq', `Arbitrum logo`)
+    cy.get(getTestSelector(`token-table-row-${USDT_ARBITRUM_ONE.address}`)).click()
+    cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'USDT')
+  })
+
 })

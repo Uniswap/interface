@@ -4,8 +4,8 @@ import { spacing } from 'ui/src/theme'
 import { NetworkLogos } from 'uniswap/src/components/network/NetworkLogos'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { useAddressColorProps } from 'uniswap/src/features/address/color'
+import { useOrderedChainIds } from 'uniswap/src/features/chains/hooks/useOrderedChainIds'
 import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
-import { isExtension } from 'utilities/src/platform'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 
@@ -15,9 +15,9 @@ export function WalletQRCode({ address }: { address: Address }): JSX.Element | n
   const { t } = useTranslation()
   const media = useMedia()
   const addressColor = useAddressColorProps(address)
+  const orderedChainIds = useOrderedChainIds(SUPPORTED_CHAIN_IDS)
 
   const QR_CODE_SIZE = media.short ? 220 : 240
-  const QR_CODE_EYE_SIZE = isExtension ? 140 : 160
   const UNICON_SIZE = QR_CODE_SIZE / 4
 
   return (
@@ -47,7 +47,6 @@ export function WalletQRCode({ address }: { address: Address }): JSX.Element | n
         color={addressColor}
         containerBackgroundColor={colors.surface1.val}
         encodedValue={address}
-        eyeSize={QR_CODE_EYE_SIZE}
         size={QR_CODE_SIZE}
       >
         <AccountIcon
@@ -61,9 +60,9 @@ export function WalletQRCode({ address }: { address: Address }): JSX.Element | n
         />
       </QRCodeDisplay>
       <Text color="$neutral2" lineHeight={20} textAlign="center" variant="body4">
-        {t('qrScanner.wallet.title', { numOfNetworks: SUPPORTED_CHAIN_IDS.length })}
+        {t('qrScanner.wallet.title', { numOfNetworks: orderedChainIds.length })}
       </Text>
-      <NetworkLogos chains={SUPPORTED_CHAIN_IDS} />
+      <NetworkLogos chains={orderedChainIds} />
     </Flex>
   )
 }

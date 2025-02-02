@@ -1,7 +1,7 @@
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { DetailBubble, SmallDetailBubble } from 'components/Pools/PoolDetails/shared'
 import Tooltip, { TooltipSize } from 'components/Tooltip'
 import Row from 'components/deprecated/Row'
@@ -11,14 +11,14 @@ import useCopyClipboard from 'hooks/useCopyClipboard'
 import styled, { useTheme } from 'lib/styled-components'
 import { useCallback, useState } from 'react'
 import { ChevronRight, Copy } from 'react-feather'
+import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { Trans, t } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { isAddress, shortenAddress } from 'utilities/src/addresses'
 
@@ -88,6 +88,7 @@ interface PoolDetailsLinkProps {
 
 export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetailsLinkProps) {
   const theme = useTheme()
+  const { t } = useTranslation()
   const isNative = address === NATIVE_CHAIN_ID
   const currency = tokens[0] && gqlToCurrency(tokens[0])
   const [isCopied, setCopied] = useCopyClipboard()
@@ -152,7 +153,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
         ref={onTextRender}
       >
         {isPool ? (
-          <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} size={20} />
+          <DoubleCurrencyLogo currencies={currencies} size={20} />
         ) : (
           <CurrencyLogo currency={currency} size={20} />
         )}

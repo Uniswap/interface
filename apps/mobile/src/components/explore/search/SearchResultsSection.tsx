@@ -29,7 +29,7 @@ import { AnimatedBottomSheetFlashList } from 'ui/src/components/AnimatedFlashLis
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import {
@@ -176,6 +176,8 @@ export function SearchResultsSection({
   return (
     <Flex grow gap="$spacing8" pb="$spacing36">
       <AnimatedBottomSheetFlashList
+        // when switching networks, we want to rerender the list to prevent any layout misalignments
+        key={selectedChain}
         estimatedItemSize={ESTIMATED_ITEM_SIZE}
         ListEmptyComponent={
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing8" mx="$spacing20">

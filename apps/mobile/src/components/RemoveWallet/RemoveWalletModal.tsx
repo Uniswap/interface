@@ -11,11 +11,10 @@ import { Delay } from 'src/components/layout/Delayed'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { Button, Flex, SpinningLoader, Text, ThemeKeys, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, SpinningLoader, Text, ThemeKeys, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, opacify } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
@@ -64,7 +63,6 @@ export function RemoveWalletModal(): JSX.Element | null {
     if (!hasAccountsLeft) {
       // user has no accounts left, so we bring onboarding back
       dispatch(setFinishedOnboarding({ finishedOnboarding: false }))
-      dispatch(setIsTestnetModeEnabled(false))
       navigateToOnboardingImportMethod()
     } else if (isReplacing) {
       // there are account left and it's replacing, user has view-only accounts left
@@ -206,11 +204,11 @@ export function RemoveWalletModal(): JSX.Element | null {
               {inProgress ? (
                 <AnimatedFlex style={animatedCancelButtonSpanStyles} />
               ) : (
-                <Button fill disabled={inProgress} theme="outline" onPress={onClose}>
+                <DeprecatedButton fill disabled={inProgress} theme="outline" onPress={onClose}>
                   {t('common.button.cancel')}
-                </Button>
+                </DeprecatedButton>
               )}
-              <Button
+              <DeprecatedButton
                 fill
                 icon={inProgress ? <SpinningLoader color={`$${labelColor}`} /> : undefined}
                 testID={isRemovingRecoveryPhrase ? ElementName.Continue : ElementName.Remove}
@@ -219,7 +217,7 @@ export function RemoveWalletModal(): JSX.Element | null {
                 onPress={onPress}
               >
                 {inProgress ? undefined : actionButtonLabel}
-              </Button>
+              </DeprecatedButton>
             </Flex>
           )}
         </Flex>

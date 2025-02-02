@@ -8,11 +8,14 @@ import {
 import { RemoveLiquidityReview } from 'components/RemoveLiquidity/RemoveLiquidityReview'
 import { RemoveLiquidityTxContextProvider } from 'components/RemoveLiquidity/RemoveLiquidityTxContext'
 import { RemoveLiquidityForm } from 'pages/RemoveLiquidity/RemoveLiquidityForm'
+import { useTranslation } from 'react-i18next'
 import { useCloseModal } from 'state/application/hooks'
-import { Flex, HeightAnimator } from 'ui/src'
+import { HeightAnimator } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { MIN_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useTranslation } from 'uniswap/src/i18n'
+import { TransactionSettingsContextProvider } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
+import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
 
 function RemoveLiquidityModalInner() {
   const closeModal = useCloseModal(ModalName.RemoveLiquidity)
@@ -30,14 +33,19 @@ function RemoveLiquidityModalInner() {
   }
 
   return (
-    <Modal name={ModalName.RemoveLiquidity} onClose={closeModal} isDismissible>
-      <Flex px="$padding16" mb="$spacing24">
-        <LiquidityModalHeader
-          title={t('pool.removeLiquidity')}
-          closeModal={closeModal}
-          goBack={step === DecreaseLiquidityStep.Review ? () => setStep(DecreaseLiquidityStep.Input) : undefined}
-        />
-      </Flex>
+    <Modal
+      name={ModalName.RemoveLiquidity}
+      onClose={closeModal}
+      isDismissible
+      gap="$gap24"
+      padding="$padding16"
+      height="max-content"
+    >
+      <LiquidityModalHeader
+        title={t('pool.removeLiquidity')}
+        closeModal={closeModal}
+        goBack={step === DecreaseLiquidityStep.Review ? () => setStep(DecreaseLiquidityStep.Input) : undefined}
+      />
       <HeightAnimator animation="fast">{modalContent}</HeightAnimator>
     </Modal>
   )
@@ -46,9 +54,14 @@ function RemoveLiquidityModalInner() {
 export function RemoveLiquidityModal() {
   return (
     <RemoveLiquidityModalContextProvider>
-      <RemoveLiquidityTxContextProvider>
-        <RemoveLiquidityModalInner />
-      </RemoveLiquidityTxContextProvider>
+      <TransactionSettingsContextProvider
+        settingKey={TransactionSettingKey.LP}
+        autoSlippageTolerance={MIN_AUTO_SLIPPAGE_TOLERANCE}
+      >
+        <RemoveLiquidityTxContextProvider>
+          <RemoveLiquidityModalInner />
+        </RemoveLiquidityTxContextProvider>
+      </TransactionSettingsContextProvider>
     </RemoveLiquidityModalContextProvider>
   )
 }

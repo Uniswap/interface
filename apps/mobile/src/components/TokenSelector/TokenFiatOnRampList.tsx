@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { Flex, Inset, Loader } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/TokenOptionItem'
+import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/items/TokenOptionItem'
 import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { FORCurrencyOrBalance, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
@@ -66,7 +66,7 @@ function TokenOptionItemWrapper({
       option={option}
       quantity={option.quantity}
       quantityFormatted={formatNumberOrString({ value: option.quantity, type: NumberType.TokenTx })}
-      showWarnings={true}
+      showWarnings={false}
       tokenWarningDismissed={tokenWarningDismissed}
       onPress={onPress}
     />

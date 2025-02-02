@@ -18,7 +18,7 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { onRestoreComplete } from 'src/screens/Import/onRestoreComplete'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
-import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { DeprecatedButton, Flex, Text, TouchableArea } from 'ui/src'
 import { Cloud } from 'ui/src/components/icons'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
@@ -175,13 +175,13 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
             </Text>
           </TouchableArea>
         )}
-        <Button
+        <DeprecatedButton
           disabled={!enteredPassword || isLockedOut || isLoading}
           testID={TestID.Continue}
           onPress={onPasswordSubmit}
         >
           {t('common.button.continue')}
-        </Button>
+        </DeprecatedButton>
       </Flex>
     </OnboardingScreen>
   )

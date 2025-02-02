@@ -1,4 +1,4 @@
-import { Button, Flex, Square, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Square, Text } from 'ui/src'
 import { ThemeNames } from 'ui/src/theme'
 
 export type SettingsRecoveryPhraseProps = {
@@ -38,14 +38,14 @@ export function SettingsRecoveryPhrase({
       </Flex>
       <Flex grow>{children}</Flex>
       <Flex mt="$spacing12">
-        <Button
+        <DeprecatedButton
           disabled={!nextButtonEnabled}
           flexGrow={1}
           theme={nextButtonTheme as ThemeNames}
           onPress={onNextPressed}
         >
           {nextButtonText}
-        </Button>
+        </DeprecatedButton>
       </Flex>
     </Flex>
   )

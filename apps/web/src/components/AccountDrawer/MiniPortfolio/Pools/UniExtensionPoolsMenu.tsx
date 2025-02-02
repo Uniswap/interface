@@ -2,7 +2,7 @@ import Pools from 'components/AccountDrawer/MiniPortfolio/Pools/PoolsTab'
 import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
 import Column from 'components/deprecated/Column'
 import styled from 'lib/styled-components'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans } from 'react-i18next'
 
 const Container = styled(Column)`
   height: 100%;

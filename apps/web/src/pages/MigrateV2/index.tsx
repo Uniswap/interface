@@ -5,7 +5,6 @@ import { Pair } from '@uniswap/v2-sdk'
 import { LightCard } from 'components/Card/cards'
 import MigrateSushiPositionCard from 'components/PositionCard/Sushi'
 import MigrateV2PositionCard from 'components/PositionCard/V2'
-import QuestionHelper from 'components/QuestionHelper'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { AutoColumn } from 'components/deprecated/Column'
@@ -18,10 +17,14 @@ import { useRpcTokenBalancesWithLoadingIndicator } from 'lib/hooks/useCurrencyBa
 import styled, { useTheme } from 'lib/styled-components'
 import { BodyWrapper } from 'pages/App/AppBody'
 import { ReactNode, useMemo } from 'react'
+import { Trans } from 'react-i18next'
+import { useNavigate, useNavigationType } from 'react-router-dom'
 import { Text } from 'rebass'
 import { toV2LiquidityToken, useTrackedTokenPairs } from 'state/user/hooks'
-import { BackArrowLink, StyledInternalLink, ThemedText } from 'theme/components'
-import { Trans } from 'uniswap/src/i18n'
+import { BackArrowIcon, StyledInternalLink, ThemedText } from 'theme/components'
+import { DeprecatedButton } from 'ui/src'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 
 export const MigrateHeader = styled(ThemedText.H1Small)`
   font-weight: 535;
@@ -57,6 +60,8 @@ function toSushiLiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
 export default function MigrateV2() {
   const theme = useTheme()
   const account = useAccount()
+  const navigate = useNavigate()
+  const navigationType = useNavigationType()
 
   const v2FactoryAddress = account.chainId ? V2_FACTORY_ADDRESSES[account.chainId] : undefined
 
@@ -125,17 +130,28 @@ export default function MigrateV2() {
   }
 
   return (
-    <>
+    <Trace logImpression page={InterfacePageNameLocal.MigrateV2}>
       <BodyWrapper style={{ padding: 24 }}>
         <AutoColumn gap="16px">
-          <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
-            <BackArrowLink to="/pools" />
+          <AutoRow style={{ alignItems: 'center', justifyContent: 'center', position: 'relative' }} gap="8px">
+            <DeprecatedButton
+              theme="secondary"
+              onPress={() => {
+                if (navigationType === 'POP') {
+                  navigate('/pools')
+                  return
+                }
+                navigate(-1)
+              }}
+              backgroundColor="$transparent"
+              size="small"
+              style={{ position: 'absolute', left: 0 }}
+            >
+              <BackArrowIcon />
+            </DeprecatedButton>
             <MigrateHeader>
               <Trans i18nKey="migrate.v2Title" />
             </MigrateHeader>
-            <div>
-              <QuestionHelper text={<Trans i18nKey="migrate.v2Subtitle" />} />
-            </div>
           </AutoRow>
 
           <ThemedText.DeprecatedBody style={{ marginBottom: 8, fontWeight: 485 }}>
@@ -184,7 +200,7 @@ export default function MigrateV2() {
               <Trans
                 i18nKey="migrate.missingV2Position"
                 components={{
-                  link: <StyledInternalLink id="import-pool-link" to="/pools/v2/find"></StyledInternalLink>,
+                  Link: <StyledInternalLink id="import-pool-link" to="/pools/v2/find" />,
                 }}
               />
             </Text>
@@ -192,6 +208,6 @@ export default function MigrateV2() {
         </AutoColumn>
       </BodyWrapper>
       <SwitchLocaleLink />
-    </>
+    </Trace>
   )
 }

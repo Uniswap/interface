@@ -19,6 +19,7 @@ export function areEqualGasStrategies(a?: GasStrategy, b?: GasStrategy): boolean
     return false
   }
 
+  // displayLimitInflationFactor is not returned by the server, so it's ignored here
   return (
     a.limitInflationFactor === b.limitInflationFactor &&
     a.priceInflationFactor === b.priceInflationFactor &&
@@ -39,6 +40,7 @@ export type GasFeeResponse = {
 
 export type GasFeeResult = {
   value?: string
+  displayValue?: string
   isLoading: boolean
   error: SerializedError | FetchError | Error | null
   params?: TransactionLegacyFeeParams | TransactionEip1559FeeParams

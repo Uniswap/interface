@@ -7,7 +7,7 @@ import { InfoModal, ModalProps } from 'src/app/components/modal/InfoModal'
 import { useSagaStatus } from 'src/app/hooks/useSagaStatus'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
-import { Button, Flex, InputProps, Text, TouchableArea } from 'ui/src'
+import { DeprecatedButton, Flex, InputProps, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled, Lock } from 'ui/src/components/icons'
 import { spacing, zIndices } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -211,9 +211,9 @@ export function Locked(): JSX.Element {
         </Flex>
 
         <Flex gap="$spacing12" justifyContent="flex-end" zIndex={zIndices.sticky}>
-          <Button size="large" theme="primary" onPress={onPress}>
+          <DeprecatedButton size="large" theme="primary" onPress={onPress}>
             {t('extension.lock.button.submit')}
-          </Button>
+          </DeprecatedButton>
 
           <TouchableArea>
             <Text

@@ -3,13 +3,15 @@ import { CurrencyRow } from 'components/SearchModal/CurrencyList'
 import { HeaderContent } from 'pages/Swap/Buy/CountryListModal'
 import { ContentWrapper } from 'pages/Swap/Buy/shared'
 import { CSSProperties } from 'react'
+import { useTranslation } from 'react-i18next'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { CloseIcon } from 'theme/components'
-import { AdaptiveWebModal, Flex } from 'ui/src'
+import { Flex } from 'ui/src'
 import { Text } from 'ui/src/components/text/Text'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
-import { useTranslation } from 'uniswap/src/i18n'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 const ROW_ITEM_SIZE = 56
 
@@ -30,14 +32,14 @@ export function FiatOnRampCurrencyModal({
 }: FiatOnRampCurrencyModalProps) {
   const { t } = useTranslation()
   return (
-    <AdaptiveWebModal
-      width={420}
-      maxWidth="90vw"
-      height="90vh"
+    <Modal
+      name={ModalName.FiatOnRampTokenSelector}
+      maxWidth={420}
+      height={700}
       maxHeight={700}
-      isOpen={isOpen}
+      isModalOpen={isOpen}
       onClose={onDismiss}
-      p={0}
+      padding={0}
     >
       <ContentWrapper>
         <HeaderContent>
@@ -67,7 +69,7 @@ export function FiatOnRampCurrencyModal({
                     return (
                       <CurrencyRow
                         style={style}
-                        currency={currencyInfo.currency}
+                        currencyInfo={currencyInfo}
                         onSelect={() => {
                           onSelectCurrency(data[index])
                           onDismiss()
@@ -84,6 +86,6 @@ export function FiatOnRampCurrencyModal({
           </AutoSizer>
         </Flex>
       </ContentWrapper>
-    </AdaptiveWebModal>
+    </Modal>
   )
 }

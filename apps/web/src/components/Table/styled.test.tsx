@@ -18,7 +18,8 @@ describe('TokenLinkCell', () => {
 
   it('renders known token on a different chain', () => {
     const { asFragment } = render(<TokenLinkCell token={{ ...validBEPoolToken0, chain: Chain.Polygon }} />)
-    expect(screen.getByAltText('Polygon logo')).toBeDefined()
+    const networkLogo = screen.getByTestId('network-logo')
+    expect(networkLogo.querySelector('img')).toHaveAttribute('src', 'polygon-logo.png')
     expect(asFragment()).toMatchSnapshot()
   })
 })

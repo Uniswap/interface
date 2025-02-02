@@ -1,54 +1,60 @@
 import { MenuItem, MenuSection, useMenuContent } from 'components/NavBar/CompanyMenu/Content'
 import { DownloadApp } from 'components/NavBar/CompanyMenu/DownloadAppCTA'
+import { LegalAndPrivacyMenu } from 'components/NavBar/LegalAndPrivacyMenu'
 import { NavDropdown } from 'components/NavBar/NavDropdown'
 import { useTabsVisible } from 'components/NavBar/ScreenSizes'
 import { useTabsContent } from 'components/NavBar/Tabs/TabsContent'
-import styled, { css } from 'lib/styled-components'
 import { Socials } from 'pages/Landing/sections/Footer'
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ExternalLink, Separator, ThemedText } from 'theme/components'
-import { Flex } from 'ui/src'
-import { t } from 'uniswap/src/i18n'
+import { Flex, Text, styled } from 'ui/src'
+import { TextVariantTokens } from 'ui/src/theme'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
-const Container = styled.div`
-  width: 295px;
-  padding: 24px;
-  margin-bottom: 8px;
-  user-select: none;
-  overflow: auto;
-  height: unset;
-  border-radius: 12px;
-`
-const LinkStyles = css<{ $hoverColor?: string }>`
-  font-size: 16px;
-  text-decoration: none;
-  color: ${({ theme }) => theme.neutral2};
-  transition: color ${({ theme }) => theme.transition.duration.fast};
-  padding: 4px 0;
-  &:hover {
-    color: ${({ theme, $hoverColor }) => $hoverColor || theme.accent1};
-    opacity: 1;
-  }
-`
-const StyledInternalLink = styled(Link)<{ $hoverColor?: string }>`
-  ${LinkStyles}
-  padding: 0;
-`
-const StyledExternalLink = styled(ExternalLink)<{ $hoverColor?: string }>`
-  ${LinkStyles}
-  padding: 0;
-`
+const Container = styled(Flex, {
+  width: '295px',
+  p: '$gap24',
+  mb: '$gap8',
+  userSelect: 'none',
+  height: 'unset',
+  borderRadius: '$rounded12',
+})
 
-export function MenuLink({ label, href, internal, $hoverColor, closeMenu }: MenuItem & { $hoverColor?: string }) {
+const LinkStyle = {
+  textDecoration: 'none',
+  height: 'unset',
+  padding: 0,
+}
+
+const LinkTextStyle = {
+  color: '$neutral2',
+  hoverStyle: {
+    opacity: 0.6,
+  },
+}
+
+export function MenuLink({
+  label,
+  href,
+  internal,
+  closeMenu,
+  textVariant = 'subheading1',
+}: MenuItem & { textVariant?: TextVariantTokens }) {
   return internal ? (
-    <StyledInternalLink to={href} onClick={closeMenu} $hoverColor={$hoverColor}>
-      {label}
-    </StyledInternalLink>
+    <Link to={href} onClick={closeMenu} style={LinkStyle}>
+      <Text variant={textVariant} {...LinkTextStyle}>
+        {label}
+      </Text>
+    </Link>
   ) : (
-    <StyledExternalLink href={href} onClick={closeMenu} $hoverColor={$hoverColor}>
-      {label}
-    </StyledExternalLink>
+    <ExternalLink href={href} onClick={closeMenu} style={LinkStyle}>
+      <Text variant={textVariant} {...LinkTextStyle}>
+        {label}
+      </Text>
+    </ExternalLink>
   )
 }
 function Section({ title, items, closeMenu }: MenuSection) {
@@ -69,14 +75,16 @@ function Section({ title, items, closeMenu }: MenuSection) {
   )
 }
 export function MenuDropdown({ close }: { close?: () => void }) {
+  const { t } = useTranslation()
+  const isConversionTrackingEnabled = useFeatureFlag(FeatureFlags.ConversionTracking)
   const menuContent = useMenuContent()
   const areTabsVisible = useTabsVisible()
   const tabs = useTabsContent()
   const tabsMenuItems = useMemo(() => {
-    return tabs.map((t) => {
+    return tabs.map((tab) => {
       return {
-        label: t.title,
-        href: t.href,
+        label: tab.title,
+        href: tab.href,
         internal: true,
         overflow: false,
       }
@@ -99,6 +107,7 @@ export function MenuDropdown({ close }: { close?: () => void }) {
           <Separator />
           <DownloadApp onClick={close} />
           <Socials iconSize="25px" />
+          {isConversionTrackingEnabled && <LegalAndPrivacyMenu closeMenu={close} />}
         </Flex>
       </Container>
     </NavDropdown>

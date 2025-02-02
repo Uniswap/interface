@@ -19,18 +19,21 @@ import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { CurrencyInputPanel, CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
-import { RouterLabel } from 'uniswap/src/components/RouterLabel/RouterLabel'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { usePrefetchSwappableTokens } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import {
   DecimalPadCalculatedSpaceId,
   DecimalPadCalculateSpace,
   DecimalPadInput,
   DecimalPadInputRef,
 } from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPadInput'
+import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
 import { GasAndWarningRows } from 'uniswap/src/features/transactions/swap/form/footer/GasAndWarningRows'
@@ -40,6 +43,7 @@ import { SwapFormHeader } from 'uniswap/src/features/transactions/swap/form/Swap
 import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/form/SwapFormSettings'
 import { SwapTokenSelector } from 'uniswap/src/features/transactions/swap/form/SwapTokenSelector'
 import { useExactOutputWillFail } from 'uniswap/src/features/transactions/swap/hooks/useExactOutputWillFail'
+import { useFeeOnTransferAmounts } from 'uniswap/src/features/transactions/swap/hooks/useFeeOnTransferAmount'
 import { useSwapNetworkNotification } from 'uniswap/src/features/transactions/swap/hooks/useSwapNetworkNotification'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
 import { useSyncFiatAndTokenAmountUpdater } from 'uniswap/src/features/transactions/swap/hooks/useSyncFiatAndTokenAmountUpdater'
@@ -48,7 +52,10 @@ import { MarketPriceImpactWarning } from 'uniswap/src/features/transactions/swap
 import { RoutingInfo } from 'uniswap/src/features/transactions/swap/modals/RoutingInfo'
 import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/review/MaxSlippageRow'
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/review/SwapRateRatio'
+import { ProtocolPreference } from 'uniswap/src/features/transactions/swap/settings/configs/ProtocolPreference'
+import { Slippage } from 'uniswap/src/features/transactions/swap/settings/configs/Slippage'
 import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
+import { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { WrapCallback } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
@@ -90,7 +97,8 @@ const ON_SELECTION_CHANGE_WAIT_TIME_MS = 500
 interface SwapFormScreenProps {
   hideContent: boolean
   hideFooter?: boolean
-  customSettings: SwapSettingConfig[]
+  settings: SwapSettingConfig[]
+  tokenColor?: string
   // TODO(WEB-5012): Remove wrap callback prop drilling by aligning interface wrap UX w/ wallet
   wrapCallback?: WrapCallback
 }
@@ -99,25 +107,37 @@ interface SwapFormScreenProps {
  * IMPORTANT: In the Extension, this component remains mounted when the user moves to the `SwapReview` screen.
  *            Make sure you take this into consideration when adding/modifying any hooks that run on this component.
  */
-export function SwapFormScreen({ hideContent, customSettings, wrapCallback }: SwapFormScreenProps): JSX.Element {
+export function SwapFormScreen({
+  hideContent,
+  settings = [Slippage, ProtocolPreference],
+  tokenColor,
+  wrapCallback,
+}: SwapFormScreenProps): JSX.Element {
   const { bottomSheetViewStyles } = useTransactionModalContext()
-  const { selectingCurrencyField, hideSettings } = useSwapFormContext()
+  const { selectingCurrencyField, hideSettings, derivedSwapInfo } = useSwapFormContext()
 
   const showTokenSelector = !hideContent && !!selectingCurrencyField
+  const isBridgeTrade = derivedSwapInfo.trade.trade instanceof BridgeTrade
 
   return (
     <TransactionModalInnerContainer fullscreen bottomSheetViewStyles={bottomSheetViewStyles}>
       {!isInterface && <SwapFormHeader /> /* Interface renders its own header with multiple tabs */}
-      {!hideSettings && <SwapFormSettings customSettings={customSettings} />}
+      {!hideSettings && <SwapFormSettings settings={settings} isBridgeTrade={isBridgeTrade} />}
 
-      {!hideContent && <SwapFormContent wrapCallback={wrapCallback} />}
+      {!hideContent && <SwapFormContent wrapCallback={wrapCallback} tokenColor={tokenColor} />}
 
       <SwapTokenSelector isModalOpen={showTokenSelector} />
     </TransactionModalInnerContainer>
   )
 }
 
-function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX.Element {
+function SwapFormContent({
+  wrapCallback,
+  tokenColor,
+}: {
+  wrapCallback?: WrapCallback
+  tokenColor?: string
+}): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const isShortMobileDevice = useIsShortMobileDevice()
@@ -177,6 +197,15 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
     // Since we only want to run this on mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  const { updateTransactionSettings } = useTransactionSettingsContext()
+  useEffect(() => {
+    if (derivedSwapInfo.chainId === UniverseChainId.MonadTestnet) {
+      updateTransactionSettings({ isOnlyV2Allowed: true })
+    } else {
+      updateTransactionSettings({ isOnlyV2Allowed: false })
+    }
+  }, [derivedSwapInfo.chainId, updateTransactionSettings])
 
   const exactFieldIsInput = exactCurrencyField === CurrencyField.INPUT
   const exactFieldIsOutput = exactCurrencyField === CurrencyField.OUTPUT
@@ -394,6 +423,7 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
         exactAmountToken: amount,
         exactCurrencyField: CurrencyField.INPUT,
         focusOnCurrencyField: undefined,
+        isMax: true,
       })
 
       // We want this update to happen on the next tick, after the input value is updated.
@@ -530,8 +560,11 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
     [focusOnCurrencyField],
   )
 
+  const isBlockedTokens =
+    getTokenWarningSeverity(currencies.input) === WarningSeverity.Blocked ||
+    getTokenWarningSeverity(currencies.output) === WarningSeverity.Blocked
   // We *always* want to show the footer on native mobile because it's used to calculate the available space for the `DecimalPad`.
-  const showFooter = Boolean(!hideFooter && (isMobileApp || (exactAmountToken && input && output)))
+  const showFooter = Boolean(!hideFooter && (isMobileApp || (!isBlockedTokens && input && output)))
 
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
@@ -564,6 +597,7 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
               usdValue={currencyAmountsUSDValue[CurrencyField.INPUT]}
               value={exactFieldIsInput ? exactValue : formattedDerivedValue}
               valueIsIndicative={!exactFieldIsInput && trade.indicativeTrade && !trade.trade}
+              tokenColor={tokenColor}
               onPressIn={onFocusInput}
               onSelectionChange={onInputSelectionChange}
               onSetExactAmount={onSetExactAmountInput}
@@ -602,6 +636,7 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
               usdValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
               value={exactFieldIsOutput ? exactValue : formattedDerivedValue}
               valueIsIndicative={!exactFieldIsOutput && trade.indicativeTrade && !trade.trade}
+              tokenColor={tokenColor}
               onPressDisabled={isBridge ? undefined : showTemporaryFoTWarning}
               onPressIn={onFocusOutput}
               onSelectionChange={onOutputSelectionChange}
@@ -649,7 +684,7 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
             <Flex>
               {isWeb && (
                 <Flex pt="$spacing4">
-                  <SwapFormButton wrapCallback={wrapCallback} />
+                  <SwapFormButton wrapCallback={wrapCallback} tokenColor={tokenColor} />
                 </Flex>
               )}
               {/*
@@ -665,11 +700,11 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
                     )}
                   </AnimatePresence>
                   {/* Accordion.Toggle is nested in GasAndWarningRows */}
-                  {!showWarning && <GasAndWarningRows />}
+                  {exactAmountToken && !showWarning && <GasAndWarningRows />}
                 </Flex>
               )}
             </Flex>
-            {isWeb ? <ExpandableRows isBridge={isBridge} /> : null}
+            {isWeb && showFooter ? <ExpandableRows isBridge={isBridge} /> : null}
           </Accordion.Item>
         </Accordion>
       </Flex>
@@ -791,9 +826,11 @@ function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Element | nul
   const showPriceImpactWarning = Boolean(priceImpactWarning)
   const warningColor = getAlertColor(priceImpactWarning?.severity)
 
-  const { autoSlippageTolerance, chainId, customSlippageTolerance, trade } = derivedSwapInfo
+  const { autoSlippageTolerance, customSlippageTolerance } = useTransactionSettingsContext()
+  const { chainId, trade } = derivedSwapInfo
 
   const swapFeeUsd = getSwapFeeUsdFromDerivedSwapInfo(derivedSwapInfo)
+  const feeOnTransferProps = useFeeOnTransferAmounts(derivedSwapInfo)
 
   if (!trade.trade) {
     return null
@@ -810,31 +847,13 @@ function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Element | nul
           swapFee={trade.trade.swapFee}
           swapFeeUsd={swapFeeUsd}
           indicative={trade.trade.indicative}
+          feeOnTransferProps={feeOnTransferProps}
           showGasFeeError={false}
           showSeparatorToggle={false}
           outputCurrency={trade.trade.outputAmount.currency}
           transactionUSDValue={derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]}
           uniswapXGasBreakdown={uniswapXGasBreakdown}
-          RoutingInfo={
-            isBridge ? (
-              <AcrossRoutingInfo />
-            ) : (
-              <Flex row alignItems="center" justifyContent="space-between">
-                <RoutingInfo gasFee={gasFee} chainId={chainId}>
-                  <Flex centered row gap="$spacing4">
-                    <Text color="$neutral2" variant="body3">
-                      {t('swap.orderRouting')}
-                    </Text>
-                  </Flex>
-                </RoutingInfo>
-                <Flex row shrink justifyContent="flex-end">
-                  <Text adjustsFontSizeToFit color="$neutral1" variant="body3">
-                    <RouterLabel />
-                  </Text>
-                </Flex>
-              </Flex>
-            )
-          }
+          RoutingInfo={isBridge ? <AcrossRoutingInfo /> : <RoutingInfo gasFee={gasFee} chainId={chainId} />}
           RateInfo={
             showPriceImpactWarning && trade.trade ? (
               <Flex row alignItems="center" justifyContent="space-between">

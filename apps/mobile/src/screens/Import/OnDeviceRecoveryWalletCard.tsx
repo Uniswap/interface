@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewProps } from 'react-native'
 import { RecoveryWalletInfo, useOnDeviceRecoveryData } from 'src/screens/Import/useOnDeviceRecoveryData'
-import { Button, Flex, FlexProps, Loader, Text, TouchableArea } from 'ui/src'
+import { DeprecatedButton, Flex, FlexProps, Loader, Text, TouchableArea } from 'ui/src'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
@@ -87,7 +87,7 @@ export function OnDeviceRecoveryWalletCard({
           </Text>
         </Flex>
 
-        <Button
+        <DeprecatedButton
           px="$spacing12"
           py="$spacing8"
           theme="secondary"
@@ -97,7 +97,7 @@ export function OnDeviceRecoveryWalletCard({
           <Text color="$neutral2" variant="buttonLabel2">
             {t('onboarding.import.onDeviceRecovery.wallet.button')}
           </Text>
-        </Button>
+        </DeprecatedButton>
       </Flex>
     </TouchableArea>
   )

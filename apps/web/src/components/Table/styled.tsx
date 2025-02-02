@@ -5,18 +5,19 @@ import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { OrderDirection, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
-import { useActiveLocale } from 'hooks/useActiveLocale'
 import deprecatedStyled from 'lib/styled-components'
+import opacify from 'polished/lib/color/opacify'
 import { PropsWithChildren } from 'react'
 import { ArrowDown, CornerLeftUp, ExternalLink as ExternalLinkIcon } from 'react-feather'
+import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { ClickableStyle, ClickableTamaguiStyle, EllipsisTamaguiStyle, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { Anchor, Flex, Text, View, styled } from 'ui/src'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { useTranslation } from 'uniswap/src/i18n'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 
 export const SHOW_RETURN_TO_TOP_OFFSET = 500
 export const LOAD_MORE_BOTTOM_OFFSET = 50
@@ -83,6 +84,7 @@ export const ReturnButton = deprecatedStyled(ButtonLight)`
   border-radius: 900px;
   width: fit-content;
   margin-top: 8px;
+  box-shadow: ${({ theme }) => `0px 10px 15px -3px ${opacify(54, theme.surface1)}, 0px 4px 6px -2px ${opacify(40, theme.surface1)}`};
 `
 
 export const ReturnIcon = deprecatedStyled(CornerLeftUp)`
@@ -261,7 +263,7 @@ const StyledExternalLinkIcon = deprecatedStyled(ExternalLinkIcon)`
  * @returns JSX.Element containing the formatted timestamp
  */
 export const TimestampCell = ({ timestamp, link }: { timestamp: number; link: string }) => {
-  const locale = useActiveLocale()
+  const locale = useCurrentLocale()
   const options: Intl.DateTimeFormatOptions = {
     year: '2-digit',
     month: '2-digit',

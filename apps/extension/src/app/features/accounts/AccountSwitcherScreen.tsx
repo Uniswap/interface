@@ -6,6 +6,7 @@ import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { AccountItem } from 'src/app/features/accounts/AccountItem'
 import { CreateWalletModal } from 'src/app/features/accounts/CreateWalletModal'
 import { EditLabelModal } from 'src/app/features/accounts/EditLabelModal'
+import { useSortedAccountList } from 'src/app/features/accounts/useSortedAccountList'
 import { useDappContext } from 'src/app/features/dapp/DappContext'
 import { updateDappConnectedAddressFromExtension } from 'src/app/features/dapp/actions'
 import { useDappConnectedAccounts } from 'src/app/features/dapp/hooks'
@@ -14,7 +15,7 @@ import { PopupName, openPopup } from 'src/app/features/popups/slice'
 import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes, UnitagClaimRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { focusOrCreateUnitagTab } from 'src/app/navigation/utils'
-import { Button, Flex, Popover, ScrollView, Text, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, Popover, ScrollView, Text, useSporeColors } from 'ui/src'
 import { WalletFilled, X } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
@@ -33,7 +34,6 @@ import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { PlusCircle } from 'wallet/src/components/icons/PlusCircle'
 import { MenuContent } from 'wallet/src/components/menu/MenuContent'
 import { MenuContentItem } from 'wallet/src/components/menu/types'
-import { useAccountList } from 'wallet/src/features/accounts/hooks'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
@@ -148,17 +148,8 @@ export function AccountSwitcherScreen(): JSX.Element {
       onPress: (): void => setShowRemoveWalletModal(true),
     },
   ]
-  const { data: accountBalanceData } = useAccountList({
-    addresses: accountAddresses,
-    notifyOnNetworkStatusChange: true,
-  })
 
-  const sortedAddressesByBalance = accountAddresses
-    .map((address) => {
-      const wallet = accountBalanceData?.portfolios?.find((portfolio) => portfolio?.ownerAddress === address)
-      return { address, balance: wallet?.tokensTotalDenominatedValue?.value }
-    })
-    .sort((a, b) => (b.balance ?? 0) - (a.balance ?? 0))
+  const sortedAddressesByBalance = useSortedAccountList(accountAddresses)
 
   const contentShadowProps = {
     shadowColor: colors.shadowColor.val,
@@ -210,14 +201,14 @@ export function AccountSwitcherScreen(): JSX.Element {
           {activeAccountHasUnitag ? (
             <UnitagActionButton />
           ) : (
-            <Button
+            <DeprecatedButton
               size="small"
               testID={TestID.AccountCard}
               theme="secondary"
               onPress={() => setShowEditLabelModal(true)}
             >
               {t('account.wallet.header.button.title')}
-            </Button>
+            </DeprecatedButton>
           )}
         </Flex>
         <ScrollView backgroundColor="$surface1" height="auto">
@@ -300,17 +291,23 @@ const UnitagActionButton = (): JSX.Element => {
 
   if (isClaimUnitagEnabled) {
     return (
-      <Button color="$neutral1" size="small" testID={TestID.AccountCard} theme="tertiary" onPress={onPressEditProfile}>
+      <DeprecatedButton
+        color="$neutral1"
+        size="small"
+        testID={TestID.AccountCard}
+        theme="tertiary"
+        onPress={onPressEditProfile}
+      >
         {t('account.wallet.header.button.disabled.title')}
-      </Button>
+      </DeprecatedButton>
     )
   }
 
   return (
     <ComingSoon placement="top">
-      <Button color="$neutral2" disabled={true} size="small" testID={TestID.AccountCard} theme="secondary">
+      <DeprecatedButton color="$neutral2" disabled={true} size="small" testID={TestID.AccountCard} theme="secondary">
         {t('account.wallet.header.button.disabled.title')}
-      </Button>
+      </DeprecatedButton>
     </ComingSoon>
   )
 }

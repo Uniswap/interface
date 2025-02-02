@@ -26,11 +26,11 @@ exports[`PredefinedAmount renders correctly with amount= 100 , currentAmount= "1
       class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-1881200688 _borderTopRightRadius-1881200688 _borderBottomRightRadius-1881200688 _borderBottomLeftRadius-1881200688 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-1481558245 _justifyContent-center _pr-1481558183 _pl-1481558183 _pt-1481558245 _pb-1481558245 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
         style="border-color: rgba(34,34,34,0.05);"
       >
         <span
-          class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016109"
+          class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
           data-disable-theme="true"
           style="color: rgb(125, 125, 125); padding-top: 1px;"
         >
@@ -63,11 +63,11 @@ exports[`PredefinedAmount renders correctly with amount= 300 , currentAmount= "1
     >
       <div
         aria-disabled="true"
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-1881200688 _borderTopRightRadius-1881200688 _borderBottomRightRadius-1881200688 _borderBottomLeftRadius-1881200688 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-1481558245 _justifyContent-center _pr-1481558183 _pl-1481558183 _pt-1481558245 _pb-1481558245 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
         style="border-color: rgba(34,34,34,0.05);"
       >
         <span
-          class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016109"
+          class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
           data-disable-theme="true"
           style="color: rgb(191, 191, 191); padding-top: 1px;"
         >
@@ -105,11 +105,11 @@ exports[`PredefinedAmount renders correctly with amount= 1000 , currentAmount= "
       class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-1881200688 _borderTopRightRadius-1881200688 _borderBottomRightRadius-1881200688 _borderBottomLeftRadius-1881200688 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-1481558245 _justifyContent-center _pr-1481558183 _pl-1481558183 _pt-1481558245 _pb-1481558245 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
         style="border-color: rgba(34,34,34,0.05);"
       >
         <span
-          class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016109"
+          class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
           data-disable-theme="true"
           style="color: rgb(34, 34, 34); padding-top: 1px;"
         >
@@ -142,11 +142,11 @@ exports[`PredefinedAmount renders correctly with amount= 1000 , currentAmount= "
     >
       <div
         aria-disabled="true"
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-1881200688 _borderTopRightRadius-1881200688 _borderBottomRightRadius-1881200688 _borderBottomLeftRadius-1881200688 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-1481558245 _justifyContent-center _pr-1481558183 _pl-1481558183 _pt-1481558245 _pb-1481558245 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
         style="border-color: rgba(34,34,34,0.05);"
       >
         <span
-          class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016109"
+          class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
           data-disable-theme="true"
           style="color: rgb(191, 191, 191); padding-top: 1px;"
         >

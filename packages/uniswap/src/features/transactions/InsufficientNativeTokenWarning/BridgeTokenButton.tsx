@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, isWeb } from 'ui/src'
+import { DeprecatedButton, isWeb } from 'ui/src'
 import { opacify, validColor } from 'ui/src/theme'
 import { AssetType } from 'uniswap/src/entities/assets'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -61,7 +61,7 @@ export function BridgeTokenButton({
 
   return (
     <Trace logPress element={ElementName.BuyNativeTokenButton}>
-      <Button
+      <DeprecatedButton
         backgroundColor={backgroundColor}
         color={primaryColor}
         pressStyle={{ backgroundColor: onPressColor }}
@@ -74,7 +74,7 @@ export function BridgeTokenButton({
           tokenSymbol: outputToken.currency.symbol,
           networkName: outputNetworkName,
         })}
-      </Button>
+      </DeprecatedButton>
     </Trace>
   )
 }

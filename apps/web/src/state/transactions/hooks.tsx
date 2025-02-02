@@ -16,6 +16,7 @@ import {
 import { isConfirmedTx, isPendingTx } from 'state/transactions/utils'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ALL_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
+import { usePrevious } from 'utilities/src/react/hooks'
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
@@ -193,6 +194,8 @@ function usePendingLPTransactions(): PendingTransactionDetails[] {
           [
             TransactionType.INCREASE_LIQUIDITY,
             TransactionType.DECREASE_LIQUIDITY,
+            TransactionType.CREATE_POSITION,
+            TransactionType.MIGRATE_LIQUIDITY_V3_TO_V4,
             TransactionType.COLLECT_FEES,
           ].includes(tx.info.type),
       ),
@@ -202,7 +205,10 @@ function usePendingLPTransactions(): PendingTransactionDetails[] {
 
 export function usePendingLPTransactionsChangeListener(callback: () => void) {
   const pendingLPTransactions = usePendingLPTransactions()
+  const previousPendingCount = usePrevious(pendingLPTransactions.length)
   useEffect(() => {
-    callback()
-  }, [pendingLPTransactions, callback])
+    if (pendingLPTransactions.length !== previousPendingCount) {
+      callback()
+    }
+  }, [pendingLPTransactions, callback, previousPendingCount])
 }

@@ -17,9 +17,10 @@ import { openDeepLink } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { addRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Text, TouchableArea, useHapticFeedback, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
+import { useSporeColorsForTheme } from 'ui/src/hooks/useSporeColors'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -28,6 +29,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UwULinkRequest } from 'uniswap/src/types/walletConnect'
+import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { WalletQRCode } from 'wallet/src/components/QRCodeScanner/WalletQRCode'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
@@ -44,8 +46,8 @@ export function WalletConnectModal({
   onClose,
 }: Props): JSX.Element | null {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
+
   const activeAccount = useActiveAccount()
   const { sessions, hasPendingSessionError } = useWalletConnect(activeAccount?.address)
   const [currentScreenState, setCurrentScreenState] = useState<ScannerModalState>(initialScreenState)
@@ -54,12 +56,16 @@ export function WalletConnectModal({
   const dispatch = useDispatch()
   const isUwULinkEnabled = useFeatureFlag(FeatureFlags.UwULink)
   const isScantasticEnabled = useFeatureFlag(FeatureFlags.Scantastic)
-  const { hapticFeedback } = useHapticFeedback()
 
   const uwuLinkContractAllowlist = useUwuLinkContractAllowlist()
 
   const providerManager = useProviderManager()
   const contractManager = useContractManager()
+
+  const isScanningQr = currentScreenState === ScannerModalState.ScanQr
+
+  // We want to always show the QR Code Scanner in "dark mode"
+  const colors = useSporeColorsForTheme(isScanningQr ? 'dark' : undefined)
 
   // Update QR scanner states when pending session error alert is shown from WCv2 saga event channel
   useEffect(() => {
@@ -75,7 +81,6 @@ export function WalletConnectModal({
       if (!activeAccount || hasPendingSessionError || shouldFreezeCamera) {
         return
       }
-      await hapticFeedback.selection()
 
       const supportedURI = await getSupportedURI(uri, {
         isUwULinkEnabled,
@@ -123,7 +128,14 @@ export function WalletConnectModal({
           logger.error(error, {
             tags: { file: 'WalletConnectModal', function: 'onScanCode' },
           })
-          Alert.alert(t('walletConnect.error.general.title'), t('walletConnect.error.general.message'), [
+
+          const title = t('walletConnect.error.general.title')
+          const message =
+            isDevEnv() || isBetaEnv()
+              ? error?.toString?.() || t('walletConnect.error.general.message')
+              : t('walletConnect.error.general.message')
+
+          Alert.alert(title, message, [
             {
               text: t('common.button.ok'),
               onPress: (): void => {
@@ -208,12 +220,11 @@ export function WalletConnectModal({
       uwuLinkContractAllowlist,
       providerManager,
       contractManager,
-      hapticFeedback,
     ],
   )
 
   const onPressBottomToggle = (): void => {
-    if (currentScreenState === ScannerModalState.ScanQr) {
+    if (isScanningQr) {
       setCurrentScreenState(ScannerModalState.WalletQr)
     } else {
       setCurrentScreenState(ScannerModalState.ScanQr)
@@ -233,21 +244,28 @@ export function WalletConnectModal({
   }
 
   return (
-    <Modal fullScreen backgroundColor={colors.surface1.val} name={ModalName.WalletConnectScan} onClose={onClose}>
+    <Modal
+      fullScreen
+      handlebarColor={colors.surface3.val}
+      backgroundColor={colors.surface1.val}
+      name={ModalName.WalletConnectScan}
+      onClose={onClose}
+    >
       <>
         {currentScreenState === ScannerModalState.ConnectedDapps && (
           <ConnectedDappsList
             backButton={
-              <TouchableArea hapticFeedback onPress={onPressShowScanQr}>
+              <TouchableArea onPress={onPressShowScanQr}>
                 <BackButtonView />
               </TouchableArea>
             }
             sessions={sessions}
           />
         )}
-        {currentScreenState === ScannerModalState.ScanQr && (
+        {isScanningQr && (
           <Trace logImpression element={ElementName.WalletConnectScan}>
             <QRCodeScanner
+              theme="dark"
               numConnections={sessions.length}
               shouldFreezeCamera={shouldFreezeCamera}
               onPressConnections={onPressShowConnectedDapps}
@@ -262,26 +280,23 @@ export function WalletConnectModal({
         )}
         <Flex centered mb="$spacing12" mt="$spacing16" mx="$spacing16">
           <TouchableArea
-            hapticFeedback
             borderColor={isDarkMode ? '$transparent' : '$surface3'}
             borderRadius="$roundedFull"
             borderWidth={1}
             p="$spacing16"
             paddingEnd="$spacing24"
-            style={{ backgroundColor: colors.DEP_backgroundOverlay.val }}
+            backgroundColor={colors.DEP_backgroundOverlay.val}
             testID={TestID.QRCodeModalToggle}
             onPress={onPressBottomToggle}
           >
             <Flex row alignItems="center" gap="$spacing12">
-              {currentScreenState === ScannerModalState.ScanQr ? (
-                <Scan color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
+              {isScanningQr ? (
+                <Scan color={colors.neutral1.val} height={iconSizes.icon24} width={iconSizes.icon24} />
               ) : (
-                <ScanQRIcon color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
+                <ScanQRIcon color={colors.neutral1.val} height={iconSizes.icon24} width={iconSizes.icon24} />
               )}
-              <Text color="$neutral1" variant="buttonLabel2">
-                {currentScreenState === ScannerModalState.ScanQr
-                  ? t('qrScanner.recipient.action.show')
-                  : t('qrScanner.recipient.action.scan')}
+              <Text color={colors.neutral1.val} variant="buttonLabel2">
+                {isScanningQr ? t('qrScanner.recipient.action.show') : t('qrScanner.recipient.action.scan')}
               </Text>
             </Flex>
           </TouchableArea>

@@ -34,6 +34,14 @@ import SwiftUI
       }
     }
   }
+
+  var onEmptyMnemonic: RCTDirectEventBlock? {
+    didSet {
+      vc.rootView.props.onEmptyMnemonic = { [weak self] mnemonicId in
+        self?.onEmptyMnemonic?(["mnemonicId": mnemonicId])
+      }
+    }
+  }
   
   var view: UIView {
     vc.view.backgroundColor = .clear
@@ -47,6 +55,7 @@ class MnemonicDisplayProps: ObservableObject {
   @Published var copiedText: String = ""
   @Published var mnemonicWords: [String] = Array(repeating: "", count: 12)
   var onHeightMeasured: ((CGFloat) -> Void)?
+  var onEmptyMnemonic: ((String) -> Void)?
 }
 
 struct MnemonicDisplay: View {
@@ -137,5 +146,10 @@ struct MnemonicDisplay: View {
           }
       }
     )
+    .onAppear {
+      if props.mnemonicWords.isEmpty || props.mnemonicWords.allSatisfy({ $0.isEmpty }) {
+        props.onEmptyMnemonic?(props.mnemonicId)
+      }
+    }
   }
 }

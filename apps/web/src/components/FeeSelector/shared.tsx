@@ -1,7 +1,7 @@
 import { FeeAmount } from '@uniswap/v3-sdk'
 import type { ReactNode } from 'react'
+import { Trans } from 'react-i18next'
 import { ALL_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Trans } from 'uniswap/src/i18n'
 
 export const FEE_AMOUNT_DETAIL: Record<
   FeeAmount,

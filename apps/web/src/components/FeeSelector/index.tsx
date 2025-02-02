@@ -13,14 +13,14 @@ import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState, usePools } from 'hooks/usePools'
 import usePrevious from 'hooks/usePrevious'
 import styled, { keyframes } from 'lib/styled-components'
-import { DynamicSection } from 'pages/AddLiquidity/styled'
+import { DynamicSection } from 'pages/AddLiquidityV3/styled'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Trans } from 'react-i18next'
 import { Box } from 'rebass'
 import { ThemedText } from 'theme/components'
 import { RadioButtonGroup } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Trans } from 'uniswap/src/i18n'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useFormatter } from 'utils/formatNumbers'
 
@@ -71,15 +71,18 @@ export default function FeeSelector({
   const { isLoading, isError, largestUsageFeeTier, distributions } = useFeeTierDistribution(currencyA, currencyB)
 
   // get pool data on-chain for latest states
-  const pools = usePools([
-    [currencyA, currencyB, FeeAmount.LOWEST],
-    [currencyA, currencyB, FeeAmount.LOW_200],
-    [currencyA, currencyB, FeeAmount.LOW_300],
-    [currencyA, currencyB, FeeAmount.LOW_400],
-    [currencyA, currencyB, FeeAmount.LOW],
-    [currencyA, currencyB, FeeAmount.MEDIUM],
-    [currencyA, currencyB, FeeAmount.HIGH],
-  ])
+  const pools = usePools(
+    [
+      [currencyA, currencyB, FeeAmount.LOWEST],
+      [currencyA, currencyB, FeeAmount.LOW_200],
+      [currencyA, currencyB, FeeAmount.LOW_300],
+      [currencyA, currencyB, FeeAmount.LOW_400],
+      [currencyA, currencyB, FeeAmount.LOW],
+      [currencyA, currencyB, FeeAmount.MEDIUM],
+      [currencyA, currencyB, FeeAmount.HIGH],
+    ],
+    chainId,
+  )
 
   const poolsByFeeTier: Record<FeeAmount, PoolState> = useMemo(
     () =>
@@ -116,6 +119,7 @@ export default function FeeSelector({
     (fee: FeeAmount) => {
       sendAnalyticsEvent(LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER, {
         action: FeePoolSelectAction.MANUAL,
+        fee_tier: fee,
         ...trace,
       })
       handleFeePoolSelect(fee)
@@ -137,6 +141,7 @@ export default function FeeSelector({
       recommended.current = true
       sendAnalyticsEvent(LiquidityEventName.SELECT_LIQUIDITY_POOL_FEE_TIER, {
         action: FeePoolSelectAction.RECOMMENDED,
+        fee_tier: largestUsageFeeTier,
         ...trace,
       })
 

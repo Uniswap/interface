@@ -2,7 +2,7 @@
 /* helpful when dealing with deeply nested state objects */
 import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { providers } from 'ethers/lib/ethers'
-import { FiatOnRampTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
+import { FORTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   ChainIdToTxIdToDetails,
@@ -99,8 +99,8 @@ const slice = createSlice({
       state[address]![chainId]![id]!.status = TransactionStatus.Replacing
     },
     resetTransactions: () => initialTransactionsState,
-    // fiat onramp transactions re-use this slice to store (off-chain) pending txs
-    upsertFiatOnRampTransaction: (state, { payload: transaction }: PayloadAction<FiatOnRampTransactionDetails>) => {
+    // FOR transactions re-use this slice to store (off-chain) pending txs
+    upsertFiatOnRampTransaction: (state, { payload: transaction }: PayloadAction<FORTransactionDetails>) => {
       const {
         chainId,
         id,
@@ -110,9 +110,11 @@ const slice = createSlice({
 
       assert(
         type === TransactionType.LocalOnRamp ||
+          type === TransactionType.LocalOffRamp ||
           type === TransactionType.OnRampPurchase ||
-          type === TransactionType.OnRampTransfer,
-        `only on-ramp transactions can be upserted`,
+          type === TransactionType.OnRampTransfer ||
+          type === TransactionType.OffRampSale,
+        `only FOR transactions can be upserted`,
       )
 
       state[from] ??= {}

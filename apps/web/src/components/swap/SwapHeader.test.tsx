@@ -1,5 +1,6 @@
 import SwapHeader from 'components/swap/SwapHeader'
 import { Dispatch, PropsWithChildren, SetStateAction } from 'react'
+import { MultichainContext } from 'state/multichain/types'
 import { CurrencyState, EMPTY_DERIVED_SWAP_INFO, SwapAndLimitContext, SwapContext } from 'state/swap/types'
 import { act, render, screen } from 'test-utils/render'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -14,37 +15,44 @@ interface WrapperProps {
 
 function Wrapper(props: PropsWithChildren<WrapperProps>) {
   return (
-    <SwapAndLimitContext.Provider
+    <MultichainContext.Provider
       value={{
-        currencyState: { inputCurrency: undefined, outputCurrency: undefined },
-        setCurrencyState: props.setCurrencyState ?? jest.fn(),
+        reset: jest.fn(),
         setSelectedChainId: jest.fn(),
-        prefilledState: {
-          inputCurrency: undefined,
-          outputCurrency: undefined,
-        },
+        isMultichainContext: true,
         initialChainId: props.chainId ?? UniverseChainId.Mainnet,
         chainId: props.chainId ?? UniverseChainId.Mainnet,
-        currentTab: SwapTab.Swap,
-        setCurrentTab: props.setCurrentTab ?? jest.fn(),
         setIsUserSelectedToken: jest.fn(),
-        isSwapAndLimitContext: true,
         isUserSelectedToken: false,
       }}
     >
-      <SwapContext.Provider
+      <SwapAndLimitContext.Provider
         value={{
-          derivedSwapInfo: EMPTY_DERIVED_SWAP_INFO,
-          setSwapState: jest.fn(),
-          swapState: {
-            independentField: CurrencyField.INPUT,
-            typedValue: '',
+          currencyState: { inputCurrency: undefined, outputCurrency: undefined },
+          setCurrencyState: props.setCurrencyState ?? jest.fn(),
+          prefilledState: {
+            inputCurrency: undefined,
+            outputCurrency: undefined,
           },
+
+          currentTab: SwapTab.Swap,
+          setCurrentTab: props.setCurrentTab ?? jest.fn(),
         }}
       >
-        {props.children}
-      </SwapContext.Provider>
-    </SwapAndLimitContext.Provider>
+        <SwapContext.Provider
+          value={{
+            derivedSwapInfo: EMPTY_DERIVED_SWAP_INFO,
+            setSwapState: jest.fn(),
+            swapState: {
+              independentField: CurrencyField.INPUT,
+              typedValue: '',
+            },
+          }}
+        >
+          {props.children}
+        </SwapContext.Provider>
+      </SwapAndLimitContext.Provider>
+    </MultichainContext.Provider>
   )
 }
 

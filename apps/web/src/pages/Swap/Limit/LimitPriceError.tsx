@@ -5,9 +5,9 @@ import Row from 'components/deprecated/Row'
 import styled, { useTheme } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { FadePresence, FadePresenceAnimationType } from 'theme/components/FadePresence'
-import { Trans } from 'uniswap/src/i18n'
 
 const Container = styled(Row)`
   padding: 12px;

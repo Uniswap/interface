@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import {
-  Button,
+  DeprecatedButton,
   Flex,
   InputProps,
   LinearGradient,
@@ -16,7 +16,6 @@ import {
 import { Pen } from 'ui/src/components/icons'
 import { borderRadii, fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
@@ -26,7 +25,7 @@ import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { ProfileMetadata } from 'uniswap/src/features/unitags/types'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
-import { shortenAddress } from 'uniswap/src/utils/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension, isMobileApp } from 'utilities/src/platform'
@@ -121,7 +120,7 @@ export function EditUnitagProfileContent({
   }
 
   const isDarkMode = useIsDarkMode()
-  const { name: ensName } = useENS(UniverseChainId.Mainnet, address)
+  const { name: ensName } = useENS({ nameOrAddress: address, autocompleteDomain: true })
   const onSetTwitterInput = (input: string): void => {
     const normalizedInput = normalizeTwitterUsername(input)
     setTwitterInput(normalizedInput)
@@ -381,7 +380,7 @@ export function EditUnitagProfileContent({
           </Flex>
         </Flex>
       </ScrollView>
-      <Button
+      <DeprecatedButton
         disabled={!profileMetadataEdited}
         mt="$spacing12"
         mx={isExtension ? undefined : '$spacing24'}
@@ -390,7 +389,7 @@ export function EditUnitagProfileContent({
         onPress={onPressSaveChanges}
       >
         {t('common.button.save')}
-      </Button>
+      </DeprecatedButton>
       {showAvatarModal && (
         <ChoosePhotoOptionsModal
           address={address}

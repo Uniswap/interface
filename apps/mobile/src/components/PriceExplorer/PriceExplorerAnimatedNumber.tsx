@@ -271,7 +271,7 @@ const Numbers = ({
   ))
 }
 
-const LoadingWrapper = (): JSX.Element | null => {
+function LoadingWrapper(): JSX.Element | null {
   return (
     <TextLoaderWrapper loadingShimmer={false}>
       <View style={Shimmer.shimmerSize} />
@@ -281,15 +281,17 @@ const LoadingWrapper = (): JSX.Element | null => {
 
 const SCREEN_WIDTH_BUFFER = 50
 
-const PriceExplorerAnimatedNumber = ({
+function PriceExplorerAnimatedNumber({
   price,
   numberOfDigits,
   currency,
+  onAnimatedNumberReady,
 }: {
   price: ValueAndFormattedWithAnimation
   numberOfDigits: PriceNumberOfDigits
   currency: FiatCurrencyInfo
-}): JSX.Element => {
+  onAnimatedNumberReady: () => void
+}): JSX.Element {
   const colors = useSporeColors()
   const hideShimmer = useSharedValue(false)
   const scale = useSharedValue(1)
@@ -336,6 +338,7 @@ const PriceExplorerAnimatedNumber = ({
 
   const hidePlaceholder = (): void => {
     hideShimmer.value = true
+    onAnimatedNumberReady()
   }
 
   const currencySymbol = (

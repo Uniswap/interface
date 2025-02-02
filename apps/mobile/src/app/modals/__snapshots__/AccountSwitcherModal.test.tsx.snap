@@ -34,17 +34,42 @@ exports[`AccountSwitcher renders correctly 1`] = `
       <View
         style={
           {
-            "backgroundColor": "transparent",
-            "borderBottomColor": "transparent",
+            "backgroundColor": {
+              "dynamic": {
+                "dark": "transparent",
+                "light": "transparent",
+              },
+            },
+            "borderBottomColor": {
+              "dynamic": {
+                "dark": "transparent",
+                "light": "transparent",
+              },
+            },
             "borderBottomLeftRadius": 999999,
             "borderBottomRightRadius": 999999,
             "borderBottomWidth": 0,
-            "borderLeftColor": "transparent",
+            "borderLeftColor": {
+              "dynamic": {
+                "dark": "transparent",
+                "light": "transparent",
+              },
+            },
             "borderLeftWidth": 0,
-            "borderRightColor": "transparent",
+            "borderRightColor": {
+              "dynamic": {
+                "dark": "transparent",
+                "light": "transparent",
+              },
+            },
             "borderRightWidth": 0,
             "borderStyle": "solid",
-            "borderTopColor": "transparent",
+            "borderTopColor": {
+              "dynamic": {
+                "dark": "transparent",
+                "light": "transparent",
+              },
+            },
             "borderTopLeftRadius": 999999,
             "borderTopRightRadius": 999999,
             "borderTopWidth": 0,
@@ -155,7 +180,12 @@ exports[`AccountSwitcher renders correctly 1`] = `
               numberOfLines={1}
               style={
                 {
-                  "color": "#222222",
+                  "color": {
+                    "dynamic": {
+                      "dark": "#FFFFFF",
+                      "light": "#222222",
+                    },
+                  },
                   "flexShrink": 1,
                   "fontFamily": "Basel Grotesk",
                   "fontSize": 19,
@@ -172,18 +202,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
           </View>
         </View>
         <View
-          cancelable={true}
-          disabled={false}
-          focusable={true}
-          hitSlop={[Function]}
-          minPressDuration={0}
-          onBlur={[Function]}
-          onFocus={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
-          onPress={[Function]}
-          onPressIn={[Function]}
-          onPressOut={[Function]}
+          hitSlop={16}
           style={
             {
               "flexDirection": "column",
@@ -201,7 +220,12 @@ exports[`AccountSwitcher renders correctly 1`] = `
             style={
               {
                 "alignItems": "center",
-                "backgroundColor": "transparent",
+                "backgroundColor": {
+                  "dynamic": {
+                    "dark": "transparent",
+                    "light": "transparent",
+                  },
+                },
                 "borderBottomLeftRadius": 999999,
                 "borderBottomRightRadius": 999999,
                 "borderTopLeftRadius": 999999,
@@ -222,7 +246,12 @@ exports[`AccountSwitcher renders correctly 1`] = `
               maxFontSizeMultiplier={1.4}
               style={
                 {
-                  "color": "#7D7D7D",
+                  "color": {
+                    "dynamic": {
+                      "dark": "#9B9B9B",
+                      "light": "#7D7D7D",
+                    },
+                  },
                   "fontFamily": "Basel Grotesk",
                   "fontSize": 17,
                   "fontWeight": "400",
@@ -231,7 +260,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
               }
               suppressHighlighting={true}
             >
-              0x​82D5...3Fa6
+              0x​82D56A...373Fa6
             </Text>
             <RNSVGSvgView
               align="xMidYMid"
@@ -304,31 +333,45 @@ exports[`AccountSwitcher renders correctly 1`] = `
       }
     >
       <View
-        cancelable={true}
-        disabled={false}
-        focusable={true}
-        minPressDuration={0}
-        onBlur={[Function]}
-        onFocus={[Function]}
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
-        onPress={[Function]}
-        onPressIn={[Function]}
-        onPressOut={[Function]}
         style={
           {
             "alignItems": "center",
-            "backgroundColor": "rgba(34,34,34,0.05)",
-            "borderBottomColor": "transparent",
+            "backgroundColor": {
+              "dynamic": {
+                "dark": "rgba(255,255,255,0.12)",
+                "light": "rgba(34,34,34,0.05)",
+              },
+            },
+            "borderBottomColor": {
+              "dynamic": {
+                "dark": "transparent",
+                "light": "transparent",
+              },
+            },
             "borderBottomLeftRadius": 12,
             "borderBottomRightRadius": 12,
             "borderBottomWidth": 1,
-            "borderLeftColor": "transparent",
+            "borderLeftColor": {
+              "dynamic": {
+                "dark": "transparent",
+                "light": "transparent",
+              },
+            },
             "borderLeftWidth": 1,
-            "borderRightColor": "transparent",
+            "borderRightColor": {
+              "dynamic": {
+                "dark": "transparent",
+                "light": "transparent",
+              },
+            },
             "borderRightWidth": 1,
             "borderStyle": "solid",
-            "borderTopColor": "transparent",
+            "borderTopColor": {
+              "dynamic": {
+                "dark": "transparent",
+                "light": "transparent",
+              },
+            },
             "borderTopLeftRadius": 12,
             "borderTopRightRadius": 12,
             "borderTopWidth": 1,
@@ -349,7 +392,12 @@ exports[`AccountSwitcher renders correctly 1`] = `
           maxFontSizeMultiplier={1.2}
           style={
             {
-              "color": "#000000",
+              "color": {
+                "dynamic": {
+                  "dark": "#FFFFFF",
+                  "light": "#000000",
+                },
+              },
               "fontFamily": "Basel Grotesk",
               "fontSize": 17,
               "fontWeight": "500",
@@ -420,18 +468,14 @@ exports[`AccountSwitcher renders correctly 1`] = `
     </View>
   </View>
   <View
-    cancelable={true}
-    disabled={false}
-    focusable={true}
-    hitSlop={[Function]}
-    minPressDuration={0}
-    onBlur={[Function]}
-    onFocus={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
-    onPress={[Function]}
-    onPressIn={[Function]}
-    onPressOut={[Function]}
+    hitSlop={
+      {
+        "bottom": 5,
+        "left": 5,
+        "right": 5,
+        "top": 5,
+      }
+    }
     style={
       {
         "flexDirection": "column",
@@ -459,17 +503,42 @@ exports[`AccountSwitcher renders correctly 1`] = `
         style={
           {
             "alignItems": "center",
-            "backgroundColor": "#FFFFFF",
-            "borderBottomColor": "rgba(34,34,34,0.05)",
+            "backgroundColor": {
+              "dynamic": {
+                "dark": "#131313",
+                "light": "#FFFFFF",
+              },
+            },
+            "borderBottomColor": {
+              "dynamic": {
+                "dark": "rgba(255,255,255,0.12)",
+                "light": "rgba(34,34,34,0.05)",
+              },
+            },
             "borderBottomLeftRadius": 999999,
             "borderBottomRightRadius": 999999,
             "borderBottomWidth": 1,
-            "borderLeftColor": "rgba(34,34,34,0.05)",
+            "borderLeftColor": {
+              "dynamic": {
+                "dark": "rgba(255,255,255,0.12)",
+                "light": "rgba(34,34,34,0.05)",
+              },
+            },
             "borderLeftWidth": 1,
-            "borderRightColor": "rgba(34,34,34,0.05)",
+            "borderRightColor": {
+              "dynamic": {
+                "dark": "rgba(255,255,255,0.12)",
+                "light": "rgba(34,34,34,0.05)",
+              },
+            },
             "borderRightWidth": 1,
             "borderStyle": "solid",
-            "borderTopColor": "rgba(34,34,34,0.05)",
+            "borderTopColor": {
+              "dynamic": {
+                "dark": "rgba(255,255,255,0.12)",
+                "light": "rgba(34,34,34,0.05)",
+              },
+            },
             "borderTopLeftRadius": 999999,
             "borderTopRightRadius": 999999,
             "borderTopWidth": 1,
@@ -554,7 +623,12 @@ exports[`AccountSwitcher renders correctly 1`] = `
         maxFontSizeMultiplier={1.2}
         style={
           {
-            "color": "#7D7D7D",
+            "color": {
+              "dynamic": {
+                "dark": "#9B9B9B",
+                "light": "#7D7D7D",
+              },
+            },
             "fontFamily": "Basel Grotesk",
             "fontSize": 17,
             "fontWeight": "500",

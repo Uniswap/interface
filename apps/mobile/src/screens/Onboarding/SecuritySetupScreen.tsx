@@ -15,7 +15,7 @@ import {
 import { setRequiredForTransactions } from 'src/features/biometrics/slice'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
-import { Button, Flex, useIsDarkMode, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, useIsDarkMode, useSporeColors } from 'ui/src'
 import { SECURITY_SCREEN_BACKGROUND_DARK, SECURITY_SCREEN_BACKGROUND_LIGHT } from 'ui/src/assets'
 import { Lock } from 'ui/src/components/icons'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -120,11 +120,11 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
           </Flex>
         </Flex>
         <Trace logPress element={ElementName.Enable}>
-          <Button theme="primary" onPress={onPressEnableSecurity}>
+          <DeprecatedButton theme="primary" onPress={onPressEnableSecurity}>
             {isIOS
               ? t('onboarding.security.button.confirm.ios', { biometricsMethod })
               : t('onboarding.security.button.confirm.android')}
-          </Button>
+          </DeprecatedButton>
         </Trace>
       </OnboardingScreen>
     </>

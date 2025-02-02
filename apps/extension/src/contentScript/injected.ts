@@ -250,7 +250,7 @@ async function logError(
   await contentScriptUtilityMessageChannel.sendMessage(message)
 }
 
-// These go to Amplitude instead of Sentry since they are informational
+// These go to Amplitude instead of Datadog since they are informational
 async function passAnalytics(message: string, tags: Record<string, string>): Promise<void> {
   const logMessage: AnalyticsLog = {
     type: ContentScriptUtilityMessageType.AnalyticsLog,

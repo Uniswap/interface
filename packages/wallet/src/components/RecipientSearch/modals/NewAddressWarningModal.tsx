@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, GetProps, ScrollView, Text } from 'ui/src'
+import { DeprecatedButton, Flex, GetProps, ScrollView, Text } from 'ui/src'
 import { UserSquare } from 'ui/src/components/icons'
 import { fonts, iconSizes, imageSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -117,12 +117,12 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
         </ScrollView>
 
         <Flex row gap="$spacing12" pt="$spacing24">
-          <Button flex={1} flexBasis={1} theme="secondary" onPress={onClose}>
+          <DeprecatedButton flex={1} flexBasis={1} theme="secondary" onPress={onClose}>
             {t('common.button.back')}
-          </Button>
-          <Button flex={1} flexBasis={1} theme="primary" onPress={onAcknowledge}>
+          </DeprecatedButton>
+          <DeprecatedButton flex={1} flexBasis={1} theme="primary" onPress={onAcknowledge}>
             {t('common.button.confirm')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

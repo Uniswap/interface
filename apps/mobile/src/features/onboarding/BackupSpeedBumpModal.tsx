@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LockPreviewImage } from 'src/features/onboarding/LockPreviewImage'
-import { Button, Flex, LabeledCheckbox, Text, useIsDarkMode, useShadowPropsShort } from 'ui/src'
+import { DeprecatedButton, Flex, LabeledCheckbox, Text, useIsDarkMode, useShadowPropsShort } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -74,12 +74,12 @@ export function BackupSpeedBumpModal({ backupType, onContinue, onClose }: Backup
         </Flex>
 
         <Flex row gap="$spacing8">
-          <Button fill size="medium" theme="secondary" onPress={() => onClose()}>
+          <DeprecatedButton fill size="medium" theme="secondary" onPress={() => onClose()}>
             {t('common.button.back')}
-          </Button>
-          <Button fill disabled={!checked} size="medium" theme="primary" onPress={() => onContinue()}>
+          </DeprecatedButton>
+          <DeprecatedButton fill disabled={!checked} size="medium" theme="primary" onPress={() => onContinue()}>
             {t('common.button.continue')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

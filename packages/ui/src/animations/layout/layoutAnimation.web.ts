@@ -1,5 +1,5 @@
-import { NotImplementedError } from 'utilities/src/errors'
+import { LayoutAnimationOptions } from 'ui/src/animations/layout/types'
 
-export function easeInEaseOutLayoutAnimation(): void {
-  throw new NotImplementedError('easeInEaseOutLayoutAnimation')
+export function easeInEaseOutLayoutAnimation(_options?: LayoutAnimationOptions): void {
+  return
 }

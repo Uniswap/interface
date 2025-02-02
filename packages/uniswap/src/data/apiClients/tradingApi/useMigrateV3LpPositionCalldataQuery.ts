@@ -1,4 +1,4 @@
-import { UseQueryResult, skipToken, useQuery } from '@tanstack/react-query'
+import { UseQueryResult, useQuery } from '@tanstack/react-query'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TRADING_API_CACHE_KEY, migrateLpPosition } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
@@ -15,7 +15,13 @@ export function useMigrateV3LpPositionCalldataQuery({
 
   return useQuery<MigrateLPPositionResponse>({
     queryKey,
-    queryFn: params ? async (): ReturnType<typeof migrateLpPosition> => await migrateLpPosition(params) : skipToken,
+    enabled: !!params,
+    queryFn: async () => {
+      if (!params) {
+        throw new Error('Params are required')
+      }
+      return await migrateLpPosition(params)
+    },
     ...rest,
   })
 }

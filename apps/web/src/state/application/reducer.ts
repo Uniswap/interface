@@ -49,6 +49,7 @@ export enum ApplicationModal {
   FIAT_ONRAMP,
   RECEIVE_CRYPTO,
   RECEIVE_CRYPTO_QR,
+  RECOVERY_PHRASE,
   PRIVACY_POLICY,
   QUEUE,
   SELF_CLAIM,
@@ -58,20 +59,28 @@ export enum ApplicationModal {
   GET_THE_APP,
 }
 
+export type LiquidityModalInitialState = PositionInfo & { collectAsWeth?: boolean }
+
 type AddLiquidityModalParams = {
   name: typeof ModalName.AddLiquidity
-  initialState: PositionInfo
+  initialState: LiquidityModalInitialState
 }
 
 type RemoveLiquidityModalParams = {
   name: typeof ModalName.RemoveLiquidity
-  initialState: PositionInfo
+  initialState: LiquidityModalInitialState
+}
+
+type ClaimFeeModalParams = {
+  name: typeof ModalName.ClaimFee
+  initialState: LiquidityModalInitialState
 }
 
 export type OpenModalParams =
   | { name: ModalNameType | ApplicationModal; initialState?: undefined }
   | AddLiquidityModalParams
   | RemoveLiquidityModalParams
+  | ClaimFeeModalParams
 
 export type CloseModalParams = ModalNameType | ApplicationModal
 

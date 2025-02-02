@@ -7,7 +7,7 @@ jest.mock('uniswap/src/features/gas/hooks', () => {
     useFormattedUniswapXGasFeeInfo: jest.fn(() => undefined),
     useUSDValue: (_chainId: UniverseChainId, gasFee: string): string => gasFee,
     useGasFeeHighRelativeToValue: jest.fn(() => false),
-    useGasFeeFormattedAmounts: jest.fn(() => ({
+    useGasFeeFormattedDisplayAmounts: jest.fn(() => ({
       gasFeeFormatted: '$1',
       gasFeeUSD: '$500.00',
     })),

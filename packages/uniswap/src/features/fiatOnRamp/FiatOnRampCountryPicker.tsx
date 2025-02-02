@@ -24,7 +24,6 @@ export function FiatOnRampCountryPicker({
   return (
     <Trace logPress element={ElementName.FiatOnRampCountryPicker}>
       <TouchableArea
-        hapticFeedback
         backgroundColor="$surface3"
         borderRadius="$roundedFull"
         hoverStyle={{
@@ -50,7 +49,7 @@ export function FiatOnRampCountryPicker({
               />
             )}
           </Flex>
-          <RotatableChevron color="$neutral3" direction="down" width={iconSizes.icon20} />
+          <RotatableChevron color="$neutral2" direction="down" width={iconSizes.icon20} />
         </Flex>
       </TouchableArea>
     </Trace>

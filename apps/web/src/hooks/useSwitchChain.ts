@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { endSwitchingChain, startSwitchingChain } from 'state/wallets/reducer'
 import { trace } from 'tracing/trace'
-import { useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks'
+import { useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSwitchChain as useSwitchChainWagmi } from 'wagmi'
 

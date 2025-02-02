@@ -11,6 +11,7 @@ export function TransactionParticipantDisplay({ address }: { address: string }):
         size={iconSizes.icon16}
         horizontalGap="$spacing6"
         variant="body3"
+        disableForcedWidth={true}
       />
     </Flex>
   )

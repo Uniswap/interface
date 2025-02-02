@@ -83,6 +83,9 @@ artifacts/
 # CocoaPods
 /ios/Pods/
 
+# Android jsbundle
+*.android.bundle
+
 # ccache
 .ccache
 

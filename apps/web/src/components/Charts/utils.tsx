@@ -1,5 +1,5 @@
 import { TickMarkType, UTCTimestamp } from 'lightweight-charts'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans } from 'react-i18next'
 
 /** Compatible with ISeriesApi<'Area' | 'Candlestick'> */
 export enum PriceChartType {
@@ -41,5 +41,23 @@ export function formatTickMarks(time: UTCTimestamp, tickMarkType: TickMarkType, 
       return date.toLocaleString(locale, { hour: 'numeric', minute: 'numeric' })
     case TickMarkType.TimeWithSeconds:
       return date.toLocaleString(locale, { hour: 'numeric', minute: 'numeric', second: '2-digit' })
+  }
+}
+
+export function roundRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  radii?: number | DOMPointInit | Iterable<number | DOMPointInit> | undefined,
+): void {
+  // roundRect might need to polyfilled for older browsers
+  if (ctx.roundRect) {
+    ctx.beginPath()
+    ctx.roundRect(x, y, w, h, radii)
+    ctx.fill()
+  } else {
+    ctx.fillRect(x, y, w, h)
   }
 }

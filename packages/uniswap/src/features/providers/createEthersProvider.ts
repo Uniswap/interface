@@ -1,9 +1,12 @@
 import { Signer, providers as ethersProviders } from 'ethers/lib/ethers'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
-import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
-import { FlashbotsRpcProvider } from 'uniswap/src/features/providers/FlashbotsRpcProvider'
+import { DynamicConfigs, MainnetPrivateRpcConfigKey } from 'uniswap/src/features/gating/configs'
+import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import {
+  FLASHBOTS_DEFAULT_BLOCK_RANGE,
+  FlashbotsRpcProvider,
+} from 'uniswap/src/features/providers/FlashbotsRpcProvider'
 import { logger } from 'utilities/src/logger/logger'
 
 // Should use ProviderManager for provider access unless being accessed outside of ProviderManagerContext (e.g., Apollo initialization)
@@ -19,10 +22,30 @@ export function createEthersProvider(
         throw new Error(`No private RPC available for chain ${chainId}`)
       }
 
-      const useFlashbots =
-        chainId === UniverseChainId.Mainnet && Statsig.checkGate(getFeatureFlagName(FeatureFlags.FlashbotsPrivateRpc))
-      if (useFlashbots) {
-        return new FlashbotsRpcProvider(signer)
+      const useFlashbots = getDynamicConfigValue<DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey, boolean>(
+        DynamicConfigs.MainnetPrivateRpc,
+        MainnetPrivateRpcConfigKey.UseFlashbots,
+        false,
+      )
+
+      if (chainId === UniverseChainId.Mainnet && useFlashbots) {
+        const sendAuthenticationHeader = getDynamicConfigValue<
+          DynamicConfigs.MainnetPrivateRpc,
+          MainnetPrivateRpcConfigKey,
+          boolean
+        >(DynamicConfigs.MainnetPrivateRpc, MainnetPrivateRpcConfigKey.SendFlashbotsAuthenticationHeader, false)
+
+        const flashbotsBlockRange = getDynamicConfigValue<
+          DynamicConfigs.MainnetPrivateRpc,
+          MainnetPrivateRpcConfigKey,
+          number
+        >(
+          DynamicConfigs.MainnetPrivateRpc,
+          MainnetPrivateRpcConfigKey.FlashbotsBlockRange,
+          FLASHBOTS_DEFAULT_BLOCK_RANGE,
+        )
+
+        return new FlashbotsRpcProvider(flashbotsBlockRange, sendAuthenticationHeader ? signer : undefined)
       }
 
       return new ethersProviders.JsonRpcProvider(privateRPCUrl)

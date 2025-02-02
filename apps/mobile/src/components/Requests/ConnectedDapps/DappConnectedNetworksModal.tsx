@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import { DappHeaderIcon } from 'src/components/Requests/DappHeaderIcon'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { WalletConnectSession, removeSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Button, Flex, Text } from 'ui/src'
+import { DeprecatedButton, Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -94,12 +94,12 @@ export function DappConnectedNetworkModal({ session, onClose }: DappConnectedNet
           </Flex>
         </Flex>
         <Flex centered row gap="$spacing16">
-          <Button fill theme="secondary" onPress={onClose}>
+          <DeprecatedButton fill theme="secondary" onPress={onClose}>
             {t('common.button.close')}
-          </Button>
-          <Button fill theme="detrimental" onPress={onDisconnect}>
+          </DeprecatedButton>
+          <DeprecatedButton fill theme="detrimental" onPress={onDisconnect}>
             {t('common.button.disconnect')}
-          </Button>
+          </DeprecatedButton>
         </Flex>
       </Flex>
     </Modal>

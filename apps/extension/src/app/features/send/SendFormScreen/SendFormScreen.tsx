@@ -1,11 +1,14 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { RecipientPanel } from 'src/app/features/send/SendFormScreen/RecipientPanel'
 import { ReviewButton } from 'src/app/features/send/SendFormScreen/ReviewButton'
 import { Flex, Separator, useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { selectHasDismissedLowNetworkTokenWarning } from 'uniswap/src/features/behaviorHistory/selectors'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName, SectionName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import {
   TransactionScreen,
@@ -14,6 +17,7 @@ import {
 import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useUSDTokenUpdater'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/swap/modals/LowNativeBalanceModal'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
@@ -28,6 +32,9 @@ import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 export function SendFormScreen(): JSX.Element {
   const colors = useSporeColors()
 
+  const hasDismissedLowNetworkTokenWarning = useSelector(selectHasDismissedLowNetworkTokenWarning)
+  const [showMaxTransferModal, setShowMaxTransferModal] = useState(false)
+
   const {
     derivedSendInfo,
     selectingCurrencyField,
@@ -39,6 +46,7 @@ export function SendFormScreen(): JSX.Element {
     recipient,
     updateSendForm,
     onSelectCurrency,
+    isMax,
   } = useSendContext()
 
   const { screen, setScreen } = useTransactionModalContext()
@@ -83,11 +91,20 @@ export function SendFormScreen(): JSX.Element {
   const isBlocked = isActiveBlocked || isRecipientBlocked
   const isBlockedLoading = isActiveBlockedLoading || isRecipientBlockedLoading
 
-  const onPressReview = useCallback(() => {
+  const goToReview = useCallback(() => {
     const txId = createTransactionId()
     updateSendForm({ txId })
     setScreen(TransactionScreen.Review)
   }, [setScreen, updateSendForm])
+
+  const onPressReview = useCallback(() => {
+    if (!hasDismissedLowNetworkTokenWarning && isMax && currencyInInfo?.currency.isNative) {
+      sendAnalyticsEvent(WalletEventName.LowNetworkTokenInfoModalOpened, { location: 'send' })
+      setShowMaxTransferModal(true)
+      return
+    }
+    goToReview()
+  }, [goToReview, isMax, hasDismissedLowNetworkTokenWarning, setShowMaxTransferModal, currencyInInfo])
 
   const onSetExactAmount = useCallback(
     (amount: string) => {
@@ -102,6 +119,16 @@ export function SendFormScreen(): JSX.Element {
     },
     [updateSendForm],
   )
+
+  const hideLowNativeBalanceWarning = useCallback(() => {
+    setShowMaxTransferModal(false)
+  }, [setShowMaxTransferModal])
+
+  const onAcknowledgeLowNativeBalanceWarning = useCallback(() => {
+    hideLowNativeBalanceWarning()
+
+    goToReview()
+  }, [hideLowNativeBalanceWarning, goToReview])
 
   const onHideTokenSelector = useCallback(() => {
     updateSendForm({ selectingCurrencyField: undefined })
@@ -127,6 +154,11 @@ export function SendFormScreen(): JSX.Element {
       <Modal alignment="top" isModalOpen={screen === TransactionScreen.Review} name={ModalName.SendReview}>
         <SendReviewDetails />
       </Modal>
+      <LowNativeBalanceModal
+        isOpen={showMaxTransferModal}
+        onClose={hideLowNativeBalanceWarning}
+        onAcknowledge={onAcknowledgeLowNativeBalanceWarning}
+      />
       <Flex fill gap="$spacing12">
         <Flex
           borderColor="$surface3"

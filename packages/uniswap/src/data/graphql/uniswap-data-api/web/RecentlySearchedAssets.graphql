@@ -39,6 +39,11 @@ query RecentlySearchedAssets(
     protectionInfo {
       attackTypes
       result
+      blockaidFees {
+        buy
+        sell
+        transfer
+      }
     }
     market(currency: USD) {
       id

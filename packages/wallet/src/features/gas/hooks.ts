@@ -3,7 +3,7 @@ import { useCallback, useMemo } from 'react'
 import { TRANSACTION_CANCELLATION_GAS_FACTOR } from 'uniswap/src/constants/transactions'
 import { FeeType } from 'uniswap/src/data/tradingApi/types'
 import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
-import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -12,7 +12,7 @@ import { getCancelOrderTxRequest } from 'wallet/src/features/transactions/cancel
 
 export type CancelationGasFeeDetails = {
   cancelRequest: providers.TransactionRequest
-  cancelationGasFee: string
+  cancelationGasFeeDisplayValue: string
 }
 
 /**
@@ -24,7 +24,14 @@ export function useCancelationGasFeeInfo(transaction: TransactionDetails): Cance
     return {
       chainId: transaction.chainId,
       from: transaction.from,
-      to: transaction.from,
+      to:
+        // Flashbots requires the cancelation transaction to be sent to the same address as the original transaction
+        // https://docs.flashbots.net/flashbots-protect/cancellations
+        isClassic(transaction) &&
+        transaction.options.privateRpcProvider === 'flashbots' &&
+        transaction.options.request.to
+          ? transaction.options.request.to
+          : transaction.from,
       value: '0x0',
     }
   }, [transaction])
@@ -37,13 +44,16 @@ export function useCancelationGasFeeInfo(transaction: TransactionDetails): Cance
   const baseTxGasFee = useTransactionGasFee(classicCancelRequest, /* skip = */ isUniswapXTx)
   return useMemo(() => {
     if (isUniswapXTx) {
-      if (!uniswapXCancelRequest.data || !uniswapXGasFee.value) {
+      if (!uniswapXCancelRequest.data || !uniswapXGasFee.value || !uniswapXGasFee.displayValue) {
         return undefined
       }
-      return { cancelRequest: uniswapXCancelRequest.data, cancelationGasFee: uniswapXGasFee.value }
+      return {
+        cancelRequest: uniswapXCancelRequest.data,
+        cancelationGasFeeDisplayValue: uniswapXGasFee.displayValue,
+      }
     }
 
-    if (!baseTxGasFee.params) {
+    if (!baseTxGasFee.params || !baseTxGasFee.value || !baseTxGasFee.displayValue) {
       return undefined
     }
 
@@ -68,27 +78,47 @@ export function useCancelationGasFeeInfo(transaction: TransactionDetails): Cance
       gasLimit: baseTxGasFee.params.gasLimit,
     }
 
+    const cancelationGasFeeDisplayValue = getCancellationGasFeeDisplayValue(
+      adjustedFeeDetails,
+      baseTxGasFee.params.gasLimit,
+      baseTxGasFee.value,
+      baseTxGasFee.displayValue,
+    )
+
     return {
       cancelRequest,
-      cancelationGasFee: getCancelationGasFee(adjustedFeeDetails, baseTxGasFee.params.gasLimit),
+      cancelationGasFeeDisplayValue,
     }
   }, [
     isUniswapXTx,
     baseTxGasFee.params,
+    baseTxGasFee.value,
+    baseTxGasFee.displayValue,
     classicCancelRequest,
     transaction,
     uniswapXCancelRequest.data,
     uniswapXGasFee.value,
+    uniswapXGasFee.displayValue,
   ])
 }
 
-function getCancelationGasFee(adjustedFeeDetails: FeeDetails, gasLimit: string): string {
+function getCancellationGasFeeDisplayValue(
+  adjustedFeeDetails: FeeDetails,
+  gasLimit: string,
+  previousValue: string,
+  previousDisplayValue: string,
+): string {
+  // Use the original ratio of displayValue to value to maintain consistency with original gas fees
+  return getCancelationGasFee(adjustedFeeDetails, gasLimit).mul(previousDisplayValue).div(previousValue).toString()
+}
+
+function getCancelationGasFee(adjustedFeeDetails: FeeDetails, gasLimit: string): BigNumber {
   // doing object destructuring here loses ts checks based on FeeDetails.type >:(
   if (adjustedFeeDetails.type === FeeType.LEGACY) {
-    return BigNumber.from(gasLimit).mul(adjustedFeeDetails.params.gasPrice).toString()
+    return BigNumber.from(gasLimit).mul(adjustedFeeDetails.params.gasPrice)
   }
 
-  return BigNumber.from(adjustedFeeDetails.params.maxFeePerGas).mul(gasLimit).toString()
+  return BigNumber.from(adjustedFeeDetails.params.maxFeePerGas).mul(gasLimit)
 }
 
 function useUniswapXCancelRequest(transaction: TransactionDetails): {

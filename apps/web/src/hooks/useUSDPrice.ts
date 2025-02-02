@@ -1,14 +1,15 @@
 import { NetworkStatus } from '@apollo/client'
-import { Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { PollingInterval } from 'graphql/data/util'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
-import useStablecoinPrice from 'hooks/useStablecoinPrice'
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import { ClassicTrade, INTERNAL_ROUTER_PREFERENCE_PRICE, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { Chain, useTokenSpotPriceQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains, useIsSupportedChainId, useSupportedChainId } from 'uniswap/src/features/chains/hooks'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useIsSupportedChainId, useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
@@ -63,6 +64,52 @@ function useETHPrice(currency?: Currency): {
   }, [chainId, currency, isSupported, state, trade])
 }
 
+/**
+ * Returns the price in USDC of the input currency
+ * @param currency currency to compute the USDC price of
+ */
+function useStablecoinPrice(currency?: Currency): {
+  price?: Price<Currency, Token>
+  state: TradeState
+} {
+  const chainId = useSupportedChainId(currency?.chainId)
+  const amountOut = chainId ? getChainInfo(chainId).spotPriceStablecoinAmount : undefined
+  const stablecoin = amountOut?.currency
+  const { trade, state } = useRoutingAPITrade(
+    false /* skip */,
+    TradeType.EXACT_OUTPUT,
+    amountOut,
+    currency,
+    INTERNAL_ROUTER_PREFERENCE_PRICE,
+  )
+  const price = useMemo(() => {
+    if (!currency || !stablecoin) {
+      return undefined
+    }
+    // handle usdc
+    if (currency?.wrapped.equals(stablecoin)) {
+      return new Price(stablecoin, stablecoin, '1', '1')
+    }
+    // if initial quoting fails, we may end up with a DutchOrderTrade
+    if (trade && trade instanceof ClassicTrade) {
+      const { numerator, denominator } = trade.routes[0].midPrice
+      return new Price(currency, stablecoin, denominator, numerator)
+    }
+    return undefined
+  }, [currency, stablecoin, trade])
+  const lastPrice = useRef(price)
+  if (
+    !price ||
+    !lastPrice.current ||
+    !price.equalTo(lastPrice.current) ||
+    !price.baseCurrency.equals(lastPrice.current.baseCurrency)
+  ) {
+    lastPrice.current = price
+  }
+  return { price: lastPrice.current, state }
+}
+
+/** @deprecated this should only be used in the legacy swap flow  */
 export function useUSDPrice(
   currencyAmount?: CurrencyAmount<Currency>,
   prefetchCurrency?: Currency,

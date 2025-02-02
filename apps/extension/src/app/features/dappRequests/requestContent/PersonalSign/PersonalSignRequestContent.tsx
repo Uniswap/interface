@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
 import { SignMessageRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { Button, Flex, Text, Tooltip } from 'ui/src'
+import { DeprecatedButton, Flex, Text, Tooltip } from 'ui/src'
 import { AlertTriangleFilled, Code, StickyNoteTextSquare } from 'ui/src/components/icons'
 import { containsNonPrintableChars } from 'utilities/src/primitives/string'
 
@@ -86,7 +86,7 @@ export function PersonalSignRequestContent({ dappRequest }: PersonalSignRequestP
           right={isScrollable ? '$spacing24' : '$spacing12'}
         >
           <Tooltip.Trigger>
-            <Button
+            <DeprecatedButton
               borderColor="$surface3"
               borderRadius="$rounded4"
               icon={

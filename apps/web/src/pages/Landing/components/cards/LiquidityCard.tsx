@@ -3,11 +3,12 @@ import { Bars } from 'pages/Landing/components/Icons'
 import { CardContents } from 'pages/Landing/components/cards/CardContents'
 import { PillButton } from 'pages/Landing/components/cards/PillButton'
 import ValuePropCard from 'pages/Landing/components/cards/ValuePropCard'
-import { t } from 'uniswap/src/i18n'
+import { useTranslation } from 'react-i18next'
 
 const primary = '#9E62FF'
 
 export function LiquidityCard() {
+  const { t } = useTranslation()
   const { rive, RiveComponent } = useRive({
     src: '/rive/landing-page.riv',
     artboard: 'LP',

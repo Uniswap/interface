@@ -1,8 +1,4 @@
-import {
-  MULTICALL_ADDRESSES,
-  Token,
-  NONFUNGIBLE_POSITION_MANAGER_ADDRESSES as V3NFT_ADDRESSES,
-} from '@uniswap/sdk-core'
+import { MULTICALL_ADDRESSES, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES as V3NFT_ADDRESSES } from '@uniswap/sdk-core'
 import type { AddressMap } from '@uniswap/smart-order-router'
 import NFTPositionManagerJSON from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import MulticallJSON from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
@@ -12,14 +8,14 @@ import { RPC_PROVIDERS } from 'constants/providers'
 import { BaseContract } from 'ethers/lib/ethers'
 import { toContractInput } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
-import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
 import {
   ContractInput,
   useUniswapPricesQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useEnabledChains, useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { CurrencyKey, currencyKey, currencyKeyFromGraphQL } from 'utils/currencyKey'
@@ -27,7 +23,7 @@ import { CurrencyKey, currencyKey, currencyKeyFromGraphQL } from 'utils/currency
 type ContractMap<T extends BaseContract> = { [key: number]: T }
 
 // Constructs a chain-to-contract map, using the wallet's provider when available
-export function useContractMultichain<T extends BaseContract>(
+function useContractMultichain<T extends BaseContract>(
   addressMap: AddressMap,
   ABI: any,
   chainIds?: UniverseChainId[],
@@ -96,22 +92,4 @@ export function usePoolPriceMap(positions: PositionInfo[] | undefined) {
   )
 
   return { priceMap, pricesLoading: loading && !data }
-}
-
-function useFeeValue(token: Token, fee: number | undefined, queriedPrice: number | undefined) {
-  const { price: stablecoinPrice } = useStablecoinPrice(!queriedPrice ? token : undefined)
-  return useMemo(() => {
-    // Prefers gql price, as fetching stablecoinPrice will trigger multiple infura calls for each pool position
-    const price = queriedPrice ?? (stablecoinPrice ? parseFloat(stablecoinPrice.toSignificant()) : undefined)
-    const feeValue = fee && price ? fee * price : undefined
-
-    return [price, feeValue]
-  }, [fee, queriedPrice, stablecoinPrice])
-}
-
-export function useFeeValues(position: PositionInfo) {
-  const [priceA, feeValueA] = useFeeValue(position.pool.token0, position.fees?.[0], position.prices?.[0])
-  const [priceB, feeValueB] = useFeeValue(position.pool.token1, position.fees?.[1], position.prices?.[1])
-
-  return { priceA, priceB, fees: (feeValueA || 0) + (feeValueB || 0) }
 }

@@ -13,6 +13,7 @@ ignores: [
     'process',
     'madge',
     # Dependencies that depcheck thinks are missing but are actually present or never used
+    'stories',
     ## package.json scripts
     'esbuild-register',
     ## GraphQL
@@ -30,6 +31,17 @@ ignores: [
     '@babel/preset-env',
     'eslint-plugin-import',
     'terser-webpack-plugin',
+    ## Storybook
+    '@svgr/webpack',
+    'ts-loader',
+    '@chromatic-com/storybook',
+    '@storybook/addon-essentials',
+    '@storybook/addon-interactions',
+    '@storybook/addon-onboarding',
+    '@storybook/blocks',
+    '@storybook/preset-create-react-app',
+    'eslint-plugin-storybook',
+    'prop-types',
     ## Testing
     '@types/testing-library__cypress',
     ## i18n

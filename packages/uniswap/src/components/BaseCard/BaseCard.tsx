@@ -104,7 +104,7 @@ function EmptyState({
       </Flex>
       <Flex row gap="$spacing16">
         {buttonLabel && (
-          <TouchableArea hapticFeedback onPress={onPress}>
+          <TouchableArea onPress={onPress}>
             <Text color="$accent1" textAlign="center" variant="buttonLabel2">
               {buttonLabel}
             </Text>
@@ -151,7 +151,7 @@ function ErrorState(props: ErrorStateProps): JSX.Element {
       </Flex>
       <Flex row>
         {retryButtonLabel ? (
-          <TouchableArea hapticFeedback onPress={onRetry}>
+          <TouchableArea onPress={onRetry}>
             <Text color="$accent1" variant="buttonLabel2">
               {retryButtonLabel}
             </Text>
@@ -197,7 +197,7 @@ function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
         </Text>
       </Flex>
       {retry ? (
-        <TouchableArea hapticFeedback onPress={retry}>
+        <TouchableArea onPress={retry}>
           <Text color="$accent1" variant="buttonLabel2">
             {retryButtonLabel}
           </Text>

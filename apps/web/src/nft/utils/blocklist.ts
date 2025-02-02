@@ -1,4 +1,7 @@
-export const blocklistedCollections = [
+import { BlockedNftCollectionsConfigKey, DynamicConfigs } from 'uniswap/src/features/gating/configs'
+import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+
+const baseBlocklistedCollections = [
   '0xd5eeac01b0d1d929d6cffaaf78020af137277293',
   '0x85c08fffa9510f87019efdcf986301873cbb10d6',
   '0x32d7e58933fceea6b73a13f8e30605d80915b616',
@@ -69,4 +72,46 @@ export const blocklistedCollections = [
   '0x4560bbf0ed7737821b6ba86e0ff8e062530085e1',
   '0xe804c29b30cc7f8848a32562fe0be6dabb91e7eb',
   '0x9e46904a211133fd2e98b8883c596fdb7aae366c',
+  '0x19ff658369141a05079439c2c99596dc6c2fb250',
+  '0x35c5a191593271333147ed238894f6dc88d97da5',
+  '0x456764666da6b2d27f0f5967202f0c4c5ce542ab',
+  '0x7f4d09419d231eda3a2ebe36fa84a2cf44ad5afb',
+  '0x844c5e575d9095adb68d85ed7067ed25fbe2992a',
+  '0x9c7b630b183566a7af2d89ff522cad82ff9668ec',
+  '0xc5e39ca13e22debc2f86762f01e9106645ece068',
+  '0xc86452e53dd1fe47089e7ae78c94e43cce0db685',
+  '0xdbfdadd6854b1b803b95a78bcca176ffe19a740e',
+  '0xe4a1ffb12dd5504d38c4ae2beb48e829dcf12c2a',
+  '0xea5eea5d725481b4569b8e84967e56770d95c084',
+  '0xee9747575c89326eb9295972f36d56a49691f874',
+  '0xf158ecbab7da7e6a0502628ad391a3d29710c576',
+  '0xf673623e8507551bde72290e909c7e184a4799a3',
 ]
+
+export function useDynamicBlocklistedNftCollections() {
+  return useDynamicConfigValue(
+    DynamicConfigs.BlockedNftCollections,
+    BlockedNftCollectionsConfigKey.BlocklistedCollections,
+    baseBlocklistedCollections,
+  )
+}
+
+// Only use this for server side rendered previews where the client statsig constext hasn't been initialized
+export async function getDynamicBlocklistedNftCollections(): Promise<string[]> {
+  try {
+    const response = await fetch('https://interface.gateway.uniswap.org/v1/statsig-proxy/get_config', {
+      method: 'POST',
+      headers: {
+        'statsig-sdk-type': 'react-client',
+      },
+      body: JSON.stringify({
+        configName: DynamicConfigs.BlockedNftCollections,
+        key: BlockedNftCollectionsConfigKey.BlocklistedCollections,
+      }),
+    })
+    const data: any = await response.json()
+    return data.value.blocklistedCollections ?? baseBlocklistedCollections
+  } catch (error) {
+    return baseBlocklistedCollections
+  }
+}

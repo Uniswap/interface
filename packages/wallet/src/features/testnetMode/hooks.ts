@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { WALLET_TESTNET_CONFIG } from 'uniswap/src/features/telemetry/constants'
 import { setAttributesToDatadog } from 'utilities/src/logger/Datadog'
 // eslint-disable-next-line no-restricted-imports

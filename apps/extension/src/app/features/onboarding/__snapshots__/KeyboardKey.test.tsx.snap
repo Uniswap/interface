@@ -13,10 +13,10 @@ exports[`KeyboardKey Component renders correctly with state Highlighted 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _backgroundColor-568007324 _borderTopColor-170210283 _borderRightColor-170210283 _borderBottomColor-170210283 _borderLeftColor-170210283 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _borderTopWidth-1481558338 _borderRightWidth-1481558338 _borderBottomWidth-1481558338 _borderLeftWidth-1481558338 _height-70px _justifyContent-center _pr-1316330176 _pl-1316330176 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _boxShadow-1750371555"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _backgroundColor-surface1 _borderTopColor-accent2Hove112785 _borderRightColor-accent2Hove112785 _borderBottomColor-accent2Hove112785 _borderLeftColor-accent2Hove112785 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _borderTopWidth-t-space-spa94665587 _borderRightWidth-t-space-spa94665587 _borderBottomWidth-t-space-spa94665587 _borderLeftWidth-t-space-spa94665587 _height-70px _justifyContent-center _pr-t-space-spa1360334043 _pl-t-space-spa1360334043 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _boxShadow-0px7px0pxva651413887"
         >
           <span
-            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-1380577629 _fontFamily-299667014 _wordWrap-break-word _fontSize-28px _lineHeight-222976542 _fontWeight-233016202"
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _fontSize-28px _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
             data-disable-theme="true"
           >
             Shift
@@ -41,10 +41,10 @@ exports[`KeyboardKey Component renders correctly with state KeyDown 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _backgroundColor-568007324 _borderTopColor-170210283 _borderRightColor-170210283 _borderBottomColor-170210283 _borderLeftColor-170210283 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _borderTopWidth-1481558338 _borderRightWidth-1481558338 _borderBottomWidth-1481558338 _borderLeftWidth-1481558338 _height-70px _justifyContent-center _pr-1316330176 _pl-1316330176 _top-7px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _boxShadow-1083284829"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _backgroundColor-surface1 _borderTopColor-accent2Hove112785 _borderRightColor-accent2Hove112785 _borderBottomColor-accent2Hove112785 _borderLeftColor-accent2Hove112785 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _borderTopWidth-t-space-spa94665587 _borderRightWidth-t-space-spa94665587 _borderBottomWidth-t-space-spa94665587 _borderLeftWidth-t-space-spa94665587 _height-70px _justifyContent-center _pr-t-space-spa1360334043 _pl-t-space-spa1360334043 _top-7px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _boxShadow-0px0pxvar--100262595"
         >
           <span
-            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-1380577629 _fontFamily-299667014 _wordWrap-break-word _fontSize-28px _lineHeight-222976542 _fontWeight-233016202"
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _fontSize-28px _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
             data-disable-theme="true"
           >
             Shift
@@ -69,10 +69,10 @@ exports[`KeyboardKey Component renders correctly with state KeyUp 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _backgroundColor-568007324 _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _borderTopWidth-1481558338 _borderRightWidth-1481558338 _borderBottomWidth-1481558338 _borderLeftWidth-1481558338 _height-70px _justifyContent-center _pr-1316330176 _pl-1316330176 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _boxShadow-1880567627"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _backgroundColor-surface1 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _borderTopWidth-t-space-spa94665587 _borderRightWidth-t-space-spa94665587 _borderBottomWidth-t-space-spa94665587 _borderLeftWidth-t-space-spa94665587 _height-70px _justifyContent-center _pr-t-space-spa1360334043 _pl-t-space-spa1360334043 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _boxShadow-0px7px0pxva612953881"
         >
           <span
-            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-28px _lineHeight-222976542 _fontWeight-233016202"
+            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-28px _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
             data-disable-theme="true"
           >
             Shift

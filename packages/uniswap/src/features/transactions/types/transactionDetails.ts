@@ -1,38 +1,19 @@
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers/lib/ethers'
-import { GeneratedIcon } from 'ui/src'
-import { Warning, WarningColor } from 'uniswap/src/components/modals/WarningModal/types'
 import { TransactionListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { Routing, TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DappInfo } from 'uniswap/src/types/walletConnect'
-
-export type WarningWithStyle = {
-  warning: Warning
-  color: WarningColor
-  Icon: GeneratedIcon | null
-  displayedInline: boolean
-}
-
-export type ParsedWarnings = {
-  blockingWarning?: Warning
-  formScreenWarning?: WarningWithStyle
-  insufficientBalanceWarning?: Warning
-  insufficientGasFundsWarning?: Warning
-  priceImpactWarning?: Warning
-  reviewScreenWarning?: WarningWithStyle
-  warnings: Warning[]
-}
 
 export type ChainIdToTxIdToDetails = Partial<Record<UniverseChainId, { [txId: string]: TransactionDetails }>>
 
 // Basic identifying info for a transaction
 export interface TransactionId {
   chainId: UniverseChainId
-  // moonpay externalTransactionId
+  // For FOR transactions, this is the externalSessionId
   id: string
 }
 
@@ -118,7 +99,8 @@ export interface BridgeTransactionDetails extends BaseTransactionDetails {
   sendConfirmed?: boolean
 }
 
-export type TransactionDetails = UniswapXOrderDetails | ClassicTransactionDetails | BridgeTransactionDetails
+export type OnChainTransactionDetails = ClassicTransactionDetails | BridgeTransactionDetails
+export type TransactionDetails = UniswapXOrderDetails | OnChainTransactionDetails
 
 export enum TransactionStatus {
   Canceled = 'cancelled',
@@ -144,6 +126,12 @@ export enum QueuedOrderStatus {
   Submitted = 'submitted',
 }
 
+export const TEMPORARY_TRANSACTION_STATUSES = [
+  TransactionStatus.Pending,
+  TransactionStatus.Replacing,
+  TransactionStatus.Cancelling,
+]
+
 const FINAL_STATUSES = [
   TransactionStatus.Success,
   TransactionStatus.Failed,
@@ -167,8 +155,11 @@ export type FinalizedTransactionDetails = TransactionDetails &
 
 export type TransactionOptions = {
   request: providers.TransactionRequest
+  submittedTimestampMs?: number
   timeoutTimestampMs?: number
+  timeoutLogged?: boolean
   submitViaPrivateRpc?: boolean
+  privateRpcProvider?: 'flashbots' | 'mevblocker'
 }
 
 export interface TransactionReceipt {
@@ -217,8 +208,10 @@ export enum TransactionType {
   // Fiat onramp
   FiatPurchaseDeprecated = 'fiat-purchase', // Deprecated, still here for use in migrations.
   LocalOnRamp = 'local-onramp',
+  LocalOffRamp = 'local-offramp',
   OnRampPurchase = 'onramp-purchase',
   OnRampTransfer = 'onramp-transfer',
+  OffRampSale = 'offramp-sale',
 
   // General
   WCConfirm = 'wc-confirm',
@@ -253,6 +246,7 @@ export interface BaseSwapTransactionInfo extends BaseTransactionInfo {
   routeString?: string
   gasUseEstimate?: string
   protocol?: Protocol
+  simulationFailureReasons?: TransactionFailureReason[]
 }
 
 export interface BridgeTransactionInfo extends BaseTransactionInfo {
@@ -320,9 +314,14 @@ export interface LocalOnRampTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.LocalOnRamp
 }
 
+export interface LocalOffRampTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.LocalOffRamp
+}
+
 export interface OnRampTransactionInfo extends BaseTransactionInfo {
   type: TransactionType
   id: string
+  providerTransactionId?: string // surfaced to the user in the transaction details modal if they need to contact support
   destinationTokenSymbol: string
   destinationTokenAddress: string
   destinationTokenAmount?: number
@@ -342,6 +341,12 @@ export interface OnRampPurchaseInfo extends OnRampTransactionInfo {
 
 export interface OnRampTransferInfo extends OnRampTransactionInfo {
   type: TransactionType.OnRampTransfer
+}
+
+export interface OffRampSaleInfo extends OnRampTransactionInfo {
+  type: TransactionType.OffRampSale
+  sourceCurrency: string
+  sourceAmount?: number
 }
 
 export interface ServiceProviderInfo {
@@ -383,7 +388,7 @@ export interface WCConfirmInfo extends BaseTransactionInfo {
 
 export interface DappInfoTransactionDetails {
   name?: string
-  address: string
+  address?: string
   icon?: string
 }
 
@@ -409,9 +414,11 @@ export type TransactionTypeInfo =
   | UnknownTransactionInfo
   | OnRampPurchaseInfo
   | OnRampTransferInfo
+  | OffRampSaleInfo
   | LocalOnRampTransactionInfo
+  | LocalOffRampTransactionInfo
 
-export function isConfirmedSwapTypeInfo(typeInfo: TransactionTypeInfo): typeInfo is ConfirmedSwapTransactionInfo {
+  export function isConfirmedSwapTypeInfo(typeInfo: TransactionTypeInfo): typeInfo is ConfirmedSwapTransactionInfo {
   return Boolean(
     (typeInfo as ConfirmedSwapTransactionInfo).inputCurrencyAmountRaw &&
       (typeInfo as ConfirmedSwapTransactionInfo).outputCurrencyAmountRaw,
@@ -447,5 +454,6 @@ export function isFinalizedTx(tx: TransactionDetails | FinalizedTransactionDetai
 export enum TransactionDetailsType {
   Transaction = 'TransactionDetails',
   OnRamp = 'OnRampTransactionDetails',
+  OffRamp = 'OffRampTransactionDetails',
   UniswapXOrder = 'SwapOrderDetails',
 }

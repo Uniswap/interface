@@ -8,7 +8,6 @@ import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 export type BaseQRProps = {
   ecl?: QRCodeErrorCorrectionLevel
   size: number
-  eyeSize?: number
   color: string
 }
 
@@ -18,7 +17,7 @@ type AddressQRCodeProps = BaseQRProps & {
   backgroundColor?: string
 }
 
-function AddressQRCode({ address, ecl, size, eyeSize, backgroundColor, color }: AddressQRCodeProps): JSX.Element {
+function AddressQRCode({ address, ecl, size, backgroundColor, color }: AddressQRCodeProps): JSX.Element {
   const colors = useSporeColors()
 
   return (
@@ -26,7 +25,6 @@ function AddressQRCode({ address, ecl, size, eyeSize, backgroundColor, color }: 
       backgroundColor={backgroundColor}
       color={color}
       ecl={ecl}
-      eyeSize={eyeSize}
       overlayColor={colors.neutral1.val}
       size={size}
       value={address}
@@ -43,7 +41,6 @@ const _QRCodeDisplay = ({
   encodedValue,
   ecl = 'H',
   size,
-  eyeSize,
   color,
   containerBackgroundColor,
   children,
@@ -55,7 +52,6 @@ const _QRCodeDisplay = ({
         backgroundColor={containerBackgroundColor}
         color={color}
         ecl={ecl}
-        eyeSize={eyeSize}
         size={size}
       />
       <Flex

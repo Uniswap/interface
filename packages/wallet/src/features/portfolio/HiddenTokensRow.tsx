@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, ImpactFeedbackStyle, Separator, Text, TouchableArea } from 'ui/src'
+import { Flex, Separator, Text, TouchableArea } from 'ui/src'
 import { AnglesDownUp, SortVertical } from 'ui/src/components/icons'
 import { isMobileApp } from 'utilities/src/platform'
 
@@ -16,13 +16,7 @@ export function HiddenTokensRow({
   const { t } = useTranslation()
 
   return (
-    <TouchableArea
-      hapticFeedback
-      activeOpacity={1}
-      hapticStyle={ImpactFeedbackStyle.Light}
-      mx={isMobileApp && '$spacing16'}
-      onPress={onPress}
-    >
+    <TouchableArea activeOpacity={1} mx={isMobileApp && '$spacing16'} onPress={onPress}>
       <Flex row alignItems="center" justifyContent="space-between" py="$spacing8">
         <Flex centered grow row gap="$spacing12">
           <Separator />

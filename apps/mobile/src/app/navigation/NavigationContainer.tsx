@@ -1,6 +1,5 @@
 import { DdRumReactNavigationTracking } from '@datadog/mobile-react-navigation'
 import {
-  createNavigationContainerRef,
   DefaultTheme,
   NavigationContainer as NativeNavigationContainer,
   NavigationContainerRefWithCurrent,
@@ -9,6 +8,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import React, { FC, PropsWithChildren, useCallback, useState } from 'react'
 import { Linking } from 'react-native'
 import { useDispatch } from 'react-redux'
+import { navigationRef } from 'src/app/navigation/navigationRef'
 import { RootParamList } from 'src/app/navigation/types'
 import { openDeepLink } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { DIRECT_LOG_ONLY_SCREENS } from 'src/features/telemetry/directLogScreens'
@@ -18,14 +18,13 @@ import { useSporeColors } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileNavScreen } from 'uniswap/src/types/screens/mobile'
+import { datadogEnabled } from 'utilities/src/environment/constants'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { sleep } from 'utilities/src/time/timing'
 
 interface Props {
   onReady?: (navigationRef: NavigationContainerRefWithCurrent<ReactNavigation.RootParamList>) => void
 }
-
-export const navigationRef = createNavigationContainerRef()
 
 /** Wrapped `NavigationContainer` with telemetry tracing. */
 export const NavigationContainer: FC<PropsWithChildren<Props>> = ({ children, onReady }: PropsWithChildren<Props>) => {
@@ -54,7 +53,7 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({ children, on
         const initialRoute = navigationRef.getCurrentRoute()?.name as MobileNavScreen
         setRouteName(initialRoute)
 
-        if (!__DEV__) {
+        if (datadogEnabled) {
           DdRumReactNavigationTracking.startTrackingViews(navigationRef.current)
         }
       }}

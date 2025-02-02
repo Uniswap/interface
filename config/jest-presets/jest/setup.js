@@ -137,6 +137,14 @@ jest.mock('uniswap/src/features/gating/sdk/statsig', () => {
   return StatsigMock
 })
 
+jest.mock('uniswap/src/features/gating/hooks', () => {
+  const real = jest.requireActual('uniswap/src/features/gating/hooks')
+  return {
+    ...real,
+    useDynamicConfigValue: (_config, _key, defaultValue, _customTypeGuard) => defaultValue,
+  }
+})
+
 // TODO: Remove this mock after mocks in jest-expo are fixed
 // (see the issue: https://github.com/expo/expo/issues/26893)
 jest.mock('expo-web-browser', () => ({}))

@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext } from 'react'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { AssetType } from 'uniswap/src/entities/assets'
-import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { getSwapPrefilledState } from 'uniswap/src/features/transactions/swap/hooks/useSwapPrefilledState'
@@ -21,6 +21,8 @@ type NavigateToSwapFlowPartialState = {
 
 type NavigateToSwapFlowWithActions = {
   openTokenSelector: CurrencyField
+  inputChainId?: UniverseChainId
+  outputChainId?: UniverseChainId
 }
 
 type NavigateToSendFlowPartialState = {
@@ -44,7 +46,9 @@ function isNavigateToTransactionFlowArgsInitialState(
   return Boolean(args && (args as NavigateToTransactionFlowTransactionState).initialState !== undefined)
 }
 
-function isNavigateToSwapFlowArgsPartialState(args: NavigateToSwapFlowArgs): args is NavigateToSwapFlowPartialState {
+export function isNavigateToSwapFlowArgsPartialState(
+  args: NavigateToSwapFlowArgs,
+): args is NavigateToSwapFlowPartialState {
   return Boolean(args && (args as NavigateToSwapFlowPartialState).currencyAddress !== undefined)
 }
 
@@ -65,16 +69,18 @@ export function getNavigateToSwapFlowArgsInitialState(
   } else if (isNavigateToSwapFlowArgsPartialState(args)) {
     return getSwapPrefilledState(args) as TransactionState
   } else if (isNavigateToSwapFlowWithActions(args)) {
+    const inputChainId = args.inputChainId ?? defaultChainId
     return {
       [CurrencyField.INPUT]: {
-        address: DEFAULT_NATIVE_ADDRESS,
-        chainId: defaultChainId,
+        address: getNativeAddress(inputChainId),
+        chainId: inputChainId,
         type: AssetType.Currency,
       },
       [CurrencyField.OUTPUT]: null,
       exactCurrencyField: CurrencyField.INPUT,
       exactAmountToken: '',
       selectingCurrencyField: CurrencyField.OUTPUT,
+      selectingCurrencyChainId: args.outputChainId,
     }
   } else {
     return undefined

@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
   selectIsTestnetModeEnabled,
   selectWalletHideSmallBalancesSetting,

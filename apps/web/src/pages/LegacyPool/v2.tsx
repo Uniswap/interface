@@ -19,6 +19,7 @@ import styled, { useTheme } from 'lib/styled-components'
 import { PoolVersionMenu } from 'pages/LegacyPool/shared'
 import { useMemo } from 'react'
 import { ChevronsRight } from 'react-feather'
+import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useStakingInfo } from 'state/stake/hooks'
@@ -26,7 +27,6 @@ import { toV2LiquidityToken, useTrackedTokenPairs } from 'state/user/hooks'
 import { ExternalLink, HideSmall, ThemedText } from 'theme/components'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { Trans } from 'uniswap/src/i18n'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
