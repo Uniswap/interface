@@ -1,5 +1,10 @@
-We are back with some small updates! Here’s the latest:
+We are back with a new feature: 
+
+Fiat Offramp: Users can now sell their crypto back into cash and have it deposit to their bank account, centralized exchange account, and more!
+
+Other changes: 
 
 - More robust dapp information on Activity screen
+- Reduced onboarding screens for new wallets
 - Improved volume-based sorting on our Explore page
 - Various bug fixes and performance improvements

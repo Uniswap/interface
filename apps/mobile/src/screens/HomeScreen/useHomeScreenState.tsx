@@ -51,10 +51,13 @@ export function useHomeScreenState(): {
 
   const hasNft = !!nftData?.nftBalances?.edges.length
   const hasTokenBalance = !!Object.entries(balancesById || {}).length
-  const hasUsedWalletFromRemote = !!hasTokenBalance || !!hasNft || !!hasActivity
+  const hasUsedWalletFromRemote = hasTokenBalance || hasNft || hasActivity
+  const dataIsLoading = areBalancesLoading || areNFTsLoading || isActivityLoading
 
-  const isTabsDataLoaded =
-    hasUsedWalletFromRemote || (!areBalancesLoading && !areNFTsLoading && !isActivityLoading) || hasUsedWalletFromCache
+  // Note: This is to prevent loading the empty wallet state for an active
+  // wallet loading tabs for the first time.
+  const isTabsDataLoaded = !(dataIsLoading && hasUsedWalletFromCache)
+
   const hasUsedWallet = hasUsedWalletFromCache || hasUsedWalletFromRemote
 
   useEffect(() => {

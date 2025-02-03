@@ -208,16 +208,6 @@ exports[`AccountHeader renders correctly 1`] = `
               }
             >
               <View
-                collapsable={false}
-                forwardedRef={[Function]}
-                jestAnimatedStyle={
-                  {
-                    "value": {
-                      "opacity": 0,
-                      "width": 0,
-                    },
-                  }
-                }
                 style={
                   {
                     "flexDirection": "row",
