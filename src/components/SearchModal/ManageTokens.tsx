@@ -40,9 +40,11 @@ const Footer = styled.div`
 export default function ManageTokens({
   setModalView,
   setImportToken,
+  onCurrencySelect,
 }: {
   setModalView: (view: CurrencyModalView) => void
   setImportToken: (token: Token) => void
+  onCurrencySelect: (currency: Token) => void
 }) {
   const { chainId } = useActiveWeb3React()
 
@@ -122,6 +124,7 @@ export default function ManageTokens({
                 showImportView={() => setModalView(CurrencyModalView.importToken)}
                 setImportToken={setImportToken}
                 style={{ height: 'fit-content' }}
+                onTokenSelect={onCurrencySelect}
               />
             </Card>
           )}

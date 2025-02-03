@@ -49,12 +49,14 @@ export default function Manage({
   setImportList,
   setImportToken,
   setListUrl,
+  onCurrencySelect,
 }: {
   onDismiss: () => void
   setModalView: (view: CurrencyModalView) => void
   setImportToken: (token: Token) => void
   setImportList: (list: TokenList) => void
   setListUrl: (url: string) => void
+  onCurrencySelect: (currency: Token) => void
 }) {
   // toggle between tokens and lists
   const [showLists, setShowLists] = useState(true)
@@ -84,7 +86,7 @@ export default function Manage({
       {showLists ? (
         <ManageLists setModalView={setModalView} setImportList={setImportList} setListUrl={setListUrl} />
       ) : (
-        <ManageTokens setModalView={setModalView} setImportToken={setImportToken} />
+        <ManageTokens setModalView={setModalView} setImportToken={setImportToken} onCurrencySelect={onCurrencySelect} />
       )}
     </Wrapper>
   )
