@@ -1,25 +1,27 @@
-import { transparentize } from 'polished'
-import { ReactNode } from 'react'
-import { AlertTriangle } from 'react-feather'
-import styled, { css } from 'styled-components'
-import { Z_INDEX } from 'theme/zIndex'
+import { transparentize } from "polished";
+import { ReactNode } from "react";
+import { AlertTriangle } from "react-feather";
+import styled, { css } from "styled-components";
+import { Z_INDEX } from "theme/zIndex";
 
-import { ButtonText } from 'theme/components'
-import { AutoColumn } from '../Column'
+import { ButtonText } from "theme/components";
+import { AutoColumn } from "../Column";
 
 export const PageWrapper = styled.div`
-  padding: 68px 8px 0px;
-  max-width: 480px;
+  padding: 50px 8px 0px;
+  max-width: 500px;
   width: 100%;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) =>
+      `${theme.breakpoint.md}px`}) {
     padding-top: 48px;
   }
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) =>
+      `${theme.breakpoint.sm}px`}) {
     padding-top: 20px;
   }
-`
+`;
 
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
 export const SwapWrapperOuter = styled.main<{ isDark?: boolean }>`
@@ -27,20 +29,22 @@ export const SwapWrapperOuter = styled.main<{ isDark?: boolean }>`
   z-index: ${Z_INDEX.default};
   transition: transform 250ms ease;
   border-radius: 24px;
-`
+`;
 
-export const SwapWrapper = (props: React.ComponentProps<typeof SwapWrapperOuter>) => {
+export const SwapWrapper = (
+  props: React.ComponentProps<typeof SwapWrapperOuter>
+) => {
   return (
     <SwapWrapperOuter {...props}>
       <SwapWrapperInner>{props.children}</SwapWrapperInner>
     </SwapWrapperOuter>
-  )
-}
+  );
+};
 
 const SwapWrapperInner = styled.div`
   border-radius: 24px;
   z-index: -1;
-`
+`;
 
 export const ArrowWrapper = styled.div<{ clickable: boolean }>`
   border-radius: 12px;
@@ -53,7 +57,7 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
   margin-right: auto;
   background-color: ${({ theme }) => theme.surface2};
   border: 4px solid;
-  border-color: ${({ theme }) => theme.surface1};
+  border-color: rgba(155, 155, 155, 0.2);
 
   z-index: 2;
   ${({ clickable }) =>
@@ -65,29 +69,29 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
           }
         `
       : null}
-`
+`;
 
 // styles
 export const Dots = styled.span`
   &::after {
     display: inline-block;
     animation: ellipsis 1.25s infinite;
-    content: '.';
+    content: ".";
     width: 1em;
     text-align: left;
   }
   @keyframes ellipsis {
     0% {
-      content: '.';
+      content: ".";
     }
     33% {
-      content: '..';
+      content: "..";
     }
     66% {
-      content: '...';
+      content: "...";
     }
   }
-`
+`;
 
 const SwapCallbackErrorInner = styled.div`
   background-color: ${({ theme }) => transparentize(0.9, theme.critical)};
@@ -105,7 +109,7 @@ const SwapCallbackErrorInner = styled.div`
     margin: 0;
     font-weight: 535;
   }
-`
+`;
 
 const SwapCallbackErrorInnerAlertTriangle = styled.div`
   background-color: ${({ theme }) => transparentize(0.9, theme.critical)};
@@ -116,7 +120,7 @@ const SwapCallbackErrorInnerAlertTriangle = styled.div`
   border-radius: 12px;
   min-width: 48px;
   height: 48px;
-`
+`;
 
 export function SwapCallbackError({ error }: { error: ReactNode }) {
   return (
@@ -124,9 +128,9 @@ export function SwapCallbackError({ error }: { error: ReactNode }) {
       <SwapCallbackErrorInnerAlertTriangle>
         <AlertTriangle size={24} />
       </SwapCallbackErrorInnerAlertTriangle>
-      <p style={{ wordBreak: 'break-word' }}>{error}</p>
+      <p style={{ wordBreak: "break-word" }}>{error}</p>
     </SwapCallbackErrorInner>
-  )
+  );
 }
 
 export const SwapShowAcceptChanges = styled(AutoColumn)`
@@ -134,7 +138,7 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
   color: ${({ theme }) => theme.accent1};
   padding: 12px;
   border-radius: 12px;
-`
+`;
 
 export const SwapSection = styled.div`
   background-color: ${({ theme }) => theme.surface2};
@@ -146,6 +150,7 @@ export const SwapSection = styled.div`
   line-height: 20px;
   padding: 16px;
   position: relative;
+  border: 1px solid #9b9b9b3b !important;
   &:before {
     box-sizing: border-box;
     background-size: 100%;
@@ -156,8 +161,7 @@ export const SwapSection = styled.div`
     width: 100%;
     height: 100%;
     pointer-events: none;
-    content: '';
-    border: 1px solid ${({ theme }) => theme.surface2};
+    content: "";
   }
   &:hover:before {
     border-color: ${({ theme }) => theme.deprecated_stateOverlayHover};
@@ -165,11 +169,11 @@ export const SwapSection = styled.div`
   &:focus-within:before {
     border-color: ${({ theme }) => theme.deprecated_stateOverlayPressed};
   }
-`
+`;
 
 export const OutputSwapSection = styled(SwapSection)`
   border-bottom: ${({ theme }) => `1px solid ${theme.surface1}`};
-`
+`;
 
 export const ArrowContainer = styled.div`
   display: inline-flex;
@@ -177,10 +181,11 @@ export const ArrowContainer = styled.div`
   justify-content: center;
   width: 100%;
   height: 100%;
-`
+`;
 
 export const SwapHeaderTabButton = styled(ButtonText)<{ $isActive: boolean }>`
-  color: ${({ theme, $isActive }) => ($isActive ? theme.neutral1 : theme.neutral2)};
+  color: ${({ theme, $isActive }) =>
+    $isActive ? theme.neutral1 : theme.neutral2};
   background-color: ${({ theme, $isActive }) => $isActive && theme.surface3};
   padding: 8px 16px;
   border-radius: 20px;
@@ -192,4 +197,4 @@ export const SwapHeaderTabButton = styled(ButtonText)<{ $isActive: boolean }>`
   &:active {
     text-decoration: none;
   }
-`
+`;

@@ -6,7 +6,12 @@ import { useUserAddedTokens } from "state/user/userAddedTokens";
 import { useWindowSize } from "../../hooks/screenSize";
 import useLast from "../../hooks/useLast";
 import Modal from "../Modal";
-import { CurrencySearch, CurrencySearchFilters } from "./CurrencySearch";
+import {
+  CurrencySearch,
+  CurrencySearchFilters,
+  CrossChainCurrencySearch,
+} from "./CurrencySearch";
+import { CrossChainCurrency } from "types/tokens";
 
 interface CurrencySearchModalProps {
   isOpen: boolean;
@@ -15,6 +20,15 @@ interface CurrencySearchModalProps {
   onCurrencySelect: (currency: Currency) => void;
   otherSelectedCurrency?: Currency | null;
   showCurrencyAmount?: boolean;
+  currencySearchFilters?: CurrencySearchFilters;
+}
+
+interface CrossChainCurrencySearchModalProps {
+  isOpen: boolean;
+  onDismiss: () => void;
+  selectedCurrency: CrossChainCurrency | null;
+  onCurrencySelect: (currency: CrossChainCurrency) => void;
+  otherSelectedCurrency: CrossChainCurrency | null;
   currencySearchFilters?: CurrencySearchFilters;
 }
 
@@ -110,3 +124,35 @@ export default memo(function CurrencySearchModal({
     </Modal>
   );
 });
+
+export const CrossChainCurrencySearchModal = memo(
+  function CrossChainCurrencySearchModal({
+    isOpen,
+    onDismiss,
+    onCurrencySelect,
+    selectedCurrency,
+    otherSelectedCurrency,
+  }: CrossChainCurrencySearchModalProps) {
+    const handleCurrencySelect = useCallback(
+      (currency: CrossChainCurrency) => {
+        onCurrencySelect(currency);
+        onDismiss();
+      },
+      [onDismiss, onCurrencySelect]
+    );
+
+    let modalHeight: number | undefined = 80;
+
+    return (
+      <Modal isOpen={isOpen} onDismiss={onDismiss} height={modalHeight}>
+        <CrossChainCurrencySearch
+          isOpen={isOpen}
+          onDismiss={onDismiss}
+          onCurrencySelect={handleCurrencySelect}
+          selectedCurrency={selectedCurrency}
+          otherSelectedCurrency={otherSelectedCurrency}
+        />
+      </Modal>
+    );
+  }
+);

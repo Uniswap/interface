@@ -4,7 +4,10 @@ import {
 } from "@uniswap/analytics-events";
 import { Currency, CurrencyAmount } from "@taraswap/sdk-core";
 import { ChainSelector } from "components/NavBar/ChainSelector";
-import { useCurrencySearchResults } from "components/SearchModal/useCurrencySearchResults";
+import {
+  useCurrencySearchResults,
+  useCrossChainCurrencySearchResults,
+} from "components/SearchModal/useCurrencySearchResults";
 import useDebounce from "hooks/useDebounce";
 import { useOnClickOutside } from "hooks/useOnClickOutside";
 import useSelectChain from "hooks/useSelectChain";
@@ -36,11 +39,15 @@ import Column from "../Column";
 import Row, { RowBetween } from "../Row";
 import CommonBases from "./CommonBases";
 import CurrencyList, {
+  CrossChainCurrencyList,
+  CrossChainCurrencyRow,
   CurrencyRow,
   formatAnalyticsEventProperties,
+  formatCrossChainAnalyticsEventProperties,
 } from "./CurrencyList";
 import { PaddedColumn, SearchInput, Separator } from "./styled";
 import { useSingleTokenBalance } from "hooks/useSingleTokenBalance";
+import { CrossChainCurrency, equalsCrossChainCurrency } from "types/tokens";
 
 const ContentWrapper = styled(Column)`
   background-color: ${({ theme }) => theme.surface1};
@@ -74,6 +81,19 @@ interface CurrencySearchProps {
   selectedCurrency?: Currency | null;
   onCurrencySelect: (currency: Currency, hasWarning?: boolean) => void;
   otherSelectedCurrency?: Currency | null;
+  showCurrencyAmount?: boolean;
+  filters?: CurrencySearchFilters;
+}
+
+interface CrossChainCurrencySearchProps {
+  isOpen: boolean;
+  onDismiss: () => void;
+  selectedCurrency: CrossChainCurrency | null;
+  onCurrencySelect: (
+    currency: CrossChainCurrency,
+    hasWarning?: boolean
+  ) => void;
+  otherSelectedCurrency: CrossChainCurrency | null;
   showCurrencyAmount?: boolean;
   filters?: CurrencySearchFilters;
 }
@@ -292,6 +312,182 @@ export function CurrencySearch({
                   searchQuery={searchQuery}
                   isAddressSearch={isAddressSearch}
                   balances={balanceMap}
+                />
+              )}
+            </AutoSizer>
+          </div>
+        ) : (
+          <Column style={{ padding: "20px", height: "100%" }}>
+            <ThemedText.DeprecatedMain
+              color={theme.neutral3}
+              textAlign="center"
+              mb="20px"
+            >
+              <Trans i18nKey="common.noResults" />
+            </ThemedText.DeprecatedMain>
+          </Column>
+        )}
+      </Trace>
+    </ContentWrapper>
+  );
+}
+
+export function CrossChainCurrencySearch({
+  selectedCurrency,
+  onCurrencySelect,
+  otherSelectedCurrency,
+  onDismiss,
+  isOpen,
+}: CrossChainCurrencySearchProps) {
+  // const { showCommonBases } = {
+  //   ...DEFAULT_CURRENCY_SEARCH_FILTERS,
+  // };
+
+  const theme = useTheme();
+
+  // refs for fixed size lists
+  const fixedList = useRef<FixedSizeList>();
+
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const debouncedQuery = useDebounce(searchQuery, 200);
+  const isAddressSearch = false;
+
+  let {
+    searchCurrency,
+    allCurrencyRows,
+    loading: currencySearchResultsLoading,
+  } = useCrossChainCurrencySearchResults({
+    searchQuery: debouncedQuery,
+    selectedCurrency,
+    otherSelectedCurrency,
+  });
+
+  const { balanceMap } = useTokenBalances();
+  const handleCurrencySelect = useCallback(
+    async (currency: CrossChainCurrency) => {
+      onCurrencySelect(currency);
+    },
+    [onCurrencySelect, onDismiss]
+  );
+
+  // clear the input on open
+  useEffect(() => {
+    if (isOpen) {
+      setSearchQuery("");
+    }
+  }, [isOpen]);
+
+  // manage focus on modal show
+  const inputRef = useRef<HTMLInputElement>();
+  const handleInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    const input = event.target.value;
+    // const checksummedInput = isAddress(input);
+    setSearchQuery(input);
+    fixedList.current?.scrollTo(0);
+  }, []);
+
+  // Allows the user to select a currency by pressing Enter if it's the only currency in the list.
+  const handleEnter = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter") {
+        const currencyResults = allCurrencyRows.filter(
+          (currencyRow) => !!currencyRow.currency
+        );
+        const s = debouncedQuery.toLowerCase().trim();
+        if (currencyResults.length > 0) {
+          if (
+            currencyResults[0]?.currency &&
+            (currencyResults[0].currency.symbol?.toLowerCase() ===
+              debouncedQuery.trim().toLowerCase() ||
+              currencyResults.length === 1)
+          ) {
+            handleCurrencySelect(currencyResults[0].currency);
+          }
+        }
+      }
+    },
+    [allCurrencyRows, debouncedQuery, handleCurrencySelect]
+  );
+
+  // menu ui
+  const [open, toggle] = useToggle(false);
+  const node = useRef<HTMLDivElement>();
+  useOnClickOutside(node, open ? toggle : undefined);
+
+  return (
+    <ContentWrapper>
+      <Trace
+        logImpression
+        eventOnTrigger={InterfaceEventName.TOKEN_SELECTOR_OPENED}
+        modal={InterfaceModalName.TOKEN_SELECTOR}
+      >
+        <PaddedColumn gap="16px">
+          <RowBetween>
+            <Text fontWeight={535} fontSize={16}>
+              <Trans i18nKey="common.selectToken.label" />
+            </Text>
+            <CloseIcon onClick={onDismiss} />
+          </RowBetween>
+          <Row gap="4px">
+            <SearchInput
+              type="text"
+              id="token-search-input"
+              data-testid="token-search-input"
+              placeholder="Search name"
+              autoComplete="off"
+              value={searchQuery}
+              ref={inputRef as RefObject<HTMLInputElement>}
+              onChange={handleInput}
+              onKeyDown={handleEnter}
+            />
+          </Row>
+        </PaddedColumn>
+        <Separator />
+        {searchCurrency ? (
+          <Column style={{ padding: "20px 0", height: "100%" }}>
+            <CrossChainCurrencyRow
+              currency={searchCurrency}
+              isSelected={Boolean(
+                searchCurrency &&
+                  selectedCurrency &&
+                  equalsCrossChainCurrency(selectedCurrency, searchCurrency)
+              )}
+              onSelect={() =>
+                searchCurrency && handleCurrencySelect(searchCurrency)
+              }
+              otherSelected={Boolean(
+                searchCurrency &&
+                  otherSelectedCurrency &&
+                  equalsCrossChainCurrency(
+                    otherSelectedCurrency,
+                    searchCurrency
+                  )
+              )}
+              eventProperties={formatCrossChainAnalyticsEventProperties(
+                searchCurrency,
+                0,
+                [searchCurrency],
+                searchQuery,
+                isAddressSearch
+              )}
+            />
+          </Column>
+        ) : allCurrencyRows.some(
+            (currencyRow: any) => !!currencyRow.currency
+          ) || currencySearchResultsLoading ? (
+          <div style={{ flex: "1" }}>
+            <AutoSizer disableWidth>
+              {({ height }: { height: number }) => (
+                <CrossChainCurrencyList
+                  height={height}
+                  currencies={allCurrencyRows}
+                  onCurrencySelect={handleCurrencySelect}
+                  otherCurrency={otherSelectedCurrency}
+                  selectedCurrency={selectedCurrency}
+                  fixedListRef={fixedList}
+                  isLoading={currencySearchResultsLoading}
+                  searchQuery={searchQuery}
+                  isAddressSearch={isAddressSearch}
                 />
               )}
             </AutoSizer>

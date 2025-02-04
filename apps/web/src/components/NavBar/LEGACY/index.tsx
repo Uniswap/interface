@@ -69,7 +69,7 @@ const MenuItem = ({
       rel={external ? "noopener noreferrer" : undefined}
       className={isActive ? styles.activeMenuItem : styles.menuItem}
       id={id}
-      style={{ textDecoration: "none" }}
+      style={{ textDecoration: "none", whiteSpace: "nowrap" }}
       data-testid={dataTestId}
     >
       {children}
@@ -102,8 +102,14 @@ export const PageTabs = () => {
       <MenuItem dataTestId="nft-nav" href="/farms" isActive={isNftPage}>
         <Trans i18nKey="common.farms" />
       </MenuItem>
+      <MenuItem
+        href="/cross-chain-swap"
+        isActive={pathname.startsWith("/cross-chain-swap")}
+      >
+        <Trans i18nKey="common.crossChainSwap" />
+      </MenuItem>
       {/* )} */}
-      <Box display={{ sm: "flex", lg: "none", xxl: "flex" }} width="full">
+      <Box display={{ sm: "flex", md: "none", xxl: "flex" }} width="full">
         <MenuItem
           href="/pool"
           dataTestId="pool-nav-link"
