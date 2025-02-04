@@ -6,7 +6,7 @@ import Row, { RowBetween } from 'components/Row'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import TransactionConfirmationModal from 'components/TransactionConfirmationModal'
 import { useToken } from 'hooks/Tokens'
-import { Discord, Github, Twitter } from 'pages/Landing/components/Icons'
+import { Discord, Farcaster, Github, LinkedIn, Medium, Reddit, Telegram, Twitter } from 'pages/Landing/components/Icons'
 import { Wiggle } from 'pages/Landing/components/animations'
 import SimpleTable from 'pages/LaunchpadCreate/SimpleTable'
 import { getDaySeconds } from 'pages/LaunchpadCreate/launchpad-constants'
@@ -14,7 +14,7 @@ import { LaunchpadOptions } from 'pages/LaunchpadCreate/launchpad-state'
 import { LaunchpadStatus } from 'pages/LaunchpadList/data/useLaunchpads'
 import { transparentize } from 'polished'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
-import { Calendar, Globe, Square, Youtube } from 'react-feather'
+import { Calendar, Globe, Youtube } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ButtonText, ExternalLink, ThemedText } from 'theme/components'
@@ -558,23 +558,23 @@ export default function LaunchpadView({
                   </SocialIcon>
                 )}
                 {options.tokenInfo.telegram && (
-                  <SocialIcon $hoverColor="#5F51FF">
+                  <SocialIcon $hoverColor="#0088cc">
                     <ExternalLink href={options.tokenInfo.telegram}>
-                      <Square size="32px" fill="inherit" />
+                      <Telegram size="32px" fill="inherit" />
                     </ExternalLink>
                   </SocialIcon>
                 )}
                 {options.tokenInfo.farcaster && (
                   <SocialIcon $hoverColor="#5F51FF">
                     <ExternalLink href={options.tokenInfo.farcaster}>
-                      <Square size="32px" fill="inherit" />
+                      <Farcaster size="32px" fill="inherit" />
                     </ExternalLink>
                   </SocialIcon>
                 )}
                 {options.tokenInfo.medium && (
                   <SocialIcon $hoverColor="#5F51FF">
                     <ExternalLink href={options.tokenInfo.medium}>
-                      <Square size="32px" fill="inherit" />
+                      <Medium size="32px" fill="inherit" />
                     </ExternalLink>
                   </SocialIcon>
                 )}
@@ -588,7 +588,7 @@ export default function LaunchpadView({
                 {options.tokenInfo.reddit && (
                   <SocialIcon $hoverColor="#5F51FF">
                     <ExternalLink href={options.tokenInfo.reddit}>
-                      <Square size="32px" fill="inherit" />
+                      <Reddit size="32px" fill="inherit" />
                     </ExternalLink>
                   </SocialIcon>
                 )}
@@ -645,7 +645,7 @@ export default function LaunchpadView({
                           {member.linkedin && (
                             <SocialIcon $hoverColor="#5F51FF">
                               <ExternalLink href={member.linkedin}>
-                                <Square size="20px" fill="inherit" />
+                                <LinkedIn size="20px" fill="inherit" />
                               </ExternalLink>
                             </SocialIcon>
                           )}
