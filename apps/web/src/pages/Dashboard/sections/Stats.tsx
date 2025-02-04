@@ -1,11 +1,12 @@
 import { DarkCard } from 'components/Card'
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { t, Trans } from 'i18n'
+import { t } from 'i18n'
 import { ArrowRightCircle } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
+import { useMedia } from 'ui'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { Body1, Box, H2 } from '../components/Generics'
 import { StatCard } from '../components/StatCard'
@@ -107,11 +108,12 @@ const StyledDot = styled.div`
 
 function LearnMore() {
   const { data } = useDashboardData()
+  const media = useMedia()
   return (
     <Row gap="16px">
       <LearnMoreButton to="/swap">
         <Row gap="sm" align="center">
-          <Trans>Go To Swap</Trans>
+          {media.xs ? 'Swap' : 'Go To Swap'}
           <LearnMoreArrow />
         </Row>
       </LearnMoreButton>

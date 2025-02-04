@@ -97,7 +97,7 @@ export function WebappCard(props: WebappCardProps) {
     if (props.type === 'earn') {
       return data.topEarnPools.map((pool) => (
         <EarnerTokenRow
-          key={pool.type === 'stake' ? pool.stakingToken : pool.poolAddress}
+          key={pool.type === 'stake' ? pool.contractAddress : pool.poolAddress}
           poolData={{
             ...pool,
             type: pool.type as 'stake' | 'farm',

@@ -2,7 +2,9 @@ import Row from 'components/Row'
 import { motion } from 'framer-motion'
 import { parseToRgb } from 'polished'
 import styled, { keyframes, useTheme } from 'styled-components'
+import { ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
+import { useMedia } from 'ui'
 
 // Animasyonlu sayı gösterimi için maskeleme bileşeni
 const Mask = motion(styled.div`
@@ -50,7 +52,7 @@ const Char = motion(styled.div<{ color: string }>`
 `)
 
 // Ana kart konteyneri
-const Container = styled.div<{ live?: boolean }>`
+const Container = styled.div<{ live?: boolean; height?: string }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -58,7 +60,7 @@ const Container = styled.div<{ live?: boolean }>`
   gap: 32px;
   border-radius: 20px;
   width: 100%;
-  height: 100%;
+  height: ${({ height }) => height || '100%'};
   max-height: 180px;
   padding: 28px 32px;
 
@@ -160,21 +162,26 @@ const delineators = [',', '.']
 // Ana StatCard bileşeni
 export function StatCard(props: StatCardProps) {
   const theme = useTheme()
+  const media = useMedia()
 
   return (
-    <Container live={props.live}>
+    <Container live={props.live} height={media.xs ? '134px' : '100%'}>
       <Row align="center" gap="sm">
         <LiveIcon display={props.live ? 'block' : 'none'} />
         <Title color={props.live ? theme.success : theme.neutral2}>{props.title}</Title>
       </Row>
-      <StringInterpolationWithMotion
-        prefix={props.prefix}
-        suffix={props.suffix}
-        value={props.value}
-        live={props.live}
-        delay={props.delay}
-        inView={props.inView}
-      />
+      {media.xs ? (
+        <ThemedText.BodyPrimary>{props.value}</ThemedText.BodyPrimary>
+      ) : (
+        <StringInterpolationWithMotion
+          prefix={props.prefix}
+          suffix={props.suffix}
+          value={props.value}
+          live={props.live}
+          delay={props.delay}
+          inView={props.inView}
+        />
+      )}
     </Container>
   )
 }
@@ -227,7 +234,6 @@ function NumberSprite({ char, charset, color }: { char: string; charset: string[
       },
     },
   }
-  console.log(chars, char)
 
   return (
     <SpriteContainer variants={variants}>
