@@ -3,8 +3,10 @@ import Column from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
 import { MenuItem, PaddedColumn, Separator } from 'components/SearchModal/styled'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { Trans } from 'i18n'
 import { useCallback, useMemo, useState } from 'react'
+import { Info } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { CloseIcon } from 'theme/components'
@@ -20,6 +22,8 @@ export interface ActionSelectorProps {
   selectedAction: string
   className?: string
   onActionSelect: (selectedAction: string) => void
+  showInfo?: boolean
+  infoTooltip?: string
 }
 
 interface ActionSelectorModalProps {
@@ -39,6 +43,9 @@ const ActionSelectorHeader = styled.div`
   font-weight: 535;
   color: ${({ theme }) => theme.neutral2};
   margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 `
 
 const ActionDropdown = styled(ButtonDropdown)`
@@ -74,7 +81,15 @@ const ActionSelectorContainer = styled.div`
   padding: 1em;
 `
 
-export const ActionSelector = ({ title, items, selectedAction, className, onActionSelect }: ActionSelectorProps) => {
+export const ActionSelector = ({
+  title,
+  items,
+  selectedAction,
+  className,
+  onActionSelect,
+  showInfo = false,
+  infoTooltip = '',
+}: ActionSelectorProps) => {
   const [modalOpen, setModalOpen] = useState(false)
   const onClick = useCallback(() => {
     setModalOpen(true)
@@ -94,6 +109,17 @@ export const ActionSelector = ({ title, items, selectedAction, className, onActi
         <ActionSelectorContainer className={className}>
           <ActionSelectorHeader>
             <Trans>{title}</Trans>
+            {showInfo && infoTooltip && (
+              <MouseoverTooltip text={infoTooltip} placement="top">
+                <Info
+                  size={15}
+                  style={{
+                    verticalAlign: 'middle',
+                    cursor: 'pointer',
+                  }}
+                />
+              </MouseoverTooltip>
+            )}
           </ActionSelectorHeader>
           <ActionDropdown onClick={onClick}>{item?.name || '-'}</ActionDropdown>
         </ActionSelectorContainer>
