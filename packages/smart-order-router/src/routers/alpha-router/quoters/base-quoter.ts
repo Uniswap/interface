@@ -126,6 +126,7 @@ export abstract class BaseQuoter<
         percents = [100]
         amounts = [amount]
       }*/
+      console.log('routesResult', routesResult)
 
       if (routesResult.routes.length > 0) {
         metric.putMetric(`${this.protocol}QuoterRoutesFound`, routesResult.routes.length, MetricLoggerUnit.Count)
