@@ -946,11 +946,9 @@ export class AlphaRouter implements IRouter<AlphaRouterConfig>, ISwapToRatio<Alp
       { blockNumber }
     )
 
-    console.log('routingConfig', JSON.stringify(routingConfig))
-
-    if (routingConfig.debugRouting) {
-      console.log(`Finalized routing config is ${JSON.stringify(routingConfig)}`)
-    }
+    // if (routingConfig.debugRouting) {
+    //   console.log(`Finalized routing config is ${JSON.stringify(routingConfig)}`)
+    // }
 
     const gasPriceWei = await this.getGasPriceWei()
 

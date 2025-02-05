@@ -53,9 +53,9 @@ function useFilteredStakes(pools: TableStake[]) {
   return useMemo(
     () =>
       pools.filter((pool) => {
-        const hashIncludesFilterString = pool.hash.toLowerCase().includes(lowercaseFilterString)
-        const addressIncludesFilterString = pool.stakingRewardAddress.toLowerCase().includes(lowercaseFilterString)
-        const tokenIncludesFilterString = pool.stakingToken.symbol?.toLowerCase().includes(lowercaseFilterString)
+        const hashIncludesFilterString = pool.hash?.toLowerCase().includes(lowercaseFilterString)
+        const addressIncludesFilterString = pool.stakingRewardAddress?.toLowerCase().includes(lowercaseFilterString)
+        const tokenIncludesFilterString = pool.stakingToken?.symbol?.toLowerCase().includes(lowercaseFilterString)
         const poolName = `${pool.stakingToken?.symbol} Stake`.toLowerCase()
         const poolNameIncludesFilterString = poolName.includes(lowercaseFilterString)
         return (
