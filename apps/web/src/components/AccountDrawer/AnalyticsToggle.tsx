@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { analytics, getAnalyticsAtomDirect } from 'utilities/src/telemetry/analytics/analytics'
 
 export function AnalyticsToggle() {
-  const [allowAnalytics, setAllowAnalytics] = useState(true)
+  const [allowAnalytics, setAllowAnalytics] = useState<boolean | null>(null)
   const { t } = useTranslation()
 
   useEffect(() => {
@@ -20,6 +20,10 @@ export function AnalyticsToggle() {
     await analytics.setAllowAnalytics(!allowAnalytics)
     setAllowAnalytics(!allowAnalytics)
   }, [allowAnalytics])
+
+  if (allowAnalytics === null) {
+    return null
+  }
 
   return (
     <SettingsToggle

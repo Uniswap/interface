@@ -40,9 +40,7 @@ export enum WalletEventName {
 export const WALLET_TESTNET_CONFIG: TestnetModeConfig = {
   allowlistEvents: [
     SharedEventName.PAGE_VIEWED,
-    SharedEventName.ELEMENT_CLICKED,
     UniswapEventName.TokenSelected,
-    WalletEventName.ExternalLinkOpened,
     WalletEventName.NetworkFilterSelected,
     WalletEventName.SwapSubmitted,
     WalletEventName.TransferCompleted,

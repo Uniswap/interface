@@ -4,7 +4,7 @@ import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
-import { useNotificationToggle } from 'src/features/notifications/hooks/useNotificationsToggle'
+import { useAddressNotificationToggle } from 'src/features/notifications/hooks/useNotificationsToggle'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { act, renderHook, waitFor } from 'src/test/test-utils'
 import { useSelectAccountNotificationSetting } from 'wallet/src/features/wallet/hooks'
@@ -42,7 +42,7 @@ jest.mock('wallet/src/features/wallet/hooks', () => ({
   useSelectAccountNotificationSetting: jest.fn(),
 }))
 
-describe('useNotificationToggle', () => {
+describe('useAddressNotificationToggle', () => {
   const mockAddress = '0xAddress'
   const mockDispatch = jest.fn()
   const mockUseDispatch = useDispatch as jest.MockedFunction<typeof useDispatch>
@@ -66,9 +66,12 @@ describe('useNotificationToggle', () => {
     firebaseEnabled?: boolean
     onPermissionChanged?: (enabled: boolean) => void
   } = {}) {
-    mockUseNotificationOSPermissionsQuery.mockReturnValue(osPermissionStatus)
+    mockUseNotificationOSPermissionsQuery.mockReturnValue({
+      notificationPermissionsEnabled: osPermissionStatus,
+      checkNotificationPermissions: jest.fn(),
+    })
     mockUseSelectAccountNotificationSetting.mockReturnValue(firebaseEnabled)
-    return renderHook(() => useNotificationToggle({ address: mockAddress, onPermissionChanged }))
+    return renderHook(() => useAddressNotificationToggle({ address: mockAddress, onToggle: onPermissionChanged }))
   }
 
   describe('initial states', () => {

@@ -306,7 +306,11 @@ export type FORTransactionUpdatedProperties = {
   serviceProvider: string
 }
 
-export type OfframpSendTransactionProperties = ITraceContext & {
+export type FORWidgetCompletedProperties = ITraceContext & {
+  externalTransactionId: Maybe<string>
+}
+
+export type FORFundsSentProperties = ITraceContext & {
   cryptoCurrency: string
   currencyAmount: number
   serviceProvider: string
@@ -341,8 +345,8 @@ export type LiquidityAnalyticsProperties = ITraceContext & {
   chain_id?: UniverseChainId
   baseCurrencyId: string
   quoteCurrencyId: string
-  token0AmountUSD: number
-  token1AmountUSD: number
+  token0AmountUSD?: number
+  token1AmountUSD?: number
   transaction_hash: string
 }
 
@@ -379,8 +383,8 @@ export type UniverseEventProperties = {
   [FiatOffRampEventName.FiatOffRampUnsupportedTokenBack]: FORUnsupportedTokenSelectedProperties
   [FiatOffRampEventName.FiatOffRampUnsupportedTokenSwap]: FORUnsupportedTokenSelectedProperties
   [FiatOffRampEventName.FiatOffRampWidgetOpened]: FORWidgetOpenedProperties
-  [FiatOffRampEventName.FiatOffRampWidgetCompleted]: OfframpSendTransactionProperties
-  [FiatOffRampEventName.FiatOffRampFundsSent]: OfframpSendTransactionProperties
+  [FiatOffRampEventName.FiatOffRampWidgetCompleted]: FORWidgetCompletedProperties
+  [FiatOffRampEventName.FiatOffRampFundsSent]: FORFundsSentProperties
   [FiatOnRampEventName.FiatOnRampAmountEntered]: FORAmountEnteredProperties
   [FiatOnRampEventName.FiatOnRampTokenSelected]: FORTokenSelectedProperties
   [FiatOnRampEventName.FiatOnRampTransactionUpdated]: FORTransactionUpdatedProperties

@@ -277,6 +277,8 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
         break
       }
       case DeepLinkAction.FiatOnRampScreen: {
+        const validUserAddress = yield* call(parseAndValidateUserAddress, deepLinkAction.data.userAddress)
+        yield* put(setAccountAsActive(validUserAddress))
         yield* call(handleGoToFiatOnRampDeepLink)
         break
       }

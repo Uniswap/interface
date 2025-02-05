@@ -1,10 +1,23 @@
-We are back with a new feature: 
+IPFS hash of the deployment:
+- CIDv0: `QmNy6ppw64jmLBEZ6r8D19beUVH3objJPrjMfNxvugqakD`
+- CIDv1: `bafybeiajkzyd25iwsu5lax4wtilh5ukji3kmzrt7r76k45pcminbsirsty`
 
-Fiat Offramp: Users can now sell their crypto back into cash and have it deposit to their bank account, centralized exchange account, and more!
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-Other changes: 
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
 
-- More robust dapp information on Activity screen
-- Reduced onboarding screens for new wallets
-- Improved volume-based sorting on our Explore page
-- Various bug fixes and performance improvements
+IPFS gateways:
+- https://bafybeiajkzyd25iwsu5lax4wtilh5ukji3kmzrt7r76k45pcminbsirsty.ipfs.dweb.link/
+- [ipfs://QmNy6ppw64jmLBEZ6r8D19beUVH3objJPrjMfNxvugqakD/](ipfs://QmNy6ppw64jmLBEZ6r8D19beUVH3objJPrjMfNxvugqakD/)
+
+### 5.68.4 (2025-02-05)
+
+
+### Bug Fixes
+
+* **web:** use price to create mock pair (#15923) 40968c3
+
+

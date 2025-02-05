@@ -30,7 +30,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                     <svg
                       fill="none"
                       stroke-width="8"
-                      style="color: rgb(125, 125, 125); width: 24px; height: 24px;"
+                      style="width: 24px; height: 24px; color: rgb(125, 125, 125);"
                       viewBox="0 0 16 16"
                     >
                       <path
@@ -99,7 +99,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                             <svg
                               fill="none"
                               stroke-width="8"
-                              style="color: rgb(125, 125, 125); width: 16px; height: 16px;"
+                              style="width: 16px; height: 16px; color: rgb(125, 125, 125);"
                               viewBox="0 0 24 24"
                             >
                               <path
@@ -6066,7 +6066,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                   <svg
                     fill="none"
                     stroke-width="8"
-                    style="color: rgb(125, 125, 125); width: 24px; height: 24px;"
+                    style="width: 24px; height: 24px; color: rgb(125, 125, 125);"
                     viewBox="0 0 16 16"
                   >
                     <path
@@ -6135,7 +6135,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                           <svg
                             fill="none"
                             stroke-width="8"
-                            style="color: rgb(125, 125, 125); width: 16px; height: 16px;"
+                            style="width: 16px; height: 16px; color: rgb(125, 125, 125);"
                             viewBox="0 0 24 24"
                           >
                             <path

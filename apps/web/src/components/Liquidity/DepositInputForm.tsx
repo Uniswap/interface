@@ -68,6 +68,7 @@ export function DepositInputForm({
       onSetMax(field, amount) // TODO(WEB-4978): update this to account for gas
     }
   }
+
   return (
     <Flex gap="$gap4">
       {!deposit0Disabled && (

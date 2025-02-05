@@ -157,7 +157,15 @@ export function getProtocolTitle(preference: FrontendSupportedProtocol, t: TFunc
       return (
         <UniswapXInfo
           tooltipTrigger={
-            <Text alignItems="center" color="$neutral2" variant="body3">
+            <Text
+              alignItems="center"
+              color="$neutral2"
+              variant="body3"
+              flexDirection="row"
+              flexShrink={0}
+              display="inline-flex"
+              gap="$gap4"
+            >
               <Trans
                 components={{
                   icon: <UniswapX size="$icon.16" style={!isMobileApp && { transform: 'translateY(3px)' }} />,
@@ -249,7 +257,14 @@ function DefaultOptionDescription({ isDefault }: { isDefault: boolean }): JSX.El
       {showIncludesUniswapX && (
         <UniswapXInfo
           tooltipTrigger={
-            <Text alignItems="center" color="$neutral2" variant="body3">
+            <Text
+              alignItems="center"
+              color="$neutral2"
+              variant="body3"
+              flexDirection="row"
+              gap="$gap4"
+              display="inline-flex"
+            >
               <Trans
                 components={{
                   icon: <UniswapX size="$icon.16" style={!isMobileApp && { transform: 'translateY(3px)' }} />,

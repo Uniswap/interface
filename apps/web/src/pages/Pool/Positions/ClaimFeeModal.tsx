@@ -1,9 +1,10 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { LoaderButton } from 'components/Button/LoaderButton'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { useModalLiquidityInitialState, useV3OrV4PositionDerivedInfo } from 'components/Liquidity/hooks'
-import { getProtocolItems } from 'components/Liquidity/utils'
+import { getErrorMessageToDisplay, getProtocolItems, parseErrorMessageTitle } from 'components/Liquidity/utils'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
@@ -15,7 +16,6 @@ import { useTranslation } from 'react-i18next'
 import { useCloseModal } from 'state/application/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
-import { TransactionType } from 'state/transactions/types'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
@@ -27,7 +27,11 @@ import { ClaimLPFeesRequest } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { LiquidityTransactionType, isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
+import {
+  CollectFeesTxAndGasInfo,
+  LiquidityTransactionType,
+  isValidLiquidityTxContext,
+} from 'uniswap/src/features/transactions/liquidity/types'
 import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { NumberType } from 'utilities/src/format/types'
@@ -57,11 +61,11 @@ export function ClaimFeeModal() {
 
   const currencyInfo0 = useCurrencyInfoWithUnwrapForTradingApi({
     currency: token0Fees?.currency,
-    shouldUnwrap: !positionInfo?.collectAsWeth,
+    shouldUnwrap: !positionInfo?.collectAsWeth && positionInfo?.version !== ProtocolVersion.V4,
   })
   const currencyInfo1 = useCurrencyInfoWithUnwrapForTradingApi({
     currency: token1Fees?.currency,
-    shouldUnwrap: !positionInfo?.collectAsWeth,
+    shouldUnwrap: !positionInfo?.collectAsWeth && positionInfo?.version !== ProtocolVersion.V4,
   })
   const dispatch = useAppDispatch()
 
@@ -74,6 +78,7 @@ export function ClaimFeeModal() {
     }
 
     return {
+      simulateTransaction: true,
       protocol: getProtocolItems(positionInfo.version),
       tokenId: positionInfo.tokenId ? Number(positionInfo.tokenId) : undefined,
       walletAddress: account?.address,
@@ -112,16 +117,18 @@ export function ClaimFeeModal() {
     refetch,
   } = useClaimLpFeesCalldataQuery({
     params: claimLpFeesParams,
+    enabled: Boolean(claimLpFeesParams),
   })
 
-  if (error) {
-    logger.info('ClaimFeeModal', 'ClaimFeeModal', 'ClaimLPFeesCalldataQuery', {
+  // prevent logging of the empty error object for now since those are burying signals
+  if (error && Object.keys(error).length > 0) {
+    logger.info('ClaimFeeModal', 'ClaimFeeModal', parseErrorMessageTitle(error, 'unknown ClaimLPFeesCalldataQuery'), {
       error: JSON.stringify(error),
       claimLpFeesParams: JSON.stringify(claimLpFeesParams),
     })
   }
 
-  const txInfo = useMemo(() => {
+  const txInfo = useMemo((): CollectFeesTxAndGasInfo | undefined => {
     const validatedTxRequest = validateTransactionRequest(data?.claim)
 
     if (!positionInfo || !validatedTxRequest) {
@@ -132,9 +139,9 @@ export function ClaimFeeModal() {
       type: LiquidityTransactionType.Collect,
       protocolVersion: positionInfo?.version,
       action: {
-        type: TransactionType.COLLECT_FEES,
-        currency0Amount: token0Fees,
-        currency1Amount: token1Fees,
+        type: LiquidityTransactionType.Collect,
+        currency0Amount: token0Fees || CurrencyAmount.fromRawAmount(positionInfo.currency0Amount.currency, 0),
+        currency1Amount: token1Fees || CurrencyAmount.fromRawAmount(positionInfo.currency1Amount.currency, 0),
       },
       txRequest: validatedTxRequest,
     }
@@ -189,7 +196,7 @@ export function ClaimFeeModal() {
             </Flex>
           </Flex>
         )}
-        {error && <TradingAPIError refetch={refetch} />}
+        <TradingAPIError errorMessage={getErrorMessageToDisplay({ calldataError: error })} refetch={refetch} />
         <LoaderButton
           buttonKey="ClaimFeeModal-button"
           disabled={!data?.claim || Boolean(currentTransactionStep)}
@@ -220,7 +227,6 @@ export function ClaimFeeModal() {
                         ...getLPBaseAnalyticsProperties({
                           trace,
                           poolId: positionInfo.poolId,
-                          chainId: positionInfo.currency0Amount.currency.chainId,
                           currency0: token0Fees?.currency,
                           currency1: token1Fees?.currency,
                           currency0AmountUsd: token0FeesUsd,

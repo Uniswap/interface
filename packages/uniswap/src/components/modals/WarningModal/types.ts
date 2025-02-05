@@ -52,6 +52,7 @@ export enum WarningLabel {
   ViewOnlyAccount = 'view_only_account',
   NetworkError = 'network_error',
   BlockedToken = 'blocked_token',
+  NoQuotesFound = 'no_quotes_found',
 }
 
 export interface Warning {

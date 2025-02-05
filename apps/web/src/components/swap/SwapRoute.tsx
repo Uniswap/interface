@@ -11,8 +11,6 @@ import { chainSupportsGasEstimates } from 'uniswap/src/features/chains/utils'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 
-// TODO(WEB-2022)
-// Can `trade.gasUseEstimateUSD` be defined when `chainId` doesn't support gas estimates?
 function useGasPrice({ gasUseEstimateUSD, inputAmount }: ClassicTrade) {
   const { formatNumber } = useFormatter()
   if (!gasUseEstimateUSD || !chainSupportsGasEstimates(inputAmount.currency.chainId)) {

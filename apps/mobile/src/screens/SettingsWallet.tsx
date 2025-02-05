@@ -20,6 +20,7 @@ import {
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { openModal } from 'src/features/modals/modalSlice'
+import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { DeprecatedButton, Flex, Text, useSporeColors } from 'ui/src'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import TextEditIcon from 'ui/src/assets/icons/textEdit.svg'
@@ -54,6 +55,7 @@ export function SettingsWallet({
   const { unitag } = useUnitagByAddress(address)
   const readonly = currentAccount?.type === AccountType.Readonly
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
+  const { sessions } = useWalletConnect(address)
 
   const showEditProfile = !readonly
 
@@ -83,12 +85,12 @@ export function SettingsWallet({
 
   const sections: SettingsSection[] = [
     {
-      subTitle: t('settings.setting.wallet.preferences.title'),
       data: [
         ...(showEditProfile ? [] : [editNicknameSectionOption]),
         {
           screen: MobileScreens.SettingsWalletManageConnection,
           text: t('settings.setting.wallet.connections.title'),
+          count: sessions.length,
           icon: <GlobalIcon {...iconProps} />,
           screenProps: { address },
           isHidden: readonly,
@@ -134,13 +136,17 @@ export function SettingsWallet({
             keyExtractor={(_item, index): string => 'wallet_settings' + index}
             renderItem={renderItem}
             renderSectionFooter={(): JSX.Element => <Flex pt="$spacing24" />}
-            renderSectionHeader={({ section: { subTitle } }): JSX.Element => (
-              <Flex backgroundColor="$surface1" pb="$spacing12">
-                <Text color="$neutral2" variant="body1">
-                  {subTitle}
-                </Text>
-              </Flex>
-            )}
+            renderSectionHeader={({ section: { subTitle } }): JSX.Element =>
+              subTitle ? (
+                <Flex backgroundColor="$surface1" pb="$spacing12">
+                  <Text color="$neutral2" variant="body1">
+                    {subTitle}
+                  </Text>
+                </Flex>
+              ) : (
+                <></>
+              )
+            }
             sections={sections.filter((p) => !p.isHidden)}
             showsVerticalScrollIndicator={false}
             stickySectionHeadersEnabled={false}

@@ -89,9 +89,9 @@ if (isCI && datadogPropertiesAvailable && !isE2E) {
   apply from: "../../../../node_modules/@datadog/mobile-react-native/datadog-sourcemaps.gradle"
 }
 
-def devVersionName = "1.44.1"
-def betaVersionName = "1.44.1"
-def prodVersionName = "1.44.1"
+def devVersionName = "1.45"
+def betaVersionName = "1.45"
+def prodVersionName = "1.45"
 
 android {
     ndkVersion rootProject.ext.ndkVersion
@@ -252,12 +252,9 @@ dependencies {
     implementation 'com.onesignal:OneSignal:4.8.9'
     implementation 'com.github.statsig-io:android-sdk:4.36.0'
 
-    // This is required for the backported AndroidX Photo Picker on versions of Android below 30
-    implementation("androidx.activity:activity:1.9.+")
-    
     // For animated GIF support
     implementation 'com.facebook.fresco:animated-gif:3.6.0'
-
+    
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {

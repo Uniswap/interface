@@ -3,7 +3,6 @@ import { LiquidityEventName } from '@uniswap/analytics-events'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { LiquidityAnalyticsProperties } from 'uniswap/src/features/telemetry/types'
 import { TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
@@ -18,17 +17,15 @@ export function getLPBaseAnalyticsProperties({
   currency1AmountUsd,
   version,
   poolId,
-  chainId,
 }: {
   trace: ITraceContext
   fee?: number | string // denominated in hundredths of bips
   currency0: Currency
   currency1: Currency
-  currency0AmountUsd: Maybe<number | CurrencyAmount<Currency>>
-  currency1AmountUsd: Maybe<number | CurrencyAmount<Currency>>
+  currency0AmountUsd: Maybe<CurrencyAmount<Currency>>
+  currency1AmountUsd: Maybe<CurrencyAmount<Currency>>
   version: ProtocolVersion
   poolId?: string
-  chainId?: UniverseChainId
 }): Omit<LiquidityAnalyticsProperties, 'transaction_hash'> {
   return {
     ...trace,
@@ -36,19 +33,11 @@ export function getLPBaseAnalyticsProperties({
     type: ProtocolVersion[version],
     fee_tier: (typeof fee === 'string' ? parseInt(fee) : fee) ?? FeeAmount.MEDIUM,
     pool_address: poolId,
-    chain_id: chainId,
+    chain_id: currency0.chainId,
     baseCurrencyId: currencyIdToAddress(currencyId(currency0)),
     quoteCurrencyId: currencyIdToAddress(currencyId(currency1)),
-    token0AmountUSD: currency0AmountUsd
-      ? currency0AmountUsd instanceof CurrencyAmount
-        ? parseFloat(currency0AmountUsd.quotient.toString())
-        : currency0AmountUsd
-      : 0,
-    token1AmountUSD: currency1AmountUsd
-      ? currency1AmountUsd instanceof CurrencyAmount
-        ? parseFloat(currency1AmountUsd.quotient.toString())
-        : currency1AmountUsd
-      : 0,
+    token0AmountUSD: currency0AmountUsd ? parseFloat(currency0AmountUsd.toExact()) : undefined,
+    token1AmountUSD: currency1AmountUsd ? parseFloat(currency1AmountUsd.toExact()) : undefined,
   }
 }
 

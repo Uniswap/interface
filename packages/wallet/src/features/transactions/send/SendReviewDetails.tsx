@@ -90,8 +90,7 @@ export function SendReviewDetails({
     onCloseModal?.()
     triggerTransferPendingNotification()
     navigateToAccountActivityList()
-    fiatOffRampMetaData?.onSubmitCallback?.()
-  }, [navigateToAccountActivityList, onCloseModal, triggerTransferPendingNotification, fiatOffRampMetaData])
+  }, [navigateToAccountActivityList, onCloseModal, triggerTransferPendingNotification])
 
   const transferERC20Callback = useSendERC20Callback(
     txId,

@@ -3,6 +3,7 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, Pool as V3Pool, tickToPrice } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { TickData, Ticks } from 'graphql/data/AllV3TicksQuery'
 import JSBI from 'jsbi'
 import ms from 'ms'
@@ -182,7 +183,7 @@ export function usePoolActiveLiquidity({
       protocolVersions: [version],
       token0: getCurrencyAddressWithWrap(currencyA, version),
       token1: getCurrencyAddressWithWrap(currencyB, version),
-      hooks,
+      hooks: hooks ?? ZERO_ADDRESS,
     },
     poolsQueryEnabled,
   )

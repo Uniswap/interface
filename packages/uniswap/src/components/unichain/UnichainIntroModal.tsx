@@ -8,7 +8,12 @@ import { ChartBarAxis } from 'ui/src/components/icons/ChartBarAxis'
 import { UniswapXUncolored } from 'ui/src/components/icons/UniswapXUncolored'
 import { X } from 'ui/src/components/icons/X'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { setHasDismissedUnichainColdBanner } from 'uniswap/src/features/behaviorHistory/slice'
+import {
+  setHasDismissedUnichainColdBanner,
+  setHasSeenBridgingTooltip,
+  setHasSeenNetworkSelectorTooltip,
+  setIsFirstUnichainBridgeSelection,
+} from 'uniswap/src/features/behaviorHistory/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isExtension, isInterface, isMobileApp, isMobileWeb } from 'utilities/src/platform'
 
@@ -24,13 +29,19 @@ export function UnichainIntroModal({
 
   const onPressGetStarted = useMemo(() => {
     return () => {
+      // Guarantee show the bridging if reached via intro modal
+      dispatch(setHasSeenNetworkSelectorTooltip(true))
+      dispatch(setHasSeenBridgingTooltip(false))
+      dispatch(setIsFirstUnichainBridgeSelection(false))
+
+      // Open swap flow, close modal, mark as dismissed
       openSwapFlow()
       onClose()
       dispatch(setHasDismissedUnichainColdBanner(true))
     }
   }, [openSwapFlow, onClose, dispatch])
 
-  const assetSize = isInterface && !isMobileWeb ? 300 : 200
+  const assetSize = isInterface && !isMobileWeb ? 225 : 200
   const isWebNonMobile = isExtension || (isInterface && !isMobileWeb)
 
   return (
@@ -57,10 +68,11 @@ export function UnichainIntroModal({
           <Flex centered>
             <Image
               source={UNICHAIN_PROMO_MODAL_GIF}
+              objectFit="cover"
               style={{
                 borderRadius: 20,
                 height: assetSize,
-                width: assetSize,
+                width: '100%',
               }}
             />
           </Flex>
@@ -72,6 +84,7 @@ export function UnichainIntroModal({
         </Flex>
 
         <DeprecatedButton
+          outlineStyle="none"
           size="medium"
           theme="primary"
           mb={isMobileApp || isMobileWeb ? '$spacing24' : undefined}

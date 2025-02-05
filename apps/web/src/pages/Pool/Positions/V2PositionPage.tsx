@@ -169,7 +169,7 @@ function V2PositionPage() {
                 disabled={positionLoading}
                 emphasis="secondary"
                 onPress={() => {
-                  if (pair && chainId && pairAddress && !savedSerializedPairs[chainId][pairAddress]) {
+                  if (pair && chainId && pairAddress && !savedSerializedPairs[chainId]?.[pairAddress]) {
                     addPair(pair)
                   }
                   navigate('/migrate/v2')

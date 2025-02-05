@@ -19,8 +19,6 @@ import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routi
 import { CurrencyState, SerializedCurrencyState, SwapInfo, SwapState } from 'state/swap/types'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
-import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -428,17 +426,7 @@ export function useInitialCurrencyState(): {
     }
   }, [parsedCurrencyState.inputCurrencyId, parsedCurrencyState.outputCurrencyId, setIsUserSelectedToken])
 
-  const { swapInputChainId } = useUniswapContext()
-
   const { initialInputCurrencyAddress, initialChainId } = useMemo(() => {
-    // Default to chain override set by context if used
-    if (swapInputChainId) {
-      return {
-        initialInputCurrencyAddress: getNativeAddress(swapInputChainId),
-        initialChainId: swapInputChainId,
-      }
-    }
-
     // Default to ETH if multichain
     if (!hasCurrencyQueryParams) {
       return {
@@ -459,7 +447,6 @@ export function useInitialCurrencyState(): {
       initialChainId: supportedChainId,
     }
   }, [
-    swapInputChainId,
     hasCurrencyQueryParams,
     parsedCurrencyState.inputCurrencyId,
     parsedCurrencyState.outputCurrencyId,

@@ -1,4 +1,4 @@
-import Tooltip from 'components/Tooltip'
+import { MouseoverTooltip } from 'components/Tooltip'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import styled from 'lib/styled-components'
 import { Trans } from 'react-i18next'
@@ -17,12 +17,12 @@ export function GitVersionRow() {
         staticCopy(process.env.REACT_APP_GIT_COMMIT_HASH as string)
       }}
     >
-      <Tooltip text="Copied" show={isCopied}>
+      <MouseoverTooltip text="Copied" forceShow={isCopied} disabled>
         <ThemedText.BodySmall color="neutral3">
           <Trans i18nKey="account.drawer.gitVersion" />
           {' ' + process.env.REACT_APP_GIT_COMMIT_HASH.substring(0, 6)}
         </ThemedText.BodySmall>
-      </Tooltip>
+      </MouseoverTooltip>
     </Container>
   ) : null
 }

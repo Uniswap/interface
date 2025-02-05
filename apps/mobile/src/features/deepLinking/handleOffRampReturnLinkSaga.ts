@@ -36,6 +36,8 @@ function* _handleOffRampReturnLink(url: URL) {
     throw new Error('Missing externalTransactionId or moonpay data in fiat offramp deep link')
   }
 
+  sendAnalyticsEvent(FiatOffRampEventName.FiatOffRampWidgetCompleted, { externalTransactionId })
+
   let offRampTransferDetails: OffRampTransferDetailsResponse | undefined
 
   try {
@@ -49,7 +51,6 @@ function* _handleOffRampReturnLink(url: URL) {
   } catch (error) {
     logger.error(error, {
       tags: { file: 'handleOffRampReturnLinkSaga', function: 'handleOffRampReturnLink' },
-      extra: { url: url.toString() },
     })
     throw new Error('Failed to fetch offramp transfer details')
   }
@@ -61,16 +62,6 @@ function* _handleOffRampReturnLink(url: URL) {
   const { tokenAddress, baseCurrencyCode, baseCurrencyAmount, depositWalletAddress, logos, provider, chainId } =
     offRampTransferDetails
 
-  const analyticsProperties = {
-    cryptoCurrency: baseCurrencyCode,
-    currencyAmount: baseCurrencyAmount,
-    serviceProvider: provider,
-    chainId,
-    externalTransactionId,
-  }
-
-  sendAnalyticsEvent(FiatOffRampEventName.FiatOffRampWidgetCompleted, analyticsProperties)
-
   const currencyTradeableAsset: TradeableAsset = {
     address: tokenAddress,
     chainId: Number(chainId) as UniverseChainId,
@@ -81,7 +72,13 @@ function* _handleOffRampReturnLink(url: URL) {
     name: provider,
     logoUrl: logos.lightLogo,
     onSubmitCallback: () => {
-      sendAnalyticsEvent(FiatOffRampEventName.FiatOffRampFundsSent, analyticsProperties)
+      sendAnalyticsEvent(FiatOffRampEventName.FiatOffRampFundsSent, {
+        cryptoCurrency: baseCurrencyCode,
+        currencyAmount: baseCurrencyAmount,
+        serviceProvider: provider,
+        chainId,
+        externalTransactionId,
+      })
     },
     moonpayCurrencyCode: baseCurrencyCode,
     meldCurrencyCode: baseCurrencyCode,

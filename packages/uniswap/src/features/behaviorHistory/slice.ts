@@ -11,6 +11,10 @@ export interface UniswapBehaviorHistoryState {
   unichainPromotion?: {
     coldBannerDismissed?: boolean
     warmBannerDismissed?: boolean
+    networkSelectorAnimationSeen?: boolean
+    networkSelectorTooltipSeen?: boolean
+    bridgingTooltipSeen?: boolean
+    isFirstUnichainBridgeSelection?: boolean
   }
 }
 
@@ -18,6 +22,14 @@ export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
   hasViewedBridgingBanner: false,
   hasDismissedBridgingWarning: false,
   hasDismissedLowNetworkTokenWarning: false,
+  unichainPromotion: {
+    coldBannerDismissed: false,
+    warmBannerDismissed: false,
+    networkSelectorAnimationSeen: false,
+    networkSelectorTooltipSeen: false,
+    bridgingTooltipSeen: false,
+    isFirstUnichainBridgeSelection: true,
+  },
 }
 
 const slice = createSlice({
@@ -41,7 +53,22 @@ const slice = createSlice({
       state.unichainPromotion ??= {}
       state.unichainPromotion.warmBannerDismissed = action.payload
     },
-
+    setHasSeenNetworkSelectorAnimation: (state, action: PayloadAction<boolean>) => {
+      state.unichainPromotion ??= {}
+      state.unichainPromotion.networkSelectorAnimationSeen = action.payload
+    },
+    setHasSeenNetworkSelectorTooltip: (state, action: PayloadAction<boolean>) => {
+      state.unichainPromotion ??= {}
+      state.unichainPromotion.networkSelectorTooltipSeen = action.payload
+    },
+    setHasSeenBridgingTooltip: (state, action: PayloadAction<boolean>) => {
+      state.unichainPromotion ??= {}
+      state.unichainPromotion.bridgingTooltipSeen = action.payload
+    },
+    setIsFirstUnichainBridgeSelection: (state, action: PayloadAction<boolean>) => {
+      state.unichainPromotion ??= {}
+      state.unichainPromotion.isFirstUnichainBridgeSelection = action.payload
+    },
     // Should only be used for testing
     resetUniswapBehaviorHistory: (_state, _action: PayloadAction) => {
       return initialUniswapBehaviorHistoryState
@@ -55,6 +82,10 @@ export const {
   setHasDismissedLowNetworkTokenWarning,
   setHasDismissedUnichainColdBanner,
   setHasDismissedUnichainWarmBanner,
+  setHasSeenNetworkSelectorAnimation,
+  setHasSeenNetworkSelectorTooltip,
+  setHasSeenBridgingTooltip,
+  setIsFirstUnichainBridgeSelection,
   resetUniswapBehaviorHistory,
 } = slice.actions
 

@@ -250,6 +250,7 @@ export default function FeatureFlagModal() {
           <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
           <FeatureFlagOption flag={FeatureFlags.LPRedesign} label="Enable LP flow redesign" />
           <FeatureFlagOption flag={FeatureFlags.V4Data} label="Enable v4 data" />
+          <FeatureFlagOption flag={FeatureFlags.MigrateV3ToV4} label="Enable migrate flow from v3 -> v4" />
           <FeatureFlagOption flag={FeatureFlags.PriceRangeInputV2} label="Enable Price Range Input V2" />
           <FeatureFlagOption flag={FeatureFlags.Realtime} label="Realtime activity updates" />
           <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
@@ -289,11 +290,6 @@ export default function FeatureFlagModal() {
           <FeatureFlagGroup name="UniswapX Flags">
             <FeatureFlagOption flag={FeatureFlags.UniswapXSyntheticQuote} label="Force synthetic quotes for UniswapX" />
             <FeatureFlagOption flag={FeatureFlags.UniswapXv2} label="UniswapX v2" />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Outage Banners">
-            <FeatureFlagOption flag={FeatureFlags.OutageBannerArbitrum} label="Outage Banner for Arbitrum" />
-            <FeatureFlagOption flag={FeatureFlags.OutageBannerOptimism} label="Outage Banner for Optimism" />
-            <FeatureFlagOption flag={FeatureFlags.OutageBannerPolygon} label="Outage Banner for Polygon" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Debug">
             <FeatureFlagOption flag={FeatureFlags.TraceJsonRpc} label="Enables JSON-RPC tracing" />

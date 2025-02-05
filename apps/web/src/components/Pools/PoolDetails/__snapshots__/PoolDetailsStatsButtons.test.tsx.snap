@@ -327,7 +327,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   transition: opacity 250ms ease-in-out;
 }
 
-.c46 {
+.c45 {
   z-index: 1020;
   overflow: hidden;
   top: 0;
@@ -804,14 +804,8 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   }
 }
 
-@media (max-width:720px) {
-  .c45 {
-    display: none;
-  }
-}
-
 @media only screen and (max-width:1024px) {
-  .c46 {
+  .c45 {
     opacity: 0;
     pointer-events: none;
     -webkit-transition: opacity 250ms ease-in-out;
@@ -899,7 +893,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                   fill="none"
                   height="100%"
                   stroke-width="8"
-                  style="color: rgb(252, 114, 255); width: 20px; height: 20px;"
+                  style="width: 20px; height: 20px; color: rgb(252, 114, 255);"
                   viewBox="0 0 16 16"
                   width="100%"
                 >
@@ -1070,34 +1064,36 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                               <div
                                 class="c28"
                               >
-                                <button
-                                  class="c29 c30 c31 c32 c33 open-currency-select-button"
-                                  data-testid="currency-1-USDC"
-                                >
-                                  <span
-                                    class="c34"
+                                <div>
+                                  <button
+                                    class="c29 c30 c31 c32 c33 open-currency-select-button"
+                                    data-testid="currency-1-USDC"
                                   >
-                                    <div
-                                      class="c0 c1 c12"
+                                    <span
+                                      class="c34"
                                     >
                                       <div
-                                        class="css-view-175oi2r"
-                                        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; opacity: 0;"
+                                        class="c0 c1 c12"
                                       >
-                                        <span
-                                          class="c35 token-symbol-container"
+                                        <div
+                                          class="css-view-175oi2r"
+                                          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; opacity: 0;"
                                         >
-                                          USDC
-                                        </span>
+                                          <span
+                                            class="c35 token-symbol-container"
+                                          >
+                                            USDC
+                                          </span>
+                                        </div>
                                       </div>
-                                    </div>
-                                    <svg
-                                      class="c36"
-                                    >
-                                      dropdown.svg
-                                    </svg>
-                                  </span>
-                                </button>
+                                      <svg
+                                        class="c36"
+                                      >
+                                        dropdown.svg
+                                      </svg>
+                                    </span>
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -1212,34 +1208,36 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                                 <div
                                   class="c28"
                                 >
-                                  <button
-                                    class="c29 c30 c31 c32 c33 open-currency-select-button"
-                                    data-testid="currency-1-WETH"
-                                  >
-                                    <span
-                                      class="c34"
+                                  <div>
+                                    <button
+                                      class="c29 c30 c31 c32 c33 open-currency-select-button"
+                                      data-testid="currency-1-WETH"
                                     >
-                                      <div
-                                        class="c0 c1 c12"
+                                      <span
+                                        class="c34"
                                       >
                                         <div
-                                          class="css-view-175oi2r"
-                                          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; opacity: 0;"
+                                          class="c0 c1 c12"
                                         >
-                                          <span
-                                            class="c35 token-symbol-container"
+                                          <div
+                                            class="css-view-175oi2r"
+                                            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; opacity: 0;"
                                           >
-                                            WETH
-                                          </span>
+                                            <span
+                                              class="c35 token-symbol-container"
+                                            >
+                                              WETH
+                                            </span>
+                                          </div>
                                         </div>
-                                      </div>
-                                      <svg
-                                        class="c36"
-                                      >
-                                        dropdown.svg
-                                      </svg>
-                                    </span>
-                                  </button>
+                                        <svg
+                                          class="c36"
+                                        >
+                                          dropdown.svg
+                                        </svg>
+                                      </span>
+                                    </button>
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -1296,80 +1294,10 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                   </div>
                 </div>
               </main>
-              <div
-                class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _opacity-0hover-0--8 _opacity-0active-0--6 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
-              >
-                <div
-                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexGrow-1 _overflowX-hidden _overflowY-hidden _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderTopColor-rgba34343401604838566 _borderRightColor-rgba34343401604838566 _borderBottomColor-rgba34343401604838566 _borderLeftColor-rgba34343401604838566 _backgroundColor-surface1 _alignItems-center _pl-t-space-non101 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _justifyContent-space-betwe3241 _width-10037 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
-                >
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-10037"
-                  >
-                    <div
-                      class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
-                      style="align-self: center; position: absolute; left: 0px; top: -50.918400000000005px; height: 99.84px; width: 32.32px;"
-                    >
-                      <div
-                        class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                        style="background-image: url(bridging-banner.png);"
-                      />
-                      <img
-                        alt=""
-                        class="css-accessibilityImage-9pa8cd"
-                        draggable="false"
-                        src="bridging-banner.png"
-                      />
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _alignItems-center _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360333981"
-                  >
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _flexGrow-1 _alignContent-center"
-                    >
-                      <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center"
-                      >
-                        <span
-                          class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
-                          data-disable-theme="true"
-                        >
-                          Swapping across networks
-                        </span>
-                      </div>
-                      <span
-                        class="c45"
-                      >
-                        <span
-                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
-                          data-disable-theme="true"
-                        >
-                          Move ETH, USDC, and more across 8+ networks.
-                        </span>
-                      </span>
-                    </div>
-                    <div
-                      class="_opacity-0active-0--75 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer _alignSelf-flex-start"
-                    >
-                      <svg
-                        fill="none"
-                        stroke-width="8"
-                        style="color: rgb(191, 191, 191); width: 20px; height: 20px;"
-                        viewBox="0 0 16 16"
-                      >
-                        <path
-                          d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
-                          fill="currentColor"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
           <div
-            class="c46"
+            class="c45"
           />
         </div>
       </span>

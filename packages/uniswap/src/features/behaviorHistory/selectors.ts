@@ -14,3 +14,15 @@ export const selectHasDismissedUnichainColdBanner = (state: UniswapState): boole
 
 export const selectHasDismissedUnichainWarmBanner = (state: UniswapState): boolean =>
   state.uniswapBehaviorHistory.unichainPromotion?.warmBannerDismissed === true
+
+export const selectHasSeenUnichainPromotionNetworkSelectorAnimation = (state: UniswapState): boolean =>
+  state.uniswapBehaviorHistory.unichainPromotion?.networkSelectorAnimationSeen === true
+
+export const selectHasSeenUnichainPromotionNetworkSelectorTooltip = (state: UniswapState): boolean =>
+  state.uniswapBehaviorHistory.unichainPromotion?.networkSelectorTooltipSeen === true
+
+export const selectHasSeenUnichainPromotionBridgingTooltip = (state: UniswapState): boolean =>
+  state.uniswapBehaviorHistory.unichainPromotion?.bridgingTooltipSeen === true
+
+export const selectIsFirstUnichainBridgeSelection = (state: UniswapState): boolean =>
+  state.uniswapBehaviorHistory.unichainPromotion?.isFirstUnichainBridgeSelection === true

@@ -29,7 +29,7 @@ export function OffRampTransferSummaryItem({
     <TransactionSummaryLayout
       caption={t('fiatOffRamp.summary.total', {
         cryptoAmount,
-        fiatAmount: destinationTokenAmount === 0 ? destinationTokenSymbol : cryptoSaleAmount,
+        fiatAmount: cryptoSaleAmount,
       })}
       icon={
         <LogoWithTxStatus

@@ -1,7 +1,7 @@
 import { Hero } from 'pages/Landing/sections/Hero'
 import { Suspense, lazy, memo, useRef } from 'react'
 import { Flex, styled } from 'ui/src'
-import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
+import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 
 // The Fold is always loaded, but is lazy-loaded because it is not seen without user interaction.
 // Annotating it with webpackPreload allows it to be ready when requested.

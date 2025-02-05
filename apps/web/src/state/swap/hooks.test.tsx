@@ -104,7 +104,6 @@ describe('hooks', () => {
         swapInputChainId: undefined,
         navigateToFiatOnRamp: () => {},
         onSwapChainsChanged: () => {},
-        setSwapInputChainId: () => {},
         signer: undefined,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         useProviderHook: (_chainId: number) => undefined,

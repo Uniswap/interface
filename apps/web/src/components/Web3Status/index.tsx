@@ -226,7 +226,7 @@ function Web3StatusInner() {
       >
         <Web3StatusConnectWrapper
           tabIndex={0}
-          onKeyPress={(e) => e.key === 'Enter' && handleWalletDropdownClick()}
+          onKeyDown={(e) => e.key === 'Enter' && handleWalletDropdownClick()}
           onClick={handleWalletDropdownClick}
           ref={ref}
         >

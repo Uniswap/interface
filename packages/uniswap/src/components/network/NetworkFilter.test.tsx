@@ -17,6 +17,7 @@ describe(NetworkFilter, () => {
     jest.useRealTimers()
   })
 
+  // TODO WALL-5689 - enable this test once tamagui fixes this issue
   it('renders a NetworkFilter', async () => {
     const tree = render(<NetworkFilter chainIds={SUPPORTED_CHAIN_IDS} selectedChain={null} onPressChain={() => null} />)
 
