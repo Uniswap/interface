@@ -5,47 +5,16 @@ import { GetTheApp } from 'components/NavBar/DownloadApp/Modal/GetTheApp'
 import { PasskeyGenerationModal } from 'components/NavBar/DownloadApp/Modal/PasskeyGeneration'
 import { useIsAccountCTAExperimentControl } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useCallback, useState } from 'react'
-import { ArrowLeft, X } from 'react-feather'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { ClickableTamaguiStyle } from 'theme/components'
-import { AnimateTransition, Flex, styled as tamaguiStyled } from 'ui/src'
+import { AnimateTransition, Flex, ModalCloseIcon, TouchableArea } from 'ui/src'
+import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { iconSizes, zIndices } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-
-const HeaderActionIcon = {
-  margin: 4,
-  color: '$neutral1',
-  ...ClickableTamaguiStyle,
-}
-
-const CloseButton = tamaguiStyled(X, {
-  ...HeaderActionIcon,
-  size: iconSizes.icon24,
-
-  variants: {
-    filled: {
-      true: {
-        color: 'white',
-        borderRadius: '100%',
-        backgroundColor: '$scrim',
-        padding: '$spacing4',
-        margin: '$none',
-        size: iconSizes.icon32,
-      },
-      false: {},
-    },
-  },
-})
-
-const BackButton = tamaguiStyled(ArrowLeft, {
-  ...HeaderActionIcon,
-  color: '$neutral3',
-})
 
 export enum Page {
   GetStarted,
@@ -87,14 +56,12 @@ export function GetTheAppModal() {
           pl="$spacing24"
           pr="$spacing24"
         >
-          {showBackButton && <BackButton onClick={() => setPage(Page.GetStarted)} size={iconSizes.icon24} />}
-          {page !== Page.PasskeyGeneration && (
-            <CloseButton
-              filled={(!isAccountCTAExperimentControl || isEmbeddedWalletEnabled) && !showBackButton}
-              onClick={close}
-              data-testid="get-the-app-close-button"
-            />
+          {showBackButton && (
+            <TouchableArea onPress={() => setPage(Page.GetStarted)}>
+              <BackArrow size={iconSizes.icon24} color="$neutral2" hoverColor="$neutral2Hovered" />
+            </TouchableArea>
           )}
+          {page !== Page.PasskeyGeneration && <ModalCloseIcon onClose={close} data-testid="get-the-app-close-button" />}
         </Flex>
         <Flex
           data-testid="download-uniswap-modal"

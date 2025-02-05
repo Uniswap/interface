@@ -72,7 +72,7 @@ export function SwitchNetworksModal(): JSX.Element {
 
       <Separator mb="$spacing4" mt="$spacing8" />
 
-      <Flex shrink overflow="scroll">
+      <Flex shrink $platform-web={{ overflow: 'auto' }}>
         {enabledChains.map((chain: UniverseChainId) => {
           return (
             <Popover.Close asChild>

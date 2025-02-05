@@ -1,13 +1,17 @@
-import { Flex, GeneratedIcon, Text, getTokenValue, useMedia } from 'ui/src'
+import { Flex, FlexProps, GeneratedIcon, SpaceTokens, Text, getTokenValue, useMedia } from 'ui/src'
 import { IconSizeTokens, TextVariantTokens, fonts } from 'ui/src/theme'
 
 type GenericHeaderProps = {
   Icon?: GeneratedIcon
+  /* Size of the icon itself.*/
   iconSize?: IconSizeTokens
+  /* The icon padding is relative to the icon size. If a value is provided, it will override the default padding. */
+  iconPaddingOverride?: SpaceTokens
   title?: string
   titleVariant?: TextVariantTokens
   subtitle?: string
   subtitleVariant?: TextVariantTokens
+  flexProps?: FlexProps
 }
 
 /**
@@ -19,21 +23,22 @@ export function GenericHeader({
   subtitle,
   subtitleVariant = 'subheading2',
   Icon,
-  iconSize = '$icon.36',
+  iconSize = '$icon.18',
+  iconPaddingOverride,
+  flexProps,
 }: GenericHeaderProps): JSX.Element {
   const media = useMedia()
   const showIcon = !media.short
 
   const iconTotalSizeValue = getTokenValue(iconSize)
-  const iconPadding = iconTotalSizeValue / 4
-  const iconSizeValue = iconTotalSizeValue / 2
+  const iconPadding = iconPaddingOverride ?? iconTotalSizeValue / 2
 
   return (
-    <Flex centered gap="$spacing8" m="$spacing12">
+    <Flex centered gap="$spacing8" {...flexProps}>
       {showIcon && Icon && (
         <Flex centered mb="$spacing4">
           <Flex centered backgroundColor="$surface3" borderRadius="$rounded8" p={iconPadding}>
-            <Icon color="$neutral1" size={iconSizeValue} />
+            <Icon color="$neutral1" size={iconSize} />
           </Flex>
         </Flex>
       )}

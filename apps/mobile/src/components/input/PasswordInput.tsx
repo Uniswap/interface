@@ -24,7 +24,7 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(functio
       backgroundColor="$surface1"
       borderColor="$surface3"
       borderRadius="$rounded16"
-      borderWidth={1}
+      borderWidth="$spacing1"
       p="$spacing4"
     >
       <AnimatedFlex fill grow row alignItems="center" minHeight={48}>
@@ -34,7 +34,7 @@ export const PasswordInput = forwardRef<NativeTextInput, TextInputProps>(functio
           autoCorrect={false}
           backgroundColor="$transparent"
           blurOnSubmit={false}
-          borderWidth={0}
+          borderWidth="$none"
           clearTextOnFocus={false}
           flex={1}
           fontFamily="$subHeading"

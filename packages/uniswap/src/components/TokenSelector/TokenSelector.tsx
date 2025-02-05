@@ -3,10 +3,8 @@ import { Currency } from '@uniswap/sdk-core'
 import { hasStringAsync } from 'expo-clipboard'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
-import { Flex, Text, TouchableArea, isWeb, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
+import { Flex, ModalCloseIcon, Text, isWeb, useMedia, useScrollbarStyles, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { X } from 'ui/src/components/icons/X'
 import { zIndices } from 'ui/src/theme'
 import { useFilterCallbacks } from 'uniswap/src/components/TokenSelector/hooks/useFilterCallbacks'
 import { TokenSelectorEmptySearchList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorEmptySearchList'
@@ -22,7 +20,6 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
-import { selectHasSeenUnichainPromotionNetworkSelectorTooltip } from 'uniswap/src/features/behaviorHistory/selectors'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -31,6 +28,7 @@ import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName, SectionName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useUnichainTooltipVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainTooltipVisibility'
 import useIsKeyboardOpen from 'uniswap/src/hooks/useIsKeyboardOpen'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getClipboard } from 'uniswap/src/utils/clipboard'
@@ -89,9 +87,7 @@ export function TokenSelectorContent({
   const scrollbarStyles = useScrollbarStyles()
   const isKeyboardOpen = useIsKeyboardOpen()
   const { navigateToBuyOrReceiveWithEmptyWallet } = useUniswapContext()
-  const hasSeenUnichainPromotionNetworkSelectorTooltip = useSelector(
-    selectHasSeenUnichainPromotionNetworkSelectorTooltip,
-  )
+  const { shouldShowUnichainNetworkSelectorTooltip } = useUnichainTooltipVisibility()
 
   const media = useMedia()
   const isSmallScreen = (media.sm && isInterface) || isMobileApp || isMobileWeb
@@ -273,9 +269,7 @@ export function TokenSelectorContent({
           {!isSmallScreen && (
             <Flex row justifyContent="space-between" pt="$spacing16" px="$spacing16">
               <Text variant="subheading1">{t('common.selectToken.label')}</Text>
-              <TouchableArea onPress={onClose}>
-                <X color="$neutral1" size="$icon.24" />
-              </TouchableArea>
+              <ModalCloseIcon onClose={onClose} />
             </Flex>
           )}
           <Flex px="$spacing16" py="$spacing4">
@@ -284,7 +278,7 @@ export function TokenSelectorContent({
               backgroundColor="$surface2"
               endAdornment={
                 <Flex row alignItems="center">
-                  {hasClipboardString && hasSeenUnichainPromotionNetworkSelectorTooltip && (
+                  {hasClipboardString && !shouldShowUnichainNetworkSelectorTooltip && (
                     <PasteButton inline textVariant="buttonLabel3" onPress={handlePaste} />
                   )}
                   <NetworkFilter

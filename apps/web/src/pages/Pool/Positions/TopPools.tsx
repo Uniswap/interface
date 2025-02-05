@@ -33,7 +33,7 @@ function TopPoolCard({ pool }: { pool: PoolStat }) {
       p="$padding16"
       borderRadius="$rounded20"
       borderColor="$surface3"
-      borderWidth={1}
+      borderWidth="$spacing1"
       justifyContent="space-between"
       {...ClickableTamaguiStyle}
       onPress={() => navigate(`/explore/pools/${toGraphQLChain(chainId ?? defaultChainId).toLowerCase()}/${pool.id}`)}

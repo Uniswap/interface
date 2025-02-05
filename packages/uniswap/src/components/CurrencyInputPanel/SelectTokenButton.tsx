@@ -1,17 +1,9 @@
 import { ComponentProps, memo, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  Flex,
-  Text,
-  TouchableArea,
-  UnichainAnimatedText,
-  getHoverCssFilter,
-  isWeb,
-  useIsDarkMode,
-  useSporeColors,
-} from 'ui/src'
+import { Flex, Text, TouchableArea, getHoverCssFilter, isWeb, useIsDarkMode, useSporeColors } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { UnichainAnimatedText } from 'ui/src/components/text/UnichainAnimatedText'
 import { iconSizes, spacing, validColor } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { selectIsFirstUnichainBridgeSelection } from 'uniswap/src/features/behaviorHistory/selectors'
@@ -94,7 +86,7 @@ export const SelectTokenButton = memo(function _SelectTokenButton({
       borderRadius="$roundedFull"
       testID={testID}
       borderColor="$surface3Solid"
-      borderWidth={1}
+      borderWidth="$spacing1"
       shadowColor="$surface3"
       shadowRadius={10}
       shadowOpacity={0.04}
@@ -110,7 +102,7 @@ export const SelectTokenButton = memo(function _SelectTokenButton({
           </Flex>
         )}
         <UnichainAnimatedText
-          gradientTextColor={colors.neutral1?.get().toString()}
+          gradientTextColor={colors.neutral1?.val}
           delayMs={800}
           enabled={!!showUnichainPromoAnimation}
           color={textColor}

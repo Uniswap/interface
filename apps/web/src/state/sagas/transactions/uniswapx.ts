@@ -20,7 +20,7 @@ import { HandledTransactionInterrupt } from 'uniswap/src/features/transactions/e
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import { UniswapXSignatureStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { percentFromFloat } from 'utilities/src/format/percent'
+import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 
 interface HandleUniswapXSignatureStepParams extends HandleSignatureStepParams<UniswapXSignatureStep> {
   trade: UniswapXTrade
@@ -35,7 +35,7 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
 
   const analyticsParams: Parameters<typeof formatSwapSignedAnalyticsEventProperties>[0] = {
     trade,
-    allowedSlippage: percentFromFloat(trade.slippageTolerance),
+    allowedSlippage: slippageToleranceToPercent(trade.slippageTolerance),
     fiatValues: {
       amountIn: analytics.token_in_amount_usd,
       amountOut: analytics.token_out_amount_usd,
@@ -61,7 +61,7 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
     SwapEventName.SWAP_SIGNED,
     formatSwapSignedAnalyticsEventProperties({
       trade,
-      allowedSlippage: percentFromFloat(trade.slippageTolerance),
+      allowedSlippage: slippageToleranceToPercent(trade.slippageTolerance),
       fiatValues: {
         amountIn: analytics.token_in_amount_usd,
         amountOut: analytics.token_out_amount_usd,

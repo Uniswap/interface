@@ -25,7 +25,7 @@ export function SwapArrowButton(props: SwapArrowButtonProps): JSX.Element {
         backgroundColor={backgroundColor}
         borderColor="$surface1"
         borderRadius={isShortMobileDevice ? '$rounded12' : '$rounded16'}
-        borderWidth={isShortMobileDevice ? 2 : 4}
+        borderWidth={isShortMobileDevice ? '$spacing2' : '$spacing4'}
         disabled={disabled}
         justifyContent="center"
         p={isShortMobileDevice ? '$spacing4' : '$spacing8'}

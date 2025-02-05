@@ -122,7 +122,7 @@ export function GenericImportForm({
           backgroundColor="$surface1"
           borderColor={borderColor}
           borderRadius="$rounded20"
-          borderWidth={1}
+          borderWidth="$spacing1"
           minHeight={shouldUseMinHeight ? INPUT_MIN_HEIGHT : undefined}
           px="$spacing24"
           py="$spacing16"

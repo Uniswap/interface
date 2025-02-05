@@ -1,13 +1,31 @@
 import { RemoveScroll } from '@tamagui/remove-scroll'
 import { PropsWithChildren, ReactNode, useCallback, useState } from 'react'
 import { Adapt, Dialog, GetProps, Sheet, View, VisuallyHidden, styled, useIsTouchDevice } from 'tamagui'
+import { X } from 'ui/src/components/icons'
 import { Flex, FlexProps } from 'ui/src/components/layout'
+import { TouchableArea } from 'ui/src/components/touchable'
 import { useScrollbarStyles } from 'ui/src/styles/ScrollbarStyles'
-import { INTERFACE_NAV_HEIGHT, zIndices } from 'ui/src/theme'
+import { INTERFACE_NAV_HEIGHT, IconSizeTokens, zIndices } from 'ui/src/theme'
 import { useShadowPropsShort } from 'ui/src/theme/shadows'
 import { isInterface } from 'utilities/src/platform'
 
 export const ADAPTIVE_MODAL_ANIMATION_DURATION = 200
+
+export function ModalCloseIcon({
+  onClose,
+  size = '$icon.24',
+  testId,
+}: {
+  onClose: () => void
+  size?: IconSizeTokens
+  testId?: string
+}): JSX.Element {
+  return (
+    <TouchableArea data-testid={testId} onPress={onClose}>
+      <X size={size} color="$neutral2" hoverColor="$neutral2Hovered" />
+    </TouchableArea>
+  )
+}
 
 export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: ModalProps): JSX.Element {
   const isTouchDevice = useIsTouchDevice()
@@ -73,7 +91,7 @@ export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: Moda
           >
             <Flex backgroundColor="$neutral3" height="$spacing4" width="$spacing32" borderRadius="$roundedFull" />
           </Sheet.Handle>
-          <Flex gap={gap} overflow="scroll" {...sheetHeightStyles}>
+          <Flex gap={gap} $platform-web={{ overflow: 'auto' }} {...sheetHeightStyles}>
             {children}
           </Flex>
         </Sheet.Frame>
@@ -174,6 +192,7 @@ export function AdaptiveWebModal({
           maxHeight="calc(100vh - 32px)"
           borderRadius="$rounded16"
           justifyContent="center"
+          overflow="hidden"
           {...topAlignedStyles}
         >
           <Dialog.Content
@@ -190,7 +209,7 @@ export function AdaptiveWebModal({
             m="$spacing16"
             maxHeight="calc(100vh - 32px)"
             maxWidth={420}
-            overflow="scroll"
+            $platform-web={{ overflow: 'auto' }}
             px={px ?? p ?? '$spacing24'}
             py={py ?? p ?? '$spacing16'}
             style={Object.assign({}, scrollbarStyles, style)}

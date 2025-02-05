@@ -26,7 +26,7 @@ exports[`PredefinedAmount renders correctly with amount= 100 , currentAmount= "1
       class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
         style="border-color: rgba(34,34,34,0.05);"
       >
         <span
@@ -63,7 +63,7 @@ exports[`PredefinedAmount renders correctly with amount= 300 , currentAmount= "1
     >
       <div
         aria-disabled="true"
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
         style="border-color: rgba(34,34,34,0.05);"
       >
         <span
@@ -105,7 +105,7 @@ exports[`PredefinedAmount renders correctly with amount= 1000 , currentAmount= "
       class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
         style="border-color: rgba(34,34,34,0.05);"
       >
         <span
@@ -142,7 +142,7 @@ exports[`PredefinedAmount renders correctly with amount= 1000 , currentAmount= "
     >
       <div
         aria-disabled="true"
-        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
+        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _flexDirection-row _gap-t-space-spa94665593 _justifyContent-center _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa94665593 _pb-t-space-spa94665593 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
         style="border-color: rgba(34,34,34,0.05);"
       >
         <span

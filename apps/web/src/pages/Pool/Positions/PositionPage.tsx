@@ -144,7 +144,7 @@ function PositionPage() {
 
   const { value: lpRedesignEnabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.LPRedesign)
   const isV4DataEnabled = useFeatureFlag(FeatureFlags.V4Data)
-  const isMigrateEnabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
+  const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
 
   const { formatCurrencyAmount } = useFormatter()
   const navigate = useNavigate()
@@ -250,27 +250,30 @@ function PositionPage() {
             alignItems="center"
           >
             <LiquidityPositionInfo positionInfo={positionInfo} />
-            {status !== PositionStatus.CLOSED && isOwner && (
+            {isOwner && (
               <Flex row gap="$gap12" alignItems="center" flexWrap="wrap">
-                {positionInfo.version === ProtocolVersion.V3 && isV4DataEnabled && isMigrateEnabled && (
-                  <MouseoverTooltip
-                    text={t('pool.migrateLiquidityDisabledTooltip')}
-                    disabled={!showV4UnsupportedTooltip}
-                  >
-                    <HeaderButton
-                      emphasis="secondary"
-                      disabled={showV4UnsupportedTooltip}
-                      opacity={showV4UnsupportedTooltip ? 0.5 : 1}
-                      onPress={() => {
-                        navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenIdFromUrl}`)
-                      }}
+                {positionInfo.version === ProtocolVersion.V3 &&
+                  status !== PositionStatus.CLOSED &&
+                  isV4DataEnabled &&
+                  isMigrateToV4Enabled && (
+                    <MouseoverTooltip
+                      text={t('pool.migrateLiquidityDisabledTooltip')}
+                      disabled={!showV4UnsupportedTooltip}
                     >
-                      <Text variant="buttonLabel2" color="$neutral1">
-                        <Trans i18nKey="pool.migrateToV4" />
-                      </Text>
-                    </HeaderButton>
-                  </MouseoverTooltip>
-                )}
+                      <HeaderButton
+                        emphasis="secondary"
+                        disabled={showV4UnsupportedTooltip}
+                        opacity={showV4UnsupportedTooltip ? 0.5 : 1}
+                        onPress={() => {
+                          navigate(`/migrate/v3/${chainInfo?.urlParam}/${tokenIdFromUrl}`)
+                        }}
+                      >
+                        <Text variant="buttonLabel2" color="$neutral1">
+                          <Trans i18nKey="pool.migrateToV4" />
+                        </Text>
+                      </HeaderButton>
+                    </MouseoverTooltip>
+                  )}
                 <HeaderButton
                   emphasis="secondary"
                   onPress={() => {
@@ -286,21 +289,23 @@ function PositionPage() {
                     <Trans i18nKey="common.addLiquidity" />
                   </Text>
                 </HeaderButton>
-                <HeaderButton
-                  emphasis="primary"
-                  onPress={() => {
-                    dispatch(
-                      setOpenModal({
-                        name: ModalName.RemoveLiquidity,
-                        initialState: { ...positionInfo, collectAsWeth },
-                      }),
-                    )
-                  }}
-                >
-                  <Text variant="buttonLabel2" color="$surface1">
-                    <Trans i18nKey="pool.removeLiquidity" />
-                  </Text>
-                </HeaderButton>
+                {status !== PositionStatus.CLOSED && (
+                  <HeaderButton
+                    emphasis="primary"
+                    onPress={() => {
+                      dispatch(
+                        setOpenModal({
+                          name: ModalName.RemoveLiquidity,
+                          initialState: { ...positionInfo, collectAsWeth },
+                        }),
+                      )
+                    }}
+                  >
+                    <Text variant="buttonLabel2" color="$surface1">
+                      <Trans i18nKey="pool.removeLiquidity" />
+                    </Text>
+                  </HeaderButton>
+                )}
               </Flex>
             )}
           </Flex>

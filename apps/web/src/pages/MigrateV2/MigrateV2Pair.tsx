@@ -27,12 +27,14 @@ import { usePairContract, useV2MigratorContract } from 'hooks/useContract'
 import useIsArgentWallet from 'hooks/useIsArgentWallet'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { PoolState, usePool } from 'hooks/usePools'
+import { usePositionOwnerV2 } from 'hooks/usePositionOwnerV2'
 import { useTotalSupply } from 'hooks/useTotalSupply'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import JSBI from 'jsbi'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { useTheme } from 'lib/styled-components'
+import { BodyWrapper } from 'pages/App/AppBody'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertCircle, AlertTriangle } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
@@ -421,7 +423,6 @@ function V2PairMigration({
     noLiquidity,
     pair.address,
     pairBalance.quotient,
-    pairBalance.currency.chainId,
     token0,
     token1,
     feeAmount,
@@ -772,6 +773,7 @@ export default function MigrateV2Pair() {
 
   // get data required for V2 pair migration
   const pairBalance = useTokenBalance(account.address, liquidityToken)
+  const isOwner = usePositionOwnerV2(account?.address, liquidityToken?.address ?? null, token0?.chainId)
   const totalSupply = useTotalSupply(liquidityToken)
   const [reserve0Raw, reserve1Raw] = useSingleCallResult(pair, 'getReserves')?.result ?? []
   const reserve0 = useMemo(
@@ -819,17 +821,7 @@ export default function MigrateV2Pair() {
         token1Address,
       }}
     >
-      <Flex
-        maxWidth={420}
-        width="100%"
-        backgroundColor="$surface1"
-        borderRadius="$rounded16"
-        borderWidth="$spacing1"
-        borderColor="$surface3"
-        mt="$spacing16"
-        mx="auto"
-        p="$spacing24"
-      >
+      <BodyWrapper style={{ padding: 24 }}>
         <Flex gap="$gap16">
           <Flex row alignItems="center" justifyContent="space-between" gap="$gap8">
             <TouchableArea
@@ -853,7 +845,7 @@ export default function MigrateV2Pair() {
             />
           </Flex>
 
-          {!account.isConnected ? (
+          {!account.isConnected || !isOwner ? (
             <ThemedText.DeprecatedLargeHeader>
               <Trans i18nKey="migrate.connectAccount" />
             </ThemedText.DeprecatedLargeHeader>
@@ -871,7 +863,7 @@ export default function MigrateV2Pair() {
             <EmptyState message={<Trans i18nKey="common.loading" />} />
           )}
         </Flex>
-      </Flex>
+      </BodyWrapper>
     </Trace>
   )
 }

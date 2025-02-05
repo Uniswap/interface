@@ -441,6 +441,9 @@ export function AppStackNavigator(): JSX.Element {
       <AppStack.Group screenOptions={navNativeStackOptions.presentationModal}>
         <AppStack.Screen component={EducationScreen} name={MobileScreens.Education} />
       </AppStack.Group>
+      <AppStack.Group screenOptions={navNativeStackOptions.presentationBottomSheet}>
+        <AppStack.Screen component={NotificationsOSSettingsModal} name={ModalName.NotificationsOSSettings} />
+      </AppStack.Group>
       {isDevEnv() && <AppStack.Screen component={StorybookUIRoot} name={MobileScreens.Storybook} />}
     </AppStack.Navigator>
   )

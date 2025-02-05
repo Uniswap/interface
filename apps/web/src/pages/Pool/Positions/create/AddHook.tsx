@@ -199,7 +199,7 @@ export function AddHook() {
               theme="secondary"
               py="$spacing8"
               px="$spacing12"
-              borderWidth={0}
+              borderWidth="$none"
               borderRadius="$rounded12"
               onPress={() => {
                 setHookInputEnabled(false)

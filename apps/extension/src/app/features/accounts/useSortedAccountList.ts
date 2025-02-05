@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { usePrevious } from 'utilities/src/react/hooks'
-import { useAccountList } from 'wallet/src/features/accounts/hooks'
+import { useAccountListData } from 'wallet/src/features/accounts/useAccountListData'
 
 interface AddressWithBalance {
   address: Address
@@ -8,7 +8,7 @@ interface AddressWithBalance {
 }
 
 export function useSortedAccountList(addresses: Address[]): AddressWithBalance[] {
-  const { data: accountBalanceData } = useAccountList({
+  const { data: accountBalanceData } = useAccountListData({
     addresses,
   })
 

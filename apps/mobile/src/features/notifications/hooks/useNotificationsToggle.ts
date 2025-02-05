@@ -1,12 +1,14 @@
 import { useMutation } from '@tanstack/react-query'
 import { useCallback, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
+import { NotifSettingType } from 'src/features/notifications/constants'
 import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
-import { NotifSettingType, getNotifSetting, handleNotifSettingToggled } from 'src/features/notifications/settings'
+import { selectAllPushNotificationSettings } from 'src/features/notifications/selectors'
+import { updateNotifSettings } from 'src/features/notifications/slice'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useSelectAccountNotificationSetting } from 'wallet/src/features/wallet/hooks'
@@ -55,21 +57,21 @@ export function useSettingNotificationToggle({
   type: NotifSettingType
   onToggle?: (enabled: boolean) => void
 }): ReturnType<typeof useBaseNotificationToggle> {
-  const [isAppPermissionEnabled, setAppPermissionEnabled] = useState(false)
+  const dispatch = useDispatch()
+  const { generalUpdatesEnabled, priceAlertsEnabled } = useSelector(selectAllPushNotificationSettings)
 
-  useEffect(() => {
-    getNotifSetting(type)
-      .then(setAppPermissionEnabled)
-      .catch(() => {})
-  }, [type])
+  const permissionEnabledMap: Record<NotifSettingType, boolean> = {
+    [NotifSettingType.GeneralUpdates]: generalUpdatesEnabled,
+    [NotifSettingType.PriceAlerts]: priceAlertsEnabled,
+  }
+  const isAppPermissionEnabled = permissionEnabledMap[type]
 
   const handleToggle = useCallback(
     (enabled: boolean) => {
-      handleNotifSettingToggled(type, enabled)
-      setAppPermissionEnabled(enabled)
+      dispatch(updateNotifSettings({ [type]: enabled }))
       onToggle?.(enabled)
     },
-    [onToggle, type],
+    [dispatch, onToggle, type],
   )
 
   return useBaseNotificationToggle({ isAppPermissionEnabled, onToggle: handleToggle })

@@ -129,8 +129,6 @@ export async function fetchSwappableTokens(params: SwappableTokensParams): Promi
     params: {
       tokenIn: params.tokenIn,
       tokenInChainId: params.tokenInChainId,
-      ...(params.tokenOut && { tokenOut: params.tokenOut }),
-      ...(params.tokenOutChainId && { tokenOutChainId: params.tokenOutChainId }),
     },
   })
 }

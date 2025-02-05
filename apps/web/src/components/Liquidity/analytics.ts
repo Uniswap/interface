@@ -38,6 +38,8 @@ export function getLPBaseAnalyticsProperties({
     quoteCurrencyId: currencyIdToAddress(currencyId(currency1)),
     token0AmountUSD: currency0AmountUsd ? parseFloat(currency0AmountUsd.toExact()) : undefined,
     token1AmountUSD: currency1AmountUsd ? parseFloat(currency1AmountUsd.toExact()) : undefined,
+    currencyInfo0Decimals: currency0.decimals,
+    currencyInfo1Decimals: currency1.decimals,
   }
 }
 

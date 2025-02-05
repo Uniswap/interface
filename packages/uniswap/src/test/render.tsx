@@ -10,10 +10,12 @@ import {
   RenderOptions,
   RenderResult,
 } from '@testing-library/react-native'
+import { ParsedQs } from 'qs'
 import { PropsWithChildren } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 import { TamaguiProvider as OGTamaguiProvider, TamaguiProviderProps } from 'ui/src'
 import { config } from 'ui/src/tamagui.config'
+import { UrlContext } from 'uniswap/src/contexts/UrlContext'
 import { SharedPersistQueryClientProvider } from 'uniswap/src/data/apiClients/SharedPersistQueryClientProvider'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import 'uniswap/src/i18n'
@@ -147,12 +149,14 @@ export function renderHookWithProviders<P extends any[], R>(
 
 function SharedUniswapProvider({ children }: Pick<TamaguiProviderProps, 'children'>): JSX.Element {
   return (
-    <SharedPersistQueryClientProvider>
-      <UnitagUpdaterContextProvider>
-        <OGTamaguiProvider config={config} defaultTheme="dark">
-          {children}
-        </OGTamaguiProvider>
-      </UnitagUpdaterContextProvider>
-    </SharedPersistQueryClientProvider>
+    <UrlContext.Provider value={{ useParsedQueryString: () => ({}) as ParsedQs, usePathname: () => '' }}>
+      <SharedPersistQueryClientProvider>
+        <UnitagUpdaterContextProvider>
+          <OGTamaguiProvider config={config} defaultTheme="dark">
+            {children}
+          </OGTamaguiProvider>
+        </UnitagUpdaterContextProvider>
+      </SharedPersistQueryClientProvider>
+    </UrlContext.Provider>
   )
 }

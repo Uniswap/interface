@@ -248,7 +248,11 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
               </Text>
               <BaseQuoteFiatAmount
                 variant="body1"
-                price={derivedPriceRangeInfo?.price}
+                price={
+                  derivedPriceRangeInfo.invertPrice
+                    ? derivedPriceRangeInfo.price?.invert()
+                    : derivedPriceRangeInfo.price
+                }
                 base={baseCurrency}
                 quote={quoteCurrency}
               />

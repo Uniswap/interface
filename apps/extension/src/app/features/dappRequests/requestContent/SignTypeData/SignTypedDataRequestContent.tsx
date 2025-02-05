@@ -1,8 +1,10 @@
+import { Component, ErrorInfo, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
 import { UniswapXSwapRequestContent } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/SwapRequestContent'
 import { DomainContent } from 'src/app/features/dappRequests/requestContent/SignTypeData/DomainContent'
 import { MaybeExplorerLinkedAddress } from 'src/app/features/dappRequests/requestContent/SignTypeData/MaybeExplorerLinkedAddress'
+import { NonStandardTypedDataRequestContent } from 'src/app/features/dappRequests/requestContent/SignTypeData/NonStandardTypedDataRequestContent'
 import { Permit2RequestContent } from 'src/app/features/dappRequests/requestContent/SignTypeData/Permit2/Permit2RequestContent'
 import { SignTypedDataRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { EIP712Message, isEIP712TypedData } from 'src/app/features/dappRequests/types/EIP712Types'
@@ -11,42 +13,69 @@ import { Flex, Text } from 'ui/src'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { isAddress } from 'utilities/src/addresses'
+import { logger } from 'utilities/src/logger/logger'
 
 interface SignTypedDataRequestProps {
   dappRequest: SignTypedDataRequest
 }
 
+interface ErrorFallbackProps {
+  dappRequest: SignTypedDataRequest
+}
+
+function ErrorFallback({ dappRequest }: ErrorFallbackProps): JSX.Element {
+  return <NonStandardTypedDataRequestContent dappRequest={dappRequest} />
+}
+
+class SignTypedDataErrorBoundary extends Component<
+  { children: ReactNode; dappRequest: SignTypedDataRequest },
+  { hasError: boolean }
+> {
+  constructor(props: { children: ReactNode; dappRequest: SignTypedDataRequest }) {
+    super(props)
+    this.state = { hasError: false }
+  }
+
+  static getDerivedStateFromError(): { hasError: boolean } {
+    return { hasError: true }
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    const { dappRequest } = this.props
+    logger.error(error, {
+      tags: { file: 'SignTypedDataRequestContent', function: 'ErrorBoundary' },
+      extra: {
+        errorInfo: JSON.stringify(errorInfo),
+        typedData: dappRequest.typedData,
+        address: dappRequest.address,
+      },
+    })
+  }
+
+  render(): ReactNode {
+    if (this.state.hasError) {
+      return <ErrorFallback dappRequest={this.props.dappRequest} />
+    }
+
+    return this.props.children
+  }
+}
+
 export function SignTypedDataRequestContent({ dappRequest }: SignTypedDataRequestProps): JSX.Element | null {
+  return (
+    <SignTypedDataErrorBoundary dappRequest={dappRequest}>
+      <SignTypedDataRequestContentInner dappRequest={dappRequest} />
+    </SignTypedDataErrorBoundary>
+  )
+}
+
+function SignTypedDataRequestContentInner({ dappRequest }: SignTypedDataRequestProps): JSX.Element | null {
   const { t } = useTranslation()
 
   const parsedTypedData = JSON.parse(dappRequest.typedData)
 
   if (!isEIP712TypedData(parsedTypedData)) {
-    return (
-      <DappRequestContent
-        showNetworkCost
-        confirmText={t('common.button.sign')}
-        title={t('dapp.request.signature.header')}
-      >
-        <Flex gap="$spacing12" p="$spacing16">
-          <Text>{t('dapp.request.signature.error.712-spec-compliance')}</Text>
-          <Flex
-            $platform-web={{ overflowY: 'auto' }}
-            backgroundColor="$surface2"
-            borderColor="$surface3"
-            borderRadius="$rounded16"
-            borderWidth={1}
-            flexDirection="column"
-            gap="$spacing4"
-            maxHeight={200}
-            p="$spacing12"
-            position="relative"
-          >
-            {dappRequest.typedData}
-          </Flex>
-        </Flex>
-      </DappRequestContent>
-    )
+    return <NonStandardTypedDataRequestContent dappRequest={dappRequest} />
   }
 
   const { name, version, chainId: domainChainId, verifyingContract, salt } = parsedTypedData?.domain || {}
@@ -116,7 +145,7 @@ export function SignTypedDataRequestContent({ dappRequest }: SignTypedDataReques
         backgroundColor="$surface2"
         borderColor="$surface3"
         borderRadius="$rounded16"
-        borderWidth={1}
+        borderWidth="$spacing1"
         flexDirection="column"
         gap="$spacing4"
         maxHeight={200}

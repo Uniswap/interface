@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Flex, Tooltip } from 'ui/src'
 import { easeInEaseOutLayoutAnimation } from 'ui/src/animations/layout/layoutAnimation'
 import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
@@ -13,13 +13,12 @@ import {
   ActionSheetDropdownStyleProps,
 } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
 import { useNetworkOptions } from 'uniswap/src/components/network/hooks'
-import { selectHasSeenUnichainPromotionNetworkSelectorTooltip } from 'uniswap/src/features/behaviorHistory/selectors'
 import { setHasSeenNetworkSelectorTooltip } from 'uniswap/src/features/behaviorHistory/slice'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { isInterface, isMobileApp, isMobileWeb } from 'utilities/src/platform'
+import { useUnichainTooltipVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainTooltipVisibility'
+import { useIsExtraLargeScreen } from 'uniswap/src/hooks/useWindowSize'
+import { isInterface, isMobileApp } from 'utilities/src/platform'
 
 const ELLIPSIS = 'ellipsis'
 const NETWORK_ICON_SIZE = iconSizes.icon20
@@ -57,7 +56,13 @@ export function NetworksInSeries({
 
   const renderItem = useCallback(
     ({ item: chainId }: { item: ListItem }) => (
-      <Flex key={chainId} borderColor="$surface2" borderRadius={8} borderWidth={2} ml={-NETWORK_ICON_SHIFT}>
+      <Flex
+        key={chainId}
+        borderColor="$surface2"
+        borderRadius="$rounded8"
+        borderWidth="$spacing2"
+        ml={-NETWORK_ICON_SHIFT}
+      >
         {chainId === ELLIPSIS ? (
           <Flex
             centered
@@ -95,17 +100,14 @@ export function NetworkFilter({
 }: NetworkFilterProps): JSX.Element {
   const { defaultChainId } = useEnabledChains()
   const dispatch = useDispatch()
-  const unichainPromotionEnabled = useFeatureFlag(FeatureFlags.UnichainPromo)
-  const unichainEnabled = useFeatureFlag(FeatureFlags.Unichain)
-  const hasSeenUnichainPromotionNetworkSelectorTooltip = useSelector(
-    selectHasSeenUnichainPromotionNetworkSelectorTooltip,
-  )
-  const showUnichainPromo =
-    unichainEnabled && unichainPromotionEnabled && !hasSeenUnichainPromotionNetworkSelectorTooltip
+  const isExtraLargeScreen = useIsExtraLargeScreen()
+  const isXLInterface = isInterface && isExtraLargeScreen
+  const { shouldShowUnichainNetworkSelectorTooltip } = useUnichainTooltipVisibility()
+
   // Desktop Web exclusive
-  const showUnichainPromoTooltip = isInterface && !isMobileWeb && showUnichainPromo
+  const showUnichainPromoTooltip = isXLInterface && shouldShowUnichainNetworkSelectorTooltip
   // Wallet and MWeb exclusive
-  const showUnichainPromoAnimation = (!isInterface || isMobileWeb) && showUnichainPromo
+  const showUnichainPromoAnimation = !isXLInterface && shouldShowUnichainNetworkSelectorTooltip
 
   const onPress = useCallback(
     async (chainId: UniverseChainId | null) => {
@@ -116,19 +118,19 @@ export function NetworkFilter({
 
       onPressChain(chainId)
 
-      if (showUnichainPromo) {
+      if (shouldShowUnichainNetworkSelectorTooltip) {
         dispatch(setHasSeenNetworkSelectorTooltip(true))
       }
     },
-    [dispatch, onPressChain, showUnichainPromo],
+    [dispatch, onPressChain, shouldShowUnichainNetworkSelectorTooltip],
   )
 
   const wrappedOnDismiss = useCallback(() => {
-    if (showUnichainPromo) {
+    if (shouldShowUnichainNetworkSelectorTooltip) {
       dispatch(setHasSeenNetworkSelectorTooltip(true))
     }
     onDismiss?.()
-  }, [dispatch, onDismiss, showUnichainPromo])
+  }, [dispatch, onDismiss, shouldShowUnichainNetworkSelectorTooltip])
 
   const networkOptions = useNetworkOptions({
     selectedChain,

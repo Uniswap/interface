@@ -247,7 +247,7 @@ export function SelectTokensStep({
     hook: hook ?? ZERO_ADDRESS,
   })
 
-  const feeTiers = getDefaultFeeTiersWithData({ chainId: token0?.chainId, feeTierData, t })
+  const feeTiers = getDefaultFeeTiersWithData({ chainId: token0?.chainId, feeTierData, protocolVersion, t })
   const [defaultFeeTierSelected, setDefaultFeeTierSelected] = useState(false)
   const mostUsedFeeTier = useMemo(() => {
     if (hasExistingFeeTiers && feeTierData && Object.keys(feeTierData).length > 0) {
@@ -446,10 +446,10 @@ export function SelectTokensStep({
                   justifyContent="space-between"
                   alignItems="center"
                   borderRadius="$rounded12"
-                  borderWidth={1}
+                  borderWidth="$spacing1"
                   borderColor="$surface3"
                 >
-                  <Flex gap="$gap4">
+                  <Flex gap="$gap4" flex={1} minWidth={0}>
                     <Flex row gap="$gap8" alignItems="center">
                       <Text variant="subheading2" color="$neutral1">
                         {isDynamicFeeTier(fee) ? (

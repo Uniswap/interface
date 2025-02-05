@@ -296,12 +296,15 @@ export function useParseFiatOnRampError({
   if (balanceError) {
     errorText = t('fiatOffRamp.error.balance')
   }
+  if (noQuotesReturned) {
+    errorText = t('fiatOnRamp.error.noQuotes')
+  }
 
   if (!error) {
     return { errorText }
   }
 
-  errorText = noQuotesReturned ? t('fiatOnRamp.error.noQuotes') : t('fiatOnRamp.error.default')
+  errorText = t('fiatOnRamp.error.default')
 
   if (isFiatOnRampApiError(error)) {
     const formatMinMaxError = (amount: number, unit?: string): string => {

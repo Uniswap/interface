@@ -124,6 +124,7 @@ export type AppStackParamList = {
   }
   [MobileScreens.WebView]: { headerTitle: string; uriLink: string }
   [MobileScreens.Storybook]: undefined
+  [ModalName.NotificationsOSSettings]: undefined
 }
 
 export type AppStackNavigationProp = NativeStackNavigationProp<AppStackParamList>

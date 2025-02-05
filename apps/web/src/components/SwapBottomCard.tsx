@@ -25,7 +25,7 @@ import { useIsBridgingChain } from 'uniswap/src/features/bridging/hooks/chains'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useUnichainBannerVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainBannerVisibility'
+import { useUnichainPromoVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainPromoVisibility'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function SwapBottomCard() {
@@ -38,7 +38,7 @@ export function SwapBottomCard() {
   const isBridgingSupportedChain = useIsBridgingChain(chainId ?? UniverseChainId.Mainnet)
 
   const [showUnichainIntroModal, setShowUnichainIntroModal] = useState(false)
-  const { shouldShowUnichainBannerCold, shouldShowUnichainBannerWarm } = useUnichainBannerVisibility()
+  const { shouldShowUnichainBannerCold, shouldShowUnichainBannerWarm } = useUnichainPromoVisibility()
 
   const isSwapPage = useIsPage(PageType.SWAP)
   const isSendPage = useIsPage(PageType.SEND)

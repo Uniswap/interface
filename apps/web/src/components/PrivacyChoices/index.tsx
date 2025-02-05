@@ -5,9 +5,8 @@ import { atomWithStorage } from 'jotai/utils'
 import { useCallback, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
-import { Anchor, Checkbox, DeprecatedButton, Flex, Text, TouchableArea } from 'ui/src'
+import { Anchor, Checkbox, DeprecatedButton, Flex, ModalCloseIcon, Text } from 'ui/src'
 import { Lock } from 'ui/src/components/icons/Lock'
-import { X } from 'ui/src/components/icons/X'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -38,9 +37,7 @@ export function PrivacyChoicesModal() {
         <Flex py="$spacing20" px="$spacing24" gap="$spacing24">
           <Flex row justifyContent="flex-end">
             <Trace logPress element={InterfaceElementName.CLOSE_BUTTON}>
-              <TouchableArea onPress={closeAndResetModal}>
-                <X size="$icon.24" color="$neutral2" />
-              </TouchableArea>
+              <ModalCloseIcon onClose={closeAndResetModal} />
             </Trace>
           </Flex>
           <Flex alignItems="center" gap="$gap16">

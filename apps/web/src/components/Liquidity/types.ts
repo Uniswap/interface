@@ -49,6 +49,7 @@ interface BasePositionInfo {
   token0UncollectedFees?: string
   token1UncollectedFees?: string
   apr?: number
+  isHidden?: boolean
 }
 
 type V2PairInfo = BasePositionInfo & {

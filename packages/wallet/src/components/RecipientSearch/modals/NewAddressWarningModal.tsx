@@ -2,11 +2,13 @@ import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DeprecatedButton, Flex, GetProps, ScrollView, Text } from 'ui/src'
 import { UserSquare } from 'ui/src/components/icons'
-import { fonts, iconSizes, imageSizes } from 'ui/src/theme'
+import { fonts, imageSizes } from 'ui/src/theme'
+import { GenericHeader } from 'uniswap/src/components/misc/GenericHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useENSAvatar, useENSName } from 'uniswap/src/features/ens/api'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
 import { isMobileApp } from 'utilities/src/platform'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
@@ -55,26 +57,22 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
 
   return (
     <Modal name={ModalName.NewAddressWarning} onClose={onClose}>
-      <Flex px={isMobileApp && '$spacing24'} py="$spacing12">
-        <Flex centered gap="$spacing16" pb="$spacing16">
-          <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
-            <UserSquare color="$neutral2" size={iconSizes.icon24} />
-          </Flex>
-          <Text color="$neutral1" variant="subheading1">
-            {t('send.warning.newAddress.title')}
-          </Text>
-          <Text color="$neutral2" variant="body3">
-            {t('send.warning.newAddress.message')}
-          </Text>
-        </Flex>
-
+      <Flex px={isMobileApp ?? '$spacing24'} py={isMobileApp ?? '$spacing12'}>
+        <GenericHeader
+          Icon={UserSquare}
+          iconSize="$icon.24"
+          title={t('send.warning.newAddress.title')}
+          subtitle={t('send.warning.newAddress.message')}
+          subtitleVariant="body3"
+          flexProps={{ pb: '$spacing16' }}
+        />
         <ScrollView
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.scrollViewContent}
           borderColor="$surface3"
           borderRadius="$rounded16"
-          borderWidth={1}
+          borderWidth="$spacing1"
           flexDirection="column"
         >
           {displayName?.type === DisplayNameType.Unitag && (
@@ -110,7 +108,7 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
             leftText={t('send.warning.newAddress.details.walletAddress')}
             rightChild={
               <Text numberOfLines={0} variant="body3">
-                {address}
+                {shortenAddress(address, 6)}
               </Text>
             }
           />

@@ -1,4 +1,5 @@
-import { JsonRpcSigner, TransactionResponse, Web3Provider } from '@ethersproject/providers'
+import { TransactionResponse } from '@ethersproject/abstract-provider'
+import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { TradeType } from '@uniswap/sdk-core'
 import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { clientToProvider } from 'hooks/useEthersProvider'
@@ -13,13 +14,15 @@ import {
   TransactionDetails,
   TransactionInfo,
   TransactionType,
+  VitalTxFields,
 } from 'state/transactions/types'
 import { isPendingTx } from 'state/transactions/utils'
 import { InterfaceState } from 'state/webReducer'
-import { SagaGenerator, call, cancel, fork, put, race, select, take } from 'typed-redux-saga'
+import { SagaGenerator, call, cancel, delay, fork, put, race, select, take } from 'typed-redux-saga'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import {
   ApprovalEditedInWalletError,
   HandledTransactionInterrupt,
@@ -46,7 +49,8 @@ import { Sentry } from 'utilities/src/logger/Sentry'
 import noop from 'utilities/src/react/noop'
 import { currencyId } from 'utils/currencyId'
 import { signTypedData } from 'utils/signing'
-import { getConnectorClient } from 'wagmi/actions'
+import { Transaction } from 'viem'
+import { getConnectorClient, getTransaction } from 'wagmi/actions'
 
 export interface HandleSignatureStepParams<T extends SignatureTransactionStep = SignatureTransactionStep> {
   account: AccountMeta
@@ -92,12 +96,11 @@ export interface HandleOnChainStepParams<T extends OnChainTransactionStep = OnCh
   /** Controls whether the function should wait to return until after the transaction has confirmed. Defaults to `true`. */
   shouldWaitForConfirmation?: boolean
   /** Called when data returned from a submitted transaction differs from data originally sent to the wallet. */
-  onModification?: (response: TransactionResponse) => void | Generator<unknown, void, unknown>
+  onModification?: (response: VitalTxFields) => void | Generator<unknown, void, unknown>
 }
 export function* handleOnChainStep<T extends OnChainTransactionStep>(params: HandleOnChainStepParams<T>) {
   const { account, step, setCurrentStep, info, allowDuplicativeTx, ignoreInterrupt, onModification } = params
   const { chainId } = step.txRequest
-  const signer = yield* call(getSigner, account.address)
 
   addTransactionBreadcrumb({ step, data: { ...info } })
 
@@ -121,8 +124,7 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
   setCurrentStep({ step, accepted: false })
 
   // Prompt wallet to submit transaction
-  const response = yield* call([signer, 'sendTransaction'], step.txRequest)
-  const { hash, nonce, data } = response
+  const { hash, nonce, data } = yield* call(submitTransaction, params)
 
   // Trigger waiting UI after user accepts
   setCurrentStep({ step, accepted: true })
@@ -131,7 +133,7 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
   yield* put(addTransaction({ from: account.address, info, hash, nonce, chainId }))
 
   if (step.txRequest.data !== data && onModification) {
-    yield* call(onModification, response)
+    yield* call(onModification, { hash, data, nonce })
   }
 
   // If the transaction flow was interrupted while awaiting input, throw an error after input is received
@@ -167,6 +169,58 @@ function* handleOnChainConfirmation(params: HandleOnChainStepParams, hash: strin
   return hash
 }
 
+/** Submits a transaction and handles potential wallet errors */
+function* submitTransaction(params: HandleOnChainStepParams): SagaGenerator<VitalTxFields> {
+  const { account, step } = params
+  const signer = yield* call(getSigner, account.address)
+
+  try {
+    const response = yield* call([signer, 'sendTransaction'], step.txRequest)
+    return transformTransactionResponse(response)
+  } catch (error) {
+    if (error && typeof error === 'object' && 'transactionHash' in error) {
+      return yield* recoverTransactionFromHash(error.transactionHash as `0x${string}`, step)
+    }
+    throw error
+  }
+}
+
+/** Polls for transaction details when only hash is known */
+function* recoverTransactionFromHash(hash: `0x${string}`, step: OnChainTransactionStep): SagaGenerator<VitalTxFields> {
+  const transaction = yield* pollForTransaction(hash, step.txRequest.chainId)
+
+  if (!transaction) {
+    throw new TransactionStepFailedError({ message: `Transaction not found`, step })
+  }
+
+  return transformTransactionResponse(transaction)
+}
+
+/** Polls until transaction is found or timeout is reached */
+function* pollForTransaction(hash: `0x${string}`, chainId: number) {
+  const POLL_INTERVAL = 2_000
+  const MAX_POLLING_TIME = isL2ChainId(chainId) ? 12_000 : 24_000
+  let elapsed = 0
+
+  while (elapsed < MAX_POLLING_TIME) {
+    try {
+      return yield* call(getTransaction, wagmiConfig, { chainId, hash })
+    } catch {
+      yield* delay(POLL_INTERVAL)
+      elapsed += POLL_INTERVAL
+    }
+  }
+  return null
+}
+
+/** Transforms a TransactionResponse or a Transaction into { hash: string; data: string; nonce: number } */
+function transformTransactionResponse(response: TransactionResponse | Transaction): VitalTxFields {
+  if ('data' in response) {
+    return { hash: response.hash, data: response.data, nonce: response.nonce }
+  }
+  return { hash: response.hash, data: response.input, nonce: response.nonce }
+}
+
 interface HandleApprovalStepParams
   extends Omit<HandleOnChainStepParams<TokenApprovalTransactionStep | TokenRevocationTransactionStep>, 'info'> {}
 export function* handleApprovalTransactionStep(params: HandleApprovalStepParams) {
@@ -175,14 +229,14 @@ export function* handleApprovalTransactionStep(params: HandleApprovalStepParams)
   return yield* call(handleOnChainStep, {
     ...params,
     info,
-    *onModification(response: TransactionResponse) {
-      const { isInsufficient, approvedAmount } = checkApprovalAmount(response, step)
+    *onModification({ hash, data }: VitalTxFields) {
+      const { isInsufficient, approvedAmount } = checkApprovalAmount(data, step)
 
       // Update state to reflect hte actual approval amount submitted on-chain
       yield* put(
         updateTransactionInfo({
           chainId: step.txRequest.chainId,
-          hash: response.hash,
+          hash,
           info: { ...info, amount: approvedAmount },
         }),
       )
@@ -205,12 +259,9 @@ function getApprovalTransactionInfo(
   }
 }
 
-function checkApprovalAmount(
-  response: TransactionResponse,
-  step: TokenApprovalTransactionStep | TokenRevocationTransactionStep,
-) {
+function checkApprovalAmount(data: string, step: TokenApprovalTransactionStep | TokenRevocationTransactionStep) {
   const requiredAmount = BigInt(`0x${parseInt(step.amount, 10).toString(16)}`)
-  const submitted = parseERC20ApproveCalldata(response.data)
+  const submitted = parseERC20ApproveCalldata(data)
   const approvedAmount = submitted.amount.toString(10)
 
   // Special case: for revoke tx's, the approval is insufficient if anything other than an empty approval was submitted on chain.

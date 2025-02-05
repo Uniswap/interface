@@ -17,7 +17,7 @@ import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { OnboardingCardLoggingName } from 'uniswap/src/features/telemetry/types'
-import { useUnichainBannerVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainBannerVisibility'
+import { useUnichainPromoVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainPromoVisibility'
 import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'uniswap/src/features/unitags/constants'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { CardType, IntroCardGraphicType, IntroCardProps } from 'wallet/src/components/introCards/IntroCard'
@@ -98,7 +98,7 @@ export function useSharedIntroCards({
     }
   }, [handleBridgingDismiss, numBridgingChains, t])
 
-  const { shouldShowUnichainBannerCold, shouldShowUnichainBannerWarm } = useUnichainBannerVisibility()
+  const { shouldShowUnichainBannerCold, shouldShowUnichainBannerWarm } = useUnichainPromoVisibility()
 
   const unichainBannerCold = useMemo(() => {
     return {

@@ -1,15 +1,7 @@
 import { ReactNode, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  AnimateInOrder,
-  ElementAfterText,
-  Flex,
-  Text,
-  isWeb,
-  unichainGradientAnimatedStyle,
-  useSporeColors,
-} from 'ui/src'
+import { AnimateInOrder, ElementAfterGradientText, Flex, Text, isWeb, useSporeColors } from 'ui/src'
 import { CheckmarkCircle } from 'ui/src/components/icons/CheckmarkCircle'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -21,6 +13,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { isInterface } from 'utilities/src/platform'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 const NETWORK_OPTION_ICON_SIZE = iconSizes.icon24
 const OPTION_GAP = isWeb ? '$spacing8' : '$spacing6'
@@ -48,9 +41,12 @@ export function NetworkOption({
   useEffect(() => {
     if (showUnichainAnimation) {
       // delay to prevent ux jank
-      const delay = setTimeout(() => {
-        dispatch(setHasSeenNetworkSelectorAnimation(true))
-      }, 1000)
+      const delay = setTimeout(
+        () => {
+          dispatch(setHasSeenNetworkSelectorAnimation(true))
+        },
+        isInterface ? ONE_SECOND_MS : ONE_SECOND_MS * 3,
+      )
       return () => clearTimeout(delay)
     }
     return undefined
@@ -92,21 +88,13 @@ export function NetworkOption({
             <Flex width={NETWORK_OPTION_ICON_SIZE} />
           )}
         </Flex>
-        {isInterface ? (
-          <style>{unichainGradientAnimatedStyle({ textColor: colors.neutral1?.get().toString() })}</style>
-        ) : null}
-        <ElementAfterText
+        <ElementAfterGradientText
           element={isNew || showUnichainAnimation ? wrappedNewTag : undefined}
           text={info.label}
-          textProps={
-            showUnichainAnimation && isInterface
-              ? {
-                  color: 'transparent',
-                  variant: 'body2',
-                  className: 'unichain-gradient',
-                }
-              : { color: '$neutral1', variant: 'body2' }
-          }
+          gradientTextColor={colors.neutral1?.val}
+          enabled={showUnichainAnimation}
+          textProps={{ variant: 'body2' }}
+          gradientEndingXPlacement={-250}
         />
       </Flex>
     )

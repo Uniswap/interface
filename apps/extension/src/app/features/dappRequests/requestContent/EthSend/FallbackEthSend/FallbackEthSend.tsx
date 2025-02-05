@@ -70,7 +70,7 @@ export function FallbackEthSendRequestContent({
         backgroundColor="$surface2"
         borderColor="$surface3"
         borderRadius="$rounded16"
-        borderWidth={1}
+        borderWidth="$spacing1"
         gap="$spacing12"
         p="$spacing16"
         width="100%"
@@ -100,7 +100,7 @@ export function FallbackEthSendRequestContent({
           <Text
             borderColor="$surface3"
             borderRadius="$rounded8"
-            borderWidth={1}
+            borderWidth="$spacing1"
             color="$neutral1"
             // fontFamily="SF Mono"
             px="$spacing8"

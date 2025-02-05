@@ -1,4 +1,4 @@
-import { InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@uniswap/analytics-events'
 import Badge from 'components/Badge/Badge'
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
 import { ChainLogo } from 'components/Logo/ChainLogo'
@@ -153,8 +153,12 @@ const TableNetworkItem = memo(function TableNetworkItem({
   return (
     <Trace
       logPress
-      eventOnTrigger={InterfaceEventName.CHAIN_CHANGED}
-      properties={{ chain: chainName.toString(), page: InterfacePageName.EXPLORE_PAGE }}
+      page={InterfacePageName.EXPLORE_PAGE}
+      properties={{
+        tab,
+        chain: chainName.toString(),
+        previousConnectedChain: currentChainInfo?.id ? toGraphQLChain(currentChainInfo?.id) : 'All networks',
+      }}
     >
       <InternalMenuItem
         data-testid={`tokens-network-filter-option-${chainName.toLowerCase()}`}

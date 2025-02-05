@@ -114,6 +114,7 @@ ios/WidgetsCore/MobileSchema/*
 
 # Swift env
 ios/WidgetsCore/Env.swift
+ios/OneSignalNotificationServiceExtension/Env.swift
 
 # Sentry
 ios/sentry.properties

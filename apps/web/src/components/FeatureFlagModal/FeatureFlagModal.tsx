@@ -4,10 +4,10 @@ import Row from 'components/deprecated/Row'
 import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
 import styled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
-import { X } from 'react-feather'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { BREAKPOINTS } from 'theme'
+import { ModalCloseIcon } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
 import {
@@ -44,13 +44,6 @@ const CenteredRow = styled.div`
   padding: 8px 0px;
   max-width: 100%;
   gap: 4px;
-`
-
-const CloseButton = styled.button`
-  cursor: pointer;
-  background: transparent;
-  border: none;
-  color: ${({ theme }) => theme.neutral1};
 `
 
 const Header = styled(CenteredRow)`
@@ -218,9 +211,7 @@ export default function FeatureFlagModal() {
               Clear Overrides
             </SmallButtonPrimary>
           </Row>
-          <CloseButton onClick={() => closeModal()}>
-            <X size={24} />
-          </CloseButton>
+          <ModalCloseIcon onClose={closeModal} />
         </Header>
         <FlagsColumn>
           <FeatureFlagOption flag={FeatureFlags.EmbeddedWallet} label="Add internal embedded wallet functionality" />
@@ -231,6 +222,7 @@ export default function FeatureFlagModal() {
             flag={FeatureFlags.IndicativeSwapQuotes}
             label="[Universal Swap Flow Only] Enable Quick Routes"
           />
+          <FeatureFlagOption flag={FeatureFlags.InstantTokenBalanceUpdate} label="Instant token balance update" />
           <FeatureFlagOption
             flag={FeatureFlags.UniswapXPriorityOrdersBase}
             label="UniswapX Priority Orders (on Base)"

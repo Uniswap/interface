@@ -21,7 +21,7 @@ export function PulseRipple({ rippleColor }: { rippleColor?: string }): JSX.Elem
       <Flex data-testid="icon-ripple-animation">
         <Flex
           borderRadius={12}
-          borderWidth={1}
+          borderWidth="$spacing1"
           height={24}
           position="absolute"
           style={{

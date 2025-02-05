@@ -61,7 +61,7 @@ export function TokenSelectorBalanceDisplay({
         backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
         borderColor="$surface3"
         borderRadius="$rounded20"
-        borderWidth={1}
+        borderWidth="$spacing1"
         flexDirection="row"
         gap="$gap8"
         p="$spacing12"

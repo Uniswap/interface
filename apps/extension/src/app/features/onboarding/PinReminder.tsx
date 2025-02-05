@@ -24,7 +24,7 @@ export function PinReminder({
         backgroundColor="$surface1"
         borderColor="$surface3"
         borderRadius="$rounded16"
-        borderWidth={1}
+        borderWidth="$spacing1"
         gap="$spacing12"
         p="$spacing12"
         shadowColor="$shadowColor"

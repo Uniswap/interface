@@ -1,4 +1,3 @@
-import { TransactionResponse } from '@ethersproject/providers'
 import { LiquidityEventName } from '@uniswap/analytics-events'
 import { getLiquidityEventName } from 'components/Liquidity/analytics'
 import { PopupType, addPopup } from 'state/application/reducer'
@@ -112,13 +111,13 @@ function* handlePositionTransactionStep(params: HandlePositionStepParams) {
   const info = getLiquidityTransactionInfo(action)
   const txRequest = yield* call(getLiquidityTxRequest, step, signature)
 
-  const onModification = (response: TransactionResponse) => {
+  const onModification = ({ hash, data }: { hash: string; data: string }) => {
     if (analytics) {
       sendAnalyticsEvent(LiquidityEventName.TRANSACTION_MODIFIED_IN_WALLET, {
         ...analytics,
-        transaction_hash: response.hash,
+        transaction_hash: hash,
         expected: txRequest.data?.toString(),
-        actual: response.data,
+        actual: data,
       })
     }
   }

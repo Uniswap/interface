@@ -160,7 +160,7 @@ export function ActiveLiquidityChart2({
               borderRadius="$rounded12"
               backgroundColor="$surface2"
               borderColor="$surface3"
-              borderWidth={1}
+              borderWidth="$spacing1"
               p="$padding8"
               position="absolute"
               left={0}
@@ -176,7 +176,7 @@ export function ActiveLiquidityChart2({
               borderRadius="$rounded12"
               backgroundColor="$surface2"
               borderColor="$surface3"
-              borderWidth={1}
+              borderWidth="$spacing1"
               p="$padding8"
               position="absolute"
               left={0}

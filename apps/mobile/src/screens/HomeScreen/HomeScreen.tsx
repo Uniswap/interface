@@ -41,7 +41,7 @@ import {
 } from 'src/components/layout/TabHelpers'
 import { openModal } from 'src/features/modals/modalSlice'
 import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
-import { AIAssistantOverlay } from 'src/features/openai/AIAssistantOverlay'
+import { DevAIAssistantOverlay } from 'src/features/openai/DevAIAssistantOverlay'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { useHomeScreenState } from 'src/screens/HomeScreen/useHomeScreenState'
@@ -645,14 +645,12 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     ],
   )
 
-  const openAIAssistantEnabled = useFeatureFlag(FeatureFlags.OpenAIAssistant)
-
   // Hides lock screen on next js render cycle, ensuring this component is loaded when the screen is hidden
   useTimeout(hideSplashScreen, 1)
 
   return (
     <Screen edges={['left', 'right']}>
-      {openAIAssistantEnabled && <AIAssistantOverlay />}
+      <DevAIAssistantOverlay />
       <View style={TAB_STYLES.container}>
         <Animated.View style={headerContainerStyle} onLayout={handleHeaderLayout}>
           {contentHeader}

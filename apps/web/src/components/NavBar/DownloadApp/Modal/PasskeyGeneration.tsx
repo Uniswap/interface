@@ -43,7 +43,7 @@ export function PasskeyGenerationModal({ setPage }: { setPage: Dispatch<SetState
           py="$padding20"
           px="$spacing4"
           gap="$gap12"
-          borderWidth={1}
+          borderWidth="$spacing1"
           borderStyle="solid"
           borderRadius="$rounded20"
         >

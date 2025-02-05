@@ -5,7 +5,7 @@ import { MobileBottomBar, TDPActionTabs } from 'components/NavBar/MobileBottomBa
 import { ActivitySection } from 'components/Tokens/TokenDetails/ActivitySection'
 import BalanceSummary, { PageChainBalanceSummary } from 'components/Tokens/TokenDetails/BalanceSummary'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
-import { LeftPanel, RightPanel, TokenDetailsLayout, TokenInfoContainer } from 'components/Tokens/TokenDetails/Skeleton'
+import { LeftPanel, RightPanel, TokenDetailsLayout } from 'components/Tokens/TokenDetails/Skeleton'
 import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import { TokenDescription } from 'components/Tokens/TokenDetails/TokenDescription'
 import { TokenDetailsHeader } from 'components/Tokens/TokenDetails/TokenDetailsHeader'
@@ -198,9 +198,7 @@ export default function TokenDetails() {
       <TokenDetailsLayout>
         <LeftPanel>
           <TDPBreadcrumb />
-          <TokenInfoContainer data-testid="token-info-container">
-            <TokenDetailsHeader />
-          </TokenInfoContainer>
+          <TokenDetailsHeader />
           <ChartSection />
           {!showRightPanel && !!pageChainBalance && (
             <Flex mt="$spacing40">

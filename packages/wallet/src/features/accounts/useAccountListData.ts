@@ -1,4 +1,5 @@
 import { NetworkStatus, WatchQueryFetchPolicy } from '@apollo/client'
+import { useMemo } from 'react'
 import {
   AccountListQuery,
   // eslint-disable-next-line no-restricted-imports
@@ -9,7 +10,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 // eslint-disable-next-line no-restricted-imports
 import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances'
 
-export function useAccountList({
+export function useAccountListData({
   addresses,
   fetchPolicy,
   notifyOnNetworkStatusChange,
@@ -39,5 +40,38 @@ export function useAccountList({
     refetch,
     startPolling,
     stopPolling,
+  }
+}
+
+export function useAccountBalances({
+  addresses,
+  fetchPolicy,
+}: {
+  addresses: Address[]
+  fetchPolicy?: WatchQueryFetchPolicy
+}): {
+  balances: number[]
+  totalBalance: number
+} {
+  const { data } = useAccountListData({
+    addresses,
+    fetchPolicy,
+  })
+
+  const balances = useMemo(() => {
+    const valuesUnfiltered = data?.portfolios
+      ?.map((p) => p?.tokensTotalDenominatedValue?.value)
+      .filter((v) => v !== undefined)
+
+    if (valuesUnfiltered === undefined) {
+      return []
+    }
+
+    return valuesUnfiltered as number[]
+  }, [data?.portfolios])
+
+  return {
+    balances,
+    totalBalance: balances.reduce((a, b) => a + b, 0),
   }
 }

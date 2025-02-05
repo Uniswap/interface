@@ -279,7 +279,7 @@ export function DappLogoWithWCBadge({
           backgroundColor="$surface2"
           borderColor="$surface1"
           borderRadius="$roundedFull"
-          borderWidth={2}
+          borderWidth="$spacing2"
           bottom={-2}
           position="absolute"
           right={-2}

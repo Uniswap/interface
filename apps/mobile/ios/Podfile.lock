@@ -1204,7 +1204,7 @@ PODS:
     - ExpoModulesCore
   - ExpoBlur (12.9.2):
     - ExpoModulesCore
-  - ExpoCamera (14.1.2):
+  - ExpoCamera (14.1.1):
     - ExpoModulesCore
     - ZXingObjC/OneD
     - ZXingObjC/PDF417
@@ -3014,7 +3014,7 @@ SPEC CHECKSUMS:
   EXImageLoader: 55080616b2fe9da19ef8c7f706afd9814e279b6b
   Expo: 0f04015e4254c8b7c74f3c4b2facdfd0b62152b0
   ExpoBlur: e832d874bd94afc0645daddbd3162ec1ce172080
-  ExpoCamera: ed3dd4ae8e32603c91336ea8e27c5d1e2822d8f6
+  ExpoCamera: 53f5ef81bab088b2edcf94d05e4da3bc84f46383
   ExpoClipboard: b597982124f067ff9f5b89093eb3d97898d5d877
   ExpoFileSystem: eecaf6796aed0f4dd20042dc2ca2cac6c4bc1185
   ExpoHaptics: 28a771b630353cd6e8dcf1b1e3e693e38ad7c3c3

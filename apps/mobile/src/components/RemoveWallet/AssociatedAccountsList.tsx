@@ -8,7 +8,7 @@ import { AccountListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__ge
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { useAccountList } from 'wallet/src/features/accounts/hooks'
+import { useAccountListData } from 'wallet/src/features/accounts/useAccountListData'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 const ADDRESS_ROW_HEIGHT = 40
@@ -23,7 +23,7 @@ type Portfolio = NonNullable<NonNullable<NonNullable<AccountListQuery['portfolio
 function _AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Element {
   const { fullHeight } = useDeviceDimensions()
   const addresses = useMemo(() => accounts.map((account) => account.address), [accounts])
-  const { data, loading } = useAccountList({
+  const { data, loading } = useAccountListData({
     addresses,
     notifyOnNetworkStatusChange: true,
   })
@@ -57,7 +57,7 @@ function _AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Ele
     <Flex
       borderColor="$surface3"
       borderRadius="$rounded16"
-      borderWidth={1}
+      borderWidth="$spacing1"
       maxHeight={accountsScrollViewHeight}
       px="$spacing12"
       width="100%"

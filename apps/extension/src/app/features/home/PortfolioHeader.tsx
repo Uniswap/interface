@@ -193,7 +193,7 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
                 animation="quicker"
                 borderColor="$surface2"
                 borderRadius="$rounded20"
-                borderWidth={1}
+                borderWidth="$spacing1"
                 disableRemoveScroll={false}
                 zIndex="$default"
                 {...animationPresets.fadeInDownOutUp}
@@ -259,7 +259,7 @@ function ConnectionStatusIcon({
         <Circle
           backgroundColor="$statusSuccess"
           borderColor="$surface1"
-          borderWidth={2}
+          borderWidth="$spacing2"
           height={iconSizes.icon12}
           mr="$spacing8"
           position="absolute"

@@ -1,4 +1,12 @@
-import { QueryFunction, QueryKey, UseQueryResult, skipToken, useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+  QueryClient,
+  QueryFunction,
+  QueryKey,
+  UseQueryResult,
+  skipToken,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TRADING_API_CACHE_KEY, fetchSwappableTokens } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
@@ -10,12 +18,11 @@ import {
   toTradingApiSupportedChainId,
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { logger } from 'utilities/src/logger/logger'
+import { MAX_REACT_QUERY_CACHE_TIME_MS } from 'utilities/src/time/time'
 
 export type SwappableTokensParams = {
   tokenIn: Address
   tokenInChainId: ChainId
-  tokenOut?: Address
-  tokenOutChainId?: ChainId
 }
 
 export function useTradingApiSwappableTokensQuery({
@@ -30,8 +37,23 @@ export function useTradingApiSwappableTokensQuery({
   return useQuery<GetSwappableTokensResponse>({
     queryKey,
     queryFn: params ? swappableTokensQueryFn(params) : skipToken,
+    // In order for `getSwappableTokensQueryData` to be more likely to have cached data,
+    // we set the `gcTime` to the longest possible time.
+    gcTime: MAX_REACT_QUERY_CACHE_TIME_MS,
     ...rest,
   })
+}
+
+// Synchronous way of reading the cached data for this query.
+// It will return `undefined` if the data is not cached.
+export function getSwappableTokensQueryData({
+  queryClient,
+  params,
+}: {
+  queryClient: QueryClient
+  params: SwappableTokensParams
+}): GetSwappableTokensResponse | undefined {
+  return queryClient.getQueryData(swappableTokensQueryKey(params))
 }
 
 export function usePrefetchSwappableTokens(input: Maybe<TradeableAsset>): void {
@@ -54,6 +76,9 @@ export function usePrefetchSwappableTokens(input: Maybe<TradeableAsset>): void {
           tokenIn,
           tokenInChainId,
         }),
+        // In order for `getSwappableTokensQueryData` to be more likely to have cached data,
+        // we set the `gcTime` to the longest possible time.
+        gcTime: MAX_REACT_QUERY_CACHE_TIME_MS,
       })
     }
 
@@ -66,7 +91,7 @@ export function usePrefetchSwappableTokens(input: Maybe<TradeableAsset>): void {
 }
 
 const swappableTokensQueryKey = (params?: SwappableTokensParams): QueryKey => {
-  return [TRADING_API_CACHE_KEY, uniswapUrls.tradingApiPaths.swappableTokens, params?.tokenIn, params?.tokenInChainId]
+  return [TRADING_API_CACHE_KEY, uniswapUrls.tradingApiPaths.swappableTokens, params]
 }
 
 const swappableTokensQueryFn = (

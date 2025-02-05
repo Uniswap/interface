@@ -2,11 +2,11 @@ import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
+import { NotifSettingType } from 'src/features/notifications/constants'
 import {
   useAddressNotificationToggle,
   useSettingNotificationToggle,
 } from 'src/features/notifications/hooks/useNotificationsToggle'
-import { NotifSettingType } from 'src/features/notifications/settings'
 import { Flex, Switch, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'

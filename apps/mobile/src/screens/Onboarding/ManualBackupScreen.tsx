@@ -126,6 +126,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
     case View.SeedPhrase:
       return (
         <OnboardingScreen
+          disableGoBack={fromCloudBackup}
           Icon={PapersText}
           subtitle={t('onboarding.recoveryPhrase.view.subtitle')}
           title={
@@ -284,7 +285,7 @@ function ManualBackWarningModal({ onBack, onContinue }: ManualBackWarningModalPr
           backgroundColor="$surface1"
           borderColor="$surface3"
           borderRadius="$rounded20"
-          borderWidth={1}
+          borderWidth="$spacing1"
           gap="$spacing20"
           p="$spacing16"
         >

@@ -106,7 +106,7 @@ export function Switch({
       aria-disabled={disabled}
       aria-selected={checked}
       backgroundColor={frameBackgroundColor}
-      borderWidth={0}
+      borderWidth="$none"
       checked={checked}
       defaultChecked={checked}
       group="item"
@@ -184,7 +184,7 @@ export function Switch({
                 }}
                 borderColor="transparent"
                 borderRadius="$roundedFull"
-                borderWidth={1}
+                borderWidth="$spacing1"
                 bottom={OUTER_RING_DISTANCE}
                 left={OUTER_RING_DISTANCE}
                 position="absolute"
@@ -200,7 +200,7 @@ export function Switch({
                 }}
                 borderColor="transparent"
                 borderRadius="$roundedFull"
-                borderWidth={2}
+                borderWidth="$spacing2"
                 bottom={INNER_RING_DISTANCE}
                 left={INNER_RING_DISTANCE}
                 position="absolute"

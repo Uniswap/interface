@@ -66,7 +66,7 @@ export const RightPanel = styled(Flex, {
   },
 })
 
-export const TokenInfoContainer = styled(Flex, {
+const TokenInfoContainer = styled(Flex, {
   row: true,
   justifyContent: 'space-between',
   alignItems: 'center',
@@ -77,7 +77,7 @@ export const TokenInfoContainer = styled(Flex, {
   zIndex: '$default',
 })
 
-export const TokenNameCell = styled(Flex, {
+const TokenNameCell = styled(Flex, {
   row: true,
   gap: '$gap12',
   alignItems: 'center',

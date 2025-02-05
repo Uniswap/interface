@@ -637,6 +637,25 @@ const v81SchemaIntermediate = {
 delete v81SchemaIntermediate.behaviorHistory.createdOnboardingRedesignAccount
 export const v81Schema = v81SchemaIntermediate
 
+// v82 had a migration but no schema update so skipping it here
+export const v83Schema = {
+  ...v81Schema,
+  pushNotifications: {
+    generalUpdatesEnabled: true,
+    priceAlertsEnabled: true,
+  },
+}
+
+const v84SchemaIntermediate = {
+  ...v83Schema,
+  behaviorHistory: {
+    ...v83Schema.behaviorHistory,
+    hasViewedWelcomeWalletCard: undefined,
+  },
+}
+delete v84SchemaIntermediate.behaviorHistory.hasViewedWelcomeWalletCard
+export const v84Schema = v84SchemaIntermediate
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v81Schema => v81Schema
+export const getSchema = (): typeof v84Schema => v84Schema

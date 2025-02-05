@@ -293,7 +293,7 @@ export function FeeTierSearchModal() {
                 alignSelf="stretch"
                 backgroundColor="$transparent"
                 borderRadius={0}
-                borderWidth={0}
+                borderWidth="$none"
                 textAlign="left"
                 value={searchValue}
                 fontFamily="$subHeading"

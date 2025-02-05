@@ -45,40 +45,65 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
   const { chainId } = useMultichainContext()
   const { exactAmountToken, exactAmountFiat, inputInFiat, inputCurrency, recipient, validatedRecipientData } = state
 
-  const { unitag: recipientInputUnitag } = useUnitagByName(validatedRecipientData ? undefined : recipient)
-  const recipientInputUnitagUsername = validatedRecipientData?.unitag ?? recipientInputUnitag?.username
+  // If we have validatedRecipientData, skip custom lookups
+  // Otherwise, use raw `recipient` input from the user.
+  const userInput = validatedRecipientData ? undefined : recipient
+
+  const isRecipientAnAddress = isAddress(userInput ?? '')
+
+  // If userInput is an address, do a reverse ENS lookup
+  // (address → ENS). Otherwise skip.
+  const reverseLookupInput = isRecipientAnAddress ? userInput : undefined
+  const { data: reverseLookupName } = useENSName(reverseLookupInput)
+
+  // If userInput is *not* an address, do a forward lookup
+  // (ENS → address). Otherwise skip.
+  const forwardLookupInput = !isRecipientAnAddress ? userInput ?? null : null
+  const { data: forwardLookupAddress } = useAddressFromEns(forwardLookupInput)
+
+  // Check Unitag by name and see if it yields an address
+  const { unitag: recipientInputUnitag } = useUnitagByName(userInput)
   const recipientInputUnitagAddress = recipientInputUnitag?.address?.address
-  const { data: recipientInputEnsAddress } = useAddressFromEns(validatedRecipientData ? null : recipient)
+  const recipientInputUnitagUsername = validatedRecipientData?.unitag ?? recipientInputUnitag?.username
+
   const validatedRecipientAddress = useMemo(() => {
-    if (validatedRecipientData) {
-      return validatedRecipientData.address
-    }
     return (
-      isAddress(recipient) || isAddress(recipientInputEnsAddress) || isAddress(recipientInputUnitagAddress) || undefined
+      validatedRecipientData?.address ??
+      (isAddress(userInput) || isAddress(forwardLookupAddress) || isAddress(recipientInputUnitagAddress) || undefined)
     )
-  }, [recipient, recipientInputEnsAddress, recipientInputUnitagAddress, validatedRecipientData])
+  }, [validatedRecipientData?.address, userInput, forwardLookupAddress, recipientInputUnitagAddress])
 
-  const { unitag } = useUnitagByAddress(recipientInputUnitagUsername ? undefined : validatedRecipientAddress)
-  const { data: ENSName } = useENSName(validatedRecipientData?.ensName ? undefined : validatedRecipientAddress)
-  const recipientData = useMemo(() => {
-    if (validatedRecipientAddress) {
-      return {
-        address: validatedRecipientAddress,
-        ensName: recipientInputEnsAddress ? recipient : validatedRecipientData?.ensName ?? ENSName ?? undefined,
-        unitag: recipientInputUnitagUsername ?? unitag?.username,
-      }
+  // Unitag fallback: If there's no known username from input or validated data,
+  // try to look up a unitag by the final address.
+  const { unitag: fallbackUnitag } = useUnitagByAddress(
+    recipientInputUnitagUsername ? undefined : validatedRecipientAddress,
+  )
+
+  // If forward lookup succeeded, use the original user input as ENS name.
+  const finalEnsName = useMemo(() => {
+    if (isAddress(forwardLookupAddress)) {
+      return userInput
     }
+    return validatedRecipientData?.ensName ?? reverseLookupName ?? undefined
+  }, [forwardLookupAddress, validatedRecipientData?.ensName, reverseLookupName, userInput])
 
-    return undefined
-  }, [
-    validatedRecipientAddress,
-    recipientInputEnsAddress,
-    recipient,
-    validatedRecipientData?.ensName,
-    ENSName,
-    recipientInputUnitagUsername,
-    unitag?.username,
-  ])
+  const finalUnitag = useMemo(() => {
+    if (validatedRecipientData?.unitag) {
+      return validatedRecipientData.unitag
+    }
+    return recipientInputUnitagUsername ?? fallbackUnitag?.username
+  }, [validatedRecipientData?.unitag, recipientInputUnitagUsername, fallbackUnitag?.username])
+
+  const recipientData = useMemo(() => {
+    if (!validatedRecipientAddress) {
+      return undefined
+    }
+    return {
+      address: validatedRecipientAddress,
+      ensName: finalEnsName,
+      unitag: finalUnitag,
+    }
+  }, [validatedRecipientAddress, finalEnsName, finalUnitag])
 
   const nativeCurrency = useCurrency(NATIVE_CHAIN_ID, chainId)
   const [inputCurrencyBalance, nativeCurrencyBalance] = useCurrencyBalances(

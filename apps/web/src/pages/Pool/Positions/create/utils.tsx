@@ -519,14 +519,19 @@ export function getV2PriceRangeInfo({
   const { currencies } = derivedPositionInfo
   const [baseCurrency] = getInvertedTuple(currencies, state.priceInverted)
 
+  const baseToken = getCurrencyWithWrap(baseCurrency, ProtocolVersion.V2)
+  const sortedTokens = getSortedCurrenciesTuple(
+    getCurrencyWithWrap(currencies[0], ProtocolVersion.V2),
+    getCurrencyWithWrap(currencies[1], ProtocolVersion.V2),
+  )
+
   const price = getInitialPrice({
-    baseCurrency: getCurrencyWithWrap(baseCurrency, ProtocolVersion.V2),
-    sortedCurrencies: getSortedCurrenciesTuple(
-      getCurrencyWithWrap(currencies[0], ProtocolVersion.V2),
-      getCurrencyWithWrap(currencies[1], ProtocolVersion.V2),
-    ),
+    baseCurrency: baseToken,
+    sortedCurrencies: sortedTokens,
     initialPrice: state.initialPrice,
   })
+
+  const invertPrice = Boolean(baseToken && sortedTokens[0] && !baseToken.equals(sortedTokens[0]))
 
   return {
     protocolVersion: ProtocolVersion.V2,
@@ -534,6 +539,7 @@ export function getV2PriceRangeInfo({
     mockPair: createMockPair(price),
     deposit0Disabled: false,
     deposit1Disabled: false,
+    invertPrice,
   } satisfies V2PriceRangeInfo
 }
 

@@ -801,7 +801,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       isSecondaryChain: false,
       nativeTokenBackendAddress: undefined,
     },
-    blockPerMainnetEpochForChainId: 6, // TODO verify to complete WALL-5243
+    blockPerMainnetEpochForChainId: 6,
     blockWaitMsBeforeWarning: undefined,
     bridge: 'https://www.unichain.org/bridge',
     docs: 'https://docs.unichain.org',
@@ -825,7 +825,6 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     },
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: undefined,
-    // TODO verify any additional RPC's to complete WALL-5243
     rpcUrls: {
       [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Unichain)] },
       [RPCType.Default]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Unichain)] },

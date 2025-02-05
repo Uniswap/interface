@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmNy6ppw64jmLBEZ6r8D19beUVH3objJPrjMfNxvugqakD`
-- CIDv1: `bafybeiajkzyd25iwsu5lax4wtilh5ukji3kmzrt7r76k45pcminbsirsty`
+- CIDv0: `Qma8zLjgStpH8bA8CcnrsPszS38XG4D9YqdW39VgnUSF64`
+- CIDv1: `bafybeifpj54iwonrxyywl5g5crbd7krugzmgsr4lw6txrkygunexey66su`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,71 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiajkzyd25iwsu5lax4wtilh5ukji3kmzrt7r76k45pcminbsirsty.ipfs.dweb.link/
-- [ipfs://QmNy6ppw64jmLBEZ6r8D19beUVH3objJPrjMfNxvugqakD/](ipfs://QmNy6ppw64jmLBEZ6r8D19beUVH3objJPrjMfNxvugqakD/)
+- https://bafybeifpj54iwonrxyywl5g5crbd7krugzmgsr4lw6txrkygunexey66su.ipfs.dweb.link/
+- [ipfs://Qma8zLjgStpH8bA8CcnrsPszS38XG4D9YqdW39VgnUSF64/](ipfs://Qma8zLjgStpH8bA8CcnrsPszS38XG4D9YqdW39VgnUSF64/)
 
-### 5.68.4 (2025-02-05)
+## 5.69.0 (2025-02-05)
+
+
+### Features
+
+* **web:** add decimals to LP analytics properties to help debug (#15603) 9021bff
+* **web:** add tests for getV3PriceRangeInfo (#15710) 2b941d0
+* **web:** design update to buy form currency selector (#15370) ca2e42b
+* **web:** hide/ unhide functionality for positions (#15158) ff6c74a
+* **web:** hook visibility logic and ui into mini portfolio positions (#15368) 3283b9b
+* **web:** prevent users from creating a pool with the wrapped native token (#15614) a36f3ac
+* **web:** remove client side router code (#15423) d0bcd67
+* **web:** show add button on PosDP for closed v3 positions (#15630) 0ab7ee2
 
 
 ### Bug Fixes
 
-* **web:** use price to create mock pair (#15923) 40968c3
+* **web:** allow creating v3 positions on celo/zksync (#15545) 35db486
+* **web:** allow explore pool creation if disconnected (#15807) bd8ebe9
+* **web:** Check hash of error in transaction before throwing Swap Failed error (#15767) 67b26f8
+* **web:** do not normalize Amount, AmountChange, Dimensions, TimestampedAmount in apollo cache (#15579) 539fea5
+* **web:** fix console error on token explore (#15573) ecd65b8
+* **web:** fix dropdown options for LP position card (#15714) 6b92961
+* **web:** fix initial setting in swap settings (#15302) f15c3d1
+* **web:** fix issue with mnually inverted price on the confirm screen (#15776) 0c3e84b
+* **web:** fix logging for explore table network filter (#15518) cc7a68e
+* **web:** fix popover on position card (#15783) e51382a
+* **web:** fix v2 migration endless nav loop (#15439) baba820
+* **web:** handle text overflow on LP fee tier (#15537) 6fde371
+* **web:** handle tick value of 0 (#15546) 69c3d69
+* **web:** hide unichain promo tooltip on web positions page (#15552) 1b4d756
+* **web:** include correct hook filter on ListPools queries (#15666) 2875b3c
+* **web:** limit orders do not work with uniswapx v2 (again) (#15657) d9bcdcc
+* **web:** lower data threshold for price range input charts (#15606) 052fda6
+* **web:** lp chart range input auto suggestion bug staging (#15817) 8866017
+* **web:** move migrate flow behind a feature flag (#15576) 572fee1
+* **web:** only show scrollbars on NavDropdown when needed (#15617) 1f15564
+* **web:** price range input fixes (#15739) 43620d4
+* **web:** quick vs standard poll for backend orders (#15565) 4769ac3
+* **web:** restrict fee tier chain filter to v3 (#15901) 21c32e7
+* **web:** should redirect migrate page if account owner is not position owner (#15680) 7ad6efa
+* **web:** skip failing gas fee query in LP create flow (#15792) 3eef945
+* **web:** switch to new google customer account (#15913) b885080
+* **web:** unichain modal content style adjustments (#15643) 4b33bd4
+* **web:** update copy on native wrapped token (#15627) a548f5e
+* **web:** update range overflow (#15564) 627d23d
+* **web:** update send hook logic for ens lookup (#15531) dc9613d
+* **web:** update the insufficient balance check to account for gas (#15797) b34461c
+* **web:** use price to create mock pair (#15922) 122ac66
+* **web:** use qn rpc for default and remove cloudflare eth (#15668) ff22d20
+* **web:** user decimal seperator issue (#15574) 9808a42
+* **web:** v4 PDP - use correct pool ID for price/volume queries (#15604) 6243d04
+* **web:** zIndex issue with TDP share dropdown (#15884) cd3aa85
+
+
+### Continuous Integration
+
+* **web:** update sitemaps d038812
+
+
+### Styles
+
+* **web:** align modal close icons (#15507) 86111e1
 
 

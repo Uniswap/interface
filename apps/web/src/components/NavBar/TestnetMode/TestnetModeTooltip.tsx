@@ -16,7 +16,7 @@ export default function TestnetModeTooltip() {
         <Flex
           p="$spacing4"
           background="$statusSuccess2"
-          borderWidth={1}
+          borderWidth="$spacing1"
           borderStyle="dashed"
           borderColor="$statusSuccess"
           borderRadius="$rounded8"

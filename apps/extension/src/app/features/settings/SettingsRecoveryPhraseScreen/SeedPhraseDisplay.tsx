@@ -115,7 +115,7 @@ export function SeedPhraseDisplay({ mnemonicId }: { mnemonicId: string }): JSX.E
       backgroundColor="$surface2"
       borderColor="$surface3"
       borderRadius="$rounded16"
-      borderWidth={1}
+      borderWidth="$spacing1"
       gap="$spacing12"
       width="100%"
     >

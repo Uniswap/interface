@@ -59,7 +59,7 @@ export function OnDeviceRecoveryWalletCard({
         centered
         backgroundColor="$surface1"
         borderColor="$surface2"
-        borderWidth={1}
+        borderWidth="$spacing1"
         gap="$spacing16"
         p="$spacing12"
       >

@@ -82,7 +82,7 @@ export function NftTransactionContent({
         borderBottomLeftRadius="$rounded20"
         borderBottomRightRadius="$rounded20"
         borderColor="$surface3"
-        borderWidth={1}
+        borderWidth="$spacing1"
         borderTopWidth={0}
         p="$spacing12"
       >

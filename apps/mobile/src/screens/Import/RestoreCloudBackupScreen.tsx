@@ -53,7 +53,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                 backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
                 borderColor="$surface3"
                 borderRadius="$rounded20"
-                borderWidth={1}
+                borderWidth="$spacing1"
                 p="$spacing16"
                 shadowColor="$surface3"
                 shadowRadius={!isDarkMode ? '$spacing4' : undefined}

@@ -71,7 +71,7 @@ export function parseValue({
   parsedValue = parsedValue.replace(/[^0-9.,]/g, '')
 
   // TODO(MOB-2385): replace this temporary solution for native keyboard.
-  if (showSoftInputOnFocus && nativeKeyboardDecimalSeparator !== decimalSeparator) {
+  if ((isMobileWeb || showSoftInputOnFocus) && nativeKeyboardDecimalSeparator !== decimalSeparator) {
     parsedValue = replaceSeparators({
       value: parsedValue,
       decimalSeparator: nativeKeyboardDecimalSeparator,

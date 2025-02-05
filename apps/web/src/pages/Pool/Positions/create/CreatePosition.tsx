@@ -67,7 +67,7 @@ function CreatingPoolInfo() {
       row
       gap="$spacing12"
       p="$spacing12"
-      borderWidth={1}
+      borderWidth="$spacing1"
       borderColor="$surface3"
       borderRadius="$rounded16"
       opacity={shouldShowDisabled ? 0.4 : 1}

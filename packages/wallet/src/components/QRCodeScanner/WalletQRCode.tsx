@@ -53,7 +53,7 @@ export function WalletQRCode({ address }: { address: Address }): JSX.Element | n
           address={address}
           avatarUri={avatar}
           borderColor="$surface1"
-          borderWidth={4}
+          borderWidth="$spacing4"
           showBackground={true}
           showBorder={true}
           size={UNICON_SIZE}

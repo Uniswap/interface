@@ -14,7 +14,7 @@ import * as userSettingsHooks from 'uniswap/src/features/settings/hooks'
 import { MobileUserPropertyName } from 'uniswap/src/features/telemetry/user'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
-import { BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import * as walletHooks from 'wallet/src/features/wallet/hooks'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
@@ -31,6 +31,11 @@ jest.mock('wallet/src/features/wallet/Keyring/Keyring', () => {
     Keyring: {
       getMnemonicIds: (): Promise<string[]> => Promise.resolve([]),
     },
+  }
+})
+jest.mock('wallet/src/features/accounts/useAccountListData', () => {
+  return {
+    useAccountBalances: jest.fn().mockReturnValue({ totalBalance: 0 }),
   }
 })
 
@@ -51,19 +56,28 @@ const signerAccount1 = {
   type: AccountType.SignerMnemonic,
   address: address1,
   timeImportedMs: 100000,
-}
+  pushNotificationsEnabled: true,
+  mnemonicId: '111',
+  derivationIndex: 0,
+} satisfies SignerMnemonicAccount
 
 const signerAccount2 = {
   type: AccountType.SignerMnemonic,
   address: address2,
   timeImportedMs: 100000,
-}
+  pushNotificationsEnabled: true,
+  mnemonicId: '222',
+  derivationIndex: 1,
+} satisfies SignerMnemonicAccount
 
 const signerAccount3 = {
   type: AccountType.SignerMnemonic,
   address: address3,
   timeImportedMs: 100000,
-}
+  pushNotificationsEnabled: true,
+  mnemonicId: '333',
+  derivationIndex: 2,
+} satisfies SignerMnemonicAccount
 
 describe('TraceUserProperties', () => {
   afterEach(() => {

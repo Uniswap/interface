@@ -78,25 +78,19 @@ export const slice = createSlice({
     setFavoriteWallets: (state, { payload: { addresses } }: PayloadAction<{ addresses: Address[] }>) => {
       state.watchedAddresses = addresses
     },
-    toggleTokenVisibility: (
+    setTokenVisibility: (
       state,
-      { payload: { currencyId, isSpam } }: PayloadAction<{ currencyId: string; isSpam?: boolean }>,
+      { payload: { currencyId, isVisible } }: PayloadAction<{ currencyId: string; isVisible: boolean }>,
     ) => {
-      const isVisible = state.tokensVisibility[currencyId]?.isVisible ?? isSpam === false
-      state.tokensVisibility[currencyId] = { isVisible: !isVisible }
+      state.tokensVisibility[currencyId] = { ...state.tokensVisibility[currencyId], isVisible }
     },
-    toggleNftVisibility: (
+    setNftVisibility: (
       state,
-      { payload: { nftKey, isSpam } }: PayloadAction<{ nftKey: string; isSpam?: boolean }>,
+      { payload: { nftKey, isVisible } }: PayloadAction<{ nftKey: string; isVisible: boolean }>,
     ) => {
-      if (state.nftsVisibility[nftKey] === undefined && isSpam) {
-        state.nftsVisibility[nftKey] = { isVisible: false }
-      } else {
-        const currentVisibility = state.nftsVisibility[nftKey]?.isVisible ?? true
-        state.nftsVisibility[nftKey] = {
-          ...state.nftsVisibility[nftKey],
-          isVisible: !currentVisibility,
-        }
+      state.nftsVisibility[nftKey] = {
+        ...state.nftsVisibility[nftKey],
+        isVisible,
       }
     },
   },
@@ -108,8 +102,8 @@ export const {
   setFavoriteTokens,
   addWatchedAddress,
   removeWatchedAddress,
-  toggleNftVisibility,
-  toggleTokenVisibility,
+  setNftVisibility,
+  setTokenVisibility,
   setFavoriteWallets,
 } = slice.actions
 export const { reducer: favoritesReducer } = slice

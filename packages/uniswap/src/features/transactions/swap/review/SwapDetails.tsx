@@ -209,7 +209,7 @@ function AcceptNewQuoteRow({
       alignItems="center"
       borderColor="$surface3"
       borderRadius="$rounded16"
-      borderWidth={1}
+      borderWidth="$spacing1"
       gap="$spacing12"
       justifyContent="space-between"
       pl="$spacing12"

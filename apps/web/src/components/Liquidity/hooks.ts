@@ -93,14 +93,18 @@ export function useAllFeeTierPoolData({
       feeTierData: mergeFeeTiers(
         feeTierData,
         Object.values(
-          getDefaultFeeTiersForChainWithDynamicFeeTier({ chainId, dynamicFeeTierEnabled: withDynamicFeeTier }),
+          getDefaultFeeTiersForChainWithDynamicFeeTier({
+            chainId,
+            dynamicFeeTierEnabled: withDynamicFeeTier,
+            protocolVersion,
+          }),
         ),
         formatPercent,
         t('fee.dynamic'),
       ),
       hasExistingFeeTiers: Object.values(feeTierData).length > 0,
     }
-  }, [poolData, sortedCurrencies, chainId, withDynamicFeeTier, formatPercent, t])
+  }, [poolData, sortedCurrencies, chainId, withDynamicFeeTier, formatPercent, protocolVersion, t])
 }
 
 /**

@@ -198,6 +198,7 @@ export const ElementName = {
   NftItem: 'nft-item',
   OK: 'ok',
   OnboardingIntroCardFundWallet: 'onboarding-intro-card-fund-wallet',
+  OnboardingIntroCardEnablePushNotifications: 'onboarding-intro-card-enable-push-notifications',
   OnboardingImportBackup: 'onboarding-import-backup',
   OnboardingImportSeedPhrase: 'onboarding-import-seed-phrase',
   OnDeviceRecoveryImportOther: 'on-device-recovery-import-other',

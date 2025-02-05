@@ -82,6 +82,8 @@ export function useTrade({
   const requestTradeType =
     tradeType === TradeType.EXACT_INPUT ? TradingApiTradeType.EXACT_INPUT : TradingApiTradeType.EXACT_OUTPUT
 
+  const isZeroAmount = amount?.quotient.toString() === '0'
+
   const skipQuery =
     skip ||
     !tokenInAddress ||
@@ -89,6 +91,7 @@ export function useTrade({
     !tokenInChainId ||
     !tokenOutChainId ||
     !amount ||
+    isZeroAmount ||
     currencyInEqualsCurrencyOut
 
   const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)

@@ -13,7 +13,7 @@ import React, {
   useRef,
   useState,
 } from 'react'
-import { AlertTriangle, ArrowLeft, CheckCircle, Copy, Icon, X } from 'react-feather'
+import { AlertTriangle, CheckCircle, Copy, Icon, X } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import { Z_INDEX } from 'theme/zIndex'
@@ -367,10 +367,6 @@ const Spinner = styled.img`
 `
 export const SpinnerSVG = styled.svg`
   ${SpinnerCss}
-`
-
-export const BackArrowIcon = styled(ArrowLeft)`
-  color: ${({ theme }) => theme.neutral1};
 `
 
 export const CustomLightSpinner = styled(Spinner)<{ size: string }>`

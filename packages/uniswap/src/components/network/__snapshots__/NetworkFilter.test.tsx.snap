@@ -44,29 +44,209 @@ exports[`NetworkFilter renders a NetworkFilter 1`] = `
       <View
         style={
           {
-            "borderColor": "#131313",
-            "borderRadius": 6,
-            "borderStyle": "solid",
-            "borderWidth": 0,
             "flexDirection": "column",
-            "height": 20,
-            "overflow": "hidden",
-            "width": 20,
-            "zIndex": 10,
           }
         }
-        testID="network-logo"
       >
-        <Image
-          resizeMode="contain"
-          source="mock-asset-ETHEREUM_LOGO.png"
-          style={
+        <View
+          collapsable={false}
+          forwardedRef={[Function]}
+          jestAnimatedStyle={
             {
-              "height": 20,
-              "width": 20,
+              "value": {
+                "opacity": 1,
+              },
             }
           }
-        />
+          style={
+            {
+              "flexDirection": "column",
+              "opacity": 0,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "borderColor": "#131313",
+                "borderRadius": 6,
+                "borderStyle": "solid",
+                "borderWidth": 0,
+                "flexDirection": "column",
+                "height": 20,
+                "overflow": "hidden",
+                "width": 20,
+                "zIndex": 10,
+              }
+            }
+            testID="network-logo"
+          >
+            <Image
+              resizeMode="contain"
+              source="mock-asset-ETHEREUM_LOGO.png"
+              style={
+                {
+                  "height": 20,
+                  "width": 20,
+                }
+              }
+            />
+          </View>
+        </View>
+        <View
+          collapsable={false}
+          forwardedRef={[Function]}
+          jestAnimatedStyle={
+            {
+              "value": {
+                "opacity": 0,
+                "transform": [
+                  {
+                    "scale": 0.8,
+                  },
+                ],
+              },
+            }
+          }
+          style={
+            {
+              "flexDirection": "column",
+              "opacity": 0,
+              "position": "absolute",
+              "transform": [
+                {
+                  "scale": 0.8,
+                },
+              ],
+              "zIndex": 1,
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            forwardedRef={[Function]}
+            jestAnimatedStyle={
+              {
+                "value": {
+                  "opacity": 0,
+                },
+              }
+            }
+            style={
+              {
+                "flexDirection": "column",
+                "opacity": 0,
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "borderColor": "#131313",
+                  "borderRadius": 6,
+                  "borderStyle": "solid",
+                  "borderWidth": 0,
+                  "flexDirection": "column",
+                  "height": 20,
+                  "overflow": "hidden",
+                  "width": 20,
+                  "zIndex": 10,
+                }
+              }
+              testID="network-logo"
+            >
+              <Image
+                resizeMode="contain"
+                source="mock-asset-UNICHAIN_LOGO.png"
+                style={
+                  {
+                    "height": 20,
+                    "width": 20,
+                  }
+                }
+              />
+            </View>
+          </View>
+        </View>
+        <View
+          collapsable={false}
+          forwardedRef={[Function]}
+          jestAnimatedStyle={
+            {
+              "value": {
+                "opacity": 0,
+                "transform": [
+                  {
+                    "scale": 0.8,
+                  },
+                ],
+              },
+            }
+          }
+          style={
+            {
+              "flexDirection": "column",
+              "opacity": 0,
+              "position": "absolute",
+              "transform": [
+                {
+                  "scale": 0.8,
+                },
+              ],
+              "zIndex": 1,
+            }
+          }
+        >
+          <View
+            collapsable={false}
+            forwardedRef={[Function]}
+            jestAnimatedStyle={
+              {
+                "value": {
+                  "backgroundColor": "#1B1B1B",
+                  "opacity": 0,
+                },
+              }
+            }
+            style={
+              {
+                "backgroundColor": "#1B1B1B",
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "opacity": 0,
+                "position": "relative",
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "borderColor": "#131313",
+                  "borderRadius": 6,
+                  "borderStyle": "solid",
+                  "borderWidth": 0,
+                  "flexDirection": "column",
+                  "height": 20,
+                  "overflow": "hidden",
+                  "width": 20,
+                  "zIndex": 10,
+                }
+              }
+              testID="network-logo"
+            >
+              <Image
+                resizeMode="contain"
+                source="mock-asset-ETHEREUM_LOGO.png"
+                style={
+                  {
+                    "height": 20,
+                    "width": 20,
+                  }
+                }
+              />
+            </View>
+          </View>
+        </View>
       </View>
       <View
         collapsable={false}

@@ -16901,14 +16901,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/client-pools@npm:0.0.12":
-  version: 0.0.12
-  resolution: "@uniswap/client-pools@npm:0.0.12"
-  checksum: 3592fe7b2cfce3b6236af9adcd443039d3ebc912d634e1d21b7ba97b635794ad13af1c3ab961ddc721e325fead2818bc8fc24fd99af291ae00a2b3666670701b
+"@uniswap/client-pools@npm:0.0.13":
+  version: 0.0.13
+  resolution: "@uniswap/client-pools@npm:0.0.13"
+  checksum: 53773fbf35cf32366a3b1b88a7081a6000026aecda08542fa57607bc2dcf8662b47f987ec56115f715e537d1718834cb55b6132862f6ac3d94d789faf34c1f4f
   languageName: node
   linkType: hard
 
-"@uniswap/default-token-list@npm:11.19.0, @uniswap/default-token-list@npm:^11.2.0":
+"@uniswap/default-token-list@npm:11.19.0":
   version: 11.19.0
   resolution: "@uniswap/default-token-list@npm:11.19.0"
   checksum: c626834a6b859b19798bb10497a92705e780e9f5fe07087fb464901deb1bb71b8daf2957c8be11791046056d2ae187951991a3e363fb081ee10d806c55c9696e
@@ -17128,7 +17128,7 @@ __metadata:
     "@uniswap/analytics": 1.7.0
     "@uniswap/analytics-events": 2.41.0
     "@uniswap/client-explore": 0.0.14
-    "@uniswap/client-pools": 0.0.12
+    "@uniswap/client-pools": 0.0.13
     "@uniswap/default-token-list": 11.19.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/liquidity-staker": 1.0.2
@@ -17137,7 +17137,6 @@ __metadata:
     "@uniswap/redux-multicall": 1.1.8
     "@uniswap/router-sdk": 1.21.0
     "@uniswap/sdk-core": 7.5.0
-    "@uniswap/smart-order-router": 3.17.3
     "@uniswap/token-lists": 1.0.0-beta.33
     "@uniswap/uniswapx-sdk": 3.0.0-beta.1
     "@uniswap/universal-router-sdk": 4.14.0
@@ -17390,7 +17389,7 @@ __metadata:
     expo: 50.0.15
     expo-barcode-scanner: 12.9.3
     expo-blur: 12.9.2
-    expo-camera: 14.1.2
+    expo-camera: 14.1.1
     expo-clipboard: 5.0.1
     expo-haptics: 12.8.1
     expo-linear-gradient: 12.7.2
@@ -17521,38 +17520,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/smart-order-router@npm:3.17.3":
-  version: 3.17.3
-  resolution: "@uniswap/smart-order-router@npm:3.17.3"
-  dependencies:
-    "@uniswap/default-token-list": ^11.2.0
-    "@uniswap/permit2-sdk": ^1.2.0
-    "@uniswap/router-sdk": ^1.6.0
-    "@uniswap/sdk-core": ^4.0.7
-    "@uniswap/swap-router-contracts": ^1.3.0
-    "@uniswap/token-lists": ^1.0.0-beta.31
-    "@uniswap/universal-router": ^1.0.1
-    "@uniswap/universal-router-sdk": ^1.5.8
-    "@uniswap/v2-sdk": ^3.2.3
-    "@uniswap/v3-sdk": ^3.10.0
-    async-retry: ^1.3.1
-    await-timeout: ^1.1.1
-    axios: ^0.21.1
-    bunyan: ^1.8.15
-    bunyan-blackhole: ^1.1.1
-    ethers: ^5.7.2
-    graphql: ^15.5.0
-    graphql-request: ^3.4.0
-    lodash: ^4.17.21
-    mnemonist: ^0.38.3
-    node-cache: ^5.1.2
-    stats-lite: ^2.2.0
-  peerDependencies:
-    jsbi: ^3.2.0
-  checksum: 2bcd7761548d3d1d426096d0af8ee4a315e1b9c2d96186f6708e406da8bb1c3929579f6f457b1f3742289e8bb6d3dca465b6c511526ed1c43b92d5cdc16fea69
-  languageName: node
-  linkType: hard
-
 "@uniswap/swap-router-contracts@npm:^1.3.0":
   version: 1.3.1
   resolution: "@uniswap/swap-router-contracts@npm:1.3.1"
@@ -17567,7 +17534,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/token-lists@npm:1.0.0-beta.33, @uniswap/token-lists@npm:^1.0.0-beta.31":
+"@uniswap/token-lists@npm:1.0.0-beta.33":
   version: 1.0.0-beta.33
   resolution: "@uniswap/token-lists@npm:1.0.0-beta.33"
   checksum: ec6842cb39c42cf3f173ce47d833968de811ffba0a1b3323c0e094d11f37187201fa0754bc6648499664819eaf9cf2420604a8915b98c7309d2e70d496c92cca
@@ -17607,7 +17574,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/universal-router-sdk@npm:^1.5.4, @uniswap/universal-router-sdk@npm:^1.5.8":
+"@uniswap/universal-router-sdk@npm:^1.5.4":
   version: 1.9.0
   resolution: "@uniswap/universal-router-sdk@npm:1.9.0"
   dependencies:
@@ -17623,7 +17590,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/universal-router@npm:1.6.0, @uniswap/universal-router@npm:^1.0.1":
+"@uniswap/universal-router@npm:1.6.0":
   version: 1.6.0
   resolution: "@uniswap/universal-router@npm:1.6.0"
   dependencies:
@@ -17709,7 +17676,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/v3-sdk@npm:3.24.0, @uniswap/v3-sdk@npm:^3.10.0, @uniswap/v3-sdk@npm:^3.11.0, @uniswap/v3-sdk@npm:^3.24.0":
+"@uniswap/v3-sdk@npm:3.24.0, @uniswap/v3-sdk@npm:^3.11.0, @uniswap/v3-sdk@npm:^3.24.0":
   version: 3.24.0
   resolution: "@uniswap/v3-sdk@npm:3.24.0"
   dependencies:
@@ -19926,15 +19893,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"async-retry@npm:^1.3.1":
-  version: 1.3.3
-  resolution: "async-retry@npm:1.3.3"
-  dependencies:
-    retry: 0.13.1
-  checksum: 38a7152ff7265a9321ea214b9c69e8224ab1febbdec98efbbde6e562f17ff68405569b796b1c5271f354aef8783665d29953f051f68c1fc45306e61aec82fdc4
-  languageName: node
-  linkType: hard
-
 "async@npm:^3.2.0, async@npm:^3.2.3":
   version: 3.2.5
   resolution: "async@npm:3.2.5"
@@ -19997,13 +19955,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"await-timeout@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "await-timeout@npm:1.1.1"
-  checksum: 5013714477ed0691f17de468dca2ceb82534e1d089d45a79f9c2c97b5bcfafa81441b78da829462f71885e2989ab05b4f28eef37502a0d998af51d45e8ffa9e7
-  languageName: node
-  linkType: hard
-
 "aws-appsync-auth-link@npm:3.0.7, aws-appsync-auth-link@npm:^3.0.7":
   version: 3.0.7
   resolution: "aws-appsync-auth-link@npm:3.0.7"
@@ -20061,15 +20012,6 @@ __metadata:
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
   checksum: e28d67b2d9134cb4608c44d8068b0678cfdccc652742e619006f27264a30c7aba13b2cd19c6f1f52ae195b5232734925928fb192d5c85feea7edd2f273df206d
-  languageName: node
-  linkType: hard
-
-"axios@npm:^0.21.1":
-  version: 0.21.4
-  resolution: "axios@npm:0.21.4"
-  dependencies:
-    follow-redirects: ^1.14.0
-  checksum: 44245f24ac971e7458f3120c92f9d66d1fc695e8b97019139de5b0cc65d9b8104647db01e5f46917728edfc0cfd88eb30fc4c55e6053eef4ace76768ce95ff3c
   languageName: node
   linkType: hard
 
@@ -21317,40 +21259,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bunyan-blackhole@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "bunyan-blackhole@npm:1.1.1"
-  dependencies:
-    stream-blackhole: ^1.0.3
-  peerDependencies:
-    bunyan: ~1.x.x
-  checksum: 4c86b6a7c6d0360c60a9bfb1f2f87a2a5f1ac7f68dc5e4e057b66d15e08c177beced6a29f18564f9dd4ab85d7fd6ae4c6bed9717fabe7dcd5c585f640ce07faf
-  languageName: node
-  linkType: hard
-
-"bunyan@npm:^1.8.15":
-  version: 1.8.15
-  resolution: "bunyan@npm:1.8.15"
-  dependencies:
-    dtrace-provider: ~0.8
-    moment: ^2.19.3
-    mv: ~2
-    safe-json-stringify: ~1
-  dependenciesMeta:
-    dtrace-provider:
-      optional: true
-    moment:
-      optional: true
-    mv:
-      optional: true
-    safe-json-stringify:
-      optional: true
-  bin:
-    bunyan: bin/bunyan
-  checksum: a479e0787c3a0b6565b54bd15f0b6c729d624c5aba53523e140e49e279b7a78508df93000e758bf6d02361117d6b4e6e5fc1d5ece05366fb6c4ba41bf1ac7d52
-  languageName: node
-  linkType: hard
-
 "busboy@npm:^1.6.0":
   version: 1.6.0
   resolution: "busboy@npm:1.6.0"
@@ -22335,17 +22243,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clone@npm:2.x, clone@npm:^2.1.1, clone@npm:^2.1.2":
-  version: 2.1.2
-  resolution: "clone@npm:2.1.2"
-  checksum: aaf106e9bc025b21333e2f4c12da539b568db4925c0501a1bf4070836c9e848c892fa22c35548ce0d1132b08bbbfa17a00144fe58fccdab6fa900fec4250f67d
-  languageName: node
-  linkType: hard
-
 "clone@npm:^1.0.2":
   version: 1.0.4
   resolution: "clone@npm:1.0.4"
   checksum: d06418b7335897209e77bdd430d04f882189582e67bd1f75a04565f3f07f5b3f119a9d670c943b6697d0afb100f03b866b3b8a1f91d4d02d72c4ecf2bb64b5dd
+  languageName: node
+  linkType: hard
+
+"clone@npm:^2.1.1, clone@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "clone@npm:2.1.2"
+  checksum: aaf106e9bc025b21333e2f4c12da539b568db4925c0501a1bf4070836c9e848c892fa22c35548ce0d1132b08bbbfa17a00144fe58fccdab6fa900fec4250f67d
   languageName: node
   linkType: hard
 
@@ -23177,7 +23085,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-fetch@npm:^3.0.4, cross-fetch@npm:^3.0.6, cross-fetch@npm:^3.1.4, cross-fetch@npm:^3.1.5":
+"cross-fetch@npm:^3.0.4, cross-fetch@npm:^3.1.4, cross-fetch@npm:^3.1.5":
   version: 3.1.8
   resolution: "cross-fetch@npm:3.1.8"
   dependencies:
@@ -25570,16 +25478,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dtrace-provider@npm:~0.8":
-  version: 0.8.8
-  resolution: "dtrace-provider@npm:0.8.8"
-  dependencies:
-    nan: ^2.14.0
-    node-gyp: latest
-  checksum: f2dc89df6a9c443dc9bae3b53496e0685b5da89142951d451c1ce062c75d96698ffc0b3d90f621a59a6a18578be552378ad4e08210759038910ff2080be556b9
-  languageName: node
-  linkType: hard
-
 "duplexer3@npm:^0.1.4":
   version: 0.1.4
   resolution: "duplexer3@npm:0.1.4"
@@ -27599,7 +27497,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethers@npm:5.7.2, ethers@npm:^5.3.1, ethers@npm:^5.5.2, ethers@npm:^5.6.7, ethers@npm:^5.7.0, ethers@npm:^5.7.2":
+"ethers@npm:5.7.2, ethers@npm:^5.3.1, ethers@npm:^5.5.2, ethers@npm:^5.6.7, ethers@npm:^5.7.0":
   version: 5.7.2
   resolution: "ethers@npm:5.7.2"
   dependencies:
@@ -27975,14 +27873,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-camera@npm:14.1.2":
-  version: 14.1.2
-  resolution: "expo-camera@npm:14.1.2"
+"expo-camera@npm:14.1.1":
+  version: 14.1.1
+  resolution: "expo-camera@npm:14.1.1"
   dependencies:
     invariant: ^2.2.4
   peerDependencies:
     expo: "*"
-  checksum: 0979397b51027e759c3fae302577e084063347f2864bfa42d2b7771ee44c39c940fda16b716401ce2e84294882bc65ffc760b9611cb829fb754235823d9554e5
+  checksum: 56d9e6e3f3817025010449a901961fbfa2cd6a4c5dc693453e2b77f9627bbaec8d80eb2390d0b7c2b3b3351cfa25f09304b8b77107823621e80589a85ded8cbf
   languageName: node
   linkType: hard
 
@@ -28285,13 +28183,6 @@ __metadata:
   version: 11.0.0
   resolution: "extract-files@npm:11.0.0"
   checksum: 39ebd92772e9a1e30d1e3112fb7db85d353c8243640635668b615ac1d605ceb79fbb13d17829dd308993ef37bb189ad99817f79ab164ae95c9bb3df9f440bd16
-  languageName: node
-  linkType: hard
-
-"extract-files@npm:^9.0.0":
-  version: 9.0.0
-  resolution: "extract-files@npm:9.0.0"
-  checksum: c31781d090f8d8f62cc541f1023b39ea863f24bd6fb3d4011922d71cbded70cef8191f2b70b43ec6cb5c5907cdad1dc5e9f29f78228936c10adc239091d8ab64
   languageName: node
   linkType: hard
 
@@ -28934,7 +28825,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.12.1, follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.9, follow-redirects@npm:^1.15.4, follow-redirects@npm:^1.15.6":
+"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.12.1, follow-redirects@npm:^1.14.9, follow-redirects@npm:^1.15.4, follow-redirects@npm:^1.15.6":
   version: 1.15.6
   resolution: "follow-redirects@npm:1.15.6"
   peerDependenciesMeta:
@@ -30266,19 +30157,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-request@npm:^3.4.0":
-  version: 3.7.0
-  resolution: "graphql-request@npm:3.7.0"
-  dependencies:
-    cross-fetch: ^3.0.6
-    extract-files: ^9.0.0
-    form-data: ^3.0.0
-  peerDependencies:
-    graphql: 14 - 16
-  checksum: db3800cc4ee884cd1514d7d5eafafb9ed27694278fdddd7402345754a7d25e7d713246c72aa510b439b6df2633b74f2cf74fb36864a22a857d5fb2de1cf0b4d8
-  languageName: node
-  linkType: hard
-
 "graphql-request@npm:^6.0.0":
   version: 6.0.0
   resolution: "graphql-request@npm:6.0.0"
@@ -30322,7 +30200,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql@npm:15.8.0, graphql@npm:^15.5.0":
+"graphql@npm:15.8.0":
   version: 15.8.0
   resolution: "graphql@npm:15.8.0"
   checksum: 423325271db8858428641b9aca01699283d1fe5b40ef6d4ac622569ecca927019fce8196208b91dd1d8eb8114f00263fe661d241d0eb40c10e5bfd650f86ec5e
@@ -32478,13 +32356,6 @@ __metadata:
   version: 2.0.0
   resolution: "isexe@npm:2.0.0"
   checksum: 26bf6c5480dda5161c820c5b5c751ae1e766c587b1f951ea3fcfc973bafb7831ae5b54a31a69bd670220e42e99ec154475025a468eae58ea262f813fdc8d1c62
-  languageName: node
-  linkType: hard
-
-"isnumber@npm:~1.0.0":
-  version: 1.0.0
-  resolution: "isnumber@npm:1.0.0"
-  checksum: 245dba1670bc5b0e0e0788ca0231f05eaa2425586b22d5acc44add14ac8f025b12e1a346b3a069e0c194cd93c0c2bfe55820dba5582500a3f45f4212a667b7f3
   languageName: node
   linkType: hard
 
@@ -36549,7 +36420,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mnemonist@npm:^0.38.0, mnemonist@npm:^0.38.3":
+"mnemonist@npm:^0.38.0":
   version: 0.38.5
   resolution: "mnemonist@npm:0.38.5"
   dependencies:
@@ -36640,13 +36511,6 @@ __metadata:
   bin:
     lookup-amd: bin/cli.js
   checksum: 911abd6b8fb1d82cfae4ef38050981d4eb7e710bfeba898903c5c49a4d3a44b3cacb6201ddf9930a39fae3473faf9b96d39930cfa8766dbf0da86689108895b1
-  languageName: node
-  linkType: hard
-
-"moment@npm:^2.19.3":
-  version: 2.29.4
-  resolution: "moment@npm:2.29.4"
-  checksum: 0ec3f9c2bcba38dc2451b1daed5daded747f17610b92427bebe1d08d48d8b7bdd8d9197500b072d14e326dd0ccf3e326b9e3d07c5895d3d49e39b6803b76e80e
   languageName: node
   linkType: hard
 
@@ -36824,7 +36688,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nan@npm:^2.14.0, nan@npm:^2.18.0, nan@npm:^2.19.0":
+"nan@npm:^2.18.0, nan@npm:^2.19.0":
   version: 2.20.0
   resolution: "nan@npm:2.20.0"
   dependencies:
@@ -37007,15 +36871,6 @@ __metadata:
   dependencies:
     node-gyp: latest
   checksum: 4349465d737e284b280fc0e5fd2384f9379bca6b7f2a5a1460bea676ba5b90bf563e7d02a9254c35b9ed808641c81d9b4ca9e1da17d2849cd07727660b00b332
-  languageName: node
-  linkType: hard
-
-"node-cache@npm:^5.1.2":
-  version: 5.1.2
-  resolution: "node-cache@npm:5.1.2"
-  dependencies:
-    clone: 2.x
-  checksum: b0bdd81a6fee4754fb984a05246b510bb35dc54721116d465899bf4229ee3287fdafb47da526900ee9924fb402ed5c7d8050049d37d8bf2d26dbafc23a2c3205
   languageName: node
   linkType: hard
 
@@ -42786,7 +42641,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"retry@npm:0.13.1, retry@npm:^0.13.1":
+"retry@npm:^0.13.1":
   version: 0.13.1
   resolution: "retry@npm:0.13.1"
   checksum: 47c4d5be674f7c13eee4cfe927345023972197dbbdfba5d3af7e461d13b44de1bfd663bfc80d2f601f8ef3fc8164c16dd99655a221921954a65d044a2fc1233b
@@ -44445,15 +44300,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stats-lite@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "stats-lite@npm:2.2.0"
-  dependencies:
-    isnumber: ~1.0.0
-  checksum: ea153c195c48692b00bfbb04fd8760d30c161edf62be31dc3475554da1f22f362461fa953ca5465c6e7977a1b927bf8cb4b1df8230c43f6a8f48fe2c125c98eb
-  languageName: node
-  linkType: hard
-
 "statsig-js@npm:4.41.0":
   version: 4.41.0
   resolution: "statsig-js@npm:4.41.0"
@@ -44576,13 +44422,6 @@ __metadata:
     sb: ./bin/index.cjs
     storybook: ./bin/index.cjs
   checksum: 3495183749b760da077b2ede7607884c62f6707412e91defbe20328b275b78528fcef350453ad95642a52b97eded50f2c5374e94fb422a3b39587de364d87ee8
-  languageName: node
-  linkType: hard
-
-"stream-blackhole@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "stream-blackhole@npm:1.0.3"
-  checksum: 584233d889083f5bb33a0a15fe2ea715dd34cc32386b5c81e465a259796898f786fccca2d44f88f18bcd768330c88c915475ef8bbc56a89fa14c3df830952f9a
   languageName: node
   linkType: hard
 
@@ -47371,7 +47210,7 @@ __metadata:
     "@uniswap/analytics-events": 2.41.0
     "@uniswap/client-embeddedwallet": 0.0.13
     "@uniswap/client-explore": 0.0.14
-    "@uniswap/client-pools": 0.0.12
+    "@uniswap/client-pools": 0.0.13
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/permit2-sdk": 1.3.0
     "@uniswap/router-sdk": 1.21.0

@@ -1,6 +1,5 @@
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
 import { AnimateInOrder, ElementAfterText, Flex, Text, Tooltip } from 'ui/src'
 import { Clock } from 'ui/src/components/icons/Clock'
 import { Coins } from 'ui/src/components/icons/Coins'
@@ -11,10 +10,11 @@ import { Star } from 'ui/src/components/icons/Star'
 import { UnichainBridgingTooltip } from 'uniswap/src/components/TokenSelector/tooltips/UnichainBridgingTooltip'
 import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
-import { selectHasSeenUnichainPromotionBridgingTooltip } from 'uniswap/src/features/behaviorHistory/selectors'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useUnichainTooltipVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainTooltipVisibility'
+import { useIsExtraLargeScreen } from 'uniswap/src/hooks/useWindowSize'
 import { isInterface, isMobileWeb } from 'utilities/src/platform'
 
 export type TokenSectionHeaderProps = {
@@ -33,18 +33,17 @@ export const SectionHeader = memo(function _SectionHeader({
   chainId,
 }: TokenSectionHeaderProps): JSX.Element | null {
   const { t } = useTranslation()
-  const isUnichainPromoEnabled = useFeatureFlag(FeatureFlags.UnichainPromo)
-  const hasSeenUnichainPromotionBridgingTooltip = useSelector(selectHasSeenUnichainPromotionBridgingTooltip)
-  const promoEnabledAndOnUnichainBridge =
-    isUnichainPromoEnabled && chainId === UniverseChainId.Unichain && sectionKey === TokenOptionSection.BridgingTokens
-  const showUnichainWebPromo =
-    promoEnabledAndOnUnichainBridge && isInterface && !isMobileWeb && !hasSeenUnichainPromotionBridgingTooltip
+  const isExtraLargeScreen = useIsExtraLargeScreen()
+  const isXLInterface = isInterface && isExtraLargeScreen
+  const { shouldShowUnichainBridgingTooltip } = useUnichainTooltipVisibility()
 
-  const showUnichainWalletPromo =
-    promoEnabledAndOnUnichainBridge && !hasSeenUnichainPromotionBridgingTooltip && (!isInterface || isMobileWeb)
+  const onUnichainBridge = chainId === UniverseChainId.Unichain && sectionKey === TokenOptionSection.BridgingTokens
+  const shouldShowUnichainPromo = shouldShowUnichainBridgingTooltip && onUnichainBridge
+  const showUnichainDesktopWebPromo = shouldShowUnichainPromo && isXLInterface
+  const showUnichainNonDesktopPromo = shouldShowUnichainPromo && !isXLInterface
 
   let title = useTokenOptionsSectionTitle(sectionKey)
-  if (promoEnabledAndOnUnichainBridge) {
+  if (shouldShowUnichainPromo) {
     title = t('unichain.promotion.bridging.description')
   }
   const icon = getTokenOptionsSectionIcon(sectionKey)
@@ -52,7 +51,7 @@ export const SectionHeader = memo(function _SectionHeader({
     return null
   }
   return (
-    <Tooltip placement="left" open={showUnichainWebPromo}>
+    <Tooltip placement="left" open={showUnichainDesktopWebPromo}>
       <Tooltip.Trigger>
         <Flex
           row
@@ -70,7 +69,7 @@ export const SectionHeader = memo(function _SectionHeader({
                 textProps={{ color: '$neutral2' }}
                 wrapperProps={{ flex: 1 }}
                 element={
-                  showUnichainWalletPromo ? (
+                  showUnichainNonDesktopPromo ? (
                     <AnimateInOrder index={1} delayMs={isMobileWeb ? 1250 : 800} enterStyle={{ opacity: 0 }}>
                       <NewTag />
                     </AnimateInOrder>
@@ -84,7 +83,7 @@ export const SectionHeader = memo(function _SectionHeader({
           </Text>
         </Flex>
       </Tooltip.Trigger>
-      {showUnichainWebPromo ? <UnichainBridgingTooltip /> : null}
+      {showUnichainDesktopWebPromo ? <UnichainBridgingTooltip /> : null}
     </Tooltip>
   )
 })

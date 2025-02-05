@@ -72,7 +72,7 @@ export function NavDropdown({ children, width, dropdownRef, isOpen, padded, data
           width={width}
           padded={padded}
           {...shadowProps}
-          overflow="scroll"
+          $platform-web={{ overflow: 'auto' }}
           style={scrollbarStyles}
         >
           {children}

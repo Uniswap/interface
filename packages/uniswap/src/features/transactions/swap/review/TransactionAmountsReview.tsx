@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { DeprecatedButton, Flex, Loader, Text, isWeb, useSporeColors } from 'ui/src'
+import { Flex, Loader, ModalCloseIcon, Text, isWeb, useSporeColors } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
-import { X } from 'ui/src/components/icons/X'
 import { iconSizes, validColor } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -105,14 +104,7 @@ export function TransactionAmountsReview({
         </Flex>
         {isWeb && (
           <Flex row centered gap="$spacing12">
-            <DeprecatedButton
-              backgroundColor="$transparent"
-              color="$neutral2"
-              icon={<X size="$icon.20" />}
-              p="$none"
-              theme="secondary"
-              onPress={onClose}
-            />
+            <ModalCloseIcon size="$icon.20" onClose={onClose} />
           </Flex>
         )}
       </Flex>

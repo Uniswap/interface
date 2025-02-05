@@ -190,7 +190,7 @@ export function IntroCard({
         backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
         borderColor="$surface3"
         borderRadius="$rounded20"
-        borderWidth={1}
+        borderWidth="$spacing1"
         flex={1}
         {...containerProps}
       >

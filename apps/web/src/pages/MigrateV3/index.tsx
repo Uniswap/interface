@@ -57,6 +57,7 @@ import { TransactionSettingKey } from 'uniswap/src/features/transactions/setting
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
+import { isSameAddress } from 'utilities/src/addresses'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { useAccount } from 'wagmi'
@@ -85,7 +86,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   const { value: lpRedesignEnabled, isLoading: isLPRedesignGateLoading } = useFeatureFlagWithLoading(
     FeatureFlags.LPRedesign,
   )
-  const isMigrateEnabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
+  const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
 
   const [transactionSteps, setTransactionSteps] = useState<TransactionStep[]>([])
   const [currentTransactionStep, setCurrentTransactionStep] = useState<
@@ -103,7 +104,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
     setCurrentTransactionStep(undefined)
   }
 
-  const { currency0Amount, currency1Amount } = positionInfo
+  const { currency0Amount, currency1Amount, owner } = positionInfo
 
   const currency0FiatAmount = useUSDCValue(currency0Amount) ?? undefined
   const currency1FiatAmount = useUSDCValue(currency1Amount) ?? undefined
@@ -112,7 +113,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
     return <Navigate to="/pools" replace />
   }
 
-  if (!isMigrateEnabled) {
+  if (!isMigrateToV4Enabled || !isSameAddress(account?.address, owner)) {
     navigate('/positions')
   }
 

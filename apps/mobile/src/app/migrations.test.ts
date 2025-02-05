@@ -84,6 +84,7 @@ import {
   v7Schema,
   v80Schema,
   v81Schema,
+  v83Schema,
   v8Schema,
   v9Schema,
 } from 'src/app/schema'
@@ -92,6 +93,7 @@ import { initialBiometricsSettingsState } from 'src/features/biometrics/slice'
 import { initialCloudBackupState } from 'src/features/CloudBackup/cloudBackupSlice'
 import { initialPasswordLockoutState } from 'src/features/CloudBackup/passwordLockoutSlice'
 import { initialModalsState } from 'src/features/modals/modalSlice'
+import { initialPushNotificationsState } from 'src/features/notifications/slice'
 import { initialTweaksState } from 'src/features/tweaks/slice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 import { AccountType } from 'uniswap/src/features/accounts/types'
@@ -120,6 +122,7 @@ import {
   testActivatePendingAccounts,
   testAddCreatedOnboardingRedesignAccount,
   testAddedHapticSetting,
+  testDeleteWelcomeWalletCard,
   testMovedCurrencySetting,
   testMovedLanguageSetting,
   testMovedTokenWarnings,
@@ -194,6 +197,7 @@ describe('Redux state migrations', () => {
       passwordLockout: initialPasswordLockoutState,
       behaviorHistory: initialBehaviorHistoryState,
       providers: { isInitialized: false },
+      pushNotifications: initialPushNotificationsState,
       saga: {},
       searchHistory: initialSearchHistoryState,
       telemetry: initialTelemetryState,
@@ -1597,5 +1601,18 @@ describe('Redux state migrations', () => {
 
   it('migrates from v81 to v82', () => {
     testUnchecksumDismissedTokenWarningKeys(migrations[82], v81Schema)
+  })
+
+  it('migrates from v82 to v83', () => {
+    // v82 didn't have a new schema
+    const v81Stub = { ...v81Schema }
+    const v83 = migrations[83](v81Stub)
+
+    expect(v83.pushNotifications.generalUpdatesEnabled).toBe(false)
+    expect(v83.pushNotifications.priceAlertsEnabled).toBe(false)
+  })
+
+  it('migrates from v83 to v84', () => {
+    testDeleteWelcomeWalletCard(migrations[84], v83Schema)
   })
 })

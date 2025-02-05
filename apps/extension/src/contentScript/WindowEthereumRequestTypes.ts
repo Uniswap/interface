@@ -19,7 +19,7 @@ export const BaseEthereumRequestSchema = z.object({
 })
 
 export const EthereumRequestWithIdSchema = BaseEthereumRequestSchema.extend({
-  requestId: z.string(),
+  requestId: z.string().uuid(),
 })
 export type EthereumRequestWithId = z.infer<typeof EthereumRequestWithIdSchema>
 

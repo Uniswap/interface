@@ -14,9 +14,8 @@ import { BellOn } from 'ui/src/components/icons'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import i18n from 'uniswap/src/i18n'
-import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
+import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { openSettings } from 'wallet/src/utils/linking'
 
@@ -40,7 +39,6 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
   const { requiredForTransactions: isBiometricAuthEnabled } = useBiometricAppSettings()
   const hasSeedPhrase = useNativeAccountExists()
   const { deviceSupportsBiometrics } = useBiometricContext()
-  const { enableNotifications } = useOnboardingContext()
 
   const onCompleteOnboarding = useCompleteOnboardingCallback(params)
 
@@ -60,18 +58,16 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
   const onPressEnableNotifications = useCallback(async () => {
     const arePushNotificationsEnabled = await promptPushPermission()
 
-    if (arePushNotificationsEnabled) {
-      enableNotifications()
-    } else {
+    if (!arePushNotificationsEnabled) {
       showNotificationSettingsAlert()
     }
 
     await navigateToNextScreen()
-  }, [enableNotifications, navigateToNextScreen])
+  }, [navigateToNextScreen])
 
   return (
     <OnboardingScreen
-      disableGoBack
+      disableGoBack={params.importType !== ImportType.CreateNew}
       Icon={BellOn}
       subtitle={t('onboarding.notification.subtitle')}
       title={t('onboarding.notification.title')}

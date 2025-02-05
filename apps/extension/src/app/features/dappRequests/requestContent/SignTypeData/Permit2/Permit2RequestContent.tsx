@@ -34,7 +34,7 @@ export function Permit2RequestContent({ dappRequest }: Permit2RequestProps): JSX
         backgroundColor="$surface2"
         borderColor="$surface3"
         borderRadius="$rounded16"
-        borderWidth={1}
+        borderWidth="$spacing1"
         flexDirection="column"
         gap="$spacing12"
         p="$spacing16"

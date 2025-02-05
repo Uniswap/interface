@@ -57,6 +57,12 @@ export function meldSupportedCurrencyToCurrencyInfo(forCurrency: FORSupportedTok
     return {
       ...currencyInfo,
       logoUrl: forCurrency.symbol,
+      safetyLevel: SafetyLevel.Verified,
+      safetyInfo: {
+        tokenList: TokenList.Default,
+        protectionResult: ProtectionResult.Benign,
+      },
+      isSpam: false,
     }
   }
 

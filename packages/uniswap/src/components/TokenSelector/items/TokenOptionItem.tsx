@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { Flex, Text, TouchableArea, UnichainAnimatedText, useSporeColors } from 'ui/src'
+import { useDispatch } from 'react-redux'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
+import { UnichainAnimatedText } from 'ui/src/components/text/UnichainAnimatedText'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
@@ -9,13 +10,11 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { selectHasSeenUnichainPromotionBridgingTooltip } from 'uniswap/src/features/behaviorHistory/selectors'
 import { setHasSeenBridgingTooltip } from 'uniswap/src/features/behaviorHistory/slice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
+import { useUnichainTooltipVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainTooltipVisibility'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
@@ -53,6 +52,7 @@ function _TokenOptionItem({
   const { currency, safetyLevel } = currencyInfo
   const [showWarningModal, setShowWarningModal] = useState(false)
   const colors = useSporeColors()
+  const dispatch = useDispatch()
 
   const severity = getTokenWarningSeverity(currencyInfo)
   const isBlocked = severity === WarningSeverity.Blocked || safetyLevel === SafetyLevel.Blocked
@@ -60,11 +60,9 @@ function _TokenOptionItem({
   const { colorSecondary: warningIconColor } = getWarningIconColors(severity)
   const shouldShowWarningModalOnPress = isBlocked || (severity !== WarningSeverity.None && !tokenWarningDismissed)
 
-  const hasSeenUnichainPromotionBridgingTooltip = useSelector(selectHasSeenUnichainPromotionBridgingTooltip)
-  const isUnichainPromoEnabled = useFeatureFlag(FeatureFlags.UnichainPromo)
-  const dispatch = useDispatch()
+  const { shouldShowUnichainBridgingTooltip } = useUnichainTooltipVisibility()
   const isUnichainEth = currency.isNative && currency.chainId === UniverseChainId.Unichain
-  const showUnichainPromoAnimation = isUnichainPromoEnabled && !hasSeenUnichainPromotionBridgingTooltip && isUnichainEth
+  const showUnichainPromoAnimation = shouldShowUnichainBridgingTooltip && isUnichainEth
 
   const handleShowWarningModal = useCallback((): void => {
     dismissNativeKeyboard()
@@ -126,7 +124,7 @@ function _TokenOptionItem({
               <Flex row alignItems="center" gap="$spacing8">
                 <UnichainAnimatedText
                   color="$neutral1"
-                  gradientTextColor={colors.neutral1.get().toString()}
+                  gradientTextColor={colors.neutral1.val}
                   delayMs={800}
                   enabled={showUnichainPromoAnimation}
                   numberOfLines={1}

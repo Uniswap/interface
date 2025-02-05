@@ -23,7 +23,9 @@ export async function fetchFORTransaction(
   forceFetch: boolean,
   activeAccountAddress: Address | null,
 ): Promise<FORTransactionDetails | undefined> {
-  const isOffRamp = previousTransactionDetails.typeInfo.type === TransactionType.LocalOffRamp
+  const isOffRamp =
+    previousTransactionDetails.typeInfo.type === TransactionType.LocalOffRamp ||
+    previousTransactionDetails.typeInfo.type === TransactionType.OffRampSale
   const isRecent = dayjs(previousTransactionDetails.addedTime).isAfter(
     dayjs().subtract(FIAT_ONRAMP_FORCE_FETCH_TX_TIMEOUT, 'ms'),
   )

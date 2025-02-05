@@ -70,6 +70,7 @@ export function NotificationsOSSettingsModal({ navigation }: NotificationsOSSett
       <Flex animation="fast" gap="$spacing40" pb="$spacing12" px="$spacing24" width="100%">
         <GenericHeader
           Icon={BellOn}
+          flexProps={{ m: '$spacing12' }}
           subtitle={t('onboarding.notification.subtitle')}
           title={t('onboarding.notification.title')}
         />

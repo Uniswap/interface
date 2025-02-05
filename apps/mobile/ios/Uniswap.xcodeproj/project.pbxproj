@@ -134,6 +134,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1440B371A1C9A42F3E91DAAE /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF5F26A06553EFDD4D99214 /* ExpoModulesProvider.swift */; };
 		463BA791004B1B7AC1773914 /* Pods_Uniswap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2226DF79BEAFECEE11A51347 /* Pods_Uniswap.framework */; };
+		5E5E0A632D380F5800E166AA /* Env.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5E0A622D380F5700E166AA /* Env.swift */; };
 		5EFB78362B1E585000E77EAC /* ConvertQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EFB78352B1E585000E77EAC /* ConvertQuery.graphql.swift */; };
 		6BC7D07E2B5FF02400617C95 /* ScantasticEncryption.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BC7D07B2B5FF02400617C95 /* ScantasticEncryption.m */; };
 		6BC7D07F2B5FF02400617C95 /* ScantasticEncryption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC7D07C2B5FF02400617C95 /* ScantasticEncryption.swift */; };
@@ -468,6 +469,7 @@
 		4C445DB9798210862C34D0E0 /* Pods-WidgetsCoreTests.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCoreTests.beta.xcconfig"; path = "Target Support Files/Pods-WidgetsCoreTests/Pods-WidgetsCoreTests.beta.xcconfig"; sourceTree = "<group>"; };
 		4DF5F26A06553EFDD4D99214 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Uniswap/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		56FE9C9AF785221B7E3F4C04 /* Pods-Uniswap.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.dev.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.dev.xcconfig"; sourceTree = "<group>"; };
+		5E5E0A622D380F5700E166AA /* Env.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Env.swift; sourceTree = "<group>"; };
 		5EFB78352B1E585000E77EAC /* ConvertQuery.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConvertQuery.graphql.swift; sourceTree = "<group>"; };
 		62CEA9F2D5176D20A6402A3E /* Pods-Uniswap.beta.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.beta.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.beta.xcconfig"; sourceTree = "<group>"; };
 		6BC7D07B2B5FF02400617C95 /* ScantasticEncryption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScantasticEncryption.m; sourceTree = "<group>"; };
@@ -1206,6 +1208,7 @@
 		F35AFD3C27EE49990011A725 /* OneSignalNotificationServiceExtension */ = {
 			isa = PBXGroup;
 			children = (
+				5E5E0A622D380F5700E166AA /* Env.swift */,
 				F35AFD4727EE4B400011A725 /* OneSignalNotificationServiceExtension.entitlements */,
 				F35AFD3D27EE49990011A725 /* NotificationService.swift */,
 				F35AFD3F27EE49990011A725 /* Info.plist */,
@@ -2088,6 +2091,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F35AFD3E27EE49990011A725 /* NotificationService.swift in Sources */,
+				5E5E0A632D380F5800E166AA /* Env.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2230,7 +2234,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -2283,7 +2287,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCore;
@@ -2336,7 +2340,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCore;
@@ -2389,7 +2393,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCore;
@@ -2427,7 +2431,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -2463,7 +2467,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCoreTests;
@@ -2498,7 +2502,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCoreTests;
@@ -2533,7 +2537,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCoreTests;
@@ -2580,7 +2584,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -2626,7 +2630,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.widgets;
@@ -2672,7 +2676,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.widgets;
@@ -2718,7 +2722,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.widgets;
@@ -2760,7 +2764,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -2803,7 +2807,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.WidgetIntentExtension;
@@ -2846,7 +2850,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.WidgetIntentExtension;
@@ -2889,7 +2893,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.WidgetIntentExtension;
@@ -2925,7 +2929,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -2963,7 +2967,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -3164,7 +3168,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3172,7 +3176,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-				STATSIG_SDK_KEY = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -3210,14 +3213,13 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile.OneSignalNotificationServiceExtension";
 				SKIP_INSTALL = YES;
-				STATSIG_SDK_KEY = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -3322,7 +3324,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -3394,14 +3396,13 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile.beta.OneSignalNotificationServiceExtension";
 				SKIP_INSTALL = YES;
-				STATSIG_SDK_KEY = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -3506,7 +3507,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -3578,14 +3579,13 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.45;
+				MARKETING_VERSION = 1.46;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.OneSignalNotificationServiceExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile.dev.OneSignalNotificationServiceExtension";
 				SKIP_INSTALL = YES;
-				STATSIG_SDK_KEY = "";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";

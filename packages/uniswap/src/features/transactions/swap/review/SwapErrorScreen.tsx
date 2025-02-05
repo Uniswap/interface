@@ -60,7 +60,7 @@ export function SwapErrorScreen({
               hoverable
               p="$padding6"
               borderColor="$surface3"
-              borderWidth={1}
+              borderWidth="$spacing1"
               borderRadius="$rounded12"
               onPress={onPressGetHelp}
             >

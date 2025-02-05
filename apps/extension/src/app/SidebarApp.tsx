@@ -1,6 +1,7 @@
 import '@tamagui/core/reset.css'
 import 'src/app/Global.css'
 
+import { SharedEventName } from '@uniswap/analytics-events'
 import { useEffect, useRef, useState } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -236,10 +237,11 @@ export default function SidebarApp(): JSX.Element {
   }, [])
 
   const isLoggedIn = useIsWalletUnlocked()
-  const hasSentLoginEvent = useRef(false)
+  const hasSentAppLoadEvent = useRef(false)
   useEffect(() => {
-    if (isLoggedIn !== null && !hasSentLoginEvent.current) {
-      hasSentLoginEvent.current = true
+    if (isLoggedIn !== null && !hasSentAppLoadEvent.current) {
+      hasSentAppLoadEvent.current = true
+      sendAnalyticsEvent(SharedEventName.APP_LOADED)
       sendAnalyticsEvent(ExtensionEventName.SidebarLoad, { locked: !isLoggedIn })
     }
   }, [isLoggedIn])

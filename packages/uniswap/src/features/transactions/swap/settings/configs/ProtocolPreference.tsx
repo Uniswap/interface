@@ -27,6 +27,7 @@ function isDefaultOptions(selectedProtocols: FrontendSupportedProtocol[]): boole
 
 export const ProtocolPreference: SwapSettingConfig = {
   renderTitle: (t) => t('swap.settings.routingPreference.title'),
+  renderCloseButtonText: (t) => t('common.button.save'),
   Control() {
     const { t } = useTranslation()
     const { selectedProtocols } = useTransactionSettingsContext()

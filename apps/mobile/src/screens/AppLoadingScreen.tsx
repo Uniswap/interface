@@ -55,6 +55,7 @@ function useFinishAutomatedRecovery(navigation: Props['navigation']): {
           address: addressInfo.address,
           derivationIndex: addressInfo.derivationIndex,
           timeImportedMs: dayjs().valueOf(),
+          pushNotificationsEnabled: true,
         }
       })
       setRecoveredImportedAccounts(accountsToImport)

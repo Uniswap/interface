@@ -6,7 +6,7 @@ import { useGetPoolTokenPercentage } from 'components/Liquidity/hooks'
 import { parseRestPosition } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { ZERO_ADDRESS } from 'constants/misc'
-import { usePositionOwnerV2 } from 'hooks/usePositionOwner'
+import { usePositionOwnerV2 } from 'hooks/usePositionOwnerV2'
 import { useV2Pair } from 'hooks/useV2Pairs'
 import NotFound from 'pages/NotFound'
 import { HeaderButton } from 'pages/Pool/Positions/PositionPage'
@@ -15,7 +15,7 @@ import { useMemo } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Trans, useTranslation } from 'react-i18next'
-import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
@@ -94,6 +94,7 @@ function V2PositionPage() {
   const positionInfo = useMemo(() => parseRestPosition(position), [position])
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+  const location = useLocation()
   const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
   const { t } = useTranslation()
 
@@ -172,7 +173,11 @@ function V2PositionPage() {
                   if (pair && chainId && pairAddress && !savedSerializedPairs[chainId]?.[pairAddress]) {
                     addPair(pair)
                   }
-                  navigate('/migrate/v2')
+                  navigate('/migrate/v2', {
+                    state: {
+                      from: location.pathname,
+                    },
+                  })
                 }}
               >
                 <Text variant="buttonLabel2" color="$neutral1">
@@ -203,7 +208,7 @@ function V2PositionPage() {
               </HeaderButton>
             </Flex>
           )}
-          <Flex borderColor="$surface3" borderWidth={1} p="$spacing24" gap="$gap12" borderRadius="$rounded20">
+          <Flex borderColor="$surface3" borderWidth="$spacing1" p="$spacing24" gap="$gap12" borderRadius="$rounded20">
             {positionLoading || !currency0Amount || !currency1Amount ? (
               <Shine>
                 <Flex gap="$gap12">

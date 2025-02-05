@@ -144,7 +144,7 @@ function TransactionDetails({
         <Flex
           borderColor={isLoading ? '$transparent' : '$surface3'}
           borderRadius="$rounded12"
-          borderWidth={1}
+          borderWidth="$spacing1"
           px="$spacing8"
           py="$spacing2"
         >

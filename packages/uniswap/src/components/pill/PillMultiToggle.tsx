@@ -56,7 +56,7 @@ export function PillMultiToggle({
       backgroundColor="$background"
       borderColor="$surface3"
       borderRadius="$roundedFull"
-      borderWidth={1}
+      borderWidth="$spacing1"
       flexDirection="column"
       orientation="horizontal"
       p="$spacing4"
