@@ -86,7 +86,7 @@ export default function TableNetworkFilter({ showMultichainOption = true }: { sh
           toggleOpen={toggleMenu}
           menuLabel={
             <NetworkLabel>
-              {!currentChainId && showMultichainOption ? (
+              {(!currentChainId || !isSupportedChainCallback(currentChainId)) && showMultichainOption ? (
                 <NetworkLogo chainId={null} />
               ) : (
                 <ChainLogo
