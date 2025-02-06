@@ -129,6 +129,12 @@ const RocketIcon = styled.img<RocketIconProps>`
   cursor: default;
 `
 
+const ResponsiveBox = styled(Box)`
+  @media (max-width: 400px) {
+    display: none !important;
+  }
+`
+
 interface MenuItemProps {
   href: string
   id?: NavLinkProps['id']
@@ -245,9 +251,9 @@ const Navbar = ({ blur }: { blur: boolean }) => {
               </Link>
             </Box>
             {!isNftPage && (
-              <Box display={{ sm: 'flex', lg: 'none' }}>
+              <ResponsiveBox display={{ sm: 'flex', lg: 'none' }}>
                 <ChainSelector leftAlign={true} />
-              </Box>
+              </ResponsiveBox>
             )}
             <Row display={{ sm: 'none', lg: 'flex' }}>
               <PageTabs />
