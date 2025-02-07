@@ -454,13 +454,15 @@ export function useInitialCurrencyState(): {
     defaultChainId,
   ])
 
+  const outputChainIsSupported = useSupportedChainId(parsedCurrencyState.outputChainId)
+
   const initialOutputCurrencyAddress = useMemo(
     () =>
-      // clear output if identical unless there's an outputChainId which means we're bridging
-      initialInputCurrencyAddress === parsedCurrencyState.outputCurrencyId && !parsedCurrencyState.outputChainId
+      // clear output if identical unless there's a supported outputChainId which means we're bridging
+      initialInputCurrencyAddress === parsedCurrencyState.outputCurrencyId && !outputChainIsSupported
         ? undefined
         : parsedCurrencyState.outputCurrencyId,
-    [initialInputCurrencyAddress, parsedCurrencyState.outputCurrencyId, parsedCurrencyState.outputChainId],
+    [initialInputCurrencyAddress, parsedCurrencyState.outputCurrencyId, outputChainIsSupported],
   )
 
   const initialInputCurrency = useCurrency(initialInputCurrencyAddress, initialChainId)
