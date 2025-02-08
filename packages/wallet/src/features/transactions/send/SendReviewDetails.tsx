@@ -4,10 +4,11 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { DeprecatedButton, Flex, Separator, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
-import { BackArrow, X } from 'ui/src/components/icons'
+import { AlertTriangleFilled, BackArrow, X } from 'ui/src/components/icons'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
+import { InlineWarningCard } from 'uniswap/src/components/InlineWarningCard/InlineWarningCard'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
@@ -36,6 +37,7 @@ import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { NFTTransfer } from 'wallet/src/components/nfts/NFTTransfer'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import { useIsErc20Contract } from 'wallet/src/features/contracts/hooks'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 import { useSendERC20Callback, useSendNFTCallback } from 'wallet/src/features/transactions/send/hooks/useSendCallback'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -90,7 +92,14 @@ export function SendReviewDetails({
     onCloseModal?.()
     triggerTransferPendingNotification()
     navigateToAccountActivityList()
-  }, [navigateToAccountActivityList, onCloseModal, triggerTransferPendingNotification])
+    fiatOffRampMetaData?.onSubmitCallback(Number(inputCurrencyUSDValue?.toExact()))
+  }, [
+    navigateToAccountActivityList,
+    onCloseModal,
+    triggerTransferPendingNotification,
+    fiatOffRampMetaData,
+    inputCurrencyUSDValue,
+  ])
 
   const transferERC20Callback = useSendERC20Callback(
     txId,
@@ -149,8 +158,17 @@ export function SendReviewDetails({
     setShowWarningModal(false)
   }
 
+  const [isErc20ContractAddressWarningChecked, setIsErc20ContractAddressWarningChecked] = useState(false)
+  const { isERC20ContractAddress, loading: erc20ContractLoading } = useIsErc20Contract(recipient, chainId)
+  const shouldBlockERC20Send = !isErc20ContractAddressWarningChecked && isERC20ContractAddress && !erc20ContractLoading
+
   const actionButtonDisabled =
-    !!blockingWarning || !gasFee.value || !!gasFee.error || !txRequest || account.type === AccountType.Readonly
+    !!blockingWarning ||
+    !gasFee.value ||
+    !!gasFee.error ||
+    !txRequest ||
+    account.type === AccountType.Readonly ||
+    shouldBlockERC20Send
 
   const actionButtonProps = {
     disabled: actionButtonDisabled,
@@ -308,6 +326,21 @@ export function SendReviewDetails({
         warning={transferWarning}
         onShowWarning={onShowWarning}
       />
+
+      {isERC20ContractAddress && (
+        <Flex pt="$spacing8">
+          <InlineWarningCard
+            hideCtaIcon
+            severity={WarningSeverity.High}
+            heading={t('send.warning.erc20.checkbox.heading')}
+            description={t('send.warning.erc20.checkbox.description')}
+            checkboxLabel={t('common.button.understand')}
+            checked={isErc20ContractAddressWarningChecked}
+            setChecked={setIsErc20ContractAddressWarningChecked}
+            Icon={AlertTriangleFilled}
+          />
+        </Flex>
+      )}
 
       <TransactionModalFooterContainer>
         <Flex row gap="$spacing8">

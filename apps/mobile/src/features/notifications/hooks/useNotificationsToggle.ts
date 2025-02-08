@@ -1,11 +1,14 @@
 import { useMutation } from '@tanstack/react-query'
 import { useCallback, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
+import { NotifSettingType } from 'src/features/notifications/constants'
 import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
+import { selectAllPushNotificationSettings } from 'src/features/notifications/selectors'
+import { updateNotifSettings } from 'src/features/notifications/slice'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useSelectAccountNotificationSetting } from 'wallet/src/features/wallet/hooks'
@@ -18,6 +21,60 @@ const waitFrame = async (): Promise<void> => {
 
 enum NotificationError {
   OsPermissionDenied = 'OS_PERMISSION_DENIED',
+}
+
+export function useAddressNotificationToggle({
+  address,
+  onToggle,
+}: {
+  address: string
+  onToggle?: (enabled: boolean) => void
+}): ReturnType<typeof useBaseNotificationToggle> {
+  const dispatch = useDispatch()
+  const isAppPermissionEnabled = useSelectAccountNotificationSetting(address)
+
+  const handleToggle = useCallback(
+    (enabled: boolean) => {
+      dispatch(
+        editAccountActions.trigger({
+          type: EditAccountAction.TogglePushNotification,
+          enabled,
+          address,
+        }),
+      )
+      onToggle?.(enabled)
+    },
+    [address, dispatch, onToggle],
+  )
+
+  return useBaseNotificationToggle({ isAppPermissionEnabled, onToggle: handleToggle })
+}
+
+export function useSettingNotificationToggle({
+  type,
+  onToggle,
+}: {
+  type: NotifSettingType
+  onToggle?: (enabled: boolean) => void
+}): ReturnType<typeof useBaseNotificationToggle> {
+  const dispatch = useDispatch()
+  const { generalUpdatesEnabled, priceAlertsEnabled } = useSelector(selectAllPushNotificationSettings)
+
+  const permissionEnabledMap: Record<NotifSettingType, boolean> = {
+    [NotifSettingType.GeneralUpdates]: generalUpdatesEnabled,
+    [NotifSettingType.PriceAlerts]: priceAlertsEnabled,
+  }
+  const isAppPermissionEnabled = permissionEnabledMap[type]
+
+  const handleToggle = useCallback(
+    (enabled: boolean) => {
+      dispatch(updateNotifSettings({ [type]: enabled }))
+      onToggle?.(enabled)
+    },
+    [dispatch, onToggle, type],
+  )
+
+  return useBaseNotificationToggle({ isAppPermissionEnabled, onToggle: handleToggle })
 }
 
 /**
@@ -64,20 +121,23 @@ enum NotificationError {
  * - Normal OS permission flow resumes
  */
 
-export function useNotificationToggle(props: { address: string; onPermissionChanged?: (enabled: boolean) => void }): {
+function useBaseNotificationToggle({
+  isAppPermissionEnabled,
+  onToggle,
+}: {
+  isAppPermissionEnabled: boolean
+  onToggle: (enabled: boolean) => void
+}): {
   isEnabled: boolean
   isPending: boolean
   toggle: () => void
 } {
-  const dispatch = useDispatch()
-
   // Get real states from different systems
-  const osPermissionStatus = useNotificationOSPermissionsEnabled()
-  const reduxPushNotificationsEnabled = useSelectAccountNotificationSetting(props.address)
+  const { notificationPermissionsEnabled: osPermissionStatus } = useNotificationOSPermissionsEnabled()
   const isOSPermissionEnabled = osPermissionStatus === NotificationPermission.Enabled
 
   // Derive real enabled state - only true if both systems are enabled
-  const isEnabled = isOSPermissionEnabled && reduxPushNotificationsEnabled
+  const isEnabled = isOSPermissionEnabled && isAppPermissionEnabled
 
   // Optimistic UI state
   const [optimisticEnabled, setOptimisticEnabled] = useState<boolean>(isEnabled)
@@ -86,23 +146,14 @@ export function useNotificationToggle(props: { address: string; onPermissionChan
   const requestOSPermissions = useCallback(async (): Promise<true> => {
     const granted = await promptPushPermission()
     if (!granted) {
-      // first let's enable the redux state (firebase)
-      // this will ensure that when the user goes to settings and enables notifications
-      // we're not stuck in a state where notifications are disabled
-      // and the user has to hit the toggle again
-      dispatch(
-        editAccountActions.trigger({
-          type: EditAccountAction.TogglePushNotification,
-          enabled: true,
-          address: props.address,
-        }),
-      )
+      // Keep app permissions enabled for when OS permissions are restored
+      onToggle(true)
       // this means the user denied the permission at the system level
       // and needs to go to settings to re-enable (boo)
       throw new Error(NotificationError.OsPermissionDenied)
     }
     return true
-  }, [dispatch, props.address])
+  }, [onToggle])
 
   // Reset optimistic state if real state changes
   useEffect(() => {
@@ -124,15 +175,7 @@ export function useNotificationToggle(props: { address: string; onPermissionChan
       // After this point, we're guaranteed to have requested OS permissions
       // If we just obtained permissions, we want to enable notifications
       // Otherwise, we're toggling the current redux state
-      const shouldEnable = isOsEnabled ? !reduxPushNotificationsEnabled : true
-
-      dispatch(
-        editAccountActions.trigger({
-          type: EditAccountAction.TogglePushNotification,
-          enabled: shouldEnable,
-          address: props.address,
-        }),
-      )
+      const shouldEnable = isOsEnabled ? !isAppPermissionEnabled : true
       return shouldEnable
     },
     onError: (error) => {
@@ -147,7 +190,7 @@ export function useNotificationToggle(props: { address: string; onPermissionChan
       // setState will bail if the value is the same as the current state
       // so we can safely call it without conditionals
       setOptimisticEnabled(enabled)
-      props.onPermissionChanged?.(enabled)
+      onToggle(enabled)
     },
   })
 

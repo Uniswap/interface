@@ -148,7 +148,6 @@ describe(LogoWithTxStatus, () => {
           expect(queryByTestId('status-icon')).toBeFalsy()
           expect(consoleWarnMock).toHaveBeenCalledWith(
             expect.anything(),
-            expect.anything(),
             expect.stringContaining('Could not find icon for transaction type:'),
             txType,
           )
@@ -170,7 +169,6 @@ describe(LogoWithTxStatus, () => {
 
           expect(queryByTestId('status-icon')).toBeFalsy()
           expect(consoleWarnMock).toHaveBeenCalledWith(
-            expect.anything(),
             expect.anything(),
             expect.stringContaining('Could not find icon for transaction type:'),
             TransactionType.NFTTrade,

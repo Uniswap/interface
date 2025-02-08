@@ -85,6 +85,12 @@ export const apolloClient = new ApolloClient({
       TokenMarket: {
         keyFields: ['id'],
       },
+      // Disable normalizaton for these types.
+      // Given that we would never query these objects directly, we want these to be stored by their parent instead of being normalized.
+      Amount: { keyFields: false },
+      AmountChange: { keyFields: false },
+      Dimensions: { keyFields: false },
+      TimestampedAmount: { keyFields: false },
     },
   }),
   defaultOptions: {

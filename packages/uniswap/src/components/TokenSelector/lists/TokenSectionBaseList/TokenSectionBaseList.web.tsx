@@ -21,16 +21,25 @@ type BaseListRowInfo = {
   key: Key | undefined
 }
 type BaseListSectionRowInfo = SectionRowInfo & BaseListRowInfo & Pick<TokenSectionBaseListProps, 'renderSectionHeader'>
+type BaseListSectionFooterRowInfo = SectionRowInfo &
+  BaseListRowInfo &
+  Pick<TokenSectionBaseListProps, 'renderSectionFooter'>
 type BaseListItemRowInfo = ItemRowInfo & BaseListRowInfo & Pick<TokenSectionBaseListProps, 'renderItem'>
 
-type BaseListData = BaseListItemRowInfo | BaseListSectionRowInfo
+type BaseListData = BaseListItemRowInfo | BaseListSectionRowInfo | BaseListSectionFooterRowInfo
 
-function isSectionHeader(rowInfo: BaseListData): rowInfo is BaseListSectionRowInfo {
+function isSectionHeaderOrFooter(
+  rowInfo: BaseListData,
+): rowInfo is BaseListSectionRowInfo | BaseListSectionFooterRowInfo {
   return !('renderItem' in rowInfo)
 }
 
+function isOnlySectionHeader(rowInfo: BaseListData): rowInfo is BaseListSectionRowInfo {
+  return 'renderSectionHeader' in rowInfo
+}
+
 function isHorizontalTokenRowInfo(rowInfo: BaseListData): boolean {
-  const isHeader = isSectionHeader(rowInfo)
+  const isHeader = isSectionHeaderOrFooter(rowInfo)
   return !isHeader && isArray(rowInfo.item)
 }
 
@@ -39,6 +48,7 @@ export function TokenSectionBaseList({
   keyExtractor,
   renderItem,
   renderSectionHeader,
+  renderSectionFooter,
   sections,
   sectionListRef,
   expandedItems,
@@ -76,7 +86,7 @@ export function TokenSectionBaseList({
         acc.push(sectionInfo)
       }
 
-      return acc.concat(
+      const rows = acc.concat(
         section.data.map((item, index) => {
           const itemInfo: BaseListItemRowInfo = {
             item,
@@ -89,13 +99,24 @@ export function TokenSectionBaseList({
           return itemInfo
         }),
       )
+
+      if (section.sectionKey === TokenOptionSection.BridgingTokens) {
+        const unichainPromotion = {
+          section: { sectionKey: TokenOptionSection.BridgingTokens },
+          key: TokenOptionSection.BridgingTokens,
+          renderSectionFooter,
+        }
+        rows.push(unichainPromotion)
+      }
+
+      return rows
     }, [])
-  }, [sections, renderSectionHeader, keyExtractor, renderItem, expandedItems])
+  }, [sections, renderSectionHeader, renderSectionFooter, keyExtractor, renderItem, expandedItems])
 
   // Used for rendering the sticky header
   const activeSessionIndex = useMemo(() => {
     return items.slice(0, firstVisibleIndex + 1).reduceRight((acc, item, index) => {
-      return acc === -1 && isSectionHeader(item) ? index : acc
+      return acc === -1 && isSectionHeaderOrFooter(item) ? index : acc
     }, -1)
   }, [firstVisibleIndex, items])
 
@@ -115,7 +136,7 @@ export function TokenSectionBaseList({
       }
 
       if (isHorizontalTokenRowInfo(item)) {
-        if (!isSectionHeader(item)) {
+        if (!isSectionHeaderOrFooter(item)) {
           if (isArray(item.item) && !item.item.length) {
             return 0
           }
@@ -127,7 +148,7 @@ export function TokenSectionBaseList({
         }
       }
 
-      return isSectionHeader(item) ? ITEM_SECTION_HEADER_ROW_HEIGHT : ITEM_ROW_HEIGHT
+      return isSectionHeaderOrFooter(item) ? ITEM_SECTION_HEADER_ROW_HEIGHT : ITEM_ROW_HEIGHT
     },
     [items],
   )
@@ -216,7 +237,7 @@ function TokenSectionBaseListRow({
 
 type RowProps = {
   index: number
-  itemData: BaseListItemRowInfo | BaseListSectionRowInfo
+  itemData: BaseListItemRowInfo | BaseListSectionRowInfo | BaseListSectionFooterRowInfo
   style?: CSSProperties
   windowWidth: number
   updateRowHeight?: (index: number, height: number) => void
@@ -234,11 +255,26 @@ function _Row({ index, itemData, style, updateRowHeight }: RowProps): JSX.Elemen
     [updateRowHeight, index],
   )
 
+  const item = useMemo((): JSX.Element | null => {
+    if (!itemData) {
+      return null
+    }
+
+    if (isSectionHeaderOrFooter(itemData)) {
+      if (isOnlySectionHeader(itemData)) {
+        return itemData.renderSectionHeader?.(itemData) ?? null
+      } else {
+        return itemData.renderSectionFooter?.(itemData) ?? null
+      }
+    }
+
+    return itemData.renderItem(itemData)
+  }, [itemData])
+
   return (
     <Flex key={itemData?.key ?? index} grow alignItems="center" justifyContent="center" style={style}>
       <Flex ref={rowRef} width="100%" onLayout={handleLayout}>
-        {itemData &&
-          (isSectionHeader(itemData) ? itemData.renderSectionHeader?.(itemData) : itemData.renderItem(itemData))}
+        {item}
       </Flex>
     </Flex>
   )

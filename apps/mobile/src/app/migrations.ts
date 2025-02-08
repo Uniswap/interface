@@ -30,6 +30,7 @@ import {
   deleteDefaultFavoritesFromFavoritesState,
   deleteExtensionOnboardingState,
   deleteHoldToSwapBehaviorHistory,
+  deleteWelcomeWalletCardBehaviorHistory,
   moveCurrencySetting,
   moveDismissedTokenWarnings,
   moveLanguageSetting,
@@ -957,6 +958,27 @@ export const migrations = {
   81: removeCreatedOnboardingRedesignAccountBehaviorHistory,
 
   82: unchecksumDismissedTokenWarningKeys,
+
+  83: function addPushNotifications(state: any) {
+    // Enabling new notifications unless they have all wallet activity notifs disabled
+    const hasAllWalletNotifsDisabled = Object.values(state.wallet.accounts).every(
+      (account) =>
+        account &&
+        typeof account === 'object' &&
+        'pushNotificationsEnabled' in account &&
+        !account.pushNotificationsEnabled,
+    )
+
+    return {
+      ...state,
+      pushNotifications: {
+        generalUpdatesEnabled: !hasAllWalletNotifsDisabled,
+        priceAlertsEnabled: !hasAllWalletNotifsDisabled,
+      },
+    }
+  },
+
+  84: deleteWelcomeWalletCardBehaviorHistory,
 }
 
-export const MOBILE_STATE_VERSION = 82
+export const MOBILE_STATE_VERSION = 84

@@ -13,13 +13,13 @@ import { TransactionSettingsContextState } from 'uniswap/src/features/transactio
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
+import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { getSwapFeeUsd } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
-import { percentFromFloat } from 'utilities/src/format/percent'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { ITraceContext, useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -91,7 +91,7 @@ export function getBaseTradeAnalyticsProperties({
 
   const finalOutputAmount = feeCurrencyAmount ? trade.outputAmount.subtract(feeCurrencyAmount) : trade.outputAmount
 
-  const slippagePercent = percentFromFloat(trade.slippageTolerance ?? 0)
+  const slippagePercent = slippageToleranceToPercent(trade.slippageTolerance ?? 0)
 
   return {
     ...trace,

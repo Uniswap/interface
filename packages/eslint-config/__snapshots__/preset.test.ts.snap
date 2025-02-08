@@ -888,7 +888,7 @@ exports[`should have a correct configuration for a React file 1`] = `
             "importNames": [
               "usePortfolioValueModifiers",
             ],
-            "message": "Use the wrapper hooks \`usePortfolioTotalValue\`, \`useAccountList\` or \`usePortfolioBalances\` instead of \`usePortfolioValueModifiers\` directly.",
+            "message": "Use the wrapper hooks \`usePortfolioTotalValue\`, \`useAccountListData\` or \`usePortfolioBalances\` instead of \`usePortfolioValueModifiers\` directly.",
             "name": "uniswap/src/features/dataApi/balances",
           },
           {

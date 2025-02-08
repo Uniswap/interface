@@ -204,4 +204,14 @@ const v17SchemaIntermediate = {
 delete v17SchemaIntermediate.behaviorHistory.createdOnboardingRedesignAccount
 export const v17Schema = v17SchemaIntermediate
 
-export const getSchema = (): typeof v17Schema => v17Schema
+const v18SchemaIntermediate = {
+  ...v17Schema,
+  behaviorHistory: {
+    ...v17Schema.behaviorHistory,
+    hasViewedWelcomeWalletCard: undefined,
+  },
+}
+delete v18SchemaIntermediate.behaviorHistory.hasViewedWelcomeWalletCard
+export const v18Schema = v18SchemaIntermediate
+
+export const getSchema = (): typeof v18Schema => v18Schema

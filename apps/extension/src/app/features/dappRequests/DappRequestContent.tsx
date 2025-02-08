@@ -45,6 +45,7 @@ interface DappRequestFooterProps {
   showNetworkCost?: boolean
   transactionGasFeeResult?: GasFeeResult
   isUniswapX?: boolean
+  disableConfirm?: boolean
 }
 
 type DappRequestContentProps = DappRequestHeaderProps & DappRequestFooterProps
@@ -88,6 +89,7 @@ export function DappRequestContent({
   transactionGasFeeResult,
   children,
   isUniswapX,
+  disableConfirm,
 }: PropsWithChildren<DappRequestContentProps>): JSX.Element {
   const { forwards, currentIndex } = useDappRequestQueueContext()
 
@@ -108,6 +110,7 @@ export function DappRequestContent({
         showAllNetworks={showAllNetworks}
         showNetworkCost={showNetworkCost}
         transactionGasFeeResult={transactionGasFeeResult}
+        disableConfirm={disableConfirm}
         onCancel={onCancel}
         onConfirm={onConfirm}
       />
@@ -162,6 +165,7 @@ export function DappRequestFooter({
   showNetworkCost,
   transactionGasFeeResult,
   isUniswapX,
+  disableConfirm,
 }: DappRequestFooterProps): JSX.Element {
   const { t } = useTranslation()
   const activeAccount = useActiveAccountWithThrow()
@@ -253,7 +257,7 @@ export function DappRequestFooter({
             {t('common.button.cancel')}
           </DeprecatedButton>
           <DeprecatedButton
-            disabled={!isConfirmEnabled}
+            disabled={!isConfirmEnabled || disableConfirm}
             flex={1}
             flexBasis={1}
             size="medium"

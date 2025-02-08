@@ -63,7 +63,7 @@ function PopupContent(): JSX.Element {
               backgroundColor="$surface1"
               borderColor="$surface3"
               borderRadius={6}
-              borderWidth={1}
+              borderWidth="$spacing1"
               bottom={-spacing.spacing4}
               p="$spacing2"
               position="absolute"

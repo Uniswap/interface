@@ -19,8 +19,6 @@ import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routi
 import { CurrencyState, SerializedCurrencyState, SwapInfo, SwapState } from 'state/swap/types'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
-import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -428,17 +426,7 @@ export function useInitialCurrencyState(): {
     }
   }, [parsedCurrencyState.inputCurrencyId, parsedCurrencyState.outputCurrencyId, setIsUserSelectedToken])
 
-  const { swapInputChainId } = useUniswapContext()
-
   const { initialInputCurrencyAddress, initialChainId } = useMemo(() => {
-    // Default to chain override set by context if used
-    if (swapInputChainId) {
-      return {
-        initialInputCurrencyAddress: getNativeAddress(swapInputChainId),
-        initialChainId: swapInputChainId,
-      }
-    }
-
     // Default to ETH if multichain
     if (!hasCurrencyQueryParams) {
       return {
@@ -459,7 +447,6 @@ export function useInitialCurrencyState(): {
       initialChainId: supportedChainId,
     }
   }, [
-    swapInputChainId,
     hasCurrencyQueryParams,
     parsedCurrencyState.inputCurrencyId,
     parsedCurrencyState.outputCurrencyId,
@@ -467,13 +454,15 @@ export function useInitialCurrencyState(): {
     defaultChainId,
   ])
 
+  const outputChainIsSupported = useSupportedChainId(parsedCurrencyState.outputChainId)
+
   const initialOutputCurrencyAddress = useMemo(
     () =>
-      // clear output if identical unless there's an outputChainId which means we're bridging
-      initialInputCurrencyAddress === parsedCurrencyState.outputCurrencyId && !parsedCurrencyState.outputChainId
+      // clear output if identical unless there's a supported outputChainId which means we're bridging
+      initialInputCurrencyAddress === parsedCurrencyState.outputCurrencyId && !outputChainIsSupported
         ? undefined
         : parsedCurrencyState.outputCurrencyId,
-    [initialInputCurrencyAddress, parsedCurrencyState.outputCurrencyId, parsedCurrencyState.outputChainId],
+    [initialInputCurrencyAddress, parsedCurrencyState.outputCurrencyId, outputChainIsSupported],
   )
 
   const initialInputCurrency = useCurrency(initialInputCurrencyAddress, initialChainId)

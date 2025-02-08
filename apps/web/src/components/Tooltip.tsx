@@ -1,4 +1,3 @@
-import { Placement } from '@popperjs/core'
 import Popover, { PopoverProps } from 'components/Popover'
 import styled from 'lib/styled-components'
 import { transparentize } from 'polished'
@@ -44,35 +43,6 @@ const TooltipContainer = styled.div<{ size: TooltipSize }>`
   box-shadow: 0 4px 8px 0 ${({ theme }) => transparentize(0.9, theme.shadow1)};
 `
 
-type TooltipProps = Omit<PopoverProps, 'content'> & {
-  text: ReactNode
-  open?: () => void
-  close?: () => void
-  size?: TooltipSize
-  disabled?: boolean
-  timeout?: number
-  placement?: Placement
-}
-
-// TODO(WEB-2024)
-// Migrate to MouseoverTooltip and move this component inline to MouseoverTooltip
-export default function Tooltip({ text, open, close, disabled, size = TooltipSize.Small, ...rest }: TooltipProps) {
-  return (
-    <Popover
-      content={
-        text && (
-          <TooltipContainer size={size} onMouseEnter={disabled ? noop : open} onMouseLeave={disabled ? noop : close}>
-            {text}
-          </TooltipContainer>
-        )
-      }
-      {...rest}
-    />
-  )
-}
-
-// TODO(WEB-2024)
-// Do not pass through PopoverProps. Prefer higher-level interface to control MouseoverTooltip.
 type MouseoverTooltipProps = Omit<PopoverProps, 'content' | 'show'> &
   PropsWithChildren<{
     text: ReactNode
@@ -107,18 +77,25 @@ export const MouseoverTooltip = memo(function MouseoverTooltip(props: MouseoverT
   }, [timeout, show])
 
   return (
-    <Tooltip
-      {...rest}
-      open={open}
-      close={close}
-      disabled={disabled}
+    <Popover
+      content={
+        text && (
+          <TooltipContainer
+            size={props.size ?? TooltipSize.Small}
+            onMouseEnter={disabled ? noop : open}
+            onMouseLeave={disabled ? noop : close}
+          >
+            {text}
+          </TooltipContainer>
+        )
+      }
       show={forceShow || show}
-      text={disabled ? null : text}
+      {...rest}
     >
       <div onMouseEnter={disabled ? noop : open} onMouseLeave={disabled || timeout ? noop : close}>
         {children}
       </div>
-    </Tooltip>
+    </Popover>
   )
 })
 
@@ -162,14 +139,7 @@ export function MouseFollowTooltip(props: MouseFollowTooltipProps) {
           top: position.y ? `${position.y + 16}px` : undefined,
         }}
       >
-        <Tooltip
-          {...rest}
-          open={open}
-          close={close}
-          disabled={disabled}
-          show={forceShow || show}
-          text={disabled ? null : text}
-        />
+        <MouseoverTooltip {...rest} text={disabled ? null : text} forceShow={forceShow} />
       </CursorFollowerContainer>
       <div onMouseEnter={disabled ? noop : open} onMouseLeave={disabled ? noop : close}>
         {children}

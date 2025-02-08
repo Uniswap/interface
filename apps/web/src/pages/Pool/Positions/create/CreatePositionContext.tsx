@@ -32,6 +32,8 @@ export const CreatePositionContext = React.createContext<CreatePositionContextTy
     wishFeeData: DEFAULT_POSITION_STATE.fee,
   },
   setDynamicFeeTierSpeedbumpData: () => undefined,
+  currentTransactionStep: undefined,
+  setCurrentTransactionStep: () => undefined,
 })
 
 export const useCreatePositionContext = () => {
@@ -91,9 +93,9 @@ export const useDepositContext = () => {
 export const CreateTxContext = React.createContext<{
   txInfo?: CreatePositionTxAndGasInfo
   gasFeeEstimateUSD?: CurrencyAmount<Currency> | null
-  error?: boolean
+  error: boolean | string
   refetch?: () => void
-}>({})
+}>({ error: false })
 
 export const useCreateTxContext = () => {
   return useContext(CreateTxContext)

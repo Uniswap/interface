@@ -24,7 +24,7 @@ import { SelectPriceRangeStep, SelectPriceRangeStepV2 } from 'pages/Pool/Positio
 import ResetCreatePositionFormModal from 'pages/Pool/Positions/create/ResetCreatePositionsFormModal'
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
 import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
-import { useInitialCurrencyInputs } from 'pages/Pool/Positions/create/hooks'
+import { useInitialPoolInputs } from 'pages/Pool/Positions/create/hooks'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
@@ -37,6 +37,7 @@ import { DeprecatedButton, Flex, Text, useMedia } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
+import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { ActionSheetDropdown } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -48,7 +49,6 @@ import { TransactionSettingsContextProvider } from 'uniswap/src/features/transac
 import { TransactionSettingKey } from 'uniswap/src/features/transactions/settings/slice'
 import { SwapFormSettings } from 'uniswap/src/features/transactions/swap/form/SwapFormSettings'
 import { Deadline } from 'uniswap/src/features/transactions/swap/settings/configs/Deadline'
-import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 import { usePrevious } from 'utilities/src/react/hooks'
 
 function CreatingPoolInfo() {
@@ -67,7 +67,7 @@ function CreatingPoolInfo() {
       row
       gap="$spacing12"
       p="$spacing12"
-      borderWidth={1}
+      borderWidth="$spacing1"
       borderColor="$surface3"
       borderRadius="$rounded16"
       opacity={shouldShowDisabled ? 0.4 : 1}
@@ -135,7 +135,7 @@ function CreatePositionInner() {
       <EditSelectTokensStep />
       {!v2Selected && <EditRangeSelectionStep />}
       <DepositStep />
-      {error && <TradingAPIError refetch={refetch} />}
+      <TradingAPIError errorMessage={error} refetch={refetch} />
     </Trace>
   )
 }
@@ -307,7 +307,15 @@ const Toolbar = ({
 
   return (
     <Flex flexDirection="row-reverse" gap="$gap8" centered $md={{ justifyContent: 'flex-end' }}>
-      <Flex p="$spacing6" borderRadius="$rounded12" borderWidth="$spacing1" borderColor="$surface3">
+      <Flex
+        borderRadius="$rounded12"
+        borderWidth="$spacing1"
+        borderColor="$surface3"
+        height="38px"
+        px="$gap8"
+        alignItems="center"
+        pt="$spacing2"
+      >
         <SwapFormSettings
           position="relative"
           adjustRightAlignment={false}
@@ -362,7 +370,7 @@ export default function CreatePosition() {
   const { protocolVersion } = useParams<{ protocolVersion: string }>()
   const paramsProtocolVersion = parseProtocolVersion(protocolVersion)
 
-  const initialCurrencyInputs = useInitialCurrencyInputs()
+  const initialInputs = useInitialPoolInputs()
   const initialProtocolVersion = useMemo((): ProtocolVersion => {
     if (isV4DataEnabled) {
       return paramsProtocolVersion ?? ProtocolVersion.V4
@@ -384,11 +392,11 @@ export default function CreatePosition() {
 
   return (
     <Trace logImpression page={InterfacePageNameLocal.CreatePosition}>
-      <MultichainContextProvider initialChainId={initialCurrencyInputs[PositionField.TOKEN0].chainId}>
+      <MultichainContextProvider initialChainId={initialInputs[PositionField.TOKEN0].chainId}>
         <TransactionSettingsContextProvider settingKey={TransactionSettingKey.LP}>
           <CreatePositionContextProvider
             initialState={{
-              currencyInputs: initialCurrencyInputs,
+              currencyInputs: initialInputs,
               protocolVersion: initialProtocolVersion,
             }}
           >
@@ -420,7 +428,7 @@ export default function CreatePosition() {
                         <Trans i18nKey="position.new" />
                       </Text>
                       <Toolbar
-                        defaultInitialToken={initialCurrencyInputs[PositionField.TOKEN0]}
+                        defaultInitialToken={initialInputs[PositionField.TOKEN0]}
                         isV4DataEnabled={isV4DataEnabled}
                       />
                     </Flex>

@@ -12,6 +12,7 @@ export function TokenSectionBaseList({
   keyExtractor,
   renderItem,
   renderSectionHeader,
+  renderSectionFooter,
   sections,
 }: TokenSectionBaseListProps): JSX.Element {
   const insets = useAppInsets()
@@ -38,6 +39,7 @@ export function TokenSectionBaseList({
       keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="always"
       renderItem={renderItem}
+      renderSectionFooter={renderSectionFooter}
       renderSectionHeader={renderSectionHeader}
       sections={sections ?? []}
       showsVerticalScrollIndicator={false}

@@ -117,7 +117,7 @@ export function SendAmountInput({
           <AmountInput
             adjustWidthToContent={isFiatInput}
             backgroundColor="$transparent"
-            borderWidth={0}
+            borderWidth="$none"
             color={inputColor}
             focusable={Boolean(currencyInfo)}
             fontFamily="$heading"

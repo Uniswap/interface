@@ -10,7 +10,7 @@ import { iconSizes } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { useAccountList } from 'wallet/src/features/accounts/hooks'
+import { useAccountListData } from 'wallet/src/features/accounts/useAccountListData'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
@@ -45,7 +45,7 @@ export function RemoveRecoveryPhraseWallets(): JSX.Element {
 // TODO(@thomasthachil): merge this with mobile AccountList
 function AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Element {
   const addresses = useMemo(() => accounts.map((account) => account.address), [accounts])
-  const { data, loading } = useAccountList({
+  const { data, loading } = useAccountListData({
     addresses,
     notifyOnNetworkStatusChange: true,
   })
@@ -58,7 +58,7 @@ function AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Elem
     .sort((a, b) => (b.balance ?? 0) - (a.balance ?? 0))
 
   return (
-    <Flex borderColor="$surface3" borderRadius="$rounded20" borderWidth={1} px="$spacing12" width="100%">
+    <Flex borderColor="$surface3" borderRadius="$rounded20" borderWidth="$spacing1" px="$spacing12" width="100%">
       <ScrollView bounces={false}>
         {sortedAddressesByBalance.map(({ address, balance }, index) => (
           <AssociatedAccountRow

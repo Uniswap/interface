@@ -18,7 +18,7 @@ export function PillButton({ label, icon, color, onClick, cursor }: PillButtonPr
       gap="$gap8"
       centered
       cursor={cursor}
-      borderWidth={0}
+      borderWidth="$none"
       backgroundColor="$surface1"
       overflow="hidden"
       onPress={onClick}

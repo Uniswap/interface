@@ -79,12 +79,14 @@ export function TDPActionTabs() {
           pressStyle={{ backgroundColor: tokenColor }}
           color={textColor}
         >
-          <Text color={textColor}>
-            <Flex row gap="$spacing8" alignItems="center">
-              {xs && tab.icon}
-              {tab.label}
-            </Flex>
-          </Text>
+          <Flex row gap="$spacing8" alignItems="center">
+            {xs && (
+              <Text color={textColor} display="flex">
+                {tab.icon}
+              </Text>
+            )}
+            <Text color={textColor}>{tab.label}</Text>
+          </Flex>
         </TDPActionPill>
       ))}
     </Flex>

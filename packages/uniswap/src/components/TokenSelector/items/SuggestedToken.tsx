@@ -35,7 +35,7 @@ function _TokenPill({
       <Pill
         borderColor="$surface3Solid"
         borderRadius="$roundedFull"
-        borderWidth={1}
+        borderWidth="$spacing1"
         foregroundColor={colors.neutral1.val}
         icon={
           <TokenLogo

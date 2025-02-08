@@ -17,11 +17,11 @@ export function PoolOutOfSyncError() {
 
   return (
     <Flex row gap="$spacing12" backgroundColor="$surface2" borderRadius="$rounded16" p="$padding12">
-      <Flex backgroundColor="$statusCritical2" p="$padding12" borderRadius="$rounded12" mb="auto">
-        <AlertTriangleFilled color="$statusCritical" size="$icon.20" />
+      <Flex backgroundColor="$statusWarning2" p="$padding12" borderRadius="$rounded12" mb="auto">
+        <AlertTriangleFilled color="$statusWarning" size="$icon.20" />
       </Flex>
       <Flex flexWrap="wrap" flexShrink={1} gap="$gap4">
-        <Text color="$statusCritical" variant="body3">
+        <Text color="$statusWarning" variant="body3">
           {t('pool.liquidity.outOfSync')}
         </Text>
         <Text variant="body3" color="$neutral2">

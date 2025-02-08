@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom'
 
 interface UrlContext {
   useParsedQueryString: () => ParsedQs
+  usePathname: () => string
 }
 
 export const UrlContext = createContext<UrlContext | null>(null)
@@ -18,8 +19,16 @@ function useParsedQueryString(): ParsedQs {
   }, [search])
 }
 
+function usePathname(): string {
+  const { pathname } = useLocation()
+  return useMemo(() => {
+    const windowPathname = window.location.pathname
+    return pathname || windowPathname
+  }, [pathname])
+}
+
 export function ReactRouterUrlProvider({ children }: { children: ReactNode | undefined }): JSX.Element {
-  return <UrlContext.Provider value={{ useParsedQueryString }}>{children}</UrlContext.Provider>
+  return <UrlContext.Provider value={{ useParsedQueryString, usePathname }}>{children}</UrlContext.Provider>
 }
 
 export function BlankUrlProvider({ children }: { children: ReactNode | undefined }): JSX.Element {
@@ -27,6 +36,9 @@ export function BlankUrlProvider({ children }: { children: ReactNode | undefined
     return {
       useParsedQueryString: (): ParsedQs => {
         return {}
+      },
+      usePathname: (): string => {
+        return ''
       },
     }
   }, [])

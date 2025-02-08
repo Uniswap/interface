@@ -23,6 +23,7 @@ export const createOnboardingAccount = async (
     mnemonicId,
     backups: existingBackups,
     name: `Wallet ${nextDerivationIndex + 1}`,
+    pushNotificationsEnabled: true,
   }
 }
 

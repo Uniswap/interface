@@ -13,6 +13,7 @@ import {
   v15Schema,
   v16Schema,
   v17Schema,
+  v18Schema,
   v1Schema,
   v2Schema,
   v3Schema,
@@ -43,6 +44,7 @@ import {
   testActivatePendingAccounts,
   testAddCreatedOnboardingRedesignAccount,
   testAddedHapticSetting,
+  testDeleteWelcomeWalletCard,
   testMovedCurrencySetting,
   testMovedLanguageSetting,
   testMovedTokenWarnings,
@@ -279,5 +281,9 @@ describe('Redux state migrations', () => {
 
   it('migrates from v17 to v18', () => {
     testUnchecksumDismissedTokenWarningKeys(migrations[18], v17Schema)
+  })
+
+  it('migrates from v18 to v19', () => {
+    testDeleteWelcomeWalletCard(migrations[19], v18Schema)
   })
 })

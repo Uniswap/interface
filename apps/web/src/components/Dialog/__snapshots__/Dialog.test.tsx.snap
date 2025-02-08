@@ -7,7 +7,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   min-width: 0;
 }
 
-.c12 {
+.c11 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -15,30 +15,12 @@ exports[`<Dialog /> renders different button types 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c14 {
+.c13 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c8 {
-  color: #222222;
-  cursor: pointer;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c8:hover {
-  opacity: 0.6;
-}
-
-.c8:active {
-  opacity: 0.4;
 }
 
 .c4 {
@@ -60,7 +42,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   opacity: 0.4;
 }
 
-.c20 {
+.c19 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -74,7 +56,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   width: 100%;
 }
 
-.c17 {
+.c16 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -109,30 +91,30 @@ exports[`<Dialog /> renders different button types 1`] = `
   user-select: none;
 }
 
-.c17:active .c19 {
+.c16:active .c18 {
   background-color: #B8C0DC3d;
 }
 
-.c17:focus .c19 {
+.c16:focus .c18 {
   background-color: #B8C0DC3d;
 }
 
-.c17:hover .c19 {
+.c16:hover .c18 {
   background-color: #98A1C014;
 }
 
-.c17:disabled {
+.c16:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c17:disabled:active .c19,
-.c17:disabled:focus .c19,
-.c17:disabled:hover .c19 {
+.c16:disabled:active .c18,
+.c16:disabled:focus .c18,
+.c16:disabled:hover .c18 {
   background-color: transparent;
 }
 
-.c21 {
+.c20 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -167,26 +149,26 @@ exports[`<Dialog /> renders different button types 1`] = `
   user-select: none;
 }
 
-.c21:active .c19 {
+.c20:active .c18 {
   background-color: #B8C0DC3d;
 }
 
-.c21:focus .c19 {
+.c20:focus .c18 {
   background-color: #B8C0DC3d;
 }
 
-.c21:hover .c19 {
+.c20:hover .c18 {
   background-color: #98A1C014;
 }
 
-.c21:disabled {
+.c20:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c21:disabled:active .c19,
-.c21:disabled:focus .c19,
-.c21:disabled:hover .c19 {
+.c20:disabled:active .c18,
+.c20:disabled:focus .c18,
+.c20:disabled:hover .c18 {
   background-color: transparent;
 }
 
@@ -208,7 +190,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   gap: 4px;
 }
 
-.c16 {
+.c15 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -265,7 +247,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   gap: 24px;
 }
 
-.c9 {
+.c8 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -280,7 +262,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   gap: 16px;
 }
 
-.c11 {
+.c10 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -310,7 +292,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   width: 100%;
 }
 
-.c10 {
+.c9 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -329,14 +311,14 @@ exports[`<Dialog /> renders different button types 1`] = `
   border-radius: 12px;
 }
 
-.c13 {
+.c12 {
   font-size: 24px;
   line-height: 32px;
   text-align: center;
   font-weight: 500;
 }
 
-.c15 {
+.c14 {
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -347,7 +329,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   text-align: center;
 }
 
-.c18 {
+.c17 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -414,140 +396,138 @@ exports[`<Dialog /> renders different button types 1`] = `
             style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: absolute; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; top: 0px; left: 0px; right: 0px; bottom: 0px; background-color: rgba(0, 0, 0, 0.6); z-index: 1040; pointer-events: auto; opacity: 0;"
           />
           <div
-            class="_dsp_contents"
-            data-remove-scroll-container="true"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-calc100vh-32087695319 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _justifyContent-center _overflowX-hidden _overflowY-hidden"
           >
             <div
-              style="display: contents; pointer-events: auto;"
+              class="_dsp_contents"
+              data-remove-scroll-container="true"
             >
               <div
-                aria-describedby="description-:rl:"
-                aria-labelledby="title-:rl:"
-                class="css-view-175oi2r"
-                id="content-:rl:"
-                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; background-color: rgb(255, 255, 255); padding: 0px 0px 0px 0px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; z-index: 1060; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgba(34,34,34,0.05); border-right-color: rgba(34,34,34,0.05); border-bottom-color: rgba(34,34,34,0.05); border-left-color: rgba(34,34,34,0.05); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; opacity: 0; gap: 4px; margin: 0px 0px 0px 0px; max-height: calc(100vh - 32px); max-width: 420px; overflow-x: hidden; overflow-y: hidden; width: calc(100vw - 32px); outline-style: none; box-shadow: 0px 3px 6px rgba(0,0,0,0.14901960784313725); transform: translateY(20px) translateX(0px);"
-                tabindex="-1"
+                style="display: contents; pointer-events: auto;"
               >
                 <div
-                  class="c0 c1 c2"
+                  aria-describedby="description-:rl:"
+                  aria-labelledby="title-:rl:"
+                  class="css-view-175oi2r"
+                  id="content-:rl:"
+                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; background-color: rgb(255, 255, 255); padding: 0px 0px 0px 0px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; z-index: 1060; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgba(34,34,34,0.05); border-right-color: rgba(34,34,34,0.05); border-bottom-color: rgba(34,34,34,0.05); border-left-color: rgba(34,34,34,0.05); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; opacity: 0; gap: 4px; margin: 0px 0px 0px 0px; max-height: calc(100vh - 32px); max-width: 420px; overflow-x: auto; overflow-y: auto; width: calc(100vw - 32px); outline-style: none; box-shadow: 0px 3px 6px rgba(0,0,0,0.14901960784313725); transform: translateY(20px) translateX(0px);"
+                  tabindex="-1"
                 >
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _gap-t-space-spa94665589 _width-10037 c3"
+                    class="c0 c1 c2"
                   >
                     <div
-                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _gap-t-space-spa94665589 _width-10037 c3"
                     >
-                      <a
-                        class="c4 c5"
-                        href="https://support.uniswap.org/hc/en-us"
-                        rel="noopener noreferrer"
-                        target="_blank"
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
                       >
-                        <div
-                          class="c6 c7"
+                        <a
+                          class="c4 c5"
+                          href="https://support.uniswap.org/hc/en-us"
+                          rel="noopener noreferrer"
+                          target="_blank"
                         >
-                          <svg
-                            fill="none"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            width="16"
-                            xmlns="http://www.w3.org/2000/svg"
+                          <div
+                            class="c6 c7"
                           >
-                            <path
-                              d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
-                              fill="#9B9B9B"
-                            />
-                          </svg>
-                          Get help
-                        </div>
-                      </a>
-                      <svg
-                        class="c8"
-                        data-testid="Dialog-closeButton"
-                        fill="none"
-                        height="24"
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <line
-                          x1="18"
-                          x2="6"
-                          y1="6"
-                          y2="18"
-                        />
-                        <line
-                          x1="6"
-                          x2="18"
-                          y1="6"
-                          y2="18"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                  <div
-                    class="c0 c1"
-                  >
-                    <div
-                      class="c9 c1"
-                    >
-                      <div
-                        class="c10"
-                      >
-                        <div>
-                          Mock Icon
-                        </div>
-                      </div>
-                      <div
-                        class="c11 c1"
-                      >
-                        <div
-                          class="c12 c13 css-4kpdx7"
-                        >
-                          <div>
-                            Mock Title
+                            <svg
+                              fill="none"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
+                                fill="#9B9B9B"
+                              />
+                            </svg>
+                            Get help
                           </div>
-                        </div>
+                        </a>
                         <div
-                          class="c14 c15 css-1urox24"
+                          class="_opacity-0active-0--75 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
+                          data-testid="Dialog-closeButton"
                         >
-                          <div>
-                            Mock Description
+                          <div
+                            class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                          >
+                            <svg
+                              fill="none"
+                              stroke-width="8"
+                              style="width: 24px; height: 24px; color: rgb(125, 125, 125);"
+                              viewBox="0 0 16 16"
+                            >
+                              <path
+                                d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+                                fill="currentColor"
+                              />
+                            </svg>
                           </div>
-                        </div>
-                        <div>
-                          Mock Body
                         </div>
                       </div>
                     </div>
                     <div
-                      class="c6 c16"
+                      class="c0 c1"
                     >
-                      <button
-                        class="c17 c18"
-                        disabled=""
+                      <div
+                        class="c8 c1"
                       >
                         <div
-                          class="c19 c20"
-                        />
-                        <div>
-                          Left Button
+                          class="c9"
+                        >
+                          <div>
+                            Mock Icon
+                          </div>
                         </div>
-                      </button>
-                      <button
-                        class="c21 c18"
-                      >
                         <div
-                          class="c19 c20"
-                        />
-                        <div>
-                          Right Button
+                          class="c10 c1"
+                        >
+                          <div
+                            class="c11 c12 css-4kpdx7"
+                          >
+                            <div>
+                              Mock Title
+                            </div>
+                          </div>
+                          <div
+                            class="c13 c14 css-1urox24"
+                          >
+                            <div>
+                              Mock Description
+                            </div>
+                          </div>
+                          <div>
+                            Mock Body
+                          </div>
                         </div>
-                      </button>
+                      </div>
+                      <div
+                        class="c6 c15"
+                      >
+                        <button
+                          class="c16 c17"
+                          disabled=""
+                        >
+                          <div
+                            class="c18 c19"
+                          />
+                          <div>
+                            Left Button
+                          </div>
+                        </button>
+                        <button
+                          class="c20 c17"
+                        >
+                          <div
+                            class="c18 c19"
+                          />
+                          <div>
+                            Right Button
+                          </div>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -568,7 +548,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   min-width: 0;
 }
 
-.c12 {
+.c11 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -576,30 +556,12 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c14 {
+.c13 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c8 {
-  color: #222222;
-  cursor: pointer;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c8:hover {
-  opacity: 0.6;
-}
-
-.c8:active {
-  opacity: 0.4;
 }
 
 .c4 {
@@ -621,7 +583,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   opacity: 0.4;
 }
 
-.c20 {
+.c19 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -635,7 +597,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   width: 100%;
 }
 
-.c17 {
+.c16 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -670,26 +632,26 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   user-select: none;
 }
 
-.c17:active .c19 {
+.c16:active .c18 {
   background-color: #B8C0DC3d;
 }
 
-.c17:focus .c19 {
+.c16:focus .c18 {
   background-color: #B8C0DC3d;
 }
 
-.c17:hover .c19 {
+.c16:hover .c18 {
   background-color: #98A1C014;
 }
 
-.c17:disabled {
+.c16:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c17:disabled:active .c19,
-.c17:disabled:focus .c19,
-.c17:disabled:hover .c19 {
+.c16:disabled:active .c18,
+.c16:disabled:focus .c18,
+.c16:disabled:hover .c18 {
   background-color: transparent;
 }
 
@@ -711,7 +673,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   gap: 4px;
 }
 
-.c16 {
+.c15 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -768,7 +730,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   gap: 24px;
 }
 
-.c9 {
+.c8 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -783,7 +745,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   gap: 16px;
 }
 
-.c11 {
+.c10 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -813,7 +775,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   width: 100%;
 }
 
-.c10 {
+.c9 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -832,14 +794,14 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   border-radius: 12px;
 }
 
-.c13 {
+.c12 {
   font-size: 24px;
   line-height: 32px;
   text-align: center;
   font-weight: 500;
 }
 
-.c15 {
+.c14 {
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -850,7 +812,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   text-align: center;
 }
 
-.c18 {
+.c17 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -917,139 +879,137 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
             style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: absolute; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; top: 0px; left: 0px; right: 0px; bottom: 0px; background-color: rgba(0, 0, 0, 0.6); z-index: 1040; pointer-events: auto; opacity: 0;"
           />
           <div
-            class="_dsp_contents"
-            data-remove-scroll-container="true"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-calc100vh-32087695319 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _justifyContent-center _overflowX-hidden _overflowY-hidden"
           >
             <div
-              style="display: contents; pointer-events: auto;"
+              class="_dsp_contents"
+              data-remove-scroll-container="true"
             >
               <div
-                aria-describedby="description-:r1:"
-                aria-labelledby="title-:r1:"
-                class="css-view-175oi2r"
-                id="content-:r1:"
-                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; background-color: rgb(255, 255, 255); padding: 0px 0px 0px 0px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; z-index: 1060; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgba(34,34,34,0.05); border-right-color: rgba(34,34,34,0.05); border-bottom-color: rgba(34,34,34,0.05); border-left-color: rgba(34,34,34,0.05); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; opacity: 0; gap: 4px; margin: 0px 0px 0px 0px; max-height: calc(100vh - 32px); max-width: 420px; overflow-x: hidden; overflow-y: hidden; width: calc(100vw - 32px); outline-style: none; box-shadow: 0px 3px 6px rgba(0,0,0,0.14901960784313725); transform: translateY(20px) translateX(0px);"
-                tabindex="-1"
+                style="display: contents; pointer-events: auto;"
               >
                 <div
-                  class="c0 c1 c2"
+                  aria-describedby="description-:r1:"
+                  aria-labelledby="title-:r1:"
+                  class="css-view-175oi2r"
+                  id="content-:r1:"
+                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; background-color: rgb(255, 255, 255); padding: 0px 0px 0px 0px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; z-index: 1060; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-color: rgba(34,34,34,0.05); border-right-color: rgba(34,34,34,0.05); border-bottom-color: rgba(34,34,34,0.05); border-left-color: rgba(34,34,34,0.05); border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; opacity: 0; gap: 4px; margin: 0px 0px 0px 0px; max-height: calc(100vh - 32px); max-width: 420px; overflow-x: auto; overflow-y: auto; width: calc(100vw - 32px); outline-style: none; box-shadow: 0px 3px 6px rgba(0,0,0,0.14901960784313725); transform: translateY(20px) translateX(0px);"
+                  tabindex="-1"
                 >
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _gap-t-space-spa94665589 _width-10037 c3"
+                    class="c0 c1 c2"
                   >
                     <div
-                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _gap-t-space-spa94665589 _width-10037 c3"
                     >
-                      <a
-                        class="c4 c5"
-                        href="https://support.uniswap.org/hc/en-us"
-                        rel="noopener noreferrer"
-                        target="_blank"
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
                       >
-                        <div
-                          class="c6 c7"
+                        <a
+                          class="c4 c5"
+                          href="https://support.uniswap.org/hc/en-us"
+                          rel="noopener noreferrer"
+                          target="_blank"
                         >
-                          <svg
-                            fill="none"
-                            height="16"
-                            viewBox="0 0 16 16"
-                            width="16"
-                            xmlns="http://www.w3.org/2000/svg"
+                          <div
+                            class="c6 c7"
                           >
-                            <path
-                              d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
-                              fill="#9B9B9B"
-                            />
-                          </svg>
-                          Get help
-                        </div>
-                      </a>
-                      <svg
-                        class="c8"
-                        data-testid="Dialog-closeButton"
-                        fill="none"
-                        height="24"
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        viewBox="0 0 24 24"
-                        width="24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <line
-                          x1="18"
-                          x2="6"
-                          y1="6"
-                          y2="18"
-                        />
-                        <line
-                          x1="6"
-                          x2="18"
-                          y1="6"
-                          y2="18"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                  <div
-                    class="c0 c1"
-                  >
-                    <div
-                      class="c9 c1"
-                    >
-                      <div
-                        class="c10"
-                      >
-                        <div>
-                          Mock Icon
-                        </div>
-                      </div>
-                      <div
-                        class="c11 c1"
-                      >
-                        <div
-                          class="c12 c13 css-4kpdx7"
-                        >
-                          <div>
-                            Mock Title
+                            <svg
+                              fill="none"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              width="16"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
+                                fill="#9B9B9B"
+                              />
+                            </svg>
+                            Get help
                           </div>
-                        </div>
+                        </a>
                         <div
-                          class="c14 c15 css-1urox24"
+                          class="_opacity-0active-0--75 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _cursor-pointer"
+                          data-testid="Dialog-closeButton"
                         >
-                          <div>
-                            Mock Description
+                          <div
+                            class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                          >
+                            <svg
+                              fill="none"
+                              stroke-width="8"
+                              style="width: 24px; height: 24px; color: rgb(125, 125, 125);"
+                              viewBox="0 0 16 16"
+                            >
+                              <path
+                                d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+                                fill="currentColor"
+                              />
+                            </svg>
                           </div>
-                        </div>
-                        <div>
-                          Mock Body
                         </div>
                       </div>
                     </div>
                     <div
-                      class="c6 c16"
+                      class="c0 c1"
                     >
-                      <button
-                        class="c17 c18"
+                      <div
+                        class="c8 c1"
                       >
                         <div
-                          class="c19 c20"
-                        />
-                        <div>
-                          Left Button
+                          class="c9"
+                        >
+                          <div>
+                            Mock Icon
+                          </div>
                         </div>
-                      </button>
-                      <button
-                        class="c17 c18"
-                      >
                         <div
-                          class="c19 c20"
-                        />
-                        <div>
-                          Right Button
+                          class="c10 c1"
+                        >
+                          <div
+                            class="c11 c12 css-4kpdx7"
+                          >
+                            <div>
+                              Mock Title
+                            </div>
+                          </div>
+                          <div
+                            class="c13 c14 css-1urox24"
+                          >
+                            <div>
+                              Mock Description
+                            </div>
+                          </div>
+                          <div>
+                            Mock Body
+                          </div>
                         </div>
-                      </button>
+                      </div>
+                      <div
+                        class="c6 c15"
+                      >
+                        <button
+                          class="c16 c17"
+                        >
+                          <div
+                            class="c18 c19"
+                          />
+                          <div>
+                            Left Button
+                          </div>
+                        </button>
+                        <button
+                          class="c16 c17"
+                        >
+                          <div
+                            class="c18 c19"
+                          />
+                          <div>
+                            Right Button
+                          </div>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

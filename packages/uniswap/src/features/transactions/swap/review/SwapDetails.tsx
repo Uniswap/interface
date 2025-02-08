@@ -209,7 +209,7 @@ function AcceptNewQuoteRow({
       alignItems="center"
       borderColor="$surface3"
       borderRadius="$rounded16"
-      borderWidth={1}
+      borderWidth="$spacing1"
       gap="$spacing12"
       justifyContent="space-between"
       pl="$spacing12"
@@ -252,7 +252,11 @@ function HeightAnimatorWrapper({ children }: { children: React.ReactNode }): JSX
   if (isMobileApp || isMobileWeb) {
     return <>{children}</>
   } else {
-    return <HeightAnimator animation="fast">{children}</HeightAnimator>
+    return (
+      <HeightAnimator useInitialHeight animation="fast">
+        {children}
+      </HeightAnimator>
+    )
   }
 }
 

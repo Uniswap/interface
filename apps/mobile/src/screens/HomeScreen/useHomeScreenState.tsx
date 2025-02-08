@@ -3,9 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
-import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { logger } from 'utilities/src/logger/logger'
-import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
+import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks/useFormattedTransactionDataForActivity'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectHasBalanceOrActivityForAddress } from 'wallet/src/features/wallet/selectors'
 import { setHasBalanceOrActivity } from 'wallet/src/features/wallet/slice'
@@ -51,24 +49,18 @@ export function useHomeScreenState(): {
 
   const hasNft = !!nftData?.nftBalances?.edges.length
   const hasTokenBalance = !!Object.entries(balancesById || {}).length
-  const hasUsedWalletFromRemote = !!hasTokenBalance || !!hasNft || !!hasActivity
+  const hasUsedWalletFromRemote = hasTokenBalance || hasNft || hasActivity
+  const dataIsLoading = areBalancesLoading || areNFTsLoading || isActivityLoading
 
-  const isTabsDataLoaded =
-    hasUsedWalletFromRemote || (!areBalancesLoading && !areNFTsLoading && !isActivityLoading) || hasUsedWalletFromCache
+  // Note: This is to prevent loading the empty wallet state for an active
+  // wallet loading tabs for the first time.
+  const isTabsDataLoaded = !(dataIsLoading && hasUsedWalletFromCache)
+
   const hasUsedWallet = hasUsedWalletFromCache || hasUsedWalletFromRemote
 
   useEffect(() => {
     if (hasUsedWallet && !hasUsedWalletFromCache) {
-      const validAddress = getValidAddress(address)
-      if (!validAddress) {
-        // do nothing. This will revert to the old logic to overfetch.
-        logger.error('Unexpected call to `setHasUsedWallet` with invalid `address`', {
-          extra: { payload: address },
-          tags: { file: 'behaviorHistory/slice.ts', function: 'setHasUsedWallet' },
-        })
-        return
-      }
-      dispatch(setHasBalanceOrActivity({ address: validAddress, hasBalanceOrActivity: true }))
+      dispatch(setHasBalanceOrActivity({ address, hasBalanceOrActivity: true }))
     }
   }, [hasUsedWallet, dispatch, address, hasUsedWalletFromCache])
 

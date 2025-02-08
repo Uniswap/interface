@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { DEFAULT_CUSTOM_DEADLINE } from 'uniswap/src/constants/transactions'
 import {
   DEFAULT_PROTOCOL_OPTIONS,
   FrontendSupportedProtocol,
@@ -23,7 +22,6 @@ export interface TransactionSettingsState {
 }
 
 export const initialTransactionSettingsState: TransactionSettingsState = {
-  customDeadline: DEFAULT_CUSTOM_DEADLINE,
   selectedProtocols: DEFAULT_PROTOCOL_OPTIONS,
   isOnlyV2Allowed: false,
   slippageWarningModalSeen: false,

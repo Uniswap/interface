@@ -56,7 +56,7 @@ export function SlippageControl({ saveOnBlur }: SlippageControlProps): JSX.Eleme
         backgroundColor={backgroundColor}
         borderColor={isEditingSlippage ? '$DEP_accentSoft' : '$surface3'}
         borderRadius="$rounded16"
-        borderWidth={1}
+        borderWidth="$spacing1"
         gap="$spacing8"
         p="$spacing4"
         pr="$spacing8"
@@ -77,6 +77,7 @@ export function SlippageControl({ saveOnBlur }: SlippageControlProps): JSX.Eleme
           <Flex style={{ position: 'relative' }}>
             <Input
               ref={inputRef}
+              keyboardType="decimal-pad"
               backgroundColor={backgroundColor}
               color={inputValueTextColor}
               editable={true}

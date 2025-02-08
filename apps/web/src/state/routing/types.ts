@@ -861,16 +861,6 @@ export enum QuoteState {
   NOT_FOUND = 'Not found',
 }
 
-export type QuoteResult =
-  | {
-      state: QuoteState.NOT_FOUND
-      data?: undefined
-    }
-  | {
-      state: QuoteState.SUCCESS
-      data: URAQuoteResponse
-    }
-
 export type TradeResult =
   | {
       state: QuoteState.NOT_FOUND

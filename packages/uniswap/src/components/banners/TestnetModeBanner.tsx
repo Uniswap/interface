@@ -29,8 +29,8 @@ export function TestnetModeBanner(props: FlexProps): JSX.Element | null {
       p="$padding12"
       gap="$gap8"
       backgroundColor="$statusSuccess2"
-      borderWidth={isWeb ? 0 : 1}
-      borderBottomWidth={1}
+      borderWidth={isWeb ? '$none' : '$spacing1'}
+      borderBottomWidth="$spacing1"
       height={TESTNET_MODE_BANNER_HEIGHT}
       borderStyle="dashed"
       borderColor="$surface3"

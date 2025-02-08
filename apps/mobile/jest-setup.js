@@ -28,6 +28,7 @@ jest.mock('react-native-onesignal', () => {
     promptForPushNotificationsWithUserResponse: jest.fn(),
     setNotificationWillShowInForegroundHandler: jest.fn(),
     setNotificationOpenedHandler: jest.fn(),
+    sendTag: jest.fn(),
     getDeviceState: () => ({ userId: 'dummyUserId', pushToken: 'dummyPushToken' }),
   }
 })
@@ -60,12 +61,6 @@ jest.mock('react-native', () => {
 
   return RN
 })
-
-jest.mock('react-native-safe-area-context', () => ({
-  useSafeAreaInsets: jest.fn().mockImplementation(() => ({})),
-  useSafeAreaFrame: jest.fn().mockImplementation(() => ({})),
-  SafeAreaProvider: jest.fn(({ children }) => children),
-}))
 
 jest.mock('@react-navigation/elements', () => ({
   useHeaderHeight: jest.fn().mockImplementation(() => 200),

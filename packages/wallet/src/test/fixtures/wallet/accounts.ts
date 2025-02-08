@@ -18,6 +18,7 @@ export const accountBaseFields = createFixture<WalletAccountFields>()(() => ({
   address: faker.finance.ethereumAddress(),
   timeImportedMs: faker.datatype.number(),
   name: faker.name.fullName(),
+  pushNotificationsEnabled: true,
 }))
 
 export const signerMnemonicAccount = createFixture<SignerMnemonicAccount>()(() => ({

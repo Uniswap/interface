@@ -165,7 +165,7 @@ function ServiceProviderLogo({ uri }: { uri: string }): JSX.Element {
       backgroundColor="$surface1"
       borderColor="$surface1"
       borderRadius="$rounded8"
-      borderWidth={2}
+      borderWidth="$spacing2"
       overflow="hidden"
     >
       <ImageUri
@@ -187,7 +187,7 @@ function ReceiveCryptoIcon(): JSX.Element {
       backgroundColor="$surface1"
       borderColor="$surface1"
       borderRadius="$roundedFull"
-      borderWidth={1}
+      borderWidth="$spacing1"
       overflow="hidden"
     >
       <ArrowDownCircle color="$accent1" size="$icon.24" />

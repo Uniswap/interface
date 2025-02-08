@@ -138,6 +138,7 @@ export function OnDeviceRecoveryScreen({
             address: walletInfo.address,
             derivationIndex: walletInfo.derivationIndex,
             timeImportedMs: dayjs().valueOf(),
+            pushNotificationsEnabled: true,
           }
         }),
       )

@@ -2,6 +2,7 @@ import PROVIDE_LIQUIDITY from 'assets/images/provideLiquidity.png'
 /* eslint-disable-next-line no-restricted-imports */
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import V4_HOOK from 'assets/images/v4Hooks.png'
+import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Pool as PoolIcon } from 'components/Icons/Pool'
 import { LiquidityPositionCard, LiquidityPositionCardLoader } from 'components/Liquidity/LiquidityPositionCard'
@@ -22,9 +23,8 @@ import { useTopPools } from 'state/explore/topPools'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
 import { useRequestPositionsForSavedPairs } from 'state/user/hooks'
 import { ClickableTamaguiStyle } from 'theme/components'
-import { Anchor, DeprecatedButton, Flex, Text, useMedia, useSporeColors } from 'ui/src'
+import { Anchor, DeprecatedButton, Flex, ModalCloseIcon, Text, useMedia, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { X } from 'ui/src/components/icons/X'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
@@ -36,6 +36,7 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
 
 const PAGE_SIZE = 25
 
@@ -80,7 +81,7 @@ function EmptyPositionsView({ chainId, isConnected }: { chainId?: UniverseChainI
         justifyContent="space-between"
         borderRadius="$rounded20"
         borderColor="$surface3"
-        borderWidth={1}
+        borderWidth="$spacing1"
         borderStyle="solid"
         p="$padding16"
         overflow="hidden"
@@ -147,7 +148,7 @@ function LearnMoreTile({ img, text, link }: { img: string; text: string; link?: 
         width={344}
         borderRadius="$rounded20"
         borderColor="$surface3"
-        borderWidth={1}
+        borderWidth="$spacing1"
         borderStyle="solid"
         alignItems="center"
         gap="$gap16"
@@ -182,6 +183,9 @@ export default function Pool() {
   const account = useAccount()
   const { address, isConnected } = account
 
+  const isPositionVisible = usePositionVisibilityCheck()
+  const [showHiddenPositions, setShowHiddenPositions] = useState(false)
+
   useEffect(() => {
     if (isV4DataEnabled) {
       setVersionFilter([ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2])
@@ -197,6 +201,7 @@ export default function Pool() {
         protocolVersions: versionFilter,
         pageSize: PAGE_SIZE,
         pageToken: '',
+        includeHidden: true,
       },
       !isConnected,
     )
@@ -234,6 +239,28 @@ export default function Pool() {
         return unique
       }, [])
   }, [loadedPositions, savedPositions, chainFilter, statusFilter, versionFilter])
+
+  const { visiblePositions, hiddenPositions } = useMemo(() => {
+    const visiblePositions: PositionInfo[] = []
+    const hiddenPositions: PositionInfo[] = []
+
+    combinedPositions.forEach((position) => {
+      const isVisible = isPositionVisible({
+        poolId: position.poolId,
+        tokenId: position.tokenId,
+        chainId: position.chainId,
+        isFlaggedSpam: position.isHidden,
+      })
+
+      if (isVisible) {
+        visiblePositions.push(position)
+      } else {
+        hiddenPositions.push(position)
+      }
+    })
+
+    return { visiblePositions, hiddenPositions }
+  }, [combinedPositions, isPositionVisible])
 
   usePendingLPTransactionsChangeListener(refetch)
 
@@ -292,21 +319,20 @@ export default function Pool() {
           {!isLoadingPositions ? (
             combinedPositions.length > 0 ? (
               <Flex gap="$gap16" mb="$spacing16" opacity={isPlaceholderData ? 0.6 : 1}>
-                {combinedPositions.map((position) => {
-                  return position ? (
-                    <Link
-                      key={`${position.poolId}-${position.tokenId}-${position.chainId}`}
-                      style={{ textDecoration: 'none' }}
-                      to={getPositionUrl(position)}
-                    >
-                      <LiquidityPositionCard
-                        isClickableStyle
-                        key={`LiquidityPositionCard-${position?.tokenId}`}
-                        liquidityPosition={position}
-                      />
-                    </Link>
-                  ) : null
-                })}
+                {visiblePositions.map((position) => (
+                  <Link
+                    key={`${position.poolId}-${position.tokenId}-${position.chainId}`}
+                    style={{ textDecoration: 'none' }}
+                    to={getPositionUrl(position)}
+                  >
+                    <LiquidityPositionCard showVisibilityOption isClickableStyle liquidityPosition={position} />
+                  </Link>
+                ))}
+                <HiddenPositions
+                  showHiddenPositions={showHiddenPositions}
+                  setShowHiddenPositions={setShowHiddenPositions}
+                  hiddenPositions={hiddenPositions}
+                />
               </Flex>
             ) : (
               <EmptyPositionsView chainId={chainFilter} isConnected={isConnected} />
@@ -347,9 +373,7 @@ export default function Pool() {
                   <Trans i18nKey="pool.closedCTA.description" />
                 </Text>
               </Flex>
-              <Flex height="100%" onPress={() => setClosedCTADismissed(true)} cursor="pointer">
-                <X color="$neutral2" size="$icon.20" />
-              </Flex>
+              <ModalCloseIcon onClose={() => setClosedCTADismissed(true)} size="$icon.20" />
             </Flex>
           )}
           <Flex row centered mb="$spacing24" gap="$gap4">
@@ -388,5 +412,40 @@ export default function Pool() {
         </Flex>
       </Flex>
     </Trace>
+  )
+}
+
+interface HiddenPositionsProps {
+  showHiddenPositions: boolean
+  setShowHiddenPositions: (showHiddenPositions: boolean) => void
+  hiddenPositions: PositionInfo[]
+}
+
+function HiddenPositions({ showHiddenPositions, setShowHiddenPositions, hiddenPositions }: HiddenPositionsProps) {
+  const { t } = useTranslation()
+  return (
+    <ExpandoRow
+      isExpanded={showHiddenPositions}
+      toggle={() => setShowHiddenPositions(!showHiddenPositions)}
+      numItems={hiddenPositions.length}
+      title={t('common.hidden')}
+    >
+      <Flex gap="$gap16">
+        {hiddenPositions.map((position) => (
+          <Link
+            key={`${position.poolId}-${position.tokenId}-${position.chainId}`}
+            style={{ textDecoration: 'none' }}
+            to={getPositionUrl(position)}
+          >
+            <LiquidityPositionCard
+              showVisibilityOption
+              isClickableStyle
+              liquidityPosition={position}
+              isVisible={false}
+            />
+          </Link>
+        ))}
+      </Flex>
+    </ExpandoRow>
   )
 }

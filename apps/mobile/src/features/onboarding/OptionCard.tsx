@@ -34,7 +34,7 @@ export function OptionCard({
         backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
         borderColor="$surface3"
         borderRadius="$rounded20"
-        borderWidth={1}
+        borderWidth="$spacing1"
         disabled={disabled}
         opacity={disabled ? 0.5 : opacity}
         p="$spacing16"

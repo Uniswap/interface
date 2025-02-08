@@ -1,31 +1,31 @@
+import { useCurrency } from 'hooks/Tokens'
 import { PageType, useIsPage } from 'hooks/useIsPage'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowUpRight } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
+import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
 import { ClickableTamaguiStyle, ExternalLink, HideSmall } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { ElementAfterText, Flex, Text, TouchableArea, TouchableAreaEvent, useSporeColors } from 'ui/src'
-import { BRIDGING_BANNER, UNICHAIN_BANNER_COLD, UNICHAIN_BANNER_WARM } from 'ui/src/assets'
+import { UNICHAIN_BANNER_COLD, UNICHAIN_BANNER_WARM } from 'ui/src/assets'
 import { X } from 'ui/src/components/icons/X'
 import { opacify } from 'ui/src/theme'
 import { CardImage } from 'uniswap/src/components/cards/image'
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
 import { UnichainIntroModal } from 'uniswap/src/components/unichain/UnichainIntroModal'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import { selectHasViewedBridgingBanner } from 'uniswap/src/features/behaviorHistory/selectors'
 import {
   setHasDismissedUnichainColdBanner,
   setHasDismissedUnichainWarmBanner,
-  setHasViewedBridgingBanner,
 } from 'uniswap/src/features/behaviorHistory/slice'
-import { useIsBridgingChain, useNumBridgingChains } from 'uniswap/src/features/bridging/hooks/chains'
+import { useIsBridgingChain } from 'uniswap/src/features/bridging/hooks/chains'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useUnichainBannerVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainBannerVisibility'
+import { useUnichainPromoVisibility } from 'uniswap/src/features/unichain/hooks/useUnichainPromoVisibility'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export function SwapBottomCard() {
@@ -35,13 +35,10 @@ export function SwapBottomCard() {
 
   const isSupportedChain = useIsSupportedChainId(chainId)
 
-  const hasViewedBridgingBanner = useSelector(selectHasViewedBridgingBanner)
   const isBridgingSupportedChain = useIsBridgingChain(chainId ?? UniverseChainId.Mainnet)
-  const isBridgingBannerChain = chainId === null || chainId === UniverseChainId.Mainnet || isBridgingSupportedChain
-  const shouldShowBridgingBanner = !hasViewedBridgingBanner && isBridgingBannerChain
 
   const [showUnichainIntroModal, setShowUnichainIntroModal] = useState(false)
-  const { shouldShowUnichainBannerCold, shouldShowUnichainBannerWarm } = useUnichainBannerVisibility()
+  const { shouldShowUnichainBannerCold, shouldShowUnichainBannerWarm } = useUnichainPromoVisibility()
 
   const isSwapPage = useIsPage(PageType.SWAP)
   const isSendPage = useIsPage(PageType.SEND)
@@ -57,21 +54,12 @@ export function SwapBottomCard() {
       return <UnichainBannerCold showUnichainModal={() => setShowUnichainIntroModal(true)} />
     } else if (shouldShowUnichainBannerWarm) {
       return <UnichainBannerWarm />
-    } else if (shouldShowBridgingBanner) {
-      return <BridgingBanner />
     } else if (!isBridgingSupportedChain) {
       return <MaybeExternalBridgeCard chainId={chainId} />
     } else {
       return null
     }
-  }, [
-    chainId,
-    hideCard,
-    isBridgingSupportedChain,
-    shouldShowBridgingBanner,
-    shouldShowUnichainBannerCold,
-    shouldShowUnichainBannerWarm,
-  ])
+  }, [chainId, hideCard, isBridgingSupportedChain, shouldShowUnichainBannerCold, shouldShowUnichainBannerWarm])
 
   return (
     <>
@@ -109,19 +97,26 @@ function UnichainBannerCold({ showUnichainModal }: { showUnichainModal: () => vo
 
 function UnichainBannerWarm() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const { setIsSwapTokenSelectorOpen, setSwapInputChainId, setSwapOutputChainId } = useUniswapContext()
+  const { setIsSwapTokenSelectorOpen, setSwapOutputChainId } = useUniswapContext()
+  const unichainCurrency = useCurrency('ETH', UniverseChainId.Unichain)
 
   const openUnichainTokenSelector = useCallback(() => {
-    // Web specific override to open token selector
-    setSwapInputChainId(UniverseChainId.Unichain)
+    navigate(
+      `/swap${serializeSwapStateToURLParameters({
+        inputCurrency: unichainCurrency,
+        chainId: UniverseChainId.Unichain,
+      })}`,
+    )
     setSwapOutputChainId(UniverseChainId.Unichain)
+    // Web specific override to open token selector
     setIsSwapTokenSelectorOpen(true)
     // delay this redux change to avoid any visible UI jank when clicking in
     setTimeout((): void => {
       dispatch(setHasDismissedUnichainWarmBanner(true))
     }, ONE_SECOND_MS / 2)
-  }, [dispatch, setIsSwapTokenSelectorOpen, setSwapInputChainId, setSwapOutputChainId])
+  }, [dispatch, navigate, setIsSwapTokenSelectorOpen, setSwapOutputChainId, unichainCurrency])
 
   return (
     <ImagePromoBanner
@@ -133,41 +128,6 @@ function UnichainBannerWarm() {
       }}
       subtitle={t('unichain.promotion.warm.description')}
       isNew
-    />
-  )
-}
-
-function BridgingBanner() {
-  const { t } = useTranslation()
-  const dispatch = useAppDispatch()
-  const numBridgingChains = useNumBridgingChains()
-  const { setIsSwapTokenSelectorOpen } = useUniswapContext()
-
-  const handleBridgingDismiss = useCallback(
-    (shouldNavigate: boolean) => {
-      if (shouldNavigate) {
-        // Web specific override to open token selector
-        setIsSwapTokenSelectorOpen(true)
-        // delay this redux change to avoid any visible UI jank when clicking in
-        setTimeout((): void => {
-          dispatch(setHasViewedBridgingBanner(true))
-        }, ONE_SECOND_MS / 2)
-      } else {
-        dispatch(setHasViewedBridgingBanner(true))
-      }
-    },
-    [dispatch, setIsSwapTokenSelectorOpen],
-  )
-
-  return (
-    <ImagePromoBanner
-      image={BRIDGING_BANNER}
-      title={t('swap.bridging.title')}
-      onPress={() => handleBridgingDismiss(true)}
-      onDismiss={() => {
-        handleBridgingDismiss(false)
-      }}
-      subtitle={t('onboarding.home.intro.bridging.description', { count: numBridgingChains })}
     />
   )
 }

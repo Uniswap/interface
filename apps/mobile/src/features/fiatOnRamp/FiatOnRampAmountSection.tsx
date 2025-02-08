@@ -234,7 +234,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
               autoFocus
               alignSelf="stretch"
               backgroundColor="$transparent"
-              borderWidth={0}
+              borderWidth="$none"
               disabled={disabled}
               fiatCurrencyInfo={fiatCurrencyInfo}
               fontFamily="$heading"

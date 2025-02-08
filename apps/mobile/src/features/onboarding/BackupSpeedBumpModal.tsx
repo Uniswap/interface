@@ -102,7 +102,7 @@ function CloudBackupPreview(): JSX.Element {
         backgroundColor="$surface1"
         borderColor="$surface3"
         borderRadius="$rounded12"
-        borderWidth={1}
+        borderWidth="$spacing1"
         gap="$spacing16"
         px="$spacing12"
         py="$spacing8"

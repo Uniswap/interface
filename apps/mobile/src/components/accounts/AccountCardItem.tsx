@@ -18,7 +18,7 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { useAccountList } from 'wallet/src/features/accounts/hooks'
+import { useAccountListData } from 'wallet/src/features/accounts/useAccountListData'
 
 type AccountCardItemProps = {
   address: Address
@@ -44,7 +44,7 @@ function PortfolioValue({
   // Since we're adding a new wallet address to the `ownerAddresses` array, this will be a brand new query, which won't be cached.
   // To avoid all wallets showing a "loading" state, we read directly from cache while we wait for the other query to complete.
 
-  const { data } = useAccountList({
+  const { data } = useAccountListData({
     fetchPolicy: 'cache-first',
     addresses: [address],
   })

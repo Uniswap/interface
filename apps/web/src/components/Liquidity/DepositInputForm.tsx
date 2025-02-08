@@ -65,9 +65,10 @@ export function DepositInputForm({
   const handleOnSetMax = (field: PositionField) => {
     return (amount: string) => {
       setFocusedInputField(field)
-      onSetMax(field, amount) // TODO(WEB-4978): update this to account for gas
+      onSetMax(field, amount)
     }
   }
+
   return (
     <Flex gap="$gap4">
       {!deposit0Disabled && (

@@ -1,6 +1,6 @@
 import { ReactNode, RefObject } from 'react'
 import { Flex, Popover, WebBottomSheet, styled, useScrollbarStyles, useShadowPropsMedium } from 'ui/src'
-import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
+import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 
 const NavDropdownContent = styled(Flex, {
   borderRadius: '$rounded16',
@@ -72,7 +72,7 @@ export function NavDropdown({ children, width, dropdownRef, isOpen, padded, data
           width={width}
           padded={padded}
           {...shadowProps}
-          overflow="scroll"
+          $platform-web={{ overflow: 'auto' }}
           style={scrollbarStyles}
         >
           {children}

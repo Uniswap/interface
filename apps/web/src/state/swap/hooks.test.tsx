@@ -22,7 +22,11 @@ function mockQueryStringInUrlProvider(
   qs: Record<string, any>,
 ): ({ children }: { children?: ReactNode }) => JSX.Element {
   function MockedProvider({ children }: { children?: ReactNode }): JSX.Element {
-    return <UrlContext.Provider value={{ useParsedQueryString: () => qs }}>{children}</UrlContext.Provider>
+    return (
+      <UrlContext.Provider value={{ useParsedQueryString: () => qs, usePathname: () => '' }}>
+        {children}
+      </UrlContext.Provider>
+    )
   }
   return MockedProvider
 }
@@ -104,7 +108,6 @@ describe('hooks', () => {
         swapInputChainId: undefined,
         navigateToFiatOnRamp: () => {},
         onSwapChainsChanged: () => {},
-        setSwapInputChainId: () => {},
         signer: undefined,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         useProviderHook: (_chainId: number) => undefined,

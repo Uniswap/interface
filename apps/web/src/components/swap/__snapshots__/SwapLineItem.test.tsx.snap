@@ -1953,7 +1953,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                           >
                             <svg
                               stroke-width="8"
-                              style="color: currentColor; width: 8px; height: 8px; min-width: 100%; min-height: 35px;"
+                              style="width: 8px; height: 8px; min-width: 100%; min-height: 35px; color: currentColor;"
                               viewBox="850 0 300 200"
                               width="100%"
                             >
@@ -2660,7 +2660,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                           >
                             <svg
                               stroke-width="8"
-                              style="color: currentColor; width: 8px; height: 8px; min-width: 100%; min-height: 35px;"
+                              style="width: 8px; height: 8px; min-width: 100%; min-height: 35px; color: currentColor;"
                               viewBox="850 0 300 200"
                               width="100%"
                             >
@@ -3411,7 +3411,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                           >
                             <svg
                               stroke-width="8"
-                              style="color: currentColor; width: 8px; height: 8px; min-width: 100%; min-height: 35px;"
+                              style="width: 8px; height: 8px; min-width: 100%; min-height: 35px; color: currentColor;"
                               viewBox="850 0 300 200"
                               width="100%"
                             >
@@ -4175,7 +4175,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                           >
                             <svg
                               stroke-width="8"
-                              style="color: currentColor; width: 8px; height: 8px; min-width: 100%; min-height: 35px;"
+                              style="width: 8px; height: 8px; min-width: 100%; min-height: 35px; color: currentColor;"
                               viewBox="850 0 300 200"
                               width="100%"
                             >
@@ -4939,7 +4939,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                           >
                             <svg
                               stroke-width="8"
-                              style="color: currentColor; width: 8px; height: 8px; min-width: 100%; min-height: 35px;"
+                              style="width: 8px; height: 8px; min-width: 100%; min-height: 35px; color: currentColor;"
                               viewBox="850 0 300 200"
                               width="100%"
                             >

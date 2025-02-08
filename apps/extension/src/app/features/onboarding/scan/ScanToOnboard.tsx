@@ -14,12 +14,12 @@ import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
 import { useScantasticContext } from 'src/app/features/onboarding/scan/ScantasticContextProvider'
 import { getScantasticUrl } from 'src/app/features/onboarding/scan/utils'
-import { TopLevelRoutes } from 'src/app/navigation/constants'
+import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import UAParser from 'ua-parser-js'
-import { Flex, Image, Square, Text, useSporeColors } from 'ui/src'
+import { Flex, Image, Square, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { DOT_GRID, UNISWAP_LOGO } from 'ui/src/assets'
-import { Mobile, Wifi } from 'ui/src/components/icons'
+import { FileListLock, Mobile, RotatableChevron, Wifi } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, zIndices } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -82,7 +82,6 @@ export function ScanToOnboard(): JSX.Element {
         browser,
         model,
       })
-
       return getScantasticUrl(params)
     } catch (e) {
       const wrappedError = new Error('Failed to build scantastic params', { cause: e })
@@ -189,6 +188,53 @@ export function ScanToOnboard(): JSX.Element {
       screen={ExtensionOnboardingScreens.OnboardingQRCode}
     >
       <OnboardingScreen
+        belowFrameContent={
+          errorDerivingQR ? (
+            <Flex centered width="100%">
+              <TouchableArea
+                borderRadius="$rounded20"
+                zIndex={zIndices.fixed}
+                onPress={(): void => navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Import}`)}
+              >
+                <Flex
+                  alignContent="center"
+                  alignItems="center"
+                  backgroundColor="$surface1"
+                  borderColor="$surface3"
+                  borderRadius="$roundedFull"
+                  borderWidth="$spacing1"
+                  my="$spacing12"
+                  shadowColor="$shadowColor"
+                  shadowOpacity={0.4}
+                  shadowRadius="$spacing4"
+                  pr="$spacing16"
+                  pl="$spacing20"
+                  py="$spacing12"
+                >
+                  <Flex row centered gap="$spacing8" justifyContent="space-between">
+                    <FileListLock color="$accent1" size="$icon.36" />
+
+                    <Flex shrink flexWrap="wrap">
+                      <Text color="$neutral2" variant="body3">
+                        {t('onboarding.scan.troubleScanning.title')}
+                      </Text>
+                      <Text color="$accent1" variant="buttonLabel2">
+                        {t('onboarding.scan.troubleScanning.message')}
+                      </Text>
+                    </Flex>
+
+                    <RotatableChevron
+                      color="$neutral3"
+                      direction="end"
+                      height={iconSizes.icon24}
+                      width={iconSizes.icon24}
+                    />
+                  </Flex>
+                </Flex>
+              </TouchableArea>
+            </Flex>
+          ) : undefined
+        }
         Icon={
           <Square
             backgroundColor="$surface2"
@@ -210,11 +256,10 @@ export function ScanToOnboard(): JSX.Element {
           <Flex
             alignContent="center"
             alignItems="center"
-            backgroundColor={colors.white.val}
+            backgroundColor="$surface1"
             borderColor="$surface3"
             borderRadius="$rounded16"
             borderWidth="$spacing1"
-            flexDirection="column"
             my="$spacing24"
             p="$spacing16"
             position="relative"
@@ -223,8 +268,8 @@ export function ScanToOnboard(): JSX.Element {
             shadowRadius="$spacing4"
           >
             {errorDerivingQR ? (
-              <Flex height={QR_CODE_SIZE} width={QR_CODE_SIZE}>
-                <Text color="$statusCritical" m="auto" textAlign="center" variant="body2">
+              <Flex px="$spacing16" height={QR_CODE_SIZE} width={QR_CODE_SIZE}>
+                <Text color="$neutral2" m="auto" textAlign="center" variant="body3">
                   {t('onboarding.scan.error')}
                 </Text>
               </Flex>

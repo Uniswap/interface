@@ -61,7 +61,7 @@ export function UnitagIntroScreen(): JSX.Element {
 
 function UnitagIntroPill({ Icon, text }: { Icon: GeneratedIcon; text: string }): JSX.Element {
   return (
-    <Flex row gap="$spacing8" p="$spacing12" borderWidth={1} borderColor="$surface3" borderRadius="$rounded16">
+    <Flex row gap="$spacing8" p="$spacing12" borderWidth="$spacing1" borderColor="$surface3" borderRadius="$rounded16">
       <Icon color="$accent1" size="$icon.24" />
       <Text color="$neutral2" variant="body1">
         {text}

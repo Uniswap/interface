@@ -20,6 +20,7 @@ export const createImportedAccounts = async (
     derivationIndex: index,
     mnemonicId,
     backups: backupType ? [backupType] : undefined,
+    pushNotificationsEnabled: true,
   }))
   return importedAccounts
 }

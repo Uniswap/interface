@@ -563,8 +563,9 @@ function SwapFormContent({
   const isBlockedTokens =
     getTokenWarningSeverity(currencies.input) === WarningSeverity.Blocked ||
     getTokenWarningSeverity(currencies.output) === WarningSeverity.Blocked
+
   // We *always* want to show the footer on native mobile because it's used to calculate the available space for the `DecimalPad`.
-  const showFooter = Boolean(!hideFooter && (isMobileApp || (!isBlockedTokens && input && output)))
+  const showFooter = Boolean(!hideFooter && (isMobileApp || (!isBlockedTokens && input && output && exactAmountToken)))
 
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
@@ -575,7 +576,7 @@ function SwapFormContent({
             borderColor={focusOnCurrencyField === CurrencyField.INPUT ? '$surface3' : '$transparent'}
             borderRadius="$rounded20"
             backgroundColor={focusOnCurrencyField === CurrencyField.INPUT ? '$surface1' : '$surface2'}
-            borderWidth={1}
+            borderWidth="$spacing1"
             overflow="hidden"
             pb={currencies[CurrencyField.INPUT] ? '$spacing4' : '$none'}
             hoverStyle={hoverStyles.input}
@@ -613,7 +614,7 @@ function SwapFormContent({
         <Trace section={SectionName.CurrencyOutputPanel}>
           <Flex
             borderRadius="$rounded20"
-            borderWidth={1}
+            borderWidth="$spacing1"
             borderColor={focusOnCurrencyField === CurrencyField.OUTPUT ? '$surface3' : '$transparent'}
             backgroundColor={focusOnCurrencyField === CurrencyField.OUTPUT ? '$surface1' : '$surface2'}
             pt={currencies[CurrencyField.OUTPUT] ? '$spacing4' : '$none'}

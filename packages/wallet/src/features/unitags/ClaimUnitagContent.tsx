@@ -301,7 +301,7 @@ export function ClaimUnitagContent({
                   blurOnSubmit={!isExtension}
                   autoCapitalize="none"
                   autoCorrect={false}
-                  borderWidth={0}
+                  borderWidth="$none"
                   borderRadius={isExtension ? 0 : undefined}
                   fontFamily="$heading"
                   fontSize={isExtension ? fonts.subheading1.fontSize : fontSize}

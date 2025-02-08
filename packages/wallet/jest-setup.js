@@ -16,13 +16,6 @@ jest.mock('uniswap/src/features/gas/hooks', () => ({
   useShadowGasStrategies: jest.fn().mockReturnValue([]),
 }))
 
-
-jest.mock('react-native-safe-area-context', () => ({
-  useSafeAreaInsets: jest.fn().mockImplementation(() => ({})),
-  useSafeAreaFrame: jest.fn().mockImplementation(() => ({})),
-  SafeAreaProvider: jest.fn(({ children }) => children),
-}))
-
 // Use web unicon
 jest.mock('ui/src/components/Unicon', () => {
   return jest.requireActual('ui/src/components/Unicon/index.web.tsx')

@@ -1,14 +1,14 @@
-import { BarCodeScanner } from 'expo-barcode-scanner'
-import { AutoFocus, BarCodeScanningResult, Camera, CameraType } from 'expo-camera'
-import { PermissionStatus } from 'expo-modules-core'
+import { PermissionStatus, scanFromURLAsync } from 'expo-barcode-scanner'
+import { BarCodeScanningResult, CameraType } from 'expo-camera'
+import { CameraProps, CameraView, useCameraPermissions } from 'expo-camera/next'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, LayoutChangeEvent, LayoutRectangle, StyleSheet } from 'react-native'
+import DeviceInfo from 'react-native-device-info'
 import { launchImageLibrary } from 'react-native-image-picker'
-
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Defs, LinearGradient, Path, Rect, Stop, Svg } from 'react-native-svg'
-import { DeprecatedButton, Flex, SpinningLoader, Text, ThemeName, TouchableArea, useSporeColors } from 'ui/src'
+import { DeprecatedButton, Flex, SpinningLoader, Text, ThemeName, useSporeColors } from 'ui/src'
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
 import { Global, PhotoStacked } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
@@ -16,8 +16,12 @@ import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { useSporeColorsForTheme } from 'ui/src/hooks/useSporeColors'
 import { iconSizes, spacing } from 'ui/src/theme'
 import PasteButton from 'uniswap/src/components/buttons/PasteButton'
-import { DevelopmentOnly } from 'wallet/src/components/DevelopmentOnly/DevelopmentOnly'
+import { logger } from 'utilities/src/logger/logger'
 import { openSettings } from 'wallet/src/utils/linking'
+
+enum BarcodeType {
+  QR = 'qr',
+}
 
 type QRCodeScannerProps = {
   onScanCode: (data: string) => void
@@ -48,17 +52,14 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
 
   const dimensions = useDeviceDimensions()
 
-  const [permissionResponse, requestPermissionResponse] = Camera.useCameraPermissions()
-  const permissionStatus = permissionResponse?.status
-
-  const [autoFocus, setAutoFocus] = useState(AutoFocus.off)
+  const [permission, requestPermission] = useCameraPermissions()
 
   const [isReadingImageFile, setIsReadingImageFile] = useState(false)
   const [overlayLayout, setOverlayLayout] = useState<LayoutRectangle | null>()
   const [infoLayout, setInfoLayout] = useState<LayoutRectangle | null>()
   const [bottomLayout, setBottomLayout] = useState<LayoutRectangle | null>()
 
-  const handleBarCodeScanned = useCallback(
+  const handleBarcodeScanned = useCallback(
     (result: BarCodeScanningResult): void => {
       if (shouldFreezeCamera) {
         return
@@ -89,7 +90,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
       return
     }
 
-    const result = (await BarCodeScanner.scanFromURLAsync(uri, [BarCodeScanner.Constants.BarCodeType.qr]))[0]
+    const result = (await scanFromURLAsync(uri, [BarcodeType.QR]))[0]
 
     if (!result) {
       Alert.alert(t('qrScanner.error.none'))
@@ -97,15 +98,16 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
       return
     }
 
-    handleBarCodeScanned(result)
-  }, [handleBarCodeScanned, isReadingImageFile, t])
+    handleBarcodeScanned(result)
+  }, [handleBarcodeScanned, isReadingImageFile, t])
 
   useEffect(() => {
     const handlePermissionStatus = async (): Promise<void> => {
-      const cameraState = await requestPermissionResponse()
-      const latestPermissionStatus = cameraState.status
-
-      if ([PermissionStatus.UNDETERMINED, PermissionStatus.DENIED].includes(latestPermissionStatus)) {
+      if (permission?.granted) {
+        return
+      }
+      const { status } = await requestPermission()
+      if ([PermissionStatus.UNDETERMINED, PermissionStatus.DENIED].includes(status)) {
         Alert.alert(t('qrScanner.error.camera.title'), t('qrScanner.error.camera.message'), [
           { text: t('common.navigation.systemSettings'), onPress: openSettings },
           {
@@ -115,46 +117,36 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
       }
     }
 
-    handlePermissionStatus().catch(() => {})
-  }, [requestPermissionResponse, t])
+    handlePermissionStatus().catch((error) => {
+      logger.error(error, {
+        tags: { file: 'QRCodeScanner.tsx', function: 'handlePermissionStatus' },
+      })
+    })
+  }, [permission?.granted, t, requestPermission])
 
   const overlayWidth = (overlayLayout?.height ?? 0) / CAMERA_ASPECT_RATIO
   const cameraWidth = dimensions.fullWidth
   const cameraHeight = CAMERA_ASPECT_RATIO * cameraWidth
   const scannerSize = Math.min(overlayWidth, cameraWidth) * SCAN_ICON_WIDTH_RATIO
 
-  /**
-   * Resets the camera auto focus to force the camera to refocus by toggling
-   * the auto focus off and on. This allows us to manually let the user refocus
-   * the camera since the expo-camera package does not currently support this.
-   * The refocus is done by toggling expo-camera's Camera's autoFocus prop. Since
-   * RN state is batched, we need to debounce the toggle.
-   */
-  function resetCameraAutoFocus(): () => void {
-    const ARBITRARY_DELAY = 100
-    const abortController = new AbortController()
-    setAutoFocus(AutoFocus.off)
-    setTimeout(() => {
-      if (!abortController.signal.aborted) {
-        setAutoFocus(AutoFocus.on)
-      }
-    }, ARBITRARY_DELAY)
-    return () => abortController.abort()
+  const disableMicPrompt: CameraProps = {
+    mute: true,
+    mode: 'picture',
   }
 
   return (
     <AnimatedFlex grow theme={theme} borderRadius="$rounded12" entering={FadeIn} exiting={FadeOut} overflow="hidden">
       <Flex justifyContent="center" style={StyleSheet.absoluteFill}>
         <Flex height={cameraHeight} overflow="hidden" width={cameraWidth}>
-          {permissionStatus === PermissionStatus.GRANTED && !isReadingImageFile && (
-            <Camera
-              barCodeScannerSettings={{
-                barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
+          {permission?.granted && !isReadingImageFile && (
+            <CameraView
+              {...disableMicPrompt}
+              barcodeScannerSettings={{
+                barcodeTypes: [BarcodeType.QR],
               }}
+              facing={CameraType.back}
               style={StyleSheet.absoluteFillObject}
-              type={CameraType.back}
-              autoFocus={autoFocus}
-              onBarCodeScanned={handleBarCodeScanned}
+              onBarcodeScanned={handleBarcodeScanned}
             />
           )}
         </Flex>
@@ -189,10 +181,8 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             </Text>
           </Flex>
           {!shouldFreezeCamera ? (
-            <TouchableArea onPress={resetCameraAutoFocus}>
-              {/* camera isn't frozen (after seeing barcode) — show the camera scan icon (the four white corners) */}
-              <CameraScan color={colors.white.val} height={scannerSize} strokeWidth={5} width={scannerSize} />
-            </TouchableArea>
+            // camera isn't frozen (after seeing barcode) — show the camera scan icon (the four white corners)
+            <CameraScan color={colors.white.val} height={scannerSize} strokeWidth={5} width={scannerSize} />
           ) : (
             // camera has been frozen (has seen a barcode) — show the loading spinner and "Connecting..." or "Loading..."
             <Flex height={scannerSize} width={scannerSize}>
@@ -211,27 +201,23 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
               </Flex>
             </Flex>
           )}
-          <DevelopmentOnly>
-            {/* when in development mode AND there's no camera (using iOS Simulator), add a paste button */}
-            {!shouldFreezeCamera ? (
-              <Flex centered height={scannerSize} style={[StyleSheet.absoluteFill]} width={scannerSize}>
-                <Flex
-                  backgroundColor="$surface2"
-                  borderRadius="$rounded16"
-                  gap="$spacing24"
-                  m="$spacing12"
-                  opacity={0.6}
-                  p="$spacing12"
-                >
-                  <Text color="$neutral1" textAlign="center" variant="body1">
-                    This paste button will only show up in development mode
-                  </Text>
-                  <PasteButton onPress={onScanCode} />
-                </Flex>
+          {DeviceInfo.isEmulatorSync() && !shouldFreezeCamera && (
+            <Flex centered height={scannerSize} style={[StyleSheet.absoluteFill]} width={scannerSize}>
+              <Flex
+                backgroundColor="$surface2"
+                borderRadius="$rounded16"
+                gap="$spacing24"
+                m="$spacing12"
+                opacity={0.6}
+                p="$spacing12"
+              >
+                <Text color="$neutral1" textAlign="center" variant="body1">
+                  This paste button will only show up in development mode
+                </Text>
+                <PasteButton onPress={onScanCode} />
               </Flex>
-            ) : null}
-          </DevelopmentOnly>
-
+            </Flex>
+          )}
           <Flex
             alignItems="center"
             bottom={0}

@@ -1,6 +1,6 @@
 import providers from '@ethersproject/providers'
 import { ONE, Protocol } from '@uniswap/router-sdk'
-import { Fraction, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
 import { NullablePermit, Permit } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -98,6 +98,44 @@ export function requireAcceptNewTrade(oldTrade: Maybe<Trade>, newTrade: Maybe<Tr
     !oldTrade.outputAmount.currency.equals(newTrade.outputAmount.currency) ||
     !isExecutionPriceWithinThreshold
   )
+}
+
+/**
+ * Calculate Rate Line: The rate is line is calculate by using the output token's USD price
+ * Caculate input rate amount:
+ *  ( output USD amount / input coin ratio ) * the output coin ratio
+ *
+ * Caculate output rate line:
+ * ( input rate amount / input coin ratio )
+ *
+ * Example:
+ * Swap: 1.50 ETH = 367.351 UNI
+ * ETH USD Price: $4,839.93, UNI USD Price: $4,755.47
+ * Corrected Rate Calculation:
+ * 1 UNI USD Rate = 4,755.47 / 367.351 = 12.94 USD
+ * 1 ETH USD Rate = (4,755.47 / 367.351) * 244.9 = 3,170 USD
+ */
+export const calculateRateLine = (
+  usdAmountOut: CurrencyAmount<Currency> | null,
+  outputCurrencyAmount: Maybe<CurrencyAmount<Currency>>,
+  trade: Trade | IndicativeTrade | undefined | null,
+  showInverseRate: boolean,
+  formatter: LocalizationContextState,
+): string => {
+  const isValidAmounts = usdAmountOut && outputCurrencyAmount
+
+  const outputRateAmount = isValidAmounts
+    ? parseFloat(usdAmountOut.toSignificant()) / parseFloat(outputCurrencyAmount.toSignificant())
+    : null
+
+  const inputRateAmount =
+    outputRateAmount && trade ? outputRateAmount * parseFloat(trade.executionPrice.toSignificant()) : null
+
+  const rateToDisplay = showInverseRate ? outputRateAmount : inputRateAmount
+
+  const latestFiatPriceFormatted = formatter.convertFiatAmountFormatted(rateToDisplay, NumberType.FiatTokenPrice)
+
+  return latestFiatPriceFormatted
 }
 
 export const getRateToDisplay = (

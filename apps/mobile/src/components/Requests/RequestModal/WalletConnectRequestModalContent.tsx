@@ -90,7 +90,7 @@ export function WalletConnectRequestModalContent({
     <>
       <ClientDetails permitInfo={permitInfo} request={request} />
       <Flex pt="$spacing8">
-        <Flex backgroundColor="$surface2" borderColor="$surface3" borderRadius="$rounded16" borderWidth={1}>
+        <Flex backgroundColor="$surface2" borderColor="$surface3" borderRadius="$rounded16" borderWidth="$spacing1">
           {!permitInfo && (
             <SectionContainer style={requestMessageStyle}>
               <RequestDetails request={request} />

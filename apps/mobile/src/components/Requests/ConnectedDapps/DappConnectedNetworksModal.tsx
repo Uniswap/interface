@@ -74,7 +74,14 @@ export function DappConnectedNetworkModal({ session, onClose }: DappConnectedNet
           </Text>
         </Flex>
         <Flex row>
-          <Flex grow borderColor="$surface3" borderRadius="$rounded12" borderWidth={1} gap="$spacing16" p="$spacing16">
+          <Flex
+            grow
+            borderColor="$surface3"
+            borderRadius="$rounded12"
+            borderWidth="$spacing1"
+            gap="$spacing16"
+            p="$spacing16"
+          >
             {session.chains.map((chainId) => (
               <Flex key={chainId} row alignItems="center" justifyContent="space-between">
                 <NetworkLogo chainId={chainId} size={iconSizes.icon24} />

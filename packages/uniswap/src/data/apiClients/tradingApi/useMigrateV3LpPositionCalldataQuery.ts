@@ -15,10 +15,9 @@ export function useMigrateV3LpPositionCalldataQuery({
 
   return useQuery<MigrateLPPositionResponse>({
     queryKey,
-    enabled: !!params,
     queryFn: async () => {
       if (!params) {
-        throw new Error('Params are required')
+        throw { name: 'Params are required' }
       }
       return await migrateLpPosition(params)
     },

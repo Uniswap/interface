@@ -251,7 +251,7 @@ export type FiatOnRampCurrency = {
 export interface FiatOffRampMetaData {
   name: string
   logoUrl: string
-  onSubmitCallback: () => void
+  onSubmitCallback: (amountUSD?: number) => void
   meldCurrencyCode?: string
   moonpayCurrencyCode?: string
 }

@@ -85,7 +85,10 @@ function* dappRequestApproval({
   if (!senderTabId) {
     throw new Error('senderTabId is required')
   }
-  if (!requestId) {
+
+  if (requestId === false) {
+    // Check explicitly for false, since empty requestId string is also falsy.
+    // In the latter case, we need to proceed to remove the request from queue.
     throw new Error('requestId is required')
   }
 

@@ -9,6 +9,7 @@ import {
   mergeFeeTiers,
 } from 'components/Liquidity/utils'
 import { PriceOrdering, getPriceOrderingFromPositionForUI } from 'components/PositionListItem'
+import { ZERO_ADDRESS } from 'constants/misc'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import JSBI from 'jsbi'
 import { OptionalCurrency } from 'pages/Pool/Positions/create/types'
@@ -31,10 +32,12 @@ export function useAllFeeTierPoolData({
   protocolVersion,
   currencies,
   withDynamicFeeTier = false,
+  hook,
 }: {
   chainId?: number
   protocolVersion: ProtocolVersion
   currencies: [OptionalCurrency, OptionalCurrency]
+  hook: string
   withDynamicFeeTier?: boolean
 }): { feeTierData: Record<number, FeeTierData>; hasExistingFeeTiers: boolean } {
   const { t } = useTranslation()
@@ -47,6 +50,7 @@ export function useAllFeeTierPoolData({
       protocolVersions: [protocolVersion],
       token0: getCurrencyAddressForTradingApi(sortedCurrencies[0]),
       token1: getCurrencyAddressForTradingApi(sortedCurrencies[1]),
+      hooks: hook ?? ZERO_ADDRESS,
     },
     Boolean(chainId && sortedCurrencies?.[0] && sortedCurrencies?.[1]),
   )
@@ -89,14 +93,18 @@ export function useAllFeeTierPoolData({
       feeTierData: mergeFeeTiers(
         feeTierData,
         Object.values(
-          getDefaultFeeTiersForChainWithDynamicFeeTier({ chainId, dynamicFeeTierEnabled: withDynamicFeeTier }),
+          getDefaultFeeTiersForChainWithDynamicFeeTier({
+            chainId,
+            dynamicFeeTierEnabled: withDynamicFeeTier,
+            protocolVersion,
+          }),
         ),
         formatPercent,
         t('fee.dynamic'),
       ),
       hasExistingFeeTiers: Object.values(feeTierData).length > 0,
     }
-  }, [poolData, sortedCurrencies, chainId, withDynamicFeeTier, formatPercent, t])
+  }, [poolData, sortedCurrencies, chainId, withDynamicFeeTier, formatPercent, protocolVersion, t])
 }
 
 /**

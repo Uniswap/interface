@@ -11,6 +11,7 @@ import { Flex, Text, useIsDarkMode } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useLocalFiatToUSDConverter } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FiatOnRampConnectingView } from 'uniswap/src/features/fiatOnRamp/FiatOnRampConnectingView'
 import {
   useFiatOnRampAggregatorOffRampWidgetQuery,
@@ -43,6 +44,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
   const { addFiatSymbolToNumber } = useLocalizationContext()
   const [timeoutElapsed, setTimeoutElapsed] = useState(false)
   const activeAccountAddress = useActiveAccountAddressWithThrow()
+  const fiatToUSDConverter = useLocalFiatToUSDConverter()
 
   const {
     isOffRamp,
@@ -133,6 +135,9 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
             countryState,
             fiatCurrency: baseCurrencyInfo?.code.toLowerCase(),
             cryptoCurrency: quoteCurrency.meldCurrencyCode.toLowerCase(),
+            chainId: quoteCurrency.currencyInfo?.currency.chainId,
+            currencyAmount: tokenAmount,
+            amountUSD: fiatToUSDConverter(fiatAmount ?? 0),
           },
         )
       }
@@ -168,6 +173,10 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     countryCode,
     countryState,
     isOffRamp,
+    fiatAmount,
+    fiatToUSDConverter,
+    tokenAmount,
+    quoteCurrency,
   ])
 
   const isDarkMode = useIsDarkMode()

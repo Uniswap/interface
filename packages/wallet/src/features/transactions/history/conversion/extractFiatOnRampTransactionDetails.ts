@@ -88,7 +88,7 @@ export function extractFORTransactionDetails(
       routing: Routing.CLASSIC,
       id: transaction.externalSessionId,
       chainId,
-      hash: transaction.cryptoDetails.blockchainTransactionId || '',
+      hash: isOffRamp ? '' : transaction.cryptoDetails.blockchainTransactionId || '', // Don't merge offramp transactions
       addedTime: new Date(transaction.createdAt).getTime(),
       status: statusToTransactionInfoStatus(transaction.status),
       from: isOffRamp ? activeAccountAddress : transaction.cryptoDetails.walletAddress,

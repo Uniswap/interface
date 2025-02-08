@@ -7,6 +7,7 @@
  * * mocks can be overridden
  */
 
+import '@shopify/react-native-skia/jestSetup'
 import mockRNLocalize from 'react-native-localize/mock'
 import { mockLocalizationContext } from 'uniswap/src/test/mocks/locale'
 import { mockSharedPersistQueryClientProvider } from 'uniswap/src/test/mocks/mockSharedPersistQueryClientProvider'

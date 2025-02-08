@@ -82,7 +82,7 @@ export function AIAssistantScreen(): JSX.Element {
               backgroundColor="$surface1"
               borderColor="$surface3"
               borderRadius="$rounded20"
-              borderWidth={1}
+              borderWidth="$spacing1"
               mx="$spacing16"
             >
               <Input

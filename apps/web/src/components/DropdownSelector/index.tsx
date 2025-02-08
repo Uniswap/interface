@@ -14,9 +14,8 @@ import {
   useShadowPropsMedium,
 } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import { zIndices } from 'ui/src/theme'
+import { INTERFACE_NAV_HEIGHT, zIndices } from 'ui/src/theme'
 import { iconSizes } from 'ui/src/theme/iconSizes'
-import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 
 export const InternalMenuItem = styled(Text, {
   display: 'flex',

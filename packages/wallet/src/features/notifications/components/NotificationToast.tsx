@@ -26,6 +26,8 @@ const TOAST_BORDER_WIDTH = spacing.spacing1
 const LARGE_TOAST_RADIUS = borderRadii.rounded24
 const SMALL_TOAST_RADIUS = borderRadii.roundedFull
 
+const MAX_TEXT_LENGTH = 20
+
 export interface NotificationContentProps {
   title: string
   subtitle?: string
@@ -292,7 +294,12 @@ function NotificationContentSmall({
         ) : (
           <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" pr="$spacing4">
             {icon && <Flex>{icon}</Flex>}
-            <Text adjustsFontSizeToFit numberOfLines={1} testID={TestID.NotificationToastTitle} variant="body2">
+            <Text
+              adjustsFontSizeToFit
+              numberOfLines={title.length > MAX_TEXT_LENGTH ? 2 : 1}
+              testID={TestID.NotificationToastTitle}
+              variant={title.length > MAX_TEXT_LENGTH ? 'body3' : 'body2'}
+            >
               {title}
             </Text>
             {postCaptionElement && <Flex>{postCaptionElement}</Flex>}

@@ -16,12 +16,14 @@ const ACCOUNT_1: Account = {
   address: '0x3ec345BA64e6C94430Cc7AC1d833d76E81B1F9eA',
   name: 'Account 1',
   timeImportedMs: TEST_IMPORT_TIME_MS,
+  pushNotificationsEnabled: true,
 }
 const ACCOUNT_2: Account = {
   type: AccountType.Readonly,
   address: '0x318aE69CB61494ca6245Ec4f895bEAAf7dDCb944',
   name: 'Account 2',
   timeImportedMs: TEST_IMPORT_TIME_MS,
+  pushNotificationsEnabled: true,
 }
 
 describe(walletReducer, () => {

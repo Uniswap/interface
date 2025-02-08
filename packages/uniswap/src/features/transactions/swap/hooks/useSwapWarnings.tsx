@@ -98,7 +98,7 @@ export function getSwapWarnings(
   }
 
   if (trade.error) {
-    warnings.push(getSwapWarningFromError(trade.error, t))
+    warnings.push(getSwapWarningFromError(trade.error, t, derivedSwapInfo))
   }
 
   // swap form is missing input, output fields
@@ -265,7 +265,8 @@ export function useParsedSwapWarnings(): ParsedWarnings {
   return useFormattedWarnings(allWarnings)
 }
 
-function getSwapWarningFromError(error: Error, t: TFunction): Warning {
+function getSwapWarningFromError(error: Error, t: TFunction, derivedSwapInfo: DerivedSwapInfo): Warning {
+  const isBridgeTrade = derivedSwapInfo.trade.trade !== null && isBridge(derivedSwapInfo.trade.trade)
   if (error instanceof FetchError) {
     // Special case: rate limit errors are not parsed by errorCode
     if (isRateLimitFetchError(error)) {
@@ -289,6 +290,18 @@ function getSwapWarningFromError(error: Error, t: TFunction): Warning {
           message: undefined,
         }
       }
+
+      // no bridging quotes found warning
+      case Err404.errorCode.RESOURCE_NOT_FOUND && isBridgeTrade: {
+        return {
+          type: WarningLabel.NoQuotesFound,
+          severity: WarningSeverity.Low,
+          action: WarningAction.DisableReview,
+          title: t('swap.warning.noQuotesFound.title'),
+          message: t('swap.warning.noQuotesFound.bridging.message'),
+        }
+      }
+
       case Err404.errorCode.RESOURCE_NOT_FOUND: {
         return {
           type: WarningLabel.NoRoutesError,

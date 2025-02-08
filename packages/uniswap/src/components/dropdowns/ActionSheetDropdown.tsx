@@ -341,7 +341,7 @@ function DropdownContent({
         animation="fast"
         backgroundColor="$surface1"
         borderColor="$surface3"
-        borderWidth={1}
+        borderWidth="$spacing1"
         enterStyle={{ y: -20, opacity: 0 }}
         exitStyle={{ y: -10, opacity: 0 }}
         overflow="hidden"

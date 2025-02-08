@@ -282,7 +282,7 @@ export function WalletConnectModal({
           <TouchableArea
             borderColor={isDarkMode ? '$transparent' : '$surface3'}
             borderRadius="$roundedFull"
-            borderWidth={1}
+            borderWidth="$spacing1"
             p="$spacing16"
             paddingEnd="$spacing24"
             backgroundColor={colors.DEP_backgroundOverlay.val}

@@ -12,6 +12,7 @@ import {
   deleteDefaultFavoritesFromFavoritesState,
   deleteExtensionOnboardingState,
   deleteHoldToSwapBehaviorHistory,
+  deleteWelcomeWalletCardBehaviorHistory,
   moveCurrencySetting,
   moveDismissedTokenWarnings,
   moveLanguageSetting,
@@ -44,6 +45,7 @@ export const migrations = {
   16: updateExploreOrderByType,
   17: removeCreatedOnboardingRedesignAccountBehaviorHistory,
   18: unchecksumDismissedTokenWarningKeys,
+  19: deleteWelcomeWalletCardBehaviorHistory,
 }
 
-export const EXTENSION_STATE_VERSION = 18
+export const EXTENSION_STATE_VERSION = 19

@@ -65,7 +65,7 @@ const noRestrictedImports = [
   {
     name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',
     importNames: ['useAccountListQuery'],
-    message: 'Use `useAccountList` instead.',
+    message: 'Use `useAccountListData` instead.',
   },
   {
     name: '@gorhom/bottom-sheet',

@@ -14,6 +14,7 @@ export interface TransactionState {
   isMax?: boolean
   exactAmountFiat?: string
   focusOnCurrencyField?: CurrencyField | null
+  skipFocusOnCurrencyField?: boolean
   recipient?: string
   isFiatInput?: boolean
   selectingCurrencyField?: CurrencyField
