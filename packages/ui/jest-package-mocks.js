@@ -7,6 +7,12 @@
  * * mocks can be overridden
  */
 
+jest.mock('react-native-safe-area-context', () => ({
+  useSafeAreaInsets: jest.fn().mockImplementation(() => ({})),
+  useSafeAreaFrame: jest.fn().mockImplementation(() => ({})),
+  SafeAreaProvider: jest.fn(({ children }) => children),
+}))
+
 jest.mock('ui/src/assets', () => {
   const assets = {
     ...jest.requireActual('ui/src/assets'),

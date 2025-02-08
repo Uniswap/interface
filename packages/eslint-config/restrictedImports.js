@@ -22,7 +22,7 @@ exports.shared = {
       name: 'uniswap/src/features/dataApi/balances',
       importNames: ['usePortfolioValueModifiers'],
       message:
-        'Use the wrapper hooks `usePortfolioTotalValue`, `useAccountList` or `usePortfolioBalances` instead of `usePortfolioValueModifiers` directly.',
+        'Use the wrapper hooks `usePortfolioTotalValue`, `useAccountListData` or `usePortfolioBalances` instead of `usePortfolioValueModifiers` directly.',
     },
     {
       name: 'i18next',

@@ -45,7 +45,7 @@ export function TickTooltip({
       right={contentWidth + axisLabelPaneWidth + 8}
       borderRadius="$rounded12"
       borderColor="$surface3"
-      borderWidth={1}
+      borderWidth="$spacing1"
       backgroundColor="$surface2"
       pointerEvents="none"
     >

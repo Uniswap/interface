@@ -74,6 +74,8 @@ const TokenPrice = memo(function _TokenPrice(): JSX.Element {
   )
 })
 
+const EXCLUDED_ACTIONS = [TokenMenuActionType.Swap, TokenMenuActionType.Send, TokenMenuActionType.Receive]
+
 export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Element {
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
@@ -88,12 +90,10 @@ export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Elemen
   const safetyLevel = project?.safetyLevel
   const isBlocked = safetyLevel === SafetyLevel.Blocked || currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
 
-  const excludedActions = [TokenMenuActionType.Swap, TokenMenuActionType.Send, TokenMenuActionType.Receive]
-
   const { menuActions, onContextMenuPress } = useTokenContextMenu({
     currencyId,
     isBlocked,
-    excludedActions,
+    excludedActions: EXCLUDED_ACTIONS,
     tokenSymbolForNotification: token?.symbol,
     portfolioBalance: currentChainBalance,
   })

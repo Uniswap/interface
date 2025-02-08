@@ -26,6 +26,7 @@ const iconSize = {
   28: iconSizes.icon28,
   36: iconSizes.icon36,
   40: iconSizes.icon40,
+  48: iconSizes.icon48,
   64: iconSizes.icon64,
   70: iconSizes.icon70,
   100: iconSizes.icon100,

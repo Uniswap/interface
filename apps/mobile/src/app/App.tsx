@@ -11,6 +11,7 @@ import appsFlyer from 'react-native-appsflyer'
 import DeviceInfo from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MMKV } from 'react-native-mmkv'
+import OneSignal from 'react-native-onesignal'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableFreeze } from 'react-native-screens'
 import { useDispatch, useSelector } from 'react-redux'
@@ -29,8 +30,9 @@ import { LockScreenContextProvider } from 'src/features/authentication/lockScree
 import { BiometricContextProvider } from 'src/features/biometrics/context'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
-import { AIAssistantScreen } from 'src/features/openai/AIAssistantScreen'
-import { OpenAIContextProvider } from 'src/features/openai/OpenAIContext'
+import { OneSignalUserTagField } from 'src/features/notifications/constants'
+import { DevAIAssistantScreen } from 'src/features/openai/DevAIAssistantScreen'
+import { DevOpenAIProvider } from 'src/features/openai/DevOpenAIProvider'
 import { shouldLogScreen } from 'src/features/telemetry/directLogScreens'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import {
@@ -55,7 +57,7 @@ import {
 import { DUMMY_STATSIG_SDK_KEY, StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
-import { getDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { getDynamicConfigValue, getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { loadStatsigOverrides } from 'uniswap/src/features/gating/overrides/customPersistedOverrides'
 import { Statsig, StatsigOptions, StatsigProvider, StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
@@ -74,6 +76,7 @@ import { attachUnhandledRejectionHandler, setAttributesToDatadog } from 'utiliti
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { DDRumAction, DDRumTiming } from 'utilities/src/logger/datadogEvents'
 import { logger } from 'utilities/src/logger/logger'
+import { isIOS } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
@@ -250,6 +253,17 @@ function AppOuter(): JSX.Element | null {
         Statsig.getExperimentWithExposureLoggingDisabled(experiment).getGroupName(),
       ).catch(() => undefined)
     }
+
+    // Used in case we aren't able to resolve notification filtering issues on iOS
+    if (isIOS) {
+      const notificationsPriceAlertsEnabled = getFeatureFlag(FeatureFlags.NotificationPriceAlerts)
+      const notificationsUnfundedWalletEnabled = getFeatureFlag(FeatureFlags.NotificationUnfundedWallets)
+
+      OneSignal.sendTags({
+        [OneSignalUserTagField.GatingPriceAlertsEnabled]: notificationsPriceAlertsEnabled ? 'true' : 'false',
+        [OneSignalUserTagField.GatingUnfundedWalletsEnabled]: notificationsUnfundedWalletEnabled ? 'true' : 'false',
+      })
+    }
   }, [])
 
   if (!client) {
@@ -270,7 +284,7 @@ function AppOuter(): JSX.Element | null {
                         <DataUpdaters />
                         <NavigationContainer>
                           <MobileWalletNavigationProvider>
-                            <OpenAIContextProvider>
+                            <DevOpenAIProvider>
                               <WalletUniswapProvider>
                                 <BottomSheetModalProvider>
                                   <AppModals />
@@ -280,7 +294,7 @@ function AppOuter(): JSX.Element | null {
                                 </BottomSheetModalProvider>
                               </WalletUniswapProvider>
                               <NotificationToastWrapper />
-                            </OpenAIContextProvider>
+                            </DevOpenAIProvider>
                           </MobileWalletNavigationProvider>
                         </NavigationContainer>
                       </LockScreenContextProvider>
@@ -331,11 +345,9 @@ function AppInner(): JSX.Element {
     NativeModules.ThemeModule.setColorScheme(themeSetting)
   }, [themeSetting])
 
-  const openAIAssistantEnabled = useFeatureFlag(FeatureFlags.OpenAIAssistant)
-
   return (
     <>
-      {openAIAssistantEnabled && <AIAssistantScreen />}
+      <DevAIAssistantScreen />
       <OfflineBanner />
       <TestnetModeBanner />
       <AppStackNavigator />

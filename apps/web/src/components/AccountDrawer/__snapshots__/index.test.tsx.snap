@@ -774,7 +774,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                         <svg
                           fill="none"
                           stroke-width="8"
-                          style="color: rgb(252, 114, 255); width: 40px; height: 40px; min-width: 40px; background-color: rgb(254, 244, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px;"
+                          style="width: 40px; height: 40px; min-width: 40px; background-color: rgb(254, 244, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px; color: rgb(252, 114, 255);"
                           viewBox="0 0 22 22"
                         >
                           <path

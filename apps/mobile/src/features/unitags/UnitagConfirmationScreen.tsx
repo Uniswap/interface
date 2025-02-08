@@ -82,7 +82,7 @@ export function UnitagConfirmationScreen({
                 aspectRatio={1}
                 borderColor="$surface3"
                 borderRadius="$roundedFull"
-                borderWidth={1}
+                borderWidth="$spacing1"
                 height={boxWidth}
               />
             </AnimateInOrder>
@@ -97,7 +97,7 @@ export function UnitagConfirmationScreen({
                 aspectRatio={1}
                 borderColor="$surface3"
                 borderRadius="$roundedFull"
-                borderWidth={1}
+                borderWidth="$spacing1"
                 height={boxWidth * 0.6}
               />
             </AnimateInOrder>

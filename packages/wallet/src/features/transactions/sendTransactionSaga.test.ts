@@ -193,6 +193,7 @@ describe(sendTransaction, () => {
       address: '0xabc',
       name: 'readonly',
       timeImportedMs: dayjs().valueOf(),
+      pushNotificationsEnabled: true,
     }
     const params = {
       ...sendParams,

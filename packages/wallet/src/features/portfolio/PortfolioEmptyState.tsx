@@ -147,7 +147,7 @@ function ServiceProviderLogo({ uri }: { uri: string }): JSX.Element {
       animation="quick"
       backgroundColor="$surface1"
       borderColor="$surface1"
-      borderWidth={2}
+      borderWidth="$spacing2"
       enterStyle={{ opacity: 0 }}
       exitStyle={{ opacity: 0 }}
       style={styles.iconContainer}

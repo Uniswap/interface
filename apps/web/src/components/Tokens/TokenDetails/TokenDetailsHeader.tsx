@@ -5,7 +5,6 @@ import { Globe } from 'components/Icons/Globe'
 import { Share as ShareIcon } from 'components/Icons/Share'
 import { TwitterXLogo } from 'components/Icons/TwitterX'
 import ShareButton, { openShareTweetWindow } from 'components/Tokens/TokenDetails/ShareButton'
-import { TokenNameCell } from 'components/Tokens/TokenDetails/Skeleton'
 import { ActionButtonStyle } from 'components/Tokens/TokenDetails/shared'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import useCopyClipboard from 'hooks/useCopyClipboard'
@@ -15,12 +14,18 @@ import { Link, MoreHorizontal } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
 import { EllipsisTamaguiStyle } from 'theme/components'
-import { Flex, Text, WebBottomSheet, useMedia, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, WebBottomSheet, useMedia, useSporeColors } from 'ui/src'
 import { Check } from 'ui/src/components/icons/Check'
 import { iconSizes } from 'ui/src/theme'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { isMobileWeb } from 'utilities/src/platform'
+
+type HeaderAction = {
+  title: string
+  icon: React.ReactNode
+  onPress: () => void
+  show: boolean
+}
 
 export const TokenDetailsHeader = () => {
   const { address, currency, tokenQuery } = useTDPContext()
@@ -44,7 +49,7 @@ export const TokenDetailsHeader = () => {
   const twitterUrl = twitterName && `https://x.com/${twitterName}`
 
   const [searchParams] = useSearchParams()
-  const utmTag = `${searchParams.size > 0 ? '&' : '?'}utm_source=share-tdp&utm_medium=${isMobileWeb ? 'mobile' : 'web'}`
+  const utmTag = `${searchParams.size > 0 ? '&' : '?'}utm_source=share-tdp&utm_medium=${isMobileScreen ? 'mobile' : 'web'}`
   const currentLocation = window.location.href + utmTag
 
   const twitterShareName =
@@ -54,7 +59,7 @@ export const TokenDetailsHeader = () => {
 
   const [isCopied, setCopied] = useCopyClipboard()
 
-  const HeaderActions = useMemo(() => {
+  const HeaderActions: HeaderAction[] = useMemo(() => {
     return [
       {
         title: t('common.explorer'),
@@ -97,24 +102,35 @@ export const TokenDetailsHeader = () => {
       },
     ]
   }, [
+    t,
+    currency.chainId,
+    colors.neutral1.val,
+    colors.statusSuccess.val,
     explorerUrl,
     homepageUrl,
     twitterUrl,
-    currency.chainId,
-    colors,
-    t,
     isCopied,
+    isMobileScreen,
     setCopied,
     currentLocation,
-    isMobileScreen,
     twitterShareName,
   ])
 
   return (
-    <>
-      <TokenNameCell>
+    <Flex
+      row
+      alignItems="center"
+      justifyContent="space-between"
+      width="100%"
+      mb="$spacing20"
+      $sm={{ mb: '$spacing8', alignItems: 'flex-start' }}
+      animation="quick"
+      data-testid="token-info-container"
+      zIndex="$default"
+    >
+      <Flex row alignItems="center" $sm={{ alignItems: 'flex-start', flexDirection: 'column' }} gap="$gap12">
         <PortfolioLogo currencies={[currency]} chainId={currency.chainId} size={32} />
-        <Flex row gap="$gap8" alignItems="center" overflow="hidden">
+        <Flex row gap="$gap8" alignItems="center">
           <Text variant="heading3" minWidth={40} {...EllipsisTamaguiStyle}>
             {currency.name ?? t('tdp.nameNotFound')}
           </Text>
@@ -122,56 +138,85 @@ export const TokenDetailsHeader = () => {
             {tokenSymbolName}
           </Text>
         </Flex>
-      </TokenNameCell>
+      </Flex>
       {isMobileScreen ? (
-        <Flex>
-          <Text onPress={() => toggleMobileSheet(true)} {...ActionButtonStyle}>
-            <MoreHorizontal size={iconSizes.icon20} color={colors.neutral2.val} />
-          </Text>
-          <WebBottomSheet isOpen={isMobileScreen && mobileSheetOpen} onClose={() => toggleMobileSheet(false)}>
-            <Flex gap="$spacing8" mb="$spacing16">
-              {HeaderActions.map(
-                (action) =>
-                  action.show && (
-                    <Flex
-                      row
-                      key={action.title}
-                      width="100%"
-                      gap="$spacing12"
-                      px="$spacing8"
-                      py={10}
-                      alignItems="center"
-                      hoverStyle={{ backgroundColor: '$surface3' }}
-                      cursor="pointer"
-                      borderRadius="$rounded8"
-                      onPress={() => {
-                        toggleMobileSheet(false)
-                        action.onPress()
-                      }}
-                    >
-                      {action.icon}
-                      <Text variant="body2">{action.title}</Text>
-                    </Flex>
-                  ),
-              )}
-            </Flex>
-          </WebBottomSheet>
-        </Flex>
+        <MobileTokenActions
+          mobileSheetOpen={mobileSheetOpen}
+          toggleMobileSheet={toggleMobileSheet}
+          HeaderActions={HeaderActions}
+        />
       ) : (
-        <Flex row gap="$gap8" alignItems="center">
+        <DesktopTokenActions HeaderActions={HeaderActions} twitterShareName={twitterShareName} />
+      )}
+    </Flex>
+  )
+}
+
+interface MobileTokenActionsProps {
+  mobileSheetOpen: boolean
+  toggleMobileSheet: (open: boolean) => void
+  HeaderActions: HeaderAction[]
+}
+
+function MobileTokenActions({ mobileSheetOpen, toggleMobileSheet, HeaderActions }: MobileTokenActionsProps) {
+  const colors = useSporeColors()
+
+  return (
+    <Flex>
+      <TouchableArea height={32} onPress={() => toggleMobileSheet(true)} {...ActionButtonStyle}>
+        <MoreHorizontal size={iconSizes.icon20} color={colors.neutral2.val} />
+      </TouchableArea>
+      <WebBottomSheet isOpen={mobileSheetOpen} onClose={() => toggleMobileSheet(false)}>
+        <Flex gap="$spacing8" mb="$spacing16">
           {HeaderActions.map(
             (action) =>
               action.show && (
-                <MouseoverTooltip key={action.title} text={action.title} placement="top" size={TooltipSize.Max}>
-                  <Text onPress={action.onPress} {...ActionButtonStyle}>
-                    {action.icon}
-                  </Text>
-                </MouseoverTooltip>
+                <Flex
+                  row
+                  key={action.title}
+                  width="100%"
+                  gap="$spacing12"
+                  px="$spacing8"
+                  py={10}
+                  alignItems="center"
+                  hoverStyle={{ backgroundColor: '$surface3' }}
+                  cursor="pointer"
+                  borderRadius="$rounded8"
+                  onPress={() => {
+                    toggleMobileSheet(false)
+                    action.onPress()
+                  }}
+                >
+                  {action.icon}
+                  <Text variant="body2">{action.title}</Text>
+                </Flex>
               ),
           )}
-          <ShareButton name={twitterShareName} utmSource="share-tdp" />
         </Flex>
+      </WebBottomSheet>
+    </Flex>
+  )
+}
+
+interface DesktopTokenActionsProps {
+  HeaderActions: HeaderAction[]
+  twitterShareName: string
+}
+
+function DesktopTokenActions({ HeaderActions, twitterShareName }: DesktopTokenActionsProps) {
+  return (
+    <Flex row gap="$gap8" alignItems="center">
+      {HeaderActions.map(
+        (action) =>
+          action.show && (
+            <MouseoverTooltip key={action.title} text={action.title} placement="top" size={TooltipSize.Max}>
+              <Text onPress={action.onPress} {...ActionButtonStyle}>
+                {action.icon}
+              </Text>
+            </MouseoverTooltip>
+          ),
       )}
-    </>
+      <ShareButton name={twitterShareName} utmSource="share-tdp" />
+    </Flex>
   )
 }

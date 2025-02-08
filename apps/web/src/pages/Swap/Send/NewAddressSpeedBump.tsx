@@ -53,7 +53,14 @@ export const NewAddressSpeedBumpModal = ({ onCancel, onConfirm }: { onCancel: ()
       title={<Trans i18nKey="speedBump.newAddress.warning.title" />}
       description={<Trans i18nKey="speedBump.newAddress.warning.description" />}
       body={
-        <Flex centered borderWidth={1} borderColor="$surface3" borderRadius="$rounded20" py="$padding20" width="100%">
+        <Flex
+          centered
+          borderWidth="$spacing1"
+          borderColor="$surface3"
+          borderRadius="$rounded20"
+          py="$padding20"
+          width="100%"
+        >
           <RecipientDisplay recipientData={recipientData} identiconType={identiconType} />
         </Flex>
       }

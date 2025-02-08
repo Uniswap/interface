@@ -30,7 +30,7 @@ export function LockPreviewImage({ height = DEFAULT_PREVIEW_HEIGHT }: { height?:
         backgroundColor="$surface1"
         borderColor="$surface3"
         borderRadius="$rounded12"
-        borderWidth={1}
+        borderWidth="$spacing1"
         height={BOXES_CONTAINER_HEIGHT}
         position="relative"
         pt="$spacing16"
@@ -58,7 +58,7 @@ export function LockPreviewImage({ height = DEFAULT_PREVIEW_HEIGHT }: { height?:
             backgroundColor="$surface1"
             borderColor="$surface3"
             borderRadius="$rounded12"
-            borderWidth={1}
+            borderWidth="$spacing1"
             p="$spacing12"
             top="$spacing24"
           >

@@ -1,11 +1,31 @@
 import { RemoveScroll } from '@tamagui/remove-scroll'
 import { PropsWithChildren, ReactNode, useCallback, useState } from 'react'
 import { Adapt, Dialog, GetProps, Sheet, View, VisuallyHidden, styled, useIsTouchDevice } from 'tamagui'
-import { Flex } from 'ui/src/components/layout'
-import { zIndices } from 'ui/src/theme'
+import { X } from 'ui/src/components/icons'
+import { Flex, FlexProps } from 'ui/src/components/layout'
+import { TouchableArea } from 'ui/src/components/touchable'
+import { useScrollbarStyles } from 'ui/src/styles/ScrollbarStyles'
+import { INTERFACE_NAV_HEIGHT, IconSizeTokens, zIndices } from 'ui/src/theme'
 import { useShadowPropsShort } from 'ui/src/theme/shadows'
+import { isInterface } from 'utilities/src/platform'
 
 export const ADAPTIVE_MODAL_ANIMATION_DURATION = 200
+
+export function ModalCloseIcon({
+  onClose,
+  size = '$icon.24',
+  testId,
+}: {
+  onClose: () => void
+  size?: IconSizeTokens
+  testId?: string
+}): JSX.Element {
+  return (
+    <TouchableArea data-testid={testId} onPress={onClose}>
+      <X size={size} color="$neutral2" hoverColor="$neutral2Hovered" />
+    </TouchableArea>
+  )
+}
 
 export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: ModalProps): JSX.Element {
   const isTouchDevice = useIsTouchDevice()
@@ -30,7 +50,9 @@ export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: Moda
   const sheetHeightStyles: GetProps<typeof View> = {
     flex: 1,
     height: rest.$sm?.['$platform-web']?.height,
-    maxHeight: rest.$sm?.['$platform-web']?.maxHeight ?? '100dvh',
+    maxHeight: isInterface
+      ? `calc(100vh - ${INTERFACE_NAV_HEIGHT}px)`
+      : rest.$sm?.['$platform-web']?.maxHeight ?? '100dvh',
   }
 
   return (
@@ -54,8 +76,8 @@ export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: Moda
           borderWidth="$spacing1"
           px="$spacing8"
           zIndex={zIndices.modal}
-          {...sheetHeightStyles}
           {...sheetOverrideStyles}
+          {...sheetHeightStyles}
         >
           <Sheet.Handle
             justifyContent="center"
@@ -67,9 +89,9 @@ export function WebBottomSheet({ isOpen, onClose, children, gap, ...rest }: Moda
             onMouseDown={() => setHandlePressed(true)}
             onMouseUp={() => setHandlePressed(false)}
           >
-            <Flex backgroundColor="$surface3" height="$spacing4" width="$spacing32" />
+            <Flex backgroundColor="$neutral3" height="$spacing4" width="$spacing32" borderRadius="$roundedFull" />
           </Sheet.Handle>
-          <Flex gap={gap} overflow="scroll" {...sheetHeightStyles}>
+          <Flex gap={gap} $platform-web={{ overflow: 'auto' }} {...sheetHeightStyles}>
             {children}
           </Flex>
         </Sheet.Frame>
@@ -120,6 +142,16 @@ export function AdaptiveWebModal({
   ...rest
 }: ModalProps): JSX.Element {
   const filteredRest = Object.fromEntries(Object.entries(rest).filter(([_, v]) => v !== undefined)) // Filter out undefined properties from rest
+  const scrollbarStyles = useScrollbarStyles()
+  const isTopAligned = alignment === 'top'
+
+  const topAlignedStyles: FlexProps = isTopAligned
+    ? {
+        position: 'absolute',
+        justifyContent: 'flex-start',
+        top: '$spacing16',
+      }
+    : {}
 
   const handleClose = useCallback(
     (open: boolean) => {
@@ -129,8 +161,6 @@ export function AdaptiveWebModal({
     },
     [onClose],
   )
-
-  const isTopAligned = alignment === 'top'
 
   return (
     <Dialog modal open={isOpen} onOpenChange={handleClose}>
@@ -157,30 +187,39 @@ export function AdaptiveWebModal({
       <Dialog.Portal zIndex={zIndices.modal}>
         <Overlay key="overlay" zIndex={zIndices.modalBackdrop} />
 
-        <Dialog.Content
-          key="content"
-          bordered
-          elevate
-          animateOnly={['transform', 'opacity']}
-          animation={isOpen ? 'fastHeavy' : 'fastExitHeavy'}
-          borderColor="$surface3"
-          borderRadius="$rounded16"
-          enterStyle={{ x: 0, y: isTopAligned ? -20 : 20, opacity: 0 }}
-          exitStyle={{ x: 0, y: isTopAligned ? -20 : 10, opacity: 0 }}
-          gap={gap ?? '$spacing4'}
-          m="$spacing16"
+        <Flex
+          grow
           maxHeight="calc(100vh - 32px)"
-          maxWidth={420}
+          borderRadius="$rounded16"
+          justifyContent="center"
           overflow="hidden"
-          px={px ?? p ?? '$spacing24'}
-          py={py ?? p ?? '$spacing16'}
-          style={style}
-          width="calc(100vw - 32px)"
-          zIndex={zIndices.modal}
-          {...filteredRest}
+          {...topAlignedStyles}
         >
-          {children}
-        </Dialog.Content>
+          <Dialog.Content
+            key="content"
+            bordered
+            elevate
+            animateOnly={['transform', 'opacity']}
+            animation={isOpen ? 'fastHeavy' : 'fastExitHeavy'}
+            borderColor="$surface3"
+            borderRadius="$rounded16"
+            enterStyle={{ x: 0, y: isTopAligned ? -20 : 20, opacity: 0 }}
+            exitStyle={{ x: 0, y: isTopAligned ? -20 : 10, opacity: 0 }}
+            gap={gap ?? '$spacing4'}
+            m="$spacing16"
+            maxHeight="calc(100vh - 32px)"
+            maxWidth={420}
+            $platform-web={{ overflow: 'auto' }}
+            px={px ?? p ?? '$spacing24'}
+            py={py ?? p ?? '$spacing16'}
+            style={Object.assign({}, scrollbarStyles, style)}
+            width="calc(100vw - 32px)"
+            zIndex={zIndices.modal}
+            {...filteredRest}
+          >
+            {children}
+          </Dialog.Content>
+        </Flex>
       </Dialog.Portal>
     </Dialog>
   )

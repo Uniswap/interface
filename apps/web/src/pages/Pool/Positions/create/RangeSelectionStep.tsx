@@ -7,6 +7,7 @@ import { BaseQuoteFiatAmount } from 'pages/Pool/Positions/create/BaseQuoteFiatAm
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { PoolOutOfSyncError } from 'pages/Pool/Positions/create/PoolOutOfSyncError'
 import { Container } from 'pages/Pool/Positions/create/shared'
+import { CreatePositionInfo, PriceRangeState } from 'pages/Pool/Positions/create/types'
 import { getInvertedTuple } from 'pages/Pool/Positions/create/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
@@ -112,7 +113,7 @@ const InitialPriceInput = () => {
       >
         <AmountInput
           backgroundColor="$transparent"
-          borderWidth={0}
+          borderWidth="$none"
           borderRadius="$none"
           color="$neutral1"
           fontFamily="$heading"
@@ -226,7 +227,7 @@ function RangeInput({
         </Text>
         <AmountInput
           backgroundColor="$transparent"
-          borderWidth={0}
+          borderWidth="$none"
           borderRadius="$none"
           color={isInvalid ? '$statusCritical' : '$neutral1'}
           fontFamily="$heading"
@@ -311,7 +312,7 @@ export const SelectPriceRangeStep = ({
   const { t } = useTranslation()
 
   const {
-    positionState: { fee },
+    positionState: { fee, hook },
     derivedPositionInfo,
   } = useCreatePositionContext()
   const { priceRangeState, setPriceRangeState, derivedPriceRangeInfo } = usePriceRangeContext()
@@ -419,7 +420,6 @@ export const SelectPriceRangeStep = ({
   const rangeSelectionInputValues = useMemo(() => {
     const leftPrice = isSorted ? prices?.[0] : prices?.[1]?.invert()
     const rightPrice = isSorted ? prices?.[1] : prices?.[0]?.invert()
-
     return [
       ticksAtLimit[isSorted ? 0 : 1] ? '0' : leftPrice?.toSignificant(8) ?? '',
       ticksAtLimit[isSorted ? 1 : 0] ? '∞' : rightPrice?.toSignificant(8) ?? '',
@@ -438,6 +438,27 @@ export const SelectPriceRangeStep = ({
     },
     [priceRangeState.fullRange, setPriceRangeState],
   )
+
+  const { rangeInputMinPrice, rangeInputMaxPrice } = useMemo(() => {
+    if (priceRangeState.fullRange) {
+      return {
+        rangeInputMinPrice: undefined,
+        rangeInputMaxPrice: undefined,
+      }
+    }
+
+    if (invertPrice) {
+      return {
+        rangeInputMinPrice: prices?.[1] ? parseFloat(prices?.[1].invert().toSignificant(8)) : undefined,
+        rangeInputMaxPrice: prices?.[0] ? parseFloat(prices?.[0].invert().toSignificant(8)) : undefined,
+      }
+    }
+
+    return {
+      rangeInputMinPrice: prices?.[0] ? parseFloat(prices?.[0].toSignificant(8)) : undefined,
+      rangeInputMaxPrice: prices?.[1] ? parseFloat(prices?.[1].toSignificant(8)) : undefined,
+    }
+  }, [priceRangeState.fullRange, prices, invertPrice])
 
   const invalidState =
     onDisableContinue ||
@@ -474,6 +495,7 @@ export const SelectPriceRangeStep = ({
   }
 
   const showIncrementButtons = !!derivedPositionInfo.pool && !priceRangeState.fullRange
+
   return (
     <Container {...rest}>
       {creatingPoolOrPair && <InitialPriceInput />}
@@ -512,12 +534,13 @@ export const SelectPriceRangeStep = ({
               px: '$spacing8',
             }}
           >
-            <DisplayCurrentPrice price={price} />
+            <DisplayCurrentPrice price={priceRangeState.priceInverted ? price?.invert() : price} />
             {!creatingPoolOrPair && !isPriceRangeInputV2Enabled && (
               <LiquidityChartRangeInput
                 currencyA={baseCurrency ?? undefined}
                 currencyB={quoteCurrency ?? undefined}
                 feeAmount={fee.feeAmount}
+                hook={hook}
                 ticksAtLimit={{
                   LOWER: ticksAtLimit[0],
                   UPPER: ticksAtLimit[1],
@@ -534,15 +557,17 @@ export const SelectPriceRangeStep = ({
             )}
             {isPriceRangeInputV2Enabled && baseCurrency && quoteCurrency && derivedPositionInfo.poolId && (
               <LiquidityRangeInput
+                key={buildRangeInputKey({ derivedPositionInfo, priceRangeState })}
                 currency0={quoteCurrency}
                 currency1={baseCurrency}
                 feeTier={fee.feeAmount}
+                hook={hook}
                 tickSpacing={derivedPositionInfo.pool?.tickSpacing}
                 protocolVersion={derivedPositionInfo.protocolVersion}
                 poolId={derivedPositionInfo.poolId}
                 disableBrushInteraction={priceRangeState.fullRange}
-                minPrice={priceRangeState.fullRange ? undefined : parseFloat(prices?.[0]?.toSignificant(8) ?? '0')}
-                maxPrice={priceRangeState.fullRange ? undefined : parseFloat(prices?.[1]?.toSignificant(8) ?? '0')}
+                minPrice={rangeInputMinPrice}
+                maxPrice={rangeInputMaxPrice}
                 setMinPrice={(minPrice?: number) => {
                   handleChartRangeInput(RangeSelectionInput.MIN, minPrice?.toString())
                 }}
@@ -601,4 +626,14 @@ export const SelectPriceRangeStep = ({
       </DeprecatedButton>
     </Container>
   )
+}
+
+function buildRangeInputKey({
+  derivedPositionInfo,
+  priceRangeState,
+}: {
+  derivedPositionInfo: CreatePositionInfo
+  priceRangeState: PriceRangeState
+}) {
+  return `${derivedPositionInfo.poolId}-${priceRangeState.fullRange}-${priceRangeState.priceInverted}-${derivedPositionInfo.protocolVersion}`
 }

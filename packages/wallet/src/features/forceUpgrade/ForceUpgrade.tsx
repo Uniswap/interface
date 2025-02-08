@@ -95,7 +95,7 @@ export function ForceUpgrade({ SeedPhraseModalContent }: ForceUpgradeProps): JSX
             width="100%"
             height={160}
             borderRadius="$rounded16"
-            borderWidth={1}
+            borderWidth="$spacing1"
             borderColor="$surface3"
             overflow="hidden"
           >
@@ -109,7 +109,7 @@ export function ForceUpgrade({ SeedPhraseModalContent }: ForceUpgradeProps): JSX
                 shadowOpacity: 0.3,
                 shadowRadius: 20,
               }}
-              borderWidth={1}
+              borderWidth="$spacing1"
               borderColor="$surface3"
               elevationAndroid={8}
             >

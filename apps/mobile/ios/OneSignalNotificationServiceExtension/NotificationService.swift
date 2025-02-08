@@ -43,7 +43,7 @@ class NotificationService: UNNotificationServiceExtension {
     if (!Statsig.isInitialized()) {
       // The real sdk key is needed on iOS even though it's substituted in proxy
       // Because the key is used to hash the feature gate names and wouldn't work properly otherwise
-      let statsigSdkKey = Bundle.main.object(forInfoDictionaryKey: "STATSIG_SDK_KEY") as? String ?? ""
+      let statsigSdkKey = Env.STATSIG_API_KEY
       let statsigUser = StatsigUser(
         userID: UIDevice.current.identifierForVendor?.uuidString,
         custom: [
@@ -88,5 +88,5 @@ struct Constants {
   static let typePriceAlert = "price_alert"
   
   static let gateUnfundedWallet = "notification_unfunded_wallet"
-  static let gatePriceAlert = "notification_price_alert"
+  static let gatePriceAlert = "notification_price_alerts"
 }

@@ -14,7 +14,7 @@ export function WalletLoader({ opacity }: Props): JSX.Element {
       alignItems="center"
       borderColor="$neutral3"
       borderRadius="$rounded20"
-      borderWidth={1}
+      borderWidth="$spacing1"
       justifyContent="flex-start"
       opacity={opacity}
       overflow="hidden"

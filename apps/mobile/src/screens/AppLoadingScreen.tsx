@@ -40,7 +40,7 @@ function useFinishAutomatedRecovery(navigation: Props['navigation']): {
   const dispatch = useDispatch()
   const { setRecoveredImportedAccounts, finishOnboarding } = useOnboardingContext()
 
-  const notificationOSPermission = useNotificationOSPermissionsEnabled()
+  const { notificationPermissionsEnabled: notificationOSPermission } = useNotificationOSPermissionsEnabled()
   const hasAnyNotificationsEnabled = useSelector(selectAnyAddressHasNotificationsEnabled)
   const { deviceSupportsBiometrics } = useBiometricContext()
   const { requiredForTransactions: isBiometricAuthEnabled } = useBiometricAppSettings()
@@ -55,6 +55,7 @@ function useFinishAutomatedRecovery(navigation: Props['navigation']): {
           address: addressInfo.address,
           derivationIndex: addressInfo.derivationIndex,
           timeImportedMs: dayjs().valueOf(),
+          pushNotificationsEnabled: true,
         }
       })
       setRecoveredImportedAccounts(accountsToImport)

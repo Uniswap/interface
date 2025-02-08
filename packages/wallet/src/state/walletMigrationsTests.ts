@@ -25,6 +25,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: false,
           derivationIndex: 0,
           timeImportedMs: 1,
+          pushNotificationsEnabled: true,
         },
         '0xTest1': {
           type: AccountType.SignerMnemonic,
@@ -33,6 +34,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           name: 'Test Account 2',
           derivationIndex: 1,
           timeImportedMs: 2,
+          pushNotificationsEnabled: true,
         },
         '0xTest2': {
           type: AccountType.SignerMnemonic,
@@ -42,6 +44,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: false,
           derivationIndex: 2,
           timeImportedMs: 3,
+          pushNotificationsEnabled: true,
         },
         '0xTest3': {
           type: AccountType.Readonly,
@@ -49,6 +52,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           name: 'Test Account 4',
           derivationIndex: 0,
           timeImportedMs: 4,
+          pushNotificationsEnabled: true,
         },
         '0xTest4': {
           type: AccountType.SignerMnemonic,
@@ -58,6 +62,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: false,
           derivationIndex: 0,
           timeImportedMs: 5,
+          pushNotificationsEnabled: true,
         },
         '0xTest5': {
           type: AccountType.SignerMnemonic,
@@ -67,6 +72,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: false,
           derivationIndex: 1,
           timeImportedMs: 6,
+          pushNotificationsEnabled: true,
         },
       } as Record<string, Account>,
     },
@@ -134,6 +140,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: false,
           derivationIndex: 0,
           timeImportedMs: 1,
+          pushNotificationsEnabled: true,
         },
         '0xTest1': {
           type: AccountType.SignerMnemonic,
@@ -143,6 +150,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: true,
           derivationIndex: 1,
           timeImportedMs: 2,
+          pushNotificationsEnabled: true,
         },
         '0xTest2': {
           type: AccountType.SignerMnemonic,
@@ -152,12 +160,14 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: true,
           derivationIndex: 2,
           timeImportedMs: 3,
+          pushNotificationsEnabled: true,
         },
         '0xTest3': {
           type: AccountType.Readonly,
           address: '0xTest3',
           name: 'Test Account 4',
           timeImportedMs: 4,
+          pushNotificationsEnabled: true,
         },
         '0xTest4': {
           type: AccountType.Readonly,
@@ -165,6 +175,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           name: 'Test Account 5',
           pending: true,
           timeImportedMs: 5,
+          pushNotificationsEnabled: true,
         },
         '0xTest5': {
           type: AccountType.SignerMnemonic,
@@ -174,6 +185,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: true,
           derivationIndex: 0,
           timeImportedMs: 6,
+          pushNotificationsEnabled: true,
         },
       } as Record<string, Account>,
     },
@@ -203,6 +215,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           address: '0xTest3',
           name: 'Test Account 4',
           timeImportedMs: 4,
+          pushNotificationsEnabled: true,
         },
         '0xTest4': {
           type: AccountType.Readonly,
@@ -210,6 +223,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           name: 'Test Account 5',
           pending: true,
           timeImportedMs: 5,
+          pushNotificationsEnabled: true,
         },
         '0xTest5': {
           type: AccountType.Readonly,
@@ -217,6 +231,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           name: 'Test Account 6',
           pending: true,
           timeImportedMs: 5,
+          pushNotificationsEnabled: true,
         },
       } as Record<string, Account>,
     },
@@ -249,6 +264,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: false,
           derivationIndex: 0,
           timeImportedMs: 1,
+          pushNotificationsEnabled: true,
         },
         '0xTest1': {
           type: AccountType.SignerMnemonic,
@@ -258,6 +274,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: true,
           derivationIndex: 1,
           timeImportedMs: 2,
+          pushNotificationsEnabled: true,
         },
         '0xTest2': {
           type: AccountType.SignerMnemonic,
@@ -267,12 +284,14 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           pending: true,
           derivationIndex: 2,
           timeImportedMs: 3,
+          pushNotificationsEnabled: true,
         },
         '0xTest3': {
           type: AccountType.Readonly,
           address: '0xTest3',
           name: 'Test Account 4',
           timeImportedMs: 4,
+          pushNotificationsEnabled: true,
         },
         '0xTest4': {
           type: AccountType.Readonly,
@@ -280,6 +299,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           name: 'Test Account 5',
           pending: true,
           timeImportedMs: 5,
+          pushNotificationsEnabled: true,
         },
         '0xTest5': {
           type: AccountType.SignerMnemonic,
@@ -288,6 +308,7 @@ export function testActivatePendingAccounts(migration: (state: any) => any, prev
           name: 'Test Account 6',
           derivationIndex: 0,
           timeImportedMs: 6,
+          pushNotificationsEnabled: true,
         },
       } as Record<string, Account>,
     },
@@ -626,4 +647,9 @@ export function testUnchecksumDismissedTokenWarningKeys(migration: (state: any) 
     address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
     chainId: 1,
   })
+}
+
+export function testDeleteWelcomeWalletCard(migration: (state: any) => any, prevSchema: any): void {
+  const result = migration(prevSchema)
+  expect(result.behaviorHistory.hasViewedWelcomeWalletCard).toBe(undefined)
 }

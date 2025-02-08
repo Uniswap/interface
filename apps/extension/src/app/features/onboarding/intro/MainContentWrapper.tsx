@@ -8,7 +8,7 @@ export function MainContentWrapper({ children }: PropsWithChildren): JSX.Element
       backgroundColor="$surface1"
       borderColor="$surface3"
       borderRadius="$rounded32"
-      borderWidth={1}
+      borderWidth="$spacing1"
       pb="$spacing24"
       pt="$spacing48"
       px="$spacing24"

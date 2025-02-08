@@ -18,10 +18,10 @@ import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 
 const Nav = styled.nav`
   padding: 0px 12px;

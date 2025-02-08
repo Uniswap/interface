@@ -273,12 +273,19 @@ export function useFiatOnRampQuotes({
   }
 }
 
-export function useParseFiatOnRampError(
-  error: unknown,
-  currencyCode: string,
-  balanceError: boolean,
-  noQuotesReturned: boolean,
-): {
+export function useParseFiatOnRampError({
+  error,
+  currencyCode,
+  tokenCode,
+  balanceError,
+  noQuotesReturned,
+}: {
+  error: unknown
+  currencyCode: string
+  tokenCode?: string
+  balanceError: boolean
+  noQuotesReturned: boolean
+}): {
   errorText: string | undefined
 } {
   const { t } = useTranslation()
@@ -289,28 +296,33 @@ export function useParseFiatOnRampError(
   if (balanceError) {
     errorText = t('fiatOffRamp.error.balance')
   }
+  if (noQuotesReturned) {
+    errorText = t('fiatOnRamp.error.noQuotes')
+  }
 
   if (!error) {
     return { errorText }
   }
 
-  errorText = noQuotesReturned ? t('fiatOnRamp.error.noQuotes') : t('fiatOnRamp.error.default')
+  errorText = t('fiatOnRamp.error.default')
 
   if (isFiatOnRampApiError(error)) {
+    const formatMinMaxError = (amount: number, unit?: string): string => {
+      return (
+        formatNumberOrString({
+          value: amount,
+          type: unit === 'token' ? NumberType.TokenTx : NumberType.FiatStandard,
+          currencyCode,
+        }) + (unit === 'token' ? ` ${tokenCode}` : '')
+      )
+    }
+
     if (isInvalidRequestAmountTooLow(error)) {
-      const formattedAmount = formatNumberOrString({
-        value: error.data.context.minimumAllowed,
-        type: NumberType.FiatStandard,
-        currencyCode,
-      })
-      errorText = t('fiatOnRamp.error.min', { amount: formattedAmount })
+      const { minimumAllowed, unit } = error.data.context
+      errorText = t('fiatOnRamp.error.min', { amount: formatMinMaxError(minimumAllowed, unit) })
     } else if (isInvalidRequestAmountTooHigh(error)) {
-      const formattedAmount = formatNumberOrString({
-        value: error.data.context.maximumAllowed,
-        type: NumberType.FiatStandard,
-        currencyCode,
-      })
-      errorText = t('fiatOnRamp.error.max', { amount: formattedAmount })
+      const { maximumAllowed, unit } = error.data.context
+      errorText = t('fiatOnRamp.error.max', { amount: formatMinMaxError(maximumAllowed, unit) })
     }
   }
 

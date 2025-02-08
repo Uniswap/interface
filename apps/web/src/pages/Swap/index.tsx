@@ -172,6 +172,7 @@ export function Swap({
     exactCurrencyField: initialIndependentField ?? CurrencyField.INPUT,
     selectingCurrencyField: isSwapTokenSelectorOpen ? CurrencyField.OUTPUT : undefined,
     selectingCurrencyChainId: swapOutputChainId,
+    skipFocusOnCurrencyField: isMobileWeb,
   })
 
   // TODO(WEB-5078): Remove this once we upgrade swap e2e tests to use the new swap flow

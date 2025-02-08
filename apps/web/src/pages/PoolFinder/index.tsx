@@ -82,7 +82,7 @@ export default function PoolFinder() {
 
         <Text variant="heading2">{t('pool.import.positions.v2')}</Text>
 
-        <Flex mt="$spacing40" borderRadius="$rounded20" borderColor="$surface3" borderWidth={1} p="$spacing24">
+        <Flex mt="$spacing40" borderRadius="$rounded20" borderColor="$surface3" borderWidth="$spacing1" p="$spacing24">
           <Text variant="subheading1">{t('pool.selectPair')}</Text>
           <Text variant="body3" mt="$gap4">
             {t('pool.import.positions.v2.selectPair.description')}

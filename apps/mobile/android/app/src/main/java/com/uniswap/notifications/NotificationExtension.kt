@@ -40,7 +40,7 @@ class NotificationExtension : OSRemoteNotificationReceivedHandler {
           val deviceId = Secure.getString(context!!.contentResolver, Secure.ANDROID_ID)
           val user = StatsigUser(userID = deviceId)
           user.custom = mapOf("app" to "mobile")
-          
+
           Statsig.initialize(
             context!!.applicationContext as Application,
             STATSIG_SDK_KEY,
@@ -77,7 +77,7 @@ class NotificationExtension : OSRemoteNotificationReceivedHandler {
     private const val STATSIG_ENVIRONMENT_KEY_TIER = "tier"
 
     private const val FEATURE_GATE_UNFUNDED_WALLET = "notification_unfunded_wallet"
-    private const val FEATURE_GATE_PRICE_ALERT = "notification_price_alert"
+    private const val FEATURE_GATE_PRICE_ALERT = "notification_price_alerts"
 
     private const val FIELD_NOTIFICATION_TYPE = "notification_type"
     private const val TYPE_UNFUNDED_WALLET_REMINDER = "unfunded_wallet_reminder"

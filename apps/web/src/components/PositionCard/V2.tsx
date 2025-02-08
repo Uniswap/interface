@@ -4,8 +4,6 @@ import { ButtonEmpty, ButtonPrimary, ButtonSecondary } from 'components/Button/b
 import { LightCard } from 'components/Card/cards'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
-import { AutoColumn } from 'components/deprecated/Column'
-import { AutoRow, RowBetween, RowFixed } from 'components/deprecated/Row'
 import { CardNoise } from 'components/earn/styled'
 import { Dots } from 'components/swap/styled'
 import { BIG_INT_ZERO } from 'constants/misc'
@@ -19,8 +17,8 @@ import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
-import { Text } from 'rebass'
 import { useTokenBalance } from 'state/connection/hooks'
+import { Flex, Text } from 'ui/src'
 import { currencyId } from 'utils/currencyId'
 import { unwrappedToken } from 'utils/unwrappedToken'
 import { FixedHeightRow } from '.'
@@ -78,11 +76,11 @@ export default function MigrateV2PositionCard({ pair, border, stakedBalance }: P
   return (
     <StyledPositionCard border={border} bgColor={backgroundColor}>
       <CardNoise />
-      <AutoColumn gap="md">
-        <FixedHeightRow>
-          <AutoRow gap="8px">
+      <Flex gap="$spacing6">
+        <Flex row alignItems="center" justifyContent="space-between">
+          <Flex row gap="$spacing8">
             <DoubleCurrencyLogo currencies={[currency0, currency1]} size={20} />
-            <Text fontWeight={535} fontSize={20}>
+            <Text variant="body1">
               {!currency0 || !currency1 ? (
                 <Dots>
                   <Trans i18nKey="common.loading" />
@@ -91,8 +89,8 @@ export default function MigrateV2PositionCard({ pair, border, stakedBalance }: P
                 `${currency0.symbol}/${currency1.symbol}`
               )}
             </Text>
-          </AutoRow>
-          <RowFixed gap="8px">
+          </Flex>
+          <Flex row gap="$spacing8">
             <ButtonEmpty
               padding="6px 8px"
               $borderRadius="12px"
@@ -111,70 +109,62 @@ export default function MigrateV2PositionCard({ pair, border, stakedBalance }: P
                 </>
               )}
             </ButtonEmpty>
-          </RowFixed>
-        </FixedHeightRow>
+          </Flex>
+        </Flex>
 
         {showMore && (
-          <AutoColumn gap="sm">
-            <FixedHeightRow>
-              <Text fontSize={16} fontWeight={535}>
+          <Flex gap="$spacing6">
+            <Flex row alignItems="center" justifyContent="space-between">
+              <Text variant="body2">
                 <Trans i18nKey="pool.totalTokens" />
               </Text>
-              <Text fontSize={16} fontWeight={535}>
-                {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
-              </Text>
-            </FixedHeightRow>
+              <Text variant="body2">{userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}</Text>
+            </Flex>
             {stakedBalance && (
-              <FixedHeightRow>
-                <Text fontSize={16} fontWeight={535}>
+              <Flex row alignItems="center" justifyContent="space-between">
+                <Text variant="body2">
                   <Trans i18nKey="pool.rewardsPool.label" />
                 </Text>
-                <Text fontSize={16} fontWeight={535}>
-                  {stakedBalance.toSignificant(4)}
-                </Text>
-              </FixedHeightRow>
+                <Text variant="body2">{stakedBalance.toSignificant(4)}</Text>
+              </Flex>
             )}
-            <FixedHeightRow>
-              <RowFixed>
-                <Text fontSize={16} fontWeight={535}>
-                  <Trans i18nKey="removeLiquidity.pooled" values={{ symbol: currency0.symbol }} />
-                </Text>
-              </RowFixed>
+            <Flex row alignItems="center" justifyContent="space-between">
+              <Text variant="body2">
+                <Trans i18nKey="removeLiquidity.pooled" values={{ symbol: currency0.symbol }} />
+              </Text>
               {token0Deposited ? (
-                <RowFixed>
-                  <Text fontSize={16} fontWeight={535} marginLeft="6px">
+                <Flex row centered>
+                  <Text variant="body2" mr="$spacing4">
                     {token0Deposited?.toSignificant(6)}
                   </Text>
-                  <CurrencyLogo size={20} style={{ marginLeft: '8px' }} currency={currency0} />
-                </RowFixed>
+                  <CurrencyLogo size={20} currency={currency0} />
+                </Flex>
               ) : (
                 '-'
               )}
-            </FixedHeightRow>
+            </Flex>
 
-            <FixedHeightRow>
-              <RowFixed>
-                <Text fontSize={16} fontWeight={535}>
-                  <Trans i18nKey="pool.pooled" values={{ sym: currency1.symbol }} />
-                </Text>
-              </RowFixed>
+            <Flex row alignItems="center" justifyContent="space-between">
+              <Text variant="body2">
+                <Trans i18nKey="pool.pooled" values={{ sym: currency1.symbol }} />
+              </Text>
               {token1Deposited ? (
-                <RowFixed>
-                  <Text fontSize={16} fontWeight={535} marginLeft="6px">
+                <Flex row centered>
+                  <Text variant="body2" mr="$spacing4">
                     {token1Deposited?.toSignificant(6)}
                   </Text>
-                  <CurrencyLogo size={20} style={{ marginLeft: '8px' }} currency={currency1} />
-                </RowFixed>
+                  <CurrencyLogo size={20} currency={currency1} />
+                </Flex>
               ) : (
                 '-'
               )}
-            </FixedHeightRow>
+            </Flex>
 
             <FixedHeightRow>
-              <Text fontSize={16} fontWeight={535}>
+              <Text variant="body2">
                 <Trans i18nKey="pool.share.label" />
               </Text>
-              <Text fontSize={16} fontWeight={535}>
+              <Text variant="body2">
                 {poolTokenPercentage
                   ? (poolTokenPercentage.toFixed(2) === '0.00' ? '<0.01' : poolTokenPercentage.toFixed(2)) + '%'
                   : '-'}
@@ -182,7 +172,7 @@ export default function MigrateV2PositionCard({ pair, border, stakedBalance }: P
             </FixedHeightRow>
 
             {userDefaultPoolBalance && JSBI.greaterThan(userDefaultPoolBalance.quotient, BIG_INT_ZERO) && (
-              <RowBetween marginTop="10px">
+              <Flex row justifyContent="space-between" mt="$spacing16">
                 <ButtonPrimary
                   padding="8px"
                   $borderRadius="8px"
@@ -201,11 +191,11 @@ export default function MigrateV2PositionCard({ pair, border, stakedBalance }: P
                 >
                   <Trans i18nKey="common.remove.label" />
                 </ButtonSecondary>
-              </RowBetween>
+              </Flex>
             )}
-          </AutoColumn>
+          </Flex>
         )}
-      </AutoColumn>
+      </Flex>
     </StyledPositionCard>
   )
 }

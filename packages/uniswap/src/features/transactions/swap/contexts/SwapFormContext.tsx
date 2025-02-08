@@ -27,6 +27,7 @@ export type SwapFormState = {
   input?: TradeableAsset
   output?: TradeableAsset
   selectingCurrencyField?: CurrencyField
+  isSelectingCurrencyFieldPrefilled?: boolean
   txId?: string
   isFiatMode: boolean
   isMax: boolean
@@ -115,7 +116,7 @@ export function SwapFormContextProvider({
           ...oldVal,
           selectingCurrencyField: prefilledState?.selectingCurrencyField,
           filteredChainIds: prefilledState.filteredChainIds,
-          isPrefilled: true,
+          isSelectingCurrencyFieldPrefilled: true,
         }
       })
     }
@@ -218,7 +219,7 @@ export function SwapFormContextProvider({
       prefilledCurrencies: [prefilledState?.input, prefilledState?.output].filter((asset): asset is TradeableAsset =>
         Boolean(asset),
       ),
-      isPrefilled: swapForm.isPrefilled,
+      isSelectingCurrencyFieldPrefilled: swapForm.isSelectingCurrencyFieldPrefilled,
     }),
     [
       derivedSwapInfo,
@@ -234,7 +235,7 @@ export function SwapFormContextProvider({
       swapForm.output,
       swapForm.selectingCurrencyField,
       swapForm.txId,
-      swapForm.isPrefilled,
+      swapForm.isSelectingCurrencyFieldPrefilled,
       hideFooter,
       hideSettings,
       updateSwapForm,

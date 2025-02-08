@@ -474,7 +474,14 @@ export function LiquidityPositionRangeChart({
       overflow="hidden"
     >
       {priceData.loading && <LiquidityPositionRangeChartLoader size={chartWidth} />}
-      {dataUnavailable && <LoadingPriceCurve size={chartWidth} color="$neutral2" />}
+      {dataUnavailable && (
+        <LoadingPriceCurve
+          size={{ width: chartWidth ?? CHART_WIDTH, height: CHART_HEIGHT }}
+          color="$neutral2"
+          mt="$spacing8"
+          ml="$spacing4"
+        />
+      )}
       {shouldRenderChart && (
         <Flex width={grow ? chartWidth : width} $md={{ width: grow ? chartWidth : '100%' }}>
           <Chart Model={LPPriceChartModel} params={chartParams} height={CHART_HEIGHT} />

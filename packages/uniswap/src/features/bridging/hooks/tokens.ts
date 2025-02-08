@@ -14,6 +14,8 @@ import { ALL_CHAIN_IDS, UniverseChainId } from 'uniswap/src/features/chains/type
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import {
   NATIVE_ADDRESS_FOR_TRADING_API,
   getTokenAddressFromChainForTradingApi,
@@ -54,12 +56,14 @@ export function useBridgingTokenWithHighestBalance({
     fetchPolicy: 'cache-first',
   })
 
+  const unichainEnabled = useFeatureFlag(FeatureFlags.Unichain)
   const { data: bridgingTokens } = useTradingApiSwappableTokensQuery({
     params:
       otherChainBalances && otherChainBalances?.length > 0 && tokenIn && tokenInChainId
         ? {
             tokenIn,
             tokenInChainId,
+            unichainEnabled,
           }
         : undefined,
   })
@@ -118,7 +122,7 @@ export function useBridgingTokensOptions({
 }): GqlResult<TokenOption[] | undefined> & { shouldNest?: boolean } {
   const tokenIn = input?.address ? getTokenAddressFromChainForTradingApi(input.address, input.chainId) : undefined
   const tokenInChainId = toTradingApiSupportedChainId(input?.chainId)
-
+  const unichainEnabled = useFeatureFlag(FeatureFlags.Unichain)
   const {
     data: bridgingTokens,
     isLoading: loadingBridgingTokens,
@@ -130,6 +134,7 @@ export function useBridgingTokensOptions({
         ? {
             tokenIn,
             tokenInChainId,
+            unichainEnabled,
           }
         : undefined,
   })

@@ -4,6 +4,7 @@ import { createContext, useMemo } from 'react'
 import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
 import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
 import { useProtocolStatsQuery } from 'uniswap/src/data/rest/protocolStats'
+import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 interface QueryResult<T> {
@@ -48,19 +49,21 @@ export function ExploreContextProvider({
   chainId?: UniverseChainId
   children: React.ReactNode
 }) {
+  const isSupportedChain = useIsSupportedChainId(chainId)
+
   const {
     data: exploreStatsData,
     isLoading: exploreStatsLoading,
     error: exploreStatsError,
   } = useExploreStatsQuery({
-    chainId: chainId ? chainId.toString() : ALL_NETWORKS_ARG,
+    chainId: isSupportedChain ? chainId?.toString() : ALL_NETWORKS_ARG,
   })
   const {
     data: protocolStatsData,
     isLoading: protocolStatsLoading,
     error: protocolStatsError,
   } = useProtocolStatsQuery({
-    chainId: chainId ? chainId.toString() : ALL_NETWORKS_ARG,
+    chainId: isSupportedChain ? chainId?.toString() : ALL_NETWORKS_ARG,
   })
 
   const exploreContext = useMemo(() => {

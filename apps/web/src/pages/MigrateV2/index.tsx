@@ -8,7 +8,6 @@ import MigrateV2PositionCard from 'components/PositionCard/V2'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { AutoColumn } from 'components/deprecated/Column'
-import { AutoRow } from 'components/deprecated/Row'
 import { Dots } from 'components/swap/styled'
 import { useAccount } from 'hooks/useAccount'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
@@ -16,13 +15,15 @@ import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
 import { useRpcTokenBalancesWithLoadingIndicator } from 'lib/hooks/useCurrencyBalance'
 import styled, { useTheme } from 'lib/styled-components'
 import { BodyWrapper } from 'pages/App/AppBody'
-import { ReactNode, useMemo } from 'react'
+import { ReactNode, useCallback, useMemo } from 'react'
 import { Trans } from 'react-i18next'
-import { useNavigate, useNavigationType } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Text } from 'rebass'
 import { toV2LiquidityToken, useTrackedTokenPairs } from 'state/user/hooks'
-import { BackArrowIcon, StyledInternalLink, ThemedText } from 'theme/components'
-import { DeprecatedButton } from 'ui/src'
+import { StyledInternalLink, ThemedText } from 'theme/components'
+import { Flex, TouchableArea } from 'ui/src'
+import { Arrow } from 'ui/src/components/arrow/Arrow'
+import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 
@@ -61,7 +62,7 @@ export default function MigrateV2() {
   const theme = useTheme()
   const account = useAccount()
   const navigate = useNavigate()
-  const navigationType = useNavigationType()
+  const { state } = useLocation()
 
   const v2FactoryAddress = account.chainId ? V2_FACTORY_ADDRESSES[account.chainId] : undefined
 
@@ -124,6 +125,14 @@ export default function MigrateV2() {
   const v2Pairs = useV2Pairs(tokenPairsWithV2Balance)
   const v2IsLoading = fetchingPairBalances || v2Pairs.some(([pairState]) => pairState === PairState.LOADING)
 
+  const handleNavigateBack = useCallback(() => {
+    if (state?.from) {
+      navigate(state.from)
+    } else {
+      navigate('/positions')
+    }
+  }, [navigate, state?.from])
+
   const networkSupportsV2 = useNetworkSupportsV2()
   if (!networkSupportsV2) {
     return <V2Unsupported />
@@ -132,31 +141,28 @@ export default function MigrateV2() {
   return (
     <Trace logImpression page={InterfacePageNameLocal.MigrateV2}>
       <BodyWrapper style={{ padding: 24 }}>
-        <AutoColumn gap="16px">
-          <AutoRow style={{ alignItems: 'center', justifyContent: 'center', position: 'relative' }} gap="8px">
-            <DeprecatedButton
-              theme="secondary"
-              onPress={() => {
-                if (navigationType === 'POP') {
-                  navigate('/pools')
-                  return
-                }
-                navigate(-1)
+        <Flex gap="$gap16">
+          <Flex row alignItems="center" justifyContent="space-between" gap="$gap8">
+            <TouchableArea
+              p="$spacing6"
+              borderRadius="$rounded8"
+              onPress={handleNavigateBack}
+              hoverable
+              hoverStyle={{
+                backgroundColor: '$backgroundHover',
               }}
-              backgroundColor="$transparent"
-              size="small"
-              style={{ position: 'absolute', left: 0 }}
             >
-              <BackArrowIcon />
-            </DeprecatedButton>
+              <Arrow direction="w" color="$neutral1" size={iconSizes.icon24} />
+            </TouchableArea>
             <MigrateHeader>
               <Trans i18nKey="migrate.v2Title" />
             </MigrateHeader>
-          </AutoRow>
+            <Flex width={iconSizes.icon48} height={iconSizes.icon36} />
+          </Flex>
 
-          <ThemedText.DeprecatedBody style={{ marginBottom: 8, fontWeight: 485 }}>
+          <Text m="$spacing8" lineHeight="24px" variant="body2">
             <Trans i18nKey="migrate.v2Instruction" />
-          </ThemedText.DeprecatedBody>
+          </Text>
 
           {!account ? (
             <LightCard padding="40px">
@@ -205,7 +211,7 @@ export default function MigrateV2() {
               />
             </Text>
           </AutoColumn>
-        </AutoColumn>
+        </Flex>
       </BodyWrapper>
       <SwitchLocaleLink />
     </Trace>

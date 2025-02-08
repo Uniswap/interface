@@ -10,7 +10,7 @@ import { PollingInterval } from 'uniswap/src/constants/misc'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
-import { useAccountList } from 'wallet/src/features/accounts/hooks'
+import { useAccountListData } from 'wallet/src/features/accounts/useAccountListData'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 type AccountListProps = Pick<ComponentProps<typeof AccountCardItem>, 'onPress'> & {
@@ -63,7 +63,7 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
   const colors = useSporeColors()
   const addresses = useMemo(() => accounts.map((a) => a.address), [accounts])
 
-  const { data, networkStatus, refetch, startPolling, stopPolling } = useAccountList({
+  const { data, networkStatus, refetch, startPolling, stopPolling } = useAccountListData({
     addresses,
     notifyOnNetworkStatusChange: true,
   })

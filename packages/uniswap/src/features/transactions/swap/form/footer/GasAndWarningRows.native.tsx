@@ -7,7 +7,7 @@ import { WarningWithStyle } from 'uniswap/src/components/modals/WarningModal/typ
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
-import { GasTradeRow, useDebouncedGasInfo } from 'uniswap/src/features/transactions/swap/form/footer/GasTradeRow'
+import { TradeInfoRow, useDebouncedGasInfo } from 'uniswap/src/features/transactions/swap/form/footer/TradeInfoRow'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
 import { SwapWarningModal } from 'uniswap/src/features/transactions/swap/modals/SwapWarningModal'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
@@ -68,7 +68,7 @@ export function GasAndWarningRows(): JSX.Element {
           />
         )}
 
-        <GasTradeRow gasInfo={debouncedGasInfo} />
+        <TradeInfoRow gasInfo={debouncedGasInfo} />
 
         {showFormWarning && (
           <FormWarning

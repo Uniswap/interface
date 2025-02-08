@@ -11,7 +11,7 @@ import { ZERO_ADDRESS } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
-import { useCallback, useMemo, useReducer } from 'react'
+import { useCallback, useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { TouchableArea } from 'ui/src'
@@ -20,6 +20,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
 
 function isPositionInfo(position: PositionInfo | undefined): position is PositionInfo {
   return !!position
@@ -38,6 +39,7 @@ export default function Pools({ account }: { account: string }) {
   const { t } = useTranslation()
   const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
   const { chains } = useEnabledChains()
+  const isPositionVisible = usePositionVisibilityCheck()
 
   const { data, isLoading } = useGetPositionsQuery({
     address: account,
@@ -46,6 +48,7 @@ export default function Pools({ account }: { account: string }) {
     protocolVersions: isLPRedesignEnabled
       ? [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4]
       : [ProtocolVersion.V2, ProtocolVersion.V3],
+    includeHidden: true,
   })
 
   const { data: closedData } = useGetPositionsQuery({
@@ -55,6 +58,7 @@ export default function Pools({ account }: { account: string }) {
     protocolVersions: isLPRedesignEnabled
       ? [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4]
       : [ProtocolVersion.V2, ProtocolVersion.V3],
+    includeHidden: true,
   })
 
   const openPositions = useMemo(() => data?.positions.map(parseRestPosition).filter(isPositionInfo), [data?.positions])
@@ -64,6 +68,38 @@ export default function Pools({ account }: { account: string }) {
   )
 
   const [showClosed, toggleShowClosed] = useReducer((showClosed) => !showClosed, false)
+  const [showHidden, setShowHidden] = useState(false)
+
+  const { visibleOpenPositions, visibleClosedPositions, hiddenPositions } = useMemo(() => {
+    function splitByVisibility(positions: PositionInfo[] = []) {
+      const visible: PositionInfo[] = []
+      const hidden: PositionInfo[] = []
+      positions.forEach((pos) => {
+        if (
+          isPositionVisible({
+            poolId: pos.poolId,
+            tokenId: pos.tokenId,
+            chainId: pos.chainId,
+            isFlaggedSpam: pos.isHidden,
+          })
+        ) {
+          visible.push(pos)
+        } else {
+          hidden.push(pos)
+        }
+      })
+      return { visible, hidden }
+    }
+
+    const { visible: visibleOpenPositions, hidden: hiddenOpenPositions } = splitByVisibility(openPositions)
+    const { visible: visibleClosedPositions, hidden: hiddenClosedPositions } = splitByVisibility(closedPositions)
+
+    return {
+      visibleOpenPositions,
+      visibleClosedPositions,
+      hiddenPositions: [...hiddenOpenPositions, ...hiddenClosedPositions],
+    }
+  }, [openPositions, closedPositions, isPositionVisible])
 
   const accountDrawer = useAccountDrawer()
 
@@ -77,18 +113,30 @@ export default function Pools({ account }: { account: string }) {
 
   return (
     <PortfolioTabWrapper>
-      {openPositions.map((positionInfo) => (
+      {visibleOpenPositions.map((positionInfo) => (
         <PositionListItem key={getPositionKey(positionInfo)} positionInfo={positionInfo} />
       ))}
-      {closedPositions && closedPositions.length > 0 && (
+      {visibleClosedPositions && visibleClosedPositions.length > 0 && (
         <ExpandoRow
-          title={t`liquidityPool.positions.closed.title`}
+          title={t('liquidityPool.positions.closed.title')}
           isExpanded={showClosed}
           toggle={toggleShowClosed}
-          numItems={closedPositions.length}
+          numItems={visibleClosedPositions.length}
         >
-          {closedPositions.map((positionInfo) => (
+          {visibleClosedPositions.map((positionInfo) => (
             <PositionListItem key={getPositionKey(positionInfo)} positionInfo={positionInfo} />
+          ))}
+        </ExpandoRow>
+      )}
+      {hiddenPositions.length > 0 && (
+        <ExpandoRow
+          title={t('common.hidden')}
+          isExpanded={showHidden}
+          toggle={() => setShowHidden((prev) => !prev)}
+          numItems={hiddenPositions.length}
+        >
+          {hiddenPositions.map((position) => (
+            <PositionListItem key={getPositionKey(position)} positionInfo={position} isVisible={false} />
           ))}
         </ExpandoRow>
       )}
@@ -96,7 +144,7 @@ export default function Pools({ account }: { account: string }) {
   )
 }
 
-function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
+function PositionListItem({ positionInfo, isVisible = true }: { positionInfo: PositionInfo; isVisible?: boolean }) {
   const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
 
   const { tokenId, chainId, currency0Amount, currency1Amount } = positionInfo
@@ -135,7 +183,13 @@ function PositionListItem({ positionInfo }: { positionInfo: PositionInfo }) {
   return (
     <Trace logPress element={InterfaceElementName.MINI_PORTFOLIO_POOLS_ROW} properties={analyticsEventProperties}>
       <TouchableArea onPress={onClick}>
-        <LiquidityPositionCard isClickableStyle isMiniVersion liquidityPosition={positionInfo} />
+        <LiquidityPositionCard
+          isClickableStyle
+          isMiniVersion
+          liquidityPosition={positionInfo}
+          showVisibilityOption
+          isVisible={isVisible}
+        />
       </TouchableArea>
     </Trace>
   )

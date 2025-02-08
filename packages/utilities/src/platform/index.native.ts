@@ -23,3 +23,4 @@ export const isMobileWebAndroid: boolean = false
 export const isExtension: boolean = false
 export const isMobileApp: boolean = true
 export const isInterface: boolean = false
+export const isInterfaceDesktop: boolean = false

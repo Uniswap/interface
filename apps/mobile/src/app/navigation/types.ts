@@ -6,6 +6,7 @@ import {
 } from '@react-navigation/native'
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import {
   FiatOnRampScreens,
@@ -69,6 +70,7 @@ export type SettingsStackParamList = {
   [MobileScreens.SettingsWalletEdit]: { address: Address }
   [MobileScreens.SettingsWalletManageConnection]: { address: Address }
   [MobileScreens.WebView]: { headerTitle: string; uriLink: string }
+  [ModalName.NotificationsOSSettings]: undefined
 }
 
 export type OnboardingStackBaseParams = {
@@ -122,6 +124,7 @@ export type AppStackParamList = {
   }
   [MobileScreens.WebView]: { headerTitle: string; uriLink: string }
   [MobileScreens.Storybook]: undefined
+  [ModalName.NotificationsOSSettings]: undefined
 }
 
 export type AppStackNavigationProp = NativeStackNavigationProp<AppStackParamList>

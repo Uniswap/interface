@@ -265,7 +265,9 @@ exports[`PoolDetailsHeader renders breadcrumb text correctly 1`] = `
               <div
                 class="c7"
               >
-                0x88e6...5640
+                <div>
+                  0x88e6...5640
+                </div>
               </div>
             </div>
           </div>

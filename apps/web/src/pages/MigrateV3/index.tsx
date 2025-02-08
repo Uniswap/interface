@@ -35,6 +35,7 @@ import { ChevronRight } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
+import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { PositionField } from 'types/position'
@@ -47,7 +48,7 @@ import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
+import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
@@ -56,6 +57,7 @@ import { TransactionSettingKey } from 'uniswap/src/features/transactions/setting
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { TransactionStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
+import { isSameAddress } from 'utilities/src/addresses'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 import { useAccount } from 'wagmi'
@@ -84,6 +86,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
   const { value: lpRedesignEnabled, isLoading: isLPRedesignGateLoading } = useFeatureFlagWithLoading(
     FeatureFlags.LPRedesign,
   )
+  const isMigrateToV4Enabled = useFeatureFlag(FeatureFlags.MigrateV3ToV4)
 
   const [transactionSteps, setTransactionSteps] = useState<TransactionStep[]>([])
   const [currentTransactionStep, setCurrentTransactionStep] = useState<
@@ -101,12 +104,17 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
     setCurrentTransactionStep(undefined)
   }
 
-  const { currency0Amount, currency1Amount } = positionInfo
+  const { currency0Amount, currency1Amount, owner } = positionInfo
+
   const currency0FiatAmount = useUSDCValue(currency0Amount) ?? undefined
   const currency1FiatAmount = useUSDCValue(currency1Amount) ?? undefined
 
   if (!isLPRedesignGateLoading && !lpRedesignEnabled) {
     return <Navigate to="/pools" replace />
+  }
+
+  if (!isMigrateToV4Enabled || !isSameAddress(account?.address, owner)) {
+    navigate('/positions')
   }
 
   if (isLPRedesignGateLoading) {
@@ -193,7 +201,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
                 <SelectPriceRangeStep
                   width="100%"
                   maxWidth="unset"
-                  onDisableContinue={!txInfo || error}
+                  onDisableContinue={!txInfo || Boolean(error)}
                   onContinue={() => {
                     const isValidTx = isValidLiquidityTxContext(txInfo)
                     if (!account || account?.type !== AccountType.SignerMnemonic || !isValidTx) {
@@ -221,8 +229,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
                             currency0AmountUsd: currency0FiatAmount,
                             currency1AmountUsd: currency1FiatAmount,
                             poolId: positionInfo.poolId,
-                            version: protocolVersion,
-                            chainId: startChainId,
+                            version: ProtocolVersion.V3,
                           }),
                           action: 'V3->V4',
                         },
@@ -230,7 +237,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
                     )
                   }}
                 />
-                {error && <TradingAPIError refetch={refetch} />}
+                <TradingAPIError errorMessage={error} refetch={refetch} />
               </>
             )}
           </Flex>
@@ -314,24 +321,26 @@ export default function MigrateV3() {
         token1Address: currencyIdToAddress(currencyId(currency1Amount.currency)),
       }}
     >
-      <TransactionSettingsContextProvider settingKey={TransactionSettingKey.LP}>
-        <CreatePositionContextProvider
-          initialState={{
-            currencyInputs: {
-              [PositionField.TOKEN0]: currency0Amount.currency,
-              [PositionField.TOKEN1]: currency1Amount.currency,
-            },
-          }}
-        >
-          <PriceRangeContextProvider>
-            <DepositContextProvider>
-              <MigrateV3PositionTxContextProvider positionInfo={positionInfo}>
-                <MigrateV3Inner positionInfo={positionInfo} />
-              </MigrateV3PositionTxContextProvider>
-            </DepositContextProvider>
-          </PriceRangeContextProvider>
-        </CreatePositionContextProvider>
-      </TransactionSettingsContextProvider>
+      <MultichainContextProvider initialChainId={chainId}>
+        <TransactionSettingsContextProvider settingKey={TransactionSettingKey.LP}>
+          <CreatePositionContextProvider
+            initialState={{
+              currencyInputs: {
+                [PositionField.TOKEN0]: currency0Amount.currency,
+                [PositionField.TOKEN1]: currency1Amount.currency,
+              },
+            }}
+          >
+            <PriceRangeContextProvider>
+              <DepositContextProvider>
+                <MigrateV3PositionTxContextProvider positionInfo={positionInfo}>
+                  <MigrateV3Inner positionInfo={positionInfo} />
+                </MigrateV3PositionTxContextProvider>
+              </DepositContextProvider>
+            </PriceRangeContextProvider>
+          </CreatePositionContextProvider>
+        </TransactionSettingsContextProvider>
+      </MultichainContextProvider>
     </Trace>
   )
 }

@@ -66,7 +66,7 @@ export function PersonalSignRequestContent({ dappRequest }: PersonalSignRequestP
         backgroundColor="$surface2"
         borderColor="$surface3"
         borderRadius="$rounded16"
-        borderWidth={1}
+        borderWidth="$spacing1"
         flexDirection="row"
         justifyContent="space-between"
         maxHeight={200}

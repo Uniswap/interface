@@ -10,6 +10,7 @@ import { timingReducer } from 'uniswap/src/features/timing/slice'
 import { tokensReducer } from 'uniswap/src/features/tokens/slice/slice'
 import { transactionSettingsReducer } from 'uniswap/src/features/transactions/settings/slice'
 import { transactionReducer } from 'uniswap/src/features/transactions/slice'
+import { visibilityReducer } from 'uniswap/src/features/visibility/slice'
 
 export const uniswapReducers = {
   [fiatOnRampAggregatorApi.reducerPath]: fiatOnRampAggregatorApi.reducer,
@@ -23,6 +24,7 @@ export const uniswapReducers = {
   transactionSettings: transactionSettingsReducer,
   uniswapBehaviorHistory: uniswapBehaviorHistoryReducer,
   userSettings: userSettingsReducer,
+  visibility: visibilityReducer,
 } as const
 
 // used to type RootState
@@ -36,6 +38,7 @@ export const uniswapPersistedStateList: Array<keyof typeof uniswapReducers> = [
   'transactions',
   'uniswapBehaviorHistory',
   'userSettings',
+  'visibility',
 ]
 
 export type UniswapState = ReturnType<typeof uniswapReducer>

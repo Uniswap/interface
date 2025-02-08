@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { MobileState } from 'src/app/mobileReducer'
-import { monitoredSagas } from 'src/app/saga'
+import { monitoredSagas } from 'src/app/monitoredSagas'
 import { SagaState, SagaStatus } from 'wallet/src/utils/saga'
 
 // Convenience hook to get the status + error of an active saga

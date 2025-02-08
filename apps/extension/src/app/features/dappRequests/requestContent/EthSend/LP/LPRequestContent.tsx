@@ -33,7 +33,7 @@ export function LPRequestContent({
         backgroundColor="$surface2"
         borderColor="$surface3"
         borderRadius="$rounded16"
-        borderWidth={1}
+        borderWidth="$spacing1"
         flexDirection="row"
         justifyContent="space-between"
         p="$spacing16"

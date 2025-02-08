@@ -143,7 +143,9 @@ exports[`BreadcrumbNav renders hover components correctly 1`] = `
             <div
               class="c5"
             >
-              0x2260...C599
+              <div>
+                0x2260...C599
+              </div>
             </div>
           </div>
         </div>

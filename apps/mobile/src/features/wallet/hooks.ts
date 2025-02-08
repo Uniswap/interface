@@ -1,3 +1,4 @@
+import { useFocusEffect } from '@react-navigation/core'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -22,19 +23,28 @@ export function useWalletRestore(params?: { openModalImmediately?: boolean }): {
     dispatch(openModal({ name: ModalName.RestoreWallet }))
   }, [dispatch])
 
-  useEffect(() => {
+  const checkWalletNeedsRestore = useCallback(async (): Promise<void> => {
     if (!hasImportedSeedPhrase) {
       return
     }
 
-    const openRestoreWalletModalIfNeeded = async (): Promise<void> => {
-      const addresses = await Keyring.getAddressesForStoredPrivateKeys()
-      setWalletNeedsRestore(hasImportedSeedPhrase && !addresses.length)
-    }
-    openRestoreWalletModalIfNeeded().catch((error) =>
+    const addresses = await Keyring.getAddressesForStoredPrivateKeys()
+    setWalletNeedsRestore(hasImportedSeedPhrase && !addresses.length)
+  }, [hasImportedSeedPhrase])
+
+  useEffect(() => {
+    checkWalletNeedsRestore().catch((error) =>
       logger.error(error, { tags: { file: 'wallet/hooks', function: 'useWalletRestore' } }),
     )
-  }, [dispatch, hasImportedSeedPhrase])
+  }, [checkWalletNeedsRestore])
+
+  useFocusEffect(
+    useCallback(() => {
+      if (openModalImmediately && walletNeedsRestore) {
+        openWalletRestoreModal()
+      }
+    }, [openModalImmediately, openWalletRestoreModal, walletNeedsRestore]),
+  )
 
   useEffect(() => {
     if (openModalImmediately && walletNeedsRestore) {

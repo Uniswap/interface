@@ -1,9 +1,11 @@
 import React from 'react'
 import { Flex, FlexProps, Image, useSporeColors } from 'ui/src'
-import { ALL_NETWORKS_LOGO } from 'ui/src/assets'
+import { ALL_NETWORKS_LOGO, ALL_NETWORKS_LOGO_UNICHAIN } from 'ui/src/assets'
 import { iconSizes, zIndices } from 'ui/src/theme'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export const SQUIRCLE_BORDER_RADIUS_RATIO = 0.3
 
@@ -32,6 +34,7 @@ function _NetworkLogo({
   const size = sizeWithoutBorder + 2 * borderWidth
   const shapeBorderRadius = shape === 'circle' ? size / 2 : size * SQUIRCLE_BORDER_RADIUS_RATIO
   const colors = useSporeColors()
+  const unichainPromoEnabled = useFeatureFlag(FeatureFlags.UnichainPromo)
 
   const imageStyle = {
     width: size,
@@ -42,9 +45,11 @@ function _NetworkLogo({
   }
 
   if (chainId === null) {
+    const logo = unichainPromoEnabled ? ALL_NETWORKS_LOGO_UNICHAIN : ALL_NETWORKS_LOGO
+
     return (
       <Flex testID="all-networks-logo">
-        <Image resizeMode="contain" source={ALL_NETWORKS_LOGO} style={imageStyle} />
+        <Image resizeMode="contain" source={logo} style={imageStyle} />
       </Flex>
     )
   }

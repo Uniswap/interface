@@ -47,10 +47,15 @@ export function useSwapPrefilledState(initialState: TransactionState | undefined
 
 export function getFocusOnCurrencyFieldFromInitialState({
   focusOnCurrencyField,
+  skipFocusOnCurrencyField,
   input,
   output,
   exactCurrencyField,
 }: TransactionState): CurrencyField | undefined {
+  if (skipFocusOnCurrencyField) {
+    return undefined
+  }
+
   if (focusOnCurrencyField) {
     return focusOnCurrencyField
   }

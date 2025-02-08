@@ -1,5 +1,4 @@
 import { MULTICALL_ADDRESSES, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES as V3NFT_ADDRESSES } from '@uniswap/sdk-core'
-import type { AddressMap } from '@uniswap/smart-order-router'
 import NFTPositionManagerJSON from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import MulticallJSON from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import { useWeb3React } from '@web3-react/core'
@@ -24,7 +23,7 @@ type ContractMap<T extends BaseContract> = { [key: number]: T }
 
 // Constructs a chain-to-contract map, using the wallet's provider when available
 function useContractMultichain<T extends BaseContract>(
-  addressMap: AddressMap,
+  addressMap: { [chainId: number]: string | undefined },
   ABI: any,
   chainIds?: UniverseChainId[],
 ): ContractMap<T> {

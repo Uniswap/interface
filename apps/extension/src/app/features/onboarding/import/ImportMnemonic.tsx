@@ -198,7 +198,7 @@ export function ImportMnemonic(): JSX.Element {
                 backgroundColor="$surface1"
                 borderColor="$surface3"
                 borderRadius={100}
-                borderWidth={1}
+                borderWidth="$spacing1"
                 mt="$spacing8"
                 px="$spacing12"
                 py="$spacing8"
@@ -307,7 +307,7 @@ const RecoveryPhraseWord = forwardRef<
         backgroundColor="$surface2"
         borderColor="$surface3"
         borderRadius="$rounded16"
-        borderWidth={1}
+        borderWidth="$spacing1"
         focusStyle={styles.inputFocus}
         fontSize={fonts.body3.fontSize}
         height={44}

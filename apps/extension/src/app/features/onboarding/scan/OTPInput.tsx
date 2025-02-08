@@ -197,7 +197,7 @@ export function OTPInput(): JSX.Element {
                 backgroundColor={character ? '$surface1' : '$surface2'}
                 borderColor="$surface3"
                 borderRadius="$rounded16"
-                borderWidth={1}
+                borderWidth="$spacing1"
                 disabled={loading}
                 focusStyle={inputStyles.inputFocus}
                 fontSize={fonts.heading3.fontSize}

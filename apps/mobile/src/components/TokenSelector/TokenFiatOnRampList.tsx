@@ -91,10 +91,32 @@ function _TokenFiatOnRampList({
     UNSUPPORTED = 'UNSUPPORTED',
   }
 
+  const sortedSupportedAssetsWithBalance = list
+    .filter((c) => {
+      if (!c.currencyInfo) {
+        return false
+      }
+
+      const quantity = balancesById?.[c.currencyInfo?.currencyId]?.quantity ?? 0
+      return quantity > 0
+    })
+    .sort((a, b) => {
+      if (!a.currencyInfo || !b.currencyInfo) {
+        return 0
+      }
+
+      const aQuantity = balancesById?.[a.currencyInfo.currencyId]?.balanceUSD ?? 0
+      const bQuantity = balancesById?.[b.currencyInfo.currencyId]?.balanceUSD ?? 0
+      return bQuantity - aQuantity
+    })
+  const supportedAssetsWithoutBalance = list.filter(
+    (c) => c.currencyInfo && !balancesById?.[c.currencyInfo?.currencyId],
+  )
   const unsupportedAssetsWithBalance = getUnsupportedFORTokensWithBalance(list, balancesById)
+
   const tokenList = isOffRamp
     ? [
-        { title: ListSection.SUPPORTED, data: list },
+        { title: ListSection.SUPPORTED, data: [...sortedSupportedAssetsWithBalance, ...supportedAssetsWithoutBalance] },
         { title: ListSection.UNSUPPORTED, data: unsupportedAssetsWithBalance },
       ]
     : [{ title: ListSection.SUPPORTED, data: list }]

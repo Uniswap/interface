@@ -10,7 +10,7 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { StyledNumericalInput } from 'components/NumericalInput'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import Tooltip from 'components/Tooltip'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { AutoColumn } from 'components/deprecated/Column'
 import { RowBetween, RowFixed } from 'components/deprecated/Row'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
@@ -329,8 +329,9 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
               </div>
             )}
             <PrefetchBalancesWrapper>
-              <Tooltip
-                show={tooltipVisible && !modalOpen}
+              <MouseoverTooltip
+                disabled
+                forceShow={tooltipVisible && !modalOpen}
                 placement="bottom"
                 offsetY={14}
                 text={numericalInputSettings?.disabledTooltipBody}
@@ -387,7 +388,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                     {onCurrencySelect && <StyledDropDown selected={!!currency} />}
                   </Aligner>
                 </CurrencySelect>
-              </Tooltip>
+              </MouseoverTooltip>
             </PrefetchBalancesWrapper>
           </InputRow>
           {Boolean(!hideInput && !hideBalance) && (

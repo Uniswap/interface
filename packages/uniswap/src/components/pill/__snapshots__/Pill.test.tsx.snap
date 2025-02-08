@@ -29,13 +29,13 @@ exports[`renders a Pill with border 1`] = `
   }
 >
   <Text
-    allowFontScaling={false}
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       {
         "color": "#FFFFFF",
         "fontFamily": "Basel Grotesk",
-        "fontSize": 16,
+        "fontSize": 17,
         "fontWeight": "400",
         "lineHeight": 24,
       }
@@ -45,13 +45,13 @@ exports[`renders a Pill with border 1`] = `
     Icon
   </Text>
   <Text
-    allowFontScaling={false}
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       {
         "color": undefined,
         "fontFamily": "Basel Grotesk",
-        "fontSize": 16,
+        "fontSize": 17,
         "fontWeight": "400",
         "lineHeight": 24,
         "paddingTop": 1,
@@ -94,13 +94,13 @@ exports[`renders a Pill without image 1`] = `
   }
 >
   <Text
-    allowFontScaling={false}
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       {
         "color": "#000",
         "fontFamily": "Basel Grotesk",
-        "fontSize": 16,
+        "fontSize": 17,
         "fontWeight": "400",
         "lineHeight": 24,
         "paddingTop": 1,

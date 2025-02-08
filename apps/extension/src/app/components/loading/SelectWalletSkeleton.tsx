@@ -19,7 +19,7 @@ function WalletSkeleton({ opacity }: { opacity: number }): JSX.Element {
       alignItems="center"
       borderColor="$surface3"
       borderRadius="$rounded20"
-      borderWidth={1}
+      borderWidth="$spacing1"
       height={WALLET_PREVIEW_CARD_HEIGHT}
       justifyContent="flex-start"
       opacity={opacity}

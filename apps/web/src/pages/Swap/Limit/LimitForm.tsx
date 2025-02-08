@@ -17,7 +17,6 @@ import Row from 'components/deprecated/Row'
 import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/styled'
 import { ZERO_PERCENT } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
-import { useIsUniswapXSupportedChain } from 'hooks/useIsUniswapXSupportedChain'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
@@ -470,13 +469,13 @@ function SubmitOrderButton({
   const accountDrawer = useAccountDrawer()
   const account = useAccount()
   const { chainId } = useMultichainContext()
-  const isUniswapXSupported = useIsUniswapXSupportedChain(chainId)
+  const isLimitSupportedChain = chainId && LIMIT_SUPPORTED_CHAINS.includes(chainId)
 
   const buttonProps = useMemo(() => {
-    const submitButtonDisabled = !isUniswapXSupported || hasInsufficientFunds || !!limitPriceError || !trade
+    const submitButtonDisabled = !isLimitSupportedChain || hasInsufficientFunds || !!limitPriceError || !trade
 
     const getButtonText = () => {
-      if (!isUniswapXSupported) {
+      if (!isLimitSupportedChain) {
         return <Trans i18nKey="limits.selectSupportedTokens" />
       }
       if (!account.isConnected) {
@@ -526,7 +525,7 @@ function SubmitOrderButton({
       ),
     } as const
   }, [
-    isUniswapXSupported,
+    isLimitSupportedChain,
     account.isConnected,
     accountDrawer.open,
     hasInsufficientFunds,

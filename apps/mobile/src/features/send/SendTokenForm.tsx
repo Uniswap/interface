@@ -256,7 +256,7 @@ export function SendTokenForm(): JSX.Element {
           {nftIn ? (
             <NFTTransfer asset={nftIn} nftSize={fullHeight / 4} />
           ) : (
-            <Flex borderColor="$surface3" borderRadius="$rounded20" borderWidth={1} justifyContent="center">
+            <Flex borderColor="$surface3" borderRadius="$rounded20" borderWidth="$spacing1" justifyContent="center">
               <CurrencyInputPanel
                 ref={currencyInputPanelRef}
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
@@ -304,7 +304,7 @@ export function SendTokenForm(): JSX.Element {
               borderColor="$surface3"
               borderTopLeftRadius="$rounded20"
               borderTopRightRadius="$rounded20"
-              borderWidth={1}
+              borderWidth="$spacing1"
               justifyContent="center"
             >
               {recipient && (
@@ -347,7 +347,7 @@ export function SendTokenForm(): JSX.Element {
                   borderBottomRightRadius="$rounded16"
                   borderColor="$surface3"
                   borderTopWidth={0}
-                  borderWidth={1}
+                  borderWidth="$spacing1"
                   isRecipientBlocked={isRecipientBlocked}
                   px="$spacing16"
                   py="$spacing12"

@@ -159,7 +159,7 @@ export function TransactionDetails({
       {showWarning && warning && onShowWarning && (
         <TransactionWarning warning={warning} onShowWarning={onShowWarning} />
       )}
-      {isSwap && (
+      {!isInterface && isSwap && (
         <TransactionSettingsModal
           settings={[SlippageUpdate]}
           initialSelectedSetting={SlippageUpdate}
@@ -274,7 +274,7 @@ const ExpectedFailureBanner = ({
       alignItems="center"
       borderRadius="$rounded16"
       borderColor="$surface3"
-      borderWidth={1}
+      borderWidth="$spacing1"
       gap="$spacing12"
       p="$spacing12"
     >

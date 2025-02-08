@@ -340,3 +340,11 @@ export function removeCreatedOnboardingRedesignAccountBehaviorHistory(state: any
   delete newState.behaviorHistory.createdOnboardingRedesignAccount
   return newState
 }
+
+// Mobile: 84
+// Extension: 18
+export function deleteWelcomeWalletCardBehaviorHistory(state: any): any {
+  const newState = { ...state }
+  delete newState.behaviorHistory?.hasViewedWelcomeWalletCard
+  return newState
+}

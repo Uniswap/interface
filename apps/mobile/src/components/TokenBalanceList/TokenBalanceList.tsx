@@ -1,3 +1,4 @@
+import { NetworkStatus } from '@apollo/client'
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import { useFocusEffect } from '@react-navigation/core'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
@@ -207,7 +208,7 @@ export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, T
 const HeaderComponent = memo(function _HeaderComponent(): JSX.Element | null {
   const { t } = useTranslation()
   const { balancesById, networkStatus, refetch } = useTokenBalanceListContext()
-  const hasError = isError(networkStatus, !!balancesById)
+  const hasError = !!balancesById && networkStatus === NetworkStatus.error
 
   return hasError ? (
     <AnimatedFlex entering={FadeInDown} exiting={FadeOut} px="$spacing24" py="$spacing8">

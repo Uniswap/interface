@@ -1,9 +1,9 @@
 import { useSortedAccountList } from 'src/app/features/accounts/useSortedAccountList'
 import { act, renderHook } from 'src/test/test-utils'
-import { useAccountList } from 'wallet/src/features/accounts/hooks'
+import { useAccountListData } from 'wallet/src/features/accounts/useAccountListData'
 
-jest.mock('wallet/src/features/accounts/hooks')
-const mockUseAccountList = useAccountList as jest.MockedFunction<typeof useAccountList>
+jest.mock('wallet/src/features/accounts/useAccountListData')
+const mockUseAccountList = useAccountListData as jest.MockedFunction<typeof useAccountListData>
 
 describe('useSortedAccountList', () => {
   beforeEach(() => {

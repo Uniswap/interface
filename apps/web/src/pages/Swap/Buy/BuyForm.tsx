@@ -152,8 +152,6 @@ function BuyFormInner({ disabled }: BuyFormProps) {
               disabled={disabled}
               iconSize={18}
               chevronDirection="down"
-              backgroundColor="$surface1"
-              amountReady={Boolean(amountOut)}
               loading={amountOutLoading && inputAmount !== ''}
               testID={TestID.ChooseInputToken}
             />
