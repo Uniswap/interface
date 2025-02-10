@@ -194,7 +194,7 @@ export function useTrackedTokenPairs(): [Token, Token][] {
     () =>
       chainId && popularTokens?.topTokens
         ? popularTokens.topTokens.flatMap((gqlToken) => {
-            if (!gqlToken) {
+            if (!gqlToken || !gqlToken.address) {
               return []
             }
             const token = gqlToCurrency(gqlToken)
