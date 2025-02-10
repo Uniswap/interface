@@ -1,5 +1,6 @@
 import { ChainId, CurrencyAmount } from '@ubeswap/sdk-core'
-import { ButtonConfirmed, ButtonOutlined, ButtonPrimary } from 'components/Button'
+import { useWeb3React } from '@web3-react/core'
+import { ButtonConfirmed, ButtonError, ButtonOutlined } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import { AutoColumn, Column } from 'components/Column'
 import Row, { AutoRow } from 'components/Row'
@@ -7,7 +8,8 @@ import TransactionConfirmationModal from 'components/TransactionConfirmationModa
 import { UBE } from 'constants/tokens'
 import { useToken } from 'hooks/Tokens'
 import { useAtom } from 'jotai'
-import { ReactNode, useCallback, useEffect, useState } from 'react'
+import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
@@ -81,12 +83,15 @@ const Divider = styled.div`
 `
 
 export default function FinalStep({ onBack }: { onBack: () => void }) {
+  const { account } = useWeb3React()
   const { formatCurrencyAmount } = useFormatter()
   const [options] = useAtom(launchpadParams)
   const [validationResult] = useAtom(launchpadValidationResult)
 
   const token = useToken(options.tokenInfo.tokenAddress)
   const quoteToken = useToken(options.tokenSale.quoteToken)
+  const tokenBalance = useCurrencyBalance(account, token)
+  const ubeBalance = useCurrencyBalance(account, UBE[ChainId.CELO])
 
   // UBE Approval process
   const ubeFeeAmount = CurrencyAmount.fromRawAmount(UBE[ChainId.CELO], validationResult?.feeAmountWei || 0)
@@ -151,6 +156,19 @@ export default function FinalStep({ onBack }: { onBack: () => void }) {
       })
     }
   }, [isDeploying, callDeploy, navigate])
+
+  const errorText: string | undefined = useMemo(() => {
+    if (!account) {
+      return 'Connect Wallet'
+    }
+    if (ubeBalance && ubeBalance.lessThan(ubeFeeAmount)) {
+      return 'Insufficient UBE balance'
+    }
+    if (tokenBalance && tokenAmount && tokenBalance.lessThan(tokenAmount)) {
+      return `Insufficient ${token?.symbol} balance`
+    }
+    return undefined
+  }, [account, ubeBalance, ubeFeeAmount, token, tokenBalance, tokenAmount])
 
   return (
     <PageWrapper>
@@ -306,7 +324,9 @@ export default function FinalStep({ onBack }: { onBack: () => void }) {
                 )}
               </ButtonConfirmed>
             ) : (
-              <ButtonPrimary onClick={onDeploy}>Create Launch</ButtonPrimary>
+              <ButtonError onClick={onDeploy} disabled={isDeploying || !!errorText} error={!!errorText}>
+                {isDeploying ? 'Deploying...' : errorText ? errorText : 'Create Launch'}
+              </ButtonError>
             )}
           </Row>
         </Column>
