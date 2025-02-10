@@ -4,7 +4,8 @@ import useCopyClipboard from "hooks/useCopyClipboard";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { CrossChainCurrency } from "types/tokens";
-import { Copy, Clipboard, CheckSquare, Check } from "react-feather";
+import { Copy, Check } from "react-feather";
+import Loader from "components/Icons/LoadingSpinner";
 
 const CopyIcon = styled(Copy)`
   color: ${({ theme }) => theme.neutral1};
@@ -14,6 +15,12 @@ const CopyIcon = styled(Copy)`
 const CheckIcon = styled(Check)`
   color: ${({ theme }) => theme.neutral1};
   cursor: pointer;
+`;
+
+const GreenCheckIcon = styled(Check)`
+  color: ${({ theme }) => theme.white};
+  border-radius: 50%;
+  background-color: #15ac5d;
 `;
 
 const Container = styled.div`
@@ -59,6 +66,9 @@ const DepositHeader = styled.div`
   margin: 0;
   margin-bottom: 10px;
   font-size: 23px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const DepositAmount = styled.div`
@@ -150,6 +160,36 @@ const SwapAddress = styled.div`
   cursor: pointer;
 `;
 
+const ProgressBar = styled.div<{ value: number }>`
+  width: 100%;
+  height: 12px;
+  border-radius: 6px;
+  background: ${({ theme }) => theme.surface2};
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 1rem;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: ${({ value }) => value * 100}%;
+    background: ${({ theme }) => theme.brandedGradient};
+    animation: ${({ value }) => (value < 1 ? "progressAnimation 3s" : "none")};
+  }
+
+  @keyframes progressAnimation {
+    0% {
+      width: 0;
+    }
+    100% {
+      width: 100%;
+    }
+  }
+`;
+
 type AwaitingDepositPageProps = {
   crossChainSwapData: any;
   currencyFrom: CrossChainCurrency | null;
@@ -199,6 +239,20 @@ export const AwaitingDepositPage = ({
     return `${address.slice(0, startChars)}...${address.slice(-endChars)}`;
   };
 
+  const progressValue =
+    swapDetails.status === "finished"
+      ? 1
+      : swapDetails.status === "waiting"
+      ? 0
+      : swapDetails.status === "confirming"
+      ? 0.25
+      : swapDetails.status === "exchanging"
+      ? 0.5
+      : 0.75;
+
+  // Use the status as a key to reset the animation
+  const progressKey = `${swapDetails.id}-${swapDetails.status}-${progressValue}`;
+
   if (!swapDetails) return null;
   return (
     <Container>
@@ -212,12 +266,15 @@ export const AwaitingDepositPage = ({
           {swapDetails.id}
         </ExchangeIDCopy>
       </ExchangeID>
-
+      <ProgressBar value={progressValue} key={progressKey} />
       <Card>
         <DepositHeader>
-          {swapDetails.status === "waiting"
-            ? "Awaiting your deposit"
-            : swapDetails.status?.toUpperCase()}
+          <div>
+            {swapDetails.status === "waiting"
+              ? "Awaiting your deposit"
+              : swapDetails.status?.toUpperCase()}
+          </div>
+          {swapDetails.status !== "finished" ? <Loader /> : <GreenCheckIcon />}
         </DepositHeader>
         <DepositAmount>
           {currencyFrom && (

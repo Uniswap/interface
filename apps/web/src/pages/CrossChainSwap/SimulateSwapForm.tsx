@@ -131,7 +131,7 @@ const Circle = styled.div<{ completed?: boolean }>`
 
 const StepLabel = styled.div`
   font-size: 1rem;
-  color: #39424e;
+  color: ${({ theme }) => theme.text};
 `;
 
 export type SimulateSwapFormType = {

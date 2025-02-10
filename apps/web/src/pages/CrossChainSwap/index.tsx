@@ -94,7 +94,7 @@ export default function CrossChainSwapPage() {
   const [crossChainSwapData, setCrossChainSwapData] = useState(null);
 
   return (
-    <Trace logImpression page={InterfacePageName.CROSS_CHAIN_SWAP_PAGE}>
+    <Trace logImpression page={"cross-chain-swap-page"}>
       <Box
         maxWidth="920px"
         direction="row"
