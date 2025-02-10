@@ -266,7 +266,10 @@ export function useParsedSwapWarnings(): ParsedWarnings {
 }
 
 function getSwapWarningFromError(error: Error, t: TFunction, derivedSwapInfo: DerivedSwapInfo): Warning {
-  const isBridgeTrade = derivedSwapInfo.trade.trade !== null && isBridge(derivedSwapInfo.trade.trade)
+  // Trade object is null for quote not found case
+  const isBridgeTrade =
+    derivedSwapInfo.currencies.input?.currency.chainId !== derivedSwapInfo.currencies.output?.currency.chainId
+
   if (error instanceof FetchError) {
     // Special case: rate limit errors are not parsed by errorCode
     if (isRateLimitFetchError(error)) {
@@ -291,18 +294,16 @@ function getSwapWarningFromError(error: Error, t: TFunction, derivedSwapInfo: De
         }
       }
 
-      // no bridging quotes found warning
-      case Err404.errorCode.RESOURCE_NOT_FOUND && isBridgeTrade: {
-        return {
-          type: WarningLabel.NoQuotesFound,
-          severity: WarningSeverity.Low,
-          action: WarningAction.DisableReview,
-          title: t('swap.warning.noQuotesFound.title'),
-          message: t('swap.warning.noQuotesFound.bridging.message'),
-        }
-      }
-
       case Err404.errorCode.RESOURCE_NOT_FOUND: {
+        if (isBridgeTrade) {
+          return {
+            type: WarningLabel.NoQuotesFound,
+            severity: WarningSeverity.Low,
+            action: WarningAction.DisableReview,
+            title: t('swap.warning.noQuotesFound.title'),
+            message: t('swap.warning.noQuotesFound.bridging.message'),
+          }
+        }
         return {
           type: WarningLabel.NoRoutesError,
           severity: WarningSeverity.Low,
