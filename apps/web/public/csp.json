@@ -100,6 +100,7 @@
     "https://x6ahx1oagk.execute-api.us-east-2.amazonaws.com",
     "https://mainnet.era.zksync.io/",
     "https://8mr3mthjba.execute-api.us-east-2.amazonaws.com",
+    "https://api.ethfollow.xyz/api/v1/",
     "wss://*.uniswap.org",
     "wss://relay.walletconnect.com",
     "wss://relay.walletconnect.org",
