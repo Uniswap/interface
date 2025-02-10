@@ -40,6 +40,7 @@ type DebouncedGasInfo = {
   uniswapXGasFeeInfo?: FormattedUniswapXGasFeeInfo
   isHighRelativeToValue: boolean
   isLoading: boolean
+  chainId: UniverseChainId
 }
 
 export function useDebouncedGasInfo(): DebouncedGasInfo {
@@ -72,7 +73,13 @@ export function useDebouncedGasInfo(): DebouncedGasInfo {
 
   const isLoading = tradeLoadingOrRefetching || gasLoading || amountChanged || tradeChanged
 
-  const [info, setInfo] = useState<DebouncedGasInfo>({ gasFee, isHighRelativeToValue, uniswapXGasFeeInfo, isLoading })
+  const [info, setInfo] = useState<DebouncedGasInfo>({
+    gasFee,
+    isHighRelativeToValue,
+    uniswapXGasFeeInfo,
+    isLoading,
+    chainId,
+  })
 
   useEffect(() => {
     if (isLoading) {
@@ -84,9 +91,10 @@ export function useDebouncedGasInfo(): DebouncedGasInfo {
         isHighRelativeToValue,
         uniswapXGasFeeInfo,
         isLoading,
+        chainId,
       })
     }
-  }, [gasFee, gasFeeFormatted, isHighRelativeToValue, isLoading, uniswapXGasFeeInfo])
+  }, [gasFee, gasFeeFormatted, isHighRelativeToValue, isLoading, uniswapXGasFeeInfo, chainId])
 
   return info
 }
@@ -142,6 +150,7 @@ function GasRow({ gasInfo, hidden }: { gasInfo: DebouncedGasInfo; hidden?: boole
             </Flex>
           }
           uniswapXGasFeeInfo={gasInfo.uniswapXGasFeeInfo}
+          chainId={gasInfo.chainId}
         />
       </Flex>
     )

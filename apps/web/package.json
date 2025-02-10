@@ -208,7 +208,7 @@
     "@uniswap/router-sdk": "1.21.0",
     "@uniswap/sdk-core": "7.5.0",
     "@uniswap/token-lists": "1.0.0-beta.33",
-    "@uniswap/uniswapx-sdk": "3.0.0-beta.1",
+    "@uniswap/uniswapx-sdk": "3.0.0-beta.3",
     "@uniswap/universal-router-sdk": "4.14.0",
     "@uniswap/v2-core": "1.0.1",
     "@uniswap/v2-periphery": "1.1.0-beta.0",

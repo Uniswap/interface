@@ -10,6 +10,7 @@ import {
   AutoSlippage,
   BridgeQuote,
   ClassicQuote,
+  ProtocolItems,
   Quote,
   QuoteRequest,
   QuoteResponse,
@@ -432,7 +433,9 @@ export function useQuoteRoutingParams({
   return useMemo(() => {
     // for USD quotes, we avoid routing through UniswapX
     if (isUSDQuote) {
-      return { routingPreference: RoutingPreference.CLASSIC }
+      return {
+        protocols: [ProtocolItems.V2, ProtocolItems.V3, ProtocolItems.V4],
+      }
     }
 
     // for bridging, we want to only return BEST_PRICE

@@ -156,15 +156,17 @@ export function* modifyLocalCache({
 
           const cachedQuantity = readField<number>('quantity', tokenBalanceRef)
 
+          const tokenBalanceId = apolloClient.cache.identify(tokenBalanceRef)
+
           logger.debug(
             'refetchGQLQueriesViaOnchainOverrideVariantSaga.ts',
             'modifyLocalCache',
             `[ITBU] Calling apolloClient.cache.modify for ${currencyId}`,
-            { tokenBalanceRef, id: apolloClient.cache.identify(tokenBalanceRef) },
+            { tokenBalanceRef, tokenBalanceId },
           )
 
           apolloClient.cache.modify({
-            id: apolloClient.cache.identify(tokenBalanceRef),
+            id: tokenBalanceId,
             fields: {
               quantity: () => {
                 return onchainQuantity
@@ -199,7 +201,7 @@ export function* modifyLocalCache({
                 logger.debug(
                   'refetchGQLQueriesViaOnchainOverrideVariantSaga.ts',
                   'modifyLocalCache',
-                  `[ITBU] Overriding ${currencyId} with ${value}`,
+                  `[ITBU] Overriding ${currencyId} with $${value}`,
                 )
 
                 return {

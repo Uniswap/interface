@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmZdY2Mb1N59jEKroBDeaUskdWbKF7M96pTr1SGaRMtu6Y`
-- CIDv1: `bafybeifhyppoxkdtcojhoqoocty7kv7czr565xrg65snoiw35fulc7rxre`
+- CIDv0: `QmTDH8VV44KFMkkHpig7crxe3CwJkXoQqkpHhTzCLUNtAo`
+- CIDv1: `bafybeicim34aqvkuunmxx2z6s5utcpw243kfqyw66jb3njra5jn2d2dopq`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeifhyppoxkdtcojhoqoocty7kv7czr565xrg65snoiw35fulc7rxre.ipfs.dweb.link/
-- [ipfs://QmZdY2Mb1N59jEKroBDeaUskdWbKF7M96pTr1SGaRMtu6Y/](ipfs://QmZdY2Mb1N59jEKroBDeaUskdWbKF7M96pTr1SGaRMtu6Y/)
+- https://bafybeicim34aqvkuunmxx2z6s5utcpw243kfqyw66jb3njra5jn2d2dopq.ipfs.dweb.link/
+- [ipfs://QmTDH8VV44KFMkkHpig7crxe3CwJkXoQqkpHhTzCLUNtAo/](ipfs://QmTDH8VV44KFMkkHpig7crxe3CwJkXoQqkpHhTzCLUNtAo/)
 
-### 5.69.5 (2025-02-08)
+## 5.70.0 (2025-02-10)
 
 
-### Bug Fixes
+### Features
 
-* **web:** add null check for chain - prod (#16125) c877c2c
+* **web:** Web Prod Unichain Hotfixes (#16016) 17efb9e
 
 

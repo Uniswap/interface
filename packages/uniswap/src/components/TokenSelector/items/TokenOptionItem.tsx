@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
@@ -10,7 +10,7 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { setHasSeenBridgingTooltip } from 'uniswap/src/features/behaviorHistory/slice'
+import { setHasSeenBridgingAnimation, setHasSeenBridgingTooltip } from 'uniswap/src/features/behaviorHistory/slice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
@@ -19,6 +19,7 @@ import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { isInterface } from 'utilities/src/platform'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 interface OptionProps {
   option: TokenOption
@@ -60,9 +61,9 @@ function _TokenOptionItem({
   const { colorSecondary: warningIconColor } = getWarningIconColors(severity)
   const shouldShowWarningModalOnPress = isBlocked || (severity !== WarningSeverity.None && !tokenWarningDismissed)
 
-  const { shouldShowUnichainBridgingTooltip } = useUnichainTooltipVisibility()
+  const { shouldShowUnichainBridgingAnimation } = useUnichainTooltipVisibility()
   const isUnichainEth = currency.isNative && currency.chainId === UniverseChainId.Unichain
-  const showUnichainPromoAnimation = shouldShowUnichainBridgingTooltip && isUnichainEth
+  const showUnichainPromoAnimation = shouldShowUnichainBridgingAnimation && isUnichainEth
 
   const handleShowWarningModal = useCallback((): void => {
     dismissNativeKeyboard()
@@ -91,6 +92,17 @@ function _TokenOptionItem({
     setShowWarningModal(false)
     onPress()
   }, [onPress])
+
+  useEffect(() => {
+    if (showUnichainPromoAnimation) {
+      // delay to prevent ux jank
+      const delay = setTimeout(() => {
+        dispatch(setHasSeenBridgingAnimation(true))
+      }, ONE_SECOND_MS * 2)
+      return () => clearTimeout(delay)
+    }
+    return undefined
+  }, [dispatch, showUnichainPromoAnimation])
 
   return (
     <>

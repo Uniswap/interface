@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux'
 import {
+  selectHasSeenUnichainPromotionBridgingAnimation,
   selectHasSeenUnichainPromotionBridgingTooltip,
   selectHasSeenUnichainPromotionNetworkSelectorTooltip,
 } from 'uniswap/src/features/behaviorHistory/selectors'
@@ -10,6 +11,7 @@ import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/select
 export function useUnichainTooltipVisibility(): {
   shouldShowUnichainNetworkSelectorTooltip: boolean
   shouldShowUnichainBridgingTooltip: boolean
+  shouldShowUnichainBridgingAnimation: boolean
 } {
   const unichainEnabled = useFeatureFlag(FeatureFlags.Unichain)
   const unichainPromoEnabled = useFeatureFlag(FeatureFlags.UnichainPromo)
@@ -17,6 +19,7 @@ export function useUnichainTooltipVisibility(): {
     selectHasSeenUnichainPromotionNetworkSelectorTooltip,
   )
   const hasSeenUnichainPromotionBridgingTooltip = useSelector(selectHasSeenUnichainPromotionBridgingTooltip)
+  const hasSeenUnichainPromotionBridgingAnimation = useSelector(selectHasSeenUnichainPromotionBridgingAnimation)
   const isTestnetModeEnabled = useSelector(selectIsTestnetModeEnabled)
 
   // Don't show promotion if:
@@ -27,11 +30,13 @@ export function useUnichainTooltipVisibility(): {
     return {
       shouldShowUnichainNetworkSelectorTooltip: false,
       shouldShowUnichainBridgingTooltip: false,
+      shouldShowUnichainBridgingAnimation: false,
     }
   }
 
   return {
     shouldShowUnichainNetworkSelectorTooltip: !hasSeenUnichainPromotionNetworkSelectorTooltip,
     shouldShowUnichainBridgingTooltip: !hasSeenUnichainPromotionBridgingTooltip,
+    shouldShowUnichainBridgingAnimation: !hasSeenUnichainPromotionBridgingAnimation,
   }
 }

@@ -16989,7 +16989,7 @@ __metadata:
     "@types/uuid": 9.0.1
     "@uniswap/analytics-events": 2.41.0
     "@uniswap/eslint-config": "workspace:^"
-    "@uniswap/uniswapx-sdk": 3.0.0-beta.1
+    "@uniswap/uniswapx-sdk": 3.0.0-beta.3
     "@uniswap/universal-router-sdk": 4.14.0
     "@uniswap/v3-sdk": 3.24.0
     "@uniswap/v4-sdk": 1.18.0
@@ -17138,7 +17138,7 @@ __metadata:
     "@uniswap/router-sdk": 1.21.0
     "@uniswap/sdk-core": 7.5.0
     "@uniswap/token-lists": 1.0.0-beta.33
-    "@uniswap/uniswapx-sdk": 3.0.0-beta.1
+    "@uniswap/uniswapx-sdk": 3.0.0-beta.3
     "@uniswap/universal-router-sdk": 4.14.0
     "@uniswap/v2-core": 1.0.1
     "@uniswap/v2-periphery": 1.1.0-beta.0
@@ -17541,16 +17541,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/uniswapx-sdk@npm:3.0.0-beta.1":
-  version: 3.0.0-beta.1
-  resolution: "@uniswap/uniswapx-sdk@npm:3.0.0-beta.1"
+"@uniswap/uniswapx-sdk@npm:3.0.0-beta.3":
+  version: 3.0.0-beta.3
+  resolution: "@uniswap/uniswapx-sdk@npm:3.0.0-beta.3"
   dependencies:
     "@ethersproject/bytes": ^5.7.0
     "@ethersproject/providers": ^5.7.0
     "@uniswap/permit2-sdk": ^1.2.1
-    "@uniswap/sdk-core": ^5.0.0
+    "@uniswap/sdk-core": ^7.5.0
     ethers: ^5.7.0
-  checksum: 4989363afd2321a428a6c36d3d64c24010932dba0fd4db64f7f72da94385a952bc6984ffcfa300096e1b4138c5dbfb28b4cb5b52cb49988a0fd7676d385f80ce
+  checksum: 766bd6bb5c7eb11c57af601fe49d21bac20086d038876be6c344a43417cf284e22ed4defb7a2c7eb2753042ee3fa1e76e00f670eb47e7c8965a3d11ca68b4907
   languageName: node
   linkType: hard
 
@@ -47215,7 +47215,7 @@ __metadata:
     "@uniswap/permit2-sdk": 1.3.0
     "@uniswap/router-sdk": 1.21.0
     "@uniswap/sdk-core": 7.5.0
-    "@uniswap/uniswapx-sdk": 3.0.0-beta.1
+    "@uniswap/uniswapx-sdk": 3.0.0-beta.3
     "@uniswap/v2-sdk": 4.13.0
     "@uniswap/v3-sdk": 3.24.0
     "@uniswap/v4-sdk": 1.18.0
@@ -48300,7 +48300,7 @@ __metadata:
     "@uniswap/permit2-sdk": 1.3.0
     "@uniswap/router-sdk": 1.21.0
     "@uniswap/sdk-core": 7.5.0
-    "@uniswap/uniswapx-sdk": 3.0.0-beta.1
+    "@uniswap/uniswapx-sdk": 3.0.0-beta.3
     "@uniswap/universal-router-sdk": 4.14.0
     "@uniswap/v3-sdk": 3.24.0
     apollo3-cache-persist: 0.14.1

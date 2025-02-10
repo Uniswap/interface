@@ -100,7 +100,7 @@ export function TokenSectionBaseList({
         }),
       )
 
-      if (section.sectionKey === TokenOptionSection.BridgingTokens) {
+      if (section.sectionKey === TokenOptionSection.BridgingTokens && renderSectionFooter) {
         const unichainPromotion = {
           section: { sectionKey: TokenOptionSection.BridgingTokens },
           key: TokenOptionSection.BridgingTokens,
