@@ -845,8 +845,8 @@ export default function OptionsStep({ onNext }: { onNext: () => void }) {
                 selected={options.tokenSale.startDate ? new Date(options.tokenSale.startDate) : null}
                 onChange={(val) => setOptionsProp('tokenSale.startDate', val?.toJSON() || '')}
                 minDate={new Date()}
-                isError={false}
-                errorMessage="Please select a date"
+                isError={isError('tokenSale.startDate')}
+                errorMessage={validationError?.message}
               />
             </Column>
             <Column flex="1">
