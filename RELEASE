@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmcrC7r7rTib44JSKEidtHVYcwVXxHzs4Zfz7j39BJTbU8`
-- CIDv1: `bafybeigxst4z4x3v4pzihhykcxjn3a7ch4pijhxjlp75cmwym5zs53peju`
+- CIDv0: `Qma8AcDw32RXGXKAXL6Aj2SXtibZTKUJfAZjo8enJ2DZ7N`
+- CIDv1: `bafybeifpdf737ucz7lem6uwz6rkpth7qvmyjygyxz7gru34tzxjyrzkfie`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeigxst4z4x3v4pzihhykcxjn3a7ch4pijhxjlp75cmwym5zs53peju.ipfs.dweb.link/
-- [ipfs://QmcrC7r7rTib44JSKEidtHVYcwVXxHzs4Zfz7j39BJTbU8/](ipfs://QmcrC7r7rTib44JSKEidtHVYcwVXxHzs4Zfz7j39BJTbU8/)
+- https://bafybeifpdf737ucz7lem6uwz6rkpth7qvmyjygyxz7gru34tzxjyrzkfie.ipfs.dweb.link/
+- [ipfs://Qma8AcDw32RXGXKAXL6Aj2SXtibZTKUJfAZjo8enJ2DZ7N/](ipfs://Qma8AcDw32RXGXKAXL6Aj2SXtibZTKUJfAZjo8enJ2DZ7N/)
 
-### 5.70.3 (2025-02-10)
+### 5.70.4 (2025-02-11)
 
 
 ### Bug Fixes
 
-* **web:** crash on the v2 migrate page (#16157) ea806be
+* **web:** hardcode bridged assets to be verified (#16163) 0d3ed69
 
 
