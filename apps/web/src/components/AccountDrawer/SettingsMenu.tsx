@@ -4,7 +4,6 @@ import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
 import { SmallBalanceToggle } from 'components/AccountDrawer/SmallBalanceToggle'
 import { SpamToggle } from 'components/AccountDrawer/SpamToggle'
 import { TestnetsToggle } from 'components/AccountDrawer/TestnetsToggle'
-import { UnichainToggle } from 'components/AccountDrawer/UnichainToggle'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
@@ -94,7 +93,6 @@ export default function SettingsMenu({
             <SpamToggle />
             <AnalyticsToggle />
             <TestnetsToggle />
-            <UnichainToggle />
           </ToggleWrapper>
 
           <Column>

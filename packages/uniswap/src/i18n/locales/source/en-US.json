@@ -2257,7 +2257,6 @@
   "transaction.warning.maxNative.title": "Low network token balance",
   "transaction.watcher.error.cancel": "Unable to cancel transaction",
   "transaction.watcher.error.status": "Error while checking transaction status",
-  "unichain.promotion.beta.enable": "Enable Unichain Beta",
   "unichain.promotion.bridging.description": "Swap to Unichain",
   "unichain.promotion.bridging.tooltip.description": "Bridge your ETH to get started on Unichain.",
   "unichain.promotion.cold.description": "Faster swaps. Lower fees. Unichain is the home for DeFi.",
