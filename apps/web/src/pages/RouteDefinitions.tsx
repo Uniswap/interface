@@ -15,6 +15,7 @@ import { getExploreDescription, getExploreTitle } from "./getExploreTitle";
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import Landing from "./Landing";
 import Swap from "./Swap";
+import CrossChainSwap from "./CrossChainSwap";
 
 const NftExplore = lazy(() => import("nft/pages/explore"));
 const Collection = lazy(() => import("nft/pages/collection"));
@@ -89,6 +90,7 @@ export function useRouterConfig(): RouterConfig {
 const StaticTitlesAndDescriptions = {
   UniswapTitle: t("title.uniswapTradeCrypto"),
   SwapTitle: t("title.buySellTradeEthereum"),
+  CrossChainSwapTitle: t("title.crossChainSwap"),
   SwapDescription: t("title.swappingMadeSimple"),
   DetailsPageBaseTitle: t("common.buyAndSell"),
   TDPDescription: t("title.realTime"),
@@ -218,6 +220,11 @@ export const routes: RouteDefinition[] = [
     path: "/swap",
     getElement: () => <Swap />,
     getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
+  }),
+  createRouteDefinition({
+    path: "/cross-chain-swap",
+    getElement: () => <CrossChainSwap />,
+    getTitle: () => StaticTitlesAndDescriptions.CrossChainSwapTitle,
   }),
   createRouteDefinition({
     path: "/pool/v2/find",

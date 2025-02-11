@@ -11,6 +11,7 @@ export const paths = [
   "/create-proposal",
   "/send",
   "/swap",
+  "/cross-chain-swap",
   "/buy",
   "/farms",
   "/limit",

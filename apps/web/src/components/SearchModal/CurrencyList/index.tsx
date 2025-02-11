@@ -24,6 +24,7 @@ import Row, { RowFixed } from "../../Row";
 import { MouseoverTooltip, TooltipSize } from "../../Tooltip";
 import { LoadingRows, MenuItem } from "../styled";
 import { scrollbarStyle } from "./index.css";
+import { CrossChainCurrency, equalsCrossChainCurrency } from "types/tokens";
 
 function currencyKey(data: Currency | CurrencyListRow): string {
   if (data instanceof CurrencyListSectionTitle) {
@@ -74,6 +75,17 @@ const LabelContainer = styled.div`
   display: flex;
   align-items: center;
   padding: 0 20px;
+`;
+
+export const CrossChainCurrencyLogo = styled.img<{ size?: number }>`
+  object-fit: cover;
+  opacity: 1;
+  width: ${({ size }) => size ?? 28}px;
+  height: ${({ size }) => size ?? 28}px;
+`;
+
+export const CrossChainTokenTags = styled.img`
+  object-fit: cover;
 `;
 
 function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
@@ -246,8 +258,99 @@ export function CurrencyRow({
   );
 }
 
+export function CrossChainCurrencyRow({
+  currency,
+  onSelect,
+  isSelected,
+  otherSelected,
+  style,
+  eventProperties,
+  disabled,
+  tooltip,
+  showAddress,
+}: {
+  currency: CrossChainCurrency;
+  onSelect: () => void;
+  isSelected: boolean;
+  otherSelected: boolean;
+  style?: CSSProperties;
+  eventProperties: Record<string, unknown>;
+  disabled?: boolean;
+  tooltip?: string;
+  showAddress?: boolean;
+}) {
+  const account = useAccount();
+  const blockedTokenOpacity = "0.6";
+  const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics();
+
+  const Wrapper = tooltip ? MouseoverTooltip : RowWrapper;
+
+  // only show add or remove buttons if not on selected list
+  return (
+    <Trace
+      logPress
+      logKeyPress
+      eventOnTrigger={WalletEventName.TokenSelected}
+      properties={{
+        is_imported_by_user: false,
+        ...eventProperties,
+        total_balances_usd: portfolioBalanceUsd,
+      }}
+      element={InterfaceElementName.TOKEN_SELECTOR_ROW}
+    >
+      <Wrapper
+        style={style}
+        text={
+          <ThemedText.Caption textAlign="center">{tooltip}</ThemedText.Caption>
+        }
+        size={TooltipSize.ExtraSmall}
+      >
+        <MenuItem
+          tabIndex={0}
+          className={`token-item-${currency._id}`}
+          onKeyPress={(e) => (e.key === "Enter" ? onSelect() : null)}
+          onClick={() => onSelect()}
+          selected={otherSelected || isSelected}
+          dim={false}
+          disabled={disabled}
+        >
+          <Column>
+            <CrossChainCurrencyLogo src={currency.img} alt={currency.name} />
+          </Column>
+          <AutoColumn style={{ opacity: "1" }} gap="xs">
+            <Row>
+              <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
+            </Row>
+            <Row gap="sm">
+              <ThemedText.Caption ml="0px" color="neutral2">
+                {currency.symbol}
+              </ThemedText.Caption>
+              {showAddress && !!currency.address && (
+                <ThemedText.Caption color="neutral3">
+                  {shortenAddress(currency.address)}
+                </ThemedText.Caption>
+              )}
+            </Row>
+          </AutoColumn>
+          <Column>
+            <RowFixed style={{ justifySelf: "flex-end" }}>
+              {/* <CrossChainTokenTags src={currency.img} alt={currency.name} /> */}
+            </RowFixed>
+          </Column>
+        </MenuItem>
+      </Wrapper>
+    </Trace>
+  );
+}
+
 interface TokenRowProps {
   data: Array<CurrencyListRow>;
+  index: number;
+  style: CSSProperties;
+}
+
+interface CrossChainTokenRowProps {
+  data: Array<CrossChainCurrencyListRow>;
   index: number;
   style: CSSProperties;
 }
@@ -261,6 +364,25 @@ export const formatAnalyticsEventProperties = (
 ) => ({
   token_symbol: token?.symbol,
   token_address: token?.isToken ? token?.address : undefined,
+  is_suggested_token: false,
+  is_selected_from_list: true,
+  scroll_position: "",
+  token_list_index: index,
+  token_list_length: data.length,
+  ...(isAddressSearch === false
+    ? { search_token_symbol_input: searchQuery }
+    : { search_token_address_input: isAddressSearch }),
+});
+
+export const formatCrossChainAnalyticsEventProperties = (
+  token: CrossChainCurrency,
+  index: number,
+  data: any[],
+  searchQuery: string,
+  isAddressSearch: string | false
+) => ({
+  token_symbol: token?.symbol,
+  token_address: !!token?.address ? token?.address : undefined,
   is_suggested_token: false,
   is_selected_from_list: true,
   scroll_position: "",
@@ -285,6 +407,20 @@ const LoadingRow = () => (
 export class CurrencyListRow {
   constructor(
     public readonly currency: Currency | undefined,
+    public readonly options?: {
+      disabled?: boolean;
+      showAddress?: boolean;
+      tooltip?: string;
+    }
+  ) {}
+}
+
+/**
+ * This is used to display disabled cross-chain currencies in the list.
+ */
+export class CrossChainCurrencyListRow {
+  constructor(
+    public readonly currency: CrossChainCurrency | null,
     public readonly options?: {
       disabled?: boolean;
       showAddress?: boolean;
@@ -411,6 +547,138 @@ export default function CurrencyList({
   const itemKey = useCallback((index: number, data: typeof currencies) => {
     const currency = data[index];
     return currencyKey(currency);
+  }, []);
+
+  return (
+    <div data-testid="currency-list-wrapper">
+      {isLoading ? (
+        <FixedSizeList
+          className={scrollbarStyle}
+          height={height}
+          ref={fixedListRef as any}
+          width="100%"
+          itemData={[]}
+          itemCount={10}
+          itemSize={ROW_ITEM_SIZE}
+        >
+          {LoadingRow}
+        </FixedSizeList>
+      ) : (
+        <FixedSizeList
+          className={scrollbarStyle}
+          height={height}
+          ref={fixedListRef as any}
+          width="100%"
+          itemData={currencies}
+          itemCount={currencies.length}
+          itemSize={ROW_ITEM_SIZE}
+          itemKey={itemKey}
+        >
+          {Row}
+        </FixedSizeList>
+      )}
+    </div>
+  );
+}
+
+export function CrossChainCurrencyList({
+  height,
+  currencies,
+  selectedCurrency,
+  onCurrencySelect,
+  otherCurrency,
+  fixedListRef,
+  isLoading,
+  searchQuery,
+  isAddressSearch,
+}: {
+  height: number;
+  currencies: Array<CrossChainCurrencyListRow>;
+  selectedCurrency: CrossChainCurrency | null;
+  onCurrencySelect: (currency: CrossChainCurrency) => void;
+  otherCurrency: CrossChainCurrency | null;
+  fixedListRef?: MutableRefObject<FixedSizeList | undefined>;
+  isLoading: boolean;
+  searchQuery: string;
+  isAddressSearch: string | false;
+  disabled?: boolean;
+}) {
+  const Row = useCallback(
+    function TokenRow({ data, index, style }: CrossChainTokenRowProps) {
+      const row: CrossChainCurrencyListRow = data[index];
+
+      if (row instanceof CurrencyListSectionTitle) {
+        return (
+          <LabelContainer style={style}>
+            <ThemedText.BodySecondary>{row.label}</ThemedText.BodySecondary>
+          </LabelContainer>
+        );
+      }
+
+      if (!row.currency) {
+        return null;
+      }
+
+      const currency: CrossChainCurrency = row.currency;
+      const isSelected = Boolean(
+        currency &&
+          selectedCurrency &&
+          equalsCrossChainCurrency(selectedCurrency, currency)
+      );
+      const otherSelected = Boolean(
+        currency &&
+          otherCurrency &&
+          equalsCrossChainCurrency(otherCurrency, currency)
+      );
+
+      const handleSelect = () => {
+        if (
+          currency &&
+          (!otherCurrency || !equalsCrossChainCurrency(otherCurrency, currency))
+        ) {
+          onCurrencySelect(currency);
+        }
+      };
+
+      if (isLoading) {
+        return LoadingRow();
+      } else if (currency) {
+        return (
+          <CrossChainCurrencyRow
+            style={style}
+            currency={currency}
+            onSelect={handleSelect}
+            otherSelected={otherSelected}
+            isSelected={isSelected}
+            eventProperties={formatCrossChainAnalyticsEventProperties(
+              currency,
+              index,
+              data,
+              searchQuery,
+              isAddressSearch
+            )}
+            disabled={row.options?.disabled}
+            tooltip={row.options?.tooltip}
+            showAddress={row.options?.showAddress}
+          />
+        );
+      } else {
+        return null;
+      }
+    },
+    [
+      selectedCurrency,
+      otherCurrency,
+      isLoading,
+      onCurrencySelect,
+      searchQuery,
+      isAddressSearch,
+    ]
+  );
+
+  const itemKey = useCallback((index: number, data: typeof currencies) => {
+    const currency = data[index];
+    return currency.currency?._id ?? "";
   }, []);
 
   return (

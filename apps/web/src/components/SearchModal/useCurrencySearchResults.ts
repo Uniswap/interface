@@ -1,5 +1,7 @@
+import { useState, useEffect, useCallback } from 'react'
 import { Currency } from "@taraswap/sdk-core";
 import {
+  CrossChainCurrencyListRow,
   CurrencyListRow,
   CurrencyListSectionTitle,
 } from "components/SearchModal/CurrencyList";
@@ -15,7 +17,7 @@ import { getSortedPortfolioTokens } from "lib/hooks/useTokenList/sorting";
 import { useMemo } from "react";
 import { useSwapAndLimitContext } from "state/swap/hooks";
 import { useUserAddedTokens } from "state/user/userAddedTokens";
-import { UserAddedToken } from "types/tokens";
+import { CrossChainCurrency, UserAddedToken } from "types/tokens";
 import {
   Chain,
   Token as GqlToken,
@@ -32,6 +34,13 @@ interface CurrencySearchParams {
   otherSelectedCurrency?: Currency | null;
 }
 
+interface CrossChainCurrencySearchParams {
+  searchQuery?: string;
+  filters?: CurrencySearchFilters;
+  selectedCurrency?: CrossChainCurrency | null;
+  otherSelectedCurrency?: CrossChainCurrency | null;
+}
+
 interface CurrencySearchResults {
   searchCurrency?: Currency | null;
   allCurrencyRows: CurrencyListRow[];
@@ -40,6 +49,8 @@ interface CurrencySearchResults {
 
 const currencyListRowMapper = (currency: Currency) =>
   new CurrencyListRow(currency);
+const crossChainCurrencyListRowMapper = (currency: CrossChainCurrency) =>
+  new CrossChainCurrencyListRow(currency);
 const searchResultsCurrencyListMapper = (currency: Currency) =>
   new CurrencyListRow(currency, { showAddress: true });
 const gqlCurrencyMapper = (gqlToken: any) => {
@@ -293,4 +304,54 @@ export function useCurrencySearchResults({
     searchCurrency: searchToken,
     allCurrencyRows: finalCurrencyList,
   };
+}
+
+export const useCrossChainCurrencySearchResults = ({
+  searchQuery,
+  selectedCurrency,
+  otherSelectedCurrency
+}: CrossChainCurrencySearchParams) => {
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [searchCurrency, setSearchCurrency] = useState<CrossChainCurrency | null>(null);
+  const [allCurrencyRows, setAllCurrencyRows] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null)
+
+  const initRows = useCallback(async () => {
+    setLoading(true)
+
+    const apiUrl = process.env.REACT_APP_TELESWAP_API_URL;
+    const apiKey = process.env.REACT_APP_TELESWAP_API_KEY;
+
+    if (!apiUrl || !apiKey) {
+      setError("API configuration is missing. Please check your environment variables.");
+      setAllCurrencyRows([]);
+      return;
+    }
+
+    const response = await fetch(`${apiUrl}/token`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Teleswap-X-API-Key': apiKey
+      }
+    });
+
+    let allCurrencies = await response.json()
+    if (searchQuery) {
+      allCurrencies = allCurrencies.filter((currency: CrossChainCurrency) => currency.name.toLowerCase().includes(searchQuery.toLowerCase()) || currency.symbol.toLowerCase().includes(searchQuery.toLowerCase()));
+    }
+    setAllCurrencyRows(allCurrencies)
+    setLoading(false)
+  }, [searchQuery]);
+
+  useEffect(() => {
+    initRows()
+  }, [initRows])
+
+  return {
+    loading,
+    searchCurrency,
+    allCurrencyRows: (allCurrencyRows ?? []).map(crossChainCurrencyListRowMapper),
+  }
 }
