@@ -42,7 +42,7 @@ export function DirectToDefi() {
           <RowToCol direction="row" gap="16px">
             <WebappCard title="Top Gainers" type="token" />
             <WebappCard title="Top Earners" type="earn" />
-            <WebappCard title="Launchpad" type="launch" />
+            <WebappCard title="Ubestarter" type="launch" />
 
             {/* <DownloadWalletCard /> */}
           </RowToCol>
