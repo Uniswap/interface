@@ -11,8 +11,7 @@ function clientToProvider(
   client?: Client<Transport, SupportedInterfaceChain>,
   chainId?: number
 ) {
-  // console.log("client & chhainId", client, chainId);
-  if (!client) {
+  if (!client?.chain) {
     return undefined;
   }
   const { chain, transport } = client;
