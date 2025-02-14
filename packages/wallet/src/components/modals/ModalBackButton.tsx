@@ -1,6 +1,6 @@
 import { TouchableArea } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons'
-import { zIndices } from 'ui/src/theme'
+import { zIndexes } from 'ui/src/theme'
 
 export function ModalBackButton({ onBack }: { onBack: () => void }): JSX.Element {
   return (
@@ -9,7 +9,7 @@ export function ModalBackButton({ onBack }: { onBack: () => void }): JSX.Element
       borderRadius="$roundedFull"
       p="$spacing4"
       position="absolute"
-      zIndex={zIndices.default}
+      zIndex={zIndexes.default}
       onPress={onBack}
     >
       <BackArrow color="$neutral2" size="$icon.24" />

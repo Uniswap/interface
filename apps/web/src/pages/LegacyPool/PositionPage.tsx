@@ -3,7 +3,15 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { InterfacePageName, LiquidityEventName } from '@uniswap/analytics-events'
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
+import {
+  Currency,
+  CurrencyAmount,
+  Fraction,
+  NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
+  Percent,
+  Price,
+  Token,
+} from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager, Pool, Position, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge/Badge'
 import RangeBadge from 'components/Badge/RangeBadge'
@@ -31,7 +39,6 @@ import { PoolState, usePool } from 'hooks/usePools'
 import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
-import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import styled, { useTheme } from 'lib/styled-components'
 import { LoadingRows } from 'pages/LegacyPool/styled'
@@ -59,6 +66,9 @@ import { currencyId } from 'utils/currencyId'
 import { WrongChainError } from 'utils/errors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
+import { assume0xAddress } from 'utils/wagmi'
+import { erc721Abi } from 'viem'
+import { useReadContract } from 'wagmi'
 
 const PositionPageButtonPrimary = styled(ButtonPrimary)`
   width: 228px;
@@ -74,12 +84,12 @@ const PageWrapper = styled.div`
   min-width: 800px;
   max-width: 960px;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     min-width: 100%;
     padding: 16px;
   }
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     min-width: 100%;
     padding: 16px;
   }
@@ -123,7 +133,7 @@ const DoubleArrow = styled.span`
   margin: 0 1rem;
 `
 const ResponsiveRow = styled(RowBetween)`
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     flex-direction: column;
     align-items: flex-start;
     row-gap: 16px;
@@ -135,7 +145,7 @@ const ActionButtonResponsiveRow = styled(ResponsiveRow)`
   width: 50%;
   justify-content: flex-end;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     width: 100%;
     flex-direction: row;
     * {
@@ -150,11 +160,11 @@ const ResponsiveButtonConfirmed = styled(ButtonConfirmed)`
   width: fit-content;
   font-size: 16px;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     width: fit-content;
   }
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     width: fit-content;
   }
 `
@@ -559,7 +569,14 @@ function PositionPageContent() {
     addTransaction,
   ])
 
-  const owner = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
+  const { data: owner } = useReadContract({
+    address: assume0xAddress(NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId ?? UniverseChainId.Mainnet]),
+    abi: erc721Abi,
+    functionName: 'ownerOf',
+    args: tokenId ? [tokenId.toBigInt()] : undefined,
+    query: { enabled: !!tokenId },
+  })
+
   const ownsNFT = owner === account.address || positionDetails?.operator === account.address
 
   const feeValueUpper = inverted ? feeValue0 : feeValue1

@@ -114,11 +114,18 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
           },
         ]
       }
-      tintColor="#BFBFBF"
+      transform={
+        [
+          {
+            "rotateZ": "0deg",
+          },
+        ]
+      }
       vbHeight={24}
       vbWidth={24}
     >
       <RNSVGGroup
+        color="#BFBFBF"
         fill={null}
         propList={
           [

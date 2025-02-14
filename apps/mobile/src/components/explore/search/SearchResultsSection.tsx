@@ -31,6 +31,7 @@ import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import {
   NFTCollectionSearchResult,
@@ -61,7 +62,11 @@ export function SearchResultsSection({
     error,
     refetch,
   } = useExploreSearchQuery({
-    variables: { searchQuery, nftCollectionsFilter: { nameQuery: searchQuery } },
+    variables: {
+      searchQuery,
+      nftCollectionsFilter: { nameQuery: searchQuery },
+      chains: selectedChain ? [toGraphQLChain(selectedChain)] : undefined,
+    },
   })
 
   const onRetry = useCallback(async () => {

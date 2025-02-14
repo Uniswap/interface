@@ -8,7 +8,7 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { MnemonicConfirmation } from 'src/components/mnemonic/MnemonicConfirmation'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
-import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
+import { useLockScreenOnBlur } from 'src/features/lockScreen/useLockScreenState'
 import { BackupSpeedBumpModal } from 'src/features/onboarding/BackupSpeedBumpModal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { DeprecatedButton, Flex, Text, useMedia, useSporeColors } from 'ui/src'
@@ -156,7 +156,8 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
             </Flex>
             <Flex justifyContent="flex-end">
               <DeprecatedButton
-                disabled={!displayContinueButtonEnabled}
+                size="large"
+                isDisabled={!displayContinueButtonEnabled}
                 testID={TestID.Next}
                 onPress={fromCloudBackup ? finishCloudBackup : nextView}
               >
@@ -192,7 +193,8 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
             </Flex>
             <Trace logPress element={ElementName.Continue} screen={ManualPageViewScreen.ConfirmRecoveryPhrase}>
               <DeprecatedButton
-                disabled={!confirmContinueButtonEnabled}
+                isDisabled={!confirmContinueButtonEnabled}
+                size="large"
                 testID={TestID.Continue}
                 onPress={() => (onboardingExperimentEnabled ? setShowSpeedBumpModal(true) : onValidationSuccessful())}
               >
@@ -238,6 +240,7 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
         <DeprecatedButton
           flexGrow={1}
           mt="$spacing16"
+          size="large"
           testID={TestID.Confirm}
           theme="primary"
           width="100%"
@@ -309,12 +312,12 @@ function ManualBackWarningModal({ onBack, onContinue }: ManualBackWarningModalPr
 
         <Flex row gap="$spacing8">
           <Trace logPress element={ElementName.BackButton} modal={ModalName.SeedPhraseWarningModal}>
-            <DeprecatedButton fill size="medium" theme="secondary" onPress={() => onBack()}>
+            <DeprecatedButton fill size="large" theme="secondary" onPress={() => onBack()}>
               {t('common.button.back')}
             </DeprecatedButton>
           </Trace>
           <Trace logPress element={ElementName.Continue} modal={ModalName.SeedPhraseWarningModal}>
-            <DeprecatedButton fill size="medium" theme="primary" onPress={() => onContinue()}>
+            <DeprecatedButton fill size="large" theme="primary" onPress={() => onContinue()}>
               {t('common.button.continue')}
             </DeprecatedButton>
           </Trace>

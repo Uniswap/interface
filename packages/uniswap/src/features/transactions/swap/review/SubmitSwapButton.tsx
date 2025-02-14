@@ -51,9 +51,8 @@ export function SubmitSwapButton({
       return (
         <DeprecatedButton
           fill
-          animation="fast"
+          isDisabled
           backgroundColor="$surface2"
-          disabled={true}
           pressStyle={{ scale: 0.98 }}
           icon={<SpinningLoader color="$neutral2" size={isWeb ? iconSizes.icon20 : iconSizes.icon24} />}
           opacity={1} // For indicative loading UI, opacity should be full despite disabled state
@@ -69,10 +68,9 @@ export function SubmitSwapButton({
       return (
         <DeprecatedButton
           fill
-          animation="fast"
+          isDisabled
           backgroundColor="$accent2"
           color="$accent1"
-          disabled={true}
           pressStyle={{ scale: 0.98 }}
           hoverStyle={{ opacity: 1 }}
           icon={<SpinningLoader color="$accent1" size={isWeb ? iconSizes.icon20 : iconSizes.icon24} />}
@@ -87,8 +85,7 @@ export function SubmitSwapButton({
       return (
         <DeprecatedButton
           fill
-          disabled
-          animation="fast"
+          isDisabled
           backgroundColor="$surface2"
           color="$neutral2"
           pressStyle={{ scale: 0.98 }}
@@ -105,10 +102,9 @@ export function SubmitSwapButton({
       return (
         <DeprecatedButton
           fill
-          animation="fast"
           backgroundColor="$statusCritical"
           color="$accent1"
-          disabled={disabled}
+          isDisabled={disabled}
           pressStyle={{ scale: 0.98 }}
           hoverStyle={{ opacity: 1, backgroundColor: '$statusCritical' }}
           opacity={disabled ? 0.5 : 0.9}
@@ -131,9 +127,8 @@ export function SubmitSwapButton({
       return (
         <DeprecatedButton
           fill
-          animation="fast"
           backgroundColor={backgroundColor}
-          disabled={disabled}
+          isDisabled={disabled}
           pressStyle={{ scale: 0.98 }}
           hoverStyle={{ opacity: 1 }}
           opacity={0.9}

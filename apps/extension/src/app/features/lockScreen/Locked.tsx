@@ -9,7 +9,7 @@ import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import { DeprecatedButton, Flex, InputProps, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled, Lock } from 'ui/src/components/icons'
-import { spacing, zIndices } from 'ui/src/theme'
+import { spacing, zIndexes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { LandingBackground } from 'wallet/src/components/landing/LandingBackground'
@@ -172,7 +172,7 @@ export function Locked(): JSX.Element {
           <Flex
             gap="$spacing24"
             width="100%"
-            zIndex={zIndices.default}
+            zIndex={zIndexes.default}
             onLayout={(e) => setInputHeight(e.nativeEvent.layout.height)}
           >
             <Flex>
@@ -210,7 +210,7 @@ export function Locked(): JSX.Element {
           </Flex>
         </Flex>
 
-        <Flex gap="$spacing12" justifyContent="flex-end" zIndex={zIndices.sticky}>
+        <Flex gap="$spacing12" justifyContent="flex-end" zIndex={zIndexes.sticky}>
           <DeprecatedButton size="large" theme="primary" onPress={onPress}>
             {t('extension.lock.button.submit')}
           </DeprecatedButton>

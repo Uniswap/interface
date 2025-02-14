@@ -48,7 +48,6 @@ import usePrevious from 'hooks/usePrevious'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { useSingleCallResult } from 'lib/hooks/multicall'
 import styled, { useTheme } from 'lib/styled-components'
 import { Review } from 'pages/AddLiquidityV3/Review'
 import { BlastRebasingAlert, BlastRebasingModal } from 'pages/AddLiquidityV3/blastAlerts'
@@ -96,6 +95,9 @@ import { currencyId } from 'utils/currencyId'
 import { WrongChainError } from 'utils/errors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
+import { assume0xAddress } from 'utils/wagmi'
+import { erc721Abi } from 'viem'
+import { useReadContract } from 'wagmi'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 const blastRebasingAlertAtom = atomWithStorage<boolean>('shouldShowBlastRebasingAlert', true)
@@ -660,7 +662,15 @@ function AddLiquidity() {
       </AutoColumn>
     )
 
-  const owner = useSingleCallResult(tokenId ? positionManager : null, 'ownerOf', [tokenId]).result?.[0]
+  const { data: owner } = useReadContract({
+    address: assume0xAddress(NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId ?? UniverseChainId.Mainnet]),
+    chainId: account.chainId ?? UniverseChainId.Mainnet,
+    abi: erc721Abi,
+    functionName: 'ownerOf',
+    args: tokenId ? [BigInt(tokenId)] : undefined,
+    query: { enabled: !!tokenId },
+  })
+
   const ownsNFT =
     addressesAreEquivalent(owner, account.address) ||
     addressesAreEquivalent(existingPositionDetails?.operator, account.address)

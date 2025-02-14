@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`getRoutingDiagramEntries returns entries for a trade 1`] = `
-Array [
-  Object {
-    "path": Array [
-      Array [
+[
+  {
+    "path": [
+      [
         Token {
           "address": "0x0000000000000000000000000000000000000001",
           "buyFeeBps": undefined,

@@ -92,7 +92,7 @@ export function LiquidityRangeInput({
   )
 
   // Set via a callback from the LiquidityPositionRangeChart, which is important when the price axis is auto-scaled.
-  // This is also used to set the bounds of the ActiveLiquiditChart, so it's necessary to keep separate from the zooming state.
+  // This is also used to set the bounds of the ActiveLiquidityChart, so it's necessary to keep separate from the zooming state.
   const [boundaryPrices, setBoundaryPrices] = useState<[number, number]>()
 
   const [zoomFactor, setZoomFactor] = useState(1)
@@ -278,6 +278,7 @@ export function LiquidityRangeInput({
           width={showChartErrorView ? sizes.chartContainerWidth : sizes.loadedPriceChartWidth}
           height={sizes.chartHeight + sizes.bottomAxisHeight}
           overflow="hidden"
+          zIndex={1}
         >
           {(priceData.loading || showChartErrorView) && (!priceData.entries || priceData.entries.length === 0) && (
             <Shine height={sizes.chartHeight} disabled={showChartErrorView} zIndex={0}>
@@ -302,6 +303,7 @@ export function LiquidityRangeInput({
           right={0}
           top={0}
           pointerEvents="none"
+          zIndex={2}
         >
           {(liquidityDataLoading || priceData.loading) && (
             <Shine
@@ -345,13 +347,9 @@ export function LiquidityRangeInput({
                   // While scrolling we receive updates to the range because the yScale changes,
                   // but we can filter them out because they have an undefined "mode".
                   // The initial range suggestion also comes with an undefined "mode", so we allow that here.
-                  const hasValidRange =
-                    minPrice !== undefined &&
-                    maxPrice !== undefined &&
-                    minPrice < maxPrice &&
-                    minPrice >= 0 &&
-                    maxPrice >= 0
-                  if (!mode && hasValidRange) {
+                  const rejectAutoRangeSuggestion =
+                    minPrice !== undefined && maxPrice !== undefined && minPrice >= 0 && maxPrice >= 0
+                  if (!mode && rejectAutoRangeSuggestion) {
                     return
                   }
                   setMinPrice(domain[0])

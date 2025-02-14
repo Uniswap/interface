@@ -81,9 +81,8 @@ function SignTypedDataRequestContentInner({ dappRequest }: SignTypedDataRequestP
   const { name, version, chainId: domainChainId, verifyingContract, salt } = parsedTypedData?.domain || {}
   const chainId = toSupportedChainId(domainChainId)
 
-  // this check needs to happen before isPermit2 since uniswapX requests are Permit2 requests
   if (isUniswapXSwapRequest(parsedTypedData)) {
-    return <UniswapXSwapRequestContent dappRequest={dappRequest} />
+    return <UniswapXSwapRequestContent typedData={parsedTypedData} />
   }
 
   if (isPermit2(parsedTypedData)) {

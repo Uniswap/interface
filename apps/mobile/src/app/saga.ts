@@ -2,10 +2,14 @@ import { PersistState } from 'redux-persist'
 import { monitoredSagas } from 'src/app/monitoredSagas'
 import { cloudBackupsManagerSaga } from 'src/features/CloudBackup/saga'
 import { appRatingWatcherSaga } from 'src/features/appRating/saga'
+import { appStateSaga } from 'src/features/appState/appStateSaga'
+import { biometricsSaga } from 'src/features/biometrics/biometricsSaga'
 import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { firebaseDataWatcher } from 'src/features/firebase/firebaseDataSaga'
+import { lockScreenSaga } from 'src/features/lockScreen/lockScreenSaga'
 import { modalWatcher } from 'src/features/modals/saga'
 import { pushNotificationsWatcherSaga } from 'src/features/notifications/saga'
+import { splashScreenSaga } from 'src/features/splashScreen/splashScreenSaga'
 import { telemetrySaga } from 'src/features/telemetry/saga'
 import { restoreMnemonicCompleteWatcher } from 'src/features/wallet/saga'
 import { walletConnectSaga } from 'src/features/walletConnect/saga'
@@ -30,6 +34,10 @@ const sagas = [
   signWcRequestSaga,
   telemetrySaga,
   walletConnectSaga,
+  appStateSaga,
+  splashScreenSaga,
+  biometricsSaga,
+  lockScreenSaga,
 ]
 
 export function* rootMobileSaga() {

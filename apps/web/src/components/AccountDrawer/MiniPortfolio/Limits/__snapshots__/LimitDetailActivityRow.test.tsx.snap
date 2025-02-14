@@ -207,15 +207,22 @@ exports[`LimitDetailActivityRow should render with valid details 1`] = `
         <div
           class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro840690004 _borderTopRightRadius-t-radius-ro840690004 _borderBottomRightRadius-t-radius-ro840690004 _borderBottomLeftRadius-t-radius-ro840690004 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _height-23px _justifyContent-center _width-23px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
         >
-          <div
+          <button
             aria-checked="false"
-            class="css-view-175oi2r"
+            class=" is_Checkbox "
+            data-disable-theme="true"
+            data-state="unchecked"
             role="checkbox"
-            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; align-items: center; cursor: pointer; justify-content: center; pointer-events: auto; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; border-top-color: rgba(125,125,125,1.00); border-right-color: rgba(125,125,125,1.00); border-bottom-color: rgba(125,125,125,1.00); border-left-color: rgba(125,125,125,1.00); opacity: 0; background-color: rgba(0, 0, 0, 0); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; height: 18px; width: 18px;"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; align-items: center; cursor: pointer; justify-content: center; pointer-events: auto; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; border-top-color: #7D7D7D; border-right-color: #7D7D7D; border-bottom-color: #7D7D7D; border-left-color: #7D7D7D; opacity: 0; background-color: transparent; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; height: 18px; width: 18px;"
             tabindex="0"
+            type="button"
+            value="on"
           />
         </div>
       </div>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>

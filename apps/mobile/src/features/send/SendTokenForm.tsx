@@ -11,7 +11,7 @@ import { CurrencyInputPanel, CurrencyInputPanelRef } from 'uniswap/src/component
 import { TextInputProps } from 'uniswap/src/components/input/TextInput'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
-import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import {
@@ -20,6 +20,7 @@ import {
   DecimalPadInput,
   DecimalPadInputRef,
 } from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPadInput'
+import { InsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useUSDTokenUpdater'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
@@ -108,6 +109,7 @@ export function SendTokenForm(): JSX.Element {
     setShowWarningModal(true)
   }
   const transferWarning = warnings.warnings.find((warning) => warning.severity >= WarningSeverity.Low)
+  const isInsufficientGasFundsWarning = transferWarning?.type === WarningLabel.InsufficientGasFunds
   const transferWarningColor = getAlertColor(transferWarning?.severity)
   const SendWarningIcon = transferWarning?.icon ?? AlertCircle
 
@@ -238,7 +240,7 @@ export function SendTokenForm(): JSX.Element {
   )
   return (
     <>
-      {transferWarning?.title && (
+      {transferWarning?.title && !isInsufficientGasFundsWarning && (
         <WarningModal
           caption={transferWarning.message}
           acknowledgeText={t('common.button.close')}
@@ -359,7 +361,7 @@ export function SendTokenForm(): JSX.Element {
                 <GasFeeRow chainId={currencyIn?.chainId} gasFee={gasFee} />
               )}
             </Flex>
-            {transferWarning && !isBlocked ? (
+            {transferWarning && !isBlocked && !isInsufficientGasFundsWarning ? (
               <TouchableArea mt="$spacing1" onPress={onTransferWarningClick}>
                 <Flex
                   grow
@@ -380,6 +382,7 @@ export function SendTokenForm(): JSX.Element {
                 </Flex>
               </TouchableArea>
             ) : null}
+            <InsufficientNativeTokenWarning flow="send" gasFee={gasFee} warnings={warnings.warnings} />
           </Flex>
         </Flex>
 

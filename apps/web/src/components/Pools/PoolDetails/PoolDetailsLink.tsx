@@ -13,8 +13,8 @@ import { useCallback, useState } from 'react'
 import { ChevronRight, Copy } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
+import { breakpoints } from 'ui/src/theme'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -25,7 +25,7 @@ import { isAddress, shortenAddress } from 'utilities/src/addresses'
 const TokenName = styled(ThemedText.BodyPrimary)`
   display: none;
 
-  @media (max-width: ${BREAKPOINTS.lg}px) and (min-width: ${BREAKPOINTS.xs}px) {
+  @media (max-width: ${breakpoints.xl}px) and (min-width: ${breakpoints.xs}px) {
     display: block;
   }
   ${EllipsisStyle}
@@ -41,7 +41,7 @@ const TokenTextWrapper = styled(Row)<{ isClickable?: boolean }>`
 const SymbolText = styled(ThemedText.BodyPrimary)`
   flex-shrink: 0;
 
-  @media (max-width: ${BREAKPOINTS.lg}px) and (min-width: ${BREAKPOINTS.xs}px) {
+  @media (max-width: ${breakpoints.xl}px) and (min-width: ${breakpoints.xs}px) {
     color: ${({ theme }) => theme.neutral2};
   }
 `

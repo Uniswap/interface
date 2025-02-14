@@ -323,6 +323,9 @@ exports[`UniswapWalletOptions Test Download wallet option should be visible if e
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -567,6 +570,9 @@ exports[`UniswapWalletOptions Test Extension connecter should be shown if detect
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

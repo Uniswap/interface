@@ -13,7 +13,8 @@ export function TokenApprovalTransactionStepRow({
 }: StepRowProps<TokenApprovalTransactionStep>): JSX.Element {
   const { t } = useTranslation()
   const { token, pair } = step
-  const symbol = token.symbol
+  // FIXME: Verify WALL-5906
+  const symbol = token.symbol ?? ''
 
   const title = {
     [StepStatus.Preview]: t('common.approveSpend', { symbol }),
@@ -41,7 +42,8 @@ export function TokenRevocationTransactionStepRow(props: StepRowProps<TokenRevoc
 
   const { t } = useTranslation()
   const { token } = step
-  const symbol = token.symbol
+  // FIXME: Verify WALL-5906
+  const symbol = token.symbol ?? ''
 
   const title = {
     [StepStatus.Preview]: t('common.resetLimit', { symbol }),

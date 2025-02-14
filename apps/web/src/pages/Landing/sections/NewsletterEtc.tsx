@@ -78,7 +78,6 @@ const SquareCard = styled(Card, {
 
   $xl: {
     '$platform-web': {
-      // @ts-expect-error TODO tamagui needs to add gridArea type
       gridArea: `3 / span 2 / 5 / span 2`,
     },
   },

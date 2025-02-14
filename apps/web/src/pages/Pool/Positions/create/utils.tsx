@@ -37,6 +37,7 @@ import {
 import { useMemo } from 'react'
 import { tryParsePrice, tryParseTick } from 'state/mint/v3/utils'
 import { PositionField } from 'types/position'
+import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   CheckApprovalLPRequest,
   CheckApprovalLPResponse,
@@ -88,6 +89,51 @@ export function getSortedCurrenciesTupleWithWrap(
   protocolVersion: ProtocolVersion,
 ): [OptionalCurrency, OptionalCurrency] {
   return getSortedCurrenciesTuple(getCurrencyWithWrap(a, protocolVersion), getCurrencyWithWrap(b, protocolVersion))
+}
+
+export function getCurrencyForProtocol(
+  currency: Currency,
+  protocolVersion: ProtocolVersion.V2 | ProtocolVersion.V3,
+): Token
+export function getCurrencyForProtocol(
+  currency: OptionalCurrency,
+  protocolVersion: ProtocolVersion.V2 | ProtocolVersion.V3,
+): Token | undefined
+export function getCurrencyForProtocol(currency: Currency, protocolVersion: ProtocolVersion.V4): Currency
+export function getCurrencyForProtocol(
+  currency: OptionalCurrency,
+  protocolVersion: ProtocolVersion.V4,
+): OptionalCurrency
+export function getCurrencyForProtocol(
+  currency: OptionalCurrency,
+  protocolVersion: ProtocolVersion.UNSPECIFIED | ProtocolVersion.V2 | ProtocolVersion.V3 | ProtocolVersion.V4,
+): OptionalCurrency
+/**
+ * Gets the currency or token that each protocol expects. For v2 + v3 if the native currency is passed then we return the wrapped version.
+ * For v4 is a wrapped native token is passed then we return the native currency.
+ */
+export function getCurrencyForProtocol(
+  currency: OptionalCurrency,
+  protocolVersion: ProtocolVersion,
+): Currency | Token | undefined {
+  if (!currency) {
+    return undefined
+  }
+
+  if (protocolVersion === ProtocolVersion.V4) {
+    const wrappedNative = WRAPPED_NATIVE_CURRENCY[currency.chainId]
+    if (areCurrenciesEqual(wrappedNative, currency)) {
+      return nativeOnChain(currency.chainId)
+    }
+
+    return currency
+  }
+
+  if (currency.isToken) {
+    return currency
+  }
+
+  return currency.wrapped
 }
 
 export function getCurrencyWithWrap(currency: Currency, protocolVersion: ProtocolVersion.V2 | ProtocolVersion.V3): Token
@@ -146,10 +192,6 @@ export function poolEnabledProtocolVersion(
 
 export function pairEnabledProtocolVersion(protocolVersion: ProtocolVersion): protocolVersion is ProtocolVersion.V2 {
   return protocolVersion === ProtocolVersion.V2
-}
-
-export function protocolShouldCalculateTaxes(protocolVersion: ProtocolVersion): protocolVersion is ProtocolVersion.V3 {
-  return protocolVersion === ProtocolVersion.V3
 }
 
 export function validateCurrencyInput(currencies: [OptionalToken, OptionalToken]): currencies is [Token, Token]
@@ -376,7 +418,7 @@ function createMockV4Pool({
   price?: Price<Currency, Currency>
   invalidPrice?: boolean
 }): V4Pool | undefined {
-  if (!baseToken || !quoteToken || !fee || !price || invalidPrice) {
+  if (!baseToken || !quoteToken || !price || invalidPrice) {
     return undefined
   }
 
@@ -395,22 +437,11 @@ function createMockV4Pool({
   return pool
 }
 
-function createMockPair({
-  baseCurrency,
-  quoteCurrency,
-  price,
-}: {
-  baseCurrency?: Currency
-  quoteCurrency?: Currency
-  price?: Price<Currency, Currency>
-}) {
-  const baseToken = baseCurrency?.wrapped
-  const quoteToken = quoteCurrency?.wrapped
-
-  if (baseToken && quoteToken && price) {
+function createMockPair(price?: Price<Currency, Currency>) {
+  if (price) {
     return new Pair(
-      CurrencyAmount.fromRawAmount(baseToken, price.numerator),
-      CurrencyAmount.fromRawAmount(quoteToken, price.denominator),
+      CurrencyAmount.fromRawAmount(price.quoteCurrency.wrapped, price.numerator),
+      CurrencyAmount.fromRawAmount(price.baseCurrency.wrapped, price.denominator),
     )
   } else {
     return undefined
@@ -530,25 +561,27 @@ export function getV2PriceRangeInfo({
   const { currencies } = derivedPositionInfo
   const [baseCurrency] = getInvertedTuple(currencies, state.priceInverted)
 
+  const baseToken = getCurrencyWithWrap(baseCurrency, ProtocolVersion.V2)
+  const sortedTokens = getSortedCurrenciesTuple(
+    getCurrencyWithWrap(currencies[0], ProtocolVersion.V2),
+    getCurrencyWithWrap(currencies[1], ProtocolVersion.V2),
+  )
+
   const price = getInitialPrice({
-    baseCurrency: getCurrencyWithWrap(baseCurrency, ProtocolVersion.V2),
-    sortedCurrencies: getSortedCurrenciesTuple(
-      getCurrencyWithWrap(currencies[0], ProtocolVersion.V2),
-      getCurrencyWithWrap(currencies[1], ProtocolVersion.V2),
-    ),
+    baseCurrency: baseToken,
+    sortedCurrencies: sortedTokens,
     initialPrice: state.initialPrice,
   })
+
+  const invertPrice = Boolean(baseToken && sortedTokens[0] && !baseToken.equals(sortedTokens[0]))
 
   return {
     protocolVersion: ProtocolVersion.V2,
     price,
-    mockPair: createMockPair({
-      baseCurrency: currencies[0],
-      quoteCurrency: currencies[1],
-      price,
-    }),
+    mockPair: createMockPair(price),
     deposit0Disabled: false,
     deposit1Disabled: false,
+    invertPrice,
   } satisfies V2PriceRangeInfo
 }
 
@@ -556,12 +589,10 @@ export function getV3PriceRangeInfo({
   state,
   positionState,
   derivedPositionInfo,
-  isTaxed,
 }: {
   state: PriceRangeState
   positionState: PositionState
   derivedPositionInfo: CreateV3PositionInfo
-  isTaxed: boolean
 }): V3PriceRangeInfo {
   const { fee } = positionState
   const { protocolVersion, currencies } = derivedPositionInfo
@@ -696,7 +727,6 @@ export function getV3PriceRangeInfo({
     deposit0Disabled: depositADisabled,
     deposit1Disabled: depositBDisabled,
     mockPool,
-    isTaxed,
   } satisfies V3PriceRangeInfo
 }
 
@@ -1116,6 +1146,16 @@ export function generateCreatePositionTxRequest({
     return undefined
   }
 
+  const validatedRevoke0Request = validateTransactionRequest(approvalCalldata?.token0Cancel)
+  if (approvalCalldata?.token0Cancel && !validatedRevoke0Request) {
+    return undefined
+  }
+
+  const validatedRevoke1Request = validateTransactionRequest(approvalCalldata?.token1Cancel)
+  if (approvalCalldata?.token1Cancel && !validatedRevoke1Request) {
+    return undefined
+  }
+
   const validatedPermitRequest = validatePermit(approvalCalldata?.permitData)
   if (approvalCalldata?.permitData && !validatedPermitRequest) {
     return undefined
@@ -1149,9 +1189,9 @@ export function generateCreatePositionTxRequest({
     approveToken1Request: validatedApprove1Request,
     txRequest,
     approvePositionTokenRequest: undefined,
-    revocationTxRequest: undefined,
+    revokeToken0Request: validatedRevoke0Request,
+    revokeToken1Request: validatedRevoke1Request,
     permit: validatedPermitRequest,
-    dependentAmount: createCalldata.dependentAmount,
   } satisfies CreatePositionTxAndGasInfo
 }
 

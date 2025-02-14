@@ -3,7 +3,8 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useIncreaseLiquidityContext } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
 import { useModalLiquidityInitialState } from 'components/Liquidity/hooks'
-import { getErrorMessageToDisplay, getProtocolItems, parseErrorMessageTitle } from 'components/Liquidity/utils'
+import { useIncreasePositionDependentAmountFallback } from 'components/Liquidity/hooks/useDependentAmountFallback'
+import { getProtocolItems, hasLPFoTTransferError } from 'components/Liquidity/utils'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { getCurrencyAddressForTradingApi } from 'pages/Pool/Positions/create/utils'
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react'
@@ -15,14 +16,18 @@ import {
   IncreaseLPPositionRequest,
   IndependentToken,
 } from 'uniswap/src/data/tradingApi/__generated__'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   IncreasePositionTxAndGasInfo,
   LiquidityTransactionType,
 } from 'uniswap/src/features/transactions/liquidity/types'
+import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
 import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useAccount } from 'wagmi'
@@ -32,6 +37,8 @@ interface IncreasePositionContextType {
   gasFeeEstimateUSD?: CurrencyAmount<Currency>
   error: boolean | string
   refetch?: () => void
+  dependentAmount?: string
+  fotErrorToken: Maybe<CurrencyInfo>
 }
 
 const IncreaseLiquidityTxContext = createContext<IncreasePositionContextType | undefined>(undefined)
@@ -78,7 +85,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     logger.info(
       'IncreaseLiquidityTxContext',
       'IncreaseLiquidityTxContext',
-      parseErrorMessageTitle(approvalError, 'unknown CheckLpApprovalQuery'),
+      parseErrorMessageTitle(approvalError, { defaultTitle: 'unknown CheckLpApprovalQuery' }),
       {
         error: JSON.stringify(approvalError),
         increaseLiquidityApprovalParams: JSON.stringify(increaseLiquidityApprovalParams),
@@ -94,6 +101,8 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     gasFeeToken0Approval,
     gasFeeToken1Approval,
     gasFeePositionTokenApproval,
+    token0Cancel,
+    token1Cancel,
   } = increaseLiquidityTokenApprovals || {}
   const gasFeeToken0USD = useUSDCurrencyAmountOfGasFee(
     positionInfo?.currency0Amount.currency.chainId,
@@ -156,9 +165,27 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     }
   }, [account, positionInfo, currencyAmounts, approvalsNeeded, customSlippageTolerance, exactField])
 
+  const currency0Info = useCurrencyInfo(
+    positionInfo?.currency0Amount.currency ? currencyId(positionInfo.currency0Amount.currency) : undefined,
+  )
+  const currency1Info = useCurrencyInfo(
+    positionInfo?.currency1Amount.currency ? currencyId(positionInfo.currency1Amount.currency) : undefined,
+  )
+  const token0FoTError = hasLPFoTTransferError(currency0Info, positionInfo?.version)
+  const token1FoTError = hasLPFoTTransferError(currency1Info, positionInfo?.version)
+  const fotErrorToken = token0FoTError || token1FoTError
+
   const isUserCommittedToIncrease =
     currentTransactionStep?.step.type === TransactionStepType.IncreasePositionTransaction ||
     currentTransactionStep?.step.type === TransactionStepType.IncreasePositionTransactionAsync
+
+  const isQueryEnabled =
+    !isUserCommittedToIncrease &&
+    !error &&
+    !approvalLoading &&
+    !approvalError &&
+    Boolean(increaseCalldataQueryParams) &&
+    !fotErrorToken
 
   const {
     data: increaseCalldata,
@@ -170,12 +197,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     deadlineInMinutes: customDeadline,
     refetchInterval: hasIncreaseErrorResponse ? false : 5 * ONE_SECOND_MS,
     retry: false,
-    enabled:
-      !isUserCommittedToIncrease &&
-      !error &&
-      !approvalLoading &&
-      !approvalError &&
-      Boolean(increaseCalldataQueryParams),
+    enabled: isQueryEnabled,
   })
 
   useEffect(() => {
@@ -188,13 +210,18 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     logger.info(
       'IncreaseLiquidityTxContext',
       'IncreaseLiquidityTxContext',
-      parseErrorMessageTitle(calldataError, 'unknown IncreaseLpPositionCalldataQuery'),
+      parseErrorMessageTitle(calldataError, { defaultTitle: 'unknown IncreaseLpPositionCalldataQuery' }),
       {
         error: JSON.stringify(calldataError),
         increaseCalldataQueryParams: JSON.stringify(increaseCalldataQueryParams),
       },
     )
   }
+
+  const fallbackDependentAmount = useIncreasePositionDependentAmountFallback(
+    increaseCalldataQueryParams,
+    isQueryEnabled && Boolean(calldataError),
+  )
 
   const { value: calculatedGasFee } = useTransactionGasFee(increase, !!actualGasFee)
   const increaseGasFeeUsd = useUSDCurrencyAmountOfGasFee(
@@ -217,6 +244,8 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     const approveToken0Request = validateTransactionRequest(token0Approval)
     const approveToken1Request = validateTransactionRequest(token1Approval)
     const approvePositionTokenRequest = validateTransactionRequest(positionTokenApproval)
+    const revokeToken0Request = validateTransactionRequest(token0Cancel)
+    const revokeToken1Request = validateTransactionRequest(token1Cancel)
     const permit = validatePermit(permitData)
     const unsigned = Boolean(permitData)
     const txRequest = validateTransactionRequest(increase)
@@ -233,12 +262,12 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       approveToken0Request,
       approveToken1Request,
       approvePositionTokenRequest,
-      revocationTxRequest: undefined, // TODO: add support for revokes
+      revokeToken0Request,
+      revokeToken1Request,
       permit,
       increasePositionRequestArgs: { ...increaseCalldataQueryParams, batchPermitData: permitData ?? undefined },
       txRequest,
       unsigned,
-      dependentAmount,
     }
   }, [
     approvalLoading,
@@ -247,9 +276,10 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     permitData,
     positionInfo,
     positionTokenApproval,
-    dependentAmount,
     token0Approval,
     token1Approval,
+    token0Cancel,
+    token1Cancel,
     increaseCalldataQueryParams,
     increase,
     currencyAmounts,
@@ -268,8 +298,11 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   const value = {
     txInfo: increaseLiquidityTxContext,
     gasFeeEstimateUSD: totalGasFee ?? undefined,
+    // in some cases there is an error with create but createCalldata still has a cached value
+    dependentAmount: calldataError && dependentAmount ? dependentAmount : fallbackDependentAmount,
     error: getErrorMessageToDisplay({ approvalError, calldataError }),
     refetch: approvalError ? approvalRefetch : calldataError ? calldataRefetch : undefined,
+    fotErrorToken,
   }
 
   return <IncreaseLiquidityTxContext.Provider value={value}>{children}</IncreaseLiquidityTxContext.Provider>

@@ -367,13 +367,13 @@ export function ClaimUnitagContent({
       </Flex>
       <Flex gap="$spacing24" justifyContent="flex-end">
         <DeprecatedButton
-          disabled={
+          isDisabled={
             (entryPoint === OnboardingScreens.Landing && !unitagAddress) ||
             !unitagInputValue ||
             isCheckingUnitag ||
             shouldBlockContinue
           }
-          size="medium"
+          size={entryPoint === OnboardingScreens.Landing ? 'large' : 'medium'}
           testID={TestID.Continue}
           theme="primary"
           onPress={onPressContinue}

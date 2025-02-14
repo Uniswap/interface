@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux'
 import { Flex } from 'ui/src'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { selectNftsVisibility } from 'uniswap/src/features/favorites/selectors'
+import { selectNftsVisibility } from 'uniswap/src/features/visibility/selectors'
 import { ContextMenu } from 'wallet/src/components/menu/ContextMenu'
 import { NftView } from 'wallet/src/components/nfts/NftView'
 import { NftViewWithContextMenuProps } from 'wallet/src/components/nfts/NftViewProps'
@@ -42,7 +42,7 @@ export function NftViewWithContextMenu(props: NftViewWithContextMenuProps): JSX.
 
   return (
     <Flex>
-      <ContextMenu itemId={itemId} menuOptions={menuOptions} onLeftClick>
+      <ContextMenu closeOnClick itemId={itemId} menuOptions={menuOptions} onLeftClick>
         <NftView {...props} />
       </ContextMenu>
     </Flex>

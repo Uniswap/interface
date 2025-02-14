@@ -57,6 +57,10 @@ const mockLimitActivity: Activity = {
 
 describe('LimitsMenu', () => {
   it('should render when there is one open order', async () => {
+    // Addresses a console.error -- `Warning: React does not recognize the `scaleIcon` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `scaleicon` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
+    // This is from tamagui's Checkbox component`
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+
     mocked(useOpenLimitOrders).mockReturnValue({
       openLimitOrders: [mockLimitActivity],
       loading: false,

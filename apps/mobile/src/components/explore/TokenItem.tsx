@@ -8,10 +8,11 @@ import { TokenItemData } from 'src/components/explore/TokenItemData'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, Text, TouchableArea, ViewProps } from 'ui/src'
+import { Flex, FlexProps, Text, TouchableArea } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { spacing } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -22,7 +23,6 @@ import {
   currencyIdToChain,
 } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
-import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 
 interface TokenItemProps {
@@ -30,9 +30,9 @@ interface TokenItemProps {
   index: number
   eventName: MobileEventName.ExploreTokenItemSelected | MobileEventName.HomeExploreTokenItemSelected
   metadataDisplayType?: TokenMetadataDisplayType
-  containerProps?: ViewProps
+  containerProps?: FlexProps
   hideNumberedList?: boolean
-  priceWrapperProps?: ViewProps
+  priceWrapperProps?: FlexProps
   showChart?: boolean
   overlay?: ReactNode
   onPriceWrapperLayout?: (layout: LayoutRectangle) => void

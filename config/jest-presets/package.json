@@ -5,8 +5,8 @@
     "ts-jest": "29.2.5"
   },
   "devDependencies": {
-    "@testing-library/jest-native": "5.4.2",
-    "babel-jest": "29.6.1",
+    "@testing-library/jest-native": "5.4.3",
+    "babel-jest": "29.7.0",
     "jest-svg-transformer": "1.0.0",
     "jest-transform-stub": "2.0.0",
     "mem-storage-area": "1.0.3"

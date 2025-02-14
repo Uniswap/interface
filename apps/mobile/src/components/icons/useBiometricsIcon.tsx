@@ -1,4 +1,4 @@
-import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
+import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/useDeviceSupportsBiometricAuth'
 import { Faceid, Fingerprint } from 'ui/src/components/icons'
 
 export type BiometricsIconProps = {

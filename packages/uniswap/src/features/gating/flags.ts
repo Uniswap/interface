@@ -22,6 +22,7 @@ export enum FeatureFlags {
   UniswapXPriorityOrdersBase,
   UniswapXPriorityOrdersOptimism,
   UniswapXPriorityOrdersUnichain,
+  BlockaidFotLogging,
 
   // Wallet
   DisableFiatOnRampKorea,
@@ -30,9 +31,11 @@ export enum FeatureFlags {
   ExtensionClaimUnitag,
   ExtensionPromotionGA,
   FiatOffRamp,
-  NotificationPriceAlerts,
+  NotificationPriceAlertsAndroid,
+  NotificationPriceAlertsIOS,
   NotificationOnboardingCard,
-  NotificationUnfundedWallets,
+  NotificationUnfundedWalletsAndroid,
+  NotificationUnfundedWalletsIOS,
   OnboardingKeyring,
   OpenAIAssistant,
   PrivateRpc,
@@ -41,6 +44,8 @@ export enum FeatureFlags {
   TransactionDetailsSheet,
   UnitagsDeviceAttestation,
   UwULink,
+  BlurredLockScreen,
+  TokenSelectorFlashList,
 
   // Web
   AATestWeb,
@@ -68,6 +73,7 @@ export enum FeatureFlags {
 
 // These names must match the gate name on statsig
 export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
+  [FeatureFlags.BlockaidFotLogging, 'blockaid_fot_logging'],
   [FeatureFlags.Datadog, 'datadog'],
   [FeatureFlags.EmbeddedWallet, 'embedded_wallet'],
   [FeatureFlags.IndicativeSwapQuotes, 'indicative-quotes'],
@@ -117,6 +123,7 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
 // These names must match the gate name on statsig
 export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   ...SHARED_FEATURE_FLAG_NAMES,
+  [FeatureFlags.BlurredLockScreen, 'blurred_lock_screen'],
   [FeatureFlags.DisableFiatOnRampKorea, 'disable-fiat-onramp-korea'],
   [FeatureFlags.ExtensionAppRating, 'extension_app_rating'],
   [FeatureFlags.ExtensionAutoConnect, 'extension-auto-connect'],
@@ -125,13 +132,16 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.FiatOffRamp, 'fiat-offramp'],
   [FeatureFlags.ForAggregator, 'for-aggregator'],
   [FeatureFlags.NotificationOnboardingCard, 'notification_onboarding_card'],
-  [FeatureFlags.NotificationPriceAlerts, 'notification_price_alerts'],
-  [FeatureFlags.NotificationUnfundedWallets, 'notification_unfunded_wallet'],
+  [FeatureFlags.NotificationPriceAlertsAndroid, 'notification_price_alerts_android'],
+  [FeatureFlags.NotificationPriceAlertsIOS, 'notification_price_alerts_ios'],
+  [FeatureFlags.NotificationUnfundedWalletsAndroid, 'notification_unfunded_wallet_android'],
+  [FeatureFlags.NotificationUnfundedWalletsIOS, 'notification_unfunded_wallet_ios'],
   [FeatureFlags.OnboardingKeyring, 'onboarding-keyring'],
   [FeatureFlags.OpenAIAssistant, 'openai-assistant'],
   [FeatureFlags.PrivateRpc, 'mev-blocker'],
   [FeatureFlags.Scantastic, 'scantastic'],
   [FeatureFlags.SelfReportSpamNFTs, 'self-report-spam-nfts'],
+  [FeatureFlags.TokenSelectorFlashList, 'token_selector_flashlist'],
   [FeatureFlags.TransactionDetailsSheet, 'transaction-details-sheet'],
   [FeatureFlags.UnitagsDeviceAttestation, 'unitags-device-attestation'],
   [FeatureFlags.UwULink, 'uwu-link'],

@@ -190,11 +190,6 @@ export function SettingsScreen(): JSX.Element {
               count={dappUrls.length}
               onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ManageConnections}`)}
             />
-            <SettingsItem
-              Icon={LineChartDots}
-              title={t('settings.setting.privacy.title')}
-              onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.Privacy}`)}
-            />
             <SettingsToggleRow
               Icon={Wrench}
               checked={isTestnetModeEnabled}
@@ -203,7 +198,7 @@ export function SettingsScreen(): JSX.Element {
             />
           </SettingsSection>
           <SettingsSectionSeparator />
-          <SettingsSection title={t('settings.section.security')}>
+          <SettingsSection title={t('settings.section.privacyAndSecurity')}>
             <SettingsItem
               Icon={Key}
               title={t('settings.setting.password.title')}
@@ -213,6 +208,11 @@ export function SettingsScreen(): JSX.Element {
               Icon={FileListLock}
               title={t('settings.setting.recoveryPhrase.title')}
               onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ViewRecoveryPhrase}`)}
+            />
+            <SettingsItem
+              Icon={LineChartDots}
+              title={t('settings.setting.permissions.title')}
+              onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.Privacy}`)}
             />
           </SettingsSection>
           <SettingsSectionSeparator />

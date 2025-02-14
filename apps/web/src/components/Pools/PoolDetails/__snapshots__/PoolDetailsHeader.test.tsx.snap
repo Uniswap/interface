@@ -97,6 +97,9 @@ exports[`PoolDetailsHeader loading skeleton is shown 1`] = `
             />
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -272,6 +275,9 @@ exports[`PoolDetailsHeader renders breadcrumb text correctly 1`] = `
             </div>
           </div>
         </nav>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -629,6 +635,9 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
             <div />
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

@@ -59,7 +59,7 @@ module.exports = function (api) {
       // speeds up compile
       '**/@tamagui/**/dist/**',
     ],
-    presets: ['module:@react-native/babel-preset'],
+    presets: ['babel-preset-expo'],
     plugins,
   }
 }

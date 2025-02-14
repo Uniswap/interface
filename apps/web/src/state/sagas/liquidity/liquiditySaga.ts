@@ -1,4 +1,3 @@
-import { TransactionResponse } from '@ethersproject/providers'
 import { LiquidityEventName } from '@uniswap/analytics-events'
 import { getLiquidityEventName } from 'components/Liquidity/analytics'
 import { PopupType, addPopup } from 'state/application/reducer'
@@ -81,14 +80,10 @@ function* getLiquidityTxRequest(
     throw new Error('Signature required for async increase position transaction step')
   }
 
-  try {
-    const txRequest = yield* call(step.getTxRequest, signature)
-    invariant(txRequest !== undefined)
+  const txRequest = yield* call(step.getTxRequest, signature)
+  invariant(txRequest !== undefined, 'txRequest must be defined')
 
-    return txRequest
-  } catch {
-    throw new Error('Failed to get transaction request')
-  }
+  return txRequest
 }
 
 interface HandlePositionStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
@@ -112,13 +107,13 @@ function* handlePositionTransactionStep(params: HandlePositionStepParams) {
   const info = getLiquidityTransactionInfo(action)
   const txRequest = yield* call(getLiquidityTxRequest, step, signature)
 
-  const onModification = (response: TransactionResponse) => {
+  const onModification = ({ hash, data }: { hash: string; data: string }) => {
     if (analytics) {
       sendAnalyticsEvent(LiquidityEventName.TRANSACTION_MODIFIED_IN_WALLET, {
         ...analytics,
-        transaction_hash: response.hash,
+        transaction_hash: hash,
         expected: txRequest.data?.toString(),
-        actual: response.data,
+        actual: data,
       })
     }
   }
@@ -163,6 +158,7 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
   try {
     for (const step of steps) {
       switch (step.type) {
+        case TransactionStepType.TokenRevocationTransaction:
         case TransactionStepType.TokenApprovalTransaction: {
           yield* call(handleApprovalTransactionStep, { account, step, setCurrentStep })
           break
@@ -184,8 +180,9 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
         }
       }
     }
-  } catch (e) {
-    logger.error(e, { tags: { file: 'liquiditySaga', function: 'modifyLiquidity' } })
+  } catch (e: unknown) {
+    const cause = e instanceof Error && e.cause // this will contain the trading api error and requestID
+    logger.error(e, { tags: { file: 'liquiditySaga', function: 'modifyLiquidity' }, extra: { tradingApiError: cause } })
     onFailure()
     return
   }

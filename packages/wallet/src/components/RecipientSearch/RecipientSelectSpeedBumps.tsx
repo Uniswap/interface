@@ -1,11 +1,10 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Text, useSporeColors } from 'ui/src'
+import { useSporeColors } from 'ui/src'
 import { Eye } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { PaginatedModalRenderer } from 'uniswap/src/components/modals/PaginatedModals'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
-import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -72,7 +71,14 @@ export function RecipientSelectSpeedBumps({
   )
 
   const renderNewAddressWarning = useCallback<PaginatedModalRenderer>(
-    (props) => (recipientAddress ? <NewAddressWarningModal address={recipientAddress} {...props} /> : null),
+    (props) =>
+      recipientAddress ? (
+        <NewAddressWarningModal
+          address={recipientAddress}
+          onAcknowledge={props.onAcknowledge}
+          onClose={props.onClose}
+        />
+      ) : null,
     [recipientAddress],
   )
 
@@ -101,11 +107,7 @@ export function RecipientSelectSpeedBumps({
         acknowledgeText={t('common.button.understand')}
         modalName={ModalName.RecipientSelectErc20Warning}
         severity={WarningSeverity.High}
-        titleComponent={
-          <Text color={getAlertColor(WarningSeverity.High).headerText} textAlign="center" variant="body1">
-            {t('send.warning.erc20.title')}
-          </Text>
-        }
+        title={t('send.warning.erc20.title')}
         {...props}
       />
     ),
@@ -121,11 +123,7 @@ export function RecipientSelectSpeedBumps({
         acknowledgeText={t('common.button.understand')}
         modalName={ModalName.RecipientSelectSmartContractWarning}
         severity={WarningSeverity.Medium}
-        titleComponent={
-          <Text color={getAlertColor(WarningSeverity.Medium).headerText} textAlign="center" variant="body1">
-            {t('send.warning.smartContract.title')}
-          </Text>
-        }
+        title={t('send.warning.smartContract.title')}
         {...props}
       />
     ),

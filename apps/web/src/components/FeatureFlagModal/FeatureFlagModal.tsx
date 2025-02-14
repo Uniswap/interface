@@ -6,8 +6,8 @@ import styled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { BREAKPOINTS } from 'theme'
 import { ModalCloseIcon } from 'ui/src'
+import { breakpoints } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/features/chains/types'
 import {
@@ -32,7 +32,7 @@ const FlagsColumn = styled(Column)`
   padding-bottom: 8px;
   overflow-y: auto;
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     max-height: unset;
   }
 `

@@ -68,6 +68,8 @@ export function ChartTypeDropdown<T extends ChartType | PriceChartType>({
                 key={chartType}
                 text={disabled && <Trans i18nKey="chart.settings.unavailable.label" />}
                 placement={!isMobileWeb ? 'right' : undefined}
+                // disable tooltip if option is not disabled, therefore tooltip is not shown
+                disabled={!disabled}
               >
                 <InternalMenuItem
                   onPress={() => {

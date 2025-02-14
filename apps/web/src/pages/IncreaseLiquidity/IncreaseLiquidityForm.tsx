@@ -10,13 +10,14 @@ import { useIncreaseLiquidityTxContext } from 'components/IncreaseLiquidity/Incr
 import { DepositInputForm } from 'components/Liquidity/DepositInputForm'
 import { LiquidityModalDetailRows } from 'components/Liquidity/LiquidityModalDetailRows'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
-import { getDisplayedAmountsFromDependentAmount } from 'components/Liquidity/utils'
+import { useUpdatedAmountsFromDependentAmount } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { TradingAPIError } from 'pages/Pool/Positions/create/TradingAPIError'
 import { useCanUnwrapCurrency, useCurrencyInfoWithUnwrapForTradingApi } from 'pages/Pool/Positions/create/utils'
 import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { PositionField } from 'types/position'
 import { Flex, Switch, Text } from 'ui/src'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 
 export function IncreaseLiquidityForm() {
@@ -41,14 +42,22 @@ export function IncreaseLiquidityForm() {
   } = derivedIncreaseLiquidityInfo
   const { position, exactField } = increaseLiquidityState
 
-  const { gasFeeEstimateUSD, txInfo, error: dataFetchingError, refetch } = useIncreaseLiquidityTxContext()
-  const { dependentAmount } = txInfo || {}
+  const {
+    gasFeeEstimateUSD,
+    txInfo,
+    error: dataFetchingError,
+    refetch,
+    dependentAmount,
+    fotErrorToken,
+  } = useIncreaseLiquidityTxContext()
 
   if (!position) {
     throw new Error('AddLiquidityModal must have an initial state when opening')
   }
 
   const { currency0Amount: initialCurrency0Amount, currency1Amount: initialCurrency1Amount } = position
+
+  // TODO(WEB-6295): this doesn't actually need to call useCurrencyInfo since only the currency object is accessed subsequently
   const currency0Info = useCurrencyInfoWithUnwrapForTradingApi({
     currency: initialCurrency0Amount.currency,
     shouldUnwrap: unwrapNativeCurrency && position.version !== ProtocolVersion.V4,
@@ -78,19 +87,17 @@ export function IncreaseLiquidityForm() {
     return initialCurrency1Amount
   }, [unwrapNativeCurrency, canUnwrap1, currency1Info, initialCurrency1Amount])
 
-  const { displayFormattedAmounts, displayUSDAmounts } = useMemo(
-    () =>
-      getDisplayedAmountsFromDependentAmount({
-        token0,
-        token1,
-        dependentAmount,
-        exactField,
-        currencyAmounts,
-        currencyAmountsUSDValue,
-        formattedAmounts,
-      }),
-    [dependentAmount, exactField, currencyAmounts, formattedAmounts, currencyAmountsUSDValue, token0, token1],
-  )
+  const { updatedFormattedAmounts, updatedUSDAmounts } = useUpdatedAmountsFromDependentAmount({
+    token0,
+    token1,
+    dependentAmount,
+    exactField,
+    currencyAmounts,
+    currencyAmountsUSDValue,
+    formattedAmounts,
+    deposit0Disabled: deposit0Disabled || false,
+    deposit1Disabled: deposit1Disabled || false,
+  })
 
   const handleUserInput = (field: PositionField, newValue: string) => {
     setIncreaseLiquidityState((prev) => ({
@@ -135,7 +142,12 @@ export function IncreaseLiquidityForm() {
   }, [nativeCurrencyInfo, t, unwrapNativeCurrency, setUnwrapNativeCurrency])
 
   const requestLoading = Boolean(
-    !dataFetchingError && !error && currencyAmounts?.TOKEN0 && currencyAmounts.TOKEN1 && !txInfo?.txRequest,
+    !dataFetchingError &&
+      !error &&
+      currencyAmounts?.TOKEN0 &&
+      currencyAmounts.TOKEN1 &&
+      !txInfo?.txRequest &&
+      !fotErrorToken,
   )
 
   return (
@@ -145,9 +157,9 @@ export function IncreaseLiquidityForm() {
         <DepositInputForm
           token0={token0}
           token1={token1}
-          formattedAmounts={displayFormattedAmounts}
+          formattedAmounts={updatedFormattedAmounts}
           currencyAmounts={currencyAmounts}
-          currencyAmountsUSDValue={displayUSDAmounts}
+          currencyAmountsUSDValue={updatedUSDAmounts}
           currencyBalances={currencyBalances}
           onUserInput={handleUserInput}
           onSetMax={handleOnSetMax}
@@ -164,9 +176,29 @@ export function IncreaseLiquidityForm() {
         currency1Amount={currency1Amount}
         networkCost={gasFeeEstimateUSD}
       />
+      {fotErrorToken && (
+        <Flex row gap="$gap12" backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12">
+          <Flex flexShrink={0}>
+            <AlertTriangleFilled size="$icon.20" color="$statusCritical" />
+          </Flex>
+          <Flex flex={1}>
+            <Text variant="body3" color="$statusCritical">
+              {t('token.safety.warning.fotLow.title')}
+            </Text>
+            <Text variant="body3" color="$neutral2">
+              <Trans
+                i18nKey="position.increase.fot"
+                values={{
+                  token: fotErrorToken.currency.symbol,
+                }}
+              />
+            </Text>
+          </Flex>
+        </Flex>
+      )}
       <TradingAPIError errorMessage={dataFetchingError} refetch={refetch} />
       <LoaderButton
-        disabled={Boolean(error) || !txInfo?.txRequest}
+        isDisabled={Boolean(error) || !txInfo?.txRequest || Boolean(fotErrorToken)}
         onPress={handleOnContinue}
         loading={requestLoading}
         buttonKey="IncreaseLiquidity-continue"

@@ -6,19 +6,19 @@ import { useDispatch } from 'react-redux'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
-import { enroll } from 'src/features/biometrics/biometrics'
+import { enroll } from 'src/features/biometrics/biometrics-utils'
+import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricAppSettings'
+import { useDeviceSupportsBiometricAuth } from 'src/features/biometrics/useDeviceSupportsBiometricAuth'
 import {
   checkOsBiometricAuthEnabled,
-  useBiometricAppSettings,
   useBiometricName,
   useBiometricPrompt,
-  useDeviceSupportsBiometricAuth,
-} from 'src/features/biometrics/hooks'
+} from 'src/features/biometricsSettings/hooks'
 import {
   BiometricSettingType,
   setRequiredForAppAccess,
   setRequiredForTransactions,
-} from 'src/features/biometrics/slice'
+} from 'src/features/biometricsSettings/slice'
 import { Flex, Switch, Text, TouchableArea } from 'ui/src'
 import { isAndroid, isIOS } from 'utilities/src/platform'
 import { openSettings } from 'wallet/src/utils/linking'

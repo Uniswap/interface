@@ -1,12 +1,121 @@
-# We are back an exciting new update!
+IPFS hash of the deployment:
+- CIDv0: `QmQciA2ug4DikZRcZ7dU1Sn38UWGecjQ91j3oy4ZiGKJdr`
+- CIDv1: `bafybeibb2sihtbcbajhgd5ucp2qaufcimjgkwdy7ag3tbyimmwc4g6v4tu`
 
-Introducing Unichain: Faster swaps. Lower fees. Unichain is optimized to be the home for cross‑chain liquidity.
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-- Swap instantly.
-- Save up to 95% on fees compared to Ethereum.
-- Lower costs for creating pools and managing positions.
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
 
-Other changes: 
+IPFS gateways:
+- https://bafybeibb2sihtbcbajhgd5ucp2qaufcimjgkwdy7ag3tbyimmwc4g6v4tu.ipfs.dweb.link/
+- [ipfs://QmQciA2ug4DikZRcZ7dU1Sn38UWGecjQ91j3oy4ZiGKJdr/](ipfs://QmQciA2ug4DikZRcZ7dU1Sn38UWGecjQ91j3oy4ZiGKJdr/)
 
-- Improved warnings for send transactions to smart contract addresses
-- Various bug fixes and performance improvements
+## 5.72.0 (2025-02-14)
+
+
+### Features
+
+* **web:** add an error for fot tokens (#16065) 0d50a8e
+* **web:** add request id to the trading api error (#15819) 145c3f7
+* **web:** add support for sub 1bip fee tiers (#15868) 159c6e9
+* **web:** create toggle to enable unichain for degens (#16007) 225ce0b
+* **web:** dutch v3 arb experiment (#14940) 03cf07c
+* **web:** fallback to BE price if coingecko not available for PDP (#16079) a73b1f7
+* **web:** fetch v4 transactions on explore and TDP (#16042) f4eb595
+* **web:** hook context menu and hidden token functionality into mini p (#15788) 9acfb9a
+* **web:** migrate from wrapped to native for v3 -> v4 (#15660) cdfc66d
+* **web:** setup playwright and anvil for e2e testing (#15308) f44260a
+* **web:** universal search all chains with unichain gate (#16073) 24e636f
+* **web:** Update unichain rpc and remove unichain beta toggle (#16377) 950418d
+* **web:** v4 pools filter in explore (#16033) 8b20bd5
+
+
+### Bug Fixes
+
+* **web:** add null check for chain - main (#16125) (#16126) 9e5ce53
+* **web:** add unichain rpc to csp main (#16167) 55ef268
+* **web:** adjust modal height settings for web (#15407) 400cfaa
+* **web:** align x on unichain promo banner (#15947) f04f19d
+* **web:** block unichain leaks via url pathways (#16070) (#16076) b99140f
+* **web:** bridge fallback display logic (#16140) e119039
+* **web:** buy form crash due to modal render (#15926) 9ac06e5
+* **web:** crash on v2 migrate page (#16156) fbfcf21
+* **web:** currency search modal height (#16197) 441c7a1
+* **web:** decimal separator issue in mweb (#16061) c7e0d28
+* **web:** Disable tooltip on TDP menu if not needed (#15847) 438f6ee
+* **web:** dismiss Send modals appropriately (#15597) b618c96
+* **web:** fix context menu on liquidity position card (#15879) 825fb3c
+* **web:** fix faulty statsig check staging (#16350) c9b799b
+* **web:** fix price display issues (#16194) cafaf7d
+* **web:** fix the filters on the positions page (#16025) 81862d9
+* **web:** fix toast for migrate (#16177) 57cb594
+* **web:** fixing native ETH limit orders (#15907) 9943aac
+* **web:** handle no order in cancel dialog (#16091) 383bb28
+* **web:** handle revoke txs in increase and create [lp] (#16034) 56647be
+* **web:** handle some bridging pairs on tdp (#15888) 556d548
+* **web:** handle testnet or mainnet initial chain id (#15837) d825882
+* **web:** have better logging for when txs fail in the saga (#16121) f619350
+* **web:** height issue on TokenSelector modal (#15936) cbeccb1
+* **web:** hide unichain explore behind feature flag (#16017) (#16018) 30fa003
+* **web:** low severity tokens should not display in web search (#16057) 634d7b6
+* **web:** LP card responsiveness (#16063) fa1283b
+* **web:** mobile web network logo (#16145) 5d0d4f2
+* **web:** move common base fallback to universe currencyInfo (#15850) a22c17c
+* **web:** move ref to content on posiiton card (#16104) 4ab013f
+* **web:** only render send modal when review is triggered (#15911) 0fd501b
+* **web:** playwright timing out (#16196) 7d62818
+* **web:** poll for the dependent amount even if the simulated call fails (#16021) e902747
+* **web:** postion popover menu double click fix (#16056) 536a4e2
+* **web:** recently searched tokens should re-fetch useCurrencyInfo (#15979) 3ff6273
+* **web:** reject LP chart range input suggestions when user is typing min/max amounts (#15816) c552d25
+* **web:** restrict fee tier chain filter to v3 (#15882) 4388d38
+* **web:** should not link v4 pools to block explorer (#15920) 6bd5d8f
+* **web:** show correct token amount in PDP tx table (#16106) cc1c9b4
+* **web:** statsig initialization with trading api client  (#16102) 99f9e7a
+* **web:** Swap form switch currencies arrow button z-index (#15830) 724ea10
+* **web:** switch to new google customer account (#15825) f08e988
+* **web:** token selector bottom sheet rendering issue (#15865) 9afa785
+* **web:** update refetching logic for migrate (#16120) 77a3d45
+* **web:** update the deposit box display (#16195) c9237ae
+* **web:** update z index to fix overlap (#16193) d082243
+* **web:** use overflow auto on web menus (#15848) ae6580a
+* **web:** use price to create mock pair (#15921) 15548aa
+* **web:** web searchbar popular tokens should be default-list-only + some search query cleanup (#15775) 72261d3
+* **web:** z-index of TDP chart header (#15823) b45565e
+
+
+### Continuous Integration
+
+* **web:** update sitemaps 478eef8
+
+
+### Tests
+
+* **web:** add smoketest to block merges to crit branches (#16113) d8d3a6d
+* **web:** getV2PriceRangeInfo (#15984) cb64d3d
+* **web:** test increase/decrease [lp] (#16097) 37ef817
+
+
+### Styles
+
+* **web:** remove close icon from modals when adapted to drawer (#15585) 095c244
+* **web:** update GetTheApp mweb banner (#15932) 3e0ba3b
+
+
+### Code Refactoring
+
+* **web:** remove nav breakpoints (#15872) 48f1126
+* **web:** rename BREAKPOINTS.lg to breakpoints.xl (#15780) 4429ee1
+* **web:** rename BREAKPOINTS.md to breakpoints.lg (#15778) 37d70d2
+* **web:** rename BREAKPOINTS.sm to breakpoints.md (#15782) f840fc8
+* **web:** rename BREAKPOINTS.xs to breakpoints.xs (#15784) 84ce1bd
+* **web:** replace useScreenSize with useMedia (#15773) 51cbd7e
+* **web:** update ExpandoRow component and use HeightAnimator (#15698) d5b7821
+* **web:** useReadContract instead of useSingleCallResult in approval hooks (#14716) 4811047
+* **web:** useReadContract instead of useSingleCallResult in legacy LP flow (#14714) 1dbe6c7
+* **web:** useReadContract instead of useSingleCallResult in usePositionOwner hooks (#14715) a30358e
+
+

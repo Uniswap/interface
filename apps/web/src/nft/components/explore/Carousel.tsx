@@ -16,7 +16,7 @@ const CarouselCardContainer = styled.div`
   max-width: 100%;
   height: 390px;
 
-  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     max-width: 600px;
   }
 `
@@ -30,7 +30,7 @@ const CarouselItemCard = styled.div`
   width: calc(100%);
   height: calc(100%);
 
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
     padding: 4px 32px 32px;
   }
 `
@@ -44,7 +44,7 @@ const CarouselItemIcon = styled.div`
   height: calc(100%);
   padding: 4px 0 32px;
 
-  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (min-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     display: flex;
   }
 

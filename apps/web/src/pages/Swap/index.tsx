@@ -6,7 +6,6 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import SwapHeader, { PathnameToTab } from 'components/swap/SwapHeader'
 import { PageWrapper, SwapWrapper } from 'components/swap/styled'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { PageType, useIsPage } from 'hooks/useIsPage'
 import { BuyForm } from 'pages/Swap/Buy/BuyForm'
 import { LimitFormWrapper } from 'pages/Swap/Limit/LimitForm'
@@ -24,9 +23,9 @@ import { SwapAndLimitContextProvider, SwapContextProvider } from 'state/swap/Swa
 import { useInitialCurrencyState } from 'state/swap/hooks'
 import { CurrencyState, SwapAndLimitContext } from 'state/swap/types'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { Flex, SegmentedControl, Text, Tooltip, styled } from 'ui/src'
+import { Flex, SegmentedControl, Text, Tooltip, styled, useMedia } from 'ui/src'
 import { AppTFunction } from 'ui/src/i18n/types'
-import { zIndices } from 'ui/src/theme'
+import { zIndexes } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -152,7 +151,7 @@ export function Swap({
   tokenColor?: string
 }) {
   const isDark = useIsDarkMode()
-  const screenSize = useScreenSize()
+  const media = useMedia()
   const isExplorePage = useIsPage(PageType.EXPLORE)
 
   const { value: universalSwapFlow, isLoading } = useFeatureFlagWithLoading(FeatureFlags.UniversalSwap)
@@ -227,7 +226,7 @@ export function Swap({
             >
               <Flex width="100%" gap="$spacing16">
                 <SwapWrapper isDark={isDark} className={className} id="swap-page">
-                  {!hideHeader && <SwapHeader compact={compact || !screenSize.sm} syncTabToUrl={syncTabToUrl} />}
+                  {!hideHeader && <SwapHeader compact={compact || media.md} syncTabToUrl={syncTabToUrl} />}
                   {currentTab === SwapTab.Swap && (
                     <SwapForm
                       onCurrencyChange={onCurrencyChange}
@@ -275,7 +274,7 @@ function UniversalSwapFlow({
   syncTabToUrl?: boolean
   disableTokenInputs?: boolean
   prefilledState?: SwapFormState
-  onCurrencyChange?: (selected: CurrencyState) => void
+  onCurrencyChange?: (selected: CurrencyState, isBridgePair?: boolean) => void
   swapRedirectCallback?: SwapRedirectFn
   tokenColor?: string
 }) {
@@ -365,7 +364,7 @@ const DisabledOverlay = styled(Flex, {
   position: 'absolute',
   width: '100%',
   height: '100%',
-  zIndex: zIndices.overlay,
+  zIndex: zIndexes.overlay,
 })
 
 const DisabledSwapOverlay = () => {

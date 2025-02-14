@@ -13,19 +13,17 @@ import { TRADING_API_CACHE_KEY, fetchSwappableTokens } from 'uniswap/src/data/ap
 import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
 import { ChainId, GetSwappableTokensResponse } from 'uniswap/src/data/tradingApi/__generated__'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import {
   getTokenAddressFromChainForTradingApi,
   toTradingApiSupportedChainId,
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { logger } from 'utilities/src/logger/logger'
+import { MAX_REACT_QUERY_CACHE_TIME_MS } from 'utilities/src/time/time'
 
 export type SwappableTokensParams = {
   tokenIn: Address
   tokenInChainId: ChainId
-  tokenOut?: Address
-  tokenOutChainId?: ChainId
+  unichainEnabled?: boolean
 }
 
 export function useTradingApiSwappableTokensQuery({
@@ -40,6 +38,9 @@ export function useTradingApiSwappableTokensQuery({
   return useQuery<GetSwappableTokensResponse>({
     queryKey,
     queryFn: params ? swappableTokensQueryFn(params) : skipToken,
+    // In order for `getSwappableTokensQueryData` to be more likely to have cached data,
+    // we set the `gcTime` to the longest possible time.
+    gcTime: MAX_REACT_QUERY_CACHE_TIME_MS,
     ...rest,
   })
 }
@@ -76,6 +77,9 @@ export function usePrefetchSwappableTokens(input: Maybe<TradeableAsset>): void {
           tokenIn,
           tokenInChainId,
         }),
+        // In order for `getSwappableTokensQueryData` to be more likely to have cached data,
+        // we set the `gcTime` to the longest possible time.
+        gcTime: MAX_REACT_QUERY_CACHE_TIME_MS,
       })
     }
 
@@ -88,14 +92,7 @@ export function usePrefetchSwappableTokens(input: Maybe<TradeableAsset>): void {
 }
 
 const swappableTokensQueryKey = (params?: SwappableTokensParams): QueryKey => {
-  const unichainEnabled = getFeatureFlag(FeatureFlags.Unichain)
-  return [
-    TRADING_API_CACHE_KEY,
-    uniswapUrls.tradingApiPaths.swappableTokens,
-    params?.tokenIn,
-    params?.tokenInChainId,
-    unichainEnabled,
-  ]
+  return [TRADING_API_CACHE_KEY, uniswapUrls.tradingApiPaths.swappableTokens, params]
 }
 
 const swappableTokensQueryFn = (

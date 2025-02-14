@@ -15,6 +15,7 @@ interface Props {
   // To override the normally associated safetyLevel<->color mapping
   strokeColorOverride?: ColorTokens
   heroIcon?: boolean
+  inModal?: boolean
 }
 
 export default function WarningIcon({
@@ -22,13 +23,14 @@ export default function WarningIcon({
   severity,
   strokeColorOverride,
   heroIcon,
+  inModal,
   ...rest
 }: Props & IconProps): JSX.Element | null {
   const severityToUse = severity ?? safetyLevelToWarningSeverity(safetyLevel)
-  const { color: defaultIconColor, backgroundColor } = getWarningIconColors(severityToUse)
+  const { color: defaultIconColor, backgroundColor, inModalColor } = getWarningIconColors(severityToUse)
   const color = strokeColorOverride ?? defaultIconColor
   const Icon = getWarningIcon(severityToUse)
-  const icon = Icon ? <Icon color={color} {...rest} /> : null
+  const icon = Icon ? <Icon color={inModal && inModalColor ? inModalColor : color} {...rest} /> : null
   return heroIcon ? (
     <Flex borderRadius="$rounded12" p="$spacing12" backgroundColor={backgroundColor}>
       {icon}

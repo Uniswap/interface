@@ -14,6 +14,7 @@ import {
   v16Schema,
   v17Schema,
   v18Schema,
+  v19Schema,
   v1Schema,
   v2Schema,
   v3Schema,
@@ -34,6 +35,7 @@ import { initialUserSettingsState } from 'uniswap/src/features/settings/slice'
 import { initialTokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { initialVisibilityState } from 'uniswap/src/features/visibility/slice'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
 import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
 import { initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
@@ -45,6 +47,7 @@ import {
   testAddCreatedOnboardingRedesignAccount,
   testAddedHapticSetting,
   testDeleteWelcomeWalletCard,
+  testMoveTokenAndNFTVisibility,
   testMovedCurrencySetting,
   testMovedLanguageSetting,
   testMovedTokenWarnings,
@@ -105,6 +108,7 @@ describe('Redux state migrations', () => {
       transactions: initialTransactionsState,
       uniswapBehaviorHistory: initialUniswapBehaviorHistoryState,
       userSettings: initialUserSettingsState,
+      visibility: initialVisibilityState,
       wallet: initialWalletState,
       _persist: {
         version: EXTENSION_STATE_VERSION,
@@ -285,5 +289,9 @@ describe('Redux state migrations', () => {
 
   it('migrates from v18 to v19', () => {
     testDeleteWelcomeWalletCard(migrations[19], v18Schema)
+  })
+
+  it('migrates from v19 to v20', () => {
+    testMoveTokenAndNFTVisibility(migrations[20], v19Schema)
   })
 })

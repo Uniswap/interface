@@ -52,7 +52,7 @@ export interface ClassicSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
 }
 
 export interface UniswapXSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
-  routing: Routing.DUTCH_V2 | Routing.PRIORITY
+  routing: Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.PRIORITY
   trade: UniswapXTrade
   wrapTxRequest: ValidatedTransactionRequest | undefined
   gasFeeBreakdown: UniswapXGasBreakdown

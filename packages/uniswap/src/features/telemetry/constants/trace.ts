@@ -39,6 +39,7 @@ export const ModalName = {
   ExchangeTransferModal: 'exchange-transfer-modal',
   Experiments: 'experiments',
   Explore: 'explore-modal',
+  ExploreProtocolFilter: 'explore-pools-protocol-filter',
   FaceIDWarning: 'face-id-warning',
   FeatureFlags: 'feature-flags-modal',
   FeeClaim: 'fee-claim-modal',

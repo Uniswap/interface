@@ -45,10 +45,10 @@ import {
   isCelo,
   nativeOnChain,
 } from 'uniswap/src/constants/tokens'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ProtectionResult, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
 import { isSameAddress } from 'utilities/src/addresses'
 
@@ -170,6 +170,16 @@ export const COMMON_BASES: ChainCurrencyList = {
   ].map(buildPartialCurrencyInfo),
 }
 
+export function getCommonBase(chainId?: number, isNative?: boolean, address?: string): CurrencyInfo | undefined {
+  if (!address || !chainId) {
+    return undefined
+  }
+  return COMMON_BASES[chainId]?.find(
+    (base) =>
+      (base.currency.isNative && isNative) || (base.currency.isToken && isSameAddress(base.currency.address, address)),
+  )
+}
+
 function getNativeLogoURI(chainId: UniverseChainId = UniverseChainId.Mainnet): ImageSourcePropType {
   if (chainId === UniverseChainId.Mainnet) {
     return ETH_LOGO as ImageSourcePropType
@@ -203,6 +213,10 @@ export function buildPartialCurrencyInfo(commonBase: Currency): CurrencyInfo {
     currency: commonBase,
     logoUrl,
     safetyLevel: SafetyLevel.Verified,
+    safetyInfo: {
+      tokenList: TokenList.Default,
+      protectionResult: ProtectionResult.Benign,
+    },
     isSpam: false,
   } as CurrencyInfo)
 }

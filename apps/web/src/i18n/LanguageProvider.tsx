@@ -5,6 +5,7 @@ import { DEFAULT_LOCALE, Locale, mapLocaleToLanguage } from 'uniswap/src/feature
 import { getLocale, navigatorLocale, parseLocale, useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { setCurrentLanguage } from 'uniswap/src/features/settings/slice'
 import { changeLanguage } from 'uniswap/src/i18n'
+import { isTestEnv } from 'utilities/src/environment/env'
 
 function getStoreLocale(): Locale | undefined {
   const storeLanguage = store.getState().userSettings.currentLanguage
@@ -17,7 +18,7 @@ function setupInitialLanguage() {
   changeLanguage(initialLocale)
 }
 
-if (process.env.NODE_ENV !== 'test') {
+if (!isTestEnv()) {
   setupInitialLanguage()
 }
 

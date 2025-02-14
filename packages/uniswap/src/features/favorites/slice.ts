@@ -6,15 +6,9 @@ import { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyId as idFromCurrency } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 
-export type Visibility = { isVisible: boolean }
-export type CurrencyIdToVisibility = Record<CurrencyId, Visibility>
-export type NFTKeyToVisibility = Record<string, Visibility>
-
 export interface FavoritesState {
   tokens: CurrencyId[]
   watchedAddresses: Address[]
-  tokensVisibility: CurrencyIdToVisibility
-  nftsVisibility: NFTKeyToVisibility
 }
 
 // Default currency ids, need to be in lowercase to match slice add and remove behavior
@@ -24,8 +18,6 @@ const ETH_CURRENCY_ID = idFromCurrency(Ether.onChain(UniverseChainId.Mainnet)).t
 export const initialFavoritesState: FavoritesState = {
   tokens: [ETH_CURRENCY_ID, WBTC_CURRENCY_ID],
   watchedAddresses: [],
-  tokensVisibility: {},
-  nftsVisibility: {},
 }
 
 export const slice = createSlice({
@@ -78,21 +70,6 @@ export const slice = createSlice({
     setFavoriteWallets: (state, { payload: { addresses } }: PayloadAction<{ addresses: Address[] }>) => {
       state.watchedAddresses = addresses
     },
-    setTokenVisibility: (
-      state,
-      { payload: { currencyId, isVisible } }: PayloadAction<{ currencyId: string; isVisible: boolean }>,
-    ) => {
-      state.tokensVisibility[currencyId] = { ...state.tokensVisibility[currencyId], isVisible }
-    },
-    setNftVisibility: (
-      state,
-      { payload: { nftKey, isVisible } }: PayloadAction<{ nftKey: string; isVisible: boolean }>,
-    ) => {
-      state.nftsVisibility[nftKey] = {
-        ...state.nftsVisibility[nftKey],
-        isVisible,
-      }
-    },
   },
 })
 
@@ -102,8 +79,6 @@ export const {
   setFavoriteTokens,
   addWatchedAddress,
   removeWatchedAddress,
-  setNftVisibility,
-  setTokenVisibility,
   setFavoriteWallets,
 } = slice.actions
 export const { reducer: favoritesReducer } = slice

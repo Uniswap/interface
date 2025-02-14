@@ -6,16 +6,25 @@ import { OnSelectCurrency } from 'uniswap/src/components/TokenSelector/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 function _TokenSelectorEmptySearchList({
+  activeAccountAddress,
   chainFilter,
   onSelectCurrency,
 }: {
+  activeAccountAddress?: string
   onSelectCurrency: OnSelectCurrency
   chainFilter: UniverseChainId | null
-  isKeyboardOpen?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
 
-  const { data: sections, loading, error, refetch } = useTokenSectionsForEmptySearch(chainFilter)
+  const {
+    data: sections,
+    loading,
+    error,
+    refetch,
+  } = useTokenSectionsForEmptySearch({
+    activeAccountAddress,
+    chainFilter,
+  })
 
   return (
     <TokenSelectorList

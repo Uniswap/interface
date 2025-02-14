@@ -50,6 +50,12 @@ exports[`DappLogoWithTxStatus renders without error with dapp name 1`] = `
       onFastImageError={[Function]}
       onFastImageLoad={[Function]}
       resizeMode="contain"
+      source={
+        {
+          "cache": "immutable",
+          "uri": "https://example.com/dapp.png",
+        }
+      }
       style={
         {
           "bottom": 0,
@@ -277,11 +283,11 @@ exports[`LogoWithTxStatus renders without error 1`] = `
         ]
       }
       testID="status-icon"
-      tintColor="#F9F9F9"
       vbHeight={16}
       vbWidth={16}
     >
       <RNSVGGroup
+        color="#F9F9F9"
         fill={
           {
             "payload": 4286414205,

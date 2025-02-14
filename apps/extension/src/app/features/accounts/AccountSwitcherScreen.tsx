@@ -305,7 +305,7 @@ const UnitagActionButton = (): JSX.Element => {
 
   return (
     <ComingSoon placement="top">
-      <DeprecatedButton color="$neutral2" disabled={true} size="small" testID={TestID.AccountCard} theme="secondary">
+      <DeprecatedButton color="$neutral2" isDisabled={true} size="small" testID={TestID.AccountCard} theme="secondary">
         {t('account.wallet.header.button.disabled.title')}
       </DeprecatedButton>
     </ComingSoon>

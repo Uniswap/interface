@@ -27,6 +27,7 @@ export function Modal({
   analyticsProperties,
   skipLogImpression,
   flex,
+  zIndex,
   isDismissible = true,
 }: ModalProps): JSX.Element {
   const [fullyClosed, setFullyClosed] = useState(false)
@@ -68,11 +69,13 @@ export function Modal({
           maxWidth={maxWidth}
           maxHeight={maxHeight}
           gap={gap}
+          zIndex={zIndex}
           $sm={{
             p: padding ?? '$spacing12',
             ...(isInterface && {
               '$platform-web': {
-                height: height ?? `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`,
+                height: height ?? 'max-content',
+                maxHeight: `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`,
               },
             }),
           }}

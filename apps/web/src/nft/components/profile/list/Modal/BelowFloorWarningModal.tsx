@@ -7,9 +7,9 @@ import { Listing, WalletAsset } from 'nft/types'
 import React from 'react'
 import { AlertTriangle, X } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
-import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
+import { breakpoints } from 'ui/src/theme'
 import { useFormatter } from 'utils/formatNumbers'
 
 const ModalWrapper = styled(Column)`
@@ -28,7 +28,7 @@ const ModalWrapper = styled(Column)`
   flex-direction: column;
   gap: 12px;
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     width: 100%;
   }
 `

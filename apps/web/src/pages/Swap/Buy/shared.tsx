@@ -1,8 +1,7 @@
 import { useTheme } from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
 import { ArrowLeft } from 'react-feather'
-import { CloseIcon } from 'theme/components'
-import { Flex, styled, useSporeColors } from 'ui/src'
+import { Flex, ModalCloseIcon, styled, useSporeColors } from 'ui/src'
 import { ReactComponent as ForConnectingBackground } from 'ui/src/assets/backgrounds/for-connecting-v2.svg'
 import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 
@@ -45,7 +44,7 @@ export function ConnectingViewWrapper({ children, closeModal, onBack }: PropsWit
         background={`radial-gradient(70% 50% at center, transparent 0%, ${colors.surface1.val} 100%)`}
       />
       <Flex flexDirection="row-reverse" alignItems="center" justifyContent="space-between" zIndex={2}>
-        <CloseIcon data-testid="ConnectingViewWrapper-close" onClick={closeModal} $color={theme.neutral2} />
+        <ModalCloseIcon testId="ConnectingViewWrapper-close" onClose={closeModal} />
         {onBack && (
           <ArrowLeft data-testid="ConnectingViewWrapper-back" fill={theme.neutral2} onClick={onBack} cursor="pointer" />
         )}

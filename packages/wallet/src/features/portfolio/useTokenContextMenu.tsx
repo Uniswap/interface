@@ -10,11 +10,11 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePortfolioCacheUpdater } from 'uniswap/src/features/dataApi/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { setTokenVisibility } from 'uniswap/src/features/favorites/slice'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName, SectionName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { setTokenVisibility } from 'uniswap/src/features/visibility/slice'
 import { CurrencyField, CurrencyId } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { isExtension } from 'utilities/src/platform'
@@ -81,15 +81,12 @@ export function useTokenContextMenu({
   )
 
   const onPressViewDetails = useCallback(() => {
-    if (isTestnetModeEnabled) {
-      return
-    }
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
       element: ElementName.TokenItem,
       section: SectionName.HomeTokensTab,
     })
     navigateToTokenDetails(currencyId)
-  }, [isTestnetModeEnabled, navigateToTokenDetails, currencyId])
+  }, [navigateToTokenDetails, currencyId])
 
   const onPressShare = useCallback(async () => {
     handleShareToken({ currencyId })
@@ -157,7 +154,7 @@ export function useTokenContextMenu({
               systemIcon: 'square.and.arrow.up',
             },
           ]),
-      ...(isExtension
+      ...(isExtension && !isTestnetModeEnabled
         ? [
             {
               name: TokenMenuActionType.ViewDetails,
@@ -167,7 +164,7 @@ export function useTokenContextMenu({
             },
           ]
         : []),
-      ...(activeAccountHoldsToken
+      ...(activeAccountHoldsToken && !isTestnetModeEnabled
         ? [
             {
               name: TokenMenuActionType.ToggleVisibility,
@@ -193,6 +190,7 @@ export function useTokenContextMenu({
     onPressHiddenStatus,
     onPressSwap,
     excludedActions,
+    isTestnetModeEnabled,
   ])
 
   const onContextMenuPress = useCallback(

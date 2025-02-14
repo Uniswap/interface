@@ -38,11 +38,12 @@ export type ModalProps = PropsWithChildren<{
   hideScrim?: boolean
   maxWidth?: number
   maxHeight?: ComponentProps<typeof View>['maxHeight']
-  height?: ComponentProps<typeof View>['height']
+  height?: 'max-content' | 'auto' | '100vh' | '100%' | number | null
   padding?: SpaceTokens
   paddingX?: SpaceTokens
   paddingY?: SpaceTokens
   bottomAttachment?: ReactNode
   gap?: ComponentProps<typeof View>['gap']
   flex?: ComponentProps<typeof View>['flex']
+  zIndex?: number
 }>

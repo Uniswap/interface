@@ -11,7 +11,7 @@ import { SendRecipientForm } from 'pages/Swap/Send/SendRecipientForm'
 import { SendReviewModal } from 'pages/Swap/Send/SendReviewModal'
 import { SmartContractSpeedBumpModal } from 'pages/Swap/Send/SmartContractSpeedBump'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Trans } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { SendContextProvider, useSendContext } from 'state/send/SendContext'
 import { CurrencyState } from 'state/swap/types'
 import { DeprecatedButton, Text } from 'ui/src'
@@ -28,34 +28,35 @@ function useSendButtonState() {
   const { sendState, derivedSendInfo } = useSendContext()
   const { recipient } = sendState
   const { parsedTokenAmount, recipientData } = derivedSendInfo
+  const { t } = useTranslation()
 
   return useMemo(() => {
     if (recipient && !recipientData) {
       return {
-        label: <Trans i18nKey="common.invalidRecipient.error" />,
+        label: t('common.invalidRecipient.error'),
         disabled: true,
       }
     }
 
     if (!parsedTokenAmount) {
       return {
-        label: <Trans i18nKey="common.noAmount.error" />,
+        label: t('common.noAmount.error'),
         disabled: true,
       }
     }
 
     if (!recipient && !recipientData) {
       return {
-        label: <Trans i18nKey="common.input.noRecipient.error" />,
+        label: t('common.input.noRecipient.error'),
         disabled: true,
       }
     }
 
     return {
-      label: <Trans i18nKey="common.send.button" />,
+      label: t('common.send.button'),
       disabled: false,
     }
-  }, [parsedTokenAmount, recipient, recipientData])
+  }, [t, parsedTokenAmount, recipient, recipientData])
 }
 
 enum SendFormModalState {
@@ -218,7 +219,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
               borderRadius="$rounded16"
               width="100%"
               pressStyle={{ scale: 0.98 }}
-              disabled={buttonDisabled}
+              isDisabled={buttonDisabled}
               opacity={1}
               onPress={() => handleSendButton()}
               backgroundColor={buttonDisabled ? '$surface2' : '$accent1'}
@@ -230,19 +231,23 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
           </Trace>
         )}
       </Column>
-      {sendFormModalState === SendFormModalState.REVIEW ? (
-        <SendReviewModal onConfirm={handleSend} onDismiss={() => handleModalState(SendFormModalState.None)} />
-      ) : sendFormModalState === SendFormModalState.SMART_CONTRACT_SPEED_BUMP ? (
-        <SmartContractSpeedBumpModal
-          onCancel={handleCancelSmartContractSpeedBump}
-          onConfirm={handleConfirmSmartContractSpeedBump}
+      {sendFormModalState === SendFormModalState.REVIEW && (
+        <SendReviewModal
+          isOpen={true}
+          onConfirm={handleSend}
+          onDismiss={() => handleModalState(SendFormModalState.None)}
         />
-      ) : sendFormModalState === SendFormModalState.NEW_ADDRESS_SPEED_BUMP ? (
-        <NewAddressSpeedBumpModal
-          onCancel={handleCancelNewAddressSpeedBump}
-          onConfirm={handleConfirmNewAddressSpeedBump}
-        />
-      ) : null}
+      )}
+      <SmartContractSpeedBumpModal
+        isOpen={sendFormModalState === SendFormModalState.SMART_CONTRACT_SPEED_BUMP}
+        onConfirm={handleConfirmSmartContractSpeedBump}
+        onDismiss={handleCancelSmartContractSpeedBump}
+      />
+      <NewAddressSpeedBumpModal
+        isOpen={sendFormModalState === SendFormModalState.NEW_ADDRESS_SPEED_BUMP}
+        onConfirm={handleConfirmNewAddressSpeedBump}
+        onDismiss={handleCancelNewAddressSpeedBump}
+      />
     </>
   )
 }

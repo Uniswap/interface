@@ -7,8 +7,8 @@ import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
 import { openModal } from 'src/features/modals/modalSlice'
+import { useHideSplashScreen } from 'src/features/splashScreen/useHideSplashScreen'
 import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
-import { hideSplashScreen } from 'src/utils/splashScreen'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -22,7 +22,6 @@ import { isE2EMode } from 'utilities/src/environment/constants'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { useTimeout } from 'utilities/src/time/timing'
 import { LANDING_ANIMATION_DURATION, LandingBackground } from 'wallet/src/components/landing/LandingBackground'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
@@ -33,7 +32,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const { isTestnetModeEnabled } = useEnabledChains()
-
+  const hideSplashScreen = useHideSplashScreen()
   const actionButtonsOpacity = useSharedValue(0)
   const actionButtonsStyle = useAnimatedStyle(() => ({ opacity: actionButtonsOpacity.value }), [actionButtonsOpacity])
 
@@ -85,12 +84,9 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
     })
   }
 
-  // Hides lock screen on next js render cycle, ensuring this component is loaded when the screen is hidden
-  useTimeout(hideSplashScreen, 1)
-
   return (
     <ReactNavigationPerformanceView interactive screenName={OnboardingScreens.Landing}>
-      <Screen backgroundColor="$surface1" edges={['bottom']}>
+      <Screen backgroundColor="$surface1" edges={['bottom']} onLayout={hideSplashScreen}>
         <Flex fill gap="$spacing8">
           <Flex shrink height="100%" width="100%">
             <LandingBackground navigationEventConsumer={navigation} />

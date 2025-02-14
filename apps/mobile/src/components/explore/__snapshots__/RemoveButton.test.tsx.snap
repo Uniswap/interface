@@ -12,13 +12,15 @@ exports[`RemoveButton renders without error 1`] = `
       "top": 5,
     }
   }
-  jestAnimatedStyle={
-    {
-      "value": {
-        "opacity": 1,
-      },
-    }
-  }
+  onBlur={[Function]}
+  onClick={[Function]}
+  onFocus={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
   style={
     {
       "alignItems": "center",

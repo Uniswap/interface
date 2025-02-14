@@ -1,7 +1,13 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Web3Provider } from '@ethersproject/providers'
 import { permit2Address } from '@uniswap/permit2-sdk'
-import { CosignedPriorityOrder, CosignedV2DutchOrder, DutchOrder, getCancelMultipleParams } from '@uniswap/uniswapx-sdk'
+import {
+  CosignedPriorityOrder,
+  CosignedV2DutchOrder,
+  CosignedV3DutchOrder,
+  DutchOrder,
+  getCancelMultipleParams,
+} from '@uniswap/uniswapx-sdk'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { ContractTransaction } from 'ethers/lib/ethers'
@@ -101,13 +107,18 @@ function getCancelMultipleUniswapXOrdersParams(
   chainId: UniverseChainId,
 ) {
   const nonces = orders
-    .map(({ encodedOrder, type }) =>
-      type === SignatureType.SIGN_UNISWAPX_V2_ORDER
-        ? CosignedV2DutchOrder.parse(encodedOrder, chainId)
-        : type === SignatureType.SIGN_PRIORITY_ORDER
-          ? CosignedPriorityOrder.parse(encodedOrder, chainId)
-          : DutchOrder.parse(encodedOrder, chainId),
-    )
+    .map(({ encodedOrder, type }) => {
+      switch (type) {
+        case SignatureType.SIGN_UNISWAPX_V2_ORDER:
+          return CosignedV2DutchOrder.parse(encodedOrder, chainId)
+        case SignatureType.SIGN_UNISWAPX_V3_ORDER:
+          return CosignedV3DutchOrder.parse(encodedOrder, chainId)
+        case SignatureType.SIGN_PRIORITY_ORDER:
+          return CosignedPriorityOrder.parse(encodedOrder, chainId)
+        default:
+          return DutchOrder.parse(encodedOrder, chainId)
+      }
+    })
     .map((order) => order.info.nonce)
   return getCancelMultipleParams(nonces)
 }

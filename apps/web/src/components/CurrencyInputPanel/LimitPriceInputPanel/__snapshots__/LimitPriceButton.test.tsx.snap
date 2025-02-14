@@ -161,6 +161,9 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly 1`] = 
           </svg>
         </button>
       </div>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>
@@ -326,6 +329,9 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly, negat
           </svg>
         </button>
       </div>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>
@@ -392,6 +398,9 @@ exports[`LimitPresetPriceButton renders 0 correctly, disabled false and selected
           Market
         </div>
       </button>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>
@@ -458,6 +467,9 @@ exports[`LimitPresetPriceButton renders 0 correctly, disabled false and selected
           Market
         </div>
       </button>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>
@@ -511,6 +523,9 @@ exports[`LimitPresetPriceButton renders 0 correctly, disabled true and selected 
           Market
         </div>
       </button>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>
@@ -578,6 +593,9 @@ exports[`LimitPresetPriceButton renders 5 correctly, disabled false and selected
           5%
         </div>
       </button>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>
@@ -632,6 +650,9 @@ exports[`LimitPresetPriceButton renders 5 correctly, disabled true and selected 
           5%
         </div>
       </button>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>
@@ -699,6 +720,9 @@ exports[`LimitPresetPriceButton renders 10 correctly, disabled false and selecte
           10%
         </div>
       </button>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>

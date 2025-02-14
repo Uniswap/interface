@@ -17,6 +17,11 @@ import { useNetworkColors } from 'uniswap/src/utils/colors'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 
+/**
+ * Shows a warning in 2 different cases:
+ * 1. When the user doesn't have enough funds to cover the transaction's network cost.
+ * 2. When the user is trying to swap a native token and they don't have enough of that token.
+ */
 export function useInsufficientNativeTokenWarning({
   flow,
   gasFee,
@@ -34,7 +39,18 @@ export function useInsufficientNativeTokenWarning({
 } | null {
   const { defaultChainId } = useEnabledChains()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const warning = warnings.find((w) => w.type === WarningLabel.InsufficientGasFunds)
+
+  const insufficientGasFundsWarning = warnings.find((w) => w.type === WarningLabel.InsufficientGasFunds)
+
+  const insufficientFundsWarning: Warning | undefined =
+    flow === 'swap' ? warnings.find((w) => w.type === WarningLabel.InsufficientFunds) : undefined
+
+  const warning = insufficientGasFundsWarning ?? insufficientFundsWarning
+
+  const shouldShowWarning =
+    warning?.type === WarningLabel.InsufficientGasFunds ||
+    (warning?.type === WarningLabel.InsufficientFunds && warning.currency?.isNative)
+
   const nativeCurrency = warning?.currency
   const chainId = nativeCurrency?.chainId ?? defaultChainId
 
@@ -56,11 +72,11 @@ export function useInsufficientNativeTokenWarning({
 
   const gasAmountFiatFormatted = convertFiatAmountFormatted(gasAmountUsd?.toExact(), NumberType.FiatGasPrice)
 
-  if (!warning || !nativeCurrency || !nativeCurrencyInfo) {
+  if (!shouldShowWarning || !nativeCurrency || !nativeCurrencyInfo) {
     return null
   }
 
-  if (!gasAmount) {
+  if (warning.type === WarningLabel.InsufficientGasFunds && !gasAmount) {
     logger.warn(
       'useInsufficientNativeTokenWarning',
       'useInsufficientNativeTokenWarning',
@@ -83,26 +99,37 @@ export function useInsufficientNativeTokenWarning({
 
   const networkName = getChainLabel(supportedChainId)
 
-  const modalOrTooltipMainMessage = (
-    <Trans
-      components={{
-        // TODO(WALL-3901): move this to `value` once the bug in i18next is fixed.
-        // We need to pass this as a `component` instead of a `value` because there seems to be a bug in i18next
-        // which causes the value `<$0.01` to be incorrectly escaped.
-        fiatTokenAmount: (
-          <Text color="$neutral2" variant={INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT}>
-            {gasAmountFiatFormatted}
-          </Text>
-        ),
-      }}
-      i18nKey="transaction.warning.insufficientGas.modal.message"
-      values={{
-        networkName,
-        tokenSymbol: nativeCurrency.symbol,
-        tokenAmount: gasAmount.toSignificant(2),
-      }}
-    />
-  )
+  const modalOrTooltipMainMessage =
+    warning.type === WarningLabel.InsufficientGasFunds ? (
+      // When the user doesn't have enough funds to cover the transaction's network cost.
+      <Trans
+        components={{
+          // TODO(WALL-3901): move this to `value` once the bug in i18next is fixed.
+          // We need to pass this as a `component` instead of a `value` because there seems to be a bug in i18next
+          // which causes the value `<$0.01` to be incorrectly escaped.
+          fiatTokenAmount: (
+            <Text color="$neutral2" variant={INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT}>
+              {gasAmountFiatFormatted}
+            </Text>
+          ),
+        }}
+        i18nKey="transaction.warning.insufficientGas.modal.message"
+        values={{
+          networkName,
+          tokenSymbol: nativeCurrency.symbol,
+          tokenAmount: gasAmount?.toSignificant(2),
+        }}
+      />
+    ) : (
+      // When the user is trying to swap a native token and they don't have enough of that token.
+      <Trans
+        i18nKey="transaction.warning.insufficientGas.modal.messageSwapWithoutTokenAmount"
+        values={{
+          networkName,
+          tokenSymbol: nativeCurrency.symbol,
+        }}
+      />
+    )
 
   return {
     flow,

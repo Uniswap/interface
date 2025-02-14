@@ -19,11 +19,12 @@ import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routi
 import { CurrencyState, SerializedCurrencyState, SwapInfo, SwapState } from 'state/swap/types'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { UniverseChainId, isUniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
@@ -334,41 +335,101 @@ export function parseCurrencyFromURLParameter(urlParam: ParsedQs[string]): strin
   return undefined
 }
 
+interface BaseSwapParams {
+  chainId?: UniverseChainId
+  outputChainId?: UniverseChainId
+  inputCurrency?: string
+  outputCurrency?: string
+  typedValue?: string
+  independentField?: CurrencyField
+}
+
+function createBaseSwapURLParams({
+  chainId,
+  outputChainId,
+  inputCurrency,
+  outputCurrency,
+  typedValue,
+  independentField,
+}: BaseSwapParams): URLSearchParams {
+  const params = new URLSearchParams()
+
+  if (chainId) {
+    params.set('chain', getChainInfo(chainId).interfaceName)
+  }
+
+  if (outputChainId && outputChainId !== chainId) {
+    params.set('outputChain', getChainInfo(outputChainId).interfaceName)
+  }
+
+  if (inputCurrency) {
+    params.set('inputCurrency', inputCurrency)
+  }
+
+  if (outputCurrency) {
+    params.set('outputCurrency', outputCurrency)
+  }
+
+  if (typedValue) {
+    params.set('value', typedValue)
+  }
+
+  if (independentField) {
+    params.set('field', independentField)
+  }
+
+  return params
+}
+
 export function serializeSwapStateToURLParameters(
   state: CurrencyState & Partial<SwapState> & { chainId: UniverseChainId },
 ): string {
   const { inputCurrency, outputCurrency, typedValue, independentField, chainId } = state
-  const params = new URLSearchParams()
-
-  params.set('chain', getChainInfo(chainId).interfaceName)
-
-  if (
-    outputCurrency &&
-    inputCurrency &&
-    outputCurrency.chainId !== inputCurrency.chainId &&
-    isUniverseChainId(outputCurrency.chainId)
-  ) {
-    params.set('outputChain', getChainInfo(outputCurrency.chainId).interfaceName)
-  }
-
-  if (inputCurrency) {
-    params.set('inputCurrency', inputCurrency.isNative ? NATIVE_CHAIN_ID : inputCurrency.address)
-  }
-
-  if (outputCurrency) {
-    params.set('outputCurrency', outputCurrency.isNative ? NATIVE_CHAIN_ID : outputCurrency.address)
-  }
-
   const hasValidInput = (inputCurrency || outputCurrency) && typedValue
-  if (hasValidInput) {
-    params.set('value', typedValue)
-  }
 
-  if (hasValidInput && independentField) {
-    params.set('field', independentField)
-  }
+  return (
+    '?' +
+    createBaseSwapURLParams({
+      chainId,
+      outputChainId: outputCurrency?.chainId !== inputCurrency?.chainId ? outputCurrency?.chainId : undefined,
+      inputCurrency: inputCurrency ? (inputCurrency.isNative ? NATIVE_CHAIN_ID : inputCurrency.address) : undefined,
+      outputCurrency: outputCurrency ? (outputCurrency.isNative ? NATIVE_CHAIN_ID : outputCurrency.address) : undefined,
+      typedValue: hasValidInput ? typedValue : undefined,
+      independentField: hasValidInput ? independentField : undefined,
+    }).toString()
+  )
+}
 
-  return '?' + params.toString()
+export function serializeSwapAddressesToURLParameters({
+  inputTokenAddress,
+  outputTokenAddress,
+  chainId,
+  outputChainId,
+}: {
+  inputTokenAddress?: string
+  outputTokenAddress?: string
+  chainId?: UniverseChainId | null
+  outputChainId?: UniverseChainId | null
+}): string {
+  const chainIdOrDefault = chainId ?? UniverseChainId.Mainnet
+
+  return (
+    '?' +
+    createBaseSwapURLParams({
+      chainId: chainId ?? undefined,
+      outputChainId: outputChainId ?? undefined,
+      inputCurrency: inputTokenAddress
+        ? inputTokenAddress === getNativeAddress(chainIdOrDefault)
+          ? NATIVE_CHAIN_ID
+          : inputTokenAddress
+        : undefined,
+      outputCurrency: outputTokenAddress
+        ? outputTokenAddress === getNativeAddress(outputChainId ?? chainIdOrDefault)
+          ? NATIVE_CHAIN_ID
+          : outputTokenAddress
+        : undefined,
+    }).toString()
+  )
 }
 
 export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCurrencyState {
@@ -408,7 +469,7 @@ export function useInitialCurrencyState(): {
   triggerConnect: boolean
 } {
   const { setIsUserSelectedToken } = useMultichainContext()
-  const { defaultChainId } = useEnabledChains()
+  const { defaultChainId, isTestnetModeEnabled } = useEnabledChains()
 
   const { useParsedQueryString } = useUrlContext()
   const parsedQs = useParsedQueryString()
@@ -417,6 +478,9 @@ export function useInitialCurrencyState(): {
   }, [parsedQs])
 
   const supportedChainId = useSupportedChainId(parsedCurrencyState.chainId ?? defaultChainId) ?? UniverseChainId.Mainnet
+  const supportedChainInfo = getChainInfo(supportedChainId)
+  const isSupportedChainCompatible = isTestnetModeEnabled === !!supportedChainInfo.testnet
+
   const hasCurrencyQueryParams =
     parsedCurrencyState.inputCurrencyId || parsedCurrencyState.outputCurrencyId || parsedCurrencyState.chainId
 
@@ -427,8 +491,8 @@ export function useInitialCurrencyState(): {
   }, [parsedCurrencyState.inputCurrencyId, parsedCurrencyState.outputCurrencyId, setIsUserSelectedToken])
 
   const { initialInputCurrencyAddress, initialChainId } = useMemo(() => {
-    // Default to ETH if multichain
-    if (!hasCurrencyQueryParams) {
+    // Default to ETH if no query params or chain is not compatible with testnet or mainnet mode
+    if (!hasCurrencyQueryParams || !isSupportedChainCompatible) {
       return {
         initialInputCurrencyAddress: 'ETH',
         initialChainId: defaultChainId,
@@ -448,19 +512,22 @@ export function useInitialCurrencyState(): {
     }
   }, [
     hasCurrencyQueryParams,
-    parsedCurrencyState.inputCurrencyId,
     parsedCurrencyState.outputCurrencyId,
+    parsedCurrencyState.inputCurrencyId,
+    isSupportedChainCompatible,
     supportedChainId,
     defaultChainId,
   ])
 
+  const outputChainIsSupported = useSupportedChainId(parsedCurrencyState.outputChainId)
+
   const initialOutputCurrencyAddress = useMemo(
     () =>
-      // clear output if identical unless there's an outputChainId which means we're bridging
-      initialInputCurrencyAddress === parsedCurrencyState.outputCurrencyId && !parsedCurrencyState.outputChainId
+      // clear output if identical unless there's a supported outputChainId which means we're bridging
+      initialInputCurrencyAddress === parsedCurrencyState.outputCurrencyId && !outputChainIsSupported
         ? undefined
         : parsedCurrencyState.outputCurrencyId,
-    [initialInputCurrencyAddress, parsedCurrencyState.outputCurrencyId, parsedCurrencyState.outputChainId],
+    [initialInputCurrencyAddress, parsedCurrencyState.outputCurrencyId, outputChainIsSupported],
   )
 
   const initialInputCurrency = useCurrency(initialInputCurrencyAddress, initialChainId)

@@ -25,7 +25,7 @@ export function FiatOnRampCtaButton({
   return (
     <DeprecatedButton
       color={buttonAvailable ? '$white' : '$neutral2'}
-      disabled={disabled}
+      isDisabled={disabled}
       icon={
         isLoading ? <SpinningLoader color="$white" /> : !eligible ? <InfoCircleFilled color="$neutral3" /> : undefined
       }

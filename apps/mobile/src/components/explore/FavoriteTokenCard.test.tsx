@@ -166,7 +166,7 @@ describe('FavoriteTokenCard', () => {
       })
 
       const removeButton = await findByTestId('explore/remove-button')
-      await act(() => {
+      act(() => {
         fireEvent.press(removeButton, ON_PRESS_EVENT_PAYLOAD)
       })
 

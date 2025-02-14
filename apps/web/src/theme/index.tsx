@@ -6,6 +6,7 @@ import { ThemeColors, darkTheme, lightTheme } from 'theme/colors'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { darkDeprecatedTheme, lightDeprecatedTheme } from 'theme/deprecatedColors'
 import { getAccent2, getNeutralContrast } from 'theme/utils'
+import { breakpoints } from 'ui/src/theme'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { WalletConnectConnector } from 'uniswap/src/features/web3/walletConnect'
 
@@ -28,16 +29,6 @@ const deprecated_mediaWidthTemplates: { [width in keyof typeof MEDIA_WIDTHS]: ty
   `
   return acc
 }, {} as any)
-
-export const BREAKPOINTS = {
-  xs: 396,
-  sm: 640,
-  md: 768,
-  lg: 1024,
-  xl: 1280,
-  xxl: 1536,
-  xxxl: 1920,
-}
 
 // deprecated - please use the ones in styles.ts file
 const transitions = {
@@ -95,7 +86,7 @@ function getSettings(darkMode: boolean) {
 
     // deprecated - please use hardcoded exported values instead of
     // adding to the theme object
-    breakpoint: BREAKPOINTS,
+    breakpoint: breakpoints,
     transition: transitions,
     blur: blurs,
     opacity: opacities,

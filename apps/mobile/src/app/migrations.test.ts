@@ -85,11 +85,12 @@ import {
   v80Schema,
   v81Schema,
   v83Schema,
+  v84Schema,
   v8Schema,
   v9Schema,
 } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
-import { initialBiometricsSettingsState } from 'src/features/biometrics/slice'
+import { initialBiometricsSettingsState } from 'src/features/biometricsSettings/slice'
 import { initialCloudBackupState } from 'src/features/CloudBackup/cloudBackupSlice'
 import { initialPasswordLockoutState } from 'src/features/CloudBackup/passwordLockoutSlice'
 import { initialModalsState } from 'src/features/modals/modalSlice'
@@ -108,6 +109,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { initialTokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { initialVisibilityState } from 'uniswap/src/features/visibility/slice'
 import { transactionDetails } from 'uniswap/src/test/fixtures'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
@@ -127,6 +129,7 @@ import {
   testMovedLanguageSetting,
   testMovedTokenWarnings,
   testMovedUserSettings,
+  testMoveTokenAndNFTVisibility,
   testRemoveCreatedOnboardingRedesignAccount,
   testRemoveHoldToSwap,
   testUnchecksumDismissedTokenWarningKeys,
@@ -207,6 +210,7 @@ describe('Redux state migrations', () => {
       tweaks: initialTweaksState,
       uniswapBehaviorHistory: initialUniswapBehaviorHistoryState,
       userSettings: initialUserSettingsState,
+      visibility: initialVisibilityState,
       wallet: initialWalletState,
       walletConnect: initialWalletConnectState,
       _persist: {
@@ -1614,5 +1618,9 @@ describe('Redux state migrations', () => {
 
   it('migrates from v83 to v84', () => {
     testDeleteWelcomeWalletCard(migrations[84], v83Schema)
+  })
+
+  it('migrates from v84 to v85', () => {
+    testMoveTokenAndNFTVisibility(migrations[85], v84Schema)
   })
 })

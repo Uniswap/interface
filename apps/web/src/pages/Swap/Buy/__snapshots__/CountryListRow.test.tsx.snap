@@ -52,6 +52,9 @@ exports[`CountryListRow should render 1`] = `
           </span>
         </div>
       </div>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>
@@ -126,6 +129,9 @@ exports[`CountryListRow should render selected country 1`] = `
           </g>
         </svg>
       </div>
+      <div
+        style="display: contents;"
+      />
     </span>
   </span>
 </span>

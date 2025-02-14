@@ -17,11 +17,11 @@ import { getScantasticUrl } from 'src/app/features/onboarding/scan/utils'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import UAParser from 'ua-parser-js'
-import { Flex, Image, Square, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Flex, Image, Square, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { DOT_GRID, UNISWAP_LOGO } from 'ui/src/assets'
 import { FileListLock, Mobile, RotatableChevron, Wifi } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { iconSizes, zIndices } from 'ui/src/theme'
+import { iconSizes, zIndexes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
@@ -56,7 +56,6 @@ function useDocumentVisibility(): boolean {
 export function ScanToOnboard(): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
-  const isDarkMode = useIsDarkMode()
 
   const { goToNextStep } = useOnboardingSteps()
   const isDocumentVisible = useDocumentVisibility()
@@ -194,7 +193,7 @@ export function ScanToOnboard(): JSX.Element {
             <Flex centered width="100%">
               <TouchableArea
                 borderRadius="$rounded20"
-                zIndex={zIndices.fixed}
+                zIndex={zIndexes.fixed}
                 onPress={(): void => navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Import}`)}
               >
                 <Flex
@@ -257,7 +256,7 @@ export function ScanToOnboard(): JSX.Element {
           <Flex
             alignContent="center"
             alignItems="center"
-            backgroundColor="$surface1"
+            backgroundColor={colors.white.val}
             borderColor="$surface3"
             borderRadius="$rounded16"
             borderWidth="$spacing1"
@@ -289,7 +288,7 @@ export function ScanToOnboard(): JSX.Element {
                   style={qrAnimatedStyle}
                   top={`calc(50% - ${UNISWAP_LOGO_SIZE / 2}px)`}
                   width={UNISWAP_LOGO_SIZE}
-                  zIndex={zIndices.default}
+                  zIndex={zIndexes.default}
                 >
                   <Image height={iconSizes.icon40} source={UNISWAP_LOGO} width={iconSizes.icon40} />
                 </AnimatedFlex>
@@ -305,7 +304,7 @@ export function ScanToOnboard(): JSX.Element {
                   >
                     <QRCode
                       bgColor="transparent"
-                      fgColor={isDarkMode ? colors.white.val : colors.black.val}
+                      fgColor={colors.black.val}
                       size={QR_CODE_SIZE}
                       value={scantasticValue}
                     />

@@ -14,8 +14,8 @@ import { atom, useAtom } from 'jotai'
 import styled, { useTheme } from 'lib/styled-components'
 import { useEffect, useState } from 'react'
 import { Trans } from 'react-i18next'
-import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
+import { breakpoints } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 
 const lastPageAtom = atom(0)
@@ -27,7 +27,7 @@ const Wrapper = styled(Column)`
   height: 100%;
   gap: 12px;
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     margin-bottom: 48px;
   }
 

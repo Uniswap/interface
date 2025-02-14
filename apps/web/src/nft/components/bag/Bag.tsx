@@ -43,7 +43,7 @@ const BagContainer = styled.div<{ raiseZIndex: boolean; isProfilePage: boolean }
   z-index: ${({ raiseZIndex, isProfilePage }) =>
     raiseZIndex ? (isProfilePage ? Z_INDEX.modalOverTooltip : Z_INDEX.modalBackdrop - 1) : 3};
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     right: 0px;
     top: 0px;
     width: 100%;

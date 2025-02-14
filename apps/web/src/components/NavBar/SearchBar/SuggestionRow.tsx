@@ -18,6 +18,7 @@ import { EllipsisStyle, ThemedText } from 'theme/components'
 import { Flex } from 'ui/src'
 import { Verified } from 'ui/src/components/icons/Verified'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
+import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
 import { Token, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { addToSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
@@ -110,6 +111,8 @@ export function SuggestionRow({
   const tokenWarningSeverity = isToken
     ? getTokenWarningSeverity(gqlTokenToCurrencyInfo(suggestion as Token)) // casting GqlSearchToken to Token
     : undefined
+  // in search, we only show the warning icon if token is >=Medium severity
+  const { colorSecondary: warningIconColor } = getWarningIconColors(tokenWarningSeverity)
 
   const handleClick = useCallback(() => {
     const address =
@@ -180,11 +183,17 @@ export function SuggestionRow({
         <Flex alignItems="flex-start" justifyContent="flex-start" shrink grow>
           <Flex row gap="$spacing4" shrink width="95%" {...(isToken && { alignItems: 'center' })}>
             <PrimaryText lineHeight="24px">{suggestion.name}</PrimaryText>
-            {isToken ? (
-              <WarningIcon severity={tokenWarningSeverity} size="$icon.16" flexShrink={0} flexGrow={0} />
-            ) : (
-              suggestion.isVerified && <Verified size={14} />
-            )}
+            {isToken
+              ? warningIconColor && (
+                  <WarningIcon
+                    severity={tokenWarningSeverity}
+                    size="$icon.16"
+                    flexShrink={0}
+                    flexGrow={0}
+                    strokeColorOverride={warningIconColor}
+                  />
+                )
+              : suggestion.isVerified && <Verified size={14} />}
           </Flex>
           <Flex row gap="$spacing4">
             <ThemedText.SubHeaderSmall lineHeight="20px">

@@ -103,7 +103,7 @@ export function RemoveLiquidityForm() {
                 }}
                 placeholder="0"
                 $width={percent && hiddenObserver.width ? hiddenObserver.width + 1 : undefined}
-                maxDecimals={1}
+                maxDecimals={0}
                 maxLength={3}
               />
               <NumericalInputSymbolContainer showPlaceholder={!percent}>%</NumericalInputSymbolContainer>
@@ -142,7 +142,7 @@ export function RemoveLiquidityForm() {
       />
       <TradingAPIError errorMessage={error} refetch={refetch} />
       <LoaderButton
-        disabled={percentInvalid || !txContext?.txRequest}
+        isDisabled={percentInvalid || !txContext?.txRequest}
         onPress={() => setStep(DecreaseLiquidityStep.Review)}
         loading={!error && !percentInvalid && !txContext?.txRequest}
         buttonKey="RemoveLiquidity-continue"

@@ -173,7 +173,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   }, [inputCurrency, limitState.outputAmount, onSwitchTokens, outputCurrency, setLimitState])
 
   const onSelectCurrency = useCallback(
-    (type: keyof CurrencyState, newCurrency: Currency) => {
+    (type: keyof CurrencyState, newCurrency: Currency, isResettingWETHAfterWrap?: boolean) => {
       if ((type === 'inputCurrency' ? outputCurrency : inputCurrency)?.equals(newCurrency)) {
         switchTokens()
         return
@@ -201,7 +201,10 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       if (newCurrency.chainId !== otherCurrency?.chainId) {
         newCurrencyState[type === 'inputCurrency' ? 'outputCurrency' : 'inputCurrency'] = undefined
       }
-      setLimitState((prev) => ({ ...prev, limitPriceEdited: false }))
+      if (!isResettingWETHAfterWrap) {
+        // If we're just changing the currency because we're wrapping an ETH limit to an WETH limit, don't reset limitPriceEdited to false
+        setLimitState((prev) => ({ ...prev, limitPriceEdited: false }))
+      }
       onCurrencyChange?.(newCurrencyState)
       setCurrencyState(newCurrencyState)
     },
@@ -209,6 +212,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   )
 
   useEffect(() => {
+    // If outputCurrency is undefined, we should default it to the chain's stablecoin or native currency
     if (!outputCurrency && isSupportedChain) {
       const stablecoinCurrency = getChainInfo(chainId).spotPriceStablecoinAmount.currency
       onSelectCurrency(
@@ -219,6 +223,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   }, [onSelectCurrency, outputCurrency, isSupportedChain, chainId, inputCurrency])
 
   useEffect(() => {
+    // If the initial pair is eth <> weth, replace the output currency with a stablecoin
     if (isSupportedChain && inputCurrency && outputCurrency && (inputCurrency.isNative || outputCurrency.isNative)) {
       const [nativeCurrency, nonNativeCurrency] = inputCurrency.isNative
         ? [inputCurrency, outputCurrency]
@@ -437,9 +442,13 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           }}
           fiatValueInput={fiatValueTradeInput}
           fiatValueOutput={fiatValueTradeOutput}
-          onCurrencySelection={(field: CurrencyField, currency) => {
-            onSelectCurrency(field === CurrencyField.INPUT ? 'inputCurrency' : 'outputCurrency', currency)
-          }}
+          onCurrencySelection={(field: CurrencyField, currency, isResettingWETHAfterWrap) =>
+            onSelectCurrency(
+              field === CurrencyField.INPUT ? 'inputCurrency' : 'outputCurrency',
+              currency,
+              isResettingWETHAfterWrap,
+            )
+          }
           onConfirm={handleSubmit}
           onDismiss={() => {
             setShowConfirm(false)
@@ -500,7 +509,7 @@ function SubmitOrderButton({
       size: 'large',
       width: '100%',
       pressStyle: { scale: 0.98 },
-      disabled: submitButtonDisabled && account.isConnected,
+      isDisabled: submitButtonDisabled && account.isConnected,
       opacity: 1,
       backgroundColor: !account.isConnected ? '$accent2' : submitButtonDisabled ? '$surface2' : '$accent1',
       hoverStyle: {

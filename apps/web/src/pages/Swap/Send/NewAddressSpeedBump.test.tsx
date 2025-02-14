@@ -34,7 +34,7 @@ describe('NewAddressSpeedBumpModal', () => {
     const mockOnConfirm = jest.fn()
     render(
       <SendContext.Provider value={mockSendContext}>
-        <NewAddressSpeedBumpModal onCancel={mockOnCancel} onConfirm={mockOnConfirm} />
+        <NewAddressSpeedBumpModal isOpen onDismiss={mockOnCancel} onConfirm={mockOnConfirm} />
       </SendContext.Provider>,
     )
 

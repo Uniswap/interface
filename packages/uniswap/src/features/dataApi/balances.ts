@@ -269,23 +269,23 @@ export function usePortfolioValueModifiers(addresses?: Address | Address[]): Por
   const hideSpamTokens = useHideSpamTokensSetting()
   const hideSmallBalances = useHideSmallBalancesSetting()
 
-  const { tokenIncludeOverrides, tokenExcludeOverrides } = Object.entries(currencyIdToTokenVisibility).reduce(
-    (acc: TokenOverrides, [key, tokenVisibility]) => {
-      const contractInput = currencyIdToContractInput(key)
-      if (tokenVisibility.isVisible) {
-        acc.tokenIncludeOverrides.push(contractInput)
-      } else {
-        acc.tokenExcludeOverrides.push(contractInput)
-      }
-      return acc
-    },
-    {
-      tokenIncludeOverrides: [],
-      tokenExcludeOverrides: [],
-    },
-  )
-
   const modifiers = useMemo<PortfolioValueModifier[]>(() => {
+    const { tokenIncludeOverrides, tokenExcludeOverrides } = Object.entries(currencyIdToTokenVisibility).reduce(
+      (acc: TokenOverrides, [key, tokenVisibility]) => {
+        const contractInput = currencyIdToContractInput(key)
+        if (tokenVisibility.isVisible) {
+          acc.tokenIncludeOverrides.push(contractInput)
+        } else {
+          acc.tokenExcludeOverrides.push(contractInput)
+        }
+        return acc
+      },
+      {
+        tokenIncludeOverrides: [],
+        tokenExcludeOverrides: [],
+      },
+    )
+
     return addressArray.map((addr) => ({
       ownerAddress: addr,
       tokenIncludeOverrides,
@@ -293,7 +293,7 @@ export function usePortfolioValueModifiers(addresses?: Address | Address[]): Por
       includeSmallBalances: !hideSmallBalances,
       includeSpamTokens: !hideSpamTokens,
     }))
-  }, [addressArray, tokenIncludeOverrides, tokenExcludeOverrides, hideSmallBalances, hideSpamTokens])
+  }, [addressArray, currencyIdToTokenVisibility, hideSmallBalances, hideSpamTokens])
 
   return modifiers.length > 0 ? modifiers : undefined
 }

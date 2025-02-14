@@ -1,8 +1,14 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from '@uniswap/sdk-core'
+import { useAccount } from 'hooks/useAccount'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
-import { CallStateResult, useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
+import { CallStateResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { assume0xAddress } from 'utils/wagmi'
+import { erc721Abi } from 'viem'
+import { useReadContract } from 'wagmi'
 
 interface UseV3PositionsResults {
   loading: boolean
@@ -63,13 +69,14 @@ export function useV3PositionFromTokenId(tokenId: BigNumber | undefined): UseV3P
 
 export function useV3Positions(account: string | null | undefined): UseV3PositionsResults {
   const positionManager = useV3NFTPositionManagerContract()
+  const { chainId } = useAccount()
 
-  const { loading: balanceLoading, result: balanceResult } = useSingleCallResult(positionManager, 'balanceOf', [
-    account ?? undefined,
-  ])
-
-  // we don't expect any account balance to ever exceed the bounds of max safe int
-  const accountBalance: number | undefined = balanceResult?.[0]?.toNumber()
+  const { data: accountBalance, isLoading: balanceLoading } = useReadContract({
+    address: assume0xAddress(NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId ?? UniverseChainId.Mainnet]),
+    abi: erc721Abi,
+    functionName: 'balanceOf',
+    args: account ? [assume0xAddress(account)] : undefined,
+  })
 
   const tokenIdsArgs = useMemo(() => {
     if (accountBalance && account) {

@@ -15,6 +15,7 @@ const SIGNATURE_TYPE_MAP: { [key in SwapOrderType]: SignatureType } = {
   [SwapOrderType.Dutch]: SignatureType.SIGN_UNISWAPX_ORDER,
   [SwapOrderType.DutchV2]: SignatureType.SIGN_UNISWAPX_V2_ORDER,
   [SwapOrderType.Priority]: SignatureType.SIGN_PRIORITY_ORDER,
+  // [SwapOrderType.DutchV3]: SignatureType.SIGN_UNISWAPX_V3_ORDER, TODO: Backend needs to support this
 }
 
 const ORDER_STATUS_MAP: { [key in SwapOrderStatus]: UniswapXOrderStatus } = {

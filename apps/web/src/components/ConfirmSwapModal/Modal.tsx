@@ -21,7 +21,7 @@ export function SwapModal({
 }>) {
   return (
     <Trace modal={InterfaceModalName.CONFIRM_SWAP}>
-      <Modal name={ModalName.SwapReview} isModalOpen onClose={onDismiss} maxHeight="90vh" padding={0}>
+      <Modal name={ModalName.SwapReview} isModalOpen onClose={onDismiss} padding={0}>
         <Content>{children}</Content>
       </Modal>
     </Trace>

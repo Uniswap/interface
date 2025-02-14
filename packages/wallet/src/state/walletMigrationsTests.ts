@@ -653,3 +653,12 @@ export function testDeleteWelcomeWalletCard(migration: (state: any) => any, prev
   const result = migration(prevSchema)
   expect(result.behaviorHistory.hasViewedWelcomeWalletCard).toBe(undefined)
 }
+
+export function testMoveTokenAndNFTVisibility(migration: (state: any) => any, prevSchema: any): void {
+  const result = migration(prevSchema)
+  expect(result.visibility.positions).toEqual({})
+  expect(result.visibility.tokens).toEqual(prevSchema.favorites.tokensVisibility)
+  expect(result.visibility.nfts).toEqual(prevSchema.favorites.nftsVisibility)
+  expect(result.favorites.tokensVisibility).toBeUndefined()
+  expect(result.favorites.nftsVisibility).toBeUndefined()
+}

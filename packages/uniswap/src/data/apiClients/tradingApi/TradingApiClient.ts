@@ -19,6 +19,7 @@ import {
   DecreaseLPPositionRequest,
   DecreaseLPPositionResponse,
   DutchQuoteV2,
+  DutchQuoteV3,
   GetOrdersResponse,
   GetSwappableTokensResponse,
   GetSwapsResponse,
@@ -38,8 +39,6 @@ import {
   UniversalRouterVersion,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { isTestEnv } from 'utilities/src/environment/env'
 
 // TradingAPI team is looking into updating type generation to produce the following types for it's current QuoteResponse type:
@@ -47,8 +46,14 @@ import { isTestEnv } from 'utilities/src/environment/env'
 export type DiscriminatedQuoteResponse =
   | ClassicQuoteResponse
   | DutchQuoteResponse
+  | DutchV3QuoteResponse
   | PriorityQuoteResponse
   | BridgeQuoteResponse
+
+export type DutchV3QuoteResponse = QuoteResponse & {
+  quote: DutchQuoteV3
+  routing: Routing.DUTCH_V3
+}
 
 export type DutchQuoteResponse = QuoteResponse & {
   quote: DutchQuoteV2
@@ -129,18 +134,15 @@ export async function fetchOrders({ orderIds }: { orderIds: string[] }): Promise
 }
 
 export async function fetchSwappableTokens(params: SwappableTokensParams): Promise<GetSwappableTokensResponse> {
-  const unichainEnabled = getFeatureFlag(FeatureFlags.Unichain)
-  const chainBlocklist = unichainEnabled ? [] : [UniverseChainId.Unichain.toString()]
+  const chainBlocklist = params.unichainEnabled ? [] : [UniverseChainId.Unichain.toString()]
 
   return await TradingApiClient.get<GetSwappableTokensResponse>(uniswapUrls.tradingApiPaths.swappableTokens, {
     params: {
       tokenIn: params.tokenIn,
       tokenInChainId: params.tokenInChainId,
-      ...(params.tokenOut && { tokenOut: params.tokenOut }),
-      ...(params.tokenOutChainId && { tokenOutChainId: params.tokenOutChainId }),
     },
     headers:
-      unichainEnabled || isTestEnv()
+      params.unichainEnabled || isTestEnv()
         ? {}
         : {
             'x-chain-blocklist': chainBlocklist.join(','),

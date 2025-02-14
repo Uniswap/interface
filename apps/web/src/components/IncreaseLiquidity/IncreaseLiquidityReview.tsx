@@ -4,7 +4,7 @@ import { useIncreaseLiquidityTxContext } from 'components/IncreaseLiquidity/Incr
 import { TokenInfo } from 'components/Liquidity/TokenInfo'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { useGetPoolTokenPercentage, usePositionCurrentPrice } from 'components/Liquidity/hooks'
-import { getDisplayedAmountsFromDependentAmount } from 'components/Liquidity/utils'
+import { useUpdatedAmountsFromDependentAmount } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
@@ -38,24 +38,21 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
 
   const { derivedIncreaseLiquidityInfo, increaseLiquidityState, currentTransactionStep, setCurrentTransactionStep } =
     useIncreaseLiquidityContext()
-  const { txInfo, gasFeeEstimateUSD } = useIncreaseLiquidityTxContext()
-  const { dependentAmount } = txInfo || {}
+  const { txInfo, gasFeeEstimateUSD, dependentAmount } = useIncreaseLiquidityTxContext()
 
   const { exactField } = increaseLiquidityState
-  const { currencyAmounts, currencyAmountsUSDValue } = derivedIncreaseLiquidityInfo
+  const { currencyAmounts, currencyAmountsUSDValue, deposit0Disabled, deposit1Disabled } = derivedIncreaseLiquidityInfo
 
-  const { displayCurrencyAmounts, displayUSDAmounts } = useMemo(
-    () =>
-      getDisplayedAmountsFromDependentAmount({
-        token0: currencyAmounts?.TOKEN0?.currency,
-        token1: currencyAmounts?.TOKEN1?.currency,
-        dependentAmount,
-        exactField,
-        currencyAmounts,
-        currencyAmountsUSDValue,
-      }),
-    [dependentAmount, exactField, currencyAmounts, currencyAmountsUSDValue],
-  )
+  const { updatedCurrencyAmounts, updatedUSDAmounts } = useUpdatedAmountsFromDependentAmount({
+    token0: currencyAmounts?.TOKEN0?.currency,
+    token1: currencyAmounts?.TOKEN1?.currency,
+    dependentAmount,
+    exactField,
+    currencyAmounts,
+    currencyAmountsUSDValue,
+    deposit0Disabled: deposit0Disabled || false,
+    deposit1Disabled: deposit1Disabled || false,
+  })
 
   const [steps, setSteps] = useState<TransactionStep[]>([])
 
@@ -69,29 +66,29 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   const poolTokenPercentage = useGetPoolTokenPercentage(increaseLiquidityState.position)
 
   const newToken0Amount = useMemo(() => {
-    if (!displayCurrencyAmounts?.TOKEN0) {
+    if (!updatedCurrencyAmounts?.TOKEN0) {
       return undefined
     }
 
     const additionalToken0Amount = CurrencyAmount.fromRawAmount(
-      displayCurrencyAmounts?.TOKEN0?.currency,
+      updatedCurrencyAmounts?.TOKEN0?.currency,
       currency0Amount.quotient,
     )
-    return displayCurrencyAmounts?.TOKEN0?.add(additionalToken0Amount)
-  }, [currency0Amount, displayCurrencyAmounts?.TOKEN0])
+    return updatedCurrencyAmounts?.TOKEN0?.add(additionalToken0Amount)
+  }, [currency0Amount, updatedCurrencyAmounts?.TOKEN0])
   const newToken0AmountUSD = useUSDCValue(newToken0Amount)
 
   const newToken1Amount = useMemo(() => {
-    if (!displayCurrencyAmounts?.TOKEN1) {
+    if (!updatedCurrencyAmounts?.TOKEN1) {
       return undefined
     }
 
     const additionalToken1Amount = CurrencyAmount.fromRawAmount(
-      displayCurrencyAmounts?.TOKEN1?.currency,
+      updatedCurrencyAmounts?.TOKEN1?.currency,
       currency1Amount.quotient,
     )
-    return displayCurrencyAmounts?.TOKEN1?.add(additionalToken1Amount)
-  }, [currency1Amount, displayCurrencyAmounts?.TOKEN1])
+    return updatedCurrencyAmounts?.TOKEN1?.add(additionalToken1Amount)
+  }, [currency1Amount, updatedCurrencyAmounts?.TOKEN1])
   const newToken1AmountUSD = useUSDCValue(newToken1Amount)
 
   const onFailure = () => {
@@ -149,11 +146,11 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   return (
     <Flex gap="$gap12">
       <Flex gap="$gap16" px="$padding16" pt="$padding12">
-        <TokenInfo currencyAmount={displayCurrencyAmounts?.TOKEN0} currencyUSDAmount={displayUSDAmounts?.TOKEN0} />
+        <TokenInfo currencyAmount={updatedCurrencyAmounts?.TOKEN0} currencyUSDAmount={updatedUSDAmounts?.TOKEN0} />
         <Text variant="body3" color="$neutral2">
           {t('common.and')}
         </Text>
-        <TokenInfo currencyAmount={displayCurrencyAmounts?.TOKEN1} currencyUSDAmount={displayUSDAmounts?.TOKEN1} />
+        <TokenInfo currencyAmount={updatedCurrencyAmounts?.TOKEN1} currencyUSDAmount={updatedUSDAmounts?.TOKEN1} />
       </Flex>
       {currentTransactionStep ? (
         <ProgressIndicator currentStep={currentTransactionStep} steps={steps} />

@@ -8,6 +8,7 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import { ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { tradeToTransactionInfo } from 'uniswap/src/features/transactions/swap/utils/trade'
 import {
   ApproveTransactionInfo,
@@ -37,20 +38,20 @@ export function* approveAndSwap(params: SwapParams) {
   let calculatedNonce: CalculatedNonce | undefined
   try {
     const { swapTxContext, account, txId, analytics, onSuccess, onFailure } = params
-    const { routing, approveTxRequest } = swapTxContext
-    const isUniswapX = routing === Routing.DUTCH_V2 || routing === Routing.PRIORITY
-    const isBridge = routing === Routing.BRIDGE
+    const { approveTxRequest } = swapTxContext
+    const isUniswapXRouting = isUniswapX(swapTxContext)
+    const isBridge = swapTxContext.routing === Routing.BRIDGE
     const chainId = swapTxContext.trade.inputAmount.currency.chainId
 
     // For classic swaps, trigger UI changes immediately after click
-    if (!isUniswapX) {
+    if (!isUniswapXRouting) {
       // onSuccess does not need to be wrapped in yield* call() here, but doing so makes it easier to test call ordering in swapSaga.test.ts
       yield* call(onSuccess)
     }
 
     // MEV protection is not needed for UniswapX approval and/or wrap transactions.
     // We disable for bridge to avoid any potential issues with BE checking status.
-    const submitViaPrivateRpc = !isUniswapX && !isBridge && (yield* call(shouldSubmitViaPrivateRpc, chainId))
+    const submitViaPrivateRpc = !isUniswapXRouting && !isBridge && (yield* call(shouldSubmitViaPrivateRpc, chainId))
     // We must manually set the nonce when submitting multiple transactions in a row,
     // otherwise for some L2s the Provider might fetch the same nonce for both transactions.
     calculatedNonce = yield* call(tryGetNonce, account, chainId)
@@ -90,7 +91,7 @@ export function* approveAndSwap(params: SwapParams) {
 
     const typeInfo = tradeToTransactionInfo(swapTxContext.trade, transactedUSDValue, gasFeeEstimation?.swapEstimates)
     // Swap Logic - UniswapX
-    if (isUniswapX) {
+    if (isUniswapXRouting) {
       const { trade, wrapTxRequest, permit } = swapTxContext
       const { quote } = trade.quote
 
@@ -116,7 +117,7 @@ export function* approveAndSwap(params: SwapParams) {
         wrapTxHash,
         permit,
         quote,
-        routing,
+        routing: swapTxContext.routing,
         typeInfo,
         chainId,
         txId,
@@ -124,7 +125,7 @@ export function* approveAndSwap(params: SwapParams) {
         onFailure,
       }
       yield* call(submitUniswapXOrder, submitOrderParams)
-    } else if (routing === Routing.BRIDGE) {
+    } else if (swapTxContext.routing === Routing.BRIDGE) {
       const options = { request: { ...swapTxContext.txRequest, nonce }, submitViaPrivateRpc }
       const sendTransactionParams = {
         txId,
@@ -137,7 +138,7 @@ export function* approveAndSwap(params: SwapParams) {
       }
       yield* call(sendTransaction, sendTransactionParams)
       yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
-    } else if (routing === Routing.CLASSIC) {
+    } else if (swapTxContext.routing === Routing.CLASSIC) {
       const options = { request: { ...swapTxContext.txRequest, nonce }, submitViaPrivateRpc }
       const sendTransactionParams = {
         txId,

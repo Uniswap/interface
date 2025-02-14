@@ -23,7 +23,7 @@ const Wrapper = styled.div`
 `
 
 interface OwnershipWarningProps {
-  ownerAddress: string
+  ownerAddress?: string
 }
 
 const OwnershipWarning = ({ ownerAddress }: OwnershipWarningProps) => (

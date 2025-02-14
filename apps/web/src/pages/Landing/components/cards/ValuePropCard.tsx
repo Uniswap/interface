@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
-import { Flex, Text, TextProps } from 'ui/src'
+import { Flex, FlexProps, Text } from 'ui/src'
 
-type ValuePropCardProps = TextProps & {
+type ValuePropCardProps = FlexProps & {
   smaller?: boolean
   children?: React.ReactNode
   button?: React.ReactNode
@@ -9,6 +9,7 @@ type ValuePropCardProps = TextProps & {
   alignTextToBottom?: boolean
   href?: string
   to?: string
+  color?: string
 }
 
 export default function ValuePropCard(props: ValuePropCardProps) {

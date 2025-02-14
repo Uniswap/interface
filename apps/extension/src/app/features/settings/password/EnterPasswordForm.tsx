@@ -72,7 +72,7 @@ export function EnterPasswordForm({ onNext }: { onNext: () => void }): JSX.Eleme
           </Text>
         )}
       </Flex>
-      <DeprecatedButton disabled={!submitEnabled} theme="tertiary" onPress={onContinue}>
+      <DeprecatedButton isDisabled={!submitEnabled} theme="tertiary" onPress={onContinue}>
         {t('common.button.continue')}
       </DeprecatedButton>
     </Flex>

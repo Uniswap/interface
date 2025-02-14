@@ -9,15 +9,16 @@ import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
 import { getTokenExploreURL } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useResetAtom } from 'jotai/utils'
+import ProtocolFilter from 'pages/Explore/ProtocolFilter'
 import { ExploreChartsSection } from 'pages/Explore/charts/ExploreChartsSection'
 import { useExploreParams } from 'pages/Explore/redirects'
 import RecentTransactions from 'pages/Explore/tables/RecentTransactions'
 import { NamedExoticComponent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ExploreContextProvider } from 'state/explore'
 import { TamaguiClickableStyle } from 'theme/components'
-import { DeprecatedButton, Flex, Text, styled as tamaguiStyled } from 'ui/src'
+import { DeprecatedButton, Flex, Text, styled as tamaguiStyled, useMedia } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { isBackendSupportedChain } from 'uniswap/src/features/chains/utils'
@@ -39,26 +40,29 @@ interface Page {
   loggingElementName: InterfaceElementName
 }
 
-const Pages: Array<Page> = [
-  {
-    title: <Trans i18nKey="common.tokens" />,
-    key: ExploreTab.Tokens,
-    component: TopTokensTable,
-    loggingElementName: InterfaceElementName.EXPLORE_TOKENS_TAB,
-  },
-  {
-    title: <Trans i18nKey="common.pools" />,
-    key: ExploreTab.Pools,
-    component: ExploreTopPoolTable,
-    loggingElementName: InterfaceElementName.EXPLORE_POOLS_TAB,
-  },
-  {
-    title: <Trans i18nKey="common.transactions" />,
-    key: ExploreTab.Transactions,
-    component: RecentTransactions,
-    loggingElementName: InterfaceElementName.EXPLORE_TRANSACTIONS_TAB,
-  },
-]
+function usePages(): Array<Page> {
+  const { t } = useTranslation()
+  return [
+    {
+      title: t('common.tokens'),
+      key: ExploreTab.Tokens,
+      component: TopTokensTable,
+      loggingElementName: InterfaceElementName.EXPLORE_TOKENS_TAB,
+    },
+    {
+      title: t('common.pools'),
+      key: ExploreTab.Pools,
+      component: ExploreTopPoolTable,
+      loggingElementName: InterfaceElementName.EXPLORE_POOLS_TAB,
+    },
+    {
+      title: t('common.transactions'),
+      key: ExploreTab.Transactions,
+      component: RecentTransactions,
+      loggingElementName: InterfaceElementName.EXPLORE_TRANSACTIONS_TAB,
+    },
+  ]
+}
 
 const HeaderTab = tamaguiStyled(Text, {
   ...TamaguiClickableStyle,
@@ -94,9 +98,11 @@ const HeaderTab = tamaguiStyled(Text, {
 
 const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const { t } = useTranslation()
+  const media = useMedia()
   const tabNavRef = useRef<HTMLDivElement>(null)
   const resetManualOutage = useResetAtom(manualChainOutageAtom)
   const isLPRedesignEnabled = useFeatureFlag(FeatureFlags.LPRedesign)
+  const Pages = usePages()
 
   const initialKey: number = useMemo(() => {
     const key = initialTab && Pages.findIndex((page) => page.key === initialTab)
@@ -105,7 +111,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
       return 0
     }
     return key
-  }, [initialTab])
+  }, [initialTab, Pages])
 
   useEffect(() => {
     if (tabNavRef.current && initialTab) {
@@ -132,7 +138,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
       setCurrentTab(tabIndex)
     }
     resetManualOutage()
-  }, [resetManualOutage, tab])
+  }, [resetManualOutage, tab, Pages])
 
   const { component: Page, key: currentKey } = Pages[currentTab]
 
@@ -209,16 +215,17 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                   pressStyle={{ backgroundColor: '$accent3', opacity: 0.8 }}
                   onPress={() => navigate('/positions/create')}
                 >
-                  <Flex row gap="$gap8" alignItems="center">
+                  <Flex row gap="$gap8" alignItems="center" $sm={{ gap: '$gap2' }}>
                     <Plus size={20} color="$surface1" />
                     <Text variant="buttonLabel3" lineHeight={20} color="$surface1">
-                      {t('common.addLiquidity')}
+                      {media.sm ? t('common.add.label') : t('common.addLiquidity')}
                     </Text>
                   </Flex>
                 </DeprecatedButton>
               )}
               <TableNetworkFilter showMultichainOption={currentKey !== ExploreTab.Transactions} />
               {currentKey === ExploreTab.Tokens && <VolumeTimeFrameSelector />}
+              {currentKey === ExploreTab.Pools && <ProtocolFilter />}
               {currentKey !== ExploreTab.Transactions && <SearchBar tab={currentKey} />}
             </Flex>
           </Flex>

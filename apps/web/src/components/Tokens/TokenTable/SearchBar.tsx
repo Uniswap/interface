@@ -8,8 +8,8 @@ import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import styled from 'lib/styled-components'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { BREAKPOINTS } from 'theme'
 import { Flex, useSporeColors } from 'ui/src'
+import { breakpoints } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 const ICON_SIZE = '20px'
 
@@ -42,7 +42,7 @@ const SearchInput = styled.input<{ isOpen?: boolean }>`
   }
 
   @supports (-webkit-touch-callout: none) {
-    @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+    @media screen and (max-width: ${breakpoints.md}px) {
       min-width: 44px;
       padding-left: ${({ isOpen }) => (isOpen ? '40px' : '36px')};
     }

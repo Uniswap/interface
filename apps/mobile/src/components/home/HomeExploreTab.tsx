@@ -11,7 +11,7 @@ import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
 import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
 import { AnimatePresence, Flex, LinearGradient, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { SwirlyArrowDown } from 'ui/src/components/icons'
-import { spacing, zIndices } from 'ui/src/theme'
+import { spacing, zIndexes } from 'ui/src/theme'
 import {
   Chain,
   ContractInput,
@@ -95,7 +95,7 @@ export const HomeExploreTab = memo(
               index={index}
               metadataDisplayType={TokenMetadataDisplayType.Symbol}
               overlay={
-                <Flex height="100%" position="absolute" width="100%" zIndex={zIndices.mask}>
+                <Flex height="100%" position="absolute" width="100%" zIndex={zIndexes.mask}>
                   <LinearGradient
                     colors={[gradientColor, '$surface1']}
                     end={{ x: 0, y: gradientYEnd }}

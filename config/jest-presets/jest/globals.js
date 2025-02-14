@@ -26,6 +26,7 @@ module.exports = {
     SHAKE_CLIENT_SECRET: 123,
     SIMPLEHASH_API_KEY: 'key',
     SIMPLEHASH_API_URL: 'https://api.simplehash.com',
+    STATSIG_API_KEY: 'client-000000000000000000000000000000000000000000',
     STATSIG_PROXY_URL: 'https://api.statsig.com',
     STATSIG_PROXY_URL_OVERRIDE: '',
     TRADING_API_KEY: 'key',
@@ -33,5 +34,6 @@ module.exports = {
     UNISWAP_API_KEY: 'key',
     UNITAGS_API_URL_OVERRIDE: '',
     WALLETCONNECT_PROJECT_ID: 123,
+    INCLUDE_PROTOTYPE_FEATURES: true,
   },
 }

@@ -73,6 +73,9 @@ exports[`DoubleLogo renders with custom icon 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -143,6 +146,9 @@ exports[`DoubleLogo renders with custom size 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -180,6 +186,9 @@ exports[`DoubleLogo renders with one valid and one undefined currency 1`] = `
             />
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -226,6 +235,9 @@ exports[`DoubleLogo renders with two undefined currencies 1`] = `
       >
         <div
           class="c0"
+        />
+        <div
+          style="display: contents;"
         />
       </span>
     </span>
@@ -297,6 +309,9 @@ exports[`DoubleLogo renders with two valid currencies 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

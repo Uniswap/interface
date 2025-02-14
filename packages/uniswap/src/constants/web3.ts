@@ -9,4 +9,5 @@ export const CONNECTION_PROVIDER_IDS = {
   UNISWAP_EXTENSION_RDNS: 'org.uniswap.app',
   SAFE_CONNECTOR_ID: 'safe',
   EMBEDDED_WALLET_CONNECTOR_ID: 'embeddedUniswapWalletConnector',
+  MOCK_CONNECTOR_ID: 'mock',
 } as const

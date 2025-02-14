@@ -45,7 +45,7 @@ export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
     return (
       <DeprecatedButton
         key="BuyFormButton"
-        disabled
+        isDisabled
         size="large"
         borderRadius="$rounded16"
         opacity={1}
@@ -65,7 +65,7 @@ export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
   return (
     <LoaderButton
       buttonKey="BuyFormButton"
-      disabled={Boolean(fetchingQuotes || !quotes || !quotes.quotes || quotes.quotes.length === 0 || error)}
+      isDisabled={Boolean(fetchingQuotes || !quotes || !quotes.quotes || quotes.quotes.length === 0 || error)}
       onPress={() => {
         setBuyFormState((prev) => ({ ...prev, providerModalOpen: true }))
       }}

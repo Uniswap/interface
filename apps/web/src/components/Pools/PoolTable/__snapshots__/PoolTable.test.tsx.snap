@@ -431,6 +431,9 @@ exports[`PoolTable renders data filled state 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -2548,6 +2551,9 @@ exports[`PoolTable renders error state 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>
@@ -4557,6 +4563,9 @@ exports[`PoolTable renders loading state 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

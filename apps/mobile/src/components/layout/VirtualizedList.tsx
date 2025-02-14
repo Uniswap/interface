@@ -14,7 +14,6 @@ export const VirtualizedList = React.forwardRef<any, VirtualizedListProps>(funct
   const List = renderedInModal ? AnimatedBottomSheetFlatList : AnimatedFlatList
   return (
     <List
-      sentry-label="VirtualizedList"
       {...props}
       ref={ref}
       ListHeaderComponent={<>{children}</>}

@@ -381,7 +381,7 @@ export function EditUnitagProfileContent({
         </Flex>
       </ScrollView>
       <DeprecatedButton
-        disabled={!profileMetadataEdited}
+        isDisabled={!profileMetadataEdited}
         mt="$spacing12"
         mx={isExtension ? undefined : '$spacing24'}
         size="medium"

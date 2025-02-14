@@ -2,7 +2,7 @@
 
 exports[`should inject metadata for collections 1`] = `
 "<!DOCTYPE html>
-<html translate="no">
+<html translate="no" style="overflow-x: hidden;">
   <head>
     <meta charset="utf-8" />
 
@@ -131,7 +131,7 @@ exports[`should inject metadata for collections 1`] = `
 
 exports[`should inject metadata for collections 2`] = `
 "<!DOCTYPE html>
-<html translate="no">
+<html translate="no" style="overflow-x: hidden;">
   <head>
     <meta charset="utf-8" />
 
@@ -260,7 +260,7 @@ exports[`should inject metadata for collections 2`] = `
 
 exports[`should inject metadata for collections 3`] = `
 "<!DOCTYPE html>
-<html translate="no">
+<html translate="no" style="overflow-x: hidden;">
   <head>
     <meta charset="utf-8" />
 

@@ -75,6 +75,11 @@ module.exports = {
           {
             paths: [
               {
+                name: '@playwright/test',
+                message: 'Import test and expect from playwright/fixtures instead.',
+                importNames: ['test', 'expect'],
+              },
+              {
                 name: 'i18next',
                 importNames: ['i18n'],
                 message: 'Import from `uniswap/src/i18n` instead.',
@@ -178,6 +183,11 @@ module.exports = {
             selector: `VariableDeclarator[id.type='ObjectPattern'][init.callee.name='useAccount'] > ObjectPattern > Property[key.name='address']`,
             message:
               "Do not use address directly from useWeb3React. Use the useAccount hook from 'hooks/useAccount' and access account.address instead.",
+          },
+          {
+            selector: `TSTypeAssertion[typeAnnotation.typeName.name='Address'], TSAsExpression[typeAnnotation.typeName.name='Address'], TSAsExpression[typeAnnotation.type='TSUnionType'] TSTypeReference[typeName.name='Address'], TSTypeAssertion[typeAnnotation.type='TSUnionType'] TSTypeReference[typeName.name='Address']`,
+            message:
+              'Do not use type assertions with "<Address>". Use `assumeOxAddress` to treat a string as an address, or isAddress/getAddress from viem to validate a string as an Address.',
           },
         ],
       },

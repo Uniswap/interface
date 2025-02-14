@@ -3,61 +3,35 @@ import { useSelector } from 'react-redux'
 import { MAX_RECENT_SEARCH_RESULTS } from 'uniswap/src/components/TokenSelector/constants'
 import { currencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
 import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
-import { currencyId } from 'uniswap/src/utils/currencyId'
+import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 
 export function useRecentlySearchedTokens(chainFilter: UniverseChainId | null): TokenOption[] | undefined {
   const searchHistory = useSelector(selectSearchHistory)
 
-  return useMemo(
-    () =>
-      currencyInfosToTokenOptions(
-        searchHistory
-          .filter((searchResult): searchResult is TokenSearchResult => searchResult.type === SearchResultType.Token)
-          .filter((searchResult) => (chainFilter ? searchResult.chainId === chainFilter : true))
-          .slice(0, MAX_RECENT_SEARCH_RESULTS)
-          .map(searchResultToCurrencyInfo),
-      ),
-    [chainFilter, searchHistory],
+  const searchHistoryCurrencyInfos = useSearchHistoryToCurrencyInfos(
+    searchHistory
+      .filter((searchResult): searchResult is TokenSearchResult => searchResult.type === SearchResultType.Token)
+      .filter((searchResult) => (chainFilter ? searchResult.chainId === chainFilter : true))
+      .slice(0, MAX_RECENT_SEARCH_RESULTS),
   )
+
+  return useMemo(() => {
+    return currencyInfosToTokenOptions(searchHistoryCurrencyInfos)
+  }, [searchHistoryCurrencyInfos])
 }
 
-function searchResultToCurrencyInfo({
-  chainId,
-  address,
-  symbol,
-  name,
-  logoUrl,
-  safetyLevel,
-  safetyInfo,
-  feeData,
-}: TokenSearchResult): CurrencyInfo | null {
-  const currency = buildCurrency({
-    chainId: chainId as UniverseChainId,
-    address,
-    decimals: 0, // this does not matter in a context of CurrencyInfo here, as we do not provide any balance
-    symbol,
-    name,
-    buyFeeBps: feeData?.buyFeeBps,
-    sellFeeBps: feeData?.sellFeeBps,
+// TODO(WEB-5131): Clean up searchHistory slice so that we only save chainId & address to redux
+function useSearchHistoryToCurrencyInfos(searchHistory: TokenSearchResult[]): Maybe<CurrencyInfo>[] {
+  const currencyIds = searchHistory.map((searchResult) => {
+    return searchResult.address
+      ? buildCurrencyId(searchResult.chainId, searchResult.address)
+      : buildNativeCurrencyId(searchResult.chainId)
   })
 
-  if (!currency) {
-    return null
-  }
-
-  return buildCurrencyInfo({
-    currency,
-    currencyId: currencyId(currency),
-    logoUrl,
-    safetyLevel: safetyLevel ?? SafetyLevel.StrongWarning,
-    // defaulting to not spam, as user has searched and chosen this token before
-    isSpam: false,
-    safetyInfo,
-  })
+  return useCurrencyInfos(currencyIds)
 }

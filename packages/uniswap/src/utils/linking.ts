@@ -1,7 +1,9 @@
 import * as WebBrowser from 'expo-web-browser'
 import { colorsLight } from 'ui/src/theme'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { canOpenURL, openURL } from 'uniswap/src/utils/link'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -120,4 +122,29 @@ export function getExplorerLink(chainId: UniverseChainId, data: string, type: Ex
     default:
       return `${prefix}`
   }
+}
+
+/**
+ * Return the token details URL for the given address and chain
+ * @param address the address of the token
+ * @param chain the chain of the token
+ * @param chainUrlParam the chain URL parameter
+ * @param inputAddress the input address
+ */
+export function getTokenDetailsURL({
+  address,
+  chain,
+  chainUrlParam,
+  inputAddress,
+}: {
+  address: string
+  chain: number
+  chainUrlParam?: string
+  inputAddress?: string | null
+}): string {
+  const chainInfo = toGraphQLChain(chain)
+
+  const chainName = chainUrlParam || String(chainInfo)?.toLowerCase() || Chain.Ethereum.toLowerCase()
+  const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
+  return `/explore/tokens/${chainName}/${address}${inputAddressSuffix}`
 }

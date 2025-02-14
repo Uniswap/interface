@@ -2,7 +2,6 @@
 
 exports[`RestoreCloudBackupScreen renders correctly 1`] = `
 <View
-  sentry-label="Screen"
   style={
     {
       "backgroundColor": {
@@ -42,11 +41,6 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
       collapsable={false}
       entering={[Function]}
       exiting={[Function]}
-      jestAnimatedStyle={
-        {
-          "value": {},
-        }
-      }
       style={
         {
           "flexDirection": "column",
@@ -133,11 +127,11 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
                   },
                 ]
               }
-              tintColor="#222222"
               vbHeight={18}
               vbWidth={19}
             >
               <RNSVGGroup
+                color="#222222"
                 fill={null}
                 propList={
                   [

@@ -83,7 +83,9 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         focusable={true}
         maxFontSizeMultiplier={1.4}
         multiline={true}
+        onBlur={[Function]}
         onChangeText={[Function]}
+        onFocus={[Function]}
         onSubmitEditing={[Function]}
         placeholderTextColor={
           {
@@ -229,6 +231,15 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
               "top": 5,
             }
           }
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
           style={
             {
               "backgroundColor": {
@@ -314,11 +325,11 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
                   },
                 ]
               }
-              tintColor="#FC72FF"
               vbHeight={16}
               vbWidth={16}
             >
               <RNSVGGroup
+                color="#FC72FF"
                 fill={
                   {
                     "type": 2,

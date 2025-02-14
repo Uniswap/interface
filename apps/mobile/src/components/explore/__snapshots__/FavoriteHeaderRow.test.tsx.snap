@@ -37,6 +37,15 @@ exports[`FavoriteHeaderRow when editing renders without error 1`] = `
   </Text>
   <View
     hitSlop={16}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     style={
       {
         "flexDirection": "column",
@@ -112,6 +121,15 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
   </Text>
   <View
     hitSlop={16}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     style={
       {
         "flexDirection": "column",
@@ -154,11 +172,11 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
           },
         ]
       }
-      tintColor="#7D7D7D"
       vbHeight={4}
       vbWidth={18}
     >
       <RNSVGGroup
+        color="#7D7D7D"
         fill={null}
         propList={
           [

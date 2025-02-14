@@ -4,8 +4,6 @@ import { useSelector } from 'react-redux'
 import { SearchableRecipient } from 'uniswap/src/features/address/types'
 import { uniqueAddressesOnly } from 'uniswap/src/features/address/utils'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { selectTokensVisibility } from 'uniswap/src/features/favorites/selectors'
-import { CurrencyIdToVisibility } from 'uniswap/src/features/favorites/slice'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
 import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
@@ -15,6 +13,8 @@ import {
   TransactionType,
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { selectTokensVisibility } from 'uniswap/src/features/visibility/selectors'
+import { CurrencyIdToVisibility } from 'uniswap/src/features/visibility/slice'
 import { UniswapState } from 'uniswap/src/state/uniswapReducer'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { unique } from 'utilities/src/primitives/array'

@@ -1,5 +1,5 @@
 import type { Insets } from 'react-native'
-import { StackProps } from 'tamagui'
+import { YStackProps } from 'tamagui'
 
 type ExtraProps = {
   hitSlop?: Insets | number
@@ -10,4 +10,4 @@ type ExtraProps = {
   hoverable?: boolean
 }
 
-export type TouchableAreaProps = Omit<StackProps, keyof ExtraProps> & ExtraProps
+export type TouchableAreaProps = Omit<YStackProps, keyof ExtraProps> & ExtraProps

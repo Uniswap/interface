@@ -5,27 +5,26 @@ import { ButtonVariantProps } from 'ui/src/components/buttons/Button/types'
 import { isWeb } from 'utilities/src/platform'
 
 const FOCUS_SCALE = 0.98
-const PRESS_SCALE = isWeb ? FOCUS_SCALE - 0.02 : 0.98
+const PRESS_SCALE = FOCUS_SCALE
 
-const brandedFocusStyle: XStackProps['focusStyle'] = {
-  outlineColor: '$accent1Hovered',
-}
-
-const criticalFocusStyle: XStackProps['focusStyle'] = {
-  outlineColor: '$statusCriticalHovered',
-}
-
-const defaultFocusStyle: XStackProps['focusStyle'] = {
+const defaultFocusVisibleStyle = {
   outlineColor: '$neutral3Hovered',
-}
+} satisfies XStackProps['focusVisibleStyle']
+
+const brandedFocusVisibleStyle = {
+  outlineColor: '$accent1Hovered',
+} satisfies XStackProps['focusVisibleStyle']
+
+const criticalFocusVisibleStyle = {
+  outlineColor: '$statusCriticalHovered',
+} satisfies XStackProps['focusVisibleStyle']
 
 export const CustomButtonFrame = styled(XStack, {
   context: buttonStyledContext,
   name: 'Button',
   tag: 'button',
-  // TODO: remove this once we've updated to tamagui@~1.114.4
-  // CAUTION: When animation is passed on Web, it loses the ability to be focused
-  // This is fixed in tamagui@1.120.2
+  // TODO: remove this once we've updated to tamagui@~1.120.2
+  // CAUTION: When animation is passed on Web, it loses the ability to be focused. Adding an animation on Web will also cause the button to regain its default styling at the end of a `click` event.
   ...(isWeb ? {} : { animation: 'fast' }),
   // instead of setting border: 0 when no border, make it 1px but transparent, so the size or alignment of a button won't change unexpectedly between variants
   borderWidth: 1,
@@ -33,7 +32,7 @@ export const CustomButtonFrame = styled(XStack, {
   justifyContent: 'center',
   backgroundColor: '$background',
   borderColor: '$borderColor',
-  focusStyle: {
+  focusVisibleStyle: {
     outlineWidth: 1,
     outlineOffset: 2,
     outlineStyle: 'solid',
@@ -56,19 +55,28 @@ export const CustomButtonFrame = styled(XStack, {
     // These presets are a good starting point; but, feel free to add more as needed!
     focusScaling: {
       default: {
-        focusStyle: {
+        focusVisibleStyle: {
           scaleX: FOCUS_SCALE,
           scaleY: FOCUS_SCALE - 0.075,
         },
       },
       equal: {
-        focusStyle: {
+        focusVisibleStyle: {
           scaleX: FOCUS_SCALE,
           scaleY: FOCUS_SCALE,
         },
       },
+      // Scale is proportionate to the button's size
+      // On Web, sometimes a smaller button needs to be scaled down more, to account for the `outlineWidth` and `outlineOffset`, so it won't extend beyond the button's bounds in its unfocused state
+      // We could try to automatically detect this, but in reality it's based on a few different factors relating to the surrounding elements; so, we'll opt to manually apply this `focusScaling` variant as-needed
+      'equal:smaller-button': {
+        focusVisibleStyle: {
+          scaleX: FOCUS_SCALE - 0.05,
+          scaleY: FOCUS_SCALE - 0.05,
+        },
+      },
       'more-x': {
-        focusStyle: {
+        focusVisibleStyle: {
           scaleX: FOCUS_SCALE - 0.075,
           scaleY: FOCUS_SCALE,
         },
@@ -103,9 +111,9 @@ export const CustomButtonFrame = styled(XStack, {
                 borderColor: '$accent2Hovered',
               },
 
-              focusStyle: {
+              focusVisibleStyle: {
                 backgroundColor: '$surface1',
-                ...brandedFocusStyle,
+                ...brandedFocusVisibleStyle,
               },
 
               pressStyle: {
@@ -121,9 +129,9 @@ export const CustomButtonFrame = styled(XStack, {
               hoverStyle: {
                 backgroundColor: '$accent2Hovered',
               },
-              focusStyle: {
+              focusVisibleStyle: {
                 backgroundColor: '$accent2Hovered',
-                ...brandedFocusStyle,
+                ...brandedFocusVisibleStyle,
               },
               pressStyle: {
                 backgroundColor: '$accent2Hovered',
@@ -137,9 +145,9 @@ export const CustomButtonFrame = styled(XStack, {
             hoverStyle: {
               backgroundColor: '$accent1Hovered',
             },
-            focusStyle: {
+            focusVisibleStyle: {
               backgroundColor: '$accent1Hovered',
-              ...brandedFocusStyle,
+              ...brandedFocusVisibleStyle,
             },
             pressStyle: {
               backgroundColor: '$accent1Hovered',
@@ -158,9 +166,9 @@ export const CustomButtonFrame = styled(XStack, {
               hoverStyle: {
                 borderColor: '$statusCritical2Hovered',
               },
-              focusStyle: {
+              focusVisibleStyle: {
                 backgroundColor: '$surface1',
-                ...criticalFocusStyle,
+                ...criticalFocusVisibleStyle,
               },
               pressStyle: {
                 borderColor: '$statusCritical2Hovered',
@@ -177,9 +185,9 @@ export const CustomButtonFrame = styled(XStack, {
                 backgroundColor: '$statusCritical2Hovered',
               },
 
-              focusStyle: {
+              focusVisibleStyle: {
                 backgroundColor: '$statusCritical2Hovered',
-                ...criticalFocusStyle,
+                ...criticalFocusVisibleStyle,
               },
 
               pressStyle: {
@@ -194,9 +202,9 @@ export const CustomButtonFrame = styled(XStack, {
             hoverStyle: {
               backgroundColor: '$statusCriticalHovered',
             },
-            focusStyle: {
+            focusVisibleStyle: {
               backgroundColor: '$statusCriticalHovered',
-              ...criticalFocusStyle,
+              ...criticalFocusVisibleStyle,
             },
             pressStyle: {
               backgroundColor: '$statusCriticalHovered',
@@ -215,9 +223,9 @@ export const CustomButtonFrame = styled(XStack, {
             hoverStyle: {
               borderColor: '$surface3Hovered',
             },
-            focusStyle: {
+            focusVisibleStyle: {
               backgroundColor: '$surface1',
-              ...defaultFocusStyle,
+              ...defaultFocusVisibleStyle,
             },
             pressStyle: {
               borderColor: '$surface3Hovered',
@@ -232,9 +240,9 @@ export const CustomButtonFrame = styled(XStack, {
             hoverStyle: {
               backgroundColor: '$surface3Hovered',
             },
-            focusStyle: {
+            focusVisibleStyle: {
               backgroundColor: '$surface3Hovered',
-              ...defaultFocusStyle,
+              ...defaultFocusVisibleStyle,
             },
             pressStyle: {
               backgroundColor: '$surface3Hovered',
@@ -248,9 +256,9 @@ export const CustomButtonFrame = styled(XStack, {
           hoverStyle: {
             backgroundColor: '$accent3Hovered',
           },
-          focusStyle: {
+          focusVisibleStyle: {
             backgroundColor: '$accent3Hovered',
-            ...defaultFocusStyle,
+            ...defaultFocusVisibleStyle,
           },
           pressStyle: {
             backgroundColor: '$accent3Hovered',

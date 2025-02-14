@@ -6,7 +6,7 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { WithScrollToTop } from 'src/components/layout/screens/WithScrollToTop'
 import { ColorTokens, Flex } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { iconSizes, zIndices } from 'ui/src/theme'
+import { iconSizes, zIndexes } from 'ui/src/theme'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 
 type ScrollHeaderProps = {
@@ -59,7 +59,7 @@ export function ScrollHeader({
       : { paddingTop: 0 }
   }, [fullScreen, insets.top])
 
-  const headerWrapperStyles = fullScreen ? [visibleOnScrollStyle, { zIndex: zIndices.popover }] : []
+  const headerWrapperStyles = fullScreen ? [visibleOnScrollStyle, { zIndex: zIndexes.popover }] : []
 
   return (
     <HeaderWrapper backgroundColor={backgroundColor} fullScreen={fullScreen} style={headerWrapperStyles}>

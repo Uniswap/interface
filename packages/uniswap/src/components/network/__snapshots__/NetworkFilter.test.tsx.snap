@@ -54,7 +54,7 @@ exports[`NetworkFilter renders a NetworkFilter 1`] = `
           jestAnimatedStyle={
             {
               "value": {
-                "opacity": 1,
+                "opacity": 0,
               },
             }
           }
@@ -311,11 +311,11 @@ exports[`NetworkFilter renders a NetworkFilter 1`] = `
               },
             ]
           }
-          tintColor="#9B9B9B"
           vbHeight={24}
           vbWidth={24}
         >
           <RNSVGGroup
+            color="#9B9B9B"
             fill={null}
             propList={
               [

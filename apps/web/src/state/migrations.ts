@@ -17,6 +17,7 @@ import { migration2 } from 'state/migrations/2'
 import { migration20 } from 'state/migrations/20'
 import { migration21 } from 'state/migrations/21'
 import { migration22 } from 'state/migrations/22'
+import { migration23 } from 'state/migrations/23'
 import { migration3 } from 'state/migrations/3'
 import { migration4 } from 'state/migrations/4'
 import { migration5 } from 'state/migrations/5'
@@ -59,9 +60,10 @@ export const migrations: MigrationManifest = {
   20: migration20,
   21: migration21,
   22: migration22,
+  23: migration23,
 } as const
 
-export const PERSIST_VERSION = 22
+export const PERSIST_VERSION = 23
 
 export const INDEXED_DB_REDUX_TABLE_NAME = 'redux'
 

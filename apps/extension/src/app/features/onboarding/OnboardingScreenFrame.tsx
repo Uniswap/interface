@@ -28,7 +28,7 @@ export function OnboardingScreenFrame({
 
   return (
     <>
-      <Flex alignItems="center" gap="$spacing16" pt={noTopPadding || '$spacing24'}>
+      <Flex alignItems="center" gap="$spacing16" pt={noTopPadding ? undefined : '$spacing24'}>
         {onBack && (
           <TouchableArea
             hoverable
@@ -86,7 +86,7 @@ export function OnboardingScreenFrame({
       <Flex row gap="$spacing12" width="100%">
         {Boolean(onSubmit) && nextButtonText && (
           <DeprecatedButton
-            disabled={!nextButtonEnabled}
+            isDisabled={!nextButtonEnabled}
             flexGrow={1}
             icon={nextButtonIcon}
             theme={nextButtonTheme}

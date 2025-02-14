@@ -14,7 +14,7 @@ import {
   useShadowPropsMedium,
 } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import { INTERFACE_NAV_HEIGHT, zIndices } from 'ui/src/theme'
+import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 
 export const InternalMenuItem = styled(Text, {
@@ -55,9 +55,8 @@ const MenuFlyout = styled(Text, {
   fontSize: 16,
   position: 'absolute',
   top: 'calc(100% + 12px)',
-  zIndex: zIndices.dropdown,
+  zIndex: zIndexes.dropdown,
   animation: 'fastHeavy',
-  overflow: 'scroll',
   enterStyle: { opacity: 0, y: -20 },
   exitStyle: { opacity: 0, y: -20 },
 })
@@ -145,6 +144,7 @@ export function DropdownSelector({
                 data-testid={optionsContainerTestId}
                 {...dropdownStyle}
                 {...shadowProps}
+                $platform-web={{ overflow: 'auto' }}
                 style={scrollbarStyles}
               >
                 {internalMenuItems}

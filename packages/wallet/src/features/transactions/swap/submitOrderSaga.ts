@@ -1,6 +1,6 @@
 import { call, put, take } from 'typed-redux-saga'
 import { submitOrder } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { DutchQuoteV2, PriorityQuote, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { DutchQuoteV2, DutchQuoteV3, PriorityQuote, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice'
@@ -31,8 +31,8 @@ export const ORDER_STALENESS_THRESHOLD = 45 * ONE_SECOND_MS
 export interface SubmitUniswapXOrderParams {
   // internal id used for tracking transactions before they're submitted
   txId?: string
-  quote: DutchQuoteV2 | PriorityQuote
-  routing: Routing.DUTCH_V2 | Routing.PRIORITY
+  quote: DutchQuoteV2 | DutchQuoteV3 | PriorityQuote
+  routing: Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.PRIORITY
   permit: ValidatedPermit
   chainId: UniverseChainId
   account: AccountMeta

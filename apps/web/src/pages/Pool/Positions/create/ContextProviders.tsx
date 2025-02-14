@@ -1,6 +1,6 @@
 import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
+import { useCreatePositionDependentAmountFallback } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { DepositState } from 'components/Liquidity/types'
-import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'components/Liquidity/utils'
 import {
   CreatePositionContext,
   CreateTxContext,
@@ -36,6 +36,7 @@ import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
+import { getErrorMessageToDisplay, parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
 import { useTransactionSettingsContext } from 'uniswap/src/features/transactions/settings/contexts/TransactionSettingsContext'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
 import { logger } from 'utilities/src/logger/logger'
@@ -184,7 +185,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     logger.info(
       'CreateTxContextProvider',
       'CreateTxContextProvider',
-      parseErrorMessageTitle(approvalError, 'unknown CheckLpApprovalQuery'),
+      parseErrorMessageTitle(approvalError, { defaultTitle: 'unknown CheckLpApprovalQuery' }),
       {
         error: JSON.stringify(approvalError),
         addLiquidityApprovalParams: JSON.stringify(addLiquidityApprovalParams),
@@ -227,6 +228,13 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     currentTransactionStep?.step.type === TransactionStepType.IncreasePositionTransaction ||
     currentTransactionStep?.step.type === TransactionStepType.IncreasePositionTransactionAsync
 
+  const isQueryEnabled =
+    !isUserCommittedToCreate &&
+    !hasError &&
+    !approvalLoading &&
+    !approvalError &&
+    Boolean(approvalCalldata) &&
+    Boolean(createCalldataQueryParams)
   const {
     data: createCalldata,
     error: createError,
@@ -236,13 +244,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     deadlineInMinutes: swapSettings.customDeadline,
     refetchInterval: hasCreateErrorResponse ? false : 5 * ONE_SECOND_MS,
     retry: false,
-    enabled:
-      !isUserCommittedToCreate &&
-      !hasError &&
-      !approvalLoading &&
-      !approvalError &&
-      Boolean(approvalCalldata) &&
-      Boolean(createCalldataQueryParams),
+    enabled: isQueryEnabled,
   })
 
   useEffect(() => {
@@ -253,7 +255,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     logger.info(
       'CreateTxContextProvider',
       'CreateTxContextProvider',
-      parseErrorMessageTitle(createError, 'unknown CreateLpPositionCalldataQuery'),
+      parseErrorMessageTitle(createError, { defaultTitle: 'unknown CreateLpPositionCalldataQuery' }),
       {
         error: JSON.stringify(createError),
         createCalldataQueryParams: JSON.stringify(createCalldataQueryParams),
@@ -261,8 +263,22 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     )
   }
 
+  const dependentAmountFallback = useCreatePositionDependentAmountFallback(
+    createCalldataQueryParams,
+    isQueryEnabled && Boolean(createError),
+  )
+
   const actualGasFee = createCalldata?.gasFee
-  const { value: calculatedGasFee } = useTransactionGasFee(createCalldata?.create, !!actualGasFee)
+  const needsApprovals = !!(
+    approvalCalldata?.token0Approval ||
+    approvalCalldata?.token1Approval ||
+    approvalCalldata?.token0Cancel ||
+    approvalCalldata?.token1Cancel
+  )
+  const { value: calculatedGasFee } = useTransactionGasFee(
+    createCalldata?.create,
+    !!actualGasFee || needsApprovals /* skip */,
+  )
   const increaseGasFeeUsd = useUSDCurrencyAmountOfGasFee(
     createCalldata?.create?.chainId,
     actualGasFee || calculatedGasFee,
@@ -292,6 +308,9 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
       gasFeeEstimateUSD: totalGasFee,
       error: getErrorMessageToDisplay({ approvalError, calldataError: createError }),
       refetch: approvalError ? approvalRefetch : createError ? createRefetch : undefined,
+      // in some cases there is an error with create but createCalldata still has a cached value
+      dependentAmount:
+        createError && dependentAmountFallback ? dependentAmountFallback : createCalldata?.dependentAmount,
     }
   }, [
     approvalCalldata,
@@ -304,6 +323,7 @@ export function CreateTxContextProvider({ children }: { children: React.ReactNod
     approvalRefetch,
     createRefetch,
     totalGasFee,
+    dependentAmountFallback,
   ])
 
   return <CreateTxContext.Provider value={validatedValue}>{children}</CreateTxContext.Provider>

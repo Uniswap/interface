@@ -340,17 +340,19 @@ export function useTransactionGasWarning({
     if (gasFee === undefined || balanceInsufficient || !nativeCurrencyBalance || hasGasFunds) {
       return undefined
     }
+    // FIXME: Verify WALL-5906
+    const currencySymbol = nativeCurrencyBalance.currency.symbol ?? ''
 
     return {
       type: WarningLabel.InsufficientGasFunds,
       severity: WarningSeverity.Medium,
       action: WarningAction.DisableSubmit,
       title: t('swap.warning.insufficientGas.title', {
-        currencySymbol: nativeCurrencyBalance.currency.symbol,
+        currencySymbol,
       }),
       buttonText: isWeb
         ? t('swap.warning.insufficientGas.button', {
-            currencySymbol: nativeCurrencyBalance.currency.symbol,
+            currencySymbol,
           })
         : undefined,
       message: undefined,

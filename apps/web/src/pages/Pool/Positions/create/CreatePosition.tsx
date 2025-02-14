@@ -202,7 +202,7 @@ const ResetButton = ({ onClickReset, isDisabled }: ResetProps) => {
       borderWidth="$spacing1"
       gap="$gap4"
       onPress={onClickReset}
-      disabled={isDisabled}
+      isDisabled={isDisabled}
       flex={1}
     >
       <RotateLeft size={iconSizes.icon16} color="$neutral1" />

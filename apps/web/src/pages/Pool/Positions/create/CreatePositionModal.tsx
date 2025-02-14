@@ -7,7 +7,8 @@ import {
 } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
-import { getDisplayedAmountsFromDependentAmount, getProtocolVersionLabel } from 'components/Liquidity/utils'
+import { useUpdatedAmountsFromDependentAmount } from 'components/Liquidity/hooks/useDependentAmountFallback'
+import { getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
@@ -78,7 +79,7 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
 
   const [steps, setSteps] = useState<TransactionStep[]>([])
   const dispatch = useDispatch()
-  const { txInfo, gasFeeEstimateUSD, error, refetch } = useCreateTxContext()
+  const { txInfo, gasFeeEstimateUSD, error, refetch, dependentAmount } = useCreateTxContext()
   const account = useAccountMeta()
   const selectChain = useSelectChain()
   const startChainId = useAccount().chainId
@@ -163,30 +164,20 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
   ])
 
   const [token0, token1] = currencies
-  const dependentAmount = txInfo?.dependentAmount
-  const { displayFormattedAmounts, displayUSDAmounts } = useMemo(
-    () =>
-      getDisplayedAmountsFromDependentAmount({
-        token0,
-        token1,
-        dependentAmount,
-        exactField,
-        currencyAmounts,
-        currencyAmountsUSDValue,
-        formattedAmounts,
-      }),
-    [dependentAmount, exactField, currencyAmounts, formattedAmounts, currencyAmountsUSDValue, token0, token1],
-  )
+  const { updatedFormattedAmounts, updatedUSDAmounts } = useUpdatedAmountsFromDependentAmount({
+    token0,
+    token1,
+    dependentAmount,
+    exactField,
+    currencyAmounts,
+    currencyAmountsUSDValue,
+    formattedAmounts,
+    deposit0Disabled: derivedPriceRangeInfo.deposit0Disabled,
+    deposit1Disabled: derivedPriceRangeInfo.deposit1Disabled,
+  })
 
   return (
-    <Modal
-      name={ModalName.CreatePosition}
-      padding="$none"
-      onClose={onClose}
-      isDismissible
-      isModalOpen={isOpen}
-      height="max-content"
-    >
+    <Modal name={ModalName.CreatePosition} padding="$none" onClose={onClose} isDismissible isModalOpen={isOpen}>
       <Flex px="$spacing8" pt="$spacing12" pb="$spacing8" gap="$spacing24">
         <Flex px="$spacing12">
           <GetHelpHeader
@@ -248,7 +239,11 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
               </Text>
               <BaseQuoteFiatAmount
                 variant="body1"
-                price={derivedPriceRangeInfo?.price}
+                price={
+                  derivedPriceRangeInfo.invertPrice
+                    ? derivedPriceRangeInfo.price?.invert()
+                    : derivedPriceRangeInfo.price
+                }
                 base={baseCurrency}
                 quote={quoteCurrency}
               />
@@ -261,11 +256,11 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
             <Flex row justifyContent="space-between">
               <Flex gap="$gap4">
                 <Flex row gap="$gap8">
-                  <Text variant="body1">{displayFormattedAmounts?.TOKEN0}</Text>
+                  <Text variant="body1">{updatedFormattedAmounts?.TOKEN0}</Text>
                   <Text variant="body1">{currencyAmounts?.TOKEN0?.currency.symbol}</Text>
                 </Flex>
                 <Text variant="body3" color="$neutral2">
-                  {formatCurrencyAmount({ value: displayUSDAmounts?.TOKEN0, type: NumberType.FiatTokenPrice })}
+                  {formatCurrencyAmount({ value: updatedUSDAmounts?.TOKEN0, type: NumberType.FiatTokenPrice })}
                 </Text>
               </Flex>
               <TokenLogo
@@ -279,11 +274,11 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
             <Flex row justifyContent="space-between">
               <Flex gap="$gap4">
                 <Flex row gap="$gap8">
-                  <Text variant="body1">{displayFormattedAmounts?.TOKEN1}</Text>
+                  <Text variant="body1">{updatedFormattedAmounts?.TOKEN1}</Text>
                   <Text variant="body1">{currencyAmounts?.TOKEN1?.currency.symbol}</Text>
                 </Flex>
                 <Text variant="body3" color="$neutral2">
-                  {formatCurrencyAmount({ value: displayUSDAmounts?.TOKEN1, type: NumberType.FiatTokenPrice })}
+                  {formatCurrencyAmount({ value: updatedUSDAmounts?.TOKEN1, type: NumberType.FiatTokenPrice })}
                 </Text>
               </Flex>
               <TokenLogo
@@ -327,7 +322,7 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
               />
             </Flex>
             {currentTransactionStep ? (
-              <LoaderButton disabled={true} loading={true} buttonKey="create-position-confirm">
+              <LoaderButton isDisabled={true} loading={true} buttonKey="create-position-confirm">
                 <Text variant="buttonLabel1" color="$white">
                   <Trans i18nKey="common.confirmWallet" />
                 </Text>
@@ -338,7 +333,7 @@ export function CreatePositionModal({ isOpen, onClose }: { isOpen: boolean; onCl
                 py="$spacing16"
                 px="$spacing20"
                 onPress={handleCreate}
-                disabled={!txInfo?.action}
+                isDisabled={!txInfo?.action}
               >
                 <Text variant="buttonLabel1" color="$neutralContrast">
                   <Trans i18nKey="common.button.create" />

@@ -16,6 +16,7 @@ import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { getContrastPassingTextColor } from 'uniswap/src/utils/colors'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { isInterface, isMobileWeb } from 'utilities/src/platform'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 interface SelectTokenButtonProps {
   onPress?: () => void
@@ -45,7 +46,7 @@ export const SelectTokenButton = memo(function _SelectTokenButton({
       // delay to prevent ux jank
       const delay = setTimeout(() => {
         dispatch(setIsFirstUnichainBridgeSelection(false))
-      }, 2000)
+      }, ONE_SECOND_MS * 2)
       return () => clearTimeout(delay)
     }
     return undefined

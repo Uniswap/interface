@@ -1,7 +1,8 @@
 import { Dialog } from 'components/Dialog/Dialog'
 import { UserIcon } from 'components/Icons/UserIcon'
 import Identicon, { IdenticonType, useIdenticonType } from 'components/Identicon'
-import { Trans } from 'react-i18next'
+import { SendModalProps } from 'pages/Swap/Send/SendReviewModal'
+import { useTranslation } from 'react-i18next'
 import { useSendContext } from 'state/send/SendContext'
 import type { RecipientData } from 'state/send/hooks'
 import { Flex, Text, useSporeColors } from 'ui/src'
@@ -39,7 +40,8 @@ const RecipientDisplay = ({
     </Text>
   )
 }
-export const NewAddressSpeedBumpModal = ({ onCancel, onConfirm }: { onCancel: () => void; onConfirm: () => void }) => {
+export const NewAddressSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: SendModalProps) => {
+  const { t } = useTranslation()
   const colors = useSporeColors()
   const {
     derivedSendInfo: { recipientData },
@@ -48,10 +50,10 @@ export const NewAddressSpeedBumpModal = ({ onCancel, onConfirm }: { onCancel: ()
 
   return (
     <Dialog
-      isVisible={true}
+      isVisible={isOpen}
       icon={<UserIcon fill={colors.neutral2.val} width={28} height={28} />}
-      title={<Trans i18nKey="speedBump.newAddress.warning.title" />}
-      description={<Trans i18nKey="speedBump.newAddress.warning.description" />}
+      title={t('speedBump.newAddress.warning.title')}
+      description={t('speedBump.newAddress.warning.description')}
       body={
         <Flex
           centered
@@ -64,14 +66,14 @@ export const NewAddressSpeedBumpModal = ({ onCancel, onConfirm }: { onCancel: ()
           <RecipientDisplay recipientData={recipientData} identiconType={identiconType} />
         </Flex>
       }
-      onCancel={onCancel}
+      onCancel={onDismiss}
       buttonsConfig={{
         left: {
-          title: <Trans i18nKey="common.button.cancel" />,
-          onClick: onCancel,
+          title: t('common.button.cancel'),
+          onClick: onDismiss,
         },
         right: {
-          title: <Trans i18nKey="common.button.continue" />,
+          title: t('common.button.continue'),
           onClick: onConfirm,
         },
       }}

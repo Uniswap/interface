@@ -1,8 +1,7 @@
 import { useIsAccountCTAExperimentControl } from 'components/NavBar/accountCTAsExperimentUtils'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { PropsWithChildren, ReactNode } from 'react'
 import { ThemedText } from 'theme/components'
-import { Flex, Image, Text } from 'ui/src'
+import { Flex, Image, Text, useMedia } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -17,7 +16,8 @@ export function ModalContent({
 }: PropsWithChildren<{ title: string; subtext?: string; rightThumbnail?: ReactNode; logo?: ReactNode }>) {
   const { isControl: isAccountCTAExperimentControl } = useIsAccountCTAExperimentControl()
   const embeddedWalletIsEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
-  const showRightThumbnail = useScreenSize()['lg']
+  const media = useMedia()
+  const showRightThumbnail = !media.xl
 
   return isAccountCTAExperimentControl && !embeddedWalletIsEnabled ? (
     <Flex p={24} alignItems="center" gap="$spacing32">

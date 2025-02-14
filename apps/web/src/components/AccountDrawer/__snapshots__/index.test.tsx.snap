@@ -946,6 +946,9 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
             </div>
           </div>
         </div>
+        <div
+          style="display: contents;"
+        />
       </span>
     </span>
   </span>

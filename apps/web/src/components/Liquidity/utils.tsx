@@ -14,10 +14,9 @@ import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, Position as V4Position } from '@uniswap/v4-sdk'
 import { defaultFeeTiers } from 'components/Liquidity/constants'
-import { DepositInfo, FeeTierData, PositionInfo } from 'components/Liquidity/types'
+import { FeeTierData, PositionInfo } from 'components/Liquidity/types'
 import { ZERO_ADDRESS } from 'constants/misc'
 import { DYNAMIC_FEE_DATA, DynamicFeeData, FeeData } from 'pages/Pool/Positions/create/types'
-import { PositionField } from 'types/position'
 import { GeneratedIcon } from 'ui/src'
 import { Flag } from 'ui/src/components/icons/Flag'
 import { Pools } from 'ui/src/components/icons/Pools'
@@ -27,6 +26,26 @@ import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+
+export function hasLPFoTTransferError(
+  currencyInfo: Maybe<CurrencyInfo>,
+  protocolVersion: ProtocolVersion | undefined,
+): CurrencyInfo | undefined {
+  const currency = currencyInfo?.currency
+
+  // FoT is only an issue for v3 + v4
+  if (!protocolVersion || protocolVersion === ProtocolVersion.V2 || !currency || currency?.isNative) {
+    return undefined
+  }
+
+  return currency?.wrapped.buyFeeBps?.gt(0) ||
+    (currencyInfo?.safetyInfo?.blockaidFees?.buyFeePercent ?? 0) > 0 ||
+    currency?.wrapped.sellFeeBps?.gt(0) ||
+    (currencyInfo?.safetyInfo?.blockaidFees?.sellFeePercent ?? 0) > 0
+    ? currencyInfo
+    : undefined
+}
 
 export function getProtocolVersionLabel(version: ProtocolVersion): string | undefined {
   switch (version) {
@@ -36,8 +55,9 @@ export function getProtocolVersionLabel(version: ProtocolVersion): string | unde
       return 'v3'
     case ProtocolVersion.V4:
       return 'v4'
+    default:
+      return undefined
   }
-  return undefined
 }
 
 export function getProtocolItems(version: ProtocolVersion | undefined): ProtocolItems | undefined {
@@ -369,7 +389,7 @@ export function calculateInvertedValues({
 }
 
 export function calculateTickSpacingFromFeeAmount(feeAmount: number): number {
-  return (2 * feeAmount) / 100
+  return Math.max((2 * feeAmount) / 100, 1)
 }
 
 export enum HookFlag {
@@ -491,10 +511,17 @@ export function mergeFeeTiers(
 }
 
 function getDefaultFeeTiersForChain(
-  chainId?: UniverseChainId,
+  chainId: UniverseChainId | undefined,
+  protocolVersion: ProtocolVersion,
 ): Record<FeeAmount, { feeAmount: FeeAmount; tickSpacing: number }> {
   const feeData = Object.values(defaultFeeTiers)
-    .filter((feeTier) => !feeTier.supportedChainIds || (chainId && feeTier.supportedChainIds.includes(chainId)))
+    .filter((feeTier) => {
+      // Only filter by chain support if we're on V3
+      if (protocolVersion === ProtocolVersion.V3) {
+        return !feeTier.supportedChainIds || (chainId && feeTier.supportedChainIds.includes(chainId))
+      }
+      return !feeTier.supportedChainIds
+    })
     .map((feeTier) => feeTier.feeData)
 
   return feeData.reduce(
@@ -509,27 +536,32 @@ function getDefaultFeeTiersForChain(
 export function getDefaultFeeTiersForChainWithDynamicFeeTier({
   chainId,
   dynamicFeeTierEnabled,
+  protocolVersion,
 }: {
   chainId?: UniverseChainId
   dynamicFeeTierEnabled: boolean
+  protocolVersion: ProtocolVersion
 }) {
+  const feeTiers = getDefaultFeeTiersForChain(chainId, protocolVersion)
   if (!dynamicFeeTierEnabled) {
-    return getDefaultFeeTiersForChain(chainId)
+    return feeTiers
   }
 
-  return { ...getDefaultFeeTiersForChain(chainId), [DYNAMIC_FEE_DATA.feeAmount]: DYNAMIC_FEE_DATA }
+  return { ...feeTiers, [DYNAMIC_FEE_DATA.feeAmount]: DYNAMIC_FEE_DATA }
 }
 
 export function getDefaultFeeTiersWithData({
   chainId,
   feeTierData,
+  protocolVersion,
   t,
 }: {
   chainId?: UniverseChainId
   feeTierData: Record<number, FeeTierData>
+  protocolVersion: ProtocolVersion
   t: AppTFunction
 }) {
-  const defaultFeeTiersForChain = getDefaultFeeTiersForChain(chainId)
+  const defaultFeeTiersForChain = getDefaultFeeTiersForChain(chainId, protocolVersion)
 
   const feeTiers = [
     {
@@ -583,7 +615,9 @@ export function getDefaultFeeTiersWithData({
     },
   ] as const
 
-  return feeTiers.filter((feeTier) => Object.keys(feeTierData).includes(feeTier.tier.toString()))
+  return feeTiers.filter(
+    (feeTier) => feeTier.value !== undefined && Object.keys(feeTierData).includes(feeTier.tier.toString()),
+  )
 }
 
 export function isDynamicFeeTier(feeData: FeeData): feeData is DynamicFeeData {
@@ -603,101 +637,4 @@ export function isDynamicFeeTierAmount(
   }
 
   return feeAmountNumber === DYNAMIC_FEE_DATA.feeAmount
-}
-
-export function getDisplayedAmountsFromDependentAmount({
-  token0,
-  token1,
-  dependentAmount,
-  exactField,
-  currencyAmounts,
-  currencyAmountsUSDValue,
-  formattedAmounts,
-}: { token0?: Currency; token1?: Currency; dependentAmount?: string; exactField: PositionField } & Pick<
-  DepositInfo,
-  'currencyAmounts' | 'currencyAmountsUSDValue' | 'formattedAmounts'
->): {
-  displayFormattedAmounts?: { [field in PositionField]?: string }
-  displayUSDAmounts?: { [field in PositionField]?: CurrencyAmount<Currency> }
-  displayCurrencyAmounts?: { [field in PositionField]?: CurrencyAmount<Currency> }
-} {
-  if (dependentAmount && exactField === PositionField.TOKEN1 && currencyAmounts?.TOKEN0?.greaterThan(0) && token0) {
-    const dependentAmount0 = CurrencyAmount.fromRawAmount(token0, dependentAmount)
-    const ratio = dependentAmount0.divide(currencyAmounts?.TOKEN0)
-    return {
-      displayFormattedAmounts: {
-        ...formattedAmounts,
-        TOKEN0: dependentAmount0?.toExact() ?? formattedAmounts?.TOKEN0,
-      },
-      displayUSDAmounts: {
-        ...currencyAmountsUSDValue,
-        TOKEN0: currencyAmountsUSDValue?.TOKEN0?.multiply(ratio),
-      },
-      displayCurrencyAmounts: {
-        ...currencyAmounts,
-        TOKEN0: dependentAmount0 ?? currencyAmounts?.TOKEN0,
-      },
-    }
-  } else if (
-    dependentAmount &&
-    exactField === PositionField.TOKEN0 &&
-    currencyAmounts?.TOKEN1?.greaterThan(0) &&
-    token1
-  ) {
-    const dependentAmount1 = CurrencyAmount.fromRawAmount(token1, dependentAmount)
-    const ratio = dependentAmount1.divide(currencyAmounts?.TOKEN1)
-    return {
-      displayFormattedAmounts: {
-        ...formattedAmounts,
-        TOKEN1: dependentAmount1?.toExact() ?? formattedAmounts?.TOKEN1,
-      },
-      displayUSDAmounts: {
-        ...currencyAmountsUSDValue,
-        TOKEN1: currencyAmountsUSDValue?.TOKEN1?.multiply(ratio),
-      },
-      displayCurrencyAmounts: {
-        ...currencyAmounts,
-        TOKEN1: dependentAmount1 ?? currencyAmounts?.TOKEN1,
-      },
-    }
-  }
-  return {
-    displayFormattedAmounts: formattedAmounts,
-    displayUSDAmounts: currencyAmountsUSDValue,
-    displayCurrencyAmounts: currencyAmounts,
-  }
-}
-
-// Takes the two potential errors from calls to the trading api and returns:
-//   - false if there is no error
-//   - a string with an error message if one can be parsed
-//   - true if there is an error but no message could be parsed
-// The calldata error takes precedence over the approval error for the message.
-export function getErrorMessageToDisplay({
-  calldataError,
-  approvalError,
-}: {
-  calldataError: unknown
-  approvalError?: unknown
-}): string | boolean {
-  if (calldataError) {
-    return parseErrorMessageTitle(calldataError) || true
-  }
-
-  if (approvalError) {
-    return parseErrorMessageTitle(approvalError) || true
-  }
-
-  return false
-}
-
-export function parseErrorMessageTitle(error: unknown, defaultTitle: string): string
-export function parseErrorMessageTitle(error: unknown): string | undefined
-export function parseErrorMessageTitle(error: unknown, defaultTitle?: string) {
-  if (!error) {
-    return defaultTitle
-  }
-
-  const errorWithData = error as { data?: { detail?: string }; name?: string }
-  return errorWithData.data?.detail || errorWithData.name || defaultTitle
 }

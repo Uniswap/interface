@@ -348,3 +348,25 @@ export function deleteWelcomeWalletCardBehaviorHistory(state: any): any {
   delete newState.behaviorHistory?.hasViewedWelcomeWalletCard
   return newState
 }
+
+// Mobile: 85
+// Extension: 19
+export function moveTokenAndNFTVisibility(state: any): any {
+  const newState = {
+    ...state,
+    visibility: {
+      ...state.visibility,
+      positions: {},
+      tokens: state.favorites.tokensVisibility,
+      nfts: state.favorites.nftsVisibility,
+    },
+    favorites: {
+      ...state.favorites,
+      tokensVisibility: undefined,
+      nftsVisibility: undefined,
+    },
+  }
+  delete newState.favorites.tokensVisibility
+  delete newState.favorites.nftsVisibility
+  return newState
+}

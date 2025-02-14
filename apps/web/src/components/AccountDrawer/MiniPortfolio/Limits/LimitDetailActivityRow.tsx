@@ -10,14 +10,13 @@ import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { parseUnits } from 'ethers/lib/utils'
 import { useCurrencyInfo } from 'hooks/Tokens'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import styled, { useTheme } from 'lib/styled-components'
 import { useMemo, useState } from 'react'
 import { ArrowRight } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { Checkbox } from 'ui/src'
+import { Checkbox, useMedia } from 'ui/src'
 import { useFormatter } from 'utils/formatNumbers'
 
 const StyledPortfolioRow = styled(PortfolioRow)`
@@ -47,13 +46,13 @@ const CircleLogoImage = styled.img<{ size: string }>`
 
 export function LimitDetailActivityRow({ order, onToggleSelect, selected }: LimitDetailActivityRowProps) {
   const theme = useTheme()
+  const media = useMedia()
   const { logos, currencies, offchainOrderDetails } = order
   const inputCurrencyInfo = useCurrencyInfo(currencies?.[0])
   const outputCurrencyInfo = useCurrencyInfo(currencies?.[1])
   const openOffchainActivityModal = useOpenOffchainActivityModal()
   const { formatReviewSwapCurrencyAmount } = useFormatter()
   const [hovered, setHovered] = useState(false)
-  const isSmallScreen = !useScreenSize()['sm']
 
   const amounts = useOrderAmounts(order.offchainOrderDetails)
   const amountsDefined = !!amounts?.inputAmount?.currency && !!amounts?.outputAmount?.currency
@@ -136,7 +135,7 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
       {!cancelling && (
         <Checkbox
           variant="branded"
-          opacity={hovered || selected || isSmallScreen ? 1 : 0}
+          opacity={hovered || selected || media.md ? 1 : 0}
           size="$icon.18"
           checked={selected}
           onPress={() => onToggleSelect(order)}

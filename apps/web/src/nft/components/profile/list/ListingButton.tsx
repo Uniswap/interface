@@ -6,7 +6,7 @@ import { findListingIssues } from 'nft/components/profile/list/utils'
 import { useSellAsset } from 'nft/hooks'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { BREAKPOINTS } from 'theme'
+import { breakpoints } from 'ui/src/theme'
 
 const StyledListingButton = styled(BaseButton)<{ showResolveIssues: boolean; missingPrices: boolean }>`
   background: ${({ showResolveIssues, theme }) => (showResolveIssues ? theme.critical : theme.accent1)};
@@ -21,7 +21,7 @@ const StyledListingButton = styled(BaseButton)<{ showResolveIssues: boolean; mis
   cursor: ${({ missingPrices }) => (missingPrices ? 'auto' : 'pointer')};
   opacity: ${({ showResolveIssues, missingPrices }) => !showResolveIssues && missingPrices && '0.3'};
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     font-size: 16px;
     line-height: 20px;
     padding: 10px 12px;

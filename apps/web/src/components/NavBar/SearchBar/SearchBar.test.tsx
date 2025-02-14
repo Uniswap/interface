@@ -1,33 +1,33 @@
 import { SearchBar } from 'components/NavBar/SearchBar'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
-// eslint-disable-next-line no-restricted-imports
-import { t } from 'i18next'
-import { useIsNavSearchInputVisible } from 'nft/hooks/useIsNavSearchInputVisible'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
+import { useMedia } from 'ui/src'
 
-jest.mock('hooks/screenSize/useScreenSize')
-jest.mock('nft/hooks/useIsNavSearchInputVisible')
+jest.mock('tamagui', () => ({
+  ...jest.requireActual('tamagui'),
+  useMedia: jest.fn(),
+}))
 
 describe('disable nft on searchbar', () => {
   beforeEach(() => {
-    mocked(useScreenSize).mockReturnValue({
-      xs: true,
-      sm: true,
-      md: true,
-      lg: true,
+    mocked(useMedia).mockReturnValue({
+      xxs: false,
+      xs: false,
+      sm: false,
+      md: false,
+      lg: false,
       xl: false,
-      xxl: false,
-      xxxl: false,
-      navSearchInputVisible: false,
-      navDropdownMobileDrawer: true,
+      xxl: true,
+      xxxl: true,
+      short: false,
+      midHeight: false,
     })
-    mocked(useIsNavSearchInputVisible).mockReturnValue(true)
   })
 
-  it('should render text without nfts', () => {
+  it('should render searchbar on larger screen', () => {
     const { container } = render(<SearchBar />)
     expect(container).toMatchSnapshot()
-    expect(screen.queryByPlaceholderText(t('tokens.selector.search.placeholder'))).toBeVisible()
+    const input = screen.getByTestId('nav-search-input')
+    expect(input).toBeInTheDocument()
   })
 })

@@ -1,5 +1,8 @@
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import { getCurrencyForProtocol } from 'pages/Pool/Positions/create/utils'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -9,11 +12,16 @@ import { NumberType } from 'utilities/src/format/types'
 export function TokenInfo({
   currencyAmount,
   currencyUSDAmount,
+  isMigrating = false,
 }: {
   currencyAmount?: CurrencyAmount<Currency>
   currencyUSDAmount?: CurrencyAmount<Currency>
+  isMigrating?: boolean
 }) {
   const { formatCurrencyAmount } = useLocalizationContext()
+  const currency = isMigrating
+    ? getCurrencyForProtocol(currencyAmount?.currency, ProtocolVersion.V4)
+    : currencyAmount?.currency
 
   return (
     <Flex row alignItems="center">
@@ -23,7 +31,7 @@ export function TokenInfo({
             value: currencyAmount,
             type: NumberType.TokenNonTx,
           })}{' '}
-          {getSymbolDisplayText(currencyAmount?.currency.symbol)}
+          {getSymbolDisplayText(currency?.symbol)}
         </Text>
         <Text variant="body3" color="$neutral2">
           {formatCurrencyAmount({
@@ -32,7 +40,7 @@ export function TokenInfo({
           })}
         </Text>
       </Flex>
-      <CurrencyLogo currency={currencyAmount?.currency} size={iconSizes.icon36} />
+      <CurrencyLogo currency={currency} size={iconSizes.icon36} />
     </Flex>
   )
 }

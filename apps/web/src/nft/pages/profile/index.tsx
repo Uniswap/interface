@@ -14,8 +14,8 @@ import { ProfilePageStateType } from 'nft/types'
 import { useEffect, useRef } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Trans, useTranslation } from 'react-i18next'
-import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
+import { breakpoints } from 'ui/src/theme'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -25,7 +25,7 @@ const ProfilePageWrapper = styled.div`
   width: 100%;
   scrollbar-width: none;
 
-  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
+  @media screen and (min-width: ${breakpoints.xl}px) {
     height: auto;
   }
 `
@@ -38,7 +38,7 @@ const LoadedAccountPage = styled.div<{ cartExpanded: boolean; isListingNfts: boo
   );
   margin: 0px ${({ isListingNfts }) => (isListingNfts ? LIST_PAGE_MARGIN : 0)}px;
 
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     width: calc(100% - ${({ isListingNfts }) => (isListingNfts ? LIST_PAGE_MARGIN_MOBILE * 2 : 0)}px);
     margin: 0px ${({ isListingNfts }) => (isListingNfts ? LIST_PAGE_MARGIN_MOBILE : 0)}px;
   }

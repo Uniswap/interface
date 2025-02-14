@@ -74,7 +74,7 @@ describe('SendCurrencyInputform', () => {
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
           <SendContext.Provider value={mockedSendContextFiatInput}>
-            <SendReviewModal onDismiss={jest.fn()} onConfirm={jest.fn()} />
+            <SendReviewModal isOpen onDismiss={jest.fn()} onConfirm={jest.fn()} />
           </SendContext.Provider>
         </SwapAndLimitContext.Provider>
       </MultichainContext.Provider>,
@@ -92,7 +92,7 @@ describe('SendCurrencyInputform', () => {
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
           <SendContext.Provider value={mockedSendContextTokenInput}>
-            <SendReviewModal onDismiss={jest.fn()} onConfirm={jest.fn()} />
+            <SendReviewModal isOpen onDismiss={jest.fn()} onConfirm={jest.fn()} />
           </SendContext.Provider>
         </SwapAndLimitContext.Provider>
       </MultichainContext.Provider>,

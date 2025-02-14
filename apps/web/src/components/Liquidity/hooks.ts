@@ -23,6 +23,7 @@ import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+export const MAX_FEE_TIER_DECIMALS = 4
 /**
  * @returns map of fee tier (in hundredths of bips) to more data about the Pool
  *
@@ -79,7 +80,7 @@ export function useAllFeeTierPoolData({
               feeAmount: pool.fee,
               tickSpacing: pool.tickSpacing,
             },
-            formattedFee: formatPercent(new Percent(pool.fee, 1000000)),
+            formattedFee: formatPercent(new Percent(pool.fee, 1000000), MAX_FEE_TIER_DECIMALS),
             totalLiquidityUsd: totalLiquidityUsdTruncated,
             percentage,
             tvl: pool.totalLiquidityUsd,
@@ -93,14 +94,18 @@ export function useAllFeeTierPoolData({
       feeTierData: mergeFeeTiers(
         feeTierData,
         Object.values(
-          getDefaultFeeTiersForChainWithDynamicFeeTier({ chainId, dynamicFeeTierEnabled: withDynamicFeeTier }),
+          getDefaultFeeTiersForChainWithDynamicFeeTier({
+            chainId,
+            dynamicFeeTierEnabled: withDynamicFeeTier,
+            protocolVersion,
+          }),
         ),
         formatPercent,
         t('fee.dynamic'),
       ),
       hasExistingFeeTiers: Object.values(feeTierData).length > 0,
     }
-  }, [poolData, sortedCurrencies, chainId, withDynamicFeeTier, formatPercent, t])
+  }, [poolData, sortedCurrencies, chainId, withDynamicFeeTier, formatPercent, protocolVersion, t])
 }
 
 /**

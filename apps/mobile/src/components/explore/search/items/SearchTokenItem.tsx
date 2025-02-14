@@ -5,7 +5,7 @@ import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { SEARCH_ITEM_ICON_SIZE, SEARCH_ITEM_PX, SEARCH_ITEM_PY } from 'src/components/explore/search/constants'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { getWarningIconColors } from 'uniswap/src/components/warnings/utils'
@@ -27,7 +27,6 @@ type SearchTokenItemProps = {
 }
 
 export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps): JSX.Element {
-  const isDarkMode = useIsDarkMode()
   const dispatch = useDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
@@ -108,7 +107,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
               </Text>
               {address && (
                 <Flex shrink>
-                  <Text color={isDarkMode ? '$neutral3' : '$neutral2'} numberOfLines={1} variant="body3">
+                  <Text color="$neutral3" numberOfLines={1} variant="body3">
                     {shortenAddress(address)}
                   </Text>
                 </Flex>

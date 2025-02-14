@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import { Flex } from 'ui/src'
 import { Shuffle } from 'ui/src/components/icons/Shuffle'
-import { iconSizes, zIndices } from 'ui/src/theme'
+import { iconSizes, zIndexes } from 'ui/src/theme'
 import { CurrencyLogo, STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
@@ -69,7 +69,7 @@ export function SplitLogo({
         )}
       </Flex>
       {(customIcon || networkLogo) && (
-        <Flex bottom={-4} position="absolute" right={-4} zIndex={zIndices.mask}>
+        <Flex bottom={-4} position="absolute" right={-4} zIndex={zIndexes.mask}>
           {customIcon ?? networkLogo}
         </Flex>
       )}

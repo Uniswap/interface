@@ -10,15 +10,14 @@ import TestnetModeTooltip from 'components/NavBar/TestnetMode/TestnetModeTooltip
 import { useIsAccountCTAExperimentControl } from 'components/NavBar/accountCTAsExperimentUtils'
 import Web3Status from 'components/Web3Status'
 import Row from 'components/deprecated/Row'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useAccount } from 'hooks/useAccount'
 import { PageType, useIsPage } from 'hooks/useIsPage'
 import styled, { css } from 'lib/styled-components'
 import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
-import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
-import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
+import { useMedia } from 'ui/src'
+import { INTERFACE_NAV_HEIGHT, breakpoints } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -42,7 +41,7 @@ const NavContents = styled.div`
 `
 const NavItems = css`
   gap: 12px;
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+  @media screen and (max-width: ${breakpoints.md}px) {
     gap: 4px;
   }
 `
@@ -97,10 +96,11 @@ export default function Navbar() {
   const isLandingPage = useIsPage(PageType.LANDING)
 
   const sellPageState = useProfilePageState((state) => state.state)
-  const isSmallScreen = !useScreenSize()['sm']
-  const isMediumScreen = !useScreenSize()['md']
+  const media = useMedia()
+  const isSmallScreen = media.md
+  const isMediumScreen = media.lg
   const areTabsVisible = useTabsVisible()
-  const collapseSearchBar = !useScreenSize()['lg']
+  const collapseSearchBar = media.xl
   const account = useAccount()
   const NAV_SEARCH_MAX_HEIGHT = 'calc(100vh - 30px)'
 

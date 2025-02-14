@@ -1,6 +1,6 @@
 import { LoaderButton } from 'components/Button/LoaderButton'
 import { DepositInputForm } from 'components/Liquidity/DepositInputForm'
-import { getDisplayedAmountsFromDependentAmount } from 'components/Liquidity/utils'
+import { useUpdatedAmountsFromDependentAmount } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import {
   useCreatePositionContext,
   useCreateTxContext,
@@ -9,7 +9,7 @@ import {
 } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { CreatePositionModal } from 'pages/Pool/Positions/create/CreatePositionModal'
 import { Container } from 'pages/Pool/Positions/create/shared'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { PositionField } from 'types/position'
 import { Flex, FlexProps, Text } from 'ui/src'
@@ -30,7 +30,7 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
       error: inputError,
     },
   } = useDepositContext()
-  const { txInfo, error: dataFetchingError } = useCreateTxContext()
+  const { txInfo, error: dataFetchingError, dependentAmount } = useCreateTxContext()
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
 
   const handleUserInput = (field: PositionField, newValue: string) => {
@@ -59,26 +59,23 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
 
   const [token0, token1] = currencies
 
-  const dependentAmount = txInfo?.dependentAmount
-  const { displayFormattedAmounts, displayUSDAmounts } = useMemo(
-    () =>
-      getDisplayedAmountsFromDependentAmount({
-        token0,
-        token1,
-        dependentAmount,
-        exactField,
-        currencyAmounts,
-        currencyAmountsUSDValue,
-        formattedAmounts,
-      }),
-    [dependentAmount, exactField, currencyAmounts, formattedAmounts, currencyAmountsUSDValue, token0, token1],
-  )
+  const { deposit0Disabled, deposit1Disabled } = derivedPriceRangeInfo
+  const { updatedFormattedAmounts, updatedUSDAmounts, updatedDeposit0Disabled, updatedDeposit1Disabled } =
+    useUpdatedAmountsFromDependentAmount({
+      token0,
+      token1,
+      dependentAmount,
+      exactField,
+      currencyAmounts,
+      currencyAmountsUSDValue,
+      formattedAmounts,
+      deposit0Disabled,
+      deposit1Disabled,
+    })
 
   if (!token0 || !token1) {
     return null
   }
-
-  const { deposit0Disabled, deposit1Disabled } = derivedPriceRangeInfo
 
   const disabled = !!inputError || !txInfo?.txRequest
 
@@ -102,14 +99,14 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
         <DepositInputForm
           token0={token0}
           token1={token1}
-          formattedAmounts={displayFormattedAmounts}
+          formattedAmounts={updatedFormattedAmounts}
           currencyAmounts={currencyAmounts}
-          currencyAmountsUSDValue={displayUSDAmounts}
+          currencyAmountsUSDValue={updatedUSDAmounts}
           currencyBalances={currencyBalances}
           onUserInput={handleUserInput}
           onSetMax={handleOnSetMax}
-          deposit0Disabled={deposit0Disabled}
-          deposit1Disabled={deposit1Disabled}
+          deposit0Disabled={updatedDeposit0Disabled}
+          deposit1Disabled={updatedDeposit1Disabled}
           amount0Loading={requestLoading && exactField === PositionField.TOKEN1}
           amount1Loading={requestLoading && exactField === PositionField.TOKEN0}
         />
@@ -118,7 +115,7 @@ export const DepositStep = ({ ...rest }: FlexProps) => {
           py="$spacing16"
           px="$spacing20"
           onPress={handleReview}
-          disabled={disabled}
+          isDisabled={disabled}
           buttonKey="Position-Create-DepositButton"
           loading={requestLoading}
         >
